@@ -2,7 +2,7 @@
 // Version object for unstable development status
 const guiaVersion = {
   major: 0,
-  minor: 3,
+  minor: 4,
   patch: 0,
   prerelease: 'alpha', // Indicates unstable development
   toString: function() {
@@ -1672,17 +1672,33 @@ class HtmlSpeechSynthesisDisplayer {
 		console.log("pitchValue:", this.pitchValue);
 
 		// Set up event listeners
-		this.speakBtn.addEventListener("click", this.speak);
-		this.pauseBtn.addEventListener("click", this.pauseSpeech);
-		this.resumeBtn.addEventListener("click", this.resumeSpeech);
-		this.stopBtn.addEventListener("click", this.stopSpeech);
-		this.languageSelect.addEventListener("change", this.updateVoices);
-		this.voiceSelect.addEventListener("change", () => {
-			this.speechManager.selectedVoiceIndex(this.voiceSelect.value);
-			this.updateVoices();
-		});
-		this.rateInput.addEventListener("input", this.updateRate);
-		this.pitchInput.addEventListener("input", this.updatePitch);
+		if (this.speakBtn) {
+			this.speakBtn.addEventListener("click", this.speak);
+		}
+		if (this.pauseBtn) {
+			this.pauseBtn.addEventListener("click", this.pauseSpeech);
+		}
+		if (this.resumeBtn) {
+			this.resumeBtn.addEventListener("click", this.resumeSpeech);
+		}
+		if (this.stopBtn) {
+			this.stopBtn.addEventListener("click", this.stopSpeech);
+		}
+		if (this.languageSelect) {
+			this.languageSelect.addEventListener("change", this.updateVoices);
+		}
+		if (this.voiceSelect) {
+			this.voiceSelect.addEventListener("change", () => {
+				this.speechManager.selectedVoiceIndex(this.voiceSelect.value);
+				this.updateVoices();
+			});
+		}
+		if (this.rateInput) {
+			this.rateInput.addEventListener("input", this.updateRate);
+		}
+		if (this.pitchInput) {
+			this.pitchInput.addEventListener("input", this.updatePitch);
+		}
 
 		this.updateVoices();
 	}
@@ -1691,7 +1707,9 @@ class HtmlSpeechSynthesisDisplayer {
 		//this.speechManager.setLanguage(this.languageSelect.value);
 
 		// Populate voice dropdown
-		this.voiceSelect.innerHTML = "";
+		if (this.voiceSelect) {
+			this.voiceSelect.innerHTML = "";
+		}
 		log("(HtmlSpeechSynthesisDisplayer) Voices cleared.");
 		var filteredVoices = this.speechManager.filteredVoices;
 		if (filteredVoices.length > 0) {
@@ -1699,12 +1717,16 @@ class HtmlSpeechSynthesisDisplayer {
 				const option = document.createElement("option");
 				option.value = index;
 				option.textContent = `${voice.name} (${voice.lang})`;
-				this.voiceSelect.appendChild(option);
+				if (this.voiceSelect) {
+					this.voiceSelect.appendChild(option);
+				}
 			});
 		} else {
 			const option = document.createElement("option");
 			option.textContent = "No voices available for selected language";
-			this.voiceSelect.appendChild(option);
+			if (this.voiceSelect) {
+				this.voiceSelect.appendChild(option);
+			}
 			warn(
 				"No voices available for language:",
 				this.speechManager.language,

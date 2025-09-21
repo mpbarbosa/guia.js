@@ -1405,19 +1405,24 @@ class HTMLAddressDisplayer {
 		}
 		if (geodataParser.data.address) {
 			html += `<p><strong>Tipo:</strong> ${addressTypeDescr}<br>`;
-			html += "<p><strong>Address Details:</strong></p><ul>";
-			for (const [key, value] of Object.entries(geodataParser.data.address)) {
-				html += `<li><strong>${key}:</strong> ${value}</li>`;
-			}
-			html += "</ul>";
-
+			html += '<br>';
 			if (enderecoPadronizado) {
 				html += ` <strong>Logradouro/Número:</strong> ${enderecoPadronizado.logradouroCompleto()}<br>
     <strong>Bairro:</strong> ${enderecoPadronizado.bairroCompleto()}<br>
     <strong>Município/Cidade:</strong> ${enderecoPadronizado.municipio}<br>`;
 			}
+			
+			html += '<details close><summary>(Address Components) Componentes do endereço</summary>';
+			html += "<p><strong>Address Details:</strong></p><ul>";
+			for (const [key, value] of Object.entries(geodataParser.data.address)) {
+				html += `<li><strong>${key}:</strong> ${value}</li>`;
+			}
+			html += "</ul>";
+			html += '</details>';
 
 			html += '<p>';
+			// Display raw address details
+			html +=  '<details close><summary>(Raw Address) Detalhes do endereço (raw)</summary>';
 			html += `<strong>Detalhes do endereço (raw):</strong><br>
 	${geodataParser.data.address.road || geodataParser.data.address.street || ""} ${geodataParser.data.address.house_number || ""}<br>
 	${geodataParser.data.address.neighbourhood || geodataParser.data.address.suburb || ""}<br>
@@ -1429,7 +1434,7 @@ class HTMLAddressDisplayer {
     <strong>País:</strong> ${geodataParser.data.address.country}<br>
     <strong>Código do país:</strong> ${geodataParser.data.address.country_code}<br>
     <strong>Boundingbox</strong>: ${geodataParser.data.boundingbox} </p> `;
-
+			html += '</details>';
 			html += '<details close><summary>(Raw Data) Dados em formato JSON</summary>';
 			html += `${JSON.stringify(geodataParser.data)}`;
 			html += '</details>';

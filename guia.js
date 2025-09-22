@@ -275,7 +275,7 @@ class SingletonStatusManager {
 		this.gettingLocation = status;
 	}
 
-	static getInstace() {
+	static getInstance() {
 		this.instance = this.instance || new SingletonStatusManager();
 		return this.instance;
 	}
@@ -442,7 +442,7 @@ class ReverseGeocoder extends APIFetcher {
 
 		// Proceed with reverse geocoding if position is updated
 		if (posEvent == CurrentPosition.strCurrPosUpdate) {
-			SingletonStatusManager.getInstace().setGettingLocation(true);
+			SingletonStatusManager.getInstance().setGettingLocation(true);
 
 			console.log("(ReverseGeocoder) update", position);
 			this.setCoordinates(position.coords.latitude, position.coords.longitude);
@@ -558,7 +558,7 @@ class GeolocationService {
 			// Get current position
 			navigator.geolocation.getCurrentPosition(
 				async (position) => {
-					SingletonStatusManager.getInstace().setGettingLocation(true);
+					SingletonStatusManager.getInstance().setGettingLocation(true);
 
 					console.log("(GeolocationService) Position obtained:", position);
 					resolve(CurrentPosition.getInstance(position));
@@ -577,7 +577,7 @@ class GeolocationService {
 
 	updatePosition(position) {
 		console.log("(GeolocationService) watchPosition callback");
-		SingletonStatusManager.getInstace().setGettingLocation(true);
+		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		if (findRestaurantsBtn) {
 			findRestaurantsBtn.disabled = true;
@@ -602,7 +602,7 @@ class GeolocationService {
 				async (position) => {
 					console.log("(GeolocationService) watchPosition callback");
 
-					SingletonStatusManager.getInstace().setGettingLocation(true);
+					SingletonStatusManager.getInstance().setGettingLocation(true);
 
 					console.log("(GeolocationService) Position obtained:", position);
 					var currentPos = CurrentPosition.getInstance(position);
@@ -626,7 +626,7 @@ class GeolocationService {
 			'<p class="loading">Buscando a sua localização...</p>';
 		console.log("(GeolocationService) locationResult:", locationResult);
 
-		SingletonStatusManager.getInstace().setGettingLocation(true);
+		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		return this.getCurrentLocation().then((position) => {
 			console.log("(GeolocationService) Position obtained:", position);
@@ -643,7 +643,7 @@ class GeolocationService {
 			'<p class="loading">Buscando a sua localização...</p>';
 		console.log("(GeolocationService) locationResult:", locationResult);
 
-		SingletonStatusManager.getInstace().setGettingLocation(true);
+		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		return this.watchCurrentLocation().then((position) => {
 			console.log(
@@ -1983,7 +1983,7 @@ class HtmlSpeechSynthesisDisplayer {
 		}
 	}
 
-	tostring() {
+	toString() {
 		return `${this.constructor.name}: ${this.elements.textInputId}`;
 	}
 }
@@ -2028,7 +2028,7 @@ class HtmlText {
 		}
 	}
 
-	tostring() {
+	toString() {
 		return `${this.constructor.name}: ${this.element.id}`;
 	}
 }

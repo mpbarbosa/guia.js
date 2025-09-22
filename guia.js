@@ -275,7 +275,7 @@ class SingletonStatusManager {
 		this.gettingLocation = status;
 	}
 
-	static getInstace() {
+	static getInstance() {
 		this.instance = this.instance || new SingletonStatusManager();
 		return this.instance;
 	}
@@ -442,7 +442,7 @@ class ReverseGeocoder extends APIFetcher {
 
 		// Proceed with reverse geocoding if position is updated
 		if (posEvent == CurrentPosition.strCurrPosUpdate) {
-			SingletonStatusManager.getInstace().setGettingLocation(true);
+			SingletonStatusManager.getInstance().setGettingLocation(true);
 
 			console.log("(ReverseGeocoder) update", position);
 			this.setCoordinates(position.coords.latitude, position.coords.longitude);
@@ -558,7 +558,7 @@ class GeolocationService {
 			// Get current position
 			navigator.geolocation.getCurrentPosition(
 				async (position) => {
-					SingletonStatusManager.getInstace().setGettingLocation(true);
+					SingletonStatusManager.getInstance().setGettingLocation(true);
 
 					console.log("(GeolocationService) Position obtained:", position);
 					resolve(CurrentPosition.getInstance(position));
@@ -577,7 +577,7 @@ class GeolocationService {
 
 	updatePosition(position) {
 		console.log("(GeolocationService) watchPosition callback");
-		SingletonStatusManager.getInstace().setGettingLocation(true);
+		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		if (findRestaurantsBtn) {
 			findRestaurantsBtn.disabled = true;
@@ -602,7 +602,7 @@ class GeolocationService {
 				async (position) => {
 					console.log("(GeolocationService) watchPosition callback");
 
-					SingletonStatusManager.getInstace().setGettingLocation(true);
+					SingletonStatusManager.getInstance().setGettingLocation(true);
 
 					console.log("(GeolocationService) Position obtained:", position);
 					var currentPos = CurrentPosition.getInstance(position);
@@ -626,7 +626,7 @@ class GeolocationService {
 			'<p class="loading">Buscando a sua localização...</p>';
 		console.log("(GeolocationService) locationResult:", locationResult);
 
-		SingletonStatusManager.getInstace().setGettingLocation(true);
+		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		return this.getCurrentLocation().then((position) => {
 			console.log("(GeolocationService) Position obtained:", position);
@@ -643,7 +643,7 @@ class GeolocationService {
 			'<p class="loading">Buscando a sua localização...</p>';
 		console.log("(GeolocationService) locationResult:", locationResult);
 
-		SingletonStatusManager.getInstace().setGettingLocation(true);
+		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		return this.watchCurrentLocation().then((position) => {
 			console.log(
@@ -1362,11 +1362,122 @@ class AddressDataExtractor {
 		return `${this.constructor.name}: ${this.enderecoPadronizado.toString()}`;
 	}
 
+	/**
+	 * Sets the cache expiration time in milliseconds
+	 * @param {number} expirationMs - Expiration time in milliseconds
+	 */
+	static setCacheExpirationTime(expirationMs) {
+		if (typeof expirationMs !== 'number' || expirationMs < 0) {
+			throw new Error('Cache expiration time must be a non-negative number');
+		}
+		AddressDataExtractor.cacheExpirationMs = expirationMs;
+		console.log(`(AddressDataExtractor) Cache expiration time set to ${expirationMs}ms`);
+	}
+
+	/**
+	 * Generates a cache key from address data
+	 * @param {Object} data - Address data object
+	 * @returns {string} Cache key
+	 */
+	static generateCacheKey(data) {
+		if (!data || !data.address) {
+			return null;
+		}
+		
+		const address = data.address;
+		const keyParts = [
+			address.street || address.road || '',
+			address.house_number || '',
+			address.neighbourhood || address.suburb || '',
+			address.city || address.town || address.municipality || address.county || '',
+			address.state || '',
+			address.postcode || '',
+			address.country_code || ''
+		];
+		
+		return keyParts.join('|');
+	}
+
+	/**
+	 * Cleans expired entries from the cache
+	 */
+	static cleanExpiredEntries() {
+		const now = Date.now();
+		let cleanedCount = 0;
+		
+		for (const [key, cacheEntry] of AddressDataExtractor.cache.entries()) {
+			if (now - cacheEntry.timestamp > AddressDataExtractor.cacheExpirationMs) {
+				AddressDataExtractor.cache.delete(key);
+				cleanedCount++;
+			}
+		}
+		
+		if (cleanedCount > 0) {
+			console.log(`(AddressDataExtractor) Cleaned ${cleanedCount} expired cache entries`);
+		}
+	}
+
+	/**
+	 * Clears all cache entries
+	 */
+	static clearCache() {
+		AddressDataExtractor.cache.clear();
+		console.log('(AddressDataExtractor) Cache cleared');
+	}
+
+	/**
+	 * Gets the current cache size
+	 * @returns {number} Number of entries in cache
+	 */
+	static getCacheSize() {
+		return AddressDataExtractor.cache.size;
+	}
+
 	static getBrazilianStandardAddress(data) {
+		const cacheKey = AddressDataExtractor.generateCacheKey(data);
+		
+		if (cacheKey) {
+			// Clean expired entries periodically
+			AddressDataExtractor.cleanExpiredEntries();
+			
+			// Check if we have a valid cached entry
+			const cacheEntry = AddressDataExtractor.cache.get(cacheKey);
+			if (cacheEntry) {
+				const now = Date.now();
+				if (now - cacheEntry.timestamp <= AddressDataExtractor.cacheExpirationMs) {
+					console.log('(AddressDataExtractor) Using cached BrazilianStandardAddress');
+					return cacheEntry.address;
+				} else {
+					// Remove expired entry
+					AddressDataExtractor.cache.delete(cacheKey);
+				}
+			}
+		}
+		
+		// Create new standardized address
+		console.log('(AddressDataExtractor) Creating new BrazilianStandardAddress');
 		const extractor = new AddressDataExtractor(data);
+		
+		// Cache the result if we have a valid key
+		if (cacheKey) {
+			AddressDataExtractor.cache.set(cacheKey, {
+				address: extractor.enderecoPadronizado,
+				timestamp: Date.now()
+			});
+			console.log(`(AddressDataExtractor) Cached BrazilianStandardAddress. Cache size: ${AddressDataExtractor.cache.size}`);
+		}
+		
 		return extractor.enderecoPadronizado;
 	}
 }
+
+// Initialize static properties for AddressDataExtractor
+// Static cache for BrazilianStandardAddress instances
+AddressDataExtractor.cache = new Map();
+// Default cache expiration time in milliseconds (5 minutes)
+AddressDataExtractor.defaultCacheExpirationMs = 5 * 60 * 1000;
+// Configurable cache expiration time
+AddressDataExtractor.cacheExpirationMs = AddressDataExtractor.defaultCacheExpirationMs;
 
 class HTMLAddressDisplayer {
 	constructor(element) {
@@ -1872,7 +1983,7 @@ class HtmlSpeechSynthesisDisplayer {
 		}
 	}
 
-	tostring() {
+	toString() {
 		return `${this.constructor.name}: ${this.elements.textInputId}`;
 	}
 }
@@ -1917,7 +2028,7 @@ class HtmlText {
 		}
 	}
 
-	tostring() {
+	toString() {
 		return `${this.constructor.name}: ${this.element.id}`;
 	}
 }

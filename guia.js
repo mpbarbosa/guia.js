@@ -453,7 +453,7 @@ class ReverseGeocoder extends APIFetcher {
 					//TODO: #23 Remover dependencia de AddressDataExtractor no ReverseGeocoder
 					console.log("(ReverseGeocoder) Extracting standardized address...");
 					this.enderecoPadronizado =
-						AddressDataExtractor.getEnderecoPadronizado(addressData);
+						AddressDataExtractor.getBrazilianStandardAddress(addressData);
 					this.notifyObservers();
 				})
 				.catch((error) => {
@@ -777,7 +777,7 @@ class WebGeocodingManager {
 		);
 	}
 
-	getEnderecoPadronizado() {
+	getBrazilianStandardAddress() {
 		return this.reverseGeocoder.enderecoPadronizado;
 	}
 
@@ -858,7 +858,7 @@ class WebGeocodingManager {
 				);
 				this.reverseGeocoder.currentAddress = addressData;
 				this.reverseGeocoder.enderecoPadronizado =
-					AddressDataExtractor.getEnderecoPadronizado(addressData);
+					AddressDataExtractor.getBrazilianStandardAddress(addressData);
 				this.reverseGeocoder.notifyObservers();
 				this.notifyFunctionObservers();
 			})
@@ -1114,7 +1114,7 @@ class HTMLPositionDisplayer {
 	}
 }
 
-class EnderecoPadronizado {
+class BrazilianStandardAddress {
 	constructor() {
 		this.municipio = null;
 		this.logradouro = null;
@@ -1308,7 +1308,7 @@ class AddressDataExtractor {
 		console.log("Initializing AddressDataExtractor...");
 		this.data = data;
 		console.log("data:", data);
-		this.enderecoPadronizado = new EnderecoPadronizado();
+		this.enderecoPadronizado = new BrazilianStandardAddress();
 		this.padronizaEndereco();
 		Object.freeze(this); // Prevent further modification
 	}
@@ -1362,7 +1362,7 @@ class AddressDataExtractor {
 		return `${this.constructor.name}: ${this.enderecoPadronizado.toString()}`;
 	}
 
-	static getEnderecoPadronizado(data) {
+	static getBrazilianStandardAddress(data) {
 		const extractor = new AddressDataExtractor(data);
 		return extractor.enderecoPadronizado;
 	}

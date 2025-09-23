@@ -1434,6 +1434,40 @@ class AddressDataExtractor {
 	}
 
 	/**
+	 * Gets the current address (most recently accessed) from cache
+	 * @returns {BrazilianStandardAddress|null} Current address or null if cache is empty
+	 */
+	static getCurrentAddress() {
+		if (AddressDataExtractor.cache.size === 0) {
+			return null;
+		}
+		
+		// Map maintains insertion order, last entry is most recent
+		const entries = Array.from(AddressDataExtractor.cache.values());
+		const currentEntry = entries[entries.length - 1];
+		
+		console.log('(AddressDataExtractor) Current address retrieved from cache');
+		return currentEntry ? currentEntry.address : null;
+	}
+
+	/**
+	 * Gets the previous address (immediately before current) from cache
+	 * @returns {BrazilianStandardAddress|null} Previous address or null if less than 2 entries
+	 */
+	static getPreviousAddress() {
+		if (AddressDataExtractor.cache.size < 2) {
+			return null;
+		}
+		
+		// Map maintains insertion order, second-to-last entry is previous
+		const entries = Array.from(AddressDataExtractor.cache.values());
+		const previousEntry = entries[entries.length - 2];
+		
+		console.log('(AddressDataExtractor) Previous address retrieved from cache');
+		return previousEntry ? previousEntry.address : null;
+	}
+
+	/**
 	 * Sets the maximum cache size for LRU behavior
 	 * @param {number} maxSize - Maximum number of entries in cache
 	 */

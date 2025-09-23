@@ -1,0 +1,31 @@
+{
+  "name": "guia_js",
+  "version": "0.5.0-alpha",
+  "description": "Geolocation web application for Brazilian addresses",
+  "main": "guia.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:verbose": "jest --verbose",
+    "validate": "node -c guia.js && node -c guia_ibge.js",
+    "test:all": "npm run validate && npm test"
+  },
+  "keywords": ["geolocation", "brazil", "maps", "geocoding"],
+  "author": "",
+  "license": "ISC",
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "*.js",
+      "!node_modules/**"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.js",
+      "**/*.test.js"
+    ]
+  },
+  "devDependencies": {
+    "jest": "^30.1.3"
+  }
+}

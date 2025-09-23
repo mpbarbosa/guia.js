@@ -1468,6 +1468,64 @@ class AddressDataExtractor {
 	}
 
 	/**
+	 * Checks if the logradouro (street) has changed between the current and previous addresses
+	 * @returns {boolean} True if logradouro has changed, false otherwise
+	 */
+	static hasLogradouroChanged() {
+		const currentAddress = AddressDataExtractor.getCurrentAddress();
+		const previousAddress = AddressDataExtractor.getPreviousAddress();
+		
+		// If we don't have both addresses, no change can be detected
+		if (!currentAddress || !previousAddress) {
+			return false;
+		}
+		
+		// Compare logradouro values, handling null/undefined cases
+		const currentLogradouro = currentAddress.logradouro;
+		const previousLogradouro = previousAddress.logradouro;
+		
+		const hasChanged = currentLogradouro !== previousLogradouro;
+		
+		if (hasChanged) {
+			console.log('(AddressDataExtractor) Logradouro changed detected:');
+			console.log(`  Previous: "${previousLogradouro}"`);
+			console.log(`  Current: "${currentLogradouro}"`);
+		}
+		
+		return hasChanged;
+	}
+
+	/**
+	 * Gets detailed information about logradouro changes between current and previous addresses
+	 * @returns {Object|null} Object with change details or null if no comparison possible
+	 */
+	static getLogradouroChangeDetails() {
+		const currentAddress = AddressDataExtractor.getCurrentAddress();
+		const previousAddress = AddressDataExtractor.getPreviousAddress();
+		
+		// If we don't have both addresses, no change details can be provided
+		if (!currentAddress || !previousAddress) {
+			return null;
+		}
+		
+		const currentLogradouro = currentAddress.logradouro;
+		const previousLogradouro = previousAddress.logradouro;
+		const hasChanged = currentLogradouro !== previousLogradouro;
+		
+		return {
+			hasChanged: hasChanged,
+			previous: {
+				logradouro: previousLogradouro,
+				logradouroCompleto: previousAddress.logradouroCompleto()
+			},
+			current: {
+				logradouro: currentLogradouro,
+				logradouroCompleto: currentAddress.logradouroCompleto()
+			}
+		};
+	}
+
+	/**
 	 * Sets the maximum cache size for LRU behavior
 	 * @param {number} maxSize - Maximum number of entries in cache
 	 */

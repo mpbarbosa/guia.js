@@ -1,0 +1,50 @@
+# Instruções para o GitHub Copilot Coding Agent
+# Consulte https://gh.io/copilot-coding-agent-tips para mais detalhes e exemplos.
+
+# Descreva o propósito do repositório e orientações gerais para o agente.
+purpose: |
+  Este repositório contém código JavaScript para tratar com a API de Geolocalização e fornecer funcionalidades de localização.
+  O agente deve priorizar boas práticas de desenvolvimento de código JavaScript como suporte para páginas web dinâmicas para LBS (Localized Based Services), organização de código e clareza na documentação.
+
+# Regras e preferências para contribuições automáticas.
+rules:
+  - Utilizar JavaScript moderno (ES6+) para novas implementações.
+ - Priorizar a modularização do código, criando componentes reutilizáveis.
+  - Seguir o padrão de nomenclatura camelCase para variáveis e funções.
+  - Garantir que o código seja compatível com os principais navegadores.
+  - Incluir testes unitários para novas funcionalidades, se aplicável.
+  - Documentar funções e classes com JSDoc.
+ - Funções Lambda devem ser usadas para callbacks simples.
+ - Quando possível, usar async/await para operações assíncronas.
+ - Quando possível,  aplicar o paradigma funcional (map, filter, reduce) em vez de loops tradicionais.
+ - Quando possível, aplicar o paradigma funcional com funções puras (lambda functions).
+  - Evitar o uso de var, preferindo let e const.
+  - Manter a legibilidade do código, evitando funções muito longas (máximo de 50 linhas).
+  - Seguir o padrão de indentação de 2 espaços.
+  - Manter o tamanho máximo de linha em 80 caracteres.
+  - Priorizar o uso de template literals para strings que envolvem variáveis.
+  - Utilizar destructuring para acessar propriedades de objetos e arrays.
+  - Evitar o uso de comentários desnecessários; o código deve ser autoexplicativo.
+  - Garantir que o código seja acessível, seguindo as melhores práticas de acessibilidade.
+  - Evitar código duplicado, reutilizando funções e componentes existentes.
+  - Evitar o uso de bibliotecas externas, a menos que absolutamente necessário.
+  - Manter a estrutura do projeto organizada, colocando arquivos em diretórios apropriados.
+  - Manter comentários claros e concisos no código.
+  - Atualizar o README.md quando houver mudanças relevantes na estrutura ou funcionalidades.
+  - Validar alterações com ferramentas de lint e testes, se disponíveis.
+
+# Restrições e áreas sensíveis.
+restrictions:
+  - Não modificar arquivos em submodules sem autorização explícita.
+  - Não remover ou sobrescrever arquivos críticos como index.html sem aprovação.
+
+# Preferências de comunicação.
+communication:
+  - Sempre explicar o motivo das mudanças em pull requests.
+  - Referenciar issues ou tarefas relacionadas quando aplicável.
+
+# Exemplos de boas práticas para este repositório.
+examples:
+  - Criar arquivos .js para manter a coesão do código.
+  - Prriozar a modularização e independência dos arquivos/módulos.
+

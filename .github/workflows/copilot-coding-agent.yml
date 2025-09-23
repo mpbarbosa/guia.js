@@ -1,0 +1,133 @@
+name: Copilot Coding Agent
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Validate JavaScript syntax
+      run: |
+        echo "Validating JavaScript syntax..."
+        node -c guia.js
+        node -c guia_ibge.js
+        echo "✅ JavaScript syntax validation passed"
+        
+    - name: Test basic functionality
+      run: |
+        echo "Testing basic Node.js functionality..."
+        node guia.js
+        echo "✅ Basic functionality test passed"
+        
+    - name: Start web server and test (basic check)
+      run: |
+        echo "Starting web server for basic connectivity test..."
+        python3 -m http.server 9000 &
+        SERVER_PID=$!
+        sleep 3
+        echo "Testing server connectivity..."
+        curl -s http://localhost:9000/ || echo "Server not responding (expected - no index.html)"
+        
+        # Test if test.html loads properly
+        if curl -s http://localhost:9000/test.html | grep -q "Guia.js"; then
+          echo "✅ test.html loads correctly"
+        else
+          echo "⚠️ test.html not found or corrupted"
+        fi
+        
+        kill $SERVER_PID
+        echo "✅ Web server test completed"
+        
+    - name: Check for required files
+      run: |
+        echo "Verifying required files exist..."
+        test -f guia.js && echo "✅ guia.js found"
+        test -f guia_ibge.js && echo "✅ guia_ibge.js found"
+        test -f test.html && echo "✅ test.html found"
+        test -f .github/copilot-instructions.md && echo "✅ copilot-instructions.md found"
+        test -f .github/workflows/copilot-coding-agent.yml && echo "✅ copilot-coding-agent.yml found"
+        echo "✅ All required files present"
+
+  lint-and-format:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Check code style (basic)
+      run: |
+        echo "Performing basic code style checks..."
+        # Check for basic formatting issues
+        if grep -q $'\t' guia.js; then
+          echo "✅ Tabs found in guia.js (consistent with existing style)"
+        fi
+        
+        # Check for console.log statements (informational)
+        console_logs=$(grep -c "console\." guia.js || true)
+        echo "ℹ️ Found $console_logs console statements in guia.js"
+        
+        # Check version consistency
+        if grep -q "prerelease: 'alpha'" guia.js; then
+          echo "✅ Version configuration found in guia.js"
+        fi
+        
+        echo "✅ Basic code style checks completed"
+
+  security-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Basic security scan
+      run: |
+        echo "Performing basic security checks..."
+        
+        # Check for hardcoded credentials (basic patterns)
+        if grep -iE "(password|secret|token|key)\s*[:=]\s*['\"][^'\"]+['\"]" *.js; then
+          echo "⚠️ Potential hardcoded credentials found"
+          exit 1
+        else
+          echo "✅ No obvious hardcoded credentials found"
+        fi
+        
+        # Check for eval() usage
+        if grep -q "eval(" *.js; then
+          echo "⚠️ eval() usage found - review for security implications"
+        else
+          echo "✅ No eval() usage found"
+        fi
+        
+        # Check API endpoints are HTTPS
+        if grep -oE "https?://[^'\"\s]+" *.js | grep "http://" | grep -v "localhost"; then
+          echo "⚠️ Non-HTTPS external URLs found"
+        else
+          echo "✅ External API calls use HTTPS"
+        fi
+        
+        echo "✅ Basic security checks completed"

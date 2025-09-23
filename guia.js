@@ -144,12 +144,12 @@ class CurrentPosition {
 			return;
 		}
 		log("(CurrentPosition) position.timestamp:", position.timestamp);
+		const tempoDecorrido = position.timestamp - (this.tsPosicaoAtual || 0);
 		log(
 			"(CurrentPosition) position.timestamp - this.tsPosicaoAtual:",
-			position.timestamp - (this.tsPosicaoAtual || 0),
+			tempoDecorrido,
 		);
-		//TODO: #50 Guardar o intervalo de tempo numa variável.
-		if (position.timestamp - (this.tsPosicaoAtual || 0) < 60000) {
+		if (tempoDecorrido < 60000) {
 			bUpdateCurrPos = false;
 			error = {
 				name: "ElapseTimeError",

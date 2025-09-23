@@ -1433,6 +1433,39 @@ class AddressDataExtractor {
 		return AddressDataExtractor.cache.size;
 	}
 
+	/**
+	 * Sets the maximum cache size for LRU behavior
+	 * @param {number} maxSize - Maximum number of entries in cache
+	 */
+	static setMaxCacheSize(maxSize) {
+		if (typeof maxSize !== 'number' || maxSize < 1) {
+			throw new Error('Maximum cache size must be a positive number');
+		}
+		AddressDataExtractor.maxCacheSize = maxSize;
+		console.log(`(AddressDataExtractor) Maximum cache size set to ${maxSize}`);
+		
+		// Evict entries if current size exceeds new limit
+		AddressDataExtractor.evictLeastRecentlyUsedIfNeeded();
+	}
+
+	/**
+	 * Evicts least recently used entries if cache exceeds maximum size
+	 * This implements the history-like behavior where old entries are removed
+	 */
+	static evictLeastRecentlyUsedIfNeeded() {
+		while (AddressDataExtractor.cache.size >= AddressDataExtractor.maxCacheSize) {
+			// Map maintains insertion order, so first entry is least recently used
+			// (since we re-insert on access to move to end)
+			const firstKey = AddressDataExtractor.cache.keys().next().value;
+			if (firstKey) {
+				AddressDataExtractor.cache.delete(firstKey);
+				console.log(`(AddressDataExtractor) Evicted least recently used cache entry. Cache size: ${AddressDataExtractor.cache.size}`);
+			} else {
+				break; // Safety check
+			}
+		}
+	}
+
 	static getBrazilianStandardAddress(data) {
 		const cacheKey = AddressDataExtractor.generateCacheKey(data);
 		
@@ -1446,6 +1479,13 @@ class AddressDataExtractor {
 				const now = Date.now();
 				if (now - cacheEntry.timestamp <= AddressDataExtractor.cacheExpirationMs) {
 					console.log('(AddressDataExtractor) Using cached BrazilianStandardAddress');
+					
+					// Update access time for LRU behavior (history-like)
+					cacheEntry.lastAccessed = now;
+					// Re-insert to update position in Map (Map maintains insertion order)
+					AddressDataExtractor.cache.delete(cacheKey);
+					AddressDataExtractor.cache.set(cacheKey, cacheEntry);
+					
 					return cacheEntry.address;
 				} else {
 					// Remove expired entry
@@ -1460,9 +1500,14 @@ class AddressDataExtractor {
 		
 		// Cache the result if we have a valid key
 		if (cacheKey) {
+			// Check if cache has reached maximum size, evict least recently used entries
+			AddressDataExtractor.evictLeastRecentlyUsedIfNeeded();
+			
+			const now = Date.now();
 			AddressDataExtractor.cache.set(cacheKey, {
 				address: extractor.enderecoPadronizado,
-				timestamp: Date.now()
+				timestamp: now,
+				lastAccessed: now
 			});
 			console.log(`(AddressDataExtractor) Cached BrazilianStandardAddress. Cache size: ${AddressDataExtractor.cache.size}`);
 		}
@@ -1478,6 +1523,9 @@ AddressDataExtractor.cache = new Map();
 AddressDataExtractor.defaultCacheExpirationMs = 5 * 60 * 1000;
 // Configurable cache expiration time
 AddressDataExtractor.cacheExpirationMs = AddressDataExtractor.defaultCacheExpirationMs;
+// Maximum cache size for LRU (history-like) behavior - default to 50 entries
+AddressDataExtractor.defaultMaxCacheSize = 50;
+AddressDataExtractor.maxCacheSize = AddressDataExtractor.defaultMaxCacheSize;
 
 class HTMLAddressDisplayer {
 	constructor(element) {

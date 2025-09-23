@@ -127,8 +127,6 @@ class CurrentPosition {
 	set accuracy(value) {
 		this._accuracy = value;
 		this.accuracyQuality = CurrentPosition.getAccuracyQuality(value);
-		console.log("(CurrentPosition) Accuracy set to:", value);
-		console.log("(CurrentPosition) Accuracy quality:", this.accuracyQuality);
 	}
 
 	update(position) {
@@ -150,7 +148,7 @@ class CurrentPosition {
 			"(CurrentPosition) position.timestamp - this.tsPosicaoAtual:",
 			position.timestamp - (this.tsPosicaoAtual || 0),
 		);
-
+		//TODO: #50 Guardar o intervalo de tempo numa variável.
 		if (position.timestamp - (this.tsPosicaoAtual || 0) < 60000) {
 			bUpdateCurrPos = false;
 			error = {

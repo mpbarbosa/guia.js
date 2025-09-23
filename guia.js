@@ -2170,3 +2170,27 @@ class HtmlText {
 		return `${this.constructor.name}: ${this.element.id}`;
 	}
 }
+
+// Export for Node.js testing - only when in Node.js environment
+if (typeof module !== "undefined" && module.exports) {
+module.exports = {
+guiaVersion,
+calculateDistance,
+delay,
+log,
+warn,
+CurrentPosition,
+SingletonStatusManager,
+APIFetcher,
+ReverseGeocoder,
+getAddressType,
+GeolocationService,
+WebGeocodingManager,
+Chronometer,
+HTMLPositionDisplayer,
+HTMLAddressDisplayer,
+SpeechSynthesisManager,
+HtmlSpeechSynthesisDisplayer,
+HtmlText
+};
+}

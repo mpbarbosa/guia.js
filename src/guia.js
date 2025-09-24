@@ -2,7 +2,7 @@
 // Version object for unstable development status
 const guiaVersion = {
   major: 0,
-  minor: 6,
+  minor: 7,
   patch: 0,
   prerelease: 'alpha', // Indicates unstable development
   toString: function() {
@@ -478,6 +478,8 @@ function getAddressType(address) {
 		addressTypeDescr = "Residencial";
 	} else if (addressClass == "shop" && addressType == "mall") {
 		addressTypeDescr = "Shopping Center";
+	} else if (addressClass == "amenity" && addressType == "cafe") {
+		addressTypeDescr = "Café";
 	} else {
 		addressTypeDescr = "Não classificado";
 	}
@@ -1318,9 +1320,8 @@ class ReferencePlaceExtractor {
 	}
 
 	static isReferencePlace(data) {
-		let validRefPlaceClasses = ['shop'];
+		let validRefPlaceClasses = ['shop','amenity'];
 		let refPlaceClass = (new ReferencePlaceExtractor(data)).placeClass;
-		log(`(ReferencePlaceExtractor) class: ${refPlaceClass}`)
 		return validRefPlaceClasses.includes(refPlaceClass);
 	}
 }

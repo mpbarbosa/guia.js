@@ -803,6 +803,7 @@ class WebGeocodingManager {
 		);
 
 		this.reverseGeocoder.subscribe(this.htmlSpeechSynthesisDisplayer);
+		this.subscribe(this.htmlSpeechSynthesisDisplayer);
 
 		console.log("WebGeocodingManager initialized.");
 		this.notifyObservers();
@@ -2198,12 +2199,26 @@ class HtmlSpeechSynthesisDisplayer {
 		return textToBeSpoken;
 	}
 
-	update(currentAddress, error, loading) {
+	update(currentAddress, enderecoPadronizadoOrEvent, loading, error) {
 		log(
 			"(HtmlSpeechSynthesisDisplayer) Updating speech synthesis display...",
 		);
 		log("currentAddress:", currentAddress);
-		if (currentAddress) {
+		log("enderecoPadronizadoOrEvent:", enderecoPadronizadoOrEvent);
+		
+		// Check if this is a logradouro change notification
+		if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
+			log("(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location...");
+			if (currentAddress) {
+				this.updateVoices();
+				var textToBeSpoken = "";
+				textToBeSpoken += this.buildTextToSpeech(currentAddress);
+				log("textToBeSpoken for logradouro change:", textToBeSpoken);
+				this.textInput.value = textToBeSpoken;
+				this.speak(textToBeSpoken);
+			}
+		} else if (currentAddress) {
+			// Normal update from reverseGeocoder
 			this.updateVoices();
 			var textToBeSpoken = "";
 			textToBeSpoken += this.buildTextToSpeech(currentAddress);

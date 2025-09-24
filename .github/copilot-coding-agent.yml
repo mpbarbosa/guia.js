@@ -32,7 +32,7 @@ rules:
   - Manter comentários claros e concisos no código.
   - Atualizar o README.md quando houver mudanças relevantes na estrutura ou funcionalidades.
   - Validar alterações com ferramentas de lint e testes, se disponíveis.
-- Sempre que possível, seguir o padrão Noje.js para projetos de API. 
+- Sempre que possível, seguir o padrão Noje.js para projetos de API, como, por exemplo a estrutura de diretórios e seus nomes. 
 
 # Restrições e áreas sensíveis.
 restrictions:

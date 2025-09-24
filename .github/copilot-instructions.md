@@ -9,21 +9,25 @@ Guia.js is a JavaScript-based geolocation web application (version 0.5.0-alpha) 
 ### Bootstrap and Run the Application
 - **Node.js Testing**: `node guia.js` - takes <1 second. Validates basic functionality and logs version.
 - **Syntax Validation**: `node -c guia.js && node -c guia_ibge.js` - takes <1 second each. ALWAYS run before commits.
-- **Web Server**: `python3 -m http.server 9000` - starts immediately. NEVER CANCEL - keeps running until stopped.
+- **Web Server**: `python3 -m http.server 9000` - starts in 3 seconds. NEVER CANCEL - keeps running until stopped.
 - **Access Application**: Navigate to `http://localhost:9000/test.html` for full functionality testing.
 
 ### Build and Test Process
 - **NEVER CANCEL any long-running server processes** - they run indefinitely by design
+- **Install Dependencies**: `npm install` - takes 20 seconds. Downloads 299 packages including Jest testing framework.
 - **Syntax Check**: Always run `node -c guia.js` (timeout: 10 seconds) before making changes
 - **Basic Test**: Run `node guia.js` (timeout: 10 seconds) to verify core functionality
-- **Web Test**: Start web server with `python3 -m http.server 9000` (timeout: 30 seconds to start, runs indefinitely)
-- **No formal test suite exists** - validation is manual through web browser testing
+- **Automated Tests**: `npm test` - takes 2 seconds. Runs 55 tests in 5 suites. NEVER CANCEL.
+- **Test Coverage**: `npm run test:coverage` - takes 2.2 seconds. Shows ~12% coverage. NEVER CANCEL.
+- **Full Validation**: `npm run test:all` - takes 4 seconds. Combines syntax + tests. NEVER CANCEL.
+- **Web Test**: Start web server with `python3 -m http.server 9000` (timeout: 10 seconds to start, runs indefinitely)
 
 ### Development Workflow
 - Always validate JavaScript syntax with `node -c` before committing changes
 - Test core functionality with `node guia.js` to see version output and basic initialization
+- Run automated tests with `npm run test:all` before commits to ensure 55 tests pass
 - For DOM/web features, use the web server and test.html for manual validation
-- **TIMING**: All commands complete in under 1 second except web server startup (2-3 seconds)
+- **TIMING**: Syntax checks <1 second, tests 2 seconds, web server startup 3 seconds
 
 ## Validation Scenarios
 
@@ -36,7 +40,13 @@ After making any changes, ALWAYS run through these validation scenarios:
    # Should output: [timestamp] Guia.js version: 0.5.0-alpha
    ```
 
-2. **Web Application Functionality**:
+2. **Automated Test Suite**:
+   ```bash
+   npm run test:all
+   # Should show: ✅ 55 tests passing, ✅ 5 suites, ~2 seconds execution
+   ```
+
+3. **Web Application Functionality**:
    - Start web server: `python3 -m http.server 9000`
    - Open `http://localhost:9000/test.html` 
    - Click "Obter Localização" button
@@ -44,10 +54,223 @@ After making any changes, ALWAYS run through these validation scenarios:
    - Check console log output in browser developer tools
    - Test "Encontrar Restaurantes" and "Estatísticas da Cidade" buttons
 
-3. **Code Integration Test**:
+4. **Code Integration Test**:
    - Verify no JavaScript errors in browser console
    - Confirm all classes initialize properly
    - Test DOM element binding (buttons, text areas, etc.)
+
+### Required User Scenarios
+- **Geolocation Flow**: User grants location permission → coordinates display → address lookup occurs
+- **Restaurant Search**: User clicks restaurant button → coordinates are passed to search function
+- **Address Display**: Geographic data gets processed and formatted for Brazilian addresses
+- **Logging**: All actions appear in the bottom textarea log area
+
+## Repository Structure
+
+### Key Files
+- `guia.js` (2288 lines) - Main application with 25 classes for geolocation functionality
+- `guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
+- `test.html` (133 lines) - Test page for manual validation
+- `package.json` - Node.js configuration with Jest testing framework
+- `__tests__/` - 5 test files with 55 total tests
+
+### Important Classes and Components
+
+#### Core Architecture (lines 62-666)
+- `PositionManager` - Singleton for current geolocation state
+- `SingletonStatusManager` - Status management across components  
+- `APIFetcher` - Base class for API communications
+- `ReverseGeocoder` - OpenStreetMap/Nominatim integration
+- `GeolocationService` - Browser geolocation API wrapper
+- `WebGeocodingManager` - Main coordination class
+
+#### Data Processing (lines 1201-1706)
+- `BrazilianStandardAddress` - Brazilian address standardization
+- `GeoDataParser/Extractor/Validator` - Geographic data processing pipeline
+- `ReferencePlaceExtractor/Validator` - Reference location handling
+- `AddressDataExtractor` - Address data extraction and caching
+
+#### UI and Display (lines 1084-2264)
+- `HTMLPositionDisplayer` - Coordinate display and Google Maps integration
+- `HTMLAddressDisplayer` - Address formatting and presentation
+- `SpeechSynthesisManager` - Text-to-speech functionality
+- `HtmlText` - Text display utilities
+
+### API Integrations
+- **OpenStreetMap Nominatim**: `https://nominatim.openstreetmap.org/reverse` for geocoding
+- **IBGE API**: `https://servicodados.ibge.gov.br/api/v1/localidades/estados/` for Brazilian location data
+- **Google Maps**: Links for map viewing and Street View integration
+
+## Testing Infrastructure
+
+### Automated Test Coverage
+- **55 tests** across 5 test suites running in ~2 seconds
+- **~12% code coverage** of guia.js (278/2288 lines)
+- **100% coverage** of guia_ibge.js (full coverage)
+- **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration
+
+### Test Execution Commands
+```bash
+# Run all tests (2 seconds)
+npm test
+
+# Run tests with coverage report (2.2 seconds)  
+npm run test:coverage
+
+# Run tests in watch mode (development)
+npm run test:watch
+
+# Syntax validation only (<1 second)
+npm run validate
+
+# Full validation: syntax + tests (4 seconds total)
+npm run test:all
+```
+
+### Expected Test Results
+- ✅ 55 tests passing
+- ✅ 5 suites of test files
+- ✅ ~12% code coverage on guia.js
+- ✅ 100% code coverage on guia_ibge.js
+
+## Common Development Tasks
+
+### Adding New Geolocation Features
+- Always extend appropriate base classes (APIFetcher for API calls, etc.)
+- Follow the MVC pattern: Extractor → Validator → Formatter → Displayer
+- Update both Node.js compatibility and DOM functionality
+- Write tests for new functionality in `__tests__/` directory
+
+### Debugging Geolocation Issues
+- Check browser console for JavaScript errors
+- Verify geolocation permissions in browser
+- Test API endpoints manually: `curl "https://nominatim.openstreetmap.org/reverse?format=json&lat=-23.550520&lon=-46.633309"`
+- Monitor network requests in browser developer tools
+- Check the bottom textarea log area for application-specific logs
+
+### Working with Brazilian Address Data
+- Use `BrazilianStandardAddress` class for address standardization
+- Reference `AddressDataExtractor` for data processing patterns
+- Test with Brazilian coordinate examples: São Paulo (-23.550520, -46.633309)
+- IBGE integration available through `renderUrlUFNome()` function
+
+## Limitations and Known Issues
+
+### Browser Dependencies
+- Full functionality requires modern browser with geolocation API support
+- Some features (speech synthesis, DOM manipulation) only work in web environment
+- Location permissions must be granted by user for geolocation features
+
+### Missing Implementations
+- `findNearbyRestaurants()` function is referenced but not implemented
+- City statistics functionality is stubbed but not fully implemented
+- Error handling for API failures could be enhanced
+
+### Development Environment
+- No formal linting configuration - use `node -c` for syntax validation
+- No build process - files are used directly
+- Manual testing required for DOM/browser features
+
+## CI/CD Integration
+
+### GitHub Actions Workflow
+The repository includes `.github/workflows/copilot-coding-agent.yml` with automated validation:
+- **JavaScript Syntax Validation**: `node -c` on all JS files
+- **Basic Functionality Test**: `node guia.js` execution 
+- **Web Server Test**: Python HTTP server startup and connectivity
+- **Security Checks**: Basic credential and eval() usage scanning
+- **Code Style Checks**: Basic formatting validation
+
+### Pre-commit Validation Commands
+Always run before committing changes:
+```bash
+# Essential validation (5 seconds total)
+npm run test:all
+
+# Additional checks
+curl -s http://localhost:9000/test.html | grep "Guia.js"  # If web server running
+```
+
+## Quick Reference Commands
+
+### Daily Development
+```bash
+# Install dependencies (20 seconds, run once)
+npm install
+
+# Syntax check (always run first)
+node -c guia.js && node -c guia_ibge.js
+
+# Basic functionality test  
+node guia.js
+
+# Full test suite
+npm run test:all
+
+# Start web server for full testing
+python3 -m http.server 9000
+
+# Test web functionality
+curl -s http://localhost:9000/test.html | head -5
+```
+
+### Performance Expectations
+- **Syntax validation**: <1 second each file
+- **Basic Node.js test**: <1 second  
+- **Jest test suite**: ~2 seconds for 55 tests
+- **Jest with coverage**: ~2.2 seconds
+- **Web server startup**: ~3 seconds, then runs indefinitely
+- **npm install**: ~20 seconds (299 packages)
+
+### Validation Checklist
+- [ ] Node.js syntax validation passes (`node -c guia.js`)
+- [ ] Basic Node.js execution shows version output
+- [ ] All 55 automated tests pass (`npm test`)
+- [ ] Web server starts successfully (`python3 -m http.server 9000`)
+- [ ] Test page loads without JavaScript errors
+- [ ] Geolocation button triggers proper API calls
+- [ ] Address formatting works for Brazilian coordinates
+- [ ] Console logging appears in both Node.js and browser
+
+## Troubleshooting
+
+### Common Issues
+1. **Tests fail with DOM dependencies**: Ensure `global.document = undefined` in test files
+2. **Web server port conflicts**: Change port with `python3 -m http.server 8000`
+3. **API connectivity issues**: External APIs may be blocked; use local testing scenarios
+4. **Geolocation not working**: Requires HTTPS or localhost, user permission required
+5. **Module not found errors**: Ensure Node.js modules are exported properly
+
+### Environment Requirements
+- **Node.js**: v18+ (tested with v20.19.5)
+- **Python**: 3.11+ for web server
+- **npm**: 10+ for package management
+- **Browser**: Modern browser with geolocation API support
+- **Network**: Internet access for OpenStreetMap and IBGE APIs
+
+### Debug Commands
+```bash
+# Check Node.js and npm versions
+node --version && npm --version
+
+# Clear npm cache if issues
+npm cache clean --force
+
+# Debug Jest tests
+npx jest --verbose --detectOpenHandles
+
+# Check web server logs
+python3 -m http.server 9000 --bind 127.0.0.1
+
+# Test API connectivity (if network allows)
+curl -I "https://nominatim.openstreetmap.org/reverse"
+```
+
+### Known Limitations
+- External API calls may fail in restricted network environments
+- Geolocation requires HTTPS in production (localhost works for development)  
+- Speech synthesis availability varies by browser
+- Some tests generate verbose console output (this is expected behavior)
 
 ### Required User Scenarios
 - **Geolocation Flow**: User grants location permission → coordinates display → address lookup occurs

@@ -1713,35 +1713,19 @@ class AddressDataExtractor {
 	static hasLogradouroChanged() {
 		const currentAddress = AddressDataExtractor.getCurrentAddress();
 		const previousAddress = AddressDataExtractor.getPreviousAddress();
-		log("(AddressDataExtractor) Checking for logradouro changes...");
-		log("Current address:", currentAddress ? currentAddress.toString() : "N/A");
-		log(
-			"Previous address:",
-			previousAddress ? previousAddress.toString() : "N/A",
-		);
-
-		log("(AddressDataExtractor) Checking for logradouro changes...");
-		log("Current address:", currentAddress ? currentAddress.toString() : "N/A");
-		log(
-			"Previous address:",
-			previousAddress ? previousAddress.toString() : "N/A",
-		);
-
+		log('(AddressDataExtractor) Checking for logradouro changes...');
+		log('Current address:', currentAddress ? currentAddress.toString() : 'N/A');
+		log('Previous address:', previousAddress ? previousAddress.toString() : 'N/A');
+		
 		// If we don't have both addresses, no change can be detected
 		if (!currentAddress || !previousAddress) {
-			log(
-				"(AddressDataExtractor) Not enough address data to determine changes.",
-			);
-			log(
-				"(AddressDataExtractor) Not enough address data to determine changes.",
-			);
+			log('(AddressDataExtractor) Not enough address data to determine changes.');
 			return false;
 		}
 
 
 		// Compare logradouro values, handling null/undefined cases
-		log("(AddressDataExtractor) Comparing logradouro values...");
-		log("(AddressDataExtractor) Comparing logradouro values...");
+		log('(AddressDataExtractor) Comparing logradouro values...');
 		const currentLogradouro = currentAddress.logradouro;
 		const previousLogradouro = previousAddress.logradouro;
 
@@ -2444,23 +2428,14 @@ class HtmlSpeechSynthesisDisplayer {
 	buildTextToSpeechLogradouro(currentAddress) {
 		log("Building text for logradouro change...");
 		let previousAddress = AddressDataExtractor.getPreviousAddress();
-		log(
-			"previousAddress:",
-			previousAddress ? previousAddress.toString() : "N/A",
-		);
-		log(
-			"previousAddress:",
-			previousAddress ? previousAddress.toString() : "N/A",
-		);
+		log("previousAddress:", previousAddress ? previousAddress.toString() : "N/A");
 		log("currentAddress:", currentAddress ? currentAddress.toString() : "N/A");
 		let logradouroChanged = AddressDataExtractor.hasLogradouroChanged();
 		log("logradouroChanged:", logradouroChanged);
-
-
+		
 		let addressExtractor = new AddressDataExtractor(currentAddress);
 		let textToBeSpoken = this.getLogradouro(addressExtractor);
-		return textToBeSpoken;
-		return textToBeSpoken;
+		return textToBeSpoken;	
 	}
 
 	update(currentAddress, enderecoPadronizadoOrEvent, loading, error) {

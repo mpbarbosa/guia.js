@@ -1213,6 +1213,10 @@ class BrazilianStandardAddress {
 		this.codigoPais = null;
 	}
 
+	getLogradouro() {
+		return this.logradouro;
+	}
+
 	logradouroCompleto() {
 		return this.house_number
 			? `${this.logradouro}, ${this.house_number}`
@@ -2193,9 +2197,20 @@ class HtmlSpeechSynthesisDisplayer {
 		return parts.join(", ");
 	}
 
+	getLogradouro(addressExtractor) {
+		var enderecoPadronizado = addressExtractor.enderecoPadronizado;
+		return enderecoPadronizado.getLogradouro();
+	}
+
 	buildTextToSpeech(currentAddress) {
 		var addressExtractor = new AddressDataExtractor(currentAddress);
 		var textToBeSpoken = `Você está em ${this.getFullAddress(addressExtractor)}.`;
+		return textToBeSpoken;
+	}
+
+	buildTextToSpeechLogradouro(currentAddress) {
+		var addressExtractor = new AddressDataExtractor(currentAddress);
+		var textToBeSpoken = `Você está em ${this.getLogradouro(addressExtractor)}.`;
 		return textToBeSpoken;
 	}
 
@@ -2212,7 +2227,7 @@ class HtmlSpeechSynthesisDisplayer {
 			if (currentAddress) {
 				this.updateVoices();
 				var textToBeSpoken = "";
-				textToBeSpoken += this.buildTextToSpeech(currentAddress);
+				textToBeSpoken += this.buildTextToSpeechLogradouro(currentAddress);
 				log("textToBeSpoken for logradouro change:", textToBeSpoken);
 				this.textInput.value = textToBeSpoken;
 				this.speak(textToBeSpoken);

@@ -3,7 +3,7 @@
  */
 
 // Import the guia_ibge.js functions
-const { renderUrlUFNome } = require('../js/guia_ibge.js');
+const { renderUrlUFNome } = require('../src/guia_ibge.js');
 
 describe('guia_ibge.js', () => {
   

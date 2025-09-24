@@ -11,7 +11,7 @@ const {
   calculateDistance,
   delay,
   getAddressType
-} = require('../guia.js');
+} = require('../js/guia.js');
 
 describe('Guia.js Core Utilities', () => {
   

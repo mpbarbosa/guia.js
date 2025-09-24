@@ -6,7 +6,7 @@
 global.document = undefined;
 
 // Import the guia.js functions
-const { SingletonStatusManager } = require('../guia.js');
+const { SingletonStatusManager } = require('../js/guia.js');
 
 describe('SingletonStatusManager Class', () => {
   

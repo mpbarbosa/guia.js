@@ -32,6 +32,7 @@ rules:
   - Manter comentários claros e concisos no código.
   - Atualizar o README.md quando houver mudanças relevantes na estrutura ou funcionalidades.
   - Validar alterações com ferramentas de lint e testes, se disponíveis.
+- Sempre que possível, seguir o padrão HTML5 Boilerplate. 
 
 # Restrições e áreas sensíveis.
 restrictions:
@@ -46,5 +47,5 @@ communication:
 # Exemplos de boas práticas para este repositório.
 examples:
   - Criar arquivos .js para manter a coesão do código.
-  - Prriozar a modularização e independência dos arquivos/módulos.
+  - Priozar a modularização e independência dos arquivos/módulos.
 

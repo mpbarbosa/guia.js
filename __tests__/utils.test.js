@@ -11,7 +11,7 @@ const {
   calculateDistance,
   delay,
   getAddressType
-} = require('../js/guia.js');
+} = require('../src/guia.js');
 
 describe('Guia.js Core Utilities', () => {
   
@@ -19,13 +19,13 @@ describe('Guia.js Core Utilities', () => {
     test('should have correct version structure', () => {
       expect(guiaVersion).toBeDefined();
       expect(guiaVersion.major).toBe(0);
-      expect(guiaVersion.minor).toBe(5);
+      expect(guiaVersion.minor).toBe(6);
       expect(guiaVersion.patch).toBe(0);
       expect(guiaVersion.prerelease).toBe('alpha');
     });
 
     test('toString should return correct format', () => {
-      expect(guiaVersion.toString()).toBe('0.5.0-alpha');
+      expect(guiaVersion.toString()).toBe('0.6.0-alpha');
     });
   });
 

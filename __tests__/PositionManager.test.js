@@ -6,7 +6,7 @@
 global.document = undefined;
 
 // Import the guia.js functions
-const { PositionManager } = require('../js/guia.js');
+const { PositionManager } = require('../src/guia.js');
 
 describe('PositionManager Class', () => {
   

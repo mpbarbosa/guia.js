@@ -89,7 +89,8 @@
             
             try {
                 // Inicializar o gerenciador principal
-                const manager = new WebGeocodingManager(document, 'result-area');
+                const resultArea = document.getElementById('result-area');
+                const manager = new WebGeocodingManager(document, resultArea);
                 
                 // Configurar botões
                 const locationBtn = document.getElementById('location-btn');
@@ -99,7 +100,7 @@
                 if (locationBtn) {
                     locationBtn.addEventListener('click', function() {
                         console.log('Botão de localização clicado');
-                        manager.getSingleLocationUpdate();
+                        manager.startTracking();
                     });
                 }
                 

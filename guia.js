@@ -620,9 +620,11 @@ class GeolocationService {
 
 	async getSingleLocationUpdate() {
 		console.log("(GeolocationService) Getting single location update...");
-		locationResult.innerHTML =
-			'<p class="loading">Buscando a sua localização...</p>';
-		console.log("(GeolocationService) locationResult:", locationResult);
+		if (this.locationResult) {
+			this.locationResult.innerHTML =
+				'<p class="loading">Buscando a sua localização...</p>';
+			console.log("(GeolocationService) locationResult:", this.locationResult);
+		}
 
 		SingletonStatusManager.getInstance().setGettingLocation(true);
 
@@ -637,9 +639,11 @@ class GeolocationService {
 
 	async getWatchLocationUpdate() {
 		console.log("(GeolocationService) getWatchLocationUpdate");
-		locationResult.innerHTML =
-			'<p class="loading">Buscando a sua localização...</p>';
-		console.log("(GeolocationService) locationResult:", locationResult);
+		if (this.locationResult) {
+			this.locationResult.innerHTML =
+				'<p class="loading">Buscando a sua localização...</p>';
+			console.log("(GeolocationService) locationResult:", this.locationResult);
+		}
 
 		SingletonStatusManager.getInstance().setGettingLocation(true);
 
@@ -670,14 +674,15 @@ class WebGeocodingManager {
 		this.functionObservers = [];
 		this.currentPosition = null;
 		this.currentCoords = null;
+		this.logradouroChangeTimer = null;
 		
 		this.initElements();
 
 		this.geolocationService = new GeolocationService(this.locationResult);
 		this.reverseGeocoder = new ReverseGeocoder();
 
-		this.positionDisplayer = new HTMLPositionDisplayer(locationResult);
-		this.addressDisplayer = new HTMLAddressDisplayer(locationResult);
+		this.positionDisplayer = new HTMLPositionDisplayer(this.locationResult);
+		this.addressDisplayer = new HTMLAddressDisplayer(this.locationResult);
 
 
 		CurrentPosition.getInstance().subscribe(this.positionDisplayer);
@@ -911,6 +916,87 @@ class WebGeocodingManager {
 			value.subscribe(this.reverseGeocoder);
 			//value.subscribe(this.htmlSpeechSynthesisDisplayer);
 		});
+
+		// Start logradouro change detection (30s interval)
+		this.startLogradouroChangeDetection();
+	}
+
+	/**
+	 * Starts the logradouro change detection timer (checks every 30 seconds)
+	 */
+	startLogradouroChangeDetection() {
+		log("(WebGeocodingManager) Starting logradouro change detection (30s interval)...");
+		
+		if (this.logradouroChangeTimer) {
+			clearInterval(this.logradouroChangeTimer);
+		}
+		
+		this.logradouroChangeTimer = setInterval(() => {
+			this.checkLogradouroChange();
+		}, 30000); // Check every 30 seconds
+	}
+
+	/**
+	 * Stops the logradouro change detection timer
+	 */
+	stopLogradouroChangeDetection() {
+		if (this.logradouroChangeTimer) {
+			log("(WebGeocodingManager) Stopping logradouro change detection...");
+			clearInterval(this.logradouroChangeTimer);
+			this.logradouroChangeTimer = null;
+		}
+	}
+
+	/**
+	 * Checks if the logradouro has changed and notifies observers
+	 */
+	checkLogradouroChange() {
+		log("(WebGeocodingManager) Checking for logradouro changes...");
+		
+		try {
+			if (AddressDataExtractor.hasLogradouroChanged()) {
+				const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
+				log("(WebGeocodingManager) Logradouro change detected!");
+				log("(WebGeocodingManager) Change details:", JSON.stringify(changeDetails));
+				
+				// Notify observers about the logradouro change
+				this.notifyLogradouroChangeObservers(changeDetails);
+			} else {
+				log("(WebGeocodingManager) No logradouro change detected.");
+			}
+		} catch (error) {
+			console.error("(WebGeocodingManager) Error checking logradouro change:", error);
+		}
+	}
+
+	/**
+	 * Notifies observers specifically about logradouro changes
+	 * @param {Object} changeDetails - Details about the logradouro change
+	 */
+	notifyLogradouroChangeObservers(changeDetails) {
+		log("(WebGeocodingManager) Notifying observers about logradouro change...");
+		
+		// Notify regular observers
+		for (const observer of this.observers) {
+			if (typeof observer.update === 'function') {
+				observer.update(this.currentPosition, "LogradouroChanged", null, null);
+			}
+		}
+		
+		// Notify function observers with change details
+		for (const fn of this.functionObservers) {
+			try {
+				log("(WebGeocodingManager) Notifying function observer about logradouro change:", fn);
+				fn(
+					this.currentPosition,
+					this.reverseGeocoder.currentAddress,
+					this.reverseGeocoder.enderecoPadronizado,
+					changeDetails
+				);
+			} catch (error) {
+				console.error("(WebGeocodingManager) Error notifying function observer:", error);
+			}
+		}
 	}
 
 	toString() {
@@ -1746,7 +1832,13 @@ function displayError(error) {
 			errorMessage = "An unknown error occurred.";
 			break;
 	}
-	locationResult.innerHTML = `<p class="error">Error: ${errorMessage}</p>`;
+	// Try to find a result area to display the error
+	const resultArea = document.getElementById("result-area");
+	if (resultArea) {
+		resultArea.innerHTML = `<p class="error">Error: ${errorMessage}</p>`;
+	} else {
+		console.error("Error:", errorMessage);
+	}
 	/*if (findRestaurantsBtn) {
 		findRestaurantsBtn.disabled = true;
 	}

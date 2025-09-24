@@ -59,23 +59,23 @@ log("Guia.js version:", guiaVersion.toString());
  * ============================
  */
 
-class CurrentPosition {
+class PositionManager {
 	static instance = null;
-	static strCurrPosUpdate = "CurrentPosition updated";
-	static strCurrPosNotUpdate = "CurrentPosition not updated";
+	static strCurrPosUpdate = "PositionManager updated";
+	static strCurrPosNotUpdate = "PositionManager not updated";
 
 	static getInstance(position) {
-		console.log("CurrentPosition.getInstance");
-		if (!CurrentPosition.instance) {
-			CurrentPosition.instance = new CurrentPosition(position);
+		console.log("PositionManager.getInstance");
+		if (!PositionManager.instance) {
+			PositionManager.instance = new PositionManager(position);
 		} else {
-			CurrentPosition.instance.update(position);
+			PositionManager.instance.update(position);
 		}
-		return CurrentPosition.instance;
+		return PositionManager.instance;
 	}
 
 	constructor(position) {
-		console.log("CurrentPosition constructor");
+		console.log("PositionManager constructor");
 		this.observers = [];
 		this.accuracyQuality = null;
 		this.tsPosicaoAtual = null;
@@ -85,11 +85,11 @@ class CurrentPosition {
 	}
 
 	subscribe(observer) {
-		console.log(`(CurrentPosition) observer ${observer} subscribing ${this}`);
+		console.log(`(PositionManager) observer ${observer} subscribing ${this}`);
 		if (observer) {
 			this.observers.push(observer);
 		}
-		console.log(`(CurrentPosition) observers ${this.observers}`);
+		console.log(`(PositionManager) observers ${this.observers}`);
 	}
 
 	unsubscribe(observer) {
@@ -98,10 +98,10 @@ class CurrentPosition {
 
 	notifyObservers(posEvent) {
 		log(
-			"(CurrentPosition) CurrentPosition.notifyObservers: " + this.observers,
+			"(PositionManager) PositionManager.notifyObservers: " + this.observers,
 		);
 		this.observers.forEach((observer) => {
-			console.log("(CurrentPosition) Notifying observer:", observer);
+			console.log("(PositionManager) Notifying observer:", observer);
 			observer.update(this, posEvent);
 		});
 	}
@@ -126,27 +126,27 @@ class CurrentPosition {
 
 	set accuracy(value) {
 		this._accuracy = value;
-		this.accuracyQuality = CurrentPosition.getAccuracyQuality(value);
+		this.accuracyQuality = PositionManager.getAccuracyQuality(value);
 	}
 
 	update(position) {
 		log("-----------------------------------------");
-		log("(CurrentPosition) CurrentPosition.update");
-		log("(CurrentPosition) this.tsPosPosicaoAtual:", this.tsPosicaoAtual);
-		log("(CurrentPosition) position:", position);
+		log("(PositionManager) PositionManager.update");
+		log("(PositionManager) this.tsPosPosicaoAtual:", this.tsPosicaoAtual);
+		log("(PositionManager) position:", position);
 
 		var bUpdateCurrPos = true;
 		var error = null;
 
 		// Verifica se a posição é válida
 		if (!position || !position.timestamp) {
-			warn("(CurrentPosition) Invalid position data:", position);
+			warn("(PositionManager) Invalid position data:", position);
 			return;
 		}
-		log("(CurrentPosition) position.timestamp:", position.timestamp);
+		log("(PositionManager) position.timestamp:", position.timestamp);
 		const tempoDecorrido = position.timestamp - (this.tsPosicaoAtual || 0);
 		log(
-			"(CurrentPosition) position.timestamp - this.tsPosicaoAtual:",
+			"(PositionManager) position.timestamp - this.tsPosicaoAtual:",
 			tempoDecorrido,
 		);
 		if (tempoDecorrido < 60000) {
@@ -155,18 +155,18 @@ class CurrentPosition {
 				name: "ElapseTimeError",
 				message: "Less than 1 minute since last update",
 			};
-			warn("(CurrentPosition) Less than 1 minute since last update.");
+			warn("(PositionManager) Less than 1 minute since last update.");
 		}
 
 		// Verifica se a precisão é boa o suficiente
 		if (
-			CurrentPosition.getAccuracyQuality(position.coords.accuracy) in
+			PositionManager.getAccuracyQuality(position.coords.accuracy) in
 			["medium", "bad", "very bad"]
 		) {
 			bUpdateCurrPos = false;
 			error = { name: "AccuracyError", message: "Accuracy is not good enough" };
 			warn(
-				"(CurrentPosition) Accuracy not good enough:",
+				"(PositionManager) Accuracy not good enough:",
 				position.coords.accuracy,
 			);
 		}
@@ -186,13 +186,13 @@ class CurrentPosition {
 				position.coords.longitude,
 			);
 			console.log(
-				"(CurrentPosition) Distance from last position:",
+				"(PositionManager) Distance from last position:",
 				distance,
 				"meters",
 			);
 			if (distance < 20) {
 				console.log(
-					"(CurrentPosition) Position change is less than 20 meters. Not updating.",
+					"(PositionManager) Position change is less than 20 meters. Not updating.",
 				);
 				return;
 			}
@@ -200,19 +200,19 @@ class CurrentPosition {
 		this.lastPosition = position;
 
 		if (!bUpdateCurrPos) {
-			this.notifyObservers(CurrentPosition.strCurrPosNotUpdate, null, error);
-			console.log("(CurrentPosition) CurrentPosition not updated:", this);
+			this.notifyObservers(PositionManager.strCurrPosNotUpdate, null, error);
+			console.log("(PositionManager) PositionManager not updated:", this);
 			return;
 		}
 
 		// Atualiza a posição apenas se tiver passado mais de 1 minuto
-		console.log("(CurrentPosition) Updating CurrentPosition...");
+		console.log("(PositionManager) Updating PositionManager...");
 		this.position = position;
 		this.coords = position.coords;
 		this.latitude = position.coords.latitude;
 		this.longitude = position.coords.longitude;
 		this.accuracy = position.coords.accuracy;
-		this.accuracyQuality = CurrentPosition.getAccuracyQuality(
+		this.accuracyQuality = PositionManager.getAccuracyQuality(
 			position.coords.accuracy,
 		);
 		this.altitude = position.coords.altitude;
@@ -221,9 +221,9 @@ class CurrentPosition {
 		this.speed = position.coords.speed;
 		this.timestamp = position.timestamp;
 		this.tsPosicaoAtual = position.timestamp;
-		console.log("(CurrentPosition) CurrentPosition updated:", this);
-		this.notifyObservers(CurrentPosition.strCurrPosUpdate, null, error);
-		console.log("(CurrentPosition) Notified observers.");
+		console.log("(PositionManager) PositionManager updated:", this);
+		this.notifyObservers(PositionManager.strCurrPosUpdate, null, error);
+		console.log("(PositionManager) Notified observers.");
 	}
 
 	toString() {
@@ -439,7 +439,7 @@ class ReverseGeocoder extends APIFetcher {
 		console.log("(ReverseGeocoder) Position event:", posEvent);
 
 		// Proceed with reverse geocoding if position is updated
-		if (posEvent == CurrentPosition.strCurrPosUpdate) {
+		if (posEvent == PositionManager.strCurrPosUpdate) {
 			SingletonStatusManager.getInstance().setGettingLocation(true);
 
 			console.log("(ReverseGeocoder) update", position);
@@ -559,7 +559,7 @@ class GeolocationService {
 					SingletonStatusManager.getInstance().setGettingLocation(true);
 
 					console.log("(GeolocationService) Position obtained:", position);
-					resolve(CurrentPosition.getInstance(position));
+					resolve(PositionManager.getInstance(position));
 				},
 				(error) => {
 					reject(error);
@@ -603,7 +603,7 @@ class GeolocationService {
 					SingletonStatusManager.getInstance().setGettingLocation(true);
 
 					console.log("(GeolocationService) Position obtained:", position);
-					var currentPos = CurrentPosition.getInstance(position);
+					var currentPos = PositionManager.getInstance(position);
 					resolve(currentPos);
 				},
 				(error) => {
@@ -680,7 +680,7 @@ class WebGeocodingManager {
 		this.addressDisplayer = new HTMLAddressDisplayer(locationResult);
 
 
-		CurrentPosition.getInstance().subscribe(this.positionDisplayer);
+		PositionManager.getInstance().subscribe(this.positionDisplayer);
 		this.reverseGeocoder.subscribe(this.addressDisplayer);
 
 		console.log("(WebGeocodingManager) WebGeocodingManager initialized.");
@@ -691,7 +691,7 @@ class WebGeocodingManager {
 		if (chronometer) {
 			console.log("(WebGeocodingManager) Chronometer element found.");
 			this.chronometer = new Chronometer(chronometer);
-			CurrentPosition.getInstance().subscribe(this.chronometer);
+			PositionManager.getInstance().subscribe(this.chronometer);
 		} else {
 			console.warn("Chronometer element not found.");
 		}
@@ -732,7 +732,7 @@ class WebGeocodingManager {
 		if (this.tsPosCapture) {
 			this.tsPosCapture.textContent = new Date().toLocaleString();
 			this.posCaptureHtmlText = new HtmlText(this.document, this.tsPosCapture);
-			CurrentPosition.getInstance().subscribe(this.posCaptureHtmlText);
+			PositionManager.getInstance().subscribe(this.posCaptureHtmlText);
 			Object.freeze(this.posCaptureHtmlText); // Prevent further modification
 		} else {
 			console.warn("tsPosCapture element not found.");
@@ -968,7 +968,7 @@ class Chronometer {
 		console.log("(Chronometer) update", currentPosition);
 		// Start the chronometer when a new position is received
 		// Stop it if no position is available
-		if (posEvent == CurrentPosition.strCurrPosUpdate) {
+		if (posEvent == PositionManager.strCurrPosUpdate) {
 			console.log("(Chronometer) Position event:", posEvent);
 			if (this.timerInterval && currentPosition) {
 				console.log("(Chronometer) Reseting chronometer...");
@@ -1088,7 +1088,7 @@ class HTMLPositionDisplayer {
 		// Display coordinates
 		// Provide link to Google Maps
 		// Provide link to Google Street View
-		if (posEvent == CurrentPosition.strCurrPosUpdate) {
+		if (posEvent == PositionManager.strCurrPosUpdate) {
 			const currentCoords = currentPosition ? currentPosition.coords : null;
 			// Display loading or error messages if applicable
 			// Otherwise, display the position
@@ -2179,7 +2179,7 @@ calculateDistance,
 delay,
 log,
 warn,
-CurrentPosition,
+PositionManager,
 SingletonStatusManager,
 APIFetcher,
 ReverseGeocoder,

@@ -1,15 +1,6 @@
 // Semantic Versioning 2.0.0 - see https://semver.org/
 // Version object for unstable development status
 const guiaVersion = {
-<<<<<<< HEAD
-  major: 0,
-  minor: 7,
-  patch: 1,
-  prerelease: 'alpha', // Indicates unstable development
-  toString: function() {
-    return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
-  }
-=======
 	major: 0,
 	minor: 7,
 	patch: 1,
@@ -17,9 +8,16 @@ const guiaVersion = {
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
 	},
->>>>>>> dev
 };
 
+const guiaName = "Guia Turístico em Movimento";
+const guiaAuthor = "Marcelo Pereira Barbosa";
+const setupParams = {
+	logradouroChangeTimer: 1000, // milliseconds
+	openstreetmapBaseUrl: 'https://nominatim.openstreetmap.org/reverse?format=json'
+};
+
+const getOpenStreetMapUrl = (latitude, longitude) => `${setupParams.openstreetmapBaseUrl}&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
 
 // Haversine distance calculation between two coordinates
 //TODO: #68 Mover para uma biblioteca utilitarian
@@ -1428,8 +1426,9 @@ class ReferencePlaceExtractor {
 	}
 
 	static isReferencePlace(data) {
-		let validRefPlaceClasses = ['shop','amenity'];
-		let refPlaceClass = (new ReferencePlaceExtractor(data)).placeClass;
+		let validRefPlaceClasses = ["shop"];
+		let refPlaceClass = new ReferencePlaceExtractor(data).placeClass;
+		log(`(ReferencePlaceExtractor) class: ${refPlaceClass}`);
 		return validRefPlaceClasses.includes(refPlaceClass);
 	}
 }

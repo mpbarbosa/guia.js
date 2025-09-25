@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Timeout da Fila - Guia.js</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        button { background-color: #007bff; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #log { width: 100%; height: 200px; margin: 10px 0; padding: 10px; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>Teste de Timeout (5 segundos)</h1>
+    <button onclick="testTimeout()">Adicionar mensagem que vai expirar</button>
+    <button onclick="checkQueue()">Verificar fila</button>
+    <textarea id="log" readonly></textarea>
+
+    <div style="display: none;">
+        <textarea id="speech-text-input"></textarea>
+        <select id="voice-select"></select>
+        <select id="language-select"></select>
+        <input id="rate-input" type="range" min="0.1" max="3" step="0.1" value="1">
+        <input id="pitch-input" type="range" min="0" max="2" step="0.1" value="1">
+        <span id="rate-value">1</span>
+        <span id="pitch-value">1</span>
+        <button id="speak-btn">Falar</button>
+        <button id="pause-btn">Pausar</button>
+        <button id="resume-btn">Continuar</button>
+        <button id="stop-btn">Parar</button>
+    </div>
+
+    <script src="src/guia.js"></script>
+    <script>
+        const speechElements = {
+            textInputId: 'speech-text-input', speakBtnId: 'speak-btn', pauseBtnId: 'pause-btn',
+            resumeBtnId: 'resume-btn', stopBtnId: 'stop-btn', voiceSelectId: 'voice-select',
+            languageSelectId: 'language-select', rateInputId: 'rate-input', pitchInputId: 'pitch-input',
+            rateValueId: 'rate-value', pitchValueId: 'pitch-value'
+        };
+
+        let speechManager;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const speechDisplayer = new HtmlSpeechSynthesisDisplayer(document, speechElements);
+            speechManager = speechDisplayer.speechManager;
+            log('Sistema inicializado');
+        });
+
+        function log(message) {
+            const logArea = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logArea.value += `[${timestamp}] ${message}\n`;
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        function testTimeout() {
+            // Modify timeout for quick testing
+            speechManager.speechQueue.timeoutDuration = 3000; // 3 seconds
+            
+            // Add multiple messages but don't let them process (block with a long message first)
+            speechManager.speechQueue.enqueue("Esta é uma mensagem muito longa que vai demorar para ser falada e vai bloquear a fila por um tempo para testarmos o timeout", 0);
+            speechManager.speechQueue.enqueue("Esta mensagem vai expirar", 0);
+            speechManager.speechQueue.enqueue("Esta também vai expirar", 0);
+            
+            log(`Adicionadas 3 mensagens à fila. Tamanho: ${speechManager.speechQueue.size()}`);
+            log('Aguarde 4 segundos e clique em "Verificar fila" para ver as mensagens expirarem...');
+        }
+
+        function checkQueue() {
+            const size = speechManager.speechQueue.size();
+            log(`Tamanho atual da fila: ${size} (mensagens expiradas foram removidas automaticamente)`);
+        }
+    </script>
+</body>
+</html>

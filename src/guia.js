@@ -1792,6 +1792,74 @@ function displayError(error) {
  * ============================
  */
 
+class SpeechQueue {
+	constructor() {
+		this.queue = [];
+		this.isProcessing = false;
+		this.timeoutDuration = 5000; // 5 seconds timeout
+	}
+
+	enqueue(text, priority = 0) {
+		const timestamp = Date.now();
+		const item = { text, priority, timestamp };
+		
+		// Remove expired items (older than 5 seconds)
+		this.queue = this.queue.filter(item => 
+			(Date.now() - item.timestamp) < this.timeoutDuration
+		);
+		
+		// Insert with priority (higher priority first, then by timestamp)
+		let inserted = false;
+		for (let i = 0; i < this.queue.length; i++) {
+			if (item.priority > this.queue[i].priority) {
+				this.queue.splice(i, 0, item);
+				inserted = true;
+				break;
+			}
+		}
+		if (!inserted) {
+			this.queue.push(item);
+		}
+		
+		log(`SpeechQueue: Enqueued "${text}" with priority ${priority}. Queue length: ${this.queue.length}`);
+	}
+
+	dequeue() {
+		// Remove expired items first
+		this.queue = this.queue.filter(item => 
+			(Date.now() - item.timestamp) < this.timeoutDuration
+		);
+		
+		if (this.queue.length > 0) {
+			const item = this.queue.shift();
+			log(`SpeechQueue: Dequeued "${item.text}". Queue length: ${this.queue.length}`);
+			return item;
+		}
+		return null;
+	}
+
+	isEmpty() {
+		// Clean expired items
+		this.queue = this.queue.filter(item => 
+			(Date.now() - item.timestamp) < this.timeoutDuration
+		);
+		return this.queue.length === 0;
+	}
+
+	clear() {
+		this.queue = [];
+		log("SpeechQueue: Cleared queue");
+	}
+
+	size() {
+		// Clean expired items
+		this.queue = this.queue.filter(item => 
+			(Date.now() - item.timestamp) < this.timeoutDuration
+		);
+		return this.queue.length;
+	}
+}
+
 class SpeechSynthesisManager {
 	constructor() {
 		log("Initializing speech manager...");
@@ -1802,6 +1870,8 @@ class SpeechSynthesisManager {
 		this.rate = 1;
 		this.pitch = 1;
 		this.voice = null;
+		this.speechQueue = new SpeechQueue();
+		this.isCurrentlySpeaking = false;
 		this.loadVoices();
 	}
 
@@ -1867,23 +1937,50 @@ class SpeechSynthesisManager {
 		log("Setting selected voice index to:", index);
 	}
 
-	speak(text) {
-		if (this.synth.speaking) {
-			warn("Speech synthesis is already speaking.");
+	speak(text, priority = 0) {
+		// Add to queue with priority
+		this.speechQueue.enqueue(text, priority);
+		
+		// Process queue if not currently speaking
+		if (!this.isCurrentlySpeaking) {
+			this.processQueue();
+		}
+	}
+
+	processQueue() {
+		if (this.isCurrentlySpeaking || this.speechQueue.isEmpty()) {
 			return;
 		}
-		const utterance = new SpeechSynthesisUtterance(text);
+
+		const item = this.speechQueue.dequeue();
+		if (!item) {
+			return;
+		}
+
+		this.isCurrentlySpeaking = true;
+		const utterance = new SpeechSynthesisUtterance(item.text);
 		utterance.voice = this.voice;
 		utterance.rate = this.rate;
 		utterance.pitch = this.pitch;
+		
 		log("Speaking with voice:", this.voice);
+		log(`Speaking with priority ${item.priority}: "${item.text}"`);
+		
 		utterance.onend = () => {
 			log("Spoke with voice:", this.voice);
 			log("Speech synthesis finished.");
+			this.isCurrentlySpeaking = false;
+			// Process next item in queue
+			setTimeout(() => this.processQueue(), 100);
 		};
+		
 		utterance.onerror = (event) => {
 			log("Speech synthesis error:", event.error);
+			this.isCurrentlySpeaking = false;
+			// Process next item in queue even on error
+			setTimeout(() => this.processQueue(), 100);
 		};
+		
 		log("Starting speech synthesis...");
 		this.synth.speak(utterance);
 		log("Speech synthesis started.");
@@ -1905,6 +2002,8 @@ class SpeechSynthesisManager {
 		if (this.synth.speaking || this.synth.paused) {
 			this.synth.cancel();
 		}
+		this.speechQueue.clear();
+		this.isCurrentlySpeaking = false;
 	}
 
 	toString() {
@@ -2014,20 +2113,20 @@ class HtmlSpeechSynthesisDisplayer {
 		pitchValue.textContent = pitchInput.value;
 	}
 
-	speak() {
-		var text = "";
-
-		if (this.textInput && this.textInput.value) {
+	speak(textToSpeak = null, priority = 0) {
+		var text = textToSpeak;
+		
+		// If no text provided, get from text input
+		if (!text && this.textInput && this.textInput.value) {
 			text = this.textInput.value.trim();
 		}
 
-		if (text === "") {
+		if (!text || text === "") {
 			return;
 		}
 
-		// Stop any current speech
-		this.stop();
-		this.speechManager.speak(text);
+		// For new functionality, add to queue instead of stopping current speech
+		this.speechManager.speak(text, priority);
 	}
 	// Speak function
 	speak2(textToBeSpoken, textAlert) {
@@ -2162,7 +2261,8 @@ class HtmlSpeechSynthesisDisplayer {
 				let textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
 				log("textToBeSpoken for logradouro change:", textToBeSpoken);
 				this.textInput.value = textToBeSpoken;
-				this.speak(textToBeSpoken);
+				// Higher priority for logradouro changes (priority = 1)
+				this.speak(textToBeSpoken, 1);
 			}
 		} else if (currentAddress) {
 			// Normal update from reverseGeocoder
@@ -2171,7 +2271,8 @@ class HtmlSpeechSynthesisDisplayer {
 			textToBeSpoken += this.buildTextToSpeech(currentAddress);
 			log("textToBeSpoken:", textToBeSpoken);
 			this.textInput.value = textToBeSpoken;
-			this.speak(textToBeSpoken);
+			// Normal priority for full address updates (priority = 0)
+			this.speak(textToBeSpoken, 0);
 		}
 	}
 
@@ -2243,6 +2344,7 @@ if (typeof module !== "undefined" && module.exports) {
 		HTMLPositionDisplayer,
 		HTMLAddressDisplayer,
 		AddressDataExtractor,
+		SpeechQueue,
 		SpeechSynthesisManager,
 		HtmlSpeechSynthesisDisplayer,
 		HtmlText,

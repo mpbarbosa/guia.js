@@ -1,6 +1,7 @@
 // Semantic Versioning 2.0.0 - see https://semver.org/
 // Version object for unstable development status
 const guiaVersion = {
+<<<<<<< HEAD
   major: 0,
   minor: 7,
   patch: 1,
@@ -8,6 +9,15 @@ const guiaVersion = {
   toString: function() {
     return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
   }
+=======
+	major: 0,
+	minor: 7,
+	patch: 1,
+	prerelease: "alpha", // Indicates unstable development
+	toString: function () {
+		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
+	},
+>>>>>>> dev
 };
 
 

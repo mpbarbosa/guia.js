@@ -493,6 +493,8 @@ function getAddressType(address) {
 		addressTypeDescr = "Shopping Center";
 	} else if (addressClass == "amenity" && addressType == "cafe") {
 		addressTypeDescr = "Café";
+	} else if (addressClass == "amenity" && addressType == "cafe") {
+		addressTypeDescr = "Café";
 	} else {
 		addressTypeDescr = "Não classificado";
 	}

@@ -947,7 +947,6 @@ class WebGeocodingManager {
 		this.logradouroChangeTimer = setInterval(() => {
 			this.checkLogradouroChange();
 		}, setupParams.logradouroChangeTimer);
-		}, setupParams.logradouroChangeTimer);
 	}
 
 	/**

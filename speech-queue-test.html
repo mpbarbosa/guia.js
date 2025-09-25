@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste da Fila de Fala - Guia.js</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .high-priority {
+            background-color: #dc3545;
+        }
+        .high-priority:hover {
+            background-color: #c82333;
+        }
+        #log-area {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            background-color: #f8f9fa;
+            overflow-y: auto;
+        }
+        .queue-status {
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teste da Fila de Fala com Prioridade</h1>
+        <p>Este teste simula o problema relatado: dois fluxos de notificação (endereço completo vs mudança de logradouro) enviando textos simultaneamente para a API de SpeechSynthesis.</p>
+    </div>
+
+    <div class="container">
+        <h2>Simulação de Fluxos de Geolocalização</h2>
+        <button onclick="simulateFullAddressUpdate()">📍 Atualização Completa (60s) - Prioridade Normal</button>
+        <button onclick="simulateLogradouroChange()" class="high-priority">🚶 Mudança de Logradouro (1s) - Prioridade Alta</button>
+        <button onclick="simulateMultipleUpdates()">⚡ Simular Múltiplas Atualizações Rápidas</button>
+        <button onclick="clearQueue()">🧹 Limpar Fila</button>
+        <button onclick="stopSpeech()">⏹️ Parar Fala</button>
+        
+        <div class="queue-status">
+            <strong>Status da Fila:</strong> <span id="queue-status">Fila vazia</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Log de Eventos</h2>
+        <textarea id="log-area" readonly></textarea>
+    </div>
+
+    <!-- Hidden elements for speech synthesis -->
+    <div style="display: none;">
+        <textarea id="speech-text-input"></textarea>
+        <select id="voice-select"></select>
+        <select id="language-select"></select>
+        <input id="rate-input" type="range" min="0.1" max="3" step="0.1" value="1">
+        <input id="pitch-input" type="range" min="0" max="2" step="0.1" value="1">
+        <span id="rate-value">1</span>
+        <span id="pitch-value">1</span>
+        <button id="speak-btn">Falar</button>
+        <button id="pause-btn">Pausar</button>
+        <button id="resume-btn">Continuar</button>
+        <button id="stop-btn">Parar</button>
+    </div>
+
+    <script src="src/guia.js"></script>
+    <script>
+        // Create speech synthesis manager
+        const speechElements = {
+            textInputId: 'speech-text-input',
+            speakBtnId: 'speak-btn',
+            pauseBtnId: 'pause-btn',
+            resumeBtnId: 'resume-btn',
+            stopBtnId: 'stop-btn',
+            voiceSelectId: 'voice-select',
+            languageSelectId: 'language-select',
+            rateInputId: 'rate-input',
+            pitchInputId: 'pitch-input',
+            rateValueId: 'rate-value',
+            pitchValueId: 'pitch-value'
+        };
+
+        let speechDisplayer;
+        let speechManager;
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                speechDisplayer = new HtmlSpeechSynthesisDisplayer(document, speechElements);
+                speechManager = speechDisplayer.speechManager;
+                logMessage('✅ Sistema de fala inicializado com sucesso');
+                updateQueueStatus();
+            } catch (error) {
+                logMessage('❌ Erro ao inicializar sistema de fala: ' + error.message);
+            }
+        });
+
+        function logMessage(message) {
+            const logArea = document.getElementById('log-area');
+            const timestamp = new Date().toLocaleTimeString();
+            logArea.value += `[${timestamp}] ${message}\n`;
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        function updateQueueStatus() {
+            if (speechManager && speechManager.speechQueue) {
+                const queueSize = speechManager.speechQueue.size();
+                const isProcessing = speechManager.isCurrentlySpeaking;
+                const statusText = `Itens na fila: ${queueSize}, Falando: ${isProcessing ? 'Sim' : 'Não'}`;
+                document.getElementById('queue-status').textContent = statusText;
+            }
+        }
+
+        function simulateFullAddressUpdate() {
+            logMessage('🔄 Simulando atualização completa de endereço (prioridade normal)');
+            const fullAddress = "Você está na Rua Augusta, número 1200, Bela Vista, São Paulo, São Paulo, Brasil";
+            
+            if (speechDisplayer) {
+                speechDisplayer.speak(fullAddress, 0); // Normal priority
+                logMessage(`📢 Adicionado à fila: "${fullAddress}" (prioridade 0)`);
+                setTimeout(updateQueueStatus, 100);
+            }
+        }
+
+        function simulateLogradouroChange() {
+            logMessage('🚶 Simulando mudança de logradouro (prioridade alta)');
+            const logradouroText = "Rua Oscar Freire";
+            
+            if (speechDisplayer) {
+                speechDisplayer.speak(logradouroText, 1); // High priority
+                logMessage(`📢 Adicionado à fila: "${logradouroText}" (prioridade 1)`);
+                setTimeout(updateQueueStatus, 100);
+            }
+        }
+
+        function simulateMultipleUpdates() {
+            logMessage('⚡ Simulando cenário real: múltiplas atualizações rápidas');
+            
+            // Simulate the real scenario: full address update followed quickly by logradouro changes
+            simulateFullAddressUpdate();
+            
+            setTimeout(() => {
+                simulateLogradouroChange();
+            }, 500);
+            
+            setTimeout(() => {
+                logMessage('🔄 Segunda atualização de endereço completo');
+                const fullAddress2 = "Você está na Avenida Paulista, número 1500, Cerqueira César, São Paulo, São Paulo, Brasil";
+                if (speechDisplayer) {
+                    speechDisplayer.speak(fullAddress2, 0);
+                    logMessage(`📢 Adicionado à fila: "${fullAddress2}" (prioridade 0)`);
+                }
+            }, 1000);
+            
+            setTimeout(() => {
+                simulateLogradouroChange();
+            }, 1200);
+            
+            setTimeout(updateQueueStatus, 1500);
+        }
+
+        function clearQueue() {
+            if (speechManager && speechManager.speechQueue) {
+                speechManager.speechQueue.clear();
+                logMessage('🧹 Fila limpa');
+                updateQueueStatus();
+            }
+        }
+
+        function stopSpeech() {
+            if (speechDisplayer) {
+                speechDisplayer.stop();
+                logMessage('⏹️ Fala interrompida e fila limpa');
+                updateQueueStatus();
+            }
+        }
+
+        // Update queue status periodically
+        setInterval(updateQueueStatus, 1000);
+    </script>
+</body>
+</html>

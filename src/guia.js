@@ -15,10 +15,12 @@ const guiaAuthor = "Marcelo Pereira Barbosa";
 const setupParams = {
 	logradouroChangeTimer: 1000, // milliseconds
 	trackingInterval: 60000, // milliseconds
-	openstreetmapBaseUrl: 'https://nominatim.openstreetmap.org/reverse?format=json'
+	openstreetmapBaseUrl:
+		"https://nominatim.openstreetmap.org/reverse?format=json",
 };
 
-const getOpenStreetMapUrl = (latitude, longitude) => `${setupParams.openstreetmapBaseUrl}&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+const getOpenStreetMapUrl = (latitude, longitude) =>
+	`${setupParams.openstreetmapBaseUrl}&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
 
 // Haversine distance calculation between two coordinates
 //TODO: #68 Mover para uma biblioteca utilitarian
@@ -51,7 +53,7 @@ const log = (message, ...params) => {
 				`${fullMessage}\n`;
 		}
 	}
-}
+};
 
 const warn = (message, ...params) => {
 	console.warn(message, ...params);
@@ -936,7 +938,6 @@ class WebGeocodingManager {
 			}
 		}
 
-
 		// Notify function observers with change details
 		for (const fn of this.functionObservers) {
 			try {
@@ -987,7 +988,7 @@ class Chronometer {
 		this.timerInterval = null;
 	}
 
-	reset() {
+	rese() {
 		this.stop();
 		this.elapsedTime = 0;
 		this.updateDisplay();
@@ -1394,10 +1395,10 @@ class AddressDataExtractor {
 			address.house_number || "",
 			address.neighbourhood || address.suburb || "",
 			address.city ||
-			address.town ||
-			address.municipality ||
-			address.county ||
-			"",
+				address.town ||
+				address.municipality ||
+				address.county ||
+				"",
 			address.state || "",
 			address.postcode || "",
 			address.country_code || "",
@@ -1413,14 +1414,12 @@ class AddressDataExtractor {
 		const now = Date.now();
 		let cleanedCount = 0;
 
-
 		for (const [key, cacheEntry] of AddressDataExtractor.cache.entries()) {
 			if (now - cacheEntry.timestamp > AddressDataExtractor.cacheExpirationMs) {
 				AddressDataExtractor.cache.delete(key);
 				cleanedCount++;
 			}
 		}
-
 
 		if (cleanedCount > 0) {
 			console.log(
@@ -1453,7 +1452,6 @@ class AddressDataExtractor {
 			return null;
 		}
 
-
 		// Map maintains insertion order, last entry is most recent
 		const entries = Array.from(AddressDataExtractor.cache.values());
 		const currentEntry = entries[entries.length - 1];
@@ -1469,7 +1467,6 @@ class AddressDataExtractor {
 		if (AddressDataExtractor.cache.size < 2) {
 			return null;
 		}
-
 
 		// Map maintains insertion order, second-to-last entry is previous
 		const entries = Array.from(AddressDataExtractor.cache.values());
@@ -1497,14 +1494,14 @@ class AddressDataExtractor {
 
 		// Check if addresses are actually different
 		const hasChanged = currentLogradouro !== previousLogradouro;
-		
+
 		if (!hasChanged) {
 			return false;
 		}
 
 		// Create a signature for this specific change to prevent loops
 		const changeSignature = `${previousLogradouro}|${currentLogradouro}`;
-		
+
 		// If we've already notified about this exact change, don't notify again
 		if (AddressDataExtractor.lastNotifiedChangeSignature === changeSignature) {
 			return false;
@@ -1512,7 +1509,7 @@ class AddressDataExtractor {
 
 		// Mark this change as the one we're about to notify
 		AddressDataExtractor.lastNotifiedChangeSignature = changeSignature;
-		
+
 		return true;
 	}
 
@@ -1523,7 +1520,6 @@ class AddressDataExtractor {
 	static getLogradouroChangeDetails() {
 		const currentAddress = AddressDataExtractor.getCurrentAddress();
 		const previousAddress = AddressDataExtractor.getPreviousAddress();
-
 
 		// If we don't have both addresses, no change details can be provided
 		if (!currentAddress || !previousAddress) {
@@ -1590,7 +1586,6 @@ class AddressDataExtractor {
 			// Clean expired entries periodically
 			AddressDataExtractor.cleanExpiredEntries();
 
-
 			// Check if we have a valid cached entry
 			const cacheEntry = AddressDataExtractor.cache.get(cacheKey);
 			if (cacheEntry) {
@@ -1631,7 +1626,7 @@ class AddressDataExtractor {
 					timestamp: now,
 					lastAccessed: now,
 				});
-				
+
 				// Reset change notification flag when new address is cached
 				// This allows detection of new changes after cache updates
 				AddressDataExtractor.lastNotifiedChangeSignature = null;
@@ -1691,8 +1686,8 @@ class HTMLAddressDisplayer {
 			html += `<p><strong>Tipo:</strong> ${addressTypeDescr}<br>`;
 			if (enderecoPadronizado) {
 				html += `<strong>Logradouro/Número:</strong> ${enderecoPadronizado.logradouroCompleto()}<br>`;
-			    html += `<strong>Bairro:</strong> ${enderecoPadronizado.bairroCompleto()}<br>`;
-    			html += `<strong>Município/Cidade:</strong> ${enderecoPadronizado.municipio}<br>`;
+				html += `<strong>Bairro:</strong> ${enderecoPadronizado.bairroCompleto()}<br>`;
+				html += `<strong>Município/Cidade:</strong> ${enderecoPadronizado.municipio}<br>`;
 			}
 
 			html +=
@@ -2246,7 +2241,6 @@ class HtmlSpeechSynthesisDisplayer {
 		log("(HtmlSpeechSynthesisDisplayer) Updating speech synthesis display...");
 		log("currentAddress:", currentAddress);
 		log("enderecoPadronizadoOrEvent:", enderecoPadronizadoOrEvent);
-
 
 		// Check if this is a logradouro change notification
 		if (enderecoPadronizadoOrEvent === "LogradouroChanged") {

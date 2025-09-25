@@ -651,6 +651,11 @@ class GeolocationService {
 			this.currentCoords = position.coords;
 			this.notifyObservers();
 			return position;
+		}).catch((error) => {
+			console.error("(GeolocationService) Error getting location:", error);
+			displayError(error);
+			SingletonStatusManager.getInstance().setGettingLocation(false);
+			throw error; // Re-throw to allow further handling if needed
 		});
 	}
 
@@ -674,6 +679,11 @@ class GeolocationService {
 			console.log("(GeolocationService) Notifying observers...");
 			this.notifyObservers();
 			return position;
+		}).catch((error) => {
+			console.error("(GeolocationService) Error watching location:", error);
+			displayError(error);
+			SingletonStatusManager.getInstance().setGettingLocation(false);
+			throw error; // Re-throw to allow further handling if needed
 		});
 	}
 
@@ -900,6 +910,9 @@ class WebGeocodingManager {
 			value.subscribe(this.positionDisplayer);
 			value.subscribe(this.reverseGeocoder);
 			//value.subscribe(this.htmlSpeechSynthesisDisplayer);
+		}).catch((error) => {
+			console.error("(WebGeocodingManager) Error setting up location watching:", error);
+			// Error is already handled by GeolocationService, just log it here
 		});
 
 		// Start logradouro change detection (30s interval)
@@ -1791,7 +1804,7 @@ function displayError(error) {
 			errorMessage = "Location information is unavailable.";
 			break;
 		case error.TIMEOUT:
-			errorMessage = "The request to get user location timed out.";
+			errorMessage = "Não foi possível obter sua localização. Isso pode acontecer quando o GPS está desligado ou em ambientes fechados. Tente novamente em local aberto.";
 			break;
 		case error.UNKNOWN_ERROR:
 			errorMessage = "An unknown error occurred.";

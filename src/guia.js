@@ -1495,7 +1495,25 @@ class AddressDataExtractor {
 		const currentLogradouro = currentAddress.logradouro;
 		const previousLogradouro = previousAddress.logradouro;
 
-		return currentLogradouro !== previousLogradouro;
+		// Check if addresses are actually different
+		const hasChanged = currentLogradouro !== previousLogradouro;
+		
+		if (!hasChanged) {
+			return false;
+		}
+
+		// Create a signature for this specific change to prevent loops
+		const changeSignature = `${previousLogradouro}|${currentLogradouro}`;
+		
+		// If we've already notified about this exact change, don't notify again
+		if (AddressDataExtractor.lastNotifiedChangeSignature === changeSignature) {
+			return false;
+		}
+
+		// Mark this change as the one we're about to notify
+		AddressDataExtractor.lastNotifiedChangeSignature = changeSignature;
+		
+		return true;
 	}
 
 	/**
@@ -1613,6 +1631,10 @@ class AddressDataExtractor {
 					timestamp: now,
 					lastAccessed: now,
 				});
+				
+				// Reset change notification flag when new address is cached
+				// This allows detection of new changes after cache updates
+				AddressDataExtractor.lastNotifiedChangeSignature = null;
 			}
 
 			return extractor.enderecoPadronizado;
@@ -1631,6 +1653,8 @@ AddressDataExtractor.cacheExpirationMs =
 // Maximum cache size for LRU (history-like) behavior - default to 50 entries
 AddressDataExtractor.defaultMaxCacheSize = 50;
 AddressDataExtractor.maxCacheSize = AddressDataExtractor.defaultMaxCacheSize;
+// Track last logradouro change to prevent notification loops
+AddressDataExtractor.lastNotifiedChangeSignature = null;
 
 class HTMLAddressDisplayer {
 	constructor(element) {
@@ -2218,6 +2242,7 @@ if (typeof module !== "undefined" && module.exports) {
 		Chronometer,
 		HTMLPositionDisplayer,
 		HTMLAddressDisplayer,
+		AddressDataExtractor,
 		SpeechSynthesisManager,
 		HtmlSpeechSynthesisDisplayer,
 		HtmlText,

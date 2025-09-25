@@ -50,16 +50,6 @@ const log = (message, ...params) => {
 				`${fullMessage}\n`;
 		}
 	}
-	const fullMessage = `[${new Date().toISOString()}] ${message} ${params.join(" ")}`;
-	console.log(fullMessage);
-	if (typeof document !== "undefined") {
-		//TODO: Remover a referência direta ao elemento HTML
-		if (document.getElementById("bottom-scroll-textarea")) {
-			document.getElementById("bottom-scroll-textarea").innerHTML +=
-				`${fullMessage}\n`;
-		}
-	}
-};
 
 const warn = (message, ...params) => {
 	console.warn(message, ...params);

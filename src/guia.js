@@ -15,6 +15,7 @@ const guiaAuthor = "Marcelo Pereira Barbosa";
 const setupParams = {
 	logradouroChangeTimer: 1000, // milliseconds
 	trackingInterval: 60000, // milliseconds
+	minimumDistanceChange: 20, // meters
 	openstreetmapBaseUrl:
 		"https://nominatim.openstreetmap.org/reverse?format=json",
 };
@@ -122,6 +123,7 @@ class PositionManager {
 		this.observers = [];
 		this.accuracyQuality = null;
 		this.tsPosicaoAtual = null;
+		this.lastModified = null;
 		if (position) {
 			this.update(position);
 		}
@@ -175,7 +177,7 @@ class PositionManager {
 			warn("(PositionManager) Invalid position data:", position);
 			return;
 		}
-		const tempoDecorrido = position.timestamp - (this.tsPosicaoAtual || 0);
+		const tempoDecorrido = position.timestamp - (this.lastModified || 0);
 		if (tempoDecorrido < setupParams.trackingInterval) {
 			bUpdateCurrPos = false;
 			error = {
@@ -212,16 +214,11 @@ class PositionManager {
 				position.coords.latitude,
 				position.coords.longitude,
 			);
-			console.log(
-				"(PositionManager) Distance from last position:",
-				distance,
-				"meters",
-			);
-			if (distance < 20) {
+			if (distance < setupParams.minimumDistanceChange) {
 				console.log(
-					"(PositionManager) Position change is less than 20 meters. Not updating.",
+					`(PositionManager) Position change is less than ${setupParams.minimumDistanceChange} meters. Not updating.`,
 				);
-				return;
+				bUpdateCurrPos = false;
 			}
 		}
 		this.lastPosition = position;
@@ -247,10 +244,8 @@ class PositionManager {
 		this.heading = position.coords.heading;
 		this.speed = position.coords.speed;
 		this.timestamp = position.timestamp;
-		this.tsPosicaoAtual = position.timestamp;
-		console.log("(PositionManager) PositionManager updated:", this);
+		this.lastModified = position.timestamp;
 		this.notifyObservers(PositionManager.strCurrPosUpdate, null, error);
-		console.log("(PositionManager) Notified observers.");
 	}
 
 	toString() {

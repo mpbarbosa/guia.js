@@ -148,8 +148,6 @@ class PositionManager {
 	update(position) {
 		let bUpdateCurrPos = true;
 		let error = null;
-		let bUpdateCurrPos = true;
-		let error = null;
 
 		// Verifica se a posição é válida
 		if (!position || !position.timestamp) {

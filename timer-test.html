@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Timer Independente - Guia.js</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        button { 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            margin: 5px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+        button:hover { 
+            background-color: #0056b3; 
+        }
+        #log { 
+            width: 100%; 
+            height: 300px; 
+            margin: 10px 0; 
+            padding: 10px; 
+            font-family: monospace; 
+            font-size: 12px; 
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+        .status {
+            background: #e7f3ff;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Teste de Timer Independente (10 segundos)</h1>
+    
+    <div class="status">
+        <strong>Status do Sistema:</strong>
+        <div id="status">Inicializando...</div>
+    </div>
+    
+    <div>
+        <button onclick="addLowPriorityMessage()">Adicionar Mensagem (Prioridade Baixa)</button>
+        <button onclick="addHighPriorityMessage()">Adicionar Mensagem (Prioridade Alta)</button>
+        <button onclick="addMultipleMessages()">Adicionar 3 Mensagens</button>
+        <button onclick="checkQueue()">Verificar Fila</button>
+        <button onclick="clearQueue()">Limpar Fila</button>
+        <button onclick="clearLog()">Limpar Log</button>
+    </div>
+
+    <textarea id="log" readonly placeholder="Log do sistema aparecerá aqui..."></textarea>
+
+    <!-- Elementos DOM necessários para o SpeechSynthesisManager (hidden) -->
+    <div style="display: none;">
+        <textarea id="speech-text-input"></textarea>
+        <select id="voice-select"></select>
+        <select id="language-select"></select>
+        <input id="rate-input" type="range" min="0.1" max="3" step="0.1" value="1">
+        <input id="pitch-input" type="range" min="0" max="2" step="0.1" value="1">
+        <span id="rate-value">1</span>
+        <span id="pitch-value">1</span>
+        <button id="speak-btn">Falar</button>
+        <button id="pause-btn">Pausar</button>
+        <button id="resume-btn">Continuar</button>
+        <button id="stop-btn">Parar</button>
+    </div>
+
+    <script src="src/guia.js"></script>
+    <script>
+        const speechElements = {
+            textInputId: 'speech-text-input', speakBtnId: 'speak-btn', pauseBtnId: 'pause-btn',
+            resumeBtnId: 'resume-btn', stopBtnId: 'stop-btn', voiceSelectId: 'voice-select',
+            languageSelectId: 'language-select', rateInputId: 'rate-input', pitchInputId: 'pitch-input',
+            rateValueId: 'rate-value', pitchValueId: 'pitch-value'
+        };
+
+        let speechManager;
+        let messageCounter = 1;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const speechDisplayer = new HtmlSpeechSynthesisDisplayer(document, speechElements);
+                speechManager = speechDisplayer.speechManager;
+                log('✅ Sistema inicializado com timer independente de 10s');
+                updateStatus();
+                
+                // Update status every 2 seconds
+                setInterval(updateStatus, 2000);
+            } catch (error) {
+                log('❌ Erro ao inicializar: ' + error.message);
+            }
+        });
+
+        function log(message) {
+            const logArea = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logArea.value += `[${timestamp}] ${message}\n`;
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        function updateStatus() {
+            if (speechManager && speechManager.speechQueue) {
+                const queueSize = speechManager.speechQueue.size();
+                const isProcessing = speechManager.isCurrentlySpeaking;
+                const hasTimer = speechManager.queueTimer !== null;
+                
+                const statusText = `Fila: ${queueSize} itens | Falando: ${isProcessing ? 'Sim' : 'Não'} | Timer: ${hasTimer ? 'Ativo' : 'Inativo'}`;
+                document.getElementById('status').textContent = statusText;
+            }
+        }
+
+        function addLowPriorityMessage() {
+            if (speechManager) {
+                const message = `Mensagem de baixa prioridade número ${messageCounter++}`;
+                speechManager.speak(message, 0);
+                log(`📝 Adicionado: "${message}" (prioridade 0)`);
+                updateStatus();
+            }
+        }
+
+        function addHighPriorityMessage() {
+            if (speechManager) {
+                const message = `MENSAGEM URGENTE número ${messageCounter++}`;
+                speechManager.speak(message, 1);
+                log(`🚨 Adicionado: "${message}" (prioridade 1)`);
+                updateStatus();
+            }
+        }
+
+        function addMultipleMessages() {
+            log('📝 Adicionando múltiplas mensagens...');
+            addLowPriorityMessage();
+            setTimeout(() => addHighPriorityMessage(), 100);
+            setTimeout(() => addLowPriorityMessage(), 200);
+        }
+
+        function checkQueue() {
+            if (speechManager && speechManager.speechQueue) {
+                const size = speechManager.speechQueue.size();
+                const isEmpty = speechManager.speechQueue.isEmpty();
+                log(`🔍 Status da fila: ${size} itens, vazia: ${isEmpty}`);
+                updateStatus();
+            }
+        }
+
+        function clearQueue() {
+            if (speechManager && speechManager.speechQueue) {
+                speechManager.speechQueue.clear();
+                log('🧹 Fila limpa');
+                updateStatus();
+            }
+        }
+
+        function clearLog() {
+            document.getElementById('log').value = '';
+            log('📋 Log limpo');
+        }
+
+        // Log timer events
+        const originalSetInterval = window.setInterval;
+        window.setInterval = function(callback, delay) {
+            if (delay === 10000) {
+                log('⏰ Timer de 10s configurado para processamento da fila');
+            }
+            return originalSetInterval.call(this, callback, delay);
+        };
+    </script>
+</body>
+</html>

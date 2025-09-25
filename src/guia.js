@@ -1898,7 +1898,9 @@ class SpeechSynthesisManager {
 		this.voice = null;
 		this.speechQueue = new SpeechQueue();
 		this.isCurrentlySpeaking = false;
+		this.queueTimer = null;
 		this.loadVoices();
+		this.startQueueTimer();
 	}
 
 	async getSpeechVoices() {
@@ -1973,6 +1975,26 @@ class SpeechSynthesisManager {
 		}
 	}
 
+	startQueueTimer() {
+		// Clear any existing timer first
+		this.stopQueueTimer();
+		
+		// Start independent 10-second timer for queue processing
+		this.queueTimer = setInterval(() => {
+			this.processQueue();
+		}, 10000); // 10 seconds
+		
+		log("(SpeechSynthesisManager) Independent queue timer started (10s interval)");
+	}
+
+	stopQueueTimer() {
+		if (this.queueTimer) {
+			clearInterval(this.queueTimer);
+			this.queueTimer = null;
+			log("(SpeechSynthesisManager) Queue timer stopped");
+		}
+	}
+
 	processQueue() {
 		if (this.isCurrentlySpeaking || this.speechQueue.isEmpty()) {
 			return;
@@ -2030,6 +2052,8 @@ class SpeechSynthesisManager {
 		}
 		this.speechQueue.clear();
 		this.isCurrentlySpeaking = false;
+		this.stopQueueTimer();
+		this.startQueueTimer(); // Restart the timer after stopping
 	}
 
 	toString() {

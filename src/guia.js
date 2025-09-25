@@ -58,18 +58,18 @@ const getOpenStreetMapUrl = (latitude, longitude) =>
  * @author Marcelo Pereira Barbosa
  */
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371e3; // Earth radius in meters (mean radius)
-    const φ1 = (lat1 * Math.PI) / 180; // Convert latitude 1 to radians
-    const φ2 = (lat2 * Math.PI) / 180; // Convert latitude 2 to radians
-    const Δφ = ((lat2 - lat1) * Math.PI) / 180; // Difference in latitude (radians)
-    const Δλ = ((lon2 - lon1) * Math.PI) / 180; // Difference in longitude (radians)
+	const R = 6371e3; // Earth radius in meters (mean radius)
+	const φ1 = (lat1 * Math.PI) / 180; // Convert latitude 1 to radians
+	const φ2 = (lat2 * Math.PI) / 180; // Convert latitude 2 to radians
+	const Δφ = ((lat2 - lat1) * Math.PI) / 180; // Difference in latitude (radians)
+	const Δλ = ((lon2 - lon1) * Math.PI) / 180; // Difference in longitude (radians)
 
-    // Haversine formula core calculation
-    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + 
-        Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	// Haversine formula core calculation
+	const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+		Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    return R * c; // Distance in meters
+	return R * c; // Distance in meters
 };
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
@@ -177,14 +177,14 @@ class PositionManager {
 			warn("(PositionManager) Invalid position data:", position);
 			return;
 		}
-		const tempoDecorrido = position.timestamp - (this.lastModified || 0);
-		if (tempoDecorrido < setupParams.trackingInterval) {
+		if (position.timestamp - (this.lastModified || 0) < setupParams.trackingInterval) {
 			bUpdateCurrPos = false;
+			let errorMessage = `Less than ${setupParams.trackingInterval / 1000} seconds since last update: ${(position.timestamp - (this.lastModified || 0)) / 1000} seconds`;
 			error = {
 				name: "ElapseTimeError",
-				message: "Less than 1 minute since last update",
+				message: errorMessage,
 			};
-			warn("(PositionManager) Less than 1 minute since last update.");
+			warn("(PositionManager) " + errorMessage);
 		}
 
 		// Verifica se a precisão é boa o suficiente
@@ -215,22 +215,22 @@ class PositionManager {
 				position.coords.longitude,
 			);
 			if (distance < setupParams.minimumDistanceChange) {
-				console.log(
+				log(
 					`(PositionManager) Position change is less than ${setupParams.minimumDistanceChange} meters. Not updating.`,
 				);
 				bUpdateCurrPos = false;
 			}
 		}
-		this.lastPosition = position;
 
 		if (!bUpdateCurrPos) {
 			this.notifyObservers(PositionManager.strCurrPosNotUpdate, null, error);
-			console.log("(PositionManager) PositionManager not updated:", this);
+			log("(PositionManager) PositionManager not updated:", this);
 			return;
 		}
 
 		// Atualiza a posição apenas se tiver passado mais de 1 minuto
-		console.log("(PositionManager) Updating PositionManager...");
+		log("(PositionManager) Updating PositionManager...");
+		this.lastPosition = position;
 		this.position = position;
 		this.coords = position.coords;
 		this.latitude = position.coords.latitude;
@@ -705,7 +705,7 @@ class WebGeocodingManager {
 	}
 
 	initElements() {
-		var chronometer = this.document.getElementById("chronometer");
+		let chronometer = this.document.getElementById("chronometer");
 		if (chronometer) {
 			this.chronometer = new Chronometer(chronometer);
 			PositionManager.getInstance().subscribe(this.chronometer);
@@ -1014,7 +1014,7 @@ class Chronometer {
 		this.timerInterval = null;
 	}
 
-	rese() {
+	reset() {
 		this.stop();
 		this.elapsedTime = 0;
 		this.updateDisplay();
@@ -1034,6 +1034,10 @@ class Chronometer {
 	update(currentPosition, posEvent) {
 		// Start the chronometer when a new position is received
 		// Stop it if no position is available
+		log("(Chronometer) update called with event:", posEvent);
+		log("(Chronometer) Current timerInterval:", this.timerInterval);
+		log("(Chronometer) Current position:", currentPosition);
+		log("(Chronometer) Expected: ", PositionManager.strCurrPosUpdate);
 		if (posEvent == PositionManager.strCurrPosUpdate) {
 			if (this.timerInterval && currentPosition) {
 				this.reset();
@@ -1421,10 +1425,10 @@ class AddressDataExtractor {
 			address.house_number || "",
 			address.neighbourhood || address.suburb || "",
 			address.city ||
-				address.town ||
-				address.municipality ||
-				address.county ||
-				"",
+			address.town ||
+			address.municipality ||
+			address.county ||
+			"",
 			address.state || "",
 			address.postcode || "",
 			address.country_code || "",
@@ -1823,12 +1827,12 @@ class SpeechQueue {
 	enqueue(text, priority = 0) {
 		const timestamp = Date.now();
 		const item = { text, priority, timestamp };
-		
+
 		// Remove expired items (older than 5 seconds)
-		this.queue = this.queue.filter(item => 
+		this.queue = this.queue.filter(item =>
 			(Date.now() - item.timestamp) < this.timeoutDuration
 		);
-		
+
 		// Insert with priority (higher priority first, then by timestamp)
 		let inserted = false;
 		for (let i = 0; i < this.queue.length; i++) {
@@ -1841,16 +1845,16 @@ class SpeechQueue {
 		if (!inserted) {
 			this.queue.push(item);
 		}
-		
+
 		log(`SpeechQueue: Enqueued "${text}" with priority ${priority}. Queue length: ${this.queue.length}`);
 	}
 
 	dequeue() {
 		// Remove expired items first
-		this.queue = this.queue.filter(item => 
+		this.queue = this.queue.filter(item =>
 			(Date.now() - item.timestamp) < this.timeoutDuration
 		);
-		
+
 		if (this.queue.length > 0) {
 			const item = this.queue.shift();
 			log(`SpeechQueue: Dequeued "${item.text}". Queue length: ${this.queue.length}`);
@@ -1861,7 +1865,7 @@ class SpeechQueue {
 
 	isEmpty() {
 		// Clean expired items
-		this.queue = this.queue.filter(item => 
+		this.queue = this.queue.filter(item =>
 			(Date.now() - item.timestamp) < this.timeoutDuration
 		);
 		return this.queue.length === 0;
@@ -1874,7 +1878,7 @@ class SpeechQueue {
 
 	size() {
 		// Clean expired items
-		this.queue = this.queue.filter(item => 
+		this.queue = this.queue.filter(item =>
 			(Date.now() - item.timestamp) < this.timeoutDuration
 		);
 		return this.queue.length;
@@ -1963,7 +1967,7 @@ class SpeechSynthesisManager {
 	speak(text, priority = 0) {
 		// Add to queue with priority
 		this.speechQueue.enqueue(text, priority);
-		
+
 		// Process queue if not currently speaking
 		if (!this.isCurrentlySpeaking) {
 			this.processQueue();
@@ -1973,12 +1977,12 @@ class SpeechSynthesisManager {
 	startQueueTimer() {
 		// Clear any existing timer first
 		this.stopQueueTimer();
-		
+
 		// Start independent 10-second timer for queue processing
 		this.queueTimer = setInterval(() => {
 			this.processQueue();
 		}, 10000); // 10 seconds
-		
+
 		log("(SpeechSynthesisManager) Independent queue timer started (10s interval)");
 	}
 
@@ -2005,10 +2009,10 @@ class SpeechSynthesisManager {
 		utterance.voice = this.voice;
 		utterance.rate = this.rate;
 		utterance.pitch = this.pitch;
-		
+
 		log("Speaking with voice:", this.voice);
 		log(`Speaking with priority ${item.priority}: "${item.text}"`);
-		
+
 		utterance.onend = () => {
 			log("Spoke with voice:", this.voice);
 			log("Speech synthesis finished.");
@@ -2016,14 +2020,14 @@ class SpeechSynthesisManager {
 			// Process next item in queue
 			setTimeout(() => this.processQueue(), 100);
 		};
-		
+
 		utterance.onerror = (event) => {
 			log("Speech synthesis error:", event.error);
 			this.isCurrentlySpeaking = false;
 			// Process next item in queue even on error
 			setTimeout(() => this.processQueue(), 100);
 		};
-		
+
 		log("Starting speech synthesis...");
 		this.synth.speak(utterance);
 		log("Speech synthesis started.");
@@ -2160,7 +2164,7 @@ class HtmlSpeechSynthesisDisplayer {
 
 	speak(textToSpeak = null, priority = 0) {
 		var text = textToSpeak;
-		
+
 		// If no text provided, get from text input
 		if (!text && this.textInput && this.textInput.value) {
 			text = this.textInput.value.trim();

@@ -16,6 +16,7 @@ const setupParams = {
 	logradouroChangeTimer: 1000, // milliseconds
 	trackingInterval: 60000, // milliseconds
 	minimumDistanceChange: 20, // meters
+	independentQueueTimerInterval: 5000, // milliseconds
 	openstreetmapBaseUrl:
 		"https://nominatim.openstreetmap.org/reverse?format=json",
 };
@@ -215,9 +216,6 @@ class PositionManager {
 				position.coords.longitude,
 			);
 			if (distance < setupParams.minimumDistanceChange) {
-				log(
-					`(PositionManager) Position change is less than ${setupParams.minimumDistanceChange} meters. Not updating.`,
-				);
 				bUpdateCurrPos = false;
 			}
 		}
@@ -346,9 +344,6 @@ class APIFetcher {
 	notifyObservers() {
 		log("(APIFetcher) Notifying observers: " + this.observers);
 		this.observers.forEach((observer) => {
-			log("(APIFetcher) Notifying observer:", observer);
-			log("First param:", this.firstUpdateParam());
-			log("Second param:", this.secondUpdateParam());
 			observer.update(
 				this.firstUpdateParam(),
 				this.secondUpdateParam(),
@@ -522,9 +517,6 @@ class GeolocationService {
 			);
 			return;
 		}
-		console.log(
-			`(GeolocationService) observer ${observer} subscribing ${this}`,
-		);
 		this.observers.push(observer);
 	}
 
@@ -567,15 +559,12 @@ class GeolocationService {
 	}
 
 	async getCurrentLocation() {
-		console.log("(GeolocationService) Getting current location...");
 		this.checkGeolocation();
 		return new Promise(async function (resolve, reject) {
 			// Get current position
 			navigator.geolocation.getCurrentPosition(
 				async (position) => {
 					SingletonStatusManager.getInstance().setGettingLocation(true);
-
-					console.log("(GeolocationService) Position obtained:", position);
 					resolve(PositionManager.getInstance(position));
 				},
 				(error) => {
@@ -591,7 +580,6 @@ class GeolocationService {
 	}
 
 	updatePosition(position) {
-		console.log("(GeolocationService) watchPosition callback");
 		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		if (findRestaurantsBtn) {
@@ -600,27 +588,19 @@ class GeolocationService {
 		if (cityStatsBtn) {
 			cityStatsBtn.disabled = true;
 		}
-		console.log("(GeolocationService) Position obtained:", position);
 		this.currentPosition = position;
 		this.currentCoords = position.coords;
-		console.log("(GeolocationService) Notifying observers...");
 		this.notifyObservers();
 	}
 
 	async watchCurrentLocation() {
-		console.log("(GeolocationService) watchCurrentLocation");
-		console.log("(GeolocationService) Getting current location...");
 		this.checkGeolocation();
 		return new Promise(async function (resolve, reject) {
 			// Get current position
 			navigator.geolocation.watchPosition(
 				async (position) => {
-					console.log("(GeolocationService) watchPosition callback");
-
 					SingletonStatusManager.getInstance().setGettingLocation(true);
-
-					console.log("(GeolocationService) Position obtained:", position);
-					var currentPos = PositionManager.getInstance(position);
+					let currentPos = PositionManager.getInstance(position);
 					resolve(currentPos);
 				},
 				(error) => {
@@ -636,17 +616,15 @@ class GeolocationService {
 	}
 
 	async getSingleLocationUpdate() {
-		console.log("(GeolocationService) Getting single location update...");
 		if (this.locationResult) {
 			this.locationResult.innerHTML =
 				'<p class="loading">Buscando a sua localização...</p>';
-			console.log("(GeolocationService) locationResult:", this.locationResult);
 		}
 
 		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		return this.getCurrentLocation().then((position) => {
-			console.log("(GeolocationService) Position obtained:", position);
+			let currentPos = PositionManager.getInstance(position);
 			this.currentPosition = position;
 			this.currentCoords = position.coords;
 			this.notifyObservers();
@@ -660,23 +638,17 @@ class GeolocationService {
 	}
 
 	async getWatchLocationUpdate() {
-		console.log("(GeolocationService) getWatchLocationUpdate");
 		if (this.locationResult) {
 			this.locationResult.innerHTML =
 				'<p class="loading">Buscando a sua localização...</p>';
-			console.log("(GeolocationService) locationResult:", this.locationResult);
+			let currentPos = PositionManager.getInstance();
 		}
 
 		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		return this.watchCurrentLocation().then((position) => {
-			console.log(
-				"(GeolocationService) watchPosition callback received position:",
-				position,
-			);
 			this.currentPosition = position;
 			this.currentCoords = position.coords;
-			console.log("(GeolocationService) Notifying observers...");
 			this.notifyObservers();
 			return position;
 		}).catch((error) => {
@@ -827,7 +799,6 @@ class WebGeocodingManager {
 		this.reverseGeocoder.subscribe(this.htmlSpeechSynthesisDisplayer);
 		this.subscribe(this.htmlSpeechSynthesisDisplayer);
 
-		console.log("WebGeocodingManager initialized.");
 		this.notifyObservers();
 	}
 
@@ -904,7 +875,6 @@ class WebGeocodingManager {
 			null;
 		}, 20000);
 
-		log("(WebGeocodingManager) Setting up periodic updates...");
 		// Start watching position with high accuracy
 		this.geolocationService.getWatchLocationUpdate().then((value) => {
 			value.subscribe(this.positionDisplayer);
@@ -927,6 +897,7 @@ class WebGeocodingManager {
 			clearInterval(this.logradouroChangeTimer);
 		}
 
+		log('(WebGeocodingManager) Starting logradouro change detection timer...');
 		this.logradouroChangeTimer = setInterval(() => {
 			this.checkLogradouroChange();
 		}, setupParams.logradouroChangeTimer);
@@ -945,11 +916,14 @@ class WebGeocodingManager {
 	/**
 	 * Checks if the logradouro has changed and notifies observers
 	 */
+	//TODO: MUdar a logica para verificar se o logradouro mudou quando um novo endereço for recebido
 	checkLogradouroChange() {
 		try {
 			if (AddressDataExtractor.hasLogradouroChanged()) {
+				log('(WebGeocodingManager) O logradouro mudou.');
 				const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
 				// Notify observers about the logradouro change
+				log('Notificando os observadores da mudança de logradouro.');
 				this.notifyLogradouroChangeObservers(changeDetails);
 			}
 		} catch (error) {
@@ -966,8 +940,10 @@ class WebGeocodingManager {
 	 */
 	notifyLogradouroChangeObservers(changeDetails) {
 		// Notify regular observers
+		log('(WebGeocodingManager) Notificando os observadores da mudança de logradouro.');
 		for (const observer of this.observers) {
 			if (typeof observer.update === "function") {
+				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de logradouro.`);
 				observer.update(
 					this.reverseGeocoder.currentAddress,
 					"LogradouroChanged",
@@ -1047,10 +1023,6 @@ class Chronometer {
 	update(currentPosition, posEvent) {
 		// Start the chronometer when a new position is received
 		// Stop it if no position is available
-		log("(Chronometer) update called with event:", posEvent);
-		log("(Chronometer) Current timerInterval:", this.timerInterval);
-		log("(Chronometer) Current position:", currentPosition);
-		log("(Chronometer) Expected: ", PositionManager.strCurrPosUpdate);
 		if (posEvent == PositionManager.strCurrPosUpdate) {
 			if (this.timerInterval && currentPosition) {
 				this.reset();
@@ -1835,6 +1807,21 @@ class SpeechQueue {
 		this.queue = [];
 		this.isProcessing = false;
 		this.timeoutDuration = 5000; // 5 seconds timeout
+		this.observerFunctions = [];
+	}
+
+	subscribeFunction(observerFunction) {
+		this.observerFunctions.push(observerFunction);
+	}
+
+	unsubscribeFunction(observerFunction) {
+		this.observerFunctions = this.observerFunctions.filter(fn => fn !== observerFunction);
+	}
+
+	notifyObserverFunctions() {
+		for (const observerFunction of this.observerFunctions) {
+			observerFunction(this.queue);
+		}
 	}
 
 	enqueue(text, priority = 0) {
@@ -1852,11 +1839,13 @@ class SpeechQueue {
 			if (item.priority > this.queue[i].priority) {
 				this.queue.splice(i, 0, item);
 				inserted = true;
+				this.notifyObserverFunctions();
 				break;
 			}
 		}
 		if (!inserted) {
 			this.queue.push(item);
+			this.notifyObserverFunctions();
 		}
 
 		log(`SpeechQueue: Enqueued "${text}" with priority ${priority}. Queue length: ${this.queue.length}`);
@@ -1871,6 +1860,7 @@ class SpeechQueue {
 		if (this.queue.length > 0) {
 			const item = this.queue.shift();
 			log(`SpeechQueue: Dequeued "${item.text}". Queue length: ${this.queue.length}`);
+			this.notifyObserverFunctions();
 			return item;
 		}
 		return null;
@@ -1886,6 +1876,7 @@ class SpeechQueue {
 
 	clear() {
 		this.queue = [];
+		this.notifyObserverFunctions();
 		log("SpeechQueue: Cleared queue");
 	}
 
@@ -1900,7 +1891,6 @@ class SpeechQueue {
 
 class SpeechSynthesisManager {
 	constructor() {
-		log("Initializing speech manager...");
 		this.synth = window.speechSynthesis;
 		this.language = "pt-BR"; // Default language
 		this.voices = [];
@@ -1911,6 +1901,7 @@ class SpeechSynthesisManager {
 		this.speechQueue = new SpeechQueue();
 		this.isCurrentlySpeaking = false;
 		this.queueTimer = null;
+		this.independentQueueTimerInterval = setupParams.independentQueueTimerInterval; // Add this line
 		this.loadVoices();
 		this.startQueueTimer();
 	}
@@ -1935,7 +1926,6 @@ class SpeechSynthesisManager {
 	async loadVoices() {
 		try {
 			const availableVoices = await this.getSpeechVoices();
-			log("(SpeechSynthesisManager) Voices loaded:", availableVoices);
 
 			// You can now use the 'voices' array to populate a dropdown, select a specific voice, etc.
 			if (availableVoices.length > 0) {
@@ -1943,8 +1933,6 @@ class SpeechSynthesisManager {
 				this.filteredVoices = this.voices.filter((voice) =>
 					voice.lang.startsWith(this.language),
 				);
-				log("(SpeechSynthesisManager) Filtered voices:", this.filteredVoices);
-				log("(SpeechSynthesisManager) Filtered voices:", this.filteredVoices);
 				if (this.filteredVoices.length > 0) {
 					this.voice = this.filteredVoices[0]; // Default to first voice in filtered list
 				}
@@ -1961,8 +1949,6 @@ class SpeechSynthesisManager {
 
 	setLanguage(selectedLanguage) {
 		this.language = selectedLanguage;
-		log("(SpeechSynthesisManager) Setting language to:", this.language);
-		log("(SpeechSynthesisManager) Loading voices...");
 		this.loadVoices();
 		this.filteredVoices = this.voices.filter((voice) =>
 			voice.lang.startsWith(this.language),
@@ -1970,33 +1956,38 @@ class SpeechSynthesisManager {
 		if (this.filteredVoices.length > 0) {
 			this.voice = this.filteredVoices[0]; // Default to first voice in filtered list
 		}
-		log("Filtered voices:", this.filteredVoices);
 	}
 
-	setSelectectedVoiceIndex(index) {
-		log("Setting selected voice index to:", index);
+	setSelectedVoiceIndex(index) {
+		//TODO: Para usar com UI
 	}
 
 	speak(text, priority = 0) {
+		log("(SpeechSynthesisManager) Queuing text for speech:", text);
+
+		if (!text || text.trim() === "") {
+			warn("(SpeechSynthesisManager) No text provided to speak.");
+			return;
+		}
 		// Add to queue with priority
 		this.speechQueue.enqueue(text, priority);
 
 		// Process queue if not currently speaking
 		if (!this.isCurrentlySpeaking) {
+			log("(SpeechSynthesisManager) Not currently speaking, processing queue...");
 			this.processQueue();
 		}
 	}
 
 	startQueueTimer() {
-		// Clear any existing timer first
 		this.stopQueueTimer();
-
-		// Start independent 10-second timer for queue processing
+		
+		// Fix: Use the properly defined interval
 		this.queueTimer = setInterval(() => {
 			this.processQueue();
-		}, 10000); // 10 seconds
+		}, this.independentQueueTimerInterval);
 
-		log("(SpeechSynthesisManager) Independent queue timer started (10s interval)");
+		log(`(SpeechSynthesisManager) Queue timer started (${this.independentQueueTimerInterval/1000}s interval)`);
 	}
 
 	stopQueueTimer() {
@@ -2008,6 +1999,9 @@ class SpeechSynthesisManager {
 	}
 
 	processQueue() {
+		log("(SpeechSynthesisManager) Processing speech queue...");
+		
+		// Enhanced protection against concurrent execution
 		if (this.isCurrentlySpeaking || this.speechQueue.isEmpty()) {
 			return;
 		}
@@ -2023,27 +2017,22 @@ class SpeechSynthesisManager {
 		utterance.rate = this.rate;
 		utterance.pitch = this.pitch;
 
-		log("Speaking with voice:", this.voice);
 		log(`Speaking with priority ${item.priority}: "${item.text}"`);
 
 		utterance.onend = () => {
-			log("Spoke with voice:", this.voice);
-			log("Speech synthesis finished.");
+			log("(SpeechSynthesisManager - utterance.onend) Speech synthesis finished.");
 			this.isCurrentlySpeaking = false;
-			// Process next item in queue
-			setTimeout(() => this.processQueue(), 100);
+			// Remove setTimeout to rely only on timer-based processing
+			// This eliminates one source of concurrent calls
 		};
 
 		utterance.onerror = (event) => {
-			log("Speech synthesis error:", event.error);
+			log("(SpeechSynthesisManager - utterance.onerror) Speech synthesis error:", event.error);
 			this.isCurrentlySpeaking = false;
-			// Process next item in queue even on error
-			setTimeout(() => this.processQueue(), 100);
+			// Remove setTimeout here too
 		};
 
-		log("Starting speech synthesis...");
 		this.synth.speak(utterance);
-		log("Speech synthesis started.");
 	}
 
 	pause() {
@@ -2075,12 +2064,9 @@ class SpeechSynthesisManager {
 
 class HtmlSpeechSynthesisDisplayer {
 	constructor(document, elements) {
-		log("Initializing HtmlSpeechSynthesisDisplayer...");
 		this.document = document;
 		this.elements = elements;
-		log("Initializing speech manager...");
 		this.speechManager = new SpeechSynthesisManager();
-		log("Speech manager initialized.");
 		this.init();
 		Object.freeze(this); // Prevent further modification
 	}
@@ -2142,8 +2128,7 @@ class HtmlSpeechSynthesisDisplayer {
 		if (this.voiceSelect) {
 			this.voiceSelect.innerHTML = "";
 		}
-		log("(HtmlSpeechSynthesisDisplayer) Voices cleared.");
-		var filteredVoices = this.speechManager.filteredVoices;
+		let filteredVoices = this.speechManager.filteredVoices;
 		if (filteredVoices.length > 0) {
 			filteredVoices.forEach((voice, index) => {
 				const option = document.createElement("option");
@@ -2159,7 +2144,6 @@ class HtmlSpeechSynthesisDisplayer {
 			if (this.voiceSelect) {
 				this.voiceSelect.appendChild(option);
 			}
-			warn("No voices available for language:", this.speechManager.language);
 			warn("No voices available for language:", this.speechManager.language);
 		}
 	}
@@ -2194,10 +2178,7 @@ class HtmlSpeechSynthesisDisplayer {
 	speak2(textToBeSpoken, textAlert) {
 		// Set selected voice
 		const selectedVoiceIndex = voiceSelect.value;
-		console.log("selectedVoiceIndex:", selectedVoiceIndex);
-		console.log("voices: ", filteredVoices);
 		if (selectedVoiceIndex && filteredVoices[selectedVoiceIndex]) {
-			console.log("voice:", filteredVoices[selectedVoiceIndex]);
 			currentUtterance.voice = filteredVoices[selectedVoiceIndex];
 		}
 
@@ -2239,11 +2220,6 @@ class HtmlSpeechSynthesisDisplayer {
 			stopBtn.disabled = true;
 			currentUtterance = null;
 		};
-
-		console.log("language:", currentUtterance.lang);
-		console.log("voice:", currentUtterance.voice);
-		console.log("rate:", currentUtterance.rate);
-		console.log("pitch:", currentUtterance.pitch);
 
 		window.speechSynthesis.cancel();
 		window.speechSynthesis.speak(currentUtterance);
@@ -2305,15 +2281,11 @@ class HtmlSpeechSynthesisDisplayer {
 
 	update(currentAddress, enderecoPadronizadoOrEvent, loading, error) {
 		log("(HtmlSpeechSynthesisDisplayer) Updating speech synthesis display...");
-		log("(HtmlSpeechSynthesisDisplayer) Updating speech synthesis display...");
 		log("currentAddress:", currentAddress);
 		log("enderecoPadronizadoOrEvent:", enderecoPadronizadoOrEvent);
 
 		// Check if this is a logradouro change notification
 		if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
-			log(
-				"(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location...",
-			);
 			log(
 				"(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location...",
 			);
@@ -2327,6 +2299,7 @@ class HtmlSpeechSynthesisDisplayer {
 			}
 		} else if (currentAddress) {
 			// Normal update from reverseGeocoder
+			log('(HtmlSpeechSynthesisDisplayer) Normal address update, speaking full address...)');
 			this.updateVoices();
 			var textToBeSpoken = "";
 			textToBeSpoken += this.buildTextToSpeech(currentAddress);

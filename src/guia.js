@@ -885,6 +885,9 @@ class WebGeocodingManager {
 
 		// Register callback for logradouro change detection (replaces timer-based approach)
 		this.setupLogradouroChangeDetection();
+
+		// Register callback for bairro change detection (follows same pattern as logradouro)
+		this.setupBairroChangeDetection();
 	}
 
 	/**
@@ -905,6 +908,23 @@ class WebGeocodingManager {
 	}
 
 	/**
+	 * Sets up bairro change detection using callback mechanism (follows same pattern as logradouro)
+	 */
+	setupBairroChangeDetection() {
+		// Register this instance's callback with AddressDataExtractor
+		AddressDataExtractor.setBairroChangeCallback((changeDetails) => {
+			this.handleBairroChange(changeDetails);
+		});
+	}
+
+	/**
+	 * Removes the bairro change detection callback
+	 */
+	removeBairroChangeDetection() {
+		AddressDataExtractor.setBairroChangeCallback(null);
+	}
+
+	/**
 	 * Handles logradouro change events and notifies observers
 	 * @param {Object} changeDetails - Details about the logradouro change
 	 */
@@ -915,6 +935,22 @@ class WebGeocodingManager {
 		} catch (error) {
 			console.error(
 				"(WebGeocodingManager) Error handling logradouro change:",
+				error,
+			);
+		}
+	}
+
+	/**
+	 * Handles bairro change events and notifies observers
+	 * @param {Object} changeDetails - Details about the bairro change
+	 */
+	handleBairroChange(changeDetails) {
+		try {
+			// Notify observers about the bairro change
+			this.notifyBairroChangeObservers(changeDetails);
+		} catch (error) {
+			console.error(
+				"(WebGeocodingManager) Error handling bairro change:",
 				error,
 			);
 		}
@@ -951,6 +987,43 @@ class WebGeocodingManager {
 			} catch (error) {
 				console.error(
 					"(WebGeocodingManager) Error notifying function observer:",
+					error,
+				);
+			}
+		}
+	}
+
+	/**
+	 * Notifies observers specifically about bairro changes
+	 * @param {Object} changeDetails - Details about the bairro change
+	 */
+	notifyBairroChangeObservers(changeDetails) {
+		// Notify regular observers
+		log('(WebGeocodingManager) Notificando os observadores da mudança de bairro.');
+		for (const observer of this.observers) {
+			if (typeof observer.update === "function") {
+				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de bairro.`);
+				observer.update(
+					this.reverseGeocoder.currentAddress,
+					"BairroChanged",
+					null,
+					null,
+				);
+			}
+		}
+
+		// Notify function observers with change details
+		for (const fn of this.functionObservers) {
+			try {
+				fn(
+					this.currentPosition,
+					this.reverseGeocoder.currentAddress,
+					this.reverseGeocoder.enderecoPadronizado,
+					changeDetails,
+				);
+			} catch (error) {
+				console.error(
+					"(WebGeocodingManager) Error notifying function observer about bairro change:",
 					error,
 				);
 			}
@@ -1545,6 +1618,74 @@ class AddressDataExtractor {
 	}
 
 	/**
+	 * Checks if the bairro (neighborhood) has changed between the current and previous addresses
+	 * @returns {boolean} True if bairro has changed, false otherwise
+	 */
+	static hasBairroChanged() {
+		const currentAddress = AddressDataExtractor.getCurrentAddress();
+		const previousAddress = AddressDataExtractor.getPreviousAddress();
+
+		// If we don't have both addresses, no change can be detected
+		if (!currentAddress || !previousAddress) {
+			return false;
+		}
+
+		// Compare bairro values, handling null/undefined cases
+		const currentBairro = currentAddress.bairro;
+		const previousBairro = previousAddress.bairro;
+
+		// Check if addresses are actually different
+		const hasChanged = currentBairro !== previousBairro;
+
+		if (!hasChanged) {
+			return false;
+		}
+
+		// Create a signature for this specific change to prevent loops
+		const changeSignature = `${previousBairro}|${currentBairro}`;
+
+		// If we've already notified about this exact change, don't notify again
+		if (AddressDataExtractor.lastNotifiedBairroChangeSignature === changeSignature) {
+			return false;
+		}
+
+		// Mark this change as the one we're about to notify
+		AddressDataExtractor.lastNotifiedBairroChangeSignature = changeSignature;
+
+		return true;
+	}
+
+	/**
+	 * Gets detailed information about bairro changes between current and previous addresses
+	 * @returns {Object|null} Object with change details or null if no comparison possible
+	 */
+	static getBairroChangeDetails() {
+		const currentAddress = AddressDataExtractor.getCurrentAddress();
+		const previousAddress = AddressDataExtractor.getPreviousAddress();
+
+		// If we don't have both addresses, no change details can be provided
+		if (!currentAddress || !previousAddress) {
+			return null;
+		}
+
+		const currentBairro = currentAddress.bairro;
+		const previousBairro = previousAddress.bairro;
+		const hasChanged = currentBairro !== previousBairro;
+
+		return {
+			hasChanged: hasChanged,
+			previous: {
+				bairro: previousBairro,
+				bairroCompleto: previousAddress.bairroCompleto(),
+			},
+			current: {
+				bairro: currentBairro,
+				bairroCompleto: currentAddress.bairroCompleto(),
+			},
+		};
+	}
+
+	/**
 	 * Sets the maximum cache size for LRU behavior
 	 * @param {number} maxSize - Maximum number of entries in cache
 	 */
@@ -1586,6 +1727,14 @@ class AddressDataExtractor {
 	 */
 	static setLogradouroChangeCallback(callback) {
 		AddressDataExtractor.logradouroChangeCallback = callback;
+	}
+
+	/**
+	 * Sets a callback function to be called when bairro changes are detected
+	 * @param {Function} callback - Function to call when bairro changes occur
+	 */
+	static setBairroChangeCallback(callback) {
+		AddressDataExtractor.bairroChangeCallback = callback;
 	}
 
 	static getBrazilianStandardAddress(data) {
@@ -1654,6 +1803,21 @@ class AddressDataExtractor {
 						);
 					}
 				}
+
+				// Check for bairro change after caching the new address
+				// This follows the same pattern as logradouro change detection
+				if (AddressDataExtractor.bairroChangeCallback && 
+					AddressDataExtractor.hasBairroChanged()) {
+					const changeDetails = AddressDataExtractor.getBairroChangeDetails();
+					try {
+						AddressDataExtractor.bairroChangeCallback(changeDetails);
+					} catch (error) {
+						console.error(
+							"(AddressDataExtractor) Error calling bairro change callback:",
+							error,
+						);
+					}
+				}
 			}
 
 			return extractor.enderecoPadronizado;
@@ -1676,6 +1840,10 @@ AddressDataExtractor.maxCacheSize = AddressDataExtractor.defaultMaxCacheSize;
 AddressDataExtractor.lastNotifiedChangeSignature = null;
 // Callback function to notify when logradouro changes occur
 AddressDataExtractor.logradouroChangeCallback = null;
+// Track last bairro change to prevent notification loops
+AddressDataExtractor.lastNotifiedBairroChangeSignature = null;
+// Callback function to notify when bairro changes occur
+AddressDataExtractor.bairroChangeCallback = null;
 
 class HTMLAddressDisplayer {
 	constructor(element) {
@@ -2282,6 +2450,11 @@ class HtmlSpeechSynthesisDisplayer {
 		return enderecoPadronizado.getLogradouro();
 	}
 
+	getBairro(addressExtractor) {
+		var enderecoPadronizado = addressExtractor.enderecoPadronizado;
+		return enderecoPadronizado.bairro || "Bairro não identificado";
+	}
+
 	buildTextToSpeech(currentAddress) {
 		var addressExtractor = new AddressDataExtractor(currentAddress);
 		var textToBeSpoken = `Você está em ${this.getFullAddress(addressExtractor)}.`;
@@ -2304,6 +2477,22 @@ class HtmlSpeechSynthesisDisplayer {
 		return textToBeSpoken;
 	}
 
+	buildTextToSpeechBairro(currentAddress) {
+		log("Building text for bairro change...");
+		let previousAddress = AddressDataExtractor.getPreviousAddress();
+		log(
+			"previousAddress:",
+			previousAddress ? previousAddress.toString() : "N/A",
+		);
+		log("currentAddress:", currentAddress ? currentAddress.toString() : "N/A");
+		let bairroChanged = AddressDataExtractor.hasBairroChanged();
+		log("bairroChanged:", bairroChanged);
+
+		let addressExtractor = new AddressDataExtractor(currentAddress);
+		let textToBeSpoken = this.getBairro(addressExtractor);
+		return textToBeSpoken;
+	}
+
 	update(currentAddress, enderecoPadronizadoOrEvent, loading, error) {
 		log("(HtmlSpeechSynthesisDisplayer) Updating speech synthesis display...");
 		log("currentAddress:", currentAddress);
@@ -2322,7 +2511,22 @@ class HtmlSpeechSynthesisDisplayer {
 				// Higher priority for logradouro changes (priority = 1)
 				this.speak(textToBeSpoken, 1);
 			}
-		} else if (currentAddress) {
+		} 
+		// Check if this is a bairro change notification
+		else if (enderecoPadronizadoOrEvent === "BairroChanged") {
+			log(
+				"(HtmlSpeechSynthesisDisplayer) Bairro change detected, speaking new neighborhood...",
+			);
+			if (currentAddress) {
+				this.updateVoices();
+				let textToBeSpoken = this.buildTextToSpeechBairro(currentAddress);
+				log("textToBeSpoken for bairro change:", textToBeSpoken);
+				this.textInput.value = textToBeSpoken;
+				// Higher priority for bairro changes (priority = 1)
+				this.speak(textToBeSpoken, 1);
+			}
+		}
+		else if (currentAddress) {
 			// Normal update from reverseGeocoder
 			log('(HtmlSpeechSynthesisDisplayer) Normal address update, speaking full address...)');
 			this.updateVoices();

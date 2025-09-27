@@ -2462,32 +2462,12 @@ class HtmlSpeechSynthesisDisplayer {
 	}
 
 	buildTextToSpeechLogradouro(currentAddress) {
-		log("Building text for logradouro change...");
-		let previousAddress = AddressDataExtractor.getPreviousAddress();
-		log(
-			"previousAddress:",
-			previousAddress ? previousAddress.toString() : "N/A",
-		);
-		log("currentAddress:", currentAddress ? currentAddress.toString() : "N/A");
-		let logradouroChanged = AddressDataExtractor.hasLogradouroChanged();
-		log("logradouroChanged:", logradouroChanged);
-
 		let addressExtractor = new AddressDataExtractor(currentAddress);
 		let textToBeSpoken = this.getLogradouro(addressExtractor);
 		return textToBeSpoken;
 	}
 
 	buildTextToSpeechBairro(currentAddress) {
-		log("Building text for bairro change...");
-		let previousAddress = AddressDataExtractor.getPreviousAddress();
-		log(
-			"previousAddress:",
-			previousAddress ? previousAddress.toString() : "N/A",
-		);
-		log("currentAddress:", currentAddress ? currentAddress.toString() : "N/A");
-		let bairroChanged = AddressDataExtractor.hasBairroChanged();
-		log("bairroChanged:", bairroChanged);
-
 		let addressExtractor = new AddressDataExtractor(currentAddress);
 		let textToBeSpoken = this.getBairro(addressExtractor);
 		return textToBeSpoken;
@@ -2498,44 +2478,37 @@ class HtmlSpeechSynthesisDisplayer {
 		log("currentAddress:", currentAddress);
 		log("enderecoPadronizadoOrEvent:", enderecoPadronizadoOrEvent);
 
-		// Check if this is a logradouro change notification
-		if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
-			log(
-				"(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location...",
-			);
-			if (currentAddress) {
-				this.updateVoices();
-				let textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
-				log("textToBeSpoken for logradouro change:", textToBeSpoken);
-				this.textInput.value = textToBeSpoken;
-				// Higher priority for logradouro changes (priority = 1)
-				this.speak(textToBeSpoken, 1);
-			}
-		} 
-		// Check if this is a bairro change notification
-		else if (enderecoPadronizadoOrEvent === "BairroChanged") {
-			log(
-				"(HtmlSpeechSynthesisDisplayer) Bairro change detected, speaking new neighborhood...",
-			);
-			if (currentAddress) {
-				this.updateVoices();
-				let textToBeSpoken = this.buildTextToSpeechBairro(currentAddress);
-				log("textToBeSpoken for bairro change:", textToBeSpoken);
-				this.textInput.value = textToBeSpoken;
-				// Higher priority for bairro changes (priority = 1)
-				this.speak(textToBeSpoken, 1);
-			}
+		// Early return if no current address
+		if (!currentAddress) {
+			return;
 		}
-		else if (currentAddress) {
+
+		let textToBeSpoken = "";
+		let priority = 0;
+
+		// Determine speech content and priority based on event type
+		if (enderecoPadronizadoOrEvent === "BairroChanged") {
+			log("(HtmlSpeechSynthesisDisplayer) Bairro change detected, speaking new neighborhood with HIGH priority...");
+			textToBeSpoken = this.buildTextToSpeechBairro(currentAddress);
+			priority = 2; // HIGHEST priority for bairro changes
+			log("textToBeSpoken for bairro change:", textToBeSpoken);
+		} else if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
+			log("(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location...");
+			textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
+			priority = 1; // Medium priority for logradouro changes
+			log("textToBeSpoken for logradouro change:", textToBeSpoken);
+		} else {
 			// Normal update from reverseGeocoder
-			log('(HtmlSpeechSynthesisDisplayer) Normal address update, speaking full address...)');
-			this.updateVoices();
-			var textToBeSpoken = "";
-			textToBeSpoken += this.buildTextToSpeech(currentAddress);
+			log("(HtmlSpeechSynthesisDisplayer) Normal address update, speaking full address...");
+			textToBeSpoken = this.buildTextToSpeech(currentAddress);
+			priority = 0; // Lowest priority for full address updates
 			log("textToBeSpoken:", textToBeSpoken);
+		}
+
+		// Common operations for all cases
+		if (textToBeSpoken) {
 			this.textInput.value = textToBeSpoken;
-			// Normal priority for full address updates (priority = 0)
-			this.speak(textToBeSpoken, 0);
+			this.speak(textToBeSpoken, priority);
 		}
 	}
 

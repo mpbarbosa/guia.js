@@ -1705,6 +1705,20 @@ class HTMLAddressDisplayer {
 		const addressTypeDescr = getAddressType(geodataParser.data);
 
 		let html = "";
+		
+		// Display municipality prominently at the top
+		if (enderecoPadronizado && enderecoPadronizado.municipio) {
+			html += `<div id="municipio-display" style="background-color: #e8f4fd; border: 2px solid #0066cc; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: center;">`;
+			html += `<h2 style="margin: 0; color: #0066cc; font-size: 24px; font-weight: bold;">📍 ${enderecoPadronizado.municipio}</h2>`;
+			if (enderecoPadronizado.uf) {
+				html += `<p style="margin: 5px 0 0 0; color: #0066cc; font-size: 16px;">${enderecoPadronizado.uf}</p>`;
+			}
+			html += `</div>`;
+		}
+		
+		// Element dadosSidra as requested in the issue
+		html += `<div id="dadosSidra"></div>`;
+		
 		if (geodataParser.referencePlace) {
 			html += `<p><strong>Referência:</strong> ${geodataParser.referencePlace.placeName}</p>`;
 		}

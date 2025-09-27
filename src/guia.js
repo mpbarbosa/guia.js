@@ -479,7 +479,7 @@ class ReverseGeocoder extends APIFetcher {
 function getAddressType(address) {
 	const addressClass = address.class;
 	const addressType = address.type;
-	var addressTypeDescr;
+	let addressTypeDescr;
 
 	if (addressClass == "place" && addressType == "house") {
 		addressTypeDescr = "Residencial";
@@ -543,7 +543,7 @@ class GeolocationService {
 
 	checkGeolocation() {
 		// Check if geolocation is supported by the browser
-		var element = this.locationResult;
+		const element = this.locationResult;
 		if (element !== null) {
 			if (!navigator.geolocation) {
 				element.innerHTML =
@@ -1425,8 +1425,8 @@ class AddressDataExtractor {
 		// Extract state code from ISO3166-2-lvl4 if available
 		// Example format: "BR-SP" for São Paulo, Brazil
 		if (address["ISO3166-2-lvl4"]) {
-			var pattern = /^BR-(\w{2})$/;
-			var match = address["ISO3166-2-lvl4"].match(pattern);
+			const pattern = /^BR-(\w{2})$/;
+			const match = address["ISO3166-2-lvl4"].match(pattern);
 			if (match) {
 				this.enderecoPadronizado.siglaUf = match[1];
 			}
@@ -2109,7 +2109,7 @@ class SpeechSynthesisManager {
 	async getSpeechVoices() {
 		return new Promise((resolve) => {
 			// Check if voices are already loaded
-			var voices = this.synth.getVoices();
+			let voices = this.synth.getVoices();
 			if (voices.length > 0) {
 				resolve(voices);
 				return;
@@ -2349,7 +2349,7 @@ class HtmlSpeechSynthesisDisplayer {
 	}
 
 	updateRate() {
-		var rate = rateInput.value;
+		const rate = rateInput.value;
 		this.speechManager.rate = rate;
 		this.rateValue.textContent = value;
 	}
@@ -2360,7 +2360,7 @@ class HtmlSpeechSynthesisDisplayer {
 	}
 
 	speak(textToSpeak = null, priority = 0) {
-		var text = textToSpeak;
+		let text = textToSpeak;
 
 		// If no text provided, get from text input
 		if (!text && this.textInput && this.textInput.value) {
@@ -2438,8 +2438,8 @@ class HtmlSpeechSynthesisDisplayer {
 	}
 
 	getFullAddress(addressExtractor) {
-		var enderecoPadronizado = addressExtractor.enderecoPadronizado;
-		var parts = [];
+		const enderecoPadronizado = addressExtractor.enderecoPadronizado;
+		const parts = [];
 		if (enderecoPadronizado.logradouro) {
 			parts.push(enderecoPadronizado.logradouroCompleto());
 		}
@@ -2453,18 +2453,18 @@ class HtmlSpeechSynthesisDisplayer {
 	}
 
 	getLogradouro(addressExtractor) {
-		var enderecoPadronizado = addressExtractor.enderecoPadronizado;
+		const enderecoPadronizado = addressExtractor.enderecoPadronizado;
 		return enderecoPadronizado.getLogradouro();
 	}
 
 	getBairro(addressExtractor) {
-		var enderecoPadronizado = addressExtractor.enderecoPadronizado;
+		const enderecoPadronizado = addressExtractor.enderecoPadronizado;
 		return enderecoPadronizado.bairro || "Bairro não identificado";
 	}
 
 	buildTextToSpeech(currentAddress) {
-		var addressExtractor = new AddressDataExtractor(currentAddress);
-		var textToBeSpoken = `Você está em ${this.getFullAddress(addressExtractor)}.`;
+		const addressExtractor = new AddressDataExtractor(currentAddress);
+		const textToBeSpoken = `Você está em ${this.getFullAddress(addressExtractor)}.`;
 		return textToBeSpoken;
 	}
 

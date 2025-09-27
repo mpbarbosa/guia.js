@@ -1884,6 +1884,13 @@ class HTMLAddressDisplayer {
 			html += `</div>`;
 		}
 		
+		// Display bairro prominently but less highlighted than municipality
+		if (enderecoPadronizado && enderecoPadronizado.bairro) {
+			html += `<div id="bairro-display" style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 12px; margin-bottom: 15px; text-align: center;">`;
+			html += `<h3 style="margin: 0; color: #6c757d; font-size: 18px; font-weight: 500;">🏘️ ${enderecoPadronizado.bairroCompleto()}</h3>`;
+			html += `</div>`;
+		}
+		
 		// Element dadosSidra as requested in the issue
 		html += `<div id="dadosSidra"></div>`;
 		
@@ -2579,6 +2586,7 @@ if (typeof module !== "undefined" && module.exports) {
 		Chronometer,
 		HTMLPositionDisplayer,
 		HTMLAddressDisplayer,
+		BrazilianStandardAddress,
 		AddressDataExtractor,
 		SpeechQueue,
 		SpeechSynthesisManager,

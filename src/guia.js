@@ -2,8 +2,8 @@
 // Version object for unstable development status
 const guiaVersion = {
 	major: 0,
-	minor: 7,
-	patch: 1,
+	minor: 8,
+	patch: 0,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;

@@ -2,8 +2,8 @@
 // Version object for unstable development status
 const guiaVersion = {
 	major: 0,
-	minor: 7,
-	patch: 1,
+	minor: 8,
+	patch: 0,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
@@ -13,29 +13,64 @@ const guiaVersion = {
 const guiaName = "Guia Turístico em Movimento";
 const guiaAuthor = "Marcelo Pereira Barbosa";
 const setupParams = {
-	logradouroChangeTimer: 1000, // milliseconds
-	openstreetmapBaseUrl: 'https://nominatim.openstreetmap.org/reverse?format=json'
+	trackingInterval: 60000, // milliseconds
+	minimumDistanceChange: 20, // meters
+	independentQueueTimerInterval: 5000, // milliseconds
+	openstreetmapBaseUrl:
+		"https://nominatim.openstreetmap.org/reverse?format=json",
 };
 
-const getOpenStreetMapUrl = (latitude, longitude) => `${setupParams.openstreetmapBaseUrl}&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+const getOpenStreetMapUrl = (latitude, longitude) =>
+	`${setupParams.openstreetmapBaseUrl}&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
 
-// Haversine distance calculation between two coordinates
-//TODO: #68 Mover para uma biblioteca utilitarian
-//TODO: #68 Mover para uma biblioteca utilitarian
-function calculateDistance(lat1, lon1, lat2, lon2) {
-	const R = 6371e3; // Earth radius in meters
-	const φ1 = (lat1 * Math.PI) / 180;
-	const φ2 = (lat2 * Math.PI) / 180;
-	const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-	const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+/**
+ * Calculates the great-circle distance between two geographic points using the Haversine formula.
+ * 
+ * The Haversine formula determines the shortest distance over the earth's surface between two points
+ * given their latitude and longitude coordinates. This implementation assumes a spherical Earth
+ * with radius 6,371,000 meters (mean radius).
+ * 
+ * Formula: d = R × c
+ * Where:
+ * - R = Earth's radius (6,371,000 meters)
+ * - c = 2 × atan2(√a, √(1−a))
+ * - a = sin²(Δφ/2) + cos(φ1) × cos(φ2) × sin²(Δλ/2)
+ * - φ = latitude in radians
+ * - λ = longitude in radians
+ * - Δφ = difference in latitudes
+ * - Δλ = difference in longitudes
+ * 
+ * @param {number} lat1 - Latitude of first point in decimal degrees (-90 to 90)
+ * @param {number} lon1 - Longitude of first point in decimal degrees (-180 to 180)
+ * @param {number} lat2 - Latitude of second point in decimal degrees (-90 to 90)
+ * @param {number} lon2 - Longitude of second point in decimal degrees (-180 to 180)
+ * @returns {number} Distance in meters between the two points
+ * 
+ * @example
+ * // Distance between São Paulo and Rio de Janeiro
+ * const distance = calculateDistance(-23.5505, -46.6333, -22.9068, -43.1729);
+ * console.log(distance); // ~357,710 meters (357.7 km)
+ * 
+ * @see {@link https://en.wikipedia.org/wiki/Haversine_formula} Haversine formula on Wikipedia
+ * @see {@link https://www.movable-type.co.uk/scripts/latlong.html} Calculate distance, bearing and more
+ * 
+ * @since 0.7.1-alpha
+ * @author Marcelo Pereira Barbosa
+ */
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+	const R = 6371e3; // Earth radius in meters (mean radius)
+	const φ1 = (lat1 * Math.PI) / 180; // Convert latitude 1 to radians
+	const φ2 = (lat2 * Math.PI) / 180; // Convert latitude 2 to radians
+	const Δφ = ((lat2 - lat1) * Math.PI) / 180; // Difference in latitude (radians)
+	const Δλ = ((lon2 - lon1) * Math.PI) / 180; // Difference in longitude (radians)
 
-	const a =
-		Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+	// Haversine formula core calculation
+	const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
 		Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-	return R * c;
-}
+	return R * c; // Distance in meters
+};
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -92,31 +127,28 @@ class PositionManager {
 	static strCurrPosNotUpdate = "PositionManager not updated";
 
 	static getInstance(position) {
-		console.log("PositionManager.getInstance");
 		if (!PositionManager.instance) {
 			PositionManager.instance = new PositionManager(position);
-		} else {
+		} else if (position) {
 			PositionManager.instance.update(position);
 		}
 		return PositionManager.instance;
 	}
 
 	constructor(position) {
-		console.log("PositionManager constructor");
 		this.observers = [];
 		this.accuracyQuality = null;
 		this.tsPosicaoAtual = null;
+		this.lastModified = null;
 		if (position) {
 			this.update(position);
 		}
 	}
 
 	subscribe(observer) {
-		console.log(`(PositionManager) observer ${observer} subscribing ${this}`);
 		if (observer) {
 			this.observers.push(observer);
 		}
-		console.log(`(PositionManager) observers ${this.observers}`);
 	}
 
 	unsubscribe(observer) {
@@ -124,10 +156,7 @@ class PositionManager {
 	}
 
 	notifyObservers(posEvent) {
-		log("(PositionManager) PositionManager.notifyObservers: " + this.observers);
-		log("(PositionManager) PositionManager.notifyObservers: " + this.observers);
 		this.observers.forEach((observer) => {
-			console.log("(PositionManager) Notifying observer:", observer);
 			observer.update(this, posEvent);
 		});
 	}
@@ -166,19 +195,14 @@ class PositionManager {
 			warn("(PositionManager) Invalid position data:", position);
 			return;
 		}
-		log("(PositionManager) position.timestamp:", position.timestamp);
-		const tempoDecorrido = position.timestamp - (this.tsPosicaoAtual || 0);
-		log(
-			"(PositionManager) position.timestamp - this.tsPosicaoAtual:",
-			tempoDecorrido,
-		);
-		if (tempoDecorrido < 60000) {
+		if (position.timestamp - (this.lastModified || 0) < setupParams.trackingInterval) {
 			bUpdateCurrPos = false;
+			let errorMessage = `Less than ${setupParams.trackingInterval / 1000} seconds since last update: ${(position.timestamp - (this.lastModified || 0)) / 1000} seconds`;
 			error = {
 				name: "ElapseTimeError",
-				message: "Less than 1 minute since last update",
+				message: errorMessage,
 			};
-			warn("(PositionManager) Less than 1 minute since last update.");
+			warn("(PositionManager) " + errorMessage);
 		}
 
 		// Verifica se a precisão é boa o suficiente
@@ -208,28 +232,20 @@ class PositionManager {
 				position.coords.latitude,
 				position.coords.longitude,
 			);
-			console.log(
-				"(PositionManager) Distance from last position:",
-				distance,
-				"meters",
-			);
-			if (distance < 20) {
-				console.log(
-					"(PositionManager) Position change is less than 20 meters. Not updating.",
-				);
-				return;
+			if (distance < setupParams.minimumDistanceChange) {
+				bUpdateCurrPos = false;
 			}
 		}
-		this.lastPosition = position;
 
 		if (!bUpdateCurrPos) {
 			this.notifyObservers(PositionManager.strCurrPosNotUpdate, null, error);
-			console.log("(PositionManager) PositionManager not updated:", this);
+			log("(PositionManager) PositionManager not updated:", this);
 			return;
 		}
 
 		// Atualiza a posição apenas se tiver passado mais de 1 minuto
-		console.log("(PositionManager) Updating PositionManager...");
+		log("(PositionManager) Updating PositionManager...");
+		this.lastPosition = position;
 		this.position = position;
 		this.coords = position.coords;
 		this.latitude = position.coords.latitude;
@@ -243,10 +259,8 @@ class PositionManager {
 		this.heading = position.coords.heading;
 		this.speed = position.coords.speed;
 		this.timestamp = position.timestamp;
-		this.tsPosicaoAtual = position.timestamp;
-		console.log("(PositionManager) PositionManager updated:", this);
+		this.lastModified = position.timestamp;
 		this.notifyObservers(PositionManager.strCurrPosUpdate, null, error);
-		console.log("(PositionManager) Notified observers.");
 	}
 
 	toString() {
@@ -347,9 +361,6 @@ class APIFetcher {
 	notifyObservers() {
 		log("(APIFetcher) Notifying observers: " + this.observers);
 		this.observers.forEach((observer) => {
-			log("(APIFetcher) Notifying observer:", observer);
-			log("First param:", this.firstUpdateParam());
-			log("Second param:", this.secondUpdateParam());
 			observer.update(
 				this.firstUpdateParam(),
 				this.secondUpdateParam(),
@@ -405,6 +416,9 @@ class ReverseGeocoder extends APIFetcher {
 	}
 
 	setCoordinates(latitude, longitude) {
+		if (!latitude || !longitude) {
+			return;
+		}
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.url = getOpenStreetMapUrl(this.latitude, this.longitude);
@@ -485,7 +499,7 @@ class ReverseGeocoder extends APIFetcher {
 function getAddressType(address) {
 	const addressClass = address.class;
 	const addressType = address.type;
-	var addressTypeDescr;
+	let addressTypeDescr;
 
 	if (addressClass == "place" && addressType == "house") {
 		addressTypeDescr = "Residencial";
@@ -522,9 +536,6 @@ class GeolocationService {
 			);
 			return;
 		}
-		console.log(
-			`(GeolocationService) observer ${observer} subscribing ${this}`,
-		);
 		this.observers.push(observer);
 	}
 
@@ -552,7 +563,7 @@ class GeolocationService {
 
 	checkGeolocation() {
 		// Check if geolocation is supported by the browser
-		var element = this.locationResult;
+		const element = this.locationResult;
 		if (element !== null) {
 			if (!navigator.geolocation) {
 				element.innerHTML =
@@ -567,15 +578,12 @@ class GeolocationService {
 	}
 
 	async getCurrentLocation() {
-		console.log("(GeolocationService) Getting current location...");
 		this.checkGeolocation();
 		return new Promise(async function (resolve, reject) {
 			// Get current position
 			navigator.geolocation.getCurrentPosition(
 				async (position) => {
 					SingletonStatusManager.getInstance().setGettingLocation(true);
-
-					console.log("(GeolocationService) Position obtained:", position);
 					resolve(PositionManager.getInstance(position));
 				},
 				(error) => {
@@ -591,7 +599,6 @@ class GeolocationService {
 	}
 
 	updatePosition(position) {
-		console.log("(GeolocationService) watchPosition callback");
 		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		if (findRestaurantsBtn) {
@@ -600,27 +607,19 @@ class GeolocationService {
 		if (cityStatsBtn) {
 			cityStatsBtn.disabled = true;
 		}
-		console.log("(GeolocationService) Position obtained:", position);
 		this.currentPosition = position;
 		this.currentCoords = position.coords;
-		console.log("(GeolocationService) Notifying observers...");
 		this.notifyObservers();
 	}
 
 	async watchCurrentLocation() {
-		console.log("(GeolocationService) watchCurrentLocation");
-		console.log("(GeolocationService) Getting current location...");
 		this.checkGeolocation();
 		return new Promise(async function (resolve, reject) {
 			// Get current position
 			navigator.geolocation.watchPosition(
 				async (position) => {
-					console.log("(GeolocationService) watchPosition callback");
-
 					SingletonStatusManager.getInstance().setGettingLocation(true);
-
-					console.log("(GeolocationService) Position obtained:", position);
-					var currentPos = PositionManager.getInstance(position);
+					let currentPos = PositionManager.getInstance(position);
 					resolve(currentPos);
 				},
 				(error) => {
@@ -636,44 +635,46 @@ class GeolocationService {
 	}
 
 	async getSingleLocationUpdate() {
-		console.log("(GeolocationService) Getting single location update...");
 		if (this.locationResult) {
 			this.locationResult.innerHTML =
 				'<p class="loading">Buscando a sua localização...</p>';
-			console.log("(GeolocationService) locationResult:", this.locationResult);
 		}
 
 		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		return this.getCurrentLocation().then((position) => {
-			console.log("(GeolocationService) Position obtained:", position);
+			let currentPos = PositionManager.getInstance(position);
 			this.currentPosition = position;
 			this.currentCoords = position.coords;
 			this.notifyObservers();
 			return position;
+		}).catch((error) => {
+			console.error("(GeolocationService) Error getting location:", error);
+			displayError(error);
+			SingletonStatusManager.getInstance().setGettingLocation(false);
+			throw error; // Re-throw to allow further handling if needed
 		});
 	}
 
 	async getWatchLocationUpdate() {
-		console.log("(GeolocationService) getWatchLocationUpdate");
 		if (this.locationResult) {
 			this.locationResult.innerHTML =
 				'<p class="loading">Buscando a sua localização...</p>';
-			console.log("(GeolocationService) locationResult:", this.locationResult);
+			let currentPos = PositionManager.getInstance();
 		}
 
 		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		return this.watchCurrentLocation().then((position) => {
-			console.log(
-				"(GeolocationService) watchPosition callback received position:",
-				position,
-			);
 			this.currentPosition = position;
 			this.currentCoords = position.coords;
-			console.log("(GeolocationService) Notifying observers...");
 			this.notifyObservers();
 			return position;
+		}).catch((error) => {
+			console.error("(GeolocationService) Error watching location:", error);
+			displayError(error);
+			SingletonStatusManager.getInstance().setGettingLocation(false);
+			throw error; // Re-throw to allow further handling if needed
 		});
 	}
 
@@ -684,15 +685,12 @@ class GeolocationService {
 
 class WebGeocodingManager {
 	constructor(document, resultElement) {
-		console.log("(WebGeocodingManager) Initializing WebGeocodingManager...");
 		this.document = document;
 		this.locationResult = resultElement;
 		this.observers = [];
 		this.functionObservers = [];
 		this.currentPosition = null;
 		this.currentCoords = null;
-		this.logradouroChangeTimer = null;
-
 
 		this.initElements();
 
@@ -704,14 +702,11 @@ class WebGeocodingManager {
 
 		PositionManager.getInstance().subscribe(this.positionDisplayer);
 		this.reverseGeocoder.subscribe(this.addressDisplayer);
-
-		console.log("(WebGeocodingManager) WebGeocodingManager initialized.");
 	}
 
 	initElements() {
-		var chronometer = this.document.getElementById("chronometer");
+		let chronometer = this.document.getElementById("chronometer");
 		if (chronometer) {
-			console.log("(WebGeocodingManager) Chronometer element found.");
 			this.chronometer = new Chronometer(chronometer);
 			PositionManager.getInstance().subscribe(this.chronometer);
 		} else {
@@ -822,7 +817,6 @@ class WebGeocodingManager {
 		this.reverseGeocoder.subscribe(this.htmlSpeechSynthesisDisplayer);
 		this.subscribe(this.htmlSpeechSynthesisDisplayer);
 
-		console.log("WebGeocodingManager initialized.");
 		this.notifyObservers();
 	}
 
@@ -836,19 +830,6 @@ class WebGeocodingManager {
 	notifyFunctionObservers() {
 		console.log("(WebGeocodingManager) Notifying function observers");
 		for (const fn of this.functionObservers) {
-			console.log("(WebGeocodingManager) Notifying function observer:", fn);
-			console.log(
-				"(WebGeocodingManager) Current position:",
-				this.currentPosition,
-			);
-			console.log(
-				"(WebGeocodingManager) Current address:",
-				this.reverseGeocoder.currentAddress,
-			);
-			console.log(
-				"(WebGeocodingManager) Standardized address:",
-				this.reverseGeocoder.enderecoPadronizado,
-			);
 			fn(
 				this.currentPosition,
 				this.reverseGeocoder.currentAddress,
@@ -858,11 +839,9 @@ class WebGeocodingManager {
 	}
 
 	getSingleLocationUpdate() {
-		console.log("(WebGeocodingManager) getSingleLocationUpdate");
 		this.geolocationService
 			.getSingleLocationUpdate()
 			.then((position) => {
-				console.log("(WebGeocodingManager) Position obtained:", position);
 				if (position && position.coords) {
 					this.currentPosition = position;
 					this.reverseGeocoder.latitude = position.coords.latitude;
@@ -873,10 +852,6 @@ class WebGeocodingManager {
 				}
 			})
 			.then((addressData) => {
-				console.log(
-					"(WebGeocodingManager) Address data obtained:",
-					addressData,
-				);
 				this.reverseGeocoder.currentAddress = addressData;
 				this.reverseGeocoder.enderecoPadronizado =
 					AddressDataExtractor.getBrazilianStandardAddress(addressData);
@@ -889,16 +864,11 @@ class WebGeocodingManager {
 	}
 
 	updatePosition(position) {
-		console.log("(WebGeocodingManager) updatePosition", position);
 		this.reverseGeocoder.latitude = position.coords.latitude;
 		this.reverseGeocoder.longitude = position.coords.longitude;
 		this.reverseGeocoder
 			.reverseGeocode()
 			.then((addressData) => {
-				console.log(
-					"(WebGeocodingManager) Address data obtained:",
-					addressData,
-				);
 				this.reverseGeocoder.currentAddress = addressData;
 				this.reverseGeocoder.notifyObservers();
 			})
@@ -908,17 +878,13 @@ class WebGeocodingManager {
 	}
 
 	startTracking() {
-		log("(WebGeocodingManager) Starting tracking...");
-
 		this.initSpeechSynthesis();
 
 		/*
-    Get current location. Do an initial check to see
-    if the user has granted location permissions. Do an immediate
-    update.
-    */
-		log("(WebGeocodingManager) Checking geolocation permissions...");
-
+	Get current location. Do an initial check to see
+	if the user has granted location permissions. Do an immediate
+	update.
+	*/
 		//this.geolocationService.checkPermissions().then((value) => {
 		this.getSingleLocationUpdate();
 		//});
@@ -927,84 +893,140 @@ class WebGeocodingManager {
 			null;
 		}, 20000);
 
-		log("(WebGeocodingManager) Setting up periodic updates...");
 		// Start watching position with high accuracy
 		this.geolocationService.getWatchLocationUpdate().then((value) => {
 			value.subscribe(this.positionDisplayer);
 			value.subscribe(this.reverseGeocoder);
 			//value.subscribe(this.htmlSpeechSynthesisDisplayer);
+		}).catch((error) => {
+			console.error("(WebGeocodingManager) Error setting up location watching:", error);
+			// Error is already handled by GeolocationService, just log it here
 		});
 
-		// Start logradouro change detection (30s interval)
-		this.startLogradouroChangeDetection();
+		// Register callback for logradouro change detection (replaces timer-based approach)
+		this.setupLogradouroChangeDetection();
+
+		// Register callback for bairro change detection (follows same pattern as logradouro)
+		this.setupBairroChangeDetection();
+
+		// Register callback for municipio change detection (follows same pattern as logradouro and bairro)
+		this.setupMunicipioChangeDetection();
 	}
 
 	/**
-	 * Starts the logradouro change detection timer (checks every 30 seconds)
+	 * Sets up logradouro change detection using callback mechanism (replaces timer-based approach)
 	 */
-	startLogradouroChangeDetection() {
-		log(
-			"(WebGeocodingManager) Starting logradouro change detection (30s interval)...",
-		);
-
-		log(
-			"(WebGeocodingManager) Starting logradouro change detection (30s interval)...",
-		);
-
-		if (this.logradouroChangeTimer) {
-			clearInterval(this.logradouroChangeTimer);
-		}
-
-
-		this.logradouroChangeTimer = setInterval(() => {
-			this.checkLogradouroChange();
-		}, setupParams.logradouroChangeTimer);
-		}, setupParams.logradouroChangeTimer);
+	setupLogradouroChangeDetection() {
+		// Register this instance's callback with AddressDataExtractor
+		AddressDataExtractor.setLogradouroChangeCallback((changeDetails) => {
+			this.handleLogradouroChange(changeDetails);
+		});
 	}
 
 	/**
-	 * Stops the logradouro change detection timer
+	 * Removes the logradouro change detection callback
 	 */
-	stopLogradouroChangeDetection() {
-		if (this.logradouroChangeTimer) {
-			clearInterval(this.logradouroChangeTimer);
-			this.logradouroChangeTimer = null;
-		}
+	removeLogradouroChangeDetection() {
+		AddressDataExtractor.setLogradouroChangeCallback(null);
 	}
 
 	/**
-	 * Checks if the logradouro has changed and notifies observers
+	 * Sets up bairro change detection using callback mechanism (follows same pattern as logradouro)
 	 */
-	checkLogradouroChange() {
-		log("(WebGeocodingManager) Checking for logradouro changes...");
+	setupBairroChangeDetection() {
+		// Register this instance's callback with AddressDataExtractor
+		AddressDataExtractor.setBairroChangeCallback((changeDetails) => {
+			this.handleBairroChange(changeDetails);
+		});
+	}
 
+	/**
+	 * Removes the bairro change detection callback
+	 */
+	removeBairroChangeDetection() {
+		AddressDataExtractor.setBairroChangeCallback(null);
+	}
 
+	/**
+	 * Sets up municipio change detection using callback mechanism (follows same pattern as logradouro and bairro)
+	 */
+	setupMunicipioChangeDetection() {
+		// Register this instance's callback with AddressDataExtractor
+		AddressDataExtractor.setMunicipioChangeCallback((changeDetails) => {
+			this.handleMunicipioChange(changeDetails);
+		});
+	}
+
+	/**
+	 * Removes the municipio change detection callback
+	 */
+	removeMunicipioChangeDetection() {
+		AddressDataExtractor.setMunicipioChangeCallback(null);
+	}
+
+	/**
+	 * Handles logradouro change events and notifies observers
+	 * @param {Object} changeDetails - Details about the logradouro change
+	 */
+	handleLogradouroChange(changeDetails) {
 		try {
-			if (AddressDataExtractor.hasLogradouroChanged()) {
-				const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
-				log("(WebGeocodingManager) Logradouro change detected!");
-				log(
-					"(WebGeocodingManager) Change details:",
-					JSON.stringify(changeDetails),
-				);
-
-				log(
-					"(WebGeocodingManager) Change details:",
-					JSON.stringify(changeDetails),
-				);
-
-				// Notify observers about the logradouro change
-				this.notifyLogradouroChangeObservers(changeDetails);
-			} else {
-				log("(WebGeocodingManager) No logradouro change detected.");
-			}
+			// Notify observers about the logradouro change
+			this.notifyLogradouroChangeObservers(changeDetails);
 		} catch (error) {
 			console.error(
-				"(WebGeocodingManager) Error checking logradouro change:",
+				"(WebGeocodingManager) Error handling logradouro change:",
+				error,
+			);
+		}
+	}
+
+	/**
+	 * Handles bairro change events and notifies observers
+	 * @param {Object} changeDetails - Details about the bairro change
+	 */
+	handleBairroChange(changeDetails) {
+		try {
+			// Notify observers about the bairro change
+			this.notifyBairroChangeObservers(changeDetails);
+		} catch (error) {
+			console.error(
+				"(WebGeocodingManager) Error handling bairro change:",
+				error,
+			);
+		}
+	}
+
+	/**
+	 * Handles municipio change events and notifies observers
+	 * @param {Object} changeDetails - Details about the municipio change
+	 */
+	handleMunicipioChange(changeDetails) {
+		try {
+			// Notify observers about the municipio change
+			this.notifyMunicipioChangeObservers(changeDetails);
+		} catch (error) {
+			console.error(
+				"(WebGeocodingManager) Error handling municipio change:",
 				error,
 			);
 			console.error(
-				"(WebGeocodingManager) Error checking logradouro change:",
+				"(WebGeocodingManager) Error handling bairro change:",
+				error,
+			);
+		}
+	}
+
+	/**
+	 * Handles municipio change events and notifies observers
+	 * @param {Object} changeDetails - Details about the municipio change
+	 */
+	handleMunicipioChange(changeDetails) {
+		try {
+			// Notify observers about the municipio change
+			this.notifyMunicipioChangeObservers(changeDetails);
+		} catch (error) {
+			console.error(
+				"(WebGeocodingManager) Error handling municipio change:",
 				error,
 			);
 		}
@@ -1015,12 +1037,11 @@ class WebGeocodingManager {
 	 * @param {Object} changeDetails - Details about the logradouro change
 	 */
 	notifyLogradouroChangeObservers(changeDetails) {
-		log("(WebGeocodingManager) Notifying observers about logradouro change...");
-
-
 		// Notify regular observers
+		log('(WebGeocodingManager) Notificando os observadores da mudança de logradouro.');
 		for (const observer of this.observers) {
 			if (typeof observer.update === "function") {
+				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de logradouro.`);
 				observer.update(
 					this.reverseGeocoder.currentAddress,
 					"LogradouroChanged",
@@ -1028,6 +1049,7 @@ class WebGeocodingManager {
 					null,
 				);
 			if (typeof observer.update === "function") {
+				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de logradouro.`);
 				observer.update(
 					this.reverseGeocoder.currentAddress,
 					"LogradouroChanged",
@@ -1041,14 +1063,6 @@ class WebGeocodingManager {
 		// Notify function observers with change details
 		for (const fn of this.functionObservers) {
 			try {
-				log(
-					"(WebGeocodingManager) Notifying function observer about logradouro change:",
-					fn,
-				);
-				log(
-					"(WebGeocodingManager) Notifying function observer about logradouro change:",
-					fn,
-				);
 				fn(
 					this.currentPosition,
 					this.reverseGeocoder.currentAddress,
@@ -1069,6 +1083,154 @@ class WebGeocodingManager {
 		}
 	}
 
+	/**
+	 * Notifies observers specifically about bairro changes
+	 * @param {Object} changeDetails - Details about the bairro change
+	 */
+	notifyBairroChangeObservers(changeDetails) {
+		// Notify regular observers
+		log('(WebGeocodingManager) Notificando os observadores da mudança de bairro.');
+		for (const observer of this.observers) {
+			if (typeof observer.update === "function") {
+				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de bairro.`);
+				observer.update(
+					this.reverseGeocoder.currentAddress,
+					"BairroChanged",
+					null,
+					null,
+				);
+			}
+		}
+
+		// Notify function observers with change details
+		for (const fn of this.functionObservers) {
+			try {
+				fn(
+					this.currentPosition,
+					this.reverseGeocoder.currentAddress,
+					this.reverseGeocoder.enderecoPadronizado,
+					changeDetails,
+				);
+			} catch (error) {
+				console.error(
+					"(WebGeocodingManager) Error notifying function observer about bairro change:",
+					error,
+				);
+			}
+		}
+	}
+
+	/**
+	 * Notifies observers specifically about municipio changes
+	 * @param {Object} changeDetails - Details about the municipio change
+	 */
+	notifyMunicipioChangeObservers(changeDetails) {
+		// Notify regular observers
+		log('(WebGeocodingManager) Notificando os observadores da mudança de município.');
+		for (const observer of this.observers) {
+			if (typeof observer.update === "function") {
+				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de município.`);
+				observer.update(
+					this.reverseGeocoder.currentAddress,
+					"MunicipioChanged",
+					null,
+					null,
+				);
+			}
+		}
+
+		// Notify function observers with change details
+		for (const fn of this.functionObservers) {
+			try {
+				fn(
+					this.currentPosition,
+					this.reverseGeocoder.currentAddress,
+					this.reverseGeocoder.enderecoPadronizado,
+					changeDetails,
+				);
+			} catch (error) {
+				console.error(
+					"(WebGeocodingManager) Error notifying function observer about municipio change:",
+					error,
+				);
+			}
+		}
+	}
+
+	/**
+	 * Notifies observers specifically about bairro changes
+	 * @param {Object} changeDetails - Details about the bairro change
+	 */
+	notifyBairroChangeObservers(changeDetails) {
+		// Notify regular observers
+		log('(WebGeocodingManager) Notificando os observadores da mudança de bairro.');
+		for (const observer of this.observers) {
+			if (typeof observer.update === "function") {
+				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de bairro.`);
+				observer.update(
+					this.reverseGeocoder.currentAddress,
+					"BairroChanged",
+					null,
+					null,
+				);
+			}
+		}
+
+		// Notify function observers with change details
+		for (const fn of this.functionObservers) {
+			try {
+				fn(
+					this.currentPosition,
+					this.reverseGeocoder.currentAddress,
+					this.reverseGeocoder.enderecoPadronizado,
+					changeDetails,
+				);
+			} catch (error) {
+				console.error(
+					"(WebGeocodingManager) Error notifying function observer about bairro change:",
+					error,
+				);
+			}
+		}
+	}
+
+	/**
+	 * Notifies observers specifically about municipio changes
+	 * @param {Object} changeDetails - Details about the municipio change
+	 */
+	notifyMunicipioChangeObservers(changeDetails) {
+		// Notify regular observers
+		log('(WebGeocodingManager) Notificando os observadores da mudança de município.');
+		for (const observer of this.observers) {
+			if (typeof observer.update === "function") {
+				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de município.`);
+				observer.update(
+					this.reverseGeocoder.currentAddress,
+					"MunicipioChanged",
+					null,
+					null,
+				);
+			}
+		}
+
+		// Notify function observers with change details
+		for (const fn of this.functionObservers) {
+			try {
+				fn(
+					this.currentPosition,
+					this.reverseGeocoder.currentAddress,
+					this.reverseGeocoder.enderecoPadronizado,
+					changeDetails,
+				);
+			} catch (error) {
+				console.error(
+					"(WebGeocodingManager) Error notifying function observer about municipio change:",
+					error,
+				);
+			}
+		}
+	}
+
 	toString() {
 		return `${this.constructor.name}: ${this.currentCoords ? this.currentCoords.latitude : "N/A"}, ${this.currentCoords ? this.currentCoords.longitude : "N/A"}`;
 	}
@@ -1076,7 +1238,6 @@ class WebGeocodingManager {
 
 class Chronometer {
 	constructor(element) {
-		console.log("Initializing Chronometer...");
 		this.element = element;
 		this.startTime = null;
 		this.elapsedTime = 0;
@@ -1084,7 +1245,6 @@ class Chronometer {
 	}
 
 	start() {
-		console.log("Starting Chronometer...");
 		if (this.timerInterval) {
 			return; // Already running
 		}
@@ -1148,35 +1308,15 @@ class Chronometer {
 
 class HTMLPositionDisplayer {
 	constructor(element) {
-		console.log("Initializing HTMLPositionDisplayer...");
 		this.element = element;
 		Object.freeze(this); // Prevent further modification
 	}
 	constructor(element) {
-		console.log("Initializing HTMLPositionDisplayer...");
 		this.element = element;
 		Object.freeze(this); // Prevent further modification
 	}
 
 	renderHtmlCoords(position) {
-		console.log(
-			"(HTMLPositionDisplayer) Rendering HTML coordinates: " + position,
-		);
-		if (!position || !position.coords) {
-			return "<p class='error'>No position data available.</p>";
-		}
-		const latitude = position.coords.latitude;
-		const longitude = position.coords.longitude;
-		const altitude = position.coords.altitude;
-		const precisao = position.coords.accuracy; // in meters
-		const precisaoAltitude = position.coords.altitudeAccuracy;
-		const direcao = position.coords.heading; // in degrees
-		const velocidade = position.coords.speed; // in meters per second
-		const timestamp = new Date(position.timestamp).toLocaleString();
-	renderHtmlCoords(position) {
-		console.log(
-			"(HTMLPositionDisplayer) Rendering HTML coordinates: " + position,
-		);
 		if (!position || !position.coords) {
 			return "<p class='error'>No position data available.</p>";
 		}
@@ -1190,56 +1330,55 @@ class HTMLPositionDisplayer {
 		const timestamp = new Date(position.timestamp).toLocaleString();
 
 		let html = `<details class="coords-details" closed>
-		let html = `<details class="coords-details" closed>
-            <summary><strong>Coordinates Details</strong></summary>`;
+					<summary><strong>Coordinates Details</strong></summary>`;
 		if (latitude) {
-			html += `<p><strong>Latitude:</strong> ${latitude.toFixed(6)}</p>`;
+			html += `<p> <strong>Latitude:</strong> ${latitude.toFixed(6)}</p > `;
 		}
 		if (longitude) {
-			html += `<p><strong>Longitude:</strong> ${longitude.toFixed(6)}</p>`;
+			html += `<p> <strong>Longitude:</strong> ${longitude.toFixed(6)}</p > `;
 		}
 		if (altitude) {
-			html += `<p><strong>Altitude:</strong> ${altitude.toFixed(2)} metros</p>`;
+			html += `<p> <strong>Altitude:</strong> ${altitude.toFixed(2)} metros</p > `;
 		}
 		if (precisao) {
-			html += `<p><strong>Precisão:</strong> ±${Math.round(precisao)} metros</p>`;
+			html += `<p> <strong>Precisão:</strong> ±${Math.round(precisao)} metros</p > `;
 		}
 		if (precisaoAltitude) {
-			html += `<p><strong>Precisão da altitude:</strong> ±${Math.round(precisaoAltitude)} metros</p>`;
+			html += `<p> <strong>Precisão da altitude:</strong> ±${Math.round(precisaoAltitude)} metros</p > `;
 		}
 		if (direcao) {
-			html += `<p><strong>Direção:</strong> ${direcao.toFixed(2)}°</p>`;
+			html += `<p> <strong>Direção:</strong> ${direcao.toFixed(2)}°</p > `;
 		}
 		if (velocidade) {
-			html += `<p><strong>Velocidade:</strong> ${velocidade.toFixed(2)} m/s</p>`;
+			html += `<p> <strong>Velocidade:</strong> ${velocidade.toFixed(2)} m / s</p > `;
 		}
 		if (timestamp) {
-			html += `<p><strong>Timestamp:</strong> ${timestamp}</p>`;
+			html += `<p> <strong>Timestamp:</strong> ${timestamp}</p > `;
 		}
 		html += `<p>
 		if (latitude) {
 			html += `<p><strong>Latitude:</strong> ${latitude.toFixed(6)}</p>`;
 		}
 		if (longitude) {
-			html += `<p><strong>Longitude:</strong> ${longitude.toFixed(6)}</p>`;
+			html += `<p> <strong>Longitude:</strong> ${longitude.toFixed(6)}</p > `;
 		}
 		if (altitude) {
-			html += `<p><strong>Altitude:</strong> ${altitude.toFixed(2)} metros</p>`;
+			html += `<p> <strong>Altitude:</strong> ${altitude.toFixed(2)} metros</p > `;
 		}
 		if (precisao) {
-			html += `<p><strong>Precisão:</strong> ±${Math.round(precisao)} metros</p>`;
+			html += `<p> <strong>Precisão:</strong> ±${Math.round(precisao)} metros</p > `;
 		}
 		if (precisaoAltitude) {
-			html += `<p><strong>Precisão da altitude:</strong> ±${Math.round(precisaoAltitude)} metros</p>`;
+			html += `<p> <strong>Precisão da altitude:</strong> ±${Math.round(precisaoAltitude)} metros</p > `;
 		}
 		if (direcao) {
-			html += `<p><strong>Direção:</strong> ${direcao.toFixed(2)}°</p>`;
+			html += `<p> <strong>Direção:</strong> ${direcao.toFixed(2)}°</p > `;
 		}
 		if (velocidade) {
-			html += `<p><strong>Velocidade:</strong> ${velocidade.toFixed(2)} m/s</p>`;
+			html += `<p> <strong>Velocidade:</strong> ${velocidade.toFixed(2)} m / s</p > `;
 		}
 		if (timestamp) {
-			html += `<p><strong>Timestamp:</strong> ${timestamp}</p>`;
+			html += `<p> <strong>Timestamp:</strong> ${timestamp}</p > `;
 		}
 		html += `<p>
             <a href="https://www.google.com/maps?q=${latitude},${longitude}" target="_blank">Ver no Google Maps</a>
@@ -1257,7 +1396,7 @@ class HTMLPositionDisplayer {
 	showCoords(position) {
 		let html = this.renderHtmlCoords(position);
 		// Display coordinates first
-		const loc = `<div id="addressSection">
+		const loc = `<div id="lookingUpAddress">
         <p class="loading">Looking up address...</p>
         </div>
         <div class="section" id="restaurantsSection" style="display:none;">
@@ -1271,7 +1410,6 @@ class HTMLPositionDisplayer {
 		html += loc;
 		// Display coordinates first
 		this.element.innerHTML = html;
-		console.log("(HTMLPositionDisplayer) Coordinates displayed.");
 	}
 
 	displayPosition(position) {
@@ -1294,7 +1432,6 @@ class HTMLPositionDisplayer {
 				this.element.innerHTML = `<p class="error">Error: ${error.message}</p>`;
 			} else if (currentCoords) {
 				this.element.innerHTML = "";
-				console.log("(HTMLPositionDisplayer) Element cleared.");
 				this.displayPosition(currentPosition);
 			} else {
 				this.element.innerHTML =
@@ -1365,17 +1502,10 @@ class GeoDataExtractor {
 	}
 
 	extract() {
-		console.log("Extracting geo data...");
 		// Implement extraction logic here
 	}
 
 	static isReferencePlace(data) {
-		log(
-			"(GeoDataExtractor) Check if address data belong to a reference place.",
-		);
-		log(
-			"(GeoDataExtractor) Check if address data belong to a reference place.",
-		);
 		return ReferencePlaceExtractor.isReferencePlace(data);
 	}
 }
@@ -1406,7 +1536,6 @@ class GeoDataPresenter {
 	}
 
 	present(data) {
-		console.log("Presenting geo data...");
 		// Implement presentation logic here
 	}
 }
@@ -1414,7 +1543,6 @@ class GeoDataPresenter {
 
 class ReferencePlaceExtractor {
 	constructor(data) {
-		console.log("Initializing ReferencePlaceExtractor...");
 		this.data = data;
 		this.extract();
 		Object.freeze(this);
@@ -1430,7 +1558,6 @@ class ReferencePlaceExtractor {
 	static isReferencePlace(data) {
 		let validRefPlaceClasses = ["shop"];
 		let refPlaceClass = new ReferencePlaceExtractor(data).placeClass;
-		log(`(ReferencePlaceExtractor) class: ${refPlaceClass}`);
 		return validRefPlaceClasses.includes(refPlaceClass);
 	}
 }
@@ -1441,14 +1568,12 @@ class ReferencePlaceValidator {
 	}
 
 	validate() {
-		console.log("Validating reference place data...");
 		// Implement validation logic here
 	}
 }
 
 class ReferencePlaceFormatter {
 	constructor(data) {
-		console.log("Initializing ReferencePlaceFormatter...");
 		this.data = data;
 	}
 
@@ -1462,9 +1587,6 @@ class ReferencePlaceDisplayer {
 		this.element = element;
 	}
 	display(data) {
-	}
-	display(data) {
-		console.log("Displaying reference place data...");
 		// Implement display logic here
 	}
 }
@@ -1498,28 +1620,23 @@ class ReferencePlace {
 }
 class ReferencePlacePresenter {
 	constructor(element) {
-		console.log("Initializing ReferencePlacePresenter...");
 		this.element = element;
 	}
 }
 
 class AddressDataExtractor {
 	constructor(data) {
-		console.log("Initializing AddressDataExtractor...");
 		this.data = data;
-		console.log("data:", data);
 		this.enderecoPadronizado = new BrazilianStandardAddress();
 		this.padronizaEndereco();
 		Object.freeze(this); // Prevent further modification
 	}
 
 	padronizaEndereco() {
-		console.log("Padronizando endereço...");
 		if (!this.data || !this.data.address) {
-			console.warn("No address data to standardize.");
 			return;
 		}
-		var address = this.data.address;
+		let address = this.data.address;
 		this.enderecoPadronizado.logradouro = address.street || address.road;
 
 		this.enderecoPadronizado.house_number = address.house_number || "";
@@ -1533,7 +1650,6 @@ class AddressDataExtractor {
 		this.enderecoPadronizado.municipio =
 			address.city || address.town || address.municipality || address.county;
 
-		console.log("address.state:", address.state);
 		this.enderecoPadronizado.uf = address.state || "";
 
 		this.enderecoPadronizado.cep = address.postcode || "";
@@ -1546,10 +1662,9 @@ class AddressDataExtractor {
 
 		// Extract state code from ISO3166-2-lvl4 if available
 		// Example format: "BR-SP" for São Paulo, Brazil
-		console.log("this.data['ISO3166-2-lvl4']:", address["ISO3166-2-lvl4"]);
 		if (address["ISO3166-2-lvl4"]) {
-			var pattern = /^BR-(\w{2})$/;
-			var match = address["ISO3166-2-lvl4"].match(pattern);
+			const pattern = /^BR-(\w{2})$/;
+			const match = address["ISO3166-2-lvl4"].match(pattern);
 			if (match) {
 				this.enderecoPadronizado.siglaUf = match[1];
 			}
@@ -1569,16 +1684,11 @@ class AddressDataExtractor {
 	static setCacheExpirationTime(expirationMs) {
 		if (typeof expirationMs !== "number" || expirationMs < 0) {
 			throw new Error("Cache expiration time must be a non-negative number");
-		if (typeof expirationMs !== "number" || expirationMs < 0) {
-			throw new Error("Cache expiration time must be a non-negative number");
+			if (typeof expirationMs !== "number" || expirationMs < 0) {
+				throw new Error("Cache expiration time must be a non-negative number");
+			}
+			AddressDataExtractor.cacheExpirationMs = expirationMs;
 		}
-		AddressDataExtractor.cacheExpirationMs = expirationMs;
-		console.log(
-			`(AddressDataExtractor) Cache expiration time set to ${expirationMs}ms`,
-		);
-		console.log(
-			`(AddressDataExtractor) Cache expiration time set to ${expirationMs}ms`,
-		);
 	}
 
 	/**
@@ -1609,10 +1719,10 @@ class AddressDataExtractor {
 			address.house_number || "",
 			address.neighbourhood || address.suburb || "",
 			address.city ||
-				address.town ||
-				address.municipality ||
-				address.county ||
-				"",
+			address.town ||
+			address.municipality ||
+			address.county ||
+			"",
 			address.state || "",
 			address.postcode || "",
 			address.country_code || "",
@@ -1654,8 +1764,6 @@ class AddressDataExtractor {
 	 */
 	static clearCache() {
 		AddressDataExtractor.cache.clear();
-		console.log("(AddressDataExtractor) Cache cleared");
-		console.log("(AddressDataExtractor) Cache cleared");
 	}
 
 	/**
@@ -1680,9 +1788,6 @@ class AddressDataExtractor {
 		const entries = Array.from(AddressDataExtractor.cache.values());
 		const currentEntry = entries[entries.length - 1];
 
-		console.log("(AddressDataExtractor) Current address retrieved from cache");
-
-		console.log("(AddressDataExtractor) Current address retrieved from cache");
 		return currentEntry ? currentEntry.address : null;
 	}
 
@@ -1700,9 +1805,6 @@ class AddressDataExtractor {
 		const entries = Array.from(AddressDataExtractor.cache.values());
 		const previousEntry = entries[entries.length - 2];
 
-		console.log("(AddressDataExtractor) Previous address retrieved from cache");
-
-		console.log("(AddressDataExtractor) Previous address retrieved from cache");
 		return previousEntry ? previousEntry.address : null;
 	}
 
@@ -1713,40 +1815,37 @@ class AddressDataExtractor {
 	static hasLogradouroChanged() {
 		const currentAddress = AddressDataExtractor.getCurrentAddress();
 		const previousAddress = AddressDataExtractor.getPreviousAddress();
-		log("(AddressDataExtractor) Checking for logradouro changes...");
-		log("Current address:", currentAddress ? currentAddress.toString() : "N/A");
-		log(
-			"Previous address:",
-			previousAddress ? previousAddress.toString() : "N/A",
-		);
 
 		// If we don't have both addresses, no change can be detected
 		if (!currentAddress || !previousAddress) {
-			log(
-				"(AddressDataExtractor) Not enough address data to determine changes.",
-			);
 			return false;
 		}
 
 
 		// Compare logradouro values, handling null/undefined cases
-		log("(AddressDataExtractor) Comparing logradouro values...");
 		const currentLogradouro = currentAddress.logradouro;
 		const previousLogradouro = previousAddress.logradouro;
 
-
+		// Check if addresses are actually different
 		const hasChanged = currentLogradouro !== previousLogradouro;
 
 
-		if (hasChanged) {
-			console.log("(AddressDataExtractor) Logradouro changed detected:");
-			console.log("(AddressDataExtractor) Logradouro changed detected:");
-			console.log(`  Previous: "${previousLogradouro}"`);
-			console.log(`  Current: "${currentLogradouro}"`);
+		if (!hasChanged) {
+			return false;
 		}
 
+		// Create a signature for this specific change to prevent loops
+		const changeSignature = `${previousLogradouro}|${currentLogradouro}`;
 
-		return hasChanged;
+		// If we've already notified about this exact change, don't notify again
+		if (AddressDataExtractor.lastNotifiedChangeSignature === changeSignature) {
+			return false;
+		}
+
+		// Mark this change as the one we're about to notify
+		AddressDataExtractor.lastNotifiedChangeSignature = changeSignature;
+
+		return true;
 	}
 
 	/**
@@ -1780,7 +1879,141 @@ class AddressDataExtractor {
 				logradouro: currentLogradouro,
 				logradouroCompleto: currentAddress.logradouroCompleto(),
 			},
-				logradouroCompleto: currentAddress.logradouroCompleto(),
+		};
+	}
+
+	/**
+	 * Checks if the bairro (neighborhood) has changed between the current and previous addresses
+	 * @returns {boolean} True if bairro has changed, false otherwise
+	 */
+	static hasBairroChanged() {
+		const currentAddress = AddressDataExtractor.getCurrentAddress();
+		const previousAddress = AddressDataExtractor.getPreviousAddress();
+
+		// If we don't have both addresses, no change can be detected
+		if (!currentAddress || !previousAddress) {
+			return false;
+		}
+
+		// Compare bairro values, handling null/undefined cases
+		const currentBairro = currentAddress.bairro;
+		const previousBairro = previousAddress.bairro;
+
+		// Check if addresses are actually different
+		const hasChanged = currentBairro !== previousBairro;
+
+		if (!hasChanged) {
+			return false;
+		}
+
+		// Create a signature for this specific change to prevent loops
+		const changeSignature = `${previousBairro}|${currentBairro}`;
+
+		// If we've already notified about this exact change, don't notify again
+		if (AddressDataExtractor.lastNotifiedBairroChangeSignature === changeSignature) {
+			return false;
+		}
+
+		// Mark this change as the one we're about to notify
+		AddressDataExtractor.lastNotifiedBairroChangeSignature = changeSignature;
+
+		return true;
+	}
+
+	/**
+	 * Gets detailed information about bairro changes between current and previous addresses
+	 * @returns {Object|null} Object with change details or null if no comparison possible
+	 */
+	static getBairroChangeDetails() {
+		const currentAddress = AddressDataExtractor.getCurrentAddress();
+		const previousAddress = AddressDataExtractor.getPreviousAddress();
+
+		// If we don't have both addresses, no change details can be provided
+		if (!currentAddress || !previousAddress) {
+			return null;
+		}
+
+		const currentBairro = currentAddress.bairro;
+		const previousBairro = previousAddress.bairro;
+		const hasChanged = currentBairro !== previousBairro;
+
+		return {
+			hasChanged: hasChanged,
+			previous: {
+				bairro: previousBairro,
+				bairroCompleto: previousAddress.bairroCompleto(),
+			},
+			current: {
+				bairro: currentBairro,
+				bairroCompleto: currentAddress.bairroCompleto(),
+			},
+		};
+	}
+
+	/**
+	 * Checks if the municipio (municipality) has changed between the current and previous addresses
+	 * @returns {boolean} True if municipio has changed, false otherwise
+	 */
+	static hasMunicipioChanged() {
+		const currentAddress = AddressDataExtractor.getCurrentAddress();
+		const previousAddress = AddressDataExtractor.getPreviousAddress();
+
+		// If we don't have both addresses, no change can be detected
+		if (!currentAddress || !previousAddress) {
+			return false;
+		}
+
+		// Compare municipio values, handling null/undefined cases
+		const currentMunicipio = currentAddress.municipio;
+		const previousMunicipio = previousAddress.municipio;
+
+		// Check if addresses are actually different
+		const hasChanged = currentMunicipio !== previousMunicipio;
+
+		if (!hasChanged) {
+			return false;
+		}
+
+		// Create a signature for this specific change to prevent loops
+		const changeSignature = `${previousMunicipio}|${currentMunicipio}`;
+
+		// If we've already notified about this exact change, don't notify again
+		if (AddressDataExtractor.lastNotifiedMunicipioChangeSignature === changeSignature) {
+			return false;
+		}
+
+		// Mark this change as the one we're about to notify
+		AddressDataExtractor.lastNotifiedMunicipioChangeSignature = changeSignature;
+
+		return true;
+	}
+
+	/**
+	 * Gets detailed information about municipio changes between current and previous addresses
+	 * @returns {Object|null} Object with change details or null if no comparison possible
+	 */
+	static getMunicipioChangeDetails() {
+		const currentAddress = AddressDataExtractor.getCurrentAddress();
+		const previousAddress = AddressDataExtractor.getPreviousAddress();
+
+		// If we don't have both addresses, no change details can be provided
+		if (!currentAddress || !previousAddress) {
+			return null;
+		}
+
+		const currentMunicipio = currentAddress.municipio;
+		const previousMunicipio = previousAddress.municipio;
+		const hasChanged = currentMunicipio !== previousMunicipio;
+
+		return {
+			hasChanged: hasChanged,
+			previous: {
+				municipio: previousMunicipio,
+				uf: previousAddress.uf,
+			},
+			current: {
+				municipio: currentMunicipio,
+				uf: currentAddress.uf,
 			},
 		};
 	}
@@ -1792,15 +2025,14 @@ class AddressDataExtractor {
 	static setMaxCacheSize(maxSize) {
 		if (typeof maxSize !== "number" || maxSize < 1) {
 			throw new Error("Maximum cache size must be a positive number");
-		if (typeof maxSize !== "number" || maxSize < 1) {
-			throw new Error("Maximum cache size must be a positive number");
+			if (typeof maxSize !== "number" || maxSize < 1) {
+				throw new Error("Maximum cache size must be a positive number");
+			}
+			AddressDataExtractor.maxCacheSize = maxSize;
+
+			// Evict entries if current size exceeds new limit
+			AddressDataExtractor.evictLeastRecentlyUsedIfNeeded();
 		}
-		AddressDataExtractor.maxCacheSize = maxSize;
-		console.log(`(AddressDataExtractor) Maximum cache size set to ${maxSize}`);
-
-
-		// Evict entries if current size exceeds new limit
-		AddressDataExtractor.evictLeastRecentlyUsedIfNeeded();
 	}
 
 	/**
@@ -1819,16 +2051,34 @@ class AddressDataExtractor {
 			const firstKey = AddressDataExtractor.cache.keys().next().value;
 			if (firstKey) {
 				AddressDataExtractor.cache.delete(firstKey);
-				console.log(
-					`(AddressDataExtractor) Evicted least recently used cache entry. Cache size: ${AddressDataExtractor.cache.size}`,
-				);
-				console.log(
-					`(AddressDataExtractor) Evicted least recently used cache entry. Cache size: ${AddressDataExtractor.cache.size}`,
-				);
 			} else {
 				break; // Safety check
 			}
 		}
+	}
+
+	/**
+	 * Sets a callback function to be called when logradouro changes are detected
+	 * @param {Function} callback - Function to call when logradouro changes occur
+	 */
+	static setLogradouroChangeCallback(callback) {
+		AddressDataExtractor.logradouroChangeCallback = callback;
+	}
+
+	/**
+	 * Sets a callback function to be called when bairro changes are detected
+	 * @param {Function} callback - Function to call when bairro changes occur
+	 */
+	static setBairroChangeCallback(callback) {
+		AddressDataExtractor.bairroChangeCallback = callback;
+	}
+
+	/**
+	 * Sets a callback function to be called when municipio changes are detected
+	 * @param {Function} callback - Function to call when municipio changes occur
+	 */
+	static setMunicipioChangeCallback(callback) {
+		AddressDataExtractor.municipioChangeCallback = callback;
 	}
 
 	static getBrazilianStandardAddress(data) {
@@ -1848,63 +2098,93 @@ class AddressDataExtractor {
 					now - cacheEntry.timestamp <=
 					AddressDataExtractor.cacheExpirationMs
 				) {
-					console.log(
-						"(AddressDataExtractor) Using cached BrazilianStandardAddress",
-					);
+					if (
+						now - cacheEntry.timestamp <=
+						AddressDataExtractor.cacheExpirationMs
+					) {
+						// Update access time for LRU behavior (history-like)
+						cacheEntry.lastAccessed = now;
+						// Re-insert to update position in Map (Map maintains insertion order)
+						AddressDataExtractor.cache.delete(cacheKey);
+						AddressDataExtractor.cache.set(cacheKey, cacheEntry);
 
-				if (
-					now - cacheEntry.timestamp <=
-					AddressDataExtractor.cacheExpirationMs
-				) {
-					console.log(
-						"(AddressDataExtractor) Using cached BrazilianStandardAddress",
-					);
-
-					// Update access time for LRU behavior (history-like)
-					cacheEntry.lastAccessed = now;
-					// Re-insert to update position in Map (Map maintains insertion order)
-					AddressDataExtractor.cache.delete(cacheKey);
-					AddressDataExtractor.cache.set(cacheKey, cacheEntry);
-
-
-					return cacheEntry.address;
-				} else {
-					// Remove expired entry
-					AddressDataExtractor.cache.delete(cacheKey);
+						return cacheEntry.address;
+					} else {
+						// Remove expired entry
+						AddressDataExtractor.cache.delete(cacheKey);
+					}
 				}
 			}
+
+			// Create new standardized address
+			const extractor = new AddressDataExtractor(data);
+
+			// Cache the result if we have a valid key
+			if (cacheKey) {
+				// Check if cache has reached maximum size, evict least recently used entries
+				AddressDataExtractor.evictLeastRecentlyUsedIfNeeded();
+
+				const now = Date.now();
+				AddressDataExtractor.cache.set(cacheKey, {
+					address: extractor.enderecoPadronizado,
+					timestamp: now,
+					lastAccessed: now,
+				});
+
+				// Reset change notification flags when new address is cached
+				// This allows detection of new changes after cache updates
+				AddressDataExtractor.lastNotifiedChangeSignature = null;
+				AddressDataExtractor.lastNotifiedBairroChangeSignature = null;
+				AddressDataExtractor.lastNotifiedMunicipioChangeSignature = null;
+
+				// Check for logradouro change after caching the new address
+				// This replaces the timer-based approach with event-driven checking
+				if (AddressDataExtractor.logradouroChangeCallback && 
+					AddressDataExtractor.hasLogradouroChanged()) {
+					const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
+					try {
+						AddressDataExtractor.logradouroChangeCallback(changeDetails);
+					} catch (error) {
+						console.error(
+							"(AddressDataExtractor) Error calling logradouro change callback:",
+							error,
+						);
+					}
+				}
+
+				// Check for bairro change after caching the new address
+				// This follows the same pattern as logradouro change detection
+				if (AddressDataExtractor.bairroChangeCallback && 
+					AddressDataExtractor.hasBairroChanged()) {
+					const changeDetails = AddressDataExtractor.getBairroChangeDetails();
+					try {
+						AddressDataExtractor.bairroChangeCallback(changeDetails);
+					} catch (error) {
+						console.error(
+							"(AddressDataExtractor) Error calling bairro change callback:",
+							error,
+						);
+					}
+				}
+
+				// Check for municipio change after caching the new address
+				// This follows the same pattern as logradouro and bairro change detection
+				if (AddressDataExtractor.municipioChangeCallback && 
+					AddressDataExtractor.hasMunicipioChanged()) {
+					const changeDetails = AddressDataExtractor.getMunicipioChangeDetails();
+					try {
+						AddressDataExtractor.municipioChangeCallback(changeDetails);
+					} catch (error) {
+						console.error(
+							"(AddressDataExtractor) Error calling municipio change callback:",
+							error,
+						);
+					}
+				}
+			}
+
+			return extractor.enderecoPadronizado;
 		}
-
-
-		// Create new standardized address
-		console.log("(AddressDataExtractor) Creating new BrazilianStandardAddress");
-		console.log("(AddressDataExtractor) Creating new BrazilianStandardAddress");
-		const extractor = new AddressDataExtractor(data);
-
-
-		// Cache the result if we have a valid key
-		if (cacheKey) {
-			// Check if cache has reached maximum size, evict least recently used entries
-			AddressDataExtractor.evictLeastRecentlyUsedIfNeeded();
-
-
-			const now = Date.now();
-			AddressDataExtractor.cache.set(cacheKey, {
-				address: extractor.enderecoPadronizado,
-				timestamp: now,
-				lastAccessed: now,
-				lastAccessed: now,
-			});
-			console.log(
-				`(AddressDataExtractor) Cached BrazilianStandardAddress. Cache size: ${AddressDataExtractor.cache.size}`,
-			);
-			console.log(
-				`(AddressDataExtractor) Cached BrazilianStandardAddress. Cache size: ${AddressDataExtractor.cache.size}`,
-			);
-		}
-
-
-		return extractor.enderecoPadronizado;
 	}
 }
 
@@ -1921,27 +2201,26 @@ AddressDataExtractor.cacheExpirationMs =
 // Maximum cache size for LRU (history-like) behavior - default to 50 entries
 AddressDataExtractor.defaultMaxCacheSize = 50;
 AddressDataExtractor.maxCacheSize = AddressDataExtractor.defaultMaxCacheSize;
+// Track last logradouro change to prevent notification loops
+AddressDataExtractor.lastNotifiedChangeSignature = null;
+// Callback function to notify when logradouro changes occur
+AddressDataExtractor.logradouroChangeCallback = null;
+// Track last bairro change to prevent notification loops
+AddressDataExtractor.lastNotifiedBairroChangeSignature = null;
+// Callback function to notify when bairro changes occur
+AddressDataExtractor.bairroChangeCallback = null;
+// Track last municipio change to prevent notification loops
+AddressDataExtractor.lastNotifiedMunicipioChangeSignature = null;
+// Callback function to notify when municipio changes occur
+AddressDataExtractor.municipioChangeCallback = null;
 
 class HTMLAddressDisplayer {
 	constructor(element) {
-		console.log("(HTMLAddressDisplayer) Initializing...");
 		this.element = element;
 		Object.freeze(this); // Prevent further modification
 	}
 
 	renderAddress(geodataParser, enderecoPadronizado) {
-		console.log(
-			"(HTMLAddressDisplayer) Rendering address:",
-			geodataParser.data,
-		);
-		console.log(
-			"(HTMLAddressDisplayer) Rendering address:",
-			geodataParser.data,
-		);
-		console.log(
-			"(HTMLAddressDisplayer) enderecoPadronizado:",
-			enderecoPadronizado,
-		);
 		// Render address data into HTML
 		// Display address components in a structured format
 		// Handle missing components gracefully
@@ -1953,28 +2232,46 @@ class HTMLAddressDisplayer {
 			return "<p class='error'>No address data available.</p>";
 		}
 
-		// Determine address type
-		var addressTypeDescr;
+		const lookingUpAddress = document.getElementById("lookingUpAddress");
+		if (lookingUpAddress) {
+			lookingUpAddress.style.display = "none";
+			lookingUpAddress.innerHTML = "";
+		}
 
-		addressTypeDescr = getAddressType(geodataParser.data);
+		// Determine address type
+		const addressTypeDescr = getAddressType(geodataParser.data);
 
 		let html = "";
-		log("(HTMLAddressDisplayer) Check if there is reference place.");
-		log("(HTMLAddressDisplayer) Check if there is reference place.");
+		
+		// Display municipality prominently at the top
+		if (enderecoPadronizado && enderecoPadronizado.municipio) {
+			html += `<div id="municipio-display" style="background-color: #e8f4fd; border: 2px solid #0066cc; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: center;">`;
+			html += `<h2 style="margin: 0; color: #0066cc; font-size: 24px; font-weight: bold;">📍 ${enderecoPadronizado.municipio}</h2>`;
+			if (enderecoPadronizado.uf) {
+				html += `<p style="margin: 5px 0 0 0; color: #0066cc; font-size: 16px;">${enderecoPadronizado.uf}</p>`;
+			}
+			html += `</div>`;
+		}
+		
+		// Display bairro prominently but less highlighted than municipality
+		if (enderecoPadronizado && enderecoPadronizado.bairro) {
+			html += `<div id="bairro-display" style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 12px; margin-bottom: 15px; text-align: center;">`;
+			html += `<h3 style="margin: 0; color: #6c757d; font-size: 18px; font-weight: 500;">🏘️ ${enderecoPadronizado.bairroCompleto()}</h3>`;
+			html += `</div>`;
+		}
+		
+		// Element dadosSidra as requested in the issue
+		html += `<div id="dadosSidra"></div>`;
+		
 		if (geodataParser.referencePlace) {
-			log("(HTMLAddressDiplayer) Yes, there is a reference place.");
-			html += `<p><strong>Referência:</strong> ${geodataParser.referencePlace.placeName}</p>`;
-			log("(HTMLAddressDiplayer) Yes, there is a reference place.");
 			html += `<p><strong>Referência:</strong> ${geodataParser.referencePlace.placeName}</p>`;
 		}
 		if (geodataParser.data.address) {
 			html += `<p><strong>Tipo:</strong> ${addressTypeDescr}<br>`;
-			html += "<br>";
-			html += "<br>";
 			if (enderecoPadronizado) {
-				html += ` <strong>Logradouro/Número:</strong> ${enderecoPadronizado.logradouroCompleto()}<br>
-    <strong>Bairro:</strong> ${enderecoPadronizado.bairroCompleto()}<br>
-    <strong>Município/Cidade:</strong> ${enderecoPadronizado.municipio}<br>`;
+				html += `<strong>Logradouro/Número:</strong> ${enderecoPadronizado.logradouroCompleto()}<br>`;
+				html += `<strong>Bairro:</strong> ${enderecoPadronizado.bairroCompleto()}<br>`;
+				html += `<strong>Município/Cidade:</strong> ${enderecoPadronizado.municipio}<br>`;
 			}
 
 			html +=
@@ -2026,22 +2323,11 @@ class HTMLAddressDisplayer {
 		let geodataParser = new GeoDataParser(data);
 		geodataParser.parse();
 		let html = this.renderAddress(geodataParser, enderecoPadronizado);
-		console.log("(HTMLAddressDisplayer) Address rendered.");
 		this.element.innerHTML += html;
 	}
 
 	update(currentAddress, enderecoPadronizado, loading, error) {
-		console.log("(HTMLAddressDisplayer) Updating address display...");
-		console.log("(HTMLAddressDisplayer) currentAddress:", currentAddress);
-		console.log(
-			"(HTMLAddressDisplayer) enderecoPadronizado:",
-			enderecoPadronizado,
-		);
 		if (currentAddress) {
-			console.log(
-				"(HTMLAddressDisplayer) Updating address display with currentAddress:",
-				currentAddress,
-			);
 			if (this.findRestaurantsBtn) {
 				this.findRestaurantsBtn.disabled = true;
 			}
@@ -2070,7 +2356,7 @@ function displayError(error) {
 			errorMessage = "Location information is unavailable.";
 			break;
 		case error.TIMEOUT:
-			errorMessage = "The request to get user location timed out.";
+			errorMessage = "Não foi possível obter sua localização. Isso pode acontecer quando o GPS está desligado ou em ambientes fechados. Tente novamente em local aberto.";
 			break;
 		case error.UNKNOWN_ERROR:
 			errorMessage = "An unknown error occurred.";
@@ -2096,9 +2382,95 @@ function displayError(error) {
  * ============================
  */
 
+class SpeechQueue {
+	constructor() {
+		this.queue = [];
+		this.isProcessing = false;
+		this.timeoutDuration = 5000; // 5 seconds timeout
+		this.observerFunctions = [];
+	}
+
+	subscribeFunction(observerFunction) {
+		this.observerFunctions.push(observerFunction);
+	}
+
+	unsubscribeFunction(observerFunction) {
+		this.observerFunctions = this.observerFunctions.filter(fn => fn !== observerFunction);
+	}
+
+	notifyObserverFunctions() {
+		for (const observerFunction of this.observerFunctions) {
+			observerFunction(this.queue);
+		}
+	}
+
+	enqueue(text, priority = 0) {
+		const timestamp = Date.now();
+		const item = { text, priority, timestamp };
+
+		// Remove expired items (older than 5 seconds)
+		this.queue = this.queue.filter(item =>
+			(Date.now() - item.timestamp) < this.timeoutDuration
+		);
+
+		// Insert with priority (higher priority first, then by timestamp)
+		let inserted = false;
+		for (let i = 0; i < this.queue.length; i++) {
+			if (item.priority > this.queue[i].priority) {
+				this.queue.splice(i, 0, item);
+				inserted = true;
+				this.notifyObserverFunctions();
+				break;
+			}
+		}
+		if (!inserted) {
+			this.queue.push(item);
+			this.notifyObserverFunctions();
+		}
+
+		log(`SpeechQueue: Enqueued "${text}" with priority ${priority}. Queue length: ${this.queue.length}`);
+	}
+
+	dequeue() {
+		// Remove expired items first
+		this.queue = this.queue.filter(item =>
+			(Date.now() - item.timestamp) < this.timeoutDuration
+		);
+
+		if (this.queue.length > 0) {
+			const item = this.queue.shift();
+			log(`SpeechQueue: Dequeued "${item.text}". Queue length: ${this.queue.length}`);
+			this.notifyObserverFunctions();
+			return item;
+		}
+		return null;
+	}
+
+	isEmpty() {
+		// Clean expired items
+		this.queue = this.queue.filter(item =>
+			(Date.now() - item.timestamp) < this.timeoutDuration
+		);
+		return this.queue.length === 0;
+	}
+
+	clear() {
+		this.queue = [];
+		this.notifyObserverFunctions();
+		log("SpeechQueue: Cleared queue");
+	}
+
+	size() {
+		// Clean expired items
+		this.queue = this.queue.filter(item =>
+			(Date.now() - item.timestamp) < this.timeoutDuration
+		);
+		return this.queue.length;
+	}
+}
+
 class SpeechSynthesisManager {
 	constructor() {
-		log("Initializing speech manager...");
 		this.synth = window.speechSynthesis;
 		this.language = "pt-BR"; // Default language
 		this.voices = [];
@@ -2106,13 +2478,18 @@ class SpeechSynthesisManager {
 		this.rate = 1;
 		this.pitch = 1;
 		this.voice = null;
+		this.speechQueue = new SpeechQueue();
+		this.isCurrentlySpeaking = false;
+		this.queueTimer = null;
+		this.independentQueueTimerInterval = setupParams.independentQueueTimerInterval; // Add this line
 		this.loadVoices();
+		this.startQueueTimer();
 	}
 
 	async getSpeechVoices() {
 		return new Promise((resolve) => {
 			// Check if voices are already loaded
-			var voices = this.synth.getVoices();
+			let voices = this.synth.getVoices();
 			if (voices.length > 0) {
 				resolve(voices);
 				return;
@@ -2129,7 +2506,6 @@ class SpeechSynthesisManager {
 	async loadVoices() {
 		try {
 			const availableVoices = await this.getSpeechVoices();
-			log("(SpeechSynthesisManager) Voices loaded:", availableVoices);
 
 			// You can now use the 'voices' array to populate a dropdown, select a specific voice, etc.
 			if (availableVoices.length > 0) {
@@ -2137,8 +2513,6 @@ class SpeechSynthesisManager {
 				this.filteredVoices = this.voices.filter((voice) =>
 					voice.lang.startsWith(this.language),
 				);
-				log("(SpeechSynthesisManager) Filtered voices:", this.filteredVoices);
-				log("(SpeechSynthesisManager) Filtered voices:", this.filteredVoices);
 				if (this.filteredVoices.length > 0) {
 					this.voice = this.filteredVoices[0]; // Default to first voice in filtered list
 				}
@@ -2155,8 +2529,6 @@ class SpeechSynthesisManager {
 
 	setLanguage(selectedLanguage) {
 		this.language = selectedLanguage;
-		log("(SpeechSynthesisManager) Setting language to:", this.language);
-		log("(SpeechSynthesisManager) Loading voices...");
 		this.loadVoices();
 		this.filteredVoices = this.voices.filter((voice) =>
 			voice.lang.startsWith(this.language),
@@ -2164,33 +2536,83 @@ class SpeechSynthesisManager {
 		if (this.filteredVoices.length > 0) {
 			this.voice = this.filteredVoices[0]; // Default to first voice in filtered list
 		}
-		log("Filtered voices:", this.filteredVoices);
 	}
 
-	setSelectectedVoiceIndex(index) {
-		log("Setting selected voice index to:", index);
+	setSelectedVoiceIndex(index) {
+		//TODO: Para usar com UI
 	}
 
-	speak(text) {
-		if (this.synth.speaking) {
-			warn("Speech synthesis is already speaking.");
+	speak(text, priority = 0) {
+		log("(SpeechSynthesisManager) Queuing text for speech:", text);
+
+		if (!text || text.trim() === "") {
+			warn("(SpeechSynthesisManager) No text provided to speak.");
 			return;
 		}
-		const utterance = new SpeechSynthesisUtterance(text);
+		// Add to queue with priority
+		this.speechQueue.enqueue(text, priority);
+
+		// Process queue if not currently speaking
+		if (!this.isCurrentlySpeaking) {
+			log("(SpeechSynthesisManager) Not currently speaking, processing queue...");
+			this.processQueue();
+		}
+	}
+
+	startQueueTimer() {
+		this.stopQueueTimer();
+		
+		// Fix: Use the properly defined interval
+		this.queueTimer = setInterval(() => {
+			this.processQueue();
+		}, this.independentQueueTimerInterval);
+
+		log(`(SpeechSynthesisManager) Queue timer started (${this.independentQueueTimerInterval/1000}s interval)`);
+	}
+
+	stopQueueTimer() {
+		if (this.queueTimer) {
+			clearInterval(this.queueTimer);
+			this.queueTimer = null;
+			log("(SpeechSynthesisManager) Queue timer stopped");
+		}
+	}
+
+	processQueue() {
+		log("(SpeechSynthesisManager) Processing speech queue...");
+		
+		// Enhanced protection against concurrent execution
+		if (this.isCurrentlySpeaking || this.speechQueue.isEmpty()) {
+			return;
+		}
+
+		const item = this.speechQueue.dequeue();
+		if (!item) {
+			return;
+		}
+
+		this.isCurrentlySpeaking = true;
+		const utterance = new SpeechSynthesisUtterance(item.text);
 		utterance.voice = this.voice;
 		utterance.rate = this.rate;
 		utterance.pitch = this.pitch;
-		log("Speaking with voice:", this.voice);
+
+		log(`Speaking with priority ${item.priority}: "${item.text}"`);
+
 		utterance.onend = () => {
-			log("Spoke with voice:", this.voice);
-			log("Speech synthesis finished.");
+			log("(SpeechSynthesisManager - utterance.onend) Speech synthesis finished.");
+			this.isCurrentlySpeaking = false;
+			// Remove setTimeout to rely only on timer-based processing
+			// This eliminates one source of concurrent calls
 		};
+
 		utterance.onerror = (event) => {
-			log("Speech synthesis error:", event.error);
+			log("(SpeechSynthesisManager - utterance.onerror) Speech synthesis error:", event.error);
+			this.isCurrentlySpeaking = false;
+			// Remove setTimeout here too
 		};
-		log("Starting speech synthesis...");
+
 		this.synth.speak(utterance);
-		log("Speech synthesis started.");
 	}
 
 	pause() {
@@ -2209,6 +2631,10 @@ class SpeechSynthesisManager {
 		if (this.synth.speaking || this.synth.paused) {
 			this.synth.cancel();
 		}
+		this.speechQueue.clear();
+		this.isCurrentlySpeaking = false;
+		this.stopQueueTimer();
+		this.startQueueTimer(); // Restart the timer after stopping
 	}
 
 	toString() {
@@ -2218,12 +2644,9 @@ class SpeechSynthesisManager {
 
 class HtmlSpeechSynthesisDisplayer {
 	constructor(document, elements) {
-		log("Initializing HtmlSpeechSynthesisDisplayer...");
 		this.document = document;
 		this.elements = elements;
-		log("Initializing speech manager...");
 		this.speechManager = new SpeechSynthesisManager();
-		log("Speech manager initialized.");
 		this.init();
 		Object.freeze(this); // Prevent further modification
 	}
@@ -2285,8 +2708,7 @@ class HtmlSpeechSynthesisDisplayer {
 		if (this.voiceSelect) {
 			this.voiceSelect.innerHTML = "";
 		}
-		log("(HtmlSpeechSynthesisDisplayer) Voices cleared.");
-		var filteredVoices = this.speechManager.filteredVoices;
+		let filteredVoices = this.speechManager.filteredVoices;
 		if (filteredVoices.length > 0) {
 			filteredVoices.forEach((voice, index) => {
 				const option = document.createElement("option");
@@ -2308,7 +2730,7 @@ class HtmlSpeechSynthesisDisplayer {
 	}
 
 	updateRate() {
-		var rate = rateInput.value;
+		const rate = rateInput.value;
 		this.speechManager.rate = rate;
 		this.rateValue.textContent = value;
 	}
@@ -2318,29 +2740,26 @@ class HtmlSpeechSynthesisDisplayer {
 		pitchValue.textContent = pitchInput.value;
 	}
 
-	speak() {
-		var text = "";
+	speak(textToSpeak = null, priority = 0) {
+		let text = textToSpeak;
 
-		if (this.textInput && this.textInput.value) {
+		// If no text provided, get from text input
+		if (!text && this.textInput && this.textInput.value) {
 			text = this.textInput.value.trim();
 		}
 
-		if (text === "") {
+		if (!text || text === "") {
 			return;
 		}
 
-		// Stop any current speech
-		this.stop();
-		this.speechManager.speak(text);
+		// For new functionality, add to queue instead of stopping current speech
+		this.speechManager.speak(text, priority);
 	}
 	// Speak function
 	speak2(textToBeSpoken, textAlert) {
 		// Set selected voice
 		const selectedVoiceIndex = voiceSelect.value;
-		console.log("selectedVoiceIndex:", selectedVoiceIndex);
-		console.log("voices: ", filteredVoices);
 		if (selectedVoiceIndex && filteredVoices[selectedVoiceIndex]) {
-			console.log("voice:", filteredVoices[selectedVoiceIndex]);
 			currentUtterance.voice = filteredVoices[selectedVoiceIndex];
 		}
 
@@ -2383,11 +2802,6 @@ class HtmlSpeechSynthesisDisplayer {
 			currentUtterance = null;
 		};
 
-		console.log("language:", currentUtterance.lang);
-		console.log("voice:", currentUtterance.voice);
-		console.log("rate:", currentUtterance.rate);
-		console.log("pitch:", currentUtterance.pitch);
-
 		window.speechSynthesis.cancel();
 		window.speechSynthesis.speak(currentUtterance);
 	}
@@ -2405,8 +2819,8 @@ class HtmlSpeechSynthesisDisplayer {
 	}
 
 	getFullAddress(addressExtractor) {
-		var enderecoPadronizado = addressExtractor.enderecoPadronizado;
-		var parts = [];
+		const enderecoPadronizado = addressExtractor.enderecoPadronizado;
+		const parts = [];
 		if (enderecoPadronizado.logradouro) {
 			parts.push(enderecoPadronizado.logradouroCompleto());
 		}
@@ -2420,29 +2834,30 @@ class HtmlSpeechSynthesisDisplayer {
 	}
 
 	getLogradouro(addressExtractor) {
-		var enderecoPadronizado = addressExtractor.enderecoPadronizado;
+		const enderecoPadronizado = addressExtractor.enderecoPadronizado;
 		return enderecoPadronizado.getLogradouro();
 	}
 
+	getBairro(addressExtractor) {
+		const enderecoPadronizado = addressExtractor.enderecoPadronizado;
+		return enderecoPadronizado.bairro || "Bairro não identificado";
+	}
+
 	buildTextToSpeech(currentAddress) {
-		var addressExtractor = new AddressDataExtractor(currentAddress);
-		var textToBeSpoken = `Você está em ${this.getFullAddress(addressExtractor)}.`;
+		const addressExtractor = new AddressDataExtractor(currentAddress);
+		const textToBeSpoken = `Você está em ${this.getFullAddress(addressExtractor)}.`;
 		return textToBeSpoken;
 	}
 
 	buildTextToSpeechLogradouro(currentAddress) {
-		log("Building text for logradouro change...");
-		let previousAddress = AddressDataExtractor.getPreviousAddress();
-		log(
-			"previousAddress:",
-			previousAddress ? previousAddress.toString() : "N/A",
-		);
-		log("currentAddress:", currentAddress ? currentAddress.toString() : "N/A");
-		let logradouroChanged = AddressDataExtractor.hasLogradouroChanged();
-		log("logradouroChanged:", logradouroChanged);
-
 		let addressExtractor = new AddressDataExtractor(currentAddress);
 		let textToBeSpoken = this.getLogradouro(addressExtractor);
+		return textToBeSpoken;
+	}
+
+	buildTextToSpeechBairro(currentAddress) {
+		let addressExtractor = new AddressDataExtractor(currentAddress);
+		let textToBeSpoken = this.getBairro(addressExtractor);
 		return textToBeSpoken;
 	}
 
@@ -2453,29 +2868,37 @@ class HtmlSpeechSynthesisDisplayer {
 		log("enderecoPadronizadoOrEvent:", enderecoPadronizadoOrEvent);
 
 
-		// Check if this is a logradouro change notification
-		if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
-			log(
-				"(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location...",
-			);
-			log(
-				"(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location...",
-			);
-			if (currentAddress) {
-				this.updateVoices();
-				let textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
-				log("textToBeSpoken for logradouro change:", textToBeSpoken);
-				this.textInput.value = textToBeSpoken;
-				this.speak(textToBeSpoken);
-			}
-		} else if (currentAddress) {
+		// Early return if no current address
+		if (!currentAddress) {
+			return;
+		}
+
+		let textToBeSpoken = "";
+		let priority = 0;
+
+		// Determine speech content and priority based on event type
+		if (enderecoPadronizadoOrEvent === "BairroChanged") {
+			log("(HtmlSpeechSynthesisDisplayer) Bairro change detected, speaking new neighborhood with HIGH priority...");
+			textToBeSpoken = this.buildTextToSpeechBairro(currentAddress);
+			priority = 2; // HIGHEST priority for bairro changes
+			log("textToBeSpoken for bairro change:", textToBeSpoken);
+		} else if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
+			log("(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location...");
+			textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
+			priority = 1; // Medium priority for logradouro changes
+			log("textToBeSpoken for logradouro change:", textToBeSpoken);
+		} else {
 			// Normal update from reverseGeocoder
-			this.updateVoices();
-			var textToBeSpoken = "";
-			textToBeSpoken += this.buildTextToSpeech(currentAddress);
+			log("(HtmlSpeechSynthesisDisplayer) Normal address update, speaking full address...");
+			textToBeSpoken = this.buildTextToSpeech(currentAddress);
+			priority = 0; // Lowest priority for full address updates
 			log("textToBeSpoken:", textToBeSpoken);
+		}
+
+		// Common operations for all cases
+		if (textToBeSpoken) {
 			this.textInput.value = textToBeSpoken;
-			this.speak(textToBeSpoken);
+			this.speak(textToBeSpoken, priority);
 		}
 	}
 
@@ -2530,7 +2953,6 @@ class HtmlText {
 				? `${posEventStr} | Lat: ${lat}, Lon: ${lon}, Alt: ${alt}, Acc: ${acc}, Head: ${head}, Speed: ${speed}`
 				: `Lat: ${lat}, Lon: ${lon}, Alt: ${alt}, Acc: ${acc}, Head: ${head}, Speed: ${speed}`;
 			text = (text || "") + ", Timestamp: " + (tsStr || "");
-			console.log("(HtmlText) updateDisplay: ", text);
 			this.updateDisplay(text);
 		}
 	}
@@ -2558,6 +2980,9 @@ if (typeof module !== "undefined" && module.exports) {
 		Chronometer,
 		HTMLPositionDisplayer,
 		HTMLAddressDisplayer,
+		BrazilianStandardAddress,
+		AddressDataExtractor,
+		SpeechQueue,
 		SpeechSynthesisManager,
 		HtmlSpeechSynthesisDisplayer,
 		HtmlText,
@@ -2578,6 +3003,9 @@ if (typeof module !== "undefined" && module.exports) {
 		Chronometer,
 		HTMLPositionDisplayer,
 		HTMLAddressDisplayer,
+		BrazilianStandardAddress,
+		AddressDataExtractor,
+		SpeechQueue,
 		SpeechSynthesisManager,
 		HtmlSpeechSynthesisDisplayer,
 		HtmlText,

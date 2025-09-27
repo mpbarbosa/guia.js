@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bairro Display Test - Guia.js</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .demo-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bairro Display Test - Guia.js</h1>
+        <p>This page demonstrates the new bairro prominent display feature.</p>
+        
+        <div class="demo-section">
+            <h2>Example 1: Complete Address with Bairro and Municipality</h2>
+            <div id="demo1"></div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>Example 2: Address with Only Municipality (No Bairro)</h2>
+            <div id="demo2"></div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>Example 3: Bairro without Região (Simple Bairro)</h2>
+            <div id="demo3"></div>
+        </div>
+    </div>
+
+    <script src="src/guia.js"></script>
+    <script>
+        // Mock global functions needed
+        function getAddressType() { return "Endereco residencial"; }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Example 1: Complete address with bairro and municipality
+                const demo1Element = document.getElementById('demo1');
+                const displayer1 = new HTMLAddressDisplayer(demo1Element);
+                
+                const endereco1 = new BrazilianStandardAddress();
+                endereco1.municipio = 'São Paulo';
+                endereco1.bairro = 'Bela Vista';
+                endereco1.regiaoCidade = 'Região Central';
+                endereco1.uf = 'SP';
+                endereco1.logradouro = 'Avenida Paulista';
+                endereco1.house_number = '1578';
+                
+                const mockGeoData1 = {
+                    data: {
+                        address: {
+                            road: 'Avenida Paulista',
+                            house_number: '1578',
+                            neighbourhood: 'Bela Vista',
+                            suburb: 'Região Central',
+                            city: 'São Paulo',
+                            state: 'São Paulo',
+                            country: 'Brasil',
+                            country_code: 'br'
+                        }
+                    }
+                };
+                
+                demo1Element.innerHTML = displayer1.renderAddress(mockGeoData1, endereco1);
+                
+                // Example 2: Address without bairro
+                const demo2Element = document.getElementById('demo2');
+                const displayer2 = new HTMLAddressDisplayer(demo2Element);
+                
+                const endereco2 = new BrazilianStandardAddress();
+                endereco2.municipio = 'Rio de Janeiro';
+                endereco2.bairro = null;
+                endereco2.uf = 'RJ';
+                endereco2.logradouro = 'Rua das Laranjeiras';
+                endereco2.house_number = '100';
+                
+                const mockGeoData2 = {
+                    data: {
+                        address: {
+                            road: 'Rua das Laranjeiras',
+                            house_number: '100',
+                            city: 'Rio de Janeiro',
+                            state: 'Rio de Janeiro',
+                            country: 'Brasil',
+                            country_code: 'br'
+                        }
+                    }
+                };
+                
+                demo2Element.innerHTML = displayer2.renderAddress(mockGeoData2, endereco2);
+                
+                // Example 3: Simple bairro without região
+                const demo3Element = document.getElementById('demo3');
+                const displayer3 = new HTMLAddressDisplayer(demo3Element);
+                
+                const endereco3 = new BrazilianStandardAddress();
+                endereco3.municipio = 'Brasília';
+                endereco3.bairro = 'Asa Norte';
+                endereco3.regiaoCidade = null;
+                endereco3.uf = 'DF';
+                endereco3.logradouro = 'SQN 410';
+                endereco3.house_number = 'Bloco A';
+                
+                const mockGeoData3 = {
+                    data: {
+                        address: {
+                            road: 'SQN 410',
+                            house_number: 'Bloco A',
+                            neighbourhood: 'Asa Norte',
+                            city: 'Brasília',
+                            state: 'Distrito Federal',
+                            country: 'Brasil',
+                            country_code: 'br'
+                        }
+                    }
+                };
+                
+                demo3Element.innerHTML = displayer3.renderAddress(mockGeoData3, endereco3);
+                
+                console.log('Bairro display test loaded successfully!');
+                
+            } catch (error) {
+                console.error('Error loading bairro display test:', error);
+            }
+        });
+    </script>
+</body>
+</html>

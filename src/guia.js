@@ -888,6 +888,9 @@ class WebGeocodingManager {
 
 		// Register callback for bairro change detection (follows same pattern as logradouro)
 		this.setupBairroChangeDetection();
+
+		// Register callback for municipio change detection (follows same pattern as logradouro and bairro)
+		this.setupMunicipioChangeDetection();
 	}
 
 	/**
@@ -925,6 +928,23 @@ class WebGeocodingManager {
 	}
 
 	/**
+	 * Sets up municipio change detection using callback mechanism (follows same pattern as logradouro and bairro)
+	 */
+	setupMunicipioChangeDetection() {
+		// Register this instance's callback with AddressDataExtractor
+		AddressDataExtractor.setMunicipioChangeCallback((changeDetails) => {
+			this.handleMunicipioChange(changeDetails);
+		});
+	}
+
+	/**
+	 * Removes the municipio change detection callback
+	 */
+	removeMunicipioChangeDetection() {
+		AddressDataExtractor.setMunicipioChangeCallback(null);
+	}
+
+	/**
 	 * Handles logradouro change events and notifies observers
 	 * @param {Object} changeDetails - Details about the logradouro change
 	 */
@@ -951,6 +971,22 @@ class WebGeocodingManager {
 		} catch (error) {
 			console.error(
 				"(WebGeocodingManager) Error handling bairro change:",
+				error,
+			);
+		}
+	}
+
+	/**
+	 * Handles municipio change events and notifies observers
+	 * @param {Object} changeDetails - Details about the municipio change
+	 */
+	handleMunicipioChange(changeDetails) {
+		try {
+			// Notify observers about the municipio change
+			this.notifyMunicipioChangeObservers(changeDetails);
+		} catch (error) {
+			console.error(
+				"(WebGeocodingManager) Error handling municipio change:",
 				error,
 			);
 		}
@@ -1024,6 +1060,43 @@ class WebGeocodingManager {
 			} catch (error) {
 				console.error(
 					"(WebGeocodingManager) Error notifying function observer about bairro change:",
+					error,
+				);
+			}
+		}
+	}
+
+	/**
+	 * Notifies observers specifically about municipio changes
+	 * @param {Object} changeDetails - Details about the municipio change
+	 */
+	notifyMunicipioChangeObservers(changeDetails) {
+		// Notify regular observers
+		log('(WebGeocodingManager) Notificando os observadores da mudança de município.');
+		for (const observer of this.observers) {
+			if (typeof observer.update === "function") {
+				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de município.`);
+				observer.update(
+					this.reverseGeocoder.currentAddress,
+					"MunicipioChanged",
+					null,
+					null,
+				);
+			}
+		}
+
+		// Notify function observers with change details
+		for (const fn of this.functionObservers) {
+			try {
+				fn(
+					this.currentPosition,
+					this.reverseGeocoder.currentAddress,
+					this.reverseGeocoder.enderecoPadronizado,
+					changeDetails,
+				);
+			} catch (error) {
+				console.error(
+					"(WebGeocodingManager) Error notifying function observer about municipio change:",
 					error,
 				);
 			}
@@ -1686,6 +1759,74 @@ class AddressDataExtractor {
 	}
 
 	/**
+	 * Checks if the municipio (municipality) has changed between the current and previous addresses
+	 * @returns {boolean} True if municipio has changed, false otherwise
+	 */
+	static hasMunicipioChanged() {
+		const currentAddress = AddressDataExtractor.getCurrentAddress();
+		const previousAddress = AddressDataExtractor.getPreviousAddress();
+
+		// If we don't have both addresses, no change can be detected
+		if (!currentAddress || !previousAddress) {
+			return false;
+		}
+
+		// Compare municipio values, handling null/undefined cases
+		const currentMunicipio = currentAddress.municipio;
+		const previousMunicipio = previousAddress.municipio;
+
+		// Check if addresses are actually different
+		const hasChanged = currentMunicipio !== previousMunicipio;
+
+		if (!hasChanged) {
+			return false;
+		}
+
+		// Create a signature for this specific change to prevent loops
+		const changeSignature = `${previousMunicipio}|${currentMunicipio}`;
+
+		// If we've already notified about this exact change, don't notify again
+		if (AddressDataExtractor.lastNotifiedMunicipioChangeSignature === changeSignature) {
+			return false;
+		}
+
+		// Mark this change as the one we're about to notify
+		AddressDataExtractor.lastNotifiedMunicipioChangeSignature = changeSignature;
+
+		return true;
+	}
+
+	/**
+	 * Gets detailed information about municipio changes between current and previous addresses
+	 * @returns {Object|null} Object with change details or null if no comparison possible
+	 */
+	static getMunicipioChangeDetails() {
+		const currentAddress = AddressDataExtractor.getCurrentAddress();
+		const previousAddress = AddressDataExtractor.getPreviousAddress();
+
+		// If we don't have both addresses, no change details can be provided
+		if (!currentAddress || !previousAddress) {
+			return null;
+		}
+
+		const currentMunicipio = currentAddress.municipio;
+		const previousMunicipio = previousAddress.municipio;
+		const hasChanged = currentMunicipio !== previousMunicipio;
+
+		return {
+			hasChanged: hasChanged,
+			previous: {
+				municipio: previousMunicipio,
+				uf: previousAddress.uf,
+			},
+			current: {
+				municipio: currentMunicipio,
+				uf: currentAddress.uf,
+			},
+		};
+	}
+
+	/**
 	 * Sets the maximum cache size for LRU behavior
 	 * @param {number} maxSize - Maximum number of entries in cache
 	 */
@@ -1737,6 +1878,14 @@ class AddressDataExtractor {
 		AddressDataExtractor.bairroChangeCallback = callback;
 	}
 
+	/**
+	 * Sets a callback function to be called when municipio changes are detected
+	 * @param {Function} callback - Function to call when municipio changes occur
+	 */
+	static setMunicipioChangeCallback(callback) {
+		AddressDataExtractor.municipioChangeCallback = callback;
+	}
+
 	static getBrazilianStandardAddress(data) {
 		const cacheKey = AddressDataExtractor.generateCacheKey(data);
 
@@ -1785,9 +1934,11 @@ class AddressDataExtractor {
 					lastAccessed: now,
 				});
 
-				// Reset change notification flag when new address is cached
+				// Reset change notification flags when new address is cached
 				// This allows detection of new changes after cache updates
 				AddressDataExtractor.lastNotifiedChangeSignature = null;
+				AddressDataExtractor.lastNotifiedBairroChangeSignature = null;
+				AddressDataExtractor.lastNotifiedMunicipioChangeSignature = null;
 
 				// Check for logradouro change after caching the new address
 				// This replaces the timer-based approach with event-driven checking
@@ -1818,6 +1969,21 @@ class AddressDataExtractor {
 						);
 					}
 				}
+
+				// Check for municipio change after caching the new address
+				// This follows the same pattern as logradouro and bairro change detection
+				if (AddressDataExtractor.municipioChangeCallback && 
+					AddressDataExtractor.hasMunicipioChanged()) {
+					const changeDetails = AddressDataExtractor.getMunicipioChangeDetails();
+					try {
+						AddressDataExtractor.municipioChangeCallback(changeDetails);
+					} catch (error) {
+						console.error(
+							"(AddressDataExtractor) Error calling municipio change callback:",
+							error,
+						);
+					}
+				}
 			}
 
 			return extractor.enderecoPadronizado;
@@ -1844,6 +2010,10 @@ AddressDataExtractor.logradouroChangeCallback = null;
 AddressDataExtractor.lastNotifiedBairroChangeSignature = null;
 // Callback function to notify when bairro changes occur
 AddressDataExtractor.bairroChangeCallback = null;
+// Track last municipio change to prevent notification loops
+AddressDataExtractor.lastNotifiedMunicipioChangeSignature = null;
+// Callback function to notify when municipio changes occur
+AddressDataExtractor.municipioChangeCallback = null;
 
 class HTMLAddressDisplayer {
 	constructor(element) {

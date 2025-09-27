@@ -7,11 +7,11 @@ assignees: ''
 
 ---
 
-## Description
+## Problem Description
 
 <!-- Clearly describe the issue or feature request. What did you expect Copilot to do? What happened instead? -->
 
-## Steps to Reproduce
+## Steps to Reproduce, if applicable
 
 <!-- List the steps needed to reproduce the issue, if applicable. -->
 
@@ -30,3 +30,5 @@ assignees: ''
 ## Additional Context
 
 <!-- Add any other context about the issue here. Links to related issues or documentation are helpful. -->
+
+## Proposed solution

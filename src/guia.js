@@ -13,7 +13,6 @@ const guiaVersion = {
 const guiaName = "Guia Turístico em Movimento";
 const guiaAuthor = "Marcelo Pereira Barbosa";
 const setupParams = {
-	logradouroChangeTimer: 1000, // milliseconds
 	trackingInterval: 60000, // milliseconds
 	minimumDistanceChange: 20, // meters
 	openstreetmapBaseUrl:
@@ -700,7 +699,6 @@ class WebGeocodingManager {
 		this.functionObservers = [];
 		this.currentPosition = null;
 		this.currentCoords = null;
-		this.logradouroChangeTimer = null;
 
 		this.initElements();
 
@@ -915,46 +913,38 @@ class WebGeocodingManager {
 			// Error is already handled by GeolocationService, just log it here
 		});
 
-		// Start logradouro change detection (30s interval)
-		this.startLogradouroChangeDetection();
+		// Register callback for logradouro change detection (replaces timer-based approach)
+		this.setupLogradouroChangeDetection();
 	}
 
 	/**
-	 * Starts the logradouro change detection timer (checks every 30 seconds)
+	 * Sets up logradouro change detection using callback mechanism (replaces timer-based approach)
 	 */
-	startLogradouroChangeDetection() {
-		if (this.logradouroChangeTimer) {
-			clearInterval(this.logradouroChangeTimer);
-		}
-
-		this.logradouroChangeTimer = setInterval(() => {
-			this.checkLogradouroChange();
-		}, setupParams.logradouroChangeTimer);
+	setupLogradouroChangeDetection() {
+		// Register this instance's callback with AddressDataExtractor
+		AddressDataExtractor.setLogradouroChangeCallback((changeDetails) => {
+			this.handleLogradouroChange(changeDetails);
+		});
 	}
 
 	/**
-	 * Stops the logradouro change detection timer
+	 * Removes the logradouro change detection callback
 	 */
-	stopLogradouroChangeDetection() {
-		if (this.logradouroChangeTimer) {
-			clearInterval(this.logradouroChangeTimer);
-			this.logradouroChangeTimer = null;
-		}
+	removeLogradouroChangeDetection() {
+		AddressDataExtractor.setLogradouroChangeCallback(null);
 	}
 
 	/**
-	 * Checks if the logradouro has changed and notifies observers
+	 * Handles logradouro change events and notifies observers
+	 * @param {Object} changeDetails - Details about the logradouro change
 	 */
-	checkLogradouroChange() {
+	handleLogradouroChange(changeDetails) {
 		try {
-			if (AddressDataExtractor.hasLogradouroChanged()) {
-				const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
-				// Notify observers about the logradouro change
-				this.notifyLogradouroChangeObservers(changeDetails);
-			}
+			// Notify observers about the logradouro change
+			this.notifyLogradouroChangeObservers(changeDetails);
 		} catch (error) {
 			console.error(
-				"(WebGeocodingManager) Error checking logradouro change:",
+				"(WebGeocodingManager) Error handling logradouro change:",
 				error,
 			);
 		}
@@ -1622,6 +1612,14 @@ class AddressDataExtractor {
 		}
 	}
 
+	/**
+	 * Sets a callback function to be called when logradouro changes are detected
+	 * @param {Function} callback - Function to call when logradouro changes occur
+	 */
+	static setLogradouroChangeCallback(callback) {
+		AddressDataExtractor.logradouroChangeCallback = callback;
+	}
+
 	static getBrazilianStandardAddress(data) {
 		const cacheKey = AddressDataExtractor.generateCacheKey(data);
 
@@ -1673,6 +1671,21 @@ class AddressDataExtractor {
 				// Reset change notification flag when new address is cached
 				// This allows detection of new changes after cache updates
 				AddressDataExtractor.lastNotifiedChangeSignature = null;
+
+				// Check for logradouro change after caching the new address
+				// This replaces the timer-based approach with event-driven checking
+				if (AddressDataExtractor.logradouroChangeCallback && 
+					AddressDataExtractor.hasLogradouroChanged()) {
+					const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
+					try {
+						AddressDataExtractor.logradouroChangeCallback(changeDetails);
+					} catch (error) {
+						console.error(
+							"(AddressDataExtractor) Error calling logradouro change callback:",
+							error,
+						);
+					}
+				}
 			}
 
 			return extractor.enderecoPadronizado;
@@ -1693,6 +1706,8 @@ AddressDataExtractor.defaultMaxCacheSize = 50;
 AddressDataExtractor.maxCacheSize = AddressDataExtractor.defaultMaxCacheSize;
 // Track last logradouro change to prevent notification loops
 AddressDataExtractor.lastNotifiedChangeSignature = null;
+// Callback function to notify when logradouro changes occur
+AddressDataExtractor.logradouroChangeCallback = null;
 
 class HTMLAddressDisplayer {
 	constructor(element) {

@@ -251,4 +251,118 @@ describe('AddressDataExtractor Logradouro Change Detection', () => {
         // Subsequent checks should return false
         expect(AddressDataExtractor.hasLogradouroChanged()).toBe(false);
     });
+
+    test('should call callback when logradouro changes on cache insert', () => {
+        let callbackDetails = null;
+        let callbackCallCount = 0;
+
+        // Set up callback
+        AddressDataExtractor.setLogradouroChangeCallback((changeDetails) => {
+            callbackDetails = changeDetails;
+            callbackCallCount++;
+        });
+
+        // Add first address
+        const firstAddress = {
+            address: {
+                street: 'Rua das Flores',
+                house_number: '123',
+                neighbourhood: 'Centro',
+                city: 'São Paulo',
+                state: 'SP',
+                postcode: '01000-000',
+                country: 'Brasil',
+                country_code: 'BR'
+            }
+        };
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+
+        // No callback should be called yet (only one address)
+        expect(callbackCallCount).toBe(0);
+        expect(callbackDetails).toBeNull();
+
+        // Add second address with different street - this should trigger callback
+        const secondAddress = {
+            address: {
+                street: 'Avenida Paulista',
+                house_number: '456',
+                neighbourhood: 'Bela Vista',
+                city: 'São Paulo',
+                state: 'SP',
+                postcode: '01310-000',
+                country: 'Brasil',
+                country_code: 'BR'
+            }
+        };
+        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
+
+        // Callback should have been called once
+        expect(callbackCallCount).toBe(1);
+        expect(callbackDetails).toBeDefined();
+        expect(callbackDetails.hasChanged).toBe(true);
+        expect(callbackDetails.previous.logradouro).toBe('Rua das Flores');
+        expect(callbackDetails.current.logradouro).toBe('Avenida Paulista');
+
+        // Adding a third address with same street should not trigger callback
+        const thirdAddress = {
+            address: {
+                street: 'Avenida Paulista', // Same street
+                house_number: '789',
+                neighbourhood: 'Bela Vista',
+                city: 'São Paulo',
+                state: 'SP',
+                postcode: '01310-001',
+                country: 'Brasil',
+                country_code: 'BR'
+            }
+        };
+        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
+
+        // Callback count should remain the same (no change detected)
+        expect(callbackCallCount).toBe(1);
+
+        // Clean up
+        AddressDataExtractor.setLogradouroChangeCallback(null);
+    });
+
+    test('should not call callback when no callback is set', () => {
+        // Ensure no callback is set
+        AddressDataExtractor.setLogradouroChangeCallback(null);
+
+        // Add addresses
+        const firstAddress = {
+            address: {
+                street: 'Rua das Flores',
+                house_number: '123',
+                neighbourhood: 'Centro',
+                city: 'São Paulo',
+                state: 'SP',
+                postcode: '01000-000',
+                country: 'Brasil',
+                country_code: 'BR'
+            }
+        };
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+
+        const secondAddress = {
+            address: {
+                street: 'Avenida Paulista',
+                house_number: '456',
+                neighbourhood: 'Bela Vista',
+                city: 'São Paulo',
+                state: 'SP',
+                postcode: '01310-000',
+                country: 'Brasil',
+                country_code: 'BR'
+            }
+        };
+        
+        // This should not throw an error even though no callback is set
+        expect(() => {
+            AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
+        }).not.toThrow();
+
+        // Change should still be detectable
+        expect(AddressDataExtractor.hasLogradouroChanged()).toBe(true);
+    });
 });

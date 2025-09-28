@@ -592,6 +592,35 @@ class GeolocationService {
 		this.notifyObservers();
 	}
 
+	/**
+	 * Updates position with immediate address change processing
+	 * This method bypasses the normal PositionManager timing constraints
+	 * to enable immediate location change notifications
+	 * @param {GeolocationPosition} position - The position update
+	 * @param {WebGeocodingManager} webGeocodingManager - Reference to WebGeocodingManager for immediate address processing
+	 */
+	updatePositionWithImmediateAddressCheck(position, webGeocodingManager) {
+		log("(GeolocationService) Processing position update with immediate address change detection...");
+		
+		// Update position data
+		this.currentPosition = position;
+		this.currentCoords = position.coords;
+		
+		// Notify regular observers first
+		this.notifyObservers();
+		
+		// Trigger immediate address update if webGeocodingManager is provided
+		if (webGeocodingManager && typeof webGeocodingManager.getImmediateAddressUpdate === 'function') {
+			webGeocodingManager.getImmediateAddressUpdate(position)
+				.then(() => {
+					log("(GeolocationService) Immediate address update completed");
+				})
+				.catch((error) => {
+					console.error("(GeolocationService) Error in immediate address update:", error);
+				});
+		}
+	}
+
 	async watchCurrentLocation() {
 		this.checkGeolocation();
 		return new Promise(async function (resolve, reject) {
@@ -843,6 +872,42 @@ class WebGeocodingManager {
 			});
 	}
 
+	/**
+	 * Get address update for immediate location change notifications
+	 * This method bypasses the PositionManager 60-second timing constraints
+	 * and processes address changes immediately for critical location notifications
+	 * @param {GeolocationPosition} position - Current position object
+	 */
+	getImmediateAddressUpdate(position) {
+		log("(WebGeocodingManager) Getting immediate address update for location change detection...");
+		
+		if (!position || !position.coords) {
+			log("(WebGeocodingManager) Invalid position for immediate address update");
+			return Promise.reject(new Error("Invalid position provided"));
+		}
+
+		// Create a new ReverseGeocoder instance for immediate processing
+		const immediateGeocoder = new ReverseGeocoder(position.coords.latitude, position.coords.longitude);
+		
+		return immediateGeocoder.reverseGeocode()
+			.then((addressData) => {
+				log("(WebGeocodingManager) Got immediate address data, processing for change detection...");
+				
+				// Use the new immediate processing method that bypasses normal timing constraints
+				const enderecoPadronizado = AddressDataExtractor.processAddressForImmediateChange(addressData, true);
+				
+				log("(WebGeocodingManager) Immediate address processing completed");
+				return {
+					currentAddress: addressData,
+					enderecoPadronizado: enderecoPadronizado
+				};
+			})
+			.catch((error) => {
+				console.error("(WebGeocodingManager) Error in immediate address update:", error);
+				throw error;
+			});
+	}
+
 	updatePosition(position) {
 		this.reverseGeocoder.latitude = position.coords.latitude;
 		this.reverseGeocoder.longitude = position.coords.longitude;
@@ -883,6 +948,9 @@ class WebGeocodingManager {
 			// Error is already handled by GeolocationService, just log it here
 		});
 
+		// Start immediate address change tracking (separate from regular position tracking)
+		this.startImmediateAddressChangeTracking();
+
 		// Register callback for logradouro change detection (replaces timer-based approach)
 		this.setupLogradouroChangeDetection();
 
@@ -891,6 +959,48 @@ class WebGeocodingManager {
 
 		// Register callback for municipio change detection (follows same pattern as logradouro and bairro)
 		this.setupMunicipioChangeDetection();
+	}
+
+	/**
+	 * Start immediate address change tracking that bypasses the 60-second position manager constraint
+	 * This enables immediate speech notifications for street/neighborhood/municipality changes
+	 */
+	startImmediateAddressChangeTracking() {
+		log("(WebGeocodingManager) Starting immediate address change tracking...");
+		
+		// Set up a separate high-frequency position watcher specifically for address changes
+		// This runs independently of the main PositionManager timing constraints
+		if (navigator.geolocation) {
+			this.immediateTrackingWatchId = navigator.geolocation.watchPosition(
+				(position) => {
+					// Use the immediate address checking method
+					this.geolocationService.updatePositionWithImmediateAddressCheck(position, this);
+				},
+				(error) => {
+					log("(WebGeocodingManager) Immediate tracking geolocation error:", error.message);
+				},
+				{
+					enableHighAccuracy: true,
+					maximumAge: 5000, // Allow 5-second cached positions for immediate tracking
+					timeout: 30000 // 30-second timeout
+				}
+			);
+			
+			log("(WebGeocodingManager) Immediate address change tracking started with watch ID:", this.immediateTrackingWatchId);
+		} else {
+			console.warn("(WebGeocodingManager) Geolocation not supported for immediate tracking");
+		}
+	}
+
+	/**
+	 * Stop immediate address change tracking
+	 */
+	stopImmediateAddressChangeTracking() {
+		if (this.immediateTrackingWatchId) {
+			navigator.geolocation.clearWatch(this.immediateTrackingWatchId);
+			this.immediateTrackingWatchId = null;
+			log("(WebGeocodingManager) Immediate address change tracking stopped");
+		}
 	}
 
 	/**
@@ -1988,6 +2098,85 @@ class AddressDataExtractor {
 
 			return extractor.enderecoPadronizado;
 		}
+	}
+
+	/**
+	 * Process address data for immediate location change detection (bypasses position manager timing constraints)
+	 * This method allows critical location changes to be detected and announced immediately
+	 * without waiting for the 60-second position update interval
+	 * @param {Object} data - Address data from geocoding API
+	 * @param {boolean} forceImmediateNotification - Force notification even if timing constraints would normally block it
+	 * @returns {BrazilianStandardAddress} Processed address object
+	 */
+	static processAddressForImmediateChange(data, forceImmediateNotification = true) {
+		log("(AddressDataExtractor) Processing address for immediate change detection...");
+		
+		if (!data) {
+			log("(AddressDataExtractor) No address data provided for immediate processing");
+			return null;
+		}
+
+		// Create new standardized address (skip cache for immediate processing to ensure fresh detection)
+		const extractor = new AddressDataExtractor(data);
+
+		// Store previous address before updating current
+		if (AddressDataExtractor.currentAddress) {
+			AddressDataExtractor.previousAddress = { ...AddressDataExtractor.currentAddress };
+		}
+		AddressDataExtractor.currentAddress = { ...data };
+
+		// For immediate processing, we don't reset change tracking signatures
+		// This allows us to detect changes even when called multiple times quickly
+
+		// Check for logradouro change with immediate notification capability
+		if (AddressDataExtractor.logradouroChangeCallback && 
+			AddressDataExtractor.hasLogradouroChanged()) {
+			const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
+			changeDetails.immediate = forceImmediateNotification;
+			try {
+				log("(AddressDataExtractor) Triggering immediate logradouro change callback...");
+				AddressDataExtractor.logradouroChangeCallback(changeDetails);
+			} catch (error) {
+				console.error(
+					"(AddressDataExtractor) Error calling immediate logradouro change callback:",
+					error,
+				);
+			}
+		}
+
+		// Check for bairro change with immediate notification capability
+		if (AddressDataExtractor.bairroChangeCallback && 
+			AddressDataExtractor.hasBairroChanged()) {
+			const changeDetails = AddressDataExtractor.getBairroChangeDetails();
+			changeDetails.immediate = forceImmediateNotification;
+			try {
+				log("(AddressDataExtractor) Triggering immediate bairro change callback...");
+				AddressDataExtractor.bairroChangeCallback(changeDetails);
+			} catch (error) {
+				console.error(
+					"(AddressDataExtractor) Error calling immediate bairro change callback:",
+					error,
+				);
+			}
+		}
+
+		// Check for municipio change with immediate notification capability
+		if (AddressDataExtractor.municipioChangeCallback && 
+			AddressDataExtractor.hasMunicipioChanged()) {
+			const changeDetails = AddressDataExtractor.getMunicipioChangeDetails();
+			changeDetails.immediate = forceImmediateNotification;
+			try {
+				log("(AddressDataExtractor) Triggering immediate municipio change callback...");
+				AddressDataExtractor.municipioChangeCallback(changeDetails);
+			} catch (error) {
+				console.error(
+					"(AddressDataExtractor) Error calling immediate municipio change callback:",
+					error,
+				);
+			}
+		}
+
+		return extractor.enderecoPadronizado;
 	}
 }
 

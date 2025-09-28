@@ -2661,12 +2661,67 @@ class HtmlSpeechSynthesisDisplayer {
 		return textToBeSpoken;
 	}
 
+	/**
+	 * Immediately sends speech for critical location changes without validation conditions
+	 * This ensures street/neighbourhood/municipality changes are announced immediately
+	 * @param {Object} currentAddress - Current address object
+	 * @param {string} changeEvent - Type of change event
+	 * @param {number} priority - Speech priority
+	 */
+	speakLocationChangeImmediately(currentAddress, changeEvent, priority) {
+		log(`(HtmlSpeechSynthesisDisplayer) Immediate speech for ${changeEvent} - bypassing validation conditions...`);
+		
+		let textToBeSpoken = "";
+		
+		// Build text based on change event type - no validation conditions
+		if (changeEvent === "MunicipioChanged") {
+			textToBeSpoken = this.buildTextToSpeechMunicipio(currentAddress) || "Município alterado";
+		} else if (changeEvent === "BairroChanged") {
+			textToBeSpoken = this.buildTextToSpeechBairro(currentAddress) || "Bairro alterado";
+		} else if (changeEvent === "LogradouroChanged") {
+			textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress) || "Rua alterada";
+		}
+		
+		// Force speech immediately - no validation conditions
+		if (textToBeSpoken) {
+			// Update text input if available
+			if (this.textInput) {
+				this.textInput.value = textToBeSpoken;
+			}
+			
+			// Force immediate queue and processing - bypass normal speak method validations
+			log(`(HtmlSpeechSynthesisDisplayer) Force queueing immediate speech: "${textToBeSpoken}" with priority ${priority}`);
+			this.speechManager.speechQueue.enqueue(textToBeSpoken, priority);
+			
+			// Force immediate processing regardless of current speaking state
+			this.speechManager.processQueue();
+		} else {
+			// Even if no text could be built, announce the change
+			const fallbackText = changeEvent === "MunicipioChanged" ? "Município alterado" :
+								changeEvent === "BairroChanged" ? "Bairro alterado" : "Rua alterada";
+			log(`(HtmlSpeechSynthesisDisplayer) Using fallback text for immediate speech: "${fallbackText}"`);
+			this.speechManager.speechQueue.enqueue(fallbackText, priority);
+			this.speechManager.processQueue();
+		}
+	}
+
 	update(currentAddress, enderecoPadronizadoOrEvent, loading, error) {
 		log("(HtmlSpeechSynthesisDisplayer) Updating speech synthesis display...");
 		log("currentAddress:", currentAddress);
 		log("enderecoPadronizadoOrEvent:", enderecoPadronizadoOrEvent);
 
-		// Early return if no current address
+		// Check for critical location changes that need immediate speech
+		const criticalLocationChanges = ["MunicipioChanged", "BairroChanged", "LogradouroChanged"];
+		if (criticalLocationChanges.includes(enderecoPadronizadoOrEvent)) {
+			// For critical location changes, send to speech queue immediately without validation conditions
+			const priority = enderecoPadronizadoOrEvent === "MunicipioChanged" ? 2 :
+							enderecoPadronizadoOrEvent === "BairroChanged" ? 1 : 0;
+			
+			this.speakLocationChangeImmediately(currentAddress, enderecoPadronizadoOrEvent, priority);
+			return; // Return early for immediate speech handling
+		}
+
+		// Early return if no current address (only for non-critical updates)
 		if (!currentAddress) {
 			return;
 		}
@@ -2674,32 +2729,13 @@ class HtmlSpeechSynthesisDisplayer {
 		let textToBeSpoken = "";
 		let priority = 0;
 
-		// Determine speech content and priority based on event type
-		// Priority order: Municipality (2) > Bairro (1) > Logradouro (0)
-		if (enderecoPadronizadoOrEvent === "MunicipioChanged") {
-			log("(HtmlSpeechSynthesisDisplayer) Municipio change detected, speaking new municipality with HIGHEST priority...");
-			textToBeSpoken = this.buildTextToSpeechMunicipio(currentAddress);
-			priority = 2; // HIGHEST priority for municipio changes
-			log("textToBeSpoken for municipio change:", textToBeSpoken);
-		} else if (enderecoPadronizadoOrEvent === "BairroChanged") {
-			log("(HtmlSpeechSynthesisDisplayer) Bairro change detected, speaking new neighborhood with MEDIUM priority...");
-			textToBeSpoken = this.buildTextToSpeechBairro(currentAddress);
-			priority = 1; // MEDIUM priority for bairro changes
-			log("textToBeSpoken for bairro change:", textToBeSpoken);
-		} else if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
-			log("(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location with LOW priority...");
-			textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
-			priority = 0; // LOWEST priority for logradouro changes
-			log("textToBeSpoken for logradouro change:", textToBeSpoken);
-		} else {
-			// Normal update from reverseGeocoder
-			log("(HtmlSpeechSynthesisDisplayer) Normal address update, speaking full address...");
-			textToBeSpoken = this.buildTextToSpeech(currentAddress);
-			priority = 0; // Lowest priority for full address updates
-			log("textToBeSpoken:", textToBeSpoken);
-		}
+		// Handle normal updates (non-location changes)
+		log("(HtmlSpeechSynthesisDisplayer) Normal address update, speaking full address...");
+		textToBeSpoken = this.buildTextToSpeech(currentAddress);
+		priority = 0; // Lowest priority for full address updates
+		log("textToBeSpoken:", textToBeSpoken);
 
-		// Common operations for all cases
+		// Common operations for normal cases
 		if (textToBeSpoken) {
 			this.textInput.value = textToBeSpoken;
 			this.speak(textToBeSpoken, priority);

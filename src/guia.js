@@ -2632,6 +2632,11 @@ class HtmlSpeechSynthesisDisplayer {
 		return enderecoPadronizado.bairro || "Bairro não identificado";
 	}
 
+	getMunicipio(addressExtractor) {
+		const enderecoPadronizado = addressExtractor.enderecoPadronizado;
+		return enderecoPadronizado.municipio || "Município não identificado";
+	}
+
 	buildTextToSpeech(currentAddress) {
 		const addressExtractor = new AddressDataExtractor(currentAddress);
 		const textToBeSpoken = `Você está em ${this.getFullAddress(addressExtractor)}.`;
@@ -2650,6 +2655,12 @@ class HtmlSpeechSynthesisDisplayer {
 		return textToBeSpoken;
 	}
 
+	buildTextToSpeechMunicipio(currentAddress) {
+		let addressExtractor = new AddressDataExtractor(currentAddress);
+		let textToBeSpoken = this.getMunicipio(addressExtractor);
+		return textToBeSpoken;
+	}
+
 	update(currentAddress, enderecoPadronizadoOrEvent, loading, error) {
 		log("(HtmlSpeechSynthesisDisplayer) Updating speech synthesis display...");
 		log("currentAddress:", currentAddress);
@@ -2664,15 +2675,21 @@ class HtmlSpeechSynthesisDisplayer {
 		let priority = 0;
 
 		// Determine speech content and priority based on event type
-		if (enderecoPadronizadoOrEvent === "BairroChanged") {
-			log("(HtmlSpeechSynthesisDisplayer) Bairro change detected, speaking new neighborhood with HIGH priority...");
+		// Priority order: Municipality (2) > Bairro (1) > Logradouro (0)
+		if (enderecoPadronizadoOrEvent === "MunicipioChanged") {
+			log("(HtmlSpeechSynthesisDisplayer) Municipio change detected, speaking new municipality with HIGHEST priority...");
+			textToBeSpoken = this.buildTextToSpeechMunicipio(currentAddress);
+			priority = 2; // HIGHEST priority for municipio changes
+			log("textToBeSpoken for municipio change:", textToBeSpoken);
+		} else if (enderecoPadronizadoOrEvent === "BairroChanged") {
+			log("(HtmlSpeechSynthesisDisplayer) Bairro change detected, speaking new neighborhood with MEDIUM priority...");
 			textToBeSpoken = this.buildTextToSpeechBairro(currentAddress);
-			priority = 2; // HIGHEST priority for bairro changes
+			priority = 1; // MEDIUM priority for bairro changes
 			log("textToBeSpoken for bairro change:", textToBeSpoken);
 		} else if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
-			log("(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location...");
+			log("(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location with LOW priority...");
 			textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
-			priority = 1; // Medium priority for logradouro changes
+			priority = 0; // LOWEST priority for logradouro changes
 			log("textToBeSpoken for logradouro change:", textToBeSpoken);
 		} else {
 			// Normal update from reverseGeocoder

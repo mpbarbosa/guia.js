@@ -105,11 +105,97 @@ log("Guia.js version:", guiaVersion.toString());
  * ============================
  */
 
+/**
+ * Manages the current geolocation position using singleton and observer design patterns.
+ * 
+ * This class provides centralized management of the user's current geographic position,
+ * implementing timing constraints, accuracy validation, and distance-based filtering
+ * to ensure position updates are meaningful and efficient. It notifies subscribed
+ * observers when position changes occur.
+ * 
+ * The PositionManager enforces several validation rules:
+ * - Minimum time interval between updates (60 seconds by default)
+ * - Minimum distance change threshold (20 meters by default)
+ * - Accuracy quality requirements (rejects medium/bad/very bad accuracy)
+ * 
+ * @class PositionManager
+ * @implements {Observer} - Implements observer pattern for position change notifications
+ * @since 0.5.0-alpha
+ * @author Marcelo Pereira Barbosa
+ * 
+ * @example
+ * // Get singleton instance and update position
+ * const position = PositionManager.getInstance(geolocationPosition);
+ * console.log(position.latitude, position.longitude);
+ * 
+ * @example
+ * // Subscribe to position changes
+ * const observer = {
+ *   update: (positionManager, event) => {
+ *     if (event === PositionManager.strCurrPosUpdate) {
+ *       console.log('Position updated:', positionManager.latitude);
+ *     }
+ *   }
+ * };
+ * PositionManager.getInstance().subscribe(observer);
+ * 
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API} Geolocation API
+ * @see {@link https://www.w3.org/TR/geolocation-API/} W3C Geolocation API Specification
+ */
 class PositionManager {
+	/**
+	 * Singleton instance holder. Only one PositionManager exists per application.
+	 * @static
+	 * @type {PositionManager|null}
+	 * @private
+	 */
 	static instance = null;
+
+	/**
+	 * Event string constant fired when position is successfully updated.
+	 * @static
+	 * @type {string}
+	 * @readonly
+	 */
 	static strCurrPosUpdate = "PositionManager updated";
+
+	/**
+	 * Event string constant fired when position update is rejected due to validation rules.
+	 * @static
+	 * @type {string}
+	 * @readonly
+	 */
 	static strCurrPosNotUpdate = "PositionManager not updated";
 
+	/**
+	 * Gets or creates the singleton PositionManager instance.
+	 * 
+	 * Implements the singleton pattern ensuring only one PositionManager instance
+	 * exists throughout the application lifecycle. If a position is provided when
+	 * an instance already exists, it will attempt to update the existing instance.
+	 * 
+	 * @static
+	 * @param {GeolocationPosition} [position] - HTML5 Geolocation API Position object
+	 * @param {GeolocationCoordinates} [position.coords] - Coordinate information
+	 * @param {number} [position.coords.latitude] - Latitude in decimal degrees
+	 * @param {number} [position.coords.longitude] - Longitude in decimal degrees  
+	 * @param {number} [position.coords.accuracy] - Accuracy in meters
+	 * @param {number} [position.timestamp] - Timestamp when position was acquired
+	 * @returns {PositionManager} The singleton PositionManager instance
+	 * 
+	 * @example
+	 * // Create initial instance
+	 * const manager = PositionManager.getInstance();
+	 * 
+	 * @example  
+	 * // Create or update with position data
+	 * navigator.geolocation.getCurrentPosition((position) => {
+	 *   const manager = PositionManager.getInstance(position);
+	 *   console.log(manager.latitude, manager.longitude);
+	 * });
+	 * 
+	 * @since 0.5.0-alpha
+	 */
 	static getInstance(position) {
 		if (!PositionManager.instance) {
 			PositionManager.instance = new PositionManager(position);
@@ -119,6 +205,26 @@ class PositionManager {
 		return PositionManager.instance;
 	}
 
+	/**
+	 * Creates a new PositionManager instance.
+	 * 
+	 * Initializes the position manager with empty observer list and optional 
+	 * initial position data. This constructor is typically called internally
+	 * by the getInstance() method to maintain the singleton pattern.
+	 * 
+	 * @param {GeolocationPosition} [position] - Initial position data
+	 * @param {GeolocationCoordinates} [position.coords] - Coordinate information
+	 * @param {number} [position.coords.latitude] - Latitude in decimal degrees
+	 * @param {number} [position.coords.longitude] - Longitude in decimal degrees
+	 * @param {number} [position.coords.accuracy] - Accuracy in meters
+	 * @param {number} [position.timestamp] - Timestamp when position was acquired
+	 * 
+	 * @example
+	 * // Typically used internally by getInstance()
+	 * const manager = new PositionManager(geolocationPosition);
+	 * 
+	 * @since 0.5.0-alpha
+	 */
 	constructor(position) {
 		this.observers = [];
 		this.accuracyQuality = null;
@@ -129,22 +235,102 @@ class PositionManager {
 		}
 	}
 
+	/**
+	 * Subscribes an observer to position change notifications.
+	 * 
+	 * Implements the observer pattern by adding observers that will be notified
+	 * when position updates occur. Observers must implement an update() method
+	 * that accepts (positionManager, eventType) parameters.
+	 * 
+	 * @param {Object} observer - Observer object to subscribe
+	 * @param {Function} observer.update - Method called on position changes
+	 * @returns {void}
+	 * 
+	 * @example
+	 * const myObserver = {
+	 *   update: (positionManager, event) => {
+	 *     console.log('Position event:', event, positionManager.latitude);
+	 *   }
+	 * };
+	 * PositionManager.getInstance().subscribe(myObserver);
+	 * 
+	 * @since 0.5.0-alpha
+	 */
 	subscribe(observer) {
 		if (observer) {
 			this.observers.push(observer);
 		}
 	}
 
+	/**
+	 * Unsubscribes an observer from position change notifications.
+	 * 
+	 * Removes the specified observer from the notification list so it will
+	 * no longer receive position update events.
+	 * 
+	 * @param {Object} observer - Observer object to unsubscribe
+	 * @returns {void}
+	 * 
+	 * @example
+	 * const myObserver = { update: () => {} };
+	 * const manager = PositionManager.getInstance();
+	 * manager.subscribe(myObserver);
+	 * // Later...
+	 * manager.unsubscribe(myObserver);
+	 * 
+	 * @since 0.5.0-alpha
+	 */
 	unsubscribe(observer) {
 		this.observers = this.observers.filter((o) => o !== observer);
 	}
 
+	/**
+	 * Notifies all subscribed observers about position change events.
+	 * 
+	 * Called internally when position updates occur or are rejected.
+	 * All subscribed observers receive the event notification via their
+	 * update() method.
+	 * 
+	 * @param {string} posEvent - Event type (strCurrPosUpdate or strCurrPosNotUpdate)
+	 * @returns {void}
+	 * 
+	 * @private
+	 * @since 0.5.0-alpha
+	 */
 	notifyObservers(posEvent) {
 		this.observers.forEach((observer) => {
 			observer.update(this, posEvent);
 		});
 	}
 
+	/**
+	 * Classifies GPS accuracy into quality levels based on accuracy value in meters.
+	 * 
+	 * Provides a standardized way to assess the quality of GPS position data
+	 * based on the accuracy reported by the device. Lower values indicate better accuracy.
+	 * 
+	 * Quality Levels:
+	 * - excellent: ≤ 10 meters (high precision, suitable for all applications)
+	 * - good: 11-30 meters (good precision, suitable for most applications)  
+	 * - medium: 31-100 meters (moderate precision, may be acceptable for some uses)
+	 * - bad: 101-200 meters (poor precision, generally not recommended)
+	 * - very bad: > 200 meters (very poor precision, should be rejected)
+	 * 
+	 * @static
+	 * @param {number} accuracy - GPS accuracy value in meters from GeolocationCoordinates
+	 * @returns {string} Quality classification: 'excellent'|'good'|'medium'|'bad'|'very bad'
+	 * 
+	 * @example
+	 * // Classify different accuracy levels
+	 * console.log(PositionManager.getAccuracyQuality(5));   // 'excellent'
+	 * console.log(PositionManager.getAccuracyQuality(25));  // 'good'
+	 * console.log(PositionManager.getAccuracyQuality(75));  // 'medium'
+	 * console.log(PositionManager.getAccuracyQuality(150)); // 'bad'
+	 * console.log(PositionManager.getAccuracyQuality(500)); // 'very bad'
+	 * 
+	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates/accuracy} GeolocationCoordinates.accuracy
+	 * @since 0.5.0-alpha
+	 */
 	static getAccuracyQuality(accuracy) {
 		if (accuracy <= 10) {
 			return "excellent";
@@ -159,15 +345,86 @@ class PositionManager {
 		}
 	}
 
+	/**
+	 * Calculates the accuracy quality for the current position.
+	 * 
+	 * Convenience method that applies the static getAccuracyQuality() method
+	 * to this instance's accuracy value.
+	 * 
+	 * @returns {string} Quality classification for current position accuracy
+	 * 
+	 * @example
+	 * const manager = PositionManager.getInstance(position);
+	 * console.log(manager.calculateAccuracyQuality()); // 'good'
+	 * 
+	 * @since 0.5.0-alpha
+	 * @deprecated Use accuracyQuality property instead - this method has a bug (calls undefined getAccuracyQuality)
+	 */
 	calculateAccuracyQuality() {
 		return getAccuracyQuality(this.accuracy);
 	}
 
+	/**
+	 * Sets the position accuracy and automatically calculates quality classification.
+	 * 
+	 * This setter automatically updates the accuracyQuality property whenever
+	 * the accuracy value changes, ensuring consistency between the numeric
+	 * accuracy value and its quality classification.
+	 * 
+	 * @param {number} value - Accuracy value in meters from GPS coordinates
+	 * 
+	 * @example
+	 * const manager = PositionManager.getInstance();
+	 * manager.accuracy = 15; // Sets accuracy and updates accuracyQuality to 'good'
+	 * console.log(manager.accuracyQuality); // 'good'
+	 * 
+	 * @since 0.5.0-alpha
+	 */
 	set accuracy(value) {
 		this._accuracy = value;
 		this.accuracyQuality = PositionManager.getAccuracyQuality(value);
 	}
 
+	/**
+	 * Updates the position with validation and filtering rules.
+	 * 
+	 * This is the core method that processes new position data with multiple
+	 * validation layers to ensure only meaningful position updates are accepted:
+	 * 
+	 * Validation Rules:
+	 * 1. Position validity: Must have valid position object with timestamp
+	 * 2. Time constraint: Must wait at least 60 seconds (trackingInterval) between updates
+	 * 3. Accuracy requirement: Rejects medium/bad/very bad accuracy positions  
+	 * 4. Distance threshold: Must move at least 20 meters (minimumDistanceChange)
+	 * 
+	 * When validation passes, updates all position properties and notifies observers.
+	 * When validation fails, notifies observers with the rejection reason.
+	 * 
+	 * @param {GeolocationPosition} position - New position data from Geolocation API
+	 * @param {GeolocationCoordinates} position.coords - Coordinate information
+	 * @param {number} position.coords.latitude - Latitude in decimal degrees
+	 * @param {number} position.coords.longitude - Longitude in decimal degrees
+	 * @param {number} position.coords.accuracy - Accuracy in meters
+	 * @param {number} position.coords.altitude - Altitude in meters (may be null)
+	 * @param {number} position.coords.altitudeAccuracy - Altitude accuracy in meters (may be null)  
+	 * @param {number} position.coords.heading - Compass heading in degrees (may be null)
+	 * @param {number} position.coords.speed - Speed in meters/second (may be null)
+	 * @param {number} position.timestamp - Timestamp when position was acquired
+	 * @returns {void}
+	 * 
+	 * @fires PositionManager#strCurrPosUpdate - When position successfully updated
+	 * @fires PositionManager#strCurrPosNotUpdate - When position rejected by validation
+	 * 
+	 * @example
+	 * // Update with new position (typically from Geolocation API)
+	 * navigator.geolocation.getCurrentPosition((position) => {
+	 *   const manager = PositionManager.getInstance();
+	 *   manager.update(position); // Validates and updates if rules pass
+	 * });
+	 * 
+	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition} GeolocationPosition
+	 * @since 0.5.0-alpha
+	 */
 	update(position) {
 		let bUpdateCurrPos = true;
 		let error = null;
@@ -245,10 +502,46 @@ class PositionManager {
 		this.notifyObservers(PositionManager.strCurrPosUpdate, null, error);
 	}
 
+	/**
+	 * Returns a string representation of the current position.
+	 * 
+	 * Provides a formatted summary of key position properties for debugging
+	 * and logging purposes. Includes class name and essential position data.
+	 * 
+	 * @returns {string} Formatted string with position details
+	 * 
+	 * @example
+	 * const manager = PositionManager.getInstance(position);
+	 * console.log(manager.toString());
+	 * // Output: "PositionManager: -23.5505, -46.6333, good, 760, 0, 0, 1634567890123"
+	 * 
+	 * @since 0.5.0-alpha
+	 */
 	toString() {
 		return `${this.constructor.name}: ${this.latitude}, ${this.longitude}, ${this.accuracyQuality}, ${this.altitude}, ${this.speed}, ${this.heading}, ${this.timestamp}`;
 	}
 
+	/**
+	 * Calculates the distance between this position and another position.
+	 * 
+	 * Uses the Haversine formula to compute the great-circle distance between
+	 * two geographic points. Useful for determining how far the device has
+	 * moved or measuring distances to other locations.
+	 * 
+	 * @param {Object} otherPosition - Other position to calculate distance to
+	 * @param {number} otherPosition.latitude - Latitude of other position in decimal degrees
+	 * @param {number} otherPosition.longitude - Longitude of other position in decimal degrees
+	 * @returns {number} Distance in meters between the two positions
+	 * 
+	 * @example
+	 * const manager = PositionManager.getInstance(currentPosition);
+	 * const restaurant = { latitude: -23.5489, longitude: -46.6388 };
+	 * const distance = manager.distanceTo(restaurant);
+	 * console.log(`Restaurant is ${Math.round(distance)} meters away`);
+	 * 
+	 * @see {@link calculateDistance} - The underlying distance calculation function
+	 * @since 0.5.0-alpha
+	 */
 	distanceTo(otherPosition) {
 		return calculateDistance(
 			this.latitude,

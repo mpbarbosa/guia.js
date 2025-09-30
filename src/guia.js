@@ -3,19 +3,27 @@
 const guiaVersion = {
 	major: 0,
 	minor: 8,
-	patch: 0,
+	patch: 1,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
 	},
 };
 
-const guiaName = "Guia Turístico em Movimento";
+const guiaName = "Ondeestou";
 const guiaAuthor = "Marcelo Pereira Barbosa";
 const setupParams = {
 	trackingInterval: 60000, // milliseconds
 	minimumDistanceChange: 20, // meters
 	independentQueueTimerInterval: 5000, // milliseconds
+	noReferencePlace: "Não classificado",
+	validRefPlaceClasses: ["shop","amenity","railway"],
+	referencePlaceMap: {
+		"place": {"house": "Residencial"},
+		"shop": {"mall": "Shopping Center"},
+		"amenity": {"cafe": "Café"},
+		"railway": {"subway": "Estação do Metrô"},
+	};
 	openstreetmapBaseUrl:
 		"https://nominatim.openstreetmap.org/reverse?format=json",
 };
@@ -774,17 +782,14 @@ function getAddressType(address) {
 	const addressType = address.type;
 	let addressTypeDescr;
 
-	if (addressClass == "place" && addressType == "house") {
-		addressTypeDescr = "Residencial";
-	} else if (addressClass == "shop" && addressType == "mall") {
-		addressTypeDescr = "Shopping Center";
-	} else if (addressClass == "amenity" && addressType == "cafe") {
-		addressTypeDescr = "Café";
-	} else if (addressClass == "amenity" && addressType == "cafe") {
-		addressTypeDescr = "Café";
-	} else {
-		addressTypeDescr = "Não classificado";
-	}
+	const referencePlaceMap = {
+		"place": {"house": "Residencial"},
+		"shop": {"mall": "Shopping Center"},
+		"amenity": {"cafe": "Café"},
+	};
+
+	addressTypeDescr = referencePlaceMap[addressClass]?.[addressType] || setupParams.noReferencePlace;
+
 	return addressTypeDescr;
 }
 
@@ -1797,8 +1802,8 @@ class ReferencePlaceExtractor {
 	}
 
 	static isReferencePlace(data) {
-		let validRefPlaceClasses = ["shop"];
-		let refPlaceClass = new ReferencePlaceExtractor(data).placeClass;
+		const validRefPlaceClasses = setupParams.validRefPlaceClasses;
+		const refPlaceClass = new ReferencePlaceExtractor(data).placeClass;
 		return validRefPlaceClasses.includes(refPlaceClass);
 	}
 }

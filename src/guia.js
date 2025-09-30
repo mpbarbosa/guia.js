@@ -23,7 +23,7 @@ const setupParams = {
 		"shop": {"mall": "Shopping Center"},
 		"amenity": {"cafe": "Café"},
 		"railway": {"subway": "Estação do Metrô"},
-	};
+	},
 	openstreetmapBaseUrl:
 		"https://nominatim.openstreetmap.org/reverse?format=json",
 };

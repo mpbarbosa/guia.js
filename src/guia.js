@@ -884,8 +884,8 @@ class GeolocationService {
 		if (cityStatsBtn) {
 			cityStatsBtn.disabled = true;
 		}
-		this.positionManager = position;
-		this.currentCoords = position.coords;
+		this.positionManager.update(position);
+		this.currentCoords = this.positionManager.coords;
 		this.notifyObservers();
 	}
 
@@ -900,8 +900,8 @@ class GeolocationService {
 		log("(GeolocationService) Processing position update with immediate address change detection...");
 
 		// Update position data
-		this.positionManager = position;
-		this.currentCoords = position.coords;
+		this.positionManager.update(position);
+		this.currentCoords = this.positionManager.coords;
 
 		// Notify regular observers first
 		this.notifyObservers();

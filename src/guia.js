@@ -176,6 +176,76 @@ class GeoPosition {
 			return "very bad";
 		}
 	}
+	
+	/**
+	 * Calculates the accuracy quality for the current position.
+	 * 
+	 * Convenience method that applies the static getAccuracyQuality() method
+	 * to this instance's accuracy value.
+	 * 
+	 * @returns {string} Quality classification for current position accuracy
+	 * 
+	 * @example
+	 * const manager = PositionManager.getInstance(position);
+	 * console.log(manager.calculateAccuracyQuality()); // 'good'
+	 * 
+	 * @since 0.5.0-alpha
+	 * @deprecated Use accuracyQuality property instead - this method has a bug (calls undefined getAccuracyQuality)
+	 */
+	calculateAccuracyQuality() {
+		return getAccuracyQuality(this.accuracy);
+	}
+
+	/**
+	 * Calculates the distance between this position and another position.
+	 * 
+	 * Uses the Haversine formula to compute the great-circle distance between
+	 * two geographic points. Useful for determining how far the device has
+	 * moved or measuring distances to other locations.
+	 * 
+	 * @param {Object} otherPosition - Other position to calculate distance to
+	 * @param {number} otherPosition.latitude - Latitude of other position in decimal degrees
+	 * @param {number} otherPosition.longitude - Longitude of other position in decimal degrees
+	 * @returns {number} Distance in meters between the two positions
+	 * 
+	 * @example
+	 * const manager = PositionManager.getInstance(currentPosition);
+	 * const restaurant = { latitude: -23.5489, longitude: -46.6388 };
+	 * const distance = manager.distanceTo(restaurant);
+	 * console.log(`Restaurant is ${Math.round(distance)} meters away`);
+	 * 
+	 * @see {@link calculateDistance} - The underlying distance calculation function
+	 * @since 0.5.0-alpha
+	 */
+	distanceTo(otherPosition) {
+		return calculateDistance(
+			this.latitude,
+			this.longitude,
+			otherPosition.latitude,
+			otherPosition.longitude,
+		);
+	}
+
+	/**
+	 * Sets the position accuracy and automatically calculates quality classification.
+	 * 
+	 * This setter automatically updates the accuracyQuality property whenever
+	 * the accuracy value changes, ensuring consistency between the numeric
+	 * accuracy value and its quality classification.
+	 * 
+	 * @param {number} value - Accuracy value in meters from GPS coordinates
+	 * 
+	 * @example
+	 * const manager = PositionManager.getInstance();
+	 * manager.accuracy = 15; // Sets accuracy and updates accuracyQuality to 'good'
+	 * console.log(manager.accuracyQuality); // 'good'
+	 * 
+	 * @since 0.5.0-alpha
+	 */
+	set accuracy(value) {
+		this._accuracy = value;
+		this.accuracyQuality = PositionManager.getAccuracyQuality(value);
+	}
 }
 
 
@@ -304,7 +374,6 @@ class PositionManager {
 	 */
 	constructor(position) {
 		this.observers = [];
-		this.accuracyQuality = null;
 		this.tsPosicaoAtual = null;
 		this.lastModified = null;
 		if (position) {
@@ -378,47 +447,6 @@ class PositionManager {
 		this.observers.forEach((observer) => {
 			observer.update(this, posEvent);
 		});
-	}
-
-
-	/**
-	 * Calculates the accuracy quality for the current position.
-	 * 
-	 * Convenience method that applies the static getAccuracyQuality() method
-	 * to this instance's accuracy value.
-	 * 
-	 * @returns {string} Quality classification for current position accuracy
-	 * 
-	 * @example
-	 * const manager = PositionManager.getInstance(position);
-	 * console.log(manager.calculateAccuracyQuality()); // 'good'
-	 * 
-	 * @since 0.5.0-alpha
-	 * @deprecated Use accuracyQuality property instead - this method has a bug (calls undefined getAccuracyQuality)
-	 */
-	calculateAccuracyQuality() {
-		return getAccuracyQuality(this.accuracy);
-	}
-
-	/**
-	 * Sets the position accuracy and automatically calculates quality classification.
-	 * 
-	 * This setter automatically updates the accuracyQuality property whenever
-	 * the accuracy value changes, ensuring consistency between the numeric
-	 * accuracy value and its quality classification.
-	 * 
-	 * @param {number} value - Accuracy value in meters from GPS coordinates
-	 * 
-	 * @example
-	 * const manager = PositionManager.getInstance();
-	 * manager.accuracy = 15; // Sets accuracy and updates accuracyQuality to 'good'
-	 * console.log(manager.accuracyQuality); // 'good'
-	 * 
-	 * @since 0.5.0-alpha
-	 */
-	set accuracy(value) {
-		this._accuracy = value;
-		this.accuracyQuality = PositionManager.getAccuracyQuality(value);
 	}
 
 	/**
@@ -553,35 +581,6 @@ class PositionManager {
 		return `${this.constructor.name}: ${this.latitude}, ${this.longitude}, ${this.accuracyQuality}, ${this.altitude}, ${this.speed}, ${this.heading}, ${this.timestamp}`;
 	}
 
-	/**
-	 * Calculates the distance between this position and another position.
-	 * 
-	 * Uses the Haversine formula to compute the great-circle distance between
-	 * two geographic points. Useful for determining how far the device has
-	 * moved or measuring distances to other locations.
-	 * 
-	 * @param {Object} otherPosition - Other position to calculate distance to
-	 * @param {number} otherPosition.latitude - Latitude of other position in decimal degrees
-	 * @param {number} otherPosition.longitude - Longitude of other position in decimal degrees
-	 * @returns {number} Distance in meters between the two positions
-	 * 
-	 * @example
-	 * const manager = PositionManager.getInstance(currentPosition);
-	 * const restaurant = { latitude: -23.5489, longitude: -46.6388 };
-	 * const distance = manager.distanceTo(restaurant);
-	 * console.log(`Restaurant is ${Math.round(distance)} meters away`);
-	 * 
-	 * @see {@link calculateDistance} - The underlying distance calculation function
-	 * @since 0.5.0-alpha
-	 */
-	distanceTo(otherPosition) {
-		return calculateDistance(
-			this.latitude,
-			this.longitude,
-			otherPosition.latitude,
-			otherPosition.longitude,
-		);
-	}
 }
 
 /* ============================

@@ -802,6 +802,9 @@ class GeolocationService {
 	constructor(element) {
 		this.element = element;
 		this.positionManager = PositionManager.getInstance();
+		if (this.positionManager == null) {
+			throw new Error("PositionManager instance is required");
+		}
 		this.currentCoords = null;
 		this.currentAddress = null;
 		this.trackingInterval = null;

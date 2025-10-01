@@ -27,7 +27,7 @@ const setupParams = {
 	},
 	geolocationOptions: {
 		enableHighAccuracy: true,
-		timeout: 5000, // 5 seconds
+		timeout: 20000, // 20 seconds
 		maximumAge: 0, // Do not use a cached position
 	},
 	openstreetmapBaseUrl:
@@ -245,7 +245,7 @@ class GeoPosition {
 	 */
 	set accuracy(value) {
 		this._accuracy = value;
-		this.accuracyQuality = PositionManager.getAccuracyQuality(value);
+		this.accuracyQuality = GeoPosition.getAccuracyQuality(value);
 	}
 }
 
@@ -775,7 +775,7 @@ class ReverseGeocoder extends APIFetcher {
 		// Proceed with reverse geocoding if position is updated
 		log("(ReverseGeocoder) Received position update event:", posEvent);
 		log("(ReverseGeocoder) Position:", position);
-		if (posEvent == PositionManager.strCurrPosUpdate || posEvent == PositionManager.strImmediateAddressUpdate) {
+		if ((posEvent == PositionManager.strCurrPosUpdate || posEvent == PositionManager.strImmediateAddressUpdate) && (position && position.coords && position.coords.latitude && position.coords.longitude)) {
 			SingletonStatusManager.getInstance().setGettingLocation(true);
 
 			this.setCoordinates(position.coords.latitude, position.coords.longitude);

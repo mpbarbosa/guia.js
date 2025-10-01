@@ -18,6 +18,7 @@ const setupParams = {
 	independentQueueTimerInterval: 5000, // milliseconds
 	noReferencePlace: "Não classificado",
 	validRefPlaceClasses: ["shop", "amenity", "railway"],
+	notAcceptedAccuracy: ["medium", "bad", "very bad"],
 	referencePlaceMap: {
 		"place": { "house": "Residencial" },
 		"shop": { "mall": "Shopping Center" },
@@ -124,7 +125,7 @@ class GeoPosition {
 		this.latitude = position.coords.latitude;
 		this.longitude = position.coords.longitude;
 		this.accuracy = position.coords.accuracy;
-		this.accuracyQuality = PositionManager.getAccuracyQuality(
+		this.accuracyQuality = GeoPosition.getAccuracyQuality(
 			position.coords.accuracy,
 		);
 		this.altitude = position.coords.altitude;
@@ -501,8 +502,7 @@ class PositionManager {
 		
 		// Verifica se a precisão é boa o suficiente
 		if (
-			PositionManager.getAccuracyQuality(position.coords.accuracy) in
-			["medium", "bad", "very bad"]
+			GeoPosition.getAccuracyQuality(position.coords.accuracy) in setupParams.notAcceptedAccuracy
 		) {
 			bUpdateCurrPos = false;
 			error = { name: "AccuracyError", message: "Accuracy is not good enough" };

@@ -844,6 +844,12 @@ class GeolocationService {
 		};
 	}
 
+	checkGeolocation() {
+		if (!("geolocation" in navigator)) {
+			throw new Error("Geolocation is not supported by this browser.");
+		}
+	}
+
 	// Get the current position as a Promise
 	async getCurrentLocation() {
 		this.checkGeolocation();

@@ -17,12 +17,17 @@ const setupParams = {
 	minimumDistanceChange: 20, // meters
 	independentQueueTimerInterval: 5000, // milliseconds
 	noReferencePlace: "Não classificado",
-	validRefPlaceClasses: ["shop","amenity","railway"],
+	validRefPlaceClasses: ["shop", "amenity", "railway"],
 	referencePlaceMap: {
-		"place": {"house": "Residencial"},
-		"shop": {"mall": "Shopping Center"},
-		"amenity": {"cafe": "Café"},
-		"railway": {"subway": "Estação do Metrô"},
+		"place": { "house": "Residencial" },
+		"shop": { "mall": "Shopping Center" },
+		"amenity": { "cafe": "Café" },
+		"railway": { "subway": "Estação do Metrô" },
+	},
+	geolocationOptions: {
+		enableHighAccuracy: true,
+		timeout: 5000, // 5 seconds
+		maximumAge: 0, // Do not use a cached position
 	},
 	openstreetmapBaseUrl:
 		"https://nominatim.openstreetmap.org/reverse?format=json",
@@ -783,9 +788,9 @@ function getAddressType(address) {
 	let addressTypeDescr;
 
 	const referencePlaceMap = {
-		"place": {"house": "Residencial"},
-		"shop": {"mall": "Shopping Center"},
-		"amenity": {"cafe": "Café"},
+		"place": { "house": "Residencial" },
+		"shop": { "mall": "Shopping Center" },
+		"amenity": { "cafe": "Café" },
 	};
 
 	addressTypeDescr = referencePlaceMap[addressClass]?.[addressType] || setupParams.noReferencePlace;
@@ -796,7 +801,7 @@ function getAddressType(address) {
 class GeolocationService {
 	constructor(element) {
 		this.element = element;
-		this.currentPosition = null;
+		this.positionManager = PositionManager.getInstance();
 		this.currentCoords = null;
 		this.currentAddress = null;
 		this.trackingInterval = null;
@@ -827,7 +832,7 @@ class GeolocationService {
 		);
 		this.observers.forEach((observer) => {
 			console.log("Notifying observer:", observer);
-			observer.update(this.currentPosition);
+			observer.update(this.positionManager);
 		});
 	}
 
@@ -839,22 +844,7 @@ class GeolocationService {
 		};
 	}
 
-	checkGeolocation() {
-		// Check if geolocation is supported by the browser
-		const element = this.locationResult;
-		if (element !== null) {
-			if (!navigator.geolocation) {
-				element.innerHTML =
-					'<p class="error">O seu navegador não tem a funcionalidade de geolocalização.</p>';
-				console.log("Your browser does not support geolocation.");
-			} else {
-				element.innerHTML +=
-					"<p>O seu navegador tem a funcionalidade de geolocalização.</p>";
-				console.log("Your browser supports geolocation.");
-			}
-		}
-	}
-
+	// Get the current position as a Promise
 	async getCurrentLocation() {
 		this.checkGeolocation();
 		return new Promise(async function (resolve, reject) {
@@ -862,16 +852,16 @@ class GeolocationService {
 			navigator.geolocation.getCurrentPosition(
 				async (position) => {
 					SingletonStatusManager.getInstance().setGettingLocation(true);
-					resolve(PositionManager.getInstance(position));
+					// Process the position data
+					this.positionManager.update(position);
+					this.currentCoords = this.positionManager.coords;
+					this.notifyObservers();
+					resolve(this.positionManager);
 				},
 				(error) => {
 					reject(error);
 				},
-				{
-					enableHighAccuracy: true,
-					maximumAge: 0, // Don't use a cached position
-					timeout: 60000, // 60 seconds
-				},
+				setupParams.geolocationOptions || this.defaultOptions()
 			);
 		});
 	}
@@ -885,7 +875,7 @@ class GeolocationService {
 		if (cityStatsBtn) {
 			cityStatsBtn.disabled = true;
 		}
-		this.currentPosition = position;
+		this.positionManager = position;
 		this.currentCoords = position.coords;
 		this.notifyObservers();
 	}
@@ -899,14 +889,14 @@ class GeolocationService {
 	 */
 	updatePositionWithImmediateAddressCheck(position, webGeocodingManager) {
 		log("(GeolocationService) Processing position update with immediate address change detection...");
-		
+
 		// Update position data
-		this.currentPosition = position;
+		this.positionManager = position;
 		this.currentCoords = position.coords;
-		
+
 		// Notify regular observers first
 		this.notifyObservers();
-		
+
 		// Trigger immediate address update if webGeocodingManager is provided
 		if (webGeocodingManager && typeof webGeocodingManager.getImmediateAddressUpdate === 'function') {
 			webGeocodingManager.getImmediateAddressUpdate(position)
@@ -919,24 +909,40 @@ class GeolocationService {
 		}
 	}
 
+	// Watch the current position as a Promise
 	async watchCurrentLocation() {
+		
+		if (this.locationResult) {
+			this.locationResult.innerHTML =
+				'<p class="loading">Buscando a sua localização...</p>';
+		}
+
+		// Returns a promise that resolves on the first position update
+		// Subsequent updates will be handled by the observer pattern
+		SingletonStatusManager.getInstance().setGettingLocation(true);
+
+		// Check if geolocation is supported
 		this.checkGeolocation();
+
+		// Returns a promise that resolves on the first position update
+		// Subsequent updates will be handled by the observer pattern
 		return new Promise(async function (resolve, reject) {
 			// Get current position
 			navigator.geolocation.watchPosition(
 				async (position) => {
 					SingletonStatusManager.getInstance().setGettingLocation(true);
-					let currentPos = PositionManager.getInstance(position);
-					resolve(currentPos);
+					this.positionManager.update(position);
+					this.currentCoords = this.positionManager.coords;
+					this.notifyObservers();
+					resolve(this.positionManager);
 				},
 				(error) => {
+					console.error("(GeolocationService) Error watching location:", error);
+					displayError(error);
+					SingletonStatusManager.getInstance().setGettingLocation(false);
 					reject(error);
 				},
-				{
-					enableHighAccuracy: true,
-					maximumAge: 0, // Don't use a cached position
-					timeout: 10000, // 10 seconds
-				},
+				setupParams.geolocationOptions || this.defaultOptions(),
 			);
 		});
 	}
@@ -950,35 +956,11 @@ class GeolocationService {
 		SingletonStatusManager.getInstance().setGettingLocation(true);
 
 		return this.getCurrentLocation().then((position) => {
-			let currentPos = PositionManager.getInstance(position);
-			this.currentPosition = position;
-			this.currentCoords = position.coords;
+			this.currentCoords = this.positionManager.coords;
 			this.notifyObservers();
 			return position;
 		}).catch((error) => {
 			console.error("(GeolocationService) Error getting location:", error);
-			displayError(error);
-			SingletonStatusManager.getInstance().setGettingLocation(false);
-			throw error; // Re-throw to allow further handling if needed
-		});
-	}
-
-	async getWatchLocationUpdate() {
-		if (this.locationResult) {
-			this.locationResult.innerHTML =
-				'<p class="loading">Buscando a sua localização...</p>';
-			let currentPos = PositionManager.getInstance();
-		}
-
-		SingletonStatusManager.getInstance().setGettingLocation(true);
-
-		return this.watchCurrentLocation().then((position) => {
-			this.currentPosition = position;
-			this.currentCoords = position.coords;
-			this.notifyObservers();
-			return position;
-		}).catch((error) => {
-			console.error("(GeolocationService) Error watching location:", error);
 			displayError(error);
 			SingletonStatusManager.getInstance().setGettingLocation(false);
 			throw error; // Re-throw to allow further handling if needed
@@ -1178,7 +1160,7 @@ class WebGeocodingManager {
 	 */
 	getImmediateAddressUpdate(position) {
 		log("(WebGeocodingManager) Getting immediate address update for location change detection...");
-		
+
 		if (!position || !position.coords) {
 			log("(WebGeocodingManager) Invalid position for immediate address update");
 			return Promise.reject(new Error("Invalid position provided"));
@@ -1186,14 +1168,14 @@ class WebGeocodingManager {
 
 		// Create a new ReverseGeocoder instance for immediate processing
 		const immediateGeocoder = new ReverseGeocoder(position.coords.latitude, position.coords.longitude);
-		
+
 		return immediateGeocoder.reverseGeocode()
 			.then((addressData) => {
 				log("(WebGeocodingManager) Got immediate address data, processing for change detection...");
-				
+
 				// Use the new immediate processing method that bypasses normal timing constraints
 				const enderecoPadronizado = AddressDataExtractor.processAddressForImmediateChange(addressData, true);
-				
+
 				log("(WebGeocodingManager) Immediate address processing completed");
 				return {
 					currentAddress: addressData,
@@ -1221,6 +1203,9 @@ class WebGeocodingManager {
 	}
 
 	startTracking() {
+		let positionManager = PositionManager.getInstance();
+		positionManager.subscribe(this.positionDisplayer);
+		positionManager.subscribe(this.reverseGeocoder);
 		this.initSpeechSynthesis();
 
 		/*
@@ -1237,14 +1222,7 @@ class WebGeocodingManager {
 		}, 20000);
 
 		// Start watching position with high accuracy
-		this.geolocationService.getWatchLocationUpdate().then((value) => {
-			value.subscribe(this.positionDisplayer);
-			value.subscribe(this.reverseGeocoder);
-			//value.subscribe(this.htmlSpeechSynthesisDisplayer);
-		}).catch((error) => {
-			console.error("(WebGeocodingManager) Error setting up location watching:", error);
-			// Error is already handled by GeolocationService, just log it here
-		});
+		this.geolocationService.watchCurrentLocation();
 
 		// Start immediate address change tracking (separate from regular position tracking)
 		this.startImmediateAddressChangeTracking();
@@ -1265,7 +1243,7 @@ class WebGeocodingManager {
 	 */
 	startImmediateAddressChangeTracking() {
 		log("(WebGeocodingManager) Starting immediate address change tracking...");
-		
+
 		// Set up a separate high-frequency position watcher specifically for address changes
 		// This runs independently of the main PositionManager timing constraints
 		if (navigator.geolocation) {
@@ -1283,7 +1261,7 @@ class WebGeocodingManager {
 					timeout: 30000 // 30-second timeout
 				}
 			);
-			
+
 			log("(WebGeocodingManager) Immediate address change tracking started with watch ID:", this.immediateTrackingWatchId);
 		} else {
 			console.warn("(WebGeocodingManager) Geolocation not supported for immediate tracking");
@@ -2350,7 +2328,7 @@ class AddressDataExtractor {
 
 				// Check for logradouro change after caching the new address
 				// This replaces the timer-based approach with event-driven checking
-				if (AddressDataExtractor.logradouroChangeCallback && 
+				if (AddressDataExtractor.logradouroChangeCallback &&
 					AddressDataExtractor.hasLogradouroChanged()) {
 					const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
 					try {
@@ -2365,7 +2343,7 @@ class AddressDataExtractor {
 
 				// Check for bairro change after caching the new address
 				// This follows the same pattern as logradouro change detection
-				if (AddressDataExtractor.bairroChangeCallback && 
+				if (AddressDataExtractor.bairroChangeCallback &&
 					AddressDataExtractor.hasBairroChanged()) {
 					const changeDetails = AddressDataExtractor.getBairroChangeDetails();
 					try {
@@ -2380,7 +2358,7 @@ class AddressDataExtractor {
 
 				// Check for municipio change after caching the new address
 				// This follows the same pattern as logradouro and bairro change detection
-				if (AddressDataExtractor.municipioChangeCallback && 
+				if (AddressDataExtractor.municipioChangeCallback &&
 					AddressDataExtractor.hasMunicipioChanged()) {
 					const changeDetails = AddressDataExtractor.getMunicipioChangeDetails();
 					try {
@@ -2408,7 +2386,7 @@ class AddressDataExtractor {
 	 */
 	static processAddressForImmediateChange(data, forceImmediateNotification = true) {
 		log("(AddressDataExtractor) Processing address for immediate change detection...");
-		
+
 		if (!data) {
 			log("(AddressDataExtractor) No address data provided for immediate processing");
 			return null;
@@ -2427,7 +2405,7 @@ class AddressDataExtractor {
 		// This allows us to detect changes even when called multiple times quickly
 
 		// Check for logradouro change with immediate notification capability
-		if (AddressDataExtractor.logradouroChangeCallback && 
+		if (AddressDataExtractor.logradouroChangeCallback &&
 			AddressDataExtractor.hasLogradouroChanged()) {
 			const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
 			changeDetails.immediate = forceImmediateNotification;
@@ -2443,7 +2421,7 @@ class AddressDataExtractor {
 		}
 
 		// Check for bairro change with immediate notification capability
-		if (AddressDataExtractor.bairroChangeCallback && 
+		if (AddressDataExtractor.bairroChangeCallback &&
 			AddressDataExtractor.hasBairroChanged()) {
 			const changeDetails = AddressDataExtractor.getBairroChangeDetails();
 			changeDetails.immediate = forceImmediateNotification;
@@ -2459,7 +2437,7 @@ class AddressDataExtractor {
 		}
 
 		// Check for municipio change with immediate notification capability
-		if (AddressDataExtractor.municipioChangeCallback && 
+		if (AddressDataExtractor.municipioChangeCallback &&
 			AddressDataExtractor.hasMunicipioChanged()) {
 			const changeDetails = AddressDataExtractor.getMunicipioChangeDetails();
 			changeDetails.immediate = forceImmediateNotification;
@@ -2530,7 +2508,7 @@ class HTMLAddressDisplayer {
 		const addressTypeDescr = getAddressType(geodataParser.data);
 
 		let html = "";
-		
+
 		// Display municipality prominently at the top
 		if (enderecoPadronizado && enderecoPadronizado.municipio) {
 			html += `<div id="municipio-display" style="background-color: #e8f4fd; border: 2px solid #0066cc; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: center;">`;
@@ -2540,17 +2518,17 @@ class HTMLAddressDisplayer {
 			}
 			html += `</div>`;
 		}
-		
+
 		// Display bairro prominently but less highlighted than municipality
 		if (enderecoPadronizado && enderecoPadronizado.bairro) {
 			html += `<div id="bairro-display" style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 12px; margin-bottom: 15px; text-align: center;">`;
 			html += `<h3 style="margin: 0; color: #6c757d; font-size: 18px; font-weight: 500;">🏘️ ${enderecoPadronizado.bairroCompleto()}</h3>`;
 			html += `</div>`;
 		}
-		
+
 		// Element dadosSidra as requested in the issue
 		html += `<div id="dadosSidra"></div>`;
-		
+
 		if (geodataParser.referencePlace) {
 			html += `<p><strong>Referência:</strong> ${geodataParser.referencePlace.placeName}</p>`;
 		}
@@ -2838,13 +2816,13 @@ class SpeechSynthesisManager {
 
 	startQueueTimer() {
 		this.stopQueueTimer();
-		
+
 		// Fix: Use the properly defined interval
 		this.queueTimer = setInterval(() => {
 			this.processQueue();
 		}, this.independentQueueTimerInterval);
 
-		log(`(SpeechSynthesisManager) Queue timer started (${this.independentQueueTimerInterval/1000}s interval)`);
+		log(`(SpeechSynthesisManager) Queue timer started (${this.independentQueueTimerInterval / 1000}s interval)`);
 	}
 
 	stopQueueTimer() {
@@ -2857,7 +2835,7 @@ class SpeechSynthesisManager {
 
 	processQueue() {
 		log("(SpeechSynthesisManager) Processing speech queue...");
-		
+
 		// Enhanced protection against concurrent execution
 		if (this.isCurrentlySpeaking || this.speechQueue.isEmpty()) {
 			return;
@@ -3157,9 +3135,9 @@ class HtmlSpeechSynthesisDisplayer {
 	 */
 	speakLocationChangeImmediately(currentAddress, changeEvent, priority) {
 		log(`(HtmlSpeechSynthesisDisplayer) Immediate speech for ${changeEvent} - bypassing validation conditions...`);
-		
+
 		let textToBeSpoken = "";
-		
+
 		// Build text based on change event type - no validation conditions
 		if (changeEvent === "MunicipioChanged") {
 			textToBeSpoken = this.buildTextToSpeechMunicipio(currentAddress) || "Município alterado";
@@ -3168,24 +3146,24 @@ class HtmlSpeechSynthesisDisplayer {
 		} else if (changeEvent === "LogradouroChanged") {
 			textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress) || "Rua alterada";
 		}
-		
+
 		// Force speech immediately - no validation conditions
 		if (textToBeSpoken) {
 			// Update text input if available
 			if (this.textInput) {
 				this.textInput.value = textToBeSpoken;
 			}
-			
+
 			// Force immediate queue and processing - bypass normal speak method validations
 			log(`(HtmlSpeechSynthesisDisplayer) Force queueing immediate speech: "${textToBeSpoken}" with priority ${priority}`);
 			this.speechManager.speechQueue.enqueue(textToBeSpoken, priority);
-			
+
 			// Force immediate processing regardless of current speaking state
 			this.speechManager.processQueue();
 		} else {
 			// Even if no text could be built, announce the change
 			const fallbackText = changeEvent === "MunicipioChanged" ? "Município alterado" :
-								changeEvent === "BairroChanged" ? "Bairro alterado" : "Rua alterada";
+				changeEvent === "BairroChanged" ? "Bairro alterado" : "Rua alterada";
 			log(`(HtmlSpeechSynthesisDisplayer) Using fallback text for immediate speech: "${fallbackText}"`);
 			this.speechManager.speechQueue.enqueue(fallbackText, priority);
 			this.speechManager.processQueue();
@@ -3202,8 +3180,8 @@ class HtmlSpeechSynthesisDisplayer {
 		if (criticalLocationChanges.includes(enderecoPadronizadoOrEvent)) {
 			// For critical location changes, send to speech queue immediately without validation conditions
 			const priority = enderecoPadronizadoOrEvent === "MunicipioChanged" ? 2 :
-							enderecoPadronizadoOrEvent === "BairroChanged" ? 1 : 0;
-			
+				enderecoPadronizadoOrEvent === "BairroChanged" ? 1 : 0;
+
 			this.speakLocationChangeImmediately(currentAddress, enderecoPadronizadoOrEvent, priority);
 			return; // Return early for immediate speech handling
 		}

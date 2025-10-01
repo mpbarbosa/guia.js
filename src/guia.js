@@ -3,7 +3,7 @@
 const guiaVersion = {
 	major: 0,
 	minor: 8,
-	patch: 1,
+	patch: 2,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
@@ -118,6 +118,68 @@ log("Guia.js version:", guiaVersion.toString());
  * ============================
  */
 
+class GeoPosition {
+	constructor(position) {
+		this.coords = position.coords;
+		this.latitude = position.coords.latitude;
+		this.longitude = position.coords.longitude;
+		this.accuracy = position.coords.accuracy;
+		this.accuracyQuality = PositionManager.getAccuracyQuality(
+			position.coords.accuracy,
+		);
+		this.altitude = position.coords.altitude;
+		this.altitudeAccuracy = position.coords.altitudeAccuracy;
+		this.heading = position.coords.heading;
+		this.speed = position.coords.speed;
+		this.timestamp = position.timestamp;
+
+	}
+
+	/**
+	 * Classifies GPS accuracy into quality levels based on accuracy value in meters.
+	 * 
+	 * Provides a standardized way to assess the quality of GPS position data
+	 * based on the accuracy reported by the device. Lower values indicate better accuracy.
+	 * 
+	 * Quality Levels:
+	 * - excellent: ≤ 10 meters (high precision, suitable for all applications)
+	 * - good: 11-30 meters (good precision, suitable for most applications)  
+	 * - medium: 31-100 meters (moderate precision, may be acceptable for some uses)
+	 * - bad: 101-200 meters (poor precision, generally not recommended)
+	 * - very bad: > 200 meters (very poor precision, should be rejected)
+	 * 
+	 * @static
+	 * @param {number} accuracy - GPS accuracy value in meters from GeolocationCoordinates
+	 * @returns {string} Quality classification: 'excellent'|'good'|'medium'|'bad'|'very bad'
+	 * 
+	 * @example
+	 * // Classify different accuracy levels
+	 * console.log(PositionManager.getAccuracyQuality(5));   // 'excellent'
+	 * console.log(PositionManager.getAccuracyQuality(25));  // 'good'
+	 * console.log(PositionManager.getAccuracyQuality(75));  // 'medium'
+	 * console.log(PositionManager.getAccuracyQuality(150)); // 'bad'
+	 * console.log(PositionManager.getAccuracyQuality(500)); // 'very bad'
+	 * 
+	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates/accuracy} GeolocationCoordinates.accuracy
+	 * @since 0.5.0-alpha
+	 */
+	static getAccuracyQuality(accuracy) {
+		if (accuracy <= 10) {
+			return "excellent";
+		} else if (accuracy <= 20) {
+			return "good";
+		} else if (accuracy <= 100) {
+			return "medium";
+		} else if (accuracy <= 200) {
+			return "bad";
+		} else {
+			return "very bad";
+		}
+	}
+}
+
+
+
 /**
  * Manages the current geolocation position using singleton and observer design patterns.
  * 
@@ -179,6 +241,8 @@ class PositionManager {
 	 * @readonly
 	 */
 	static strCurrPosNotUpdate = "PositionManager not updated";
+
+	static strImmediateAddressUpdate = 'Immediate address update';
 
 	/**
 	 * Gets or creates the singleton PositionManager instance.
@@ -316,47 +380,6 @@ class PositionManager {
 		});
 	}
 
-	/**
-	 * Classifies GPS accuracy into quality levels based on accuracy value in meters.
-	 * 
-	 * Provides a standardized way to assess the quality of GPS position data
-	 * based on the accuracy reported by the device. Lower values indicate better accuracy.
-	 * 
-	 * Quality Levels:
-	 * - excellent: ≤ 10 meters (high precision, suitable for all applications)
-	 * - good: 11-30 meters (good precision, suitable for most applications)  
-	 * - medium: 31-100 meters (moderate precision, may be acceptable for some uses)
-	 * - bad: 101-200 meters (poor precision, generally not recommended)
-	 * - very bad: > 200 meters (very poor precision, should be rejected)
-	 * 
-	 * @static
-	 * @param {number} accuracy - GPS accuracy value in meters from GeolocationCoordinates
-	 * @returns {string} Quality classification: 'excellent'|'good'|'medium'|'bad'|'very bad'
-	 * 
-	 * @example
-	 * // Classify different accuracy levels
-	 * console.log(PositionManager.getAccuracyQuality(5));   // 'excellent'
-	 * console.log(PositionManager.getAccuracyQuality(25));  // 'good'
-	 * console.log(PositionManager.getAccuracyQuality(75));  // 'medium'
-	 * console.log(PositionManager.getAccuracyQuality(150)); // 'bad'
-	 * console.log(PositionManager.getAccuracyQuality(500)); // 'very bad'
-	 * 
-	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates/accuracy} GeolocationCoordinates.accuracy
-	 * @since 0.5.0-alpha
-	 */
-	static getAccuracyQuality(accuracy) {
-		if (accuracy <= 10) {
-			return "excellent";
-		} else if (accuracy <= 30) {
-			return "good";
-		} else if (accuracy <= 100) {
-			return "medium";
-		} else if (accuracy <= 200) {
-			return "bad";
-		} else {
-			return "very bad";
-		}
-	}
 
 	/**
 	 * Calculates the accuracy quality for the current position.
@@ -447,16 +470,7 @@ class PositionManager {
 			warn("(PositionManager) Invalid position data:", position);
 			return;
 		}
-		if (position.timestamp - (this.lastModified || 0) < setupParams.trackingInterval) {
-			bUpdateCurrPos = false;
-			let errorMessage = `Less than ${setupParams.trackingInterval / 1000} seconds since last update: ${(position.timestamp - (this.lastModified || 0)) / 1000} seconds`;
-			error = {
-				name: "ElapseTimeError",
-				message: errorMessage,
-			};
-			warn("(PositionManager) " + errorMessage);
-		}
-
+		
 		// Verifica se a precisão é boa o suficiente
 		if (
 			PositionManager.getAccuracyQuality(position.coords.accuracy) in
@@ -469,7 +483,6 @@ class PositionManager {
 				position.coords.accuracy,
 			);
 		}
-
 		// Only update if position has changed significantly (more than 20 meters)
 		if (
 			this.lastPosition &&
@@ -495,24 +508,30 @@ class PositionManager {
 			return;
 		}
 
-		// Atualiza a posição apenas se tiver passado mais de 1 minuto
-		log("(PositionManager) Updating PositionManager...");
-		this.lastPosition = position;
-		this.position = position;
-		this.coords = position.coords;
-		this.latitude = position.coords.latitude;
-		this.longitude = position.coords.longitude;
-		this.accuracy = position.coords.accuracy;
-		this.accuracyQuality = PositionManager.getAccuracyQuality(
-			position.coords.accuracy,
-		);
-		this.altitude = position.coords.altitude;
-		this.altitudeAccuracy = position.coords.altitudeAccuracy;
-		this.heading = position.coords.heading;
-		this.speed = position.coords.speed;
-		this.timestamp = position.timestamp;
-		this.lastModified = position.timestamp;
-		this.notifyObservers(PositionManager.strCurrPosUpdate, null, error);
+
+		this.notifyObservers(PositionManager.strImmediateAddressUpdate,null,error);
+
+		//Resets the flag before the last condition check
+		bUpdateCurrPos = true;
+
+		if (position.timestamp - (this.lastModified || 0) < setupParams.trackingInterval) {
+			bUpdateCurrPos = false;
+			let errorMessage = `Less than ${setupParams.trackingInterval / 1000} seconds since last update: ${(position.timestamp - (this.lastModified || 0)) / 1000} seconds`;
+			error = {
+				name: "ElapseTimeError",
+				message: errorMessage,
+			};
+			warn("(PositionManager) " + errorMessage);
+		}
+
+		if (bUpdateCurrPos) {
+			// Atualiza a posição apenas se tiver passado mais de 1 minuto
+			log("(PositionManager) Updating PositionManager...");
+			this.lastPosition = new GeoPosition(position);
+			this.position = this.lastPosition;
+			this.lastModified = position.timestamp;
+			this.notifyObservers(PositionManager.strCurrPosUpdate, null, error);
+		}
 	}
 
 	/**
@@ -755,7 +774,7 @@ class ReverseGeocoder extends APIFetcher {
 
 	update(position, posEvent) {
 		// Proceed with reverse geocoding if position is updated
-		if (posEvent == PositionManager.strCurrPosUpdate) {
+		if (posEvent == PositionManager.strCurrPosUpdate || posEvent == PositionManager.strImmediateAddressUpdate) {
 			SingletonStatusManager.getInstance().setGettingLocation(true);
 
 			this.setCoordinates(position.coords.latitude, position.coords.longitude);
@@ -918,7 +937,7 @@ class GeolocationService {
 
 	// Watch the current position as a Promise
 	async watchCurrentLocation() {
-		
+
 		if (this.locationResult) {
 			this.locationResult.innerHTML =
 				'<p class="loading">Buscando a sua localização...</p>';
@@ -1227,10 +1246,27 @@ class WebGeocodingManager {
 		}, 20000);
 
 		// Start watching position with high accuracy
-		this.geolocationService.watchCurrentLocation();
+		let watchId = this.geolocationService.watchCurrentLocation();
 
+		/**
+		 * Start immediate address change tracking that bypasses the 60-second position manager constraint
+		 * This enables immediate speech notifications for street/neighborhood/municipality changes
+		 */
 		// Start immediate address change tracking (separate from regular position tracking)
-		this.startImmediateAddressChangeTracking();
+		this.immediateTrackingWatchId = navigator.geolocation.watchPosition(
+			(position) => {
+				// Use the immediate address checking method
+				this.geolocationService.updatePositionWithImmediateAddressCheck(position, this);
+			},
+			(error) => {
+				log("(WebGeocodingManager) Immediate tracking geolocation error:", error.message);
+			},
+			{
+				enableHighAccuracy: true,
+				maximumAge: 5000, // Allow 5-second cached positions for immediate tracking
+				timeout: 30000 // 30-second timeout
+			}
+		);
 
 		// Register callback for logradouro change detection (replaces timer-based approach)
 		this.setupLogradouroChangeDetection();
@@ -1240,37 +1276,6 @@ class WebGeocodingManager {
 
 		// Register callback for municipio change detection (follows same pattern as logradouro and bairro)
 		this.setupMunicipioChangeDetection();
-	}
-
-	/**
-	 * Start immediate address change tracking that bypasses the 60-second position manager constraint
-	 * This enables immediate speech notifications for street/neighborhood/municipality changes
-	 */
-	startImmediateAddressChangeTracking() {
-		log("(WebGeocodingManager) Starting immediate address change tracking...");
-
-		// Set up a separate high-frequency position watcher specifically for address changes
-		// This runs independently of the main PositionManager timing constraints
-		if (navigator.geolocation) {
-			this.immediateTrackingWatchId = navigator.geolocation.watchPosition(
-				(position) => {
-					// Use the immediate address checking method
-					this.geolocationService.updatePositionWithImmediateAddressCheck(position, this);
-				},
-				(error) => {
-					log("(WebGeocodingManager) Immediate tracking geolocation error:", error.message);
-				},
-				{
-					enableHighAccuracy: true,
-					maximumAge: 5000, // Allow 5-second cached positions for immediate tracking
-					timeout: 30000 // 30-second timeout
-				}
-			);
-
-			log("(WebGeocodingManager) Immediate address change tracking started with watch ID:", this.immediateTrackingWatchId);
-		} else {
-			console.warn("(WebGeocodingManager) Geolocation not supported for immediate tracking");
-		}
 	}
 
 	/**

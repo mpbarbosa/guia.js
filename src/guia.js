@@ -773,6 +773,8 @@ class ReverseGeocoder extends APIFetcher {
 
 	update(position, posEvent) {
 		// Proceed with reverse geocoding if position is updated
+		log("(ReverseGeocoder) Received position update event:", posEvent);
+		log("(ReverseGeocoder) Position:", position);
 		if (posEvent == PositionManager.strCurrPosUpdate || posEvent == PositionManager.strImmediateAddressUpdate) {
 			SingletonStatusManager.getInstance().setGettingLocation(true);
 

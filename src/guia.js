@@ -863,8 +863,6 @@ class GeolocationService {
 					SingletonStatusManager.getInstance().setGettingLocation(true);
 					// Process the position data
 					PositionManager.getInstance().update(position);
-					this.currentCoords = PositionManager.getInstance().coords;
-					this.notifyObservers();
 					resolve(PositionManager.getInstance());
 				},
 				(error) => {

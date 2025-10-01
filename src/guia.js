@@ -862,10 +862,10 @@ class GeolocationService {
 				async (position) => {
 					SingletonStatusManager.getInstance().setGettingLocation(true);
 					// Process the position data
-					this.positionManager.update(position);
-					this.currentCoords = this.positionManager.coords;
+					PositionManager.getInstance().update(position);
+					this.currentCoords = PositionManager.getInstance().coords;
 					this.notifyObservers();
-					resolve(this.positionManager);
+					resolve(PositionManager.getInstance());
 				},
 				(error) => {
 					reject(error);

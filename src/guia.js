@@ -985,11 +985,7 @@ class GeolocationService {
 	}
 
 	notifyObservers() {
-		console.log(
-			"(GeolocationService) Notifying observers of location update...",
-		);
 		this.observers.forEach((observer) => {
-			console.log("Notifying observer:", observer);
 			observer.update(this.positionManager);
 		});
 	}
@@ -1011,7 +1007,7 @@ class GeolocationService {
 	// Get the current position as a Promise
 	async getCurrentLocation() {
 		this.checkGeolocation();
-		return new Promise(async function (resolve, reject) {
+		return new Promise(async (resolve, reject) => {
 			// Get current position
 			navigator.geolocation.getCurrentPosition(
 				async (position) => {
@@ -1024,7 +1020,7 @@ class GeolocationService {
 				(error) => {
 					reject(error);
 				},
-				setupParams.geolocationOptions || this.defaultOptions()
+				setupParams.geolocationOptions
 			);
 		});
 	}
@@ -1053,11 +1049,14 @@ class GeolocationService {
 				'<p class="loading">Buscando a sua localização...</p>';
 		}
 
-		// Returns a promise that resolves on the first position update
-		// Subsequent updates will be handled by the observer pattern
+		// === STATUS MANAGEMENT ===
+		// Set global application status to indicate location acquisition is active
+		// This helps coordinate state across different components using the Singleton pattern
 		SingletonStatusManager.getInstance().setGettingLocation(true);
 
-		// Check if geolocation is supported
+		// === GEOLOCATION CAPABILITY CHECK ===
+		// Verify browser support for Geolocation API before attempting to use it
+		// Throws descriptive error if feature is missing to prevent runtime errors
 		this.checkGeolocation();
 
 		// Returns a promise that resolves on the first position update
@@ -1188,9 +1187,6 @@ class WebGeocodingManager {
 			);
 			return;
 		}
-		console.log(
-			`(WebGeocodingManager) observer ${observer} subscribing ${this}`,
-		);
 		this.observers.push(observer);
 	}
 
@@ -1538,68 +1534,172 @@ class WebGeocodingManager {
 	}
 }
 
+/**
+ * A timer utility class that tracks elapsed time and displays it in HH:MM:SS format on a DOM element.
+ * 
+ * This class is designed to work within the Guia.js geolocation application to provide timing functionality,
+ * likely for tracking how long a user has been at a specific location or how long the application has been
+ * actively monitoring their position. The chronometer maintains its state internally and can be paused and
+ * resumed while preserving the accumulated elapsed time.
+ * 
+ * @class Chronometer
+ * @since 0.8.2-alpha
+ */
 class Chronometer {
+	/**
+	 * Creates a new Chronometer instance.
+	 * 
+	 * Initializes the chronometer with four key properties: a DOM element for display output,
+	 * a startTime timestamp for calculating elapsed time, an elapsedTime accumulator in milliseconds,
+	 * and a timerInterval reference for the periodic update mechanism.
+	 * 
+	 * @param {HTMLElement} element - DOM element where the timer display will be shown
+	 */
 	constructor(element) {
-		this.element = element;
-		this.startTime = null;
-		this.elapsedTime = 0;
-		this.timerInterval = null;
+		this.element = element;           // DOM element for display output
+		this.startTime = null;           // Timestamp for calculating elapsed time
+		this.elapsedTime = 0;           // Accumulator in milliseconds
+		this.timerInterval = null;      // Reference for periodic update mechanism
 	}
 
+	/**
+	 * Starts the chronometer timer with resume capability.
+	 * 
+	 * Implements a guard clause pattern to prevent multiple timers from running simultaneously.
+	 * Calculates the effective start time by subtracting any previously elapsed time from the
+	 * current timestamp, ensuring accurate timing when resuming a paused timer. Establishes
+	 * a 1-second interval that continuously updates the elapsed time and refreshes the display.
+	 * 
+	 * @returns {void}
+	 */
 	start() {
+		// === GUARD CLAUSE: PREVENT MULTIPLE TIMERS ===
+		// Check if timer is already running to avoid multiple intervals
 		if (this.timerInterval) {
-			return; // Already running
+			return; // Already running - exit early
 		}
+		
+		// === RESUME-CAPABLE START TIME CALCULATION ===
+		// Calculate effective start time by subtracting previously elapsed time
+		// This ensures accurate timing when resuming a paused timer
 		this.startTime = Date.now() - this.elapsedTime;
+		
+		// === ESTABLISH PERIODIC UPDATE MECHANISM ===
+		// Create 1-second interval for continuous time updates and display refresh
 		this.timerInterval = setInterval(() => {
+			// Update elapsed time based on current timestamp minus effective start time
 			this.elapsedTime = Date.now() - this.startTime;
+			// Refresh the visual display with new time value
 			this.updateDisplay();
 		}, 1000);
 	}
 
+	/**
+	 * Stops the chronometer timer while preserving elapsed time.
+	 * 
+	 * Safely clears the interval and resets the timer reference. The elapsed time
+	 * is preserved, allowing the timer to be resumed later from where it left off.
+	 * 
+	 * @returns {void}
+	 */
 	stop() {
+		// === GUARD CLAUSE: CHECK IF TIMER IS RUNNING ===
+		// Exit early if no timer is currently active
 		if (!this.timerInterval) {
-			return; // Not running
+			return; // Not running - nothing to stop
 		}
+		
+		// === SAFE INTERVAL CLEANUP ===
+		// Clear the periodic interval and reset reference
 		clearInterval(this.timerInterval);
 		this.timerInterval = null;
+		// Note: elapsedTime is preserved for potential resume
 	}
 
+	/**
+	 * Resets the chronometer to zero and updates display.
+	 * 
+	 * Combines stopping the timer with clearing the elapsed time and updating
+	 * the display to show "00:00:00". This provides a complete reset functionality.
+	 * 
+	 * @returns {void}
+	 */
 	reset() {
+		// === STOP TIMER OPERATION ===
+		// Ensure timer is stopped before resetting
 		this.stop();
+		
+		// === CLEAR ACCUMULATED TIME ===
+		// Reset elapsed time to zero
 		this.elapsedTime = 0;
+		
+		// === UPDATE DISPLAY TO SHOW RESET STATE ===
+		// Refresh display to show "00:00:00"
 		this.updateDisplay();
 	}
 
+	/**
+	 * Updates the DOM element with formatted time display.
+	 * 
+	 * Performs time calculations by converting milliseconds to seconds, then extracting
+	 * hours, minutes, and seconds using mathematical operations. Uses Math.floor() for
+	 * integer conversion, modulo operations for remainder calculations, and padStart()
+	 * method to ensure two-digit formatting with leading zeros. The formatted time
+	 * string follows the standard HH:MM:SS format.
+	 * 
+	 * @returns {void}
+	 */
 	updateDisplay() {
+		// === TIME CALCULATION AND EXTRACTION ===
+		// Convert milliseconds to total seconds using floor division
 		const totalSeconds = Math.floor(this.elapsedTime / 1000);
+		
+		// Extract hours from total seconds (3600 seconds per hour)
 		const hours = Math.floor(totalSeconds / 3600);
+		
+		// Extract minutes from remaining seconds after hours are removed
 		const minutes = Math.floor((totalSeconds % 3600) / 60);
+		
+		// Extract remaining seconds after hours and minutes are removed
 		const seconds = totalSeconds % 60;
 
+		// === FORMATTED DISPLAY STRING GENERATION ===
+		// Create HH:MM:SS format with leading zeros using padStart()
+		// Ensures consistent two-digit formatting for professional appearance
 		this.element.textContent = `${String(hours).padStart(2, "0")}:${String(
 			minutes,
 		).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 	}
 
+	/**
+	 * Integrates chronometer with the application's observer pattern for position updates.
+	 * 
+	 * Responds specifically to PositionManager.strCurrPosUpdate events, resetting and
+	 * restarting the timer when a new position is detected, effectively tracking time
+	 * since the last location change. When no current position is available, it stops
+	 * and resets the timer. This design allows the chronometer to automatically respond
+	 * to geolocation state changes without requiring manual intervention.
+	 * 
+	 * @param {Object} currentPosition - Current position object from PositionManager
+	 * @param {string} posEvent - Event type from PositionManager notifications
+	 * @returns {void}
+	 */
 	update(currentPosition, posEvent) {
-		// Start the chronometer when a new position is received
-		// Stop it if no position is available
-		if (posEvent == PositionManager.strCurrPosUpdate) {
-			if (this.timerInterval && currentPosition) {
-				this.reset();
-				this.start();
-			} else if (!this.timerInterval && currentPosition) {
-				this.start();
-			} else {
-				this.stop();
-				this.reset();
-			}
+		// === POSITION UPDATE EVENT HANDLING ===
+		// Only handles PositionManager.strCurrPosUpdate; other events are ignored.
+		// Extend this method if you need to handle additional events.
+		if (posEvent === PositionManager.strCurrPosUpdate && currentPosition) {
+			// === RESTART TIMER ON NEW POSITION ===
+			// Reset and start timer to track time since this location change
+			this.reset();
+			this.start();
+		} else if (!currentPosition) {
+			// === STOP TIMER WHEN NO POSITION AVAILABLE ===
+			// Clean stop and reset when position data is unavailable
+			this.stop();
+			this.reset();
 		}
-	}
-
-	toString() {
-		return `${this.constructor.name}: ${this.element.textContent}`;
+		// For other posEvent values, no action is taken - allows for future extension
 	}
 }
 
@@ -2273,9 +2373,9 @@ class AddressDataExtractor {
 	}
 
 	/**
-	 * Sets a callback function to be called when municipio changes are detected
-	 * @param {Function} callback - Function to call when municipio changes occur
-	 */
+ * Sets a callback function to be called when municipio changes are detected
+ * @param {Function} callback - Function to call when municipio changes occur
+ */
 	static setMunicipioChangeCallback(callback) {
 		AddressDataExtractor.municipioChangeCallback = callback;
 	}

@@ -177,7 +177,7 @@ class GeoPosition {
 			return "very bad";
 		}
 	}
-	
+
 	/**
 	 * Calculates the accuracy quality for the current position.
 	 * 
@@ -499,7 +499,7 @@ class PositionManager {
 			warn("(PositionManager) Invalid position data:", position);
 			return;
 		}
-		
+
 		// Verifica se a precisão é boa o suficiente
 		if (
 			GeoPosition.getAccuracyQuality(position.coords.accuracy) in setupParams.notAcceptedAccuracy
@@ -537,7 +537,7 @@ class PositionManager {
 		}
 
 
-		this.notifyObservers(PositionManager.strImmediateAddressUpdate,null,error);
+		this.notifyObservers(PositionManager.strImmediateAddressUpdate, null, error);
 
 		//Resets the flag before the last condition check
 		bUpdateCurrPos = true;
@@ -850,11 +850,7 @@ class GeolocationService {
 	}
 
 	notifyObservers() {
-		console.log(
-			"(GeolocationService) Notifying observers of location update...",
-		);
 		this.observers.forEach((observer) => {
-			console.log("Notifying observer:", observer);
 			observer.update(this.positionManager);
 		});
 	}
@@ -876,7 +872,7 @@ class GeolocationService {
 	// Get the current position as a Promise
 	async getCurrentLocation() {
 		this.checkGeolocation();
-		return new Promise(async function (resolve, reject) {
+		return new Promise(async (resolve, reject) => {
 			// Get current position
 			navigator.geolocation.getCurrentPosition(
 				async (position) => {
@@ -888,7 +884,7 @@ class GeolocationService {
 				(error) => {
 					reject(error);
 				},
-				setupParams.geolocationOptions || this.defaultOptions()
+				setupParams.geolocationOptions
 			);
 		});
 	}
@@ -915,8 +911,6 @@ class GeolocationService {
 	 * @param {WebGeocodingManager} webGeocodingManager - Reference to WebGeocodingManager for immediate address processing
 	 */
 	updatePositionWithImmediateAddressCheck(position, webGeocodingManager) {
-		log("(GeolocationService) Processing position update with immediate address change detection...");
-
 		// Update position data
 		this.positionManager.update(position);
 		this.currentCoords = this.positionManager.coords;
@@ -936,40 +930,84 @@ class GeolocationService {
 		}
 	}
 
-	// Watch the current position as a Promise
-	async watchCurrentLocation() {
-
+	/**
+	 * Continuously monitors the user's position using the browser's Geolocation API.
+	 * 
+	 * This method implements real-time location tracking with proper error handling and observer 
+	 * pattern notifications. It establishes continuous position monitoring rather than one-time 
+	 * position requests, making it suitable for applications requiring real-time location tracking.
+	 * 
+	 * The method follows a well-structured flow:
+	 * 1. Initial Setup: Provides immediate user feedback through DOM updates
+	 * 2. Status Management: Sets global status to indicate location acquisition is in progress
+	 * 3. Capability Check: Verifies browser support for geolocation to prevent runtime errors
+	 * 4. Continuous Monitoring: Establishes watchPosition for ongoing location updates
+	 * 5. Observer Notifications: Notifies all registered observers about position changes
+	 * 6. Error Handling: Comprehensive error management with user-friendly messages
+	 * 
+	 * @returns {void}
+	 * @throws {Error} If geolocation is not supported by the browser
+	 * 
+	 * @since 0.8.2-alpha
+	 */
+	watchCurrentLocation() {
+		// === INITIAL SETUP AND UI FEEDBACK ===
+		// Provide immediate user feedback by displaying loading message in Portuguese
+		// for Brazilian users while geolocation acquisition is in progress
 		if (this.locationResult) {
 			this.locationResult.innerHTML =
 				'<p class="loading">Buscando a sua localização...</p>';
 		}
 
-		// Returns a promise that resolves on the first position update
-		// Subsequent updates will be handled by the observer pattern
+		// === STATUS MANAGEMENT ===
+		// Set global application status to indicate location acquisition is active
+		// This helps coordinate state across different components using the Singleton pattern
 		SingletonStatusManager.getInstance().setGettingLocation(true);
 
-		// Check if geolocation is supported
+		// === GEOLOCATION CAPABILITY CHECK ===
+		// Verify browser support for Geolocation API before attempting to use it
+		// Throws descriptive error if feature is missing to prevent runtime errors
 		this.checkGeolocation();
 
-		// Returns a promise that resolves on the first position update
-		// Subsequent updates will be handled by the observer pattern
-		return new Promise(async function (resolve, reject) {
-			// Get current position
-			navigator.geolocation.watchPosition(
-				async (position) => {
-					SingletonStatusManager.getInstance().setGettingLocation(true);
-					PositionManager.getInstance().update(position);
-					resolve(PositionManager.getInstance());
-				},
-				(error) => {
-					console.error("(GeolocationService) Error watching location:", error);
-					displayError(error);
-					SingletonStatusManager.getInstance().setGettingLocation(false);
-					reject(error);
-				},
-				setupParams.geolocationOptions || this.defaultOptions(),
-			);
-		});
+		// === CONTINUOUS POSITION MONITORING ===
+		// Establish ongoing location tracking using watchPosition API
+		// Returns watchId for later cleanup and stopping the watch operation
+		this.watchId = navigator.geolocation.watchPosition(
+			// === SUCCESS CALLBACK: OBSERVER PATTERN IMPLEMENTATION ===
+			(position) => {
+				// Update centralized position manager with validation and filtering
+				// PositionManager handles accuracy filtering, distance thresholds, and timing constraints
+				// (positions must change by >20 meters and pass accuracy requirements)
+				PositionManager.getInstance().update(position);
+
+				// Synchronize local coordinates with the centralized position manager
+				// Ensures consistency between GeolocationService and PositionManager state
+				this.currentCoords = PositionManager.getInstance().coords;
+
+				// Notify all registered observers about the position change
+				// Implements observer pattern for decoupled notifications to UI components,
+				// address geocoders, and other position-dependent services
+				this.notifyObservers();
+			},
+			// === ERROR CALLBACK: COMPREHENSIVE ERROR HANDLING ===
+			(error) => {
+				// Log detailed error information for debugging purposes
+				console.error("(GeolocationService) Error watching location:", error);
+
+				// Display user-friendly error messages in Portuguese for Brazilian users
+				// Handles different error types: permission denied, position unavailable, timeout
+				displayError(error);
+
+				// Reset location status flag to indicate acquisition has stopped
+				// Allows other components to react appropriately to the error state
+				SingletonStatusManager.getInstance().setGettingLocation(false);
+			},
+			// === CONFIGURATION OPTIONS ===
+			// Use custom geolocation options from setupParams or fallback to defaults
+			// Default options: enableHighAccuracy=true, maximumAge=0, timeout=10000ms
+			// These settings ensure the most current and accurate position data possible
+			setupParams.geolocationOptions || this.defaultOptions(),
+		);
 	}
 
 	async getSingleLocationUpdate() {
@@ -1077,9 +1115,6 @@ class WebGeocodingManager {
 			);
 			return;
 		}
-		console.log(
-			`(WebGeocodingManager) observer ${observer} subscribing ${this}`,
-		);
 		this.observers.push(observer);
 	}
 
@@ -1286,7 +1321,6 @@ class WebGeocodingManager {
 		if (this.immediateTrackingWatchId) {
 			navigator.geolocation.clearWatch(this.immediateTrackingWatchId);
 			this.immediateTrackingWatchId = null;
-			log("(WebGeocodingManager) Immediate address change tracking stopped");
 		}
 	}
 
@@ -1505,68 +1539,172 @@ class WebGeocodingManager {
 	}
 }
 
+/**
+ * A timer utility class that tracks elapsed time and displays it in HH:MM:SS format on a DOM element.
+ * 
+ * This class is designed to work within the Guia.js geolocation application to provide timing functionality,
+ * likely for tracking how long a user has been at a specific location or how long the application has been
+ * actively monitoring their position. The chronometer maintains its state internally and can be paused and
+ * resumed while preserving the accumulated elapsed time.
+ * 
+ * @class Chronometer
+ * @since 0.8.2-alpha
+ */
 class Chronometer {
+	/**
+	 * Creates a new Chronometer instance.
+	 * 
+	 * Initializes the chronometer with four key properties: a DOM element for display output,
+	 * a startTime timestamp for calculating elapsed time, an elapsedTime accumulator in milliseconds,
+	 * and a timerInterval reference for the periodic update mechanism.
+	 * 
+	 * @param {HTMLElement} element - DOM element where the timer display will be shown
+	 */
 	constructor(element) {
-		this.element = element;
-		this.startTime = null;
-		this.elapsedTime = 0;
-		this.timerInterval = null;
+		this.element = element;           // DOM element for display output
+		this.startTime = null;           // Timestamp for calculating elapsed time
+		this.elapsedTime = 0;           // Accumulator in milliseconds
+		this.timerInterval = null;      // Reference for periodic update mechanism
 	}
 
+	/**
+	 * Starts the chronometer timer with resume capability.
+	 * 
+	 * Implements a guard clause pattern to prevent multiple timers from running simultaneously.
+	 * Calculates the effective start time by subtracting any previously elapsed time from the
+	 * current timestamp, ensuring accurate timing when resuming a paused timer. Establishes
+	 * a 1-second interval that continuously updates the elapsed time and refreshes the display.
+	 * 
+	 * @returns {void}
+	 */
 	start() {
+		// === GUARD CLAUSE: PREVENT MULTIPLE TIMERS ===
+		// Check if timer is already running to avoid multiple intervals
 		if (this.timerInterval) {
-			return; // Already running
+			return; // Already running - exit early
 		}
+		
+		// === RESUME-CAPABLE START TIME CALCULATION ===
+		// Calculate effective start time by subtracting previously elapsed time
+		// This ensures accurate timing when resuming a paused timer
 		this.startTime = Date.now() - this.elapsedTime;
+		
+		// === ESTABLISH PERIODIC UPDATE MECHANISM ===
+		// Create 1-second interval for continuous time updates and display refresh
 		this.timerInterval = setInterval(() => {
+			// Update elapsed time based on current timestamp minus effective start time
 			this.elapsedTime = Date.now() - this.startTime;
+			// Refresh the visual display with new time value
 			this.updateDisplay();
 		}, 1000);
 	}
 
+	/**
+	 * Stops the chronometer timer while preserving elapsed time.
+	 * 
+	 * Safely clears the interval and resets the timer reference. The elapsed time
+	 * is preserved, allowing the timer to be resumed later from where it left off.
+	 * 
+	 * @returns {void}
+	 */
 	stop() {
+		// === GUARD CLAUSE: CHECK IF TIMER IS RUNNING ===
+		// Exit early if no timer is currently active
 		if (!this.timerInterval) {
-			return; // Not running
+			return; // Not running - nothing to stop
 		}
+		
+		// === SAFE INTERVAL CLEANUP ===
+		// Clear the periodic interval and reset reference
 		clearInterval(this.timerInterval);
 		this.timerInterval = null;
+		// Note: elapsedTime is preserved for potential resume
 	}
 
+	/**
+	 * Resets the chronometer to zero and updates display.
+	 * 
+	 * Combines stopping the timer with clearing the elapsed time and updating
+	 * the display to show "00:00:00". This provides a complete reset functionality.
+	 * 
+	 * @returns {void}
+	 */
 	reset() {
+		// === STOP TIMER OPERATION ===
+		// Ensure timer is stopped before resetting
 		this.stop();
+		
+		// === CLEAR ACCUMULATED TIME ===
+		// Reset elapsed time to zero
 		this.elapsedTime = 0;
+		
+		// === UPDATE DISPLAY TO SHOW RESET STATE ===
+		// Refresh display to show "00:00:00"
 		this.updateDisplay();
 	}
 
+	/**
+	 * Updates the DOM element with formatted time display.
+	 * 
+	 * Performs time calculations by converting milliseconds to seconds, then extracting
+	 * hours, minutes, and seconds using mathematical operations. Uses Math.floor() for
+	 * integer conversion, modulo operations for remainder calculations, and padStart()
+	 * method to ensure two-digit formatting with leading zeros. The formatted time
+	 * string follows the standard HH:MM:SS format.
+	 * 
+	 * @returns {void}
+	 */
 	updateDisplay() {
+		// === TIME CALCULATION AND EXTRACTION ===
+		// Convert milliseconds to total seconds using floor division
 		const totalSeconds = Math.floor(this.elapsedTime / 1000);
+		
+		// Extract hours from total seconds (3600 seconds per hour)
 		const hours = Math.floor(totalSeconds / 3600);
+		
+		// Extract minutes from remaining seconds after hours are removed
 		const minutes = Math.floor((totalSeconds % 3600) / 60);
+		
+		// Extract remaining seconds after hours and minutes are removed
 		const seconds = totalSeconds % 60;
 
+		// === FORMATTED DISPLAY STRING GENERATION ===
+		// Create HH:MM:SS format with leading zeros using padStart()
+		// Ensures consistent two-digit formatting for professional appearance
 		this.element.textContent = `${String(hours).padStart(2, "0")}:${String(
 			minutes,
 		).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 	}
 
+	/**
+	 * Integrates chronometer with the application's observer pattern for position updates.
+	 * 
+	 * Responds specifically to PositionManager.strCurrPosUpdate events, resetting and
+	 * restarting the timer when a new position is detected, effectively tracking time
+	 * since the last location change. When no current position is available, it stops
+	 * and resets the timer. This design allows the chronometer to automatically respond
+	 * to geolocation state changes without requiring manual intervention.
+	 * 
+	 * @param {Object} currentPosition - Current position object from PositionManager
+	 * @param {string} posEvent - Event type from PositionManager notifications
+	 * @returns {void}
+	 */
 	update(currentPosition, posEvent) {
-		// Start the chronometer when a new position is received
-		// Stop it if no position is available
-		if (posEvent == PositionManager.strCurrPosUpdate) {
-			if (this.timerInterval && currentPosition) {
-				this.reset();
-				this.start();
-			} else if (!this.timerInterval && currentPosition) {
-				this.start();
-			} else {
-				this.stop();
-				this.reset();
-			}
+		// === POSITION UPDATE EVENT HANDLING ===
+		// Only handles PositionManager.strCurrPosUpdate; other events are ignored.
+		// Extend this method if you need to handle additional events.
+		if (posEvent === PositionManager.strCurrPosUpdate && currentPosition) {
+			// === RESTART TIMER ON NEW POSITION ===
+			// Reset and start timer to track time since this location change
+			this.reset();
+			this.start();
+		} else if (!currentPosition) {
+			// === STOP TIMER WHEN NO POSITION AVAILABLE ===
+			// Clean stop and reset when position data is unavailable
+			this.stop();
+			this.reset();
 		}
-	}
-
-	toString() {
-		return `${this.constructor.name}: ${this.element.textContent}`;
+		// For other posEvent values, no action is taken - allows for future extension
 	}
 }
 
@@ -2276,9 +2414,9 @@ class AddressDataExtractor {
 	}
 
 	/**
-	 * Sets a callback function to be called when municipio changes are detected
-	 * @param {Function} callback - Function to call when municipio changes occur
-	 */
+ * Sets a callback function to be called when municipio changes are detected
+ * @param {Function} callback - Function to call when municipio changes occur
+ */
 	static setMunicipioChangeCallback(callback) {
 		AddressDataExtractor.municipioChangeCallback = callback;
 	}

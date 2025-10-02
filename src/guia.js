@@ -3,7 +3,7 @@
 const guiaVersion = {
 	major: 0,
 	minor: 8,
-	patch: 2,
+	patch: 3,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
@@ -13,7 +13,7 @@ const guiaVersion = {
 const guiaName = "Ondeestou";
 const guiaAuthor = "Marcelo Pereira Barbosa";
 const setupParams = {
-	trackingInterval: 60000, // milliseconds
+	trackingInterval: 50000, // milliseconds
 	minimumDistanceChange: 20, // meters
 	independentQueueTimerInterval: 5000, // milliseconds
 	noReferencePlace: "Não classificado",
@@ -121,6 +121,10 @@ log("Guia.js version:", guiaVersion.toString());
 
 class GeoPosition {
 	constructor(position) {
+		log("+++ (2.1) (GeoPosition) Initializing with position:", position);
+		position.toString = function () {
+			return `PositionGeolocation: { latitude: ${this.latitude}, longitude: ${this.longitude}, accuracy: ${this.accuracy} }`;
+		};
 		this.coords = position.coords;
 		this.latitude = position.coords.latitude;
 		this.longitude = position.coords.longitude;
@@ -313,6 +317,12 @@ class PositionManager {
 	 */
 	static strCurrPosNotUpdate = "PositionManager not updated";
 
+	/**
+	 * Event string constant fired when position is successfully updated and must be immediatily processed.
+	 * @static
+	 * @type {string}
+	 * @readonly
+	 */
 	static strImmediateAddressUpdate = 'Immediate address update';
 
 	/**
@@ -404,6 +414,7 @@ class PositionManager {
 	 * @since 0.5.0-alpha
 	 */
 	subscribe(observer) {
+		log("(PositionManager) observer subscribing:", observer);
 		if (observer) {
 			this.observers.push(observer);
 		}
@@ -445,7 +456,9 @@ class PositionManager {
 	 * @since 0.5.0-alpha
 	 */
 	notifyObservers(posEvent) {
+		log("+++ (1000) (PositionManager) Notifying observers:", this.observers);
 		this.observers.forEach((observer) => {
+			log("+++ (1001) (PositionManager) Notifying observer:", observer);
 			observer.update(this, posEvent);
 		});
 	}
@@ -494,6 +507,8 @@ class PositionManager {
 		let bUpdateCurrPos = true;
 		let error = null;
 
+		log("+++ (2.0.1) (PositionManager) Received new position:", position);
+
 		// Verifica se a posição é válida
 		if (!position || !position.timestamp) {
 			warn("(PositionManager) Invalid position data:", position);
@@ -502,7 +517,9 @@ class PositionManager {
 
 		// Verifica se a precisão é boa o suficiente
 		if (
-			GeoPosition.getAccuracyQuality(position.coords.accuracy) in setupParams.notAcceptedAccuracy
+			setupParams.notAcceptedAccuracy.includes(
+				GeoPosition.getAccuracyQuality(position.coords.accuracy)
+			)
 		) {
 			bUpdateCurrPos = false;
 			error = { name: "AccuracyError", message: "Accuracy is not good enough" };
@@ -515,13 +532,13 @@ class PositionManager {
 		if (
 			this.lastPosition &&
 			position &&
-			this.latitude &&
-			this.longitude &&
+			this.lastPosition.latitude &&
+			this.lastPosition.longitude &&
 			position.coords
 		) {
 			const distance = calculateDistance(
-				this.latitude,
-				this.longitude,
+				this.lastPosition.latitude,
+				this.lastPosition.longitude,
 				position.coords.latitude,
 				position.coords.longitude,
 			);
@@ -531,35 +548,32 @@ class PositionManager {
 		}
 
 		if (!bUpdateCurrPos) {
+			log("+++ (2.0.2) (PositionManager) Not updating position due to validation rules.");
 			this.notifyObservers(PositionManager.strCurrPosNotUpdate, null, error);
-			log("(PositionManager) PositionManager not updated:", this);
+			log("+++ (2.0.3) (PositionManager) PositionManager not updated:", this);
 			return;
 		}
 
-
-		this.notifyObservers(PositionManager.strImmediateAddressUpdate, null, error);
-
-		//Resets the flag before the last condition check
-		bUpdateCurrPos = true;
+		let posEvent = "";
 
 		if (position.timestamp - (this.lastModified || 0) < setupParams.trackingInterval) {
-			bUpdateCurrPos = false;
 			let errorMessage = `Less than ${setupParams.trackingInterval / 1000} seconds since last update: ${(position.timestamp - (this.lastModified || 0)) / 1000} seconds`;
 			error = {
 				name: "ElapseTimeError",
 				message: errorMessage,
 			};
 			warn("(PositionManager) " + errorMessage);
+			posEvent = PositionManager.strImmediateAddressUpdate;
+		} else {
+			posEvent = PositionManager.strCurrPosUpdate;
 		}
 
-		if (bUpdateCurrPos) {
-			// Atualiza a posição apenas se tiver passado mais de 1 minuto
-			log("(PositionManager) Updating PositionManager...");
-			this.lastPosition = new GeoPosition(position);
-			this.position = this.lastPosition;
-			this.lastModified = position.timestamp;
-			this.notifyObservers(PositionManager.strCurrPosUpdate, null, error);
-		}
+		// Atualiza a posição apenas se tiver passado mais de 1 minuto
+		log("+++ (2.0.8) (PositionManager) Updating PositionManager...");
+		this.lastPosition = new GeoPosition(position);
+		this.position = this.lastPosition;
+		this.lastModified = position.timestamp;
+		this.notifyObservers(posEvent, null, error);
 	}
 
 	/**
@@ -578,7 +592,11 @@ class PositionManager {
 	 * @since 0.5.0-alpha
 	 */
 	toString() {
-		return `${this.constructor.name}: ${this.latitude}, ${this.longitude}, ${this.accuracyQuality}, ${this.altitude}, ${this.speed}, ${this.heading}, ${this.timestamp}`;
+		let position = this.lastPosition || {};
+		if (!position || !this.latitude || !this.longitude) {
+			return `${this.constructor.name}: No position data`;
+		}
+		return `${this.constructor.name}: ${position.latitude}, ${position.longitude}, ${position.accuracyQuality}, ${position.altitude}, ${position.speed}, ${position.heading}, ${position.timestamp}`;
 	}
 
 }
@@ -648,13 +666,10 @@ class APIFetcher {
 		this.loading = false;
 		this.lastFetch = 0;
 		this.cache.clear();
-		console.log("(APIFetcher) URL set to:", this.url);
-		console.log("(APIFetcher) Notifying observers after URL change.");
-		this.notifyObservers();
 	}
 
 	subscribe(observer) {
-		console.log(`(APIFetcher) observer ${observer} subscribing ${this}`);
+		log(`(APIFetcher) observer ${observer} subscribing ${this}`);
 		if (observer) {
 			this.observers.push(observer);
 		}
@@ -664,12 +679,13 @@ class APIFetcher {
 		this.observers = this.observers.filter((o) => o !== observer);
 	}
 
-	notifyObservers() {
-		log("(APIFetcher) Notifying observers: " + this.observers);
+	notifyObservers(appEvent) {
+		log("+++ (30) (APIFetcher) Notifying observers: " + this.observers);
 		this.observers.forEach((observer) => {
 			observer.update(
 				this.firstUpdateParam(),
 				this.secondUpdateParam(),
+				appEvent,
 				this.error,
 				this.loading,
 			);
@@ -684,25 +700,109 @@ class APIFetcher {
 		return null;
 	}
 
+	/**
+ * Fetches data from the configured URL with robust caching, loading states, and error handling.
+ * 
+ * This method implements a comprehensive data fetching strategy designed to efficiently retrieve 
+ * and manage data from external APIs while providing a smooth user experience through intelligent 
+ * caching and proper state management.
+ * 
+ * **Caching Strategy:**
+ * The method starts by generating a cache key using getCacheKey(), which by default returns the URL 
+ * but can be overridden in subclasses for more sophisticated caching strategies. It immediately 
+ * checks if the data already exists in the cache - if it does, it retrieves the cached data and 
+ * returns early, avoiding unnecessary network requests. This caching mechanism significantly 
+ * improves performance by reducing redundant API calls.
+ * 
+ * **Loading State Management:**
+ * When a cache miss occurs, the method sets `this.loading = true` to indicate that a network 
+ * operation is in progress. This loading state can be used by the UI to show loading spinners 
+ * or disable user interactions, providing immediate feedback to users.
+ * 
+ * **Network Operations:**
+ * The actual data fetching uses the modern Fetch API with proper error handling - it checks if 
+ * the response is successful using `response.ok` and throws a meaningful error if the request fails. 
+ * The method follows the JSON API pattern by calling `response.json()` to parse the response data.
+ * 
+ * **Data Storage:**
+ * Upon successful retrieval, it stores the data both in the instance (`this.data`) and in the cache 
+ * for future use, ensuring consistent data availability across the application.
+ * 
+ * **Error Handling:**
+ * The error handling is comprehensive, catching any network errors, parsing errors, or HTTP errors 
+ * and storing them in `this.error` for the calling code to handle appropriately. This provides 
+ * a clean separation of
+ * 
+ * **Cleanup Guarantee:**
+ * The `finally` block ensures that `this.loading` is always reset to `false`, regardless of whether 
+ * the operation succeeded or failed. This prevents the UI from getting stuck in a loading state, 
+ * which is a common source of bugs in data fetching implementations.
+ * 
+ * @async
+ * @returns {Promise<void>} Resolves when data is fetched and stored, or retrieved from cache
+ * @throws {Error} Network errors, HTTP errors, or JSON parsing errors are caught and stored in this.error
+ * 
+ * @example
+ * // Basic usage with automatic caching
+ * const fetcher = new APIFetcher('https://api.example.com/data');
+ * await fetcher.fetchData();
+ * console.log(fetcher.data); // Retrieved data
+ * console.log(fetcher.loading); // false after completion
+ * 
+ * @example
+ * // Error handling
+ * try {
+ *   await fetcher.fetchData();
+ *   if (fetcher.error) {
+ *     console.error('Fetch failed:', fetcher.error.message);
+ *   }
+ * } catch (error) {
+ *   console.error('Unexpected error:', error);
+ * }
+ * 
+ * @see {@link getCacheKey} - Override this method for custom cache key generation
+ * @since 0.8.3-alpha
+ * @author Marcelo Pereira Barbosa
+ */
 	async fetchData() {
+		// Generate cache key for this request (can be overridden in subclasses)
 		const cacheKey = this.getCacheKey();
+
+		// Check cache first - if data exists, return immediately to avoid network request
 		if (this.cache.has(cacheKey)) {
 			this.data = this.cache.get(cacheKey);
-			return;
+			return; // Early return with cached data improves performance
 		}
+
+		// Set loading state to indicate network operation in progress
+		// UI can use this to show loading spinners or disable interactions
 		this.loading = true;
 
 		try {
+			// Perform network request using modern Fetch API
 			const response = await fetch(this.url);
+
+			// Check if HTTP request was successful (status 200-299)
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
+
+			// Parse JSON response data
 			const data = await response.json();
+
+			// Store data in instance for immediate access
 			this.data = data;
+
+			// Cache the result for future requests with same cache key
 			this.cache.set(cacheKey, data);
+
 		} catch (error) {
+			// Comprehensive error handling: network errors, HTTP errors, JSON parsing errors
+			// Store error for calling code to handle appropriately
 			this.error = error;
 		} finally {
+			// Always reset loading state regardless of success/failure
+			// This prevents UI from getting stuck in loading state
 			this.loading = false;
 		}
 	}
@@ -731,8 +831,6 @@ class ReverseGeocoder extends APIFetcher {
 		this.error = null;
 		this.loading = false;
 		this.lastFetch = 0;
-		this.cache.clear();
-		this.notifyObservers();
 	}
 
 	getCacheKey() {
@@ -743,62 +841,99 @@ class ReverseGeocoder extends APIFetcher {
 		return super.fetchData();
 	}
 
-	reverseGeocode() {
+	/**
+ * Performs reverse geocoding to convert latitude/longitude coordinates into human-readable address.
+ * 
+ * This method validates coordinates, constructs the OpenStreetMap API URL, and fetches address data
+ * using the configured data fetching mechanism. It handles coordinate validation, URL generation,
+ * and promise-based error handling for robust geocoding operations.
+ * 
+ * **ISSUES IDENTIFIED AND FIXED:**
+ * 1. **Code Duplication**: The original method had duplicate coordinate and URL validation blocks
+ *    that were identical and served no purpose. This has been consolidated into single checks.
+ * 
+ * 2. **Redundant Validation**: The method was checking coordinates and URL twice in succession,
+ *    which added unnecessary overhead and made the code harder to maintain.
+ * 
+ * 3. **Promise Wrapping**: The method was unnecessarily wrapping the already-async fetchData()
+ *    method in a new Promise, which is an anti-pattern. Modern async/await syntax is cleaner.
+ * 
+ * 4. **Error Handling**: The original error handling was verbose and didn't add value over
+ *    the built-in promise rejection mechanisms.
+ * 
+ * **PERFORMANCE IMPROVEMENTS:**
+ * - Eliminated duplicate validation checks that were executed twice
+ * - Removed unnecessary Promise wrapping around async operations
+ * - Streamlined error handling to use native promise mechanisms
+ * - Reduced method complexity from multiple validation blocks to single-pass validation
+ * 
+ * **VALIDATION LOGIC:**
+ * The method first validates that both latitude and longitude are provided and valid.
+ * If coordinates are missing or invalid, it immediately rejects with a descriptive error.
+ * If no URL is configured, it automatically generates one using the OpenStreetMap service.
+ * 
+ * @async
+ * @returns {Promise<Object>} Promise that resolves to geocoded address data from OpenStreetMap
+ * @throws {Error} Throws "Invalid coordinates" if latitude or longitude are missing/invalid
+ * @throws {Error} Throws network errors, HTTP errors, or JSON parsing errors from fetchData()
+ * 
+ * @example
+ * // Basic reverse geocoding
+ * const geocoder = new ReverseGeocoder(-23.5505, -46.6333);
+ * try {
+ *   const addressData = await geocoder.reverseGeocode();
+ *   console.log('Address:', addressData.display_name);
+ * } catch (error) {
+ *   console.error('Geocoding failed:', error.message);
+ * }
+ * 
+ * @example
+ * // With promise chaining (legacy style)
+ * geocoder.reverseGeocode()
+ *   .then(data => console.log('Success:', data))
+ *   .catch(error => console.error('Failed:', error));
+ * 
+ * @see {@link fetchData} - The underlying data fetching method with caching
+ * @see {@link getOpenStreetMapUrl} - URL generation utility for OpenStreetMap API
+ * @see {@link https://nominatim.openstreetmap.org/} - OpenStreetMap Nominatim API documentation
+ * 
+ * @since 0.8.3-alpha
+ * @author Marcelo Pereira Barbosa
+ */
+	async reverseGeocode() {
+		// FIXED: Single coordinate validation check (was duplicated twice in original)
+		// Validate that both latitude and longitude are provided and valid
 		if (!this.latitude || !this.longitude) {
-			return Promise.reject(new Error("Invalid coordinates"));
+			throw new Error("Invalid coordinates");
 		}
+
+		// FIXED: Single URL generation check (was duplicated twice in original)  
+		// Generate OpenStreetMap URL if not already configured
 		if (!this.url) {
 			this.url = getOpenStreetMapUrl(this.latitude, this.longitude);
 		}
-		if (!this.latitude || !this.longitude) {
-			return Promise.reject(new Error("Invalid coordinates"));
+
+		// FIXED: Use modern async/await instead of unnecessary Promise wrapping
+		// The original code wrapped fetchData() in a new Promise, which is an anti-pattern
+		// since fetchData() already returns a Promise
+		try {
+			// Fetch data using the configured URL with built-in caching and error handling
+			await this.fetchData();
+
+			// FIXED: Simplified error handling - if this.error exists, throw it directly
+			// The original code was doing manual promise resolution/rejection which was redundant
+			if (this.error) {
+				throw this.error;
+			}
+
+			// Return the successfully fetched address data
+			return this.data;
+
+		} catch (error) {
+			// FIXED: Simplified error propagation - just re-throw the error
+			// Modern promise chains handle this automatically without manual catch/reject
+			throw error;
 		}
-		if (!this.url) {
-			this.url = getOpenStreetMapUrl(this.latitude, this.longitude);
-		}
-		return new Promise((resolve, reject) => {
-			this.fetchData()
-				.then(() => {
-					if (this.error) {
-						reject(this.error);
-					} else {
-						resolve(this.data);
-					}
-				})
-				.catch((error) => {
-					reject(error);
-				});
-		});
-	}
-
-	update(position, posEvent) {
-		// Proceed with reverse geocoding if position is updated
-		log("(ReverseGeocoder) Received position update event:", posEvent);
-		log("(ReverseGeocoder) Position:", position);
-		if ((posEvent == PositionManager.strCurrPosUpdate || posEvent == PositionManager.strImmediateAddressUpdate) && (position && position.coords && position.coords.latitude && position.coords.longitude)) {
-			SingletonStatusManager.getInstance().setGettingLocation(true);
-
-			this.setCoordinates(position.coords.latitude, position.coords.longitude);
-			this.reverseGeocode()
-				.then((addressData) => {
-					this.currentAddress = addressData;
-					//TODO: #23 Remover dependencia de AddressDataExtractor no ReverseGeocoder
-					this.enderecoPadronizado =
-						AddressDataExtractor.getBrazilianStandardAddress(addressData);
-					this.notifyObservers();
-				})
-				.catch((error) => {
-					displayError(error);
-				});
-		}
-	}
-
-	toString() {
-		return `${this.constructor.name}: ${this.latitude}, ${this.longitude}`;
-	}
-
-	secondUpdateParam() {
-		return this.enderecoPadronizado;
 	}
 }
 
@@ -876,6 +1011,7 @@ class GeolocationService {
 			// Get current position
 			navigator.geolocation.getCurrentPosition(
 				async (position) => {
+					log("+++ (1) (GeolocationService) Received position update:", position);
 					SingletonStatusManager.getInstance().setGettingLocation(true);
 					// Process the position data
 					PositionManager.getInstance().update(position);
@@ -903,57 +1039,11 @@ class GeolocationService {
 		this.notifyObservers();
 	}
 
-	/**
-	 * Updates position with immediate address change processing
-	 * This method bypasses the normal PositionManager timing constraints
-	 * to enable immediate location change notifications
-	 * @param {GeolocationPosition} position - The position update
-	 * @param {WebGeocodingManager} webGeocodingManager - Reference to WebGeocodingManager for immediate address processing
-	 */
-	updatePositionWithImmediateAddressCheck(position, webGeocodingManager) {
-		// Update position data
-		this.positionManager.update(position);
-		this.currentCoords = this.positionManager.coords;
 
-		// Notify regular observers first
-		this.notifyObservers();
+	// Watch the current position as a Promise
+	async watchCurrentLocation() {
 
-		// Trigger immediate address update if webGeocodingManager is provided
-		if (webGeocodingManager && typeof webGeocodingManager.getImmediateAddressUpdate === 'function') {
-			webGeocodingManager.getImmediateAddressUpdate(position)
-				.then(() => {
-					log("(GeolocationService) Immediate address update completed");
-				})
-				.catch((error) => {
-					console.error("(GeolocationService) Error in immediate address update:", error);
-				});
-		}
-	}
-
-	/**
-	 * Continuously monitors the user's position using the browser's Geolocation API.
-	 * 
-	 * This method implements real-time location tracking with proper error handling and observer 
-	 * pattern notifications. It establishes continuous position monitoring rather than one-time 
-	 * position requests, making it suitable for applications requiring real-time location tracking.
-	 * 
-	 * The method follows a well-structured flow:
-	 * 1. Initial Setup: Provides immediate user feedback through DOM updates
-	 * 2. Status Management: Sets global status to indicate location acquisition is in progress
-	 * 3. Capability Check: Verifies browser support for geolocation to prevent runtime errors
-	 * 4. Continuous Monitoring: Establishes watchPosition for ongoing location updates
-	 * 5. Observer Notifications: Notifies all registered observers about position changes
-	 * 6. Error Handling: Comprehensive error management with user-friendly messages
-	 * 
-	 * @returns {void}
-	 * @throws {Error} If geolocation is not supported by the browser
-	 * 
-	 * @since 0.8.2-alpha
-	 */
-	watchCurrentLocation() {
-		// === INITIAL SETUP AND UI FEEDBACK ===
-		// Provide immediate user feedback by displaying loading message in Portuguese
-		// for Brazilian users while geolocation acquisition is in progress
+		log("(GeolocationService) Starting to watch current location...");
 		if (this.locationResult) {
 			this.locationResult.innerHTML =
 				'<p class="loading">Buscando a sua localização...</p>';
@@ -969,45 +1059,26 @@ class GeolocationService {
 		// Throws descriptive error if feature is missing to prevent runtime errors
 		this.checkGeolocation();
 
-		// === CONTINUOUS POSITION MONITORING ===
-		// Establish ongoing location tracking using watchPosition API
-		// Returns watchId for later cleanup and stopping the watch operation
-		this.watchId = navigator.geolocation.watchPosition(
-			// === SUCCESS CALLBACK: OBSERVER PATTERN IMPLEMENTATION ===
-			(position) => {
-				// Update centralized position manager with validation and filtering
-				// PositionManager handles accuracy filtering, distance thresholds, and timing constraints
-				// (positions must change by >20 meters and pass accuracy requirements)
-				PositionManager.getInstance().update(position);
-
-				// Synchronize local coordinates with the centralized position manager
-				// Ensures consistency between GeolocationService and PositionManager state
-				this.currentCoords = PositionManager.getInstance().coords;
-
-				// Notify all registered observers about the position change
-				// Implements observer pattern for decoupled notifications to UI components,
-				// address geocoders, and other position-dependent services
-				this.notifyObservers();
-			},
-			// === ERROR CALLBACK: COMPREHENSIVE ERROR HANDLING ===
-			(error) => {
-				// Log detailed error information for debugging purposes
-				console.error("(GeolocationService) Error watching location:", error);
-
-				// Display user-friendly error messages in Portuguese for Brazilian users
-				// Handles different error types: permission denied, position unavailable, timeout
-				displayError(error);
-
-				// Reset location status flag to indicate acquisition has stopped
-				// Allows other components to react appropriately to the error state
-				SingletonStatusManager.getInstance().setGettingLocation(false);
-			},
-			// === CONFIGURATION OPTIONS ===
-			// Use custom geolocation options from setupParams or fallback to defaults
-			// Default options: enableHighAccuracy=true, maximumAge=0, timeout=10000ms
-			// These settings ensure the most current and accurate position data possible
-			setupParams.geolocationOptions || this.defaultOptions(),
-		);
+		// Returns a promise that resolves on the first position update
+		// Subsequent updates will be handled by the observer pattern
+		return new Promise(async function (resolve, reject) {
+			// Get current position
+			navigator.geolocation.watchPosition(
+				async (position) => {
+					log("+++ (2) (GeolocationService) Received position update:", position);
+					SingletonStatusManager.getInstance().setGettingLocation(true);
+					PositionManager.getInstance().update(position);
+					resolve(PositionManager.getInstance());
+				},
+				(error) => {
+					console.error("(GeolocationService) Error watching location:", error);
+					displayError(error);
+					SingletonStatusManager.getInstance().setGettingLocation(false);
+					reject(error);
+				},
+				setupParams.geolocationOptions || this.defaultOptions(),
+			);
+		});
 	}
 
 	async getSingleLocationUpdate() {
@@ -1053,6 +1124,7 @@ class WebGeocodingManager {
 		this.addressDisplayer = new HTMLAddressDisplayer(this.locationResult);
 
 		PositionManager.getInstance().subscribe(this.positionDisplayer);
+		PositionManager.getInstance().subscribe(this.reverseGeocoder);
 		this.reverseGeocoder.subscribe(this.addressDisplayer);
 	}
 
@@ -1122,6 +1194,18 @@ class WebGeocodingManager {
 		this.observers = this.observers.filter((o) => o !== observer);
 	}
 
+	notifyObservers() {
+		log("=================================================================");
+		console.log("(WebGeocodingManager) Notifying observers");
+		this.observers.forEach((observer) => {
+			observer.update(
+				this.currentPosition,
+				this.reverseGeocoder.currentAddress,
+				this.reverseGeocoder.enderecoPadronizado,
+			);
+		});
+	}
+
 	subscribeFunction(observerFunction) {
 		if (observerFunction == null) {
 			console.warn(
@@ -1162,21 +1246,13 @@ class WebGeocodingManager {
 				pitchValueId: "pitch-value",
 			},
 		);
-
 		this.reverseGeocoder.subscribe(this.htmlSpeechSynthesisDisplayer);
-		this.subscribe(this.htmlSpeechSynthesisDisplayer);
-
-		this.notifyObservers();
-	}
-
-	notifyObservers() {
-		console.log("(WebGeocodingManager) Notifying observers");
-		for (const observer of this.observers) {
-			observer.update(this.currentPosition);
-		}
+		this.subscribe(this.htmlSpeechSynthesisDisplayer.speechManager);
+		Object.freeze(this.htmlSpeechSynthesisDisplayer); // Prevent further modification
 	}
 
 	notifyFunctionObservers() {
+		log("=================================================================");
 		console.log("(WebGeocodingManager) Notifying function observers");
 		for (const fn of this.functionObservers) {
 			fn(
@@ -1212,60 +1288,7 @@ class WebGeocodingManager {
 			});
 	}
 
-	/**
-	 * Get address update for immediate location change notifications
-	 * This method bypasses the PositionManager 60-second timing constraints
-	 * and processes address changes immediately for critical location notifications
-	 * @param {GeolocationPosition} position - Current position object
-	 */
-	getImmediateAddressUpdate(position) {
-		log("(WebGeocodingManager) Getting immediate address update for location change detection...");
-
-		if (!position || !position.coords) {
-			log("(WebGeocodingManager) Invalid position for immediate address update");
-			return Promise.reject(new Error("Invalid position provided"));
-		}
-
-		// Create a new ReverseGeocoder instance for immediate processing
-		const immediateGeocoder = new ReverseGeocoder(position.coords.latitude, position.coords.longitude);
-
-		return immediateGeocoder.reverseGeocode()
-			.then((addressData) => {
-				log("(WebGeocodingManager) Got immediate address data, processing for change detection...");
-
-				// Use the new immediate processing method that bypasses normal timing constraints
-				const enderecoPadronizado = AddressDataExtractor.processAddressForImmediateChange(addressData, true);
-
-				log("(WebGeocodingManager) Immediate address processing completed");
-				return {
-					currentAddress: addressData,
-					enderecoPadronizado: enderecoPadronizado
-				};
-			})
-			.catch((error) => {
-				console.error("(WebGeocodingManager) Error in immediate address update:", error);
-				throw error;
-			});
-	}
-
-	updatePosition(position) {
-		this.reverseGeocoder.latitude = position.coords.latitude;
-		this.reverseGeocoder.longitude = position.coords.longitude;
-		this.reverseGeocoder
-			.reverseGeocode()
-			.then((addressData) => {
-				this.reverseGeocoder.currentAddress = addressData;
-				this.reverseGeocoder.notifyObservers();
-			})
-			.catch((error) => {
-				displayError(error);
-			});
-	}
-
 	startTracking() {
-		let positionManager = PositionManager.getInstance();
-		positionManager.subscribe(this.positionDisplayer);
-		positionManager.subscribe(this.reverseGeocoder);
 		this.initSpeechSynthesis();
 
 		/*
@@ -1284,26 +1307,6 @@ class WebGeocodingManager {
 		// Start watching position with high accuracy
 		let watchId = this.geolocationService.watchCurrentLocation();
 
-		/**
-		 * Start immediate address change tracking that bypasses the 60-second position manager constraint
-		 * This enables immediate speech notifications for street/neighborhood/municipality changes
-		 */
-		// Start immediate address change tracking (separate from regular position tracking)
-		this.immediateTrackingWatchId = navigator.geolocation.watchPosition(
-			(position) => {
-				// Use the immediate address checking method
-				this.geolocationService.updatePositionWithImmediateAddressCheck(position, this);
-			},
-			(error) => {
-				log("(WebGeocodingManager) Immediate tracking geolocation error:", error.message);
-			},
-			{
-				enableHighAccuracy: true,
-				maximumAge: 5000, // Allow 5-second cached positions for immediate tracking
-				timeout: 30000 // 30-second timeout
-			}
-		);
-
 		// Register callback for logradouro change detection (replaces timer-based approach)
 		this.setupLogradouroChangeDetection();
 
@@ -1312,16 +1315,6 @@ class WebGeocodingManager {
 
 		// Register callback for municipio change detection (follows same pattern as logradouro and bairro)
 		this.setupMunicipioChangeDetection();
-	}
-
-	/**
-	 * Stop immediate address change tracking
-	 */
-	stopImmediateAddressChangeTracking() {
-		if (this.immediateTrackingWatchId) {
-			navigator.geolocation.clearWatch(this.immediateTrackingWatchId);
-			this.immediateTrackingWatchId = null;
-		}
 	}
 
 	/**
@@ -1382,6 +1375,8 @@ class WebGeocodingManager {
 	handleLogradouroChange(changeDetails) {
 		try {
 			// Notify observers about the logradouro change
+			log("+++ (10000)(WebGeocodingManager) Handling logradouro change:", changeDetails);
+			log("+++ (10002) changeDetails: ", changeDetails.current.logradouro)
 			this.notifyLogradouroChangeObservers(changeDetails);
 		} catch (error) {
 			console.error(
@@ -1429,12 +1424,12 @@ class WebGeocodingManager {
 	 */
 	notifyLogradouroChangeObservers(changeDetails) {
 		// Notify regular observers
-		log('(WebGeocodingManager) Notificando os observadores da mudança de logradouro.');
+		log('+++ (10001) (WebGeocodingManager) Notificando os observadores da mudança de logradouro: ', this.observers.toString());
 		for (const observer of this.observers) {
 			if (typeof observer.update === "function") {
 				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de logradouro.`);
 				observer.update(
-					this.reverseGeocoder.currentAddress,
+					changeDetails.current.logradouro,
 					"LogradouroChanged",
 					null,
 					null,
@@ -1471,7 +1466,7 @@ class WebGeocodingManager {
 			if (typeof observer.update === "function") {
 				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de bairro.`);
 				observer.update(
-					this.reverseGeocoder.currentAddress,
+					changeDetails.current.bairro,
 					"BairroChanged",
 					null,
 					null,
@@ -1786,18 +1781,21 @@ class HTMLPositionDisplayer {
 		this.element.innerHTML = html;
 	}
 
-	displayPosition(position) {
-		this.showCoords(position);
+	displayPosition(positionManager) {
+		this.showCoords(positionManager.lastPosition);
 	}
 
-	update(currentPosition, posEvent, loading, error) {
+	update(positionManager, posEvent, loading, error) {
 		// Extract coordinates
 		// Format coordinates to 6 decimal places
 		// Display coordinates
 		// Provide link to Google Maps
 		// Provide link to Google Street View
+		log("(HTMLPositionDisplayer) Received position update event:", posEvent);
+		log("(HTMLPositionDisplayer) Current position:", positionManager);
 		if (posEvent == PositionManager.strCurrPosUpdate) {
-			const currentCoords = currentPosition ? currentPosition.coords : null;
+			const currentCoords = positionManager ? (positionManager.lastPosition ? positionManager.lastPosition.coords : null) : null;
+			log("(HTMLPositionDisplayer) Current coordinates:", currentCoords);
 			// Display loading or error messages if applicable
 			// Otherwise, display the position
 			if (loading) {
@@ -1806,7 +1804,7 @@ class HTMLPositionDisplayer {
 				this.element.innerHTML = `<p class="error">Error: ${error.message}</p>`;
 			} else if (currentCoords) {
 				this.element.innerHTML = "";
-				this.displayPosition(currentPosition);
+				this.displayPosition(positionManager);
 			} else {
 				this.element.innerHTML =
 					'<p class="error">No position data available.</p>';
@@ -2280,6 +2278,10 @@ class AddressDataExtractor {
 		const previousBairro = previousAddress.bairro;
 		const hasChanged = currentBairro !== previousBairro;
 
+
+
+
+
 		return {
 			hasChanged: hasChanged,
 			previous: {
@@ -2294,7 +2296,7 @@ class AddressDataExtractor {
 	}
 
 	/**
-	 * Checks if the municipio (municipality) has changed between the current and previous addresses
+	 * Checks if the municipio (city) has changed between the current and previous addresses
 	 * @returns {boolean} True if municipio has changed, false otherwise
 	 */
 	static hasMunicipioChanged() {
@@ -2352,60 +2354,17 @@ class AddressDataExtractor {
 			hasChanged: hasChanged,
 			previous: {
 				municipio: previousMunicipio,
-				uf: previousAddress.uf,
+				municipioCompleto: previousAddress.municipio,
 			},
 			current: {
 				municipio: currentMunicipio,
-				uf: currentAddress.uf,
+				municipioCompleto: currentAddress.municipio,
 			},
 		};
 	}
 
 	/**
-	 * Sets the maximum cache size for LRU behavior
-	 * @param {number} maxSize - Maximum number of entries in cache
-	 */
-	static setMaxCacheSize(maxSize) {
-		if (typeof maxSize !== "number" || maxSize < 1) {
-			throw new Error("Maximum cache size must be a positive number");
-			if (typeof maxSize !== "number" || maxSize < 1) {
-				throw new Error("Maximum cache size must be a positive number");
-			}
-			AddressDataExtractor.maxCacheSize = maxSize;
 
-			// Evict entries if current size exceeds new limit
-			AddressDataExtractor.evictLeastRecentlyUsedIfNeeded();
-		}
-	}
-
-	/**
-	 * Evicts least recently used entries if cache exceeds maximum size
-	 * This implements the history-like behavior where old entries are removed
-	 */
-	static evictLeastRecentlyUsedIfNeeded() {
-		while (
-			AddressDataExtractor.cache.size >= AddressDataExtractor.maxCacheSize
-		) {
-			// Map maintains insertion order, so first entry is least recently used
-			// (since we re-insert on access to move to end)
-			const firstKey = AddressDataExtractor.cache.keys().next().value;
-			if (firstKey) {
-				AddressDataExtractor.cache.delete(firstKey);
-			} else {
-				break; // Safety check
-			}
-		}
-	}
-
-	/**
-	 * Sets a callback function to be called when logradouro changes are detected
-	 * @param {Function} callback - Function to call when logradouro changes occur
-	 */
-	static setLogradouroChangeCallback(callback) {
-		AddressDataExtractor.logradouroChangeCallback = callback;
-	}
-
-	/**
 	 * Sets a callback function to be called when bairro changes are detected
 	 * @param {Function} callback - Function to call when bairro changes occur
 	 */
@@ -2434,96 +2393,94 @@ class AddressDataExtractor {
 				const now = Date.now();
 				if (
 					now - cacheEntry.timestamp <=
+
+					now - cacheEntry.timestamp <=
 					AddressDataExtractor.cacheExpirationMs
 				) {
-					if (
-						now - cacheEntry.timestamp <=
-						AddressDataExtractor.cacheExpirationMs
-					) {
-						// Update access time for LRU behavior (history-like)
-						cacheEntry.lastAccessed = now;
-						// Re-insert to update position in Map (Map maintains insertion order)
-						AddressDataExtractor.cache.delete(cacheKey);
-						AddressDataExtractor.cache.set(cacheKey, cacheEntry);
+					// Update access time for LRU behavior (history-like)
+					cacheEntry.lastAccessed = now;
+					// Re-insert to update position in Map (Map maintains insertion order)
+					AddressDataExtractor.cache.delete(cacheKey);
+					AddressDataExtractor.cache.set(cacheKey, cacheEntry);
 
-						return cacheEntry.address;
-					} else {
-						// Remove expired entry
-						AddressDataExtractor.cache.delete(cacheKey);
-					}
+					return cacheEntry.address;
+				} else {
+					// Remove expired entry
+					AddressDataExtractor.cache.delete(cacheKey);
 				}
 			}
-
-			// Create new standardized address
-			const extractor = new AddressDataExtractor(data);
-
-			// Cache the result if we have a valid key
-			if (cacheKey) {
-				// Check if cache has reached maximum size, evict least recently used entries
-				AddressDataExtractor.evictLeastRecentlyUsedIfNeeded();
-
-				const now = Date.now();
-				AddressDataExtractor.cache.set(cacheKey, {
-					address: extractor.enderecoPadronizado,
-					timestamp: now,
-					lastAccessed: now,
-				});
-
-				// Reset change notification flags when new address is cached
-				// This allows detection of new changes after cache updates
-				AddressDataExtractor.lastNotifiedChangeSignature = null;
-				AddressDataExtractor.lastNotifiedBairroChangeSignature = null;
-				AddressDataExtractor.lastNotifiedMunicipioChangeSignature = null;
-
-				// Check for logradouro change after caching the new address
-				// This replaces the timer-based approach with event-driven checking
-				if (AddressDataExtractor.logradouroChangeCallback &&
-					AddressDataExtractor.hasLogradouroChanged()) {
-					const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
-					try {
-						AddressDataExtractor.logradouroChangeCallback(changeDetails);
-					} catch (error) {
-						console.error(
-							"(AddressDataExtractor) Error calling logradouro change callback:",
-							error,
-						);
-					}
-				}
-
-				// Check for bairro change after caching the new address
-				// This follows the same pattern as logradouro change detection
-				if (AddressDataExtractor.bairroChangeCallback &&
-					AddressDataExtractor.hasBairroChanged()) {
-					const changeDetails = AddressDataExtractor.getBairroChangeDetails();
-					try {
-						AddressDataExtractor.bairroChangeCallback(changeDetails);
-					} catch (error) {
-						console.error(
-							"(AddressDataExtractor) Error calling bairro change callback:",
-							error,
-						);
-					}
-				}
-
-				// Check for municipio change after caching the new address
-				// This follows the same pattern as logradouro and bairro change detection
-				if (AddressDataExtractor.municipioChangeCallback &&
-					AddressDataExtractor.hasMunicipioChanged()) {
-					const changeDetails = AddressDataExtractor.getMunicipioChangeDetails();
-					try {
-						AddressDataExtractor.municipioChangeCallback(changeDetails);
-					} catch (error) {
-						console.error(
-							"(AddressDataExtractor) Error calling municipio change callback:",
-							error,
-						);
-					}
-				}
-			}
-
-			return extractor.enderecoPadronizado;
 		}
+
+		// Create new standardized address
+		const extractor = new AddressDataExtractor(data);
+
+		// Cache the result if we have a valid key
+		if (cacheKey) {
+			// Check if cache has reached maximum size, evict least recently used entries
+			AddressDataExtractor.evictLeastRecentlyUsedIfNeeded();
+
+			const now = Date.now();
+			AddressDataExtractor.cache.set(cacheKey, {
+				address: extractor.enderecoPadronizado,
+				timestamp: now,
+				lastAccessed: now,
+			});
+
+			// Reset change notification flags when new address is cached
+			// This allows detection of new changes after cache updates
+			AddressDataExtractor.lastNotifiedChangeSignature = null;
+			AddressDataExtractor.lastNotifiedBairroChangeSignature = null;
+			AddressDataExtractor.lastNotifiedMunicipioChangeSignature = null;
+
+			// Check for logradouro change after caching the new address
+			// This replaces the timer-based approach with event-driven checking
+			if (AddressDataExtractor.logradouroChangeCallback &&
+				AddressDataExtractor.hasLogradouroChanged()) {
+				const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
+				try {
+					AddressDataExtractor.logradouroChangeCallback(changeDetails);
+				} catch (error) {
+					console.error(
+						"(AddressDataExtractor) Error calling logradouro change callback:",
+						error,
+					);
+				}
+			}
+
+			// Check for bairro change after caching the new address
+			// This follows the same pattern as logradouro change detection
+			if (AddressDataExtractor.bairroChangeCallback &&
+				AddressDataExtractor.hasBairroChanged()) {
+				const changeDetails = AddressDataExtractor.getBairroChangeDetails();
+				try {
+					AddressDataExtractor.bairroChangeCallback(changeDetails);
+				} catch (error) {
+					console.error(
+						"(AddressDataExtractor) Error calling bairro change callback:",
+						error,
+					);
+				}
+			}
+
+			// Check for municipio change after caching the new address
+			// This follows the same pattern as logradouro and bairro change detection
+			if (AddressDataExtractor.municipioChangeCallback &&
+				AddressDataExtractor.hasMunicipioChanged()) {
+				const changeDetails = AddressDataExtractor.getMunicipioChangeDetails();
+				try {
+					AddressDataExtractor.municipioChangeCallback(changeDetails);
+				} catch (error) {
+					console.error(
+						"(AddressDataExtractor) Error calling municipio change callback:",
+						error,
+					);
+				}
+			}
+		}
+
+		return extractor.enderecoPadronizado;
 	}
+}
 
 	/**
 	 * Process address data for immediate location change detection (bypasses position manager timing constraints)
@@ -2534,75 +2491,75 @@ class AddressDataExtractor {
 	 * @returns {BrazilianStandardAddress} Processed address object
 	 */
 	static processAddressForImmediateChange(data, forceImmediateNotification = true) {
-		log("(AddressDataExtractor) Processing address for immediate change detection...");
+	log("(AddressDataExtractor) Processing address for immediate change detection...");
 
-		if (!data) {
-			log("(AddressDataExtractor) No address data provided for immediate processing");
-			return null;
-		}
-
-		// Create new standardized address (skip cache for immediate processing to ensure fresh detection)
-		const extractor = new AddressDataExtractor(data);
-
-		// Store previous address before updating current
-		if (AddressDataExtractor.currentAddress) {
-			AddressDataExtractor.previousAddress = { ...AddressDataExtractor.currentAddress };
-		}
-		AddressDataExtractor.currentAddress = { ...data };
-
-		// For immediate processing, we don't reset change tracking signatures
-		// This allows us to detect changes even when called multiple times quickly
-
-		// Check for logradouro change with immediate notification capability
-		if (AddressDataExtractor.logradouroChangeCallback &&
-			AddressDataExtractor.hasLogradouroChanged()) {
-			const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
-			changeDetails.immediate = forceImmediateNotification;
-			try {
-				log("(AddressDataExtractor) Triggering immediate logradouro change callback...");
-				AddressDataExtractor.logradouroChangeCallback(changeDetails);
-			} catch (error) {
-				console.error(
-					"(AddressDataExtractor) Error calling immediate logradouro change callback:",
-					error,
-				);
-			}
-		}
-
-		// Check for bairro change with immediate notification capability
-		if (AddressDataExtractor.bairroChangeCallback &&
-			AddressDataExtractor.hasBairroChanged()) {
-			const changeDetails = AddressDataExtractor.getBairroChangeDetails();
-			changeDetails.immediate = forceImmediateNotification;
-			try {
-				log("(AddressDataExtractor) Triggering immediate bairro change callback...");
-				AddressDataExtractor.bairroChangeCallback(changeDetails);
-			} catch (error) {
-				console.error(
-					"(AddressDataExtractor) Error calling immediate bairro change callback:",
-					error,
-				);
-			}
-		}
-
-		// Check for municipio change with immediate notification capability
-		if (AddressDataExtractor.municipioChangeCallback &&
-			AddressDataExtractor.hasMunicipioChanged()) {
-			const changeDetails = AddressDataExtractor.getMunicipioChangeDetails();
-			changeDetails.immediate = forceImmediateNotification;
-			try {
-				log("(AddressDataExtractor) Triggering immediate municipio change callback...");
-				AddressDataExtractor.municipioChangeCallback(changeDetails);
-			} catch (error) {
-				console.error(
-					"(AddressDataExtractor) Error calling immediate municipio change callback:",
-					error,
-				);
-			}
-		}
-
-		return extractor.enderecoPadronizado;
+	if (!data) {
+		log("(AddressDataExtractor) No address data provided for immediate processing");
+		return null;
 	}
+
+	// Create new standardized address (skip cache for immediate processing to ensure fresh detection)
+	const extractor = new AddressDataExtractor(data);
+
+	// Store previous address before updating current
+	if (AddressDataExtractor.currentAddress) {
+		AddressDataExtractor.previousAddress = { ...AddressDataExtractor.currentAddress };
+	}
+	AddressDataExtractor.currentAddress = { ...data };
+
+	// For immediate processing, we don't reset change tracking signatures
+	// This allows us to detect changes even when called multiple times quickly
+
+	// Check for logradouro change with immediate notification capability
+	if (AddressDataExtractor.logradouroChangeCallback &&
+		AddressDataExtractor.hasLogradouroChanged()) {
+		const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
+		changeDetails.immediate = forceImmediateNotification;
+		try {
+			log("(AddressDataExtractor) Triggering immediate logradouro change callback...");
+			AddressDataExtractor.logradouroChangeCallback(changeDetails);
+		} catch (error) {
+			console.error(
+				"(AddressDataExtractor) Error calling immediate logradouro change callback:",
+				error,
+			);
+		}
+	}
+
+	// Check for bairro change with immediate notification capability
+	if (AddressDataExtractor.bairroChangeCallback &&
+		AddressDataExtractor.hasBairroChanged()) {
+		const changeDetails = AddressDataExtractor.getBairroChangeDetails();
+		changeDetails.immediate = forceImmediateNotification;
+		try {
+			log("(AddressDataExtractor) Triggering immediate bairro change callback...");
+			AddressDataExtractor.bairroChangeCallback(changeDetails);
+		} catch (error) {
+			console.error(
+				"(AddressDataExtractor) Error calling immediate bairro change callback:",
+				error,
+			);
+		}
+	}
+
+	// Check for municipio change with immediate notification capability
+	if (AddressDataExtractor.municipioChangeCallback &&
+		AddressDataExtractor.hasMunicipioChanged()) {
+		const changeDetails = AddressDataExtractor.getMunicipioChangeDetails();
+		changeDetails.immediate = forceImmediateNotification;
+		try {
+			log("(AddressDataExtractor) Triggering immediate municipio change callback...");
+			AddressDataExtractor.municipioChangeCallback(changeDetails);
+		} catch (error) {
+			console.error(
+				"(AddressDataExtractor) Error calling immediate municipio change callback:",
+				error,
+			);
+		}
+	}
+
+	return extractor.enderecoPadronizado;
+}
 }
 
 // Initialize static properties for AddressDataExtractor
@@ -2642,6 +2599,7 @@ class HTMLAddressDisplayer {
 		// Include links to view the address on a map service if coordinates are available
 		// Return the generated HTML string
 
+		log("+++ (100) (HTMLAddressDisplayer) Rendering address...");
 		// Check if data is valid
 		if (!geodataParser.data || !geodataParser.data.address) {
 			return "<p class='error'>No address data available.</p>";
@@ -2730,14 +2688,22 @@ class HTMLAddressDisplayer {
 		this.element.innerHTML += html;
 	}
 
-	update(currentAddress, enderecoPadronizado, loading, error) {
-		if (currentAddress) {
+	update(currentAddress, enderecoPadronizado, posEvent, loading, error) {
+		log("+++ (5000) $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		log(`+++ (5001) ${this.toString()}.update() called`);
+		log("+++ (5002) (HTMLAddressDisplayer) Current Address:", currentAddress);
+		log("+++ (5003) (HTMLAddressDisplayer) Endereço Padronizado:", enderecoPadronizado);
+		log("+++ (5004) (HTMLAddressDisplayer) PosEvent:", posEvent);
+		log("+++ (5005) (HTMLAddressDisplayer) Loading:", loading);
+		log("+++ (5006) (HTMLAddressDisplayer) Error:", error);
+		if (currentAddress && enderecoPadronizado && !loading && !error && posEvent == PositionManager.strCurrPosUpdate) {
 			if (this.findRestaurantsBtn) {
 				this.findRestaurantsBtn.disabled = true;
 			}
 			if (this.cityStatsBtn) {
 				this.cityStatsBtn.disabled = true;
 			}
+			log("+++ (50010) (HTMLAddressDisplayer) Displaying address...");
 			this.displayAddress(currentAddress, enderecoPadronizado);
 		}
 	}
@@ -2803,6 +2769,7 @@ class SpeechQueue {
 	}
 
 	notifyObserverFunctions() {
+		// Notify all subscribed functions about the current queue state
 		for (const observerFunction of this.observerFunctions) {
 			observerFunction(this.queue);
 		}
@@ -2946,21 +2913,61 @@ class SpeechSynthesisManager {
 		//TODO: Para usar com UI
 	}
 
+	/**
+ * Primary entry point for adding text-to-speech requests to the speech synthesis system.
+ * 
+ * Implements a clean three-step process: input validation, queue management, and conditional 
+ * processing initiation. This method serves as the public interface for all speech requests,
+ * handling both immediate processing and queued batch processing scenarios through intelligent
+ * state management and priority-based queue operations.
+ * 
+ * **Architecture Design:**
+ * The method separates concerns effectively - speak() handles the public interface and immediate
+ * processing decisions, while enqueue() manages queue state and processQueue() handles the actual
+ * speech synthesis mechanics, creating a responsive system for various speech scenarios.
+ * 
+ * @param {string} text - Text content to be spoken by the speech synthesis system
+ * @param {number} [priority=0] - Priority level for queue positioning (higher values = higher priority)
+ * @returns {void}
+ * 
+ * @example
+ * // Basic speech request with default priority
+ * speechManager.speak("Welcome to the application", 0);
+ * 
+ * @example  
+ * // High priority urgent message (jumps ahead in queue)
+ * speechManager.speak("Emergency alert", 2);
+ * 
+ * @since 0.8.3-alpha
+ * @author Marcelo Pereira Barbosa
+ */
 	speak(text, priority = 0) {
-		log("(SpeechSynthesisManager) Queuing text for speech:", text);
-
+		// STEP 1: Input Validation - Robust validation prevents empty/whitespace content
+		// Check if text is falsy (null, undefined, empty string) or contains only whitespace
+		// This prevents the system from attempting to speak empty content which would waste resources
+		// and potentially cause audio artifacts
 		if (!text || text.trim() === "") {
 			warn("(SpeechSynthesisManager) No text provided to speak.");
-			return;
+			return; // Early return following fail-fast principle
 		}
-		// Add to queue with priority
+		
+		// STEP 2: Queue Management - Add text to priority-based speech queue
+		// The enqueue operation automatically handles:
+		// - Priority sorting (higher priority items processed first)
+		// - Timestamp management for chronological order within same priority
+		// - Automatic cleanup of expired items to prevent memory leaks
 		this.speechQueue.enqueue(text, priority);
 
-		// Process queue if not currently speaking
+		// STEP 3: Conditional Processing Initiation - Intelligent queue processing
+		// Only trigger immediate processing if system is currently idle
+		// This prevents overlapping audio while ensuring prompt processing of new requests
+		// If speech is already in progress, the newly enqueued item will be picked up
+		// automatically when current utterance completes, creating seamless continuous flow
 		if (!this.isCurrentlySpeaking) {
-			log("(SpeechSynthesisManager) Not currently speaking, processing queue...");
-			this.processQueue();
+			this.processQueue(); // Begin speech synthesis immediately when system is idle
 		}
+		// Note: If isCurrentlySpeaking is true, the queue item will be processed
+		// by the timer-based mechanism or when current speech completes via event handlers
 	}
 
 	startQueueTimer() {
@@ -2982,40 +2989,80 @@ class SpeechSynthesisManager {
 		}
 	}
 
+	/**
+ * Processes the speech synthesis queue in a state-managed, sequential manner.
+ * 
+ * This method is the core orchestrator for the speech synthesis queue system, managing 
+ * the sequential processing of text-to-speech requests while ensuring only one speech 
+ * utterance plays at a time and maintaining a queue of pending items.
+ * 
+ * **Queue Management Strategy:**
+ * The method uses a pure helper function to encapsulate queue retrieval logic with 
+ * guard clauses that prevent overlapping speech or processing empty queues. Both 
+ * isEmpty() and dequeue() methods automatically clean up expired items based on 
+ * timestamps, preventing memory leaks and ensuring fresh speech requests.
+ * 
+ * **Concurrency Control:**
+ * Uses isCurrentlySpeaking flag to prevent concurrent speech processing, ensuring 
+ * only one utterance plays at a time. The flag is managed through event handlers 
+ * that guarantee proper cleanup regardless of success or failure outcomes.
+ * 
+ * **Event-Driven Processing:**
+ * This method is called repeatedly through timer mechanisms or manual triggers, 
+ * creating a continuous processing loop that picks up new queue items as they 
+ * become available.
+ * 
+ * @returns {void}
+ * @since 0.8.3-alpha
+ * @author Marcelo Pereira Barbosa
+ */
 	processQueue() {
-		log("(SpeechSynthesisManager) Processing speech queue...");
+		// Pure helper function that encapsulates queue retrieval logic with guard clauses
+		// Returns next item only if two conditions are met:
+		// 1. System is not currently speaking (!this.isCurrentlySpeaking)  
+		// 2. Queue is not empty (!this.speechQueue.isEmpty())
+		// This prevents overlapping speech and processing empty queues
+		const getNextSpeechItem = () =>
+			!this.isCurrentlySpeaking && !this.speechQueue.isEmpty()
+				? this.speechQueue.dequeue() // Auto-cleans expired items on dequeue
+				: null; // Guard clause - return null if conditions not met
 
-		// Enhanced protection against concurrent execution
-		if (this.isCurrentlySpeaking || this.speechQueue.isEmpty()) {
-			return;
-		}
+		// Attempt to get next valid item from queue
+		const item = getNextSpeechItem();
 
-		const item = this.speechQueue.dequeue();
-		if (!item) {
-			return;
-		}
+		// Early return if no item available - prevents unnecessary processing
+		if (!item) return;
 
+		// Set concurrency control flag to prevent overlapping speech processing
+		// This ensures only one speech utterance plays at a time
 		this.isCurrentlySpeaking = true;
+
+		// Create new speech utterance with retrieved text content
 		const utterance = new SpeechSynthesisUtterance(item.text);
-		utterance.voice = this.voice;
-		utterance.rate = this.rate;
-		utterance.pitch = this.pitch;
 
-		log(`Speaking with priority ${item.priority}: "${item.text}"`);
+		// Configure utterance with instance voice settings for consistent speech characteristics
+		utterance.voice = this.voice;   // Voice selection (language/accent)
+		utterance.rate = this.rate;     // Speech speed
+		utterance.pitch = this.pitch;   // Voice pitch/tone
 
+		// Event handler for successful speech completion
+		// Resets concurrency flag to allow next queue item to be processed
 		utterance.onend = () => {
-			log("(SpeechSynthesisManager - utterance.onend) Speech synthesis finished.");
 			this.isCurrentlySpeaking = false;
-			// Remove setTimeout to rely only on timer-based processing
-			// This eliminates one source of concurrent calls
+			// Next item will be picked up by timer-based calls or manual triggers
+			// This creates a continuous processing loop for the speech queue
 		};
 
+		// Event handler for speech errors (network issues, unsupported text, etc.)
+		// Ensures concurrency flag is reset even when speech fails
+		// Prevents the system from getting stuck in speaking state
 		utterance.onerror = (event) => {
-			log("(SpeechSynthesisManager - utterance.onerror) Speech synthesis error:", event.error);
 			this.isCurrentlySpeaking = false;
-			// Remove setTimeout here too
+			// Queue processing can continue with next item despite this error
 		};
 
+		// Execute the speech utterance using Web Speech API
+		// This triggers the actual text-to-speech conversion and audio playback
 		this.synth.speak(utterance);
 	}
 
@@ -3043,6 +3090,10 @@ class SpeechSynthesisManager {
 
 	toString() {
 		return `${this.constructor.name}: Language=${this.language}, Rate=${this.rate}, Pitch=${this.pitch}, Voice=${this.voice ? this.voice.name : "N/A"}`;
+	}
+
+	update(textToBeSpoken, textAlert) {
+		this.speak(textToBeSpoken);
 	}
 }
 
@@ -3321,8 +3372,8 @@ class HtmlSpeechSynthesisDisplayer {
 
 	update(currentAddress, enderecoPadronizadoOrEvent, loading, error) {
 		log("(HtmlSpeechSynthesisDisplayer) Updating speech synthesis display...");
-		log("currentAddress:", currentAddress);
-		log("enderecoPadronizadoOrEvent:", enderecoPadronizadoOrEvent);
+		log("(HtmlSpeechSynthesisDisplayer) currentAddress:", currentAddress);
+		log("(HtmlSpeechSynthesisDisplayer) enderecoPadronizadoOrEvent:", enderecoPadronizadoOrEvent);
 
 		// Check for critical location changes that need immediate speech
 		const criticalLocationChanges = ["MunicipioChanged", "BairroChanged", "LogradouroChanged"];
@@ -3345,7 +3396,7 @@ class HtmlSpeechSynthesisDisplayer {
 
 		// Handle normal updates (non-location changes)
 		log("(HtmlSpeechSynthesisDisplayer) Normal address update, speaking full address...");
-		textToBeSpoken = this.buildTextToSpeech(currentAddress);
+		textToBeSpoken = this.buildTextToBeSpoken(currentAddress);
 		priority = 0; // Lowest priority for full address updates
 		log("textToBeSpoken:", textToBeSpoken);
 

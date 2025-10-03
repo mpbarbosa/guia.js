@@ -2570,7 +2570,6 @@ class SpeechQueue {
 	}
 
 	notifyObservers() {
-		log("=================================================================");
 		console.log("(SpeechQueue) Notifying observers");
 		this.observers.forEach((observer) => {
 			if (typeof observer.update === "function") {
@@ -3250,7 +3249,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * @since 0.8.3-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
-	update(currentAddress, enderecoPadronizadoOrEvent, loading, error) {
+	update(currentAddress, enderecoPadronizadoOrEvent, posEvent, loading, error) {
 		log("(HtmlSpeechSynthesisDisplayer) Updating speech synthesis display...");
 		log("currentAddress:", currentAddress);
 		log("enderecoPadronizadoOrEvent:", enderecoPadronizadoOrEvent);
@@ -3268,15 +3267,15 @@ class HtmlSpeechSynthesisDisplayer {
 		if (enderecoPadronizadoOrEvent === "MunicipioChanged") {
 			log("(HtmlSpeechSynthesisDisplayer) Municipio change detected, speaking new municipality with HIGHEST priority...");
 			textToBeSpoken = this.buildTextToSpeechMunicipio(currentAddress);
-			priority = 2; // HIGHEST priority for municipio changes
+			priority = 3; // HIGHEST priority for municipio changes
 		} else if (enderecoPadronizadoOrEvent === "BairroChanged") {
 			log("(HtmlSpeechSynthesisDisplayer) Bairro change detected, speaking new neighborhood with MEDIUM priority...");
 			textToBeSpoken = this.buildTextToSpeechBairro(currentAddress);
-			priority = 1; // MEDIUM priority for bairro changes
+			priority = 2; // MEDIUM priority for bairro changes
 		} else if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
 			log("(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location with LOW priority...");
 			textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
-			priority = 0; // LOWEST priority for logradouro changes
+			priority = 1; // LOWEST priority for logradouro changes
 		} else {
 			// Normal update from reverseGeocoder
 			log("(HtmlSpeechSynthesisDisplayer) Normal address update, speaking full address...");

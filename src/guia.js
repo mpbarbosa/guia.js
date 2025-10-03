@@ -1518,7 +1518,7 @@ class HTMLAddressDisplayer {
 		return html;
 	}
 
-	update(addressData, enderecoPadronizado, loading, error) {
+	update(addressData, enderecoPadronizado, posEvent, loading, error) {
 		log("(HTMLAddressDisplayer) Received address update");
 		log(" (HTMLAddressDisplayer) addressData: ", addressData);
 		if (addressData) {
@@ -1539,7 +1539,7 @@ class HTMLAddressDisplayer {
 		}
 
 		// Handle successful address data
-		if (addressData || enderecoPadronizado) {
+		if (posEvent == PositionManager.strCurrPosUpdate && (addressData || enderecoPadronizado)) {
 			const html = this.renderAddressHtml(addressData, enderecoPadronizado);
 			this.element.innerHTML = html;
 		} else {

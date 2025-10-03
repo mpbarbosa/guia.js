@@ -2982,6 +2982,10 @@ class SpeechSynthesisManager {
 		this.stopQueueTimer();
 		log("(SpeechSynthesisManager) Speech stopped and queue cleared");
 	}
+
+	toString() {
+		return `${this.constructor.name}: voice=${this.voice?.name || 'none'}, rate=${this.rate}, pitch=${this.pitch}, isSpeaking=${this.isCurrentlySpeaking}, queueSize=${this.speechQueue.size()}`;
+	}
 }
 
 /**
@@ -3211,15 +3215,15 @@ class HtmlSpeechSynthesisDisplayer {
 		if (currentAddress.logradouro) {
 			speechText += currentAddress.logradouroCompleto();
 			if (currentAddress.bairro) {
-				speechText += `, no bairro ${currentAddress.bairroCompleto()}`;
+				speechText += `, ${currentAddress.bairroCompleto()}`;
 			}
 			if (currentAddress.municipio) {
-				speechText += `, em ${currentAddress.municipio}`;
+				speechText += `, ${currentAddress.municipio}`;
 			}
 		} else if (currentAddress.bairro) {
 			speechText += `bairro ${currentAddress.bairroCompleto()}`;
 			if (currentAddress.municipio) {
-				speechText += `, em ${currentAddress.municipio}`;
+				speechText += `, ${currentAddress.municipio}`;
 			}
 		} else if (currentAddress.municipio) {
 			speechText += currentAddress.municipio;

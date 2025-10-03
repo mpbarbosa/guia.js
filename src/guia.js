@@ -863,55 +863,33 @@ class ReverseGeocoder extends APIFetcher {
 	update(positionManager, posEvent, loading, error) {
 		log("(ReverseGeocoder) Received position update notification:", posEvent);
 
+		if (!positionManager || !positionManager.lastPosition) {
+			warn("(ReverseGeocoder) Invalid PositionManager or no last position.");
+			return;
+		}
+
 		// Only process actual position updates, ignore other events
-		if (posEvent === PositionManager.strCurrPosUpdate && positionManager && positionManager.lastPosition) {
-			const coords = positionManager.lastPosition.coords;
-			if (coords && coords.latitude && coords.longitude) {
-				log("(ReverseGeocoder) Updating coordinates and performing reverse geocoding...");
+		const coords = positionManager.lastPosition.coords;
+		if (coords && coords.latitude && coords.longitude) {
+			log("(ReverseGeocoder) Updating coordinates and performing reverse geocoding...");
 
-				// Update coordinates
-				this.setCoordinates(coords.latitude, coords.longitude);
+			// Update coordinates
+			this.setCoordinates(coords.latitude, coords.longitude);
 
-				// Trigger reverse geocoding asynchronously
-				this.reverseGeocode()
-					.then((addressData) => {
-						log("(ReverseGeocoder) Reverse geocoding successful:", addressData);
-						this.currentAddress = addressData;
-						this.enderecoPadronizado = AddressDataExtractor.getBrazilianStandardAddress(addressData);
-						// Notify this geocoder's own observers
-						this.notifyObservers();
-					})
-					.catch((error) => {
-						console.error("(ReverseGeocoder) Reverse geocoding failed:", error);
-						this.error = error;
-						this.notifyObservers();
-					});
-			}
-		} else if (posEvent === PositionManager.strImmediateAddressUpdate && positionManager && positionManager.lastPosition) {
-			// Handle immediate address updates (bypassing timing constraints)
-			const coords = positionManager.lastPosition.coords;
-			if (coords && coords.latitude && coords.longitude) {
-				log("(ReverseGeocoder) Processing immediate address update...");
-
-				// Update coordinates
-				this.setCoordinates(coords.latitude, coords.longitude);
-
-				// Use immediate processing method for critical location changes
-				this.reverseGeocode()
-					.then((addressData) => {
-						log("(ReverseGeocoder) Immediate reverse geocoding successful:", addressData);
-						this.currentAddress = addressData;
-						// Use immediate processing for critical location changes
-						this.enderecoPadronizado = AddressDataExtractor.processAddressForImmediateChange(addressData, true);
-						// Notify this geocoder's own observers
-						this.notifyObservers();
-					})
-					.catch((error) => {
-						console.error("(ReverseGeocoder) Immediate reverse geocoding failed:", error);
-						this.error = error;
-						this.notifyObservers();
-					});
-			}
+			// Trigger reverse geocoding asynchronously
+			this.reverseGeocode()
+				.then((addressData) => {
+					log("(ReverseGeocoder) Reverse geocoding successful:", addressData);
+					this.currentAddress = addressData;
+					this.enderecoPadronizado = AddressDataExtractor.getBrazilianStandardAddress(addressData);
+					// Notify this geocoder's own observers
+					this.notifyObservers(posEvent);
+				})
+				.catch((error) => {
+					console.error("(ReverseGeocoder) Reverse geocoding failed:", error);
+					this.error = error;
+					this.notifyObservers(posEvent);
+				});
 		}
 	}
 
@@ -1545,7 +1523,7 @@ class HTMLAddressDisplayer {
 		log(" (HTMLAddressDisplayer) addressData: ", addressData);
 		if (addressData) {
 			// Display all object attributes
-			
+
 		}
 
 		// Handle loading state
@@ -2012,6 +1990,7 @@ class AddressDataExtractor {
 				AddressDataExtractor.hasLogradouroChanged()) {
 				const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
 				try {
+					log("Logradouro changed:", changeDetails);
 					AddressDataExtractor.logradouroChangeCallback(changeDetails);
 				} catch (error) {
 					console.error(
@@ -2173,7 +2152,6 @@ class WebGeocodingManager {
 	}
 
 	notifyObservers() {
-		log("=================================================================");
 		console.log("(WebGeocodingManager) Notifying observers");
 		this.observers.forEach((observer) => {
 			observer.update(
@@ -2230,7 +2208,6 @@ class WebGeocodingManager {
 	}
 
 	notifyFunctionObservers() {
-		log("=================================================================");
 		console.log("(WebGeocodingManager) Notifying function observers");
 		for (const fn of this.functionObservers) {
 			fn(
@@ -2759,22 +2736,22 @@ class SpeechSynthesisManager {
 		const updateVoices = () => {
 			this.voices = this.synth.getVoices();
 			log("Voices: ", this.voices);
-			
+
 			// PRIORITY 1: Try to find Brazilian Portuguese voice (pt-BR)
 			let portugueseVoice = this.voices.find(voice =>
 				voice.lang && voice.lang.toLowerCase() === 'pt-br'
 			);
-			
+
 			// PRIORITY 2: If pt-BR not found, try any other Portuguese voice (pt, pt-PT, etc.)
 			if (!portugueseVoice) {
 				portugueseVoice = this.voices.find(voice =>
 					voice.lang && voice.lang.toLowerCase().startsWith('pt')
 				);
 			}
-			
+
 			this.voice = portugueseVoice || this.voices[0] || null;
 			log(`(SpeechSynthesisManager) Loaded ${this.voices.length} voices, selected: ${this.voice?.name || 'none'} (${this.voice?.lang || 'none'})`);
-			
+
 			// If Brazilian Portuguese voice was found, stop retry timer
 			if (portugueseVoice && portugueseVoice.lang.toLowerCase() === 'pt-br') {
 				this.stopVoiceRetryTimer();
@@ -2798,17 +2775,17 @@ class SpeechSynthesisManager {
 	 */
 	startVoiceRetryTimer() {
 		if (this.voiceRetryTimer) return;
-		
+
 		log(`(SpeechSynthesisManager) Starting voice retry timer (attempt ${this.voiceRetryAttempts + 1}/${this.maxVoiceRetryAttempts})`);
 		this.voiceRetryTimer = setInterval(() => {
 			this.voiceRetryAttempts++;
-			
+
 			// Check for Brazilian Portuguese voice
 			const voices = this.synth.getVoices();
 			const brazilianVoice = voices.find(voice =>
 				voice.lang && voice.lang.toLowerCase() === 'pt-br'
 			);
-			
+
 			if (brazilianVoice) {
 				this.voice = brazilianVoice;
 				log(`(SpeechSynthesisManager) Brazilian Portuguese voice found on retry: ${brazilianVoice.name}`);

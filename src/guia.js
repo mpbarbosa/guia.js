@@ -3237,11 +3237,18 @@ class HtmlSpeechSynthesisDisplayer {
 	 * Updates the HTML display with new address information and handles speech synthesis.
 	 * 
 	 * Observer pattern update method that gets called when address changes occur.
-	 * Implements priority-based speech notifications where bairro changes have higher
-	 * priority than logradouro changes, following the MP Barbosa project requirements.
+	 * Implements priority-based speech notifications and periodic full address announcements:
+	 * - Municipality changes (priority 3): Highest priority for city changes
+	 * - Neighborhood/Bairro changes (priority 2): Medium priority for neighborhood changes
+	 * - Street/Logradouro changes (priority 1): Low priority for street changes
+	 * - Full address every 50 seconds (priority 0): Periodic announcements at trackingInterval
+	 * 
+	 * The 50-second interval feature ensures users receive regular location updates while
+	 * driving, providing a better user experience than more frequent announcements.
 	 * 
 	 * @param {Object} currentAddress - Current address data
-	 * @param {string} enderecoPadronizadoOrEvent - Standardized address or event type
+	 * @param {string|BrazilianStandardAddress} enderecoPadronizadoOrEvent - Standardized address or event type
+	 * @param {string} posEvent - Position event type (strCurrPosUpdate, strImmediateAddressUpdate, etc.)
 	 * @param {Object} loading - Loading state information
 	 * @param {Object} error - Error information if any
 	 * @returns {void}
@@ -3253,6 +3260,7 @@ class HtmlSpeechSynthesisDisplayer {
 		log("(HtmlSpeechSynthesisDisplayer) Updating speech synthesis display...");
 		log("currentAddress:", currentAddress);
 		log("enderecoPadronizadoOrEvent:", enderecoPadronizadoOrEvent);
+		log("posEvent:", posEvent);
 
 		// Early return if no current address
 		if (!currentAddress) {
@@ -3263,7 +3271,7 @@ class HtmlSpeechSynthesisDisplayer {
 		let priority = 0;
 
 		// Determine speech content and priority based on event type
-		// Priority order: Municipality (2) > Bairro (1) > Logradouro (0)
+		// Priority order: Municipality (3) > Bairro (2) > Logradouro (1) > Full address every 50s (0)
 		if (enderecoPadronizadoOrEvent === "MunicipioChanged") {
 			log("(HtmlSpeechSynthesisDisplayer) Municipio change detected, speaking new municipality with HIGHEST priority...");
 			textToBeSpoken = this.buildTextToSpeechMunicipio(currentAddress);
@@ -3276,12 +3284,15 @@ class HtmlSpeechSynthesisDisplayer {
 			log("(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location with LOW priority...");
 			textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
 			priority = 1; // LOWEST priority for logradouro changes
-		} else {
-			// Normal update from reverseGeocoder
-			log("(HtmlSpeechSynthesisDisplayer) Normal address update, speaking full address...");
+		} else if (posEvent === PositionManager.strCurrPosUpdate) {
+			// Full address update every 50 seconds (trackingInterval)
+			// This is the main feature: speak full address at regular 50-second intervals
+			log("(HtmlSpeechSynthesisDisplayer) 50-second interval reached, speaking full address...");
 			textToBeSpoken = this.buildTextToSpeech(enderecoPadronizadoOrEvent);
-			priority = 0; // Lowest priority for full address updates
+			priority = 0; // Lowest priority for periodic full address updates
 		}
+		// Note: For immediate updates (strImmediateAddressUpdate), we don't speak
+		// unless there's a specific change event (handled by the conditions above)
 
 		// Common operations for all cases
 		if (textToBeSpoken && this.textInput) {

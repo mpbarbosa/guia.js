@@ -820,6 +820,10 @@ class ReverseGeocoder extends APIFetcher {
 		this.setCoordinates(latitude, longitude);
 	}
 
+	secondUpdateParam() {
+		return this.enderecoPadronizado;
+	}
+
 	setCoordinates(latitude, longitude) {
 		if (!latitude || !longitude) {
 			return;
@@ -2746,16 +2750,22 @@ class SpeechSynthesisManager {
 	 * Loads available voices and selects default Portuguese voice.
 	 */
 	loadVoices() {
-		this.voices = this.synth.getVoices();
-
-		// Try to find Portuguese voice
-		let portugueseVoice = this.voices.find(voice =>
-			voice.lang.startsWith('pt') || voice.lang.includes('Portuguese')
-		);
-
-		this.voice = portugueseVoice || this.voices[0] || null;
-
-		log(`(SpeechSynthesisManager) Loaded ${this.voices.length} voices, selected: ${this.voice?.name || 'none'}`);
+		const updateVoices = () => {
+			this.voices = this.synth.getVoices();
+			log("Voices: ", this.voices);
+			// Try to find any Portuguese voice (pt, pt-BR, pt-PT, etc.)
+			let portugueseVoice = this.voices.find(voice =>
+				voice.lang && voice.lang.toLowerCase().startsWith('pt')
+			);
+			this.voice = portugueseVoice || this.voices[0] || null;
+			log(`(SpeechSynthesisManager) Loaded ${this.voices.length} voices, selected: ${this.voice?.name || 'none'}`);
+		};
+		// Always update voices immediately in case they're already loaded
+		updateVoices();
+		// Listen for voiceschanged event to update when voices are loaded asynchronously
+		if (typeof window !== "undefined" && window.speechSynthesis) {
+			window.speechSynthesis.onvoiceschanged = updateVoices;
+		}
 	}
 
 	/**
@@ -3103,6 +3113,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * @returns {string} Formatted speech text for logradouro
 	 */
 	buildTextToSpeechLogradouro(currentAddress) {
+		log("+++ (HtmlSpeechSynthesisDisplayer) Building text for logradouro change:", currentAddress.constructor.name);
 		if (!currentAddress || !currentAddress.logradouro) {
 			return "Nova localização detectada";
 		}
@@ -3132,8 +3143,7 @@ class HtmlSpeechSynthesisDisplayer {
 		if (!currentAddress) {
 			return "Localização não disponível";
 		}
-
-		let speechText = "Sua localização atual é: ";
+		let speechText = "Você está em: ";
 
 		if (currentAddress.logradouro) {
 			speechText += currentAddress.logradouroCompleto();
@@ -3198,7 +3208,7 @@ class HtmlSpeechSynthesisDisplayer {
 		} else {
 			// Normal update from reverseGeocoder
 			log("(HtmlSpeechSynthesisDisplayer) Normal address update, speaking full address...");
-			textToBeSpoken = this.buildTextToSpeech(currentAddress);
+			textToBeSpoken = this.buildTextToSpeech(enderecoPadronizadoOrEvent);
 			priority = 0; // Lowest priority for full address updates
 		}
 

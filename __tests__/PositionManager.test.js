@@ -6,7 +6,7 @@
 global.document = undefined;
 
 // Import the guia.js functions
-const { PositionManager } = require('../src/guia.js');
+const { PositionManager, GeoPosition } = require('../src/guia.js');
 
 describe('PositionManager Class', () => {
   
@@ -166,28 +166,28 @@ describe('PositionManager Class', () => {
 
   describe('Accuracy Quality', () => {
     test('should classify excellent accuracy', () => {
-      expect(PositionManager.getAccuracyQuality(5)).toBe('excellent');
-      expect(PositionManager.getAccuracyQuality(10)).toBe('excellent');
+      expect(GeoPosition.getAccuracyQuality(5)).toBe('excellent');
+      expect(GeoPosition.getAccuracyQuality(10)).toBe('excellent');
     });
 
     test('should classify good accuracy', () => {
-      expect(PositionManager.getAccuracyQuality(20)).toBe('good');
-      expect(PositionManager.getAccuracyQuality(30)).toBe('good');
+      expect(GeoPosition.getAccuracyQuality(20)).toBe('good');
+      expect(GeoPosition.getAccuracyQuality(30)).toBe('good');
     });
 
     test('should classify medium accuracy', () => {
-      expect(PositionManager.getAccuracyQuality(50)).toBe('medium');
-      expect(PositionManager.getAccuracyQuality(100)).toBe('medium');
+      expect(GeoPosition.getAccuracyQuality(50)).toBe('medium');
+      expect(GeoPosition.getAccuracyQuality(100)).toBe('medium');
     });
 
     test('should classify bad accuracy', () => {
-      expect(PositionManager.getAccuracyQuality(150)).toBe('bad');
-      expect(PositionManager.getAccuracyQuality(200)).toBe('bad');
+      expect(GeoPosition.getAccuracyQuality(150)).toBe('bad');
+      expect(GeoPosition.getAccuracyQuality(200)).toBe('bad');
     });
 
     test('should classify very bad accuracy', () => {
-      expect(PositionManager.getAccuracyQuality(500)).toBe('very bad');
-      expect(PositionManager.getAccuracyQuality(1000)).toBe('very bad');
+      expect(GeoPosition.getAccuracyQuality(500)).toBe('very bad');
+      expect(GeoPosition.getAccuracyQuality(1000)).toBe('very bad');
     });
   });
 

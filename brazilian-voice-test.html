@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Voz em Português Brasileiro - Guia.js</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #log {
+            width: 100%;
+            height: 300px;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            background-color: #f8f9fa;
+        }
+        .voice-info {
+            background-color: #e3f2fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .voice-name {
+            font-weight: bold;
+            color: #0277bd;
+        }
+        .voice-lang {
+            color: #01579b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .priority-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .priority-high {
+            background-color: #28a745;
+            color: white;
+        }
+        .priority-medium {
+            background-color: #ffc107;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎙️ Teste de Seleção de Voz em Português Brasileiro</h1>
+    
+    <div class="container">
+        <h2>Informações sobre a Voz Selecionada</h2>
+        <div class="voice-info">
+            <p><span class="voice-name">Voz:</span> <span id="selected-voice-name">Carregando...</span></p>
+            <p><span class="voice-lang">Idioma:</span> <span id="selected-voice-lang">Carregando...</span></p>
+            <p><span class="voice-lang">URI:</span> <span id="selected-voice-uri">Carregando...</span></p>
+        </div>
+        
+        <h3>Controles de Teste</h3>
+        <button onclick="testBrazilianVoice()">🇧🇷 Testar Voz Brasileira</button>
+        <button onclick="showAllVoices()">📋 Listar Todas as Vozes</button>
+        <button onclick="testRetryMechanism()">🔄 Simular Retry (Ver Console)</button>
+        <button onclick="clearLog()">🧹 Limpar Log</button>
+    </div>
+    
+    <div class="container">
+        <h2>Vozes Disponíveis no Sistema</h2>
+        <div id="voices-table-container">
+            <p>Carregando vozes...</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Log de Eventos</h2>
+        <textarea id="log" readonly></textarea>
+    </div>
+
+    <!-- Hidden elements for speech synthesis -->
+    <div style="display: none;">
+        <textarea id="speech-text-input"></textarea>
+        <select id="voice-select"></select>
+        <select id="language-select"></select>
+        <input id="rate-input" type="range" min="0.1" max="3" step="0.1" value="1">
+        <input id="pitch-input" type="range" min="0" max="2" step="0.1" value="1">
+        <span id="rate-value">1</span>
+        <span id="pitch-value">1</span>
+        <button id="speak-btn">Falar</button>
+        <button id="pause-btn">Pausar</button>
+        <button id="resume-btn">Continuar</button>
+        <button id="stop-btn">Parar</button>
+    </div>
+
+    <script src="src/guia.js"></script>
+    <script>
+        const speechElements = {
+            textInputId: 'speech-text-input',
+            speakBtnId: 'speak-btn',
+            pauseBtnId: 'pause-btn',
+            resumeBtnId: 'resume-btn',
+            stopBtnId: 'stop-btn',
+            voiceSelectId: 'voice-select',
+            languageSelectId: 'language-select',
+            rateInputId: 'rate-input',
+            pitchInputId: 'pitch-input',
+            rateValueId: 'rate-value',
+            pitchValueId: 'pitch-value'
+        };
+
+        let speechDisplayer;
+        let speechManager;
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                speechDisplayer = new HtmlSpeechSynthesisDisplayer(document, speechElements);
+                speechManager = speechDisplayer.speechManager;
+                
+                logMessage('✅ Sistema de fala inicializado com sucesso');
+                updateSelectedVoiceInfo();
+                
+                // Wait a bit for voices to load
+                setTimeout(() => {
+                    updateSelectedVoiceInfo();
+                    showAllVoices();
+                }, 1000);
+                
+            } catch (error) {
+                logMessage('❌ Erro ao inicializar sistema de fala: ' + error.message);
+            }
+        });
+
+        function logMessage(message) {
+            const logArea = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logArea.value += `[${timestamp}] ${message}\n`;
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        function updateSelectedVoiceInfo() {
+            if (!speechManager || !speechManager.voice) {
+                logMessage('⚠️ Aguardando carregamento das vozes...');
+                return;
+            }
+            
+            const voice = speechManager.voice;
+            document.getElementById('selected-voice-name').textContent = voice.name;
+            document.getElementById('selected-voice-lang').textContent = voice.lang;
+            document.getElementById('selected-voice-uri').textContent = voice.voiceURI || 'N/A';
+            
+            // Check if it's Brazilian Portuguese
+            if (voice.lang.toLowerCase() === 'pt-br') {
+                logMessage('✅ Voz em Português Brasileiro (pt-BR) selecionada: ' + voice.name);
+            } else if (voice.lang.toLowerCase().startsWith('pt')) {
+                logMessage('⚠️ Voz em Português genérica selecionada: ' + voice.name + ' (' + voice.lang + ')');
+            } else {
+                logMessage('❌ Nenhuma voz em Português disponível, usando: ' + voice.name + ' (' + voice.lang + ')');
+            }
+        }
+
+        function testBrazilianVoice() {
+            const testPhrases = [
+                "Olá! Este é um teste de voz em português brasileiro.",
+                "Você está no bairro de Pinheiros, na cidade de São Paulo.",
+                "A localização foi atualizada com sucesso."
+            ];
+            
+            const randomPhrase = testPhrases[Math.floor(Math.random() * testPhrases.length)];
+            
+            if (speechManager) {
+                speechManager.speak(randomPhrase, 0);
+                logMessage('🗣️ Falando: "' + randomPhrase + '"');
+            }
+        }
+
+        function showAllVoices() {
+            if (!speechManager) {
+                logMessage('❌ Sistema de fala não inicializado');
+                return;
+            }
+            
+            const voices = speechManager.voices;
+            logMessage('📋 Total de vozes disponíveis: ' + voices.length);
+            
+            // Create table
+            let tableHTML = '<table><thead><tr><th>Nome</th><th>Idioma</th><th>Prioridade</th></tr></thead><tbody>';
+            
+            voices.forEach((voice, index) => {
+                let priorityBadge = '';
+                if (voice.lang.toLowerCase() === 'pt-br') {
+                    priorityBadge = '<span class="priority-badge priority-high">🇧🇷 PRIORIDADE 1</span>';
+                } else if (voice.lang.toLowerCase().startsWith('pt')) {
+                    priorityBadge = '<span class="priority-badge priority-medium">🇵🇹 PRIORIDADE 2</span>';
+                }
+                
+                tableHTML += `<tr>
+                    <td>${voice.name}</td>
+                    <td>${voice.lang}</td>
+                    <td>${priorityBadge}</td>
+                </tr>`;
+            });
+            
+            tableHTML += '</tbody></table>';
+            document.getElementById('voices-table-container').innerHTML = tableHTML;
+            
+            // Log Portuguese voices specifically
+            const portugueseVoices = voices.filter(v => v.lang.toLowerCase().startsWith('pt'));
+            logMessage('🇧🇷 Vozes em Português encontradas: ' + portugueseVoices.length);
+            portugueseVoices.forEach(v => {
+                logMessage(`   - ${v.name} (${v.lang})`);
+            });
+        }
+
+        function testRetryMechanism() {
+            logMessage('🔄 Informações sobre o mecanismo de retry:');
+            if (speechManager) {
+                logMessage(`   - Tentativas de retry: ${speechManager.voiceRetryAttempts}`);
+                logMessage(`   - Máximo de tentativas: ${speechManager.maxVoiceRetryAttempts}`);
+                logMessage(`   - Intervalo de retry: ${speechManager.voiceRetryInterval}ms`);
+                logMessage(`   - Timer ativo: ${speechManager.voiceRetryTimer ? 'Sim' : 'Não'}`);
+                
+                if (speechManager.voice && speechManager.voice.lang.toLowerCase() === 'pt-br') {
+                    logMessage('   ✅ Voz pt-BR já encontrada, retry não necessário');
+                } else {
+                    logMessage('   ⚠️ Voz pt-BR não encontrada, retry pode estar ativo');
+                }
+            }
+        }
+
+        function clearLog() {
+            document.getElementById('log').value = '';
+            logMessage('🧹 Log limpo');
+        }
+
+        // Monitor voice changes
+        if (window.speechSynthesis) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                logMessage('🔄 Evento voiceschanged disparado - atualizando vozes');
+                updateSelectedVoiceInfo();
+            };
+        }
+    </script>
+</body>
+</html>

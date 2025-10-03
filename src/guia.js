@@ -2743,28 +2743,91 @@ class SpeechSynthesisManager {
 		this.speechQueue = new SpeechQueue();
 		this.queueTimer = null;
 		this.independentQueueTimerInterval = setupParams.independentQueueTimerInterval;
+		this.voiceRetryTimer = null;
+		this.voiceRetryAttempts = 0;
+		this.maxVoiceRetryAttempts = 10;
+		this.voiceRetryInterval = 1000; // 1 second
 		this.loadVoices();
 	}
 
 	/**
 	 * Loads available voices and selects default Portuguese voice.
+	 * Prioritizes Brazilian Portuguese (pt-BR) voices for target users.
+	 * Includes retry mechanism to keep trying if Brazilian Portuguese voice is not immediately available.
 	 */
 	loadVoices() {
 		const updateVoices = () => {
 			this.voices = this.synth.getVoices();
 			log("Voices: ", this.voices);
-			// Try to find any Portuguese voice (pt, pt-BR, pt-PT, etc.)
+			
+			// PRIORITY 1: Try to find Brazilian Portuguese voice (pt-BR)
 			let portugueseVoice = this.voices.find(voice =>
-				voice.lang && voice.lang.toLowerCase().startsWith('pt')
+				voice.lang && voice.lang.toLowerCase() === 'pt-br'
 			);
+			
+			// PRIORITY 2: If pt-BR not found, try any other Portuguese voice (pt, pt-PT, etc.)
+			if (!portugueseVoice) {
+				portugueseVoice = this.voices.find(voice =>
+					voice.lang && voice.lang.toLowerCase().startsWith('pt')
+				);
+			}
+			
 			this.voice = portugueseVoice || this.voices[0] || null;
-			log(`(SpeechSynthesisManager) Loaded ${this.voices.length} voices, selected: ${this.voice?.name || 'none'}`);
+			log(`(SpeechSynthesisManager) Loaded ${this.voices.length} voices, selected: ${this.voice?.name || 'none'} (${this.voice?.lang || 'none'})`);
+			
+			// If Brazilian Portuguese voice was found, stop retry timer
+			if (portugueseVoice && portugueseVoice.lang.toLowerCase() === 'pt-br') {
+				this.stopVoiceRetryTimer();
+				log(`(SpeechSynthesisManager) Brazilian Portuguese voice found, retry stopped`);
+			}
+			// If no Brazilian Portuguese voice found and voices are available, start retry mechanism
+			else if (this.voices.length > 0 && !this.voiceRetryTimer && this.voiceRetryAttempts < this.maxVoiceRetryAttempts) {
+				this.startVoiceRetryTimer();
+			}
 		};
 		// Always update voices immediately in case they're already loaded
 		updateVoices();
 		// Listen for voiceschanged event to update when voices are loaded asynchronously
 		if (typeof window !== "undefined" && window.speechSynthesis) {
 			window.speechSynthesis.onvoiceschanged = updateVoices;
+		}
+	}
+
+	/**
+	 * Starts the retry timer to periodically check for Brazilian Portuguese voice.
+	 */
+	startVoiceRetryTimer() {
+		if (this.voiceRetryTimer) return;
+		
+		log(`(SpeechSynthesisManager) Starting voice retry timer (attempt ${this.voiceRetryAttempts + 1}/${this.maxVoiceRetryAttempts})`);
+		this.voiceRetryTimer = setInterval(() => {
+			this.voiceRetryAttempts++;
+			
+			// Check for Brazilian Portuguese voice
+			const voices = this.synth.getVoices();
+			const brazilianVoice = voices.find(voice =>
+				voice.lang && voice.lang.toLowerCase() === 'pt-br'
+			);
+			
+			if (brazilianVoice) {
+				this.voice = brazilianVoice;
+				log(`(SpeechSynthesisManager) Brazilian Portuguese voice found on retry: ${brazilianVoice.name}`);
+				this.stopVoiceRetryTimer();
+			} else if (this.voiceRetryAttempts >= this.maxVoiceRetryAttempts) {
+				log(`(SpeechSynthesisManager) Max retry attempts reached, using current voice: ${this.voice?.name || 'none'}`);
+				this.stopVoiceRetryTimer();
+			}
+		}, this.voiceRetryInterval);
+	}
+
+	/**
+	 * Stops the voice retry timer.
+	 */
+	stopVoiceRetryTimer() {
+		if (this.voiceRetryTimer) {
+			clearInterval(this.voiceRetryTimer);
+			this.voiceRetryTimer = null;
+			log(`(SpeechSynthesisManager) Voice retry timer stopped`);
 		}
 	}
 
@@ -3008,6 +3071,7 @@ class HtmlSpeechSynthesisDisplayer {
 
 	/**
 	 * Updates the voice selection dropdown with available voices.
+	 * Prioritizes Brazilian Portuguese (pt-BR) voices for target users.
 	 */
 	updateVoices() {
 		if (!this.voiceSelect) return;
@@ -3018,14 +3082,23 @@ class HtmlSpeechSynthesisDisplayer {
 		// Get available voices
 		const voices = this.speechManager.synth.getVoices();
 
+		// Track if we found a Brazilian Portuguese voice
+		let brazilianVoiceFound = false;
+
 		// Add voices to dropdown
 		voices.forEach((voice, index) => {
 			const option = this.document.createElement('option');
 			option.value = index;
 			option.textContent = `${voice.name} (${voice.lang})`;
 
-			// Select Portuguese voice by default
-			if (voice.lang.startsWith('pt')) {
+			// PRIORITY 1: Select Brazilian Portuguese voice (pt-BR) by default
+			if (voice.lang.toLowerCase() === 'pt-br') {
+				option.selected = true;
+				this.speechManager.setVoice(voice);
+				brazilianVoiceFound = true;
+			}
+			// PRIORITY 2: Select any Portuguese voice if pt-BR not found
+			else if (!brazilianVoiceFound && voice.lang.toLowerCase().startsWith('pt')) {
 				option.selected = true;
 				this.speechManager.setVoice(voice);
 			}

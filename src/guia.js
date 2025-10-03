@@ -159,11 +159,11 @@ class GeoPosition {
 	 * 
 	 * @example
 	 * // Classify different accuracy levels
-	 * console.log(PositionManager.getAccuracyQuality(5));   // 'excellent'
-	 * console.log(PositionManager.getAccuracyQuality(25));  // 'good'
-	 * console.log(PositionManager.getAccuracyQuality(75));  // 'medium'
-	 * console.log(PositionManager.getAccuracyQuality(150)); // 'bad'
-	 * console.log(PositionManager.getAccuracyQuality(500)); // 'very bad'
+	 * console.log(GeoPosition.getAccuracyQuality(5));   // 'excellent'
+	 * console.log(GeoPosition.getAccuracyQuality(25));  // 'good'
+	 * console.log(GeoPosition.getAccuracyQuality(75));  // 'medium'
+	 * console.log(GeoPosition.getAccuracyQuality(150)); // 'bad'
+	 * console.log(GeoPosition.getAccuracyQuality(500)); // 'very bad'
 	 * 
 	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates/accuracy} GeolocationCoordinates.accuracy
 	 * @since 0.5.0-alpha
@@ -171,7 +171,7 @@ class GeoPosition {
 	static getAccuracyQuality(accuracy) {
 		if (accuracy <= 10) {
 			return "excellent";
-		} else if (accuracy <= 20) {
+		} else if (accuracy <= 30) {
 			return "good";
 		} else if (accuracy <= 100) {
 			return "medium";
@@ -3788,4 +3788,29 @@ function fetchCityStatistics(latitude, longitude) {
 	log(`(Utility) Fetching city statistics for ${latitude}, ${longitude}`);
 	// Implementation would go here for city statistics
 	alert(`Obtendo estatísticas da cidade para ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+}
+// Node.js/CommonJS exports for testing
+if (typeof module !== 'undefined' && module.exports) {
+module.exports = {
+GeoPosition,
+PositionManager,
+SingletonStatusManager,
+APIFetcher,
+ReverseGeocoder,
+BrazilianStandardAddress,
+Chronometer,
+HtmlText,
+HTMLPositionDisplayer,
+HTMLAddressDisplayer,
+AddressDataExtractor,
+WebGeocodingManager,
+SpeechItem,
+SpeechQueue,
+SpeechSynthesisManager,
+HtmlSpeechSynthesisDisplayer,
+GeolocationService,
+calculateDistance,
+log,
+warn
+};
 }

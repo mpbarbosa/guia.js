@@ -3184,6 +3184,19 @@ class HtmlSpeechSynthesisDisplayer {
 	}
 
 	/**
+	 * Builds text for municipio (municipality) change announcements.
+	 * 
+	 * @param {BrazilianStandardAddress} currentAddress - Current standardized address
+	 * @returns {string} Formatted speech text for municipio
+	 */
+	buildTextToSpeechMunicipio(currentAddress) {
+		if (!currentAddress || !currentAddress.municipio) {
+			return "Novo município detectado";
+		}
+		return `Você entrou no município de ${currentAddress.municipio}`;
+	}
+
+	/**
 	 * Builds text for full address announcements.
 	 * 
 	 * @param {BrazilianStandardAddress} currentAddress - Current standardized address
@@ -3247,14 +3260,19 @@ class HtmlSpeechSynthesisDisplayer {
 		let priority = 0;
 
 		// Determine speech content and priority based on event type
-		if (enderecoPadronizadoOrEvent === "BairroChanged") {
-			log("(HtmlSpeechSynthesisDisplayer) Bairro change detected, speaking new neighborhood with HIGH priority...");
+		// Priority order: Municipality (2) > Bairro (1) > Logradouro (0)
+		if (enderecoPadronizadoOrEvent === "MunicipioChanged") {
+			log("(HtmlSpeechSynthesisDisplayer) Municipio change detected, speaking new municipality with HIGHEST priority...");
+			textToBeSpoken = this.buildTextToSpeechMunicipio(currentAddress);
+			priority = 2; // HIGHEST priority for municipio changes
+		} else if (enderecoPadronizadoOrEvent === "BairroChanged") {
+			log("(HtmlSpeechSynthesisDisplayer) Bairro change detected, speaking new neighborhood with MEDIUM priority...");
 			textToBeSpoken = this.buildTextToSpeechBairro(currentAddress);
-			priority = 2; // HIGHEST priority for bairro changes
+			priority = 1; // MEDIUM priority for bairro changes
 		} else if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
-			log("(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location...");
+			log("(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location with LOW priority...");
 			textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
-			priority = 1; // Medium priority for logradouro changes
+			priority = 0; // LOWEST priority for logradouro changes
 		} else {
 			// Normal update from reverseGeocoder
 			log("(HtmlSpeechSynthesisDisplayer) Normal address update, speaking full address...");

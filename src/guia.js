@@ -2134,16 +2134,20 @@ class AddressCache {
 	 * @since 0.8.3-alpha
 	 */
 	static getMunicipioChangeDetails() {
-		const currentMunicipio = AddressCache.currentAddress?.municipio || null;
-		const previousMunicipio = AddressCache.previousAddress?.municipio || null;
+		const currentMunicipio = AddressCache.currentAddress?.municipio ?? undefined;
+		const previousMunicipio = AddressCache.previousAddress?.municipio ?? undefined;
+		const currentUf = AddressCache.currentAddress?.uf ?? undefined;
+		const previousUf = AddressCache.previousAddress?.uf ?? undefined;
 		
 		return {
-			hasChanged: currentMunicipio !== previousMunicipio,
+			hasChanged: (currentMunicipio ?? null) !== (previousMunicipio ?? null),
 			current: {
-				municipio: currentMunicipio
+				municipio: currentMunicipio,
+				uf: currentUf
 			},
 			previous: {
-				municipio: previousMunicipio
+				municipio: previousMunicipio,
+				uf: previousUf
 			},
 			timestamp: Date.now()
 		};
@@ -2446,17 +2450,53 @@ class AddressDataExtractor {
 
 // Legacy static properties for AddressDataExtractor - delegated to AddressCache
 // These maintain backward compatibility but all operations use AddressCache internally
-AddressDataExtractor.cache = AddressCache.cache;
-AddressDataExtractor.maxCacheSize = AddressCache.maxCacheSize;
-AddressDataExtractor.cacheExpirationMs = AddressCache.cacheExpirationMs;
-AddressDataExtractor.lastNotifiedChangeSignature = AddressCache.lastNotifiedChangeSignature;
-AddressDataExtractor.lastNotifiedBairroChangeSignature = AddressCache.lastNotifiedBairroChangeSignature;
-AddressDataExtractor.lastNotifiedMunicipioChangeSignature = AddressCache.lastNotifiedMunicipioChangeSignature;
-AddressDataExtractor.logradouroChangeCallback = AddressCache.logradouroChangeCallback;
-AddressDataExtractor.bairroChangeCallback = AddressCache.bairroChangeCallback;
-AddressDataExtractor.municipioChangeCallback = AddressCache.municipioChangeCallback;
-AddressDataExtractor.currentAddress = AddressCache.currentAddress;
-AddressDataExtractor.previousAddress = AddressCache.previousAddress;
+// Use property descriptors to create live references that stay synchronized
+Object.defineProperties(AddressDataExtractor, {
+	cache: {
+		get: () => AddressCache.cache,
+		set: (value) => { AddressCache.cache = value; }
+	},
+	maxCacheSize: {
+		get: () => AddressCache.maxCacheSize,
+		set: (value) => { AddressCache.maxCacheSize = value; }
+	},
+	cacheExpirationMs: {
+		get: () => AddressCache.cacheExpirationMs,
+		set: (value) => { AddressCache.cacheExpirationMs = value; }
+	},
+	lastNotifiedChangeSignature: {
+		get: () => AddressCache.lastNotifiedChangeSignature,
+		set: (value) => { AddressCache.lastNotifiedChangeSignature = value; }
+	},
+	lastNotifiedBairroChangeSignature: {
+		get: () => AddressCache.lastNotifiedBairroChangeSignature,
+		set: (value) => { AddressCache.lastNotifiedBairroChangeSignature = value; }
+	},
+	lastNotifiedMunicipioChangeSignature: {
+		get: () => AddressCache.lastNotifiedMunicipioChangeSignature,
+		set: (value) => { AddressCache.lastNotifiedMunicipioChangeSignature = value; }
+	},
+	logradouroChangeCallback: {
+		get: () => AddressCache.logradouroChangeCallback,
+		set: (value) => { AddressCache.logradouroChangeCallback = value; }
+	},
+	bairroChangeCallback: {
+		get: () => AddressCache.bairroChangeCallback,
+		set: (value) => { AddressCache.bairroChangeCallback = value; }
+	},
+	municipioChangeCallback: {
+		get: () => AddressCache.municipioChangeCallback,
+		set: (value) => { AddressCache.municipioChangeCallback = value; }
+	},
+	currentAddress: {
+		get: () => AddressCache.currentAddress,
+		set: (value) => { AddressCache.currentAddress = value; }
+	},
+	previousAddress: {
+		get: () => AddressCache.previousAddress,
+		set: (value) => { AddressCache.previousAddress = value; }
+	}
+});
 
 /* ============================
  * Camada de Serviço - Continuação

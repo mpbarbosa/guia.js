@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Detection Test - Guia.js</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .device-type {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2196F3;
+        }
+        .accuracy-info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        .quality-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .quality-level {
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .quality-excellent {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .quality-good {
+            background-color: #cce5ff;
+            border: 1px solid #b8daff;
+        }
+        .quality-medium {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+        }
+        .quality-bad {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .quality-very-bad {
+            background-color: #d6d8db;
+            border: 1px solid #c6c8ca;
+        }
+        .rejected {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+        .code-block {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Device Detection Test</h1>
+        <p>This page demonstrates the device-specific geolocation accuracy adjustment feature.</p>
+        
+        <div class="info-box">
+            <strong>Device Type Detected:</strong>
+            <div class="device-type" id="device-type">Loading...</div>
+            
+            <div style="margin-top: 10px;">
+                <strong>Detection Details:</strong>
+                <div id="detection-details" style="margin-top: 5px;"></div>
+            </div>
+        </div>
+        
+        <div class="accuracy-info">
+            <strong>Accuracy Configuration:</strong>
+            <div id="accuracy-config" style="margin-top: 5px;"></div>
+        </div>
+        
+        <h2>Accuracy Quality Levels</h2>
+        <p>These quality levels determine which geolocation readings are accepted:</p>
+        
+        <div class="quality-levels">
+            <div class="quality-level quality-excellent" id="quality-excellent">
+                <strong>Excellent</strong><br>
+                ≤ 10 meters<br>
+                <span style="font-size: 0.9em;">GPS precision</span>
+            </div>
+            <div class="quality-level quality-good" id="quality-good">
+                <strong>Good</strong><br>
+                11-20 meters<br>
+                <span style="font-size: 0.9em;">Mobile GPS</span>
+            </div>
+            <div class="quality-level quality-medium" id="quality-medium">
+                <strong>Medium</strong><br>
+                21-100 meters<br>
+                <span style="font-size: 0.9em;">WiFi location</span>
+            </div>
+            <div class="quality-level quality-bad" id="quality-bad">
+                <strong>Bad</strong><br>
+                101-200 meters<br>
+                <span style="font-size: 0.9em;">Cell tower</span>
+            </div>
+            <div class="quality-level quality-very-bad" id="quality-very-bad">
+                <strong>Very Bad</strong><br>
+                > 200 meters<br>
+                <span style="font-size: 0.9em;">IP location</span>
+            </div>
+        </div>
+        
+        <h2>Technical Details</h2>
+        <div class="code-block">
+            <strong>setupParams.notAcceptedAccuracy:</strong>
+            <div id="not-accepted-array"></div>
+        </div>
+        
+        <div class="code-block">
+            <strong>User Agent:</strong>
+            <div id="user-agent" style="word-break: break-all;"></div>
+        </div>
+        
+        <div class="code-block">
+            <strong>Touch Points:</strong> <span id="touch-points"></span><br>
+            <strong>Screen Width:</strong> <span id="screen-width"></span> px
+        </div>
+    </div>
+
+    <!-- Include the main script -->
+    <script src="src/guia.js"></script>
+    
+    <script>
+        // Wait for page to load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Testing device detection feature...');
+            
+            // Get device detection result
+            const isMobile = isMobileDevice();
+            const deviceType = isMobile ? 'Mobile/Tablet' : 'Desktop/Laptop';
+            
+            // Display device type
+            document.getElementById('device-type').textContent = deviceType;
+            document.getElementById('device-type').style.color = isMobile ? '#4CAF50' : '#2196F3';
+            
+            // Display detection details
+            const userAgent = navigator.userAgent || 'N/A';
+            const hasTouchScreen = navigator.maxTouchPoints > 0;
+            const isSmallScreen = window.innerWidth < 768;
+            
+            let detectionHTML = '<ul style="margin: 5px 0; padding-left: 20px;">';
+            detectionHTML += `<li>User Agent Match: ${/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i.test(userAgent.toLowerCase()) ? '✓ Mobile' : '✗ Desktop'}</li>`;
+            detectionHTML += `<li>Touch Screen: ${hasTouchScreen ? '✓ Yes' : '✗ No'}</li>`;
+            detectionHTML += `<li>Small Screen: ${isSmallScreen ? '✓ Yes' : '✗ No'}</li>`;
+            detectionHTML += '</ul>';
+            document.getElementById('detection-details').innerHTML = detectionHTML;
+            
+            // Display accuracy configuration
+            const notAccepted = setupParams.notAcceptedAccuracy;
+            let configHTML = '<ul style="margin: 5px 0; padding-left: 20px;">';
+            if (isMobile) {
+                configHTML += '<li><strong>Mobile Mode:</strong> Strict accuracy (GPS expected)</li>';
+                configHTML += '<li>Rejected levels: ' + notAccepted.join(', ') + '</li>';
+                configHTML += '<li>Accepted: excellent, good</li>';
+            } else {
+                configHTML += '<li><strong>Desktop Mode:</strong> Relaxed accuracy (WiFi/IP expected)</li>';
+                configHTML += '<li>Rejected levels: ' + notAccepted.join(', ') + '</li>';
+                configHTML += '<li>Accepted: excellent, good, medium</li>';
+            }
+            configHTML += '</ul>';
+            document.getElementById('accuracy-config').innerHTML = configHTML;
+            
+            // Mark rejected quality levels
+            ['excellent', 'good', 'medium', 'bad', 'very-bad'].forEach(level => {
+                const element = document.getElementById('quality-' + level);
+                const levelName = level.replace('-', ' ');
+                if (notAccepted.includes(levelName)) {
+                    element.classList.add('rejected');
+                    element.innerHTML += '<br><span style="color: red; font-size: 0.9em;">❌ REJECTED</span>';
+                } else {
+                    element.innerHTML += '<br><span style="color: green; font-size: 0.9em;">✓ ACCEPTED</span>';
+                }
+            });
+            
+            // Display technical details
+            document.getElementById('not-accepted-array').textContent = JSON.stringify(notAccepted);
+            document.getElementById('user-agent').textContent = userAgent;
+            document.getElementById('touch-points').textContent = navigator.maxTouchPoints;
+            document.getElementById('screen-width').textContent = window.innerWidth;
+            
+            console.log('Device detection test complete!');
+            console.log('Device Type:', deviceType);
+            console.log('Not Accepted Accuracy:', notAccepted);
+        });
+    </script>
+</body>
+</html>

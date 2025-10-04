@@ -18,7 +18,12 @@ const setupParams = {
 	independentQueueTimerInterval: 5000, // milliseconds
 	noReferencePlace: "Não classificado",
 	validRefPlaceClasses: ["shop", "amenity", "railway"],
-	notAcceptedAccuracy: ["medium", "bad", "very bad"],
+	// Device-specific accuracy thresholds
+	// Mobile devices (with GPS): stricter thresholds, reject medium/bad/very bad
+	// Desktop devices (WiFi/IP location): relaxed thresholds, accept medium, reject bad/very bad
+	mobileNotAcceptedAccuracy: ["medium", "bad", "very bad"],
+	desktopNotAcceptedAccuracy: ["bad", "very bad"],
+	notAcceptedAccuracy: null, // Will be set dynamically based on device type
 	referencePlaceMap: {
 		"place": { "house": "Residencial" },
 		"shop": { "mall": "Shopping Center" },
@@ -88,6 +93,54 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
+/**
+ * Detects if the current device is a mobile or tablet device.
+ * 
+ * Uses multiple detection methods to determine device type:
+ * 1. User agent string matching for common mobile/tablet patterns
+ * 2. Touch capability detection (maxTouchPoints > 0)
+ * 3. Screen width heuristic (< 768px typically indicates mobile)
+ * 
+ * Mobile devices typically have GPS hardware providing more accurate
+ * geolocation (< 20 meters), while desktop/laptop devices rely on
+ * WiFi/IP-based location with lower accuracy (50-1000 meters).
+ * 
+ * @returns {boolean} True if device is mobile/tablet, false for desktop/laptop
+ * 
+ * @example
+ * if (isMobileDevice()) {
+ *   console.log('Mobile device detected - expecting high GPS accuracy');
+ * } else {
+ *   console.log('Desktop device detected - expecting lower accuracy');
+ * }
+ * 
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent} User Agent Detection
+ * @since 0.8.4-alpha
+ * @author Marcelo Pereira Barbosa
+ */
+const isMobileDevice = () => {
+	// Check if we're in a browser environment
+	if (typeof navigator === 'undefined' || typeof window === 'undefined') {
+		return false; // Default to desktop for non-browser environments (e.g., Node.js)
+	}
+
+	// Method 1: User agent detection
+	const userAgent = navigator.userAgent || navigator.vendor || window.opera || '';
+	const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i;
+	const isMobileUA = mobileRegex.test(userAgent.toLowerCase());
+
+	// Method 2: Touch capability detection
+	const hasTouchScreen = 'maxTouchPoints' in navigator && navigator.maxTouchPoints > 0;
+
+	// Method 3: Screen width heuristic (tablets and phones typically < 768px)
+	const isSmallScreen = window.innerWidth < 768;
+
+	// Consider it mobile if any two of these conditions are true
+	const detectionScore = [isMobileUA, hasTouchScreen, isSmallScreen].filter(Boolean).length;
+	
+	return detectionScore >= 2;
+};
+
 const log = (message, ...params) => {
 	//get all params after message and concatenate them
 	const fullMessage = `[${new Date().toISOString()}] ${message} ${params.join(" ")}`;
@@ -110,6 +163,21 @@ const warn = (message, ...params) => {
 		}
 	}
 };
+
+// Initialize device-specific accuracy settings
+// Mobile devices have GPS and can achieve higher accuracy, so we're stricter
+// Desktop devices use WiFi/IP location which is less accurate, so we're more lenient
+if (typeof navigator !== 'undefined') {
+	const isMobile = isMobileDevice();
+	setupParams.notAcceptedAccuracy = isMobile 
+		? setupParams.mobileNotAcceptedAccuracy 
+		: setupParams.desktopNotAcceptedAccuracy;
+	console.log(`[Device Detection] Type: ${isMobile ? 'Mobile/Tablet' : 'Desktop/Laptop'}`);
+	console.log(`[Device Detection] Rejecting accuracy levels: ${setupParams.notAcceptedAccuracy.join(', ')}`);
+} else {
+	// Default for non-browser environments (e.g., Node.js testing)
+	setupParams.notAcceptedAccuracy = setupParams.mobileNotAcceptedAccuracy;
+}
 
 // Example usage:
 log("Guia.js version:", guiaVersion.toString());
@@ -3685,28 +3753,31 @@ function fetchCityStatistics(latitude, longitude) {
 	// Implementation would go here for city statistics
 	alert(`Obtendo estatísticas da cidade para ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
 }
-// Node.js/CommonJS exports for testing
+
+// Export for testing and module usage
 if (typeof module !== 'undefined' && module.exports) {
-module.exports = {
-GeoPosition,
-PositionManager,
-SingletonStatusManager,
-APIFetcher,
-ReverseGeocoder,
-BrazilianStandardAddress,
-Chronometer,
-HtmlText,
-HTMLPositionDisplayer,
-HTMLAddressDisplayer,
-AddressDataExtractor,
-WebGeocodingManager,
-SpeechItem,
-SpeechQueue,
-SpeechSynthesisManager,
-HtmlSpeechSynthesisDisplayer,
-GeolocationService,
-calculateDistance,
-log,
-warn
-};
+	module.exports = {
+		guiaVersion,
+		calculateDistance,
+		delay,
+		getAddressType,
+		isMobileDevice,
+		setupParams,
+		GeoPosition,
+		PositionManager,
+		SingletonStatusManager,
+		APIFetcher,
+		ReverseGeocoder,
+		GeolocationService,
+		WebGeocodingManager,
+		BrazilianStandardAddress,
+		AddressDataExtractor,
+		HTMLAddressDisplayer,
+		HTMLPositionDisplayer,
+		SpeechSynthesisManager,
+		SpeechQueue,
+		findNearbyRestaurants,
+		fetchCityStatistics
+	};
 }
+

@@ -1727,26 +1727,6 @@ class HTMLAddressDisplayer {
 		let html = `<details class="address-details" open>
             <summary><strong>Endereço Atual</strong></summary>`;
 
-		// Display standardized Brazilian address if available
-		if (enderecoPadronizado) {
-			html += `<div class="standardized-address">
-                <h4>Endereço Padronizado:</h4>`;
-
-			if (enderecoPadronizado.logradouro) {
-				html += `<p><strong>Logradouro:</strong> ${enderecoPadronizado.logradouroCompleto()}</p>`;
-			}
-			if (enderecoPadronizado.bairro) {
-				html += `<p><strong>Bairro:</strong> ${enderecoPadronizado.bairroCompleto()}</p>`;
-			}
-			if (enderecoPadronizado.municipio) {
-				html += `<p><strong>Município:</strong> ${enderecoPadronizado.municipio}</p>`;
-			}
-			if (enderecoPadronizado.uf) {
-				html += `<p><strong>UF:</strong> ${enderecoPadronizado.uf}</p>`;
-			}
-			html += `</div>`;
-		}
-
 		// Display all addressData attributes
 		html += `<div class="address-attributes">
 			<h4>Todos os atributos de addressData:</h4>

@@ -927,7 +927,9 @@ class APIFetcher {
 	}
 
 	notifyObservers(appEvent) {
+		log("+++ (11) (APIFetcher) Notifying observers: ", this.observers);
 		this.observerSubject.observers.forEach((observer) => {
+			log("+++ (12) (APIFetcher) Notifying observer: ", observer);
 			observer.update(
 				this.firstUpdateParam(),
 				this.secondUpdateParam(),

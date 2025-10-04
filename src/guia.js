@@ -1618,21 +1618,31 @@ class HTMLAddressDisplayer {
 
 // Add after the HTMLPositionDisplayer class and before the AddressDataExtractor class
 // ...existing code continues...
+
 /**
  * Extracts and standardizes address data from geocoding API responses.
  * 
- * This class processes raw address data from geocoding services and converts it
- * into standardized Brazilian address format with proper field mapping, caching,
- * and change detection capabilities. It implements caching mechanisms and
- * callback-based change notifications for efficient address processing.
+ * This class is responsible for the extraction and standardization logic only.
+ * It processes raw address data from geocoding services (like OpenStreetMap/Nominatim)
+ * and converts it into standardized Brazilian address format with proper field mapping.
  * 
- * @class AddressDataExtractor
- * @since 0.8.3-alpha
+ * The class follows the Single Responsibility Principle by focusing solely on
+ * the transformation of raw address data into a BrazilianStandardAddress object.
+ * Cache management and change detection are handled by the AddressCache class.
+ * 
+ * Responsibilities:
+ * - Parse raw geocoding API response data
+ * - Map API fields to Brazilian address standard fields (logradouro, bairro, municipio, etc.)
+ * - Handle fallback values for missing or incomplete data
+ * - Create immutable address instances
+ * 
+ * @class AddressExtractor
+ * @since 0.8.4-alpha
  * @author Marcelo Pereira Barbosa
  */
-class AddressDataExtractor {
+class AddressExtractor {
 	/**
-	 * Creates a new AddressDataExtractor instance.
+	 * Creates a new AddressExtractor instance.
 	 * 
 	 * @param {Object} data - Raw address data from geocoding API
 	 */
@@ -1682,6 +1692,45 @@ class AddressDataExtractor {
 	}
 
 	/**
+	 * Returns a string representation of this extractor.
+	 * 
+	 * @returns {string} String representation
+	 * @since 0.8.3-alpha
+	 */
+	toString() {
+		return `${this.constructor.name}: ${this.enderecoPadronizado.enderecoCompleto()}`;
+	}
+}
+
+/**
+ * Manages caching of standardized addresses with LRU eviction and change detection.
+ * 
+ * This class is responsible for cache management, performance optimization, and
+ * change detection logic. It implements a sophisticated caching strategy including:
+ * - LRU (Least Recently Used) eviction policy
+ * - Time-based expiration of cache entries
+ * - Change detection for address components (logradouro, bairro, municipio)
+ * - Callback-based notifications for address changes
+ * 
+ * The class follows the Single Responsibility Principle by focusing solely on
+ * cache management and change tracking. Address extraction logic is handled
+ * by the AddressExtractor class.
+ * 
+ * Responsibilities:
+ * - Generate unique cache keys from address data
+ * - Store and retrieve cached addresses efficiently
+ * - Implement LRU eviction when cache reaches capacity
+ * - Clean expired cache entries based on timestamps
+ * - Track address changes (current vs. previous)
+ * - Notify registered callbacks when address components change
+ * - Manage callback registration for change detection
+ * 
+ * @class AddressCache
+ * @since 0.8.4-alpha
+ * @author Marcelo Pereira Barbosa
+ */
+class AddressCache {
+	/**
 	 * Generates a cache key for address data to enable efficient caching and retrieval.
 	 * 
 	 * Creates a unique identifier based on address components that can be used to cache
@@ -1693,7 +1742,7 @@ class AddressDataExtractor {
 	 * @returns {string|null} Cache key string or null if data is invalid
 	 * 
 	 * @example
-	 * const cacheKey = AddressDataExtractor.generateCacheKey(addressData);
+	 * const cacheKey = AddressCache.generateCacheKey(addressData);
 	 * if (cacheKey) {
 	 *   console.log('Cache key:', cacheKey);
 	 * }
@@ -1741,17 +1790,17 @@ class AddressDataExtractor {
 	 * @since 0.8.3-alpha
 	 */
 	static evictLeastRecentlyUsedIfNeeded() {
-		if (AddressDataExtractor.cache.size >= AddressDataExtractor.maxCacheSize) {
+		if (AddressCache.cache.size >= AddressCache.maxCacheSize) {
 			// Convert cache entries to array and sort by lastAccessed (oldest first)
-			const entries = Array.from(AddressDataExtractor.cache.entries());
+			const entries = Array.from(AddressCache.cache.entries());
 			entries.sort((a, b) => a[1].lastAccessed - b[1].lastAccessed);
 
 			// Calculate how many entries to remove (25% of max size)
-			const entriesToRemove = Math.ceil(AddressDataExtractor.maxCacheSize * 0.25);
+			const entriesToRemove = Math.ceil(AddressCache.maxCacheSize * 0.25);
 
 			// Remove the least recently used entries
 			for (let i = 0; i < entriesToRemove && i < entries.length; i++) {
-				AddressDataExtractor.cache.delete(entries[i][0]);
+				AddressCache.cache.delete(entries[i][0]);
 			}
 		}
 	}
@@ -1767,17 +1816,35 @@ class AddressDataExtractor {
 		const now = Date.now();
 		const expiredKeys = [];
 
-		for (const [key, entry] of AddressDataExtractor.cache.entries()) {
-			if (now - entry.timestamp > AddressDataExtractor.cacheExpirationMs) {
+		for (const [key, entry] of AddressCache.cache.entries()) {
+			if (now - entry.timestamp > AddressCache.cacheExpirationMs) {
 				expiredKeys.push(key);
 			}
 		}
 
-		expiredKeys.forEach(key => AddressDataExtractor.cache.delete(key));
+		expiredKeys.forEach(key => AddressCache.cache.delete(key));
 
 		if (expiredKeys.length > 0) {
-			log(`(AddressDataExtractor) Cleaned ${expiredKeys.length} expired cache entries`);
+			log(`(AddressCache) Cleaned ${expiredKeys.length} expired cache entries`);
 		}
+	}
+
+	/**
+	 * Clears all cache entries and resets change tracking.
+	 * This method is primarily used for testing purposes.
+	 * 
+	 * @static
+	 * @since 0.8.4-alpha
+	 */
+	static clearCache() {
+		AddressCache.cache.clear();
+		AddressCache.currentAddress = null;
+		AddressCache.previousAddress = null;
+		AddressCache.currentRawData = null;
+		AddressCache.previousRawData = null;
+		AddressCache.lastNotifiedChangeSignature = null;
+		AddressCache.lastNotifiedBairroChangeSignature = null;
+		AddressCache.lastNotifiedMunicipioChangeSignature = null;
 	}
 
 	/**
@@ -1792,7 +1859,7 @@ class AddressDataExtractor {
 	 * @returns {void}
 	 * 
 	 * @example
-	 * AddressDataExtractor.setLogradouroChangeCallback((changeDetails) => {
+	 * AddressCache.setLogradouroChangeCallback((changeDetails) => {
 	 *   console.log('Street changed:', changeDetails);
 	 * });
 	 * 
@@ -1800,7 +1867,7 @@ class AddressDataExtractor {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	static setLogradouroChangeCallback(callback) {
-		AddressDataExtractor.logradouroChangeCallback = callback;
+		AddressCache.logradouroChangeCallback = callback;
 	}
 
 	/**
@@ -1815,7 +1882,7 @@ class AddressDataExtractor {
 	 * @returns {void}
 	 * 
 	 * @example
-	 * AddressDataExtractor.setBairroChangeCallback((changeDetails) => {
+	 * AddressCache.setBairroChangeCallback((changeDetails) => {
 	 *   console.log('Neighborhood changed:', changeDetails);
 	 * });
 	 * 
@@ -1823,7 +1890,7 @@ class AddressDataExtractor {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	static setBairroChangeCallback(callback) {
-		AddressDataExtractor.bairroChangeCallback = callback;
+		AddressCache.bairroChangeCallback = callback;
 	}
 
 	/**
@@ -1838,7 +1905,7 @@ class AddressDataExtractor {
 	 * @returns {void}
 	 * 
 	 * @example
-	 * AddressDataExtractor.setMunicipioChangeCallback((changeDetails) => {
+	 * AddressCache.setMunicipioChangeCallback((changeDetails) => {
 	 *   console.log('Municipality changed:', changeDetails);
 	 * });
 	 * 
@@ -1846,7 +1913,7 @@ class AddressDataExtractor {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	static setMunicipioChangeCallback(callback) {
-		AddressDataExtractor.municipioChangeCallback = callback;
+		AddressCache.municipioChangeCallback = callback;
 	}
 
 	/**
@@ -1857,7 +1924,7 @@ class AddressDataExtractor {
 	 * @since 0.8.3-alpha
 	 */
 	static getLogradouroChangeCallback() {
-		return AddressDataExtractor.logradouroChangeCallback;
+		return AddressCache.logradouroChangeCallback;
 	}
 
 	/**
@@ -1868,7 +1935,7 @@ class AddressDataExtractor {
 	 * @since 0.8.3-alpha
 	 */
 	static getBairroChangeCallback() {
-		return AddressDataExtractor.bairroChangeCallback;
+		return AddressCache.bairroChangeCallback;
 	}
 
 	/**
@@ -1879,52 +1946,103 @@ class AddressDataExtractor {
 	 * @since 0.8.3-alpha
 	 */
 	static getMunicipioChangeCallback() {
-		return AddressDataExtractor.municipioChangeCallback;
+		return AddressCache.municipioChangeCallback;
 	}
 
 	/**
 	 * Checks if logradouro has changed compared to previous address.
+	 * Returns true only once per change to prevent notification loops.
 	 * 
 	 * @static
-	 * @returns {boolean} True if logradouro has changed
+	 * @returns {boolean} True if logradouro has changed and not yet notified
 	 * @since 0.8.3-alpha
 	 */
 	static hasLogradouroChanged() {
-		if (!AddressDataExtractor.currentAddress || !AddressDataExtractor.previousAddress) {
+		if (!AddressCache.currentAddress || !AddressCache.previousAddress) {
 			return false;
 		}
 
-		return AddressDataExtractor.currentAddress.logradouro !== AddressDataExtractor.previousAddress.logradouro;
+		const hasChanged = AddressCache.currentAddress.logradouro !== AddressCache.previousAddress.logradouro;
+		
+		if (!hasChanged) {
+			return false;
+		}
+
+		// Create a signature for this change to track if we've already notified
+		const changeSignature = `${AddressCache.previousAddress.logradouro}=>${AddressCache.currentAddress.logradouro}`;
+		
+		// If we've already notified about this exact change, return false
+		if (AddressCache.lastNotifiedChangeSignature === changeSignature) {
+			return false;
+		}
+		
+		// Mark this change as notified
+		AddressCache.lastNotifiedChangeSignature = changeSignature;
+		return true;
 	}
 
 	/**
 	 * Checks if bairro has changed compared to previous address.
+	 * Returns true only once per change to prevent notification loops.
 	 * 
 	 * @static
-	 * @returns {boolean} True if bairro has changed
+	 * @returns {boolean} True if bairro has changed and not yet notified
 	 * @since 0.8.3-alpha
 	 */
 	static hasBairroChanged() {
-		if (!AddressDataExtractor.currentAddress || !AddressDataExtractor.previousAddress) {
+		if (!AddressCache.currentAddress || !AddressCache.previousAddress) {
 			return false;
 		}
 
-		return AddressDataExtractor.currentAddress.bairro !== AddressDataExtractor.previousAddress.bairro;
+		const hasChanged = AddressCache.currentAddress.bairro !== AddressCache.previousAddress.bairro;
+		
+		if (!hasChanged) {
+			return false;
+		}
+
+		// Create a signature for this change to track if we've already notified
+		const changeSignature = `${AddressCache.previousAddress.bairro}=>${AddressCache.currentAddress.bairro}`;
+		
+		// If we've already notified about this exact change, return false
+		if (AddressCache.lastNotifiedBairroChangeSignature === changeSignature) {
+			return false;
+		}
+		
+		// Mark this change as notified
+		AddressCache.lastNotifiedBairroChangeSignature = changeSignature;
+		return true;
 	}
 
 	/**
 	 * Checks if municipio has changed compared to previous address.
+	 * Returns true only once per change to prevent notification loops.
 	 * 
 	 * @static
-	 * @returns {boolean} True if municipio has changed
+	 * @returns {boolean} True if municipio has changed and not yet notified
 	 * @since 0.8.3-alpha
 	 */
 	static hasMunicipioChanged() {
-		if (!AddressDataExtractor.currentAddress || !AddressDataExtractor.previousAddress) {
+		if (!AddressCache.currentAddress || !AddressCache.previousAddress) {
 			return false;
 		}
 
-		return AddressDataExtractor.currentAddress.municipio !== AddressDataExtractor.previousAddress.municipio;
+		const hasChanged = AddressCache.currentAddress.municipio !== AddressCache.previousAddress.municipio;
+		
+		if (!hasChanged) {
+			return false;
+		}
+
+		// Create a signature for this change to track if we've already notified
+		const changeSignature = `${AddressCache.previousAddress.municipio}=>${AddressCache.currentAddress.municipio}`;
+		
+		// If we've already notified about this exact change, return false
+		if (AddressCache.lastNotifiedMunicipioChangeSignature === changeSignature) {
+			return false;
+		}
+		
+		// Mark this change as notified
+		AddressCache.lastNotifiedMunicipioChangeSignature = changeSignature;
+		return true;
 	}
 
 	/**
@@ -1935,12 +2053,16 @@ class AddressDataExtractor {
 	 * @since 0.8.3-alpha
 	 */
 	static getLogradouroChangeDetails() {
+		const currentLogradouro = AddressCache.currentAddress?.logradouro || null;
+		const previousLogradouro = AddressCache.previousAddress?.logradouro || null;
+		
 		return {
+			hasChanged: currentLogradouro !== previousLogradouro,
 			current: {
-				logradouro: AddressDataExtractor.currentAddress?.logradouro || null
+				logradouro: currentLogradouro
 			},
 			previous: {
-				logradouro: AddressDataExtractor.previousAddress?.logradouro || null
+				logradouro: previousLogradouro
 			},
 			timestamp: Date.now()
 		};
@@ -1954,15 +2076,54 @@ class AddressDataExtractor {
 	 * @since 0.8.3-alpha
 	 */
 	static getBairroChangeDetails() {
+		const currentBairro = AddressCache.currentAddress?.bairro || null;
+		const previousBairro = AddressCache.previousAddress?.bairro || null;
+		
+		// Compute bairroCompleto from raw data if available
+		const currentBairroCompleto = AddressCache._computeBairroCompleto(AddressCache.currentRawData);
+		const previousBairroCompleto = AddressCache._computeBairroCompleto(AddressCache.previousRawData);
+		
 		return {
+			hasChanged: currentBairro !== previousBairro,
 			current: {
-				bairro: AddressDataExtractor.currentAddress?.bairro || null
+				bairro: currentBairro,
+				bairroCompleto: currentBairroCompleto
 			},
 			previous: {
-				bairro: AddressDataExtractor.previousAddress?.bairro || null
+				bairro: previousBairro,
+				bairroCompleto: previousBairroCompleto
 			},
 			timestamp: Date.now()
 		};
+	}
+
+	/**
+	 * Computes complete bairro string from raw address data.
+	 * Combines neighbourhood and suburb fields when both are present.
+	 * 
+	 * @static
+	 * @private
+	 * @param {Object} rawData - Raw address data from geocoding API
+	 * @returns {string} Complete bairro string
+	 * @since 0.8.4-alpha
+	 */
+	static _computeBairroCompleto(rawData) {
+		if (!rawData || !rawData.address) {
+			return null;
+		}
+		
+		const address = rawData.address;
+		const neighbourhood = address.neighbourhood || null;
+		const suburb = address.suburb || null;
+		const quarter = address.quarter || null;
+		
+		// If we have both neighbourhood and suburb, combine them
+		if (neighbourhood && suburb && neighbourhood !== suburb) {
+			return `${neighbourhood}, ${suburb}`;
+		}
+		
+		// Otherwise return whichever is available
+		return neighbourhood || suburb || quarter || null;
 	}
 
 	/**
@@ -1973,19 +2134,26 @@ class AddressDataExtractor {
 	 * @since 0.8.3-alpha
 	 */
 	static getMunicipioChangeDetails() {
+		const currentMunicipio = AddressCache.currentAddress?.municipio || null;
+		const previousMunicipio = AddressCache.previousAddress?.municipio || null;
+		
 		return {
+			hasChanged: currentMunicipio !== previousMunicipio,
 			current: {
-				municipio: AddressDataExtractor.currentAddress?.municipio || null
+				municipio: currentMunicipio
 			},
 			previous: {
-				municipio: AddressDataExtractor.previousAddress?.municipio || null
+				municipio: previousMunicipio
 			},
 			timestamp: Date.now()
 		};
 	}
 
 	/**
-	 * Main static method to get Brazilian standard address with caching and change detection.
+	 * Gets a cached or newly extracted Brazilian standard address with change detection.
+	 * 
+	 * This is the main entry point for retrieving standardized addresses. It coordinates
+	 * between cache retrieval, address extraction, and change detection.
 	 * 
 	 * @static
 	 * @param {Object} data - Raw address data from geocoding API
@@ -1993,66 +2161,69 @@ class AddressDataExtractor {
 	 * @since 0.8.3-alpha
 	 */
 	static getBrazilianStandardAddress(data) {
-		const cacheKey = AddressDataExtractor.generateCacheKey(data);
+		const cacheKey = AddressCache.generateCacheKey(data);
 
 		if (cacheKey) {
 			// Clean expired entries periodically
-			AddressDataExtractor.cleanExpiredEntries();
+			AddressCache.cleanExpiredEntries();
 
 			// Check if we have a valid cached entry
-			const cacheEntry = AddressDataExtractor.cache.get(cacheKey);
+			const cacheEntry = AddressCache.cache.get(cacheKey);
 			if (cacheEntry) {
 				const now = Date.now();
-				if (now - cacheEntry.timestamp <= AddressDataExtractor.cacheExpirationMs) {
+				if (now - cacheEntry.timestamp <= AddressCache.cacheExpirationMs) {
 					// Update access time for LRU behavior (history-like)
 					cacheEntry.lastAccessed = now;
 					// Re-insert to update position in Map (Map maintains insertion order)
-					AddressDataExtractor.cache.delete(cacheKey);
-					AddressDataExtractor.cache.set(cacheKey, cacheEntry);
+					AddressCache.cache.delete(cacheKey);
+					AddressCache.cache.set(cacheKey, cacheEntry);
 
 					return cacheEntry.address;
 				} else {
 					// Remove expired entry
-					AddressDataExtractor.cache.delete(cacheKey);
+					AddressCache.cache.delete(cacheKey);
 				}
 			}
 		}
 
-		// Create new standardized address
-		const extractor = new AddressDataExtractor(data);
+		// Create new standardized address using AddressExtractor
+		const extractor = new AddressExtractor(data);
 
 		// Cache the result if we have a valid key
 		if (cacheKey) {
 			// Check if cache has reached maximum size, evict least recently used entries
-			AddressDataExtractor.evictLeastRecentlyUsedIfNeeded();
+			AddressCache.evictLeastRecentlyUsedIfNeeded();
 
 			const now = Date.now();
-			AddressDataExtractor.cache.set(cacheKey, {
+			AddressCache.cache.set(cacheKey, {
 				address: extractor.enderecoPadronizado,
+				rawData: data, // Store raw data for detailed change information
 				timestamp: now,
 				lastAccessed: now,
 			});
 
 			// Update current and previous addresses for change detection
-			AddressDataExtractor.previousAddress = AddressDataExtractor.currentAddress;
-			AddressDataExtractor.currentAddress = extractor.enderecoPadronizado;
+			AddressCache.previousAddress = AddressCache.currentAddress;
+			AddressCache.previousRawData = AddressCache.currentRawData;
+			AddressCache.currentAddress = extractor.enderecoPadronizado;
+			AddressCache.currentRawData = data;
 
 			// Reset change notification flags when new address is cached
 			// This allows detection of new changes after cache updates
-			AddressDataExtractor.lastNotifiedChangeSignature = null;
-			AddressDataExtractor.lastNotifiedBairroChangeSignature = null;
-			AddressDataExtractor.lastNotifiedMunicipioChangeSignature = null;
+			AddressCache.lastNotifiedChangeSignature = null;
+			AddressCache.lastNotifiedBairroChangeSignature = null;
+			AddressCache.lastNotifiedMunicipioChangeSignature = null;
 
 			// Check for logradouro change after caching the new address
 			// This replaces the timer-based approach with event-driven checking
-			if (AddressDataExtractor.logradouroChangeCallback &&
-				AddressDataExtractor.hasLogradouroChanged()) {
-				const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
+			if (AddressCache.logradouroChangeCallback &&
+				AddressCache.hasLogradouroChanged()) {
+				const changeDetails = AddressCache.getLogradouroChangeDetails();
 				try {
-					AddressDataExtractor.logradouroChangeCallback(changeDetails);
+					AddressCache.logradouroChangeCallback(changeDetails);
 				} catch (error) {
 					console.error(
-						"(AddressDataExtractor) Error calling logradouro change callback:",
+						"(AddressCache) Error calling logradouro change callback:",
 						error,
 					);
 				}
@@ -2060,14 +2231,14 @@ class AddressDataExtractor {
 
 			// Check for bairro change after caching the new address
 			// This follows the same pattern as logradouro change detection
-			if (AddressDataExtractor.bairroChangeCallback &&
-				AddressDataExtractor.hasBairroChanged()) {
-				const changeDetails = AddressDataExtractor.getBairroChangeDetails();
+			if (AddressCache.bairroChangeCallback &&
+				AddressCache.hasBairroChanged()) {
+				const changeDetails = AddressCache.getBairroChangeDetails();
 				try {
-					AddressDataExtractor.bairroChangeCallback(changeDetails);
+					AddressCache.bairroChangeCallback(changeDetails);
 				} catch (error) {
 					console.error(
-						"(AddressDataExtractor) Error calling bairro change callback:",
+						"(AddressCache) Error calling bairro change callback:",
 						error,
 					);
 				}
@@ -2075,14 +2246,14 @@ class AddressDataExtractor {
 
 			// Check for municipio change after caching the new address
 			// This follows the same pattern as logradouro and bairro change detection
-			if (AddressDataExtractor.municipioChangeCallback &&
-				AddressDataExtractor.hasMunicipioChanged()) {
-				const changeDetails = AddressDataExtractor.getMunicipioChangeDetails();
+			if (AddressCache.municipioChangeCallback &&
+				AddressCache.hasMunicipioChanged()) {
+				const changeDetails = AddressCache.getMunicipioChangeDetails();
 				try {
-					AddressDataExtractor.municipioChangeCallback(changeDetails);
+					AddressCache.municipioChangeCallback(changeDetails);
 				} catch (error) {
 					console.error(
-						"(AddressDataExtractor) Error calling municipio change callback:",
+						"(AddressCache) Error calling municipio change callback:",
 						error,
 					);
 				}
@@ -2090,6 +2261,176 @@ class AddressDataExtractor {
 		}
 
 		return extractor.enderecoPadronizado;
+	}
+}
+
+// Initialize static properties for AddressCache
+AddressCache.cache = new Map();
+AddressCache.maxCacheSize = 50;
+AddressCache.cacheExpirationMs = 300000; // 5 minutes
+AddressCache.lastNotifiedChangeSignature = null;
+AddressCache.lastNotifiedBairroChangeSignature = null;
+AddressCache.lastNotifiedMunicipioChangeSignature = null;
+AddressCache.logradouroChangeCallback = null;
+AddressCache.bairroChangeCallback = null;
+AddressCache.municipioChangeCallback = null;
+AddressCache.currentAddress = null;
+AddressCache.previousAddress = null;
+AddressCache.currentRawData = null;
+AddressCache.previousRawData = null;
+
+/**
+ * Legacy wrapper class that maintains backward compatibility with existing code.
+ * 
+ * This class serves as a facade that delegates to the specialized AddressExtractor
+ * and AddressCache classes. It preserves the original API surface for existing code
+ * while the implementation has been refactored to follow the Single Responsibility Principle.
+ * 
+ * The refactoring split the original AddressDataExtractor into two classes:
+ * - AddressExtractor: Handles address extraction and standardization
+ * - AddressCache: Manages caching, change detection, and callbacks
+ * 
+ * New code should use AddressCache.getBrazilianStandardAddress() directly.
+ * This class exists to maintain compatibility with existing tests and consumers.
+ * 
+ * @class AddressDataExtractor
+ * @deprecated Use AddressCache for cache operations and AddressExtractor for extraction
+ * @since 0.8.3-alpha
+ * @author Marcelo Pereira Barbosa
+ */
+class AddressDataExtractor {
+	/**
+	 * Creates a new AddressDataExtractor instance.
+	 * Delegates to AddressExtractor for actual extraction.
+	 * 
+	 * @param {Object} data - Raw address data from geocoding API
+	 */
+	constructor(data) {
+		const extractor = new AddressExtractor(data);
+		this.data = extractor.data;
+		this.enderecoPadronizado = extractor.enderecoPadronizado;
+		Object.freeze(this);
+	}
+
+	/**
+	 * Delegates to AddressCache for cache key generation.
+	 * @static
+	 */
+	static generateCacheKey(data) {
+		return AddressCache.generateCacheKey(data);
+	}
+
+	/**
+	 * Clears the cache. Delegates to AddressCache.
+	 * @static
+	 */
+	static clearCache() {
+		return AddressCache.clearCache();
+	}
+
+	/**
+	 * Delegates to AddressCache for callback management.
+	 * @static
+	 */
+	static setLogradouroChangeCallback(callback) {
+		return AddressCache.setLogradouroChangeCallback(callback);
+	}
+
+	/**
+	 * Delegates to AddressCache for callback management.
+	 * @static
+	 */
+	static setBairroChangeCallback(callback) {
+		return AddressCache.setBairroChangeCallback(callback);
+	}
+
+	/**
+	 * Delegates to AddressCache for callback management.
+	 * @static
+	 */
+	static setMunicipioChangeCallback(callback) {
+		return AddressCache.setMunicipioChangeCallback(callback);
+	}
+
+	/**
+	 * Delegates to AddressCache for callback retrieval.
+	 * @static
+	 */
+	static getLogradouroChangeCallback() {
+		return AddressCache.getLogradouroChangeCallback();
+	}
+
+	/**
+	 * Delegates to AddressCache for callback retrieval.
+	 * @static
+	 */
+	static getBairroChangeCallback() {
+		return AddressCache.getBairroChangeCallback();
+	}
+
+	/**
+	 * Delegates to AddressCache for callback retrieval.
+	 * @static
+	 */
+	static getMunicipioChangeCallback() {
+		return AddressCache.getMunicipioChangeCallback();
+	}
+
+	/**
+	 * Delegates to AddressCache for change detection.
+	 * @static
+	 */
+	static hasLogradouroChanged() {
+		return AddressCache.hasLogradouroChanged();
+	}
+
+	/**
+	 * Delegates to AddressCache for change detection.
+	 * @static
+	 */
+	static hasBairroChanged() {
+		return AddressCache.hasBairroChanged();
+	}
+
+	/**
+	 * Delegates to AddressCache for change detection.
+	 * @static
+	 */
+	static hasMunicipioChanged() {
+		return AddressCache.hasMunicipioChanged();
+	}
+
+	/**
+	 * Delegates to AddressCache for change details.
+	 * @static
+	 */
+	static getLogradouroChangeDetails() {
+		return AddressCache.getLogradouroChangeDetails();
+	}
+
+	/**
+	 * Delegates to AddressCache for change details.
+	 * @static
+	 */
+	static getBairroChangeDetails() {
+		return AddressCache.getBairroChangeDetails();
+	}
+
+	/**
+	 * Delegates to AddressCache for change details.
+	 * @static
+	 */
+	static getMunicipioChangeDetails() {
+		return AddressCache.getMunicipioChangeDetails();
+	}
+
+	/**
+	 * Main static method to get Brazilian standard address.
+	 * Delegates to AddressCache which coordinates with AddressExtractor.
+	 * @static
+	 */
+	static getBrazilianStandardAddress(data) {
+		return AddressCache.getBrazilianStandardAddress(data);
 	}
 
 	/**
@@ -2103,18 +2444,19 @@ class AddressDataExtractor {
 	}
 }
 
-// Initialize static properties for AddressDataExtractor
-AddressDataExtractor.cache = new Map();
-AddressDataExtractor.maxCacheSize = 50;
-AddressDataExtractor.cacheExpirationMs = 300000; // 5 minutes
-AddressDataExtractor.lastNotifiedChangeSignature = null;
-AddressDataExtractor.lastNotifiedBairroChangeSignature = null;
-AddressDataExtractor.lastNotifiedMunicipioChangeSignature = null;
-AddressDataExtractor.logradouroChangeCallback = null;
-AddressDataExtractor.bairroChangeCallback = null;
-AddressDataExtractor.municipioChangeCallback = null;
-AddressDataExtractor.currentAddress = null;
-AddressDataExtractor.previousAddress = null;
+// Legacy static properties for AddressDataExtractor - delegated to AddressCache
+// These maintain backward compatibility but all operations use AddressCache internally
+AddressDataExtractor.cache = AddressCache.cache;
+AddressDataExtractor.maxCacheSize = AddressCache.maxCacheSize;
+AddressDataExtractor.cacheExpirationMs = AddressCache.cacheExpirationMs;
+AddressDataExtractor.lastNotifiedChangeSignature = AddressCache.lastNotifiedChangeSignature;
+AddressDataExtractor.lastNotifiedBairroChangeSignature = AddressCache.lastNotifiedBairroChangeSignature;
+AddressDataExtractor.lastNotifiedMunicipioChangeSignature = AddressCache.lastNotifiedMunicipioChangeSignature;
+AddressDataExtractor.logradouroChangeCallback = AddressCache.logradouroChangeCallback;
+AddressDataExtractor.bairroChangeCallback = AddressCache.bairroChangeCallback;
+AddressDataExtractor.municipioChangeCallback = AddressCache.municipioChangeCallback;
+AddressDataExtractor.currentAddress = AddressCache.currentAddress;
+AddressDataExtractor.previousAddress = AddressCache.previousAddress;
 
 /* ============================
  * Camada de Serviço - Continuação
@@ -3801,6 +4143,8 @@ if (typeof module !== 'undefined' && module.exports) {
 		GeolocationService,
 		WebGeocodingManager,
 		BrazilianStandardAddress,
+		AddressExtractor,
+		AddressCache,
 		AddressDataExtractor,
 		HTMLAddressDisplayer,
 		HTMLPositionDisplayer,

@@ -1797,8 +1797,6 @@ class HTMLAddressDisplayer {
 		if (posEvent == PositionManager.strCurrPosUpdate && (addressData || enderecoPadronizado)) {
 			const html = this.renderAddressHtml(addressData, enderecoPadronizado);
 			this.element.innerHTML = html;
-		} else {
-			this.element.innerHTML = '<p class="warning">Nenhum dado de endereço disponível.</p>';
 		}
 	}
 
@@ -4159,19 +4157,6 @@ class GeolocationService {
 
 		const coords = position.coords;
 		const timestamp = new Date(position.timestamp).toLocaleString();
-
-		this.locationResult.innerHTML = `
-            <div class="location-success">
-                <h4>Localização Obtida com Sucesso</h4>
-                <p><strong>Latitude:</strong> ${coords.latitude.toFixed(6)}°</p>
-                <p><strong>Longitude:</strong> ${coords.longitude.toFixed(6)}°</p>
-                <p><strong>Precisão:</strong> ${coords.accuracy.toFixed(2)} metros</p>
-                <p><strong>Horário:</strong> ${timestamp}</p>
-                ${coords.altitude ? `<p><strong>Altitude:</strong> ${coords.altitude.toFixed(2)} metros</p>` : ''}
-                ${coords.speed ? `<p><strong>Velocidade:</strong> ${(coords.speed * 3.6).toFixed(2)} km/h</p>` : ''}
-                ${coords.heading ? `<p><strong>Direção:</strong> ${coords.heading.toFixed(0)}°</p>` : ''}
-            </div>
-        `;
 	}
 
 	/**

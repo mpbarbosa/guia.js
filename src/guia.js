@@ -1041,6 +1041,34 @@ class ReverseGeocoder extends APIFetcher {
 		}
 		l
 	}
+
+	/**
+	 * Returns a string representation of the ReverseGeocoder instance.
+	 * 
+	 * Provides a formatted summary showing the class name and the coordinates
+	 * being geocoded, useful for debugging and logging purposes.
+	 * 
+	 * @returns {string} Formatted string with class name and coordinates
+	 * 
+	 * @example
+	 * const geocoder = new ReverseGeocoder(-23.5505, -46.6333);
+	 * console.log(geocoder.toString());
+	 * // Output: "ReverseGeocoder: -23.5505, -46.6333"
+	 * 
+	 * @example
+	 * const geocoder = new ReverseGeocoder();
+	 * console.log(geocoder.toString());
+	 * // Output: "ReverseGeocoder: No coordinates set"
+	 * 
+	 * @since 0.8.4-alpha
+	 * @author Marcelo Pereira Barbosa
+	 */
+	toString() {
+		if (!this.latitude || !this.longitude) {
+			return `${this.constructor.name}: No coordinates set`;
+		}
+		return `${this.constructor.name}: ${this.latitude}, ${this.longitude}`;
+	}
 }
 
 /**

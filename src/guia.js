@@ -359,6 +359,175 @@ class GeoPosition {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API} Geolocation API
  * @see {@link https://www.w3.org/TR/geolocation-API/} W3C Geolocation API Specification
  */
+
+/**
+ * ObserverSubject - Centralizes observer pattern implementation
+ * 
+ * This class provides a reusable implementation of the observer pattern,
+ * supporting both object-based observers (with update methods) and function-based observers.
+ * It eliminates code duplication across multiple classes that need observer functionality.
+ * 
+ * @class
+ * @since 0.8.4-alpha
+ * 
+ * @example
+ * // Using in a class via composition
+ * class MyClass {
+ *   constructor() {
+ *     this.observerSubject = new ObserverSubject();
+ *   }
+ *   
+ *   subscribe(observer) {
+ *     this.observerSubject.subscribe(observer);
+ *   }
+ *   
+ *   notify(...args) {
+ *     this.observerSubject.notifyObservers(...args);
+ *   }
+ * }
+ */
+class ObserverSubject {
+	/**
+	 * Creates a new ObserverSubject instance.
+	 * Initializes empty arrays for both object and function observers.
+	 */
+	constructor() {
+		this.observers = [];
+		this.functionObservers = [];
+	}
+
+	/**
+	 * Subscribes an observer object to receive notifications.
+	 * The observer must have an update() method that will be called on notifications.
+	 * 
+	 * @param {Object} observer - Observer object with an update method
+	 * @param {Function} observer.update - Method called when notifying observers
+	 * @returns {void}
+	 * 
+	 * @example
+	 * const observer = {
+	 *   update: (subject, ...args) => {
+	 *     console.log('Notified with:', args);
+	 *   }
+	 * };
+	 * observerSubject.subscribe(observer);
+	 */
+	subscribe(observer) {
+		if (observer) {
+			this.observers.push(observer);
+		}
+	}
+
+	/**
+	 * Unsubscribes an observer object from notifications.
+	 * 
+	 * @param {Object} observer - Observer object to remove
+	 * @returns {void}
+	 * 
+	 * @example
+	 * observerSubject.unsubscribe(observer);
+	 */
+	unsubscribe(observer) {
+		this.observers = this.observers.filter((o) => o !== observer);
+	}
+
+	/**
+	 * Notifies all subscribed object observers.
+	 * Calls the update() method on each observer with the provided arguments.
+	 * 
+	 * @param {...*} args - Arguments to pass to each observer's update method
+	 * @returns {void}
+	 * 
+	 * @example
+	 * observerSubject.notifyObservers(data1, data2, eventType);
+	 */
+	notifyObservers(...args) {
+		this.observers.forEach((observer) => {
+			if (typeof observer.update === "function") {
+				observer.update(...args);
+			}
+		});
+	}
+
+	/**
+	 * Subscribes a function to receive notifications.
+	 * 
+	 * @param {Function} observerFunction - Function to be called on notifications
+	 * @returns {void}
+	 * 
+	 * @example
+	 * const handler = (subject, ...args) => {
+	 *   console.log('Function observer notified:', args);
+	 * };
+	 * observerSubject.subscribeFunction(handler);
+	 */
+	subscribeFunction(observerFunction) {
+		if (observerFunction) {
+			this.functionObservers.push(observerFunction);
+		}
+	}
+
+	/**
+	 * Unsubscribes a function from notifications.
+	 * 
+	 * @param {Function} observerFunction - Function to remove
+	 * @returns {void}
+	 * 
+	 * @example
+	 * observerSubject.unsubscribeFunction(handler);
+	 */
+	unsubscribeFunction(observerFunction) {
+		this.functionObservers = this.functionObservers.filter(
+			(fn) => fn !== observerFunction,
+		);
+	}
+
+	/**
+	 * Notifies all subscribed function observers.
+	 * 
+	 * @param {...*} args - Arguments to pass to each observer function
+	 * @returns {void}
+	 * 
+	 * @example
+	 * observerSubject.notifyFunctionObservers(data1, data2);
+	 */
+	notifyFunctionObservers(...args) {
+		this.functionObservers.forEach((fn) => {
+			if (typeof fn === "function") {
+				fn(...args);
+			}
+		});
+	}
+
+	/**
+	 * Gets the count of subscribed object observers.
+	 * 
+	 * @returns {number} Number of subscribed observers
+	 */
+	getObserverCount() {
+		return this.observers.length;
+	}
+
+	/**
+	 * Gets the count of subscribed function observers.
+	 * 
+	 * @returns {number} Number of subscribed function observers
+	 */
+	getFunctionObserverCount() {
+		return this.functionObservers.length;
+	}
+
+	/**
+	 * Clears all observers (both object and function observers).
+	 * 
+	 * @returns {void}
+	 */
+	clearAllObservers() {
+		this.observers = [];
+		this.functionObservers = [];
+	}
+}
+
 class PositionManager {
 	/**
 	 * Singleton instance holder. Only one PositionManager exists per application.
@@ -451,12 +620,21 @@ class PositionManager {
 	 * @since 0.5.0-alpha
 	 */
 	constructor(position) {
-		this.observers = [];
+		this.observerSubject = new ObserverSubject();
 		this.tsPosicaoAtual = null;
 		this.lastModified = null;
 		if (position) {
 			this.update(position);
 		}
+	}
+
+	/**
+	 * Gets the observers array for backward compatibility.
+	 * @private
+	 * @returns {Array} Array of subscribed observers
+	 */
+	get observers() {
+		return this.observerSubject.observers;
 	}
 
 	/**
@@ -481,9 +659,7 @@ class PositionManager {
 	 * @since 0.5.0-alpha
 	 */
 	subscribe(observer) {
-		if (observer) {
-			this.observers.push(observer);
-		}
+		this.observerSubject.subscribe(observer);
 	}
 
 	/**
@@ -505,7 +681,7 @@ class PositionManager {
 	 * @since 0.5.0-alpha
 	 */
 	unsubscribe(observer) {
-		this.observers = this.observers.filter((o) => o !== observer);
+		this.observerSubject.unsubscribe(observer);
 	}
 
 	/**
@@ -523,7 +699,7 @@ class PositionManager {
 	 */
 	notifyObservers(posEvent) {
 		log("+++ (2) (PositionManager) Notifying observers: ", this.observers);
-		this.observers.forEach((observer) => {
+		this.observerSubject.observers.forEach((observer) => {
 			log("+++ (3) (PositionManager) Notifying observer: ", observer);
 			observer.update(this, posEvent);
 		});
@@ -708,7 +884,7 @@ class SingletonStatusManager {
 class APIFetcher {
 	constructor(url) {
 		this.url = url;
-		this.observers = [];
+		this.observerSubject = new ObserverSubject();
 		this.fetching = false;
 		this.data = null;
 		this.error = null;
@@ -717,6 +893,15 @@ class APIFetcher {
 		this.timeout = 10000;
 		this.cache = new Map();
 		this.lastPosition = null;
+	}
+
+	/**
+	 * Gets the observers array for backward compatibility.
+	 * @private
+	 * @returns {Array} Array of subscribed observers
+	 */
+	get observers() {
+		return this.observerSubject.observers;
 	}
 
 	getCacheKey() {
@@ -734,17 +919,15 @@ class APIFetcher {
 	}
 
 	subscribe(observer) {
-		if (observer) {
-			this.observers.push(observer);
-		}
+		this.observerSubject.subscribe(observer);
 	}
 
 	unsubscribe(observer) {
-		this.observers = this.observers.filter((o) => o !== observer);
+		this.observerSubject.unsubscribe(observer);
 	}
 
 	notifyObservers(appEvent) {
-		this.observers.forEach((observer) => {
+		this.observerSubject.observers.forEach((observer) => {
 			observer.update(
 				this.firstUpdateParam(),
 				this.secondUpdateParam(),
@@ -2513,8 +2696,7 @@ class WebGeocodingManager {
 	constructor(document, resultElement) {
 		this.document = document;
 		this.locationResult = resultElement;
-		this.observers = [];
-		this.functionObservers = [];
+		this.observerSubject = new ObserverSubject();
 		this.currentPosition = null;
 		this.currentCoords = null;
 
@@ -2583,6 +2765,24 @@ class WebGeocodingManager {
 		}
 	}
 
+	/**
+	 * Gets the observers array for backward compatibility.
+	 * @private
+	 * @returns {Array} Array of subscribed observers
+	 */
+	get observers() {
+		return this.observerSubject.observers;
+	}
+
+	/**
+	 * Gets the function observers array for backward compatibility.
+	 * @private
+	 * @returns {Array} Array of subscribed function observers
+	 */
+	get functionObservers() {
+		return this.observerSubject.functionObservers;
+	}
+
 	subscribe(observer) {
 		if (observer == null) {
 			console.warn(
@@ -2590,15 +2790,15 @@ class WebGeocodingManager {
 			);
 			return;
 		}
-		this.observers.push(observer);
+		this.observerSubject.subscribe(observer);
 	}
 
 	unsubscribe(observer) {
-		this.observers = this.observers.filter((o) => o !== observer);
+		this.observerSubject.unsubscribe(observer);
 	}
 
 	notifyObservers() {
-		this.observers.forEach((observer) => {
+		this.observerSubject.observers.forEach((observer) => {
 			observer.update(
 				this.currentPosition,
 				this.reverseGeocoder.currentAddress,
@@ -2617,13 +2817,11 @@ class WebGeocodingManager {
 		console.log(
 			`(WebGeocodingManager) observer function ${observerFunction} subscribing ${this}`,
 		);
-		this.functionObservers.push(observerFunction);
+		this.observerSubject.subscribeFunction(observerFunction);
 	}
 
 	unsubscribeFunction(observerFunction) {
-		this.functionObservers = this.functionObservers.filter(
-			(fn) => fn !== observerFunction,
-		);
+		this.observerSubject.unsubscribeFunction(observerFunction);
 	}
 
 	getBrazilianStandardAddress() {
@@ -2991,8 +3189,25 @@ class SpeechQueue {
 		this.items = [];
 		this.maxSize = maxSize;
 		this.expirationMs = expirationMs;
-		this.observers = [];
-		this.functionObservers = [];
+		this.observerSubject = new ObserverSubject();
+	}
+
+	/**
+	 * Gets the observers array for backward compatibility.
+	 * @private
+	 * @returns {Array} Array of subscribed observers
+	 */
+	get observers() {
+		return this.observerSubject.observers;
+	}
+
+	/**
+	 * Gets the function observers array for backward compatibility.
+	 * @private
+	 * @returns {Array} Array of subscribed function observers
+	 */
+	get functionObservers() {
+		return this.observerSubject.functionObservers;
 	}
 
 	subscribe(observer) {
@@ -3000,15 +3215,15 @@ class SpeechQueue {
 			console.warn("(SpeechQueue) Attempted to subscribe a null observer.");
 			return;
 		}
-		this.observers.push(observer);
+		this.observerSubject.subscribe(observer);
 	}
 
 	unsubscribe(observer) {
-		this.observers = this.observers.filter((o) => o !== observer);
+		this.observerSubject.unsubscribe(observer);
 	}
 
 	notifyObservers() {
-		this.observers.forEach((observer) => {
+		this.observerSubject.observers.forEach((observer) => {
 			if (typeof observer.update === "function") {
 				observer.update(this);
 			}
@@ -3020,7 +3235,7 @@ class SpeechQueue {
 			console.warn("(SpeechQueue) Attempted to subscribe a null observer function.");
 			return;
 		}
-		this.functionObservers.push(observerFunction);
+		this.observerSubject.subscribeFunction(observerFunction);
 	}
 
 	unsubscribeFunction(observerFunction) {
@@ -3028,13 +3243,13 @@ class SpeechQueue {
 			console.warn("(SpeechQueue) Attempted to unsubscribe a null observer function.");
 			return;
 		}
-		this.functionObservers = this.functionObservers.filter((f) => f !== observerFunction);
+		this.observerSubject.unsubscribeFunction(observerFunction);
 	}
 
 	notifyFunctionObservers() {
-		for (const fn of this.functionObservers) {
+		this.observerSubject.functionObservers.forEach((fn) => {
 			fn(this);
-		}
+		});
 	}
 
 	/**
@@ -4181,6 +4396,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		getAddressType,
 		isMobileDevice,
 		setupParams,
+		ObserverSubject,
 		GeoPosition,
 		PositionManager,
 		SingletonStatusManager,

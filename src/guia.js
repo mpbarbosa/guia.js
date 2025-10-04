@@ -204,7 +204,7 @@ class GeoPosition {
 		this.heading = position.coords.heading;
 		this.speed = position.coords.speed;
 		this.timestamp = position.timestamp;
-
+		log("+++ (1) (GeoPosition) Created:", this.toString());
 	}
 
 	/**
@@ -522,7 +522,9 @@ class PositionManager {
 	 * @since 0.5.0-alpha
 	 */
 	notifyObservers(posEvent) {
+		log("+++ (2) (PositionManager) Notifying observers: ", this.observers);
 		this.observers.forEach((observer) => {
+			log("+++ (3) (PositionManager) Notifying observer: ", observer);
 			observer.update(this, posEvent);
 		});
 	}

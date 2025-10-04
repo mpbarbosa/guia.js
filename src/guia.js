@@ -189,7 +189,6 @@ log("Guia.js version:", guiaVersion.toString());
 
 class GeoPosition {
 	constructor(position) {
-		log("+++ (2.1) (GeoPosition) Initializing with position:", position);
 		position.toString = function () {
 			return `PositionGeolocation: { latitude: ${this.latitude}, longitude: ${this.longitude}, accuracy: ${this.accuracy} }`;
 		};
@@ -227,11 +226,11 @@ class GeoPosition {
 	 * 
 	 * @example
 	 * // Classify different accuracy levels
-	 * console.log(PositionManager.getAccuracyQuality(5));   // 'excellent'
-	 * console.log(PositionManager.getAccuracyQuality(25));  // 'good'
-	 * console.log(PositionManager.getAccuracyQuality(75));  // 'medium'
-	 * console.log(PositionManager.getAccuracyQuality(150)); // 'bad'
-	 * console.log(PositionManager.getAccuracyQuality(500)); // 'very bad'
+	 * console.log(GeoPosition.getAccuracyQuality(5));   // 'excellent'
+	 * console.log(GeoPosition.getAccuracyQuality(25));  // 'good'
+	 * console.log(GeoPosition.getAccuracyQuality(75));  // 'medium'
+	 * console.log(GeoPosition.getAccuracyQuality(150)); // 'bad'
+	 * console.log(GeoPosition.getAccuracyQuality(500)); // 'very bad'
 	 * 
 	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates/accuracy} GeolocationCoordinates.accuracy
 	 * @since 0.5.0-alpha
@@ -239,7 +238,7 @@ class GeoPosition {
 	static getAccuracyQuality(accuracy) {
 		if (accuracy <= 10) {
 			return "excellent";
-		} else if (accuracy <= 20) {
+		} else if (accuracy <= 30) {
 			return "good";
 		} else if (accuracy <= 100) {
 			return "medium";
@@ -482,7 +481,6 @@ class PositionManager {
 	 * @since 0.5.0-alpha
 	 */
 	subscribe(observer) {
-		log("(PositionManager) observer subscribing:", observer);
 		if (observer) {
 			this.observers.push(observer);
 		}
@@ -524,9 +522,7 @@ class PositionManager {
 	 * @since 0.5.0-alpha
 	 */
 	notifyObservers(posEvent) {
-		log("+++ (1000) (PositionManager) Notifying observers:", this.observers);
 		this.observers.forEach((observer) => {
-			log("+++ (1001) (PositionManager) Notifying observer:", observer.constructor.name);
 			observer.update(this, posEvent);
 		});
 	}
@@ -575,8 +571,6 @@ class PositionManager {
 		let bUpdateCurrPos = true;
 		let error = null;
 
-		log("+++ (2.0.1) (PositionManager) Received new position:", position);
-
 		// Verifica se a posição é válida
 		if (!position || !position.timestamp) {
 			warn("(PositionManager) Invalid position data:", position);
@@ -616,9 +610,7 @@ class PositionManager {
 		}
 
 		if (!bUpdateCurrPos) {
-			log("+++ (2.0.2) (PositionManager) Not updating position due to validation rules.");
 			this.notifyObservers(PositionManager.strCurrPosNotUpdate, null, error);
-			log("+++ (2.0.3) (PositionManager) PositionManager not updated:", this);
 			return;
 		}
 
@@ -637,7 +629,6 @@ class PositionManager {
 		}
 
 		// Atualiza a posição apenas se tiver passado mais de 1 minuto
-		log("+++ (2.0.8) (PositionManager) Updating PositionManager...");
 		this.lastPosition = new GeoPosition(position);
 		this.position = this.lastPosition;
 		this.lastModified = position.timestamp;
@@ -689,7 +680,6 @@ class SingletonStatusManager {
 	}
 
 	setGettingLocation(status) {
-		console.log("Setting gettingLocation status to:", status);
 		this.gettingLocation = status;
 		if (status) {
 			console.log("Getting location...");
@@ -737,7 +727,6 @@ class APIFetcher {
 	}
 
 	subscribe(observer) {
-		log(`(APIFetcher) observer ${observer} subscribing ${this}`);
 		if (observer) {
 			this.observers.push(observer);
 		}
@@ -748,7 +737,6 @@ class APIFetcher {
 	}
 
 	notifyObservers(appEvent) {
-		log("+++ (30) (APIFetcher) Notifying observers: " + this.observers);
 		this.observers.forEach((observer) => {
 			observer.update(
 				this.firstUpdateParam(),
@@ -929,8 +917,6 @@ class ReverseGeocoder extends APIFetcher {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	update(positionManager, posEvent, loading, error) {
-		log("(ReverseGeocoder) Received position update notification:", posEvent);
-
 		if (!positionManager || !positionManager.lastPosition) {
 			warn("(ReverseGeocoder) Invalid PositionManager or no last position.");
 			return;
@@ -939,15 +925,12 @@ class ReverseGeocoder extends APIFetcher {
 		// Only process actual position updates, ignore other events
 		const coords = positionManager.lastPosition.coords;
 		if (coords && coords.latitude && coords.longitude) {
-			log("(ReverseGeocoder) Updating coordinates and performing reverse geocoding...");
-
 			// Update coordinates
 			this.setCoordinates(coords.latitude, coords.longitude);
 
 			// Trigger reverse geocoding asynchronously
 			this.reverseGeocode()
 				.then((addressData) => {
-					log("(ReverseGeocoder) Reverse geocoding successful:", addressData);
 					this.currentAddress = addressData;
 					this.enderecoPadronizado = AddressDataExtractor.getBrazilianStandardAddress(addressData);
 					// Notify this geocoder's own observers
@@ -1200,8 +1183,6 @@ class Chronometer {
 			this.intervalId = setInterval(() => {
 				this.updateDisplay();
 			}, 1000);
-
-			log("(Chronometer) Started timing");
 		}
 	}
 
@@ -1218,7 +1199,6 @@ class Chronometer {
 				clearInterval(this.intervalId);
 				this.intervalId = null;
 			}
-			log("(Chronometer) Stopped timing");
 		}
 	}
 
@@ -1235,7 +1215,6 @@ class Chronometer {
 		if (this.element) {
 			this.element.textContent = "00:00:00";
 		}
-		log("(Chronometer) Reset to initial state");
 	}
 
 	/**
@@ -1298,18 +1277,14 @@ class Chronometer {
 	 * @since 0.8.3-alpha
 	 */
 	update(positionManager, posEvent, loading, error) {
-		log("(Chronometer) Received position update notification:", posEvent);
-
 		// Handle different position events
 		if (posEvent === PositionManager.strCurrPosUpdate ||
 			posEvent === PositionManager.strImmediateAddressUpdate) {
 			// Position successfully updated - restart chronometer
-			log("(Chronometer) Position updated, restarting timer");
 			this.reset();
 			this.start();
 		} else if (posEvent === PositionManager.strCurrPosNotUpdate) {
 			// Position update was rejected - continue running if already started
-			log("(Chronometer) Position update rejected, continuing current timing");
 			if (!this.isRunning && this.element) {
 				this.start();
 			}
@@ -1317,7 +1292,6 @@ class Chronometer {
 
 		// Handle error states
 		if (error) {
-			log("(Chronometer) Error detected, stopping timer:", error.message);
 			this.stop();
 			if (this.element) {
 				this.element.textContent = "Error";
@@ -1354,7 +1328,6 @@ class HtmlText {
 	 * @param {HTMLElement} element - Target DOM element for text updates
 	 */
 	constructor(document, element) {
-		console.log("Initializing HtmlText...");
 		this.document = document;
 		this.element = element;
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
@@ -1371,8 +1344,6 @@ class HtmlText {
 	 * @since 0.8.3-alpha
 	 */
 	update(positionManager, posEvent, loading, error) {
-		log("(HtmlText) Received position update notification:", posEvent);
-
 		if (this.element) {
 			if (error) {
 				this.element.textContent = `Error: ${error.message}`;
@@ -1399,7 +1370,6 @@ class HtmlText {
  */
 class HTMLPositionDisplayer {
 	constructor(element) {
-		console.log("Initializing HTMLPositionDisplayer...");
 		this.element = element;
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
 	}
@@ -1486,8 +1456,6 @@ class HTMLPositionDisplayer {
 	 * @since 0.8.3-alpha
 	 */
 	update(positionManager, posEvent, loading, error) {
-		log("(HTMLPositionDisplayer) Received position update notification:", posEvent);
-
 		// Handle loading state
 		if (loading) {
 			this.element.innerHTML = '<p class="loading">Obtendo posição...</p>';
@@ -1587,8 +1555,6 @@ class HTMLAddressDisplayer {
 	}
 
 	update(addressData, enderecoPadronizado, posEvent, loading, error) {
-		log("(HTMLAddressDisplayer) Received address update");
-		log(" (HTMLAddressDisplayer) addressData: ", addressData);
 		if (addressData) {
 			// Display all object attributes
 
@@ -1757,8 +1723,6 @@ class AddressDataExtractor {
 			for (let i = 0; i < entriesToRemove && i < entries.length; i++) {
 				AddressDataExtractor.cache.delete(entries[i][0]);
 			}
-
-			log(`(AddressDataExtractor) Evicted ${entriesToRemove} least recently used cache entries`);
 		}
 	}
 
@@ -1807,7 +1771,6 @@ class AddressDataExtractor {
 	 */
 	static setLogradouroChangeCallback(callback) {
 		AddressDataExtractor.logradouroChangeCallback = callback;
-		log(`(AddressDataExtractor) Logradouro change callback ${callback ? 'set' : 'removed'}`);
 	}
 
 	/**
@@ -1831,7 +1794,6 @@ class AddressDataExtractor {
 	 */
 	static setBairroChangeCallback(callback) {
 		AddressDataExtractor.bairroChangeCallback = callback;
-		log(`(AddressDataExtractor) Bairro change callback ${callback ? 'set' : 'removed'}`);
 	}
 
 	/**
@@ -1855,7 +1817,6 @@ class AddressDataExtractor {
 	 */
 	static setMunicipioChangeCallback(callback) {
 		AddressDataExtractor.municipioChangeCallback = callback;
-		log(`(AddressDataExtractor) Municipio change callback ${callback ? 'set' : 'removed'}`);
 	}
 
 	/**
@@ -2058,7 +2019,6 @@ class AddressDataExtractor {
 				AddressDataExtractor.hasLogradouroChanged()) {
 				const changeDetails = AddressDataExtractor.getLogradouroChangeDetails();
 				try {
-					log("Logradouro changed:", changeDetails);
 					AddressDataExtractor.logradouroChangeCallback(changeDetails);
 				} catch (error) {
 					console.error(
@@ -2220,7 +2180,6 @@ class WebGeocodingManager {
 	}
 
 	notifyObservers() {
-		console.log("(WebGeocodingManager) Notifying observers");
 		this.observers.forEach((observer) => {
 			observer.update(
 				this.currentPosition,
@@ -2276,7 +2235,6 @@ class WebGeocodingManager {
 	}
 
 	notifyFunctionObservers() {
-		console.log("(WebGeocodingManager) Notifying function observers");
 		for (const fn of this.functionObservers) {
 			fn(
 				this.currentPosition,
@@ -2398,8 +2356,6 @@ class WebGeocodingManager {
 	handleLogradouroChange(changeDetails) {
 		try {
 			// Notify observers about the logradouro change
-			log("+++ (10000)(WebGeocodingManager) Handling logradouro change:", changeDetails);
-			log("+++ (10002) changeDetails: ", changeDetails.current.logradouro)
 			this.notifyLogradouroChangeObservers(changeDetails);
 		} catch (error) {
 			console.error(
@@ -2447,10 +2403,8 @@ class WebGeocodingManager {
 	 */
 	notifyLogradouroChangeObservers(changeDetails) {
 		// Notify regular observers
-		log('+++ (10001) (WebGeocodingManager) Notificando os observadores da mudança de logradouro: ', this.observers.toString());
 		for (const observer of this.observers) {
 			if (typeof observer.update === "function") {
-				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de logradouro.`);
 				observer.update(
 					changeDetails.current.logradouro,
 					"LogradouroChanged",
@@ -2487,7 +2441,6 @@ class WebGeocodingManager {
 		log('(WebGeocodingManager) Notificando os observadores da mudança de bairro.');
 		for (const observer of this.observers) {
 			if (typeof observer.update === "function") {
-				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de bairro.`);
 				observer.update(
 					changeDetails.current.bairro,
 					"BairroChanged",
@@ -2524,7 +2477,6 @@ class WebGeocodingManager {
 		log('(WebGeocodingManager) Notificando os observadores da mudança de município.');
 		for (const observer of this.observers) {
 			if (typeof observer.update === "function") {
-				log(`(WebGeocodingManager) Notificando o observador ${observer.toString()} sobre a mudança de município.`);
 				observer.update(
 					this.reverseGeocoder.currentAddress,
 					"MunicipioChanged",
@@ -2638,7 +2590,6 @@ class SpeechQueue {
 	}
 
 	notifyObservers() {
-		console.log("(SpeechQueue) Notifying observers");
 		this.observers.forEach((observer) => {
 			if (typeof observer.update === "function") {
 				observer.update(this);
@@ -2651,7 +2602,6 @@ class SpeechQueue {
 			console.warn("(SpeechQueue) Attempted to subscribe a null observer function.");
 			return;
 		}
-		console.log(`(SpeechQueue) observer function ${observerFunction} subscribing ${this}`);
 		this.functionObservers.push(observerFunction);
 	}
 
@@ -2664,7 +2614,6 @@ class SpeechQueue {
 	}
 
 	notifyFunctionObservers() {
-		console.log("(SpeechQueue) Notifying function observers");
 		for (const fn of this.functionObservers) {
 			fn(this);
 		}
@@ -2701,7 +2650,6 @@ class SpeechQueue {
 			this.items = this.items.slice(0, this.maxSize);
 		}
 
-		log(`(SpeechQueue) Enqueued: "${text}" with priority ${priority}`);
 	}
 
 	/**
@@ -2715,9 +2663,6 @@ class SpeechQueue {
 
 		// Return first item (highest priority due to ordering in enqueue)
 		const item = this.items.shift();
-		if (item) {
-			log(`(SpeechQueue) Dequeued: "${item.text}" with priority ${item.priority}`);
-		}
 		return item || null;
 	}
 
@@ -2761,7 +2706,6 @@ class SpeechQueue {
 	 */
 	clear() {
 		this.items = [];
-		log("(SpeechQueue) Queue cleared");
 	}
 }
 
@@ -2802,7 +2746,6 @@ class SpeechSynthesisManager {
 	loadVoices() {
 		const updateVoices = () => {
 			this.voices = this.synth.getVoices();
-			log("Voices: ", this.voices);
 
 			// PRIORITY 1: Try to find Brazilian Portuguese voice (pt-BR)
 			let portugueseVoice = this.voices.find(voice =>
@@ -2817,12 +2760,10 @@ class SpeechSynthesisManager {
 			}
 
 			this.voice = portugueseVoice || this.voices[0] || null;
-			log(`(SpeechSynthesisManager) Loaded ${this.voices.length} voices, selected: ${this.voice?.name || 'none'} (${this.voice?.lang || 'none'})`);
 
 			// If Brazilian Portuguese voice was found, stop retry timer
 			if (portugueseVoice && portugueseVoice.lang.toLowerCase() === 'pt-br') {
 				this.stopVoiceRetryTimer();
-				log(`(SpeechSynthesisManager) Brazilian Portuguese voice found, retry stopped`);
 			}
 			// If no Brazilian Portuguese voice found and voices are available, start retry mechanism
 			else if (this.voices.length > 0 && !this.voiceRetryTimer && this.voiceRetryAttempts < this.maxVoiceRetryAttempts) {
@@ -2843,7 +2784,6 @@ class SpeechSynthesisManager {
 	startVoiceRetryTimer() {
 		if (this.voiceRetryTimer) return;
 
-		log(`(SpeechSynthesisManager) Starting voice retry timer (attempt ${this.voiceRetryAttempts + 1}/${this.maxVoiceRetryAttempts})`);
 		this.voiceRetryTimer = setInterval(() => {
 			this.voiceRetryAttempts++;
 
@@ -2855,10 +2795,8 @@ class SpeechSynthesisManager {
 
 			if (brazilianVoice) {
 				this.voice = brazilianVoice;
-				log(`(SpeechSynthesisManager) Brazilian Portuguese voice found on retry: ${brazilianVoice.name}`);
 				this.stopVoiceRetryTimer();
 			} else if (this.voiceRetryAttempts >= this.maxVoiceRetryAttempts) {
-				log(`(SpeechSynthesisManager) Max retry attempts reached, using current voice: ${this.voice?.name || 'none'}`);
 				this.stopVoiceRetryTimer();
 			}
 		}, this.voiceRetryInterval);
@@ -2871,7 +2809,6 @@ class SpeechSynthesisManager {
 		if (this.voiceRetryTimer) {
 			clearInterval(this.voiceRetryTimer);
 			this.voiceRetryTimer = null;
-			log(`(SpeechSynthesisManager) Voice retry timer stopped`);
 		}
 	}
 
@@ -2882,7 +2819,6 @@ class SpeechSynthesisManager {
 	 */
 	setVoice(voice) {
 		this.voice = voice;
-		log(`(SpeechSynthesisManager) Voice set to: ${voice?.name || 'none'}`);
 	}
 
 	/**
@@ -2892,7 +2828,6 @@ class SpeechSynthesisManager {
 	 */
 	setRate(rate) {
 		this.rate = Math.max(0.1, Math.min(10, rate));
-		log(`(SpeechSynthesisManager) Rate set to: ${this.rate}`);
 	}
 
 	/**
@@ -2902,7 +2837,6 @@ class SpeechSynthesisManager {
 	 */
 	setPitch(pitch) {
 		this.pitch = Math.max(0, Math.min(2, pitch));
-		log(`(SpeechSynthesisManager) Pitch set to: ${this.pitch}`);
 	}
 
 	/**
@@ -2981,13 +2915,11 @@ class SpeechSynthesisManager {
 
 		// Event handler for successful speech completion
 		utterance.onend = () => {
-			log("(SpeechSynthesisManager) Speech utterance completed successfully");
 			this.isCurrentlySpeaking = false;
 		};
 
 		// Event handler for speech errors
 		utterance.onerror = (event) => {
-			log("(SpeechSynthesisManager) Speech utterance error:", event.error);
 			this.isCurrentlySpeaking = false;
 		};
 
@@ -3004,8 +2936,6 @@ class SpeechSynthesisManager {
 		this.queueTimer = setInterval(() => {
 			this.processQueue();
 		}, this.independentQueueTimerInterval);
-
-		log(`(SpeechSynthesisManager) Queue timer started (${this.independentQueueTimerInterval / 1000}s interval)`);
 	}
 
 	/**
@@ -3015,7 +2945,6 @@ class SpeechSynthesisManager {
 		if (this.queueTimer) {
 			clearInterval(this.queueTimer);
 			this.queueTimer = null;
-			log("(SpeechSynthesisManager) Queue timer stopped");
 		}
 	}
 
@@ -3025,7 +2954,6 @@ class SpeechSynthesisManager {
 	pause() {
 		if (this.synth.speaking) {
 			this.synth.pause();
-			log("(SpeechSynthesisManager) Speech paused");
 		}
 	}
 
@@ -3035,7 +2963,6 @@ class SpeechSynthesisManager {
 	resume() {
 		if (this.synth.paused) {
 			this.synth.resume();
-			log("(SpeechSynthesisManager) Speech resumed");
 		}
 	}
 
@@ -3047,7 +2974,6 @@ class SpeechSynthesisManager {
 		this.speechQueue.clear();
 		this.isCurrentlySpeaking = false;
 		this.stopQueueTimer();
-		log("(SpeechSynthesisManager) Speech stopped and queue cleared");
 	}
 
 	toString() {
@@ -3114,7 +3040,6 @@ class HtmlSpeechSynthesisDisplayer {
 		this.updateVoices();
 		this.setupEventHandlers();
 		this.speechManager.startQueueTimer();
-		log("(HtmlSpeechSynthesisDisplayer) Initialized");
 	}
 
 	/**
@@ -3153,8 +3078,6 @@ class HtmlSpeechSynthesisDisplayer {
 
 			this.voiceSelect.appendChild(option);
 		});
-
-		log(`(HtmlSpeechSynthesisDisplayer) Updated voice options: ${voices.length} voices`);
 	}
 
 	/**
@@ -3223,8 +3146,6 @@ class HtmlSpeechSynthesisDisplayer {
 				this.updateVoices();
 			};
 		}
-
-		log("(HtmlSpeechSynthesisDisplayer) Event handlers set up");
 	}
 
 	/**
@@ -3234,7 +3155,6 @@ class HtmlSpeechSynthesisDisplayer {
 	 * @returns {string} Formatted speech text for logradouro
 	 */
 	buildTextToSpeechLogradouro(currentAddress) {
-		log("+++ (HtmlSpeechSynthesisDisplayer) Building text for logradouro change:", currentAddress.constructor.name);
 		if (!currentAddress || !currentAddress.logradouro) {
 			return "Nova localização detectada";
 		}
@@ -3325,11 +3245,6 @@ class HtmlSpeechSynthesisDisplayer {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	update(currentAddress, enderecoPadronizadoOrEvent, posEvent, loading, error) {
-		log("(HtmlSpeechSynthesisDisplayer) Updating speech synthesis display...");
-		log("currentAddress:", currentAddress);
-		log("enderecoPadronizadoOrEvent:", enderecoPadronizadoOrEvent);
-		log("posEvent:", posEvent);
-
 		// Early return if no current address
 		if (!currentAddress) {
 			return;
@@ -3341,21 +3256,17 @@ class HtmlSpeechSynthesisDisplayer {
 		// Determine speech content and priority based on event type
 		// Priority order: Municipality (3) > Bairro (2) > Logradouro (1) > Full address every 50s (0)
 		if (enderecoPadronizadoOrEvent === "MunicipioChanged") {
-			log("(HtmlSpeechSynthesisDisplayer) Municipio change detected, speaking new municipality with HIGHEST priority...");
 			textToBeSpoken = this.buildTextToSpeechMunicipio(currentAddress);
 			priority = 3; // HIGHEST priority for municipio changes
 		} else if (enderecoPadronizadoOrEvent === "BairroChanged") {
-			log("(HtmlSpeechSynthesisDisplayer) Bairro change detected, speaking new neighborhood with MEDIUM priority...");
 			textToBeSpoken = this.buildTextToSpeechBairro(currentAddress);
 			priority = 2; // MEDIUM priority for bairro changes
 		} else if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
-			log("(HtmlSpeechSynthesisDisplayer) Logradouro change detected, speaking new location with LOW priority...");
 			textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
 			priority = 1; // LOWEST priority for logradouro changes
 		} else if (posEvent === PositionManager.strCurrPosUpdate) {
 			// Full address update every 50 seconds (trackingInterval)
 			// This is the main feature: speak full address at regular 50-second intervals
-			log("(HtmlSpeechSynthesisDisplayer) 50-second interval reached, speaking full address...");
 			textToBeSpoken = this.buildTextToSpeech(enderecoPadronizadoOrEvent);
 			priority = 0; // Lowest priority for periodic full address updates
 		}
@@ -3427,8 +3338,6 @@ class GeolocationService {
 
 		// Get reference to PositionManager singleton
 		this.positionManager = PositionManager.getInstance();
-
-		log("(GeolocationService) Initialized with result element:", this.locationResult?.id || 'none');
 	}
 
 	/**
@@ -3454,11 +3363,9 @@ class GeolocationService {
 			if ('permissions' in navigator) {
 				const permission = await navigator.permissions.query({ name: 'geolocation' });
 				this.permissionStatus = permission.state;
-				log(`(GeolocationService) Permission status: ${permission.state}`);
 				return permission.state;
 			} else {
 				// Fallback for browsers without Permissions API
-				log("(GeolocationService) Permissions API not available, assuming prompt");
 				return 'prompt';
 			}
 		} catch (error) {
@@ -3491,8 +3398,6 @@ class GeolocationService {
 	 */
 	async getSingleLocationUpdate() {
 		return new Promise((resolve, reject) => {
-			log("(GeolocationService) Requesting single location update...");
-
 			if (!navigator.geolocation) {
 				const error = new Error("Geolocation is not supported by this browser");
 				error.name = "NotSupportedError";
@@ -3502,7 +3407,6 @@ class GeolocationService {
 
 			navigator.geolocation.getCurrentPosition(
 				(position) => {
-					log("(GeolocationService) Single location update successful:", position);
 					this.lastKnownPosition = position;
 
 					// Update PositionManager with new position
@@ -3553,15 +3457,11 @@ class GeolocationService {
 		}
 
 		if (this.isWatching) {
-			log("(GeolocationService) Already watching position");
 			return this.watchId;
 		}
 
-		log("(GeolocationService) Starting position watch...");
-
 		this.watchId = navigator.geolocation.watchPosition(
 			(position) => {
-				log("(GeolocationService) Position watch update received:", position);
 				this.lastKnownPosition = position;
 
 				// Update PositionManager with new position
@@ -3584,7 +3484,6 @@ class GeolocationService {
 		);
 
 		this.isWatching = true;
-		log(`(GeolocationService) Position watch started with ID: ${this.watchId}`);
 
 		return this.watchId;
 	}
@@ -3607,7 +3506,6 @@ class GeolocationService {
 			navigator.geolocation.clearWatch(this.watchId);
 			this.watchId = null;
 			this.isWatching = false;
-			log("(GeolocationService) Position watching stopped");
 		} else {
 			log("(GeolocationService) No active position watch to stop");
 		}
@@ -3837,7 +3735,6 @@ function getAddressType(addressData) {
  * @author Marcelo Pereira Barbosa
  */
 function findNearbyRestaurants(latitude, longitude) {
-	log(`(Utility) Finding restaurants near ${latitude}, ${longitude}`);
 	// Implementation would go here for restaurant search
 	alert(`Procurando restaurantes próximos a ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
 }
@@ -3853,7 +3750,6 @@ function findNearbyRestaurants(latitude, longitude) {
  * @author Marcelo Pereira Barbosa
  */
 function fetchCityStatistics(latitude, longitude) {
-	log(`(Utility) Fetching city statistics for ${latitude}, ${longitude}`);
 	// Implementation would go here for city statistics
 	alert(`Obtendo estatísticas da cidade para ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
 }
@@ -3884,3 +3780,4 @@ if (typeof module !== 'undefined' && module.exports) {
 		fetchCityStatistics
 	};
 }
+

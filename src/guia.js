@@ -608,6 +608,11 @@ class PositionManager {
 			);
 			if (distance < setupParams.minimumDistanceChange) {
 				bUpdateCurrPos = false;
+				error = { name: "DistanceError", message: "Movement is not significant enough" };
+				warn(
+					"(PositionManager) Movement not significant enough:",
+					distance,
+				);
 			}
 		}
 
@@ -789,7 +794,7 @@ class APIFetcher {
  * **Error Handling:**
  * The error handling is comprehensive, catching any network errors, parsing errors, or HTTP errors 
  * and storing them in `this.error` for the calling code to handle appropriately. This provides 
- * a clean separation of
+ * a clean separation of concerns and allows for more manageable error handling in the UI.
  * 
  * **Cleanup Guarantee:**
  * The `finally` block ensures that `this.loading` is always reset to `false`, regardless of whether 
@@ -936,6 +941,7 @@ class ReverseGeocoder extends APIFetcher {
 					this.currentAddress = addressData;
 					this.enderecoPadronizado = AddressDataExtractor.getBrazilianStandardAddress(addressData);
 					// Notify this geocoder's own observers
+					log("+++ (10) (ReverseGeocoder) Received the address data and now notifying the observers.");
 					this.notifyObservers(posEvent);
 				})
 				.catch((error) => {

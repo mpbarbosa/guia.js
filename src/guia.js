@@ -1627,27 +1627,27 @@ class HTMLPositionDisplayer {
 			return "<p class='error'>No position data available.</p>";
 		}
 
-		const position = positionManager.lastPosition;
+		const geoPosition = positionManager.lastPosition;
+		const position = geoPosition.geolocationPosition;
+		const coords = position.coords;
 
 		let html = `<details class="position-details" closed>
             <summary><strong>Posição Atual</strong></summary>`;
 
 		html += `<div class="coordinates">
-		${positionManager.lastPosition.geolocationPosition}<br>
-		${positionManager.lastPosition.constructor.name}
+		${position}<br>
 		</div>`;
 
 		// Display core coordinates
 		html += `<div class="coordinates">
             <h4>Coordenadas:</h4>
-            <p><strong>Latitude:</strong> ${position.latitude.toFixed(6)}°</p>
-            <p><strong>Longitude:</strong> ${position.longitude.toFixed(6)}°</p>
+            <p><strong>Latitude:</strong> ${coords.latitude.toFixed(6)}°</p>
+            <p><strong>Longitude:</strong> ${coords.longitude.toFixed(6)}°</p>
         </div>`;
 
 		// Display accuracy information
 		html += `<div class="accuracy-info">
-            <h4>Precisão:</h4>
-            <p><strong>Precisão:</strong> ${position.accuracy ? position.accuracy.toFixed(2) : 'N/A'} metros</p>
+            <p><strong>Precisão:</strong> ${coords.accuracy ? coords.accuracy.toFixed(2) : 'N/A'} metros</p>
             <p><strong>Qualidade:</strong> ${this.formatAccuracyQuality(position.accuracyQuality)}</p>
         </div>`;
 

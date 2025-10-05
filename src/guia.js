@@ -2567,6 +2567,7 @@ class AddressCache {
 			// This replaces the timer-based approach with event-driven checking
 			if (AddressCache.logradouroChangeCallback &&
 				AddressCache.hasLogradouroChanged()) {
+				log("+++ (300) (AddressCache) Detected logradouro change, invoking callback");
 				const changeDetails = AddressCache.getLogradouroChangeDetails();
 				try {
 					AddressCache.logradouroChangeCallback(changeDetails);
@@ -3000,7 +3001,7 @@ class WebGeocodingManager {
 			},
 		);
 		this.reverseGeocoder.subscribe(this.htmlSpeechSynthesisDisplayer);
-		this.subscribe(this.htmlSpeechSynthesisDisplayer.speechManager);
+		this.subscribe(this.htmlSpeechSynthesisDisplayer);
 		Object.freeze(this.htmlSpeechSynthesisDisplayer); // Prevent further modification
 	}
 
@@ -3173,33 +3174,8 @@ class WebGeocodingManager {
 	 */
 	notifyLogradouroChangeObservers(changeDetails) {
 		// Notify regular observers
-		for (const observer of this.observers) {
-			if (typeof observer.update === "function") {
-				observer.update(
-					changeDetails.current.logradouro,
-					"LogradouroChanged",
-					null,
-					null,
-				);
-			}
-		}
-
-		// Notify function observers with change details
-		for (const fn of this.functionObservers) {
-			try {
-				fn(
-					this.currentPosition,
-					this.reverseGeocoder.currentAddress,
-					this.reverseGeocoder.enderecoPadronizado,
-					changeDetails,
-				);
-			} catch (error) {
-				console.error(
-					"(WebGeocodingManager) Error notifying function observer:",
-					error,
-				);
-			}
-		}
+		this.observerSubject.notifyObservers(changeDetails.current.logradouro, "LogradouroChanged", null, null);
+		this.observerSubject.notifyFunctionObservers(this.currentPosition, this.reverseGeocoder.currentAddress, this.reverseGeocoder.enderecoPadronizado, changeDetails);
 	}
 
 	/**
@@ -3646,6 +3622,7 @@ class SpeechSynthesisManager {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	speak(text, priority = 0) {
+		log("+++ (600) (SpeechSynthesisManager) Speak: ", text);
 		// STEP 1: Input Validation - Robust validation prevents empty/whitespace content
 		if (!text || text.trim() === "") {
 			warn("(SpeechSynthesisManager) No text provided to speak.");
@@ -4028,6 +4005,10 @@ class HtmlSpeechSynthesisDisplayer {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	update(currentAddress, enderecoPadronizadoOrEvent, posEvent, loading, error) {
+		log("+++ (301) HtmlSpeechSynthesisDisplayer.update called +++");
+		log("+++ (302) currentAddress: ", currentAddress);
+		log("+++ (303) enderecoPadronizadoOrEvent: " , enderecoPadronizadoOrEvent);
+		log("+++ (304) posEvent: ", posEvent);
 		// Early return if no current address
 		if (!currentAddress) {
 			return;
@@ -4038,15 +4019,11 @@ class HtmlSpeechSynthesisDisplayer {
 
 		// Determine speech content and priority based on event type
 		// Priority order: Municipality (3) > Bairro (2) > Logradouro (1) > Full address every 50s (0)
-		if (enderecoPadronizadoOrEvent === "MunicipioChanged") {
-			textToBeSpoken = this.buildTextToSpeechMunicipio(currentAddress);
-			priority = 3; // HIGHEST priority for municipio changes
-		} else if (enderecoPadronizadoOrEvent === "BairroChanged") {
-			textToBeSpoken = this.buildTextToSpeechBairro(currentAddress);
-			priority = 2; // MEDIUM priority for bairro changes
-		} else if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
-			textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
-			priority = 1; // LOWEST priority for logradouro changes
+		if (["MunicipioChanged","BairroChanged","LogradouroChanged"].includes(enderecoPadronizadoOrEvent)) {
+			log("+++ (310) (HtmlSpeechSyntesisDisplayer) Changed")
+			textToBeSpoken = currentAddress;
+			const priorities = {"MunicipioChanged": 3, "BairroChanged": 2, "LogradouroChanged": 1};
+			priority = priorities[enderecoPadronizadoOrEvent]; // Set priority based on event
 		} else if (posEvent === PositionManager.strCurrPosUpdate) {
 			// Full address update every 50 seconds (trackingInterval)
 			// This is the main feature: speak full address at regular 50-second intervals

@@ -43,8 +43,8 @@ npm run test:all
 ### Resultados Esperados
 
 Todos os testes devem passar:
-- ✅ 41 testes passando
-- ✅ 4 suites de teste
+- ✅ 180+ testes passando
+- ✅ 22 suites de teste
 - ✅ ~12% de cobertura de código
 
 ## Funcionalidades Testadas
@@ -70,6 +70,12 @@ Todos os testes devem passar:
 ### 4. Módulo IBGE (`guia_ibge.test.js`)
 - **renderUrlUFNome**: Testa geração de URLs para API do IBGE
 - **Tratamento de Dados**: Verifica comportamento com diferentes entradas
+
+### 5. Padrões de Imutabilidade (`Immutability.test.js`)
+- **ObserverSubject**: Verifica que operações de subscribe/unsubscribe não mutam arrays
+- **BrazilianStandardAddress**: Testa construção imutável de arrays com filter(Boolean)
+- **AddressCache**: Verifica operações de cache sem mutação de estado
+- **Best Practices**: Demonstra padrões imutáveis (spread operator, filter, sort em cópias)
 
 ## Cobertura de Código
 

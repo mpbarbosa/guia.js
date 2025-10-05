@@ -25,9 +25,10 @@ Guia.js is a JavaScript-based geolocation web application (version 0.5.0-alpha) 
 ### Development Workflow
 - Always validate JavaScript syntax with `node -c` before committing changes
 - Test core functionality with `node guia.js` to see version output and basic initialization
-- Run automated tests with `npm run test:all` before commits to ensure 55 tests pass
+- Run automated tests with `npm run test:all` before commits to ensure 180+ tests pass
 - For DOM/web features, use the web server and test.html for manual validation
-- **TIMING**: Syntax checks <1 second, tests 2 seconds, web server startup 3 seconds
+- **Follow immutability principles** - see `.github/CONTRIBUTING.md` for guidelines
+- **TIMING**: Syntax checks <1 second, tests ~3 seconds, web server startup 3 seconds
 
 ## Validation Scenarios
 
@@ -43,7 +44,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 2. **Automated Test Suite**:
    ```bash
    npm run test:all
-   # Should show: ✅ 55 tests passing, ✅ 5 suites, ~2 seconds execution
+   # Should show: ✅ 180+ tests passing, ✅ 22 suites, ~3 seconds execution
    ```
 
 3. **Web Application Functionality**:
@@ -72,7 +73,8 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
 - `test.html` (133 lines) - Test page for manual validation
 - `package.json` - Node.js configuration with Jest testing framework
-- `__tests__/` - 5 test files with 55 total tests
+- `__tests__/` - 22 test files with 180+ total tests
+- `.github/CONTRIBUTING.md` - Contribution guidelines including immutability principles
 
 ### Important Classes and Components
 
@@ -104,10 +106,10 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Testing Infrastructure
 
 ### Automated Test Coverage
-- **55 tests** across 5 test suites running in ~2 seconds
+- **180+ tests** across 22 test suites running in ~3 seconds
 - **~12% code coverage** of guia.js (278/2288 lines)
 - **100% coverage** of guia_ibge.js (full coverage)
-- **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration
+- **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns
 
 ### Test Execution Commands
 ```bash
@@ -128,10 +130,11 @@ npm run test:all
 ```
 
 ### Expected Test Results
-- ✅ 55 tests passing
-- ✅ 5 suites of test files
+- ✅ 180+ tests passing
+- ✅ 22 suites of test files
 - ✅ ~12% code coverage on guia.js
 - ✅ 100% code coverage on guia_ibge.js
+- ✅ 14 immutability pattern tests
 
 ## Common Development Tasks
 
@@ -140,6 +143,8 @@ npm run test:all
 - Follow the MVC pattern: Extractor → Validator → Formatter → Displayer
 - Update both Node.js compatibility and DOM functionality
 - Write tests for new functionality in `__tests__/` directory
+- **Follow immutability principles**: Use spread operator, filter, map instead of push, splice, sort
+- See `.github/CONTRIBUTING.md` for comprehensive immutability guidelines
 
 ### Debugging Geolocation Issues
 - Check browser console for JavaScript errors

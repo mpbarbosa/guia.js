@@ -425,6 +425,7 @@ class ObserverSubject {
 	/**
 	 * Subscribes an observer object to receive notifications.
 	 * The observer must have an update() method that will be called on notifications.
+	 * Uses immutable pattern to avoid direct array mutation.
 	 * 
 	 * @param {Object} observer - Observer object with an update method
 	 * @param {Function} observer.update - Method called when notifying observers
@@ -440,7 +441,7 @@ class ObserverSubject {
 	 */
 	subscribe(observer) {
 		if (observer) {
-			this.observers.push(observer);
+			this.observers = [...this.observers, observer];
 		}
 	}
 
@@ -479,6 +480,7 @@ class ObserverSubject {
 
 	/**
 	 * Subscribes a function to receive notifications.
+	 * Uses immutable pattern to avoid direct array mutation.
 	 * 
 	 * @param {Function} observerFunction - Function to be called on notifications
 	 * @returns {void}
@@ -491,7 +493,7 @@ class ObserverSubject {
 	 */
 	subscribeFunction(observerFunction) {
 		if (observerFunction) {
-			this.functionObservers.push(observerFunction);
+			this.functionObservers = [...this.functionObservers, observerFunction];
 		}
 	}
 
@@ -1345,27 +1347,20 @@ class BrazilianStandardAddress {
 
 	/**
 	 * Returns a complete formatted address string.
+	 * Uses immutable pattern to build address parts array.
 	 * 
 	 * @returns {string} Complete formatted address
 	 * @since 0.8.3-alpha
 	 */
 	enderecoCompleto() {
-		const parts = [];
-
-		if (this.logradouroCompleto()) {
-			parts.push(this.logradouroCompleto());
-		}
-		if (this.bairro) {
-			parts.push(this.bairro);
-		}
-		if (this.municipioCompleto()) {
-			parts.push(this.municipioCompleto());
-		}
-		if (this.cep) {
-			parts.push(this.cep);
-		}
-
-		return parts.join(", ");
+		return [
+			this.logradouroCompleto(),
+			this.bairro,
+			this.municipioCompleto(),
+			this.cep
+		]
+		.filter(Boolean)  // Remove falsy values
+		.join(", ");
 	}
 
 	toString() {
@@ -2158,6 +2153,7 @@ class AddressCache {
 
 	/**
 	 * Cleans up expired cache entries based on timestamp.
+	 * Uses immutable pattern to build expired keys array.
 	 * 
 	 * @static
 	 * @private
@@ -2165,13 +2161,11 @@ class AddressCache {
 	 */
 	static cleanExpiredEntries() {
 		const now = Date.now();
-		const expiredKeys = [];
-
-		for (const [key, entry] of AddressCache.cache.entries()) {
-			if (now - entry.timestamp > AddressCache.cacheExpirationMs) {
-				expiredKeys.push(key);
-			}
-		}
+		
+		// Build expiredKeys array immutably using filter and map
+		const expiredKeys = Array.from(AddressCache.cache.entries())
+			.filter(([key, entry]) => now - entry.timestamp > AddressCache.cacheExpirationMs)
+			.map(([key]) => key);
 
 		expiredKeys.forEach(key => AddressCache.cache.delete(key));
 

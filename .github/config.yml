@@ -1,0 +1,33 @@
+# Shared configuration for .github resources
+# This file centralizes common settings to reduce coupling between templates and workflows
+
+# Common labels used across issue templates
+labels:
+  copilot: copilot
+  feature: enhancement
+  tech_debt: technical-debt
+  maintenance: maintenance
+  triage: triage
+
+# Default assignees (empty to allow manual assignment)
+assignees: []
+
+# Project file paths (centralized for workflows)
+project_files:
+  main_js: src/guia.js
+  ibge_js: src/guia_ibge.js
+  test_html: test.html
+  instructions: .github/copilot-instructions.md
+
+# Validation configuration
+validation:
+  node_version: '18'
+  python_version: '3.11'
+  web_server_port: 9000
+  startup_wait_seconds: 3
+
+# Code quality thresholds
+quality:
+  test_coverage_target: 80
+  max_function_lines: 50
+  max_line_length: 80

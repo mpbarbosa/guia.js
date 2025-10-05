@@ -1,0 +1,38 @@
+name: 'Security Check'
+description: 'Performs basic security checks on JavaScript files'
+inputs:
+  files:
+    description: 'Pattern for files to check (e.g., "*.js")'
+    required: false
+    default: '*.js'
+runs:
+  using: "composite"
+  steps:
+    - name: Basic security scan
+      shell: bash
+      run: |
+        echo "Performing basic security checks..."
+        
+        # Check for hardcoded credentials (basic patterns)
+        if grep -iE "(password|secret|token|key)\s*[:=]\s*['\"][^'\"]+['\"]" ${{ inputs.files }} 2>/dev/null; then
+          echo "⚠️ Potential hardcoded credentials found"
+          exit 1
+        else
+          echo "✅ No obvious hardcoded credentials found"
+        fi
+        
+        # Check for eval() usage
+        if grep -q "eval(" ${{ inputs.files }} 2>/dev/null; then
+          echo "⚠️ eval() usage found - review for security implications"
+        else
+          echo "✅ No eval() usage found"
+        fi
+        
+        # Check API endpoints are HTTPS
+        if grep -oE "https?://[^'\"\s]+" ${{ inputs.files }} 2>/dev/null | grep "http://" | grep -v "localhost"; then
+          echo "⚠️ Non-HTTPS external URLs found"
+        else
+          echo "✅ External API calls use HTTPS"
+        fi
+        
+        echo "✅ Basic security checks completed"

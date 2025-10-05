@@ -67,11 +67,7 @@ assignees: ''
 
 ## Additional Context
 
-<!-- Add any other context, references, or related information -->
-<!-- - Links to related issues or discussions -->
-<!-- - Code snippets showing the problem -->
-<!-- - Performance metrics or benchmarks -->
-<!-- - Screenshots or diagrams if helpful -->
+<!-- Add any other context such as links to related issues, code snippets, metrics, or diagrams. -->
 
 ## Effort Estimation
 

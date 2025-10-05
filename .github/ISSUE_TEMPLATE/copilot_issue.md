@@ -29,6 +29,8 @@ assignees: ''
 
 ## Additional Context
 
-<!-- Add any other context about the issue here. Links to related issues or documentation are helpful. -->
+<!-- Add any other context such as links to related issues, documentation, or similar problems. -->
 
-## Proposed solution
+## Proposed Solution
+
+<!-- If you have ideas for how to solve this issue, describe them here. -->

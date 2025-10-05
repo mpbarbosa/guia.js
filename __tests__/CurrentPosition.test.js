@@ -339,4 +339,78 @@ describe('GeoPosition Class', () => {
     });
   });
 
+  describe('GeolocationPosition toString Method', () => {
+    test('should add toString method to the position parameter with correct values', () => {
+      const mockPosition = {
+        coords: {
+          latitude: -23.5505,
+          longitude: -46.6333,
+          accuracy: 10,
+          altitude: 760,
+          altitudeAccuracy: 5,
+          heading: 0,
+          speed: 0
+        },
+        timestamp: 1234567890
+      };
+
+      const geoPosition = new GeoPosition(mockPosition);
+      
+      // Test that the position parameter now has a toString method
+      expect(mockPosition.toString).toBeDefined();
+      expect(typeof mockPosition.toString).toBe('function');
+      
+      // Test that the toString method returns correct format
+      const result = mockPosition.toString();
+      expect(result).toContain('PositionGeolocation');
+      expect(result).toContain('latitude');
+      expect(result).toContain('longitude');
+      expect(result).toContain('accuracy');
+      expect(result).toContain('-23.5505');
+      expect(result).toContain('-46.6333');
+      expect(result).toContain('10');
+    });
+
+    test('should show coordinates from coords property', () => {
+      const mockPosition = {
+        coords: {
+          latitude: -22.9068,
+          longitude: -43.1729,
+          accuracy: 25,
+          altitude: 11,
+          altitudeAccuracy: 3,
+          heading: 0,
+          speed: 0
+        },
+        timestamp: 9876543210
+      };
+
+      const geoPosition = new GeoPosition(mockPosition);
+      const result = mockPosition.toString();
+      
+      // Verify the method accesses coords.latitude, coords.longitude, coords.accuracy
+      expect(result).toBe('PositionGeolocation: { latitude: -22.9068, longitude: -43.1729, accuracy: 25 }');
+    });
+
+    test('should handle different accuracy values', () => {
+      const mockPosition = {
+        coords: {
+          latitude: 0,
+          longitude: 0,
+          accuracy: 150,
+          altitude: 0,
+          altitudeAccuracy: 0,
+          heading: 0,
+          speed: 0
+        },
+        timestamp: 0
+      };
+
+      const geoPosition = new GeoPosition(mockPosition);
+      const result = mockPosition.toString();
+      
+      expect(result).toBe('PositionGeolocation: { latitude: 0, longitude: 0, accuracy: 150 }');
+    });
+  });
+
 });

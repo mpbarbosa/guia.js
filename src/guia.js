@@ -190,7 +190,7 @@ log("Guia.js version:", guiaVersion.toString());
 class GeoPosition {
 	constructor(position) {
 		position.toString = function () {
-			return `PositionGeolocation: { latitude: ${this.latitude}, longitude: ${this.longitude}, accuracy: ${this.accuracy} }`;
+			return `PositionGeolocation: { latitude: ${this.coords.latitude}, longitude: ${this.coords.longitude}, accuracy: ${this.coords.accuracy} }`;
 		};
 		this.geolocationPosition = position;
 		this.coords = position.coords;

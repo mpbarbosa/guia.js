@@ -23,6 +23,15 @@ assignees: ''
 
 <!-- Suggest how the feature might be implemented. Include any ideas about design, workflow, or code changes. -->
 
+### Implementation Considerations
+
+<!-- When designing the feature, consider: -->
+<!-- - Can core logic be implemented as pure functions (referentially transparent)? -->
+<!-- - How can we separate business logic from side effects (I/O, mutations)? -->
+<!-- - Will the implementation be easy to test in isolation? -->
+<!-- - Are all dependencies explicit (passed as parameters vs global state)? -->
+<!-- See .github/REFERENTIAL_TRANSPARENCY.md for best practices -->
+
 ## Alternatives Considered
 
 <!-- List any alternative solutions or approaches you've thought about. Why did you choose this proposal? -->

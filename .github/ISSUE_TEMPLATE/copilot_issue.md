@@ -34,3 +34,12 @@ assignees: ''
 ## Proposed Solution
 
 <!-- If you have ideas for how to solve this issue, describe them here. -->
+
+### Referential Transparency Guidelines
+
+<!-- When proposing solutions, consider: -->
+<!-- - Will the solution use pure functions (deterministic, no side effects)? -->
+<!-- - Are dependencies made explicit rather than relying on global state? -->
+<!-- - Are side effects isolated from business logic? -->
+<!-- - Is the solution easy to test in isolation? -->
+<!-- See .github/REFERENTIAL_TRANSPARENCY.md and .github/CODE_REVIEW_GUIDE.md for details -->

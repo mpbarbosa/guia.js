@@ -366,3 +366,101 @@ describe('AddressDataExtractor Logradouro Change Detection', () => {
         expect(AddressDataExtractor.hasLogradouroChanged()).toBe(true);
     });
 });
+
+describe('AddressDataExtractor ReferencePlace Integration', () => {
+    beforeEach(() => {
+        AddressDataExtractor.clearCache();
+    });
+
+    afterEach(() => {
+        AddressDataExtractor.clearCache();
+    });
+
+    test('should extract reference place for shopping mall', () => {
+        const mallData = {
+            class: 'shop',
+            type: 'mall',
+            name: 'Shopping Morumbi',
+            address: {
+                road: 'Avenida Roque Petroni Junior',
+                house_number: '1089',
+                neighbourhood: 'Jardim das Acácias',
+                city: 'São Paulo',
+                state: 'São Paulo'
+            }
+        };
+
+        const extractor = new AddressDataExtractor(mallData);
+        
+        expect(extractor.referencePlace).toBeDefined();
+        expect(extractor.referencePlace.className).toBe('shop');
+        expect(extractor.referencePlace.typeName).toBe('mall');
+        expect(extractor.referencePlace.name).toBe('Shopping Morumbi');
+        expect(extractor.referencePlace.description).toBe('Shopping Center');
+    });
+
+    test('should extract reference place for subway station', () => {
+        const subwayData = {
+            class: 'railway',
+            type: 'subway',
+            name: 'Estação Sé',
+            address: {
+                road: 'Praça da Sé',
+                neighbourhood: 'Sé',
+                city: 'São Paulo',
+                state: 'São Paulo'
+            }
+        };
+
+        const extractor = new AddressDataExtractor(subwayData);
+        
+        expect(extractor.referencePlace).toBeDefined();
+        expect(extractor.referencePlace.className).toBe('railway');
+        expect(extractor.referencePlace.typeName).toBe('subway');
+        expect(extractor.referencePlace.name).toBe('Estação Sé');
+        expect(extractor.referencePlace.description).toBe('Estação do Metrô');
+    });
+
+    test('should handle data without reference place', () => {
+        const regularData = {
+            address: {
+                road: 'Rua Augusta',
+                house_number: '123',
+                neighbourhood: 'Consolação',
+                city: 'São Paulo',
+                state: 'São Paulo'
+            }
+        };
+
+        const extractor = new AddressDataExtractor(regularData);
+        
+        expect(extractor.referencePlace).toBeDefined();
+        expect(extractor.referencePlace.className).toBeNull();
+        expect(extractor.referencePlace.typeName).toBeNull();
+        expect(extractor.referencePlace.name).toBeNull();
+        expect(extractor.referencePlace.description).toBe('Não classificado');
+    });
+
+    test('should extract reference place with residential data', () => {
+        const residentialData = {
+            class: 'place',
+            type: 'house',
+            name: 'Casa do João',
+            address: {
+                road: 'Rua das Flores',
+                house_number: '100',
+                neighbourhood: 'Jardim das Flores',
+                city: 'São Paulo',
+                state: 'São Paulo'
+            }
+        };
+
+        const extractor = new AddressDataExtractor(residentialData);
+        
+        expect(extractor.referencePlace).toBeDefined();
+        expect(extractor.referencePlace.className).toBe('place');
+        expect(extractor.referencePlace.typeName).toBe('house');
+        expect(extractor.referencePlace.name).toBe('Casa do João');
+        expect(extractor.referencePlace.description).toBe('Residencial');
+    });
+});

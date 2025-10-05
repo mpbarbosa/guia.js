@@ -3,7 +3,7 @@
 const guiaVersion = {
 	major: 0,
 	minor: 8,
-	patch: 4,
+	patch: 5,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
@@ -2610,6 +2610,7 @@ class AddressDataExtractor {
 		const extractor = new AddressExtractor(data);
 		this.data = extractor.data;
 		this.enderecoPadronizado = extractor.enderecoPadronizado;
+		this.referencePlace = extractor.referencePlace;
 		Object.freeze(this);
 	}
 

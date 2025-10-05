@@ -28,7 +28,9 @@ const setupParams = {
 		"place": { "house": "Residencial" },
 		"shop": { "mall": "Shopping Center" },
 		"amenity": { "cafe": "Café" },
-		"railway": { "subway": "Estação do Metrô" },
+		"railway": { "subway": "Estação do Metrô",
+			"station": "Estação do Metrô"
+		 },
 	},
 	geolocationOptions: {
 		enableHighAccuracy: true,
@@ -137,7 +139,7 @@ const isMobileDevice = () => {
 
 	// Consider it mobile if any two of these conditions are true
 	const detectionScore = [isMobileUA, hasTouchScreen, isSmallScreen].filter(Boolean).length;
-	
+
 	return detectionScore >= 2;
 };
 
@@ -169,8 +171,8 @@ const warn = (message, ...params) => {
 // Desktop devices use WiFi/IP location which is less accurate, so we're more lenient
 if (typeof navigator !== 'undefined') {
 	const isMobile = isMobileDevice();
-	setupParams.notAcceptedAccuracy = isMobile 
-		? setupParams.mobileNotAcceptedAccuracy 
+	setupParams.notAcceptedAccuracy = isMobile
+		? setupParams.mobileNotAcceptedAccuracy
 		: setupParams.desktopNotAcceptedAccuracy;
 	console.log(`[Device Detection] Type: ${isMobile ? 'Mobile/Tablet' : 'Desktop/Laptop'}`);
 	console.log(`[Device Detection] Rejecting accuracy levels: ${setupParams.notAcceptedAccuracy.join(', ')}`);
@@ -466,8 +468,10 @@ class ObserverSubject {
 	 * observerSubject.notifyObservers(data1, data2, eventType);
 	 */
 	notifyObservers(...args) {
+		log("+++ (100) (ObserverSubject) Notifying observers with args:", args);
 		this.observers.forEach((observer) => {
 			if (typeof observer.update === "function") {
+				log("+++ (101) (ObserverSubject) Notifying observer:", observer);
 				observer.update(...args);
 			}
 		});
@@ -722,7 +726,7 @@ class PositionManager {
 	 * @since 0.5.0-alpha
 	 */
 	notifyObservers(posEvent) {
-		this.observerSubject.notifyObservers(this,posEvent)
+		this.observerSubject.notifyObservers(this, posEvent)
 	}
 
 	/**
@@ -947,17 +951,7 @@ class APIFetcher {
 	}
 
 	notifyObservers(appEvent) {
-		log("+++ (11) (APIFetcher) Notifying observers: ", this.observers);
-		this.observerSubject.observers.forEach((observer) => {
-			log("+++ (12) (APIFetcher) Notifying observer: ", observer);
-			observer.update(
-				this.firstUpdateParam(),
-				this.secondUpdateParam(),
-				appEvent,
-				this.error,
-				this.loading,
-			);
-		});
+		this.observerSubject.notifyObservers(this.firstUpdateParam(), this.secondUpdateParam(), appEvent, this.error, this.loading);
 	}
 
 	firstUpdateParam() {
@@ -1947,6 +1941,7 @@ class AddressExtractor {
 		this.data = data;
 		this.enderecoPadronizado = new BrazilianStandardAddress();
 		this.referencePlace = new ReferencePlace(data);
+		log("+++ (200) (AddressExtractor) Reference place: ", this.referencePlace);
 		this.padronizaEndereco();
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
 	}
@@ -2261,19 +2256,19 @@ class AddressCache {
 		}
 
 		const hasChanged = AddressCache.currentAddress.logradouro !== AddressCache.previousAddress.logradouro;
-		
+
 		if (!hasChanged) {
 			return false;
 		}
 
 		// Create a signature for this change to track if we've already notified
 		const changeSignature = `${AddressCache.previousAddress.logradouro}=>${AddressCache.currentAddress.logradouro}`;
-		
+
 		// If we've already notified about this exact change, return false
 		if (AddressCache.lastNotifiedChangeSignature === changeSignature) {
 			return false;
 		}
-		
+
 		// Mark this change as notified
 		AddressCache.lastNotifiedChangeSignature = changeSignature;
 		return true;
@@ -2293,19 +2288,19 @@ class AddressCache {
 		}
 
 		const hasChanged = AddressCache.currentAddress.bairro !== AddressCache.previousAddress.bairro;
-		
+
 		if (!hasChanged) {
 			return false;
 		}
 
 		// Create a signature for this change to track if we've already notified
 		const changeSignature = `${AddressCache.previousAddress.bairro}=>${AddressCache.currentAddress.bairro}`;
-		
+
 		// If we've already notified about this exact change, return false
 		if (AddressCache.lastNotifiedBairroChangeSignature === changeSignature) {
 			return false;
 		}
-		
+
 		// Mark this change as notified
 		AddressCache.lastNotifiedBairroChangeSignature = changeSignature;
 		return true;
@@ -2325,19 +2320,19 @@ class AddressCache {
 		}
 
 		const hasChanged = AddressCache.currentAddress.municipio !== AddressCache.previousAddress.municipio;
-		
+
 		if (!hasChanged) {
 			return false;
 		}
 
 		// Create a signature for this change to track if we've already notified
 		const changeSignature = `${AddressCache.previousAddress.municipio}=>${AddressCache.currentAddress.municipio}`;
-		
+
 		// If we've already notified about this exact change, return false
 		if (AddressCache.lastNotifiedMunicipioChangeSignature === changeSignature) {
 			return false;
 		}
-		
+
 		// Mark this change as notified
 		AddressCache.lastNotifiedMunicipioChangeSignature = changeSignature;
 		return true;
@@ -2353,7 +2348,7 @@ class AddressCache {
 	static getLogradouroChangeDetails() {
 		const currentLogradouro = AddressCache.currentAddress?.logradouro || null;
 		const previousLogradouro = AddressCache.previousAddress?.logradouro || null;
-		
+
 		return {
 			hasChanged: currentLogradouro !== previousLogradouro,
 			current: {
@@ -2376,11 +2371,11 @@ class AddressCache {
 	static getBairroChangeDetails() {
 		const currentBairro = AddressCache.currentAddress?.bairro || null;
 		const previousBairro = AddressCache.previousAddress?.bairro || null;
-		
+
 		// Compute bairroCompleto from raw data if available
 		const currentBairroCompleto = AddressCache._computeBairroCompleto(AddressCache.currentRawData);
 		const previousBairroCompleto = AddressCache._computeBairroCompleto(AddressCache.previousRawData);
-		
+
 		return {
 			hasChanged: currentBairro !== previousBairro,
 			current: {
@@ -2409,17 +2404,17 @@ class AddressCache {
 		if (!rawData || !rawData.address) {
 			return null;
 		}
-		
+
 		const address = rawData.address;
 		const neighbourhood = address.neighbourhood || null;
 		const suburb = address.suburb || null;
 		const quarter = address.quarter || null;
-		
+
 		// If we have both neighbourhood and suburb, combine them
 		if (neighbourhood && suburb && neighbourhood !== suburb) {
 			return `${neighbourhood}, ${suburb}`;
 		}
-		
+
 		// Otherwise return whichever is available
 		return neighbourhood || suburb || quarter || null;
 	}
@@ -2436,7 +2431,7 @@ class AddressCache {
 		const previousMunicipio = AddressCache.previousAddress?.municipio ?? undefined;
 		const currentUf = AddressCache.currentAddress?.uf ?? undefined;
 		const previousUf = AddressCache.previousAddress?.uf ?? undefined;
-		
+
 		return {
 			hasChanged: (currentMunicipio ?? null) !== (previousMunicipio ?? null),
 			current: {
@@ -2909,13 +2904,7 @@ class WebGeocodingManager {
 	}
 
 	notifyObservers() {
-		this.observerSubject.observers.forEach((observer) => {
-			observer.update(
-				this.currentPosition,
-				this.reverseGeocoder.currentAddress,
-				this.reverseGeocoder.enderecoPadronizado,
-			);
-		});
+		this.observerSubject.notifyObservers(this.currentPosition,this.reverseGeocoder.currentAddress,this.reverseGeocoder.enderecoPadronizado);
 	}
 
 	subscribeFunction(observerFunction) {
@@ -3334,11 +3323,7 @@ class SpeechQueue {
 	}
 
 	notifyObservers() {
-		this.observerSubject.observers.forEach((observer) => {
-			if (typeof observer.update === "function") {
-				observer.update(this);
-			}
-		});
+		this.observerSubject.notifyObservers(this);
 	}
 
 	subscribeFunction(observerFunction) {

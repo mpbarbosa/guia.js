@@ -5,6 +5,7 @@ Thank you for your interest in contributing to Guia.js! This document provides g
 ## Table of Contents
 
 - [Code Style and Best Practices](#code-style-and-best-practices)
+- [Referential Transparency](#referential-transparency)
 - [Immutability Principles](#immutability-principles)
 - [Testing Guidelines](#testing-guidelines)
 - [Pull Request Process](#pull-request-process)
@@ -18,6 +19,124 @@ Thank you for your interest in contributing to Guia.js! This document provides g
 - Add JSDoc comments for public APIs
 - Write tests for new functionality
 - Ensure all tests pass before submitting a PR
+
+## Referential Transparency
+
+### What is Referential Transparency?
+
+**Referential transparency** is a fundamental principle in functional programming where an expression can be replaced with its resulting value without changing the program's behavior. A function is referentially transparent when:
+
+1. **It always produces the same output for the same input** (deterministic)
+2. **It has no observable side effects** (no mutations, I/O operations, etc.)
+
+### Why It Matters for Contributors
+
+Writing referentially transparent code makes the Guia.js project more:
+- **Predictable**: Easier to understand and reason about
+- **Testable**: Simple to test without complex setup
+- **Maintainable**: Changes have localized effects
+- **Reliable**: No hidden dependencies or side effects
+
+### Guidelines for Writing Referentially Transparent Code
+
+#### ✅ DO: Write Pure Functions
+
+```javascript
+// ✅ GOOD: Pure function - same input always gives same output
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371e3; // Earth's radius in meters
+  const φ1 = lat1 * Math.PI / 180;
+  const φ2 = lat2 * Math.PI / 180;
+  // ... calculation
+  return distance;
+}
+
+// ✅ GOOD: Pure transformation
+function formatAddress(address) {
+  return [address.street, address.city, address.state]
+    .filter(Boolean)
+    .join(', ');
+}
+```
+
+#### ❌ DON'T: Depend on External State
+
+```javascript
+// ❌ BAD: Depends on external config
+const config = { apiUrl: 'https://api.example.com' };
+function fetchData(endpoint) {
+  return fetch(`${config.apiUrl}${endpoint}`);  // Hidden dependency
+}
+
+// ✅ GOOD: Explicit dependencies as parameters
+function fetchData(apiUrl, endpoint) {
+  return fetch(`${apiUrl}${endpoint}`);
+}
+```
+
+#### ✅ DO: Isolate Side Effects
+
+Keep side effects (I/O, mutations, logging) at the boundaries:
+
+```javascript
+// ✅ GOOD: Pure business logic
+function validateCoordinates(lat, lon) {
+  return lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
+}
+
+// Side effects in the orchestration layer
+async function processLocation(lat, lon) {
+  if (!validateCoordinates(lat, lon)) {  // Pure
+    throw new Error('Invalid coordinates');
+  }
+  
+  const address = await fetchAddress(lat, lon);  // Side effect: I/O
+  console.log('Address fetched:', address);  // Side effect: logging
+  return address;
+}
+```
+
+#### ❌ DON'T: Use Non-Deterministic Values
+
+```javascript
+// ❌ BAD: Non-deterministic
+function createTimestamp() {
+  return Date.now();  // Different value each time
+}
+
+// ✅ GOOD: Deterministic (pass current time as parameter)
+function createTimestamp(currentTime) {
+  return currentTime;
+}
+
+// ❌ BAD: Random values
+function generateId() {
+  return Math.random().toString(36);
+}
+
+// ✅ GOOD: Pass randomness as parameter or use at boundary
+function generateId(randomValue) {
+  return randomValue.toString(36);
+}
+```
+
+### Quick Checklist for Contributors
+
+Before submitting your PR, verify your functions are referentially transparent:
+
+- [ ] Functions return the same output for the same input
+- [ ] No modifications to external state (no mutations outside function scope)
+- [ ] No I/O operations in business logic (console.log, fetch, localStorage, etc.)
+- [ ] No use of `Math.random()`, `Date.now()`, or similar non-deterministic sources
+- [ ] All dependencies are passed as parameters (no hidden globals)
+- [ ] Side effects are isolated to boundary functions
+- [ ] Functions are easy to test in isolation
+
+### Learn More
+
+For a comprehensive guide with detailed examples, see:
+- **[REFERENTIAL_TRANSPARENCY.md](./.github/REFERENTIAL_TRANSPARENCY.md)** - Full documentation
+- **[CODE_REVIEW_GUIDE.md](./.github/CODE_REVIEW_GUIDE.md)** - Review checklist
 
 ## Immutability Principles
 

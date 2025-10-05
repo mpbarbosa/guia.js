@@ -40,6 +40,15 @@ assignees: ''
 <!-- - Performance optimizations -->
 <!-- - Security fixes -->
 
+### Referential Transparency Considerations
+
+<!-- Consider these aspects when proposing a solution: -->
+<!-- - Can functions be made pure (same input → same output, no side effects)? -->
+<!-- - Are there hidden dependencies on global state that should be made explicit? -->
+<!-- - Can side effects be isolated to boundary functions? -->
+<!-- - Would the code be easier to test with referentially transparent functions? -->
+<!-- See .github/REFERENTIAL_TRANSPARENCY.md for guidance -->
+
 ## Affected Areas
 
 <!-- List the files, modules, or components that would be impacted by addressing this technical debt -->
@@ -64,6 +73,9 @@ assignees: ''
 - [ ] Criterion 1
 - [ ] Criterion 2
 - [ ] Criterion 3
+- [ ] Functions follow referential transparency principles (pure, testable)
+- [ ] Side effects are properly isolated
+- [ ] Code is tested and tests verify no mutations occur
 
 ## Additional Context
 

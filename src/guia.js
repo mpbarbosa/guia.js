@@ -1750,6 +1750,7 @@ class HTMLPositionDisplayer {
 		// Display accuracy information
 		html += `<div class="accuracy-info">
             <p><strong>Precisão:</strong> ${coords.accuracy ? coords.accuracy.toFixed(2) : 'N/A'} metros</p>
+            <h4>Precisão:</h4>
             <p><strong>Qualidade:</strong> ${this.formatAccuracyQuality(position.accuracyQuality)}</p>
         </div>`;
 

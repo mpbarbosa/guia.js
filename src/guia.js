@@ -1883,6 +1883,7 @@ class HTMLAddressDisplayer {
 	}
 
 	update(addressData, enderecoPadronizado, posEvent, loading, error) {
+		log("+++ (50) (HTMLAddressDisplayer) update() called with posEvent:", posEvent);
 		// Handle loading state
 		if (loading) {
 			this.element.innerHTML = '<p class="loading">Carregando endereço...</p>';
@@ -1897,6 +1898,7 @@ class HTMLAddressDisplayer {
 
 		// Handle successful address data
 		if (posEvent == PositionManager.strCurrPosUpdate && (addressData || enderecoPadronizado)) {
+			log("+++ (51) (HTMLAddressDisplayer) Rendering address data:", addressData);
 			const html = this.renderAddressHtml(addressData, enderecoPadronizado);
 			this.element.innerHTML += html;
 		}

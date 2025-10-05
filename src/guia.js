@@ -192,6 +192,7 @@ class GeoPosition {
 		position.toString = function () {
 			return `PositionGeolocation: { latitude: ${this.latitude}, longitude: ${this.longitude}, accuracy: ${this.accuracy} }`;
 		};
+		this.geolocationPosition = position;
 		this.coords = position.coords;
 		this.latitude = position.coords.latitude;
 		this.longitude = position.coords.longitude;
@@ -675,7 +676,7 @@ class PositionManager {
 	 * const myObserver = { update: () => {} };
 	 * const manager = PositionManager.getInstance();
 	 * manager.subscribe(myObserver);
-	 * // Later...
+	 * // Later..
 	 * manager.unsubscribe(myObserver);
 	 * 
 	 * @since 0.5.0-alpha
@@ -698,11 +699,7 @@ class PositionManager {
 	 * @since 0.5.0-alpha
 	 */
 	notifyObservers(posEvent) {
-		log("+++ (2) (PositionManager) Notifying observers: ", this.observers);
-		this.observerSubject.observers.forEach((observer) => {
-			log("+++ (3) (PositionManager) Notifying observer: ", observer);
-			observer.update(this, posEvent);
-		});
+		this.observerSubject.notifyObservers(this,posEvent)
 	}
 
 	/**
@@ -1609,8 +1606,13 @@ class HTMLPositionDisplayer {
 
 		const position = positionManager.lastPosition;
 
-		let html = `<details class="position-details" open>
+		let html = `<details class="position-details" closed>
             <summary><strong>Posição Atual</strong></summary>`;
+
+		html += `<div class="coordinates">
+		${positionManager.lastPosition.geolocationPosition}<br>
+		${positionManager.lastPosition.constructor.name}
+		</div>`;
 
 		// Display core coordinates
 		html += `<div class="coordinates">
@@ -1714,8 +1716,9 @@ class HTMLPositionDisplayer {
  * @author Marcelo Pereira Barbosa
  */
 class HTMLAddressDisplayer {
-	constructor(element) {
+	constructor(element, enderecoPadronizadoDisplay = false) {
 		this.element = element;
+		this.enderecoPadronizadoDisplay = enderecoPadronizadoDisplay;
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
 	}
 
@@ -1724,7 +1727,11 @@ class HTMLAddressDisplayer {
 			return "<p class='error'>No address data available.</p>";
 		}
 
-		let html = `<details class="address-details" open>
+		if (this.enderecoPadronizadoDisplay && enderecoPadronizado) {
+			this.enderecoPadronizadoDisplay.innerHTML = enderecoPadronizado.enderecoCompleto();
+		}
+
+		let html = `<details class="address-details" closed>
             <summary><strong>Endereço Atual</strong></summary>`;
 
 		// Display all addressData attributes
@@ -1756,11 +1763,6 @@ class HTMLAddressDisplayer {
 	}
 
 	update(addressData, enderecoPadronizado, posEvent, loading, error) {
-		if (addressData) {
-			// Display all object attributes
-
-		}
-
 		// Handle loading state
 		if (loading) {
 			this.element.innerHTML = '<p class="loading">Carregando endereço...</p>';
@@ -1776,7 +1778,7 @@ class HTMLAddressDisplayer {
 		// Handle successful address data
 		if (posEvent == PositionManager.strCurrPosUpdate && (addressData || enderecoPadronizado)) {
 			const html = this.renderAddressHtml(addressData, enderecoPadronizado);
-			this.element.innerHTML = html;
+			this.element.innerHTML += html;
 		}
 	}
 
@@ -2673,9 +2675,10 @@ Object.defineProperties(AddressDataExtractor, {
  */
 
 class WebGeocodingManager {
-	constructor(document, resultElement) {
+	constructor(document, params) {
 		this.document = document;
-		this.locationResult = resultElement;
+		this.locationResult = params.locationResult;
+		this.enderecoPadronizadoDisplay = params.enderecoPadronizadoDisplay || null;
 		this.observerSubject = new ObserverSubject();
 		this.currentPosition = null;
 		this.currentCoords = null;
@@ -2686,7 +2689,7 @@ class WebGeocodingManager {
 		this.reverseGeocoder = new ReverseGeocoder();
 
 		this.positionDisplayer = new HTMLPositionDisplayer(this.locationResult);
-		this.addressDisplayer = new HTMLAddressDisplayer(this.locationResult);
+		this.addressDisplayer = new HTMLAddressDisplayer(this.locationResult, this.enderecoPadronizadoDisplay);
 
 		PositionManager.getInstance().subscribe(this.positionDisplayer);
 		PositionManager.getInstance().subscribe(this.reverseGeocoder);
@@ -3810,7 +3813,7 @@ class HtmlSpeechSynthesisDisplayer {
 		if (!currentAddress) {
 			return "Localização não disponível";
 		}
-		let speechText = "Você está em: ";
+		let speechText = "Você está em ";
 
 		if (currentAddress.logradouro) {
 			speechText += currentAddress.logradouroCompleto();

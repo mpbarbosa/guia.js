@@ -1442,10 +1442,16 @@ class ReferencePlace {
 			return setupParams.noReferencePlace;
 		}
 
-		// Look up in the reference place map
-		if (setupParams.referencePlaceMap[this.className] &&
-			setupParams.referencePlaceMap[this.className][this.typeName]) {
-			return setupParams.referencePlaceMap[this.className][this.typeName];
+		if (this.className && this.typeName) {
+			// Look up in the reference place map
+			if (setupParams.referencePlaceMap[this.className] &&
+				setupParams.referencePlaceMap[this.className][this.typeName]) {
+					if (this.name) {
+						return `${setupParams.referencePlaceMap[this.className][this.typeName]} ${this.name}`;
+					} else {
+						return setupParams.referencePlaceMap[this.className][this.typeName];
+					}
+			}
 		}
 
 		// Fallback to class/type combination
@@ -1828,6 +1834,56 @@ class HTMLPositionDisplayer {
 	}
 }
 
+
+class HTMLReferencePlaceDisplayer {
+	constructor(element, referencePlaceDisplay = false) {
+		this.element = element;
+		this.referencePlaceDisplay = referencePlaceDisplay;
+		Object.freeze(this); // Prevent further modification following MP Barbosa standards
+	}
+
+	renderReferencePlaceHtml(referencePlace) {
+		if (!referencePlace) {
+			return "<p class='error'>No reference place data available.</p>";
+		}
+
+
+		// Display all referencePlace attributes
+		let html = '<div class="reference-place-attributes">';
+		html += referencePlace.description; 
+		html += `</div>`;
+		return html;
+	}
+
+	update(addressData, brazilianStandardAddress, posEvent, loading, error) {
+		log("+++ (50) (HTMLReferencePlaceDisplayer) update() called with posEvent:", posEvent);
+		log("+++ (50.1) (HTMLReferencePlaceDisplayer) brazilian standard address: ", brazilianStandardAddress.constructor.name);
+		log("+++ (50.2) (HTMLReferencePlaceDisplayer) Reference place: ", brazilianStandardAddress.referencePlace);
+		// Handle loading state
+		if (loading) {
+			this.element.innerHTML = '<p class="loading">Carregando local de referência...</p>';
+			return;
+		}
+
+		// Handle error state
+		if (error) {
+			this.element.innerHTML = `<p class="error">Erro ao carregar local de referência: ${error.message}</p>`;
+			return;
+		}
+
+		// Handle successful reference place data
+		if (posEvent == PositionManager.strCurrPosUpdate && (brazilianStandardAddress)) {
+			log("+++ (51) (HTMLReferencePlaceDisplayer) Rendering reference place data:", brazilianStandardAddress);
+			const html = this.renderReferencePlaceHtml(brazilianStandardAddress.referencePlace);
+			this.element.innerHTML = html;
+		}
+	}
+
+	toString() {
+		return `${this.constructor.name}: ${this.element.id || 'no-id'}`;
+	}
+}
+
 /**
  * Displays address information in HTML format.
  * 
@@ -1942,8 +1998,6 @@ class AddressExtractor {
 	constructor(data) {
 		this.data = data;
 		this.enderecoPadronizado = new BrazilianStandardAddress();
-		this.referencePlace = new ReferencePlace(data);
-		log("+++ (200) (AddressExtractor) Reference place: ", this.referencePlace);
 		this.padronizaEndereco();
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
 	}
@@ -1984,6 +2038,8 @@ class AddressExtractor {
 
 		// Map country (default to Brasil for Brazilian addresses)
 		this.enderecoPadronizado.pais = address.country === 'Brasil' || address.country === 'Brazil' ? 'Brasil' : (address.country || 'Brasil');
+
+		this.enderecoPadronizado.referencePlace = new ReferencePlace(this.data);
 	}
 
 	/**
@@ -2804,6 +2860,7 @@ class WebGeocodingManager {
 		this.document = document;
 		this.locationResult = params.locationResult;
 		this.enderecoPadronizadoDisplay = params.enderecoPadronizadoDisplay || null;
+		this.referencePlaceDisplay = params.referencePlaceDisplay || null;
 		this.observerSubject = new ObserverSubject();
 		this.currentPosition = null;
 		this.currentCoords = null;
@@ -2815,9 +2872,10 @@ class WebGeocodingManager {
 
 		this.positionDisplayer = new HTMLPositionDisplayer(this.locationResult);
 		this.addressDisplayer = new HTMLAddressDisplayer(this.locationResult, this.enderecoPadronizadoDisplay);
-
+		this.referencePlaceDisplayer = new HTMLReferencePlaceDisplayer(this.referencePlaceDisplay);
 		PositionManager.getInstance().subscribe(this.positionDisplayer);
 		PositionManager.getInstance().subscribe(this.reverseGeocoder);
+		this.reverseGeocoder.subscribe(this.referencePlaceDisplayer);
 		this.reverseGeocoder.subscribe(this.addressDisplayer);
 	}
 

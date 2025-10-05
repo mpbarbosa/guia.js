@@ -319,6 +319,29 @@ class GeoPosition {
 		this._accuracy = value;
 		this.accuracyQuality = GeoPosition.getAccuracyQuality(value);
 	}
+
+	/**
+	 * Returns a string representation of the GeoPosition instance.
+	 * 
+	 * Provides a formatted summary of key position properties for debugging
+	 * and logging purposes. Includes class name and essential position data
+	 * following the same format as PositionManager.toString().
+	 * 
+	 * @returns {string} Formatted string with position details
+	 * 
+	 * @example
+	 * const position = new GeoPosition(geolocationPosition);
+	 * console.log(position.toString());
+	 * // Output: "GeoPosition: -23.5505, -46.6333, good, 760, 0, 0, 1634567890123"
+	 * 
+	 * @since 0.5.0-alpha
+	 */
+	toString() {
+		if (!this.latitude || !this.longitude) {
+			return `${this.constructor.name}: No position data`;
+		}
+		return `${this.constructor.name}: ${this.latitude}, ${this.longitude}, ${this.accuracyQuality}, ${this.altitude}, ${this.speed}, ${this.heading}, ${this.timestamp}`;
+	}
 }
 
 

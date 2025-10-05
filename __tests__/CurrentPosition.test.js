@@ -218,3 +218,125 @@ describe('PositionManager Class', () => {
   });
 
 });
+
+describe('GeoPosition Class', () => {
+  
+  describe('toString Method', () => {
+    test('should return formatted string representation with all position data', () => {
+      const mockPosition = {
+        coords: {
+          latitude: -23.5505,
+          longitude: -46.6333,
+          accuracy: 10,
+          altitude: 760,
+          altitudeAccuracy: 5,
+          heading: 90,
+          speed: 5
+        },
+        timestamp: 1234567890
+      };
+
+      const geoPosition = new GeoPosition(mockPosition);
+      const result = geoPosition.toString();
+      
+      expect(result).toContain('GeoPosition');
+      expect(result).toContain('-23.5505');
+      expect(result).toContain('-46.6333');
+      expect(result).toContain('excellent'); // accuracy quality for 10m
+      expect(result).toContain('760');
+      expect(result).toContain('90');
+      expect(result).toContain('5');
+      expect(result).toContain('1234567890');
+    });
+
+    test('should handle position with good accuracy quality', () => {
+      const mockPosition = {
+        coords: {
+          latitude: -22.9068,
+          longitude: -43.1729,
+          accuracy: 25, // good accuracy
+          altitude: 11,
+          altitudeAccuracy: 3,
+          heading: 0,
+          speed: 0
+        },
+        timestamp: 9876543210
+      };
+
+      const geoPosition = new GeoPosition(mockPosition);
+      const result = geoPosition.toString();
+      
+      expect(result).toContain('GeoPosition');
+      expect(result).toContain('-22.9068');
+      expect(result).toContain('-43.1729');
+      expect(result).toContain('good');
+    });
+
+    test('should handle null altitude, heading, and speed', () => {
+      const mockPosition = {
+        coords: {
+          latitude: -23.5505,
+          longitude: -46.6333,
+          accuracy: 50, // medium accuracy
+          altitude: null,
+          altitudeAccuracy: null,
+          heading: null,
+          speed: null
+        },
+        timestamp: 1111111111
+      };
+
+      const geoPosition = new GeoPosition(mockPosition);
+      const result = geoPosition.toString();
+      
+      expect(result).toContain('GeoPosition');
+      expect(result).toContain('-23.5505');
+      expect(result).toContain('-46.6333');
+      expect(result).toContain('medium');
+      expect(result).toContain('null');
+    });
+
+    test('should return "No position data" when latitude or longitude is missing', () => {
+      const mockPosition = {
+        coords: {
+          latitude: null,
+          longitude: null,
+          accuracy: 10,
+          altitude: 760,
+          altitudeAccuracy: 5,
+          heading: 0,
+          speed: 0
+        },
+        timestamp: 1234567890
+      };
+
+      const geoPosition = new GeoPosition(mockPosition);
+      const result = geoPosition.toString();
+      
+      expect(result).toBe('GeoPosition: No position data');
+    });
+
+    test('should follow same format as PositionManager.toString()', () => {
+      const mockPosition = {
+        coords: {
+          latitude: -23.5505,
+          longitude: -46.6333,
+          accuracy: 10,
+          altitude: 760,
+          altitudeAccuracy: 5,
+          heading: 0,
+          speed: 0
+        },
+        timestamp: 1234567890
+      };
+
+      const geoPosition = new GeoPosition(mockPosition);
+      const result = geoPosition.toString();
+      
+      // Expected format: "GeoPosition: latitude, longitude, accuracyQuality, altitude, speed, heading, timestamp"
+      const expectedPattern = /^GeoPosition: -?\d+\.?\d*, -?\d+\.?\d*, \w+, -?\d+\.?\d*, -?\d+\.?\d*, -?\d+\.?\d*, \d+$/;
+      expect(result).toMatch(expectedPattern);
+    });
+  });
+
+});

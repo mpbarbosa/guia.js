@@ -25,16 +25,14 @@ jobs:
         python-version: '3.11'
         
     - name: Validate JavaScript syntax
-      run: |
-        echo "Validating JavaScript syntax..."
-        node -c guia.js
-        node -c guia_ibge.js
-        echo "✅ JavaScript syntax validation passed"
+      uses: ./.github/actions/validate-js
+      with:
+        files: 'src/guia.js src/guia_ibge.js'
         
     - name: Test basic functionality
       run: |
         echo "Testing basic Node.js functionality..."
-        node guia.js
+        node src/guia.js
         echo "✅ Basic functionality test passed"
         
     - name: Start web server and test (basic check)
@@ -59,8 +57,8 @@ jobs:
     - name: Check for required files
       run: |
         echo "Verifying required files exist..."
-        test -f guia.js && echo "✅ guia.js found"
-        test -f guia_ibge.js && echo "✅ guia_ibge.js found"
+        test -f src/guia.js && echo "✅ src/guia.js found"
+        test -f src/guia_ibge.js && echo "✅ src/guia_ibge.js found"
         test -f test.html && echo "✅ test.html found"
         test -f .github/copilot-instructions.md && echo "✅ copilot-instructions.md found"
         test -f .github/workflows/copilot-coding-agent.yml && echo "✅ copilot-coding-agent.yml found"
@@ -82,17 +80,17 @@ jobs:
       run: |
         echo "Performing basic code style checks..."
         # Check for basic formatting issues
-        if grep -q $'\t' guia.js; then
-          echo "✅ Tabs found in guia.js (consistent with existing style)"
+        if grep -q $'\t' src/guia.js; then
+          echo "✅ Tabs found in src/guia.js (consistent with existing style)"
         fi
         
         # Check for console.log statements (informational)
-        console_logs=$(grep -c "console\." guia.js || true)
-        echo "ℹ️ Found $console_logs console statements in guia.js"
+        console_logs=$(grep -c "console\." src/guia.js || true)
+        echo "ℹ️ Found $console_logs console statements in src/guia.js"
         
         # Check version consistency
-        if grep -q "prerelease: 'alpha'" guia.js; then
-          echo "✅ Version configuration found in guia.js"
+        if grep -q "prerelease: 'alpha'" src/guia.js; then
+          echo "✅ Version configuration found in src/guia.js"
         fi
         
         echo "✅ Basic code style checks completed"
@@ -105,29 +103,6 @@ jobs:
       uses: actions/checkout@v4
       
     - name: Basic security scan
-      run: |
-        echo "Performing basic security checks..."
-        
-        # Check for hardcoded credentials (basic patterns)
-        if grep -iE "(password|secret|token|key)\s*[:=]\s*['\"][^'\"]+['\"]" *.js; then
-          echo "⚠️ Potential hardcoded credentials found"
-          exit 1
-        else
-          echo "✅ No obvious hardcoded credentials found"
-        fi
-        
-        # Check for eval() usage
-        if grep -q "eval(" *.js; then
-          echo "⚠️ eval() usage found - review for security implications"
-        else
-          echo "✅ No eval() usage found"
-        fi
-        
-        # Check API endpoints are HTTPS
-        if grep -oE "https?://[^'\"\s]+" *.js | grep "http://" | grep -v "localhost"; then
-          echo "⚠️ Non-HTTPS external URLs found"
-        else
-          echo "✅ External API calls use HTTPS"
-        fi
-        
-        echo "✅ Basic security checks completed"
+      uses: ./.github/actions/security-check
+      with:
+        files: 'src/*.js'

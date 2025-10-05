@@ -1,0 +1,24 @@
+name: 'Validate JavaScript'
+description: 'Validates JavaScript syntax for all JS files in the project'
+inputs:
+  files:
+    description: 'Space-separated list of JavaScript files to validate'
+    required: false
+    default: 'src/guia.js src/guia_ibge.js'
+runs:
+  using: "composite"
+  steps:
+    - name: Validate JavaScript syntax
+      shell: bash
+      run: |
+        echo "Validating JavaScript syntax..."
+        for file in ${{ inputs.files }}; do
+          if [ -f "$file" ]; then
+            echo "Validating $file..."
+            node -c "$file"
+            echo "✅ $file syntax validation passed"
+          else
+            echo "⚠️ File not found: $file"
+          fi
+        done
+        echo "✅ JavaScript syntax validation completed"

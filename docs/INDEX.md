@@ -88,6 +88,10 @@ When creating issues, use these templates for consistency:
 - **[Copilot Issue](../.github/ISSUE_TEMPLATE/copilot_issue.md)** - Report Copilot-related issues
   - Now includes referential transparency guidelines 🆕
 
+- **[Documentation](../.github/ISSUE_TEMPLATE/documentation.md)** - Report documentation issues 🆕
+  - Request missing documentation or report unclear/outdated content
+  - Includes documentation quality checklist
+
 ## Quick Start Guides
 
 ### For New Contributors

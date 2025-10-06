@@ -92,6 +92,11 @@ When creating issues, use these templates for consistency:
   - Request missing documentation or report unclear/outdated content
   - Includes documentation quality checklist
 
+📊 **[Issue Template Comparison](./ISSUE_TEMPLATE_COMPARISON.md)** - Side-by-side comparison of all templates 🆕
+  - Detailed analysis of each template's features
+  - Common patterns and unique capabilities
+  - Guidance on selecting the right template
+
 ## Quick Start Guides
 
 ### For New Contributors

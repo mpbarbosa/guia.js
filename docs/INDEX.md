@@ -23,6 +23,12 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Distance calculation utilities
   - Integration with position tracking
 
+- **[GEO_POSITION_FUNC_SPEC.md](./GEO_POSITION_FUNC_SPEC.md)** - GeoPosition functional specification 🆕
+  - Language-agnostic functional requirements
+  - Codeless specification for multi-language implementation
+  - Detailed algorithms and data model
+  - Testing requirements and validation rules
+
 ### Testing
 
 - **[TESTING.md](../TESTING.md)** - Automated testing documentation

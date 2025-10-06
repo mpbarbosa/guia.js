@@ -2076,6 +2076,23 @@ class AddressExtractor {
  * @author Marcelo Pereira Barbosa
  */
 class AddressCache {
+
+// Initialize static properties for AddressCache
+	static observerSubject = new ObserverSubject();
+	static cache = new Map();
+	static maxCacheSize = 50;
+	static cacheExpirationMs = 300000; // 5 minutes
+	static lastNotifiedChangeSignature = null;
+	static lastNotifiedBairroChangeSignature = null;
+	static lastNotifiedMunicipioChangeSignature = null;
+	static logradouroChangeCallback = null;
+	static bairroChangeCallback = null;
+	static municipioChangeCallback = null;
+	static currentAddress = null;
+	static previousAddress = null;
+	static currentRawData = null;
+	static previousRawData = null;
+
 	/**
 	 * Generates a cache key for address data to enable efficient caching and retrieval.
 	 * 
@@ -2610,24 +2627,63 @@ class AddressCache {
 			}
 		}
 
+		AddressCache.notifyObservers({ type: 'addressUpdated', address: extractor.enderecoPadronizado, cacheSize: AddressCache.getCacheSize() });
+
+		AddressCache.notifyFunctions({ type: 'addressUpdated', address: extractor.enderecoPadronizado, cacheSize: AddressCache.getCacheSize() });
+
+		// Return the newly extracted standardized address
+
 		return extractor.enderecoPadronizado;
 	}
+
+	static toString() {
+		return `AddressCache {
+			cache: ${AddressCache.cache.size},
+			currentAddress: ${AddressCache.currentAddress},
+			previousAddress: ${AddressCache.previousAddress}
+		}`;
+	}
+
+	static subscribe(observer) {
+		return AddressCache.observerSubject.subscribe(observer);
+	}
+
+	static unsubscribe(observer) {
+		return AddressCache.observerSubject.unsubscribe(observer);
+	}	
+
+	static notifyObservers(event) {
+		AddressCache.observerSubject.notifyObservers(event);
+	}
+
+	static getCacheSize() {
+		return AddressCache.cache.size;
+	}
+
+	static subscribeFunction(fn) {
+		return AddressCache.observerSubject.subscribeFunction(fn);
+	}
+
+	static unsubscribeFunction(fn) {
+		return AddressCache.observerSubject.unsubscribeFunction(fn);
+	}
+
+	static notifyFunctions(event) {
+		AddressCache.observerSubject.notifyFunctionObservers(event);
+	}	
 }
 
-// Initialize static properties for AddressCache
-AddressCache.cache = new Map();
-AddressCache.maxCacheSize = 50;
-AddressCache.cacheExpirationMs = 300000; // 5 minutes
-AddressCache.lastNotifiedChangeSignature = null;
-AddressCache.lastNotifiedBairroChangeSignature = null;
-AddressCache.lastNotifiedMunicipioChangeSignature = null;
-AddressCache.logradouroChangeCallback = null;
-AddressCache.bairroChangeCallback = null;
-AddressCache.municipioChangeCallback = null;
-AddressCache.currentAddress = null;
-AddressCache.previousAddress = null;
-AddressCache.currentRawData = null;
-AddressCache.previousRawData = null;
+
+// Set up periodic cleanup of expired cache entries
+// Use a non-blocking interval to avoid preventing Node.js exit
+AddressCache.cleanupInterval = setInterval(() => {
+	AddressCache.cleanExpiredEntries();
+}, 60000); // Clean expired entries every 60 seconds
+
+// Ensure the interval is not blocking Node.js exit
+if (typeof AddressCache.cleanupInterval.unref === 'function') {
+	AddressCache.cleanupInterval.unref();
+}
 
 /**
  * Legacy wrapper class that maintains backward compatibility with existing code.

@@ -1,6 +1,6 @@
 # Observer Pattern Execution Flow in `src/guia.js`
 
-This document describes the execution flow of the Observer pattern as implemented in `guia.js`, focusing on the position update process.
+This document describes the execution flow of the Observer pattern as implemented in `guia.js`, focusing on the position update process and advanced callback-observer combinations.
 
 ## Key Components
 
@@ -8,7 +8,9 @@ This document describes the execution flow of the Observer pattern as implemente
 - **Observers:** Any object with an `update()` method (e.g., `ReverseGeocoder`, `HTMLPositionDisplayer`, `Chronometer`, etc.)
 - **Event:** Position update
 
-## Sequence Diagram
+---
+
+## Sequence Diagram: Simple Position Update Flow
 
 ```mermaid
 sequenceDiagram
@@ -32,15 +34,43 @@ sequenceDiagram
     end
 ```
 
-## Flow Description
+---
 
-1. **GeolocationService** obtains a new position (e.g., from the browser API).
-2. It calls `PositionManager.update(position)`.
-3. `PositionManager` validates the position (accuracy, distance, time).
-4. If valid, it calls `ObserverSubject.notifyObservers(this, eventType)`.
-5. `ObserverSubject` iterates through all subscribed observers, calling their `update()` method.
-6. `ReverseGeocoder`, as an observer, fetches address data and notifies its own observers (such as `HtmlSpeechSynthesisDisplayer`) when ready.
-7. Each observer (such as `ReverseGeocoder`, `Chronometer`, UI components, or `HtmlSpeechSynthesisDisplayer`) reacts to the update.
+## Combined Callback and Observer Pattern Execution Flow
+
+This diagram illustrates how a change in logradouro (street) is detected and propagated using both a callback mechanism and the observer-subject pattern.
+
+```mermaid
+sequenceDiagram
+    participant AddressCache
+    participant WebGeocodingManager
+    participant ObserverSubject
+    participant ObserverX as Observer(s) of WebGeocodingManager
+
+    Note over AddressCache: 1. Logradouro change is detected by AddressCache
+    AddressCache-->>WebGeocodingManager: logradouroChangeCallback(changeDetails) (callback)
+
+    Note over WebGeocodingManager: 2. Callback triggers notification to observers
+    WebGeocodingManager->>ObserverSubject: notifyLogradouroChangeObservers(changeDetails)
+    ObserverSubject->>ObserverX: observer.update(changeDetails.current.logradouro, "LogradouroChanged", ...)
+
+    Note over ObserverX: 3. Observers react to the change (UI update, speech, etc.)
+```
+
+### Flow Steps
+
+1. **AddressCache** detects a logradouro change and triggers the registered callback (provided by `WebGeocodingManager`).
+2. **WebGeocodingManager**'s callback handler (`handleLogradouroChange`) is called, which in turn notifies its own observers using the observer pattern.
+3. **Observers** of `WebGeocodingManager` are notified and react accordingly (e.g., update UI, speak address).
+
+---
+
+This flow is more flexible than a pure observer pattern or pure callback approach, as it allows decoupling:
+- The source of change detection (`AddressCache`)
+- The central manager (`WebGeocodingManager`)
+- The final UI or logic observers
+
+---
 
 ## Example Observers in `guia.js`
 

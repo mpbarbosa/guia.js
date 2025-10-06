@@ -3409,6 +3409,9 @@ class SpeechQueue {
 			this.items = this.items.slice(0, this.maxSize);
 		}
 
+		this.notifyObservers();
+		this.notifyFunctionObservers();
+
 	}
 
 	/**
@@ -3422,6 +3425,10 @@ class SpeechQueue {
 
 		// Return first item (highest priority due to ordering in enqueue)
 		const item = this.items.shift();
+
+		this.notifyObservers();
+		this.notifyFunctionObservers();
+		
 		return item || null;
 	}
 

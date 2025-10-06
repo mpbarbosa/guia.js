@@ -17,6 +17,12 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Type mappings and descriptions
   - Integration with geocoding APIs
 
+- **[GEO_POSITION.md](./GEO_POSITION.md)** - Geographic position data documentation
+  - Wrapper for browser GeolocationPosition API
+  - GPS accuracy quality classification
+  - Distance calculation utilities
+  - Integration with position tracking
+
 ### Testing
 
 - **[TESTING.md](../TESTING.md)** - Automated testing documentation

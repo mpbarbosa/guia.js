@@ -2077,21 +2077,57 @@ class AddressExtractor {
  */
 class AddressCache {
 
-// Initialize static properties for AddressCache
-	static observerSubject = new ObserverSubject();
-	static cache = new Map();
-	static maxCacheSize = 50;
-	static cacheExpirationMs = 300000; // 5 minutes
-	static lastNotifiedChangeSignature = null;
-	static lastNotifiedBairroChangeSignature = null;
-	static lastNotifiedMunicipioChangeSignature = null;
-	static logradouroChangeCallback = null;
-	static bairroChangeCallback = null;
-	static municipioChangeCallback = null;
-	static currentAddress = null;
-	static previousAddress = null;
-	static currentRawData = null;
-	static previousRawData = null;
+	/**
+	 * Singleton instance holder. Only one AddressCache exists per application.
+	 * @static
+	 * @type {AddressCache|null}
+	 * @private
+	 */
+	static instance = null;
+
+	/**
+	 * Gets or creates the singleton AddressCache instance.
+	 * 
+	 * Implements the singleton pattern ensuring only one AddressCache instance
+	 * exists throughout the application lifecycle.
+	 * 
+	 * @static
+	 * @returns {AddressCache} The singleton AddressCache instance
+	 * @since 0.8.5-alpha
+	 */
+	static getInstance() {
+		if (!AddressCache.instance) {
+			AddressCache.instance = new AddressCache();
+		}
+		return AddressCache.instance;
+	}
+
+	/**
+	 * Creates a new AddressCache instance.
+	 * 
+	 * Initializes the cache with default settings and empty state.
+	 * This constructor is typically called internally by the getInstance() method
+	 * to maintain the singleton pattern.
+	 * 
+	 * @private
+	 * @since 0.8.5-alpha
+	 */
+	constructor() {
+		this.observerSubject = new ObserverSubject();
+		this.cache = new Map();
+		this.maxCacheSize = 50;
+		this.cacheExpirationMs = 300000; // 5 minutes
+		this.lastNotifiedChangeSignature = null;
+		this.lastNotifiedBairroChangeSignature = null;
+		this.lastNotifiedMunicipioChangeSignature = null;
+		this.logradouroChangeCallback = null;
+		this.bairroChangeCallback = null;
+		this.municipioChangeCallback = null;
+		this.currentAddress = null;
+		this.previousAddress = null;
+		this.currentRawData = null;
+		this.previousRawData = null;
+	}
 
 	/**
 	 * Generates a cache key for address data to enable efficient caching and retrieval.
@@ -2100,12 +2136,12 @@ class AddressCache {
 	 * processed address data and avoid redundant processing. The cache key is designed
 	 * to be stable for the same address data while being unique across different addresses.
 	 * 
-	 * @static
 	 * @param {Object} data - Address data from geocoding API
 	 * @returns {string|null} Cache key string or null if data is invalid
 	 * 
 	 * @example
-	 * const cacheKey = AddressCache.generateCacheKey(addressData);
+	 * const cache = AddressCache.getInstance();
+	 * const cacheKey = cache.generateCacheKey(addressData);
 	 * if (cacheKey) {
 	 *   console.log('Cache key:', cacheKey);
 	 * }
@@ -2113,7 +2149,7 @@ class AddressCache {
 	 * @since 0.8.3-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
-	static generateCacheKey(data) {
+	generateCacheKey(data) {
 		// Validate input data
 		if (!data || !data.address) {
 			return null;
@@ -2142,28 +2178,36 @@ class AddressCache {
 	}
 
 	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().generateCacheKey() instead
+	 * @static
+	 */
+	static generateCacheKey(data) {
+		return AddressCache.getInstance().generateCacheKey(data);
+	}
+
+	/**
 	 * Evicts least recently used cache entries when maximum cache size is reached.
 	 * 
 	 * This method implements LRU (Least Recently Used) eviction policy to maintain
 	 * cache size within configured limits. It removes the oldest entries based on
 	 * lastAccessed timestamp to make room for new entries.
 	 * 
-	 * @static
 	 * @private
 	 * @since 0.8.3-alpha
 	 */
-	static evictLeastRecentlyUsedIfNeeded() {
-		if (AddressCache.cache.size >= AddressCache.maxCacheSize) {
+	evictLeastRecentlyUsedIfNeeded() {
+		if (this.cache.size >= this.maxCacheSize) {
 			// Convert cache entries to array and sort by lastAccessed (oldest first)
-			const entries = Array.from(AddressCache.cache.entries());
+			const entries = Array.from(this.cache.entries());
 			entries.sort((a, b) => a[1].lastAccessed - b[1].lastAccessed);
 
 			// Calculate how many entries to remove (25% of max size)
-			const entriesToRemove = Math.ceil(AddressCache.maxCacheSize * 0.25);
+			const entriesToRemove = Math.ceil(this.maxCacheSize * 0.25);
 
 			// Remove the least recently used entries
 			for (let i = 0; i < entriesToRemove && i < entries.length; i++) {
-				AddressCache.cache.delete(entries[i][0]);
+				this.cache.delete(entries[i][0]);
 			}
 		}
 	}
@@ -2172,19 +2216,18 @@ class AddressCache {
 	 * Cleans up expired cache entries based on timestamp.
 	 * Uses immutable pattern to build expired keys array.
 	 * 
-	 * @static
 	 * @private
 	 * @since 0.8.3-alpha
 	 */
-	static cleanExpiredEntries() {
+	cleanExpiredEntries() {
 		const now = Date.now();
 		
 		// Build expiredKeys array immutably using filter and map
-		const expiredKeys = Array.from(AddressCache.cache.entries())
-			.filter(([key, entry]) => now - entry.timestamp > AddressCache.cacheExpirationMs)
+		const expiredKeys = Array.from(this.cache.entries())
+			.filter(([key, entry]) => now - entry.timestamp > this.cacheExpirationMs)
 			.map(([key]) => key);
 
-		expiredKeys.forEach(key => AddressCache.cache.delete(key));
+		expiredKeys.forEach(key => this.cache.delete(key));
 
 		if (expiredKeys.length > 0) {
 			log(`(AddressCache) Cleaned ${expiredKeys.length} expired cache entries`);
@@ -2192,21 +2235,38 @@ class AddressCache {
 	}
 
 	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().cleanExpiredEntries() instead
+	 * @static
+	 */
+	static cleanExpiredEntries() {
+		return AddressCache.getInstance().cleanExpiredEntries();
+	}
+
+	/**
 	 * Clears all cache entries and resets change tracking.
 	 * This method is primarily used for testing purposes.
 	 * 
-	 * @static
 	 * @since 0.8.4-alpha
 	 */
+	clearCache() {
+		this.cache.clear();
+		this.currentAddress = null;
+		this.previousAddress = null;
+		this.currentRawData = null;
+		this.previousRawData = null;
+		this.lastNotifiedChangeSignature = null;
+		this.lastNotifiedBairroChangeSignature = null;
+		this.lastNotifiedMunicipioChangeSignature = null;
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().clearCache() instead
+	 * @static
+	 */
 	static clearCache() {
-		AddressCache.cache.clear();
-		AddressCache.currentAddress = null;
-		AddressCache.previousAddress = null;
-		AddressCache.currentRawData = null;
-		AddressCache.previousRawData = null;
-		AddressCache.lastNotifiedChangeSignature = null;
-		AddressCache.lastNotifiedBairroChangeSignature = null;
-		AddressCache.lastNotifiedMunicipioChangeSignature = null;
+		return AddressCache.getInstance().clearCache();
 	}
 
 	/**
@@ -2215,21 +2275,30 @@ class AddressCache {
 	 * This method allows external components to register a callback function that will be
 	 * invoked whenever a street (logradouro) change is detected between address updates.
 	 * 
-	 * @static
 	 * @param {Function|null} callback - Function to call on logradouro changes, or null to remove callback
 	 * @param {Object} callback.changeDetails - Details about the logradouro change
 	 * @returns {void}
 	 * 
 	 * @example
-	 * AddressCache.setLogradouroChangeCallback((changeDetails) => {
+	 * const cache = AddressCache.getInstance();
+	 * cache.setLogradouroChangeCallback((changeDetails) => {
 	 *   console.log('Street changed:', changeDetails);
 	 * });
 	 * 
 	 * @since 0.8.3-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
+	setLogradouroChangeCallback(callback) {
+		this.logradouroChangeCallback = callback;
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().setLogradouroChangeCallback() instead
+	 * @static
+	 */
 	static setLogradouroChangeCallback(callback) {
-		AddressCache.logradouroChangeCallback = callback;
+		return AddressCache.getInstance().setLogradouroChangeCallback(callback);
 	}
 
 	/**
@@ -2238,21 +2307,30 @@ class AddressCache {
 	 * This method allows external components to register a callback function that will be
 	 * invoked whenever a neighborhood (bairro) change is detected between address updates.
 	 * 
-	 * @static
 	 * @param {Function|null} callback - Function to call on bairro changes, or null to remove callback
 	 * @param {Object} callback.changeDetails - Details about the bairro change
 	 * @returns {void}
 	 * 
 	 * @example
-	 * AddressCache.setBairroChangeCallback((changeDetails) => {
+	 * const cache = AddressCache.getInstance();
+	 * cache.setBairroChangeCallback((changeDetails) => {
 	 *   console.log('Neighborhood changed:', changeDetails);
 	 * });
 	 * 
 	 * @since 0.8.3-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
+	setBairroChangeCallback(callback) {
+		this.bairroChangeCallback = callback;
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().setBairroChangeCallback() instead
+	 * @static
+	 */
 	static setBairroChangeCallback(callback) {
-		AddressCache.bairroChangeCallback = callback;
+		return AddressCache.getInstance().setBairroChangeCallback(callback);
 	}
 
 	/**
@@ -2261,162 +2339,218 @@ class AddressCache {
 	 * This method allows external components to register a callback function that will be
 	 * invoked whenever a municipality (municipio) change is detected between address updates.
 	 * 
-	 * @static
 	 * @param {Function|null} callback - Function to call on municipio changes, or null to remove callback
 	 * @param {Object} callback.changeDetails - Details about the municipio change
 	 * @returns {void}
 	 * 
 	 * @example
-	 * AddressCache.setMunicipioChangeCallback((changeDetails) => {
+	 * const cache = AddressCache.getInstance();
+	 * cache.setMunicipioChangeCallback((changeDetails) => {
 	 *   console.log('Municipality changed:', changeDetails);
 	 * });
 	 * 
 	 * @since 0.8.3-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
+	setMunicipioChangeCallback(callback) {
+		this.municipioChangeCallback = callback;
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().setMunicipioChangeCallback() instead
+	 * @static
+	 */
 	static setMunicipioChangeCallback(callback) {
-		AddressCache.municipioChangeCallback = callback;
+		return AddressCache.getInstance().setMunicipioChangeCallback(callback);
 	}
 
 	/**
 	 * Gets the currently registered logradouro change callback.
 	 * 
-	 * @static
 	 * @returns {Function|null} The current callback function or null if none is set
 	 * @since 0.8.3-alpha
 	 */
+	getLogradouroChangeCallback() {
+		return this.logradouroChangeCallback;
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().getLogradouroChangeCallback() instead
+	 * @static
+	 */
 	static getLogradouroChangeCallback() {
-		return AddressCache.logradouroChangeCallback;
+		return AddressCache.getInstance().getLogradouroChangeCallback();
 	}
 
 	/**
 	 * Gets the currently registered bairro change callback.
 	 * 
-	 * @static
 	 * @returns {Function|null} The current callback function or null if none is set
 	 * @since 0.8.3-alpha
 	 */
+	getBairroChangeCallback() {
+		return this.bairroChangeCallback;
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().getBairroChangeCallback() instead
+	 * @static
+	 */
 	static getBairroChangeCallback() {
-		return AddressCache.bairroChangeCallback;
+		return AddressCache.getInstance().getBairroChangeCallback();
 	}
 
 	/**
 	 * Gets the currently registered municipio change callback.
 	 * 
-	 * @static
 	 * @returns {Function|null} The current callback function or null if none is set
 	 * @since 0.8.3-alpha
 	 */
+	getMunicipioChangeCallback() {
+		return this.municipioChangeCallback;
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().getMunicipioChangeCallback() instead
+	 * @static
+	 */
 	static getMunicipioChangeCallback() {
-		return AddressCache.municipioChangeCallback;
+		return AddressCache.getInstance().getMunicipioChangeCallback();
 	}
 
 	/**
 	 * Checks if logradouro has changed compared to previous address.
 	 * Returns true only once per change to prevent notification loops.
 	 * 
-	 * @static
 	 * @returns {boolean} True if logradouro has changed and not yet notified
 	 * @since 0.8.3-alpha
 	 */
-	static hasLogradouroChanged() {
-		if (!AddressCache.currentAddress || !AddressCache.previousAddress) {
+	hasLogradouroChanged() {
+		if (!this.currentAddress || !this.previousAddress) {
 			return false;
 		}
 
-		const hasChanged = AddressCache.currentAddress.logradouro !== AddressCache.previousAddress.logradouro;
+		const hasChanged = this.currentAddress.logradouro !== this.previousAddress.logradouro;
 
 		if (!hasChanged) {
 			return false;
 		}
 
 		// Create a signature for this change to track if we've already notified
-		const changeSignature = `${AddressCache.previousAddress.logradouro}=>${AddressCache.currentAddress.logradouro}`;
+		const changeSignature = `${this.previousAddress.logradouro}=>${this.currentAddress.logradouro}`;
 
 		// If we've already notified about this exact change, return false
-		if (AddressCache.lastNotifiedChangeSignature === changeSignature) {
+		if (this.lastNotifiedChangeSignature === changeSignature) {
 			return false;
 		}
 
 		// Mark this change as notified
-		AddressCache.lastNotifiedChangeSignature = changeSignature;
+		this.lastNotifiedChangeSignature = changeSignature;
 		return true;
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().hasLogradouroChanged() instead
+	 * @static
+	 */
+	static hasLogradouroChanged() {
+		return AddressCache.getInstance().hasLogradouroChanged();
 	}
 
 	/**
 	 * Checks if bairro has changed compared to previous address.
 	 * Returns true only once per change to prevent notification loops.
 	 * 
-	 * @static
 	 * @returns {boolean} True if bairro has changed and not yet notified
 	 * @since 0.8.3-alpha
 	 */
-	static hasBairroChanged() {
-		if (!AddressCache.currentAddress || !AddressCache.previousAddress) {
+	hasBairroChanged() {
+		if (!this.currentAddress || !this.previousAddress) {
 			return false;
 		}
 
-		const hasChanged = AddressCache.currentAddress.bairro !== AddressCache.previousAddress.bairro;
+		const hasChanged = this.currentAddress.bairro !== this.previousAddress.bairro;
 
 		if (!hasChanged) {
 			return false;
 		}
 
 		// Create a signature for this change to track if we've already notified
-		const changeSignature = `${AddressCache.previousAddress.bairro}=>${AddressCache.currentAddress.bairro}`;
+		const changeSignature = `${this.previousAddress.bairro}=>${this.currentAddress.bairro}`;
 
 		// If we've already notified about this exact change, return false
-		if (AddressCache.lastNotifiedBairroChangeSignature === changeSignature) {
+		if (this.lastNotifiedBairroChangeSignature === changeSignature) {
 			return false;
 		}
 
 		// Mark this change as notified
-		AddressCache.lastNotifiedBairroChangeSignature = changeSignature;
+		this.lastNotifiedBairroChangeSignature = changeSignature;
 		return true;
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().hasBairroChanged() instead
+	 * @static
+	 */
+	static hasBairroChanged() {
+		return AddressCache.getInstance().hasBairroChanged();
 	}
 
 	/**
 	 * Checks if municipio has changed compared to previous address.
 	 * Returns true only once per change to prevent notification loops.
 	 * 
-	 * @static
 	 * @returns {boolean} True if municipio has changed and not yet notified
 	 * @since 0.8.3-alpha
 	 */
-	static hasMunicipioChanged() {
-		if (!AddressCache.currentAddress || !AddressCache.previousAddress) {
+	hasMunicipioChanged() {
+		if (!this.currentAddress || !this.previousAddress) {
 			return false;
 		}
 
-		const hasChanged = AddressCache.currentAddress.municipio !== AddressCache.previousAddress.municipio;
+		const hasChanged = this.currentAddress.municipio !== this.previousAddress.municipio;
 
 		if (!hasChanged) {
 			return false;
 		}
 
 		// Create a signature for this change to track if we've already notified
-		const changeSignature = `${AddressCache.previousAddress.municipio}=>${AddressCache.currentAddress.municipio}`;
+		const changeSignature = `${this.previousAddress.municipio}=>${this.currentAddress.municipio}`;
 
 		// If we've already notified about this exact change, return false
-		if (AddressCache.lastNotifiedMunicipioChangeSignature === changeSignature) {
+		if (this.lastNotifiedMunicipioChangeSignature === changeSignature) {
 			return false;
 		}
 
 		// Mark this change as notified
-		AddressCache.lastNotifiedMunicipioChangeSignature = changeSignature;
+		this.lastNotifiedMunicipioChangeSignature = changeSignature;
 		return true;
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().hasMunicipioChanged() instead
+	 * @static
+	 */
+	static hasMunicipioChanged() {
+		return AddressCache.getInstance().hasMunicipioChanged();
 	}
 
 	/**
 	 * Gets details about logradouro change.
 	 * 
-	 * @static
 	 * @returns {Object} Change details with current and previous logradouro
 	 * @since 0.8.3-alpha
 	 */
-	static getLogradouroChangeDetails() {
-		const currentLogradouro = AddressCache.currentAddress?.logradouro || null;
-		const previousLogradouro = AddressCache.previousAddress?.logradouro || null;
+	getLogradouroChangeDetails() {
+		const currentLogradouro = this.currentAddress?.logradouro || null;
+		const previousLogradouro = this.previousAddress?.logradouro || null;
 
 		return {
 			hasChanged: currentLogradouro !== previousLogradouro,
@@ -2431,19 +2565,27 @@ class AddressCache {
 	}
 
 	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().getLogradouroChangeDetails() instead
+	 * @static
+	 */
+	static getLogradouroChangeDetails() {
+		return AddressCache.getInstance().getLogradouroChangeDetails();
+	}
+
+	/**
 	 * Gets details about bairro change.
 	 * 
-	 * @static
 	 * @returns {Object} Change details with current and previous bairro
 	 * @since 0.8.3-alpha
 	 */
-	static getBairroChangeDetails() {
-		const currentBairro = AddressCache.currentAddress?.bairro || null;
-		const previousBairro = AddressCache.previousAddress?.bairro || null;
+	getBairroChangeDetails() {
+		const currentBairro = this.currentAddress?.bairro || null;
+		const previousBairro = this.previousAddress?.bairro || null;
 
 		// Compute bairroCompleto from raw data if available
-		const currentBairroCompleto = AddressCache._computeBairroCompleto(AddressCache.currentRawData);
-		const previousBairroCompleto = AddressCache._computeBairroCompleto(AddressCache.previousRawData);
+		const currentBairroCompleto = this._computeBairroCompleto(this.currentRawData);
+		const previousBairroCompleto = this._computeBairroCompleto(this.previousRawData);
 
 		return {
 			hasChanged: currentBairro !== previousBairro,
@@ -2460,16 +2602,24 @@ class AddressCache {
 	}
 
 	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().getBairroChangeDetails() instead
+	 * @static
+	 */
+	static getBairroChangeDetails() {
+		return AddressCache.getInstance().getBairroChangeDetails();
+	}
+
+	/**
 	 * Computes complete bairro string from raw address data.
 	 * Combines neighbourhood and suburb fields when both are present.
 	 * 
-	 * @static
 	 * @private
 	 * @param {Object} rawData - Raw address data from geocoding API
 	 * @returns {string} Complete bairro string
 	 * @since 0.8.4-alpha
 	 */
-	static _computeBairroCompleto(rawData) {
+	_computeBairroCompleto(rawData) {
 		if (!rawData || !rawData.address) {
 			return null;
 		}
@@ -2491,15 +2641,14 @@ class AddressCache {
 	/**
 	 * Gets details about municipio change.
 	 * 
-	 * @static
 	 * @returns {Object} Change details with current and previous municipio
 	 * @since 0.8.3-alpha
 	 */
-	static getMunicipioChangeDetails() {
-		const currentMunicipio = AddressCache.currentAddress?.municipio ?? undefined;
-		const previousMunicipio = AddressCache.previousAddress?.municipio ?? undefined;
-		const currentUf = AddressCache.currentAddress?.uf ?? undefined;
-		const previousUf = AddressCache.previousAddress?.uf ?? undefined;
+	getMunicipioChangeDetails() {
+		const currentMunicipio = this.currentAddress?.municipio ?? undefined;
+		const previousMunicipio = this.previousAddress?.municipio ?? undefined;
+		const currentUf = this.currentAddress?.uf ?? undefined;
+		const previousUf = this.previousAddress?.uf ?? undefined;
 
 		return {
 			hasChanged: (currentMunicipio ?? null) !== (previousMunicipio ?? null),
@@ -2516,38 +2665,46 @@ class AddressCache {
 	}
 
 	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().getMunicipioChangeDetails() instead
+	 * @static
+	 */
+	static getMunicipioChangeDetails() {
+		return AddressCache.getInstance().getMunicipioChangeDetails();
+	}
+
+	/**
 	 * Gets a cached or newly extracted Brazilian standard address with change detection.
 	 * 
 	 * This is the main entry point for retrieving standardized addresses. It coordinates
 	 * between cache retrieval, address extraction, and change detection.
 	 * 
-	 * @static
 	 * @param {Object} data - Raw address data from geocoding API
 	 * @returns {BrazilianStandardAddress} Standardized address object
 	 * @since 0.8.3-alpha
 	 */
-	static getBrazilianStandardAddress(data) {
-		const cacheKey = AddressCache.generateCacheKey(data);
+	getBrazilianStandardAddress(data) {
+		const cacheKey = this.generateCacheKey(data);
 
 		if (cacheKey) {
 			// Clean expired entries periodically
-			AddressCache.cleanExpiredEntries();
+			this.cleanExpiredEntries();
 
 			// Check if we have a valid cached entry
-			const cacheEntry = AddressCache.cache.get(cacheKey);
+			const cacheEntry = this.cache.get(cacheKey);
 			if (cacheEntry) {
 				const now = Date.now();
-				if (now - cacheEntry.timestamp <= AddressCache.cacheExpirationMs) {
+				if (now - cacheEntry.timestamp <= this.cacheExpirationMs) {
 					// Update access time for LRU behavior (history-like)
 					cacheEntry.lastAccessed = now;
 					// Re-insert to update position in Map (Map maintains insertion order)
-					AddressCache.cache.delete(cacheKey);
-					AddressCache.cache.set(cacheKey, cacheEntry);
+					this.cache.delete(cacheKey);
+					this.cache.set(cacheKey, cacheEntry);
 
 					return cacheEntry.address;
 				} else {
 					// Remove expired entry
-					AddressCache.cache.delete(cacheKey);
+					this.cache.delete(cacheKey);
 				}
 			}
 		}
@@ -2558,10 +2715,10 @@ class AddressCache {
 		// Cache the result if we have a valid key
 		if (cacheKey) {
 			// Check if cache has reached maximum size, evict least recently used entries
-			AddressCache.evictLeastRecentlyUsedIfNeeded();
+			this.evictLeastRecentlyUsedIfNeeded();
 
 			const now = Date.now();
-			AddressCache.cache.set(cacheKey, {
+			this.cache.set(cacheKey, {
 				address: extractor.enderecoPadronizado,
 				rawData: data, // Store raw data for detailed change information
 				timestamp: now,
@@ -2569,25 +2726,25 @@ class AddressCache {
 			});
 
 			// Update current and previous addresses for change detection
-			AddressCache.previousAddress = AddressCache.currentAddress;
-			AddressCache.previousRawData = AddressCache.currentRawData;
-			AddressCache.currentAddress = extractor.enderecoPadronizado;
-			AddressCache.currentRawData = data;
+			this.previousAddress = this.currentAddress;
+			this.previousRawData = this.currentRawData;
+			this.currentAddress = extractor.enderecoPadronizado;
+			this.currentRawData = data;
 
 			// Reset change notification flags when new address is cached
 			// This allows detection of new changes after cache updates
-			AddressCache.lastNotifiedChangeSignature = null;
-			AddressCache.lastNotifiedBairroChangeSignature = null;
-			AddressCache.lastNotifiedMunicipioChangeSignature = null;
+			this.lastNotifiedChangeSignature = null;
+			this.lastNotifiedBairroChangeSignature = null;
+			this.lastNotifiedMunicipioChangeSignature = null;
 
 			// Check for logradouro change after caching the new address
 			// This replaces the timer-based approach with event-driven checking
-			if (AddressCache.logradouroChangeCallback &&
-				AddressCache.hasLogradouroChanged()) {
+			if (this.logradouroChangeCallback &&
+				this.hasLogradouroChanged()) {
 				log("+++ (300) (AddressCache) Detected logradouro change, invoking callback");
-				const changeDetails = AddressCache.getLogradouroChangeDetails();
+				const changeDetails = this.getLogradouroChangeDetails();
 				try {
-					AddressCache.logradouroChangeCallback(changeDetails);
+					this.logradouroChangeCallback(changeDetails);
 				} catch (error) {
 					console.error(
 						"(AddressCache) Error calling logradouro change callback:",
@@ -2598,11 +2755,11 @@ class AddressCache {
 
 			// Check for bairro change after caching the new address
 			// This follows the same pattern as logradouro change detection
-			if (AddressCache.bairroChangeCallback &&
-				AddressCache.hasBairroChanged()) {
-				const changeDetails = AddressCache.getBairroChangeDetails();
+			if (this.bairroChangeCallback &&
+				this.hasBairroChanged()) {
+				const changeDetails = this.getBairroChangeDetails();
 				try {
-					AddressCache.bairroChangeCallback(changeDetails);
+					this.bairroChangeCallback(changeDetails);
 				} catch (error) {
 					console.error(
 						"(AddressCache) Error calling bairro change callback:",
@@ -2613,11 +2770,11 @@ class AddressCache {
 
 			// Check for municipio change after caching the new address
 			// This follows the same pattern as logradouro and bairro change detection
-			if (AddressCache.municipioChangeCallback &&
-				AddressCache.hasMunicipioChanged()) {
-				const changeDetails = AddressCache.getMunicipioChangeDetails();
+			if (this.municipioChangeCallback &&
+				this.hasMunicipioChanged()) {
+				const changeDetails = this.getMunicipioChangeDetails();
 				try {
-					AddressCache.municipioChangeCallback(changeDetails);
+					this.municipioChangeCallback(changeDetails);
 				} catch (error) {
 					console.error(
 						"(AddressCache) Error calling municipio change callback:",
@@ -2627,50 +2784,383 @@ class AddressCache {
 			}
 		}
 
-		AddressCache.notifyObservers({ type: 'addressUpdated', address: extractor.enderecoPadronizado, cacheSize: AddressCache.getCacheSize() });
+		this.notifyObservers({ type: 'addressUpdated', address: extractor.enderecoPadronizado, cacheSize: this.getCacheSize() });
 
-		AddressCache.notifyFunctions({ type: 'addressUpdated', address: extractor.enderecoPadronizado, cacheSize: AddressCache.getCacheSize() });
+		this.notifyFunctions({ type: 'addressUpdated', address: extractor.enderecoPadronizado, cacheSize: this.getCacheSize() });
 
 		// Return the newly extracted standardized address
 
 		return extractor.enderecoPadronizado;
 	}
 
-	static toString() {
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().getBrazilianStandardAddress() instead
+	 * @static
+	 */
+	static getBrazilianStandardAddress(data) {
+		return AddressCache.getInstance().getBrazilianStandardAddress(data);
+	}
+
+	toString() {
 		return `AddressCache {
-			cache: ${AddressCache.cache.size},
-			currentAddress: ${AddressCache.currentAddress},
-			previousAddress: ${AddressCache.previousAddress}
+			cache: ${this.cache.size},
+			currentAddress: ${this.currentAddress},
+			previousAddress: ${this.previousAddress}
 		}`;
 	}
 
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().toString() instead
+	 * @static
+	 */
+	static toString() {
+		return AddressCache.getInstance().toString();
+	}
+
+	subscribe(observer) {
+		return this.observerSubject.subscribe(observer);
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().subscribe() instead
+	 * @static
+	 */
 	static subscribe(observer) {
-		return AddressCache.observerSubject.subscribe(observer);
+		return AddressCache.getInstance().subscribe(observer);
 	}
 
+	unsubscribe(observer) {
+		return this.observerSubject.unsubscribe(observer);
+	}	
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().unsubscribe() instead
+	 * @static
+	 */
 	static unsubscribe(observer) {
-		return AddressCache.observerSubject.unsubscribe(observer);
-	}	
+		return AddressCache.getInstance().unsubscribe(observer);
+	}
 
+	notifyObservers(event) {
+		this.observerSubject.notifyObservers(event);
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().notifyObservers() instead
+	 * @static
+	 */
 	static notifyObservers(event) {
-		AddressCache.observerSubject.notifyObservers(event);
+		return AddressCache.getInstance().notifyObservers(event);
 	}
 
+	getCacheSize() {
+		return this.cache.size;
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().getCacheSize() instead
+	 * @static
+	 */
 	static getCacheSize() {
-		return AddressCache.cache.size;
+		return AddressCache.getInstance().getCacheSize();
 	}
 
+	subscribeFunction(fn) {
+		return this.observerSubject.subscribeFunction(fn);
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().subscribeFunction() instead
+	 * @static
+	 */
 	static subscribeFunction(fn) {
-		return AddressCache.observerSubject.subscribeFunction(fn);
+		return AddressCache.getInstance().subscribeFunction(fn);
 	}
 
+	unsubscribeFunction(fn) {
+		return this.observerSubject.unsubscribeFunction(fn);
+	}
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().unsubscribeFunction() instead
+	 * @static
+	 */
 	static unsubscribeFunction(fn) {
-		return AddressCache.observerSubject.unsubscribeFunction(fn);
+		return AddressCache.getInstance().unsubscribeFunction(fn);
 	}
 
-	static notifyFunctions(event) {
-		AddressCache.observerSubject.notifyFunctionObservers(event);
+	notifyFunctions(event) {
+		this.observerSubject.notifyFunctionObservers(event);
 	}	
+
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().notifyFunctions() instead
+	 * @static
+	 */
+	static notifyFunctions(event) {
+		return AddressCache.getInstance().notifyFunctions(event);
+	}
+
+	/**
+	 * Static getter for cache property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get cache() {
+		return AddressCache.getInstance().cache;
+	}
+
+	/**
+	 * Static setter for cache property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set cache(value) {
+		AddressCache.getInstance().cache = value;
+	}
+
+	/**
+	 * Static getter for maxCacheSize property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get maxCacheSize() {
+		return AddressCache.getInstance().maxCacheSize;
+	}
+
+	/**
+	 * Static setter for maxCacheSize property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set maxCacheSize(value) {
+		AddressCache.getInstance().maxCacheSize = value;
+	}
+
+	/**
+	 * Static getter for cacheExpirationMs property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get cacheExpirationMs() {
+		return AddressCache.getInstance().cacheExpirationMs;
+	}
+
+	/**
+	 * Static setter for cacheExpirationMs property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set cacheExpirationMs(value) {
+		AddressCache.getInstance().cacheExpirationMs = value;
+	}
+
+	/**
+	 * Static getter for lastNotifiedChangeSignature property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get lastNotifiedChangeSignature() {
+		return AddressCache.getInstance().lastNotifiedChangeSignature;
+	}
+
+	/**
+	 * Static setter for lastNotifiedChangeSignature property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set lastNotifiedChangeSignature(value) {
+		AddressCache.getInstance().lastNotifiedChangeSignature = value;
+	}
+
+	/**
+	 * Static getter for lastNotifiedBairroChangeSignature property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get lastNotifiedBairroChangeSignature() {
+		return AddressCache.getInstance().lastNotifiedBairroChangeSignature;
+	}
+
+	/**
+	 * Static setter for lastNotifiedBairroChangeSignature property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set lastNotifiedBairroChangeSignature(value) {
+		AddressCache.getInstance().lastNotifiedBairroChangeSignature = value;
+	}
+
+	/**
+	 * Static getter for lastNotifiedMunicipioChangeSignature property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get lastNotifiedMunicipioChangeSignature() {
+		return AddressCache.getInstance().lastNotifiedMunicipioChangeSignature;
+	}
+
+	/**
+	 * Static setter for lastNotifiedMunicipioChangeSignature property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set lastNotifiedMunicipioChangeSignature(value) {
+		AddressCache.getInstance().lastNotifiedMunicipioChangeSignature = value;
+	}
+
+	/**
+	 * Static getter for logradouroChangeCallback property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get logradouroChangeCallback() {
+		return AddressCache.getInstance().logradouroChangeCallback;
+	}
+
+	/**
+	 * Static setter for logradouroChangeCallback property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set logradouroChangeCallback(value) {
+		AddressCache.getInstance().logradouroChangeCallback = value;
+	}
+
+	/**
+	 * Static getter for bairroChangeCallback property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get bairroChangeCallback() {
+		return AddressCache.getInstance().bairroChangeCallback;
+	}
+
+	/**
+	 * Static setter for bairroChangeCallback property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set bairroChangeCallback(value) {
+		AddressCache.getInstance().bairroChangeCallback = value;
+	}
+
+	/**
+	 * Static getter for municipioChangeCallback property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get municipioChangeCallback() {
+		return AddressCache.getInstance().municipioChangeCallback;
+	}
+
+	/**
+	 * Static setter for municipioChangeCallback property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set municipioChangeCallback(value) {
+		AddressCache.getInstance().municipioChangeCallback = value;
+	}
+
+	/**
+	 * Static getter for currentAddress property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get currentAddress() {
+		return AddressCache.getInstance().currentAddress;
+	}
+
+	/**
+	 * Static setter for currentAddress property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set currentAddress(value) {
+		AddressCache.getInstance().currentAddress = value;
+	}
+
+	/**
+	 * Static getter for previousAddress property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get previousAddress() {
+		return AddressCache.getInstance().previousAddress;
+	}
+
+	/**
+	 * Static setter for previousAddress property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set previousAddress(value) {
+		AddressCache.getInstance().previousAddress = value;
+	}
+
+	/**
+	 * Static getter for currentRawData property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get currentRawData() {
+		return AddressCache.getInstance().currentRawData;
+	}
+
+	/**
+	 * Static setter for currentRawData property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set currentRawData(value) {
+		AddressCache.getInstance().currentRawData = value;
+	}
+
+	/**
+	 * Static getter for previousRawData property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get previousRawData() {
+		return AddressCache.getInstance().previousRawData;
+	}
+
+	/**
+	 * Static setter for previousRawData property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set previousRawData(value) {
+		AddressCache.getInstance().previousRawData = value;
+	}
+
+	/**
+	 * Static getter for observerSubject property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static get observerSubject() {
+		return AddressCache.getInstance().observerSubject;
+	}
+
+	/**
+	 * Static setter for observerSubject property - backward compatibility.
+	 * @deprecated Access instance properties through getInstance()
+	 * @static
+	 */
+	static set observerSubject(value) {
+		AddressCache.getInstance().observerSubject = value;
+	}
 }
 
 
@@ -2851,53 +3341,53 @@ class AddressDataExtractor {
 	}
 }
 
-// Legacy static properties for AddressDataExtractor - delegated to AddressCache
-// These maintain backward compatibility but all operations use AddressCache internally
+// Legacy static properties for AddressDataExtractor - delegated to AddressCache singleton
+// These maintain backward compatibility but all operations use AddressCache singleton internally
 // Use property descriptors to create live references that stay synchronized
 Object.defineProperties(AddressDataExtractor, {
 	cache: {
-		get: () => AddressCache.cache,
-		set: (value) => { AddressCache.cache = value; }
+		get: () => AddressCache.getInstance().cache,
+		set: (value) => { AddressCache.getInstance().cache = value; }
 	},
 	maxCacheSize: {
-		get: () => AddressCache.maxCacheSize,
-		set: (value) => { AddressCache.maxCacheSize = value; }
+		get: () => AddressCache.getInstance().maxCacheSize,
+		set: (value) => { AddressCache.getInstance().maxCacheSize = value; }
 	},
 	cacheExpirationMs: {
-		get: () => AddressCache.cacheExpirationMs,
-		set: (value) => { AddressCache.cacheExpirationMs = value; }
+		get: () => AddressCache.getInstance().cacheExpirationMs,
+		set: (value) => { AddressCache.getInstance().cacheExpirationMs = value; }
 	},
 	lastNotifiedChangeSignature: {
-		get: () => AddressCache.lastNotifiedChangeSignature,
-		set: (value) => { AddressCache.lastNotifiedChangeSignature = value; }
+		get: () => AddressCache.getInstance().lastNotifiedChangeSignature,
+		set: (value) => { AddressCache.getInstance().lastNotifiedChangeSignature = value; }
 	},
 	lastNotifiedBairroChangeSignature: {
-		get: () => AddressCache.lastNotifiedBairroChangeSignature,
-		set: (value) => { AddressCache.lastNotifiedBairroChangeSignature = value; }
+		get: () => AddressCache.getInstance().lastNotifiedBairroChangeSignature,
+		set: (value) => { AddressCache.getInstance().lastNotifiedBairroChangeSignature = value; }
 	},
 	lastNotifiedMunicipioChangeSignature: {
-		get: () => AddressCache.lastNotifiedMunicipioChangeSignature,
-		set: (value) => { AddressCache.lastNotifiedMunicipioChangeSignature = value; }
+		get: () => AddressCache.getInstance().lastNotifiedMunicipioChangeSignature,
+		set: (value) => { AddressCache.getInstance().lastNotifiedMunicipioChangeSignature = value; }
 	},
 	logradouroChangeCallback: {
-		get: () => AddressCache.logradouroChangeCallback,
-		set: (value) => { AddressCache.logradouroChangeCallback = value; }
+		get: () => AddressCache.getInstance().logradouroChangeCallback,
+		set: (value) => { AddressCache.getInstance().logradouroChangeCallback = value; }
 	},
 	bairroChangeCallback: {
-		get: () => AddressCache.bairroChangeCallback,
-		set: (value) => { AddressCache.bairroChangeCallback = value; }
+		get: () => AddressCache.getInstance().bairroChangeCallback,
+		set: (value) => { AddressCache.getInstance().bairroChangeCallback = value; }
 	},
 	municipioChangeCallback: {
-		get: () => AddressCache.municipioChangeCallback,
-		set: (value) => { AddressCache.municipioChangeCallback = value; }
+		get: () => AddressCache.getInstance().municipioChangeCallback,
+		set: (value) => { AddressCache.getInstance().municipioChangeCallback = value; }
 	},
 	currentAddress: {
-		get: () => AddressCache.currentAddress,
-		set: (value) => { AddressCache.currentAddress = value; }
+		get: () => AddressCache.getInstance().currentAddress,
+		set: (value) => { AddressCache.getInstance().currentAddress = value; }
 	},
 	previousAddress: {
-		get: () => AddressCache.previousAddress,
-		set: (value) => { AddressCache.previousAddress = value; }
+		get: () => AddressCache.getInstance().previousAddress,
+		set: (value) => { AddressCache.getInstance().previousAddress = value; }
 	}
 });
 

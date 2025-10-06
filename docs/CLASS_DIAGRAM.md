@@ -42,31 +42,35 @@ classDiagram
     }
     
     class AddressCache {
-        -static Map cache
-        -static int maxCacheSize
-        -static int cacheExpirationMs
-        -static BrazilianStandardAddress currentAddress
-        -static BrazilianStandardAddress previousAddress
-        -static Object currentRawData
-        -static Object previousRawData
-        -static Function logradouroChangeCallback
-        -static Function bairroChangeCallback
-        -static Function municipioChangeCallback
-        +static generateCacheKey(data)
-        +static getBrazilianStandardAddress(data)
-        +static evictLeastRecentlyUsedIfNeeded()
-        +static cleanExpiredEntries()
-        +static clearCache()
-        +static setLogradouroChangeCallback(callback)
-        +static setBairroChangeCallback(callback)
-        +static setMunicipioChangeCallback(callback)
-        +static hasLogradouroChanged()
-        +static hasBairroChanged()
-        +static hasMunicipioChanged()
-        +static getLogradouroChangeDetails()
-        +static getBairroChangeDetails()
-        +static getMunicipioChangeDetails()
-        -static _computeBairroCompleto(rawData)
+        <<Singleton>>
+        -static AddressCache instance
+        -Map cache
+        -int maxCacheSize
+        -int cacheExpirationMs
+        -BrazilianStandardAddress currentAddress
+        -BrazilianStandardAddress previousAddress
+        -Object currentRawData
+        -Object previousRawData
+        -Function logradouroChangeCallback
+        -Function bairroChangeCallback
+        -Function municipioChangeCallback
+        +static getInstance()
+        +generateCacheKey(data)
+        +getBrazilianStandardAddress(data)
+        +evictLeastRecentlyUsedIfNeeded()
+        +cleanExpiredEntries()
+        +clearCache()
+        +setLogradouroChangeCallback(callback)
+        +setBairroChangeCallback(callback)
+        +setMunicipioChangeCallback(callback)
+        +hasLogradouroChanged()
+        +hasBairroChanged()
+        +hasMunicipioChanged()
+        +getLogradouroChangeDetails()
+        +getBairroChangeDetails()
+        +getMunicipioChangeDetails()
+        -_computeBairroCompleto(rawData)
+        Note: Static wrappers available for backward compatibility
     }
     
     class AddressDataExtractor {
@@ -106,8 +110,11 @@ classDiagram
 - Creates immutable `BrazilianStandardAddress` instances
 - **No caching or change detection logic**
 
-**AddressCache** (New in PR #121)
+**AddressCache** (New in PR #121, Refactored to Singleton in PR #TBD)
 - **Single Responsibility**: Manage caching of standardized addresses with LRU eviction and change detection
+- **Singleton Pattern**: Ensures only one cache instance exists per application (refactored from static-only class)
+- Access via `AddressCache.getInstance()` for instance methods
+- Static wrappers available for backward compatibility
 - Generates unique cache keys from address components
 - Implements LRU (Least Recently Used) eviction policy (removes 25% when at max capacity of 50)
 - Cleans expired entries (5-minute TTL)
@@ -394,10 +401,16 @@ AddressDataExtractor (176 lines)
 const extractor = new AddressExtractor(geocodingData);
 const standardizedAddress = extractor.enderecoPadronizado;
 
-// Get cached address with change detection
+// Get cached address with change detection (using singleton)
+// Option 1: Use static wrapper (backward compatible)
 const address = AddressCache.getBrazilianStandardAddress(geocodingData);
 
+// Option 2: Use singleton instance directly (preferred for new code)
+const cache = AddressCache.getInstance();
+const address2 = cache.getBrazilianStandardAddress(geocodingData);
+
 // Register change callbacks
+// Using static wrappers (backward compatible)
 AddressCache.setBairroChangeCallback((details) => {
   console.log(`Neighborhood changed from ${details.previous.bairro} to ${details.current.bairro}`);
   console.log(`Complete neighborhood: ${details.current.bairroCompleto}`);
@@ -405,6 +418,11 @@ AddressCache.setBairroChangeCallback((details) => {
 
 AddressCache.setMunicipioChangeCallback((details) => {
   console.log(`Municipality changed: ${details.current.municipio}, ${details.current.uf}`);
+});
+
+// Or use singleton instance directly
+cache.setBairroChangeCallback((details) => {
+  console.log('Bairro changed:', details);
 });
 ```
 
@@ -423,22 +441,26 @@ AddressDataExtractor.setBairroChangeCallback(callback);
 ## Best Practices
 
 ### For New Development
-1. Use `AddressCache.getBrazilianStandardAddress()` for cache-aware retrieval
-2. Use `AddressExtractor` directly only when caching is not needed
-3. Register change callbacks on `AddressCache` for monitoring address changes
-4. Avoid using `AddressDataExtractor` (legacy facade) in new code
+1. Access AddressCache via `AddressCache.getInstance()` for instance methods (preferred)
+2. Static wrappers like `AddressCache.getBrazilianStandardAddress()` available for convenience
+3. Use `AddressExtractor` directly only when caching is not needed
+4. Register change callbacks on `AddressCache` for monitoring address changes
+5. Avoid using `AddressDataExtractor` (legacy facade) in new code
 
 ### For Maintenance
-1. All static properties on `AddressDataExtractor` are synchronized with `AddressCache`
-2. Change detection uses signature tracking to prevent notification loops
-3. Cache implements LRU eviction (25% removal when at 50-entry capacity)
-4. Cache entries expire after 5 minutes (300,000 ms)
+1. `AddressCache` uses singleton pattern - only one instance exists per application
+2. All static properties on `AddressDataExtractor` are synchronized with `AddressCache` singleton
+3. Change detection uses signature tracking to prevent notification loops
+4. Cache implements LRU eviction (25% removal when at 50-entry capacity)
+5. Cache entries expire after 5 minutes (300,000 ms)
+6. Static methods/properties delegate to singleton instance for backward compatibility
 
 ### For Testing
-1. Use `AddressCache.clearCache()` to reset state between tests
+1. Use `AddressCache.clearCache()` to reset state between tests (works on singleton)
 2. Test extraction and caching concerns independently
 3. Mock raw geocoding data with realistic OpenStreetMap format
 4. Verify callback invocations for change detection
+5. Multiple `getInstance()` calls return the same instance (testable singleton behavior)
 
 ## File Organization
 

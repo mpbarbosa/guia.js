@@ -1,0 +1,20 @@
+%%{init: {"theme": "default"}}%%
+sequenceDiagram
+    participant GeolocationService
+    participant PositionManager
+    participant ObserverSubject
+    participant ReverseGeocoder
+    participant ReverseGeocoderObs as HtmlSpeechSynthesisDisplayer (observer of ReverseGeocoder)
+    participant Observer1 as Chronometer/HTMLPositionDisplayer (other observers)
+    Note over GeolocationService: 1. GeolocationService gets new position
+    GeolocationService->>PositionManager: update(position)
+    Note over PositionManager: 2. PositionManager validates and updates position
+    PositionManager->>ObserverSubject: notifyObservers(this, eventType)
+    ObserverSubject->>ReverseGeocoder: update(PositionManager, eventType)
+    ObserverSubject->>Observer1: update(PositionManager, eventType)
+    Note over ReverseGeocoder: 3. ReverseGeocoder fetches address data
+    ReverseGeocoder->>ReverseGeocoder: reverseGeocode()
+    alt ReverseGeocoder notifies its observers when address is ready
+        ReverseGeocoder->>ReverseGeocoderObs: notifyObservers(addressData, eventType)
+        Note over ReverseGeocoderObs: 4. HtmlSpeechSynthesisDisplayer (and others) react to new address
+    end

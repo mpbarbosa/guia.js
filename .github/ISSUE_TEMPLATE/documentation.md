@@ -85,6 +85,7 @@ assignees: ''
 - [ ] **Maintainers** - Project maintainers and reviewers
 - [ ] **New Contributors** - First-time contributors
 - [ ] **API Users** - Developers using the API/library
+- [ ] **GITHUB COPILOT** - Well-structured, easily parseable format for AI understanding
 
 ## Documentation Quality Checklist
 

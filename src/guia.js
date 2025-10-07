@@ -2003,6 +2003,9 @@ class AddressExtractor {
 	 * Maps fields from the raw geocoding response to standardized Brazilian
 	 * address components with proper fallback handling for missing data.
 	 * 
+	 * Supports both Nominatim API format (road, house_number, etc.) and 
+	 * standard OSM address tags (addr:street, addr:housenumber, etc.).
+	 * 
 	 * @private
 	 * @since 0.8.3-alpha
 	 */
@@ -2014,22 +2017,28 @@ class AddressExtractor {
 		const address = this.data.address;
 
 		// Map street/road information
-		this.enderecoPadronizado.logradouro = address.road || address.street || address.pedestrian || null;
+		// Supports: Nominatim format (road, street, pedestrian) and OSM tags (addr:street)
+		this.enderecoPadronizado.logradouro = address['addr:street'] || address.road || address.street || address.pedestrian || null;
 
 		// Map house number
-		this.enderecoPadronizado.numero = address.house_number || null;
+		// Supports: Nominatim format (house_number) and OSM tags (addr:housenumber)
+		this.enderecoPadronizado.numero = address['addr:housenumber'] || address.house_number || null;
 
 		// Map neighborhood/suburb information
-		this.enderecoPadronizado.bairro = address.neighbourhood || address.suburb || address.quarter || null;
+		// Supports: Nominatim format (neighbourhood, suburb, quarter) and OSM tags (addr:neighbourhood)
+		this.enderecoPadronizado.bairro = address['addr:neighbourhood'] || address.neighbourhood || address.suburb || address.quarter || null;
 
-		// Map municipality/city information  
-		this.enderecoPadronizado.municipio = address.city || address.town || address.municipality || address.village || null;
+		// Map municipality/city information
+		// Supports: Nominatim format (city, town, municipality, village) and OSM tags (addr:city)
+		this.enderecoPadronizado.municipio = address['addr:city'] || address.city || address.town || address.municipality || address.village || null;
 
 		// Map state information
-		this.enderecoPadronizado.uf = address.state || address.state_code || null;
+		// Supports: Nominatim format (state, state_code) and OSM tags (addr:state)
+		this.enderecoPadronizado.uf = address['addr:state'] || address.state || address.state_code || null;
 
 		// Map postal code
-		this.enderecoPadronizado.cep = address.postcode || null;
+		// Supports: Nominatim format (postcode) and OSM tags (addr:postcode)
+		this.enderecoPadronizado.cep = address['addr:postcode'] || address.postcode || null;
 
 		// Map country (default to Brasil for Brazilian addresses)
 		this.enderecoPadronizado.pais = address.country === 'Brasil' || address.country === 'Brazil' ? 'Brasil' : (address.country || 'Brasil');

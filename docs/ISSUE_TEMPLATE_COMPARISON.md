@@ -8,16 +8,17 @@ This document provides a comprehensive side-by-side comparison of all GitHub Iss
 ISSUE TEMPLATE COMPARISON
 ==========================================================
 
-| Template            | Lines | Title Prefix | Labels                               |
-|---------------------|-------|--------------|--------------------------------------|
-| technical_debt.md   |   90  | [Tech Debt]  | technical-debt, maintenance, triage  |
-| feature_request.md  |   40  | [Feature]    | enhancement, triage                  |
-| copilot_issue.md    |   45  | [Copilot]    | copilot, triage                      |
-| documentation.md    |  147  | [Docs]       | documentation, triage                |
+| Template                    | Lines | Title Prefix | Labels                                      |
+|-----------------------------|-------|--------------|---------------------------------------------|
+| technical_debt.md           |   90  | [Tech Debt]  | technical-debt, maintenance, triage         |
+| feature_request.md          |   40  | [Feature]    | enhancement, triage                         |
+| copilot_issue.md            |   45  | [Copilot]    | copilot, triage                             |
+| documentation.md            |  147  | [Docs]       | documentation, triage                       |
+| functional_specification.md |  308  | [Func Spec]  | documentation, functional-spec, triage      |
 
 ## Common Features Across All Templates
 
-All four templates share these structural elements:
+All five templates share these structural elements:
 
 ✅ **YAML Frontmatter** - Each template includes structured metadata:
 - `name`: Template display name
@@ -93,7 +94,7 @@ All four templates share these structural elements:
 - References both REFERENTIAL_TRANSPARENCY.md and CODE_REVIEW_GUIDE.md
 - Focus on deterministic, testable solutions
 
-### Documentation Template (147 lines) ⭐ Most Comprehensive
+### Documentation Template (147 lines)
 
 **Purpose:** Report documentation issues or request documentation improvements
 
@@ -122,11 +123,55 @@ All four templates share these structural elements:
 - **Effort Estimation** - Specific to documentation work (< 2 hours to > 2 days)
 
 **Special Considerations:**
-- Most detailed template with 147 lines
+- Detailed template with 147 lines
 - Specific effort estimates for documentation tasks
 - Comprehensive quality checklist
 - Emphasis on documenting pure functions and referential transparency
 - Multiple audience types for targeting documentation
+
+### Functional Specification Template (308 lines) ⭐ Most Comprehensive
+
+**Purpose:** Create codeless functional specifications for features, components, or modules suitable for AI-supported development
+
+**Unique Sections:**
+- **Specification Overview** - Brief summary of the component/feature
+- **Document Information** - Version, status, target audience, implementation language
+- **Purpose and Motivation** - Problem statement and solution overview
+- **Core Responsibilities** - Primary responsibilities numbered list
+- **Functional Requirements** - Detailed FR-1, FR-2, etc. with:
+  - Description, Input, Output, Behavior, Validation, Side Effects
+- **Data Model** - Input/output data structures and internal state
+- **Validation Rules** - Constraints and edge cases
+- **Use Cases** - UC-1, UC-2, etc. with:
+  - Description, Preconditions, Input, Expected Output, Postconditions
+- **Error Handling** - Error types and edge cases
+- **Quality Attributes** - Performance, Testability, Maintainability, Usability
+- **Integration Points** - Input sources, output consumers, dependencies
+- **Implementation Considerations** - Design principles and architecture patterns
+- **Referential Transparency Requirements** - 6-point checklist:
+  - Core logic as pure functions
+  - Deterministic functions
+  - Isolated side effects
+  - Explicit dependencies
+  - Avoid state mutations
+  - Side effects at boundaries
+- **Non-Functional Requirements** - Scalability, security, accessibility, i18n, compatibility
+- **Testing Requirements** - Test categories, test data examples, coverage goals
+- **Version History** - Track specification changes
+- **References** - Related documentation and resources
+- **Glossary** - Domain-specific terms
+- **Implementation Checklist** - 12-step checklist for implementers
+- **Contact** - Author, reviewers, subject matter experts
+
+**Special Considerations:**
+- Largest and most comprehensive template at 308 lines
+- **Completely codeless** - focuses on WHAT not HOW
+- Language-agnostic design for cross-platform implementation
+- AI-friendly structure with clear, parseable sections
+- Based on existing GEO_POSITION_FUNC_SPEC.md format
+- Strong emphasis on referential transparency throughout
+- Includes comprehensive testing and quality sections
+- Suitable for GitHub Copilot and other AI tools to parse requirements
 
 ## Integration Points
 
@@ -137,6 +182,7 @@ All templates are well-integrated into the project:
 - Feature Request: "Propose new features" - Now includes implementation considerations for pure functions 🆕
 - Copilot Issue: "Report Copilot-related issues" - Now includes referential transparency guidelines 🆕
 - Documentation: "Report documentation issues" - Includes documentation quality checklist 🆕
+- Functional Specification: "Create functional specs" - Codeless, AI-friendly specification format 🆕
 
 ✅ **Consistent Naming Conventions** - All files use lowercase with underscores (snake_case)
 
@@ -150,12 +196,14 @@ All templates are well-integrated into the project:
 1. **Feature Request** (40 lines) - Simplest, focused on proposing new functionality
 2. **Copilot Issue** (45 lines) - Straightforward bug/feature reporting for Copilot
 3. **Technical Debt** (90 lines) - Moderate complexity for code quality issues
-4. **Documentation** (147 lines) - Most comprehensive with detailed categorization
+4. **Documentation** (147 lines) - Comprehensive with detailed categorization
+5. **Functional Specification** (308 lines) - Most comprehensive, codeless specification format
 
 ### Common Label Strategy
 - All templates use **"triage"** for initial categorization
-- Each has a specific domain label (technical-debt, enhancement, copilot, documentation)
+- Each has a specific domain label (technical-debt, enhancement, copilot, documentation, functional-spec)
 - Technical Debt uniquely includes **"maintenance"** label
+- Functional Specification uses both **"documentation"** and **"functional-spec"** labels
 
 ### Functional Programming Focus
 All templates include referential transparency guidance, showing the project's commitment to:
@@ -169,6 +217,7 @@ All templates include referential transparency guidance, showing the project's c
 - **Feature Request**: New capabilities and enhancements
 - **Copilot Issue**: GitHub Copilot integration problems
 - **Documentation**: Content creation and maintenance
+- **Functional Specification**: Codeless specifications for AI-supported development
 
 ## Recent Updates
 
@@ -192,12 +241,15 @@ Based on this comparison:
    - New features → Feature Request
    - Copilot problems → Copilot Issue
    - Documentation needs → Documentation
+   - Functional specifications → Functional Specification
 
-2. **Documentation Template**: Use for any content-related issues due to its comprehensive checklist and quality criteria
+2. **Functional Specification Template**: Use when creating codeless, language-agnostic specifications for features or components. Ideal for AI-supported development and cross-platform implementations
 
-3. **Consistency**: All templates follow consistent patterns, making them easy to use and maintain
+3. **Documentation Template**: Use for any content-related issues due to its comprehensive checklist and quality criteria
 
-4. **Referential Transparency**: Every template guides users toward functional programming principles, ensuring code quality across all contributions
+4. **Consistency**: All templates follow consistent patterns, making them easy to use and maintain
+
+5. **Referential Transparency**: Every template guides users toward functional programming principles, ensuring code quality across all contributions
 
 ## Related Resources
 

@@ -104,6 +104,12 @@ When creating issues, use these templates for consistency:
   - Request missing documentation or report unclear/outdated content
   - Includes documentation quality checklist
 
+- **[Functional Specification](../.github/ISSUE_TEMPLATE/functional_specification.md)** - Create functional specifications 🆕
+  - Codeless, language-agnostic specification format
+  - Suitable for AI-supported development (GitHub Copilot, etc.)
+  - Based on GEO_POSITION_FUNC_SPEC.md format
+  - Comprehensive sections for requirements, data models, use cases, testing
+
 📊 **[Issue Template Comparison](./ISSUE_TEMPLATE_COMPARISON.md)** - Side-by-side comparison of all templates 🆕
   - Detailed analysis of each template's features
   - Common patterns and unique capabilities

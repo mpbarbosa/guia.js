@@ -14,7 +14,7 @@ ISSUE TEMPLATE COMPARISON
 | feature_request.md          |   40  | [Feature]    | enhancement, triage                         |
 | copilot_issue.md            |   45  | [Copilot]    | copilot, triage                             |
 | documentation.md            |  147  | [Docs]       | documentation, triage                       |
-| functional_specification.md |  308  | [Func Spec]  | documentation, functional-spec, triage      |
+| functional_specification.md |  379  | [Func Spec]  | documentation, functional-spec, triage      |
 
 ## Common Features Across All Templates
 
@@ -129,13 +129,17 @@ All five templates share these structural elements:
 - Emphasis on documenting pure functions and referential transparency
 - Multiple audience types for targeting documentation
 
-### Functional Specification Template (308 lines) ⭐ Most Comprehensive
+### Functional Specification Template (379 lines) ⭐ Most Comprehensive
 
 **Purpose:** Create codeless functional specifications for features, components, or modules suitable for AI-supported development
 
 **Unique Sections:**
 - **Specification Overview** - Brief summary of the component/feature
 - **Document Information** - Version, status, target audience, implementation language
+- **Output Deliverables** - 🆕 Defines output type (Programming Code or Class Documentation)
+  - Programming Code option with language, files, and structure details
+  - Class Documentation option with documentation file and format template
+  - Includes complete Class Documentation Model based on REFERENCE_PLACE.md structure
 - **Purpose and Motivation** - Problem statement and solution overview
 - **Core Responsibilities** - Primary responsibilities numbered list
 - **Functional Requirements** - Detailed FR-1, FR-2, etc. with:
@@ -164,7 +168,7 @@ All five templates share these structural elements:
 - **Contact** - Author, reviewers, subject matter experts
 
 **Special Considerations:**
-- Largest and most comprehensive template at 308 lines
+- Largest and most comprehensive template at 379 lines
 - **Completely codeless** - focuses on WHAT not HOW
 - Language-agnostic design for cross-platform implementation
 - AI-friendly structure with clear, parseable sections
@@ -197,7 +201,7 @@ All templates are well-integrated into the project:
 2. **Copilot Issue** (45 lines) - Straightforward bug/feature reporting for Copilot
 3. **Technical Debt** (90 lines) - Moderate complexity for code quality issues
 4. **Documentation** (147 lines) - Comprehensive with detailed categorization
-5. **Functional Specification** (308 lines) - Most comprehensive, codeless specification format
+5. **Functional Specification** (379 lines) - Most comprehensive, codeless specification format
 
 ### Common Label Strategy
 - All templates use **"triage"** for initial categorization

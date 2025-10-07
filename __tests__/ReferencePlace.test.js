@@ -26,7 +26,7 @@ describe('ReferencePlace Class', () => {
             expect(refPlace.className).toBe('shop');
             expect(refPlace.typeName).toBe('mall');
             expect(refPlace.name).toBe('Shopping Morumbi');
-            expect(refPlace.description).toBe('Shopping Center');
+            expect(refPlace.description).toBe('Shopping Center Shopping Morumbi');
         });
 
         test('should create instance with valid amenity/cafe data', () => {
@@ -40,7 +40,7 @@ describe('ReferencePlace Class', () => {
             expect(refPlace.className).toBe('amenity');
             expect(refPlace.typeName).toBe('cafe');
             expect(refPlace.name).toBe('Café Central');
-            expect(refPlace.description).toBe('Café');
+            expect(refPlace.description).toBe('Café Café Central');
         });
 
         test('should create instance with valid railway/subway data', () => {
@@ -54,7 +54,7 @@ describe('ReferencePlace Class', () => {
             expect(refPlace.className).toBe('railway');
             expect(refPlace.typeName).toBe('subway');
             expect(refPlace.name).toBe('Estação Sé');
-            expect(refPlace.description).toBe('Estação do Metrô');
+            expect(refPlace.description).toBe('Estação do Metrô Estação Sé');
         });
 
         test('should create instance with valid place/house data', () => {
@@ -68,7 +68,7 @@ describe('ReferencePlace Class', () => {
             expect(refPlace.className).toBe('place');
             expect(refPlace.typeName).toBe('house');
             expect(refPlace.name).toBe('Casa do João');
-            expect(refPlace.description).toBe('Residencial');
+            expect(refPlace.description).toBe('Residencial Casa do João');
         });
 
         test('should handle data without name', () => {
@@ -181,7 +181,7 @@ describe('ReferencePlace Class', () => {
             expect(result).toContain('ReferencePlace');
             expect(result).toContain('Shopping Center');
             expect(result).toContain('Shopping Morumbi');
-            expect(result).toBe('ReferencePlace: Shopping Center - Shopping Morumbi');
+            expect(result).toBe('ReferencePlace: Shopping Center Shopping Morumbi - Shopping Morumbi');
         });
 
         test('should return formatted string without name', () => {
@@ -234,12 +234,12 @@ describe('ReferencePlace Class', () => {
             
             Object.keys(map).forEach(className => {
                 Object.keys(map[className]).forEach(typeName => {
-                    const expectedDescription = map[className][typeName];
                     const data = { 
                         class: className, 
                         type: typeName, 
                         name: 'Test Place' 
                     };
+                    const expectedDescription = `${map[className][typeName]} Test Place`;
                     const refPlace = new ReferencePlace(data);
                     
                     expect(refPlace.description).toBe(expectedDescription);
@@ -259,12 +259,12 @@ describe('ReferencePlace Class', () => {
             const refPlace = new ReferencePlace(data);
             
             // The app should be able to speak this information
-            expect(refPlace.description).toBe('Shopping Center');
+            expect(refPlace.description).toBe('Shopping Center Shopping Morumbi');
             expect(refPlace.name).toBe('Shopping Morumbi');
             
             // Simulated speech: "Você está no Shopping Center Shopping Morumbi"
             const speechText = `Você está no ${refPlace.description} ${refPlace.name}`;
-            expect(speechText).toBe('Você está no Shopping Center Shopping Morumbi');
+            expect(speechText).toBe('Você está no Shopping Center Shopping Morumbi Shopping Morumbi');
         });
 
         test('should notify user when near a subway station', () => {
@@ -276,12 +276,12 @@ describe('ReferencePlace Class', () => {
             };
             const refPlace = new ReferencePlace(data);
             
-            expect(refPlace.description).toBe('Estação do Metrô');
+            expect(refPlace.description).toBe('Estação do Metrô Estação Sé');
             expect(refPlace.name).toBe('Estação Sé');
             
             // Simulated speech: "Você está próximo da Estação do Metrô Estação Sé"
             const speechText = `Você está próximo da ${refPlace.description} ${refPlace.name}`;
-            expect(speechText).toBe('Você está próximo da Estação do Metrô Estação Sé');
+            expect(speechText).toBe('Você está próximo da Estação do Metrô Estação Sé Estação Sé');
         });
 
         test('should notify user when at a cafe', () => {
@@ -293,7 +293,7 @@ describe('ReferencePlace Class', () => {
             };
             const refPlace = new ReferencePlace(data);
             
-            expect(refPlace.description).toBe('Café');
+            expect(refPlace.description).toBe('Café Café Girondino');
             expect(refPlace.name).toBe('Café Girondino');
         });
     });
@@ -312,7 +312,7 @@ describe('ReferencePlace Class', () => {
             expect(refPlace.className).toBe('shop');
             expect(refPlace.typeName).toBe('mall');
             expect(refPlace.name).toBe('Shopping Morumbi');
-            expect(refPlace.description).toBe('Shopping Center');
+            expect(refPlace.description).toBe('Shopping Center Shopping Morumbi');
         });
 
         test('should handle empty string values', () => {

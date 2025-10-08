@@ -164,6 +164,88 @@ describe('OSM Address Tag Translation', () => {
             expect(result.uf).toBe('RJ');
             expect(result.cep).toBe('20000-000');
         });
+
+        test('should extract siglaUF from ISO3166-2-lvl4 field', () => {
+            // Test data with ISO3166-2-lvl4 field for Rio de Janeiro
+            const nominatimDataWithISO = {
+                address: {
+                    'road': 'Avenida Atlântica',
+                    'neighbourhood': 'Copacabana',
+                    'city': 'Rio de Janeiro',
+                    'ISO3166-2-lvl4': 'BR-RJ',
+                    'postcode': '22070-001'
+                }
+            };
+
+            const result = AddressDataExtractor.getBrazilianStandardAddress(nominatimDataWithISO);
+
+            expect(result.logradouro).toBe('Avenida Atlântica');
+            expect(result.bairro).toBe('Copacabana');
+            expect(result.municipio).toBe('Rio de Janeiro');
+            expect(result.uf).toBe('RJ'); // Should extract "RJ" from "BR-RJ"
+            expect(result.cep).toBe('22070-001');
+        });
+
+        test('should prioritize state_code over ISO3166-2-lvl4', () => {
+            const nominatimData = {
+                address: {
+                    'city': 'São Paulo',
+                    'state_code': 'SP',
+                    'ISO3166-2-lvl4': 'BR-RJ' // This should be ignored since state_code exists
+                }
+            };
+
+            const result = AddressDataExtractor.getBrazilianStandardAddress(nominatimData);
+
+            expect(result.municipio).toBe('São Paulo');
+            expect(result.uf).toBe('SP'); // Should use state_code, not ISO3166-2-lvl4
+        });
+
+        test('should handle various Brazilian state codes in ISO3166-2-lvl4', () => {
+            const testCases = [
+                { iso: 'BR-SP', city: 'São Paulo', expected: 'SP' },
+                { iso: 'BR-RJ', city: 'Rio de Janeiro', expected: 'RJ' },
+                { iso: 'BR-MG', city: 'Belo Horizonte', expected: 'MG' },
+                { iso: 'BR-DF', city: 'Brasília', expected: 'DF' },
+                { iso: 'BR-RS', city: 'Porto Alegre', expected: 'RS' },
+                { iso: 'BR-BA', city: 'Salvador', expected: 'BA' }
+            ];
+
+            testCases.forEach(({ iso, city, expected }) => {
+                const nominatimData = {
+                    address: {
+                        'city': city,
+                        'ISO3166-2-lvl4': iso
+                    }
+                };
+
+                const result = AddressDataExtractor.getBrazilianStandardAddress(nominatimData);
+                expect(result.uf).toBe(expected);
+            });
+        });
+
+        test('should return null for invalid ISO3166-2-lvl4 format', () => {
+            const testCases = [
+                { iso: 'invalid' },
+                { iso: 'BR-' },
+                { iso: 'BR-ABC' },
+                { iso: 'RJ' },
+                { iso: '' },
+                { iso: null }
+            ];
+
+            testCases.forEach(({ iso }) => {
+                const nominatimData = {
+                    address: {
+                        'city': 'Test City',
+                        'ISO3166-2-lvl4': iso
+                    }
+                };
+
+                const result = AddressDataExtractor.getBrazilianStandardAddress(nominatimData);
+                expect(result.uf).toBeNull();
+            });
+        });
     });
 
     describe('FR-3: Format and Output Brazilian Address', () => {

@@ -97,7 +97,7 @@ The `address` object contains detailed address components. Fields vary based on 
 | `state_district` | string | State district | "Região Geográfica..." | ℹ️ Informational only |
 | `state` | string | State full name | "São Paulo" | ✅ Maps to `uf` |
 | `state_code` | string | State abbreviation | "SP" | ✅ Preferred for `uf` |
-| `ISO3166-2-lvl4` | string | ISO state code | "BR-SP" | ℹ️ Informational only |
+| `ISO3166-2-lvl4` | string | ISO state code | "BR-SP" | ✅ Fallback for `uf` (extracts "SP") |
 | `region` | string | Geographic region | "Região Sudeste" | ℹ️ Informational only |
 | `postcode` | string | Postal code | "05145-200" | ✅ Maps to `cep` |
 | `country` | string | Country name | "Brasil" | ✅ Maps to `pais` |
@@ -295,7 +295,7 @@ const address = AddressDataExtractor.getBrazilianStandardAddress(nominatimRespon
 // house_number → numero
 // neighbourhood, suburb, quarter → bairro
 // city, town, municipality, village → municipio
-// state, state_code → uf
+// state, state_code, ISO3166-2-lvl4 (extracted) → uf
 // postcode → cep
 // country → pais
 ```
@@ -307,7 +307,10 @@ The extraction follows a priority order for each field:
 1. **OSM address tags** (`addr:street`, `addr:housenumber`, etc.) - Highest priority
 2. **Primary Nominatim fields** (`road`, `city`, `state`)
 3. **Fallback Nominatim fields** (`street`, `town`, `state_code`)
-4. **Null** if no data available
+4. **ISO3166-2-lvl4 extracted** (state abbreviation extracted from ISO code)
+5. **Null** if no data available
+
+**Note for `uf` field**: The state abbreviation (`siglaUF`) is extracted from the `ISO3166-2-lvl4` field when other state fields are unavailable. For example, "BR-RJ" becomes "RJ".
 
 See [OSM_ADDRESS_TRANSLATION.md](./OSM_ADDRESS_TRANSLATION.md) for complete details.
 

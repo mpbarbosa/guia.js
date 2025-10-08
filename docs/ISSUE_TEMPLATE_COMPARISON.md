@@ -15,10 +15,11 @@ ISSUE TEMPLATE COMPARISON
 | copilot_issue.md            |   45  | [Copilot]    | copilot, triage                             |
 | documentation.md            |  147  | [Docs]       | documentation, triage                       |
 | functional_specification.md |  379  | [Func Spec]  | documentation, functional-spec, triage      |
+| github_config.md            |  117  | [Config]     | infrastructure, configuration, triage       |
 
 ## Common Features Across All Templates
 
-All five templates share these structural elements:
+All six templates share these structural elements:
 
 ✅ **YAML Frontmatter** - Each template includes structured metadata:
 - `name`: Template display name
@@ -177,6 +178,44 @@ All five templates share these structural elements:
 - Includes comprehensive testing and quality sections
 - Suitable for GitHub Copilot and other AI tools to parse requirements
 
+### GitHub Configuration Template (117 lines) 🆕
+
+**Purpose:** Report issues or request changes to .github configuration (workflows, actions, issue templates, CI/CD)
+
+**Unique Sections:**
+- **Configuration Issue Summary** - Brief description of the configuration issue
+- **Type of Configuration Issue** - Multi-select checkboxes for:
+  - Workflow Issue
+  - Action Issue
+  - Issue Template
+  - CI/CD Pipeline
+  - Configuration File
+  - Security/Permissions
+  - Documentation
+  - Enhancement
+- **Affected Components** - List specific .github files or components
+- **Current Behavior** - What's happening now (errors, failures, unexpected behavior)
+- **Expected Behavior** - How the configuration should work
+- **Impact** - Four impact areas:
+  - Developer Impact
+  - CI/CD Impact
+  - User Impact
+  - Maintenance Impact
+- **Steps to Reproduce** - For bugs or workflow failures
+- **Proposed Solution** - Configuration changes, workflow modifications, new actions
+- **Implementation Considerations** - Maintainability, breaking changes, testability, dependencies
+- **Environment Details** - GitHub Runner, versions, workflow/action info, run IDs
+- **Related Resources** - Links to workflow runs, issues, docs, external references
+- **Acceptance Criteria** - Definition of "done" with testing and documentation requirements
+
+**Special Considerations:**
+- Focused on DevOps/infrastructure concerns
+- Addresses GitHub Actions workflows, custom actions, and CI/CD pipelines
+- References WORKFLOW_SETUP.md for workflow guidance
+- Emphasis on maintainability and testability of automation
+- Includes environment details for debugging workflow failures
+- Links to related resources like failed workflow runs
+
 ## Integration Points
 
 All templates are well-integrated into the project:
@@ -187,6 +226,7 @@ All templates are well-integrated into the project:
 - Copilot Issue: "Report Copilot-related issues" - Now includes referential transparency guidelines 🆕
 - Documentation: "Report documentation issues" - Includes documentation quality checklist 🆕
 - Functional Specification: "Create functional specs" - Codeless, AI-friendly specification format 🆕
+- GitHub Configuration: "Report .github configuration issues" - For workflows, actions, CI/CD 🆕
 
 ✅ **Consistent Naming Conventions** - All files use lowercase with underscores (snake_case)
 
@@ -200,14 +240,16 @@ All templates are well-integrated into the project:
 1. **Feature Request** (40 lines) - Simplest, focused on proposing new functionality
 2. **Copilot Issue** (45 lines) - Straightforward bug/feature reporting for Copilot
 3. **Technical Debt** (90 lines) - Moderate complexity for code quality issues
-4. **Documentation** (147 lines) - Comprehensive with detailed categorization
-5. **Functional Specification** (379 lines) - Most comprehensive, codeless specification format
+4. **GitHub Configuration** (117 lines) - Moderate-to-high complexity for infrastructure issues
+5. **Documentation** (147 lines) - Comprehensive with detailed categorization
+6. **Functional Specification** (379 lines) - Most comprehensive, codeless specification format
 
 ### Common Label Strategy
 - All templates use **"triage"** for initial categorization
-- Each has a specific domain label (technical-debt, enhancement, copilot, documentation, functional-spec)
+- Each has a specific domain label (technical-debt, enhancement, copilot, documentation, functional-spec, infrastructure)
 - Technical Debt uniquely includes **"maintenance"** label
 - Functional Specification uses both **"documentation"** and **"functional-spec"** labels
+- GitHub Configuration uses both **"infrastructure"** and **"configuration"** labels
 
 ### Functional Programming Focus
 All templates include referential transparency guidance, showing the project's commitment to:
@@ -222,6 +264,7 @@ All templates include referential transparency guidance, showing the project's c
 - **Copilot Issue**: GitHub Copilot integration problems
 - **Documentation**: Content creation and maintenance
 - **Functional Specification**: Codeless specifications for AI-supported development
+- **GitHub Configuration**: DevOps, CI/CD, workflows, actions, and infrastructure issues
 
 ## Recent Updates
 

@@ -24,6 +24,10 @@ const setupParams = {
 	mobileNotAcceptedAccuracy: ["medium", "bad", "very bad"],
 	desktopNotAcceptedAccuracy: ["bad", "very bad"],
 	notAcceptedAccuracy: null, // Will be set dynamically based on device type
+	// Reference place mapping for known OSM classes/types
+	// Keys must be lowercase to match OSM data
+	// See https://wiki.openstreetmap.org/wiki/Map_Features for OSM feature documentation
+	// "class": { "type": "Description in Portuguese" }
 	referencePlaceMap: {
 		"place": { "house": "Residencial" },
 		"shop": { "mall": "Shopping Center" },

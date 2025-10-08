@@ -26,7 +26,10 @@ const setupParams = {
 	notAcceptedAccuracy: null, // Will be set dynamically based on device type
 	referencePlaceMap: {
 		"place": { "house": "Residencial" },
-		"shop": { "mall": "Shopping Center" },
+		"shop": { 
+			"mall": "Shopping Center",
+			"car_repair": "Oficina Mecânica"
+		},
 		"amenity": { "cafe": "Café" },
 		"railway": { "subway": "Estação do Metrô",
 			"station": "Estação do Metrô"

@@ -84,7 +84,7 @@ The following reference place types are currently supported:
 | amenity   | cafe       | Café                   |
 | railway   | subway     | Estação do Metrô       |
 
-Additional mappings can be configured in `setupParams.referencePlaceMap`.
+Additional mappings can be configured by modifying `ReferencePlace.referencePlaceMap` (also accessible via `setupParams.referencePlaceMap` for backward compatibility).
 
 ## Valid Reference Place Classes
 
@@ -173,7 +173,14 @@ new ReferencePlace(data)
   - `type` (string, optional): The specific type within the class (e.g., 'mall', 'cafe', 'subway')
   - `name` (string, optional): The name of the reference place
 
-### Properties
+### Static Properties
+
+- `ReferencePlace.referencePlaceMap` (Object): Mapping of OSM class/type combinations to Portuguese descriptions
+  - Format: `{ "class": { "type": "Description in Portuguese" } }`
+  - Can be accessed via `setupParams.referencePlaceMap` for backward compatibility
+  - Keys must be lowercase to match OSM data
+
+### Instance Properties
 
 - `className` (string|null): The class category of the reference place
 - `typeName` (string|null): The specific type within the class
@@ -212,7 +219,11 @@ Test results:
 
 ## Version History
 
-- **0.8.5-alpha**: Initial implementation of `ReferencePlace` class
+- **0.8.5-alpha** (current): 
+  - Moved `referencePlaceMap` from `setupParams` to `ReferencePlace` class as static property
+  - Improved code cohesion by keeping reference place data within the class
+  - Added backward compatibility via `setupParams.referencePlaceMap` getter
+  - Initial implementation of `ReferencePlace` class
 - **0.8.4-alpha**: Previous version with standalone `getAddressType()` function
 
 ## Related Classes

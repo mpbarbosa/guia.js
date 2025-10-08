@@ -1,0 +1,75 @@
+name: 'Update Test Documentation'
+description: 'Updates test documentation files with current statistics'
+inputs:
+  test-results-file:
+    description: 'Path to test results JSON file'
+    required: false
+    default: 'test-results.json'
+outputs:
+  updated:
+    description: 'Whether documentation was updated'
+    value: ${{ steps.update.outputs.updated }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Count test files
+      id: count
+      shell: bash
+      run: |
+        # Count test suites
+        TEST_SUITES=$(find __tests__ -name "*.test.js" -o -name "*.spec.js" | wc -l)
+        echo "test_suites=$TEST_SUITES" >> $GITHUB_OUTPUT
+        
+        # Count test files by category
+        UNIT_TESTS=$(find __tests__ -name "*.test.js" | wc -l)
+        echo "unit_tests=$UNIT_TESTS" >> $GITHUB_OUTPUT
+        
+        echo "Found $TEST_SUITES test suites"
+        
+    - name: Update TESTING.md
+      id: update
+      shell: bash
+      run: |
+        TESTING_FILE="TESTING.md"
+        UPDATED="false"
+        
+        if [ ! -f "$TESTING_FILE" ]; then
+          echo "TESTING.md not found"
+          echo "updated=false" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+        
+        # Get current date
+        CURRENT_DATE=$(date +"%Y-%m-%d %H:%M:%S UTC")
+        
+        # Backup original file
+        cp "$TESTING_FILE" "${TESTING_FILE}.bak"
+        
+        # Add or update automation notice
+        if ! grep -q "Last updated automatically" "$TESTING_FILE"; then
+          echo "" >> "$TESTING_FILE"
+          echo "---" >> "$TESTING_FILE"
+          echo "" >> "$TESTING_FILE"
+          echo "_Last updated automatically by GitHub Actions: $CURRENT_DATE_" >> "$TESTING_FILE"
+          UPDATED="true"
+        else
+          # Update existing timestamp
+          sed -i "s/_Last updated automatically.*/_Last updated automatically by GitHub Actions: $CURRENT_DATE_/" "$TESTING_FILE"
+          
+          # Check if file actually changed
+          if ! diff -q "$TESTING_FILE" "${TESTING_FILE}.bak" > /dev/null; then
+            UPDATED="true"
+          fi
+        fi
+        
+        # Cleanup backup
+        rm -f "${TESTING_FILE}.bak"
+        
+        echo "updated=$UPDATED" >> $GITHUB_OUTPUT
+        
+        if [ "$UPDATED" = "true" ]; then
+          echo "✅ TESTING.md updated"
+        else
+          echo "ℹ️ No changes needed to TESTING.md"
+        fi

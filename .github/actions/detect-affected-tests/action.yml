@@ -1,0 +1,66 @@
+name: 'Detect Affected Tests'
+description: 'Detects which test files need to be run based on changed source files'
+inputs:
+  changed-files:
+    description: 'Comma-separated list of changed files'
+    required: true
+outputs:
+  test-files:
+    description: 'Test files that should be run'
+    value: ${{ steps.detect.outputs.tests }}
+  should-run-all:
+    description: 'Whether all tests should be run'
+    value: ${{ steps.detect.outputs.run_all }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Detect affected tests
+      id: detect
+      shell: bash
+      run: |
+        echo "Analyzing changed files to determine affected tests..."
+        
+        CHANGED="${{ inputs.changed-files }}"
+        AFFECTED_TESTS=""
+        RUN_ALL="false"
+        
+        # Convert comma-separated to newline-separated
+        CHANGED_FILES=$(echo "$CHANGED" | tr ',' '\n')
+        
+        echo "Changed files:"
+        echo "$CHANGED_FILES"
+        
+        # Check if core files changed (run all tests)
+        if echo "$CHANGED_FILES" | grep -qE "^src/guia\.js$|^src/guia_ibge\.js$|^package\.json$"; then
+          echo "Core files changed - running all tests"
+          RUN_ALL="true"
+        fi
+        
+        # Map source files to test files
+        while IFS= read -r file; do
+          case "$file" in
+            src/guia.js)
+              # Core file - multiple tests affected
+              AFFECTED_TESTS="$AFFECTED_TESTS __tests__/CurrentPosition.test.js"
+              AFFECTED_TESTS="$AFFECTED_TESTS __tests__/utils.test.js"
+              AFFECTED_TESTS="$AFFECTED_TESTS __tests__/SingletonStatusManager.test.js"
+              ;;
+            src/guia_ibge.js)
+              AFFECTED_TESTS="$AFFECTED_TESTS __tests__/guia_ibge.test.js"
+              ;;
+            __tests__/*.test.js)
+              # Test file itself changed
+              AFFECTED_TESTS="$AFFECTED_TESTS $file"
+              ;;
+          esac
+        done <<< "$CHANGED_FILES"
+        
+        # Remove duplicates and format
+        AFFECTED_TESTS=$(echo "$AFFECTED_TESTS" | tr ' ' '\n' | sort -u | tr '\n' ' ')
+        
+        echo "Affected test files: $AFFECTED_TESTS"
+        echo "tests=$AFFECTED_TESTS" >> $GITHUB_OUTPUT
+        echo "run_all=$RUN_ALL" >> $GITHUB_OUTPUT
+        
+        echo "✅ Affected tests detection complete"

@@ -1,0 +1,85 @@
+name: 'Update Documentation Index'
+description: 'Updates docs/INDEX.md with current documentation structure'
+outputs:
+  updated:
+    description: 'Whether index was updated'
+    value: ${{ steps.update.outputs.updated }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Scan documentation files
+      id: scan
+      shell: bash
+      run: |
+        echo "Scanning documentation files..."
+        
+        # Find all markdown files
+        MD_FILES=$(find . -name "*.md" \
+          -not -path "./node_modules/*" \
+          -not -path "./.git/*" \
+          -not -path "./coverage/*" \
+          | sort)
+        
+        echo "Documentation files found:"
+        echo "$MD_FILES"
+        
+        # Count files by location
+        ROOT_DOCS=$(echo "$MD_FILES" | grep "^\.\/[^/]*\.md$" | wc -l)
+        DOCS_DIR=$(echo "$MD_FILES" | grep "^\./docs/" | wc -l)
+        GITHUB_DOCS=$(echo "$MD_FILES" | grep "^\./.github/" | wc -l)
+        
+        echo "root_docs=$ROOT_DOCS" >> $GITHUB_OUTPUT
+        echo "docs_dir=$DOCS_DIR" >> $GITHUB_OUTPUT
+        echo "github_docs=$GITHUB_DOCS" >> $GITHUB_OUTPUT
+        
+        echo "Found: $ROOT_DOCS root, $DOCS_DIR in docs/, $GITHUB_DOCS in .github/"
+        
+    - name: Update docs/INDEX.md
+      id: update
+      shell: bash
+      run: |
+        INDEX_FILE="docs/INDEX.md"
+        UPDATED="false"
+        
+        if [ ! -f "$INDEX_FILE" ]; then
+          echo "docs/INDEX.md not found, skipping update"
+          echo "updated=false" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+        
+        # Get current date
+        CURRENT_DATE=$(date +"%Y-%m-%d %H:%M:%S UTC")
+        
+        # Backup original
+        cp "$INDEX_FILE" "${INDEX_FILE}.bak"
+        
+        # Add or update automation notice at the end
+        if ! grep -q "automatically updated" "$INDEX_FILE"; then
+          echo "" >> "$INDEX_FILE"
+          echo "---" >> "$INDEX_FILE"
+          echo "" >> "$INDEX_FILE"
+          echo "_Index automatically updated by GitHub Actions: $CURRENT_DATE_" >> "$INDEX_FILE"
+          echo "_Total documentation files: ${{ steps.scan.outputs.root_docs }} root, ${{ steps.scan.outputs.docs_dir }} in docs/, ${{ steps.scan.outputs.github_docs }} in .github/_" >> "$INDEX_FILE"
+          UPDATED="true"
+        else
+          # Update existing notice
+          sed -i "s/_Index automatically updated.*/_Index automatically updated by GitHub Actions: $CURRENT_DATE_/" "$INDEX_FILE"
+          sed -i "s/_Total documentation files:.*/_Total documentation files: ${{ steps.scan.outputs.root_docs }} root, ${{ steps.scan.outputs.docs_dir }} in docs\/, ${{ steps.scan.outputs.github_docs }} in .github\/_/" "$INDEX_FILE"
+          
+          # Check if actually changed
+          if ! diff -q "$INDEX_FILE" "${INDEX_FILE}.bak" > /dev/null; then
+            UPDATED="true"
+          fi
+        fi
+        
+        # Cleanup
+        rm -f "${INDEX_FILE}.bak"
+        
+        echo "updated=$UPDATED" >> $GITHUB_OUTPUT
+        
+        if [ "$UPDATED" = "true" ]; then
+          echo "✅ docs/INDEX.md updated"
+        else
+          echo "ℹ️ No changes needed to docs/INDEX.md"
+        fi

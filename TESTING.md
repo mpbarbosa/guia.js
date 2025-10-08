@@ -167,3 +167,6 @@ npx jest --detectOpenHandles --forceExit
 # Limpar cache do Jest
 npx jest --clearCache
 ```
+---
+
+_Last updated automatically: 

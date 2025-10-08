@@ -1303,6 +1303,7 @@ class BrazilianStandardAddress {
 		this.bairro = null;
 		this.municipio = null;
 		this.uf = null;
+		this.siglaUF = null;
 		this.cep = null;
 		this.pais = "Brasil";
 	}
@@ -1339,8 +1340,8 @@ class BrazilianStandardAddress {
 	 */
 	municipioCompleto() {
 		if (!this.municipio) return "";
-		if (this.uf) {
-			return `${this.municipio}, ${this.uf}`;
+		if (this.siglaUF) {
+			return `${this.municipio}, ${this.siglaUF}`;
 		}
 		return this.municipio;
 	}
@@ -2063,6 +2064,18 @@ class AddressExtractor {
 		// Supports: Nominatim format (state, state_code, ISO3166-2-lvl4) and OSM tags (addr:state)
 		// Priority: OSM tag > state full name > state_code > ISO3166-2-lvl4 extracted
 		this.enderecoPadronizado.uf = address['addr:state'] || address.state || address.state_code || AddressExtractor.extractSiglaUF(address['ISO3166-2-lvl4']) || null;
+		
+		// Set siglaUF based on extracted uf
+		// If uf is already a two-letter code, use it directly
+		if (this.enderecoPadronizado.uf && /^[A-Z]{2}$/.test(this.enderecoPadronizado.uf)) {
+			this.enderecoPadronizado.siglaUF = this.enderecoPadronizado.uf;
+		} else if (this.enderecoPadronizado.uf) {
+			// Attempt to extract siglaUF from full state name if possible
+			this.enderecoPadronizado.siglaUF = AddressExtractor.extractSiglaUF(address['ISO3166-2-lvl4']) || null;
+		} else {
+			this.enderecoPadronizado.siglaUF = null;
+		}
+		this.enderecoPadronizado.uf = address['addr:state'] || address.state || address.state_code ||  null;
 
 		// Map postal code
 		// Supports: Nominatim format (postcode) and OSM tags (addr:postcode)

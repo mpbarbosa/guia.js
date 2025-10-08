@@ -296,6 +296,7 @@ const address = AddressDataExtractor.getBrazilianStandardAddress(nominatimRespon
 // neighbourhood, suburb, quarter → bairro
 // city, town, municipality, village → municipio
 // state, state_code, ISO3166-2-lvl4 (extracted) → uf
+// Two-letter state code extracted from uf or ISO3166-2-lvl4 → siglaUF
 // postcode → cep
 // country → pais
 ```
@@ -310,7 +311,12 @@ The extraction follows a priority order for each field:
 4. **ISO3166-2-lvl4 extracted** (state abbreviation extracted from ISO code)
 5. **Null** if no data available
 
-**Note for `uf` field**: The state abbreviation (`siglaUF`) is extracted from the `ISO3166-2-lvl4` field when other state fields are unavailable. For example, "BR-RJ" becomes "RJ".
+**Note for `uf` and `siglaUF` fields**: 
+- The `uf` field contains state name or abbreviation from `addr:state`, `state`, or `state_code` fields
+- The `siglaUF` field contains the two-letter state abbreviation
+- When `uf` is a two-letter code (e.g., "SP"), `siglaUF` will be set to the same value
+- When `uf` is a full state name (e.g., "São Paulo"), `siglaUF` will attempt to extract the abbreviation from the `ISO3166-2-lvl4` field (e.g., "BR-SP" → "SP")
+- The `AddressExtractor.extractSiglaUF()` static method handles extraction from ISO3166-2-lvl4 format
 
 See [OSM_ADDRESS_TRANSLATION.md](./OSM_ADDRESS_TRANSLATION.md) for complete details.
 
@@ -334,7 +340,8 @@ console.log(brazilianAddress.logradouro);     // "Avenida Roque Petroni Júnior"
 console.log(brazilianAddress.numero);         // "1089"
 console.log(brazilianAddress.bairro);         // "Jardim das Acácias"
 console.log(brazilianAddress.municipio);      // "São Paulo"
-console.log(brazilianAddress.uf);             // "São Paulo" or "SP"
+console.log(brazilianAddress.uf);             // "São Paulo" or "SP" (state name or code)
+console.log(brazilianAddress.siglaUF);        // "SP" (two-letter state abbreviation)
 console.log(brazilianAddress.cep);            // "04707-000"
 
 // Get formatted address

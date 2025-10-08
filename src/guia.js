@@ -3493,6 +3493,54 @@ Object.defineProperties(AddressDataExtractor, {
  * });
  * manager.startTracking();
  */
+
+/**
+ * Default configuration for DOM element IDs used by WebGeocodingManager.
+ * 
+ * This configuration object provides a single source of truth for all element IDs
+ * required by WebGeocodingManager. It can be overridden by passing a custom
+ * elementIds object in the constructor params.
+ * 
+ * @constant {Object}
+ * @property {string} chronometer - ID for chronometer display element
+ * @property {string} findRestaurantsBtn - ID for find restaurants button
+ * @property {string} cityStatsBtn - ID for city statistics button
+ * @property {string} timestampDisplay - ID for timestamp display element
+ * @property {Object} speechSynthesis - IDs for speech synthesis UI elements
+ * @property {string} speechSynthesis.languageSelectId - ID for language selection dropdown
+ * @property {string} speechSynthesis.voiceSelectId - ID for voice selection dropdown
+ * @property {string} speechSynthesis.textInputId - ID for text input field
+ * @property {string} speechSynthesis.speakBtnId - ID for speak button
+ * @property {string} speechSynthesis.pauseBtnId - ID for pause button
+ * @property {string} speechSynthesis.resumeBtnId - ID for resume button
+ * @property {string} speechSynthesis.stopBtnId - ID for stop button
+ * @property {string} speechSynthesis.rateInputId - ID for rate input slider
+ * @property {string} speechSynthesis.rateValueId - ID for rate value display
+ * @property {string} speechSynthesis.pitchInputId - ID for pitch input slider
+ * @property {string} speechSynthesis.pitchValueId - ID for pitch value display
+ */
+const DEFAULT_ELEMENT_IDS = {
+	chronometer: "chronometer",
+	findRestaurantsBtn: "find-restaurants-btn",
+	cityStatsBtn: "city-stats-btn",
+	timestampDisplay: "tsPosCapture",
+	speechSynthesis: {
+		languageSelectId: "language",
+		voiceSelectId: "voice-select",
+		textInputId: "text-input",
+		speakBtnId: "speak-btn",
+		pauseBtnId: "pause-btn",
+		resumeBtnId: "resume-btn",
+		stopBtnId: "stop-btn",
+		rateInputId: "rate",
+		rateValueId: "rate-value",
+		pitchInputId: "pitch",
+		pitchValueId: "pitch-value",
+	}
+};
+Object.freeze(DEFAULT_ELEMENT_IDS.speechSynthesis);
+Object.freeze(DEFAULT_ELEMENT_IDS);
+
 class WebGeocodingManager {
 	/**
 	 * Creates a new WebGeocodingManager instance.
@@ -3515,6 +3563,7 @@ class WebGeocodingManager {
 	 * @param {string} params.locationResult - ID of element to display location results
 	 * @param {string} [params.enderecoPadronizadoDisplay] - ID of element for standardized address display
 	 * @param {string} [params.referencePlaceDisplay] - ID of element for reference place display
+	 * @param {Object} [params.elementIds] - Optional custom element IDs (defaults to DEFAULT_ELEMENT_IDS)
 	 * 
 	 * @throws {TypeError} If document is null or undefined
 	 * @throws {TypeError} If params.locationResult is not provided
@@ -3525,6 +3574,10 @@ class WebGeocodingManager {
 		this.locationResult = params.locationResult;
 		this.enderecoPadronizadoDisplay = params.enderecoPadronizadoDisplay || null;
 		this.referencePlaceDisplay = params.referencePlaceDisplay || null;
+		
+		// Store element IDs configuration (frozen to prevent mutations)
+		this.elementIds = params.elementIds || DEFAULT_ELEMENT_IDS;
+		Object.freeze(this.elementIds);
 		
 		// Initialize observer subject for external subscribers
 		this.observerSubject = new ObserverSubject();
@@ -3611,7 +3664,7 @@ class WebGeocodingManager {
 	 * @private
 	 */
 	_initializeChronometer() {
-		const chronometerElement = this.document.getElementById("chronometer");
+		const chronometerElement = this.document.getElementById(this.elementIds.chronometer);
 		if (chronometerElement) {
 			this.chronometer = new Chronometer(chronometerElement);
 			PositionManager.getInstance().subscribe(this.chronometer);
@@ -3634,7 +3687,7 @@ class WebGeocodingManager {
 	 * @private
 	 */
 	_initializeFindRestaurantsButton() {
-		this.findRestaurantsBtn = this.document.getElementById("find-restaurants-btn");
+		this.findRestaurantsBtn = this.document.getElementById(this.elementIds.findRestaurantsBtn);
 		if (this.findRestaurantsBtn) {
 			this.findRestaurantsBtn.addEventListener("click", () => {
 				this._handleFindRestaurantsClick();
@@ -3664,7 +3717,7 @@ class WebGeocodingManager {
 	 * @private
 	 */
 	_initializeCityStatsButton() {
-		this.cityStatsBtn = this.document.getElementById("city-stats-btn");
+		this.cityStatsBtn = this.document.getElementById(this.elementIds.cityStatsBtn);
 		if (this.cityStatsBtn) {
 			this.cityStatsBtn.addEventListener("click", () => {
 				this._handleCityStatsClick();
@@ -3694,7 +3747,7 @@ class WebGeocodingManager {
 	 * @private
 	 */
 	_initializeTimestampDisplay() {
-		this.tsPosCapture = this.document.getElementById("tsPosCapture");
+		this.tsPosCapture = this.document.getElementById(this.elementIds.timestampDisplay);
 		if (this.tsPosCapture) {
 			this.tsPosCapture.textContent = new Date().toLocaleString();
 			this.posCaptureHtmlText = new HtmlText(this.document, this.tsPosCapture);
@@ -3715,7 +3768,7 @@ class WebGeocodingManager {
 	}
 
 	initElements() {
-		let chronometer = this.document.getElementById("chronometer");
+		let chronometer = this.document.getElementById(this.elementIds.chronometer);
 		if (chronometer) {
 			this.chronometer = new Chronometer(chronometer);
 			PositionManager.getInstance().subscribe(this.chronometer);
@@ -3723,7 +3776,7 @@ class WebGeocodingManager {
 			console.warn("Chronometer element not found.");
 		}
 
-		this.findRestaurantsBtn = document.getElementById("find-restaurants-btn");
+		this.findRestaurantsBtn = this.document.getElementById(this.elementIds.findRestaurantsBtn);
 		if (this.findRestaurantsBtn) {
 			this.findRestaurantsBtn.addEventListener("click", () => {
 				if (this.currentCoords) {
@@ -3739,7 +3792,7 @@ class WebGeocodingManager {
 			console.warn("Find Restaurants button not found.");
 		}
 
-		this.cityStatsBtn = document.getElementById("city-stats-btn");
+		this.cityStatsBtn = this.document.getElementById(this.elementIds.cityStatsBtn);
 		if (this.cityStatsBtn) {
 			this.cityStatsBtn.addEventListener("click", () => {
 				if (this.currentCoords) {
@@ -3755,7 +3808,7 @@ class WebGeocodingManager {
 			console.warn("City Stats button not found.");
 		}
 
-		this.tsPosCapture = this.document.getElementById("tsPosCapture");
+		this.tsPosCapture = this.document.getElementById(this.elementIds.timestampDisplay);
 		if (this.tsPosCapture) {
 			this.tsPosCapture.textContent = new Date().toLocaleString();
 			this.posCaptureHtmlText = new HtmlText(this.document, this.tsPosCapture);
@@ -3898,31 +3951,19 @@ class WebGeocodingManager {
 	/**
 	 * Initializes speech synthesis UI components.
 	 * 
-	 * Creates and configures the HTML speech synthesis displayer with predefined
+	 * Creates and configures the HTML speech synthesis displayer with configured
 	 * element IDs for voice controls. Subscribes the displayer to both reverse
 	 * geocoder and manager notifications, then freezes it to prevent modifications.
 	 * 
 	 * This method should be called after the relevant DOM elements are available.
-	 * Element IDs are currently hardcoded but follow a consistent naming convention.
+	 * Element IDs can be customized via the elementIds configuration in constructor.
 	 * 
 	 * @returns {void}
 	 */
 	initSpeechSynthesis() {
 		this.htmlSpeechSynthesisDisplayer = new HtmlSpeechSynthesisDisplayer(
 			this.document,
-			{
-				languageSelectId: "language",
-				voiceSelectId: "voice-select",
-				textInputId: "text-input",
-				speakBtnId: "speak-btn",
-				pauseBtnId: "pause-btn",
-				resumeBtnId: "resume-btn",
-				stopBtnId: "stop-btn",
-				rateInputId: "rate",
-				rateValueId: "rate-value",
-				pitchInputId: "pitch",
-				pitchValueId: "pitch-value",
-			},
+			this.elementIds.speechSynthesis,
 		);
 		this.reverseGeocoder.subscribe(this.htmlSpeechSynthesisDisplayer);
 		this.subscribe(this.htmlSpeechSynthesisDisplayer);
@@ -5577,6 +5618,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		getAddressType,
 		isMobileDevice,
 		setupParams,
+		DEFAULT_ELEMENT_IDS,
 		ObserverSubject,
 		GeoPosition,
 		PositionManager,

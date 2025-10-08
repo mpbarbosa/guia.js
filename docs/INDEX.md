@@ -37,6 +37,20 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Running tests: `npm test`, `npm run test:coverage`
   - Immutability pattern tests
 
+### Automation & CI/CD
+
+- **[GITHUB_ACTIONS_GUIDE.md](./GITHUB_ACTIONS_GUIDE.md)** - GitHub Actions workflows guide 🆕
+  - Automated file modification workflow
+  - Test and documentation updates
+  - Coverage reporting
+  - Troubleshooting and best practices
+
+- **[Workflows README](../.github/workflows/README.md)** - Technical workflow details 🆕
+  - Workflow architecture and jobs
+  - Custom composite actions
+  - Configuration and customization
+  - Integration with existing workflows
+
 ### Features
 
 - **[DEVICE_DETECTION.md](../DEVICE_DETECTION.md)** - Device detection and accuracy thresholds

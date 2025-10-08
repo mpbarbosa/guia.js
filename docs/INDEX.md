@@ -29,6 +29,29 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Detailed algorithms and data model
   - Testing requirements and validation rules
 
+- **[WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md)** - WebGeocodingManager refactoring analysis
+  - High cohesion and low coupling improvements
+  - Design patterns applied (Coordinator, Observer, Dependency Injection)
+  - Code quality metrics and architectural improvements
+  - Comprehensive documentation of Issue #189
+
+- **[ISSUE_189_NEXT_STEPS.md](./ISSUE_189_NEXT_STEPS.md)** - Issue #189 follow-up work 🆕
+  - 5 technical debt items identified from WebGeocodingManager refactoring
+  - Detailed specifications for each enhancement opportunity
+  - Priority and effort estimations
+  - Implementation order recommendations
+  - Referential transparency considerations for each item
+
+- **[ISSUE_189_TRACKING.md](./ISSUE_189_TRACKING.md)** - Issue creation tracking 🆕
+  - Status of issue creation for #189 follow-up items
+  - Quick reference table for all 5 technical debt items
+  - Progress checklist and success metrics
+
+- **[CREATE_ISSUES_GUIDE.md](./CREATE_ISSUES_GUIDE.md)** - Issue creation guide 🆕
+  - Ready-to-use issue templates for all 5 technical debt items
+  - Step-by-step instructions for creating GitHub issues
+  - Complete issue content with proper formatting
+
 ### Testing
 
 - **[TESTING.md](../TESTING.md)** - Automated testing documentation

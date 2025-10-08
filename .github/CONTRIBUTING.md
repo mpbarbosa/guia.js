@@ -4,11 +4,52 @@ Thank you for your interest in contributing to Guia.js! This document provides g
 
 ## Table of Contents
 
+- [Creating Issues](#creating-issues)
 - [Code Style and Best Practices](#code-style-and-best-practices)
 - [Referential Transparency](#referential-transparency)
 - [Immutability Principles](#immutability-principles)
 - [Testing Guidelines](#testing-guidelines)
 - [Pull Request Process](#pull-request-process)
+
+## Creating Issues
+
+### Issue Templates
+
+Guia.js provides several issue templates to help structure and communicate different types of work:
+
+#### Agile Ticket Template (agile-ticket.yml)
+
+Use the **Agile Ticket** template to create actionable user stories and tasks. This template is ideal for:
+
+- **Breaking down functional specifications** into implementable tasks
+- **Defining small features** with clear acceptance criteria
+- **Creating user stories** following Agile best practices
+- **Technical tasks** that support larger initiatives
+
+**When to use:**
+- You want to convert a functional specification into actionable development work
+- You're defining a new feature with specific user value
+- You need to create a technical task with clear deliverables
+- You're following Agile/Scrum methodology
+
+**Key sections:**
+- **User Story**: "As a [role], I want [feature], so that [benefit]"
+- **Acceptance Criteria**: Specific, measurable outcomes
+- **Engineering Principles**: Technical guidelines (referential transparency, immutability, etc.)
+- **Testing Requirements**: What needs to be tested
+- **Definition of Done**: Checklist for completion
+
+#### Other Templates
+
+- **Functional Specification** (`functional_specification.md`): For comprehensive feature documentation
+- **Feature Request** (`feature_request.md`): For proposing new features or enhancements
+- **Technical Debt** (`technical_debt.md`): For reporting code quality or maintenance issues
+- **Documentation** (`documentation.md`): For documentation improvements
+- **GitHub Config** (`github_config.md`): For workflow and configuration changes
+- **UX Issue** (`ux_issue.md`): For user experience problems or suggestions
+- **Copilot Issue** (`copilot_issue.md`): For AI-assisted development issues
+
+**Best Practice**: Start with a Functional Specification for complex features, then break it down into multiple Agile Tickets for implementation.
 
 ## Code Style and Best Practices
 

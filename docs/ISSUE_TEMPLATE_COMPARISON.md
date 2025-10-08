@@ -16,10 +16,11 @@ ISSUE TEMPLATE COMPARISON
 | documentation.md            |  147  | [Docs]       | documentation, triage                       |
 | functional_specification.md |  379  | [Func Spec]  | documentation, functional-spec, triage      |
 | github_config.md            |  118  | [Config]     | infrastructure, configuration, triage       |
+| agile-ticket.yml            |  203  | [Agile]      | agile-ticket, triage                        |
 
 ## Common Features Across All Templates
 
-All six templates share these structural elements:
+All seven templates share these structural elements:
 
 ✅ **YAML Frontmatter** - Each template includes structured metadata:
 - `name`: Template display name
@@ -94,6 +95,43 @@ All six templates share these structural elements:
 - Specific to GitHub Copilot integration issues
 - References both REFERENTIAL_TRANSPARENCY.md and CODE_REVIEW_GUIDE.md
 - Focus on deterministic, testable solutions
+
+### Agile Ticket Template (203 lines) 🆕 **YML Form Format**
+
+**Purpose:** Create actionable Agile tickets for implementing user stories, features, and functional specifications using GitHub's YAML form syntax
+
+**Unique Sections:**
+- **Ticket Type** - Dropdown: User Story, Feature Implementation, Technical Task, Bug Fix, Refactoring, Documentation, Research/Spike
+- **User Story** - Structured format: "As a [role], I want [feature], so that [benefit]"
+- **Background / Context** - Link to functional specifications, related issues, and project context
+- **Acceptance Criteria** - Specific, measurable outcomes in checkbox format
+- **Engineering Principles & Technical Considerations** - Checklist covering:
+  - Referential transparency principles
+  - Pure functions implementation
+  - Side effects isolation
+  - Immutable data structures
+  - Testability in isolation
+  - Low coupling principles
+  - High cohesion maintenance
+  - TDD practices
+- **Implementation Notes** - Files to modify, new components, architecture patterns, dependencies
+- **Testing Requirements** - Unit tests, integration tests, edge cases, error handling, coverage targets
+- **Priority Level** - Dropdown: Critical, High, Medium, Low
+- **Story Points / Effort Estimation** - Fibonacci scale (1-21) with time estimates
+- **Definition of Done** - Pre-filled checklist of completion criteria
+- **Dependencies & Blockers** - Track related issues and blocking factors
+- **Additional Context** - Links, diagrams, and supplementary information
+
+**Special Considerations:**
+- **First YML template** - Uses GitHub's modern YAML form syntax (not markdown)
+- Designed to bridge functional specifications and implementation work
+- Supports both large features (broken down from specs) and small standalone features
+- Integrates all project engineering principles (referential transparency, TDD, low coupling, high cohesion)
+- Provides structured dropdowns for consistency (ticket type, priority, story points)
+- Pre-filled "Definition of Done" checklist ensures quality standards
+- Story points use Fibonacci scale following Agile best practices
+- Explicitly supports Agile/Scrum methodology with user story format
+- References multiple project guides (.github/REFERENTIAL_TRANSPARENCY.md, LOW_COUPLING_GUIDE.md, HIGH_COHESION_GUIDE.md, TDD_GUIDE.md)
 
 ### Documentation Template (147 lines)
 
@@ -228,6 +266,7 @@ All templates are well-integrated into the project:
 - Documentation: "Report documentation issues" - Includes documentation quality checklist 🆕
 - Functional Specification: "Create functional specs" - Codeless, AI-friendly specification format 🆕
 - GitHub Configuration: "Report .github configuration issues" - For workflows, actions, CI/CD 🆕
+- Agile Ticket: "Create actionable Agile tickets" - User stories, acceptance criteria, engineering principles 🆕
 
 ✅ **Consistent Naming Conventions** - All files use lowercase with underscores (snake_case)
 
@@ -243,7 +282,8 @@ All templates are well-integrated into the project:
 3. **Technical Debt** (90 lines) - Moderate complexity for code quality issues
 4. **GitHub Configuration** (118 lines) - Moderate-to-high complexity for infrastructure issues
 5. **Documentation** (147 lines) - Comprehensive with detailed categorization
-6. **Functional Specification** (379 lines) - Most comprehensive, codeless specification format
+6. **Agile Ticket** (203 lines) - Structured Agile/Scrum ticket format with YML forms 🆕
+7. **Functional Specification** (379 lines) - Most comprehensive, codeless specification format
 
 ### Common Label Strategy
 - All templates use **"triage"** for initial categorization
@@ -266,6 +306,7 @@ All templates include referential transparency guidance, showing the project's c
 - **Documentation**: Content creation and maintenance
 - **Functional Specification**: Codeless specifications for AI-supported development
 - **GitHub Configuration**: DevOps, CI/CD, workflows, actions, and infrastructure issues
+- **Agile Ticket**: Actionable user stories and tasks following Agile/Scrum methodology 🆕
 
 ## Recent Updates
 
@@ -286,18 +327,24 @@ Based on this comparison:
 
 1. **Template Selection**: Choose based on issue type:
    - Code quality concerns → Technical Debt
-   - New features → Feature Request
+   - New features → Feature Request or Agile Ticket
    - Copilot problems → Copilot Issue
    - Documentation needs → Documentation
    - Functional specifications → Functional Specification
+   - Actionable user stories → Agile Ticket 🆕
+   - Breaking down specs into tasks → Agile Ticket 🆕
 
-2. **Functional Specification Template**: Use when creating codeless, language-agnostic specifications for features or components. Ideal for AI-supported development and cross-platform implementations
+2. **Agile Ticket Template**: Use for Agile/Scrum teams to create structured user stories with acceptance criteria, engineering principles, and definition of done. Ideal for breaking down functional specifications into implementable tasks 🆕
 
-3. **Documentation Template**: Use for any content-related issues due to its comprehensive checklist and quality criteria
+3. **Functional Specification Template**: Use when creating codeless, language-agnostic specifications for features or components. Ideal for AI-supported development and cross-platform implementations
 
-4. **Consistency**: All templates follow consistent patterns, making them easy to use and maintain
+4. **Documentation Template**: Use for any content-related issues due to its comprehensive checklist and quality criteria
 
-5. **Referential Transparency**: Every template guides users toward functional programming principles, ensuring code quality across all contributions
+5. **Consistency**: All templates follow consistent patterns, making them easy to use and maintain
+
+6. **Referential Transparency**: Every template guides users toward functional programming principles, ensuring code quality across all contributions
+
+7. **Workflow Recommendation**: For large features, start with a Functional Specification, then break it down into multiple Agile Tickets for implementation 🆕
 
 ## Related Resources
 

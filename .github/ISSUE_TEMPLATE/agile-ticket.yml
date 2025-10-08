@@ -1,0 +1,203 @@
+name: Agile Ticket
+description: Create an Agile ticket for implementing user stories, features, and functional specifications
+title: "[Agile] "
+labels: ["agile-ticket", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Agile Methodology Ticket
+        
+        Use this template to create actionable Agile tickets from functional specifications or to define small features. 
+        This template supports user stories, acceptance criteria, and engineering principles to ensure consistent delivery.
+
+  - type: dropdown
+    id: ticket-type
+    attributes:
+      label: Ticket Type
+      description: What type of work does this ticket represent?
+      options:
+        - User Story
+        - Feature Implementation
+        - Technical Task
+        - Bug Fix
+        - Refactoring
+        - Documentation
+        - Research/Spike
+    validations:
+      required: true
+
+  - type: textarea
+    id: user-story
+    attributes:
+      label: User Story
+      description: |
+        Write a user story in the format: "As a [role], I want [feature], so that [benefit]"
+        For technical tasks, describe what needs to be accomplished and why.
+      placeholder: |
+        As a [user/developer/contributor],
+        I want [what functionality/change],
+        So that [the benefit/value delivered]
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: Background / Context
+      description: |
+        Provide context about this ticket. Link to related functional specifications, issues, or documentation.
+        Explain why this work is important and how it fits into the larger project goals.
+      placeholder: |
+        - Related to functional specification: #XXX
+        - Supports feature request: #YYY
+        - Addresses technical debt in: [component name]
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: |
+        Define specific, measurable criteria that must be met for this ticket to be considered complete.
+        Use checkboxes for clarity.
+      placeholder: |
+        - [ ] Criterion 1: [Specific measurable outcome]
+        - [ ] Criterion 2: [Specific measurable outcome]
+        - [ ] Criterion 3: [Specific measurable outcome]
+        - [ ] All tests pass
+        - [ ] Code follows project standards
+        - [ ] Documentation updated if needed
+    validations:
+      required: true
+
+  - type: textarea
+    id: engineering-principles
+    attributes:
+      label: Engineering Principles & Technical Considerations
+      description: |
+        List the key engineering principles that should guide implementation.
+        Consider referential transparency, immutability, testability, and other project standards.
+      placeholder: |
+        - [ ] Follow referential transparency principles (see .github/REFERENTIAL_TRANSPARENCY.md)
+        - [ ] Implement core logic as pure functions
+        - [ ] Isolate side effects at system boundaries
+        - [ ] Use immutable data structures
+        - [ ] Ensure code is testable in isolation
+        - [ ] Follow low coupling principles (see .github/LOW_COUPLING_GUIDE.md)
+        - [ ] Maintain high cohesion (see .github/HIGH_COHESION_GUIDE.md)
+        - [ ] Write tests following TDD practices (see .github/TDD_GUIDE.md)
+
+  - type: textarea
+    id: implementation-notes
+    attributes:
+      label: Implementation Notes
+      description: |
+        Provide guidance on how to implement this ticket. Include:
+        - Files/modules to modify or create
+        - Key functions or classes involved
+        - Architectural patterns to follow
+        - Dependencies or integrations
+      placeholder: |
+        **Files to modify:**
+        - src/[filename].js
+        
+        **New components:**
+        - [ComponentName] class
+        
+        **Architecture patterns:**
+        - Observer pattern for state changes
+        - Strategy pattern for [specific feature]
+        
+        **Dependencies:**
+        - None / [list external dependencies]
+
+  - type: textarea
+    id: testing-requirements
+    attributes:
+      label: Testing Requirements
+      description: |
+        Define what tests need to be written and what should be tested.
+      placeholder: |
+        - [ ] Unit tests for new functions
+        - [ ] Integration tests for component interactions
+        - [ ] Edge case tests for boundary conditions
+        - [ ] Error handling tests
+        - [ ] Target coverage: [percentage or scope]
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: What is the priority of this ticket?
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+
+  - type: dropdown
+    id: story-points
+    attributes:
+      label: Story Points / Effort Estimation
+      description: Estimate the effort required to complete this ticket (Fibonacci scale)
+      options:
+        - "1 - Trivial (< 2 hours)"
+        - "2 - Small (2-4 hours)"
+        - "3 - Medium (4-8 hours)"
+        - "5 - Large (1-2 days)"
+        - "8 - Very Large (2-3 days)"
+        - "13 - Extra Large (1 week)"
+        - "21 - Epic (needs breakdown)"
+
+  - type: textarea
+    id: definition-of-done
+    attributes:
+      label: Definition of Done
+      description: |
+        Checklist of items that must be completed before this ticket can be closed.
+      placeholder: |
+        - [ ] Code implemented and follows project standards
+        - [ ] All acceptance criteria met
+        - [ ] Tests written and passing (npm test)
+        - [ ] Code reviewed and approved
+        - [ ] Documentation updated (if applicable)
+        - [ ] No breaking changes (or migration plan provided)
+        - [ ] Integration verified with other components
+        - [ ] Technical debt addressed or documented
+      value: |
+        - [ ] Code implemented and follows project standards
+        - [ ] All acceptance criteria met
+        - [ ] Tests written and passing (npm test)
+        - [ ] Code reviewed and approved
+        - [ ] Documentation updated (if applicable)
+        - [ ] No breaking changes (or migration plan provided)
+
+  - type: textarea
+    id: dependencies-blockers
+    attributes:
+      label: Dependencies & Blockers
+      description: |
+        List any dependencies on other tickets or external factors that could block this work.
+      placeholder: |
+        **Depends on:**
+        - Issue #XXX must be completed first
+        - External API documentation needed
+        
+        **Blocked by:**
+        - None / [List blockers]
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: |
+        Any other relevant information, diagrams, links, or notes that would help with implementation.
+      placeholder: |
+        - Reference documentation: [links]
+        - Related PRs: [links]
+        - Design mockups: [links]
+        - Discussion threads: [links]

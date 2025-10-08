@@ -159,6 +159,14 @@ When creating issues, use these templates for consistency:
   - Includes environment details and debugging aids
   - References WORKFLOW_SETUP.md for guidance
 
+- **[Agile Ticket](../.github/ISSUE_TEMPLATE/agile-ticket.yml)** - Create actionable Agile tickets 🆕
+  - User stories following "As a X, I want Y, so that Z" format
+  - Acceptance criteria and Definition of Done
+  - Engineering principles integration (referential transparency, TDD, low coupling, high cohesion)
+  - Story points estimation using Fibonacci scale
+  - Ideal for breaking down functional specifications into implementable tasks
+  - Uses GitHub's YAML form syntax for structured data entry
+
 📊 **[Issue Template Comparison](./ISSUE_TEMPLATE_COMPARISON.md)** - Side-by-side comparison of all templates 🆕
   - Detailed analysis of each template's features
   - Common patterns and unique capabilities

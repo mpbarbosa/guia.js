@@ -111,6 +111,12 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Interface design
   - Module boundaries
 
+- **[HIGH_COHESION_GUIDE.md](../.github/HIGH_COHESION_GUIDE.md)** - High cohesion principles 🆕
+  - Single responsibility for components
+  - Focused workflows and actions
+  - Cohesive documentation structure
+  - Real examples from PR #121 refactoring
+
 - **[REFACTORING_SUMMARY.md](../.github/REFACTORING_SUMMARY.md)** - Major refactoring history
   - PR #121: AddressDataExtractor refactoring
   - Design decisions and trade-offs
@@ -193,6 +199,7 @@ When creating issues, use these templates for consistency:
 3. **Design principles**:
    - [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)
    - [LOW_COUPLING_GUIDE.md](../.github/LOW_COUPLING_GUIDE.md)
+   - [HIGH_COHESION_GUIDE.md](../.github/HIGH_COHESION_GUIDE.md)
 
 ## Project Principles
 

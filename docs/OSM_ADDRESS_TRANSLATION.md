@@ -33,7 +33,8 @@ The following Nominatim API fields are supported as fallbacks:
 | `house_number` | `numero` | Single field |
 | `neighbourhood`, `suburb`, `quarter` | `bairro` | In order of priority |
 | `city`, `town`, `municipality`, `village` | `municipio` | In order of priority |
-| `state`, `state_code`, `ISO3166-2-lvl4` (extracted) | `uf` | In order of priority |
+| `state`, `state_code` | `uf` | In order of priority |
+| Extracted from `uf` or `ISO3166-2-lvl4` | `siglaUF` | Two-letter state abbreviation |
 | `postcode` | `cep` | Single field |
 
 ## Translation Priority
@@ -43,10 +44,19 @@ When both OSM tags and Nominatim fields are present, the system follows this pri
 1. **OSM address tags** (`addr:*`) - **Highest priority**
 2. **Nominatim primary fields** (e.g., `road`, `city`, `state`)
 3. **Nominatim fallback fields** (e.g., `street`, `town`, `state_code`)
-4. **ISO3166-2-lvl4 extracted** - State abbreviation extracted from ISO code (e.g., "BR-RJ" → "RJ")
-5. **Null** - If no data available
+4. **Null** - If no data available
 
-**Special Handling for State Field (`uf`)**: The state abbreviation (`siglaUF`) can be automatically extracted from the `ISO3166-2-lvl4` field when other state-related fields are not available. The extraction removes the "BR-" prefix from codes like "BR-RJ" to get "RJ".
+**For `siglaUF` specifically:**
+- If `uf` is a two-letter code, `siglaUF` = `uf`
+- If `uf` is a full state name, `siglaUF` extracted from `ISO3166-2-lvl4` (e.g., "BR-RJ" → "RJ")
+- If neither is available, `siglaUF` = null
+
+**Special Handling for State Fields (`uf` and `siglaUF`)**:
+- The `uf` field contains the state name or abbreviation from `addr:state`, `state`, or `state_code` (does not include ISO3166-2-lvl4 as fallback)
+- The `siglaUF` field provides a normalized two-letter state abbreviation
+- When `uf` is already a two-letter code (e.g., "SP"), `siglaUF` is set to the same value
+- When `uf` is a full state name (e.g., "São Paulo"), `siglaUF` attempts to extract the abbreviation from `ISO3166-2-lvl4` (e.g., "BR-SP" → "SP")
+- The `AddressExtractor.extractSiglaUF()` static method extracts the abbreviation by removing the "BR-" prefix from ISO codes
 
 ## Usage Examples
 
@@ -117,26 +127,38 @@ console.log(result.numero);      // "100"
 console.log(result.municipio);   // "São Paulo"
 ```
 
-### Example 4: State Abbreviation Extraction from ISO3166-2-lvl4
+### Example 4: State Abbreviation with siglaUF
 
 ```javascript
-const dataWithISO = {
+// Example with state abbreviation in state_code
+const dataWithStateCode = {
     address: {
-        'road': 'Avenida Atlântica',
-        'city': 'Rio de Janeiro',
-        'ISO3166-2-lvl4': 'BR-RJ'  // State code in ISO format
-        // Note: No explicit state or state_code field
+        'road': 'Avenida Paulista',
+        'city': 'São Paulo',
+        'state_code': 'SP'  // Two-letter state code
     }
 };
 
-const result = AddressDataExtractor.getBrazilianStandardAddress(dataWithISO);
-console.log(result.logradouro);  // "Avenida Atlântica"
-console.log(result.municipio);   // "Rio de Janeiro"
-console.log(result.uf);          // null (no direct state field)
-console.log(result.siglaUF);     // "RJ" (extracted from ISO3166-2-lvl4)
+const result1 = AddressDataExtractor.getBrazilianStandardAddress(dataWithStateCode);
+console.log(result1.uf);         // "SP"
+console.log(result1.siglaUF);    // "SP" (same as uf when it's already a two-letter code)
+
+// Example with full state name - siglaUF extraction from ISO3166-2-lvl4
+const dataWithFullState = {
+    address: {
+        'road': 'Avenida Atlântica',
+        'city': 'Rio de Janeiro',
+        'state': 'Rio de Janeiro',  // Full state name
+        'ISO3166-2-lvl4': 'BR-RJ'   // ISO code for extraction
+    }
+};
+
+const result2 = AddressDataExtractor.getBrazilianStandardAddress(dataWithFullState);
+console.log(result2.uf);         // "Rio de Janeiro" (full state name)
+console.log(result2.siglaUF);    // "RJ" (extracted from ISO3166-2-lvl4)
 
 // The municipioCompleto() method uses siglaUF when available
-console.log(result.municipioCompleto()); 
+console.log(result2.municipioCompleto()); 
 // "Rio de Janeiro, RJ"
 ```
 

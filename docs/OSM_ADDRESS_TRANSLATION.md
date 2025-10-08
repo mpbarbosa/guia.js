@@ -33,7 +33,7 @@ The following Nominatim API fields are supported as fallbacks:
 | `house_number` | `numero` | Single field |
 | `neighbourhood`, `suburb`, `quarter` | `bairro` | In order of priority |
 | `city`, `town`, `municipality`, `village` | `municipio` | In order of priority |
-| `state`, `state_code` | `uf` | In order of priority |
+| `state`, `state_code`, `ISO3166-2-lvl4` (extracted) | `uf` | In order of priority |
 | `postcode` | `cep` | Single field |
 
 ## Translation Priority
@@ -41,9 +41,12 @@ The following Nominatim API fields are supported as fallbacks:
 When both OSM tags and Nominatim fields are present, the system follows this priority:
 
 1. **OSM address tags** (`addr:*`) - **Highest priority**
-2. **Nominatim primary fields** (e.g., `road`, `city`)
-3. **Nominatim fallback fields** (e.g., `street`, `town`)
-4. **Null** - If no data available
+2. **Nominatim primary fields** (e.g., `road`, `city`, `state`)
+3. **Nominatim fallback fields** (e.g., `street`, `town`, `state_code`)
+4. **ISO3166-2-lvl4 extracted** - State abbreviation extracted from ISO code (e.g., "BR-RJ" → "RJ")
+5. **Null** - If no data available
+
+**Special Handling for State Field (`uf`)**: The state abbreviation (`siglaUF`) can be automatically extracted from the `ISO3166-2-lvl4` field when other state-related fields are not available. The extraction removes the "BR-" prefix from codes like "BR-RJ" to get "RJ".
 
 ## Usage Examples
 

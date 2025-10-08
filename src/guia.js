@@ -1998,6 +1998,33 @@ class AddressExtractor {
 	}
 
 	/**
+	 * Extracts the state abbreviation (siglaUF) from ISO3166-2-lvl4 field.
+	 * 
+	 * The ISO3166-2-lvl4 field contains the state code in the format "BR-XX"
+	 * where XX is the two-letter state abbreviation (e.g., "BR-RJ" for Rio de Janeiro).
+	 * This method extracts and returns just the state abbreviation part.
+	 * 
+	 * @private
+	 * @param {string} iso3166Code - The ISO3166-2-lvl4 code (e.g., "BR-RJ", "BR-SP")
+	 * @returns {string|null} The state abbreviation (e.g., "RJ", "SP") or null if invalid
+	 * @since 0.8.6-alpha
+	 * 
+	 * @example
+	 * extractSiglaUF("BR-RJ")  // Returns "RJ"
+	 * extractSiglaUF("BR-SP")  // Returns "SP"
+	 * extractSiglaUF("invalid") // Returns null
+	 */
+	static extractSiglaUF(iso3166Code) {
+		if (!iso3166Code || typeof iso3166Code !== 'string') {
+			return null;
+		}
+		
+		// Extract the state code after "BR-" prefix
+		const match = iso3166Code.match(/^BR-([A-Z]{2})$/);
+		return match ? match[1] : null;
+	}
+
+	/**
 	 * Standardizes the address data into Brazilian format.
 	 * 
 	 * Maps fields from the raw geocoding response to standardized Brazilian
@@ -2033,8 +2060,9 @@ class AddressExtractor {
 		this.enderecoPadronizado.municipio = address['addr:city'] || address.city || address.town || address.municipality || address.village || null;
 
 		// Map state information
-		// Supports: Nominatim format (state, state_code) and OSM tags (addr:state)
-		this.enderecoPadronizado.uf = address['addr:state'] || address.state || address.state_code || null;
+		// Supports: Nominatim format (state, state_code, ISO3166-2-lvl4) and OSM tags (addr:state)
+		// Priority: OSM tag > state full name > state_code > ISO3166-2-lvl4 extracted
+		this.enderecoPadronizado.uf = address['addr:state'] || address.state || address.state_code || AddressExtractor.extractSiglaUF(address['ISO3166-2-lvl4']) || null;
 
 		// Map postal code
 		// Supports: Nominatim format (postcode) and OSM tags (addr:postcode)

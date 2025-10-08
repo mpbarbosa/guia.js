@@ -15,7 +15,7 @@ ISSUE TEMPLATE COMPARISON
 | copilot_issue.md            |   45  | [Copilot]    | copilot, triage                             |
 | documentation.md            |  147  | [Docs]       | documentation, triage                       |
 | functional_specification.md |  379  | [Func Spec]  | documentation, functional-spec, triage      |
-| github_config.md            |  117  | [Config]     | infrastructure, configuration, triage       |
+| github_config.md            |  118  | [Config]     | infrastructure, configuration, triage       |
 
 ## Common Features Across All Templates
 
@@ -178,7 +178,7 @@ All six templates share these structural elements:
 - Includes comprehensive testing and quality sections
 - Suitable for GitHub Copilot and other AI tools to parse requirements
 
-### GitHub Configuration Template (117 lines) 🆕
+### GitHub Configuration Template (118 lines) 🆕
 
 **Purpose:** Report issues or request changes to .github configuration (workflows, actions, issue templates, CI/CD)
 
@@ -193,6 +193,7 @@ All six templates share these structural elements:
   - Security/Permissions
   - Documentation
   - Enhancement
+  - Architectural
 - **Affected Components** - List specific .github files or components
 - **Current Behavior** - What's happening now (errors, failures, unexpected behavior)
 - **Expected Behavior** - How the configuration should work
@@ -240,7 +241,7 @@ All templates are well-integrated into the project:
 1. **Feature Request** (40 lines) - Simplest, focused on proposing new functionality
 2. **Copilot Issue** (45 lines) - Straightforward bug/feature reporting for Copilot
 3. **Technical Debt** (90 lines) - Moderate complexity for code quality issues
-4. **GitHub Configuration** (117 lines) - Moderate-to-high complexity for infrastructure issues
+4. **GitHub Configuration** (118 lines) - Moderate-to-high complexity for infrastructure issues
 5. **Documentation** (147 lines) - Comprehensive with detailed categorization
 6. **Functional Specification** (379 lines) - Most comprehensive, codeless specification format
 

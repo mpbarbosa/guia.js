@@ -30,7 +30,10 @@ const setupParams = {
 	// "class": { "type": "Description in Portuguese" }
 	referencePlaceMap: {
 		"place": { "house": "Residencial" },
-		"shop": { "mall": "Shopping Center" },
+		"shop": { 
+			"mall": "Shopping Center",
+			"car_repair": "Oficina Mecânica"
+		},
 		"amenity": { "cafe": "Café" },
 		"railway": { "subway": "Estação do Metrô",
 			"station": "Estação do Metrô"

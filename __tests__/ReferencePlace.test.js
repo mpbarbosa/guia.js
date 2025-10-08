@@ -71,6 +71,20 @@ describe('ReferencePlace Class', () => {
             expect(refPlace.description).toBe('Residencial Casa do João');
         });
 
+        test('should create instance with valid shop/car_repair data', () => {
+            const data = { 
+                class: 'shop', 
+                type: 'car_repair', 
+                name: 'Auto Center Silva' 
+            };
+            const refPlace = new ReferencePlace(data);
+            
+            expect(refPlace.className).toBe('shop');
+            expect(refPlace.typeName).toBe('car_repair');
+            expect(refPlace.name).toBe('Auto Center Silva');
+            expect(refPlace.description).toBe('Oficina Mecânica Auto Center Silva');
+        });
+
         test('should handle data without name', () => {
             const data = { 
                 class: 'shop', 

@@ -76,12 +76,13 @@ const speechText = `Você está próximo da ${extractor.referencePlace.descripti
 
 The following reference place types are currently supported:
 
-| Class     | Type   | Portuguese Description |
-|-----------|--------|------------------------|
-| place     | house  | Residencial            |
-| shop      | mall   | Shopping Center        |
-| amenity   | cafe   | Café                   |
-| railway   | subway | Estação do Metrô       |
+| Class     | Type       | Portuguese Description |
+|-----------|------------|------------------------|
+| place     | house      | Residencial            |
+| shop      | mall       | Shopping Center        |
+| shop      | car_repair | Oficina Mecânica       |
+| amenity   | cafe       | Café                   |
+| railway   | subway     | Estação do Metrô       |
 
 Additional mappings can be configured in `setupParams.referencePlaceMap`.
 

@@ -382,12 +382,15 @@ When reviewing code (your own or others'), check for:
 
 ## Testing Guidelines
 
+For comprehensive guidance on Test Driven Development, see [TDD_GUIDE.md](./TDD_GUIDE.md).
+
 ### Writing Tests
 
 - Write tests for all new functionality
 - Include edge cases and error conditions
 - Test both success and failure paths
 - Ensure tests are isolated and don't depend on execution order
+- Follow the TDD cycle: Red-Green-Refactor (see [TDD_GUIDE.md](./TDD_GUIDE.md))
 
 ### Running Tests
 

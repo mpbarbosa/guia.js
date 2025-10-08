@@ -305,6 +305,7 @@ Based on this comparison:
 - **Documentation Index**: `docs/INDEX.md`
 - **Referential Transparency Guide**: `.github/REFERENTIAL_TRANSPARENCY.md`
 - **Code Review Guide**: `.github/CODE_REVIEW_GUIDE.md`
+- **TDD Guide**: `.github/TDD_GUIDE.md` 🆕
 - **Contributing Guide**: `.github/CONTRIBUTING.md`
 
 ---

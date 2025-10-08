@@ -104,6 +104,14 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Code quality standards
   - Common issues and solutions
 
+- **[TDD_GUIDE.md](../.github/TDD_GUIDE.md)** - Test Driven Development guide 🆕
+  - What is TDD and why it matters
+  - Red-Green-Refactor cycle
+  - TDD workflow and best practices
+  - Integration with referential transparency
+  - Examples and common patterns
+  - CI/CD integration
+
 ### Architectural Principles
 
 - **[LOW_COUPLING_GUIDE.md](../.github/LOW_COUPLING_GUIDE.md)** - Low coupling principles

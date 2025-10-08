@@ -521,6 +521,7 @@ git push
 **Questions?** Check the documentation:
 1. [GITHUB_ACTIONS_GUIDE.md](docs/GITHUB_ACTIONS_GUIDE.md) - User guide
 2. [.github/workflows/README.md](.github/workflows/README.md) - Technical reference
+3. [TDD_GUIDE.md](.github/TDD_GUIDE.md) - Test Driven Development guide
 
 **Issues?** 
 1. Run `.github/scripts/test-workflow-locally.sh`

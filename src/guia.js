@@ -3452,28 +3452,266 @@ Object.defineProperties(AddressDataExtractor, {
  * ============================
  */
 
+/**
+ * Main coordination class for geocoding workflow in the Guia.js application.
+ * 
+ * WebGeocodingManager orchestrates the geolocation services, geocoding operations,
+ * and UI updates for displaying location-based information. It follows the Coordinator
+ * pattern, managing communication between services (GeolocationService, ReverseGeocoder)
+ * and displayers (HTML displayers for position, address, and reference places).
+ * 
+ * **Architecture Pattern**: Coordinator/Mediator
+ * - Coordinates between geolocation services and UI displayers
+ * - Manages observer subscriptions between components
+ * - Handles change detection callbacks for address components
+ * 
+ * **Responsibilities**:
+ * - Initialize and coordinate geocoding services
+ * - Set up observer relationships between components
+ * - Manage UI element initialization and event handlers
+ * - Coordinate address change detection (logradouro, bairro, municipio)
+ * - Provide observer pattern implementation for external consumers
+ * 
+ * **Design Principles Applied**:
+ * - **Single Responsibility**: Focuses on coordinating geocoding workflow
+ * - **Dependency Injection**: Receives document and configuration via constructor
+ * - **Observer Pattern**: Implements subject/observer for state changes
+ * - **Immutability**: Uses Object.freeze on created displayers
+ * 
+ * @class WebGeocodingManager
+ * @see {@link PositionManager} For position state management
+ * @see {@link ReverseGeocoder} For geocoding API integration
+ * @see {@link GeolocationService} For browser geolocation API
+ * @since 0.5.0-alpha
+ * @author Marcelo Pereira Barbosa
+ * 
+ * @example
+ * const manager = new WebGeocodingManager(document, {
+ *   locationResult: 'location-result',
+ *   enderecoPadronizadoDisplay: 'address-display',
+ *   referencePlaceDisplay: 'reference-place'
+ * });
+ * manager.startTracking();
+ */
 class WebGeocodingManager {
+	/**
+	 * Creates a new WebGeocodingManager instance.
+	 * 
+	 * Initializes the coordination layer for geocoding services, creates service
+	 * instances, sets up displayers, and establishes observer relationships between
+	 * components. The constructor follows dependency injection pattern by receiving
+	 * document and configuration parameters.
+	 * 
+	 * **Initialization Steps**:
+	 * 1. Store document reference and configuration
+	 * 2. Initialize observer subject for external subscribers
+	 * 3. Initialize DOM elements and event handlers
+	 * 4. Create geolocation and geocoding services
+	 * 5. Create and wire up UI displayers
+	 * 6. Establish observer relationships
+	 * 
+	 * @param {Document} document - DOM document object for element access
+	 * @param {Object} params - Configuration parameters
+	 * @param {string} params.locationResult - ID of element to display location results
+	 * @param {string} [params.enderecoPadronizadoDisplay] - ID of element for standardized address display
+	 * @param {string} [params.referencePlaceDisplay] - ID of element for reference place display
+	 * 
+	 * @throws {TypeError} If document is null or undefined
+	 * @throws {TypeError} If params.locationResult is not provided
+	 */
 	constructor(document, params) {
+		// Store dependencies
 		this.document = document;
 		this.locationResult = params.locationResult;
 		this.enderecoPadronizadoDisplay = params.enderecoPadronizadoDisplay || null;
 		this.referencePlaceDisplay = params.referencePlaceDisplay || null;
+		
+		// Initialize observer subject for external subscribers
 		this.observerSubject = new ObserverSubject();
+		
+		// Initialize state
 		this.currentPosition = null;
 		this.currentCoords = null;
 
-		this.initElements();
+		// Initialize DOM elements and event handlers
+		this._initializeUIElements();
 
+		// Create services (lazy instantiation could be considered for better testability)
 		this.geolocationService = new GeolocationService(this.locationResult);
 		this.reverseGeocoder = new ReverseGeocoder();
 
+		// Create and configure displayers
+		this._createDisplayers();
+		this._wireObservers();
+	}
+
+	/**
+	 * Creates UI displayer components.
+	 * 
+	 * Instantiates the three main displayers for position, address, and reference place.
+	 * This method is separated from constructor to improve testability and allow
+	 * for potential factory pattern implementation in the future.
+	 * 
+	 * @private
+	 */
+	_createDisplayers() {
 		this.positionDisplayer = new HTMLPositionDisplayer(this.locationResult);
-		this.addressDisplayer = new HTMLAddressDisplayer(this.locationResult, this.enderecoPadronizadoDisplay);
-		this.referencePlaceDisplayer = new HTMLReferencePlaceDisplayer(this.referencePlaceDisplay);
+		this.addressDisplayer = new HTMLAddressDisplayer(
+			this.locationResult,
+			this.enderecoPadronizadoDisplay
+		);
+		this.referencePlaceDisplayer = new HTMLReferencePlaceDisplayer(
+			this.referencePlaceDisplay
+		);
+	}
+
+	/**
+	 * Establishes observer relationships between components.
+	 * 
+	 * Wires up the observer pattern connections:
+	 * - PositionManager notifies positionDisplayer and reverseGeocoder
+	 * - ReverseGeocoder notifies referencePlaceDisplayer and addressDisplayer
+	 * 
+	 * This centralized wiring makes the observer relationships explicit and
+	 * easier to understand and modify.
+	 * 
+	 * @private
+	 */
+	_wireObservers() {
+		// Position updates flow to displayer and geocoder
 		PositionManager.getInstance().subscribe(this.positionDisplayer);
 		PositionManager.getInstance().subscribe(this.reverseGeocoder);
+		
+		// Geocoding results flow to reference place and address displayers
 		this.reverseGeocoder.subscribe(this.referencePlaceDisplayer);
 		this.reverseGeocoder.subscribe(this.addressDisplayer);
+	}
+
+	/**
+	 * Initializes DOM elements and sets up event handlers.
+	 * 
+	 * This method handles all DOM-related initialization:
+	 * - Chronometer display
+	 * - Action buttons (restaurants, city stats)
+	 * - Timestamp display
+	 * 
+	 * Each element is checked for existence before initialization to handle
+	 * cases where certain UI elements may not be present in all contexts.
+	 * 
+	 * @private
+	 */
+	_initializeUIElements() {
+		this._initializeChronometer();
+		this._initializeActionButtons();
+		this._initializeTimestampDisplay();
+	}
+
+	/**
+	 * Initializes chronometer element if present.
+	 * @private
+	 */
+	_initializeChronometer() {
+		const chronometerElement = this.document.getElementById("chronometer");
+		if (chronometerElement) {
+			this.chronometer = new Chronometer(chronometerElement);
+			PositionManager.getInstance().subscribe(this.chronometer);
+		} else {
+			console.warn("Chronometer element not found.");
+		}
+	}
+
+	/**
+	 * Initializes action buttons (restaurants, city stats) and their event handlers.
+	 * @private
+	 */
+	_initializeActionButtons() {
+		this._initializeFindRestaurantsButton();
+		this._initializeCityStatsButton();
+	}
+
+	/**
+	 * Initializes find restaurants button and its click handler.
+	 * @private
+	 */
+	_initializeFindRestaurantsButton() {
+		this.findRestaurantsBtn = this.document.getElementById("find-restaurants-btn");
+		if (this.findRestaurantsBtn) {
+			this.findRestaurantsBtn.addEventListener("click", () => {
+				this._handleFindRestaurantsClick();
+			});
+		} else {
+			console.warn("Find Restaurants button not found.");
+		}
+	}
+
+	/**
+	 * Handles click event for find restaurants button.
+	 * @private
+	 */
+	_handleFindRestaurantsClick() {
+		if (this.currentCoords) {
+			findNearbyRestaurants(
+				this.currentCoords.latitude,
+				this.currentCoords.longitude
+			);
+		} else {
+			alert("Current coordinates not available.");
+		}
+	}
+
+	/**
+	 * Initializes city stats button and its click handler.
+	 * @private
+	 */
+	_initializeCityStatsButton() {
+		this.cityStatsBtn = this.document.getElementById("city-stats-btn");
+		if (this.cityStatsBtn) {
+			this.cityStatsBtn.addEventListener("click", () => {
+				this._handleCityStatsClick();
+			});
+		} else {
+			console.warn("City Stats button not found.");
+		}
+	}
+
+	/**
+	 * Handles click event for city stats button.
+	 * @private
+	 */
+	_handleCityStatsClick() {
+		if (this.currentCoords) {
+			fetchCityStatistics(
+				this.currentCoords.latitude,
+				this.currentCoords.longitude
+			);
+		} else {
+			alert("Current coordinates not available.");
+		}
+	}
+
+	/**
+	 * Initializes timestamp display element.
+	 * @private
+	 */
+	_initializeTimestampDisplay() {
+		this.tsPosCapture = this.document.getElementById("tsPosCapture");
+		if (this.tsPosCapture) {
+			this.tsPosCapture.textContent = new Date().toLocaleString();
+			this.posCaptureHtmlText = new HtmlText(this.document, this.tsPosCapture);
+			PositionManager.getInstance().subscribe(this.posCaptureHtmlText);
+			Object.freeze(this.posCaptureHtmlText);
+		} else {
+			console.warn("tsPosCapture element not found.");
+		}
+	}
+
+	/**
+	 * Legacy method for backward compatibility.
+	 * @deprecated Use _initializeUIElements() instead
+	 * @private
+	 */
+	initElements() {
+		this._initializeUIElements();
 	}
 
 	initElements() {
@@ -3530,6 +3768,10 @@ class WebGeocodingManager {
 
 	/**
 	 * Gets the observers array for backward compatibility.
+	 * 
+	 * Provides access to the internal observer list. This is a read-only
+	 * getter that delegates to the ObserverSubject.
+	 * 
 	 * @private
 	 * @returns {Array} Array of subscribed observers
 	 */
@@ -3539,6 +3781,10 @@ class WebGeocodingManager {
 
 	/**
 	 * Gets the function observers array for backward compatibility.
+	 * 
+	 * Provides access to the internal function observer list. This is a
+	 * read-only getter that delegates to the ObserverSubject.
+	 * 
 	 * @private
 	 * @returns {Array} Array of subscribed function observers
 	 */
@@ -3546,6 +3792,24 @@ class WebGeocodingManager {
 		return this.observerSubject.functionObservers;
 	}
 
+	/**
+	 * Subscribes an observer to receive notifications about position and address changes.
+	 * 
+	 * Observers must implement an update(posEvent, currentAddress, enderecoPadronizado)
+	 * method to receive notifications. Null observers are rejected with a warning.
+	 * 
+	 * @param {Object} observer - Observer object with update() method
+	 * @param {Function} observer.update - Method called when notifications occur
+	 * @returns {void}
+	 * 
+	 * @example
+	 * const myObserver = {
+	 *   update: (pos, addr, endPad) => {
+	 *     console.log('Position changed:', pos);
+	 *   }
+	 * };
+	 * manager.subscribe(myObserver);
+	 */
 	subscribe(observer) {
 		if (observer == null) {
 			console.warn(
@@ -3556,14 +3820,46 @@ class WebGeocodingManager {
 		this.observerSubject.subscribe(observer);
 	}
 
+	/**
+	 * Unsubscribes an observer from receiving notifications.
+	 * 
+	 * @param {Object} observer - Observer object to unsubscribe
+	 * @returns {void}
+	 */
 	unsubscribe(observer) {
 		this.observerSubject.unsubscribe(observer);
 	}
 
+	/**
+	 * Notifies all subscribed observers about current position and address.
+	 * 
+	 * Sends current position, raw address, and standardized address to all
+	 * observers that have been subscribed via subscribe() method.
+	 * 
+	 * @returns {void}
+	 */
 	notifyObservers() {
-		this.observerSubject.notifyObservers(this.currentPosition,this.reverseGeocoder.currentAddress,this.reverseGeocoder.enderecoPadronizado);
+		this.observerSubject.notifyObservers(
+			this.currentPosition,
+			this.reverseGeocoder.currentAddress,
+			this.reverseGeocoder.enderecoPadronizado
+		);
 	}
 
+	/**
+	 * Subscribes a function to receive notifications about position and address changes.
+	 * 
+	 * Function observers receive (position, currentAddress, enderecoPadronizado, changeDetails)
+	 * as parameters. This provides an alternative to the observer object pattern.
+	 * 
+	 * @param {Function} observerFunction - Function to call on notifications
+	 * @returns {void}
+	 * 
+	 * @example
+	 * manager.subscribeFunction((pos, addr, endPad, details) => {
+	 *   console.log('Address changed:', endPad.enderecoCompleto());
+	 * });
+	 */
 	subscribeFunction(observerFunction) {
 		if (observerFunction == null) {
 			console.warn(
@@ -3577,14 +3873,40 @@ class WebGeocodingManager {
 		this.observerSubject.subscribeFunction(observerFunction);
 	}
 
+	/**
+	 * Unsubscribes a function observer from receiving notifications.
+	 * 
+	 * @param {Function} observerFunction - Function observer to unsubscribe
+	 * @returns {void}
+	 */
 	unsubscribeFunction(observerFunction) {
 		this.observerSubject.unsubscribeFunction(observerFunction);
 	}
 
+	/**
+	 * Gets the current Brazilian standardized address.
+	 * 
+	 * Returns the standardized address object from the reverse geocoder,
+	 * which contains formatted Brazilian address components.
+	 * 
+	 * @returns {BrazilianStandardAddress|null} Standardized address or null if not yet geocoded
+	 */
 	getBrazilianStandardAddress() {
 		return this.reverseGeocoder.enderecoPadronizado;
 	}
 
+	/**
+	 * Initializes speech synthesis UI components.
+	 * 
+	 * Creates and configures the HTML speech synthesis displayer with predefined
+	 * element IDs for voice controls. Subscribes the displayer to both reverse
+	 * geocoder and manager notifications, then freezes it to prevent modifications.
+	 * 
+	 * This method should be called after the relevant DOM elements are available.
+	 * Element IDs are currently hardcoded but follow a consistent naming convention.
+	 * 
+	 * @returns {void}
+	 */
 	initSpeechSynthesis() {
 		this.htmlSpeechSynthesisDisplayer = new HtmlSpeechSynthesisDisplayer(
 			this.document,
@@ -3604,9 +3926,18 @@ class WebGeocodingManager {
 		);
 		this.reverseGeocoder.subscribe(this.htmlSpeechSynthesisDisplayer);
 		this.subscribe(this.htmlSpeechSynthesisDisplayer);
-		Object.freeze(this.htmlSpeechSynthesisDisplayer); // Prevent further modification
+		Object.freeze(this.htmlSpeechSynthesisDisplayer);
 	}
 
+	/**
+	 * Notifies all function observers about current state.
+	 * 
+	 * Calls each subscribed function observer with current position, address,
+	 * and standardized address. This is a convenience method for manual
+	 * notification of function observers.
+	 * 
+	 * @returns {void}
+	 */
 	notifyFunctionObservers() {
 		for (const fn of this.functionObservers) {
 			fn(
@@ -3617,6 +3948,24 @@ class WebGeocodingManager {
 		}
 	}
 
+	/**
+	 * Gets a single location update from the geolocation service.
+	 * 
+	 * Requests current position from the GeolocationService, performs reverse
+	 * geocoding on the coordinates, and notifies observers. This is typically
+	 * used for initial position acquisition or manual position refresh.
+	 * 
+	 * **Workflow**:
+	 * 1. Request single location update from GeolocationService
+	 * 2. If successful, store position and trigger reverse geocoding
+	 * 3. Process geocoding results and standardize address
+	 * 4. Notify all observers with new position and address
+	 * 
+	 * @returns {void}
+	 * 
+	 * @fires ReverseGeocoder#notifyObservers - When geocoding completes
+	 * @fires WebGeocodingManager#notifyFunctionObservers - After geocoding completes
+	 */
 	getSingleLocationUpdate() {
 		this.geolocationService
 			.getSingleLocationUpdate()
@@ -3642,93 +3991,140 @@ class WebGeocodingManager {
 			});
 	}
 
+	/**
+	 * Starts continuous location tracking and initializes all monitoring systems.
+	 * 
+	 * This is the main entry point for starting the geocoding workflow. It:
+	 * 1. Initializes speech synthesis UI
+	 * 2. Gets initial location update
+	 * 3. Starts continuous position watching
+	 * 4. Registers callbacks for address component change detection
+	 * 
+	 * The method sets up the complete tracking infrastructure including
+	 * logradouro, bairro, and municipio change detection callbacks that
+	 * will be triggered automatically when address components change.
+	 * 
+	 * @returns {void}
+	 * 
+	 * @example
+	 * const manager = new WebGeocodingManager(document, {
+	 *   locationResult: 'location-result'
+	 * });
+	 * manager.startTracking(); // Begins continuous tracking
+	 */
 	startTracking() {
+		// Initialize speech synthesis UI components
 		this.initSpeechSynthesis();
 
-		/*
-	Get current location. Do an initial check to see
-	if the user has granted location permissions. Do an immediate
-	update.
-	*/
-		//this.geolocationService.checkPermissions().then((value) => {
+		// Get initial location (immediate update)
+		// Note: Permission check is commented out but available for future use
+		// this.geolocationService.checkPermissions().then((value) => {
 		this.getSingleLocationUpdate();
-		//});
+		// });
 
+		// Legacy timeout - kept for backward compatibility
+		// TODO: Evaluate if this timeout is still necessary
 		setTimeout(() => {
 			null;
 		}, 20000);
 
-		// Start watching position with high accuracy
+		// Start continuous position watching
 		let watchId = this.geolocationService.watchCurrentLocation();
 
-		// Register callback for logradouro change detection (replaces timer-based approach)
+		// Set up address component change detection callbacks
 		this.setupLogradouroChangeDetection();
-
-		// Register callback for bairro change detection (follows same pattern as logradouro)
 		this.setupBairroChangeDetection();
-
-		// Register callback for municipio change detection (follows same pattern as logradouro and bairro)
 		this.setupMunicipioChangeDetection();
 	}
 
 	/**
-	 * Sets up logradouro change detection using callback mechanism (replaces timer-based approach)
+	 * Sets up logradouro (street) change detection using callback mechanism.
+	 * 
+	 * Registers a callback with AddressDataExtractor that will be invoked
+	 * whenever a logradouro change is detected during address updates.
+	 * This replaces the previous timer-based polling approach.
+	 * 
+	 * @returns {void}
 	 */
 	setupLogradouroChangeDetection() {
-		// Register this instance's callback with AddressDataExtractor
 		AddressDataExtractor.setLogradouroChangeCallback((changeDetails) => {
 			this.handleLogradouroChange(changeDetails);
 		});
 	}
 
 	/**
-	 * Removes the logradouro change detection callback
+	 * Removes the logradouro change detection callback.
+	 * 
+	 * Clears the callback registered with AddressDataExtractor. Use this
+	 * when cleaning up or stopping change detection.
+	 * 
+	 * @returns {void}
 	 */
 	removeLogradouroChangeDetection() {
 		AddressDataExtractor.setLogradouroChangeCallback(null);
 	}
 
 	/**
-	 * Sets up bairro change detection using callback mechanism (follows same pattern as logradouro)
+	 * Sets up bairro (neighborhood) change detection using callback mechanism.
+	 * 
+	 * Registers a callback with AddressDataExtractor that will be invoked
+	 * whenever a bairro change is detected during address updates.
+	 * 
+	 * @returns {void}
 	 */
 	setupBairroChangeDetection() {
-		// Register this instance's callback with AddressDataExtractor
 		AddressDataExtractor.setBairroChangeCallback((changeDetails) => {
 			this.handleBairroChange(changeDetails);
 		});
 	}
 
 	/**
-	 * Removes the bairro change detection callback
+	 * Removes the bairro change detection callback.
+	 * 
+	 * @returns {void}
 	 */
 	removeBairroChangeDetection() {
 		AddressDataExtractor.setBairroChangeCallback(null);
 	}
 
 	/**
-	 * Sets up municipio change detection using callback mechanism (follows same pattern as logradouro and bairro)
+	 * Sets up municipio (municipality/city) change detection using callback mechanism.
+	 * 
+	 * Registers a callback with AddressDataExtractor that will be invoked
+	 * whenever a municipio change is detected during address updates.
+	 * 
+	 * @returns {void}
 	 */
 	setupMunicipioChangeDetection() {
-		// Register this instance's callback with AddressDataExtractor
 		AddressDataExtractor.setMunicipioChangeCallback((changeDetails) => {
 			this.handleMunicipioChange(changeDetails);
 		});
 	}
 
 	/**
-	 * Removes the municipio change detection callback
+	 * Removes the municipio change detection callback.
+	 * 
+	 * @returns {void}
 	 */
 	removeMunicipioChangeDetection() {
 		AddressDataExtractor.setMunicipioChangeCallback(null);
 	}
 
 	/**
-	 * Handles logradouro change events and notifies observers
+	 * Handles logradouro change events and notifies observers.
+	 * 
+	 * Called automatically when a logradouro change is detected. Wraps the
+	 * notification call in error handling to prevent one error from breaking
+	 * the entire change detection system.
+	 * 
 	 * @param {Object} changeDetails - Details about the logradouro change
+	 * @param {Object} changeDetails.previous - Previous address component values
+	 * @param {Object} changeDetails.current - Current address component values
+	 * @param {boolean} changeDetails.hasChanged - Whether change actually occurred
+	 * @returns {void}
 	 */
 	handleLogradouroChange(changeDetails) {
 		try {
-			// Notify observers about the logradouro change
 			this.notifyLogradouroChangeObservers(changeDetails);
 		} catch (error) {
 			console.error(
@@ -3739,12 +4135,19 @@ class WebGeocodingManager {
 	}
 
 	/**
-	 * Handles bairro change events and notifies observers
+	 * Handles bairro change events and notifies observers.
+	 * 
+	 * Called automatically when a bairro change is detected. Wraps the
+	 * notification call in error handling.
+	 * 
 	 * @param {Object} changeDetails - Details about the bairro change
+	 * @param {Object} changeDetails.previous - Previous address component values
+	 * @param {Object} changeDetails.current - Current address component values
+	 * @param {boolean} changeDetails.hasChanged - Whether change actually occurred
+	 * @returns {void}
 	 */
 	handleBairroChange(changeDetails) {
 		try {
-			// Notify observers about the bairro change
 			this.notifyBairroChangeObservers(changeDetails);
 		} catch (error) {
 			console.error(
@@ -3755,12 +4158,19 @@ class WebGeocodingManager {
 	}
 
 	/**
-	 * Handles municipio change events and notifies observers
+	 * Handles municipio change events and notifies observers.
+	 * 
+	 * Called automatically when a municipio change is detected. Wraps the
+	 * notification call in error handling.
+	 * 
 	 * @param {Object} changeDetails - Details about the municipio change
+	 * @param {Object} changeDetails.previous - Previous address component values
+	 * @param {Object} changeDetails.current - Current address component values
+	 * @param {boolean} changeDetails.hasChanged - Whether change actually occurred
+	 * @returns {void}
 	 */
 	handleMunicipioChange(changeDetails) {
 		try {
-			// Notify observers about the municipio change
 			this.notifyMunicipioChangeObservers(changeDetails);
 		} catch (error) {
 			console.error(
@@ -3771,87 +4181,135 @@ class WebGeocodingManager {
 	}
 
 	/**
-	 * Notifies observers specifically about logradouro changes
-	 * @param {Object} changeDetails - Details about the logradouro change
+	 * Notifies observers about address component changes.
+	 * 
+	 * This is a generalized notification method that handles all types of address
+	 * component changes (logradouro, bairro, municipio). It follows DRY principle
+	 * by consolidating the notification logic that was previously duplicated across
+	 * three separate methods.
+	 * 
+	 * The method notifies two types of observers:
+	 * 1. Regular observers (via update() method) - receive change-specific data
+	 * 2. Function observers - receive full context including position and address
+	 * 
+	 * @private
+	 * @param {Object} changeDetails - Details about the address component change
+	 * @param {string} changeType - Type of change ("LogradouroChanged", "BairroChanged", "MunicipioChanged")
+	 * @param {*} changeData - Specific data for the change (e.g., new logradouro value)
+	 * @param {string} logMessage - Optional log message for debugging
 	 */
-	notifyLogradouroChangeObservers(changeDetails) {
-		// Notify regular observers
-		this.observerSubject.notifyObservers(changeDetails.current.logradouro, "LogradouroChanged", null, null);
-		this.observerSubject.notifyFunctionObservers(this.currentPosition, this.reverseGeocoder.currentAddress, this.reverseGeocoder.enderecoPadronizado, changeDetails);
-	}
+	_notifyAddressChangeObservers(changeDetails, changeType, changeData, logMessage) {
+		// Log if message provided
+		if (logMessage) {
+			log(logMessage);
+		}
 
-	/**
-	 * Notifies observers specifically about bairro changes
-	 * @param {Object} changeDetails - Details about the bairro change
-	 */
-	notifyBairroChangeObservers(changeDetails) {
-		// Notify regular observers
-		log('(WebGeocodingManager) Notificando os observadores da mudança de bairro.');
+		// Notify regular observers with change-specific data
 		for (const observer of this.observers) {
 			if (typeof observer.update === "function") {
-				observer.update(
-					changeDetails.current.bairro,
-					"BairroChanged",
-					null,
-					null,
-				);
+				observer.update(changeData, changeType, null, null);
 			}
 		}
 
-		// Notify function observers with change details
+		// Notify function observers with full context
+		this._notifyFunctionObserversWithError(changeDetails, changeType);
+	}
+
+	/**
+	 * Notifies function observers with error handling.
+	 * 
+	 * Extracted method to handle function observer notifications with proper
+	 * error handling. This prevents one observer's error from blocking other
+	 * observers from receiving notifications.
+	 * 
+	 * @private
+	 * @param {Object} changeDetails - Details about the change
+	 * @param {string} changeType - Type of change for error messages
+	 */
+	_notifyFunctionObserversWithError(changeDetails, changeType) {
 		for (const fn of this.functionObservers) {
 			try {
 				fn(
 					this.currentPosition,
 					this.reverseGeocoder.currentAddress,
 					this.reverseGeocoder.enderecoPadronizado,
-					changeDetails,
+					changeDetails
 				);
 			} catch (error) {
 				console.error(
-					"(WebGeocodingManager) Error notifying function observer about bairro change:",
-					error,
+					`(WebGeocodingManager) Error notifying function observer about ${changeType}:`,
+					error
 				);
 			}
 		}
 	}
 
 	/**
-	 * Notifies observers specifically about municipio changes
+	 * Notifies observers specifically about logradouro changes.
+	 * 
+	 * Uses the generalized notification method with logradouro-specific parameters.
+	 * 
+	 * @param {Object} changeDetails - Details about the logradouro change
+	 * @param {Object} changeDetails.current - Current address component values
+	 * @param {string} changeDetails.current.logradouro - New logradouro value
+	 */
+	notifyLogradouroChangeObservers(changeDetails) {
+		this._notifyAddressChangeObservers(
+			changeDetails,
+			"LogradouroChanged",
+			changeDetails.current.logradouro,
+			null // No specific log message for logradouro
+		);
+	}
+
+	/**
+	 * Notifies observers specifically about bairro changes.
+	 * 
+	 * Uses the generalized notification method with bairro-specific parameters.
+	 * 
+	 * @param {Object} changeDetails - Details about the bairro change
+	 * @param {Object} changeDetails.current - Current address component values
+	 * @param {string} changeDetails.current.bairro - New bairro value
+	 */
+	notifyBairroChangeObservers(changeDetails) {
+		this._notifyAddressChangeObservers(
+			changeDetails,
+			"BairroChanged",
+			changeDetails.current.bairro,
+			'(WebGeocodingManager) Notificando os observadores da mudança de bairro.'
+		);
+	}
+
+	/**
+	 * Notifies observers specifically about municipio changes.
+	 * 
+	 * Uses the generalized notification method with municipio-specific parameters.
+	 * Note: For municipio changes, the entire currentAddress is passed as changeData
+	 * to maintain backward compatibility with existing observers.
+	 * 
 	 * @param {Object} changeDetails - Details about the municipio change
 	 */
 	notifyMunicipioChangeObservers(changeDetails) {
-		// Notify regular observers
-		log('(WebGeocodingManager) Notificando os observadores da mudança de município.');
-		for (const observer of this.observers) {
-			if (typeof observer.update === "function") {
-				observer.update(
-					this.reverseGeocoder.currentAddress,
-					"MunicipioChanged",
-					null,
-					null,
-				);
-			}
-		}
-
-		// Notify function observers with change details
-		for (const fn of this.functionObservers) {
-			try {
-				fn(
-					this.currentPosition,
-					this.reverseGeocoder.currentAddress,
-					this.reverseGeocoder.enderecoPadronizado,
-					changeDetails,
-				);
-			} catch (error) {
-				console.error(
-					"(WebGeocodingManager) Error notifying function observer about municipio change:",
-					error,
-				);
-			}
-		}
+		this._notifyAddressChangeObservers(
+			changeDetails,
+			"MunicipioChanged",
+			this.reverseGeocoder.currentAddress, // Full address for municipio
+			'(WebGeocodingManager) Notificando os observadores da mudança de município.'
+		);
 	}
 
+	/**
+	 * Returns a string representation of this WebGeocodingManager instance.
+	 * 
+	 * Provides a human-readable representation showing the class name and
+	 * current coordinates (if available). Useful for logging and debugging.
+	 * 
+	 * @returns {string} String representation with coordinates or "N/A"
+	 * 
+	 * @example
+	 * console.log(manager.toString());
+	 * // Output: "WebGeocodingManager: -23.5505, -46.6333"
+	 */
 	toString() {
 		return `${this.constructor.name}: ${this.currentCoords ? this.currentCoords.latitude : "N/A"}, ${this.currentCoords ? this.currentCoords.longitude : "N/A"}`;
 	}

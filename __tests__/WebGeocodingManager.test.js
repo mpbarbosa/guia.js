@@ -1,0 +1,303 @@
+/**
+ * Tests for WebGeocodingManager class
+ * 
+ * These tests validate the improved cohesion and coupling of the refactored
+ * WebGeocodingManager class, ensuring proper initialization, observer pattern
+ * implementation, and coordination between components.
+ */
+
+// Mock document to prevent errors in test environment
+global.document = undefined;
+
+const { WebGeocodingManager, ObserverSubject, GeolocationService, ReverseGeocoder } = require('../src/guia.js');
+
+describe('WebGeocodingManager - High Cohesion and Low Coupling', () => {
+    let mockDocument;
+    let mockElement;
+
+    beforeEach(() => {
+        // Create mock document with getElementById
+        mockElement = {
+            textContent: '',
+            addEventListener: jest.fn()
+        };
+        
+        mockDocument = {
+            getElementById: jest.fn((id) => {
+                // Return null for most elements to simulate missing UI elements
+                if (id === 'location-result') {
+                    return mockElement;
+                }
+                return null;
+            })
+        };
+    });
+
+    describe('Constructor and Initialization', () => {
+        test('should initialize with required parameters', () => {
+            const params = {
+                locationResult: 'location-result',
+                enderecoPadronizadoDisplay: 'address-display',
+                referencePlaceDisplay: 'reference-place'
+            };
+
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager).toBeDefined();
+            expect(manager.document).toBe(mockDocument);
+            expect(manager.locationResult).toBe(params.locationResult);
+            expect(manager.enderecoPadronizadoDisplay).toBe(params.enderecoPadronizadoDisplay);
+            expect(manager.referencePlaceDisplay).toBe(params.referencePlaceDisplay);
+        });
+
+        test('should initialize observer subject', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.observerSubject).toBeDefined();
+            expect(manager.observerSubject).toBeInstanceOf(ObserverSubject);
+        });
+
+        test('should create geolocation service and reverse geocoder', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.geolocationService).toBeDefined();
+            expect(manager.geolocationService).toBeInstanceOf(GeolocationService);
+            expect(manager.reverseGeocoder).toBeDefined();
+            expect(manager.reverseGeocoder).toBeInstanceOf(ReverseGeocoder);
+        });
+
+        test('should handle optional parameters with defaults', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.enderecoPadronizadoDisplay).toBeNull();
+            expect(manager.referencePlaceDisplay).toBeNull();
+        });
+
+        test('should initialize state to null', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.currentPosition).toBeNull();
+            expect(manager.currentCoords).toBeNull();
+        });
+    });
+
+    describe('Observer Pattern Implementation', () => {
+        test('should subscribe object observers', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+            
+            const mockObserver = {
+                update: jest.fn()
+            };
+
+            manager.subscribe(mockObserver);
+            
+            expect(manager.observers).toContain(mockObserver);
+        });
+
+        test('should not subscribe null observers', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+            
+            const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+            
+            manager.subscribe(null);
+            
+            expect(consoleSpy).toHaveBeenCalledWith(
+                expect.stringContaining('Attempted to subscribe a null observer')
+            );
+            
+            consoleSpy.mockRestore();
+        });
+
+        test('should unsubscribe object observers', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+            
+            const mockObserver = {
+                update: jest.fn()
+            };
+
+            manager.subscribe(mockObserver);
+            expect(manager.observers).toContain(mockObserver);
+            
+            manager.unsubscribe(mockObserver);
+            expect(manager.observers).not.toContain(mockObserver);
+        });
+
+        test('should subscribe function observers', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+            
+            const mockFunction = jest.fn();
+
+            manager.subscribeFunction(mockFunction);
+            
+            expect(manager.functionObservers).toContain(mockFunction);
+        });
+
+        test('should not subscribe null function observers', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+            
+            const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+            
+            manager.subscribeFunction(null);
+            
+            expect(consoleSpy).toHaveBeenCalledWith(
+                expect.stringContaining('Attempted to subscribe a null observer function')
+            );
+            
+            consoleSpy.mockRestore();
+        });
+
+        test('should unsubscribe function observers', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+            
+            const mockFunction = jest.fn();
+
+            manager.subscribeFunction(mockFunction);
+            expect(manager.functionObservers).toContain(mockFunction);
+            
+            manager.unsubscribeFunction(mockFunction);
+            expect(manager.functionObservers).not.toContain(mockFunction);
+        });
+    });
+
+    describe('Public API Methods', () => {
+        test('should get Brazilian standard address from reverse geocoder', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+            
+            const mockAddress = { logradouro: 'Rua Test' };
+            manager.reverseGeocoder.enderecoPadronizado = mockAddress;
+
+            const result = manager.getBrazilianStandardAddress();
+            
+            expect(result).toBe(mockAddress);
+        });
+
+        test('should provide toString representation', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            const result = manager.toString();
+            
+            expect(result).toContain('WebGeocodingManager');
+            expect(result).toContain('N/A');
+        });
+
+        test('should provide toString with coordinates when available', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+            
+            manager.currentCoords = {
+                latitude: -23.5505,
+                longitude: -46.6333
+            };
+
+            const result = manager.toString();
+            
+            expect(result).toContain('WebGeocodingManager');
+            expect(result).toContain('-23.5505');
+            expect(result).toContain('-46.6333');
+        });
+    });
+
+    describe('Cohesion - Single Responsibility', () => {
+        test('should delegate DOM element initialization to private methods', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            // Verify that initialization was called
+            expect(mockDocument.getElementById).toHaveBeenCalled();
+        });
+
+        test('should separate displayer creation from observer wiring', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            // Verify displayers were created
+            expect(manager.positionDisplayer).toBeDefined();
+            expect(manager.addressDisplayer).toBeDefined();
+            expect(manager.referencePlaceDisplayer).toBeDefined();
+        });
+    });
+
+    describe('Coupling - Dependencies', () => {
+        test('should accept document as dependency injection', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.document).toBe(mockDocument);
+        });
+
+        test('should accept configuration as parameter object', () => {
+            const params = {
+                locationResult: 'location-result',
+                enderecoPadronizadoDisplay: 'address-display',
+                referencePlaceDisplay: 'reference-place'
+            };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.locationResult).toBe(params.locationResult);
+            expect(manager.enderecoPadronizadoDisplay).toBe(params.enderecoPadronizadoDisplay);
+            expect(manager.referencePlaceDisplay).toBe(params.referencePlaceDisplay);
+        });
+    });
+
+    describe('Backward Compatibility', () => {
+        test('should provide legacy initElements method', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(typeof manager.initElements).toBe('function');
+        });
+
+        test('should provide observers getter for backward compatibility', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(Array.isArray(manager.observers)).toBe(true);
+        });
+
+        test('should provide functionObservers getter for backward compatibility', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(Array.isArray(manager.functionObservers)).toBe(true);
+        });
+    });
+
+    describe('Error Handling', () => {
+        test('should handle missing DOM elements gracefully', () => {
+            const params = { locationResult: 'location-result' };
+            const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+
+            // Create manager with document that returns null for most elements
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            // Should have logged warnings for missing elements
+            expect(consoleSpy).toHaveBeenCalled();
+            
+            consoleSpy.mockRestore();
+        });
+
+        test('should handle null observer subscription gracefully', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+            const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+
+            // Should not throw error
+            expect(() => manager.subscribe(null)).not.toThrow();
+            expect(consoleSpy).toHaveBeenCalled();
+            
+            consoleSpy.mockRestore();
+        });
+    });
+});

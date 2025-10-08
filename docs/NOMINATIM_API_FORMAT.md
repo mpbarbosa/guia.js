@@ -296,6 +296,7 @@ const address = AddressDataExtractor.getBrazilianStandardAddress(nominatimRespon
 // neighbourhood, suburb, quarter → bairro
 // city, town, municipality, village → municipio
 // state, state_code, ISO3166-2-lvl4 (extracted) → uf
+// Two-letter state code extracted from uf or ISO3166-2-lvl4 → siglaUF
 // postcode → cep
 // country → pais
 ```
@@ -334,7 +335,8 @@ console.log(brazilianAddress.logradouro);     // "Avenida Roque Petroni Júnior"
 console.log(brazilianAddress.numero);         // "1089"
 console.log(brazilianAddress.bairro);         // "Jardim das Acácias"
 console.log(brazilianAddress.municipio);      // "São Paulo"
-console.log(brazilianAddress.uf);             // "São Paulo" or "SP"
+console.log(brazilianAddress.uf);             // "São Paulo" or "SP" (state name or code)
+console.log(brazilianAddress.siglaUF);        // "SP" (two-letter state abbreviation)
 console.log(brazilianAddress.cep);            // "04707-000"
 
 // Get formatted address

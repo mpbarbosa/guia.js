@@ -38,6 +38,7 @@ classDiagram
         -Object data
         -BrazilianStandardAddress enderecoPadronizado
         +constructor(data)
+        +static extractSiglaUF(iso3166Code)
         +toString()
     }
     
@@ -88,6 +89,7 @@ classDiagram
         +String bairro
         +String municipio
         +String uf
+        +String siglaUF
         +String cep
         +String pais
         +enderecoCompleto()
@@ -105,9 +107,10 @@ classDiagram
 **AddressExtractor** (New in PR #121)
 - **Single Responsibility**: Extract and standardize address data from geocoding API responses
 - Parses raw geocoding API response data (OpenStreetMap/Nominatim format)
-- Maps API fields to Brazilian address standard fields (logradouro, bairro, municipio, uf, cep)
+- Maps API fields to Brazilian address standard fields (logradouro, bairro, municipio, uf, siglaUF, cep)
 - Handles fallback values for missing or incomplete data
 - Creates immutable `BrazilianStandardAddress` instances
+- Extracts state abbreviation (siglaUF) from ISO3166-2-lvl4 field (e.g., "BR-RJ" → "RJ") via static `extractSiglaUF()` method
 - **No caching or change detection logic**
 
 **AddressCache** (New in PR #121, Refactored to Singleton in PR #TBD)
@@ -133,7 +136,8 @@ classDiagram
 **BrazilianStandardAddress**
 - Immutable data structure representing standardized Brazilian address
 - Provides formatted output via `enderecoCompleto()` method
-- Fields: logradouro, numero, bairro, municipio, uf, cep, pais
+- Fields: logradouro, numero, bairro, municipio, uf, siglaUF, cep, pais
+- **siglaUF**: Two-letter state abbreviation (e.g., "RJ", "SP") extracted from uf or ISO3166-2-lvl4
 
 ### 4. Presentation Layer
 **Purpose**: HTML rendering and user interface
@@ -219,6 +223,7 @@ classDiagram
         +String bairro
         +String municipio
         +String uf
+        +String siglaUF
         +String cep
         +String pais
         +enderecoCompleto()
@@ -228,6 +233,7 @@ classDiagram
         -Object data
         -BrazilianStandardAddress enderecoPadronizado
         +constructor(data)
+        +static extractSiglaUF(iso3166Code)
         +toString()
     }
     

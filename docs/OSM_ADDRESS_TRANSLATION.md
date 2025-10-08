@@ -73,6 +73,7 @@ console.log(result.numero);          // "123"
 console.log(result.bairro);          // "Jardins"
 console.log(result.municipio);       // "São Paulo"
 console.log(result.uf);              // "SP"
+console.log(result.siglaUF);         // "SP"
 console.log(result.cep);             // "01426-001"
 console.log(result.enderecoCompleto()); 
 // "Rua Oscar Freire, 123, Jardins, São Paulo, SP, 01426-001"
@@ -116,7 +117,30 @@ console.log(result.numero);      // "100"
 console.log(result.municipio);   // "São Paulo"
 ```
 
-### Example 4: Partial Address Data
+### Example 4: State Abbreviation Extraction from ISO3166-2-lvl4
+
+```javascript
+const dataWithISO = {
+    address: {
+        'road': 'Avenida Atlântica',
+        'city': 'Rio de Janeiro',
+        'ISO3166-2-lvl4': 'BR-RJ'  // State code in ISO format
+        // Note: No explicit state or state_code field
+    }
+};
+
+const result = AddressDataExtractor.getBrazilianStandardAddress(dataWithISO);
+console.log(result.logradouro);  // "Avenida Atlântica"
+console.log(result.municipio);   // "Rio de Janeiro"
+console.log(result.uf);          // null (no direct state field)
+console.log(result.siglaUF);     // "RJ" (extracted from ISO3166-2-lvl4)
+
+// The municipioCompleto() method uses siglaUF when available
+console.log(result.municipioCompleto()); 
+// "Rio de Janeiro, RJ"
+```
+
+### Example 5: Partial Address Data
 
 ```javascript
 const partialData = {
@@ -133,6 +157,7 @@ console.log(result.numero);      // null
 console.log(result.bairro);      // null
 console.log(result.municipio);   // "Rio de Janeiro"
 console.log(result.uf);          // null
+console.log(result.siglaUF);     // null
 console.log(result.cep);         // null
 
 // Formatted address handles null values gracefully
@@ -151,7 +176,8 @@ The translation produces a `BrazilianStandardAddress` object with the following 
 | `complemento` | string\|null | Complement (not extracted from OSM) | null |
 | `bairro` | string\|null | Neighborhood | "Jardins" |
 | `municipio` | string\|null | City/Municipality | "São Paulo" |
-| `uf` | string\|null | State abbreviation | "SP" |
+| `uf` | string\|null | State name or abbreviation | "SP" or "São Paulo" |
+| `siglaUF` | string\|null | Two-letter state abbreviation | "SP" |
 | `cep` | string\|null | Postal code | "01426-001" |
 | `pais` | string | Country (default: "Brasil") | "Brasil" |
 | `referencePlace` | ReferencePlace | Reference place object | See ReferencePlace docs |
@@ -162,8 +188,10 @@ The `BrazilianStandardAddress` class provides the following formatting methods:
 
 - `logradouroCompleto()` - Returns "Logradouro, Número" format
 - `bairroCompleto()` - Returns neighborhood name
-- `municipioCompleto()` - Returns "Município, UF" format
+- `municipioCompleto()` - Returns "Município, siglaUF" format (uses siglaUF when available)
 - `enderecoCompleto()` - Returns full formatted address
+
+**Note**: The `municipioCompleto()` method prioritizes using `siglaUF` over `uf` to ensure consistent two-letter state abbreviation format.
 
 ## Error Handling
 

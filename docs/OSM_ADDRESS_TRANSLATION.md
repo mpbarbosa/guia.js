@@ -253,6 +253,7 @@ The OSM address translation integrates seamlessly with:
 
 ## Related Documentation
 
+- [Nominatim API Format](./NOMINATIM_API_FORMAT.md) - Complete Nominatim JSON format documentation
 - [BrazilianStandardAddress Class](./BRAZILIAN_ADDRESS.md)
 - [ReferencePlace Class](./REFERENCE_PLACE.md)
 - [AddressCache Documentation](./ADDRESS_CACHE.md)

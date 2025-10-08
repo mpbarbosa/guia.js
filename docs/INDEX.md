@@ -51,6 +51,21 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Configuration and customization
   - Integration with existing workflows
 
+### API Integration
+
+- **[NOMINATIM_API_FORMAT.md](./NOMINATIM_API_FORMAT.md)** - Nominatim API JSON format documentation 🆕
+  - Complete JSON response structure
+  - Address object field descriptions
+  - Bounding box format
+  - Real-world examples from Brazilian addresses
+  - Integration with Guia.js
+  - Field availability by location type
+
+- **[OSM_ADDRESS_TRANSLATION.md](./OSM_ADDRESS_TRANSLATION.md)** - OSM address tag translation
+  - OSM to Brazilian address mapping
+  - Priority and fallback chains
+  - Usage examples and integration
+
 ### Features
 
 - **[DEVICE_DETECTION.md](../DEVICE_DETECTION.md)** - Device detection and accuracy thresholds

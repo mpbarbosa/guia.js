@@ -182,7 +182,8 @@ describe('OSM Address Tag Translation', () => {
             expect(result.logradouro).toBe('Avenida Atlântica');
             expect(result.bairro).toBe('Copacabana');
             expect(result.municipio).toBe('Rio de Janeiro');
-            expect(result.uf).toBe('RJ'); // Should extract "RJ" from "BR-RJ"
+            expect(result.uf).toBeNull(); // uf should be null when no state field exists
+            expect(result.siglaUF).toBe('RJ'); // siglaUF should extract "RJ" from "BR-RJ"
             expect(result.cep).toBe('22070-001');
         });
 
@@ -198,7 +199,8 @@ describe('OSM Address Tag Translation', () => {
             const result = AddressDataExtractor.getBrazilianStandardAddress(nominatimData);
 
             expect(result.municipio).toBe('São Paulo');
-            expect(result.uf).toBe('SP'); // Should use state_code, not ISO3166-2-lvl4
+            expect(result.uf).toBeNull(); // uf should be null when no state field exists (only state_code)
+            expect(result.siglaUF).toBe('SP'); // siglaUF should use state_code, not ISO3166-2-lvl4
         });
 
         test('should handle various Brazilian state codes in ISO3166-2-lvl4', () => {
@@ -220,7 +222,8 @@ describe('OSM Address Tag Translation', () => {
                 };
 
                 const result = AddressDataExtractor.getBrazilianStandardAddress(nominatimData);
-                expect(result.uf).toBe(expected);
+                expect(result.uf).toBeNull(); // uf should be null when no state field exists
+                expect(result.siglaUF).toBe(expected); // siglaUF should extract from ISO3166-2-lvl4
             });
         });
 
@@ -468,7 +471,7 @@ describe('OSM Address Tag Translation', () => {
                     town: 'Town Name',             // Fallback for city
                     municipality: 'Municipality',  // Another fallback
                     village: 'Village Name',       // Another fallback
-                    state_code: 'SC'               // Fallback for state
+                    state_code: 'SC'               // Provides siglaUF only
                 }
             };
 
@@ -478,7 +481,8 @@ describe('OSM Address Tag Translation', () => {
             expect(result.logradouro).toBe('Street Name');
             expect(result.bairro).toBe('Suburb Area');
             expect(result.municipio).toBe('Town Name');
-            expect(result.uf).toBe('SC');
+            expect(result.uf).toBeNull(); // uf should be null when no state field exists (only state_code)
+            expect(result.siglaUF).toBe('SC'); // siglaUF should use state_code
         });
     });
 

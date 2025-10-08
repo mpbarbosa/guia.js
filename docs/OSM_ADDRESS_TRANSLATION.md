@@ -33,8 +33,8 @@ The following Nominatim API fields are supported as fallbacks:
 | `house_number` | `numero` | Single field |
 | `neighbourhood`, `suburb`, `quarter` | `bairro` | In order of priority |
 | `city`, `town`, `municipality`, `village` | `municipio` | In order of priority |
-| `state`, `state_code` | `uf` | In order of priority |
-| Extracted from `uf` or `ISO3166-2-lvl4` | `siglaUF` | Two-letter state abbreviation |
+| `state` (full names only) | `uf` | State full name field |
+| `state_code`, extracted from `ISO3166-2-lvl4` | `siglaUF` | Two-letter state abbreviation |
 | `postcode` | `cep` | Single field |
 
 ## Translation Priority
@@ -46,17 +46,20 @@ When both OSM tags and Nominatim fields are present, the system follows this pri
 3. **Nominatim fallback fields** (e.g., `street`, `town`, `state_code`)
 4. **Null** - If no data available
 
-**For `siglaUF` specifically:**
-- If `uf` is a two-letter code, `siglaUF` = `uf`
-- If `uf` is a full state name, `siglaUF` extracted from `ISO3166-2-lvl4` (e.g., "BR-RJ" → "RJ")
-- If neither is available, `siglaUF` = null
+**State Field Rules (`uf` and `siglaUF`)**:
 
-**Special Handling for State Fields (`uf` and `siglaUF`)**:
-- The `uf` field contains the state name or abbreviation from `addr:state`, `state`, or `state_code` (does not include ISO3166-2-lvl4 as fallback)
-- The `siglaUF` field provides a normalized two-letter state abbreviation
-- When `uf` is already a two-letter code (e.g., "SP"), `siglaUF` is set to the same value
-- When `uf` is a full state name (e.g., "São Paulo"), `siglaUF` attempts to extract the abbreviation from `ISO3166-2-lvl4` (e.g., "BR-SP" → "SP")
-- The `AddressExtractor.extractSiglaUF()` static method extracts the abbreviation by removing the "BR-" prefix from ISO codes
+The `uf` and `siglaUF` fields follow strict rules for consistency:
+
+1. **`uf` field** - Contains ONLY full state names:
+   - Source: `addr:state` or `state` fields only
+   - Examples: "São Paulo", "Rio de Janeiro", "Minas Gerais"
+   - Will be `null` if only abbreviations are available (e.g., only `state_code` or `ISO3166-2-lvl4`)
+
+2. **`siglaUF` field** - Contains ONLY two-letter state abbreviations:
+   - Priority: `state_code` > extracted from `ISO3166-2-lvl4`
+   - Examples: "SP", "RJ", "MG"
+   - If `uf` contains a two-letter code (edge case), `siglaUF` will use it
+   - The `AddressExtractor.extractSiglaUF()` static method extracts abbreviations by removing the "BR-" prefix from ISO codes (e.g., "BR-RJ" → "RJ")
 
 ## Usage Examples
 
@@ -130,34 +133,48 @@ console.log(result.municipio);   // "São Paulo"
 ### Example 4: State Abbreviation with siglaUF
 
 ```javascript
-// Example with state abbreviation in state_code
+// Example 1: Only state_code available (no full state name)
 const dataWithStateCode = {
     address: {
         'road': 'Avenida Paulista',
         'city': 'São Paulo',
-        'state_code': 'SP'  // Two-letter state code
+        'state_code': 'SP'  // Only abbreviation available
     }
 };
 
 const result1 = AddressDataExtractor.getBrazilianStandardAddress(dataWithStateCode);
-console.log(result1.uf);         // "SP"
-console.log(result1.siglaUF);    // "SP" (same as uf when it's already a two-letter code)
+console.log(result1.uf);         // null (no full state name available)
+console.log(result1.siglaUF);    // "SP" (from state_code)
 
-// Example with full state name - siglaUF extraction from ISO3166-2-lvl4
+// Example 2: Full state name with ISO3166-2-lvl4
 const dataWithFullState = {
     address: {
         'road': 'Avenida Atlântica',
         'city': 'Rio de Janeiro',
         'state': 'Rio de Janeiro',  // Full state name
-        'ISO3166-2-lvl4': 'BR-RJ'   // ISO code for extraction
+        'ISO3166-2-lvl4': 'BR-RJ'   // ISO code for siglaUF extraction
     }
 };
 
 const result2 = AddressDataExtractor.getBrazilianStandardAddress(dataWithFullState);
-console.log(result2.uf);         // "Rio de Janeiro" (full state name)
+console.log(result2.uf);         // "Rio de Janeiro" (full state name from state field)
 console.log(result2.siglaUF);    // "RJ" (extracted from ISO3166-2-lvl4)
 
-// The municipioCompleto() method uses siglaUF when available
+// Example 3: OSM tag with full state name
+const dataWithOSMTag = {
+    address: {
+        'addr:street': 'Rua Oscar Freire',
+        'addr:city': 'São Paulo',
+        'addr:state': 'São Paulo',  // OSM tag with full name
+        'state_code': 'SP'           // Used for siglaUF
+    }
+};
+
+const result3 = AddressDataExtractor.getBrazilianStandardAddress(dataWithOSMTag);
+console.log(result3.uf);         // "São Paulo" (from addr:state)
+console.log(result3.siglaUF);    // "SP" (from state_code)
+
+// The municipioCompleto() method uses siglaUF for consistent formatting
 console.log(result2.municipioCompleto()); 
 // "Rio de Janeiro, RJ"
 ```
@@ -198,8 +215,8 @@ The translation produces a `BrazilianStandardAddress` object with the following 
 | `complemento` | string\|null | Complement (not extracted from OSM) | null |
 | `bairro` | string\|null | Neighborhood | "Jardins" |
 | `municipio` | string\|null | City/Municipality | "São Paulo" |
-| `uf` | string\|null | State name or abbreviation | "SP" or "São Paulo" |
-| `siglaUF` | string\|null | Two-letter state abbreviation | "SP" |
+| `uf` | string\|null | **Full state name only** | "São Paulo", "Rio de Janeiro" |
+| `siglaUF` | string\|null | **Two-letter state abbreviation only** | "SP", "RJ" |
 | `cep` | string\|null | Postal code | "01426-001" |
 | `pais` | string | Country (default: "Brasil") | "Brasil" |
 | `referencePlace` | ReferencePlace | Reference place object | See ReferencePlace docs |

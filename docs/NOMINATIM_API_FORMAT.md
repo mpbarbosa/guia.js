@@ -95,9 +95,9 @@ The `address` object contains detailed address components. Fields vary based on 
 | `municipality` | string | Municipality | "Região Imediata de SP" | ✅ Fallback for `municipio` |
 | `county` | string | County/metro region | "Região Metropolitana de SP" | ℹ️ Informational only |
 | `state_district` | string | State district | "Região Geográfica..." | ℹ️ Informational only |
-| `state` | string | State full name | "São Paulo" | ✅ Maps to `uf` |
-| `state_code` | string | State abbreviation | "SP" | ✅ Preferred for `uf` |
-| `ISO3166-2-lvl4` | string | ISO state code | "BR-SP" | ✅ Fallback for `uf` (extracts "SP") |
+| `state` | string | State full name | "São Paulo" | ✅ Maps to `uf` (full names only) |
+| `state_code` | string | State abbreviation | "SP" | ✅ Maps to `siglaUF` (abbreviations only) |
+| `ISO3166-2-lvl4` | string | ISO state code | "BR-SP" | ✅ Fallback for `siglaUF` (extracts "SP") |
 | `region` | string | Geographic region | "Região Sudeste" | ℹ️ Informational only |
 | `postcode` | string | Postal code | "05145-200" | ✅ Maps to `cep` |
 | `country` | string | Country name | "Brasil" | ✅ Maps to `pais` |
@@ -340,8 +340,8 @@ console.log(brazilianAddress.logradouro);     // "Avenida Roque Petroni Júnior"
 console.log(brazilianAddress.numero);         // "1089"
 console.log(brazilianAddress.bairro);         // "Jardim das Acácias"
 console.log(brazilianAddress.municipio);      // "São Paulo"
-console.log(brazilianAddress.uf);             // "São Paulo" or "SP" (state name or code)
-console.log(brazilianAddress.siglaUF);        // "SP" (two-letter state abbreviation)
+console.log(brazilianAddress.uf);             // "São Paulo" (full state name only)
+console.log(brazilianAddress.siglaUF);        // "SP" (two-letter abbreviation only)
 console.log(brazilianAddress.cep);            // "04707-000"
 
 // Get formatted address

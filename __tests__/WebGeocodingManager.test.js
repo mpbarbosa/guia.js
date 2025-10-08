@@ -9,7 +9,7 @@
 // Mock document to prevent errors in test environment
 global.document = undefined;
 
-const { WebGeocodingManager, ObserverSubject, GeolocationService, ReverseGeocoder } = require('../src/guia.js');
+const { WebGeocodingManager, ObserverSubject, GeolocationService, ReverseGeocoder, DEFAULT_ELEMENT_IDS } = require('../src/guia.js');
 
 describe('WebGeocodingManager - High Cohesion and Low Coupling', () => {
     let mockDocument;
@@ -298,6 +298,129 @@ describe('WebGeocodingManager - High Cohesion and Low Coupling', () => {
             expect(consoleSpy).toHaveBeenCalled();
             
             consoleSpy.mockRestore();
+        });
+    });
+
+    describe('Element IDs Configuration', () => {
+        test('should use DEFAULT_ELEMENT_IDS when no custom elementIds provided', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.elementIds).toBe(DEFAULT_ELEMENT_IDS);
+            expect(manager.elementIds.chronometer).toBe('chronometer');
+            expect(manager.elementIds.findRestaurantsBtn).toBe('find-restaurants-btn');
+            expect(manager.elementIds.cityStatsBtn).toBe('city-stats-btn');
+            expect(manager.elementIds.timestampDisplay).toBe('tsPosCapture');
+        });
+
+        test('should use custom elementIds when provided', () => {
+            const customElementIds = {
+                chronometer: 'custom-chronometer',
+                findRestaurantsBtn: 'custom-find-btn',
+                cityStatsBtn: 'custom-stats-btn',
+                timestampDisplay: 'custom-timestamp',
+                speechSynthesis: {
+                    languageSelectId: 'custom-language',
+                    voiceSelectId: 'custom-voice',
+                    textInputId: 'custom-text',
+                    speakBtnId: 'custom-speak',
+                    pauseBtnId: 'custom-pause',
+                    resumeBtnId: 'custom-resume',
+                    stopBtnId: 'custom-stop',
+                    rateInputId: 'custom-rate',
+                    rateValueId: 'custom-rate-value',
+                    pitchInputId: 'custom-pitch',
+                    pitchValueId: 'custom-pitch-value',
+                }
+            };
+
+            const params = {
+                locationResult: 'location-result',
+                elementIds: customElementIds
+            };
+
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.elementIds).toBe(customElementIds);
+            expect(manager.elementIds.chronometer).toBe('custom-chronometer');
+            expect(manager.elementIds.findRestaurantsBtn).toBe('custom-find-btn');
+            expect(manager.elementIds.cityStatsBtn).toBe('custom-stats-btn');
+            expect(manager.elementIds.timestampDisplay).toBe('custom-timestamp');
+        });
+
+        test('should freeze elementIds configuration to prevent mutations', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            // Attempt to modify elementIds should not work (in strict mode would throw)
+            expect(() => {
+                manager.elementIds.chronometer = 'modified';
+            }).not.toThrow();
+            
+            // Value should remain unchanged due to freeze
+            expect(manager.elementIds.chronometer).toBe('chronometer');
+            expect(Object.isFrozen(manager.elementIds)).toBe(true);
+        });
+
+        test('should use custom element IDs in DOM lookups', () => {
+            const customChronometerId = 'my-custom-chronometer';
+            const customElementIds = {
+                chronometer: customChronometerId,
+                findRestaurantsBtn: 'custom-find-btn',
+                cityStatsBtn: 'custom-stats-btn',
+                timestampDisplay: 'custom-timestamp',
+                speechSynthesis: DEFAULT_ELEMENT_IDS.speechSynthesis
+            };
+
+            const customMockElement = {
+                textContent: '',
+                addEventListener: jest.fn()
+            };
+
+            const customMockDocument = {
+                getElementById: jest.fn((id) => {
+                    if (id === 'location-result' || id === customChronometerId) {
+                        return customMockElement;
+                    }
+                    return null;
+                })
+            };
+
+            const params = {
+                locationResult: 'location-result',
+                elementIds: customElementIds
+            };
+
+            const manager = new WebGeocodingManager(customMockDocument, params);
+
+            // Verify custom ID was used in DOM lookup
+            expect(customMockDocument.getElementById).toHaveBeenCalledWith(customChronometerId);
+        });
+
+        test('DEFAULT_ELEMENT_IDS should be frozen', () => {
+            expect(Object.isFrozen(DEFAULT_ELEMENT_IDS)).toBe(true);
+            expect(Object.isFrozen(DEFAULT_ELEMENT_IDS.speechSynthesis)).toBe(true);
+        });
+
+        test('should have all required element IDs in DEFAULT_ELEMENT_IDS', () => {
+            expect(DEFAULT_ELEMENT_IDS).toHaveProperty('chronometer');
+            expect(DEFAULT_ELEMENT_IDS).toHaveProperty('findRestaurantsBtn');
+            expect(DEFAULT_ELEMENT_IDS).toHaveProperty('cityStatsBtn');
+            expect(DEFAULT_ELEMENT_IDS).toHaveProperty('timestampDisplay');
+            expect(DEFAULT_ELEMENT_IDS).toHaveProperty('speechSynthesis');
+            
+            // Verify speech synthesis nested properties
+            expect(DEFAULT_ELEMENT_IDS.speechSynthesis).toHaveProperty('languageSelectId');
+            expect(DEFAULT_ELEMENT_IDS.speechSynthesis).toHaveProperty('voiceSelectId');
+            expect(DEFAULT_ELEMENT_IDS.speechSynthesis).toHaveProperty('textInputId');
+            expect(DEFAULT_ELEMENT_IDS.speechSynthesis).toHaveProperty('speakBtnId');
+            expect(DEFAULT_ELEMENT_IDS.speechSynthesis).toHaveProperty('pauseBtnId');
+            expect(DEFAULT_ELEMENT_IDS.speechSynthesis).toHaveProperty('resumeBtnId');
+            expect(DEFAULT_ELEMENT_IDS.speechSynthesis).toHaveProperty('stopBtnId');
+            expect(DEFAULT_ELEMENT_IDS.speechSynthesis).toHaveProperty('rateInputId');
+            expect(DEFAULT_ELEMENT_IDS.speechSynthesis).toHaveProperty('rateValueId');
+            expect(DEFAULT_ELEMENT_IDS.speechSynthesis).toHaveProperty('pitchInputId');
+            expect(DEFAULT_ELEMENT_IDS.speechSynthesis).toHaveProperty('pitchValueId');
         });
     });
 });

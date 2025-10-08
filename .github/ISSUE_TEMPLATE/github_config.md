@@ -23,6 +23,7 @@ assignees: ''
 - [ ] **Security/Permissions** - Access control or security settings issue
 - [ ] **Documentation** - .github documentation needs improvement
 - [ ] **Enhancement** - New workflow, action, or automation feature request
+- [ ] **Architectural** - Architecture or design patterns in .github configuration (e.g., low coupling, modularity)
 
 ## Affected Components
 

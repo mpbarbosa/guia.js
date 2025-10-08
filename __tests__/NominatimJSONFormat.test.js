@@ -270,6 +270,8 @@ describe('Nominatim JSON Format Tests', () => {
             
             expect(refPlace.className).toBe('shop');
             expect(refPlace.typeName).toBe('car_repair');
+            expect(refPlace.name).toBe('Oficina');
+            expect(refPlace.description).toBe('Oficina Oficina Mecânica');
         });
 
         test('should handle empty name in reference place', () => {

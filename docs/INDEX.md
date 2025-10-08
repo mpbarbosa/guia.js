@@ -139,6 +139,12 @@ When creating issues, use these templates for consistency:
   - Based on GEO_POSITION_FUNC_SPEC.md format
   - Comprehensive sections for requirements, data models, use cases, testing
 
+- **[GitHub Configuration](../.github/ISSUE_TEMPLATE/github_config.md)** - Report .github configuration issues 🆕
+  - Report workflow, action, or CI/CD issues
+  - Request infrastructure improvements
+  - Includes environment details and debugging aids
+  - References WORKFLOW_SETUP.md for guidance
+
 📊 **[Issue Template Comparison](./ISSUE_TEMPLATE_COMPARISON.md)** - Side-by-side comparison of all templates 🆕
   - Detailed analysis of each template's features
   - Common patterns and unique capabilities

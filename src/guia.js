@@ -24,21 +24,6 @@ const setupParams = {
 	mobileNotAcceptedAccuracy: ["medium", "bad", "very bad"],
 	desktopNotAcceptedAccuracy: ["bad", "very bad"],
 	notAcceptedAccuracy: null, // Will be set dynamically based on device type
-	// Reference place mapping for known OSM classes/types
-	// Keys must be lowercase to match OSM data
-	// See https://wiki.openstreetmap.org/wiki/Map_Features for OSM feature documentation
-	// "class": { "type": "Description in Portuguese" }
-	referencePlaceMap: {
-		"place": { "house": "Residencial" },
-		"shop": { 
-			"mall": "Shopping Center",
-			"car_repair": "Oficina Mecânica"
-		},
-		"amenity": { "cafe": "Café" },
-		"railway": { "subway": "Estação do Metrô",
-			"station": "Estação do Metrô"
-		 },
-	},
 	geolocationOptions: {
 		enableHighAccuracy: true,
 		timeout: 20000, // 20 seconds
@@ -1404,6 +1389,29 @@ class BrazilianStandardAddress {
  */
 class ReferencePlace {
 	/**
+	 * Reference place mapping for known OSM classes/types.
+	 * Keys must be lowercase to match OSM data.
+	 * See https://wiki.openstreetmap.org/wiki/Map_Features for OSM feature documentation.
+	 * Format: "class": { "type": "Description in Portuguese" }
+	 * 
+	 * @static
+	 * @type {Object.<string, Object.<string, string>>}
+	 * @since 0.8.5-alpha
+	 */
+	static referencePlaceMap = {
+		"place": { "house": "Residencial" },
+		"shop": { 
+			"mall": "Shopping Center",
+			"car_repair": "Oficina Mecânica"
+		},
+		"amenity": { "cafe": "Café" },
+		"railway": { 
+			"subway": "Estação do Metrô",
+			"station": "Estação do Metrô"
+		},
+	};
+
+	/**
 	 * Creates a new ReferencePlace instance.
 	 * 
 	 * Extracts class, type, and name information from the provided geocoding data
@@ -1447,12 +1455,12 @@ class ReferencePlace {
 
 		if (this.className && this.typeName) {
 			// Look up in the reference place map
-			if (setupParams.referencePlaceMap[this.className] &&
-				setupParams.referencePlaceMap[this.className][this.typeName]) {
+			if (ReferencePlace.referencePlaceMap[this.className] &&
+				ReferencePlace.referencePlaceMap[this.className][this.typeName]) {
 					if (this.name) {
-						return `${setupParams.referencePlaceMap[this.className][this.typeName]} ${this.name}`;
+						return `${ReferencePlace.referencePlaceMap[this.className][this.typeName]} ${this.name}`;
 					} else {
-						return setupParams.referencePlaceMap[this.className][this.typeName];
+						return ReferencePlace.referencePlaceMap[this.className][this.typeName];
 					}
 			}
 		}
@@ -1483,6 +1491,16 @@ class ReferencePlace {
 		return baseName;
 	}
 }
+
+// Add backward compatibility: setupParams.referencePlaceMap references ReferencePlace.referencePlaceMap
+// This ensures existing code that accesses setupParams.referencePlaceMap continues to work
+Object.defineProperty(setupParams, 'referencePlaceMap', {
+	get() {
+		return ReferencePlace.referencePlaceMap;
+	},
+	enumerable: true,
+	configurable: true
+});
 
 /**
  * Displays and manages elapsed time information in HTML format.
@@ -5071,9 +5089,9 @@ function getAddressType(addressData) {
 	}
 
 	// Look up in the reference place map
-	if (setupParams.referencePlaceMap[className] &&
-		setupParams.referencePlaceMap[className][typeName]) {
-		return setupParams.referencePlaceMap[className][typeName];
+	if (ReferencePlace.referencePlaceMap[className] &&
+		ReferencePlace.referencePlaceMap[className][typeName]) {
+		return ReferencePlace.referencePlaceMap[className][typeName];
 	}
 
 	// Fallback to class/type combination

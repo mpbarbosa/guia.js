@@ -182,7 +182,8 @@ describe('OSM Address Tag Translation', () => {
             expect(result.logradouro).toBe('Avenida Atlântica');
             expect(result.bairro).toBe('Copacabana');
             expect(result.municipio).toBe('Rio de Janeiro');
-            expect(result.uf).toBe('RJ'); // Should extract "RJ" from "BR-RJ"
+            expect(result.uf).toBeNull(); // uf should be null when no state field exists
+            expect(result.siglaUF).toBe('RJ'); // siglaUF should extract "RJ" from "BR-RJ"
             expect(result.cep).toBe('22070-001');
         });
 
@@ -198,7 +199,8 @@ describe('OSM Address Tag Translation', () => {
             const result = AddressDataExtractor.getBrazilianStandardAddress(nominatimData);
 
             expect(result.municipio).toBe('São Paulo');
-            expect(result.uf).toBe('SP'); // Should use state_code, not ISO3166-2-lvl4
+            expect(result.uf).toBeNull(); // uf should be null when no state field exists (only state_code)
+            expect(result.siglaUF).toBe('SP'); // siglaUF should use state_code, not ISO3166-2-lvl4
         });
 
         test('should handle various Brazilian state codes in ISO3166-2-lvl4', () => {
@@ -220,7 +222,8 @@ describe('OSM Address Tag Translation', () => {
                 };
 
                 const result = AddressDataExtractor.getBrazilianStandardAddress(nominatimData);
-                expect(result.uf).toBe(expected);
+                expect(result.uf).toBeNull(); // uf should be null when no state field exists
+                expect(result.siglaUF).toBe(expected); // siglaUF should extract from ISO3166-2-lvl4
             });
         });
 
@@ -468,7 +471,7 @@ describe('OSM Address Tag Translation', () => {
                     town: 'Town Name',             // Fallback for city
                     municipality: 'Municipality',  // Another fallback
                     village: 'Village Name',       // Another fallback
-                    state_code: 'SC'               // Fallback for state
+                    state_code: 'SC'               // Provides siglaUF only
                 }
             };
 
@@ -478,7 +481,8 @@ describe('OSM Address Tag Translation', () => {
             expect(result.logradouro).toBe('Street Name');
             expect(result.bairro).toBe('Suburb Area');
             expect(result.municipio).toBe('Town Name');
-            expect(result.uf).toBe('SC');
+            expect(result.uf).toBeNull(); // uf should be null when no state field exists (only state_code)
+            expect(result.siglaUF).toBe('SC'); // siglaUF should use state_code
         });
     });
 
@@ -561,6 +565,88 @@ describe('OSM Address Tag Translation', () => {
             expect(result.numero).toBe('456');
             expect(result.municipio).toBe('Nominatim City');
             expect(result.cep).toBe('12345-000');
+        });
+    });
+
+    describe('State Field Rules Validation', () => {
+        test('uf should contain ONLY full state names', () => {
+            // Test case 1: Full state name in state field
+            const dataWithFullName = {
+                address: {
+                    'state': 'São Paulo',
+                    'state_code': 'SP'
+                }
+            };
+            const result1 = AddressDataExtractor.getBrazilianStandardAddress(dataWithFullName);
+            expect(result1.uf).toBe('São Paulo'); // Full name
+            expect(result1.siglaUF).toBe('SP');    // Abbreviation
+
+            // Test case 2: Only abbreviation available (state_code only)
+            const dataWithAbbrevOnly = {
+                address: {
+                    'state_code': 'RJ'
+                }
+            };
+            const result2 = AddressDataExtractor.getBrazilianStandardAddress(dataWithAbbrevOnly);
+            expect(result2.uf).toBeNull();        // No full name available
+            expect(result2.siglaUF).toBe('RJ');   // Abbreviation from state_code
+
+            // Test case 3: Only ISO3166-2-lvl4 available
+            const dataWithISOOnly = {
+                address: {
+                    'ISO3166-2-lvl4': 'BR-MG'
+                }
+            };
+            const result3 = AddressDataExtractor.getBrazilianStandardAddress(dataWithISOOnly);
+            expect(result3.uf).toBeNull();        // No full name available
+            expect(result3.siglaUF).toBe('MG');   // Extracted from ISO
+        });
+
+        test('siglaUF should contain ONLY two-letter abbreviations', () => {
+            // Test case 1: state_code provides abbreviation
+            const dataWithStateCode = {
+                address: {
+                    'state': 'Rio de Janeiro',
+                    'state_code': 'RJ'
+                }
+            };
+            const result1 = AddressDataExtractor.getBrazilianStandardAddress(dataWithStateCode);
+            expect(result1.siglaUF).toBe('RJ');
+            expect(result1.siglaUF).toMatch(/^[A-Z]{2}$/); // Exactly 2 uppercase letters
+
+            // Test case 2: ISO3166-2-lvl4 provides abbreviation
+            const dataWithISO = {
+                address: {
+                    'state': 'Bahia',
+                    'ISO3166-2-lvl4': 'BR-BA'
+                }
+            };
+            const result2 = AddressDataExtractor.getBrazilianStandardAddress(dataWithISO);
+            expect(result2.siglaUF).toBe('BA');
+            expect(result2.siglaUF).toMatch(/^[A-Z]{2}$/);
+
+            // Test case 3: No abbreviation source available
+            const dataNoAbbrev = {
+                address: {
+                    'state': 'Pernambuco'
+                    // No state_code or ISO3166-2-lvl4
+                }
+            };
+            const result3 = AddressDataExtractor.getBrazilianStandardAddress(dataNoAbbrev);
+            expect(result3.uf).toBe('Pernambuco');  // Full name present
+            expect(result3.siglaUF).toBeNull();      // No abbreviation available
+        });
+
+        test('edge case: addr:state with two-letter code should populate siglaUF', () => {
+            // When addr:state contains a two-letter code (backward compatibility)
+            const dataWithAddrStateCode = {
+                address: {
+                    'addr:state': 'RS'  // Two-letter code in OSM tag
+                }
+            };
+            const result = AddressDataExtractor.getBrazilianStandardAddress(dataWithAddrStateCode);
+            expect(result.uf).toBe('RS');        // uf gets the two-letter code
+            expect(result.siglaUF).toBe('RS');   // siglaUF should also get it
         });
     });
 });

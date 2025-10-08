@@ -111,7 +111,8 @@ describe('Immutability Patterns', () => {
       address.numero = '1000';
       address.bairro = 'Bela Vista';
       address.municipio = 'São Paulo';
-      address.uf = 'SP';
+      address.uf = 'São Paulo';  // uf contains full state name
+      address.siglaUF = 'SP';    // siglaUF contains abbreviation
       address.cep = '01310-100';
 
       // Call multiple times to ensure no side effects
@@ -132,7 +133,8 @@ describe('Immutability Patterns', () => {
       addressWithMissingFields.numero = null;
       addressWithMissingFields.bairro = '';  // Empty string - falsy
       addressWithMissingFields.municipio = 'Rio de Janeiro';
-      addressWithMissingFields.uf = 'RJ';
+      addressWithMissingFields.uf = 'Rio de Janeiro';  // uf contains full state name
+      addressWithMissingFields.siglaUF = 'RJ';         // siglaUF contains abbreviation
       addressWithMissingFields.cep = null;
 
       const result = addressWithMissingFields.enderecoCompleto();
@@ -152,7 +154,8 @@ describe('Immutability Patterns', () => {
       address.numero = '123';
       address.bairro = null;
       address.municipio = 'Cidade';
-      address.uf = 'UF';
+      address.uf = 'Estado Completo';  // uf contains full state name
+      address.siglaUF = 'UF';           // siglaUF contains abbreviation
       address.cep = undefined;
 
       const result = address.enderecoCompleto();

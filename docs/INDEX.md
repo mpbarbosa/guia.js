@@ -6,58 +6,80 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
 
 ### Architecture & Design
 
-- **[CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md)** - Comprehensive overview of the class architecture
+- **[CLASS_DIAGRAM.md](./architecture/CLASS_DIAGRAM.md)** - Comprehensive overview of the class architecture
   - Design patterns used (Singleton, Observer, Facade, Strategy)
   - Class relationships and responsibilities
   - Refactoring history and rationale
   - Best practices for development
 
-- **[REFERENCE_PLACE.md](./REFERENCE_PLACE.md)** - Reference place type documentation
+- **[REFERENCE_PLACE.md](./architecture/REFERENCE_PLACE.md)** - Reference place type documentation
   - Classification system for locations
   - Type mappings and descriptions
   - Integration with geocoding APIs
 
-- **[GEO_POSITION.md](./GEO_POSITION.md)** - Geographic position data documentation
+- **[GEO_POSITION.md](./architecture/GEO_POSITION.md)** - Geographic position data documentation
   - Wrapper for browser GeolocationPosition API
   - GPS accuracy quality classification
   - Distance calculation utilities
   - Integration with position tracking
 
-- **[GEO_POSITION_FUNC_SPEC.md](./GEO_POSITION_FUNC_SPEC.md)** - GeoPosition functional specification 🆕
+- **[GEO_POSITION_FUNC_SPEC.md](./architecture/GEO_POSITION_FUNC_SPEC.md)** - GeoPosition functional specification 🆕
   - Language-agnostic functional requirements
   - Codeless specification for multi-language implementation
   - Detailed algorithms and data model
   - Testing requirements and validation rules
 
-- **[WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md)** - WebGeocodingManager class documentation 🆕
+- **[WEB_GEOCODING_MANAGER.md](./architecture/WEB_GEOCODING_MANAGER.md)** - WebGeocodingManager class documentation 🆕
   - Main coordinator for geocoding workflow
   - Observer pattern implementation for position/address changes
   - Dependency injection for testing and flexibility
   - Comprehensive API reference with real-world examples
   - Architecture diagram and design patterns explained
 
-- **[WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md)** - WebGeocodingManager refactoring analysis
+- **[WEBGEOCODINGMANAGER_REFACTORING.md](./architecture/WEBGEOCODINGMANAGER_REFACTORING.md)** - WebGeocodingManager refactoring analysis
   - High cohesion and low coupling improvements
   - Design patterns applied (Coordinator, Observer, Dependency Injection)
   - Code quality metrics and architectural improvements
   - Comprehensive documentation of Issue #189
 
-- **[ISSUE_189_NEXT_STEPS.md](./ISSUE_189_NEXT_STEPS.md)** - Issue #189 follow-up work 🆕
+- **[ELEMENT_IDS_CONFIGURATION.md](./architecture/ELEMENT_IDS_CONFIGURATION.md)** - Element IDs configuration 🆕
+  - Configurable DOM element IDs for WebGeocodingManager
+  - Improves testability and reusability
+  - Single source of truth for DOM dependencies
+
+- **[observer-pattern-sequence.md](./architecture/observer-pattern-sequence.md)** - Observer pattern execution flow
+  - Position update process
+  - Advanced callback-observer combinations
+  - Sequence diagrams
+
+### Issue #189 Follow-up
+
+- **[ISSUE_189_README.md](./issue-189/ISSUE_189_README.md)** - Quick navigation guide 🆕
+  - Overview of all Issue #189 follow-up documentation
+  - Quick reference table
+  - Navigation to related files
+
+- **[ISSUE_189_NEXT_STEPS.md](./issue-189/ISSUE_189_NEXT_STEPS.md)** - Issue #189 follow-up work 🆕
   - 5 technical debt items identified from WebGeocodingManager refactoring
   - Detailed specifications for each enhancement opportunity
   - Priority and effort estimations
   - Implementation order recommendations
   - Referential transparency considerations for each item
 
-- **[ISSUE_189_TRACKING.md](./ISSUE_189_TRACKING.md)** - Issue creation tracking 🆕
+- **[ISSUE_189_TRACKING.md](./issue-189/ISSUE_189_TRACKING.md)** - Issue creation tracking 🆕
   - Status of issue creation for #189 follow-up items
   - Quick reference table for all 5 technical debt items
   - Progress checklist and success metrics
 
-- **[CREATE_ISSUES_GUIDE.md](./CREATE_ISSUES_GUIDE.md)** - Issue creation guide 🆕
+- **[CREATE_ISSUES_GUIDE.md](./issue-189/CREATE_ISSUES_GUIDE.md)** - Issue creation guide 🆕
   - Ready-to-use issue templates for all 5 technical debt items
   - Step-by-step instructions for creating GitHub issues
   - Complete issue content with proper formatting
+
+- **[ISSUE_189_SUMMARY_FOR_USER.md](./issue-189/ISSUE_189_SUMMARY_FOR_USER.md)** - Summary for repository owner 🆕
+  - What was completed
+  - Recommended next steps
+  - Quick copy-paste labels
 
 ### Testing
 
@@ -69,7 +91,7 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
 
 ### Automation & CI/CD
 
-- **[GITHUB_ACTIONS_GUIDE.md](./GITHUB_ACTIONS_GUIDE.md)** - GitHub Actions workflows guide 🆕
+- **[GITHUB_ACTIONS_GUIDE.md](./github/GITHUB_ACTIONS_GUIDE.md)** - GitHub Actions workflows guide 🆕
   - Automated file modification workflow
   - Test and documentation updates
   - Coverage reporting
@@ -83,7 +105,7 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
 
 ### API Integration
 
-- **[NOMINATIM_API_FORMAT.md](./NOMINATIM_API_FORMAT.md)** - Nominatim API JSON format documentation 🆕
+- **[NOMINATIM_API_FORMAT.md](./api-integration/NOMINATIM_API_FORMAT.md)** - Nominatim API JSON format documentation 🆕
   - Complete JSON response structure
   - Address object field descriptions
   - Bounding box format
@@ -91,7 +113,11 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Integration with Guia.js
   - Field availability by location type
 
-- **[OSM_ADDRESS_TRANSLATION.md](./OSM_ADDRESS_TRANSLATION.md)** - OSM address tag translation
+- **[NOMINATIM_JSON_TESTS.md](./api-integration/NOMINATIM_JSON_TESTS.md)** - Nominatim JSON format tests 🆕
+  - Test suite for validating Nominatim API responses
+  - Test coverage and examples
+
+- **[OSM_ADDRESS_TRANSLATION.md](./api-integration/OSM_ADDRESS_TRANSLATION.md)** - OSM address tag translation
   - OSM to Brazilian address mapping
   - Priority and fallback chains
   - Usage examples and integration
@@ -197,7 +223,7 @@ When creating issues, use these templates for consistency:
   - Ideal for breaking down functional specifications into implementable tasks
   - Uses GitHub's YAML form syntax for structured data entry
 
-📊 **[Issue Template Comparison](./ISSUE_TEMPLATE_COMPARISON.md)** - Side-by-side comparison of all templates 🆕
+📊 **[Issue Template Comparison](./github/ISSUE_TEMPLATE_COMPARISON.md)** - Side-by-side comparison of all templates 🆕
   - Detailed analysis of each template's features
   - Common patterns and unique capabilities
   - Guidance on selecting the right template
@@ -212,7 +238,7 @@ When creating issues, use these templates for consistency:
 
 2. **Before coding**:
    - Review [CODE_REVIEW_GUIDE.md](../.github/CODE_REVIEW_GUIDE.md) checklist
-   - Check [CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md) to understand architecture
+   - Check [CLASS_DIAGRAM.md](./architecture/CLASS_DIAGRAM.md) to understand architecture
 
 3. **Development workflow**:
    ```bash
@@ -240,7 +266,7 @@ When creating issues, use these templates for consistency:
 
 ### For Maintainers
 
-1. **Architecture reference**: [CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md)
+1. **Architecture reference**: [CLASS_DIAGRAM.md](./architecture/CLASS_DIAGRAM.md)
 2. **Refactoring history**: [REFACTORING_SUMMARY.md](../.github/REFACTORING_SUMMARY.md)
 3. **Design principles**:
    - [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)
@@ -304,7 +330,7 @@ Major documentation update to formalize the project's commitment to functional p
 
 - **Questions about referential transparency?** See [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)
 - **Questions about contributing?** See [CONTRIBUTING.md](../.github/CONTRIBUTING.md)
-- **Questions about architecture?** See [CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md)
+- **Questions about architecture?** See [CLASS_DIAGRAM.md](./architecture/CLASS_DIAGRAM.md)
 - **Found a bug?** Open an issue using the appropriate template
 
 ## Project Information

@@ -324,9 +324,9 @@ The OSM address translation integrates seamlessly with:
 ## Related Documentation
 
 - [Nominatim API Format](./NOMINATIM_API_FORMAT.md) - Complete Nominatim JSON format documentation
-- [BrazilianStandardAddress Class](./BRAZILIAN_ADDRESS.md)
-- [ReferencePlace Class](./REFERENCE_PLACE.md)
-- [AddressCache Documentation](./ADDRESS_CACHE.md)
+- [BrazilianStandardAddress Class](../architecture/BRAZILIAN_ADDRESS.md) (if exists)
+- [ReferencePlace Class](../architecture/REFERENCE_PLACE.md)
+- [AddressCache Documentation](../architecture/ADDRESS_CACHE.md) (if exists)
 - [Testing Guide](../TESTING.md)
 
 ## Version History
@@ -349,4 +349,4 @@ Marcelo Pereira Barbosa (@mpbarbosa)
 
 - [Functional Specification](../issues/150-osm-translation-spec.md) - Original specification
 - [Implementation Issue](https://github.com/mpbarbosa/guia_js/issues/150)
-- [Class Diagram](./CLASS_DIAGRAM.md)
+- [Class Diagram](../architecture/CLASS_DIAGRAM.md)

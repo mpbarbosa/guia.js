@@ -29,6 +29,13 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Detailed algorithms and data model
   - Testing requirements and validation rules
 
+- **[WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md)** - WebGeocodingManager class documentation 🆕
+  - Main coordinator for geocoding workflow
+  - Observer pattern implementation for position/address changes
+  - Dependency injection for testing and flexibility
+  - Comprehensive API reference with real-world examples
+  - Architecture diagram and design patterns explained
+
 - **[WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md)** - WebGeocodingManager refactoring analysis
   - High cohesion and low coupling improvements
   - Design patterns applied (Coordinator, Observer, Dependency Injection)

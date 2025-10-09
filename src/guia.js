@@ -3961,9 +3961,40 @@ class WebGeocodingManager {
 	 * @param {string} [params.referencePlaceDisplay] - ID of element for reference place display
 	 * @param {Object} [params.elementIds] - Optional custom element IDs (defaults to DEFAULT_ELEMENT_IDS)
 	 * @param {Object} [params.displayerFactory] - Optional factory for creating displayers (defaults to DisplayerFactory)
+	 * @param {GeolocationService} [params.geolocationService] - Optional GeolocationService instance (defaults to new GeolocationService)
+	 * @param {ReverseGeocoder} [params.reverseGeocoder] - Optional ReverseGeocoder instance (defaults to new ReverseGeocoder)
 	 * 
 	 * @throws {TypeError} If document is null or undefined
 	 * @throws {TypeError} If params.locationResult is not provided
+	 * 
+	 * @example
+	 * // Default behavior (backward compatible)
+	 * const manager = new WebGeocodingManager(document, {
+	 *   locationResult: 'location-result'
+	 * });
+	 * 
+	 * @example
+	 * // With custom/configured services
+	 * const customGeocoder = new ReverseGeocoder();
+	 * customGeocoder.configure({ provider: 'mapbox', timeout: 5000 });
+	 * 
+	 * const manager = new WebGeocodingManager(document, {
+	 *   locationResult: 'location-result',
+	 *   reverseGeocoder: customGeocoder
+	 * });
+	 * 
+	 * @example
+	 * // For testing with mocks
+	 * const mockGeocoder = {
+	 *   subscribe: jest.fn(),
+	 *   currentAddress: mockAddress,
+	 *   enderecoPadronizado: mockStandardAddress
+	 * };
+	 * 
+	 * const manager = new WebGeocodingManager(document, {
+	 *   locationResult: 'location-result',
+	 *   reverseGeocoder: mockGeocoder
+	 * });
 	 */
 	constructor(document, params) {
 		// Store dependencies
@@ -3989,9 +4020,11 @@ class WebGeocodingManager {
 		// Initialize DOM elements and event handlers
 		this._initializeUIElements();
 
-		// Create services (lazy instantiation could be considered for better testability)
-		this.geolocationService = new GeolocationService(this.locationResult);
-		this.reverseGeocoder = new ReverseGeocoder();
+		// Inject services or create defaults (maintains backward compatibility)
+		this.geolocationService = params.geolocationService || 
+			new GeolocationService(this.locationResult);
+		this.reverseGeocoder = params.reverseGeocoder || 
+			new ReverseGeocoder();
 
 		// Create change detection coordinator
 		this.changeDetectionCoordinator = new ChangeDetectionCoordinator({

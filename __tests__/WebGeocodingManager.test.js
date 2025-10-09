@@ -251,6 +251,103 @@ describe('WebGeocodingManager - High Cohesion and Low Coupling', () => {
         });
     });
 
+    describe('Service Dependency Injection', () => {
+        test('should create default services when not provided', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.geolocationService).toBeDefined();
+            expect(manager.geolocationService).toBeInstanceOf(GeolocationService);
+            expect(manager.reverseGeocoder).toBeDefined();
+            expect(manager.reverseGeocoder).toBeInstanceOf(ReverseGeocoder);
+        });
+
+        test('should accept injected GeolocationService', () => {
+            const mockGeolocationService = {
+                subscribe: jest.fn(),
+                getCurrentPosition: jest.fn()
+            };
+
+            const params = {
+                locationResult: 'location-result',
+                geolocationService: mockGeolocationService
+            };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.geolocationService).toBe(mockGeolocationService);
+            expect(manager.geolocationService).not.toBeInstanceOf(GeolocationService);
+        });
+
+        test('should accept injected ReverseGeocoder', () => {
+            const mockReverseGeocoder = {
+                subscribe: jest.fn(),
+                currentAddress: { logradouro: 'Test Street' },
+                enderecoPadronizado: 'Test Address'
+            };
+
+            const params = {
+                locationResult: 'location-result',
+                reverseGeocoder: mockReverseGeocoder
+            };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.reverseGeocoder).toBe(mockReverseGeocoder);
+            expect(manager.reverseGeocoder).not.toBeInstanceOf(ReverseGeocoder);
+        });
+
+        test('should accept both injected services simultaneously', () => {
+            const mockGeolocationService = {
+                subscribe: jest.fn(),
+                getCurrentPosition: jest.fn()
+            };
+            const mockReverseGeocoder = {
+                subscribe: jest.fn(),
+                currentAddress: { logradouro: 'Test Street' },
+                enderecoPadronizado: 'Test Address'
+            };
+
+            const params = {
+                locationResult: 'location-result',
+                geolocationService: mockGeolocationService,
+                reverseGeocoder: mockReverseGeocoder
+            };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.geolocationService).toBe(mockGeolocationService);
+            expect(manager.reverseGeocoder).toBe(mockReverseGeocoder);
+        });
+
+        test('should allow pre-configured service instances', () => {
+            // Create a real ReverseGeocoder that could be pre-configured
+            const preconfiguredGeocoder = new ReverseGeocoder();
+            
+            const params = {
+                locationResult: 'location-result',
+                reverseGeocoder: preconfiguredGeocoder
+            };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.reverseGeocoder).toBe(preconfiguredGeocoder);
+            expect(manager.reverseGeocoder).toBeInstanceOf(ReverseGeocoder);
+        });
+
+        test('should pass injected services to ChangeDetectionCoordinator', () => {
+            const mockReverseGeocoder = {
+                subscribe: jest.fn(),
+                currentAddress: { logradouro: 'Test Street' },
+                enderecoPadronizado: 'Test Address'
+            };
+
+            const params = {
+                locationResult: 'location-result',
+                reverseGeocoder: mockReverseGeocoder
+            };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.changeDetectionCoordinator.reverseGeocoder).toBe(mockReverseGeocoder);
+        });
+    });
+
     describe('Backward Compatibility', () => {
         test('should provide legacy initElements method', () => {
             const params = { locationResult: 'location-result' };

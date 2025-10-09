@@ -18,7 +18,7 @@ const {
     ObserverSubject, 
     ReverseGeocoder,
     AddressDataExtractor 
-} = require('../src/guia.js');
+} = require('../../src/guia.js');
 
 describe('ChangeDetectionCoordinator', () => {
     let coordinator;

@@ -37,7 +37,7 @@ describe('Device Detection and Accuracy Configuration', () => {
       };
 
       // Reload module with mocked navigator
-      const { isMobileDevice } = require('../src/guia.js');
+      const { isMobileDevice } = require('../../src/guia.js');
       
       expect(isMobileDevice()).toBe(true);
     });
@@ -55,7 +55,7 @@ describe('Device Detection and Accuracy Configuration', () => {
       };
 
       // Reload module with mocked navigator
-      const { isMobileDevice } = require('../src/guia.js');
+      const { isMobileDevice } = require('../../src/guia.js');
       
       expect(isMobileDevice()).toBe(false);
     });
@@ -73,7 +73,7 @@ describe('Device Detection and Accuracy Configuration', () => {
       };
 
       // Reload module with mocked navigator
-      const { isMobileDevice } = require('../src/guia.js');
+      const { isMobileDevice } = require('../../src/guia.js');
       
       expect(isMobileDevice()).toBe(true);
     });
@@ -84,7 +84,7 @@ describe('Device Detection and Accuracy Configuration', () => {
       global.window = undefined;
 
       // Reload module
-      const { isMobileDevice } = require('../src/guia.js');
+      const { isMobileDevice } = require('../../src/guia.js');
       
       expect(isMobileDevice()).toBe(false);
     });
@@ -102,7 +102,7 @@ describe('Device Detection and Accuracy Configuration', () => {
       };
 
       // Reload module
-      const { isMobileDevice } = require('../src/guia.js');
+      const { isMobileDevice } = require('../../src/guia.js');
       
       // Should return true because 2 out of 3 indicators suggest mobile
       expect(isMobileDevice()).toBe(true);
@@ -111,7 +111,7 @@ describe('Device Detection and Accuracy Configuration', () => {
 
   describe('setupParams accuracy configuration', () => {
     test('should have mobile and desktop accuracy arrays defined', () => {
-      const { setupParams } = require('../src/guia.js');
+      const { setupParams } = require('../../src/guia.js');
       
       expect(setupParams.mobileNotAcceptedAccuracy).toBeDefined();
       expect(setupParams.desktopNotAcceptedAccuracy).toBeDefined();
@@ -120,7 +120,7 @@ describe('Device Detection and Accuracy Configuration', () => {
     });
 
     test('mobile accuracy should be stricter than desktop', () => {
-      const { setupParams } = require('../src/guia.js');
+      const { setupParams } = require('../../src/guia.js');
       
       // Mobile should reject more accuracy levels (stricter)
       expect(setupParams.mobileNotAcceptedAccuracy.length).toBeGreaterThanOrEqual(
@@ -153,7 +153,7 @@ describe('Device Detection and Accuracy Configuration', () => {
 
       // Clear cache and reload to trigger initialization
       jest.resetModules();
-      const { setupParams } = require('../src/guia.js');
+      const { setupParams } = require('../../src/guia.js');
       
       // Should use mobile settings
       expect(setupParams.notAcceptedAccuracy).toEqual(setupParams.mobileNotAcceptedAccuracy);
@@ -166,7 +166,7 @@ describe('Device Detection and Accuracy Configuration', () => {
 
       // Clear cache and reload
       jest.resetModules();
-      const { setupParams } = require('../src/guia.js');
+      const { setupParams } = require('../../src/guia.js');
       
       // Should default to mobile (stricter) settings
       expect(setupParams.notAcceptedAccuracy).toEqual(setupParams.mobileNotAcceptedAccuracy);
@@ -186,7 +186,7 @@ describe('Device Detection and Accuracy Configuration', () => {
       };
 
       jest.resetModules();
-      const { setupParams, GeoPosition } = require('../src/guia.js');
+      const { setupParams, GeoPosition } = require('../../src/guia.js');
       
       // Medium accuracy (50 meters) should be rejected on mobile
       const mediumAccuracy = 50;
@@ -208,7 +208,7 @@ describe('Device Detection and Accuracy Configuration', () => {
       };
 
       jest.resetModules();
-      const { setupParams, GeoPosition } = require('../src/guia.js');
+      const { setupParams, GeoPosition } = require('../../src/guia.js');
       
       // Medium accuracy (50 meters) should be accepted on desktop
       const mediumAccuracy = 50;

@@ -6,7 +6,7 @@
 // Mock document to prevent errors in test environment
 global.document = undefined;
 
-const { AddressDataExtractor } = require('../src/guia.js');
+const { AddressDataExtractor } = require('../../src/guia.js');
 
 describe('AddressDataExtractor Bairro Change Detection', () => {
     beforeEach(() => {

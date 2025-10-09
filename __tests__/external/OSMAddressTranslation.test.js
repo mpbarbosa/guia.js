@@ -6,7 +6,7 @@
 // Mock document to prevent errors in test environment
 global.document = undefined;
 
-const { AddressDataExtractor, BrazilianStandardAddress } = require('../src/guia.js');
+const { AddressDataExtractor, BrazilianStandardAddress } = require('../../src/guia.js');
 
 describe('OSM Address Tag Translation', () => {
     beforeEach(() => {

@@ -65,7 +65,7 @@ try {
     const path = require('path');
     
     // Follow the project structure as defined in copilot instructions
-    const guiaPath = path.join(__dirname, '../src/guia.js');
+    const guiaPath = path.join(__dirname, '../../src/guia.js');
     
     if (fs.existsSync(guiaPath)) {
         // Read and evaluate the file content to extract classes

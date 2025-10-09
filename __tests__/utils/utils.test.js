@@ -48,7 +48,7 @@ global.console = {
 // Import the modules being tested
 let guiaModule;
 try {
-    guiaModule = require('../src/guia.js');
+    guiaModule = require('../../src/guia.js');
 } catch (error) {
     // If guia.js doesn't export properly, we'll test individual functions
     console.warn('Could not import guia.js module, testing will be limited');

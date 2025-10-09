@@ -11,7 +11,7 @@
 // Mock document to prevent errors in test environment
 global.document = undefined;
 
-const { AddressDataExtractor, ReferencePlace } = require('../src/guia.js');
+const { AddressDataExtractor, ReferencePlace } = require('../../src/guia.js');
 
 // Real-world Nominatim JSON response from the issue
 const MAIRIPORA_JSON = {

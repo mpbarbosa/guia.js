@@ -6,7 +6,7 @@
 global.document = undefined;
 
 // Import the ReverseGeocoder class
-const { ReverseGeocoder } = require('../src/guia.js');
+const { ReverseGeocoder } = require('../../src/guia.js');
 
 describe('ReverseGeocoder Class', () => {
   

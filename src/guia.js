@@ -1968,6 +1968,72 @@ class HTMLAddressDisplayer {
 	}
 }
 
+/**
+ * Factory for creating displayer instances.
+ * 
+ * This factory provides a centralized point for creating displayer objects,
+ * enabling dependency injection and easier testing. The factory methods are
+ * pure functions that create displayer instances without side effects.
+ * 
+ * **Benefits**:
+ * - Decouples WebGeocodingManager from concrete displayer implementations
+ * - Enables mock displayer injection for testing
+ * - Provides single point of control for displayer creation
+ * - Maintains referential transparency (pure functions)
+ * 
+ * **Usage**:
+ * ```javascript
+ * // Default usage
+ * const posDisplayer = DisplayerFactory.createPositionDisplayer(element);
+ * 
+ * // Custom factory for testing
+ * class MockDisplayerFactory {
+ *     static createPositionDisplayer(element) {
+ *         return new MockPositionDisplayer(element);
+ *     }
+ * }
+ * ```
+ * 
+ * @class DisplayerFactory
+ * @since 0.8.6-alpha
+ * @author Marcelo Pereira Barbosa
+ */
+class DisplayerFactory {
+	/**
+	 * Creates a position displayer instance.
+	 * 
+	 * @param {HTMLElement|string} element - DOM element or element ID for display
+	 * @returns {HTMLPositionDisplayer} Position displayer instance
+	 * @since 0.8.6-alpha
+	 */
+	static createPositionDisplayer(element) {
+		return new HTMLPositionDisplayer(element);
+	}
+
+	/**
+	 * Creates an address displayer instance.
+	 * 
+	 * @param {HTMLElement|string} element - DOM element or element ID for display
+	 * @param {HTMLElement|string|boolean} enderecoPadronizadoDisplay - Element for standardized address display
+	 * @returns {HTMLAddressDisplayer} Address displayer instance
+	 * @since 0.8.6-alpha
+	 */
+	static createAddressDisplayer(element, enderecoPadronizadoDisplay = false) {
+		return new HTMLAddressDisplayer(element, enderecoPadronizadoDisplay);
+	}
+
+	/**
+	 * Creates a reference place displayer instance.
+	 * 
+	 * @param {HTMLElement|string} element - DOM element or element ID for display
+	 * @returns {HTMLReferencePlaceDisplayer} Reference place displayer instance
+	 * @since 0.8.6-alpha
+	 */
+	static createReferencePlaceDisplayer(element) {
+		return new HTMLReferencePlaceDisplayer(element);
+	}
+}
+
 // Add after the HTMLPositionDisplayer class and before the AddressDataExtractor class
 // ...existing code continues...
 
@@ -3564,6 +3630,7 @@ class WebGeocodingManager {
 	 * @param {string} [params.enderecoPadronizadoDisplay] - ID of element for standardized address display
 	 * @param {string} [params.referencePlaceDisplay] - ID of element for reference place display
 	 * @param {Object} [params.elementIds] - Optional custom element IDs (defaults to DEFAULT_ELEMENT_IDS)
+	 * @param {Object} [params.displayerFactory] - Optional factory for creating displayers (defaults to DisplayerFactory)
 	 * 
 	 * @throws {TypeError} If document is null or undefined
 	 * @throws {TypeError} If params.locationResult is not provided
@@ -3578,6 +3645,9 @@ class WebGeocodingManager {
 		// Store element IDs configuration (frozen to prevent mutations)
 		this.elementIds = params.elementIds || DEFAULT_ELEMENT_IDS;
 		Object.freeze(this.elementIds);
+		
+		// Store displayer factory (enables dependency injection for testing)
+		this.displayerFactory = params.displayerFactory || DisplayerFactory;
 		
 		// Initialize observer subject for external subscribers
 		this.observerSubject = new ObserverSubject();
@@ -3599,21 +3669,24 @@ class WebGeocodingManager {
 	}
 
 	/**
-	 * Creates UI displayer components.
+	 * Creates UI displayer components using the configured factory.
 	 * 
-	 * Instantiates the three main displayers for position, address, and reference place.
-	 * This method is separated from constructor to improve testability and allow
-	 * for potential factory pattern implementation in the future.
+	 * Uses the displayerFactory (injected via constructor or default) to instantiate
+	 * the three main displayers for position, address, and reference place.
+	 * This design enables dependency injection for testing and alternative implementations.
 	 * 
 	 * @private
+	 * @since 0.8.6-alpha - Updated to use factory pattern
 	 */
 	_createDisplayers() {
-		this.positionDisplayer = new HTMLPositionDisplayer(this.locationResult);
-		this.addressDisplayer = new HTMLAddressDisplayer(
+		this.positionDisplayer = this.displayerFactory.createPositionDisplayer(
+			this.locationResult
+		);
+		this.addressDisplayer = this.displayerFactory.createAddressDisplayer(
 			this.locationResult,
 			this.enderecoPadronizadoDisplay
 		);
-		this.referencePlaceDisplayer = new HTMLReferencePlaceDisplayer(
+		this.referencePlaceDisplayer = this.displayerFactory.createReferencePlaceDisplayer(
 			this.referencePlaceDisplay
 		);
 	}
@@ -5634,6 +5707,8 @@ if (typeof module !== 'undefined' && module.exports) {
 		AddressDataExtractor,
 		HTMLAddressDisplayer,
 		HTMLPositionDisplayer,
+		HTMLReferencePlaceDisplayer,
+		DisplayerFactory,
 		SpeechSynthesisManager,
 		SpeechQueue,
 		findNearbyRestaurants,

@@ -423,4 +423,105 @@ describe('WebGeocodingManager - High Cohesion and Low Coupling', () => {
             expect(DEFAULT_ELEMENT_IDS.speechSynthesis).toHaveProperty('pitchValueId');
         });
     });
+
+    describe('Displayer Factory Injection', () => {
+        test('should use default DisplayerFactory when none provided', () => {
+            const params = { locationResult: 'location-result' };
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            expect(manager.positionDisplayer).toBeDefined();
+            expect(manager.addressDisplayer).toBeDefined();
+            expect(manager.referencePlaceDisplayer).toBeDefined();
+        });
+
+        test('should accept custom displayer factory for testing', () => {
+            // Create mock displayers
+            const mockPositionDisplayer = {
+                update: jest.fn(),
+                element: mockElement,
+                toString: () => 'MockPositionDisplayer'
+            };
+            const mockAddressDisplayer = {
+                update: jest.fn(),
+                element: mockElement,
+                toString: () => 'MockAddressDisplayer'
+            };
+            const mockReferencePlaceDisplayer = {
+                update: jest.fn(),
+                element: mockElement,
+                toString: () => 'MockReferencePlaceDisplayer'
+            };
+
+            // Create mock factory
+            const mockFactory = {
+                createPositionDisplayer: jest.fn(() => mockPositionDisplayer),
+                createAddressDisplayer: jest.fn(() => mockAddressDisplayer),
+                createReferencePlaceDisplayer: jest.fn(() => mockReferencePlaceDisplayer)
+            };
+
+            const params = {
+                locationResult: 'location-result',
+                enderecoPadronizadoDisplay: 'address-display',
+                referencePlaceDisplay: 'reference-place',
+                displayerFactory: mockFactory
+            };
+
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            // Verify factory was used
+            expect(mockFactory.createPositionDisplayer).toHaveBeenCalledWith('location-result');
+            expect(mockFactory.createAddressDisplayer).toHaveBeenCalledWith(
+                'location-result',
+                'address-display'
+            );
+            expect(mockFactory.createReferencePlaceDisplayer).toHaveBeenCalledWith('reference-place');
+
+            // Verify mock displayers were assigned
+            expect(manager.positionDisplayer).toBe(mockPositionDisplayer);
+            expect(manager.addressDisplayer).toBe(mockAddressDisplayer);
+            expect(manager.referencePlaceDisplayer).toBe(mockReferencePlaceDisplayer);
+        });
+
+        test('should enable isolated testing without DOM manipulation', () => {
+            // Mock displayers that don't touch DOM
+            const mockDisplayers = {
+                position: { update: jest.fn(), toString: () => 'Mock' },
+                address: { update: jest.fn(), toString: () => 'Mock' },
+                referencePlace: { update: jest.fn(), toString: () => 'Mock' }
+            };
+
+            const mockFactory = {
+                createPositionDisplayer: () => mockDisplayers.position,
+                createAddressDisplayer: () => mockDisplayers.address,
+                createReferencePlaceDisplayer: () => mockDisplayers.referencePlace
+            };
+
+            const params = {
+                locationResult: 'location-result',
+                displayerFactory: mockFactory
+            };
+
+            const manager = new WebGeocodingManager(mockDocument, params);
+
+            // Verify displayers were created without DOM access
+            expect(manager.positionDisplayer.update).toBeDefined();
+            expect(manager.addressDisplayer.update).toBeDefined();
+            expect(manager.referencePlaceDisplayer.update).toBeDefined();
+        });
+
+        test('should maintain backward compatibility with default factory', () => {
+            const params1 = { locationResult: 'location-result' };
+            const manager1 = new WebGeocodingManager(mockDocument, params1);
+
+            const params2 = {
+                locationResult: 'location-result',
+                displayerFactory: undefined
+            };
+            const manager2 = new WebGeocodingManager(mockDocument, params2);
+
+            // Both should use default factory and create real displayers
+            expect(manager1.positionDisplayer.constructor.name).toBe('HTMLPositionDisplayer');
+            expect(manager2.positionDisplayer.constructor.name).toBe('HTMLPositionDisplayer');
+        });
+    });
 });

@@ -4136,12 +4136,6 @@ class WebGeocodingManager {
 		this.getSingleLocationUpdate();
 		// });
 
-		// Legacy timeout - kept for backward compatibility
-		// TODO: Evaluate if this timeout is still necessary
-		setTimeout(() => {
-			null;
-		}, 20000);
-
 		// Start continuous position watching
 		let watchId = this.geolocationService.watchCurrentLocation();
 

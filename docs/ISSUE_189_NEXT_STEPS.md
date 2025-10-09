@@ -640,13 +640,13 @@ const manager = new WebGeocodingManager(document, {
 
 ### Acceptance Criteria
 
-- [ ] Constructor accepts optional `geolocationService` parameter
-- [ ] Constructor accepts optional `reverseGeocoder` parameter
-- [ ] Default services created if not provided (backward compatibility)
-- [ ] Tests demonstrate service injection with mocks
-- [ ] All existing tests pass without modification
-- [ ] JSDoc updated with injection examples
-- [ ] Services can be pre-configured before injection
+- [x] Constructor accepts optional `geolocationService` parameter
+- [x] Constructor accepts optional `reverseGeocoder` parameter
+- [x] Default services created if not provided (backward compatibility)
+- [x] Tests demonstrate service injection with mocks
+- [x] All existing tests pass without modification
+- [x] JSDoc updated with injection examples
+- [x] Services can be pre-configured before injection
 
 ### Effort Estimation
 

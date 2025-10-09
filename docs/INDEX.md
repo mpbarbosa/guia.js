@@ -168,6 +168,16 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Examples and common patterns
   - CI/CD integration
 
+- **[UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md)** - Unit Testing guide 🆕
+  - What is unit testing and why it matters
+  - Unit testing principles (AAA, isolation, speed)
+  - Writing effective unit tests
+  - Testing pure functions and referential transparency
+  - Mocking and async testing
+  - Testing immutability
+  - Jest integration and best practices
+  - **GitHub Copilot-optimized format**
+
 ### Architectural Principles
 
 - **[LOW_COUPLING_GUIDE.md](../.github/LOW_COUPLING_GUIDE.md)** - Low coupling principles
@@ -240,7 +250,12 @@ When creating issues, use these templates for consistency:
    - Review [CODE_REVIEW_GUIDE.md](../.github/CODE_REVIEW_GUIDE.md) checklist
    - Check [CLASS_DIAGRAM.md](./architecture/CLASS_DIAGRAM.md) to understand architecture
 
-3. **Development workflow**:
+3. **Learn testing**:
+   - [UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md) - Unit testing fundamentals
+   - [TDD_GUIDE.md](../.github/TDD_GUIDE.md) - Test-driven development workflow
+   - [TESTING.md](../TESTING.md) - Project test suite overview
+
+4. **Development workflow**:
    ```bash
    # Validate syntax
    npm run validate

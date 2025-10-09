@@ -209,6 +209,12 @@ When creating issues, use these templates for consistency:
 - **[Copilot Issue](../.github/ISSUE_TEMPLATE/copilot_issue.md)** - Report Copilot-related issues
   - Now includes referential transparency guidelines 🆕
 
+- **[GitHub Copilot Test](../.github/ISSUE_TEMPLATE/copilot_test.md)** - Document and track Copilot testing 🆕
+  - Test code completions, generations, and suggestions
+  - Evaluate quality against project standards
+  - Track referential transparency in generated code
+  - Document reproducible test scenarios
+
 - **[Documentation](../.github/ISSUE_TEMPLATE/documentation.md)** - Report documentation issues 🆕
   - Request missing documentation or report unclear/outdated content
   - Includes documentation quality checklist

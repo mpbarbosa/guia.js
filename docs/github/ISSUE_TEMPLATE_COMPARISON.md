@@ -8,19 +8,20 @@ This document provides a comprehensive side-by-side comparison of all GitHub Iss
 ISSUE TEMPLATE COMPARISON
 ==========================================================
 
-| Template                    | Lines | Title Prefix | Labels                                      |
-|-----------------------------|-------|--------------|---------------------------------------------|
-| technical_debt.md           |   90  | [Tech Debt]  | technical-debt, maintenance, triage         |
-| feature_request.md          |   40  | [Feature]    | enhancement, triage                         |
-| copilot_issue.md            |   45  | [Copilot]    | copilot, triage                             |
-| documentation.md            |  147  | [Docs]       | documentation, triage                       |
-| functional_specification.md |  379  | [Func Spec]  | documentation, functional-spec, triage      |
-| github_config.md            |  118  | [Config]     | infrastructure, configuration, triage       |
-| agile-ticket.yml            |  203  | [Agile]      | agile-ticket, triage                        |
+| Template                    | Lines | Title Prefix      | Labels                                      |
+|-----------------------------|-------|-------------------|---------------------------------------------|
+| technical_debt.md           |   90  | [Tech Debt]       | technical-debt, maintenance, triage         |
+| feature_request.md          |   40  | [Feature]         | enhancement, triage                         |
+| copilot_issue.md            |   45  | [Copilot]         | copilot, triage                             |
+| copilot_test.md             |  190  | [Copilot Test] 🆕 | copilot, testing, triage                    |
+| documentation.md            |  147  | [Docs]            | documentation, triage                       |
+| functional_specification.md |  379  | [Func Spec]       | documentation, functional-spec, triage      |
+| github_config.md            |  118  | [Config]          | infrastructure, configuration, triage       |
+| agile-ticket.yml            |  203  | [Agile]           | agile-ticket, triage                        |
 
 ## Common Features Across All Templates
 
-All seven templates share these structural elements:
+All eight templates share these structural elements:
 
 ✅ **YAML Frontmatter** - Each template includes structured metadata:
 - `name`: Template display name
@@ -95,6 +96,52 @@ All seven templates share these structural elements:
 - Specific to GitHub Copilot integration issues
 - References both REFERENTIAL_TRANSPARENCY.md and CODE_REVIEW_GUIDE.md
 - Focus on deterministic, testable solutions
+
+### GitHub Copilot Test Template (190 lines) 🆕
+
+**Purpose:** Document and track systematic testing of GitHub Copilot features, code suggestions, and generation quality
+
+**Unique Sections:**
+- **Test Summary** - Brief description of what aspect of Copilot is being tested
+- **Test Type** - Multi-select checkboxes for:
+  - Code Completion
+  - Code Generation
+  - Code Explanation
+  - Code Translation
+  - Test Generation
+  - Documentation Generation
+  - Refactoring Suggestions
+  - Bug Detection
+  - Integration Testing
+- **Test Environment** - IDE/Editor, Copilot version, programming language, file context
+- **Test Scenario** - Detailed test setup including:
+  - Context Provided to Copilot
+  - Expected Behavior
+  - Actual Behavior
+- **Test Results** - Quality evaluation checklist:
+  - Accuracy, Relevance, Code Quality
+  - Referential Transparency adherence
+  - Testability, Documentation, Performance, Security
+- **Quality Rating** - Excellent, Good, Fair, or Poor
+- **Observations** - What worked well, what could be improved, unexpected behaviors
+- **Referential Transparency Evaluation** - 5-point checklist:
+  - Pure Functions
+  - Explicit Dependencies
+  - Isolated Side Effects
+  - Immutability
+  - Testability
+- **Test Data** - Sample inputs, test cases used
+- **Reproducibility** - Steps to reproduce the test
+- **Recommendations** - For users, documentation, and Copilot instructions
+- **Follow-up Actions** - Update documentation, improve instructions, create issues, etc.
+
+**Special Considerations:**
+- Distinct from copilot_issue.md (which reports bugs) - this tracks systematic testing
+- Evaluates quality of Copilot suggestions against project standards
+- Documents reproducible test scenarios for consistent evaluation
+- Provides structured format for tracking Copilot's behavior patterns
+- Helps improve project's .github/copilot-instructions.md over time
+- References REFERENTIAL_TRANSPARENCY.md, CODE_REVIEW_GUIDE.md, and TDD_GUIDE.md
 
 ### Agile Ticket Template (203 lines) 🆕 **YML Form Format**
 
@@ -263,6 +310,7 @@ All templates are well-integrated into the project:
 - Technical Debt: "Report technical debt" - Now includes referential transparency considerations 🆕
 - Feature Request: "Propose new features" - Now includes implementation considerations for pure functions 🆕
 - Copilot Issue: "Report Copilot-related issues" - Now includes referential transparency guidelines 🆕
+- GitHub Copilot Test: "Document and track Copilot testing" - Test code quality and project standards adherence 🆕
 - Documentation: "Report documentation issues" - Includes documentation quality checklist 🆕
 - Functional Specification: "Create functional specs" - Codeless, AI-friendly specification format 🆕
 - GitHub Configuration: "Report .github configuration issues" - For workflows, actions, CI/CD 🆕
@@ -282,15 +330,17 @@ All templates are well-integrated into the project:
 3. **Technical Debt** (90 lines) - Moderate complexity for code quality issues
 4. **GitHub Configuration** (118 lines) - Moderate-to-high complexity for infrastructure issues
 5. **Documentation** (147 lines) - Comprehensive with detailed categorization
-6. **Agile Ticket** (203 lines) - Structured Agile/Scrum ticket format with YML forms 🆕
-7. **Functional Specification** (379 lines) - Most comprehensive, codeless specification format
+6. **GitHub Copilot Test** (190 lines) - Comprehensive testing documentation for Copilot features 🆕
+7. **Agile Ticket** (203 lines) - Structured Agile/Scrum ticket format with YML forms 🆕
+8. **Functional Specification** (379 lines) - Most comprehensive, codeless specification format
 
 ### Common Label Strategy
 - All templates use **"triage"** for initial categorization
-- Each has a specific domain label (technical-debt, enhancement, copilot, documentation, functional-spec, infrastructure)
+- Each has a specific domain label (technical-debt, enhancement, copilot, documentation, functional-spec, infrastructure, testing)
 - Technical Debt uniquely includes **"maintenance"** label
 - Functional Specification uses both **"documentation"** and **"functional-spec"** labels
 - GitHub Configuration uses both **"infrastructure"** and **"configuration"** labels
+- GitHub Copilot Test uses both **"copilot"** and **"testing"** labels 🆕
 
 ### Functional Programming Focus
 All templates include referential transparency guidance, showing the project's commitment to:
@@ -302,7 +352,8 @@ All templates include referential transparency guidance, showing the project's c
 ### Target Use Cases
 - **Technical Debt**: Internal code quality improvements
 - **Feature Request**: New capabilities and enhancements
-- **Copilot Issue**: GitHub Copilot integration problems
+- **Copilot Issue**: GitHub Copilot integration problems and feature requests
+- **GitHub Copilot Test**: Systematic testing and quality evaluation of Copilot suggestions 🆕
 - **Documentation**: Content creation and maintenance
 - **Functional Specification**: Codeless specifications for AI-supported development
 - **GitHub Configuration**: DevOps, CI/CD, workflows, actions, and infrastructure issues

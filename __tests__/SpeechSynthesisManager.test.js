@@ -82,7 +82,7 @@ global.SpeechSynthesisUtterance = jest.fn().mockImplementation((text) => {
     return utterance;
 });
 
-// Mock window object for browser APIs
+// Mock window object for browser APIs following live-server configuration
 global.window = {
     location: {
         hostname: 'localhost',
@@ -125,14 +125,14 @@ global.setupParams = {
 global.log = jest.fn();
 global.warn = jest.fn();
 
-// Import the guia.js module with proper error handling following project structure
+// Import the guia.js module with proper error handling following project structure from instructions
 let SpeechSynthesisManager, AccessibilityManager, ObserverSubject;
 try {
     const fs = require('fs');
     const path = require('path');
     
     // Follow the project structure as defined in copilot instructions
-    const guiaPath = path.join(__dirname, '../../src/guia.js');
+    const guiaPath = path.join(__dirname, '../src/guia.js');
     
     if (fs.existsSync(guiaPath)) {
         // Read and evaluate the file content to extract classes
@@ -331,7 +331,7 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.4.1-alpha)', () =
             if (!SpeechSynthesisManager) {
                 console.warn('Classes not available - testing Portuguese TTS concepts');
                 
-                // Test Portuguese tourist phrases for speech synthesis - FIXED: Each phrase contains expected keywords
+                // Test Portuguese tourist phrases for speech synthesis - Each phrase contains expected keywords
                 const touristPhrases = [
                     'Bem-vindo ao Rio de Janeiro!',
                     'Você está em Copacabana, Rio de Janeiro.',
@@ -340,7 +340,7 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.4.1-alpha)', () =
                     'Brasília é a capital federal do Brasil.'
                 ];
                 
-                // FIXED: Check that each phrase contains at least one of the expected Brazilian location keywords
+                // Check that each phrase contains at least one of the expected Brazilian location keywords
                 touristPhrases.forEach(phrase => {
                     const containsBrazilianLocation = phrase.includes('Brasil') || 
                                                     phrase.includes('Rio') || 
@@ -537,7 +537,7 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.4.1-alpha)', () =
             if (!SpeechSynthesisManager) {
                 console.warn('Classes not available - testing speech control concepts');
                 
-                // Test speech control operations - FIXED: Updated regex to match all speech control operations
+                // Test speech control operations - Updated regex to match all speech control operations
                 const speechControls = {
                     play: 'start_speaking',
                     pause: 'pause_speaking', 
@@ -546,7 +546,7 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.4.1-alpha)', () =
                     skip: 'skip_current_utterance'
                 };
                 
-                // FIXED: Use more flexible regex that matches speech-related operations including "utterance"
+                // Use flexible regex that matches speech-related operations including "utterance"
                 Object.values(speechControls).forEach(control => {
                     expect(control).toMatch(/speak|utterance/);
                     expect(typeof control).toBe('string');
@@ -583,15 +583,15 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.4.1-alpha)', () =
             if (!SpeechSynthesisManager) {
                 console.warn('Classes not available - testing speech queue concepts');
                 
-                // Test text chunking for long content - FIXED: Made the long text longer than 300 characters
+                // Test text chunking for long content
                 const longTextScenarios = {
                     short: 'Texto curto.',
                     medium: 'Este é um texto de tamanho médio que pode ser falado de uma vez só.',
                     long: 'Este é um texto muito longo que precisa ser dividido em partes menores para melhor síntese de fala em português brasileiro. ' +
-                          'Cada parte deve respeitar o limite máximo de caracteres configurado no sistema de síntese de voz do Guia Turístico MP Barbosa. ' +
-                          'A divisão deve ser feita de forma inteligente, respeitando pontuação e pausas naturais da língua portuguesa brasileira. ' +
-                          'Este texto agora tem mais de trezentos caracteres para garantir que seja testado corretamente no sistema de fila de fala brasileira. ' +
-                          'O processamento deve ser sequencial e respeitar as configurações de velocidade e clareza para usuários brasileiros visitando pontos turísticos.'
+                          'Cada parte deve respeitar o limite máximo de caracteres configurado no sistema de síntese de voz. ' +
+                          'A divisão deve ser feita de forma inteligente, respeitando pontuação e pausas naturais da língua portuguesa. ' +
+                          'Este texto agora tem mais de trezentos caracteres para garantir que seja testado corretamente no sistema de fila de fala. ' +
+                          'O processamento deve ser sequencial e respeitar as configurações de velocidade e clareza para usuários brasileiros.'
                 };
                 
                 expect(longTextScenarios.short.length).toBeLessThan(50);
@@ -632,7 +632,7 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.4.1-alpha)', () =
                 errorScenarios.forEach(scenario => {
                     expect(scenario.type).toBeTruthy();
                     
-                    // FIXED: Check if message contains at least one of the expected Portuguese error terms
+                    // Check if message contains at least one of the expected Portuguese error terms
                     const containsPortugueseErrorTerm = scenario.message.includes('não') || 
                                                        scenario.message.includes('Falha') || 
                                                        scenario.message.includes('muito') ||

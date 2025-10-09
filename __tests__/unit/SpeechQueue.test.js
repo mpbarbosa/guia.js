@@ -527,19 +527,28 @@ describe('SpeechQueue - MP Barbosa Travel Guide (v0.4.1-alpha)', () => {
 
         test('should preserve Portuguese pronunciation in text processing', () => {
             if (!SpeechQueue) {
-                console.warn('Classes not available - testing pronunciation concepts');
+                console.warn('SpeechQueue not available - testing Portuguese pronunciation concepts');
                 
-                // Test Portuguese pronunciation preservation
+                // FIXED: Test Portuguese pronunciation with mixed accented and non-accented words
                 const portuguesePronunciation = {
-                    nasal_sounds: ['São Paulo', 'João', 'não'],
-                    cedilla: ['Praça', 'coração', 'atenção'],
-                    accents: ['José', 'André', 'Brasília'],
-                    digraphs: ['nhoque', 'lhama', 'chácara']
+                    accented_words: ['São', 'não', 'ação', 'informação', 'João', 'Brasília'],
+                    non_accented_words: ['Rio', 'Brasil', 'turismo', 'guia', 'viagem', 'cidade'],
+                    mixed_phrases: ['São Paulo é uma metrópole', 'Rio de Janeiro tem praias', 'Brasília é a capital']
                 };
                 
-                Object.values(portuguesePronunciation).forEach(examples => {
+                // FIXED: Test accented words separately from non-accented words
+                Object.entries(portuguesePronunciation).forEach(([category, examples]) => {
                     examples.forEach(word => {
-                        expect(/[ãçáéíóúâêôàü]/i.test(word)).toBe(true);
+                        expect(typeof word).toBe('string');
+                        expect(word.length).toBeGreaterThan(0);
+                        
+                        // FIXED: Only check for accents in accented_words category or mixed phrases
+                        if (category === 'accented_words' || category === 'mixed_phrases') {
+                            expect(/[ãçáéíóúâêôàü]/i.test(word)).toBe(true);
+                        } else {
+                            // For non-accented words, just verify they're valid Portuguese words
+                            expect(/^[a-zA-Z\s]+$/i.test(word)).toBe(true);
+                        }
                     });
                 });
                 return;
@@ -547,14 +556,16 @@ describe('SpeechQueue - MP Barbosa Travel Guide (v0.4.1-alpha)', () => {
 
             const queue = new SpeechQueue();
             
-            if (typeof queue.preprocessPortugueseText === 'function') {
-                const textWithAccents = 'São José dos Campos é uma cidade no interior de São Paulo.';
-                const processed = queue.preprocessPortugueseText(textWithAccents);
+            if (typeof queue.processPortugueseText === 'function') {
+                // Test Portuguese text processing with pronunciation considerations
+                const portugueseText = 'São Paulo é uma cidade incrível no Brasil.';
+                const processed = queue.processPortugueseText(portugueseText);
                 
-                // Should preserve Portuguese characters
-                expect(processed).toContain('São José');
                 expect(processed).toContain('São Paulo');
-                expect(/[ãç]/i.test(processed)).toBe(true);
+                expect(processed).toContain('Brasil');
+                
+                // Should preserve Portuguese characters where they exist
+                expect(/[ãçáéíóúâêôàü]/i.test(processed)).toBe(true);
             }
         });
 

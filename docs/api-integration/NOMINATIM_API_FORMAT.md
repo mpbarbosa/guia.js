@@ -468,9 +468,9 @@ npm test
 ## Related Documentation
 
 - **[OSM Address Translation](./OSM_ADDRESS_TRANSLATION.md)** - Address format mapping and translation
-- **[Brazilian Address Standard](./BRAZILIAN_ADDRESS.md)** - BrazilianStandardAddress class documentation
-- **[Reference Place](./REFERENCE_PLACE.md)** - Location type classification
-- **[Class Diagram](./CLASS_DIAGRAM.md)** - System architecture overview
+- **[Brazilian Address Standard](../architecture/BRAZILIAN_ADDRESS.md)** - BrazilianStandardAddress class documentation (if exists)
+- **[Reference Place](../architecture/REFERENCE_PLACE.md)** - Location type classification
+- **[Class Diagram](../architecture/CLASS_DIAGRAM.md)** - System architecture overview
 
 ## External References
 

@@ -168,11 +168,11 @@ All documentation follows the project's established patterns:
 
 ## 🔗 Quick Links
 
-- **Main Analysis**: [`docs/ISSUE_189_NEXT_STEPS.md`](./ISSUE_189_NEXT_STEPS.md)
-- **Issue Templates**: [`docs/CREATE_ISSUES_GUIDE.md`](./CREATE_ISSUES_GUIDE.md)
-- **Progress Tracking**: [`docs/ISSUE_189_TRACKING.md`](./ISSUE_189_TRACKING.md)
-- **Original Refactoring**: [`docs/WEBGEOCODINGMANAGER_REFACTORING.md`](./WEBGEOCODINGMANAGER_REFACTORING.md)
-- **Architecture**: [`docs/CLASS_DIAGRAM.md`](./CLASS_DIAGRAM.md)
+- **Main Analysis**: [`docs/issue-189/ISSUE_189_NEXT_STEPS.md`](./ISSUE_189_NEXT_STEPS.md)
+- **Issue Templates**: [`docs/issue-189/CREATE_ISSUES_GUIDE.md`](./CREATE_ISSUES_GUIDE.md)
+- **Progress Tracking**: [`docs/issue-189/ISSUE_189_TRACKING.md`](./ISSUE_189_TRACKING.md)
+- **Original Refactoring**: [`docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md`](../architecture/WEBGEOCODINGMANAGER_REFACTORING.md)
+- **Architecture**: [`docs/architecture/CLASS_DIAGRAM.md`](../architecture/CLASS_DIAGRAM.md)
 
 ## 💡 Additional Notes
 

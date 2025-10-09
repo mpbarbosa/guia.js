@@ -45,7 +45,7 @@ A comprehensive GitHub Actions workflow system that automatically:
   - Action specifications
   - Configuration details
 
-- **`docs/GITHUB_ACTIONS_GUIDE.md`** (11.5KB)
+- **`docs/github/GITHUB_ACTIONS_GUIDE.md`** (11.5KB)
   - User-friendly guide
   - Troubleshooting section
   - FAQ and best practices
@@ -308,7 +308,7 @@ npm run test:all
 
 1. **Review the logs**: Actions tab → Workflow run → Job logs
 2. **Check documentation**: 
-   - `docs/GITHUB_ACTIONS_GUIDE.md` - User guide
+   - `docs/github/GITHUB_ACTIONS_GUIDE.md` - User guide
    - `.github/workflows/README.md` - Technical details
 3. **Test locally**: Run `.github/scripts/test-workflow-locally.sh`
 4. **Ask maintainers**: Open an issue if workflow is broken
@@ -484,7 +484,7 @@ git push
 
 ## 📚 Related Documentation
 
-- **[GITHUB_ACTIONS_GUIDE.md](docs/GITHUB_ACTIONS_GUIDE.md)** - Detailed user guide
+- **[GITHUB_ACTIONS_GUIDE.md](docs/github/GITHUB_ACTIONS_GUIDE.md)** - Detailed user guide
 - **[.github/workflows/README.md](.github/workflows/README.md)** - Technical reference
 - **[TESTING.md](TESTING.md)** - Test suite documentation
 - **[CONTRIBUTING.md](.github/CONTRIBUTING.md)** - Contribution guidelines
@@ -519,7 +519,7 @@ git push
 ## 📞 Support
 
 **Questions?** Check the documentation:
-1. [GITHUB_ACTIONS_GUIDE.md](docs/GITHUB_ACTIONS_GUIDE.md) - User guide
+1. [GITHUB_ACTIONS_GUIDE.md](docs/github/GITHUB_ACTIONS_GUIDE.md) - User guide
 2. [.github/workflows/README.md](.github/workflows/README.md) - Technical reference
 3. [TDD_GUIDE.md](.github/TDD_GUIDE.md) - Test Driven Development guide
 

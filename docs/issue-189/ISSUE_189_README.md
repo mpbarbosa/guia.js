@@ -79,9 +79,9 @@ When creating issues, use these labels:
 
 ## 🔗 Related Documentation
 
-- **[WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md)** - Original Issue #189 refactoring analysis
-- **[CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md)** - Overall architecture
-- **[INDEX.md](./INDEX.md)** - Complete documentation index
+- **[WEBGEOCODINGMANAGER_REFACTORING.md](../architecture/WEBGEOCODINGMANAGER_REFACTORING.md)** - Original Issue #189 refactoring analysis
+- **[CLASS_DIAGRAM.md](../architecture/CLASS_DIAGRAM.md)** - Overall architecture
+- **[INDEX.md](../INDEX.md)** - Complete documentation index
 - **[../.github/REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)** - Functional programming guide
 
 ## ✅ What's Been Completed

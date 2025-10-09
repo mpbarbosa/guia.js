@@ -155,5 +155,5 @@ describe('WebGeocodingManager', () => {
 ## Related
 
 - Issue #189: WebGeocodingManager refactoring
-- `docs/ISSUE_189_NEXT_STEPS.md`: Technical debt items
+- `docs/issue-189/ISSUE_189_NEXT_STEPS.md`: Technical debt items
 - `__tests__/WebGeocodingManager.test.js`: Test examples

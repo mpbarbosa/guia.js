@@ -939,7 +939,7 @@ Marcelo Pereira Barbosa
 - **[TESTING.md](../TESTING.md)** - Testing documentation and coverage
 - **[REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)** - Functional programming guidelines
 - **[observer-pattern-sequence.md](./observer-pattern-sequence.md)** - Observer pattern execution flow diagrams
-- **[ISSUE_189_NEXT_STEPS.md](./ISSUE_189_NEXT_STEPS.md)** - Follow-up technical debt items
+- **[ISSUE_189_NEXT_STEPS.md](../issue-189/ISSUE_189_NEXT_STEPS.md)** - Follow-up technical debt items
 
 ## External Documentation
 

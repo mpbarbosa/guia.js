@@ -23,6 +23,7 @@ The application is organized into the following architectural layers:
 - **APIFetcher**: Base class for all API communications
 - **ReverseGeocoder**: OpenStreetMap/Nominatim API integration for reverse geocoding
 - **GeolocationService**: Browser Geolocation API wrapper
+- **ChangeDetectionCoordinator**: Coordinates address component change detection (extracted from WebGeocodingManager)
 - **WebGeocodingManager**: Main coordination class for geocoding workflow
 
 ### 3. Data Processing Layer
@@ -139,6 +140,29 @@ classDiagram
 - Fields: logradouro, numero, bairro, municipio, uf, siglaUF, cep, pais
 - **siglaUF**: Two-letter state abbreviation (e.g., "RJ", "SP") extracted from uf or ISO3166-2-lvl4
 
+#### 3.3 Change Detection Coordinator (Extracted from WebGeocodingManager)
+
+**ChangeDetectionCoordinator** (New - Refactoring to follow Single Responsibility Principle)
+- **Single Responsibility**: Coordinate address component change detection
+- Extracted from `WebGeocodingManager` to separate change detection from geocoding coordination
+- Monitors changes in logradouro (street), bairro (neighborhood), and município (city) components
+- Sets up and removes change detection callbacks with `AddressDataExtractor`
+- Handles change events with proper error handling (prevents one observer error from breaking the system)
+- Notifies observers about detected changes via `ObserverSubject`
+- Maintains reference to current position for observer notifications
+- **Benefits**:
+  - Each class has single responsibility
+  - Change detection can be tested independently (26 comprehensive tests)
+  - Clearer code organization and boundaries
+  - Easier to modify change detection without affecting geocoding
+  - Reduced `WebGeocodingManager` complexity (from ~827 to ~545 lines)
+
+**Relationship with WebGeocodingManager**:
+- `WebGeocodingManager` creates and owns `ChangeDetectionCoordinator` instance
+- `WebGeocodingManager` delegates all change detection operations to coordinator
+- Backward compatibility maintained: original methods now delegate to coordinator
+- Shares `ObserverSubject` and `ReverseGeocoder` instances
+
 ### 4. Presentation Layer
 **Purpose**: HTML rendering and user interface
 
@@ -209,11 +233,34 @@ classDiagram
         +watchPosition()
     }
     
+    class ChangeDetectionCoordinator {
+        -ReverseGeocoder reverseGeocoder
+        -ObserverSubject observerSubject
+        -Object currentPosition
+        +constructor(params)
+        +setCurrentPosition(position)
+        +setupChangeDetection()
+        +removeAllChangeDetection()
+        +setupLogradouroChangeDetection()
+        +setupBairroChangeDetection()
+        +setupMunicipioChangeDetection()
+        +handleLogradouroChange(changeDetails)
+        +handleBairroChange(changeDetails)
+        +handleMunicipioChange(changeDetails)
+        +notifyLogradouroChangeObservers(changeDetails)
+        +notifyBairroChangeObservers(changeDetails)
+        +notifyMunicipioChangeObservers(changeDetails)
+    }
+    
     class WebGeocodingManager {
         -Object document
         -String elementId
+        -ChangeDetectionCoordinator changeDetectionCoordinator
+        -ReverseGeocoder reverseGeocoder
+        -ObserverSubject observerSubject
         +initialize()
         +handleGeolocation()
+        +startTracking()
     }
     
     %% Data Processing Layer (Post PR #121)
@@ -307,6 +354,10 @@ classDiagram
     WebGeocodingManager --> PositionManager: observes
     WebGeocodingManager --> ReverseGeocoder: uses
     WebGeocodingManager --> GeolocationService: uses
+    WebGeocodingManager --> ChangeDetectionCoordinator: delegates to
+    ChangeDetectionCoordinator --> ReverseGeocoder: reads address from
+    ChangeDetectionCoordinator --> ObserverSubject: notifies observers via
+    ChangeDetectionCoordinator ..> AddressDataExtractor: registers callbacks with
     HTMLPositionDisplayer --> PositionManager: displays
     HTMLAddressDisplayer --> BrazilianStandardAddress: displays
     HtmlSpeechSynthesisDisplayer --> SpeechSynthesisManager: uses
@@ -326,6 +377,13 @@ classDiagram
 ### Facade Pattern
 - **AddressDataExtractor**: Legacy facade maintaining backward compatibility
 - **WebGeocodingManager**: Simplifies complex geocoding workflow
+
+### Delegation Pattern
+- **WebGeocodingManager → ChangeDetectionCoordinator**: Delegates change detection responsibilities
+  - Reduces complexity and follows Single Responsibility Principle
+  - Maintains backward compatibility through delegation methods
+  - Enables independent testing of change detection logic
+- **AddressDataExtractor → AddressCache/AddressExtractor**: Delegates all operations for backward compatibility
 
 ### Strategy Pattern
 - **APIFetcher**: Base class allowing different API implementations
@@ -381,6 +439,7 @@ AddressDataExtractor (176 lines)
 - ✅ BairroChangeDetection.test.js: 11/11
 - ✅ MunicipioChangeDetection.test.js: 10/10
 - ✅ WebGeocodingManagerMunicipio.test.js: 4/4
+- ✅ ChangeDetectionCoordinator.test.js: 26/26 (NEW - tests extracted change detection logic)
 
 ## API Integration Points
 

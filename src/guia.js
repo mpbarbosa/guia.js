@@ -3607,6 +3607,336 @@ const DEFAULT_ELEMENT_IDS = {
 Object.freeze(DEFAULT_ELEMENT_IDS.speechSynthesis);
 Object.freeze(DEFAULT_ELEMENT_IDS);
 
+/**
+ * Coordinates address component change detection for Brazilian addresses.
+ * 
+ * Monitors changes in logradouro (street), bairro (neighborhood), and
+ * município (city) components and notifies subscribers when changes occur.
+ * 
+ * This class follows the Single Responsibility Principle by separating
+ * change detection logic from geocoding coordination. It manages:
+ * - Setting up and removing change detection callbacks
+ * - Handling change events with error handling
+ * - Notifying observers about detected changes
+ * 
+ * @class ChangeDetectionCoordinator
+ * @since 0.5.0-alpha
+ */
+class ChangeDetectionCoordinator {
+	/**
+	 * Creates a new ChangeDetectionCoordinator instance.
+	 * 
+	 * @param {Object} params - Configuration parameters
+	 * @param {Object} params.reverseGeocoder - ReverseGeocoder instance for address data
+	 * @param {Object} params.observerSubject - ObserverSubject for managing observers
+	 */
+	constructor(params) {
+		this.reverseGeocoder = params.reverseGeocoder;
+		this.observerSubject = params.observerSubject;
+		this.currentPosition = null; // Will be updated externally
+	}
+
+	/**
+	 * Sets the current position.
+	 * Called by WebGeocodingManager when position updates.
+	 * 
+	 * @param {Object} position - Current position object
+	 */
+	setCurrentPosition(position) {
+		this.currentPosition = position;
+	}
+
+	/**
+	 * Sets up change detection callbacks for all address components.
+	 * 
+	 * Registers callbacks with AddressDataExtractor for logradouro, bairro,
+	 * and municipio changes. This method should be called during initialization
+	 * to begin monitoring address changes.
+	 * 
+	 * @returns {void}
+	 */
+	setupChangeDetection() {
+		this.setupLogradouroChangeDetection();
+		this.setupBairroChangeDetection();
+		this.setupMunicipioChangeDetection();
+	}
+
+	/**
+	 * Removes all change detection callbacks.
+	 * 
+	 * Clears all callbacks registered with AddressDataExtractor. Use this
+	 * during cleanup or when stopping change detection.
+	 * 
+	 * @returns {void}
+	 */
+	removeAllChangeDetection() {
+		this.removeLogradouroChangeDetection();
+		this.removeBairroChangeDetection();
+		this.removeMunicipioChangeDetection();
+	}
+
+	/**
+	 * Sets up logradouro (street) change detection using callback mechanism.
+	 * 
+	 * Registers a callback with AddressDataExtractor that will be invoked
+	 * whenever a logradouro change is detected during address updates.
+	 * This replaces the previous timer-based polling approach.
+	 * 
+	 * @returns {void}
+	 */
+	setupLogradouroChangeDetection() {
+		AddressDataExtractor.setLogradouroChangeCallback((changeDetails) => {
+			this.handleLogradouroChange(changeDetails);
+		});
+	}
+
+	/**
+	 * Removes the logradouro change detection callback.
+	 * 
+	 * Clears the callback registered with AddressDataExtractor. Use this
+	 * when cleaning up or stopping change detection.
+	 * 
+	 * @returns {void}
+	 */
+	removeLogradouroChangeDetection() {
+		AddressDataExtractor.setLogradouroChangeCallback(null);
+	}
+
+	/**
+	 * Sets up bairro (neighborhood) change detection using callback mechanism.
+	 * 
+	 * Registers a callback with AddressDataExtractor that will be invoked
+	 * whenever a bairro change is detected during address updates.
+	 * 
+	 * @returns {void}
+	 */
+	setupBairroChangeDetection() {
+		AddressDataExtractor.setBairroChangeCallback((changeDetails) => {
+			this.handleBairroChange(changeDetails);
+		});
+	}
+
+	/**
+	 * Removes the bairro change detection callback.
+	 * 
+	 * @returns {void}
+	 */
+	removeBairroChangeDetection() {
+		AddressDataExtractor.setBairroChangeCallback(null);
+	}
+
+	/**
+	 * Sets up municipio (municipality/city) change detection using callback mechanism.
+	 * 
+	 * Registers a callback with AddressDataExtractor that will be invoked
+	 * whenever a municipio change is detected during address updates.
+	 * 
+	 * @returns {void}
+	 */
+	setupMunicipioChangeDetection() {
+		AddressDataExtractor.setMunicipioChangeCallback((changeDetails) => {
+			this.handleMunicipioChange(changeDetails);
+		});
+	}
+
+	/**
+	 * Removes the municipio change detection callback.
+	 * 
+	 * @returns {void}
+	 */
+	removeMunicipioChangeDetection() {
+		AddressDataExtractor.setMunicipioChangeCallback(null);
+	}
+
+	/**
+	 * Handles logradouro change events and notifies observers.
+	 * 
+	 * Called automatically when a logradouro change is detected. Wraps the
+	 * notification call in error handling to prevent one error from breaking
+	 * the entire change detection system.
+	 * 
+	 * @param {Object} changeDetails - Details about the logradouro change
+	 * @param {Object} changeDetails.previous - Previous address component values
+	 * @param {Object} changeDetails.current - Current address component values
+	 * @param {boolean} changeDetails.hasChanged - Whether change actually occurred
+	 * @returns {void}
+	 */
+	handleLogradouroChange(changeDetails) {
+		try {
+			this.notifyLogradouroChangeObservers(changeDetails);
+		} catch (error) {
+			console.error(
+				"(ChangeDetectionCoordinator) Error handling logradouro change:",
+				error,
+			);
+		}
+	}
+
+	/**
+	 * Handles bairro change events and notifies observers.
+	 * 
+	 * Called automatically when a bairro change is detected. Wraps the
+	 * notification call in error handling.
+	 * 
+	 * @param {Object} changeDetails - Details about the bairro change
+	 * @param {Object} changeDetails.previous - Previous address component values
+	 * @param {Object} changeDetails.current - Current address component values
+	 * @param {boolean} changeDetails.hasChanged - Whether change actually occurred
+	 * @returns {void}
+	 */
+	handleBairroChange(changeDetails) {
+		try {
+			this.notifyBairroChangeObservers(changeDetails);
+		} catch (error) {
+			console.error(
+				"(ChangeDetectionCoordinator) Error handling bairro change:",
+				error,
+			);
+		}
+	}
+
+	/**
+	 * Handles municipio change events and notifies observers.
+	 * 
+	 * Called automatically when a municipio change is detected. Wraps the
+	 * notification call in error handling.
+	 * 
+	 * @param {Object} changeDetails - Details about the municipio change
+	 * @param {Object} changeDetails.previous - Previous address component values
+	 * @param {Object} changeDetails.current - Current address component values
+	 * @param {boolean} changeDetails.hasChanged - Whether change actually occurred
+	 * @returns {void}
+	 */
+	handleMunicipioChange(changeDetails) {
+		try {
+			this.notifyMunicipioChangeObservers(changeDetails);
+		} catch (error) {
+			console.error(
+				"(ChangeDetectionCoordinator) Error handling municipio change:",
+				error,
+			);
+		}
+	}
+
+	/**
+	 * Notifies observers about address component changes.
+	 * 
+	 * This is a generalized notification method that handles all types of address
+	 * component changes (logradouro, bairro, municipio). It follows DRY principle
+	 * by consolidating the notification logic that was previously duplicated across
+	 * three separate methods.
+	 * 
+	 * The method notifies two types of observers:
+	 * 1. Regular observers (via update() method) - receive change-specific data
+	 * 2. Function observers - receive full context including position and address
+	 * 
+	 * @private
+	 * @param {Object} changeDetails - Details about the address component change
+	 * @param {string} changeType - Type of change ("LogradouroChanged", "BairroChanged", "MunicipioChanged")
+	 * @param {*} changeData - Specific data for the change (e.g., new logradouro value)
+	 * @param {string} logMessage - Optional log message for debugging
+	 */
+	_notifyAddressChangeObservers(changeDetails, changeType, changeData, logMessage) {
+		// Log if message provided
+		if (logMessage) {
+			log(logMessage);
+		}
+
+		// Notify regular observers with change-specific data
+		for (const observer of this.observerSubject.observers) {
+			if (typeof observer.update === "function") {
+				observer.update(changeData, changeType, null, null);
+			}
+		}
+
+		// Notify function observers with full context
+		this._notifyFunctionObserversWithError(changeDetails, changeType);
+	}
+
+	/**
+	 * Notifies function observers with error handling.
+	 * 
+	 * Extracted method to handle function observer notifications with proper
+	 * error handling. This prevents one observer's error from blocking other
+	 * observers from receiving notifications.
+	 * 
+	 * @private
+	 * @param {Object} changeDetails - Details about the change
+	 * @param {string} changeType - Type of change for error messages
+	 */
+	_notifyFunctionObserversWithError(changeDetails, changeType) {
+		for (const fn of this.observerSubject.functionObservers) {
+			try {
+				fn(
+					this.currentPosition,
+					this.reverseGeocoder.currentAddress,
+					this.reverseGeocoder.enderecoPadronizado,
+					changeDetails
+				);
+			} catch (error) {
+				console.error(
+					`(ChangeDetectionCoordinator) Error notifying function observer about ${changeType}:`,
+					error
+				);
+			}
+		}
+	}
+
+	/**
+	 * Notifies observers specifically about logradouro changes.
+	 * 
+	 * Uses the generalized notification method with logradouro-specific parameters.
+	 * 
+	 * @param {Object} changeDetails - Details about the logradouro change
+	 * @param {Object} changeDetails.current - Current address component values
+	 * @param {string} changeDetails.current.logradouro - New logradouro value
+	 */
+	notifyLogradouroChangeObservers(changeDetails) {
+		this._notifyAddressChangeObservers(
+			changeDetails,
+			"LogradouroChanged",
+			changeDetails.current.logradouro,
+			null // No specific log message for logradouro
+		);
+	}
+
+	/**
+	 * Notifies observers specifically about bairro changes.
+	 * 
+	 * Uses the generalized notification method with bairro-specific parameters.
+	 * 
+	 * @param {Object} changeDetails - Details about the bairro change
+	 * @param {Object} changeDetails.current - Current address component values
+	 * @param {string} changeDetails.current.bairro - New bairro value
+	 */
+	notifyBairroChangeObservers(changeDetails) {
+		this._notifyAddressChangeObservers(
+			changeDetails,
+			"BairroChanged",
+			changeDetails.current.bairro,
+			'(ChangeDetectionCoordinator) Notificando os observadores da mudança de bairro.'
+		);
+	}
+
+	/**
+	 * Notifies observers specifically about municipio changes.
+	 * 
+	 * Uses the generalized notification method with municipio-specific parameters.
+	 * Note: For municipio changes, the entire currentAddress is passed as changeData
+	 * to maintain backward compatibility with existing observers.
+	 * 
+	 * @param {Object} changeDetails - Details about the municipio change
+	 */
+	notifyMunicipioChangeObservers(changeDetails) {
+		this._notifyAddressChangeObservers(
+			changeDetails,
+			"MunicipioChanged",
+			this.reverseGeocoder.currentAddress, // Full address for municipio
+			'(ChangeDetectionCoordinator) Notificando os observadores da mudança de município.'
+		);
+	}
+}
+
 class WebGeocodingManager {
 	/**
 	 * Creates a new WebGeocodingManager instance.
@@ -3662,6 +3992,12 @@ class WebGeocodingManager {
 		// Create services (lazy instantiation could be considered for better testability)
 		this.geolocationService = new GeolocationService(this.locationResult);
 		this.reverseGeocoder = new ReverseGeocoder();
+
+		// Create change detection coordinator
+		this.changeDetectionCoordinator = new ChangeDetectionCoordinator({
+			reverseGeocoder: this.reverseGeocoder,
+			observerSubject: this.observerSubject
+		});
 
 		// Create and configure displayers
 		this._createDisplayers();
@@ -4086,6 +4422,7 @@ class WebGeocodingManager {
 			.then((position) => {
 				if (position && position.coords) {
 					this.currentPosition = position;
+					this.changeDetectionCoordinator.setCurrentPosition(position);
 					this.reverseGeocoder.latitude = position.coords.latitude;
 					this.reverseGeocoder.longitude = position.coords.longitude;
 					return this.reverseGeocoder.reverseGeocode();
@@ -4139,271 +4476,74 @@ class WebGeocodingManager {
 		// Start continuous position watching
 		let watchId = this.geolocationService.watchCurrentLocation();
 
-		// Set up address component change detection callbacks
-		this.setupLogradouroChangeDetection();
-		this.setupBairroChangeDetection();
-		this.setupMunicipioChangeDetection();
+		// Set up address component change detection callbacks via coordinator
+		this.changeDetectionCoordinator.setupChangeDetection();
 	}
 
 	/**
 	 * Sets up logradouro (street) change detection using callback mechanism.
+	 * Delegates to ChangeDetectionCoordinator.
 	 * 
-	 * Registers a callback with AddressDataExtractor that will be invoked
-	 * whenever a logradouro change is detected during address updates.
-	 * This replaces the previous timer-based polling approach.
-	 * 
+	 * @deprecated Use changeDetectionCoordinator.setupLogradouroChangeDetection() instead
 	 * @returns {void}
 	 */
 	setupLogradouroChangeDetection() {
-		AddressDataExtractor.setLogradouroChangeCallback((changeDetails) => {
-			this.handleLogradouroChange(changeDetails);
-		});
+		this.changeDetectionCoordinator.setupLogradouroChangeDetection();
 	}
 
 	/**
 	 * Removes the logradouro change detection callback.
+	 * Delegates to ChangeDetectionCoordinator.
 	 * 
-	 * Clears the callback registered with AddressDataExtractor. Use this
-	 * when cleaning up or stopping change detection.
-	 * 
+	 * @deprecated Use changeDetectionCoordinator.removeLogradouroChangeDetection() instead
 	 * @returns {void}
 	 */
 	removeLogradouroChangeDetection() {
-		AddressDataExtractor.setLogradouroChangeCallback(null);
+		this.changeDetectionCoordinator.removeLogradouroChangeDetection();
 	}
 
 	/**
 	 * Sets up bairro (neighborhood) change detection using callback mechanism.
+	 * Delegates to ChangeDetectionCoordinator.
 	 * 
-	 * Registers a callback with AddressDataExtractor that will be invoked
-	 * whenever a bairro change is detected during address updates.
-	 * 
+	 * @deprecated Use changeDetectionCoordinator.setupBairroChangeDetection() instead
 	 * @returns {void}
 	 */
 	setupBairroChangeDetection() {
-		AddressDataExtractor.setBairroChangeCallback((changeDetails) => {
-			this.handleBairroChange(changeDetails);
-		});
+		this.changeDetectionCoordinator.setupBairroChangeDetection();
 	}
 
 	/**
 	 * Removes the bairro change detection callback.
+	 * Delegates to ChangeDetectionCoordinator.
 	 * 
+	 * @deprecated Use changeDetectionCoordinator.removeBairroChangeDetection() instead
 	 * @returns {void}
 	 */
 	removeBairroChangeDetection() {
-		AddressDataExtractor.setBairroChangeCallback(null);
+		this.changeDetectionCoordinator.removeBairroChangeDetection();
 	}
 
 	/**
 	 * Sets up municipio (municipality/city) change detection using callback mechanism.
+	 * Delegates to ChangeDetectionCoordinator.
 	 * 
-	 * Registers a callback with AddressDataExtractor that will be invoked
-	 * whenever a municipio change is detected during address updates.
-	 * 
+	 * @deprecated Use changeDetectionCoordinator.setupMunicipioChangeDetection() instead
 	 * @returns {void}
 	 */
 	setupMunicipioChangeDetection() {
-		AddressDataExtractor.setMunicipioChangeCallback((changeDetails) => {
-			this.handleMunicipioChange(changeDetails);
-		});
+		this.changeDetectionCoordinator.setupMunicipioChangeDetection();
 	}
 
 	/**
 	 * Removes the municipio change detection callback.
+	 * Delegates to ChangeDetectionCoordinator.
 	 * 
+	 * @deprecated Use changeDetectionCoordinator.removeMunicipioChangeDetection() instead
 	 * @returns {void}
 	 */
 	removeMunicipioChangeDetection() {
-		AddressDataExtractor.setMunicipioChangeCallback(null);
-	}
-
-	/**
-	 * Handles logradouro change events and notifies observers.
-	 * 
-	 * Called automatically when a logradouro change is detected. Wraps the
-	 * notification call in error handling to prevent one error from breaking
-	 * the entire change detection system.
-	 * 
-	 * @param {Object} changeDetails - Details about the logradouro change
-	 * @param {Object} changeDetails.previous - Previous address component values
-	 * @param {Object} changeDetails.current - Current address component values
-	 * @param {boolean} changeDetails.hasChanged - Whether change actually occurred
-	 * @returns {void}
-	 */
-	handleLogradouroChange(changeDetails) {
-		try {
-			this.notifyLogradouroChangeObservers(changeDetails);
-		} catch (error) {
-			console.error(
-				"(WebGeocodingManager) Error handling logradouro change:",
-				error,
-			);
-		}
-	}
-
-	/**
-	 * Handles bairro change events and notifies observers.
-	 * 
-	 * Called automatically when a bairro change is detected. Wraps the
-	 * notification call in error handling.
-	 * 
-	 * @param {Object} changeDetails - Details about the bairro change
-	 * @param {Object} changeDetails.previous - Previous address component values
-	 * @param {Object} changeDetails.current - Current address component values
-	 * @param {boolean} changeDetails.hasChanged - Whether change actually occurred
-	 * @returns {void}
-	 */
-	handleBairroChange(changeDetails) {
-		try {
-			this.notifyBairroChangeObservers(changeDetails);
-		} catch (error) {
-			console.error(
-				"(WebGeocodingManager) Error handling bairro change:",
-				error,
-			);
-		}
-	}
-
-	/**
-	 * Handles municipio change events and notifies observers.
-	 * 
-	 * Called automatically when a municipio change is detected. Wraps the
-	 * notification call in error handling.
-	 * 
-	 * @param {Object} changeDetails - Details about the municipio change
-	 * @param {Object} changeDetails.previous - Previous address component values
-	 * @param {Object} changeDetails.current - Current address component values
-	 * @param {boolean} changeDetails.hasChanged - Whether change actually occurred
-	 * @returns {void}
-	 */
-	handleMunicipioChange(changeDetails) {
-		try {
-			this.notifyMunicipioChangeObservers(changeDetails);
-		} catch (error) {
-			console.error(
-				"(WebGeocodingManager) Error handling municipio change:",
-				error,
-			);
-		}
-	}
-
-	/**
-	 * Notifies observers about address component changes.
-	 * 
-	 * This is a generalized notification method that handles all types of address
-	 * component changes (logradouro, bairro, municipio). It follows DRY principle
-	 * by consolidating the notification logic that was previously duplicated across
-	 * three separate methods.
-	 * 
-	 * The method notifies two types of observers:
-	 * 1. Regular observers (via update() method) - receive change-specific data
-	 * 2. Function observers - receive full context including position and address
-	 * 
-	 * @private
-	 * @param {Object} changeDetails - Details about the address component change
-	 * @param {string} changeType - Type of change ("LogradouroChanged", "BairroChanged", "MunicipioChanged")
-	 * @param {*} changeData - Specific data for the change (e.g., new logradouro value)
-	 * @param {string} logMessage - Optional log message for debugging
-	 */
-	_notifyAddressChangeObservers(changeDetails, changeType, changeData, logMessage) {
-		// Log if message provided
-		if (logMessage) {
-			log(logMessage);
-		}
-
-		// Notify regular observers with change-specific data
-		for (const observer of this.observers) {
-			if (typeof observer.update === "function") {
-				observer.update(changeData, changeType, null, null);
-			}
-		}
-
-		// Notify function observers with full context
-		this._notifyFunctionObserversWithError(changeDetails, changeType);
-	}
-
-	/**
-	 * Notifies function observers with error handling.
-	 * 
-	 * Extracted method to handle function observer notifications with proper
-	 * error handling. This prevents one observer's error from blocking other
-	 * observers from receiving notifications.
-	 * 
-	 * @private
-	 * @param {Object} changeDetails - Details about the change
-	 * @param {string} changeType - Type of change for error messages
-	 */
-	_notifyFunctionObserversWithError(changeDetails, changeType) {
-		for (const fn of this.functionObservers) {
-			try {
-				fn(
-					this.currentPosition,
-					this.reverseGeocoder.currentAddress,
-					this.reverseGeocoder.enderecoPadronizado,
-					changeDetails
-				);
-			} catch (error) {
-				console.error(
-					`(WebGeocodingManager) Error notifying function observer about ${changeType}:`,
-					error
-				);
-			}
-		}
-	}
-
-	/**
-	 * Notifies observers specifically about logradouro changes.
-	 * 
-	 * Uses the generalized notification method with logradouro-specific parameters.
-	 * 
-	 * @param {Object} changeDetails - Details about the logradouro change
-	 * @param {Object} changeDetails.current - Current address component values
-	 * @param {string} changeDetails.current.logradouro - New logradouro value
-	 */
-	notifyLogradouroChangeObservers(changeDetails) {
-		this._notifyAddressChangeObservers(
-			changeDetails,
-			"LogradouroChanged",
-			changeDetails.current.logradouro,
-			null // No specific log message for logradouro
-		);
-	}
-
-	/**
-	 * Notifies observers specifically about bairro changes.
-	 * 
-	 * Uses the generalized notification method with bairro-specific parameters.
-	 * 
-	 * @param {Object} changeDetails - Details about the bairro change
-	 * @param {Object} changeDetails.current - Current address component values
-	 * @param {string} changeDetails.current.bairro - New bairro value
-	 */
-	notifyBairroChangeObservers(changeDetails) {
-		this._notifyAddressChangeObservers(
-			changeDetails,
-			"BairroChanged",
-			changeDetails.current.bairro,
-			'(WebGeocodingManager) Notificando os observadores da mudança de bairro.'
-		);
-	}
-
-	/**
-	 * Notifies observers specifically about municipio changes.
-	 * 
-	 * Uses the generalized notification method with municipio-specific parameters.
-	 * Note: For municipio changes, the entire currentAddress is passed as changeData
-	 * to maintain backward compatibility with existing observers.
-	 * 
-	 * @param {Object} changeDetails - Details about the municipio change
-	 */
-	notifyMunicipioChangeObservers(changeDetails) {
-		this._notifyAddressChangeObservers(
-			changeDetails,
-			"MunicipioChanged",
-			this.reverseGeocoder.currentAddress, // Full address for municipio
-			'(WebGeocodingManager) Notificando os observadores da mudança de município.'
-		);
+		this.changeDetectionCoordinator.removeMunicipioChangeDetection();
 	}
 
 	/**
@@ -5693,6 +5833,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		APIFetcher,
 		ReverseGeocoder,
 		GeolocationService,
+		ChangeDetectionCoordinator,
 		WebGeocodingManager,
 		BrazilianStandardAddress,
 		ReferencePlace,

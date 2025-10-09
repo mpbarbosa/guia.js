@@ -56,6 +56,14 @@ Tests for utility functions and helpers:
 Tests for design patterns and architectural principles:
 - `Immutability.test.js` - Immutability pattern validation
 
+### `e2e/` - End-to-End Tests (5 files)
+Comprehensive end-to-end tests that validate complete workflows:
+- `CompleteGeolocationWorkflow.e2e.test.js` - Full workflow from position acquisition to display
+- `AddressChangeAndSpeech.e2e.test.js` - Address change detection and speech synthesis integration
+- `BrazilianAddressProcessing.e2e.test.js` - Brazilian address formatting and processing pipeline
+- `ErrorHandlingRecovery.e2e.test.js` - Error handling, recovery, and edge cases
+- `MultiComponentIntegration.e2e.test.js` - Complex multi-component interactions and coordination
+
 ## Running Tests
 
 All tests can be run from the project root:
@@ -74,6 +82,10 @@ npm run test:coverage
 npm test -- __tests__/unit
 npm test -- __tests__/integration
 npm test -- __tests__/features
+npm test -- __tests__/e2e
+
+# Run only E2E tests
+npm test -- __tests__/e2e
 ```
 
 ## Test Organization Principles
@@ -87,6 +99,7 @@ Tests are organized by their primary purpose:
 - **External tests** ensure external API compatibility
 - **Util tests** verify helper function correctness
 - **Pattern tests** validate architectural principles
+- **E2E tests** validate complete application workflows from start to finish
 
 This organization makes it easier to:
 - Locate tests related to specific functionality

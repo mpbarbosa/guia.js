@@ -6,7 +6,7 @@
 global.document = undefined;
 
 // Import the guia.js functions
-const { ObserverSubject } = require('../src/guia.js');
+const { ObserverSubject } = require('../../src/guia.js');
 
 describe('ObserverSubject Class', () => {
   let observerSubject;

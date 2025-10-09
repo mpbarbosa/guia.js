@@ -9,7 +9,7 @@
 // Mock document to prevent errors in test environment
 global.document = undefined;
 
-const { WebGeocodingManager, ObserverSubject, GeolocationService, ReverseGeocoder, DEFAULT_ELEMENT_IDS } = require('../src/guia.js');
+const { WebGeocodingManager, ObserverSubject, GeolocationService, ReverseGeocoder, DEFAULT_ELEMENT_IDS } = require('../../src/guia.js');
 
 describe('WebGeocodingManager - High Cohesion and Low Coupling', () => {
     let mockDocument;

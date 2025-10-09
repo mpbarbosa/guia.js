@@ -10,7 +10,7 @@ const {
     HTMLPositionDisplayer,
     HTMLAddressDisplayer,
     HTMLReferencePlaceDisplayer
-} = require('../src/guia.js');
+} = require('../../src/guia.js');
 
 describe('DisplayerFactory', () => {
     let mockElement;

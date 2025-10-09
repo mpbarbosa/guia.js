@@ -6,7 +6,7 @@
 global.document = undefined;
 
 // Import the guia.js functions for simpler priority logic testing
-const { AddressDataExtractor } = require('../src/guia.js');
+const { AddressDataExtractor } = require('../../src/guia.js');
 
 describe('Speech Priority Logic Tests', () => {
   beforeEach(() => {

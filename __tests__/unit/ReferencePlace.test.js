@@ -10,7 +10,7 @@ global.document = {
     getElementById: jest.fn().mockReturnValue(null)
 };
 
-const { ReferencePlace, setupParams } = require('../src/guia.js');
+const { ReferencePlace, setupParams } = require('../../src/guia.js');
 
 describe('ReferencePlace Class', () => {
     

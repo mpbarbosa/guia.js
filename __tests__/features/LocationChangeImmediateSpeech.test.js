@@ -8,7 +8,7 @@ global.document = undefined;
 
 const { 
     BrazilianStandardAddress 
-} = require('../src/guia.js');
+} = require('../../src/guia.js');
 
 describe('Location Change Immediate Speech Feature', () => {
     test('BrazilianStandardAddress should be available for location changes', () => {

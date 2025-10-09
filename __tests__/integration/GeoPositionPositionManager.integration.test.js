@@ -63,7 +63,7 @@ let PositionManager, GeoPosition, ObserverSubject;
 try {
     const fs = require('fs');
     const path = require('path');
-    const guiaPath = path.join(__dirname, '../src/guia.js');
+    const guiaPath = path.join(__dirname, '../../src/guia.js');
     
     if (fs.existsSync(guiaPath)) {
         // Read and evaluate the file content to extract classes

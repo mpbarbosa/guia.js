@@ -14,7 +14,7 @@ const {
   ObserverSubject, 
   BrazilianStandardAddress, 
   AddressCache 
-} = require('../src/guia.js');
+} = require('../../src/guia.js');
 
 describe('Immutability Patterns', () => {
 

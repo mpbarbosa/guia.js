@@ -33,10 +33,10 @@ assignees: ''
 <!-- See .github/REFERENTIAL_TRANSPARENCY.md for best practices -->
 
 **Development Guidelines:**
-- Referential transparency: [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)
-- Code review standards: [CODE_REVIEW_GUIDE.md](../.github/CODE_REVIEW_GUIDE.md)
-- Testing approach: [TDD_GUIDE.md](../.github/TDD_GUIDE.md), [UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md)
-- Architecture principles: [LOW_COUPLING_GUIDE.md](../.github/LOW_COUPLING_GUIDE.md), [HIGH_COHESION_GUIDE.md](../.github/HIGH_COHESION_GUIDE.md)
+- Referential transparency: [REFERENTIAL_TRANSPARENCY.md](../REFERENTIAL_TRANSPARENCY.md)
+- Code review standards: [CODE_REVIEW_GUIDE.md](../CODE_REVIEW_GUIDE.md)
+- Testing approach: [TDD_GUIDE.md](../TDD_GUIDE.md), [UNIT_TEST_GUIDE.md](../UNIT_TEST_GUIDE.md)
+- Architecture principles: [LOW_COUPLING_GUIDE.md](../LOW_COUPLING_GUIDE.md), [HIGH_COHESION_GUIDE.md](../HIGH_COHESION_GUIDE.md)
 
 ## Alternatives Considered
 

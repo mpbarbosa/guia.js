@@ -176,8 +176,8 @@ Before submitting your PR, verify your functions are referentially transparent:
 ### Learn More
 
 For a comprehensive guide with detailed examples, see:
-- **[REFERENTIAL_TRANSPARENCY.md](./.github/REFERENTIAL_TRANSPARENCY.md)** - Full documentation
-- **[CODE_REVIEW_GUIDE.md](./.github/CODE_REVIEW_GUIDE.md)** - Review checklist
+- **[REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)** - Full documentation
+- **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Review checklist
 
 ## Immutability Principles
 

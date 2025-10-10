@@ -49,6 +49,13 @@ assignees: ''
 <!-- - Would the code be easier to test with referentially transparent functions? -->
 <!-- See .github/REFERENTIAL_TRANSPARENCY.md for guidance -->
 
+**Refactoring Guidelines:**
+- Referential transparency: [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)
+- Code review checklist: [CODE_REVIEW_GUIDE.md](../.github/CODE_REVIEW_GUIDE.md)
+- Testing improvements: [TDD_GUIDE.md](../.github/TDD_GUIDE.md), [UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md)
+- Coupling reduction: [LOW_COUPLING_GUIDE.md](../.github/LOW_COUPLING_GUIDE.md)
+- Cohesion improvement: [HIGH_COHESION_GUIDE.md](../.github/HIGH_COHESION_GUIDE.md)
+
 ## Affected Areas
 
 <!-- List the files, modules, or components that would be impacted by addressing this technical debt -->

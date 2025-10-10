@@ -76,6 +76,11 @@ assignees: ''
 <!-- - Is the configuration testable (e.g., using act for workflows)? -->
 <!-- See WORKFLOW_SETUP.md for guidance on workflows and actions -->
 
+**Configuration and Workflow Guidelines:**
+- Workflow setup: [WORKFLOW_SETUP.md](../../WORKFLOW_SETUP.md)
+- GitHub Actions guide: [GITHUB_ACTIONS_GUIDE.md](../../docs/github/GITHUB_ACTIONS_GUIDE.md)
+- Issue template design: [ISSUE_TEMPLATE_COMPARISON.md](../../docs/github/ISSUE_TEMPLATE_COMPARISON.md)
+
 ## Priority Level
 
 <!-- Select the appropriate priority level and provide justification -->

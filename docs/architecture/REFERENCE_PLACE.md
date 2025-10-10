@@ -227,6 +227,20 @@ Marcelo Pereira Barbosa
 
 ## See Also
 
-- [Class Diagram](./CLASS_DIAGRAM.md)
-- [Testing Documentation](../TESTING.md)
+### Related Architecture Documentation
+- [Class Diagram](./CLASS_DIAGRAM.md) - Overall system architecture and class relationships
+- [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - Geocoding coordination layer
+- [GEO_POSITION.md](./GEO_POSITION.md) - GeoPosition class documentation
+
+### Testing and Quality
+- [Testing Documentation](../TESTING.md) - Test suite and coverage information
+- [TDD_GUIDE.md](../../.github/TDD_GUIDE.md) - Test-driven development approach
+- [UNIT_TEST_GUIDE.md](../../.github/UNIT_TEST_GUIDE.md) - Unit testing best practices
+
+### Development Guidelines
+- [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md) - Pure functions and immutable objects
+- [CODE_REVIEW_GUIDE.md](../../.github/CODE_REVIEW_GUIDE.md) - Code review standards
+- [HIGH_COHESION_GUIDE.md](../../.github/HIGH_COHESION_GUIDE.md) - Single responsibility principle
+
+### Related Issues
 - Issue: [Feature] Implement class ReferencePlace

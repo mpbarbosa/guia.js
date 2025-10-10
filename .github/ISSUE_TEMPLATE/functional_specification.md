@@ -246,6 +246,13 @@ When creating Class Documentation, follow this structure based on the project's 
 - [ ] State mutations should be avoided (use immutable data patterns)
 - [ ] All side effects should occur at system boundaries
 
+**Implementation Guidelines:**
+- Referential transparency: [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)
+- Code review standards: [CODE_REVIEW_GUIDE.md](../.github/CODE_REVIEW_GUIDE.md)
+- Testing with TDD: [TDD_GUIDE.md](../.github/TDD_GUIDE.md), [UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md)
+- Architecture principles: [LOW_COUPLING_GUIDE.md](../.github/LOW_COUPLING_GUIDE.md), [HIGH_COHESION_GUIDE.md](../.github/HIGH_COHESION_GUIDE.md)
+- Class architecture: [CLASS_DIAGRAM.md](../../docs/architecture/CLASS_DIAGRAM.md)
+
 ### Design Principles
 
 <!-- Key design principles to follow during implementation -->

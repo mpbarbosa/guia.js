@@ -565,6 +565,26 @@ guia_js/
 - IBGE API Documentation: https://servicodados.ibge.gov.br/api/docs
 - Haversine Formula: https://en.wikipedia.org/wiki/Haversine_formula
 
+## See Also
+
+### Related Documentation
+- [GEO_POSITION.md](./GEO_POSITION.md) - GeoPosition class documentation
+- [REFERENCE_PLACE.md](./REFERENCE_PLACE.md) - ReferencePlace class documentation
+- [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - WebGeocodingManager coordination layer
+- [WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md) - PR #189 refactoring details
+- [GEO_POSITION_FUNC_SPEC.md](./GEO_POSITION_FUNC_SPEC.md) - Functional specification for GeoPosition
+
+### Development Guidelines
+- [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md) - Pure functions and immutability
+- [CODE_REVIEW_GUIDE.md](../../.github/CODE_REVIEW_GUIDE.md) - Code review checklist
+- [TDD_GUIDE.md](../../.github/TDD_GUIDE.md) - Test-driven development
+- [UNIT_TEST_GUIDE.md](../../.github/UNIT_TEST_GUIDE.md) - Unit testing best practices
+- [LOW_COUPLING_GUIDE.md](../../.github/LOW_COUPLING_GUIDE.md) - Reducing dependencies
+- [HIGH_COHESION_GUIDE.md](../../.github/HIGH_COHESION_GUIDE.md) - Single responsibility principle
+
+### Testing
+- [TESTING.md](../TESTING.md) - Test suite overview and running tests
+
 ## Author
 
 Marcelo Pereira Barbosa

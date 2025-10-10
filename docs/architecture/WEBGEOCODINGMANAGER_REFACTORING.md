@@ -407,6 +407,25 @@ The class now serves as a clear example of the Coordinator pattern with well-doc
 - [Coordinator Pattern](https://www.objc.io/issues/1-view-controllers/behaviors/)
 - [Observer Pattern](https://refactoring.guru/design-patterns/observer)
 
+## See Also
+
+### Related Documentation
+- [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - Complete WebGeocodingManager class documentation
+- [CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md) - Overall architecture and class relationships
+- [GEO_POSITION.md](./GEO_POSITION.md) - GeoPosition class used by the geocoding manager
+
+### Development Guidelines
+- [HIGH_COHESION_GUIDE.md](../../.github/HIGH_COHESION_GUIDE.md) - Single responsibility and focused components
+- [LOW_COUPLING_GUIDE.md](../../.github/LOW_COUPLING_GUIDE.md) - Dependency management and interfaces
+- [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md) - Pure functions and testability
+- [CODE_REVIEW_GUIDE.md](../../.github/CODE_REVIEW_GUIDE.md) - Code review standards
+- [REFACTORING_SUMMARY.md](../../.github/REFACTORING_SUMMARY.md) - Major refactoring history
+
+### Testing
+- [TESTING.md](../TESTING.md) - Test suite and coverage information
+- [TDD_GUIDE.md](../../.github/TDD_GUIDE.md) - Test-driven development approach
+- [UNIT_TEST_GUIDE.md](../../.github/UNIT_TEST_GUIDE.md) - Unit testing best practices
+
 ---
 
 **Author**: GitHub Copilot

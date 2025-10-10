@@ -933,12 +933,25 @@ Marcelo Pereira Barbosa
 
 ## See Also
 
+### Related Architecture Documentation
 - **[CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md)** - Complete class architecture and relationships
 - **[WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md)** - Detailed refactoring analysis (PR #189)
 - **[GEO_POSITION.md](./GEO_POSITION.md)** - Geographic position data documentation
-- **[TESTING.md](../TESTING.md)** - Testing documentation and coverage
-- **[REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)** - Functional programming guidelines
+- **[REFERENCE_PLACE.md](./REFERENCE_PLACE.md)** - Reference place class documentation
 - **[observer-pattern-sequence.md](./observer-pattern-sequence.md)** - Observer pattern execution flow diagrams
+
+### Testing and Quality
+- **[TESTING.md](../TESTING.md)** - Testing documentation and coverage
+- **[TDD_GUIDE.md](../../.github/TDD_GUIDE.md)** - Test-driven development approach
+- **[UNIT_TEST_GUIDE.md](../../.github/UNIT_TEST_GUIDE.md)** - Unit testing best practices
+
+### Development Guidelines
+- **[REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md)** - Functional programming guidelines
+- **[CODE_REVIEW_GUIDE.md](../../.github/CODE_REVIEW_GUIDE.md)** - Code review standards
+- **[HIGH_COHESION_GUIDE.md](../../.github/HIGH_COHESION_GUIDE.md)** - Single responsibility and cohesion
+- **[LOW_COUPLING_GUIDE.md](../../.github/LOW_COUPLING_GUIDE.md)** - Dependency management
+
+### Related Issues and Technical Debt
 - **[ISSUE_189_NEXT_STEPS.md](../issue-189/ISSUE_189_NEXT_STEPS.md)** - Follow-up technical debt items
 
 ## External Documentation

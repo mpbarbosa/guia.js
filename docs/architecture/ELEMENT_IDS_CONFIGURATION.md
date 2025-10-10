@@ -157,3 +157,18 @@ describe('WebGeocodingManager', () => {
 - Issue #189: WebGeocodingManager refactoring
 - `docs/issue-189/ISSUE_189_NEXT_STEPS.md`: Technical debt items
 - `__tests__/WebGeocodingManager.test.js`: Test examples
+
+## See Also
+
+### Related Architecture Documentation
+- [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - Main class using ElementIdsConfiguration
+- [CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md) - Complete class architecture
+- [WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md) - Refactoring details
+
+### Development Guidelines
+- [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md) - Immutability principles
+- [HIGH_COHESION_GUIDE.md](../../.github/HIGH_COHESION_GUIDE.md) - Single responsibility principle
+
+### Testing
+- [TESTING.md](../TESTING.md) - Test suite documentation
+- [UNIT_TEST_GUIDE.md](../../.github/UNIT_TEST_GUIDE.md) - Unit testing best practices

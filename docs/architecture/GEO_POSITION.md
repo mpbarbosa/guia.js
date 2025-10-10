@@ -458,8 +458,21 @@ Marcelo Pereira Barbosa
 
 ## See Also
 
-- [Class Diagram](./CLASS_DIAGRAM.md)
-- [Testing Documentation](../TESTING.md)
+### Related Architecture Documentation
+- [Class Diagram](./CLASS_DIAGRAM.md) - Overall system architecture
+- [GEO_POSITION_FUNC_SPEC.md](./GEO_POSITION_FUNC_SPEC.md) - Functional specification for GeoPosition
+- [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - Main geocoding coordination layer
+
+### Testing and Quality
+- [Testing Documentation](../TESTING.md) - Test suite and coverage
 - [Device Detection](../DEVICE_DETECTION.md) - How accuracy quality affects position acceptance
+- [TDD_GUIDE.md](../../.github/TDD_GUIDE.md) - Test-driven development
+- [UNIT_TEST_GUIDE.md](../../.github/UNIT_TEST_GUIDE.md) - Unit testing practices
+
+### Development Guidelines
+- [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md) - Pure functions and immutability
+- [CODE_REVIEW_GUIDE.md](../../.github/CODE_REVIEW_GUIDE.md) - Code review standards
+
+### External References
 - [MDN GeolocationPosition](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition)
 - [MDN GeolocationCoordinates](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates)

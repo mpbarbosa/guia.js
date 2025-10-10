@@ -82,3 +82,18 @@ This flow is more flexible than a pure observer pattern or pure callback approac
 ## References
 
 - See classes: `ObserverSubject`, `PositionManager`, and the `subscribe`, `notifyObservers`, `update` methods in [`/src/guia.js`](https://github.com/mpbarbosa/guia_js/blob/main/src/guia.js).
+
+## See Also
+
+### Related Architecture Documentation
+- [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - WebGeocodingManager class using observer pattern
+- [CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md) - Complete class architecture and relationships
+- [WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md) - PR #189 refactoring details
+
+### Development Guidelines
+- [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md) - Pure functions in observer implementations
+- [LOW_COUPLING_GUIDE.md](../../.github/LOW_COUPLING_GUIDE.md) - Decoupling through observer pattern
+- [HIGH_COHESION_GUIDE.md](../../.github/HIGH_COHESION_GUIDE.md) - Focused observer responsibilities
+
+### External References
+- [Observer Pattern - Refactoring Guru](https://refactoring.guru/design-patterns/observer)

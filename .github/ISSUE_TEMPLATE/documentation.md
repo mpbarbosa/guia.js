@@ -138,6 +138,10 @@ assignees: ''
 - [ ] Examples demonstrate best practices (pure functions, immutability)
 - [ ] Documentation is linked from appropriate index files
 
+**Related Guidelines:**
+- For code quality standards: [CODE_REVIEW_GUIDE.md](../CODE_REVIEW_GUIDE.md)
+- For testing documentation: [UNIT_TEST_GUIDE.md](../UNIT_TEST_GUIDE.md), [TDD_GUIDE.md](../TDD_GUIDE.md)
+
 ## Effort Estimation
 
 <!-- Rough estimate of the effort required -->

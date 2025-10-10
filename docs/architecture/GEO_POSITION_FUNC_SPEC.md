@@ -539,6 +539,12 @@ Missing coordinates:
 - DEVICE_DETECTION.md: Quality thresholds by device type
 - TESTING.md: Test suite documentation
 
+### Development Guidelines
+- [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md): Pure functions and immutability principles
+- [TDD_GUIDE.md](../../.github/TDD_GUIDE.md): Test-driven development approach
+- [UNIT_TEST_GUIDE.md](../../.github/UNIT_TEST_GUIDE.md): Unit testing best practices
+- [CODE_REVIEW_GUIDE.md](../../.github/CODE_REVIEW_GUIDE.md): Code review standards
+
 ## Glossary
 
 - **Accuracy**: The margin of error for geographic coordinates, in meters

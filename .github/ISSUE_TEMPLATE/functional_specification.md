@@ -87,7 +87,7 @@ When creating Class Documentation, follow this structure based on the project's 
 <!-- Links to related documentation -->
 ```
 
-**Reference**: See [docs/REFERENCE_PLACE.md](../../docs/REFERENCE_PLACE.md) for a complete example of Class Documentation.
+**Reference**: See [docs/architecture/REFERENCE_PLACE.md](../../docs/architecture/REFERENCE_PLACE.md) for a complete example of Class Documentation.
 
 ## Purpose and Motivation
 
@@ -245,6 +245,13 @@ When creating Class Documentation, follow this structure based on the project's 
 - [ ] Dependencies should be explicit (passed as parameters)
 - [ ] State mutations should be avoided (use immutable data patterns)
 - [ ] All side effects should occur at system boundaries
+
+**Implementation Guidelines:**
+- Referential transparency: [REFERENTIAL_TRANSPARENCY.md](../REFERENTIAL_TRANSPARENCY.md)
+- Code review standards: [CODE_REVIEW_GUIDE.md](../CODE_REVIEW_GUIDE.md)
+- Testing with TDD: [TDD_GUIDE.md](../TDD_GUIDE.md), [UNIT_TEST_GUIDE.md](../UNIT_TEST_GUIDE.md)
+- Architecture principles: [LOW_COUPLING_GUIDE.md](../LOW_COUPLING_GUIDE.md), [HIGH_COHESION_GUIDE.md](../HIGH_COHESION_GUIDE.md)
+- Class architecture: [CLASS_DIAGRAM.md](../../docs/architecture/CLASS_DIAGRAM.md)
 
 ### Design Principles
 

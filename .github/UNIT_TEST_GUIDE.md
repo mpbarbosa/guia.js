@@ -1438,6 +1438,12 @@ npm test -- --coverage --collectCoverageFrom="src/utils.js"
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
 - **[docs/github/GITHUB_ACTIONS_GUIDE.md](../docs/github/GITHUB_ACTIONS_GUIDE.md)** - CI/CD integration
 
+### Architecture Examples with Tests
+- **[CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md)** - Complete class architecture and test organization
+- **[GEO_POSITION.md](../docs/architecture/GEO_POSITION.md)** - Well-tested GeoPosition class example
+- **[REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md)** - ReferencePlace with comprehensive test coverage
+- **[WEB_GEOCODING_MANAGER.md](../docs/architecture/WEB_GEOCODING_MANAGER.md)** - Complex class with unit tests
+
 ### Jest Documentation
 
 - **[Jest Getting Started](https://jestjs.io/docs/getting-started)** - Official documentation

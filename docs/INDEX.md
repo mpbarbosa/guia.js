@@ -91,6 +91,13 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
 
 ### Automation & CI/CD
 
+- **[WORKFLOW_SETUP.md](../WORKFLOW_SETUP.md)** - Complete workflow setup guide 🆕
+  - Comprehensive GitHub Actions implementation
+  - Smart test detection and execution
+  - Automatic documentation updates
+  - Markdown validation and link checking
+  - Best practices and troubleshooting
+
 - **[GITHUB_ACTIONS_GUIDE.md](./github/GITHUB_ACTIONS_GUIDE.md)** - GitHub Actions workflows guide 🆕
   - Automated file modification workflow
   - Test and documentation updates
@@ -238,6 +245,12 @@ When creating issues, use these templates for consistency:
   - Story points estimation using Fibonacci scale
   - Ideal for breaking down functional specifications into implementable tasks
   - Uses GitHub's YAML form syntax for structured data entry
+
+- **[UX Issue](../.github/ISSUE_TEMPLATE/ux_issue.md)** - Report user experience problems 🆕
+  - Report usability concerns and UX suggestions
+  - Includes steps to reproduce, expected vs actual behavior
+  - Screenshots and environment details
+  - Severity classification (cosmetic, usability, blocking)
 
 📊 **[Issue Template Comparison](./github/ISSUE_TEMPLATE_COMPARISON.md)** - Side-by-side comparison of all templates 🆕
   - Detailed analysis of each template's features

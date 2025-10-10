@@ -18,10 +18,11 @@ ISSUE TEMPLATE COMPARISON
 | functional_specification.md |  379  | [Func Spec]       | documentation, functional-spec, triage      |
 | github_config.md            |  118  | [Config]          | infrastructure, configuration, triage       |
 | agile-ticket.yml            |  203  | [Agile]           | agile-ticket, triage                        |
+| ux_issue.md                 |   46  | [UX]              | UX, enhancement                             |
 
 ## Common Features Across All Templates
 
-All eight templates share these structural elements:
+All nine templates share these structural elements:
 
 ✅ **YAML Frontmatter** - Each template includes structured metadata:
 - `name`: Template display name
@@ -302,6 +303,31 @@ All eight templates share these structural elements:
 - Includes environment details for debugging workflow failures
 - Links to related resources like failed workflow runs
 
+### UX Issue Template (46 lines)
+
+**Purpose:** Report user experience problems or make usability suggestions
+
+**Unique Sections:**
+- **Summary** - Brief description of the UX issue or suggestion
+- **Steps to Reproduce** - Numbered steps to encounter the problem or observe the UX concern
+- **Expected Behavior** - What should happen from a user perspective
+- **Actual Behavior** - What actually happens (including error messages or confusing UI)
+- **Screenshots or Videos** - Visual aids to illustrate the problem
+- **Environment** - Browser/version, device type, operating system details
+- **Severity** - Classification as:
+  - Cosmetic (minor visual issue)
+  - Usability (makes usage confusing or difficult)
+  - Blocking (prevents using a feature)
+- **Additional Context** - Other details or suggestions
+
+**Special Considerations:**
+- Focused on user-facing aspects rather than code quality
+- No referential transparency section (UX-specific, not implementation-focused)
+- Simpler structure compared to other templates
+- Environment details help reproduce browser/device-specific issues
+- Severity classification helps prioritize UX improvements
+- Does NOT include "triage" label (only UX and enhancement labels)
+
 ## Integration Points
 
 All templates are well-integrated into the project:
@@ -315,39 +341,44 @@ All templates are well-integrated into the project:
 - Functional Specification: "Create functional specs" - Codeless, AI-friendly specification format 🆕
 - GitHub Configuration: "Report .github configuration issues" - For workflows, actions, CI/CD 🆕
 - Agile Ticket: "Create actionable Agile tickets" - User stories, acceptance criteria, engineering principles 🆕
+- UX Issue: "Report user experience problems" - Usability concerns and UX suggestions 🆕
 
 ✅ **Consistent Naming Conventions** - All files use lowercase with underscores (snake_case)
 
 ✅ **Follows Project Principles** - Each template aligns with the project's referential transparency initiative
 
-✅ **Triage Label** - All templates include the "triage" label for initial review
+✅ **Triage Label** - Most templates include the "triage" label for initial review (exception: ux_issue.md uses UX and enhancement labels)
 
 ## Comparison Summary
 
 ### Complexity Scale
 1. **Feature Request** (40 lines) - Simplest, focused on proposing new functionality
 2. **Copilot Issue** (45 lines) - Straightforward bug/feature reporting for Copilot
-3. **Technical Debt** (90 lines) - Moderate complexity for code quality issues
-4. **GitHub Configuration** (118 lines) - Moderate-to-high complexity for infrastructure issues
-5. **Documentation** (147 lines) - Comprehensive with detailed categorization
-6. **GitHub Copilot Test** (190 lines) - Comprehensive testing documentation for Copilot features 🆕
-7. **Agile Ticket** (203 lines) - Structured Agile/Scrum ticket format with YML forms 🆕
-8. **Functional Specification** (379 lines) - Most comprehensive, codeless specification format
+3. **UX Issue** (46 lines) - Simple user experience reporting 🆕
+4. **Technical Debt** (90 lines) - Moderate complexity for code quality issues
+5. **GitHub Configuration** (118 lines) - Moderate-to-high complexity for infrastructure issues
+6. **Documentation** (147 lines) - Comprehensive with detailed categorization
+7. **GitHub Copilot Test** (190 lines) - Comprehensive testing documentation for Copilot features 🆕
+8. **Agile Ticket** (203 lines) - Structured Agile/Scrum ticket format with YML forms 🆕
+9. **Functional Specification** (379 lines) - Most comprehensive, codeless specification format
 
 ### Common Label Strategy
-- All templates use **"triage"** for initial categorization
-- Each has a specific domain label (technical-debt, enhancement, copilot, documentation, functional-spec, infrastructure, testing)
+- Most templates use **"triage"** for initial categorization
+- Exception: **UX Issue** uses "UX" and "enhancement" without "triage" 🆕
+- Each has a specific domain label (technical-debt, enhancement, copilot, documentation, functional-spec, infrastructure, testing, UX)
 - Technical Debt uniquely includes **"maintenance"** label
 - Functional Specification uses both **"documentation"** and **"functional-spec"** labels
 - GitHub Configuration uses both **"infrastructure"** and **"configuration"** labels
 - GitHub Copilot Test uses both **"copilot"** and **"testing"** labels 🆕
 
 ### Functional Programming Focus
-All templates include referential transparency guidance, showing the project's commitment to:
+Most templates include referential transparency guidance, showing the project's commitment to:
 - Pure functions and deterministic behavior
 - Explicit dependency management
 - Side effect isolation
 - Enhanced testability
+
+Note: UX Issue template focuses on user-facing concerns rather than implementation, so it doesn't include referential transparency sections.
 
 ### Target Use Cases
 - **Technical Debt**: Internal code quality improvements
@@ -358,6 +389,7 @@ All templates include referential transparency guidance, showing the project's c
 - **Functional Specification**: Codeless specifications for AI-supported development
 - **GitHub Configuration**: DevOps, CI/CD, workflows, actions, and infrastructure issues
 - **Agile Ticket**: Actionable user stories and tasks following Agile/Scrum methodology 🆕
+- **UX Issue**: User experience problems, usability concerns, and interface suggestions 🆕
 
 ## Recent Updates
 
@@ -384,6 +416,8 @@ Based on this comparison:
    - Functional specifications → Functional Specification
    - Actionable user stories → Agile Ticket 🆕
    - Breaking down specs into tasks → Agile Ticket 🆕
+   - User experience issues → UX Issue 🆕
+   - Workflows/CI/CD issues → GitHub Configuration
 
 2. **Agile Ticket Template**: Use for Agile/Scrum teams to create structured user stories with acceptance criteria, engineering principles, and definition of done. Ideal for breaking down functional specifications into implementable tasks 🆕
 

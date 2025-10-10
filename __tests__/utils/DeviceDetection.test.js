@@ -2,7 +2,47 @@
  * @jest-environment node
  */
 
-// Mock DOM functions for testing
+
+/*
+  * Unit tests for device detection and accuracy configuration in guia.js
+  * Mock DOM functions for testing
+  * Tests cover various user agent strings and screen sizes
+  * Ensure referential transparency and deterministic behavior
+  * Tests for both mobile and desktop scenarios
+  * Validate accuracy configuration based on device type
+  * Integration tests with accuracy quality classification
+  * Edge cases for missing properties and non-browser environments
+  * Clear module cache between tests to ensure fresh evaluation
+  * Restore original globals after each test to avoid side effects
+  * Use Jest for mocking and assertions
+  * Comprehensive coverage of all branches in device detection logic
+  * Ensure mobile detection is robust against various user agent formats
+  * Validate that desktop detection works correctly with common desktop UAs
+  * Test boundary conditions for screen width checks (e.g., exactly 768px)
+  * Confirm that touch point detection works across different scenarios
+  * Ensure that the presence of window.opera is handled correctly
+  * Verify that the absence of navigator or window does not cause errors
+  * Check that accuracy settings are stricter for mobile devices as intended
+  * Ensure that medium accuracy is accepted on desktop but rejected on mobile
+  * Validate that the default accuracy settings are applied in non-browser environments
+  * Test with a variety of user agent strings to cover different devices and browsers
+  * Ensure that the tests are isolated and do not interfere with each other
+  * Use descriptive test names for clarity on what each test is validating
+  * Maintainability and readability of test code for future updates
+  * Adherence to best practices in unit testing and mocking
+  * Ensure that all possible code paths in the device detection logic are tested
+  * Validate that the function behaves correctly with both real and mocked inputs
+  * Confirm that the function is resilient to unexpected or malformed inputs
+  * Ensure that the tests can be run in any environment without relying on a real browser
+  * Provide clear error messages when tests fail for easier debugging
+  * Use of beforeEach and afterEach hooks to manage test setup and teardown
+  * Ensure that the tests are performant and do not introduce significant overhead
+  * Comprehensive documentation of test cases for future reference
+  * DEVICE_DETECTION.md for detailed explanation of the detection logic
+  * ACCURACY_CONFIGURATION.md for details on accuracy settings rationale
+  * Ensure compatibility with various versions of Jest and Node.js
+  * Regularly update tests to reflect changes in the main codebase
+*/
 global.document = undefined;
 
 describe('Device Detection and Accuracy Configuration', () => {
@@ -294,16 +334,28 @@ describe('Device Detection and Accuracy Configuration', () => {
     });
   });
 
+  // Tests for setupParams accuracy configuration based on device type
+  // Ensure mobile settings are stricter than desktop 
   describe('setupParams accuracy configuration', () => {
+    // Ensure accuracy arrays are defined
+    // and have expected contents
+    // Validate that mobile settings are stricter than desktop
     test('should have mobile and desktop accuracy arrays defined', () => {
       const { setupParams } = require('../../src/guia.js');
       
+      // Check that both arrays are defined and are arrays
       expect(setupParams.mobileNotAcceptedAccuracy).toBeDefined();
       expect(setupParams.desktopNotAcceptedAccuracy).toBeDefined();
       expect(Array.isArray(setupParams.mobileNotAcceptedAccuracy)).toBe(true);
       expect(Array.isArray(setupParams.desktopNotAcceptedAccuracy)).toBe(true);
     });
 
+    // Validate that mobile settings are stricter than desktop
+    // Mobile should reject more accuracy levels than desktop
+    // Mobile should reject "medium" accuracy
+    // Desktop should accept "medium" accuracy
+    // Both should reject "bad" and "very bad"
+    // This ensures the intended behavior of accuracy configuration
     test('mobile accuracy should be stricter than desktop', () => {
       const { setupParams } = require('../../src/guia.js');
       
@@ -358,7 +410,12 @@ describe('Device Detection and Accuracy Configuration', () => {
     });
   });
 
+  // Integration tests with accuracy quality classification
+  // to ensure correct behavior based on device type
+  // and accuracy quality
   describe('Integration with accuracy quality classification', () => {
+    // Mobile device tests
+    // Medium accuracy should be rejected on mobile
     test('mobile device should reject medium accuracy', () => {
       // Mock mobile device
       global.navigator = {
@@ -381,6 +438,9 @@ describe('Device Detection and Accuracy Configuration', () => {
       expect(setupParams.notAcceptedAccuracy).toContain('medium');
     });
 
+    // Desktop device tests
+    // Medium accuracy should be accepted on desktop
+    // since desktop settings are less strict
     test('desktop device should accept medium accuracy', () => {
       // Mock desktop device
       global.navigator = {

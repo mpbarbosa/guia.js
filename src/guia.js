@@ -136,7 +136,17 @@ const delay = (ms) => new Promise((res) => setTimeout(res, ms));
  * - Tablets in landscape mode (width > 768) may be misdetected as desktop
  * - Detection happens once at module load; window resize not tracked
  * 
+ * @test: isMobileDevice() should return true for mobile user agents
+ * @test: isMobileDevice() should return false for desktop user agents
+ * @test: isMobileDevice() should return true for touch-enabled devices
+ * @test: isMobileDevice() should return false for non-touch devices
+ * @test: isMobileDevice() should return true for small screen widths
+ * @test: isMobileDevice() should return false for large screen widths
+ *
+ * @see (/__tests__/utils/DeviceDetection.test.js) Unit tests for device detection
+ * @see {@link https://caniuse.com/mdn-api_navigator_maxtouchpoints} Browser compatibility for maxTouchPoints
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent} User Agent Detection
+ * @see (DEVICE_DETECTION.md) - Additional documentation on device detection strategies
  * @since 0.8.4-alpha
  * @author Marcelo Pereira Barbosa
  */

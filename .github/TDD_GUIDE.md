@@ -831,10 +831,17 @@ When opening a PR:
 ### Internal Documentation
 
 - **[TESTING.md](../TESTING.md)** - Test suite overview and configuration
+- **[UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)** - Unit testing best practices
 - **[REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)** - Pure functions guide
 - **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Code review checklist
-- **[GITHUB_ACTIONS_GUIDE.md](../docs/GITHUB_ACTIONS_GUIDE.md)** - CI/CD workflow guide
+- **[GITHUB_ACTIONS_GUIDE.md](../docs/github/GITHUB_ACTIONS_GUIDE.md)** - CI/CD workflow guide
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
+
+### Architecture Examples
+- **[CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md)** - Complete class architecture
+- **[GEO_POSITION.md](../docs/architecture/GEO_POSITION.md)** - Example of well-tested class
+- **[REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md)** - TDD implementation example
+- **[WEBGEOCODINGMANAGER_REFACTORING.md](../docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md)** - Refactoring with tests
 
 ### Jest Documentation
 

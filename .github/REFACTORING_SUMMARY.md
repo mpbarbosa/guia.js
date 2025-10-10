@@ -253,8 +253,18 @@ New issue templates should:
 
 ## Related Documentation
 
-- [LOW_COUPLING_GUIDE.md](.github/LOW_COUPLING_GUIDE.md) - Detailed principles and examples
-- [CONTRIBUTING.md](.github/CONTRIBUTING.md) - Contribution guidelines
+### Project Guidelines
+- [LOW_COUPLING_GUIDE.md](./LOW_COUPLING_GUIDE.md) - Detailed principles and examples
+- [HIGH_COHESION_GUIDE.md](./HIGH_COHESION_GUIDE.md) - Single responsibility and cohesion
+- [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) - Pure functions and immutability
+- [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md) - Review checklist
+- [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution guidelines
+
+### Architecture Examples
+- [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) - Complete architecture showing refactored classes
+- [WEBGEOCODINGMANAGER_REFACTORING.md](../docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - PR #189 refactoring details
+
+### External References
 - [GitHub Actions: Reusing workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows)
 - [Creating composite actions](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)
 

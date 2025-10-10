@@ -211,6 +211,19 @@ node-version: '18'
 
 ## Related Documentation
 
+### Project Guidelines
+- [HIGH_COHESION_GUIDE.md](./HIGH_COHESION_GUIDE.md) - Complementary principle for cohesive components
+- [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) - Pure functions reduce coupling
+- [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md) - Review checklist including coupling concerns
+- [TDD_GUIDE.md](./TDD_GUIDE.md) - Testing approach for loosely coupled code
+- [REFACTORING_SUMMARY.md](./REFACTORING_SUMMARY.md) - Major refactoring examples
+
+### Architecture Examples
+- [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) - Overall architecture showing low coupling
+- [WEBGEOCODINGMANAGER_REFACTORING.md](../docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - Reducing coupling example
+- [WEB_GEOCODING_MANAGER.md](../docs/architecture/WEB_GEOCODING_MANAGER.md) - Dependency injection pattern
+
+### External References
 - [GitHub Actions: Reusing workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows)
 - [Creating composite actions](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)
 - [Issue templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository)

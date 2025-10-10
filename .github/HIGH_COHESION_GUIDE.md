@@ -615,7 +615,14 @@ describe('AddressCache', () => {
 - [REFACTORING_SUMMARY.md](./REFACTORING_SUMMARY.md) - Real examples of improving cohesion (PR #121)
 - [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md) - Reviewing for cohesion
 - [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) - Pure functions and single responsibility
-- [CLASS_DIAGRAM.md](../docs/CLASS_DIAGRAM.md) - Architecture showing cohesive classes
+- [TDD_GUIDE.md](./TDD_GUIDE.md) - Testing cohesive components
+- [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md) - Testing focused units
+
+### Architecture Examples
+- [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) - Architecture showing cohesive classes
+- [WEBGEOCODINGMANAGER_REFACTORING.md](../docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - PR #189 cohesion improvements
+- [WEB_GEOCODING_MANAGER.md](../docs/architecture/WEB_GEOCODING_MANAGER.md) - Coordinator with focused responsibilities
+- [REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md) - Single-purpose class example
 
 ### External Resources
 

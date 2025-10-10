@@ -512,9 +512,21 @@ This ensures the original data isn't modified, making the code more predictable 
 
 ## Resources
 
+### Project Guidelines
 - [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) - Detailed guide on referential transparency
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution guidelines including immutability principles
 - [LOW_COUPLING_GUIDE.md](./LOW_COUPLING_GUIDE.md) - Architectural guidelines
+- [HIGH_COHESION_GUIDE.md](./HIGH_COHESION_GUIDE.md) - Single responsibility principle
+- [TDD_GUIDE.md](./TDD_GUIDE.md) - Test-driven development approach
+- [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md) - Unit testing best practices
+
+### Architecture Documentation
+- [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) - Complete class architecture
+- [WEBGEOCODINGMANAGER_REFACTORING.md](../docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - Example of high-quality refactoring
+- [REFACTORING_SUMMARY.md](./REFACTORING_SUMMARY.md) - Major refactoring history
+
+### Testing
+- [TESTING.md](../TESTING.md) - Test suite overview and running tests
 
 ---
 

@@ -243,8 +243,8 @@ describe('ReferencePlace Class', () => {
             });
         });
 
-        test('should use referencePlaceMap from setupParams', () => {
-            const map = setupParams.referencePlaceMap;
+        test('should use referencePlaceMap from ReferencePlace class', () => {
+            const map = ReferencePlace.referencePlaceMap;
             
             Object.keys(map).forEach(className => {
                 Object.keys(map[className]).forEach(typeName => {

@@ -3843,9 +3843,10 @@ class ChangeDetectionCoordinator {
 		}
 
 		// Notify regular observers with change-specific data
+		// Pass changeDetails as 4th parameter for observers that need previous/current info
 		for (const observer of this.observerSubject.observers) {
 			if (typeof observer.update === "function") {
-				observer.update(changeData, changeType, null, null);
+				observer.update(changeData, changeType, null, changeDetails);
 			}
 		}
 
@@ -5286,12 +5287,24 @@ class HtmlSpeechSynthesisDisplayer {
 	 * Builds text for municipio (municipality) change announcements.
 	 * 
 	 * @param {BrazilianStandardAddress} currentAddress - Current standardized address
+	 * @param {Object} changeDetails - Details about the municipality change (optional)
+	 * @param {Object} changeDetails.previous - Previous municipality info
+	 * @param {string} changeDetails.previous.municipio - Previous municipality name
+	 * @param {Object} changeDetails.current - Current municipality info
+	 * @param {string} changeDetails.current.municipio - Current municipality name
 	 * @returns {string} Formatted speech text for municipio
 	 */
-	buildTextToSpeechMunicipio(currentAddress) {
+	buildTextToSpeechMunicipio(currentAddress, changeDetails) {
 		if (!currentAddress || !currentAddress.municipio) {
 			return "Novo município detectado";
 		}
+		
+		// If we have changeDetails with previous municipality, include it in the message
+		if (changeDetails && changeDetails.previous && changeDetails.previous.municipio) {
+			return `Você saiu de ${changeDetails.previous.municipio} e entrou em ${currentAddress.municipio}`;
+		}
+		
+		// Fallback to simple message if no previous municipality info
 		return `Você entrou no município de ${currentAddress.municipio}`;
 	}
 
@@ -5345,14 +5358,14 @@ class HtmlSpeechSynthesisDisplayer {
 	 * @param {Object} currentAddress - Current address data
 	 * @param {string|BrazilianStandardAddress} enderecoPadronizadoOrEvent - Standardized address or event type
 	 * @param {string} posEvent - Position event type (strCurrPosUpdate, strImmediateAddressUpdate, etc.)
-	 * @param {Object} loading - Loading state information
+	 * @param {Object} loadingOrChangeDetails - Loading state information or changeDetails for address component changes
 	 * @param {Object} error - Error information if any
 	 * @returns {void}
 	 * 
 	 * @since 0.8.3-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
-	update(currentAddress, enderecoPadronizadoOrEvent, posEvent, loading, error) {
+	update(currentAddress, enderecoPadronizadoOrEvent, posEvent, loadingOrChangeDetails, error) {
 		log("+++ (301) HtmlSpeechSynthesisDisplayer.update called +++");
 		log("+++ (302) currentAddress: ", currentAddress);
 		log("+++ (303) enderecoPadronizadoOrEvent: " , enderecoPadronizadoOrEvent);
@@ -5369,7 +5382,16 @@ class HtmlSpeechSynthesisDisplayer {
 		// Priority order: Municipality (3) > Bairro (2) > Logradouro (1) > Full address every 50s (0)
 		if (["MunicipioChanged","BairroChanged","LogradouroChanged"].includes(enderecoPadronizadoOrEvent)) {
 			log("+++ (310) (HtmlSpeechSyntesisDisplayer) Changed")
-			textToBeSpoken = currentAddress;
+			
+			// Call the appropriate build method based on event type
+			if (enderecoPadronizadoOrEvent === "MunicipioChanged") {
+				textToBeSpoken = this.buildTextToSpeechMunicipio(currentAddress, loadingOrChangeDetails);
+			} else if (enderecoPadronizadoOrEvent === "BairroChanged") {
+				textToBeSpoken = this.buildTextToSpeechBairro(currentAddress);
+			} else if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
+				textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
+			}
+			
 			const priorities = {"MunicipioChanged": 3, "BairroChanged": 2, "LogradouroChanged": 1};
 			priority = priorities[enderecoPadronizadoOrEvent]; // Set priority based on event
 		} else if (posEvent === PositionManager.strCurrPosUpdate) {

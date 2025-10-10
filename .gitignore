@@ -32,4 +32,4 @@ Thumbs.db
 *.tmp
 *.temp
 .tmp/
-.temp/
+.temp/demo-issue-218.js

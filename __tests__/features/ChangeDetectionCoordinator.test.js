@@ -229,7 +229,7 @@ describe('ChangeDetectionCoordinator', () => {
                 'Rua Nova',
                 'LogradouroChanged',
                 null,
-                null
+                changeDetails
             );
         });
 
@@ -251,7 +251,7 @@ describe('ChangeDetectionCoordinator', () => {
                 'Bairro Novo',
                 'BairroChanged',
                 null,
-                null
+                changeDetails
             );
         });
 
@@ -274,7 +274,7 @@ describe('ChangeDetectionCoordinator', () => {
                 mockReverseGeocoder.currentAddress,
                 'MunicipioChanged',
                 null,
-                null
+                changeDetails
             );
         });
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `GeoPosition` class was introduced in version 0.5.0-alpha to encapsulate and manage geographic position data obtained from the browser's Geolocation API. It provides a structured way to handle GPS coordinates, accuracy information, altitude, speed, and heading data with automatic quality classification.
+The `GeoPosition` class was introduced in version 0.5.0-alpha to encapsulate and manage geographic position data obtained from the browser's Geolocation API. It provides a **pure, referentially transparent, immutable** way to handle GPS coordinates, accuracy information, altitude, speed, and heading data with automatic quality classification.
 
 ## Motivation
 
@@ -11,8 +11,11 @@ When working with the browser's Geolocation API, position data comes in a comple
 - Automatically classifying GPS accuracy into quality levels (excellent, good, medium, bad, very bad)
 - Providing utility methods for distance calculations
 - Offering consistent string representations for logging and debugging
+- **Ensuring referential transparency**: No side effects, no mutations, predictable behavior
+- **Providing immutability**: All properties set at construction, no setters
+- **Creating defensive copies**: Input objects are not modified or shared
 
-Previously, developers had to work directly with the browser's `GeolocationPosition` object, which requires accessing nested properties like `position.coords.latitude`. The `GeoPosition` class provides a cleaner, more intuitive interface.
+Previously, developers had to work directly with the browser's `GeolocationPosition` object, which requires accessing nested properties like `position.coords.latitude`. The `GeoPosition` class provides a cleaner, more intuitive interface with functional programming guarantees.
 
 ## Features
 
@@ -21,6 +24,9 @@ Previously, developers had to work directly with the browser's `GeolocationPosit
 - **Distance calculation** between geographic points using Haversine formula
 - **Consistent logging** with formatted toString() output
 - **Integration** with PositionManager and GeolocationService
+- **Referential transparency**: Pure functions, no side effects, predictable outputs
+- **Immutability**: All properties set at construction, no mutation after creation
+- **Defensive copying**: Input objects are copied to prevent shared mutable state
 
 ## Usage
 
@@ -238,9 +244,11 @@ new GeoPosition(position)
     - `speed` (number|null): Speed in meters per second
   - `timestamp` (number): Timestamp when the position was acquired
 
-**Side Effects:**
-- Adds a `toString()` method to the original `position` parameter
-- Logs creation message using the global `log()` function
+**Pure and Immutable:**
+- Does not mutate the input `position` object
+- Does not perform side effects (no logging)
+- Creates defensive copies of `position` and `coords` objects
+- All properties are set once at construction and cannot be changed
 
 ### Properties
 
@@ -323,28 +331,6 @@ console.log(`Restaurant is ${Math.round(distance)} meters away`);
 
 ---
 
-#### `set accuracy(value)`
-
-Sets the position accuracy and automatically calculates quality classification.
-
-**Parameters:**
-- `value` (number): Accuracy value in meters from GPS coordinates
-
-**Side Effects:**
-- Updates internal `_accuracy` property
-- Automatically recalculates and updates `accuracyQuality` property
-
-**Example:**
-```javascript
-const position = new GeoPosition(geolocationPosition);
-position.accuracy = 15;
-console.log(position.accuracyQuality);  // 'good' - automatically updated
-```
-
-**Since:** 0.5.0-alpha
-
----
-
 #### `toString()`
 
 Returns a string representation of the GeoPosition instance.
@@ -387,17 +373,32 @@ Test coverage includes:
 
 ## Design Considerations
 
-### Why Not Immutable?
+### Referential Transparency and Immutability
 
-Unlike `ReferencePlace`, the `GeoPosition` class is **not** frozen after creation. This is intentional because:
+As of version 0.5.0-alpha, the `GeoPosition` class is **designed to be referentially transparent and immutable**:
 
-1. **Position data updates**: GPS positions are continuously updated, and the accuracy setter needs to work
-2. **Performance**: Position updates happen frequently in real-time tracking scenarios
-3. **Integration**: The class integrates with mutable browser APIs and position managers
+1. **No side effects**: The constructor does not log or mutate input objects
+2. **Immutable properties**: All properties are set once at construction time
+3. **No setters**: The accuracy setter has been removed to ensure immutability
+4. **Defensive copying**: The constructor creates defensive copies of input objects to prevent shared mutable state
+5. **Pure methods**: All methods (distanceTo, toString) are pure functions that depend only on their inputs
 
-### Modifying the Original Position Object
+### Position Updates
 
-The constructor adds a `toString()` method to the original `position` parameter. While this violates immutability principles, it's done for debugging purposes to make the browser's position object more readable in console logs.
+For continuous position tracking, create new `GeoPosition` instances for each update rather than mutating existing instances. This ensures:
+- Predictable behavior (referential transparency)
+- Easier testing and debugging
+- Thread-safety and concurrency-friendliness
+- Compatibility with functional programming patterns
+
+Example:
+```javascript
+// DON'T: Try to mutate (won't work as expected)
+// position.accuracy = 20; // No setter exists
+
+// DO: Create a new instance for updates
+const newPosition = new GeoPosition(updatedBrowserPosition);
+```
 
 ## Related Classes
 
@@ -445,12 +446,16 @@ if (isNearby(position, store, 50)) {
 
 ## Version History
 
-- **0.5.0-alpha**: Initial implementation of `GeoPosition` class
-  - Constructor with property extraction
-  - Static `getAccuracyQuality()` method
-  - Instance methods: `distanceTo()`, `toString()`
-  - Accuracy setter with automatic quality calculation
-  - Deprecated `calculateAccuracyQuality()` method (bug present)
+- **0.5.0-alpha**: Referentially transparent implementation
+  - **Breaking change**: Removed accuracy setter for immutability
+  - **Breaking change**: Constructor no longer mutates input position object
+  - **Breaking change**: Constructor no longer logs creation
+  - Added defensive copying of position and coords objects
+  - All properties now immutable (set once at construction)
+  - All methods are pure functions (no side effects)
+  - Static `getAccuracyQuality()` method (pure function)
+  - Instance methods: `distanceTo()` (pure), `toString()` (pure)
+  - Deprecated `calculateAccuracyQuality()` method (bug present, use property instead)
 
 ## Author
 

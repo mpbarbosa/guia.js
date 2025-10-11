@@ -26,6 +26,7 @@ Previously, developers had to work directly with the browser's `GeolocationPosit
 - **Integration** with PositionManager and GeolocationService
 - **Referential transparency**: Pure functions, no side effects, predictable outputs
 - **Immutability**: All properties set at construction, no mutation after creation
+- **Immutable instances** (frozen after creation)
 - **Defensive copying**: Input objects are copied to prevent shared mutable state
 
 ## Usage

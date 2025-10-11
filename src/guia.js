@@ -257,6 +257,7 @@ class GeoPosition {
 		this.heading = coords.heading;
 		this.speed = coords.speed;
 		this.timestamp = position?.timestamp;
+		Object.freeze(this); // Make the instance immutable
 	}
 
 	/**
@@ -1897,13 +1898,13 @@ class HTMLPositionDisplayer {
 		// Display core coordinates
 		html += `<div class="coordinates">
             <h4>Coordenadas:</h4>
-            <p><strong>Latitude:</strong> ${coords.latitude.toFixed(6)}°</p>
-            <p><strong>Longitude:</strong> ${coords.longitude.toFixed(6)}°</p>
+            <p><strong>Latitude:</strong> ${coords ? (coords.latitude ? coords.latitude.toFixed(6) : 'N/A') : 'N/A'}°</p>
+            <p><strong>Longitude:</strong> ${coords ? (coords.longitude ? coords.longitude.toFixed(6) : 'N/A') : 'N/A'}°</p>
         </div>`;
 
 		// Display accuracy information
 		html += `<div class="accuracy-info">
-            <p><strong>Precisão:</strong> ${coords.accuracy ? coords.accuracy.toFixed(2) : 'N/A'} metros</p>
+            <p><strong>Precisão:</strong> ${coords ? (coords.accuracy ? coords.accuracy.toFixed(2) : 'N/A') : 'N/A'} metros</p>
             <h4>Precisão:</h4>
             <p><strong>Qualidade:</strong> ${this.formatAccuracyQuality(position.accuracyQuality)}</p>
         </div>`;

@@ -23,6 +23,13 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Distance calculation utilities
   - Integration with position tracking
 
+- **[POSITION_MANAGER.md](./architecture/POSITION_MANAGER.md)** - PositionManager class documentation 🆕
+  - Singleton pattern for centralized position state management
+  - Observer pattern for position change notifications
+  - Multi-layer validation (accuracy, distance, time thresholds)
+  - Comprehensive API reference with real-world examples
+  - Smart filtering to prevent excessive processing
+
 - **[GEO_POSITION_FUNC_SPEC.md](./architecture/GEO_POSITION_FUNC_SPEC.md)** - GeoPosition functional specification 🆕
   - Language-agnostic functional requirements
   - Codeless specification for multi-language implementation

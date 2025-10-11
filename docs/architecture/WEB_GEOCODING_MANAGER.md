@@ -756,7 +756,7 @@ However, immutability principles are applied where appropriate (displayers, conf
 
 ## Related Classes
 
-- **[PositionManager](./CLASS_DIAGRAM.md)**: Singleton managing current device position state
+- **[PositionManager](./POSITION_MANAGER.md)**: Singleton managing current device position state
 - **[ReverseGeocoder](./CLASS_DIAGRAM.md)**: Converts coordinates to addresses via Nominatim API
 - **[GeolocationService](./CLASS_DIAGRAM.md)**: Wraps browser Geolocation API
 - **[ChangeDetectionCoordinator](./CLASS_DIAGRAM.md)**: Manages address component change detection callbacks

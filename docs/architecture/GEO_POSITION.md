@@ -401,9 +401,9 @@ The constructor adds a `toString()` method to the original `position` parameter.
 
 ## Related Classes
 
-- **PositionManager**: Singleton that uses GeoPosition to manage current device position
-- **GeolocationService**: Wraps browser Geolocation API and creates GeoPosition instances
-- **ReverseGeocoder**: Uses position coordinates to fetch address information
+- **[PositionManager](./POSITION_MANAGER.md)**: Singleton that uses GeoPosition to manage current device position
+- **[GeolocationService](./CLASS_DIAGRAM.md)**: Wraps browser Geolocation API and creates GeoPosition instances
+- **[ReverseGeocoder](./CLASS_DIAGRAM.md)**: Uses position coordinates to fetch address information
 
 ## Common Patterns
 

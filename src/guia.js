@@ -597,6 +597,61 @@ class ObserverSubject {
 	}
 }
 
+/**
+ * Centralized singleton manager for device geographic position.
+ * 
+ * PositionManager implements the singleton and observer patterns to provide a single
+ * source of truth for the current device position. It wraps the browser's Geolocation API,
+ * applies multi-layer validation rules (accuracy, distance, time thresholds), and notifies
+ * subscribed observers about position changes.
+ * 
+ * Key Features:
+ * - Singleton pattern ensures one position state across application
+ * - Observer pattern for decoupled position change notifications
+ * - Smart filtering prevents excessive processing from GPS noise
+ * - Multi-layer validation (accuracy quality, distance threshold, time interval)
+ * - Integration with GeoPosition for enhanced position data
+ * 
+ * Validation Rules:
+ * 1. Accuracy Quality: Rejects medium/bad/very bad accuracy on mobile devices
+ * 2. Distance Threshold: Ignores movements less than 20 meters
+ * 3. Time Interval: Distinguishes regular updates (≥50s) from immediate updates (<50s)
+ * 
+ * @class PositionManager
+ * @pattern Singleton - Only one instance manages position state
+ * @pattern Observer - Notifies subscribers of position changes
+ * 
+ * @see {@link GeoPosition} For position data wrapper with convenience methods
+ * @see {@link ObserverSubject} For observer pattern implementation
+ * @see {@link WebGeocodingManager} For geocoding workflow coordination
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition} Browser GeolocationPosition API
+ * @see [Complete Documentation](../../docs/architecture/POSITION_MANAGER.md)
+ * 
+ * @example
+ * // Basic usage - get singleton instance
+ * const manager = PositionManager.getInstance();
+ * 
+ * @example
+ * // Subscribe to position updates
+ * const observer = {
+ *   update: (positionManager, eventType) => {
+ *     if (eventType === PositionManager.strCurrPosUpdate) {
+ *       console.log('Position:', positionManager.latitude, positionManager.longitude);
+ *     }
+ *   }
+ * };
+ * manager.subscribe(observer);
+ * 
+ * @example
+ * // Update position (typically done by GeolocationService)
+ * navigator.geolocation.getCurrentPosition((position) => {
+ *   const manager = PositionManager.getInstance();
+ *   manager.update(position); // Validates and updates if rules pass
+ * });
+ * 
+ * @since 0.5.0-alpha
+ * @author Marcelo Pereira Barbosa
+ */
 class PositionManager {
 	/**
 	 * Singleton instance holder. Only one PositionManager exists per application.

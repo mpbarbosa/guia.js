@@ -228,25 +228,35 @@ log("Guia.js version:", guiaVersion.toString());
  * ============================
  */
 
+/**
+ * Pure, referentially transparent GeoPosition class.
+ * 
+ * This class is designed to be immutable and pure:
+ * - Does not mutate input objects
+ * - Does not perform side effects (no logging)
+ * - All properties are set once at construction and cannot be changed
+ * - All methods are pure functions (outputs depend only on inputs)
+ * - Creates defensive copies of input objects to ensure isolation
+ * 
+ * @since 0.5.0-alpha
+ */
 class GeoPosition {
 	constructor(position) {
-		position.toString = function () {
-			return `PositionGeolocation: { latitude: ${this.coords.latitude}, longitude: ${this.coords.longitude}, accuracy: ${this.coords.accuracy} }`;
-		};
-		this.geolocationPosition = position;
-		this.coords = position.coords;
-		this.latitude = position.coords.latitude;
-		this.longitude = position.coords.longitude;
-		this.accuracy = position.coords.accuracy;
+		// Create defensive copies to avoid sharing references with external state
+		const coords = position?.coords ?? {};
+		this.geolocationPosition = position ? { ...position, coords: { ...coords } } : null;
+		this.coords = coords ? { ...coords } : null;
+		this.latitude = coords.latitude;
+		this.longitude = coords.longitude;
+		this.accuracy = coords.accuracy;
 		this.accuracyQuality = GeoPosition.getAccuracyQuality(
-			position.coords.accuracy,
+			coords.accuracy,
 		);
-		this.altitude = position.coords.altitude;
-		this.altitudeAccuracy = position.coords.altitudeAccuracy;
-		this.heading = position.coords.heading;
-		this.speed = position.coords.speed;
-		this.timestamp = position.timestamp;
-		log("+++ (1) (GeoPosition) Created:", this.toString());
+		this.altitude = coords.altitude;
+		this.altitudeAccuracy = coords.altitudeAccuracy;
+		this.heading = coords.heading;
+		this.speed = coords.speed;
+		this.timestamp = position?.timestamp;
 	}
 
 	/**
@@ -340,26 +350,7 @@ class GeoPosition {
 		);
 	}
 
-	/**
-	 * Sets the position accuracy and automatically calculates quality classification.
-	 * 
-	 * This setter automatically updates the accuracyQuality property whenever
-	 * the accuracy value changes, ensuring consistency between the numeric
-	 * accuracy value and its quality classification.
-	 * 
-	 * @param {number} value - Accuracy value in meters from GPS coordinates
-	 * 
-	 * @example
-	 * const manager = PositionManager.getInstance();
-	 * manager.accuracy = 15; // Sets accuracy and updates accuracyQuality to 'good'
-	 * console.log(manager.accuracyQuality); // 'good'
-	 * 
-	 * @since 0.5.0-alpha
-	 */
-	set accuracy(value) {
-		this._accuracy = value;
-		this.accuracyQuality = GeoPosition.getAccuracyQuality(value);
-	}
+
 
 	/**
 	 * Returns a string representation of the GeoPosition instance.

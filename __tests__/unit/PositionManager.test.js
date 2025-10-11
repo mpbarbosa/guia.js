@@ -4,6 +4,7 @@
  * 
  * @jest-environment node
  * @author Marcelo Pereira Barbosa
+ * @see [PositionManager Documentation](../../docs/architecture/POSITION_MANAGER.md)
  * @since 0.8.5-alpha
  */
 

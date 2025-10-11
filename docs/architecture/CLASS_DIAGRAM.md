@@ -13,8 +13,8 @@ The application is organized into the following architectural layers:
 ### 1. Core Domain Layer
 **Purpose**: Fundamental data structures and position management
 
-- **GeoPosition**: Represents a geographic position with coordinates
-- **PositionManager**: Singleton managing current position state (Observer pattern)
+- **[GeoPosition](./GEO_POSITION.md)**: Represents a geographic position with coordinates
+- **[PositionManager](./POSITION_MANAGER.md)**: Singleton managing current position state (Observer pattern)
 - **SingletonStatusManager**: Application-wide status management
 
 ### 2. Service Layer

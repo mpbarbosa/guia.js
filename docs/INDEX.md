@@ -159,6 +159,18 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Testing requirements
   - Pull request process
 
+- **[JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript Best Practices Guide 🆕
+  - Core JavaScript principles and patterns
+  - Functional programming in JavaScript
+  - Pure functions and immutability patterns
+  - Modern ES6+ features and syntax
+  - Error handling and async programming
+  - Code organization and naming conventions
+  - Common pitfalls and anti-patterns
+  - Performance and testing considerations
+  - **GitHub Copilot-optimized format**
+  - **Essential reading for all contributors**
+
 - **[REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)** - Comprehensive guide 🆕
   - What is referential transparency and why it matters
   - Pure vs impure functions with examples
@@ -270,6 +282,7 @@ When creating issues, use these templates for consistency:
 
 1. **Read first**:
    - [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Understand project conventions
+   - [JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md) - JavaScript coding standards
    - [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md) - Learn core principles
 
 2. **Before coding**:

@@ -6,7 +6,7 @@
 - **Last Updated**: January 2025
 - **Status**: Final
 - **Purpose**: Language-agnostic functional specification for GeoPosition class implementation
-- **Target Audience**: Developers implementing GeoPosition in other programming languages
+- **Target Audience**: Developers implementing GeoPosition in any programming languages
 
 ## Overview
 

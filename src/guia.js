@@ -5575,12 +5575,172 @@ class HtmlSpeechSynthesisDisplayer {
 }
 
 /**
+ * Pure helper functions for GeolocationService.
+ * 
+ * These functions are referentially transparent - they have no side effects
+ * and always produce the same output for the same input. This makes them
+ * easy to test, reason about, and reuse.
+ * 
+ * @since 0.8.5-alpha
+ */
+
+/**
+ * Maps geolocation error codes to error information.
+ * Pure function that returns error metadata based on error code.
+ * 
+ * @param {number} errorCode - Geolocation error code (1-3)
+ * @returns {Object} Error information with name and message
+ * 
+ * @example
+ * const errorInfo = getGeolocationErrorInfo(1);
+ * // Returns: { name: "PermissionDeniedError", message: "User denied..." }
+ * 
+ * @since 0.8.5-alpha
+ */
+const getGeolocationErrorInfo = (errorCode) => {
+	const errorMap = {
+		1: {
+			name: "PermissionDeniedError",
+			message: "User denied geolocation permission"
+		},
+		2: {
+			name: "PositionUnavailableError",
+			message: "Position information is unavailable"
+		},
+		3: {
+			name: "TimeoutError",
+			message: "Geolocation request timed out"
+		}
+	};
+
+	return errorMap[errorCode] || {
+		name: "UnknownGeolocationError",
+		message: "Unknown geolocation error occurred"
+	};
+};
+
+/**
+ * Formats a geolocation error into a consistent Error object.
+ * Pure function that transforms error data without side effects.
+ * 
+ * @param {Object} error - Raw geolocation error with code property
+ * @returns {Error} Formatted error object with descriptive message
+ * 
+ * @example
+ * const formattedError = formatGeolocationError({ code: 1, message: "..." });
+ * 
+ * @since 0.8.5-alpha
+ */
+const formatGeolocationError = (error) => {
+	const errorInfo = getGeolocationErrorInfo(error.code);
+	
+	const formattedError = new Error(errorInfo.message);
+	formattedError.name = errorInfo.name;
+	formattedError.code = error.code;
+	formattedError.originalError = error;
+	
+	return formattedError;
+};
+
+/**
+ * Gets Portuguese error message for geolocation error code.
+ * Pure function for UI error messages.
+ * 
+ * @param {number} errorCode - Geolocation error code
+ * @returns {string} Portuguese error message
+ * 
+ * @example
+ * const msg = getGeolocationErrorMessage(1);
+ * // Returns: "Permissão negada pelo usuário"
+ * 
+ * @since 0.8.5-alpha
+ */
+const getGeolocationErrorMessage = (errorCode) => {
+	const errorMessages = {
+		1: "Permissão negada pelo usuário",
+		2: "Posição indisponível",
+		3: "Timeout na obtenção da posição"
+	};
+	
+	return errorMessages[errorCode] || "Erro desconhecido";
+};
+
+/**
+ * Generates HTML for displaying geolocation error.
+ * Pure function that returns HTML string based on error data.
+ * 
+ * @param {Object} error - Geolocation error object
+ * @returns {string} HTML string for error display
+ * 
+ * @example
+ * const html = generateErrorDisplayHTML({ code: 1, message: "..." });
+ * 
+ * @since 0.8.5-alpha
+ */
+const generateErrorDisplayHTML = (error) => {
+	const errorMessage = getGeolocationErrorMessage(error.code);
+	
+	return `
+		<div class="location-error">
+			<h4>Erro na Obtenção da Localização</h4>
+			<p><strong>Código:</strong> ${error.code}</p>
+			<p><strong>Mensagem:</strong> ${errorMessage}</p>
+			<p><strong>Detalhes:</strong> ${error.message}</p>
+		</div>
+	`;
+};
+
+/**
+ * Checks if navigator geolocation is supported.
+ * Pure function that validates geolocation API availability.
+ * 
+ * @param {Object} navigatorObj - Navigator object to check
+ * @returns {boolean} True if geolocation is supported
+ * 
+ * @example
+ * const supported = isGeolocationSupported(navigator);
+ * 
+ * @since 0.8.5-alpha
+ */
+const isGeolocationSupported = (navigatorObj) => {
+	return navigatorObj && 'geolocation' in navigatorObj;
+};
+
+/**
+ * Checks if Permissions API is supported.
+ * Pure function that validates Permissions API availability.
+ * 
+ * @param {Object} navigatorObj - Navigator object to check
+ * @returns {boolean} True if Permissions API is supported
+ * 
+ * @since 0.8.5-alpha
+ */
+const isPermissionsAPISupported = (navigatorObj) => {
+	return navigatorObj && 'permissions' in navigatorObj;
+};
+
+/**
  * Provides geolocation services using the HTML5 Geolocation API with enhanced error handling.
  * 
  * This class encapsulates geolocation functionality with comprehensive error handling,
  * permission management, and position tracking capabilities. It integrates with the
  * PositionManager singleton to provide centralized position management and implements
  * the observer pattern for position change notifications.
+ * 
+ * **Referential Transparency:**
+ * - Pure helper functions extracted for error formatting and validation
+ * - Side effects isolated to browser API calls and DOM manipulation
+ * - Supports dependency injection of navigator for testing
+ * - Core logic separated from I/O operations
+ * 
+ * **Key Features:**
+ * - Promise-based API for easier async handling
+ * - Integration with PositionManager for centralized state management
+ * - Automatic permission checking via Permissions API
+ * - Error handling with formatted error messages
+ * - Support for both single updates and continuous watching
+ * - Built-in display update capabilities
+ * - Dependency injection support for testing
  * 
  * @class GeolocationService
  * @since 0.8.3-alpha
@@ -5591,6 +5751,11 @@ class HtmlSpeechSynthesisDisplayer {
  * service.getSingleLocationUpdate()
  *   .then(position => console.log('Location:', position))
  *   .catch(error => console.error('Error:', error));
+ * 
+ * @example
+ * // With dependency injection for testing
+ * const mockNavigator = { geolocation: mockGeolocationAPI };
+ * const service = new GeolocationService(null, mockNavigator);
  * 
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API} Geolocation API
  * @see {@link https://www.w3.org/TR/geolocation-API/} W3C Geolocation API Specification
@@ -5603,23 +5768,40 @@ class GeolocationService {
 	 * and sets up the connection with the PositionManager singleton for centralized
 	 * position management.
 	 * 
+	 * **Dependency Injection:**
+	 * The navigator parameter enables dependency injection for testing. By allowing
+	 * the navigator object to be passed in, the class becomes more testable and
+	 * follows the Dependency Inversion Principle.
+	 * 
 	 * @param {HTMLElement} [locationResult] - DOM element for displaying location results
+	 * @param {Object} [navigatorObj] - Navigator object (injectable for testing)
+	 * @param {Object} [positionManagerInstance] - PositionManager instance (injectable for testing)
 	 * 
 	 * @example
 	 * const resultDiv = document.getElementById('location-display');
 	 * const service = new GeolocationService(resultDiv);
 	 * 
+	 * @example
+	 * // With dependency injection for testing
+	 * const mockNavigator = { geolocation: mockGeolocationAPI };
+	 * const mockPositionManager = { update: jest.fn() };
+	 * const service = new GeolocationService(null, mockNavigator, mockPositionManager);
+	 * 
 	 * @since 0.8.3-alpha
 	 */
-	constructor(locationResult) {
+	constructor(locationResult, navigatorObj, positionManagerInstance) {
 		this.locationResult = locationResult;
 		this.watchId = null;
 		this.isWatching = false;
 		this.lastKnownPosition = null;
 		this.permissionStatus = null;
 
-		// Get reference to PositionManager singleton
-		this.positionManager = PositionManager.getInstance();
+		// Store navigator for dependency injection (enables testing)
+		// Use provided navigator or global navigator if available
+		this.navigator = navigatorObj || (typeof navigator !== 'undefined' ? navigator : null);
+
+		// Get reference to PositionManager singleton (or use injected instance)
+		this.positionManager = positionManagerInstance || PositionManager.getInstance();
 	}
 
 	/**
@@ -5642,8 +5824,8 @@ class GeolocationService {
 	 */
 	async checkPermissions() {
 		try {
-			if ('permissions' in navigator) {
-				const permission = await navigator.permissions.query({ name: 'geolocation' });
+			if (isPermissionsAPISupported(this.navigator)) {
+				const permission = await this.navigator.permissions.query({ name: 'geolocation' });
 				this.permissionStatus = permission.state;
 				return permission.state;
 			} else {
@@ -5680,14 +5862,14 @@ class GeolocationService {
 	 */
 	async getSingleLocationUpdate() {
 		return new Promise((resolve, reject) => {
-			if (!navigator.geolocation) {
+			if (!isGeolocationSupported(this.navigator)) {
 				const error = new Error("Geolocation is not supported by this browser");
 				error.name = "NotSupportedError";
 				reject(error);
 				return;
 			}
 
-			navigator.geolocation.getCurrentPosition(
+			this.navigator.geolocation.getCurrentPosition(
 				(position) => {
 					this.lastKnownPosition = position;
 
@@ -5709,7 +5891,7 @@ class GeolocationService {
 						this.updateErrorDisplay(error);
 					}
 
-					reject(this.formatGeolocationError(error));
+					reject(formatGeolocationError(error));
 				},
 				setupParams.geolocationOptions
 			);
@@ -5733,7 +5915,7 @@ class GeolocationService {
 	 * @since 0.8.3-alpha
 	 */
 	watchCurrentLocation() {
-		if (!navigator.geolocation) {
+		if (!isGeolocationSupported(this.navigator)) {
 			console.error("(GeolocationService) Geolocation is not supported by this browser");
 			return null;
 		}
@@ -5742,7 +5924,7 @@ class GeolocationService {
 			return this.watchId;
 		}
 
-		this.watchId = navigator.geolocation.watchPosition(
+		this.watchId = this.navigator.geolocation.watchPosition(
 			(position) => {
 				this.lastKnownPosition = position;
 
@@ -5785,7 +5967,7 @@ class GeolocationService {
 	 */
 	stopWatching() {
 		if (this.watchId !== null && this.isWatching) {
-			navigator.geolocation.clearWatch(this.watchId);
+			this.navigator.geolocation.clearWatch(this.watchId);
 			this.watchId = null;
 			this.isWatching = false;
 		} else {
@@ -5819,59 +6001,7 @@ class GeolocationService {
 	updateErrorDisplay(error) {
 		if (!this.locationResult) return;
 
-		const errorMessages = {
-			1: "Permissão negada pelo usuário",
-			2: "Posição indisponível",
-			3: "Timeout na obtenção da posição"
-		};
-
-		const errorMessage = errorMessages[error.code] || "Erro desconhecido";
-
-		this.locationResult.innerHTML = `
-            <div class="location-error">
-                <h4>Erro na Obtenção da Localização</h4>
-                <p><strong>Código:</strong> ${error.code}</p>
-                <p><strong>Mensagem:</strong> ${errorMessage}</p>
-                <p><strong>Detalhes:</strong> ${error.message}</p>
-            </div>
-        `;
-	}
-
-	/**
-	 * Formats geolocation errors into a consistent error object.
-	 * 
-	 * @private
-	 * @param {GeolocationPositionError} error - Raw geolocation error
-	 * @returns {Error} Formatted error object with descriptive message
-	 * @since 0.8.3-alpha
-	 */
-	formatGeolocationError(error) {
-		const errorMap = {
-			1: {
-				name: "PermissionDeniedError",
-				message: "User denied geolocation permission"
-			},
-			2: {
-				name: "PositionUnavailableError",
-				message: "Position information is unavailable"
-			},
-			3: {
-				name: "TimeoutError",
-				message: "Geolocation request timed out"
-			}
-		};
-
-		const errorInfo = errorMap[error.code] || {
-			name: "UnknownGeolocationError",
-			message: "Unknown geolocation error occurred"
-		};
-
-		const formattedError = new Error(errorInfo.message);
-		formattedError.name = errorInfo.name;
-		formattedError.code = error.code;
-		formattedError.originalError = error;
-
-		return formattedError;
+		this.locationResult.innerHTML = generateErrorDisplayHTML(error);
 	}
 
 	/**

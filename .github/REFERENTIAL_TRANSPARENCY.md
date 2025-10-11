@@ -665,11 +665,13 @@ The Guia.js project demonstrates referential transparency in several areas:
 - **Address Formatting**: Uses immutable data transformations
 - **Reference Place Types**: Frozen objects prevent mutations
 - **Cache Operations**: Designed with immutability in mind
+- **Observer Management**: `ObserverSubject` uses immutable array patterns (spread operator, filter) for subscribe/unsubscribe operations
 
 For architecture examples:
 - [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) - Overall architecture showing pure functions
 - [GEO_POSITION.md](../docs/architecture/GEO_POSITION.md) - Example of immutable data classes
 - [REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md) - Frozen objects for immutability
+- [POSITION_MANAGER.md](../docs/architecture/POSITION_MANAGER.md) - ObserverSubject immutable observer management
 - [WEBGEOCODINGMANAGER_REFACTORING.md](../docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - Refactoring toward better separation of concerns
 
 ### Academic Papers

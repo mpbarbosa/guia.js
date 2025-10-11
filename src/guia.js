@@ -5741,6 +5741,21 @@ const isPermissionsAPISupported = (navigatorObj) => {
  * - Support for both single updates and continuous watching
  * - Built-in display update capabilities
  * - Dependency injection support for testing
+ * - Race condition protection for concurrent requests
+ * - Privacy-conscious logging (no coordinates in error logs)
+ * 
+ * **Security & Privacy:**
+ * ⚠️ **Important**: Location data is highly sensitive personal information.
+ * - Only request location when absolutely necessary
+ * - Ensure users understand why location is needed and consent
+ * - Stop tracking (stopWatching) when location updates are no longer needed
+ * - Do not log or expose coordinates unnecessarily
+ * - Handle errors gracefully without revealing location data
+ * 
+ * **Concurrent Request Management:**
+ * - The service prevents race conditions by rejecting overlapping getSingleLocationUpdate() calls
+ * - Use hasPendingRequest() to check before making new requests
+ * - watchCurrentLocation() can run independently of single updates
  * 
  * @class GeolocationService
  * @since 0.8.3-alpha
@@ -5795,6 +5810,7 @@ class GeolocationService {
 		this.isWatching = false;
 		this.lastKnownPosition = null;
 		this.permissionStatus = null;
+		this.isPendingRequest = false; // Prevents race conditions from overlapping requests
 
 		// Store navigator for dependency injection (enables testing)
 		// Use provided navigator or global navigator if available
@@ -5845,9 +5861,19 @@ class GeolocationService {
 	 * This method integrates with the PositionManager to ensure all position
 	 * data is centrally managed and properly validated.
 	 * 
+	 * **Concurrent Request Protection:**
+	 * If a request is already pending, this method will reject immediately to
+	 * prevent race conditions and stale data. Check `isPendingRequest()` before
+	 * calling if you need to avoid errors from overlapping calls.
+	 * 
+	 * **Privacy Notice:**
+	 * Location data is sensitive. Errors are logged without coordinates to protect
+	 * user privacy. Full position data is only passed to authorized components.
+	 * 
 	 * @async
 	 * @returns {Promise<GeolocationPosition>} Promise that resolves to the current position
 	 * @throws {GeolocationPositionError} Geolocation API errors (permission denied, unavailable, timeout)
+	 * @throws {Error} If a request is already pending (race condition prevention)
 	 * 
 	 * @example
 	 * try {
@@ -5858,10 +5884,24 @@ class GeolocationService {
 	 *   console.error('Location error:', error.message);
 	 * }
 	 * 
+	 * @example
+	 * // Check for pending requests before calling
+	 * if (!service.hasPendingRequest()) {
+	 *   const position = await service.getSingleLocationUpdate();
+	 * }
+	 * 
 	 * @since 0.8.3-alpha
 	 */
 	async getSingleLocationUpdate() {
 		return new Promise((resolve, reject) => {
+			// Prevent race conditions from overlapping requests
+			if (this.isPendingRequest) {
+				const error = new Error("A geolocation request is already pending");
+				error.name = "RequestPendingError";
+				reject(error);
+				return;
+			}
+
 			if (!isGeolocationSupported(this.navigator)) {
 				const error = new Error("Geolocation is not supported by this browser");
 				error.name = "NotSupportedError";
@@ -5869,8 +5909,11 @@ class GeolocationService {
 				return;
 			}
 
+			this.isPendingRequest = true;
+
 			this.navigator.geolocation.getCurrentPosition(
 				(position) => {
+					this.isPendingRequest = false;
 					this.lastKnownPosition = position;
 
 					// Update PositionManager with new position
@@ -5884,7 +5927,9 @@ class GeolocationService {
 					resolve(position);
 				},
 				(error) => {
-					console.error("(GeolocationService) Single location update failed:", error);
+					this.isPendingRequest = false;
+					// Privacy: Log error without coordinates
+					console.error("(GeolocationService) Single location update failed:", error.message || error);
 
 					// Update display with error if element is available
 					if (this.locationResult) {
@@ -5904,6 +5949,11 @@ class GeolocationService {
 	 * Begins continuous position monitoring using the Geolocation API's watchPosition
 	 * method. Updates are automatically sent to the PositionManager for validation
 	 * and processing according to the configured tracking rules.
+	 * 
+	 * **Privacy Notice:**
+	 * Continuous tracking involves sensitive location data. Ensure users have
+	 * consented to location tracking and understand how their data will be used.
+	 * Stop tracking when no longer needed to preserve battery and privacy.
 	 * 
 	 * @returns {number|null} Watch ID for stopping the position watching, or null if not supported
 	 * 
@@ -5937,7 +5987,8 @@ class GeolocationService {
 				}
 			},
 			(error) => {
-				console.error("(GeolocationService) Position watch error:", error);
+				// Privacy: Log error without coordinates
+				console.error("(GeolocationService) Position watch error:", error.message || error);
 
 				// Update display with error if element is available
 				if (this.locationResult) {
@@ -6032,6 +6083,27 @@ class GeolocationService {
 	 */
 	getCurrentWatchId() {
 		return this.watchId;
+	}
+
+	/**
+	 * Checks if a geolocation request is currently pending.
+	 * 
+	 * Use this method to prevent race conditions by checking if a request is
+	 * already in progress before calling getSingleLocationUpdate().
+	 * 
+	 * @returns {boolean} True if a request is pending, false otherwise
+	 * 
+	 * @example
+	 * if (!service.hasPendingRequest()) {
+	 *   const position = await service.getSingleLocationUpdate();
+	 * } else {
+	 *   console.log('Request already in progress');
+	 * }
+	 * 
+	 * @since 0.8.6-alpha
+	 */
+	hasPendingRequest() {
+		return this.isPendingRequest;
 	}
 
 	/**

@@ -426,11 +426,17 @@ class GeoPosition {
  */
 
 /**
- * ObserverSubject - Centralizes observer pattern implementation
+ * ObserverSubject - Centralizes observer pattern implementation with immutable state updates
  * 
  * This class provides a reusable implementation of the observer pattern,
  * supporting both object-based observers (with update methods) and function-based observers.
  * It eliminates code duplication across multiple classes that need observer functionality.
+ * 
+ * **Referential Transparency & Immutability:**
+ * - Observer arrays are managed immutably using spread operator and filter
+ * - subscribe() and unsubscribe() create new arrays instead of mutating in place
+ * - State transitions are predictable and referentially transparent
+ * - Each operation returns void but updates state without direct mutation
  * 
  * @class
  * @since 0.8.4-alpha
@@ -450,6 +456,23 @@ class GeoPosition {
  *     this.observerSubject.notifyObservers(...args);
  *   }
  * }
+ * 
+ * @example
+ * // Immutable observer management
+ * const subject = new ObserverSubject();
+ * const observer1 = { update: () => {} };
+ * const observer2 = { update: () => {} };
+ * 
+ * subject.subscribe(observer1);
+ * const array1 = subject.observers; // [observer1]
+ * 
+ * subject.subscribe(observer2);
+ * const array2 = subject.observers; // [observer1, observer2]
+ * 
+ * // array1 and array2 are different instances (immutable pattern)
+ * console.log(array1 !== array2); // true
+ * console.log(array1.length); // 1 (original unchanged)
+ * console.log(array2.length); // 2 (new array created)
  */
 class ObserverSubject {
 	/**
@@ -464,7 +487,10 @@ class ObserverSubject {
 	/**
 	 * Subscribes an observer object to receive notifications.
 	 * The observer must have an update() method that will be called on notifications.
-	 * Uses immutable pattern to avoid direct array mutation.
+	 * 
+	 * **Immutable Pattern:** Creates a new array using spread operator instead of 
+	 * mutating the existing observers array. This ensures referential transparency
+	 * and makes state transitions predictable.
 	 * 
 	 * @param {Object} observer - Observer object with an update method
 	 * @param {Function} observer.update - Method called when notifying observers
@@ -477,6 +503,13 @@ class ObserverSubject {
 	 *   }
 	 * };
 	 * observerSubject.subscribe(observer);
+	 * 
+	 * @example
+	 * // Demonstrating immutability
+	 * const originalArray = observerSubject.observers;
+	 * observerSubject.subscribe(observer);
+	 * const newArray = observerSubject.observers;
+	 * console.log(originalArray !== newArray); // true - new array created
 	 */
 	subscribe(observer) {
 		if (observer) {
@@ -487,11 +520,21 @@ class ObserverSubject {
 	/**
 	 * Unsubscribes an observer object from notifications.
 	 * 
+	 * **Immutable Pattern:** Uses filter to create a new array without the observer,
+	 * instead of mutating the existing array. This maintains referential transparency.
+	 * 
 	 * @param {Object} observer - Observer object to remove
 	 * @returns {void}
 	 * 
 	 * @example
 	 * observerSubject.unsubscribe(observer);
+	 * 
+	 * @example
+	 * // Demonstrating immutability
+	 * const arrayBefore = observerSubject.observers;
+	 * observerSubject.unsubscribe(observer);
+	 * const arrayAfter = observerSubject.observers;
+	 * console.log(arrayBefore !== arrayAfter); // true - new array created
 	 */
 	unsubscribe(observer) {
 		this.observers = this.observers.filter((o) => o !== observer);
@@ -519,7 +562,9 @@ class ObserverSubject {
 
 	/**
 	 * Subscribes a function to receive notifications.
-	 * Uses immutable pattern to avoid direct array mutation.
+	 * 
+	 * **Immutable Pattern:** Creates a new array using spread operator instead of 
+	 * mutating the existing functionObservers array.
 	 * 
 	 * @param {Function} observerFunction - Function to be called on notifications
 	 * @returns {void}
@@ -538,6 +583,9 @@ class ObserverSubject {
 
 	/**
 	 * Unsubscribes a function from notifications.
+	 * 
+	 * **Immutable Pattern:** Uses filter to create a new array without the function,
+	 * maintaining immutability and referential transparency.
 	 * 
 	 * @param {Function} observerFunction - Function to remove
 	 * @returns {void}
@@ -726,9 +774,9 @@ class PositionManager {
 	/**
 	 * Creates a new PositionManager instance.
 	 * 
-	 * Initializes the position manager with empty observer list and optional 
-	 * initial position data. This constructor is typically called internally
-	 * by the getInstance() method to maintain the singleton pattern.
+	 * Initializes the position manager with an ObserverSubject for immutable observer 
+	 * management and optional initial position data. This constructor is typically called 
+	 * internally by the getInstance() method to maintain the singleton pattern.
 	 * 
 	 * @param {GeolocationPosition} [position] - Initial position data
 	 * @param {GeolocationCoordinates} [position.coords] - Coordinate information
@@ -764,9 +812,12 @@ class PositionManager {
 	/**
 	 * Subscribes an observer to position change notifications.
 	 * 
-	 * Implements the observer pattern by adding observers that will be notified
-	 * when position updates occur. Observers must implement an update() method
-	 * that accepts (positionManager, eventType) parameters.
+	 * Implements the observer pattern by delegating to ObserverSubject, which manages
+	 * observers immutably. Observers will be notified when position updates occur. 
+	 * Observers must implement an update() method that accepts (positionManager, eventType) parameters.
+	 * 
+	 * **Note:** Observer management uses immutable array updates via ObserverSubject,
+	 * ensuring referential transparency for subscribe/unsubscribe operations.
 	 * 
 	 * @param {Object} observer - Observer object to subscribe
 	 * @param {Function} observer.update - Method called on position changes

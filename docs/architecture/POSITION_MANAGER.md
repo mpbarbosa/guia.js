@@ -833,6 +833,32 @@ The observer pattern provides:
 2. **Extensibility**: New observers can be added without modifying PositionManager
 3. **Dynamic subscriptions**: Components can subscribe/unsubscribe at runtime
 4. **Separation of concerns**: Position management separated from position consumers
+5. **Immutable observer management**: ObserverSubject uses immutable array updates for subscribe/unsubscribe operations
+
+### ObserverSubject Implementation
+
+PositionManager delegates observer management to **ObserverSubject**, which implements the observer pattern with immutable state updates:
+
+```javascript
+// Immutable array updates ensure referential transparency
+class ObserverSubject {
+  subscribe(observer) {
+    // Creates new array instead of mutating
+    this.observers = [...this.observers, observer];
+  }
+  
+  unsubscribe(observer) {
+    // Filter creates new array
+    this.observers = this.observers.filter(o => o !== observer);
+  }
+}
+```
+
+This design choice provides:
+- **Predictable state transitions**: Each operation creates a new observer list
+- **No direct mutations**: Original arrays remain unchanged
+- **Testability**: Easy to verify immutability in tests
+- **Functional programming principles**: subscribe/unsubscribe are referentially transparent regarding state updates
 
 ### Validation Strategy
 
@@ -856,19 +882,19 @@ setupParams = {
 
 These values can be tuned based on application requirements.
 
-### Why Not Immutable?
+### Why Not Fully Immutable?
 
-The PositionManager maintains **mutable state** by design:
+The PositionManager maintains **mutable state** for position data by design:
 
-1. **Real-time updates**: GPS positions change continuously
-2. **Observer management**: Dynamic subscription list must be mutable
-3. **Performance**: Frequent position updates require efficient in-place updates
-4. **Browser API integration**: GeolocationPosition is inherently mutable
+1. **Real-time updates**: GPS positions change continuously and must be updated in place
+2. **Performance**: Frequent position updates require efficient state management
+3. **Browser API integration**: GeolocationPosition is inherently mutable
 
 However, immutability principles are applied where appropriate:
-- GeoPosition objects wrap position data
-- Validation logic uses pure functions where possible
-- State changes are controlled through the update() method
+- **Observer management**: ObserverSubject uses immutable array patterns (spread operator for subscribe/unsubscribe)
+- **GeoPosition objects**: Wrap position data with consistent interfaces
+- **Validation logic**: Uses pure functions where possible
+- **State changes**: Controlled through the update() method with clear boundaries
 
 ## Related Classes
 
@@ -982,12 +1008,38 @@ manager.subscribe(navigationSystem);
 ## Referential Transparency Considerations
 
 The PositionManager class is **not referentially transparent** because it:
-- Maintains mutable state (current position, observers list)
+- Maintains mutable state (current position)
 - Performs side effects (notifying observers)
 - Interacts with browser APIs (GeolocationPosition objects)
 - Uses singleton pattern (global shared state)
 
-However, the class follows best practices to minimize complexity:
+### ObserverSubject: Referentially Transparent Observer Management
+
+However, it's important to note that **ObserverSubject manages observers immutably**:
+
+- **subscribe()** and **unsubscribe()** are referentially transparent with respect to state updates
+- Observer arrays are updated using immutable patterns (spread operator, filter)
+- Each subscribe/unsubscribe operation creates a new array instead of mutating in place
+- State transitions are predictable and do not mutate state directly
+
+**Example of immutable observer management:**
+
+```javascript
+// ObserverSubject uses immutable patterns
+subscribe(observer) {
+  if (observer) {
+    this.observers = [...this.observers, observer]; // Creates new array
+  }
+}
+
+unsubscribe(observer) {
+  this.observers = this.observers.filter(o => o !== observer); // Creates new array
+}
+```
+
+This means the observer management itself follows functional programming principles, even though the overall PositionManager class manages mutable position state.
+
+The class follows best practices to minimize complexity:
 
 ### Pure Function Extraction
 

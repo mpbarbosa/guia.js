@@ -204,6 +204,16 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Jest integration and best practices
   - **GitHub Copilot-optimized format**
 
+- **[HTML_CSS_JS_SEPARATION.md](../.github/HTML_CSS_JS_SEPARATION.md)** - HTML, CSS, and JavaScript Separation Guide 🆕
+  - Separation of concerns in web development
+  - The three pillars: Structure, Presentation, and Behavior
+  - Benefits: maintainability, reusability, readability, performance
+  - Practical file structure recommendations
+  - Real-world examples from Guia.js project
+  - Common mistakes and anti-patterns
+  - Best practices and integration with project standards
+  - **Essential for all contributors and end users**
+
 ### Architectural Principles
 
 - **[LOW_COUPLING_GUIDE.md](../.github/LOW_COUPLING_GUIDE.md)** - Low coupling principles
@@ -282,6 +292,7 @@ When creating issues, use these templates for consistency:
 
 1. **Read first**:
    - [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Understand project conventions
+   - [HTML_CSS_JS_SEPARATION.md](../.github/HTML_CSS_JS_SEPARATION.md) - Separation of HTML, CSS, and JavaScript
    - [JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md) - JavaScript coding standards
    - [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md) - Learn core principles
 

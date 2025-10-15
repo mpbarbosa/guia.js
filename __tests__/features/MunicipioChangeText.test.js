@@ -62,14 +62,18 @@ global.window = {
 // Import classes from guia.js
 let BrazilianStandardAddress, HtmlSpeechSynthesisDisplayer;
 
-const guiaModule = await import('../../src/guia.js');
+try {
+    const guiaModule = await import('../../src/guia.js');
     
-    if (typeof global.BrazilianStandardAddress !== 'undefined') {
-        BrazilianStandardAddress = global.BrazilianStandardAddress;
+    // Extract the pure functions from module
+    if (guiaModule.BrazilianStandardAddress) {
+        BrazilianStandardAddress = guiaModule.BrazilianStandardAddress;
     }
-    if (typeof global.HtmlSpeechSynthesisDisplayer !== 'undefined') {
-        HtmlSpeechSynthesisDisplayer = global.HtmlSpeechSynthesisDisplayer;
+    if (guiaModule.HtmlSpeechSynthesisDisplayer) {
+        HtmlSpeechSynthesisDisplayer = guiaModule.HtmlSpeechSynthesisDisplayer;
     }
+} catch (error) {
+    console.warn('Could not load guia.js:', error.message);
 }
 
 describe('Municipality Change Text Announcements (Issue #218)', () => {

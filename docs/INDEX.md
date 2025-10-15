@@ -171,6 +171,19 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - **GitHub Copilot-optimized format**
   - **Essential reading for all contributors**
 
+- **[MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)** - JavaScript Module Splitting Guide 🆕
+  - Understanding JavaScript modules (ES6 vs CommonJS)
+  - Benefits of modularization for maintainability and testability
+  - Strategies for splitting large files (by layer, feature, responsibility)
+  - Maintaining referential transparency in modules
+  - Practical examples from Guia.js (6,000+ line file refactoring)
+  - Migration strategies (bottom-up, strangler fig pattern)
+  - Testing modular code (unit tests, mocks, integration)
+  - Best practices and common pitfalls
+  - Tools and automation (bundlers, linters, dependency analysis)
+  - **GitHub Copilot-optimized format**
+  - **Essential for maintainers and contributors**
+
 - **[REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)** - Comprehensive guide 🆕
   - What is referential transparency and why it matters
   - Pure vs impure functions with examples

@@ -171,6 +171,16 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - **GitHub Copilot-optimized format**
   - **Essential reading for all contributors**
 
+- **[JAVASCRIPT_ECMASCRIPT_VERSIONS.md](./JAVASCRIPT_ECMASCRIPT_VERSIONS.md)** - JavaScript and ECMAScript Version Features 🆕
+  - Comprehensive summary of features in every JavaScript/ECMAScript version
+  - Version timeline from ES1 (1997) to ES2024 (ES15)
+  - Practical code examples for each major feature
+  - Browser compatibility information
+  - Feature support matrix for functional programming
+  - Best practices for modern JavaScript
+  - **GitHub Copilot-optimized format**
+  - **Essential reference for all contributors**
+
 - **[MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)** - JavaScript Module Splitting Guide 🆕
   - Understanding JavaScript modules (ES6 vs CommonJS)
   - Benefits of modularization for maintainability and testability

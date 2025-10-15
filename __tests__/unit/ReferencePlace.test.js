@@ -5,12 +5,13 @@
  * including shopping centers, subway stations, cafes, and other points of interest.
  */
 
+import { describe, test, expect, jest } from '@jest/globals';
+import { ReferencePlace, setupParams } from '../../src/guia.js';
+
 // Mock document to prevent errors in test environment
 global.document = {
     getElementById: jest.fn().mockReturnValue(null)
 };
-
-const { ReferencePlace, setupParams } = require('../../src/guia.js');
 
 describe('ReferencePlace Class', () => {
     

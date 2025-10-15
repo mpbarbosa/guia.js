@@ -12,6 +12,8 @@
  * @since 0.8.6-alpha
  */
 
+import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';
+
 // Mock console
 global.console = {
     log: jest.fn(),
@@ -41,21 +43,16 @@ global.setupParams = {
 };
 
 // Load guia.js
-const fs = require('fs');
-const path = require('path');
+
+
 
 let GeolocationService, PositionManager;
 
 try {
-    const guiaPath = path.join(__dirname, '../../src/guia.js');
-    if (fs.existsSync(guiaPath)) {
-        const guiaContent = fs.readFileSync(guiaPath, 'utf8');
-        eval(guiaContent);
+    const guiaModule = await import('../../src/guia.js');
         
         GeolocationService = global.GeolocationService;
-        PositionManager = global.PositionManager;
-    }
-} catch (error) {
+        PositionManager = global.PositionManager;} catch (error) {
     console.warn('Could not load guia.js:', error.message);
 }
 

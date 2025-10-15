@@ -6,15 +6,15 @@
  * and don't mutate data structures directly.
  */
 
-// Mock DOM functions for testing
-global.document = undefined;
-
-// Import the guia.js classes
-const { 
+import { describe, test, expect, jest, beforeEach } from '@jest/globals';
+import { 
   ObserverSubject, 
   BrazilianStandardAddress, 
   AddressCache 
-} = require('../../src/guia.js');
+} from '../../src/guia.js';
+
+// Mock DOM functions for testing
+global.document = undefined;
 
 describe('Immutability Patterns', () => {
 

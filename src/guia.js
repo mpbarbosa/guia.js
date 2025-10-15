@@ -10,10 +10,37 @@ import {
 	createDefaultConfig 
 } from './config/defaults.js';
 
+// Application log functions with DOM integration
+// Note: Pure logging utilities are available in src/utils/logger.js
+// These functions add DOM output to console logging for the web UI
+// TODO: Consider refactoring to use observer pattern for DOM updates
+const log = (message, ...params) => {
+	//get all params after message and concatenate them
+	const fullMessage = `[${new Date().toISOString()}] ${message} ${params.join(" ")}`;
+	console.log(fullMessage);
+	if (typeof document !== "undefined") {
+		//TODO: Remover a referência direta ao elemento HTML
+		if (document.getElementById("bottom-scroll-textarea")) {
+			document.getElementById("bottom-scroll-textarea").innerHTML +=
+				`${fullMessage}\n`;
+		}
+	}
+};
+
+const warn = (message, ...params) => {
+	console.warn(message, ...params);
+	if (typeof document !== "undefined") {
+		const logContainer = document.getElementById("bottom-scroll-textarea");
+		if (logContainer) {
+			logContainer.innerHTML += `${message} ${params.join(" ")}\n`;
+		}
+	}
+};
+
 let IbiraAPIFetchManager;
 
 // Promise that resolves when Ibira.js loading is complete (success or fallback)
-window.ibiraLoadingPromise = (async () => {
+const ibiraLoadingPromise = (async () => {
     try {
 		const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Import timeout')), 5000));
 		const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js/src/ibira.js');
@@ -43,6 +70,11 @@ window.ibiraLoadingPromise = (async () => {
     }
 })();
 
+// Export to window for browser compatibility
+if (typeof window !== 'undefined') {
+	window.ibiraLoadingPromise = ibiraLoadingPromise;
+}
+
 // Use configuration from imported module
 const guiaVersion = GUIA_VERSION;
 const guiaName = GUIA_NAME;
@@ -53,33 +85,6 @@ const getOpenStreetMapUrl = (latitude, longitude) =>
 	`${setupParams.openstreetmapBaseUrl}&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
 
 // Note: calculateDistance, delay, and isMobileDevice now imported from utils modules
-
-// Application log functions with DOM integration
-// Note: Pure logging utilities are available in src/utils/logger.js
-// These functions add DOM output to console logging for the web UI
-// TODO: Consider refactoring to use observer pattern for DOM updates
-const log = (message, ...params) => {
-	//get all params after message and concatenate them
-	const fullMessage = `[${new Date().toISOString()}] ${message} ${params.join(" ")}`;
-	console.log(fullMessage);
-	if (typeof document !== "undefined") {
-		//TODO: Remover a referência direta ao elemento HTML
-		if (document.getElementById("bottom-scroll-textarea")) {
-			document.getElementById("bottom-scroll-textarea").innerHTML +=
-				`${fullMessage}\n`;
-		}
-	}
-};
-
-const warn = (message, ...params) => {
-	console.warn(message, ...params);
-	if (typeof document !== "undefined") {
-		const logContainer = document.getElementById("bottom-scroll-textarea");
-		if (logContainer) {
-			logContainer.innerHTML += `${message} ${params.join(" ")}\n`;
-		}
-	}
-};
 
 // Initialize device-specific accuracy settings
 // Mobile devices have GPS and can achieve higher accuracy, so we're stricter
@@ -5984,39 +5989,37 @@ function fetchCityStatistics(latitude, longitude) {
 }
 
 
-// Export for testing and module usage
-if (typeof module !== 'undefined' && module.exports) {
-	module.exports = {
-		guiaVersion,
-		calculateDistance,
-		delay,
-		getAddressType,
-		isMobileDevice,
-		setupParams,
-		DEFAULT_ELEMENT_IDS,
-		ObserverSubject,
-		GeoPosition,
-		PositionManager,
-		SingletonStatusManager,
-		ReverseGeocoder,
-		GeolocationService,
-		ChangeDetectionCoordinator,
-		WebGeocodingManager,
-		BrazilianStandardAddress,
-		ReferencePlace,
-		AddressExtractor,
-		AddressCache,
-		AddressDataExtractor,
-		HTMLAddressDisplayer,
-		HTMLPositionDisplayer,
-		HTMLReferencePlaceDisplayer,
-		DisplayerFactory,
-		SpeechSynthesisManager,
-		SpeechQueue,
-		findNearbyRestaurants,
-		fetchCityStatistics
-	};
-}
+// Export for ES6 modules
+export {
+	guiaVersion,
+	calculateDistance,
+	delay,
+	getAddressType,
+	isMobileDevice,
+	setupParams,
+	DEFAULT_ELEMENT_IDS,
+	ObserverSubject,
+	GeoPosition,
+	PositionManager,
+	SingletonStatusManager,
+	ReverseGeocoder,
+	GeolocationService,
+	ChangeDetectionCoordinator,
+	WebGeocodingManager,
+	BrazilianStandardAddress,
+	ReferencePlace,
+	AddressExtractor,
+	AddressCache,
+	AddressDataExtractor,
+	HTMLAddressDisplayer,
+	HTMLPositionDisplayer,
+	HTMLReferencePlaceDisplayer,
+	DisplayerFactory,
+	SpeechSynthesisManager,
+	SpeechQueue,
+	findNearbyRestaurants,
+	fetchCityStatistics
+};
 
 // Export to window for browser compatibility when loaded as module
 if (typeof window !== 'undefined') {

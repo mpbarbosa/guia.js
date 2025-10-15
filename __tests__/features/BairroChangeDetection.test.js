@@ -3,10 +3,11 @@
  * This test suite validates the bairro change detection features following the same pattern as logradouro detection
  */
 
+import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
+import { AddressDataExtractor } from '../../src/guia.js';
+
 // Mock document to prevent errors in test environment
 global.document = undefined;
-
-const { AddressDataExtractor } = require('../../src/guia.js');
 
 describe('AddressDataExtractor Bairro Change Detection', () => {
     beforeEach(() => {

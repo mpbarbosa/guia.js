@@ -7,6 +7,8 @@
  * @since 0.4.1-alpha (HTML page version alignment)
  */
 
+import { describe, test, expect, jest, beforeEach } from '@jest/globals';
+
 // Mock DOM functions to prevent errors in test environment
 global.document = undefined;
 
@@ -60,22 +62,14 @@ global.calculateDistance = jest.fn((lat1, lon1, lat2, lon2) => {
 // Import the guia.js module with proper error handling
 let CurrentPosition, GeoPosition;
 try {
-    const fs = require('fs');
-    const path = require('path');
-    const guiaPath = path.join(__dirname, '../../src/guia.js');
+    const guiaModule = await import('../../src/guia.js');
     
-    if (fs.existsSync(guiaPath)) {
-        // Read and evaluate the file content to extract classes
-        const guiaContent = fs.readFileSync(guiaPath, 'utf8');
-        eval(guiaContent);
-        
-        // Extract the classes we need for testing
-        if (typeof global.CurrentPosition !== 'undefined') {
-            CurrentPosition = global.CurrentPosition;
-        }
-        if (typeof global.GeoPosition !== 'undefined') {
-            GeoPosition = global.GeoPosition;
-        }
+    // Extract the classes we need for testing
+    if (guiaModule.CurrentPosition) {
+        CurrentPosition = guiaModule.CurrentPosition;
+    }
+    if (guiaModule.GeoPosition) {
+        GeoPosition = guiaModule.GeoPosition;
     }
 } catch (error) {
     console.warn('Could not load guia.js, some tests may be skipped:', error.message);

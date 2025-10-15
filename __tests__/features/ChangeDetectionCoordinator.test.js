@@ -10,15 +10,16 @@
  * - Notifying observers about detected changes
  */
 
-// Mock document to prevent errors in test environment
-global.document = undefined;
-
-const { 
+import { describe, test, expect, jest, beforeEach } from '@jest/globals';
+import { 
     ChangeDetectionCoordinator, 
     ObserverSubject, 
     ReverseGeocoder,
     AddressDataExtractor 
-} = require('../../src/guia.js');
+} from '../../src/guia.js';
+
+// Mock document to prevent errors in test environment
+global.document = undefined;
 
 describe('ChangeDetectionCoordinator', () => {
     let coordinator;

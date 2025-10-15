@@ -7,6 +7,8 @@
  * @since 0.4.1-alpha (HTML page version alignment)
  */
 
+import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';
+
 // Mock DOM functions to prevent errors in test environment  
 global.document = undefined;
 
@@ -149,30 +151,11 @@ const executeTimeouts = (maxDelay = 1000) => {
 // Import the guia.js module with proper error handling following project structure
 let SpeechQueue, SpeechQueueItem, SpeechSynthesisManager;
 try {
-    const fs = require('fs');
-    const path = require('path');
+    const guiaModule = await import('../../src/guia.js');
     
-    // Follow the project structure as defined in copilot instructions
-    const guiaPath = path.join(__dirname, '../../src/guia.js');
-    
-    if (fs.existsSync(guiaPath)) {
-        // Read and evaluate the file content to extract classes
-        const guiaContent = fs.readFileSync(guiaPath, 'utf8');
-        eval(guiaContent);
-        
-        // Extract the classes we need for testing
-        if (typeof global.SpeechQueue !== 'undefined') {
-            SpeechQueue = global.SpeechQueue;
-        }
-        if (typeof global.SpeechQueueItem !== 'undefined') {
-            SpeechQueueItem = global.SpeechQueueItem;
-        }
-        if (typeof global.SpeechSynthesisManager !== 'undefined') {
-            SpeechSynthesisManager = global.SpeechSynthesisManager;
-        }
-    } else {
-        // Handle case where submodules may not be initialized (per instructions)
-        console.warn('guia.js not found - this is expected if submodules are not initialized');
+    // Extract the classes we need for testing
+    if (guiaModule.SpeechQueue) {
+        SpeechQueue = guiaModule.SpeechQueue;
     }
 } catch (error) {
     // As per instructions, submodules may fail without authentication

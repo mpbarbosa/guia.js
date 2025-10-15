@@ -11,6 +11,8 @@
  * @since 0.8.5-alpha
  */
 
+import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';
+
 // Mock console to track any logging
 global.console = {
     log: jest.fn(),
@@ -23,8 +25,8 @@ global.console = {
 global.document = undefined;
 
 // Load guia.js to access the pure functions
-const fs = require('fs');
-const path = require('path');
+
+
 
 let getGeolocationErrorInfo;
 let formatGeolocationError;
@@ -34,20 +36,15 @@ let isGeolocationSupported;
 let isPermissionsAPISupported;
 
 try {
-    const guiaPath = path.join(__dirname, '../../src/guia.js');
-    if (fs.existsSync(guiaPath)) {
-        const guiaContent = fs.readFileSync(guiaPath, 'utf8');
-        eval(guiaContent);
+    const guiaModule = await import('../../src/guia.js');
         
-        // Extract the pure functions from global scope
-        getGeolocationErrorInfo = global.getGeolocationErrorInfo;
-        formatGeolocationError = global.formatGeolocationError;
-        getGeolocationErrorMessage = global.getGeolocationErrorMessage;
-        generateErrorDisplayHTML = global.generateErrorDisplayHTML;
-        isGeolocationSupported = global.isGeolocationSupported;
-        isPermissionsAPISupported = global.isPermissionsAPISupported;
-    }
-} catch (error) {
+        // Extract the pure functions from module
+getGeolocationErrorInfo = guiaModule.getGeolocationErrorInfo;
+        formatGeolocationError = guiaModule.formatGeolocationError;
+        getGeolocationErrorMessage = guiaModule.getGeolocationErrorMessage;
+        generateErrorDisplayHTML = guiaModule.generateErrorDisplayHTML;
+        isGeolocationSupported = guiaModule.isGeolocationSupported;
+        isPermissionsAPISupported = guiaModule.isPermissionsAPISupported;} catch (error) {
     console.warn('Could not load guia.js:', error.message);
 }
 

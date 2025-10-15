@@ -7,6 +7,8 @@
  * @since 0.4.1-alpha (HTML page version alignment)
  */
 
+import { describe, test, expect, jest } from '@jest/globals';
+
 // Mock console to suppress logging during tests but allow error tracking
 global.console = {
     log: jest.fn(),
@@ -46,30 +48,17 @@ global.warn = jest.fn();
 // Import the guia.js module with proper error handling following project structure
 let NominatimJSONFormat, ReferencePlace, GeolocationManager;
 try {
-    const fs = require('fs');
-    const path = require('path');
+    const guiaModule = await import('../../src/guia.js');
     
-    // Follow the project structure as defined in copilot instructions
-    const guiaPath = path.join(__dirname, '../../src/guia.js');
-    
-    if (fs.existsSync(guiaPath)) {
-        // Read and evaluate the file content to extract classes
-        const guiaContent = fs.readFileSync(guiaPath, 'utf8');
-        eval(guiaContent);
-        
-        // Extract the classes we need for testing
-        if (typeof global.NominatimJSONFormat !== 'undefined') {
-            NominatimJSONFormat = global.NominatimJSONFormat;
-        }
-        if (typeof global.ReferencePlace !== 'undefined') {
-            ReferencePlace = global.ReferencePlace;
-        }
-        if (typeof global.GeolocationManager !== 'undefined') {
-            GeolocationManager = global.GeolocationManager;
-        }
-    } else {
-        // Handle case where submodules may not be initialized (per instructions)
-        console.warn('guia.js not found - this is expected if submodules are not initialized');
+    // Extract the classes we need for testing
+    if (guiaModule.NominatimJSONFormat) {
+        NominatimJSONFormat = guiaModule.NominatimJSONFormat;
+    }
+    if (guiaModule.ReferencePlace) {
+        ReferencePlace = guiaModule.ReferencePlace;
+    }
+    if (guiaModule.GeolocationManager) {
+        GeolocationManager = guiaModule.GeolocationManager;
     }
 } catch (error) {
     // As per instructions, submodules may fail without authentication

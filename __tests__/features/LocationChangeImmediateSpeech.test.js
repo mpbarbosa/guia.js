@@ -3,12 +3,13 @@
  * This ensures street/neighbourhood/municipality changes are announced immediately
  */
 
+import { describe, test, expect } from '@jest/globals';
+import { 
+    BrazilianStandardAddress 
+} from '../../src/guia.js';
+
 // Mock document to prevent errors in test environment
 global.document = undefined;
-
-const { 
-    BrazilianStandardAddress 
-} = require('../../src/guia.js');
 
 describe('Location Change Immediate Speech Feature', () => {
     test('BrazilianStandardAddress should be available for location changes', () => {

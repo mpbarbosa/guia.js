@@ -2,8 +2,8 @@
  * @jest-environment node
  */
 
-// Import the guia_ibge.js functions
-const { renderUrlUFNome } = require('../../src/guia_ibge.js');
+import { describe, test, expect } from '@jest/globals';
+import { renderUrlUFNome } from '../../src/guia_ibge.js';
 
 describe('guia_ibge.js', () => {
   

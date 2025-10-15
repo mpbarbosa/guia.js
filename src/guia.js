@@ -3,6 +3,14 @@ import { log, warn } from './utils/logger.js';
 import { calculateDistance, delay } from './utils/distance.js';
 import { isMobileDevice } from './utils/device.js';
 
+// Import configuration
+import { 
+	GUIA_VERSION,
+	GUIA_NAME,
+	GUIA_AUTHOR,
+	createDefaultConfig 
+} from './config/defaults.js';
+
 let IbiraAPIFetchManager;
 
 // Promise that resolves when Ibira.js loading is complete (success or fallback)
@@ -36,40 +44,11 @@ window.ibiraLoadingPromise = (async () => {
     }
 })();
 
-// Semantic Versioning 2.0.0 - see https://semver.org/
-// Version object for unstable development status
-const guiaVersion = {
-	major: 0,
-	minor: 8,
-	patch: 6,
-	prerelease: "alpha", // Indicates unstable development
-	toString: function () {
-		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
-	},
-};
-
-const guiaName = "Ondeestou";
-const guiaAuthor = "Marcelo Pereira Barbosa";
-const setupParams = {
-	trackingInterval: 50000, // milliseconds
-	minimumDistanceChange: 20, // meters
-	independentQueueTimerInterval: 5000, // milliseconds
-	noReferencePlace: "Não classificado",
-	validRefPlaceClasses: ["place", "shop", "amenity", "railway"],
-	// Device-specific accuracy thresholds
-	// Mobile devices (with GPS): stricter thresholds, reject medium/bad/very bad
-	// Desktop devices (WiFi/IP location): relaxed thresholds, accept medium, reject bad/very bad
-	mobileNotAcceptedAccuracy: ["medium", "bad", "very bad"],
-	desktopNotAcceptedAccuracy: ["bad", "very bad"],
-	notAcceptedAccuracy: null, // Will be set dynamically based on device type
-	geolocationOptions: {
-		enableHighAccuracy: true,
-		timeout: 20000, // 20 seconds
-		maximumAge: 0, // Do not use a cached position
-	},
-	openstreetmapBaseUrl:
-		"https://nominatim.openstreetmap.org/reverse?format=json",
-};
+// Use configuration from imported module
+const guiaVersion = GUIA_VERSION;
+const guiaName = GUIA_NAME;
+const guiaAuthor = GUIA_AUTHOR;
+const setupParams = createDefaultConfig();
 
 const getOpenStreetMapUrl = (latitude, longitude) =>
 	`${setupParams.openstreetmapBaseUrl}&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;

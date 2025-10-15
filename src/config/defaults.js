@@ -13,7 +13,7 @@
 export const GUIA_VERSION = {
 	major: 0,
 	minor: 8,
-	patch: 6,
+	patch: 7,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;

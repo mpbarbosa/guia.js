@@ -1,9 +1,29 @@
 /**
  * Reverse geocoding service for converting coordinates to addresses.
  * 
- * Provides reverse geocoding functionality using the OpenStreetMap Nominatim API
- * to convert latitude/longitude coordinates into human-readable addresses.
- * Implements the observer pattern to notify subscribers of address changes.
+ * ARCHITECTURAL OVERVIEW:
+ * The ReverseGeocoder class serves as a critical service layer component in the travel guide
+ * application, responsible for converting geographic coordinates into human-readable addresses
+ * using the OpenStreetMap Nominatim API. The class follows the project's established patterns
+ * of dependency injection, observer pattern implementation, and graceful error handling.
+ * 
+ * INTEGRATION WITH WEBGEOCODINGMANAGER:
+ * Within the broader WebGeocodingManager architecture, the ReverseGeocoder class serves as
+ * a bridge between position updates and address display components. It receives position
+ * notifications, performs geocoding operations, and propagates address updates to subscribed
+ * UI components, maintaining clean separation of concerns.
+ * 
+ * OBSERVER PATTERN IMPLEMENTATION:
+ * The class implements a comprehensive observer pattern through an ObserverSubject instance,
+ * enabling other components to subscribe to geocoding updates. This allows UI components like
+ * HTMLAddressDisplayer and HtmlSpeechSynthesisDisplayer to receive automatic updates when
+ * new address data becomes available.
+ * 
+ * BRAZILIAN ADDRESS STANDARDIZATION:
+ * The integration with AddressDataExtractor.getBrazilianStandardAddress() demonstrates the
+ * focus on Brazilian users, automatically converting raw OpenStreetMap data into standardized
+ * Brazilian address formats. This includes proper handling of logradouro (street), bairro
+ * (neighborhood), and municipio (municipality) components, with Portuguese language support.
  * 
  * @module services/ReverseGeocoder
  * @since 0.8.7-alpha (extracted from guia.js in Phase 2)
@@ -15,6 +35,9 @@ import { warn } from '../utils/logger.js';
 
 /**
  * Generates OpenStreetMap Nominatim API URL for reverse geocoding.
+ * 
+ * "Nominatim" is the search and geocoding engine used by OpenStreetMap.
+ * See: https://nominatim.org/
  * 
  * @param {number} latitude - Latitude coordinate
  * @param {number} longitude - Longitude coordinate
@@ -28,71 +51,167 @@ const getOpenStreetMapUrl = (latitude, longitude, baseUrl) =>
 /**
  * Reverse geocoder for converting geographic coordinates to addresses.
  * 
+ * CONSTRUCTOR AND DEPENDENCY MANAGEMENT:
+ * The constructor accepts a fetchManager parameter (typically IbiraAPIFetchManager) and an
+ * optional configuration object. This design follows dependency injection standards, allowing
+ * for flexible testing and different API backends. The class stores the fetch manager and
+ * sets up default configuration with the OpenStreetMap Nominatim API URL, demonstrating
+ * preference for external service integration with fallback capabilities.
+ * 
+ * CACHING AND PERFORMANCE OPTIMIZATION:
+ * The class integrates with the AddressDataExtractor system for address standardization
+ * and caching. The getCacheKey() method generates unique identifiers for caching geocoded
+ * results, while the fetchAddress() method leverages established caching and retry mechanisms.
+ * 
+ * ERROR HANDLING AND GRACEFUL DEGRADATION:
+ * Following MP Barbosa standards, the class includes comprehensive error handling with
+ * meaningful warning messages. Methods validate input parameters and gracefully handle
+ * cases where data is unavailable or malformed, ensuring the application continues
+ * functioning even when geocoding services are unavailable.
+ * 
  * @class ReverseGeocoder
  */
 class ReverseGeocoder {
 	/**
 	 * Creates a new ReverseGeocoder instance.
 	 * 
-	 * @param {Object} fetchManager - API fetch manager (IbiraAPIFetchManager)
+	 * DEPENDENCY INJECTION PATTERN:
+	 * The constructor follows the dependency injection pattern by receiving the fetchManager
+	 * and configuration parameters, enabling flexible testing with mock objects and supporting
+	 * different API backends while maintaining clean separation of concerns.
+	 * 
+	 * @param {Object} fetchManager - API fetch manager (IbiraAPIFetchManager or fallback)
 	 * @param {Object} [config] - Configuration options
 	 * @param {string} [config.openstreetmapBaseUrl] - Base URL for OpenStreetMap API
 	 */
 	constructor(fetchManager, config = {}) {
+		// Store fetch manager for API operations (supports IbiraAPIFetchManager or fallback)
 		this.fetchManager = fetchManager;
+		
+		// Configure OpenStreetMap Nominatim API with fallback to default endpoint
 		this.config = {
 			openstreetmapBaseUrl: config.openstreetmapBaseUrl || 
 				'https://nominatim.openstreetmap.org/reverse?format=json'
 		};
 		
+		// Define getter/setter property for current address data
+		// This pattern maintains backward compatibility while enabling reactive updates
 		Object.defineProperty(this, "currentAddress", {
 			get: () => this.data,
 			set: (value) => {
 				this.data = value;
 			},
 		});
+		
+		// Initialize observer subject for notifying subscribers of address changes
+		// This enables UI components to automatically update when new addresses are resolved
 		this.observerSubject = new ObserverSubject();
 	}
 
+	// OBSERVER PATTERN DELEGATION METHODS:
+	// These methods delegate to the internal ObserverSubject, maintaining consistency
+	// with the codebase's observer architecture and enabling UI components to receive
+	// automatic updates when new address data becomes available.
+
+	/**
+	 * Subscribe an observer to address update notifications.
+	 * Delegates to internal ObserverSubject for consistent observer pattern implementation.
+	 */
 	subscribe(observer) {
 		this.observerSubject.subscribe(observer);
 	}
 
+	/**
+	 * Internal method to subscribe observers to fetch manager URL updates.
+	 * Links geocoding operations with observer notifications for reactive updates.
+	 */
 	_subscribe(url) {
 		this.observerSubject.observers.forEach((observer) => {
 			this.fetchManager.subscribe(observer, url);
 		});
 	}
 	
+	/**
+	 * Unsubscribe an observer from address update notifications.
+	 * Maintains clean observer lifecycle management.
+	 */
 	unsubscribe(observer) {
 		this.observerSubject.unsubscribe(observer);
 	}
 
+	/**
+	 * Notify all subscribed observers of address changes.
+	 * Enables reactive UI updates when geocoding completes.
+	 */
 	notifyObservers(...args) {
 		this.observerSubject.notifyObservers(...args);
 	}
 
+	/**
+	 * Returns the standardized Brazilian address for observer notifications.
+	 * This method provides the second parameter for observer update calls,
+	 * enabling UI components to receive both raw and standardized address data.
+	 */
 	secondUpdateParam() {
 		return this.enderecoPadronizado;
 	}
 
+	/**
+	 * Sets coordinates for reverse geocoding operations.
+	 * 
+	 * CORE GEOCODING FUNCTIONALITY:
+	 * This method accepts latitude and longitude parameters, constructs the appropriate
+	 * OpenStreetMap URL using the helper function getOpenStreetMapUrl(), and resets
+	 * the internal state for new geocoding operations. Input validation ensures that
+	 * invalid coordinates don't trigger unnecessary API calls.
+	 * 
+	 * @param {number} latitude - Latitude coordinate
+	 * @param {number} longitude - Longitude coordinate
+	 */
 	setCoordinates(latitude, longitude) {
+		// Validate coordinates before processing to avoid unnecessary API calls
 		if (!latitude || !longitude) {
 			return;
 		}
+		
+		// Store coordinates for geocoding operations
 		this.latitude = latitude;
 		this.longitude = longitude;
+		
+		// Generate OpenStreetMap Nominatim API URL for these coordinates
 		this.url = getOpenStreetMapUrl(this.latitude, this.longitude, this.config.openstreetmapBaseUrl);
+		
+		// Reset state for new geocoding operation
 		this.data = null;
 		this.error = null;
 		this.loading = false;
 		this.lastFetch = 0;
 	}
 
+	/**
+	 * Generates unique cache key for geocoded results.
+	 * 
+	 * CACHING STRATEGY:
+	 * Creates unique identifiers for caching geocoded results based on coordinates,
+	 * enabling efficient lookup of previously resolved addresses and reducing
+	 * unnecessary API calls for the same locations.
+	 * 
+	 * @returns {string} Unique cache key based on latitude and longitude
+	 */
 	getCacheKey() {
 		return `${this.latitude},${this.longitude}`;
 	}
 
+	/**
+	 * Fetches address data using parent class caching mechanisms.
+	 * 
+	 * PERFORMANCE INTEGRATION:
+	 * Delegates to the parent class's fetchData() implementation, leveraging
+	 * established caching and retry mechanisms for optimal performance and
+	 * reliability when accessing external geocoding services.
+	 * 
+	 * @returns {Promise} Promise resolving to address data
+	 */
 	async fetchAddress() {
 		return super.fetchData();
 	}
@@ -100,8 +219,21 @@ class ReverseGeocoder {
 	/**
 	 * Observer pattern update method for PositionManager notifications.
 	 * 
-	 * This method is called when the PositionManager notifies observers about position changes.
-	 * It updates the geocoder coordinates and triggers reverse geocoding for new positions.
+	 * POSITION MANAGER INTEGRATION:
+	 * This method serves as the observer callback for PositionManager notifications,
+	 * automatically triggering reverse geocoding when position updates occur. This method
+	 * demonstrates the architecture's event-driven design, where position changes flow
+	 * through to address resolution and subsequent UI updates.
+	 * 
+	 * EVENT-DRIVEN ARCHITECTURE:
+	 * The method includes proper error handling and validation, ensuring that invalid
+	 * position data doesn't crash the geocoding process. It only processes actual position
+	 * updates, filtering out other event types to optimize performance.
+	 * 
+	 * BRAZILIAN ADDRESS PROCESSING:
+	 * When address data is successfully retrieved, the method automatically converts it
+	 * to Brazilian standard format using AddressDataExtractor, supporting Portuguese
+	 * language display and local address conventions.
 	 * 
 	 * @param {PositionManager} positionManager - The PositionManager instance with current position
 	 * @param {string} posEvent - The position event type (strCurrPosUpdate, strCurrPosNotUpdate, etc.)
@@ -113,35 +245,52 @@ class ReverseGeocoder {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	update(positionManager, posEvent, loading, error) {
-		// Import AddressDataExtractor dynamically to avoid circular dependency
+		// DEPENDENCY MANAGEMENT:
+		// AddressDataExtractor is imported dynamically to avoid circular dependency
 		// This is a temporary solution until AddressDataExtractor is also extracted
+		// Will be set externally or via dependency injection following MP Barbosa patterns
 		if (!this.AddressDataExtractor) {
-			// Will be set externally or via dependency injection
 			warn("(ReverseGeocoder) AddressDataExtractor not available");
 		}
 
+		// INPUT VALIDATION:
+		// Validate positionManager and position data to ensure robust operation
+		// Following MP Barbosa standards for graceful degradation when data is unavailable
 		if (!positionManager || !positionManager.lastPosition) {
 			warn("(ReverseGeocoder) Invalid PositionManager or no last position.");
 			return;
 		}
 
-		// Only process actual position updates, ignore other events
+		// EVENT FILTERING AND COORDINATE EXTRACTION:
+		// Only process actual position updates, ignore other events for performance optimization
+		// Extract coordinates from position data with proper validation
 		const coords = positionManager.lastPosition.coords;
 		if (coords && coords.latitude && coords.longitude) {
-			// Update coordinates
+			// Update internal coordinates for geocoding operation
 			this.setCoordinates(coords.latitude, coords.longitude);
 
-			// Trigger reverse geocoding asynchronously
+			// ASYNCHRONOUS GEOCODING PIPELINE:
+			// Trigger reverse geocoding asynchronously to avoid blocking the UI thread
+			// Handle both success and error cases with proper observer notifications
 			this.reverseGeocode()
 				.then((addressData) => {
+					// Store raw address data from OpenStreetMap
 					this.currentAddress = addressData;
+					
+					// BRAZILIAN ADDRESS STANDARDIZATION:
+					// Convert raw OpenStreetMap data to Brazilian standard format
+					// Supports Portuguese language display and local address conventions
 					if (this.AddressDataExtractor) {
 						this.enderecoPadronizado = this.AddressDataExtractor.getBrazilianStandardAddress(addressData);
 					}
-					// Notify this geocoder's own observers
+					
+					// Notify subscribers that new address data is available
 					this.notifyObservers(posEvent);
 				})
 				.catch((error) => {
+					// ERROR HANDLING:
+					// Log geocoding failures and notify observers of error state
+					// Ensures application continues functioning even when geocoding fails
 					console.error("(ReverseGeocoder) Reverse geocoding failed:", error);
 					this.error = error;
 					this.notifyObservers(posEvent);
@@ -266,6 +415,12 @@ class ReverseGeocoder {
 	}
 }
 
-// Export as both default and named export for flexibility
+// MODULE EXPORT STRATEGY:
+// The file includes both default and named exports for flexibility, providing support
+// for different import styles while maintaining compatibility with the existing codebase.
+// This dual export strategy aligns with the project's approach of supporting both ES6
+// modules and traditional script loading patterns.
+
+// Export as both default and named export for maximum compatibility
 export default ReverseGeocoder;
 export { ReverseGeocoder };

@@ -2,17 +2,24 @@
  * @jest-environment node
  */
 
-import { describe, test, expect } from '@jest/globals';
+import { describe, test, expect, jest } from '@jest/globals';
 import { ReverseGeocoder } from '../../src/guia.js';
 
 // Mock DOM functions for testing
 global.document = undefined;
 
+// Mock fetch manager for ReverseGeocoder
+const createMockFetchManager = () => ({
+  fetch: jest.fn(),
+  subscribe: jest.fn()
+});
+
 describe('ReverseGeocoder Class', () => {
   
   describe('toString Method', () => {
     test('should return formatted string with coordinates', () => {
-      const geocoder = new ReverseGeocoder(-23.5505, -46.6333);
+      const geocoder = new ReverseGeocoder(createMockFetchManager());
+      geocoder.setCoordinates(-23.5505, -46.6333);
       const result = geocoder.toString();
       
       expect(result).toContain('ReverseGeocoder');
@@ -22,7 +29,7 @@ describe('ReverseGeocoder Class', () => {
     });
 
     test('should handle missing coordinates gracefully', () => {
-      const geocoder = new ReverseGeocoder();
+      const geocoder = new ReverseGeocoder(createMockFetchManager());
       const result = geocoder.toString();
       
       expect(result).toContain('ReverseGeocoder');
@@ -31,7 +38,8 @@ describe('ReverseGeocoder Class', () => {
     });
 
     test('should handle incomplete coordinates (missing longitude)', () => {
-      const geocoder = new ReverseGeocoder(-23.5505, null);
+      const geocoder = new ReverseGeocoder(createMockFetchManager());
+      geocoder.setCoordinates(-23.5505, null);
       const result = geocoder.toString();
       
       expect(result).toContain('ReverseGeocoder');
@@ -40,7 +48,8 @@ describe('ReverseGeocoder Class', () => {
     });
 
     test('should handle incomplete coordinates (missing latitude)', () => {
-      const geocoder = new ReverseGeocoder(null, -46.6333);
+      const geocoder = new ReverseGeocoder(createMockFetchManager());
+      geocoder.setCoordinates(null, -46.6333);
       const result = geocoder.toString();
       
       expect(result).toContain('ReverseGeocoder');
@@ -49,7 +58,7 @@ describe('ReverseGeocoder Class', () => {
     });
 
     test('should reflect coordinates after setCoordinates is called', () => {
-      const geocoder = new ReverseGeocoder();
+      const geocoder = new ReverseGeocoder(createMockFetchManager());
       expect(geocoder.toString()).toBe('ReverseGeocoder: No coordinates set');
       
       geocoder.setCoordinates(-23.5505, -46.6333);
@@ -61,7 +70,8 @@ describe('ReverseGeocoder Class', () => {
     });
 
     test('should show different coordinates after update', () => {
-      const geocoder = new ReverseGeocoder(-23.5505, -46.6333);
+      const geocoder = new ReverseGeocoder(createMockFetchManager());
+      geocoder.setCoordinates(-23.5505, -46.6333);
       expect(geocoder.toString()).toBe('ReverseGeocoder: -23.5505, -46.6333');
       
       geocoder.setCoordinates(-22.9068, -43.1729); // Rio de Janeiro

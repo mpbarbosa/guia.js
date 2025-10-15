@@ -96,6 +96,42 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Running tests: `npm test`, `npm run test:coverage`
   - Immutability pattern tests
 
+- **[JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md)** - Jest and Module Systems: Critical Analysis 🆕
+  - **Essential reading for all contributors and GitHub Copilot**
+  - Comprehensive guide to ES6 modules vs CommonJS in Jest
+  - Understanding the module system conflict (why tests fail)
+  - Three solution strategies (ES6 migration, Babel, dual exports)
+  - Step-by-step migration guide from CommonJS to ES6 tests
+  - Common errors and troubleshooting
+  - Best practices for testing with ES6 modules
+  - Decision matrix for choosing the right approach
+  - Addresses current test failure issue (19/40 suites failing)
+  - **Critical for fixing module system incompatibility**
+
+### Modularization & Code Organization
+
+- **[MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)** - JavaScript Module Splitting Guide 🆕
+  - Understanding JavaScript modules (ES6 vs CommonJS)
+  - Benefits of modularization for maintainability and testability
+  - Strategies for splitting large files (by layer, feature, responsibility)
+  - Maintaining referential transparency in modules
+  - Practical examples from Guia.js (6,000+ line file refactoring)
+  - Migration strategies (bottom-up, strangler fig pattern)
+  - **Jest configuration for ES6 modules** 🔥
+  - Testing modular code (unit tests, mocks, integration)
+  - Common Jest pitfalls with ES6 modules
+  - Best practices and common pitfalls
+  - Tools and automation (bundlers, linters, dependency analysis)
+  - **GitHub Copilot-optimized format**
+  - **Essential for maintainers and contributors**
+
+- **[MODULE_SPLITTING_SUMMARY.md](./MODULE_SPLITTING_SUMMARY.md)** - Module Splitting Implementation Summary 🆕
+  - Implementation results and metrics
+  - Test compatibility analysis (93.7% pass rate)
+  - ES6 module migration impact
+  - Future work and recommendations
+  - Risk assessment and mitigations
+
 ### Automation & CI/CD
 
 - **[WORKFLOW_SETUP.md](../WORKFLOW_SETUP.md)** - Complete workflow setup guide 🆕

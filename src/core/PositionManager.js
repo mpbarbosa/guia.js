@@ -55,16 +55,34 @@
 import GeoPosition from './GeoPosition.js';
 import ObserverSubject from './ObserverSubject.js';
 import { calculateDistance } from '../utils/distance.js';
-import { createDefaultConfig } from '../config/defaults.js';
+import { log, warn } from '../utils/logger.js';
 
-// Get configuration (will be initialized when module loads)
-const setupParams = createDefaultConfig();
+/**
+ * Get configuration - use imported defaults and allow override
+ * This makes the module testable and reduces coupling
+ */
+let setupParams = null;
 
-// Application log functions - imported from parent scope
-// Note: These rely on the global log/warn from guia.js
-// TODO: Consider using logger module directly
-const log = (typeof window !== 'undefined' && window.log) || console.log.bind(console);
-const warn = (typeof window !== 'undefined' && window.warn) || console.warn.bind(console);
+/**
+ * Initialize setupParams - called when module loads or can be overridden for testing
+ * @param {Object} config - Configuration object
+ */
+export function initializeConfig(config) {
+	setupParams = config;
+}
+
+// Initialize with defaults if available
+try {
+	const { createDefaultConfig } = await import('../config/defaults.js');
+	setupParams = createDefaultConfig();
+} catch (err) {
+	// If config not available, use minimal defaults
+	setupParams = {
+		notAcceptedAccuracy: ['medium', 'bad', 'very bad'],
+		minimumDistanceChange: 20,
+		trackingInterval: 50000
+	};
+}
 
 /**
  * Manages the current geolocation position using singleton and observer design patterns.

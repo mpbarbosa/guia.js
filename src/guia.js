@@ -1,9 +1,42 @@
+let IbiraAPIFetchManager;
+
+// Promise that resolves when Ibira.js loading is complete (success or fallback)
+window.ibiraLoadingPromise = (async () => {
+    try {
+		const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Import timeout')), 5000));
+		const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js/src/ibira.js');
+        const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
+
+		// Validate the imported module
+		if (!ibiraModule || !ibiraModule.IbiraAPIFetchManager) {
+			throw new Error('Invalid ibira.js module');
+		}
+        IbiraAPIFetchManager = ibiraModule.IbiraAPIFetchManager;
+        log('(guia.js) Ibira.js loaded successfully');
+        return { success: true, manager: IbiraAPIFetchManager };
+    } catch (error) {
+        warn('(guia.js) Failed to load ibira.js:', error.message);
+        // Provide fallback implementation
+        IbiraAPIFetchManager = class IbiraAPIFetchManagerFallback {
+            constructor(config = {}) {
+                warn('Using fallback - ibira.js not available');
+                this.config = config;
+            }
+            // Add basic methods that might be expected
+            fetch() {
+                return Promise.reject(new Error('Fallback fetch manager - external library not available'));
+            }
+        };
+        return { success: false, manager: IbiraAPIFetchManager };
+    }
+})();
+
 // Semantic Versioning 2.0.0 - see https://semver.org/
 // Version object for unstable development status
 const guiaVersion = {
 	major: 0,
 	minor: 8,
-	patch: 5,
+	patch: 6,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
@@ -162,7 +195,7 @@ const isMobileDevice = (options = {}) => {
 
 	// Method 1: User agent detection
 	// Safely access user agent with fallbacks
-	const userAgent = navigatorObj.userAgent || navigatorObj.vendor || 
+	const userAgent = navigatorObj.userAgent || navigatorObj.vendor ||
 		(windowObj.opera ? windowObj.opera : '') || '';
 	const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i;
 	const isMobileUA = mobileRegex.test(userAgent.toLowerCase());
@@ -1044,181 +1077,35 @@ class SingletonStatusManager {
 	}
 }
 
-class APIFetcher {
-	constructor(url) {
-		this.url = url;
-		this.observerSubject = new ObserverSubject();
-		this.fetching = false;
-		this.data = null;
-		this.error = null;
-		this.loading = false;
-		this.lastFetch = 0;
-		this.timeout = 10000;
-		this.cache = new Map();
-		this.lastPosition = null;
-	}
 
-	/**
-	 * Gets the observers array for backward compatibility.
-	 * @private
-	 * @returns {Array} Array of subscribed observers
-	 */
-	get observers() {
-		return this.observerSubject.observers;
-	}
-
-	getCacheKey() {
-		// Override this method in subclasses to provide a unique cache key
-		return this.url;
-	}
-
-	setUrl(url) {
-		this.url = url;
-		this.data = null;
-		this.error = null;
-		this.loading = false;
-		this.lastFetch = 0;
-		this.cache.clear();
-	}
-
-	subscribe(observer) {
-		this.observerSubject.subscribe(observer);
-	}
-
-	unsubscribe(observer) {
-		this.observerSubject.unsubscribe(observer);
-	}
-
-	notifyObservers(appEvent) {
-		this.observerSubject.notifyObservers(this.firstUpdateParam(), this.secondUpdateParam(), appEvent, this.error, this.loading);
-	}
-
-	firstUpdateParam() {
-		return this.data;
-	}
-
-	secondUpdateParam() {
-		return null;
-	}
-
-	/**
- * Fetches data from the configured URL with robust caching, loading states, and error handling.
- * 
- * This method implements a comprehensive data fetching strategy designed to efficiently retrieve 
- * and manage data from external APIs while providing a smooth user experience through intelligent 
- * caching and proper state management.
- * 
- * **Caching Strategy:**
- * The method starts by generating a cache key using getCacheKey(), which by default returns the URL 
- * but can be overridden in subclasses for more sophisticated caching strategies. It immediately 
- * checks if the data already exists in the cache - if it does, it retrieves the cached data and 
- * returns early, avoiding unnecessary network requests. This caching mechanism significantly 
- * improves performance by reducing redundant API calls.
- * 
- * **Loading State Management:**
- * When a cache miss occurs, the method sets `this.loading = true` to indicate that a network 
- * operation is in progress. This loading state can be used by the UI to show loading spinners 
- * or disable user interactions, providing immediate feedback to users.
- * 
- * **Network Operations:**
- * The actual data fetching uses the modern Fetch API with proper error handling - it checks if 
- * the response is successful using `response.ok` and throws a meaningful error if the request fails. 
- * The method follows the JSON API pattern by calling `response.json()` to parse the response data.
- * 
- * **Data Storage:**
- * Upon successful retrieval, it stores the data both in the instance (`this.data`) and in the cache 
- * for future use, ensuring consistent data availability across the application.
- * 
- * **Error Handling:**
- * The error handling is comprehensive, catching any network errors, parsing errors, or HTTP errors 
- * and storing them in `this.error` for the calling code to handle appropriately. This provides 
- * a clean separation of concerns and allows for more manageable error handling in the UI.
- * 
- * **Cleanup Guarantee:**
- * The `finally` block ensures that `this.loading` is always reset to `false`, regardless of whether 
- * the operation succeeded or failed. This prevents the UI from getting stuck in a loading state, 
- * which is a common source of bugs in data fetching implementations.
- * 
- * @async
- * @returns {Promise<void>} Resolves when data is fetched and stored, or retrieved from cache
- * @throws {Error} Network errors, HTTP errors, or JSON parsing errors are caught and stored in this.error
- * 
- * @example
- * // Basic usage with automatic caching
- * const fetcher = new APIFetcher('https://api.example.com/data');
- * await fetcher.fetchData();
- * console.log(fetcher.data); // Retrieved data
- * console.log(fetcher.loading); // false after completion
- * 
- * @example
- * // Error handling
- * try {
- *   await fetcher.fetchData();
- *   if (fetcher.error) {
- *     console.error('Fetch failed:', fetcher.error.message);
- *   }
- * } catch (error) {
- *   console.error('Unexpected error:', error);
- * }
- * 
- * @see {@link getCacheKey} - Override this method for custom cache key generation
- * @since 0.8.3-alpha
- * @author Marcelo Pereira Barbosa
- */
-	async fetchData() {
-		// Generate cache key for this request (can be overridden in subclasses)
-		const cacheKey = this.getCacheKey();
-
-		// Check cache first - if data exists, return immediately to avoid network request
-		if (this.cache.has(cacheKey)) {
-			this.data = this.cache.get(cacheKey);
-			return; // Early return with cached data improves performance
-		}
-
-		// Set loading state to indicate network operation in progress
-		// UI can use this to show loading spinners or disable interactions
-		this.loading = true;
-
-		try {
-			// Perform network request using modern Fetch API
-			const response = await fetch(this.url);
-
-			// Check if HTTP request was successful (status 200-299)
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-
-			// Parse JSON response data
-			const data = await response.json();
-
-			// Store data in instance for immediate access
-			this.data = data;
-
-			// Cache the result for future requests with same cache key
-			this.cache.set(cacheKey, data);
-
-		} catch (error) {
-			// Comprehensive error handling: network errors, HTTP errors, JSON parsing errors
-			// Store error for calling code to handle appropriately
-			this.error = error;
-		} finally {
-			// Always reset loading state regardless of success/failure
-			// This prevents UI from getting stuck in loading state
-			this.loading = false;
-		}
-	}
-}
-
-class ReverseGeocoder extends APIFetcher {
-	constructor(latitude, longitude) {
-		super("");
+class ReverseGeocoder {
+	constructor(fetchManager) {
+		this.fetchManager = fetchManager;
 		Object.defineProperty(this, "currentAddress", {
 			get: () => this.data,
 			set: (value) => {
 				this.data = value;
 			},
 		});
-		this.setCoordinates(latitude, longitude);
+		this.observerSubject = new ObserverSubject();
+	}
+
+	subscribe(observer) {
+		this.observerSubject.subscribe(observer);
+	}
+
+	_subscribe(url) {
+		this.observerSubject.observers.forEach((observer) => {
+			this.fetchManager.subscribe(observer, url);
+		});
+	}
+	
+	unsubscribe(observer) {
+		this.observerSubject.unsubscribe(observer);
+	}
+
+	notifyObservers(...args) {
+		this.observerSubject.notifyObservers(...args);
 	}
 
 	secondUpdateParam() {
@@ -1279,7 +1166,6 @@ class ReverseGeocoder extends APIFetcher {
 					this.currentAddress = addressData;
 					this.enderecoPadronizado = AddressDataExtractor.getBrazilianStandardAddress(addressData);
 					// Notify this geocoder's own observers
-					log("+++ (10) (ReverseGeocoder) Received the address data and now notifying the observers.");
 					this.notifyObservers(posEvent);
 				})
 				.catch((error) => {
@@ -1362,28 +1248,20 @@ class ReverseGeocoder extends APIFetcher {
 			this.url = getOpenStreetMapUrl(this.latitude, this.longitude);
 		}
 
+		this._subscribe(this.url);
+
 		// FIXED: Use modern async/await instead of unnecessary Promise wrapping
 		// The original code wrapped fetchData() in a new Promise, which is an anti-pattern
 		// since fetchData() already returns a Promise
 		try {
 			// Fetch data using the configured URL with built-in caching and error handling
-			await this.fetchData();
-
-			// FIXED: Simplified error handling - if this.error exists, throw it directly
-			// The original code was doing manual promise resolution/rejection which was redundant
-			if (this.error) {
-				throw this.error;
-			}
-
-			// Return the successfully fetched address data
-			return this.data;
+			return await this.fetchManager.fetch(this.url);
 
 		} catch (error) {
 			// FIXED: Simplified error propagation - just re-throw the error
 			// Modern promise chains handle this automatically without manual catch/reject
 			throw error;
 		}
-		l
 	}
 
 	/**
@@ -1497,8 +1375,8 @@ class BrazilianStandardAddress {
 			this.municipioCompleto(),
 			this.cep
 		]
-		.filter(Boolean)  // Remove falsy values
-		.join(", ");
+			.filter(Boolean)  // Remove falsy values
+			.join(", ");
 	}
 
 	toString() {
@@ -1545,14 +1423,15 @@ class ReferencePlace {
 	 */
 	static referencePlaceMap = {
 		"place": { "house": "Residencial" },
-		"shop": { 
+		"shop": {
 			"mall": "Shopping Center",
 			"car_repair": "Oficina Mecânica"
 		},
 		"amenity": { "cafe": "Café" },
-		"railway": { "subway": "Estação do Metrô",
+		"railway": {
+			"subway": "Estação do Metrô",
 			"station": "Estação do Metrô"
-		 },
+		},
 	};
 
 	/**
@@ -1601,11 +1480,11 @@ class ReferencePlace {
 			// Look up in the reference place map
 			if (ReferencePlace.referencePlaceMap[this.className] &&
 				ReferencePlace.referencePlaceMap[this.className][this.typeName]) {
-					if (this.name) {
-						return `${ReferencePlace.referencePlaceMap[this.className][this.typeName]} ${this.name}`;
-					} else {
-						return ReferencePlace.referencePlaceMap[this.className][this.typeName];
-					}
+				if (this.name) {
+					return `${ReferencePlace.referencePlaceMap[this.className][this.typeName]} ${this.name}`;
+				} else {
+					return ReferencePlace.referencePlaceMap[this.className][this.typeName];
+				}
 			}
 		}
 
@@ -2005,7 +1884,7 @@ class HTMLReferencePlaceDisplayer {
 
 		// Display all referencePlace attributes
 		let html = '<div class="reference-place-attributes">';
-		html += referencePlace.description; 
+		html += referencePlace.description;
 		html += `</div>`;
 		return html;
 	}
@@ -2244,7 +2123,7 @@ class AddressExtractor {
 		if (!iso3166Code || typeof iso3166Code !== 'string') {
 			return null;
 		}
-		
+
 		// Extract the state code after "BR-" prefix
 		const match = iso3166Code.match(/^BR-([A-Z]{2})$/);
 		return match ? match[1] : null;
@@ -2290,12 +2169,12 @@ class AddressExtractor {
 		// Priority: OSM tag (addr:state) > Nominatim state field
 		// Rule: uf must contain only full state names (e.g., "São Paulo", "Rio de Janeiro")
 		this.enderecoPadronizado.uf = address['addr:state'] || address.state || null;
-		
+
 		// siglaUF property: Contains ONLY two-letter state abbreviations
 		// Priority: state_code > extracted from ISO3166-2-lvl4 > derived from uf if it's already a 2-letter code
 		// Rule: siglaUF must contain only two-letter state abbreviations (e.g., "SP", "RJ")
 		this.enderecoPadronizado.siglaUF = address.state_code || AddressExtractor.extractSiglaUF(address['ISO3166-2-lvl4']) || null;
-		
+
 		// If uf contains a two-letter code (edge case for backward compatibility), use it for siglaUF
 		if (this.enderecoPadronizado.uf && /^[A-Z]{2}$/.test(this.enderecoPadronizado.uf)) {
 			this.enderecoPadronizado.siglaUF = this.enderecoPadronizado.uf;
@@ -2495,7 +2374,7 @@ class AddressCache {
 	 */
 	cleanExpiredEntries() {
 		const now = Date.now();
-		
+
 		// Build expiredKeys array immutably using filter and map
 		const expiredKeys = Array.from(this.cache.entries())
 			.filter(([key, entry]) => now - entry.timestamp > this.cacheExpirationMs)
@@ -3108,7 +2987,7 @@ class AddressCache {
 
 	unsubscribe(observer) {
 		return this.observerSubject.unsubscribe(observer);
-	}	
+	}
 
 	/**
 	 * Static wrapper for backward compatibility.
@@ -3173,7 +3052,7 @@ class AddressCache {
 
 	notifyFunctions(event) {
 		this.observerSubject.notifyFunctionObservers(event);
-	}	
+	}
 
 	/**
 	 * Static wrapper for backward compatibility.
@@ -4092,6 +3971,30 @@ class ChangeDetectionCoordinator {
 
 class WebGeocodingManager {
 	/**
+	 * Creates a new WebGeocodingManager instance after waiting for Ibira.js to load.
+	 * 
+	 * @param {Document} document - The document object for DOM manipulation
+	 * @param {Object} params - Configuration parameters for the manager
+	 * @returns {Promise<WebGeocodingManager>} Promise that resolves to the manager instance
+	 * 
+	 * @example
+	 * // Usage with await
+	 * const manager = await WebGeocodingManager.createAsync(document, params);
+	 * 
+	 * // Usage with then
+	 * WebGeocodingManager.createAsync(document, params)
+	 *   .then(manager => {
+	 *     // Use manager here
+	 *   });
+	 */
+	static async createAsync(document, params) {
+		// Wait for Ibira.js loading to complete
+		await window.ibiraLoadingPromise;
+		log('(WebGeocodingManager) Ibira.js loading complete, creating manager');
+		return new WebGeocodingManager(document, params);
+	}
+
+	/**
 	 * Creates a new WebGeocodingManager instance.
 	 * 
 	 * Initializes the coordination layer for geocoding services, creates service
@@ -4155,17 +4058,17 @@ class WebGeocodingManager {
 		this.locationResult = params.locationResult;
 		this.enderecoPadronizadoDisplay = params.enderecoPadronizadoDisplay || null;
 		this.referencePlaceDisplay = params.referencePlaceDisplay || null;
-		
+
 		// Store element IDs configuration (frozen to prevent mutations)
 		this.elementIds = params.elementIds || DEFAULT_ELEMENT_IDS;
 		Object.freeze(this.elementIds);
-		
+
 		// Store displayer factory (enables dependency injection for testing)
 		this.displayerFactory = params.displayerFactory || DisplayerFactory;
-		
+
 		// Initialize observer subject for external subscribers
 		this.observerSubject = new ObserverSubject();
-		
+
 		// Initialize state
 		this.currentPosition = null;
 		this.currentCoords = null;
@@ -4174,10 +4077,21 @@ class WebGeocodingManager {
 		this._initializeUIElements();
 
 		// Inject services or create defaults (maintains backward compatibility)
-		this.geolocationService = params.geolocationService || 
+		this.geolocationService = params.geolocationService ||
 			new GeolocationService(this.locationResult);
-		this.reverseGeocoder = params.reverseGeocoder || 
-			new ReverseGeocoder();
+		
+		// Create fetch manager - IbiraAPIFetchManager should be loaded by now
+		const fetchManager = new IbiraAPIFetchManager({
+			maxCacheSize: 100,           // Maximum cache entries
+			cacheExpiration: 300000,     // 5 minutes cache expiration
+			cleanupInterval: 60000,      // Cleanup every minute
+			maxRetries: 3,               // Default retry attempts
+			retryDelay: 1000,            // Initial retry delay
+			retryMultiplier: 2           // Exponential backoff
+		});
+		log('(WebGeocodingManager) Using IbiraAPIFetchManager');
+		this.reverseGeocoder = params.reverseGeocoder ||
+			new ReverseGeocoder(fetchManager);
 
 		// Create change detection coordinator
 		this.changeDetectionCoordinator = new ChangeDetectionCoordinator({
@@ -4188,6 +4102,7 @@ class WebGeocodingManager {
 		// Create and configure displayers
 		this._createDisplayers();
 		this._wireObservers();
+		log("(WebGeocodingManager) Initialized successfully.");
 	}
 
 	/**
@@ -4229,10 +4144,10 @@ class WebGeocodingManager {
 		// Position updates flow to displayer and geocoder
 		PositionManager.getInstance().subscribe(this.positionDisplayer);
 		PositionManager.getInstance().subscribe(this.reverseGeocoder);
-		
+
 		// Geocoding results flow to reference place and address displayers
-		this.reverseGeocoder.subscribe(this.referencePlaceDisplayer);
-		this.reverseGeocoder.subscribe(this.addressDisplayer);
+		//this.reverseGeocoder.subscribe(this.referencePlaceDisplayer);
+		//this.reverseGeocoder.subscribe(this.addressDisplayer);
 	}
 
 	/**
@@ -4922,7 +4837,7 @@ class SpeechQueue {
 
 		this.notifyObservers();
 		this.notifyFunctionObservers();
-		
+
 		return item || null;
 	}
 
@@ -5450,12 +5365,12 @@ class HtmlSpeechSynthesisDisplayer {
 		if (!currentAddress || !currentAddress.municipio) {
 			return "Novo município detectado";
 		}
-		
+
 		// If we have changeDetails with previous municipality, include it in the message
 		if (changeDetails && changeDetails.previous && changeDetails.previous.municipio) {
 			return `Você saiu de ${changeDetails.previous.municipio} e entrou em ${currentAddress.municipio}`;
 		}
-		
+
 		// Fallback to simple message if no previous municipality info
 		return `Você entrou no município de ${currentAddress.municipio}`;
 	}
@@ -5520,7 +5435,7 @@ class HtmlSpeechSynthesisDisplayer {
 	update(currentAddress, enderecoPadronizadoOrEvent, posEvent, loadingOrChangeDetails, error) {
 		log("+++ (301) HtmlSpeechSynthesisDisplayer.update called +++");
 		log("+++ (302) currentAddress: ", currentAddress);
-		log("+++ (303) enderecoPadronizadoOrEvent: " , enderecoPadronizadoOrEvent);
+		log("+++ (303) enderecoPadronizadoOrEvent: ", enderecoPadronizadoOrEvent);
 		log("+++ (304) posEvent: ", posEvent);
 		// Early return if no current address
 		if (!currentAddress) {
@@ -5532,9 +5447,9 @@ class HtmlSpeechSynthesisDisplayer {
 
 		// Determine speech content and priority based on event type
 		// Priority order: Municipality (3) > Bairro (2) > Logradouro (1) > Full address every 50s (0)
-		if (["MunicipioChanged","BairroChanged","LogradouroChanged"].includes(enderecoPadronizadoOrEvent)) {
+		if (["MunicipioChanged", "BairroChanged", "LogradouroChanged"].includes(enderecoPadronizadoOrEvent)) {
 			log("+++ (310) (HtmlSpeechSyntesisDisplayer) Changed")
-			
+
 			// Call the appropriate build method based on event type
 			if (enderecoPadronizadoOrEvent === "MunicipioChanged") {
 				textToBeSpoken = this.buildTextToSpeechMunicipio(currentAddress, loadingOrChangeDetails);
@@ -5543,8 +5458,8 @@ class HtmlSpeechSynthesisDisplayer {
 			} else if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
 				textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
 			}
-			
-			const priorities = {"MunicipioChanged": 3, "BairroChanged": 2, "LogradouroChanged": 1};
+
+			const priorities = { "MunicipioChanged": 3, "BairroChanged": 2, "LogradouroChanged": 1 };
 			priority = priorities[enderecoPadronizadoOrEvent]; // Set priority based on event
 		} else if (posEvent === PositionManager.strCurrPosUpdate) {
 			// Full address update every 50 seconds (trackingInterval)
@@ -5633,12 +5548,12 @@ const getGeolocationErrorInfo = (errorCode) => {
  */
 const formatGeolocationError = (error) => {
 	const errorInfo = getGeolocationErrorInfo(error.code);
-	
+
 	const formattedError = new Error(errorInfo.message);
 	formattedError.name = errorInfo.name;
 	formattedError.code = error.code;
 	formattedError.originalError = error;
-	
+
 	return formattedError;
 };
 
@@ -5661,7 +5576,7 @@ const getGeolocationErrorMessage = (errorCode) => {
 		2: "Posição indisponível",
 		3: "Timeout na obtenção da posição"
 	};
-	
+
 	return errorMessages[errorCode] || "Erro desconhecido";
 };
 
@@ -5679,7 +5594,7 @@ const getGeolocationErrorMessage = (errorCode) => {
  */
 const generateErrorDisplayHTML = (error) => {
 	const errorMessage = getGeolocationErrorMessage(error.code);
-	
+
 	return `
 		<div class="location-error">
 			<h4>Erro na Obtenção da Localização</h4>
@@ -6152,6 +6067,7 @@ function fetchCityStatistics(latitude, longitude) {
 	// Implementation would go here for city statistics
 	alert(`Obtendo estatísticas da cidade para ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
 }
+
 
 // Export for testing and module usage
 if (typeof module !== 'undefined' && module.exports) {

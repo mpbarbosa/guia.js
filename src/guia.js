@@ -1,5 +1,4 @@
-// Import utility modules
-import { log, warn } from './utils/logger.js';
+// Import utility modules  
 import { calculateDistance, delay } from './utils/distance.js';
 import { isMobileDevice } from './utils/device.js';
 
@@ -55,9 +54,10 @@ const getOpenStreetMapUrl = (latitude, longitude) =>
 
 // Note: calculateDistance, delay, and isMobileDevice now imported from utils modules
 
-// Wrapper log functions with DOM integration (side effects)
-// These extend the imported pure log/warn functions with DOM updates
-// TODO: Consider moving DOM updates to a separate displayer/observer pattern
+// Application log functions with DOM integration
+// Note: Pure logging utilities are available in src/utils/logger.js
+// These functions add DOM output to console logging for the web UI
+// TODO: Consider refactoring to use observer pattern for DOM updates
 const log = (message, ...params) => {
 	//get all params after message and concatenate them
 	const fullMessage = `[${new Date().toISOString()}] ${message} ${params.join(" ")}`;

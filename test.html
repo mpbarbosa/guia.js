@@ -78,11 +78,11 @@
         <textarea id="bottom-scroll-textarea" readonly></textarea>
     </div>
 
-    <!-- Incluir o script principal -->
-    <script src="src/guia.js"></script>
-    <script src="src/guia_ibge.js"></script>
+    <!-- Incluir o script principal com type="module" para ES6 imports -->
+    <script type="module" src="src/guia.js"></script>
+    <script type="module" src="src/guia_ibge.js"></script>
     
-    <script>
+    <script type="module">
         // Inicializar a aplicação quando a página carregar
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Página carregada, inicializando Guia.js...');

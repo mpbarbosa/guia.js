@@ -1,3 +1,15 @@
+// Import utility modules  
+import { calculateDistance, delay } from './utils/distance.js';
+import { isMobileDevice } from './utils/device.js';
+
+// Import configuration
+import { 
+	GUIA_VERSION,
+	GUIA_NAME,
+	GUIA_AUTHOR,
+	createDefaultConfig 
+} from './config/defaults.js';
+
 let IbiraAPIFetchManager;
 
 // Promise that resolves when Ibira.js loading is complete (success or fallback)
@@ -31,190 +43,21 @@ window.ibiraLoadingPromise = (async () => {
     }
 })();
 
-// Semantic Versioning 2.0.0 - see https://semver.org/
-// Version object for unstable development status
-const guiaVersion = {
-	major: 0,
-	minor: 8,
-	patch: 6,
-	prerelease: "alpha", // Indicates unstable development
-	toString: function () {
-		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
-	},
-};
-
-const guiaName = "Ondeestou";
-const guiaAuthor = "Marcelo Pereira Barbosa";
-const setupParams = {
-	trackingInterval: 50000, // milliseconds
-	minimumDistanceChange: 20, // meters
-	independentQueueTimerInterval: 5000, // milliseconds
-	noReferencePlace: "Não classificado",
-	validRefPlaceClasses: ["place", "shop", "amenity", "railway"],
-	// Device-specific accuracy thresholds
-	// Mobile devices (with GPS): stricter thresholds, reject medium/bad/very bad
-	// Desktop devices (WiFi/IP location): relaxed thresholds, accept medium, reject bad/very bad
-	mobileNotAcceptedAccuracy: ["medium", "bad", "very bad"],
-	desktopNotAcceptedAccuracy: ["bad", "very bad"],
-	notAcceptedAccuracy: null, // Will be set dynamically based on device type
-	geolocationOptions: {
-		enableHighAccuracy: true,
-		timeout: 20000, // 20 seconds
-		maximumAge: 0, // Do not use a cached position
-	},
-	openstreetmapBaseUrl:
-		"https://nominatim.openstreetmap.org/reverse?format=json",
-};
+// Use configuration from imported module
+const guiaVersion = GUIA_VERSION;
+const guiaName = GUIA_NAME;
+const guiaAuthor = GUIA_AUTHOR;
+const setupParams = createDefaultConfig();
 
 const getOpenStreetMapUrl = (latitude, longitude) =>
 	`${setupParams.openstreetmapBaseUrl}&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
 
-/**
- * Calculates the great-circle distance between two geographic points using the Haversine formula.
- * 
- * The Haversine formula determines the shortest distance over the earth's surface between two points
- * given their latitude and longitude coordinates. This implementation assumes a spherical Earth
- * with radius 6,371,000 meters (mean radius).
- * 
- * Formula: d = R × c
- * Where:
- * - R = Earth's radius (6,371,000 meters)
- * - c = 2 × atan2(√a, √(1−a))
- * - a = sin²(Δφ/2) + cos(φ1) × cos(φ2) × sin²(Δλ/2)
- * - φ = latitude in radians
- * - λ = longitude in radians
- * - Δφ = difference in latitudes
- * - Δλ = difference in longitudes
- * 
- * @param {number} lat1 - Latitude of first point in decimal degrees (-90 to 90)
- * @param {number} lon1 - Longitude of first point in decimal degrees (-180 to 180)
- * @param {number} lat2 - Latitude of second point in decimal degrees (-90 to 90)
- * @param {number} lon2 - Longitude of second point in decimal degrees (-180 to 180)
- * @returns {number} Distance in meters between the two points
- * 
- * @example
- * // Distance between São Paulo and Rio de Janeiro
- * const distance = calculateDistance(-23.5505, -46.6333, -22.9068, -43.1729);
- * console.log(distance); // ~357,710 meters (357.7 km)
- * 
- * @see {@link https://en.wikipedia.org/wiki/Haversine_formula} Haversine formula on Wikipedia
- * @see {@link https://www.movable-type.co.uk/scripts/latlong.html} Calculate distance, bearing and more
- * 
- * @since 0.7.1-alpha
- * @author Marcelo Pereira Barbosa
- */
-const calculateDistance = (lat1, lon1, lat2, lon2) => {
-	const R = 6371e3; // Earth radius in meters (mean radius)
-	const φ1 = (lat1 * Math.PI) / 180; // Convert latitude 1 to radians
-	const φ2 = (lat2 * Math.PI) / 180; // Convert latitude 2 to radians
-	const Δφ = ((lat2 - lat1) * Math.PI) / 180; // Difference in latitude (radians)
-	const Δλ = ((lon2 - lon1) * Math.PI) / 180; // Difference in longitude (radians)
+// Note: calculateDistance, delay, and isMobileDevice now imported from utils modules
 
-	// Haversine formula core calculation
-	const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-		Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-	return R * c; // Distance in meters
-};
-
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-
-/**
- * Detects if the current device is a mobile or tablet device.
- * 
- * This function uses multiple detection methods to determine device type:
- * 1. User agent string matching for common mobile/tablet patterns
- * 2. Touch capability detection (maxTouchPoints > 0)
- * 3. Screen width heuristic (< 768px typically indicates mobile)
- * 
- * A device is classified as mobile if at least 2 out of 3 detection methods
- * indicate a mobile device. This scoring system provides more reliable detection
- * than any single method.
- * 
- * Mobile devices typically have GPS hardware providing more accurate
- * geolocation (< 20 meters), while desktop/laptop devices rely on
- * WiFi/IP-based location with lower accuracy (50-1000 meters).
- * 
- * @param {Object} [options] - Optional parameters for testing/dependency injection
- * @param {Object} [options.navigatorObj] - Navigator object to use (defaults to global navigator)
- * @param {Object} [options.windowObj] - Window object to use (defaults to global window)
- * @returns {boolean} True if device is mobile/tablet, false for desktop/laptop
- * 
- * @example
- * // Default usage (uses global navigator and window)
- * if (isMobileDevice()) {
- *   console.log('Mobile device detected - expecting high GPS accuracy');
- * } else {
- *   console.log('Desktop device detected - expecting lower accuracy');
- * }
- * 
- * @example
- * // Testing with custom navigator/window (referentially transparent)
- * const result = isMobileDevice({
- *   navigatorObj: { userAgent: 'iPhone', maxTouchPoints: 5 },
- *   windowObj: { innerWidth: 375 }
- * });
- * 
- * @note Edge Cases:
- * - Returns false for non-browser environments (Node.js)
- * - Handles missing navigator.userAgent, navigator.vendor gracefully
- * - Screen width of exactly 768px is considered desktop (not < 768)
- * - Missing maxTouchPoints property is treated as 0 (no touch)
- * - Empty or missing user agent strings default to empty string
- * 
- * @note Limitations:
- * - User agent strings can be spoofed
- * - Touch-capable laptops may be misdetected as mobile
- * - Tablets in landscape mode (width > 768) may be misdetected as desktop
- * - Detection happens once at module load; window resize not tracked
- * 
- * @test: isMobileDevice() should return true for mobile user agents
- * @test: isMobileDevice() should return false for desktop user agents
- * @test: isMobileDevice() should return true for touch-enabled devices
- * @test: isMobileDevice() should return false for non-touch devices
- * @test: isMobileDevice() should return true for small screen widths
- * @test: isMobileDevice() should return false for large screen widths
- *
- * @see (/__tests__/utils/DeviceDetection.test.js) Unit tests for device detection
- * @see {@link https://caniuse.com/mdn-api_navigator_maxtouchpoints} Browser compatibility for maxTouchPoints
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent} User Agent Detection
- * @see (DEVICE_DETECTION.md) - Additional documentation on device detection strategies
- * @since 0.8.4-alpha
- * @author Marcelo Pereira Barbosa
- */
-const isMobileDevice = (options = {}) => {
-	// Allow dependency injection for testing (referential transparency)
-	const navigatorObj = options.navigatorObj || (typeof navigator !== 'undefined' ? navigator : null);
-	const windowObj = options.windowObj || (typeof window !== 'undefined' ? window : null);
-
-	// Check if we're in a browser environment
-	if (!navigatorObj || !windowObj) {
-		return false; // Default to desktop for non-browser environments (e.g., Node.js)
-	}
-
-	// Method 1: User agent detection
-	// Safely access user agent with fallbacks
-	const userAgent = navigatorObj.userAgent || navigatorObj.vendor ||
-		(windowObj.opera ? windowObj.opera : '') || '';
-	const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i;
-	const isMobileUA = mobileRegex.test(userAgent.toLowerCase());
-
-	// Method 2: Touch capability detection
-	// Defensive check for maxTouchPoints property existence
-	const hasTouchScreen = 'maxTouchPoints' in navigatorObj && navigatorObj.maxTouchPoints > 0;
-
-	// Method 3: Screen width heuristic (tablets and phones typically < 768px)
-	// Defensive check for innerWidth property
-	const screenWidth = typeof windowObj.innerWidth === 'number' ? windowObj.innerWidth : Infinity;
-	const isSmallScreen = screenWidth < 768;
-
-	// Consider it mobile if any two of these conditions are true
-	const detectionScore = [isMobileUA, hasTouchScreen, isSmallScreen].filter(Boolean).length;
-
-	return detectionScore >= 2;
-};
-
+// Application log functions with DOM integration
+// Note: Pure logging utilities are available in src/utils/logger.js
+// These functions add DOM output to console logging for the web UI
+// TODO: Consider refactoring to use observer pattern for DOM updates
 const log = (message, ...params) => {
 	//get all params after message and concatenate them
 	const fullMessage = `[${new Date().toISOString()}] ${message} ${params.join(" ")}`;
@@ -6083,7 +5926,6 @@ if (typeof module !== 'undefined' && module.exports) {
 		GeoPosition,
 		PositionManager,
 		SingletonStatusManager,
-		APIFetcher,
 		ReverseGeocoder,
 		GeolocationService,
 		ChangeDetectionCoordinator,
@@ -6102,5 +5944,37 @@ if (typeof module !== 'undefined' && module.exports) {
 		findNearbyRestaurants,
 		fetchCityStatistics
 	};
+}
+
+// Export to window for browser compatibility when loaded as module
+if (typeof window !== 'undefined') {
+	window.guiaVersion = guiaVersion;
+	window.calculateDistance = calculateDistance;
+	window.delay = delay;
+	window.getAddressType = getAddressType;
+	window.isMobileDevice = isMobileDevice;
+	window.setupParams = setupParams;
+	window.DEFAULT_ELEMENT_IDS = DEFAULT_ELEMENT_IDS;
+	window.ObserverSubject = ObserverSubject;
+	window.GeoPosition = GeoPosition;
+	window.PositionManager = PositionManager;
+	window.SingletonStatusManager = SingletonStatusManager;
+	window.ReverseGeocoder = ReverseGeocoder;
+	window.GeolocationService = GeolocationService;
+	window.ChangeDetectionCoordinator = ChangeDetectionCoordinator;
+	window.WebGeocodingManager = WebGeocodingManager;
+	window.BrazilianStandardAddress = BrazilianStandardAddress;
+	window.ReferencePlace = ReferencePlace;
+	window.AddressExtractor = AddressExtractor;
+	window.AddressCache = AddressCache;
+	window.AddressDataExtractor = AddressDataExtractor;
+	window.HTMLAddressDisplayer = HTMLAddressDisplayer;
+	window.HTMLPositionDisplayer = HTMLPositionDisplayer;
+	window.HTMLReferencePlaceDisplayer = HTMLReferencePlaceDisplayer;
+	window.DisplayerFactory = DisplayerFactory;
+	window.SpeechSynthesisManager = SpeechSynthesisManager;
+	window.SpeechQueue = SpeechQueue;
+	window.findNearbyRestaurants = findNearbyRestaurants;
+	window.fetchCityStatistics = fetchCityStatistics;
 }
 

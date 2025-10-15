@@ -5926,7 +5926,6 @@ if (typeof module !== 'undefined' && module.exports) {
 		GeoPosition,
 		PositionManager,
 		SingletonStatusManager,
-		APIFetcher,
 		ReverseGeocoder,
 		GeolocationService,
 		ChangeDetectionCoordinator,
@@ -5945,5 +5944,37 @@ if (typeof module !== 'undefined' && module.exports) {
 		findNearbyRestaurants,
 		fetchCityStatistics
 	};
+}
+
+// Export to window for browser compatibility when loaded as module
+if (typeof window !== 'undefined') {
+	window.guiaVersion = guiaVersion;
+	window.calculateDistance = calculateDistance;
+	window.delay = delay;
+	window.getAddressType = getAddressType;
+	window.isMobileDevice = isMobileDevice;
+	window.setupParams = setupParams;
+	window.DEFAULT_ELEMENT_IDS = DEFAULT_ELEMENT_IDS;
+	window.ObserverSubject = ObserverSubject;
+	window.GeoPosition = GeoPosition;
+	window.PositionManager = PositionManager;
+	window.SingletonStatusManager = SingletonStatusManager;
+	window.ReverseGeocoder = ReverseGeocoder;
+	window.GeolocationService = GeolocationService;
+	window.ChangeDetectionCoordinator = ChangeDetectionCoordinator;
+	window.WebGeocodingManager = WebGeocodingManager;
+	window.BrazilianStandardAddress = BrazilianStandardAddress;
+	window.ReferencePlace = ReferencePlace;
+	window.AddressExtractor = AddressExtractor;
+	window.AddressCache = AddressCache;
+	window.AddressDataExtractor = AddressDataExtractor;
+	window.HTMLAddressDisplayer = HTMLAddressDisplayer;
+	window.HTMLPositionDisplayer = HTMLPositionDisplayer;
+	window.HTMLReferencePlaceDisplayer = HTMLReferencePlaceDisplayer;
+	window.DisplayerFactory = DisplayerFactory;
+	window.SpeechSynthesisManager = SpeechSynthesisManager;
+	window.SpeechQueue = SpeechQueue;
+	window.findNearbyRestaurants = findNearbyRestaurants;
+	window.fetchCityStatistics = fetchCityStatistics;
 }
 

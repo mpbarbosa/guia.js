@@ -3,10 +3,11 @@
  * Validates FR-1, FR-2, and FR-3 from the functional specification
  */
 
+import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
+import { AddressDataExtractor, BrazilianStandardAddress } from '../../src/guia.js';
+
 // Mock document to prevent errors in test environment
 global.document = undefined;
-
-const { AddressDataExtractor, BrazilianStandardAddress } = require('../../src/guia.js');
 
 describe('OSM Address Tag Translation', () => {
     beforeEach(() => {

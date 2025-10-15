@@ -2,11 +2,11 @@
  * @jest-environment node
  */
 
+import { describe, test, expect, jest, beforeEach } from '@jest/globals';
+import { ObserverSubject } from '../../src/guia.js';
+
 // Mock DOM functions for testing
 global.document = undefined;
-
-// Import the guia.js functions
-const { ObserverSubject } = require('../../src/guia.js');
 
 describe('ObserverSubject Class', () => {
   let observerSubject;

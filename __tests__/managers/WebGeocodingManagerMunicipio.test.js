@@ -3,10 +3,11 @@
  * This test suite validates that the municipio change callback functionality works correctly
  */
 
+import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globals';
+import { AddressDataExtractor } from '../../src/guia.js';
+
 // Mock document to prevent errors in test environment
 global.document = undefined;
-
-const { AddressDataExtractor } = require('../../src/guia.js');
 
 describe('AddressDataExtractor Municipio Change Callback Integration', () => {
     beforeEach(() => {

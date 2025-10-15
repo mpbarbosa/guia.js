@@ -12,6 +12,8 @@
  * @since 0.8.6-alpha
  */
 
+import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';
+
 // Mock console
 global.console = {
     log: jest.fn(),

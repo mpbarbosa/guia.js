@@ -5,12 +5,13 @@
  * ensuring proper instantiation and support for dependency injection.
  */
 
-const {
+import { describe, test, expect, beforeEach } from '@jest/globals';
+import {
     DisplayerFactory,
     HTMLPositionDisplayer,
     HTMLAddressDisplayer,
     HTMLReferencePlaceDisplayer
-} = require('../../src/guia.js');
+} from '../../src/guia.js';
 
 describe('DisplayerFactory', () => {
     let mockElement;

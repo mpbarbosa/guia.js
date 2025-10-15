@@ -18,6 +18,8 @@
  * @since 0.5.0-alpha
  */
 
+import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';
+
 // Mock DOM functions to prevent errors in test environment
 global.document = undefined;
 
@@ -95,23 +97,9 @@ let GeoPosition, PositionManager, ReverseGeocoder, AddressDataExtractor,
     BrazilianStandardAddress, SpeechQueue, WebGeocodingManager;
 
 try {
-    const fs = require('fs');
-    const path = require('path');
-    const guiaPath = path.join(__dirname, '../../src/guia.js');
+    const guiaModule = await import('../../src/guia.js');
     
-    if (fs.existsSync(guiaPath)) {
-        const guiaContent = fs.readFileSync(guiaPath, 'utf8');
-        eval(guiaContent);
-        
-        // Extract classes
-        GeoPosition = global.GeoPosition;
-        PositionManager = global.PositionManager;
-        ReverseGeocoder = global.ReverseGeocoder;
-        AddressDataExtractor = global.AddressDataExtractor;
-        BrazilianStandardAddress = global.BrazilianStandardAddress;
-        SpeechQueue = global.SpeechQueue;
-        WebGeocodingManager = global.WebGeocodingManager;
-    }
+    // Extract the classes we need for testing
 } catch (error) {
     console.warn('Could not load guia.js:', error.message);
 }

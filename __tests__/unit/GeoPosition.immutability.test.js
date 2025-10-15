@@ -13,6 +13,8 @@
  * @since 0.5.0-alpha
  */
 
+import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';
+
 // Mock console to track any logging
 global.console = {
     log: jest.fn(),
@@ -51,20 +53,11 @@ global.warn = jest.fn();
 // Import guia.js
 let GeoPosition, calculateDistance;
 try {
-    const fs = require('fs');
-    const path = require('path');
-    const guiaPath = path.join(__dirname, '../../src/guia.js');
+    const guiaModule = await import('../../src/guia.js');
     
-    if (fs.existsSync(guiaPath)) {
-        const guiaContent = fs.readFileSync(guiaPath, 'utf8');
-        eval(guiaContent);
-        
-        if (typeof global.GeoPosition !== 'undefined') {
-            GeoPosition = global.GeoPosition;
-        }
-        if (typeof global.calculateDistance !== 'undefined') {
-            calculateDistance = global.calculateDistance;
-        }
+    // Extract the classes we need for testing
+    if (guiaModule.GeoPosition) {
+        GeoPosition = guiaModule.GeoPosition;
     }
 } catch (error) {
     console.warn('Could not load guia.js:', error.message);

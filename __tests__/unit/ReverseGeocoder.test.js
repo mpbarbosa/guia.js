@@ -2,11 +2,11 @@
  * @jest-environment node
  */
 
+import { describe, test, expect } from '@jest/globals';
+import { ReverseGeocoder } from '../../src/guia.js';
+
 // Mock DOM functions for testing
 global.document = undefined;
-
-// Import the ReverseGeocoder class
-const { ReverseGeocoder } = require('../../src/guia.js');
 
 describe('ReverseGeocoder Class', () => {
   

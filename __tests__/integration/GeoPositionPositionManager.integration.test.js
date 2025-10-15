@@ -11,6 +11,8 @@
  * @since 0.8.5-alpha
  */
 
+import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';
+
 // Mock DOM functions to prevent errors in test environment
 global.document = undefined;
 
@@ -61,25 +63,11 @@ global.calculateDistance = jest.fn((lat1, lon1, lat2, lon2) => {
 // Import the guia.js module with proper error handling
 let PositionManager, GeoPosition, ObserverSubject;
 try {
-    const fs = require('fs');
-    const path = require('path');
-    const guiaPath = path.join(__dirname, '../../src/guia.js');
+    const guiaModule = await import('../../src/guia.js');
     
-    if (fs.existsSync(guiaPath)) {
-        // Read and evaluate the file content to extract classes
-        const guiaContent = fs.readFileSync(guiaPath, 'utf8');
-        eval(guiaContent);
-        
-        // Extract the classes we need for testing
-        if (typeof global.PositionManager !== 'undefined') {
-            PositionManager = global.PositionManager;
-        }
-        if (typeof global.GeoPosition !== 'undefined') {
-            GeoPosition = global.GeoPosition;
-        }
-        if (typeof global.ObserverSubject !== 'undefined') {
-            ObserverSubject = global.ObserverSubject;
-        }
+    // Extract the classes we need for testing
+    if (guiaModule.PositionManager) {
+        PositionManager = guiaModule.PositionManager;
     }
 } catch (error) {
     console.warn('Could not load guia.js, some tests may be skipped:', error.message);

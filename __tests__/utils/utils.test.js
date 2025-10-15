@@ -6,6 +6,8 @@
  * @since 0.8.3-alpha
  */
 
+import { describe, test, expect, jest, beforeEach } from '@jest/globals';
+
 // Mock document to prevent errors in test environment
 global.document = {
     getElementById: jest.fn(() => ({
@@ -48,7 +50,7 @@ global.console = {
 // Import the modules being tested
 let guiaModule;
 try {
-    guiaModule = require('../../src/guia.js');
+    guiaModule = await import('../../src/guia.js');
 } catch (error) {
     // If guia.js doesn't export properly, we'll test individual functions
     console.warn('Could not import guia.js module, testing will be limited');

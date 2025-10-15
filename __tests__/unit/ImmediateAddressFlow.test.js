@@ -7,6 +7,8 @@
  * @since 0.4.1-alpha (HTML page version alignment)
  */
 
+import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globals';
+
 // Mock DOM functions to prevent errors in test environment  
 global.document = undefined;
 
@@ -91,30 +93,11 @@ global.calculateDistance = jest.fn((lat1, lon1, lat2, lon2) => {
 // Import the guia.js module with proper error handling following project structure
 let ImmediateAddressFlow, BrazilianStandardAddress, CurrentPosition;
 try {
-    const fs = require('fs');
-    const path = require('path');
+    const guiaModule = await import('../../src/guia.js');
     
-    // Follow the project structure as defined in copilot instructions
-    const guiaPath = path.join(__dirname, '../../src/guia.js');
-    
-    if (fs.existsSync(guiaPath)) {
-        // Read and evaluate the file content to extract classes
-        const guiaContent = fs.readFileSync(guiaPath, 'utf8');
-        eval(guiaContent);
-        
-        // Extract the classes we need for testing
-        if (typeof global.ImmediateAddressFlow !== 'undefined') {
-            ImmediateAddressFlow = global.ImmediateAddressFlow;
-        }
-        if (typeof global.BrazilianStandardAddress !== 'undefined') {
-            BrazilianStandardAddress = global.BrazilianStandardAddress;
-        }
-        if (typeof global.CurrentPosition !== 'undefined') {
-            CurrentPosition = global.CurrentPosition;
-        }
-    } else {
-        // Handle case where submodules may not be initialized (per instructions)
-        console.warn('guia.js not found - this is expected if submodules are not initialized');
+    // Extract the classes we need for testing
+    if (guiaModule.ImmediateAddressFlow) {
+        ImmediateAddressFlow = guiaModule.ImmediateAddressFlow;
     }
 } catch (error) {
     // As per instructions, submodules may fail without authentication

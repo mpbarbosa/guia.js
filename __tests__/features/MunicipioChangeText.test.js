@@ -6,6 +6,8 @@
  * @jest-environment node
  */
 
+import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';
+
 // Mock DOM to prevent errors in test environment
 global.document = undefined;
 

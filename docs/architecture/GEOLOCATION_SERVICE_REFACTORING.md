@@ -324,6 +324,105 @@ All changes are **backward compatible**:
 ✅ All public method signatures remain unchanged  
 ✅ No breaking changes to existing consumers
 
+## Race Condition Protection (Added in 0.8.6-alpha)
+
+### Problem
+
+Concurrent calls to `getSingleLocationUpdate()` could cause race conditions:
+- Overlapping API requests
+- Stale position data
+- Unpredictable state updates
+- Multiple PositionManager updates for the same location
+
+### Solution
+
+Added `isPendingRequest` flag and `hasPendingRequest()` method:
+
+```javascript
+// ✅ Prevents race conditions
+if (!service.hasPendingRequest()) {
+    const position = await service.getSingleLocationUpdate();
+} else {
+    console.log('Request already in progress');
+}
+```
+
+**Implementation:**
+- Constructor initializes `isPendingRequest` flag to `false`
+- `getSingleLocationUpdate()` checks flag before making API call
+- Flag set to `true` when request starts
+- Flag reset to `false` when request completes (success or failure)
+- Second request while first is pending rejects with `RequestPendingError`
+
+**Benefits:**
+- Prevents overlapping geolocation requests
+- Ensures predictable state management
+- Clear error messages for developers
+- No impact on watchPosition (continuous tracking)
+
+### Testing
+
+New test suite: `GeolocationService.raceCondition.test.js` (9 tests)
+- ✅ Concurrent request rejection
+- ✅ Sequential requests after completion
+- ✅ hasPendingRequest() state tracking
+- ✅ Error type verification
+- ✅ Privacy-conscious logging
+
+## Privacy and Security Improvements (Added in 0.8.6-alpha)
+
+### Problem
+
+Location data is highly sensitive personal information:
+- Coordinates could be exposed in error logs
+- Full error objects might contain sensitive data
+- Users need clear warnings about data usage
+- Unnecessary tracking consumes battery and exposes location
+
+### Solution
+
+**1. Privacy-Conscious Error Logging**
+
+Before:
+```javascript
+console.error("(GeolocationService) Error:", error);
+// Could log full error object with coordinates
+```
+
+After:
+```javascript
+console.error("(GeolocationService) Error:", error.message || error);
+// Only logs error message, not full object with potential coordinates
+```
+
+**2. Documentation Warnings**
+
+Added comprehensive privacy notices in JSDoc:
+- Constructor documentation
+- getSingleLocationUpdate() method
+- watchCurrentLocation() method
+- Class-level documentation
+
+**3. Best Practices**
+
+- Only request location when necessary
+- Ensure user consent and understanding
+- Stop tracking when not needed (call `stopWatching()`)
+- Don't log coordinates unnecessarily
+- Handle errors gracefully without revealing location
+
+**Example:**
+```javascript
+// ✅ Good: Check permission first, stop when done
+const permission = await service.checkPermissions();
+if (permission === 'granted') {
+    const watchId = service.watchCurrentLocation();
+    // ... use location updates
+    // Stop when done
+    service.stopWatching();
+}
+```
+
 ## Examples
 
 ### Basic Usage (No Changes)

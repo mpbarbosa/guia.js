@@ -56,16 +56,13 @@ global.window = {
     }
 };
 
-const fs = require('fs');
-const path = require('path');
+
+
 
 // Import classes from guia.js
 let BrazilianStandardAddress, HtmlSpeechSynthesisDisplayer;
 
-const guiaPath = path.join(__dirname, '../../src/guia.js');
-if (fs.existsSync(guiaPath)) {
-    const guiaContent = fs.readFileSync(guiaPath, 'utf8');
-    eval(guiaContent);
+const guiaModule = await import('../../src/guia.js');
     
     if (typeof global.BrazilianStandardAddress !== 'undefined') {
         BrazilianStandardAddress = global.BrazilianStandardAddress;

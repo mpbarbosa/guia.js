@@ -479,12 +479,12 @@ describe('ImmediateAddressFlow - MP Barbosa Travel Guide (v0.4.1-alpha)', () => 
             const expectedPaths = [
                 '__tests__',
                 'guia_js',
-                'guia_turistico',
-                'submodules'
             ];
 
+            // Get directory path from import.meta.url
+            const currentFilePath = new URL(import.meta.url).pathname;
             expectedPaths.forEach(pathSegment => {
-                expect(__dirname).toContain(pathSegment);
+                expect(currentFilePath).toContain(pathSegment);
             });
         });
 

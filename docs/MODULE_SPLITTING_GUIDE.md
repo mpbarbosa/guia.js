@@ -1152,6 +1152,62 @@ For each module extraction:
 
 ## Testing Modular Code
 
+### Jest and ES6 Modules - Critical Configuration
+
+**⚠️ IMPORTANT:** When using ES6 modules with Jest, special configuration is required.
+
+**The Problem:**
+```javascript
+// Source uses ES6 modules
+// src/guia.js
+import { helper } from './utils/helper.js';
+export class MyClass { }
+
+// CommonJS tests fail
+// test.js
+const { MyClass } = require('../src/guia.js');
+// ❌ Error: Cannot use import statement outside a module
+```
+
+**The Solution:**
+
+1. **Update package.json:**
+```json
+{
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
+  }
+}
+```
+
+2. **Update test files to ES6:**
+```javascript
+// ✅ Correct: ES6 test file
+import { describe, test, expect } from '@jest/globals';
+import { MyClass } from '../../src/guia.js';
+
+describe('MyClass', () => {
+  test('works with ES6', () => {
+    expect(new MyClass()).toBeDefined();
+  });
+});
+```
+
+**Key Points:**
+- ✅ Import Jest globals from `@jest/globals`
+- ✅ Use `import` instead of `require()`
+- ✅ Include `.js` extensions in imports
+- ✅ Use `--experimental-vm-modules` flag
+- ❌ Don't use `eval()` with ES6 modules
+- ❌ Don't mix `import` and `require()`
+
+**See:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) for comprehensive guide.
+
 ### Unit Testing Individual Modules
 
 **Before** (monolithic):
@@ -1164,6 +1220,7 @@ const guia = require('./guia.js');
 **After** (modular):
 ```javascript
 // __tests__/utils/distance.test.js
+import { describe, test, expect } from '@jest/globals';
 import { calculateDistance } from '../../src/utils/distance.js';
 
 describe('calculateDistance', () => {
@@ -1188,6 +1245,7 @@ describe('calculateDistance', () => {
 
 ```javascript
 // __tests__/services/ReverseGeocoder.test.js
+import { describe, test, expect, jest, beforeEach } from '@jest/globals';
 import { ReverseGeocoder } from '../../src/services/ReverseGeocoder.js';
 
 // Mock fetch dependency
@@ -1225,6 +1283,7 @@ describe('ReverseGeocoder', () => {
 
 ```javascript
 // __tests__/integration/geolocation-flow.test.js
+import { describe, test, expect } from '@jest/globals';
 import { GeoPosition } from '../../src/models/GeoPosition.js';
 import { PositionManager } from '../../src/managers/PositionManager.js';
 import { calculateDistance } from '../../src/utils/distance.js';
@@ -1255,6 +1314,64 @@ describe('Geolocation Integration', () => {
   });
 });
 ```
+
+### Common Jest + ES6 Pitfalls to Avoid
+
+#### ❌ Pitfall 1: Using eval() with ES6 modules
+
+```javascript
+// ❌ WRONG - eval() doesn't work with ES6 imports
+const fs = require('fs');
+const guiaContent = fs.readFileSync('../../src/guia.js', 'utf8');
+eval(guiaContent);
+// Error: Cannot use import statement outside a module
+
+// ✅ CORRECT - Use proper imports
+import { MyClass } from '../../src/guia.js';
+```
+
+#### ❌ Pitfall 2: Missing Jest globals import
+
+```javascript
+// ❌ WRONG - describe/test not defined in ESM
+describe('Test', () => {
+  test('fails', () => { });
+});
+// Error: describe is not defined
+
+// ✅ CORRECT - Import Jest globals
+import { describe, test, expect } from '@jest/globals';
+describe('Test', () => {
+  test('works', () => { });
+});
+```
+
+#### ❌ Pitfall 3: Missing .js extension
+
+```javascript
+// ❌ WRONG - Missing extension
+import { MyClass } from './MyClass';
+// Error: Module not found
+
+// ✅ CORRECT - Include .js extension
+import { MyClass } from './MyClass.js';
+```
+
+#### ❌ Pitfall 4: Mixing module systems
+
+```javascript
+// ❌ WRONG - Don't mix import and require
+import { A } from './a.js';
+const B = require('./b.js');
+
+// ✅ CORRECT - Use one system consistently
+import { A } from './a.js';
+import { B } from './b.js';
+```
+
+**For complete Jest configuration guide, see:**
+- [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) - Full guide
+- [TESTING_MODULE_SYSTEMS.md](../.github/TESTING_MODULE_SYSTEMS.md) - Quick reference
 
 ## Best Practices
 

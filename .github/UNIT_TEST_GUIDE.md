@@ -1328,6 +1328,43 @@ describe('immutable operations', () => {
 
 ## Integration with Jest
 
+### ⚠️ IMPORTANT: Jest and ES6 Modules
+
+**If you're using ES6 modules (`import/export`) in your source code, you MUST configure Jest properly.**
+
+**See comprehensive guides:**
+- 📖 [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) - Complete analysis and solutions
+- 📖 [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) - Quick reference
+
+**Quick setup for ES6 modules:**
+
+```json
+// package.json
+{
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  }
+}
+```
+
+```javascript
+// test.js - Import Jest globals
+import { describe, test, expect } from '@jest/globals';
+import { myFunction } from '../src/module.js';  // Include .js extension
+
+describe('myFunction', () => {
+  test('works', () => {
+    expect(myFunction()).toBe('expected');
+  });
+});
+```
+
+**Common errors and fixes:**
+- ❌ "Cannot use import statement outside a module" → Use `--experimental-vm-modules`
+- ❌ "describe is not defined" → Import from `@jest/globals`
+- ❌ "Module not found" → Add `.js` extension to imports
+
 ### Jest Matchers Reference
 
 ```javascript

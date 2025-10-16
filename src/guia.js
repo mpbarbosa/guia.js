@@ -32,6 +32,7 @@ import Chronometer from './timing/Chronometer.js';
 
 // Import HTML classes
 import HtmlText from './html/HtmlText.js';
+import HTMLPositionDisplayer from './html/HTMLPositionDisplayer.js';
 
 // Application log functions with DOM integration
 // Note: Pure logging utilities are available in src/utils/logger.js
@@ -196,135 +197,7 @@ class SingletonStatusManager {
 
 // HtmlText - Extracted to src/html/HtmlText.js
 
-/**
- * Displays position information in HTML format with coordinates and accuracy details.
- * 
- * @class HTMLPositionDisplayer
- * @since 0.8.3-alpha  
- * @author Marcelo Pereira Barbosa
- */
-class HTMLPositionDisplayer {
-	constructor(element) {
-		this.element = element;
-		Object.freeze(this); // Prevent further modification following MP Barbosa standards
-	}
-
-	/**
-	 * Renders position data as formatted HTML.
-	 * 
-	 * @param {PositionManager} positionManager - PositionManager instance with position data
-	 * @returns {string} Formatted HTML string for position display
-	 * @since 0.8.3-alpha
-	 */
-	renderPositionHtml(positionManager) {
-		if (!positionManager || !positionManager.lastPosition) {
-			return "<p class='error'>No position data available.</p>";
-		}
-
-		const geoPosition = positionManager.lastPosition;
-		const position = geoPosition.geolocationPosition;
-		const coords = position.coords;
-
-		let html = `<details class="position-details" closed>
-            <summary><strong>Posição Atual</strong></summary>`;
-
-		html += `<div class="coordinates">
-		${position}<br>
-		</div>`;
-
-		// Display core coordinates
-		html += `<div class="coordinates">
-            <h4>Coordenadas:</h4>
-            <p><strong>Latitude:</strong> ${coords ? (coords.latitude ? coords.latitude.toFixed(6) : 'N/A') : 'N/A'}°</p>
-            <p><strong>Longitude:</strong> ${coords ? (coords.longitude ? coords.longitude.toFixed(6) : 'N/A') : 'N/A'}°</p>
-        </div>`;
-
-		// Display accuracy information
-		html += `<div class="accuracy-info">
-            <p><strong>Precisão:</strong> ${coords ? (coords.accuracy ? coords.accuracy.toFixed(2) : 'N/A') : 'N/A'} metros</p>
-            <h4>Precisão:</h4>
-            <p><strong>Qualidade:</strong> ${this.formatAccuracyQuality(position.accuracyQuality)}</p>
-        </div>`;
-
-		// Display altitude if available
-		if (position.altitude !== null && position.altitude !== undefined) {
-			html += `<div class="altitude-info">
-                <h4>Altitude:</h4>
-                <p><strong>Altitude:</strong> ${position.altitude.toFixed(2)} metros</p>`;
-
-			if (position.altitudeAccuracy !== null && position.altitudeAccuracy !== undefined) {
-				html += `<p><strong>Precisão da Altitude:</strong> ${position.altitudeAccuracy.toFixed(2)} metros</p>`;
-			}
-			html += `</div>`;
-		}
-
-		// Display movement information
-		if (position.speed !== null && position.speed !== undefined) {
-			const speedKmh = (position.speed * 3.6);
-			html += `<div class="movement-info">
-                <h4>Movimento:</h4>
-                <p><strong>Velocidade:</strong> ${speedKmh.toFixed(2)} km/h</p>`;
-
-			if (position.heading !== null && position.heading !== undefined) {
-				html += `<p><strong>Direção:</strong> ${position.heading.toFixed(0)}°</p>`;
-			}
-			html += `</div>`;
-		}
-
-		html += `</details>`;
-		return html;
-	}
-
-	formatAccuracyQuality(quality) {
-		const qualityMap = {
-			'excellent': 'Excelente',
-			'good': 'Boa',
-			'medium': 'Média',
-			'bad': 'Ruim',
-			'very bad': 'Muito Ruim'
-		};
-		return qualityMap[quality] || quality;
-	}
-
-	/**
-	 * Updates the HTML display with new position information.
-	 * 
-	 * @param {PositionManager} positionManager - The PositionManager instance
-	 * @param {string} posEvent - The position event type
-	 * @param {Object} loading - Loading state information
-	 * @param {Object} error - Error information if any
-	 * @returns {void}
-	 * @since 0.8.3-alpha
-	 */
-	update(positionManager, posEvent, loading, error) {
-		// Handle loading state
-		if (loading) {
-			this.element.innerHTML = '<p class="loading">Obtendo posição...</p>';
-			return;
-		}
-
-		// Handle error state
-		if (error) {
-			this.element.innerHTML = `<p class="error">Erro ao obter posição: ${error.message}</p>`;
-			return;
-		}
-
-		// Handle successful position updates
-		if (posEvent === PositionManager.strCurrPosUpdate ||
-			posEvent === PositionManager.strImmediateAddressUpdate) {
-			if (positionManager && positionManager.lastPosition) {
-				const html = this.renderPositionHtml(positionManager);
-				this.element.innerHTML = html;
-			} else {
-				this.element.innerHTML = '<p class="warning">Dados de posição não disponíveis.</p>';
-			}
-		}
-	}
-
-	toString() {
-		return `${this.constructor.name}: ${this.element.id || 'no-id'}`;
-	}
-}
+// HTMLPositionDisplayer - Extracted to src/html/HTMLPositionDisplayer.js
 
 
 class HTMLReferencePlaceDisplayer {

@@ -34,6 +34,7 @@ import Chronometer from './timing/Chronometer.js';
 import HtmlText from './html/HtmlText.js';
 import HTMLPositionDisplayer from './html/HTMLPositionDisplayer.js';
 import HTMLReferencePlaceDisplayer from './html/HTMLReferencePlaceDisplayer.js';
+import HTMLAddressDisplayer from './html/HTMLAddressDisplayer.js';
 
 // Application log functions with DOM integration
 // Note: Pure logging utilities are available in src/utils/logger.js
@@ -202,86 +203,7 @@ class SingletonStatusManager {
 
 // HTMLReferencePlaceDisplayer - Extracted to src/html/HTMLReferencePlaceDisplayer.js
 
-/**
- * Displays address information in HTML format.
- * 
- * @class HTMLAddressDisplayer
- * @since 0.8.3-alpha
- * @author Marcelo Pereira Barbosa
- */
-class HTMLAddressDisplayer {
-	constructor(element, enderecoPadronizadoDisplay = false) {
-		this.element = element;
-		this.enderecoPadronizadoDisplay = enderecoPadronizadoDisplay;
-		Object.freeze(this); // Prevent further modification following MP Barbosa standards
-	}
-
-	renderAddressHtml(addressData, enderecoPadronizado) {
-		if (!addressData) {
-			return "<p class='error'>No address data available.</p>";
-		}
-
-		if (this.enderecoPadronizadoDisplay && enderecoPadronizado) {
-			this.enderecoPadronizadoDisplay.innerHTML = enderecoPadronizado.enderecoCompleto();
-		}
-
-		let html = `<details class="address-details" closed>
-            <summary><strong>Endereço Atual</strong></summary>`;
-
-		// Display all addressData attributes
-		html += `<div class="address-attributes">
-			<h4>Todos os atributos de addressData:</h4>
-			<ul>`;
-		for (const key in addressData) {
-			if (Object.prototype.hasOwnProperty.call(addressData, key)) {
-				const value = addressData[key];
-				if (typeof value === 'object' && value !== null) {
-					html += `<li><strong>${key}:</strong> <pre>${JSON.stringify(value, null, 2)}</pre></li>`;
-				} else {
-					html += `<li><strong>${key}:</strong> ${value}</li>`;
-				}
-			}
-		}
-		html += `</ul></div>`;
-
-		// Display full address name if available
-		if (addressData.display_name) {
-			html += `<div class="full-address">
-                <p><strong>Endereço Completo:</strong></p>
-                <p class="display-name">${addressData.display_name}</p>
-            </div>`;
-		}
-
-		html += `</details>`;
-		return html;
-	}
-
-	update(addressData, enderecoPadronizado, posEvent, loading, error) {
-		log("+++ (50) (HTMLAddressDisplayer) update() called with posEvent:", posEvent);
-		// Handle loading state
-		if (loading) {
-			this.element.innerHTML = '<p class="loading">Carregando endereço...</p>';
-			return;
-		}
-
-		// Handle error state
-		if (error) {
-			this.element.innerHTML = `<p class="error">Erro ao carregar endereço: ${error.message}</p>`;
-			return;
-		}
-
-		// Handle successful address data
-		if (posEvent == PositionManager.strCurrPosUpdate && (addressData || enderecoPadronizado)) {
-			log("+++ (51) (HTMLAddressDisplayer) Rendering address data:", addressData);
-			const html = this.renderAddressHtml(addressData, enderecoPadronizado);
-			this.element.innerHTML += html;
-		}
-	}
-
-	toString() {
-		return `${this.constructor.name}: ${this.element.id || 'no-id'}`;
-	}
-}
+// HTMLAddressDisplayer - Extracted to src/html/HTMLAddressDisplayer.js
 
 /**
  * Factory for creating displayer instances.

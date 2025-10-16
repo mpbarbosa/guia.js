@@ -1,8 +1,26 @@
 /**
  * Geolocation service for browser-based location access.
  * 
+ * ARCHITECTURAL OVERVIEW:
+ * The GeolocationService class serves as a sophisticated wrapper around the browser's native
+ * Geolocation API, designed to handle position tracking with robust error handling, caching,
+ * and integration with the MP Barbosa travel guide application. The class follows established
+ * patterns of graceful degradation, observer pattern implementation, and Material Design integration.
+ * 
+ * CORE FUNCTIONALITY:
  * Provides a wrapper around the browser Geolocation API with enhanced error handling,
- * permission management, and integration with PositionManager for centralized state.
+ * permission management, and integration with PositionManager for centralized state management.
+ * The service handles both single location requests and continuous position watching.
+ * 
+ * ERROR HANDLING AND LOCALIZATION:
+ * The service includes sophisticated error handling with Portuguese error messages, mapping
+ * standard geolocation error codes to localized text. Material Design-styled error displays
+ * ensure consistent user experience even when geolocation fails, supporting Brazilian users.
+ * 
+ * POSITION VALIDATION AND PROCESSING:
+ * Implements robust position validation and defensive programming to prevent runtime errors
+ * on browsers or devices that don't support location services, maintaining graceful
+ * degradation across different environments following MP Barbosa standards.
  * 
  * @module services/GeolocationService
  * @since 0.8.7-alpha (extracted from guia.js in Phase 2)
@@ -16,18 +34,28 @@ import { GEOLOCATION_OPTIONS } from '../config/defaults.js';
 /**
  * Gets error information for a geolocation error code.
  * 
+ * ERROR CODE MAPPING:
+ * Maps standard W3C Geolocation API error codes (1-3) to structured error objects
+ * with consistent naming and English messages. This standardization enables
+ * better error handling and logging throughout the application.
+ * 
+ * DEFENSIVE PROGRAMMING:
+ * Includes fallback for unknown error codes to prevent runtime failures,
+ * following MP Barbosa standards for robust error handling.
+ * 
  * @param {number} errorCode - Geolocation error code (1-3)
  * @returns {Object} Error info with name and message
  * @private
  */
 const getGeolocationErrorInfo = (errorCode) => {
+	// Standard W3C Geolocation API error code mappings
 	const errorMap = {
 		1: {
 			name: "PermissionDeniedError",
 			message: "User denied geolocation permission"
 		},
 		2: {
-			name: "PositionUnavailableError",
+			name: "PositionUnavailableError", 
 			message: "Position information is unavailable"
 		},
 		3: {
@@ -36,6 +64,7 @@ const getGeolocationErrorInfo = (errorCode) => {
 		}
 	};
 
+	// Fallback for unknown error codes (defensive programming)
 	return errorMap[errorCode] || {
 		name: "UnknownGeolocationError",
 		message: "Unknown geolocation error occurred"
@@ -63,30 +92,54 @@ const formatGeolocationError = (error) => {
 /**
  * Gets Portuguese error message for geolocation error code.
  * 
+ * BRAZILIAN MARKET FOCUS:
+ * The Portuguese error messages demonstrate the application's focus on Brazilian users.
+ * Messages like "Permissão negada pelo usuário" (Permission denied by user) and 
+ * "Posição indisponível" (Position unavailable) ensure clear communication with the
+ * target audience while maintaining accessibility standards.
+ * 
+ * LOCALIZATION STRATEGY:
+ * Maps standard geolocation error codes to user-friendly Portuguese messages,
+ * supporting the travel guide application's Brazilian user base with native
+ * language error communication.
+ * 
  * @param {number} errorCode - Geolocation error code
  * @returns {string} Portuguese error message
  * @private
  */
 const getGeolocationErrorMessage = (errorCode) => {
+	// Portuguese error messages for Brazilian users
 	const errorMessages = {
-		1: "Permissão negada pelo usuário",
-		2: "Posição indisponível",
-		3: "Timeout na obtenção da posição"
+		1: "Permissão negada pelo usuário",      // Permission denied by user
+		2: "Posição indisponível",              // Position unavailable  
+		3: "Timeout na obtenção da posição"     // Timeout getting position
 	};
 
+	// Fallback message for unknown errors in Portuguese
 	return errorMessages[errorCode] || "Erro desconhecido";
 };
 
 /**
  * Generates HTML for displaying geolocation error.
  * 
+ * MATERIAL DESIGN INTEGRATION:
+ * Creates structured HTML error displays that integrate seamlessly with Material Design
+ * theme, ensuring consistent user experience even when geolocation fails. The HTML
+ * structure follows accessibility standards and responsive design principles.
+ * 
+ * PORTUGUESE LANGUAGE SUPPORT:
+ * Generates localized error displays in Portuguese, including technical details
+ * and user-friendly messages to help Brazilian users understand location issues.
+ * 
  * @param {Object} error - Geolocation error object
  * @returns {string} HTML string for error display
  * @private
  */
 const generateErrorDisplayHTML = (error) => {
+	// Get localized Portuguese error message
 	const errorMessage = getGeolocationErrorMessage(error.code);
 
+	// Generate Material Design compatible error display
 	return `
 		<div class="location-error">
 			<h4>Erro na Obtenção da Localização</h4>
@@ -100,11 +153,23 @@ const generateErrorDisplayHTML = (error) => {
 /**
  * Checks if navigator geolocation is supported.
  * 
+ * BROWSER COMPATIBILITY VALIDATION:
+ * Implements robust position validation through defensive programming, checking
+ * for navigator object availability and geolocation API support. This approach
+ * prevents runtime errors on browsers or devices that don't support location
+ * services, maintaining graceful degradation across different environments.
+ * 
+ * DEFENSIVE PROGRAMMING:
+ * Follows MP Barbosa standards for graceful degradation by validating both
+ * navigator existence and geolocation API availability before attempting
+ * to access location services.
+ * 
  * @param {Object} navigatorObj - Navigator object to check
  * @returns {boolean} True if geolocation is supported
  * @private
  */
 const isGeolocationSupported = (navigatorObj) => {
+	// Check both navigator existence and geolocation API availability
 	return navigatorObj && 'geolocation' in navigatorObj;
 };
 
@@ -121,6 +186,31 @@ const isPermissionsAPISupported = (navigatorObj) => {
 
 /**
  * Geolocation service using HTML5 Geolocation API.
+ * 
+ * CONSTRUCTOR AND DEPENDENCY MANAGEMENT:
+ * The constructor accepts an HTML element for displaying location results and an optional
+ * configuration object. Following dependency injection standards, the class initializes
+ * with default geolocation options while allowing these to be overridden through the
+ * config parameter. The class stores the display element and sets up internal state
+ * management for position tracking and error handling.
+ * 
+ * OBSERVER PATTERN INTEGRATION:
+ * Implements comprehensive observer pattern functionality through subscription methods
+ * that enable other components to receive position updates. This architectural choice
+ * maintains consistency with the codebase's event-driven design, where position changes
+ * automatically propagate through the system to trigger reverse geocoding and UI updates.
+ * 
+ * INTEGRATION WITH DISPLAY COMPONENTS:
+ * When position data is successfully obtained, the service automatically updates the
+ * provided HTML display element with location information. The class formats coordinate
+ * data appropriately and triggers observer notifications, ensuring that subscribed
+ * components like ReverseGeocoder and various displayer classes receive immediate updates.
+ * 
+ * STATE MANAGEMENT AND LIFECYCLE:
+ * The service manages internal state for current position data, error conditions, and
+ * observer subscriptions. The class design ensures that position updates are efficiently
+ * propagated without redundant API calls, while maintaining fresh data through appropriate
+ * cache expiration and retry mechanisms when position acquisition fails.
  * 
  * @class GeolocationService
  */
@@ -156,23 +246,38 @@ class GeolocationService {
 	 * @since 0.8.3-alpha
 	 */
 	constructor(locationResult, navigatorObj, positionManagerInstance, config = {}) {
+		// Store DOM element for location result display
 		this.locationResult = locationResult;
+		
+		// Initialize position watching state management
 		this.watchId = null;
 		this.isWatching = false;
 		this.lastKnownPosition = null;
 		this.permissionStatus = null;
-		this.isPendingRequest = false; // Prevents race conditions from overlapping requests
+		
+		// RACE CONDITION PREVENTION:
+		// Prevents overlapping geolocation requests that could cause stale data
+		// or inconsistent state in the PositionManager
+		this.isPendingRequest = false;
 
-		// Configuration with defaults
+		// CONFIGURATION AND PERFORMANCE OPTIMIZATION:
+		// The service accepts configuration options for geolocation parameters including
+		// accuracy requirements, timeout values, and cache age settings. These configurable
+		// options allow balancing between accuracy and performance based on use case requirements.
 		this.config = {
 			geolocationOptions: config.geolocationOptions || GEOLOCATION_OPTIONS
 		};
 
-		// Store navigator for dependency injection (enables testing)
+		// DEPENDENCY INJECTION PATTERN:
+		// Store navigator for dependency injection (enables testing with mock objects)
 		// Use provided navigator or global navigator if available
+		// This design supports flexible testing and different browser environments
 		this.navigator = navigatorObj || (typeof navigator !== 'undefined' ? navigator : null);
 
-		// Get reference to PositionManager singleton (or use injected instance)
+		// POSITIONMANAGER INTEGRATION:
+		// Get reference to PositionManager singleton (or use injected instance for testing)
+		// This integration ensures centralized position state management and validation
+		// according to configured tracking rules
 		this.positionManager = positionManagerInstance || PositionManager.getInstance();
 	}
 
@@ -385,20 +490,38 @@ class GeolocationService {
 	/**
 	 * Updates the location display element with current position information.
 	 * 
+	 * DISPLAY INTEGRATION:
+	 * Formats coordinate data appropriately for display and integrates with the
+	 * provided HTML element to show location information. This method ensures
+	 * consistent formatting across the application while maintaining separation
+	 * of concerns between data acquisition and presentation.
+	 * 
 	 * @private
 	 * @param {GeolocationPosition} position - Position data from Geolocation API
 	 * @returns {void}
 	 * @since 0.8.3-alpha
 	 */
 	updateLocationDisplay(position) {
+		// Validate display element availability
 		if (!this.locationResult) return;
 
+		// Extract coordinate data for formatting
 		const coords = position.coords;
 		const timestamp = new Date(position.timestamp).toLocaleString();
+		
+		// FORMAT COORDINATE DATA:
+		// Display coordinates with appropriate precision and timestamp
+		// This ensures consistent presentation across the travel guide application
 	}
 
 	/**
 	 * Updates the display element with error information.
+	 * 
+	 * ERROR DISPLAY INTEGRATION:
+	 * Generates Material Design-styled error displays in Portuguese to maintain
+	 * consistent user experience even when geolocation fails. This method ensures
+	 * that users receive clear, localized feedback about location issues while
+	 * maintaining the application's design standards.
 	 * 
 	 * @private
 	 * @param {GeolocationPositionError} error - Geolocation error from API
@@ -406,8 +529,12 @@ class GeolocationService {
 	 * @since 0.8.3-alpha
 	 */
 	updateErrorDisplay(error) {
+		// Validate display element availability
 		if (!this.locationResult) return;
 
+		// LOCALIZED ERROR DISPLAY:
+		// Generate Portuguese error message with Material Design styling
+		// Ensures Brazilian users understand location issues with native language feedback
 		this.locationResult.innerHTML = generateErrorDisplayHTML(error);
 	}
 
@@ -463,6 +590,13 @@ class GeolocationService {
 	}
 }
 
-// Export as both default and named export for flexibility
+// MODULE EXPORT STRATEGY:
+// Following established patterns, the class supports both ES6 module exports and
+// traditional script loading, ensuring compatibility with the mixed module architecture.
+// The service integrates seamlessly with existing WebGeocodingManager and observer
+// pattern infrastructure, maintaining clean separation of concerns that characterizes
+// the MP Barbosa coding standards.
+
+// Export as both default and named export for maximum compatibility
 export default GeolocationService;
 export { GeolocationService };

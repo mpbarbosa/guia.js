@@ -37,6 +37,9 @@ import HTMLReferencePlaceDisplayer from './html/HTMLReferencePlaceDisplayer.js';
 import HTMLAddressDisplayer from './html/HTMLAddressDisplayer.js';
 import DisplayerFactory from './html/DisplayerFactory.js';
 
+// Import speech synthesis classes
+import SpeechItem from './speech/SpeechItem.js';
+
 // Application log functions with DOM integration
 // Note: Pure logging utilities are available in src/utils/logger.js
 // These functions add DOM output to console logging for the web UI
@@ -1001,46 +1004,7 @@ class WebGeocodingManager {
 	}
 }
 
-/**
- * Speech synthesis queue item for managing text-to-speech requests with priority support.
- * 
- * This class represents individual items in the speech synthesis queue, providing
- * priority-based ordering and automatic expiration to prevent stale speech requests
- * from being processed. Each item contains text content, priority level, and timestamp.
- * 
- * @class SpeechItem
- * @since 0.8.3-alpha
- * @author Marcelo Pereira Barbosa
- */
-class SpeechItem {
-	/**
-	 * Creates a new speech queue item.
-	 * 
-	 * @param {string} text - Text content to be spoken
-	 * @param {number} [priority=0] - Priority level (higher values = higher priority)
-	 * @param {number} [timestamp=Date.now()] - Creation timestamp for expiration tracking
-	 */
-	constructor(text, priority = 0, timestamp = Date.now()) {
-		this.text = text;
-		this.priority = priority;
-		this.timestamp = timestamp;
-		Object.freeze(this); // Prevent further modification following MP Barbosa standards
-	}
-
-	/**
-	 * Checks if this speech item has expired based on the configured expiration time.
-	 * 
-	 * @param {number} expirationMs - Expiration time in milliseconds
-	 * @returns {boolean} True if the item has expired
-	 */
-	isExpired(expirationMs = 30000) { // 30 seconds default
-		return Date.now() - this.timestamp > expirationMs;
-	}
-
-	toString() {
-		return `${this.constructor.name}: "${this.text}" (priority: ${this.priority})`;
-	}
-}
+// SpeechItem - Extracted to src/speech/SpeechItem.js
 
 /**
  * Priority-based speech synthesis queue with automatic cleanup of expired items.
@@ -1962,6 +1926,7 @@ export {
 	HTMLPositionDisplayer,
 	HTMLReferencePlaceDisplayer,
 	DisplayerFactory,
+	SpeechItem,
 	SpeechSynthesisManager,
 	SpeechQueue,
 	findNearbyRestaurants,
@@ -1996,6 +1961,7 @@ if (typeof window !== 'undefined') {
 	window.HTMLPositionDisplayer = HTMLPositionDisplayer;
 	window.HTMLReferencePlaceDisplayer = HTMLReferencePlaceDisplayer;
 	window.DisplayerFactory = DisplayerFactory;
+	window.SpeechItem = SpeechItem;
 	window.SpeechSynthesisManager = SpeechSynthesisManager;
 	window.SpeechQueue = SpeechQueue;
 	window.findNearbyRestaurants = findNearbyRestaurants;

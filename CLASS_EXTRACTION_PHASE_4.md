@@ -251,3 +251,24 @@ The codebase now has:
 - **Comprehensive documentation**: Including migration guidance
 - **Excellent test coverage**: Integration tests for all modules
 - **Modern patterns**: Immutability, dependency injection, and clean interfaces
+
+## Related Documentation
+
+### MP Barbosa Travel Guide Architecture
+- [Class Extraction Summary](./CLASS_EXTRACTION_SUMMARY.md) - Overview of all phases
+- [JavaScript Async-Await Best Practices](./docs/javascript-async-await-best-practices.md) - Async programming patterns
+- [Low Coupling Guide](./.github/LOW_COUPLING_GUIDE.md) - Architecture principles
+- [High Cohesion Guide](./.github/HIGH_COHESION_GUIDE.md) - Single responsibility patterns
+- [Referential Transparency Guide](./.github/REFERENTIAL_TRANSPARENCY.md) - Immutability principles
+
+### Implementation Details
+- [AddressDataExtractor Module](./src/data/AddressDataExtractor.js) - Legacy facade implementation
+- [Integration Tests](./__tests__/integration/AddressDataExtractor-module.test.js) - Test coverage
+- [Main Entry Point](./src/guia.js) - Updated exports
+- [Documentation Update Index](./DOCUMENTATION_UPDATE_INDEX.md) - Change tracking
+
+### Project Context
+- [MP Barbosa Site](../../../../../README.md) - Main project overview
+- [Copilot Instructions](../../../../../.github/copilot-instructions.md) - Development guidelines
+- [Project Structure](../../../../../src/README.md) - Source organization
+- [Repository Documentation](../../../../../docs/README.md) - Centralized documentation index

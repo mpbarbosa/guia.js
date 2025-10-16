@@ -291,6 +291,62 @@ describe('Chronometer', () => {
         });
     });
 
+    describe('Event configuration injection', () => {
+        test('should use default event configuration when none provided', () => {
+            const chronometer = new Chronometer(null);
+            
+            expect(chronometer.eventConfig.positionUpdate).toBe('strCurrPosUpdate');
+            expect(chronometer.eventConfig.immediateAddressUpdate).toBe('strImmediateAddressUpdate');
+            expect(chronometer.eventConfig.positionNotUpdate).toBe('strCurrPosNotUpdate');
+        });
+
+        test('should use custom event configuration when provided', () => {
+            const customConfig = {
+                positionUpdate: 'location.updated',
+                immediateAddressUpdate: 'address.immediate',
+                positionNotUpdate: 'location.rejected'
+            };
+            const chronometer = new Chronometer(null, customConfig);
+            
+            expect(chronometer.eventConfig.positionUpdate).toBe('location.updated');
+            expect(chronometer.eventConfig.immediateAddressUpdate).toBe('address.immediate');
+            expect(chronometer.eventConfig.positionNotUpdate).toBe('location.rejected');
+        });
+
+        test('should use partial custom configuration with defaults for missing values', () => {
+            const partialConfig = {
+                positionUpdate: 'custom.position.update'
+            };
+            const chronometer = new Chronometer(null, partialConfig);
+            
+            expect(chronometer.eventConfig.positionUpdate).toBe('custom.position.update');
+            expect(chronometer.eventConfig.immediateAddressUpdate).toBe('strImmediateAddressUpdate');
+            expect(chronometer.eventConfig.positionNotUpdate).toBe('strCurrPosNotUpdate');
+        });
+
+        test('should respond to custom event names in update method', () => {
+            const customConfig = {
+                positionUpdate: 'custom.update',
+                positionNotUpdate: 'custom.no.update'
+            };
+            const chronometer = new Chronometer(null, customConfig);
+            const resetSpy = jest.spyOn(chronometer, 'reset');
+            const startSpy = jest.spyOn(chronometer, 'start');
+            const mockPositionManager = PositionManager.getInstance();
+
+            // Should respond to custom event name  
+            chronometer.update(mockPositionManager, 'custom.update', false, null);
+            expect(resetSpy).toHaveBeenCalled();
+            expect(startSpy).toHaveBeenCalled();
+
+            // Should NOT respond to default event name
+            resetSpy.mockClear();
+            startSpy.mockClear();
+            chronometer.update(mockPositionManager, 'strCurrPosUpdate', false, null);
+            expect(resetSpy).not.toHaveBeenCalled();
+        });
+    });
+
     describe('Observer pattern integration', () => {
         let mockPositionManager;
 
@@ -302,7 +358,7 @@ describe('Chronometer', () => {
             const resetSpy = jest.spyOn(chronometer, 'reset');
             const startSpy = jest.spyOn(chronometer, 'start');
 
-            chronometer.update(mockPositionManager, PositionManager.strCurrPosUpdate, false, null);
+            chronometer.update(mockPositionManager, 'strCurrPosUpdate', false, null);
 
             expect(resetSpy).toHaveBeenCalled();
             expect(startSpy).toHaveBeenCalled();
@@ -312,7 +368,7 @@ describe('Chronometer', () => {
             const resetSpy = jest.spyOn(chronometer, 'reset');
             const startSpy = jest.spyOn(chronometer, 'start');
 
-            chronometer.update(mockPositionManager, PositionManager.strImmediateAddressUpdate, false, null);
+            chronometer.update(mockPositionManager, 'strImmediateAddressUpdate', false, null);
 
             expect(resetSpy).toHaveBeenCalled();
             expect(startSpy).toHaveBeenCalled();
@@ -321,7 +377,7 @@ describe('Chronometer', () => {
         test('should start if not running on position not update', () => {
             const startSpy = jest.spyOn(chronometer, 'start');
 
-            chronometer.update(mockPositionManager, PositionManager.strCurrPosNotUpdate, false, null);
+            chronometer.update(mockPositionManager, 'strCurrPosNotUpdate', false, null);
 
             expect(startSpy).toHaveBeenCalled();
         });
@@ -330,7 +386,7 @@ describe('Chronometer', () => {
             chronometer.start();
             const startSpy = jest.spyOn(chronometer, 'start');
 
-            chronometer.update(mockPositionManager, PositionManager.strCurrPosNotUpdate, false, null);
+            chronometer.update(mockPositionManager, 'strCurrPosNotUpdate', false, null);
 
             expect(startSpy).toHaveBeenCalledTimes(0);
         });
@@ -400,9 +456,9 @@ describe('Chronometer', () => {
             const positionManager = PositionManager.getInstance();
             
             expect(() => {
-                chronometer.update(positionManager, PositionManager.strCurrPosUpdate, false, null);
-                chronometer.update(positionManager, PositionManager.strImmediateAddressUpdate, false, null);
-                chronometer.update(positionManager, PositionManager.strCurrPosNotUpdate, false, null);
+                chronometer.update(positionManager, 'strCurrPosUpdate', false, null);
+                chronometer.update(positionManager, 'strImmediateAddressUpdate', false, null);
+                chronometer.update(positionManager, 'strCurrPosNotUpdate', false, null);
             }).not.toThrow();
         });
     });

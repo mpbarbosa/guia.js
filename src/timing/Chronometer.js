@@ -1,6 +1,3 @@
-// Import core dependencies
-import PositionManager from '../core/PositionManager.js';
-
 /**
  * Displays and manages elapsed time information in HTML format.
  * 
@@ -12,7 +9,7 @@ import PositionManager from '../core/PositionManager.js';
  * - Start/stop/reset timer functionality
  * - HH:MM:SS time formatting
  * - Automatic display updates (1-second interval)
- * - Observer pattern integration with PositionManager
+ * - Observer pattern integration with position management systems
  * - Error and loading state handling
  * 
  * **Usage**:
@@ -20,7 +17,7 @@ import PositionManager from '../core/PositionManager.js';
  * const chronometerElement = document.getElementById('chronometer');
  * const chronometer = new Chronometer(chronometerElement);
  * 
- * // Subscribe to position updates
+ * // Subscribe to position updates (example with PositionManager)
  * PositionManager.getInstance().subscribe(chronometer);
  * 
  * // Manual control
@@ -43,18 +40,38 @@ class Chronometer {
 	 * observer notifications.
 	 * 
 	 * @param {HTMLElement} element - DOM element where chronometer will be displayed
+	 * @param {Object} [eventConfig] - Configuration object for position events
+	 * @param {string} [eventConfig.positionUpdate='strCurrPosUpdate'] - Event name for successful position updates
+	 * @param {string} [eventConfig.immediateAddressUpdate='strImmediateAddressUpdate'] - Event name for immediate address updates  
+	 * @param {string} [eventConfig.positionNotUpdate='strCurrPosNotUpdate'] - Event name for rejected position updates
 	 * 
 	 * @example
+	 * // Basic usage with default PositionManager events
 	 * const element = document.getElementById('timer-display');
 	 * const chronometer = new Chronometer(element);
+	 * 
+	 * @example
+	 * // Custom event configuration for different observer systems
+	 * const chronometer = new Chronometer(element, {
+	 *   positionUpdate: 'location.updated',
+	 *   immediateAddressUpdate: 'address.immediate',
+	 *   positionNotUpdate: 'location.rejected'
+	 * });
 	 */
-	constructor(element) {
+	constructor(element, eventConfig = {}) {
 		console.log("Initializing Chronometer...");
 		this.element = element;
 		this.startTime = null;
 		this.lastUpdateTime = null;
 		this.isRunning = false;
 		this.intervalId = null;
+		
+		// Configure event names with defaults for backward compatibility
+		this.eventConfig = {
+			positionUpdate: eventConfig.positionUpdate || 'strCurrPosUpdate',
+			immediateAddressUpdate: eventConfig.immediateAddressUpdate || 'strImmediateAddressUpdate',
+			positionNotUpdate: eventConfig.positionNotUpdate || 'strCurrPosNotUpdate'
+		};
 	}
 
 	/**
@@ -211,18 +228,20 @@ class Chronometer {
 	/**
 	 * Updates the chronometer based on position manager notifications.
 	 * 
-	 * Observer pattern update method that gets called when the PositionManager
-	 * has new position data available. The chronometer responds to different
+	 * Observer pattern update method that gets called when a position management
+	 * system has new position data available. The chronometer responds to different
 	 * position events by starting, stopping, or displaying status messages.
 	 * 
-	 * **Event Handling**:
-	 * - `strCurrPosUpdate`: Position successfully updated - restart chronometer
-	 * - `strImmediateAddressUpdate`: Immediate address update - restart chronometer  
-	 * - `strCurrPosNotUpdate`: Position update rejected - continue if not running
-	 * - Error states: Stop chronometer and display "Error"
-	 * - Loading states: Display "Loading..." message
+ * **Event Handling**:
+ * - Position update events: Position successfully updated - restart chronometer
+ * - Immediate address events: Immediate address update - restart chronometer  
+ * - Position not update events: Position update rejected - continue if not running
+ * - Error states: Stop chronometer and display "Error"
+ * - Loading states: Display "Loading..." message
+ * 
+ * Event names are configurable via constructor eventConfig parameter.
 	 * 
-	 * @param {PositionManager} positionManager - The PositionManager instance
+	 * @param {Object} positionManager - The position manager instance
 	 * @param {string} posEvent - The position event type
 	 * @param {Object} loading - Loading state information  
 	 * @param {Object} error - Error information if any
@@ -231,16 +250,16 @@ class Chronometer {
 	 * 
 	 * @example
 	 * // Typically called automatically via observer pattern
-	 * PositionManager.getInstance().subscribe(chronometer);
+	 * positionManager.subscribe(chronometer);
 	 */
 	update(positionManager, posEvent, loading, error) {
-		// Handle different position events
-		if (posEvent === PositionManager.strCurrPosUpdate ||
-			posEvent === PositionManager.strImmediateAddressUpdate) {
+		// Handle different position events using injected configuration
+		if (posEvent === this.eventConfig.positionUpdate ||
+			posEvent === this.eventConfig.immediateAddressUpdate) {
 			// Position successfully updated - restart chronometer
 			this.reset();
 			this.start();
-		} else if (posEvent === PositionManager.strCurrPosNotUpdate) {
+		} else if (posEvent === this.eventConfig.positionNotUpdate) {
 			// Position update was rejected - continue running if already started
 			if (!this.isRunning && this.element) {
 				this.start();

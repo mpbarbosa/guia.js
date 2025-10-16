@@ -30,6 +30,9 @@ import AddressDataExtractor from './data/AddressDataExtractor.js';
 // Import timing classes
 import Chronometer from './timing/Chronometer.js';
 
+// Import HTML classes
+import HtmlText from './html/HtmlText.js';
+
 // Application log functions with DOM integration
 // Note: Pure logging utilities are available in src/utils/logger.js
 // These functions add DOM output to console logging for the web UI
@@ -62,6 +65,11 @@ let IbiraAPIFetchManager;
 // Promise that resolves when Ibira.js loading is complete (success or fallback)
 const ibiraLoadingPromise = (async () => {
     try {
+		// Skip HTTPS imports in Node.js environments (only works in browsers)
+		if (typeof window === 'undefined') {
+			throw new Error('Node.js environment detected - using fallback');
+		}
+		
 		const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Import timeout')), 5000));
 		const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js/src/ibira.js');
         const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
@@ -186,53 +194,7 @@ class SingletonStatusManager {
 
 // Chronometer - Extracted to src/timing/Chronometer.js
 
-/**
- * Manages HTML text content updates with timestamp formatting.
- * 
- * @class HtmlText
- * @since 0.8.3-alpha
- * @author Marcelo Pereira Barbosa
- */
-class HtmlText {
-	/**
-	 * Creates a new HtmlText instance.
-	 * 
-	 * @param {Document} document - Document object for DOM operations
-	 * @param {HTMLElement} element - Target DOM element for text updates
-	 */
-	constructor(document, element) {
-		this.document = document;
-		this.element = element;
-		Object.freeze(this); // Prevent further modification following MP Barbosa standards
-	}
-
-	/**
-	 * Updates the element with current timestamp on position changes.
-	 * 
-	 * @param {PositionManager} positionManager - The PositionManager instance
-	 * @param {string} posEvent - The position event type
-	 * @param {Object} loading - Loading state information
-	 * @param {Object} error - Error information if any
-	 * @returns {void}
-	 * @since 0.8.3-alpha
-	 */
-	update(positionManager, posEvent, loading, error) {
-		if (this.element) {
-			if (error) {
-				this.element.textContent = `Error: ${error.message}`;
-			} else if (loading) {
-				this.element.textContent = "Loading...";
-			} else if (posEvent === PositionManager.strCurrPosUpdate ||
-				posEvent === PositionManager.strImmediateAddressUpdate) {
-				this.element.textContent = new Date().toLocaleString();
-			}
-		}
-	}
-
-	toString() {
-		return `${this.constructor.name}: ${this.element.id || 'no-id'}`;
-	}
-}
+// HtmlText - Extracted to src/html/HtmlText.js
 
 /**
  * Displays position information in HTML format with coordinates and accuracy details.
@@ -2312,6 +2274,8 @@ export {
 	AddressExtractor,
 	AddressCache,
 	AddressDataExtractor,
+	Chronometer,
+	HtmlText,
 	HTMLAddressDisplayer,
 	HTMLPositionDisplayer,
 	HTMLReferencePlaceDisplayer,
@@ -2344,6 +2308,8 @@ if (typeof window !== 'undefined') {
 	window.AddressExtractor = AddressExtractor;
 	window.AddressCache = AddressCache;
 	window.AddressDataExtractor = AddressDataExtractor;
+	window.Chronometer = Chronometer;
+	window.HtmlText = HtmlText;
 	window.HTMLAddressDisplayer = HTMLAddressDisplayer;
 	window.HTMLPositionDisplayer = HTMLPositionDisplayer;
 	window.HTMLReferencePlaceDisplayer = HTMLReferencePlaceDisplayer;

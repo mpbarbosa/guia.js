@@ -35,6 +35,7 @@ import HtmlText from './html/HtmlText.js';
 import HTMLPositionDisplayer from './html/HTMLPositionDisplayer.js';
 import HTMLReferencePlaceDisplayer from './html/HTMLReferencePlaceDisplayer.js';
 import HTMLAddressDisplayer from './html/HTMLAddressDisplayer.js';
+import DisplayerFactory from './html/DisplayerFactory.js';
 
 // Application log functions with DOM integration
 // Note: Pure logging utilities are available in src/utils/logger.js
@@ -205,74 +206,7 @@ class SingletonStatusManager {
 
 // HTMLAddressDisplayer - Extracted to src/html/HTMLAddressDisplayer.js
 
-/**
- * Factory for creating displayer instances.
- * 
- * This factory provides a centralized point for creating displayer objects,
- * enabling dependency injection and easier testing. The factory methods are
- * pure functions that create displayer instances without side effects.
- * 
- * **Benefits**:
- * - Decouples WebGeocodingManager from concrete displayer implementations
- * - Enables mock displayer injection for testing
- * - Provides single point of control for displayer creation
- * - Maintains referential transparency (pure functions)
- * 
- * **Usage**:
- * ```javascript
- * // Default usage
- * const posDisplayer = DisplayerFactory.createPositionDisplayer(element);
- * 
- * // Custom factory for testing
- * class MockDisplayerFactory {
- *     static createPositionDisplayer(element) {
- *         return new MockPositionDisplayer(element);
- *     }
- * }
- * ```
- * 
- * @class DisplayerFactory
- * @since 0.8.6-alpha
- * @author Marcelo Pereira Barbosa
- */
-class DisplayerFactory {
-	/**
-	 * Creates a position displayer instance.
-	 * 
-	 * @param {HTMLElement|string} element - DOM element or element ID for display
-	 * @returns {HTMLPositionDisplayer} Position displayer instance
-	 * @since 0.8.6-alpha
-	 */
-	static createPositionDisplayer(element) {
-		return new HTMLPositionDisplayer(element);
-	}
-
-	/**
-	 * Creates an address displayer instance.
-	 * 
-	 * @param {HTMLElement|string} element - DOM element or element ID for display
-	 * @param {HTMLElement|string|boolean} enderecoPadronizadoDisplay - Element for standardized address display
-	 * @returns {HTMLAddressDisplayer} Address displayer instance
-	 * @since 0.8.6-alpha
-	 */
-	static createAddressDisplayer(element, enderecoPadronizadoDisplay = false) {
-		return new HTMLAddressDisplayer(element, enderecoPadronizadoDisplay);
-	}
-
-	/**
-	 * Creates a reference place displayer instance.
-	 * 
-	 * @param {HTMLElement|string} element - DOM element or element ID for display
-	 * @returns {HTMLReferencePlaceDisplayer} Reference place displayer instance
-	 * @since 0.8.6-alpha
-	 */
-	static createReferencePlaceDisplayer(element) {
-		return new HTMLReferencePlaceDisplayer(element);
-	}
-}
-
-// Add after the HTMLPositionDisplayer class and before the AddressDataExtractor class
-// ...existing code continues...
+// DisplayerFactory - Extracted to src/html/DisplayerFactory.js
 
 // AddressExtractor - Extracted to src/data/AddressExtractor.js
 // AddressCache - Extracted to src/data/AddressCache.js  

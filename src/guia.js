@@ -33,6 +33,7 @@ import Chronometer from './timing/Chronometer.js';
 // Import HTML classes
 import HtmlText from './html/HtmlText.js';
 import HTMLPositionDisplayer from './html/HTMLPositionDisplayer.js';
+import HTMLReferencePlaceDisplayer from './html/HTMLReferencePlaceDisplayer.js';
 
 // Application log functions with DOM integration
 // Note: Pure logging utilities are available in src/utils/logger.js
@@ -199,55 +200,7 @@ class SingletonStatusManager {
 
 // HTMLPositionDisplayer - Extracted to src/html/HTMLPositionDisplayer.js
 
-
-class HTMLReferencePlaceDisplayer {
-	constructor(element, referencePlaceDisplay = false) {
-		this.element = element;
-		this.referencePlaceDisplay = referencePlaceDisplay;
-		Object.freeze(this); // Prevent further modification following MP Barbosa standards
-	}
-
-	renderReferencePlaceHtml(referencePlace) {
-		if (!referencePlace) {
-			return "<p class='error'>No reference place data available.</p>";
-		}
-
-
-		// Display all referencePlace attributes
-		let html = '<div class="reference-place-attributes">';
-		html += referencePlace.description;
-		html += `</div>`;
-		return html;
-	}
-
-	update(addressData, brazilianStandardAddress, posEvent, loading, error) {
-		log("+++ (50) (HTMLReferencePlaceDisplayer) update() called with posEvent:", posEvent);
-		log("+++ (50.1) (HTMLReferencePlaceDisplayer) brazilian standard address: ", brazilianStandardAddress.constructor.name);
-		log("+++ (50.2) (HTMLReferencePlaceDisplayer) Reference place: ", brazilianStandardAddress.referencePlace);
-		// Handle loading state
-		if (loading) {
-			this.element.innerHTML = '<p class="loading">Carregando local de referência...</p>';
-			return;
-		}
-
-		// Handle error state
-		if (error) {
-			this.element.innerHTML = `<p class="error">Erro ao carregar local de referência: ${error.message}</p>`;
-			return;
-		}
-
-		// Handle successful reference place data
-		if (posEvent == PositionManager.strCurrPosUpdate && (brazilianStandardAddress)) {
-			log("+++ (51) (HTMLReferencePlaceDisplayer) Rendering reference place data:", brazilianStandardAddress);
-			const html = this.renderReferencePlaceHtml(brazilianStandardAddress.referencePlace);
-			this.element.innerHTML = html;
-		}
-	}
-
-	toString() {
-		return `${this.constructor.name}: ${this.element.id || 'no-id'}`;
-	}
-}
+// HTMLReferencePlaceDisplayer - Extracted to src/html/HTMLReferencePlaceDisplayer.js
 
 /**
  * Displays address information in HTML format.

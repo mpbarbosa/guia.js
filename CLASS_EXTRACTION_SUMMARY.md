@@ -195,9 +195,21 @@ See CLASS_EXTRACTION_PHASE_2.md for complete Phase 2 documentation.
 
 See CLASS_EXTRACTION_PHASE_3.md for complete Phase 3 documentation.
 
-### Phase 4: Presentation Layer
+### Phase 4: Legacy Facade Extraction ✅ COMPLETED
+- ✅ AddressDataExtractor - Extracted to src/data/AddressDataExtractor.js (legacy facade)
+
+**Phase 4 Results:**
+- Extracted AddressDataExtractor legacy facade from guia.js (~175 lines removed)
+- Created 1 facade module (207 lines) with comprehensive delegation
+- Added 295 lines of integration tests (all passing)
+- Maintained 100% backward compatibility through facade pattern
+- Zero breaking changes while providing clear migration path
+
+See CLASS_EXTRACTION_PHASE_4.md for complete Phase 4 documentation.
+
+### Future Phases: Presentation Layer (Optional)
 - HTMLPositionDisplayer
-- HTMLAddressDisplayer
+- HTMLAddressDisplayer  
 - SpeechSynthesisManager
 - DisplayerFactory
 

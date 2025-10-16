@@ -268,6 +268,24 @@ New issue templates should:
 - [GitHub Actions: Reusing workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows)
 - [Creating composite actions](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)
 
+## Recent Updates (October 2025)
+
+### Class Extraction Initiative Completion
+
+**Phase 4: AddressDataExtractor Legacy Facade** (October 16, 2025)
+- ✅ Extracted AddressDataExtractor from guia.js to dedicated module
+- ✅ Implemented facade pattern for 100% backward compatibility
+- ✅ Added 295 lines of comprehensive integration tests
+- ✅ Maintained all existing APIs while providing clear migration path
+- ✅ Created property descriptor synchronization with AddressCache singleton
+
+**Total Initiative Results:**
+- **4 phases completed**: Core, Services, Data Processing, Legacy Facade
+- **11 classes extracted**: All following low-coupling principles
+- **11 focused modules**: Each with single responsibility
+- **Zero breaking changes**: Complete backward compatibility maintained
+- **Enhanced documentation**: Including migration guidance and best practices
+
 ## Conclusion
 
 This refactoring successfully reduces coupling in the `.github` folder by:
@@ -277,3 +295,5 @@ This refactoring successfully reduces coupling in the `.github` folder by:
 - Improving documentation
 
 The changes make the repository easier to maintain while preserving all existing functionality.
+
+The completed class extraction initiative demonstrates how low-coupling principles can be applied systematically to improve code organization while maintaining backward compatibility.

@@ -880,12 +880,12 @@ class WebGeocodingManager {
 	/**
 	 * Displays error messages to the user in a formatted way.
 	 * 
-	 * @param {Error} error - Error object to display
+	 * @param {Error} errorObj - Error object to display
 	 * @returns {void}
 	 * @private
 	 */
-	_displayError(error) {
-		error("Display Error:", error);
+	_displayError(errorObj) {
+		error("Display Error:", errorObj);
 
 		// Try to find a suitable element to display the error
 		const errorElements = [
@@ -899,14 +899,14 @@ class WebGeocodingManager {
 			element.innerHTML = `
 				<div class="error-message" style="color: red; padding: 10px; border: 1px solid red; border-radius: 4px; margin: 10px 0;">
 					<h4>Erro</h4>
-					<p><strong>Tipo:</strong> ${error.name || 'Error'}</p>
-					<p><strong>Mensagem:</strong> ${error.message}</p>
-					${error.code ? `<p><strong>Código:</strong> ${error.code}</p>` : ''}
+					<p><strong>Tipo:</strong> ${errorObj.name || 'Error'}</p>
+					<p><strong>Mensagem:</strong> ${errorObj.message}</p>
+					${errorObj.code ? `<p><strong>Código:</strong> ${errorObj.code}</p>` : ''}
 				</div>
 			`;
 		} else {
 			// Fallback to alert if no suitable element found
-			alert(`Erro: ${error.message}`);
+			alert(`Erro: ${errorObj.message}`);
 		}
 	}
 

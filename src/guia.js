@@ -120,6 +120,13 @@ if (typeof window !== 'undefined') {
 	// Make log/warn available globally for imported modules
 	window.log = log;
 	window.warn = warn;
+	
+	// Export IbiraAPIFetchManager when available
+	ibiraLoadingPromise.then(() => {
+		if (IbiraAPIFetchManager) {
+			window.IbiraAPIFetchManager = IbiraAPIFetchManager;
+		}
+	});
 }
 
 // Use configuration from imported module
@@ -354,7 +361,7 @@ function fetchCityStatistics(latitude, longitude) {
 }
 
 
-// Export for ES6 modules
+// Export for ES6 module system
 export {
 	guiaVersion,
 	calculateDistance,
@@ -386,6 +393,8 @@ export {
 	SpeechItem,
 	SpeechSynthesisManager,
 	SpeechQueue,
+	IbiraAPIFetchManager,
+	ibiraLoadingPromise,
 	findNearbyRestaurants,
 	fetchCityStatistics
 };

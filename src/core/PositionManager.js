@@ -354,6 +354,8 @@ class PositionManager {
 
 		// Verifica se a precisão é boa o suficiente
 		if (
+			setupParams.notAcceptedAccuracy && 
+			Array.isArray(setupParams.notAcceptedAccuracy) &&
 			setupParams.notAcceptedAccuracy.includes(
 				GeoPosition.getAccuracyQuality(position.coords.accuracy)
 			)

@@ -124,6 +124,15 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Real-world examples from Phase 16 modularization
   - **Based on actual guia.js modularization experience**
 
+- **[class-extraction/README.md](./class-extraction/README.md)** - Class Extraction Documentation Hub 🆕
+  - **Complete guide to class extraction and module splitting efforts**
+  - Chronological documentation of Phases 2-16
+  - Architecture evolution from monolithic to modular design
+  - Functional programming transformation emphasis
+  - Before/after code structure comparisons
+  - Performance and maintainability improvements
+  - Reading guide for new contributors and implementation details
+
 - **[MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)** - JavaScript Module Splitting Guide 🆕
   - Understanding JavaScript modules (ES6 vs CommonJS)
   - Benefits of modularization for maintainability and testability
@@ -138,13 +147,6 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Tools and automation (bundlers, linters, dependency analysis)
   - **GitHub Copilot-optimized format**
   - **Essential for maintainers and contributors**
-
-- **[MODULE_SPLITTING_SUMMARY.md](./MODULE_SPLITTING_SUMMARY.md)** - Module Splitting Implementation Summary 🆕
-  - Implementation results and metrics
-  - Test compatibility analysis (93.7% pass rate)
-  - ES6 module migration impact
-  - Future work and recommendations
-  - Risk assessment and mitigations
 
 ### Automation & CI/CD
 

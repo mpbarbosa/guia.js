@@ -90,7 +90,9 @@
             try {
                 // Inicializar o gerenciador principal
                 const resultArea = document.getElementById('result-area');
-                const manager = new WebGeocodingManager(document, resultArea);
+                const manager = new WebGeocodingManager(document, {
+                    locationResult: resultArea.id
+                });
                 
                 // Configurar botões
                 const locationBtn = document.getElementById('location-btn');

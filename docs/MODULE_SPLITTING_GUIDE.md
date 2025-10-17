@@ -22,6 +22,8 @@
 
 This guide provides comprehensive instructions for splitting large JavaScript files into smaller, focused modules. Following modular design principles improves code maintainability, testability, and reusability while aligning with the project's core principles of **referential transparency**, **high cohesion**, and **low coupling**.
 
+> 📚 **Essential Companion**: See **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](./ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** for comprehensive ES6 import/export patterns, naming conventions, and practical solutions to common module issues.
+
 ### Why This Guide?
 
 The Guia.js project currently has a 6,000+ line `guia.js` file containing 25+ classes. While functional, this monolithic structure:
@@ -210,6 +212,15 @@ JavaScript has two primary module systems:
 ## ES6 Modules (ESM)
 
 ES6 modules are the modern JavaScript standard for organizing code.
+
+> 📖 **Detailed Reference**: See **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](./ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** for comprehensive coverage of:
+> - All export patterns (named, default, re-exports, mixed)
+> - Import patterns (named, default, namespace, dynamic)
+> - Module naming conventions and organization
+> - Common pitfalls and troubleshooting
+> - HTML integration with `type="module"`
+> - Performance optimization techniques
+> - Real-world migration examples from guia.js
 
 ### Basic Syntax
 

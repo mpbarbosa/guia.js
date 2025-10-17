@@ -110,6 +110,20 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
 
 ### Modularization & Code Organization
 
+- **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](./ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - ES6 Import/Export System Best Practices Guide 🆕
+  - **Essential reference for all ES6 module work**
+  - Comprehensive export patterns (named, default, re-exports)
+  - Import patterns (named, default, mixed, dynamic)
+  - Module organization and naming conventions
+  - Common pitfalls and practical solutions
+  - HTML integration with `type="module"`
+  - Testing considerations for ES6 modules
+  - Performance optimization and tree shaking
+  - Migration strategies from CommonJS
+  - Troubleshooting guide for import/export errors
+  - Real-world examples from Phase 16 modularization
+  - **Based on actual guia.js modularization experience**
+
 - **[MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)** - JavaScript Module Splitting Guide 🆕
   - Understanding JavaScript modules (ES6 vs CommonJS)
   - Benefits of modularization for maintainability and testability

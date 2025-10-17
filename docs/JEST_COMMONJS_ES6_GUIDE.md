@@ -22,6 +22,8 @@
 
 When splitting JavaScript modules, developers face a critical choice between **ES6 modules** (`import/export`) and **CommonJS** (`require/module.exports`). This choice becomes particularly complex when using **Jest**, which has varying levels of support for both systems.
 
+> 📚 **Practical Implementation**: For hands-on ES6 module best practices, patterns, and real-world examples, see **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](./ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - a comprehensive guide based on the guia.js modularization experience.
+
 **Guia.js Current State:**
 - ✅ Source code uses ES6 modules (`import/export`)
 - ✅ `package.json` has `"type": "module"`
@@ -114,6 +116,8 @@ SyntaxError: Cannot use import statement outside a module
 ---
 
 ## Module Systems Overview
+
+> 📖 **Comprehensive ES6 Reference**: For detailed ES6 module patterns, best practices, and real-world examples, see **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](./ES6_IMPORT_EXPORT_BEST_PRACTICES.md)**.
 
 ### ES6 Modules (ESM)
 

@@ -201,11 +201,16 @@ See `.github/REFERENTIAL_TRANSPARENCY.md` for more details.
 
 ## Related Documentation
 
-- [MODULE_SPLITTING_GUIDE.md](../docs/MODULE_SPLITTING_GUIDE.md) - Complete guide to module splitting
-- [FOLDER_STRUCTURE_GUIDE.md](../.github/FOLDER_STRUCTURE_GUIDE.md) - Recommended folder structure
-- [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md) - Pure function guidelines
-- [CODE_REVIEW_GUIDE.md](../.github/CODE_REVIEW_GUIDE.md) - Code review checklist
-- [JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md) - JavaScript coding standards
+- **[INDEX.md](./INDEX.md)** - Complete documentation index
+- **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](./ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - ES6 Import/Export System Best Practices Guide 🆕
+  - Essential reference for all ES6 module development
+  - Comprehensive export/import patterns and conventions
+  - Common pitfalls and practical solutions
+  - HTML integration with `type="module"`
+  - Based on actual guia.js modularization experience
+- **[MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)** - Comprehensive module splitting guide
+- **[JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md)** - Critical analysis of Jest and module systems
+- **[CLASS_EXTRACTION_SUMMARY.md](./CLASS_EXTRACTION_SUMMARY.md)** - Complete Phase 16 summary
 
 ## Contributors
 

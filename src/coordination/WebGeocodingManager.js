@@ -696,16 +696,34 @@ class WebGeocodingManager {
 	 * and standardized address. This is a convenience method for manual
 	 * notification of function observers.
 	 * 
+	 * **Functional Programming Principles Applied**:
+	 * - **Declarative approach**: Uses forEach instead of imperative for loop
+	 * - **Pure data preparation**: Extracts notification parameters once
+	 * - **Null safety**: Guards against undefined function observers
+	 * - **Single responsibility**: Clear separation of data prep and notification
+	 * 
 	 * @returns {void}
 	 */
 	notifyFunctionObservers() {
-		for (const fn of this.functionObservers) {
-			fn(
-				this.currentPosition,
-				this.reverseGeocoder.currentAddress,
-				this.reverseGeocoder.enderecoPadronizado,
-			);
-		}
+		// Guard against undefined function observers (defensive programming)
+		const observers = this.functionObservers || [];
+		
+		// Prepare notification parameters once (avoid repetition, improve performance)
+		const notificationData = [
+			this.currentPosition,
+			this.reverseGeocoder.currentAddress,
+			this.reverseGeocoder.enderecoPadronizado,
+		];
+		
+		// Functional approach: declarative iteration with clear intent
+		observers.forEach(observerFunction => {
+			try {
+				observerFunction(...notificationData);
+			} catch (error) {
+				warn(`(WebGeocodingManager) Error notifying function observer:`, error.message);
+				// Continue with other observers even if one fails
+			}
+		});
 	}
 
 	/**

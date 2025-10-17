@@ -82,7 +82,7 @@ import DisplayerFactory from '../html/DisplayerFactory.js';
 import HtmlSpeechSynthesisDisplayer from '../html/HtmlSpeechSynthesisDisplayer.js';
 
 // Import utility functions
-import { logInfo, logWarning, logError } from '../utils/logger.js';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Default configuration for DOM element IDs used by WebGeocodingManager.
@@ -203,9 +203,9 @@ class WebGeocodingManager {
 		// Wait for Ibira.js loading to complete
 		if (typeof window !== 'undefined' && window.ibiraLoadingPromise) {
 			await window.ibiraLoadingPromise;
-			logInfo('(WebGeocodingManager) Ibira.js loading complete, creating manager');
+			log('(WebGeocodingManager) Ibira.js loading complete, creating manager');
 		} else {
-			logWarning('(WebGeocodingManager) ibiraLoadingPromise not available, proceeding without wait');
+			warn('(WebGeocodingManager) ibiraLoadingPromise not available, proceeding without wait');
 		}
 		return new WebGeocodingManager(document, params);
 	}
@@ -317,7 +317,7 @@ class WebGeocodingManager {
 		// Create and configure displayers
 		this._createDisplayers();
 		this._wireObservers();
-		logInfo("(WebGeocodingManager) Initialized successfully.");
+		log("(WebGeocodingManager) Initialized successfully.");
 	}
 
 	/**
@@ -344,13 +344,13 @@ class WebGeocodingManager {
 					retryDelay: 1000,            // Initial retry delay
 					retryMultiplier: 2           // Exponential backoff
 				});
-				logInfo('(WebGeocodingManager) Using IbiraAPIFetchManager');
+				log('(WebGeocodingManager) Using IbiraAPIFetchManager');
 			} catch (error) {
-				logWarning('(WebGeocodingManager) Failed to create IbiraAPIFetchManager:', error.message);
+				warn('(WebGeocodingManager) Failed to create IbiraAPIFetchManager:', error.message);
 				fetchManager = null;
 			}
 		} else {
-			logWarning('(WebGeocodingManager) IbiraAPIFetchManager not available');
+			warn('(WebGeocodingManager) IbiraAPIFetchManager not available');
 		}
 
 		// Create reverse geocoder with or without fetch manager
@@ -433,7 +433,7 @@ class WebGeocodingManager {
 			this.chronometer = new Chronometer(chronometerElement);
 			PositionManager.getInstance().subscribe(this.chronometer);
 		} else {
-			logWarning("(WebGeocodingManager) Chronometer element not found.");
+			warn("(WebGeocodingManager) Chronometer element not found.");
 		}
 	}
 
@@ -457,7 +457,7 @@ class WebGeocodingManager {
 				this._handleFindRestaurantsClick();
 			});
 		} else {
-			logWarning("(WebGeocodingManager) Find Restaurants button not found.");
+			warn("(WebGeocodingManager) Find Restaurants button not found.");
 		}
 	}
 
@@ -493,7 +493,7 @@ class WebGeocodingManager {
 				this._handleCityStatsClick();
 			});
 		} else {
-			logWarning("(WebGeocodingManager) City Stats button not found.");
+			warn("(WebGeocodingManager) City Stats button not found.");
 		}
 	}
 
@@ -530,7 +530,7 @@ class WebGeocodingManager {
 			PositionManager.getInstance().subscribe(this.posCaptureHtmlText);
 			Object.freeze(this.posCaptureHtmlText);
 		} else {
-			logWarning("(WebGeocodingManager) tsPosCapture element not found.");
+			warn("(WebGeocodingManager) tsPosCapture element not found.");
 		}
 	}
 
@@ -540,7 +540,7 @@ class WebGeocodingManager {
 	 * @private
 	 */
 	initElements() {
-		logWarning("(WebGeocodingManager) initElements() is deprecated, using _initializeUIElements()");
+		warn("(WebGeocodingManager) initElements() is deprecated, using _initializeUIElements()");
 		this._initializeUIElements();
 	}
 
@@ -590,7 +590,7 @@ class WebGeocodingManager {
 	 */
 	subscribe(observer) {
 		if (observer == null) {
-			logWarning("(WebGeocodingManager) Attempted to subscribe a null observer.");
+			warn("(WebGeocodingManager) Attempted to subscribe a null observer.");
 			return;
 		}
 		this.observerSubject.subscribe(observer);
@@ -638,10 +638,10 @@ class WebGeocodingManager {
 	 */
 	subscribeFunction(observerFunction) {
 		if (observerFunction == null) {
-			logWarning("(WebGeocodingManager) Attempted to subscribe a null observer function.");
+			warn("(WebGeocodingManager) Attempted to subscribe a null observer function.");
 			return;
 		}
-		logInfo(`(WebGeocodingManager) observer function ${observerFunction} subscribing ${this}`);
+		log(`(WebGeocodingManager) observer function ${observerFunction} subscribing ${this}`);
 		this.observerSubject.subscribeFunction(observerFunction);
 	}
 
@@ -867,7 +867,7 @@ class WebGeocodingManager {
 	 * @private
 	 */
 	_displayError(error) {
-		logError("Display Error:", error);
+		error("Display Error:", error);
 
 		// Try to find a suitable element to display the error
 		const errorElements = [

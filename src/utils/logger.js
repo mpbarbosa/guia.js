@@ -53,3 +53,19 @@ export const log = (message, ...params) => {
 export const warn = (message, ...params) => {
 	console.warn(`[${formatTimestamp()}]`, message, ...params);
 };
+
+/**
+ * Logs error message with timestamp.
+ * 
+ * @param {string} message - Error message
+ * @param {...any} params - Additional parameters
+ * 
+ * @example
+ * error('Geolocation failed', { code: 1, message: 'Permission denied' });
+ * // Output: [2025-10-15T04:33:48.006Z] Geolocation failed { code: 1, message: 'Permission denied' }
+ * 
+ * @since 0.8.6-alpha
+ */
+export const error = (message, ...params) => {
+	console.error(`[${formatTimestamp()}]`, message, ...params);
+};

@@ -42,6 +42,9 @@ import HtmlSpeechSynthesisDisplayer from './html/HtmlSpeechSynthesisDisplayer.js
 import SpeechItem from './speech/SpeechItem.js';
 import SpeechQueue from './speech/SpeechQueue.js';
 
+// Import status management classes
+import SingletonStatusManager from './status/SingletonStatusManager.js';
+
 // Application log functions with DOM integration
 // Note: Pure logging utilities are available in src/utils/logger.js
 // These functions add DOM output to console logging for the web UI
@@ -164,38 +167,7 @@ log("Guia.js version:", guiaVersion.toString());
 // - GeolocationService: Browser Geolocation API wrapper with permission management
 // - ChangeDetectionCoordinator: Address component change detection coordinator
 
-class SingletonStatusManager {
-	constructor() {
-		if (SingletonStatusManager.instance) {
-			return SingletonStatusManager.instance;
-		}
-
-		this.gettingLocation = false;
-		SingletonStatusManager.instance = this;
-	}
-
-	isGettingLocation() {
-		return this.gettingLocation;
-	}
-
-	setGettingLocation(status) {
-		this.gettingLocation = status;
-		if (status) {
-			console.log("Getting location...");
-		} else {
-			console.log("Stopped getting location.");
-		}
-	}
-
-	setGettingLocation(status) {
-		this.gettingLocation = status;
-	}
-
-	static getInstance() {
-		this.instance = this.instance || new SingletonStatusManager();
-		return this.instance;
-	}
-}
+// SingletonStatusManager - Extracted to src/status/SingletonStatusManager.js
 
 // BrazilianStandardAddress - Extracted to src/data/BrazilianStandardAddress.js
 

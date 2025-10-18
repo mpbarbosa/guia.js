@@ -59,19 +59,7 @@
 // Import dependencies
 import SpeechQueue from './SpeechQueue.js';
 
-// Define logging functions with console safety for cross-environment compatibility
-const safeLog = (message, ...params) => {
-    if (typeof console !== 'undefined' && console.log) {
-        const fullMessage = `[${new Date().toISOString()}] ${message} ${params.join(" ")}`;
-        console.log(fullMessage);
-    }
-};
-
-const safeWarn = (message, ...params) => {
-    if (typeof console !== 'undefined' && console.warn) {
-        console.warn(message, ...params);
-    }
-};
+// Logging functions are now instance methods for configurable logging control
 
 /**
  * Configuration constants for speech synthesis management.
@@ -151,18 +139,32 @@ class SpeechSynthesisManager {
      * 7. Begin voice loading process with retry logic
      * 
      * @constructor
+     * @param {boolean} [enableLogging=false] - Whether to enable logging output
      * @throws {Error} If Web Speech API is not available in the environment
+     * @throws {TypeError} When enableLogging parameter is not a boolean
      * 
      * @example
      * // Basic instantiation
      * const speechManager = new SpeechSynthesisManager();
      * 
      * @example
+     * // Instantiation with logging enabled
+     * const speechManager = new SpeechSynthesisManager(true);
+     * 
+     * @example
      * // Instantiation with immediate usage
      * const speechManager = new SpeechSynthesisManager();
      * speechManager.speak("Sistema inicializado com sucesso!");
      */
-    constructor() {
+    constructor(enableLogging = false) {
+        // Parameter validation
+        if (typeof enableLogging !== 'boolean') {
+            throw new TypeError(`enableLogging must be a boolean, got: ${typeof enableLogging}`);
+        }
+
+        // Store logging preference
+        this.enableLogging = enableLogging;
+
         // Validate Web Speech API availability
         if (typeof window === 'undefined' || !window.speechSynthesis) {
             throw new Error('Web Speech API not available in this environment');
@@ -183,7 +185,7 @@ class SpeechSynthesisManager {
         this.isCurrentlySpeaking = false;    // Concurrency control flag
         
         // Initialize speech queue for priority-based processing
-        this.speechQueue = new SpeechQueue();
+        this.speechQueue = new SpeechQueue(100, 30000, enableLogging);
         
         // Initialize timer management for queue processing
         this.queueTimer = null;              // Timer for independent queue processing
@@ -198,7 +200,83 @@ class SpeechSynthesisManager {
         // Begin voice loading process (may trigger retry mechanism)
         this.loadVoices();
         
-        safeLog('(SpeechSynthesisManager) Initialized successfully with Web Speech API');
+        this.safeLog('(SpeechSynthesisManager) Initialized successfully with Web Speech API');
+    }
+
+    /**
+     * Gets the current logging state.
+     * 
+     * @returns {boolean} True if logging is enabled, false otherwise
+     * @readonly
+     */
+    get isLoggingEnabled() {
+        return this.enableLogging;
+    }
+
+    /**
+     * Enables logging for this speech manager instance.
+     * 
+     * @example
+     * speechManager.enableLogs();
+     * speechManager.speak("Test message"); // Will log speech operations
+     */
+    enableLogs() {
+        this.enableLogging = true;
+        this.speechQueue.enableLogs();
+    }
+
+    /**
+     * Disables logging for this speech manager instance.
+     * 
+     * @example
+     * speechManager.disableLogs();
+     * speechManager.speak("Test message"); // Will not log speech operations
+     */
+    disableLogs() {
+        this.enableLogging = false;
+        this.speechQueue.disableLogs();
+    }
+
+    /**
+     * Toggles the logging state for this speech manager instance.
+     * 
+     * @returns {boolean} The new logging state after toggling
+     * 
+     * @example
+     * const newState = speechManager.toggleLogs();
+     * console.log(`Logging is now ${newState ? 'enabled' : 'disabled'}`);
+     */
+    toggleLogs() {
+        this.enableLogging = !this.enableLogging;
+        this.speechQueue.toggleLogs();
+        return this.enableLogging;
+    }
+
+    /**
+     * Safe logging method that respects the logging state.
+     * 
+     * @private
+     * @param {string} message - Main log message
+     * @param {...any} params - Additional parameters to log
+     */
+    safeLog(message, ...params) {
+        if (this.enableLogging && typeof console !== 'undefined' && console.log) {
+            const fullMessage = `[${new Date().toISOString()}] ${message} ${params.join(" ")}`;
+            console.log(fullMessage);
+        }
+    }
+
+    /**
+     * Safe warning method that respects the logging state.
+     * 
+     * @private
+     * @param {string} message - Main warning message
+     * @param {...any} params - Additional parameters to log
+     */
+    safeWarn(message, ...params) {
+        if (this.enableLogging && typeof console !== 'undefined' && console.warn) {
+            console.warn(message, ...params);
+        }
     }
 
     /**
@@ -241,7 +319,7 @@ class SpeechSynthesisManager {
             // Get all available voices from Web Speech API
             this.voices = this.synth.getVoices();
             
-            safeLog(`(SpeechSynthesisManager) Found ${this.voices.length} available voices`);
+            this.safeLog(`(SpeechSynthesisManager) Found ${this.voices.length} available voices`);
 
             // PRIORITY 1: Search for Brazilian Portuguese voice (pt-BR)
             let portugueseVoice = this.voices.find(voice =>
@@ -265,19 +343,19 @@ class SpeechSynthesisManager {
                     : this.voice.lang?.toLowerCase().startsWith(SPEECH_CONFIG.fallbackLanguagePrefix)
                         ? 'Portuguese variant'
                         : 'fallback';
-                safeLog(`(SpeechSynthesisManager) Selected ${voiceType} voice: ${this.voice.name} (${this.voice.lang})`);
+                this.safeLog(`(SpeechSynthesisManager) Selected ${voiceType} voice: ${this.voice.name} (${this.voice.lang})`);
             } else {
-                safeWarn('(SpeechSynthesisManager) No voices available for speech synthesis');
+                                this.safeWarn('(SpeechSynthesisManager) No voices available for speech synthesis');
             }
 
             // Retry mechanism management based on voice selection results
             if (portugueseVoice && portugueseVoice.lang.toLowerCase() === SPEECH_CONFIG.primaryLanguage) {
                 // SUCCESS: Brazilian Portuguese voice found, stop retry timer
                 this.stopVoiceRetryTimer();
-                safeLog('(SpeechSynthesisManager) Brazilian Portuguese voice acquired, retry stopped');
+                this.safeLog('(SpeechSynthesisManager) Brazilian Portuguese voice acquired, retry stopped');
             } else if (this.voices.length > 0 && !this.voiceRetryTimer && this.voiceRetryAttempts < this.maxVoiceRetryAttempts) {
                 // RETRY NEEDED: Voices available but no Brazilian Portuguese, start retry mechanism
-                safeLog('(SpeechSynthesisManager) Starting voice retry mechanism for Brazilian Portuguese');
+                this.safeLog('(SpeechSynthesisManager) Starting voice retry mechanism for Brazilian Portuguese');
                 this.startVoiceRetryTimer();
             }
         };
@@ -288,7 +366,7 @@ class SpeechSynthesisManager {
         // Set up event listener for asynchronous voice loading (handles delayed voice loading)
         if (typeof window !== "undefined" && window.speechSynthesis) {
             window.speechSynthesis.onvoiceschanged = updateVoices;
-            safeLog('(SpeechSynthesisManager) Voice change listener registered');
+            this.safeLog('(SpeechSynthesisManager) Voice change listener registered');
         }
     }
 
@@ -318,15 +396,15 @@ class SpeechSynthesisManager {
     startVoiceRetryTimer() {
         // Prevent multiple concurrent retry timers
         if (this.voiceRetryTimer) {
-            safeLog('(SpeechSynthesisManager) Voice retry timer already running');
+            this.safeLog('(SpeechSynthesisManager) Voice retry timer already running');
             return;
         }
 
-        safeLog(`(SpeechSynthesisManager) Starting voice retry timer (max ${this.maxVoiceRetryAttempts} attempts)`);
+        this.safeLog(`(SpeechSynthesisManager) Starting voice retry timer (max ${this.maxVoiceRetryAttempts} attempts)`);
 
         this.voiceRetryTimer = setInterval(() => {
             this.voiceRetryAttempts++;
-            safeLog(`(SpeechSynthesisManager) Voice retry attempt ${this.voiceRetryAttempts}/${this.maxVoiceRetryAttempts}`);
+            this.safeLog(`(SpeechSynthesisManager) Voice retry attempt ${this.voiceRetryAttempts}/${this.maxVoiceRetryAttempts}`);
 
             // Get current available voices for retry check
             const voices = this.synth.getVoices();
@@ -337,11 +415,11 @@ class SpeechSynthesisManager {
             if (brazilianVoice) {
                 // SUCCESS: Brazilian Portuguese voice found
                 this.voice = brazilianVoice;
-                safeLog(`(SpeechSynthesisManager) Brazilian Portuguese voice found: ${brazilianVoice.name}`);
+                this.safeLog(`(SpeechSynthesisManager) Brazilian Portuguese voice found: ${brazilianVoice.name}`);
                 this.stopVoiceRetryTimer();
             } else if (this.voiceRetryAttempts >= this.maxVoiceRetryAttempts) {
                 // FAILURE: Maximum attempts reached without finding Brazilian Portuguese voice
-                safeWarn(`(SpeechSynthesisManager) Maximum voice retry attempts (${this.maxVoiceRetryAttempts}) reached`);
+                this.safeWarn(`(SpeechSynthesisManager) Maximum voice retry attempts (${this.maxVoiceRetryAttempts}) reached`);
                 this.stopVoiceRetryTimer();
             }
         }, this.voiceRetryInterval);
@@ -366,7 +444,7 @@ class SpeechSynthesisManager {
         if (this.voiceRetryTimer) {
             clearInterval(this.voiceRetryTimer);
             this.voiceRetryTimer = null;
-            safeLog('(SpeechSynthesisManager) Voice retry timer stopped');
+            this.safeLog('(SpeechSynthesisManager) Voice retry timer stopped');
         }
     }
 
@@ -401,9 +479,9 @@ class SpeechSynthesisManager {
         this.voice = voice;
         
         if (voice) {
-            safeLog(`(SpeechSynthesisManager) Voice set to: ${voice.name} (${voice.lang})`);
+            this.safeLog(`(SpeechSynthesisManager) Voice set to: ${voice.name} (${voice.lang})`);
         } else {
-            safeLog('(SpeechSynthesisManager) Voice cleared (will use default)');
+            this.safeLog('(SpeechSynthesisManager) Voice cleared (will use default)');
         }
     }
 
@@ -442,9 +520,9 @@ class SpeechSynthesisManager {
         
         // Log rate change with clamping notification if needed
         if (clampedRate !== rate) {
-            safeWarn(`(SpeechSynthesisManager) Rate ${rate} clamped to ${clampedRate} (valid range: ${SPEECH_CONFIG.minRate}-${SPEECH_CONFIG.maxRate})`);
+            this.safeWarn(`(SpeechSynthesisManager) Rate ${rate} clamped to ${clampedRate} (valid range: ${SPEECH_CONFIG.minRate}-${SPEECH_CONFIG.maxRate})`);
         } else {
-            safeLog(`(SpeechSynthesisManager) Speech rate set to ${clampedRate}`);
+            this.safeLog(`(SpeechSynthesisManager) Speech rate set to ${clampedRate}`);
         }
     }
 
@@ -483,9 +561,9 @@ class SpeechSynthesisManager {
         
         // Log pitch change with clamping notification if needed
         if (clampedPitch !== pitch) {
-            safeWarn(`(SpeechSynthesisManager) Pitch ${pitch} clamped to ${clampedPitch} (valid range: ${SPEECH_CONFIG.minPitch}-${SPEECH_CONFIG.maxPitch})`);
+            this.safeWarn(`(SpeechSynthesisManager) Pitch ${pitch} clamped to ${clampedPitch} (valid range: ${SPEECH_CONFIG.minPitch}-${SPEECH_CONFIG.maxPitch})`);
         } else {
-            safeLog(`(SpeechSynthesisManager) Speech pitch set to ${clampedPitch}`);
+            this.safeLog(`(SpeechSynthesisManager) Speech pitch set to ${clampedPitch}`);
         }
     }
 
@@ -576,7 +654,7 @@ class SpeechSynthesisManager {
      * @author Marcelo Pereira Barbosa
      */
     speak(text, priority = 0) {
-        safeLog(`(SpeechSynthesisManager) Speak request: "${text}" (priority: ${priority})`);
+        this.safeLog(`(SpeechSynthesisManager) Speak request: "${text}" (priority: ${priority})`);
         
         // STEP 1: Input Validation - Comprehensive validation prevents invalid requests
         if (typeof text !== 'string') {
@@ -593,14 +671,14 @@ class SpeechSynthesisManager {
 
         // STEP 2: Queue Management - Add text to priority-based speech queue
         this.speechQueue.enqueue(text.trim(), priority);
-        safeLog(`(SpeechSynthesisManager) Text added to queue (size: ${this.speechQueue.size()})`);
+        this.safeLog(`(SpeechSynthesisManager) Text added to queue (size: ${this.speechQueue.size()})`);
 
         // STEP 3: Conditional Processing Initiation - Intelligent queue processing
         if (!this.isCurrentlySpeaking) {
-            safeLog('(SpeechSynthesisManager) Starting queue processing');
+            this.safeLog('(SpeechSynthesisManager) Starting queue processing');
             this.processQueue();
         } else {
-            safeLog('(SpeechSynthesisManager) Currently speaking, text queued for later processing');
+            this.safeLog('(SpeechSynthesisManager) Currently speaking, text queued for later processing');
         }
     }
 
@@ -645,11 +723,11 @@ class SpeechSynthesisManager {
 
         // Early return if no item available for processing
         if (!item) {
-            safeLog('(SpeechSynthesisManager) No items in queue or currently speaking');
+            this.safeLog('(SpeechSynthesisManager) No items in queue or currently speaking');
             return;
         }
 
-        safeLog(`(SpeechSynthesisManager) Processing speech item: "${item.text}" (priority: ${item.priority})`);
+        this.safeLog(`(SpeechSynthesisManager) Processing speech item: "${item.text}" (priority: ${item.priority})`);
 
         // Set concurrency control flag to prevent overlapping speech processing
         this.isCurrentlySpeaking = true;
@@ -664,12 +742,12 @@ class SpeechSynthesisManager {
 
         // Event handler for successful speech completion
         utterance.onend = () => {
-            safeLog(`(SpeechSynthesisManager) Speech completed: "${item.text}"`);
+            this.safeLog(`(SpeechSynthesisManager) Speech completed: "${item.text}"`);
             this.isCurrentlySpeaking = false;
             
             // Continue processing queue if more items exist
             if (!this.speechQueue.isEmpty()) {
-                safeLog('(SpeechSynthesisManager) Continuing with next queue item');
+                this.safeLog('(SpeechSynthesisManager) Continuing with next queue item');
                 // Use setTimeout to avoid potential recursion issues
                 setTimeout(() => this.processQueue(), 10);
             }
@@ -677,12 +755,12 @@ class SpeechSynthesisManager {
 
         // Event handler for speech errors
         utterance.onerror = (event) => {
-            safeWarn(`(SpeechSynthesisManager) Speech error for "${item.text}":`, event.error);
+            this.safeWarn(`(SpeechSynthesisManager) Speech error for "${item.text}":`, event.error);
             this.isCurrentlySpeaking = false;
             
             // Continue processing queue even after errors to prevent queue stalling
             if (!this.speechQueue.isEmpty()) {
-                safeLog('(SpeechSynthesisManager) Continuing queue processing after error');
+                this.safeLog('(SpeechSynthesisManager) Continuing queue processing after error');
                 setTimeout(() => this.processQueue(), 10);
             }
         };
@@ -690,9 +768,9 @@ class SpeechSynthesisManager {
         // Execute the speech utterance using Web Speech API
         try {
             this.synth.speak(utterance);
-            safeLog(`(SpeechSynthesisManager) Speech utterance started for: "${item.text}"`);
+            this.safeLog(`(SpeechSynthesisManager) Speech utterance started for: "${item.text}"`);
         } catch (error) {
-            safeWarn('(SpeechSynthesisManager) Failed to start speech utterance:', error);
+            this.safeWarn('(SpeechSynthesisManager) Failed to start speech utterance:', error);
             this.isCurrentlySpeaking = false;
             
             // Continue processing queue after synthesis errors
@@ -732,7 +810,7 @@ class SpeechSynthesisManager {
         // Stop any existing timer to prevent duplicates
         this.stopQueueTimer();
 
-        safeLog(`(SpeechSynthesisManager) Starting queue timer (${this.independentQueueTimerInterval}ms interval)`);
+        this.safeLog(`(SpeechSynthesisManager) Starting queue timer (${this.independentQueueTimerInterval}ms interval)`);
 
         this.queueTimer = setInterval(() => {
             this.processQueue();
@@ -756,7 +834,7 @@ class SpeechSynthesisManager {
         if (this.queueTimer) {
             clearInterval(this.queueTimer);
             this.queueTimer = null;
-            safeLog('(SpeechSynthesisManager) Queue timer stopped');
+            this.safeLog('(SpeechSynthesisManager) Queue timer stopped');
         }
     }
 
@@ -778,9 +856,9 @@ class SpeechSynthesisManager {
     pause() {
         if (this.synth.speaking && !this.synth.paused) {
             this.synth.pause();
-            safeLog('(SpeechSynthesisManager) Speech paused');
+            this.safeLog('(SpeechSynthesisManager) Speech paused');
         } else {
-            safeLog('(SpeechSynthesisManager) No active speech to pause');
+            this.safeLog('(SpeechSynthesisManager) No active speech to pause');
         }
     }
 
@@ -800,9 +878,9 @@ class SpeechSynthesisManager {
     resume() {
         if (this.synth.paused) {
             this.synth.resume();
-            safeLog('(SpeechSynthesisManager) Speech resumed');
+            this.safeLog('(SpeechSynthesisManager) Speech resumed');
         } else {
-            safeLog('(SpeechSynthesisManager) No paused speech to resume');
+            this.safeLog('(SpeechSynthesisManager) No paused speech to resume');
         }
     }
 
@@ -845,7 +923,7 @@ class SpeechSynthesisManager {
         // Stop queue processing timer
         this.stopQueueTimer();
         
-        safeLog(`(SpeechSynthesisManager) Speech stopped and queue cleared (${queueSize} items removed)`);
+        this.safeLog(`(SpeechSynthesisManager) Speech stopped and queue cleared (${queueSize} items removed)`);
     }
 
     /**

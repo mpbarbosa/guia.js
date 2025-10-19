@@ -47,6 +47,10 @@ import ObserverSubject from '../core/ObserverSubject.js';
  * const queue = new SpeechQueue(50, 60000); // 50 items max, 60s expiration
  * 
  * @example
+ * // Create a queue with logging disabled
+ * const queue = new SpeechQueue(100, 30000, false); // No logging output
+ * 
+ * @example
  * // Add items with different priorities
  * queue.enqueue("Welcome message", 0);        // Normal priority
  * queue.enqueue("Emergency alert", 2);        // High priority (processed first)
@@ -58,10 +62,11 @@ class SpeechQueue {
 	 * 
 	 * @param {number} [maxSize=100] - Maximum number of items in queue (1-1000)
 	 * @param {number} [expirationMs=30000] - Item expiration time in milliseconds (1000-300000)
+	 * @param {boolean} [enableLogging=true] - Whether to enable logging output
 	 * @throws {TypeError} When parameters are not numbers
 	 * @throws {RangeError} When parameters are outside valid ranges
 	 */
-	constructor(maxSize = 100, expirationMs = 30000) {
+	constructor(maxSize = 100, expirationMs = 30000, enableLogging = false) {
 		// Parameter validation with specific error messages for debugging
 		if (!Number.isInteger(maxSize) || maxSize < 1 || maxSize > 1000) {
 			throw new RangeError(`maxSize must be an integer between 1 and 1000, got: ${maxSize}`);
@@ -69,6 +74,10 @@ class SpeechQueue {
 		
 		if (!Number.isInteger(expirationMs) || expirationMs < 1000 || expirationMs > 300000) {
 			throw new RangeError(`expirationMs must be an integer between 1000 and 300000, got: ${expirationMs}`);
+		}
+
+		if (typeof enableLogging !== 'boolean') {
+			throw new TypeError(`enableLogging must be a boolean, got: ${typeof enableLogging}`);
 		}
 
 		/**
@@ -99,6 +108,13 @@ class SpeechQueue {
 		 */
 		this.observerSubject = new ObserverSubject();
 
+		/**
+		 * Controls whether logging is enabled for this queue instance.
+		 * @private
+		 * @type {boolean}
+		 */
+		this.enableLogging = enableLogging;
+
 		// Note: Unlike SpeechItem, SpeechQueue must remain mutable to manage its internal state
 		// The queue operations require modification of the items array for proper functionality
 	}
@@ -127,6 +143,52 @@ class SpeechQueue {
 	 */
 	get functionObservers() {
 		return this.observerSubject.functionObservers;
+	}
+
+	/**
+	 * Gets the current logging state.
+	 * 
+	 * @returns {boolean} True if logging is enabled, false otherwise
+	 * @readonly
+	 */
+	get isLoggingEnabled() {
+		return this.enableLogging;
+	}
+
+	/**
+	 * Enables logging for this queue instance.
+	 * 
+	 * @example
+	 * queue.enableLogs();
+	 * queue.cleanExpired(); // Will log removed items count
+	 */
+	enableLogs() {
+		this.enableLogging = true;
+	}
+
+	/**
+	 * Disables logging for this queue instance.
+	 * 
+	 * @example
+	 * queue.disableLogs();
+	 * queue.cleanExpired(); // Will not log removed items count
+	 */
+	disableLogs() {
+		this.enableLogging = false;
+	}
+
+	/**
+	 * Toggles the logging state for this queue instance.
+	 * 
+	 * @returns {boolean} The new logging state after toggling
+	 * 
+	 * @example
+	 * const newState = queue.toggleLogs();
+	 * console.log(`Logging is now ${newState ? 'enabled' : 'disabled'}`);
+	 */
+	toggleLogs() {
+		this.enableLogging = !this.enableLogging;
+		return this.enableLogging;
 	}
 
 	/**
@@ -379,7 +441,7 @@ class SpeechQueue {
 		this.items = this.items.filter(item => !item.isExpired(this.expirationMs));
 
 		const removedCount = originalSize - this.items.length;
-		if (removedCount > 0) {
+		if (removedCount > 0 && this.enableLogging) {
 			// Use console.log for compatibility with existing logging system
 			console.log(`(SpeechQueue) Removed ${removedCount} expired items`);
 		}

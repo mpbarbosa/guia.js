@@ -96,7 +96,7 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Running tests: `npm test`, `npm run test:coverage`
   - Immutability pattern tests
 
-- **[JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md)** - Jest and Module Systems: Critical Analysis 🆕
+- **[JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md)** - Jest and Module Systems: Critical Analysis 🆕
   - **Essential reading for all contributors and GitHub Copilot**
   - Comprehensive guide to ES6 modules vs CommonJS in Jest
   - Understanding the module system conflict (why tests fail)
@@ -110,7 +110,7 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
 
 ### Modularization & Code Organization
 
-- **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](./ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - ES6 Import/Export System Best Practices Guide 🆕
+- **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](../.github/ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - ES6 Import/Export System Best Practices Guide 🆕
   - **Essential reference for all ES6 module work**
   - Comprehensive export patterns (named, default, re-exports)
   - Import patterns (named, default, mixed, dynamic)
@@ -157,7 +157,7 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Markdown validation and link checking
   - Best practices and troubleshooting
 
-- **[GITHUB_ACTIONS_GUIDE.md](./github/GITHUB_ACTIONS_GUIDE.md)** - GitHub Actions workflows guide 🆕
+- **[GITHUB_ACTIONS_GUIDE.md](../.github/GITHUB_ACTIONS_GUIDE.md)** - GitHub Actions workflows guide 🆕
   - Automated file modification workflow
   - Test and documentation updates
   - Coverage reporting
@@ -223,7 +223,7 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - **GitHub Copilot-optimized format**
   - **Essential reading for all contributors**
 
-- **[JAVASCRIPT_ECMASCRIPT_VERSIONS.md](./JAVASCRIPT_ECMASCRIPT_VERSIONS.md)** - JavaScript and ECMAScript Version Features 🆕
+- **[JAVASCRIPT_ECMASCRIPT_VERSIONS.md](../.github/JAVASCRIPT_ECMASCRIPT_VERSIONS.md)** - JavaScript and ECMAScript Version Features 🆕
   - Comprehensive summary of features in every JavaScript/ECMAScript version
   - Version timeline from ES1 (1997) to ES2024 (ES15)
   - Practical code examples for each major feature
@@ -356,7 +356,7 @@ When creating issues, use these templates for consistency:
   - Screenshots and environment details
   - Severity classification (cosmetic, usability, blocking)
 
-📊 **[Issue Template Comparison](./github/ISSUE_TEMPLATE_COMPARISON.md)** - Side-by-side comparison of all templates 🆕
+📊 **[Issue Template Comparison](../.github/ISSUE_TEMPLATE_COMPARISON.md)** - Side-by-side comparison of all templates 🆕
   - Detailed analysis of each template's features
   - Common patterns and unique capabilities
   - Guidance on selecting the right template

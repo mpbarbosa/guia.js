@@ -1,5 +1,10 @@
 # Git Best Practices Guide - Guia.js Project
 
+> **📋 Document Scope: Guia.js/Guia Turístico Specific**  
+> This is the **Guia.js-specific version** with customizations for this library project.  
+> **Canonical Reference**: See [/docs/GIT_BEST_PRACTICES_GUIDE.md](../../../../../../docs/GIT_BEST_PRACTICES_GUIDE.md) in the main repository for universal best practices.  
+> **Main Repository**: [mpbarbosa_site](https://github.com/mpbarbosa/mpbarbosa_site)
+
 ## Overview
 
 This guide establishes Git best practices specifically for the Guia.js project, with emphasis on proper file operations, version control hygiene, and submodule management.

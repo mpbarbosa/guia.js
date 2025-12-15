@@ -251,41 +251,241 @@ https://servicodados.ibge.gov.br/api/v1/localidades/estados/
 
 ## 📦 CDN Delivery
 
-Guia.js can be delivered via jsDelivr CDN for easy integration into web projects.
+Guia.js can be delivered via **jsDelivr CDN** for easy integration into web projects with global distribution and automatic optimization.
 
-### Generate CDN URLs
+**Reference**: [jsDelivr Documentation](https://www.jsdelivr.com/?docs=gh)
+
+### Quick Start
 
 ```bash
-# Run the CDN delivery script
+# Generate CDN URLs with current version and commit
 ./cdn-delivery.sh
 
-# Generates cdn-urls.txt with all available CDN URLs
+# Output saved to cdn-urls.txt
 ```
 
-### Quick CDN Integration
+### 📦 Version-Specific URLs (Recommended for Production)
+
+Load a specific version for stability and cache consistency:
 
 ```html
-<!-- Production (recommended - specific version) -->
+<!-- Main guia.js file -->
 <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js"></script>
 
-<!-- ES Module import -->
-<script type="module">
-  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js';
-  // Use the module...
+<!-- Load entire src directory -->
+<link rel="prefetch" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/">
+
+<!-- IBGE utilities -->
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia_ibge.js"></script>
+```
+
+**Benefits:**
+- ✅ Version pinning prevents breaking changes
+- ✅ Immutable URLs for reliable caching
+- ✅ Production-ready stability
+
+### 🔖 Commit-Specific URLs
+
+Load from a specific git commit (immutable):
+
+```html
+<!-- Replace {COMMIT_SHA} with actual commit hash -->
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@{COMMIT_SHA}/src/guia.js"></script>
+
+<!-- Example with full commit hash -->
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@ba5b3adee7fc5f77e30f5a7a42efadf42eec34dc/src/guia.js"></script>
+```
+
+**Use case:** Pin to exact commit for audit trails and regulatory compliance
+
+### 🌿 Branch URLs (Auto-updating)
+
+Load latest from a branch (updates automatically):
+
+```html
+<!-- Latest from main branch -->
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@main/src/guia.js"></script>
+```
+
+**⚠️ Warning:** Not recommended for production - URLs update as branch changes
+
+### 🎯 Version Range URLs (SemVer)
+
+Automatically get latest patches or minor versions:
+
+```html
+<!-- Latest v0.5.x (patch updates only) -->
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5/src/guia.js"></script>
+
+<!-- Latest v0.x.x (minor + patch updates) -->
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0/src/guia.js"></script>
+```
+
+**Use case:** Auto-receive bug fixes while maintaining compatibility
+
+### ⚡ Optimized & Minified URLs
+
+jsDelivr automatically minifies files:
+
+```html
+<!-- Auto-minified version (adds .min.js) -->
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.min.js"></script>
+
+<!-- Source maps (for debugging) -->
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js.map"></script>
+```
+
+### 📚 Combine Multiple Files
+
+Combine and minify multiple files in a single request:
+
+```html
+<!-- Combine guia.js and guia_ibge.js -->
+<script src="https://cdn.jsdelivr.net/combine/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js,gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia_ibge.js"></script>
+```
+
+**Benefits:**
+- Reduces HTTP requests
+- Automatic minification
+- Combined caching
+
+### 🌐 HTML Usage Examples
+
+#### Standard Script Tag
+
+```html
+<!-- Load specific version -->
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js"></script>
+
+<!-- Use after load -->
+<script>
+  const manager = new WebGeocodingManager(document, 'container-id');
+  manager.startGeolocation();
 </script>
 ```
 
-### CDN Features
+#### With Subresource Integrity (SRI)
 
-- ✅ **Global Distribution** - 750+ CDN locations worldwide
-- ✅ **Version Pinning** - Lock to specific version for production
-- ✅ **Automatic Optimization** - Brotli/Gzip compression
+```html
+<!-- Generate SRI hash at: https://www.srihash.org/ -->
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js"
+        integrity="sha384-HASH_HERE"
+        crossorigin="anonymous"></script>
+```
+
+**Security:** SRI validates file integrity and prevents tampering
+
+#### ES Module Import
+
+```html
+<script type="module">
+  import { WebGeocodingManager, PositionManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js';
+  
+  // Use imported classes
+  const manager = new WebGeocodingManager(document, 'map-container');
+  const position = PositionManager.getInstance();
+</script>
+```
+
+#### Module Preloading
+
+```html
+<!-- Preload for better performance -->
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js">
+
+<script type="module">
+  // Module is already cached
+  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js';
+</script>
+```
+
+### 📦 NPM CDN URLs (if published to npm)
+
+If guia_js is published to npm registry:
+
+```html
+<!-- Load from npm -->
+<script src="https://cdn.jsdelivr.net/npm/guia_js@0.5.0-alpha/src/guia.js"></script>
+
+<!-- Load latest version -->
+<script src="https://cdn.jsdelivr.net/npm/guia_js/src/guia.js"></script>
+```
+
+### 🔧 Additional Features
+
+#### Package Metadata
+
+```javascript
+// Get package.json
+fetch('https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/package.json')
+  .then(res => res.json())
+  .then(pkg => console.log(pkg.version));
+
+// List all files in package
+fetch('https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia_js@0.5.0-alpha')
+  .then(res => res.json())
+  .then(data => console.log(data.files));
+```
+
+### ⚡ Performance Tips
+
+1. **Always use specific versions in production** - Avoid `@latest` or branch names
+2. **Enable SRI (Subresource Integrity)** - For security and cache validation
+3. **Use modulepreload** - Preload critical modules for faster loading
+4. **Leverage browser caching** - CDN files are cached automatically
+5. **Combine files when possible** - Reduce HTTP requests
+
+### 🌍 CDN Features
+
+- ✅ **750+ CDN Locations** - Worldwide distribution via jsDelivr
+- ✅ **Automatic Compression** - Brotli and Gzip support
 - ✅ **HTTP/2 & HTTP/3** - Modern protocol support
+- ✅ **Smart Caching** - Optimized cache headers
+- ✅ **Auto-Minification** - Minified versions generated automatically
+- ✅ **Source Maps** - Debug support with .map files
 - ✅ **Zero Config** - No build step required
+- ✅ **99.9% Uptime** - Enterprise-grade reliability
 
-**Files**: 
-- `cdn-delivery.sh` - Generate CDN URLs with current version
-- `cdn-urls.txt` - Pre-generated CDN URLs for quick reference
+### 🔐 Security Considerations
+
+#### Generate SRI Hash
+
+```bash
+# Using curl and openssl
+curl -s https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js | \
+  openssl dgst -sha384 -binary | openssl base64 -A
+
+# Or use online tool: https://www.srihash.org/
+```
+
+#### Use HTTPS Only
+
+All jsDelivr URLs use HTTPS with valid SSL certificates.
+
+### 📋 Making CDN Available
+
+To make your version available on jsDelivr CDN:
+
+```bash
+# 1. Ensure code is pushed to GitHub
+git push origin main
+
+# 2. Create a git tag with version
+git tag v0.5.0-alpha
+
+# 3. Push the tag
+git push origin v0.5.0-alpha
+
+# 4. Wait a few minutes for jsDelivr to sync
+# Then test: https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/package.json
+```
+
+### 📁 CDN Files Reference
+
+- **`cdn-delivery.sh`** - Shell script to generate all CDN URLs with current version
+- **`cdn-urls.txt`** - Pre-generated CDN URLs for quick reference
+
+Run `./cdn-delivery.sh` anytime to generate updated URLs after version changes.
 
 ## ⚙️ Configuration
 

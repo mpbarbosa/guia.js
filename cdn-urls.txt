@@ -1,5 +1,5 @@
 jsDelivr CDN URLs for mpbarbosa/guia_js v0.5.0-alpha
-Generated: Mon Dec 15 20:14:10 -03 2025
+Generated: Mon Dec 15 20:17:55 -03 2025
 =============================================================================
 
 PRODUCTION (Recommended - Specific Version):

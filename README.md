@@ -107,6 +107,8 @@ guia_js/
 ├── examples/                     # Usage examples
 ├── eslint.config.js              # ESLint v9 flat configuration
 ├── package.json                  # Node.js project configuration
+├── cdn-delivery.sh               # CDN URL generator script
+├── cdn-urls.txt                  # Pre-generated CDN URLs
 └── *.html                        # Test pages and demos
 ```
 
@@ -246,6 +248,44 @@ https://servicodados.ibge.gov.br/api/v1/localidades/estados/
 - Map viewing links
 - Street View integration
 - Directions and routing (external)
+
+## 📦 CDN Delivery
+
+Guia.js can be delivered via jsDelivr CDN for easy integration into web projects.
+
+### Generate CDN URLs
+
+```bash
+# Run the CDN delivery script
+./cdn-delivery.sh
+
+# Generates cdn-urls.txt with all available CDN URLs
+```
+
+### Quick CDN Integration
+
+```html
+<!-- Production (recommended - specific version) -->
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js"></script>
+
+<!-- ES Module import -->
+<script type="module">
+  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js';
+  // Use the module...
+</script>
+```
+
+### CDN Features
+
+- ✅ **Global Distribution** - 750+ CDN locations worldwide
+- ✅ **Version Pinning** - Lock to specific version for production
+- ✅ **Automatic Optimization** - Brotli/Gzip compression
+- ✅ **HTTP/2 & HTTP/3** - Modern protocol support
+- ✅ **Zero Config** - No build step required
+
+**Files**: 
+- `cdn-delivery.sh` - Generate CDN URLs with current version
+- `cdn-urls.txt` - Pre-generated CDN URLs for quick reference
 
 ## ⚙️ Configuration
 

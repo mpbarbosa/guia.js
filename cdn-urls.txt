@@ -1,0 +1,31 @@
+jsDelivr CDN URLs for mpbarbosa/guia_js v0.5.0-alpha
+Generated: Mon Dec 15 20:05:45 -03 2025
+=============================================================================
+
+PRODUCTION (Recommended - Specific Version):
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js
+
+DEVELOPMENT (Latest from branch):
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@main/src/guia.js
+
+VERSION RANGE (Auto-update patches):
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5/src/guia.js
+
+NPM CDN (if published to npm):
+https://cdn.jsdelivr.net/npm/guia_js@0.5.0-alpha/src/guia.js
+
+IBGE UTILITIES:
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia_ibge.js
+
+HTML USAGE:
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js"></script>
+
+ES MODULE:
+<script type="module">
+  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js';
+</script>
+
+PACKAGE INFO API:
+https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia_js@0.5.0-alpha
+
+=============================================================================

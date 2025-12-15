@@ -230,6 +230,22 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Usage examples and troubleshooting
   - Performance optimization tips
 
+### CDN Delivery
+
+- **cdn-delivery.sh** - jsDelivr CDN URL generator script 🆕
+  - Generates CDN URLs for all guia.js files
+  - Version-specific and branch-based URLs
+  - HTML usage examples and ES module imports
+  - Commit-specific URLs for immutability
+  - SemVer range support (e.g., @0.5 for latest patch)
+  - NPM CDN URLs (if published to npm registry)
+
+- **cdn-urls.txt** - Pre-generated CDN URLs reference 🆕
+  - Production URLs (version-pinned for stability)
+  - Development URLs (auto-updating from branch)
+  - HTML and ES module usage examples
+  - Quick reference for web integration
+
 ### Code Quality Guidelines
 
 - **[CONTRIBUTING.md](../.github/CONTRIBUTING.md)** - Contribution guidelines

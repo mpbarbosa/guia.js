@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `PositionManager` class is the central singleton for managing the current geographic position in the Guia.js application. Introduced in version 0.5.0-alpha, it wraps the browser's Geolocation API, implements sophisticated position validation and filtering rules, and provides an observer-based notification system for position changes. Following the Singleton and Observer design patterns, it ensures only one position state exists throughout the application while allowing multiple components to react to position updates.
+The `PositionManager` class is the central singleton for managing the current geographic position in the Guia.js application. Introduced in version 0.6.0-alpha, it wraps the browser's Geolocation API, implements sophisticated position validation and filtering rules, and provides an observer-based notification system for position changes. Following the Singleton and Observer design patterns, it ensures only one position state exists throughout the application while allowing multiple components to react to position updates.
 
 ## Motivation
 
@@ -307,7 +307,7 @@ Singleton instance holder. Only one PositionManager exists per application.
 
 **Type:** `PositionManager|null`  
 **Access:** Private (used internally by getInstance())  
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -321,7 +321,7 @@ Event string constant fired when position is successfully updated.
 
 **Type:** `string` (readonly)  
 **Value:** `"PositionManager updated"`  
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -335,7 +335,7 @@ Event string constant fired when position update is rejected due to validation r
 
 **Type:** `string` (readonly)  
 **Value:** `"PositionManager not updated"`  
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -349,7 +349,7 @@ Event string constant fired when position is successfully updated and must be im
 
 **Type:** `string` (readonly)  
 **Value:** `'Immediate address update'`  
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -393,7 +393,7 @@ const manager2 = PositionManager.getInstance();
 console.log(manager1 === manager2); // true
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -419,7 +419,7 @@ Initializes the position manager with empty observer list and optional initial p
 const manager = new PositionManager(geolocationPosition);
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -463,7 +463,7 @@ const myObserver = {
 PositionManager.getInstance().subscribe(myObserver);
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -488,7 +488,7 @@ manager.subscribe(myObserver);
 manager.unsubscribe(myObserver);
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -505,7 +505,7 @@ Called internally when position updates occur or are rejected. All subscribed ob
 
 **Access:** Private (internal use only)
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -573,7 +573,7 @@ navigator.geolocation.getCurrentPosition((position) => {
 **See Also:**
 - [MDN GeolocationPosition](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition)
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -600,7 +600,7 @@ console.log(emptyManager.toString());
 // Output: "PositionManager: No position data"
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -618,7 +618,7 @@ Gets the observers array for backward compatibility.
 
 **Access:** Private (internal use, delegates to ObserverSubject)
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -1094,7 +1094,7 @@ This architecture makes it clear where side effects occur and enables testing co
 
 ## Version History
 
-- **0.5.0-alpha**: Initial implementation of PositionManager
+- **0.6.0-alpha**: Initial implementation of PositionManager
   - Singleton pattern
   - Observer pattern for subscriptions
   - Multi-layer position validation

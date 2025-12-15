@@ -4,7 +4,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-70%25-yellow)](https://github.com/mpbarbosa/guia_js)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_js)
 
-A JavaScript-based geolocation web application (version 0.5.0-alpha) providing geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses. Features DOM manipulation, OpenStreetMap/Nominatim API integration, and speech synthesis capabilities.
+A JavaScript-based geolocation web application (version 0.6.0-alpha) providing geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses. Features DOM manipulation, OpenStreetMap/Nominatim API integration, and speech synthesis capabilities.
 
 ## ✨ Key Features
 
@@ -63,7 +63,7 @@ python3 -m http.server 9000
 ```bash
 # Node.js execution test (<1 second)
 node src/guia.js
-# Expected output: [timestamp] Guia.js version: 0.5.0-alpha
+# Expected output: [timestamp] Guia.js version: 0.6.0-alpha
 
 # Code linting (ESLint v9 flat config)
 npm run lint
@@ -270,13 +270,13 @@ Load a specific version for stability and cache consistency:
 
 ```html
 <!-- Main guia.js file -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"></script>
 
 <!-- Load entire src directory -->
-<link rel="prefetch" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/">
+<link rel="prefetch" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/">
 
 <!-- IBGE utilities -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia_ibge.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia_ibge.js"></script>
 ```
 
 **Benefits:**
@@ -314,8 +314,8 @@ Load latest from a branch (updates automatically):
 Automatically get latest patches or minor versions:
 
 ```html
-<!-- Latest v0.5.x (patch updates only) -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5/src/guia.js"></script>
+<!-- Latest v0.6.x (patch updates only) -->
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6/src/guia.js"></script>
 
 <!-- Latest v0.x.x (minor + patch updates) -->
 <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0/src/guia.js"></script>
@@ -329,10 +329,10 @@ jsDelivr automatically minifies files:
 
 ```html
 <!-- Auto-minified version (adds .min.js) -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.min.js"></script>
 
 <!-- Source maps (for debugging) -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js.map"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js.map"></script>
 ```
 
 ### 📚 Combine Multiple Files
@@ -341,7 +341,7 @@ Combine and minify multiple files in a single request:
 
 ```html
 <!-- Combine guia.js and guia_ibge.js -->
-<script src="https://cdn.jsdelivr.net/combine/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js,gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia_ibge.js"></script>
+<script src="https://cdn.jsdelivr.net/combine/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js,gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia_ibge.js"></script>
 ```
 
 **Benefits:**
@@ -355,7 +355,7 @@ Combine and minify multiple files in a single request:
 
 ```html
 <!-- Load specific version -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"></script>
 
 <!-- Use after load -->
 <script>
@@ -368,7 +368,7 @@ Combine and minify multiple files in a single request:
 
 ```html
 <!-- Generate SRI hash at: https://www.srihash.org/ -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js"
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"
         integrity="sha384-HASH_HERE"
         crossorigin="anonymous"></script>
 ```
@@ -379,7 +379,7 @@ Combine and minify multiple files in a single request:
 
 ```html
 <script type="module">
-  import { WebGeocodingManager, PositionManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js';
+  import { WebGeocodingManager, PositionManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js';
   
   // Use imported classes
   const manager = new WebGeocodingManager(document, 'map-container');
@@ -391,11 +391,11 @@ Combine and minify multiple files in a single request:
 
 ```html
 <!-- Preload for better performance -->
-<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js">
 
 <script type="module">
   // Module is already cached
-  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js';
+  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js';
 </script>
 ```
 
@@ -405,7 +405,7 @@ If guia_js is published to npm registry:
 
 ```html
 <!-- Load from npm -->
-<script src="https://cdn.jsdelivr.net/npm/guia_js@0.5.0-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/guia_js@0.6.0-alpha/src/guia.js"></script>
 
 <!-- Load latest version -->
 <script src="https://cdn.jsdelivr.net/npm/guia_js/src/guia.js"></script>
@@ -417,12 +417,12 @@ If guia_js is published to npm registry:
 
 ```javascript
 // Get package.json
-fetch('https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/package.json')
+fetch('https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/package.json')
   .then(res => res.json())
   .then(pkg => console.log(pkg.version));
 
 // List all files in package
-fetch('https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia_js@0.5.0-alpha')
+fetch('https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia_js@0.6.0-alpha')
   .then(res => res.json())
   .then(data => console.log(data.files));
 ```
@@ -452,7 +452,7 @@ fetch('https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia_js@0.5.0-alpha')
 
 ```bash
 # Using curl and openssl
-curl -s https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js | \
+curl -s https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js | \
   openssl dgst -sha384 -binary | openssl base64 -A
 
 # Or use online tool: https://www.srihash.org/
@@ -471,13 +471,13 @@ To make your version available on jsDelivr CDN:
 git push origin main
 
 # 2. Create a git tag with version
-git tag v0.5.0-alpha
+git tag v0.6.0-alpha
 
 # 3. Push the tag
-git push origin v0.5.0-alpha
+git push origin v0.6.0-alpha
 
 # 4. Wait a few minutes for jsDelivr to sync
-# Then test: https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/package.json
+# Then test: https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/package.json
 ```
 
 ### 📁 CDN Files Reference
@@ -676,6 +676,6 @@ ISC License - See repository for details
 
 ---
 
-**Version**: 0.5.0-alpha (unstable development)  
+**Version**: 0.6.0-alpha (unstable development)  
 **Status**: Active Development  
 **Last Updated**: December 2024

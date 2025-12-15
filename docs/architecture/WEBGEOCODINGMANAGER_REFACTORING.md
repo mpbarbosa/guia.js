@@ -209,7 +209,7 @@ Added 200+ lines of JSDoc documentation including:
  * @see {@link PositionManager} For position state management
  * @see {@link ReverseGeocoder} For geocoding API integration
  * @see {@link GeolocationService} For browser geolocation API
- * @since 0.5.0-alpha
+ * @since 0.6.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 ```

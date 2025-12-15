@@ -408,7 +408,7 @@ These E2E tests are part of the CI pipeline:
 ## Version
 
 E2E Test Suite Version: **1.0.0**  
-Guia.js Version: **0.5.0-alpha**  
+Guia.js Version: **0.6.0-alpha**  
 Last Updated: 2024
 
 ## Contributing

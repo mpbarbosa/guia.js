@@ -237,7 +237,7 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Version-specific and branch-based URLs
   - HTML usage examples and ES module imports
   - Commit-specific URLs for immutability
-  - SemVer range support (e.g., @0.5 for latest patch)
+  - SemVer range support (e.g., @0.6 for latest patch)
   - NPM CDN URLs (if published to npm registry)
 
 - **cdn-urls.txt** - Pre-generated CDN URLs reference 🆕

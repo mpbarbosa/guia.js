@@ -7,7 +7,7 @@
  * 3. Pure methods (deterministic outputs)
  * 
  * @author MP Barbosa
- * @since 0.5.0-alpha
+ * @since 0.6.0-alpha
  */
 
 // Load the GeoPosition class

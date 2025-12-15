@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `GeoPosition` class was introduced in version 0.5.0-alpha to encapsulate and manage geographic position data obtained from the browser's Geolocation API. It provides a **pure, referentially transparent, immutable** way to handle GPS coordinates, accuracy information, altitude, speed, and heading data with automatic quality classification.
+The `GeoPosition` class was introduced in version 0.6.0-alpha to encapsulate and manage geographic position data obtained from the browser's Geolocation API. It provides a **pure, referentially transparent, immutable** way to handle GPS coordinates, accuracy information, altitude, speed, and heading data with automatic quality classification.
 
 ## Motivation
 
@@ -287,7 +287,7 @@ console.log(GeoPosition.getAccuracyQuality(150));  // 'bad'
 console.log(GeoPosition.getAccuracyQuality(500));  // 'very bad'
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -301,7 +301,7 @@ Convenience method that applies the static getAccuracyQuality() method to this i
 
 **Note:** This method has a bug - it calls undefined `getAccuracyQuality()` function instead of the static method. Use the `accuracyQuality` property which is automatically calculated and maintained.
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -328,7 +328,7 @@ console.log(`Restaurant is ${Math.round(distance)} meters away`);
 **See Also:** 
 - `calculateDistance()` - The underlying distance calculation utility function
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -354,7 +354,7 @@ console.log(invalidPosition.toString());
 // Output: "GeoPosition: No position data"
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ## Testing
 
@@ -376,7 +376,7 @@ Test coverage includes:
 
 ### Referential Transparency and Immutability
 
-As of version 0.5.0-alpha, the `GeoPosition` class is **designed to be referentially transparent and immutable**:
+As of version 0.6.0-alpha, the `GeoPosition` class is **designed to be referentially transparent and immutable**:
 
 1. **No side effects**: The constructor does not log or mutate input objects
 2. **Immutable properties**: All properties are set once at construction time
@@ -447,7 +447,7 @@ if (isNearby(position, store, 50)) {
 
 ## Version History
 
-- **0.5.0-alpha**: Referentially transparent implementation
+- **0.6.0-alpha**: Referentially transparent implementation
   - **Breaking change**: Removed accuracy setter for immutability
   - **Breaking change**: Constructor no longer mutates input position object
   - **Breaking change**: Constructor no longer logs creation

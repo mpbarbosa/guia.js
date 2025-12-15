@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `WebGeocodingManager` class is the main coordination layer for the geocoding workflow in the Guia.js application. Introduced in version 0.5.0-alpha and significantly refactored in PR #189, it orchestrates geolocation services, reverse geocoding operations, and UI updates for displaying location-based information. Following the Coordinator/Mediator pattern, it manages communication between services and UI displayers while providing a clean observer-based API for external consumers.
+The `WebGeocodingManager` class is the main coordination layer for the geocoding workflow in the Guia.js application. Introduced in version 0.6.0-alpha and significantly refactored in PR #189, it orchestrates geolocation services, reverse geocoding operations, and UI updates for displaying location-based information. Following the Coordinator/Mediator pattern, it manages communication between services and UI displayers while providing a clean observer-based API for external consumers.
 
 ## Motivation
 
@@ -309,7 +309,7 @@ new WebGeocodingManager(document, params)
 
 **Examples:** See [Usage](#usage) section above.
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -364,7 +364,7 @@ const manager = new WebGeocodingManager(document, {
 manager.startTracking(); // Begins continuous tracking
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -390,7 +390,7 @@ const myObserver = {
 manager.subscribe(myObserver);
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -408,7 +408,7 @@ Unsubscribes an observer object from receiving notifications.
 manager.unsubscribe(myObserver);
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -434,7 +434,7 @@ manager.subscribeFunction((pos, addr, endPad, details) => {
 });
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -452,7 +452,7 @@ Unsubscribes a function observer from receiving notifications.
 manager.unsubscribeFunction(myFunction);
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -470,7 +470,7 @@ Sends current position, raw address, and standardized address to all observers t
 manager.notifyObservers();
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -488,7 +488,7 @@ Calls each subscribed function observer with current position, address, and stan
 manager.notifyFunctionObservers();
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -509,7 +509,7 @@ if (address) {
 }
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -537,7 +537,7 @@ Requests current position from the GeolocationService, performs reverse geocodin
 manager.getSingleLocationUpdate();
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -558,7 +558,7 @@ This method should be called after the relevant DOM elements are available. Elem
 manager.initSpeechSynthesis();
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -576,7 +576,7 @@ console.log(manager.toString());
 // Output: "WebGeocodingManager: -23.5505, -46.6333"
 ```
 
-**Since:** 0.5.0-alpha
+**Since:** 0.6.0-alpha
 
 ---
 
@@ -911,7 +911,7 @@ This architecture makes it clear where side effects occur and enables testing co
 
 ## Version History
 
-- **0.5.0-alpha**: Initial implementation of WebGeocodingManager
+- **0.6.0-alpha**: Initial implementation of WebGeocodingManager
   - Constructor with service creation
   - Observer pattern for position/address changes
   - Basic UI element initialization

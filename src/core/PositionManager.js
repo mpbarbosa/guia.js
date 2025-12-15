@@ -48,7 +48,7 @@
  *   manager.update(position); // Validates and updates if rules pass
  * });
  * 
- * @since 0.5.0-alpha
+ * @since 0.6.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -160,7 +160,7 @@ class PositionManager {
 	 *   console.log(manager.latitude, manager.longitude);
 	 * });
 	 * 
-	 * @since 0.5.0-alpha
+	 * @since 0.6.0-alpha
 	 */
 	static getInstance(position) {
 		if (!PositionManager.instance) {
@@ -189,7 +189,7 @@ class PositionManager {
 	 * // Typically used internally by getInstance()
 	 * const manager = new PositionManager(geolocationPosition);
 	 * 
-	 * @since 0.5.0-alpha
+	 * @since 0.6.0-alpha
 	 */
 	constructor(position) {
 		this.observerSubject = new ObserverSubject();
@@ -231,7 +231,7 @@ class PositionManager {
 	 * };
 	 * PositionManager.getInstance().subscribe(myObserver);
 	 * 
-	 * @since 0.5.0-alpha
+	 * @since 0.6.0-alpha
 	 */
 	subscribe(observer) {
 		this.observerSubject.subscribe(observer);
@@ -249,7 +249,7 @@ class PositionManager {
 	 * @example
 	 * PositionManager.getInstance().unsubscribe(myObserver);
 	 * 
-	 * @since 0.5.0-alpha
+	 * @since 0.6.0-alpha
 	 */
 	unsubscribe(observer) {
 		this.observerSubject.unsubscribe(observer);
@@ -340,7 +340,7 @@ class PositionManager {
 	 * });
 	 * 
 	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition} GeolocationPosition
-	 * @since 0.5.0-alpha
+	 * @since 0.6.0-alpha
 	 */
 	update(position) {
 		let bUpdateCurrPos = true;
@@ -430,7 +430,7 @@ class PositionManager {
 	 * console.log(manager.toString());
 	 * // Output: "PositionManager: -23.5505, -46.6333, good, 760, 0, 0, 1634567890123"
 	 * 
-	 * @since 0.5.0-alpha
+	 * @since 0.6.0-alpha
 	 */
 	toString() {
 		let position = this.lastPosition || {};

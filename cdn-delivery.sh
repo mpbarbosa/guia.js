@@ -69,8 +69,8 @@ echo ""
 # ==============================================================================
 echo -e "${YELLOW}🎯 Version Range URLs (SemVer):${NC}"
 echo ""
-echo "Load latest v0.5.x (patch updates):"
-echo "https://cdn.jsdelivr.net/gh/${GITHUB_USER}/${GITHUB_REPO}@0.5/${MAIN_FILE}"
+echo "Load latest v0.6.x (patch updates):"
+echo "https://cdn.jsdelivr.net/gh/${GITHUB_USER}/${GITHUB_REPO}@0.6/${MAIN_FILE}"
 echo ""
 echo "Load latest v0.x.x (minor updates):"
 echo "https://cdn.jsdelivr.net/gh/${GITHUB_USER}/${GITHUB_REPO}@0/${MAIN_FILE}"
@@ -174,7 +174,7 @@ DEVELOPMENT (Latest from branch):
 https://cdn.jsdelivr.net/gh/${GITHUB_USER}/${GITHUB_REPO}@${CURRENT_BRANCH}/${MAIN_FILE}
 
 VERSION RANGE (Auto-update patches):
-https://cdn.jsdelivr.net/gh/${GITHUB_USER}/${GITHUB_REPO}@0.5/${MAIN_FILE}
+https://cdn.jsdelivr.net/gh/${GITHUB_USER}/${GITHUB_REPO}@0.6/${MAIN_FILE}
 
 NPM CDN (if published to npm):
 https://cdn.jsdelivr.net/npm/guia_js@${PACKAGE_VERSION}/${MAIN_FILE}

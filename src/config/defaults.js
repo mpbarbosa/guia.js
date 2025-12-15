@@ -5,15 +5,15 @@
  * Configuration follows referential transparency principles.
  * 
  * @module config/defaults
- * @since 0.8.6-alpha
+ * @since 0.6.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
 // Version Information
 export const GUIA_VERSION = {
 	major: 0,
-	minor: 8,
-	patch: 7,
+	minor: 6,
+	patch: 0,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;

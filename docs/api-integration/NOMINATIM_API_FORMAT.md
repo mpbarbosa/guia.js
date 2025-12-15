@@ -484,7 +484,7 @@ npm test
 
 - **v0.8.5-alpha** - Added comprehensive Nominatim API format documentation
 - **v0.8.3-alpha** - Initial integration with Nominatim reverse geocoding
-- **v0.5.0-alpha** - Basic geocoding support
+- **v0.6.0-alpha** - Basic geocoding support
 
 ## Target Audience
 

@@ -8,7 +8,7 @@ This document describes the test suite created for validating Nominatim API JSON
 
 **Location:** `__tests__/NominatimJSONFormat.test.js`
 
-**Created:** Version 0.5.0-alpha
+**Created:** Version 0.6.0-alpha
 
 **Purpose:** Comprehensive validation of Nominatim API JSON format and data extraction for Brazilian addresses.
 
@@ -166,7 +166,7 @@ MP Barbosa
 
 ## Version History
 
-- **0.5.0-alpha** - Initial test suite creation with 44 comprehensive tests
+- **0.6.0-alpha** - Initial test suite creation with 44 comprehensive tests
 
 ## License
 

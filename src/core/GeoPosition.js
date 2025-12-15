@@ -5,7 +5,7 @@
  * adding convenience methods for distance calculations and accuracy assessment.
  * 
  * @module core/GeoPosition
- * @since 0.5.0-alpha
+ * @since 0.6.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -63,7 +63,7 @@ class GeoPosition {
 	 * console.log(GeoPosition.getAccuracyQuality(500)); // 'very bad'
 	 * 
 	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates/accuracy} GeolocationCoordinates.accuracy
-	 * @since 0.5.0-alpha
+	 * @since 0.6.0-alpha
 	 */
 	static getAccuracyQuality(accuracy) {
 		if (accuracy <= 10) {
@@ -91,7 +91,7 @@ class GeoPosition {
 	 * const manager = PositionManager.getInstance(position);
 	 * console.log(manager.calculateAccuracyQuality()); // 'good'
 	 * 
-	 * @since 0.5.0-alpha
+	 * @since 0.6.0-alpha
 	 * @deprecated Use accuracyQuality property instead - this method has a bug (calls undefined getAccuracyQuality)
 	 */
 	calculateAccuracyQuality() {
@@ -117,7 +117,7 @@ class GeoPosition {
 	 * console.log(`Restaurant is ${Math.round(distance)} meters away`);
 	 * 
 	 * @see {@link calculateDistance} - The underlying distance calculation function
-	 * @since 0.5.0-alpha
+	 * @since 0.6.0-alpha
 	 */
 	distanceTo(otherPosition) {
 		return calculateDistance(
@@ -142,7 +142,7 @@ class GeoPosition {
 	 * console.log(position.toString());
 	 * // Output: "GeoPosition: -23.5505, -46.6333, good, 760, 0, 0, 1634567890123"
 	 * 
-	 * @since 0.5.0-alpha
+	 * @since 0.6.0-alpha
 	 */
 	toString() {
 		if (!this.latitude || !this.longitude) {

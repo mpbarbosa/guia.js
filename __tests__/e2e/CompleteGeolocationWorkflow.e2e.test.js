@@ -14,7 +14,7 @@
  * 
  * @jest-environment node
  * @author MP Barbosa
- * @since 0.5.0-alpha
+ * @since 0.6.0-alpha
  */
 
 import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';

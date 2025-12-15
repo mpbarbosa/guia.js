@@ -1,5 +1,5 @@
 jsDelivr CDN URLs for mpbarbosa/guia_js v0.5.0-alpha
-Generated: Mon Dec 15 20:05:45 -03 2025
+Generated: Mon Dec 15 20:14:10 -03 2025
 =============================================================================
 
 PRODUCTION (Recommended - Specific Version):
@@ -13,9 +13,6 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5/src/guia.js
 
 NPM CDN (if published to npm):
 https://cdn.jsdelivr.net/npm/guia_js@0.5.0-alpha/src/guia.js
-
-IBGE UTILITIES:
-https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia_ibge.js
 
 HTML USAGE:
 <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0-alpha/src/guia.js"></script>

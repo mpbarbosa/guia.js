@@ -1,6 +1,6 @@
 # Guia.js - Geolocation Web Application
 
-Guia.js is a JavaScript-based geolocation web application (version 0.5.0-alpha) that provides geolocation services, address geocoding, and mapping integration for Brazilian addresses. The application includes DOM manipulation, OpenStreetMap/Nominatim API integration, and speech synthesis capabilities.
+Guia.js is a JavaScript-based geolocation web application (version 0.6.0-alpha) that provides geolocation services, address geocoding, and mapping integration for Brazilian addresses. The application includes DOM manipulation, OpenStreetMap/Nominatim API integration, and speech synthesis capabilities.
 
 **CRITICAL: Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
 
@@ -38,7 +38,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 1. **Basic Node.js Execution**:
    ```bash
    node guia.js
-   # Should output: [timestamp] Guia.js version: 0.5.0-alpha
+   # Should output: [timestamp] Guia.js version: 0.6.0-alpha
    ```
 
 2. **Automated Test Suite**:

@@ -465,7 +465,7 @@ Some tests already work because they:
    ```javascript
    // These tests work - test config data
    test('config values', () => {
-     expect(config.version).toBe('0.5.0-alpha');
+     expect(config.version).toBe('0.6.0-alpha');
    });
    ```
 

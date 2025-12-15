@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Integração - ibira.js</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 20px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .info {
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔌 Teste de Integração - ibira.js</h1>
+        
+        <div class="info">
+            <strong>ℹ️ Sobre este teste:</strong>
+            <p>Esta página demonstra a integração do ibira.js via CDN com fallback para módulo local.</p>
+            <p>A biblioteca ibira.js fornece funcionalidades de fetch com cache e padrão observer.</p>
+        </div>
+
+        <h2>Status do Carregamento</h2>
+        <div id="loading-status" class="status warning">
+            ⏳ Carregando ibira.js...
+        </div>
+
+        <h2>Informações da Biblioteca</h2>
+        <div id="library-info">
+            <p>Aguardando carregamento...</p>
+        </div>
+
+        <h2>Testes de Funcionalidade</h2>
+        <button id="test-fetch" disabled>Testar Fetch</button>
+        <button id="test-cache" disabled>Testar Cache</button>
+        <button id="test-observer" disabled>Testar Observer</button>
+
+        <h2>Resultados dos Testes</h2>
+        <pre id="test-results">Nenhum teste executado ainda.</pre>
+
+        <h2>Logs do Console</h2>
+        <pre id="console-log" style="max-height: 300px; overflow-y: auto;"></pre>
+    </div>
+
+    <!-- Load guia.js which will load ibira.js -->
+    <script type="module" src="src/guia.js"></script>
+    
+    <script type="module">
+        const statusDiv = document.getElementById('loading-status');
+        const libraryInfo = document.getElementById('library-info');
+        const testResults = document.getElementById('test-results');
+        const consoleLog = document.getElementById('console-log');
+        
+        // Capture console logs
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const logs = [];
+        
+        function addLog(type, ...args) {
+            const message = args.join(' ');
+            logs.push(`[${type}] ${message}`);
+            consoleLog.textContent = logs.join('\n');
+            consoleLog.scrollTop = consoleLog.scrollHeight;
+        }
+        
+        console.log = (...args) => {
+            originalLog(...args);
+            addLog('LOG', ...args);
+        };
+        
+        console.warn = (...args) => {
+            originalWarn(...args);
+            addLog('WARN', ...args);
+        };
+        
+        // Wait for ibira.js to load
+        async function initialize() {
+            try {
+                console.log('Aguardando carregamento do ibira.js...');
+                
+                const result = await window.ibiraLoadingPromise;
+                
+                if (result.success) {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = `✅ ibira.js carregado com sucesso!<br>` +
+                                         `📦 Fonte: <strong>${result.source === 'cdn' ? 'CDN (jsDelivr)' : 'Módulo Local (npm)'}</strong>`;
+                    
+                    // Show library info
+                    libraryInfo.innerHTML = `
+                        <p><strong>Classe disponível:</strong> <code>IbiraAPIFetchManager</code></p>
+                        <p><strong>Versão:</strong> 0.2.1-alpha</p>
+                        <p><strong>Repositório:</strong> <a href="https://github.com/mpbarbosa/ibira.js" target="_blank">mpbarbosa/ibira.js</a></p>
+                        <p><strong>CDN URL:</strong> <code>https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.1-alpha/src/index.js</code></p>
+                    `;
+                    
+                    // Enable test buttons
+                    document.querySelectorAll('button').forEach(btn => btn.disabled = false);
+                    
+                    console.log('Biblioteca pronta para uso!');
+                } else {
+                    statusDiv.className = 'status warning';
+                    statusDiv.innerHTML = `⚠️ Fallback ativo<br>` +
+                                         `Ibira.js não pôde ser carregado. Usando implementação mínima.`;
+                    
+                    libraryInfo.innerHTML = `
+                        <p><strong>⚠️ Modo Fallback</strong></p>
+                        <p>A biblioteca ibira.js não está disponível. Os testes não funcionarão completamente.</p>
+                    `;
+                }
+                
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `❌ Erro ao carregar ibira.js: ${error.message}`;
+                console.error('Erro:', error);
+            }
+        }
+        
+        // Test functions
+        document.getElementById('test-fetch').addEventListener('click', async () => {
+            testResults.textContent = 'Executando teste de fetch...\n';
+            
+            try {
+                // Note: This will fail with fallback implementation
+                const manager = new window.IbiraAPIFetchManager();
+                testResults.textContent += '✅ IbiraAPIFetchManager instanciado com sucesso\n';
+                testResults.textContent += `   Tipo: ${typeof manager}\n`;
+                testResults.textContent += `   Constructor: ${manager.constructor.name}\n`;
+                
+                // Try a simple fetch (will fail gracefully with fallback)
+                testResults.textContent += '\n🔄 Tentando fetch de exemplo...\n';
+                
+                try {
+                    await manager.fetch('https://jsonplaceholder.typicode.com/todos/1');
+                    testResults.textContent += '✅ Fetch executado com sucesso\n';
+                } catch (fetchError) {
+                    testResults.textContent += `⚠️ Fetch falhou (esperado no fallback): ${fetchError.message}\n`;
+                }
+                
+            } catch (error) {
+                testResults.textContent += `❌ Erro: ${error.message}\n`;
+            }
+        });
+        
+        document.getElementById('test-cache').addEventListener('click', () => {
+            testResults.textContent = 'Teste de cache:\n';
+            testResults.textContent += 'ℹ️ Funcionalidade de cache requer fetch funcional\n';
+            testResults.textContent += '   Veja a documentação do ibira.js para exemplos completos\n';
+        });
+        
+        document.getElementById('test-observer').addEventListener('click', () => {
+            testResults.textContent = 'Teste de observer pattern:\n';
+            testResults.textContent += 'ℹ️ Padrão observer requer instância funcional do IbiraAPIFetchManager\n';
+            testResults.textContent += '   Veja a documentação do ibira.js para exemplos completos\n';
+        });
+        
+        // Initialize
+        initialize();
+    </script>
+</body>
+</html>

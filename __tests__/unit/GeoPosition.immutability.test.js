@@ -285,16 +285,17 @@ describe('GeoPosition - Referential Transparency Tests', () => {
             const originalAccuracy = geoPosition.accuracy;
             const originalAccuracyQuality = geoPosition.accuracyQuality;
 
-            // Attempt to set accuracy (should not have setter)
-            geoPosition.accuracy = 50;
+            // In ES modules (strict mode), attempting to assign to a frozen object throws
+            // This verifies the object is properly frozen (immutable)
+            expect(() => {
+                geoPosition.accuracy = 50;
+            }).toThrow(TypeError);
 
-            // In a pure implementation without setters, the property assignment
-            // will simply overwrite the property value directly
-            // We verify that accuracyQuality did NOT change automatically
+            // Verify values remain unchanged (object is frozen)
+            expect(geoPosition.accuracy).toBe(originalAccuracy);
             expect(geoPosition.accuracyQuality).toBe(originalAccuracyQuality);
             
-            // The accuracy may have changed (direct assignment), but the quality didn't auto-update
-            // This shows no setter is present to maintain consistency
+            // This shows the object is immutable and has no setters
         });
     });
 

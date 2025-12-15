@@ -10,9 +10,16 @@
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "test:verbose": "node --experimental-vm-modules node_modules/jest/bin/jest.js --verbose",
     "validate": "node -c src/guia.js && node -c src/guia_ibge.js",
-    "test:all": "npm run validate && npm test"
+    "test:all": "npm run validate && npm test",
+    "lint": "eslint src/**/*.js __tests__/**/*.js tests/**/*.js",
+    "lint:fix": "eslint --fix src/**/*.js __tests__/**/*.js tests/**/*.js"
   },
-  "keywords": ["geolocation", "brazil", "maps", "geocoding"],
+  "keywords": [
+    "geolocation",
+    "brazil",
+    "maps",
+    "geocoding"
+  ],
   "author": "",
   "license": "ISC",
   "jest": {
@@ -28,6 +35,11 @@
     ]
   },
   "devDependencies": {
+    "eslint": "^9.39.2",
     "jest": "^30.1.3"
+  },
+  "dependencies": {
+    "ibira.js": "github:mpbarbosa/ibira.js",
+    "jsdom": "^27.3.0"
   }
 }

@@ -117,6 +117,8 @@ class SpeechQueue {
 
 		// Note: Unlike SpeechItem, SpeechQueue must remain mutable to manage its internal state
 		// The queue operations require modification of the items array for proper functionality
+		// However, we seal the object to prevent addition of new properties (defensive programming)
+		Object.seal(this);
 	}
 
 	/**

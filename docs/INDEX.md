@@ -2,6 +2,16 @@
 
 Welcome to the Guia.js documentation! This index provides an overview of all available documentation and guides.
 
+## Quick Links
+
+- **[README.md](../README.md)** - Project overview, quick start, and getting started guide 🆕
+  - Installation instructions
+  - Quick start commands
+  - Project structure overview
+  - Testing and validation guide
+  - Contributing guidelines
+  - Troubleshooting common issues
+
 ## Core Documentation
 
 ### Architecture & Design
@@ -201,6 +211,24 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Voice preference management
 
 ## Contributing & Best Practices
+
+### Configuration & Tools
+
+- **[ESLINT_SETUP.md](./ESLINT_SETUP.md)** - ESLint configuration and "this" keyword rule 🆕
+  - ESLint v9 flat config setup
+  - Custom rule to disallow "this" keyword
+  - Enforces functional programming patterns
+  - npm scripts: `npm run lint` and `npm run lint:fix`
+  - Refactoring patterns from classes to factory functions
+  - 952 errors found (uses of "this" in codebase)
+
+- **[IBIRA_INTEGRATION.md](./IBIRA_INTEGRATION.md)** - ibira.js CDN and local module integration 🆕
+  - Three-tier loading strategy (CDN → local module → fallback)
+  - jsDelivr CDN configuration (v0.2.1-alpha)
+  - API fetching and caching capabilities
+  - Observer pattern support
+  - Usage examples and troubleshooting
+  - Performance optimization tips
 
 ### Code Quality Guidelines
 
@@ -435,6 +463,17 @@ This project prioritizes:
 - ✅ **Clear documentation**: JSDoc comments for public APIs
 
 ## Recent Updates 🆕
+
+### December 2024: Configuration & Integration Documentation
+
+New documentation for project configuration and external integrations:
+
+- ✅ **ESLint Setup**: Configured ESLint v9 with custom rule to disallow "this" keyword
+- ✅ **ibira.js Integration**: Added CDN loading with fallback to local module
+- ✅ **Documentation Organization**: Moved all root-level docs to `docs/` folder
+- ✅ **Test Fixes**: Fixed 12+ test suites with various import/path/mock issues
+
+**Impact**: Better tooling for functional programming enforcement and improved external library integration.
 
 ### October 2024: Referential Transparency Documentation
 

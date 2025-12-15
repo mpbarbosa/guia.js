@@ -362,6 +362,9 @@ describe('ChangeDetectionCoordinator', () => {
         test('should receive callbacks from AddressDataExtractor', () => {
             const handleLogradouroChangeSpy = jest.spyOn(coordinator, 'handleLogradouroChange');
             
+            // Set AddressDataExtractor reference (required for callback setup)
+            coordinator.setAddressDataExtractor(AddressDataExtractor);
+            
             coordinator.setupLogradouroChangeDetection();
 
             const changeDetails = {
@@ -380,6 +383,9 @@ describe('ChangeDetectionCoordinator', () => {
         });
 
         test('should handle callback after removal gracefully', () => {
+            // Set AddressDataExtractor reference (required for callback setup)
+            coordinator.setAddressDataExtractor(AddressDataExtractor);
+            
             coordinator.setupLogradouroChangeDetection();
             coordinator.removeLogradouroChangeDetection();
 

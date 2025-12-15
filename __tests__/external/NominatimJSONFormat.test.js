@@ -123,7 +123,8 @@ describe('Nominatim JSON Format Tests - MP Barbosa Travel Guide (v0.4.1-alpha)',
                 ];
                 
                 portuguesePlaces.forEach(place => {
-                    expect(/[ãáçéíóú]/i.test(place)).toBe(true);
+                    // Portuguese accented characters: ã á â ç é ê í ó ô õ ú
+                    expect(/[ãáâçéêíóôõú]/i.test(place)).toBe(true);
                 });
                 return;
             }
@@ -170,9 +171,9 @@ describe('Nominatim JSON Format Tests - MP Barbosa Travel Guide (v0.4.1-alpha)',
 
             // Create reference place for car repair shop
             const refPlace = new ReferencePlace({
-                typeName: 'car_repair',
+                type: 'car_repair',    // Constructor expects 'type', not 'typeName'
                 name: 'Oficina',
-                category: 'shop'
+                class: 'shop'          // Constructor expects 'class', not 'category'
             });
 
             expect(refPlace.typeName).toBe('car_repair');
@@ -199,9 +200,9 @@ describe('Nominatim JSON Format Tests - MP Barbosa Travel Guide (v0.4.1-alpha)',
             }
 
             const refPlace = new ReferencePlace({
-                typeName: 'car_repair',
+                type: 'car_repair',    // Constructor expects 'type', not 'typeName'
                 name: '',
-                category: 'shop'
+                class: 'shop'          // Constructor expects 'class', not 'category'
             });
 
             expect(refPlace.typeName).toBe('car_repair');
@@ -234,9 +235,9 @@ describe('Nominatim JSON Format Tests - MP Barbosa Travel Guide (v0.4.1-alpha)',
             }
 
             const brazilianCarShop = new ReferencePlace({
-                typeName: 'car_repair',
+                type: 'car_repair',        // Constructor expects 'type', not 'typeName'
                 name: 'Auto Mecânica Brasil',
-                category: 'shop',
+                class: 'shop',             // Constructor expects 'class', not 'category'
                 tags: {
                     'shop': 'car_repair',
                     'name': 'Auto Mecânica Brasil',

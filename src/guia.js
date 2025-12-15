@@ -81,36 +81,67 @@ let IbiraAPIFetchManager;
 // Promise that resolves when Ibira.js loading is complete (success or fallback)
 const ibiraLoadingPromise = (async () => {
     try {
-		// Skip HTTPS imports in Node.js environments (only works in browsers)
-		if (typeof window === 'undefined') {
-			throw new Error('Node.js environment detected - using fallback');
+		// Try loading from CDN first (browser environment)
+		if (typeof window !== 'undefined') {
+			try {
+				const timeoutPromise = new Promise((_, reject) => 
+					setTimeout(() => reject(new Error('CDN import timeout')), 5000)
+				);
+				
+				// Use correct CDN URL for ibira.js v0.2.1-alpha
+				const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.1-alpha/src/index.js');
+				const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
+
+				// Validate the imported module
+				if (!ibiraModule || !ibiraModule.IbiraAPIFetchManager) {
+					throw new Error('Invalid ibira.js module from CDN');
+				}
+				
+				IbiraAPIFetchManager = ibiraModule.IbiraAPIFetchManager;
+				log('(guia.js) Ibira.js loaded successfully from CDN');
+				return { success: true, source: 'cdn', manager: IbiraAPIFetchManager };
+			} catch (cdnError) {
+				warn('(guia.js) CDN load failed:', cdnError.message, '- trying local module');
+			}
 		}
 		
-		const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Import timeout')), 5000));
-		const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js/src/ibira.js');
-        const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
-
-		// Validate the imported module
-		if (!ibiraModule || !ibiraModule.IbiraAPIFetchManager) {
-			throw new Error('Invalid ibira.js module');
+		// Fallback to local node_modules (Node.js or if CDN fails)
+		try {
+			const ibiraModule = await import('ibira.js');
+			
+			if (!ibiraModule || !ibiraModule.IbiraAPIFetchManager) {
+				throw new Error('Invalid ibira.js module from node_modules');
+			}
+			
+			IbiraAPIFetchManager = ibiraModule.IbiraAPIFetchManager;
+			log('(guia.js) Ibira.js loaded successfully from node_modules');
+			return { success: true, source: 'local', manager: IbiraAPIFetchManager };
+		} catch (localError) {
+			warn('(guia.js) Local module load failed:', localError.message);
+			throw new Error('Failed to load ibira.js from both CDN and node_modules');
 		}
-        IbiraAPIFetchManager = ibiraModule.IbiraAPIFetchManager;
-        log('(guia.js) Ibira.js loaded successfully');
-        return { success: true, manager: IbiraAPIFetchManager };
     } catch (error) {
-        warn('(guia.js) Failed to load ibira.js:', error.message);
-        // Provide fallback implementation
+        warn('(guia.js) Failed to load ibira.js from any source:', error.message);
+        
+        // Provide minimal fallback implementation
         IbiraAPIFetchManager = class IbiraAPIFetchManagerFallback {
             constructor(config = {}) {
-                warn('Using fallback - ibira.js not available');
+                warn('(IbiraAPIFetchManagerFallback) Using fallback - ibira.js not available');
                 this.config = config;
             }
+            
             // Add basic methods that might be expected
-            fetch() {
-                return Promise.reject(new Error('Fallback fetch manager - external library not available'));
+            async fetch(url) {
+                warn('(IbiraAPIFetchManagerFallback) fetch() called - ibira.js not available');
+                return Promise.reject(new Error('Fallback fetch manager - ibira.js library not available'));
+            }
+            
+            async fetchData(url) {
+                return this.fetch(url);
             }
         };
-        return { success: false, manager: IbiraAPIFetchManager };
+        
+        return { success: false, source: 'fallback', manager: IbiraAPIFetchManager };
     }
 })();
 

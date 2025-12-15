@@ -9,7 +9,7 @@
  * @since 0.8.3-alpha
  */
 
-import { describe, test, expect, beforeEach } from '@jest/globals';
+import { describe, test, expect, beforeEach, jest } from '@jest/globals';
 
 describe('SpeechItem Module Integration - MP Barbosa Travel Guide (v0.8.11-alpha)', () => {
     
@@ -163,6 +163,18 @@ describe('SpeechItem Module Integration - MP Barbosa Travel Guide (v0.8.11-alpha
                 // Create instances to test compatibility
                 const item = new guia.SpeechItem('Teste de compatibilidade', 2);
                 const queue = new guia.SpeechQueue();
+                
+                // Mock Web Speech API for SpeechSynthesisManager
+                global.window = global.window || {};
+                global.window.speechSynthesis = {
+                    speak: jest.fn(),
+                    cancel: jest.fn(),
+                    pause: jest.fn(),
+                    resume: jest.fn(),
+                    getVoices: jest.fn(() => [])
+                };
+                global.window.SpeechSynthesisUtterance = jest.fn();
+                
                 const manager = new guia.SpeechSynthesisManager();
                 
                 expect(item).toBeDefined();
@@ -414,8 +426,9 @@ describe('SpeechItem Module Integration - MP Barbosa Travel Guide (v0.8.11-alpha
             // Clean up expired items (using 25 second expiration)
             const cleanedQueue = queueItems.filter(item => !item.isExpired(25000));
             
-            // Should keep only the first 5 items (0-24 seconds old)
-            expect(cleanedQueue.length).toBe(5);
+            // Should keep the first 6 items (0-25 seconds old)
+            // Note: isExpired uses > comparison, so items at exactly 25000ms are NOT expired
+            expect(cleanedQueue.length).toBe(6);
             cleanedQueue.forEach((item, index) => {
                 expect(item.text).toBe(`Item ${index}`);
             });

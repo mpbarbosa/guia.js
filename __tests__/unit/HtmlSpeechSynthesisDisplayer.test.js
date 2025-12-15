@@ -123,16 +123,16 @@ global.console = {
 };
 
 // Mock module imports
-jest.unstable_mockModule('../guia.js', () => ({
+jest.unstable_mockModule('../../src/guia.js', () => ({
 	SpeechSynthesisManager: MockSpeechSynthesisManager
 }));
 
-jest.unstable_mockModule('../core/PositionManager.js', () => ({
+jest.unstable_mockModule('../../src/core/PositionManager.js', () => ({
 	default: MockPositionManager
 }));
 
 // Import the class under test
-const HtmlSpeechSynthesisDisplayer = (await import('../src/html/HtmlSpeechSynthesisDisplayer.js')).default;
+const HtmlSpeechSynthesisDisplayer = (await import('../../src/html/HtmlSpeechSynthesisDisplayer.js')).default;
 
 describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.8.3-alpha)', () => {
 	let displayer;
@@ -300,10 +300,17 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.8.3-alpha)'
 		});
 
 		test('should handle missing voice select element', () => {
-			displayer.voiceSelect = null;
+			// Create a new displayer with null voice select element
+			const nullElements = { ...mockElements, voiceSelect: null };
+			mockDocument.getElementById.mockImplementation((id) => {
+				return nullElements[mockElementIds.voiceSelectId] === null && id === mockElementIds.voiceSelectId 
+					? null 
+					: mockElements[id] || null;
+			});
+			const testDisplayer = new HtmlSpeechSynthesisDisplayer(mockDocument, mockElementIds);
 
 			expect(() => {
-				displayer.updateVoices();
+				testDisplayer.updateVoices();
 			}).not.toThrow();
 		});
 
@@ -578,14 +585,21 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.8.3-alpha)'
 		});
 
 		test('should handle missing text input element', () => {
-			displayer.textInput = null;
+			// Create a new displayer with null text input element
+			const nullElements = { ...mockElements, textInput: null };
+			mockDocument.getElementById.mockImplementation((id) => {
+				return nullElements[mockElementIds.textInputId] === null && id === mockElementIds.textInputId 
+					? null 
+					: mockElements[id] || null;
+			});
+			const testDisplayer = new HtmlSpeechSynthesisDisplayer(mockDocument, mockElementIds);
 
 			const address = new MockBrazilianStandardAddress({
 				municipio: 'São Paulo'
 			});
 
 			expect(() => {
-				displayer.update(address, 'MunicipioChanged', 'strCurrPosUpdate');
+				testDisplayer.update(address, 'MunicipioChanged', 'strCurrPosUpdate');
 			}).not.toThrow();
 		});
 

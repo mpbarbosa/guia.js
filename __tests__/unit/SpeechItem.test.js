@@ -201,7 +201,9 @@ describe('SpeechItem - MP Barbosa Travel Guide (v0.8.11-alpha)', () => {
         test('should work with zero and negative expiration times', () => {
             const item = new SpeechItem('Teste de expiração');
             
-            expect(item.isExpired(0)).toBe(true);  // Always expired with 0ms expiration
+            // With 0ms expiration, item expires if any time has passed (Date.now() - timestamp > 0)
+            // For a brand new item, this might be false, but after any delay it becomes true
+            // With negative expiration, the comparison is: time_passed > -1000, which is always true
             expect(item.isExpired(-1000)).toBe(true); // Always expired with negative expiration
         });
     });
@@ -226,7 +228,7 @@ describe('SpeechItem - MP Barbosa Travel Guide (v0.8.11-alpha)', () => {
         });
 
         test('should handle exactly 50 character text without truncation', () => {
-            const exactText = 'Este texto tem exatamente cinquenta caracteres!!';
+            const exactText = 'Este texto tem exatamente cinquenta caracteres!!!!';
             expect(exactText.length).toBe(50);
             
             const item = new SpeechItem(exactText, 0);
@@ -237,14 +239,14 @@ describe('SpeechItem - MP Barbosa Travel Guide (v0.8.11-alpha)', () => {
         });
 
         test('should handle text with 51 characters with truncation', () => {
-            const longText = 'Este texto tem exatamente cinquenta e um caracter!';
+            const longText = 'Este texto tem exatamente cinquenta e um caracter!!';
             expect(longText.length).toBe(51);
             
             const item = new SpeechItem(longText, 3);
             const result = item.toString();
             
             expect(result).toContain('...');
-            expect(result).toBe('SpeechItem: "Este texto tem exatamente cinquenta e um caracter..." (priority: 3)');
+            expect(result).toBe('SpeechItem: "Este texto tem exatamente cinquenta e um caracter!..." (priority: 3)');
         });
 
         test('should include class name and priority in string representation', () => {

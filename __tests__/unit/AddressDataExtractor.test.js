@@ -88,14 +88,32 @@ describe('AddressDataExtractor - MP Barbosa Travel Guide (v0.4.1-alpha)', () => 
                 return;
             }
 
-            const extractor = new AddressDataExtractor();
+            // Current implementation is a facade - test with minimal Brazilian address data
+            const mockBrazilianData = {
+                address: {
+                    road: 'Avenida Paulista',
+                    house_number: '1578',
+                    neighbourhood: 'Bela Vista',
+                    city: 'São Paulo',
+                    state: 'SP',
+                    country: 'Brasil'
+                }
+            };
             
-            expect(extractor.defaultCountry).toBe('Brasil');
-            expect(extractor.timeout).toBe(3000);
-            expect(extractor.validPlaceClasses).toContain('amenity');
-            expect(extractor.validPlaceClasses).toContain('building');
-            expect(extractor.validPlaceClasses).toContain('shop');
-            expect(extractor.validPlaceClasses).toContain('place');
+            const extractor = new AddressDataExtractor(mockBrazilianData);
+            
+            // Verify facade properties exist
+            expect(extractor.data).toBeDefined();
+            expect(extractor.enderecoPadronizado).toBeDefined();
+            // referencePlace is on enderecoPadronizado
+            expect(extractor.enderecoPadronizado.referencePlace).toBeDefined();
+            
+            // Verify Brazilian address was extracted correctly
+            expect(extractor.enderecoPadronizado.municipio).toBe('São Paulo');
+            expect(extractor.enderecoPadronizado.siglaUF).toBe('SP');
+            
+            // Verify the instance is frozen (immutable)
+            expect(Object.isFrozen(extractor)).toBe(true);
         });
 
         test('should handle missing classes gracefully (submodule not initialized)', () => {

@@ -108,9 +108,12 @@ describe('WebGeocodingManager - High Cohesion and Low Coupling', () => {
             
             manager.subscribe(null);
             
-            expect(consoleSpy).toHaveBeenCalledWith(
-                expect.stringContaining('Attempted to subscribe a null observer')
+            // console.warn is called with timestamp and message, check the second argument
+            expect(consoleSpy).toHaveBeenCalled();
+            const warnCall = consoleSpy.mock.calls.find(call => 
+                call.some(arg => typeof arg === 'string' && arg.includes('Attempted to subscribe a null observer'))
             );
+            expect(warnCall).toBeDefined();
             
             consoleSpy.mockRestore();
         });
@@ -149,9 +152,12 @@ describe('WebGeocodingManager - High Cohesion and Low Coupling', () => {
             
             manager.subscribeFunction(null);
             
-            expect(consoleSpy).toHaveBeenCalledWith(
-                expect.stringContaining('Attempted to subscribe a null observer function')
+            // console.warn is called with timestamp and message, check the second argument
+            expect(consoleSpy).toHaveBeenCalled();
+            const warnCall = consoleSpy.mock.calls.find(call => 
+                call.some(arg => typeof arg === 'string' && arg.includes('Attempted to subscribe a null observer'))
             );
+            expect(warnCall).toBeDefined();
             
             consoleSpy.mockRestore();
         });
@@ -450,10 +456,10 @@ describe('WebGeocodingManager - High Cohesion and Low Coupling', () => {
             const params = { locationResult: 'location-result' };
             const manager = new WebGeocodingManager(mockDocument, params);
 
-            // Attempt to modify elementIds should not work (in strict mode would throw)
+            // Attempt to modify elementIds should throw in strict mode (ES modules are strict by default)
             expect(() => {
                 manager.elementIds.chronometer = 'modified';
-            }).not.toThrow();
+            }).toThrow(TypeError);
             
             // Value should remain unchanged due to freeze
             expect(manager.elementIds.chronometer).toBe('chronometer');

@@ -262,13 +262,15 @@ describe('DisplayerFactory Module Integration Tests', () => {
                 addressDisplayer.update({ display_name: 'Test' }, null, 'test', true, null);
             }).not.toThrow();
             
-            // Should work with ReferencePlace
-            const mockReferencePlace = new ReferencePlace();
-            mockReferencePlace.name = 'Shopping Center';
-            mockReferencePlace.description = 'Shopping';
+            // Should work with ReferencePlace (immutable - pass data to constructor)
+            const mockReferencePlace = new ReferencePlace({
+                class: 'shop',
+                type: 'mall',
+                name: 'Shopping Center'
+            });
             
             expect(() => {
-                referenceDisplayer.update(mockBrazilianAddress, null, 'test', true, null);
+                referenceDisplayer.update(mockBrazilianAddress, null, 'test', true, mockReferencePlace);
             }).not.toThrow();
         });
     });

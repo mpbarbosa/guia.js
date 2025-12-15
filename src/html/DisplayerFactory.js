@@ -44,6 +44,16 @@ import HTMLReferencePlaceDisplayer from './HTMLReferencePlaceDisplayer.js';
 
 class DisplayerFactory {
 	/**
+	 * Private constructor to prevent instantiation.
+	 * DisplayerFactory is a static factory class - use static methods instead.
+	 * 
+	 * @throws {Error} Always throws - this class cannot be instantiated
+	 */
+	constructor() {
+		throw new Error('DisplayerFactory is a static factory class and cannot be instantiated. Use static methods instead.');
+	}
+
+	/**
 	 * Creates a position displayer instance for geographic coordinate display.
 	 * 
 	 * Creates an HTMLPositionDisplayer instance configured for displaying
@@ -160,11 +170,6 @@ class DisplayerFactory {
 		return `${this.name}: 3 factory methods available`;
 	}
 }
-
-// Prevent instantiation of the factory class
-DisplayerFactory.constructor = function() {
-	throw new Error('DisplayerFactory is a static factory class and cannot be instantiated. Use static methods instead.');
-};
 
 // Freeze the class to prevent modifications
 Object.freeze(DisplayerFactory);

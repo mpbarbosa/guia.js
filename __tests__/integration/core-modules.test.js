@@ -16,25 +16,25 @@ global.console.warn = jest.fn();
 
 describe('Core Modules Integration', () => {
     test('should import GeoPosition from core module', async () => {
-        const { GeoPosition } = await import('../src/core/GeoPosition.js');
+        const { default: GeoPosition } = await import('../../src/core/GeoPosition.js');
         expect(GeoPosition).toBeDefined();
         expect(typeof GeoPosition).toBe('function');
     });
 
     test('should import ObserverSubject from core module', async () => {
-        const { default: ObserverSubject } = await import('../src/core/ObserverSubject.js');
+        const { default: ObserverSubject } = await import('../../src/core/ObserverSubject.js');
         expect(ObserverSubject).toBeDefined();
         expect(typeof ObserverSubject).toBe('function');
     });
 
     test('should import PositionManager from core module', async () => {
-        const { default: PositionManager } = await import('../src/core/PositionManager.js');
+        const { default: PositionManager } = await import('../../src/core/PositionManager.js');
         expect(PositionManager).toBeDefined();
         expect(typeof PositionManager).toBe('function');
     });
 
     test('should create immutable GeoPosition', async () => {
-        const { default: GeoPosition } = await import('../src/core/GeoPosition.js');
+        const { default: GeoPosition } = await import('../../src/core/GeoPosition.js');
         
         const mockPosition = {
             coords: {
@@ -61,7 +61,7 @@ describe('Core Modules Integration', () => {
     });
 
     test('should create and use ObserverSubject', async () => {
-        const { default: ObserverSubject } = await import('../src/core/ObserverSubject.js');
+        const { default: ObserverSubject } = await import('../../src/core/ObserverSubject.js');
         
         const subject = new ObserverSubject();
         let notified = false;
@@ -81,7 +81,7 @@ describe('Core Modules Integration', () => {
     });
 
     test('should create PositionManager singleton', async () => {
-        const { default: PositionManager } = await import('../src/core/PositionManager.js');
+        const { default: PositionManager } = await import('../../src/core/PositionManager.js');
         
         const manager1 = PositionManager.getInstance();
         const manager2 = PositionManager.getInstance();
@@ -92,7 +92,7 @@ describe('Core Modules Integration', () => {
     });
 
     test('should export classes from guia.js', async () => {
-        const guia = await import('../src/guia.js');
+        const guia = await import('../../src/guia.js');
         
         expect(guia.GeoPosition).toBeDefined();
         expect(guia.ObserverSubject).toBeDefined();
@@ -100,8 +100,8 @@ describe('Core Modules Integration', () => {
     });
 
     test('core classes should work together', async () => {
-        const { default: GeoPosition } = await import('../src/core/GeoPosition.js');
-        const { default: ObserverSubject } = await import('../src/core/ObserverSubject.js');
+        const { default: GeoPosition } = await import('../../src/core/GeoPosition.js');
+        const { default: ObserverSubject } = await import('../../src/core/ObserverSubject.js');
         
         const subject = new ObserverSubject();
         let lastPosition = null;

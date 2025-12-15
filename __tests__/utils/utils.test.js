@@ -231,9 +231,10 @@ describe('Utility Functions', () => {
             
             Object.freeze(testObject);
             
+            // In ES modules (strict mode), assigning to frozen properties throws TypeError
             expect(() => {
                 testObject.property = 'new value';
-            }).not.toThrow(); // In non-strict mode, this fails silently
+            }).toThrow(TypeError);
             
             expect(Object.isFrozen(testObject)).toBe(true);
         });

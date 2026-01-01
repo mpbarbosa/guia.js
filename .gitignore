@@ -1,4 +1,5 @@
-.gitignore/
+#Logs for AI Workflow
+.ai_workflow/
 
 # Dependencies
 node_modules/

@@ -7,25 +7,25 @@ Guia.js is a JavaScript-based geolocation web application (version 0.6.0-alpha) 
 ## Working Effectively
 
 ### Bootstrap and Run the Application
-- **Node.js Testing**: `node guia.js` - takes <1 second. Validates basic functionality and logs version.
-- **Syntax Validation**: `node -c guia.js && node -c guia_ibge.js` - takes <1 second each. ALWAYS run before commits.
+- **Node.js Testing**: `node src/guia.js` - takes <1 second. Validates basic functionality and logs version.
+- **Syntax Validation**: `node -c src/guia.js && node -c src/guia_ibge.js` - takes <1 second each. ALWAYS run before commits.
 - **Web Server**: `python3 -m http.server 9000` - starts in 3 seconds. NEVER CANCEL - keeps running until stopped.
 - **Access Application**: Navigate to `http://localhost:9000/test.html` for full functionality testing.
 
 ### Build and Test Process
 - **NEVER CANCEL any long-running server processes** - they run indefinitely by design
 - **Install Dependencies**: `npm install` - takes 20 seconds. Downloads 299 packages including Jest testing framework.
-- **Syntax Check**: Always run `node -c guia.js` (timeout: 10 seconds) before making changes
-- **Basic Test**: Run `node guia.js` (timeout: 10 seconds) to verify core functionality
-- **Automated Tests**: `npm test` - takes 2 seconds. Runs 55 tests in 5 suites. NEVER CANCEL.
-- **Test Coverage**: `npm run test:coverage` - takes 2.2 seconds. Shows ~12% coverage. NEVER CANCEL.
+- **Syntax Check**: Always run `node -c src/guia.js` (timeout: 10 seconds) before making changes
+- **Basic Test**: Run `node src/guia.js` (timeout: 10 seconds) to verify core functionality
+- **Automated Tests**: `npm test` - takes 2 seconds. Runs 1224 tests in 57 suites. NEVER CANCEL.
+- **Test Coverage**: `npm run test:coverage` - takes 2.2 seconds. Shows ~70% coverage. NEVER CANCEL.
 - **Full Validation**: `npm run test:all` - takes 4 seconds. Combines syntax + tests. NEVER CANCEL.
 - **Web Test**: Start web server with `python3 -m http.server 9000` (timeout: 10 seconds to start, runs indefinitely)
 
 ### Development Workflow
 - Always validate JavaScript syntax with `node -c` before committing changes
-- Test core functionality with `node guia.js` to see version output and basic initialization
-- Run automated tests with `npm run test:all` before commits to ensure 180+ tests pass
+- Test core functionality with `node src/guia.js` to see version output and basic initialization
+- Run automated tests with `npm run test:all` before commits to ensure 1224+ tests pass
 - For DOM/web features, use the web server and test.html for manual validation
 - **Follow immutability principles** - see `.github/CONTRIBUTING.md` for guidelines
 - **TIMING**: Syntax checks <1 second, tests ~3 seconds, web server startup 3 seconds
@@ -37,14 +37,14 @@ After making any changes, ALWAYS run through these validation scenarios:
 
 1. **Basic Node.js Execution**:
    ```bash
-   node guia.js
+   node src/guia.js
    # Should output: [timestamp] Guia.js version: 0.6.0-alpha
    ```
 
 2. **Automated Test Suite**:
    ```bash
    npm run test:all
-   # Should show: ✅ 180+ tests passing, ✅ 22 suites, ~3 seconds execution
+   # Should show: ✅ 1224+ tests passing, ✅ 57 suites, ~3 seconds execution
    ```
 
 3. **Web Application Functionality**:
@@ -69,34 +69,42 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Repository Structure
 
 ### Key Files
-- `guia.js` (2288 lines) - Main application with 25 classes for geolocation functionality
+- `src/guia.js` (468 lines) - Main application entry point and exports (modularized from 2288 lines into 29 files)
 - `guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
 - `test.html` (133 lines) - Test page for manual validation
 - `package.json` - Node.js configuration with Jest testing framework
-- `__tests__/` - 22 test files with 180+ total tests
+- `__tests__/` - 60 test files with 1224+ total tests
 - `.github/CONTRIBUTING.md` - Contribution guidelines including immutability principles
+- `.github/scripts/test-workflow-locally.sh` - Pre-push validation script (simulates CI/CD)
+- `cdn-delivery.sh` - CDN URL generator for jsDelivr distribution
 
 ### Important Classes and Components
 
-#### Core Architecture (lines 62-666)
-- `PositionManager` - Singleton for current geolocation state
-- `SingletonStatusManager` - Status management across components  
-- `APIFetcher` - Base class for API communications
-- `ReverseGeocoder` - OpenStreetMap/Nominatim integration
-- `GeolocationService` - Browser geolocation API wrapper
-- `WebGeocodingManager` - Main coordination class
+#### Core Architecture (src/core/, src/services/, src/coordination/)
+- `PositionManager` (src/core/PositionManager.js) - Singleton for current geolocation state
+- `GeoPosition` (src/core/GeoPosition.js) - Immutable position value object
+- `SingletonStatusManager` (src/status/SingletonStatusManager.js) - Status management across components
+- `ReverseGeocoder` (src/services/ReverseGeocoder.js) - OpenStreetMap/Nominatim integration
+- `GeolocationService` (src/services/GeolocationService.js) - Browser geolocation API wrapper
+- `WebGeocodingManager` (src/coordination/WebGeocodingManager.js) - Main coordination class
 
-#### Data Processing (lines 1201-1706)
-- `BrazilianStandardAddress` - Brazilian address standardization
-- `GeoDataParser/Extractor/Validator` - Geographic data processing pipeline
-- `ReferencePlaceExtractor/Validator` - Reference location handling
-- `AddressDataExtractor` - Address data extraction and caching
+#### Data Processing (src/data/)
+- `BrazilianStandardAddress` (src/data/BrazilianStandardAddress.js) - Brazilian address standardization
+- `AddressExtractor` (src/data/AddressExtractor.js) - Address data extraction
+- `AddressCache` (src/data/AddressCache.js) - Address caching functionality
+- `AddressDataExtractor` (src/data/AddressDataExtractor.js) - Complete address data extraction and caching
+- `ReferencePlace` (src/data/ReferencePlace.js) - Reference location handling
 
-#### UI and Display (lines 1084-2264)
-- `HTMLPositionDisplayer` - Coordinate display and Google Maps integration
-- `HTMLAddressDisplayer` - Address formatting and presentation
-- `SpeechSynthesisManager` - Text-to-speech functionality
-- `HtmlText` - Text display utilities
+#### UI and Display (src/html/)
+- `HTMLPositionDisplayer` (src/html/HTMLPositionDisplayer.js) - Coordinate display and Google Maps integration
+- `HTMLAddressDisplayer` (src/html/HTMLAddressDisplayer.js) - Address formatting and presentation
+- `DisplayerFactory` (src/html/DisplayerFactory.js) - Factory for display components
+- `HtmlText` (src/html/HtmlText.js) - Text display utilities
+
+#### Speech Synthesis (src/speech/)
+- `SpeechSynthesisManager` (src/speech/SpeechSynthesisManager.js) - Text-to-speech functionality
+- `SpeechQueue` (src/speech/SpeechQueue.js) - Speech queue management
+- `SpeechItem` (src/speech/SpeechItem.js) - Individual speech items
 
 ### API Integrations
 - **OpenStreetMap Nominatim**: `https://nominatim.openstreetmap.org/reverse` for geocoding
@@ -106,8 +114,8 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Testing Infrastructure
 
 ### Automated Test Coverage
-- **180+ tests** across 22 test suites running in ~3 seconds
-- **~12% code coverage** of guia.js (278/2288 lines)
+- **1224+ tests** across 57 test suites running in ~3 seconds
+- **~70% code coverage** overall (69.82% actual)
 - **100% coverage** of guia_ibge.js (full coverage)
 - **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns
 
@@ -130,9 +138,9 @@ npm run test:all
 ```
 
 ### Expected Test Results
-- ✅ 180+ tests passing
-- ✅ 22 suites of test files
-- ✅ ~12% code coverage on guia.js
+- ✅ 1224+ tests passing
+- ✅ 57 suites of test files
+- ✅ ~70% code coverage overall
 - ✅ 100% code coverage on guia_ibge.js
 - ✅ 14 immutability pattern tests
 
@@ -166,9 +174,9 @@ npm run test:all
 - Some features (speech synthesis, DOM manipulation) only work in web environment
 - Location permissions must be granted by user for geolocation features
 
-### Missing Implementations
-- `findNearbyRestaurants()` function is referenced but not implemented
-- City statistics functionality is stubbed but not fully implemented
+### Known Limitations
+- `findNearbyRestaurants()` function exists as placeholder with alert notification - requires external service integration
+- `fetchCityStatistics()` function exists as placeholder with alert notification - requires backend implementation
 - Error handling for API failures could be enhanced
 
 ### Development Environment
@@ -181,7 +189,7 @@ npm run test:all
 ### GitHub Actions Workflow
 The repository includes `.github/workflows/copilot-coding-agent.yml` with automated validation:
 - **JavaScript Syntax Validation**: `node -c` on all JS files
-- **Basic Functionality Test**: `node guia.js` execution 
+- **Basic Functionality Test**: `node src/guia.js` execution 
 - **Web Server Test**: Python HTTP server startup and connectivity
 - **Security Checks**: Basic credential and eval() usage scanning
 - **Code Style Checks**: Basic formatting validation
@@ -196,6 +204,79 @@ npm run test:all
 curl -s http://localhost:9000/test.html | grep "Guia.js"  # If web server running
 ```
 
+### Local Workflow Testing Script
+The repository includes `.github/scripts/test-workflow-locally.sh` for pre-push validation:
+
+**Purpose**: Simulate GitHub Actions workflow locally to catch issues before pushing
+
+**Usage**:
+```bash
+# From project root
+./.github/scripts/test-workflow-locally.sh
+```
+
+**What it validates**:
+- ✅ JavaScript syntax validation (npm run validate)
+- ✅ Test suite execution (npm test)
+- ✅ Test coverage generation
+- ✅ Documentation format checks
+- ✅ Change detection (only runs relevant tests)
+
+**Prerequisites**:
+- Node.js v18+ and npm installed
+- npm dependencies installed (`npm install`)
+- git repository initialized
+- Standard Unix tools: grep, find, wc
+
+**Common Exit Scenarios**:
+- **Exit 0**: All checks passed, safe to push
+- **Exit 1**: Some checks failed, fix issues before pushing
+
+See `docs/WORKFLOW_SETUP.md` for detailed usage guide.
+
+### CDN Delivery Script
+The repository includes `cdn-delivery.sh` for generating CDN URLs:
+
+**Purpose**: Generate jsDelivr CDN URLs for the current version
+
+**Usage**:
+```bash
+# From project root
+./cdn-delivery.sh
+# Output saved to cdn-urls.txt
+```
+
+**When to run**:
+- After version bumps in package.json
+- Before releases to generate distribution URLs
+- After creating git tags
+- Manually anytime you need CDN URLs
+
+**Prerequisites**:
+- Node.js v18+ (for package.json parsing)
+- git (for commit hash extraction)
+- curl (optional, for CDN availability testing)
+
+**Integration Example**:
+```bash
+npm version minor
+./cdn-delivery.sh
+git add cdn-urls.txt
+git commit -m "chore: update CDN URLs for v0.7.0"
+git tag v0.7.0
+git push origin v0.7.0
+```
+
+**Environment Variables** (optional):
+```bash
+# Override defaults if needed
+export GITHUB_USER="your-username"
+export GITHUB_REPO="your-repo"
+./cdn-delivery.sh
+```
+
+See README.md CDN Delivery section for troubleshooting guide.
+
 ## Quick Reference Commands
 
 ### Daily Development
@@ -204,10 +285,10 @@ curl -s http://localhost:9000/test.html | grep "Guia.js"  # If web server runnin
 npm install
 
 # Syntax check (always run first)
-node -c guia.js && node -c guia_ibge.js
+node -c src/guia.js && node -c src/guia_ibge.js
 
 # Basic functionality test  
-node guia.js
+node src/guia.js
 
 # Full test suite
 npm run test:all
@@ -222,13 +303,13 @@ curl -s http://localhost:9000/test.html | head -5
 ### Performance Expectations
 - **Syntax validation**: <1 second each file
 - **Basic Node.js test**: <1 second  
-- **Jest test suite**: ~2 seconds for 55 tests
+- **Jest test suite**: ~2 seconds for 1224 tests
 - **Jest with coverage**: ~2.2 seconds
 - **Web server startup**: ~3 seconds, then runs indefinitely
 - **npm install**: ~20 seconds (299 packages)
 
 ### Validation Checklist
-- [ ] Node.js syntax validation passes (`node -c guia.js`)
+- [ ] Node.js syntax validation passes (`node -c src/guia.js`)
 - [ ] Basic Node.js execution shows version output
 - [ ] All 55 automated tests pass (`npm test`)
 - [ ] Web server starts successfully (`python3 -m http.server 9000`)
@@ -257,6 +338,9 @@ curl -s http://localhost:9000/test.html | head -5
 ```bash
 # Check Node.js and npm versions
 node --version && npm --version
+
+# Validate all source files
+node -c src/guia.js && node -c src/guia_ibge.js
 
 # Clear npm cache if issues
 npm cache clean --force
@@ -292,25 +376,31 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 
 ### Important Classes and Components
 
-#### Core Architecture (lines 62-666)
-- `CurrentPosition` - Singleton for current geolocation state
-- `SingletonStatusManager` - Status management across components  
-- `APIFetcher` - Base class for API communications
-- `ReverseGeocoder` - OpenStreetMap/Nominatim integration
-- `GeolocationService` - Browser geolocation API wrapper
-- `WebGeocodingManager` - Main coordination class
+#### Core Architecture (src/core/, src/services/, src/coordination/)
+- `PositionManager` (src/core/PositionManager.js) - Singleton for current geolocation state
+- `GeoPosition` (src/core/GeoPosition.js) - Immutable position value object
+- `SingletonStatusManager` (src/status/SingletonStatusManager.js) - Status management across components
+- `ReverseGeocoder` (src/services/ReverseGeocoder.js) - OpenStreetMap/Nominatim integration
+- `GeolocationService` (src/services/GeolocationService.js) - Browser geolocation API wrapper
+- `WebGeocodingManager` (src/coordination/WebGeocodingManager.js) - Main coordination class
 
-#### Data Processing (lines 1117-1530)
-- `BrazilianStandardAddress` - Brazilian address standardization
-- `GeoDataParser/Extractor/Validator` - Geographic data processing pipeline
-- `ReferencePlaceExtractor/Validator` - Reference location handling
-- `AddressDataExtractor` - Address data extraction and caching
+#### Data Processing (src/data/)
+- `BrazilianStandardAddress` (src/data/BrazilianStandardAddress.js) - Brazilian address standardization
+- `AddressExtractor` (src/data/AddressExtractor.js) - Address data extraction
+- `AddressCache` (src/data/AddressCache.js) - Address caching functionality
+- `AddressDataExtractor` (src/data/AddressDataExtractor.js) - Complete address data extraction and caching
+- `ReferencePlace` (src/data/ReferencePlace.js) - Reference location handling
 
-#### UI and Display (lines 1000-2082)
-- `HTMLPositionDisplayer` - Coordinate display and Google Maps integration
-- `HTMLAddressDisplayer` - Address formatting and presentation
-- `SpeechSynthesisManager` - Text-to-speech functionality
-- `HtmlText` - Text display utilities
+#### UI and Display (src/html/)
+- `HTMLPositionDisplayer` (src/html/HTMLPositionDisplayer.js) - Coordinate display and Google Maps integration
+- `HTMLAddressDisplayer` (src/html/HTMLAddressDisplayer.js) - Address formatting and presentation
+- `DisplayerFactory` (src/html/DisplayerFactory.js) - Factory for display components
+- `HtmlText` (src/html/HtmlText.js) - Text display utilities
+
+#### Speech Synthesis (src/speech/)
+- `SpeechSynthesisManager` (src/speech/SpeechSynthesisManager.js) - Text-to-speech functionality
+- `SpeechQueue` (src/speech/SpeechQueue.js) - Speech queue management
+- `SpeechItem` (src/speech/SpeechItem.js) - Individual speech items
 
 ### API Integrations
 - **OpenStreetMap Nominatim**: `https://nominatim.openstreetmap.org/reverse` for geocoding
@@ -342,9 +432,9 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 - Some features (speech synthesis, DOM manipulation) only work in web environment
 - Location permissions must be granted by user for geolocation features
 
-### Missing Implementations
-- `findNearbyRestaurants()` function is referenced but not implemented
-- City statistics functionality is stubbed but not fully implemented
+### Known Limitations
+- `findNearbyRestaurants()` function exists as placeholder with alert notification - requires external service integration
+- `fetchCityStatistics()` function exists as placeholder with alert notification - requires backend implementation
 - Error handling for API failures could be enhanced
 
 ### Development Environment
@@ -392,7 +482,7 @@ new BrazilianStandardAddress() // Address standardization
 node -c guia.js && node -c guia_ibge.js
 
 # Basic functionality test  
-node guia.js
+node src/guia.js
 
 # Start web server for full testing
 python3 -m http.server 9000

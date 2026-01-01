@@ -20,10 +20,43 @@ A JavaScript-based geolocation web application (version 0.6.0-alpha) providing g
 
 ### Prerequisites
 
-- Node.js v18+ (tested with v20.19.5)
-- npm v10+
-- Python 3.11+ (for web server during development)
-- Modern browser with Geolocation API support
+- **Node.js v18+** (tested with v20.19.5)
+- **npm v10+**
+- **Python 3.11+** (for web server during development)
+- **Git** (for version control and CDN script)
+- **Modern browser** with Geolocation API support (Chrome 90+, Firefox 88+, Safari 14+)
+
+**Verify Your Environment**:
+```bash
+# Check Node.js version
+node --version
+# Should output: v18.x.x or higher
+
+# Check npm version
+npm --version
+# Should output: v10.x.x or higher
+
+# Check Python version
+python3 --version
+# Should output: Python 3.11.x or higher
+
+# Check Git
+git --version
+# Should output: git version 2.x.x or higher
+```
+
+**Installation Help**:
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install nodejs npm python3 git
+
+# macOS (with Homebrew)
+brew install node python@3.11 git
+
+# Windows (with Chocolatey)
+choco install nodejs python git
+```
 
 ### Installation
 
@@ -77,7 +110,7 @@ npm run lint:fix
 ```
 guia_js/
 ├── src/                          # Source code (ES6 modules)
-│   ├── guia.js                   # Main application (2288 lines)
+│   ├── guia.js                   # Main entry point (468 lines, modularized from 2288 lines)
 │   ├── guia_ibge.js              # IBGE integration utilities
 │   ├── core/                     # Core classes (Singletons, Managers)
 │   ├── data/                     # Data processing and extraction
@@ -112,6 +145,34 @@ guia_js/
 └── *.html                        # Test pages and demos
 ```
 
+## 💡 Usage Examples
+
+The `examples/` directory contains working demonstrations of key functionality:
+
+### Available Examples
+
+1. **geoposition-immutability-demo.js** - Demonstrates referential transparency principles:
+   - Pure constructor without side effects
+   - Immutability through defensive copying
+   - Deterministic pure methods
+   - Static pure functions
+
+2. **geolocation-service-demo.js** - Shows GeolocationService usage patterns
+
+3. **jest-esm-migration-example.js** - Example of Jest with ES modules configuration
+
+### Running Examples
+
+```bash
+# Run from project root
+node examples/geoposition-immutability-demo.js
+
+# Run geolocation service demo
+node examples/geolocation-service-demo.js
+```
+
+See [examples/README.md](examples/README.md) for detailed documentation and expected outputs.
+
 ## 🧪 Testing
 
 ### Test Suite Overview
@@ -143,6 +204,26 @@ npm run test:verbose
 npm run test:all
 ```
 
+### Testing Terminology
+
+To ensure clear communication about testing concepts:
+
+- **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`)
+  - The project has 57 passing test suites across 5 categories
+  
+- **Test**: Individual test case within a suite using `it()` or `test()`
+  - Example: `it('should return singleton instance')`
+  - The project has 1224 passing tests total
+
+- **Test Category**: Organizational grouping of related test suites
+  - **unit/**: Tests for individual classes and functions in isolation
+  - **integration/**: Tests for interactions between multiple components
+  - **features/**: Tests for complete user-facing features
+  - **external/**: Tests for external API integrations
+  - **managers/**: Tests for manager and coordinator classes
+
+**Example**: The PositionManager test suite (`__tests__/unit/PositionManager.test.js`) contains 12 individual tests covering singleton behavior, state management, and position updates.
+
 ### Test Categories
 
 - **Unit Tests**: Individual component testing with mocks
@@ -150,6 +231,13 @@ npm run test:all
 - **Feature Tests**: End-to-end feature validation
 - **Immutability Tests**: Verifying referential transparency patterns
 - **API Tests**: External API integration validation
+
+### Testing Terminology
+
+- **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 57 passing suites
+- **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 1224 passing tests
+- **Test Category**: Organizational grouping by functionality (unit, integration, features, external, managers)
+- **Code Coverage**: Percentage of source code executed during tests (~70% overall)
 
 ## 📚 Documentation
 
@@ -243,25 +331,494 @@ https://servicodados.ibge.gov.br/api/v1/localidades/estados/
 
 **Documentation**: [IBGE Integration](docs/IBIRA_INTEGRATION.md)
 
+### IBGE API via ibira.js
+
+Guia.js integrates with IBGE (Brazilian statistics) through the **ibira.js** library using a three-tier loading strategy:
+
+1. **CDN Loading** (primary): jsDelivr CDN v0.2.2-alpha with 5-second timeout
+2. **Local Module** (fallback): `node_modules/ibira.js` for Node.js environments
+3. **Mock Fallback** (testing): Stub implementation when neither source is available
+
+```javascript
+// Dynamic CDN import with timeout
+import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js')
+  .then(module => module.IbiraAPIFetchManager)
+  .catch(() => import('ibira.js')); // Fallback to local
+```
+
+**Features**:
+- Automatic failover between CDN and local sources
+- Zero-configuration mock for testing environments
+- Full IBGE API compatibility through `IbiraAPIFetchManager`
+
+**Documentation**: [IBIRA Integration Guide](docs/IBIRA_INTEGRATION.md)
+
 ### Google Maps Integration
 
-- Map viewing links
-- Street View integration
-- Directions and routing (external)
+Guia.js generates Google Maps links for enhanced location visualization and navigation:
+
+**Features**:
+- **Map View Links**: Opens location in Google Maps web interface
+- **Street View Integration**: Direct links to Street View when available
+- **Directions**: External routing to user's location
+
+**Generated Links** (created by HTMLPositionDisplayer):
+```javascript
+// Map view URL format
+https://www.google.com/maps?q=<latitude>,<longitude>
+
+// Street View URL format  
+https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=<latitude>,<longitude>
+```
+
+**Usage**: The application automatically generates these links when displaying position data. No API key required for basic link generation.
+
+**Note**: Google Maps links are external - users navigate to Google's service. For embedded maps, consider the Google Maps JavaScript API (requires API key).
 
 ## 📦 CDN Delivery
 
 Guia.js can be delivered via **jsDelivr CDN** for easy integration into web projects with global distribution and automatic optimization.
 
+**Quick Start**: Run `./cdn-delivery.sh` to generate all CDN URLs for the current version.
+
 **Reference**: [jsDelivr Documentation](https://www.jsdelivr.com/?docs=gh)
+
+### Prerequisites
+
+Before using the CDN delivery script, ensure you have:
+
+**Required**:
+- **Node.js v18+** - For package.json parsing
+- **Git** - For commit hash extraction and repository information
+
+**Optional**:
+- **curl** - For CDN availability testing (script works without it)
+
+**Verify Dependencies**:
+```bash
+# Check Node.js version (must be v18+)
+node --version
+
+# Check Git availability
+git --version
+
+# Check curl (optional)
+curl --version
+```
+
+If any required dependency is missing:
+```bash
+# Install Node.js (Ubuntu/Debian)
+sudo apt update && sudo apt install nodejs
+
+# Install Node.js (macOS with Homebrew)
+brew install node
+
+# Git is usually pre-installed
+# If not: sudo apt install git (Linux) or brew install git (macOS)
+```
+
+### CDN URL Generator Script
+
+The `cdn-delivery.sh` script automatically generates CDN URLs based on your current version and commit:
+
+```bash
+# Generate all CDN URLs
+./cdn-delivery.sh
+
+# Output includes:
+# - Version-specific URLs (recommended for production)
+# - Commit-specific URLs (for audit trails)
+# - Branch URLs (for development)
+# - Version range URLs (SemVer)
+# - Minified URLs (auto-optimized)
+# - Combination URLs (multiple files)
+
+# All URLs saved to cdn-urls.txt
+```
+
+**Script Features**:
+- ✅ Automatic version detection from package.json
+- ✅ Current commit hash for immutable URLs
+- ✅ Multiple URL formats for different use cases
+- ✅ Color-coded terminal output
+- ✅ Persistent output file (cdn-urls.txt)
+- ✅ Comprehensive error checking and helpful messages
+
+### Exit Codes & Error Handling
+
+**Exit Codes**:
+- **0**: Success - URLs generated and saved to `cdn-urls.txt`
+- **1**: Error - Check error message for details
+
+**Common Errors and Solutions**:
+
+#### Error: Node.js not found
+```bash
+Error: Node.js not found
+This script requires Node.js v18+ to parse package.json
+```
+**Solution**: Install Node.js
+```bash
+# Ubuntu/Debian
+sudo apt install nodejs
+
+# macOS
+brew install node
+
+# Verify
+node --version  # Should be v18+
+```
+
+#### Error: package.json not found
+```bash
+Error: package.json not found
+This script must be run from the project root directory
+Current directory: /home/user/wrong/path
+```
+**Solution**: Navigate to project root
+```bash
+cd /path/to/guia_js
+./cdn-delivery.sh
+```
+
+#### Error: Git not found
+```bash
+Error: Git not found
+This script requires Git to extract commit information
+```
+**Solution**: Install Git
+```bash
+# Ubuntu/Debian
+sudo apt install git
+
+# macOS
+brew install git
+
+# Verify
+git --version
+```
+
+#### Error: Not a Git repository
+```bash
+Error: Not a Git repository
+This script requires a Git repository to extract commit hash
+```
+**Solution**: Ensure you're in a cloned repository
+```bash
+# Clone if needed
+git clone https://github.com/mpbarbosa/guia_js.git
+cd guia_js
+./cdn-delivery.sh
+```
+
+#### Error: Failed to read package.json
+```bash
+Error: Failed to read package.json
+Details: SyntaxError: Unexpected token...
+```
+**Solution**: Check package.json syntax
+```bash
+# Validate JSON
+node -p "JSON.parse(require('fs').readFileSync('package.json', 'utf8'))"
+
+# Or use online validator
+# https://jsonlint.com/
+```
+
+#### Error: Package not yet available on CDN
+```bash
+# When accessing CDN URL, you get:
+# 404 Not Found
+# Package not found
+```
+**Solution**: Ensure Git tag is pushed and wait for CDN sync
+```bash
+# 1. Check if tag exists locally
+git tag | grep v0.6.0-alpha
+
+# 2. If missing, create tag
+git tag v0.6.0-alpha
+
+# 3. Push tag to GitHub
+git push origin v0.6.0-alpha
+
+# 4. Wait for jsDelivr to sync (5-10 minutes)
+# Check status at: https://www.jsdelivr.com/package/gh/mpbarbosa/guia_js
+
+# 5. Verify CDN availability
+curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"
+# Should return: HTTP/2 200
+
+# Alternative: Use commit hash instead (available immediately)
+# https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@COMMIT_HASH/src/guia.js
+```
+
+**Note**: CDN sync times:
+- **Tag-based URLs**: 5-10 minutes after pushing tag
+- **Commit-based URLs**: Available immediately after push
+- **Branch URLs**: Update within ~1 minute
 
 ### Quick Start
 
 ```bash
-# Generate CDN URLs with current version and commit
+# From project root directory
 ./cdn-delivery.sh
 
 # Output saved to cdn-urls.txt
+```
+
+### Usage Guide
+
+#### When to Run the Script
+
+Run `cdn-delivery.sh` when you need CDN URLs:
+
+- ✅ **After version bumps** - Update CDN URLs when `package.json` version changes
+- ✅ **Before releases** - Generate distribution URLs for release notes
+- ✅ **After creating Git tags** - Get version-specific URLs for stable releases
+- ✅ **During documentation** - Get current URLs for examples and guides
+- ✅ **Manual anytime** - Script is idempotent and safe to run repeatedly
+
+#### Basic Usage
+
+```bash
+# Generate all CDN URLs for current version
+./cdn-delivery.sh
+
+# Output appears in terminal with color coding
+# Also saved to: cdn-urls.txt
+```
+
+#### Release Workflow Integration
+
+**Scenario 1: Version Bump and Release**
+```bash
+# 1. Bump version
+npm version patch  # or minor, major
+# Creates: v0.6.1-alpha
+
+# 2. Generate CDN URLs
+./cdn-delivery.sh
+
+# 3. Commit URLs file
+git add cdn-urls.txt package.json package-lock.json
+git commit -m "chore: bump version to v0.6.1-alpha"
+
+# 4. Create and push tag
+git tag v0.6.1-alpha
+git push origin main
+git push origin v0.6.1-alpha
+
+# 5. Wait 5-10 minutes for jsDelivr sync
+
+# 6. Verify CDN availability
+curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.1-alpha/package.json"
+```
+
+**Scenario 2: Documentation Update**
+```bash
+# Need current CDN URLs for docs
+./cdn-delivery.sh
+
+# Copy URLs from cdn-urls.txt
+# Update documentation files
+vim README.md
+
+# Commit changes
+git add README.md cdn-urls.txt
+git commit -m "docs: update CDN URLs"
+git push
+```
+
+**Scenario 3: Pre-release Testing**
+```bash
+# Use commit-based URL before tagging
+./cdn-delivery.sh
+
+# Get commit URL from output:
+# https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@abc1234/src/guia.js
+
+# Test in browser immediately (no tag needed)
+# Available within seconds of pushing to GitHub
+```
+
+#### Environment & Configuration
+
+**No Configuration Required**: Script auto-detects:
+- Repository information from Git
+- Version from `package.json`
+- Current commit hash
+- Main file location
+
+**Environment Variables** (optional overrides):
+
+| Variable | Default | Purpose | Example |
+|----------|---------|---------|---------|
+| `GITHUB_USER` | `mpbarbosa` | GitHub username | Your fork owner |
+| `GITHUB_REPO` | `guia_js` | Repository name | Your fork name |
+| `MAIN_FILE` | `src/guia.js` | Main file path | Custom entry point |
+| `OUTPUT_FILE` | `cdn-urls.txt` | Output filename | Custom output |
+
+**Usage Examples**:
+
+```bash
+# Use defaults (recommended for main repository)
+./cdn-delivery.sh
+
+# Generate URLs for your fork
+GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./cdn-delivery.sh
+
+# Custom main file
+MAIN_FILE="dist/guia.min.js" ./cdn-delivery.sh
+
+# Custom output file
+OUTPUT_FILE="production-urls.txt" ./cdn-delivery.sh
+
+# Combine multiple overrides
+GITHUB_USER="yourname" OUTPUT_FILE="my-urls.txt" ./cdn-delivery.sh
+
+# Set for entire session
+export GITHUB_USER="yourname"
+export GITHUB_REPO="yourrepo"
+./cdn-delivery.sh  # Uses exported values
+```
+
+**Configuration Display**:
+```bash
+$ ./cdn-delivery.sh
+🔍 Checking prerequisites...
+✅ Node.js found: v20.19.5
+✅ package.json found
+✅ Git found: git version 2.51.0
+✅ Git repository detected
+✅ All prerequisites met!
+
+⚙️  Configuration:
+   GitHub User: mpbarbosa
+   Repository: guia_js
+   Main File: src/guia.js
+   Output File: cdn-urls.txt
+
+[URLs generated...]
+```
+
+**For Forks and Custom Setups**:
+```bash
+# Permanent configuration (edit script directly)
+# Lines 87-90 in cdn-delivery.sh:
+GITHUB_USER="${GITHUB_USER:-yourname}"
+GITHUB_REPO="${GITHUB_REPO:-yourrepo}"
+MAIN_FILE="${MAIN_FILE:-custom/path.js}"
+OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
+```
+
+#### Command-Line Arguments
+
+**Current**: Script takes no arguments (uses environment variables instead)
+
+**Future**: Planned options:
+```bash
+./cdn-delivery.sh --help           # Show usage help
+./cdn-delivery.sh --test           # Test CDN availability only
+./cdn-delivery.sh --version X.Y.Z  # Generate URLs for specific version
+./cdn-delivery.sh --commit abc123  # Generate URLs for specific commit
+./cdn-delivery.sh --quiet          # Suppress output, only save file
+```
+
+#### Output Files
+
+**cdn-urls.txt**:
+- Plain text format
+- All generated URLs
+- Timestamped
+- Safe to commit to repository
+- Used by documentation and CI/CD
+
+**Location**: Project root directory
+
+**Format**:
+```
+# Generated: 2026-01-01 15:14:51
+# Version: 0.6.0-alpha
+# Commit: abc1234567890abcdef1234567890abcdef12345
+
+Version-specific URLs:
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js
+...
+```
+
+#### Best Practices
+
+1. **Run after every version change**
+   ```bash
+   npm version patch && ./cdn-delivery.sh
+   ```
+
+2. **Commit cdn-urls.txt with version bumps**
+   ```bash
+   git add cdn-urls.txt package.json
+   git commit -m "chore: version bump"
+   ```
+
+3. **Use version-specific URLs in production**
+   ```html
+   <!-- ✅ Good: Pinned version -->
+   <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"></script>
+   
+   <!-- ❌ Avoid: Latest version (unpredictable) -->
+   <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@main/src/guia.js"></script>
+   ```
+
+4. **Test commit URLs before tagging**
+   ```bash
+   # Push code
+   git push
+   
+   # Generate URLs
+   ./cdn-delivery.sh
+   
+   # Test commit URL immediately
+   # Then create tag once tested
+   git tag v0.6.0-alpha
+   git push origin v0.6.0-alpha
+   ```
+
+5. **Keep cdn-urls.txt in repository**
+   - Provides URL history
+   - Helps with documentation
+   - Useful for CI/CD pipelines
+
+#### Troubleshooting
+
+**Script fails silently**:
+```bash
+# Run with bash -x for debugging
+bash -x ./cdn-delivery.sh
+```
+
+**URLs not working**:
+```bash
+# Verify tag was pushed
+git ls-remote --tags origin
+
+# Check jsDelivr status
+curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/package.json"
+
+# Use commit URL as temporary alternative
+```
+
+**Wrong version shown**:
+```bash
+# Check package.json
+cat package.json | grep version
+
+# Verify you're in project root
+pwd
+ls package.json
+
+# Update version if needed
+npm version patch
 ```
 
 ### 📦 Version-Specific URLs (Recommended for Production)
@@ -517,6 +1074,77 @@ export default [
 
 We welcome contributions! Please follow these guidelines:
 
+### Pre-Push Validation
+
+**Always test locally before pushing** to catch issues early and speed up CI/CD:
+
+```bash
+# Simulate GitHub Actions workflow locally
+./.github/scripts/test-workflow-locally.sh
+```
+
+**What it validates**:
+- ✅ JavaScript syntax (npm run validate)
+- ✅ Test suite execution (npm test)
+- ✅ Coverage generation (npm run test:coverage)
+- ✅ Documentation format checks
+- ✅ Change detection (shows what will trigger in CI)
+
+**Prerequisites**:
+- Node.js v18+ (for npm commands)
+- npm dependencies installed (`npm install`)
+- git (for change detection)
+- Standard Unix tools: grep, find, wc
+
+**Output Interpretation**:
+
+The script detects file changes and runs appropriate validations:
+- **JavaScript changes**: Runs syntax validation + tests
+- **Test file changes**: Runs full test suite + coverage
+- **Documentation changes**: Validates markdown format + updates index
+
+**Exit Codes**:
+- **0**: All checks passed - safe to push
+- **1**: Some checks failed - fix issues before pushing
+
+**Common Failures**:
+
+1. **npm test fails**
+   - Fix failing tests before pushing
+   - Run `npm test` separately for detailed output
+   - Check `npm run test:verbose` for more information
+
+2. **Syntax validation fails**
+   - Check JavaScript syntax errors
+   - Run `node -c src/file.js` to debug specific files
+   - Use `npm run lint` to catch style issues
+
+3. **Documentation issues**
+   - Remove Windows line endings: `dos2unix file.md`
+   - Update `docs/INDEX.md` if new files added
+   - Check markdown formatting
+
+**Integration with Git**:
+```bash
+# Recommended workflow
+git add .
+./.github/scripts/test-workflow-locally.sh
+git commit -m "your message"
+git push
+```
+
+**What happens in CI**:
+- If tests changed: TESTING.md auto-updated by bot
+- If docs changed: docs/INDEX.md auto-updated by bot
+- Auto-commits appear from `github-actions[bot]`
+
+For comprehensive guidance, see:
+- [GitHub Actions Guide](docs/GITHUB_ACTIONS_GUIDE.md)
+- [Workflow Setup](docs/WORKFLOW_SETUP.md)
+- [Contributing Guidelines](.github/CONTRIBUTING.md)
+
+### Development Guidelines
+
 ### Code Quality Standards
 
 - ✅ **Functional Programming** - Use pure functions and immutability
@@ -524,6 +1152,42 @@ We welcome contributions! Please follow these guidelines:
 - ✅ **No Direct Mutations** - Use spread operators, filter(), map() instead of push(), splice()
 - ✅ **Comprehensive Tests** - Write tests for all new functionality
 - ✅ **Documentation** - Update docs for API changes
+
+### Pre-Push Validation
+
+Test locally before pushing to catch issues early:
+
+```bash
+# Simulate GitHub Actions workflow locally
+./.github/scripts/test-workflow-locally.sh
+```
+
+**What it validates**:
+- ✅ JavaScript syntax validation (`npm run validate`)
+- ✅ Test suite execution (`npm test`)
+- ✅ Coverage generation (`npm run test:coverage`)
+- ✅ Documentation format checks
+- ✅ Shows exactly what will trigger in CI/CD
+
+**Benefits**:
+- Catch failures before pushing
+- Faster feedback loop (local vs remote)
+- Saves CI/CD minutes
+- Preview GitHub Actions results
+
+**Output Example**:
+```
+🔍 Running JavaScript Syntax Validation...
+✅ Syntax validation passed
+
+🧪 Running Test Suite...
+✅ Tests passed: 1224 passing
+
+📊 Generating Coverage Report...
+✅ Coverage: 69.82%
+
+✅ All checks passed! Safe to push.
+```
 
 ### Development Workflow
 
@@ -533,9 +1197,10 @@ We welcome contributions! Please follow these guidelines:
 4. **Implement your feature**
 5. **Run validation**: `npm run test:all`
 6. **Run linter**: `npm run lint:fix`
-7. **Commit changes**: Use conventional commits (feat:, fix:, docs:, test:)
-8. **Push to your fork**: `git push origin feature/your-feature`
-9. **Create a Pull Request**
+7. **Pre-push check**: `./.github/scripts/test-workflow-locally.sh`
+8. **Commit changes**: Use conventional commits (feat:, fix:, docs:, test:)
+9. **Push to your fork**: `git push origin feature/your-feature`
+10. **Create a Pull Request**
 
 ### Commit Message Format
 
@@ -678,4 +1343,4 @@ ISC License - See repository for details
 
 **Version**: 0.6.0-alpha (unstable development)  
 **Status**: Active Development  
-**Last Updated**: December 2024
+**Last Updated**: 2026-01-01

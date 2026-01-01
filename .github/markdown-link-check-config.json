@@ -1,0 +1,29 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^https://cdn.jsdelivr.net"
+    },
+    {
+      "pattern": "^https://nominatim.openstreetmap.org"
+    },
+    {
+      "pattern": "^https://servicodados.ibge.gov.br"
+    },
+    {
+      "pattern": "^http://localhost"
+    }
+  ],
+  "replacementPatterns": [],
+  "httpHeaders": [
+    {
+      "urls": ["https://github.com"],
+      "headers": {
+        "Accept-Encoding": "zlib, deflate, br"
+      }
+    }
+  ],
+  "timeout": "20s",
+  "retryOn429": true,
+  "retryCount": 3,
+  "aliveStatusCodes": [200, 206, 301, 302, 307, 308]
+}

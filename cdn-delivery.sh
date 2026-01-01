@@ -4,6 +4,38 @@
 # ==============================================================================
 # This script generates jsDelivr CDN URLs for delivering guia.js from GitHub
 # Reference: https://www.jsdelivr.com/?docs=gh
+#
+# Exit Codes:
+#   0 - Success: URLs generated and saved to cdn-urls.txt
+#   1 - Error: Missing prerequisites or invalid environment
+#
+# Prerequisites:
+#   - Node.js v18+ (for package.json parsing)
+#   - Git (for commit hash extraction)
+#   - Must be run from project root directory
+#
+# Usage:
+#   ./cdn-delivery.sh
+#
+#   Environment Variables (optional):
+#     GITHUB_USER    - GitHub username (default: mpbarbosa)
+#     GITHUB_REPO    - Repository name (default: guia_js)
+#     MAIN_FILE      - Main file path (default: src/guia.js)
+#     OUTPUT_FILE    - Output filename (default: cdn-urls.txt)
+#
+#   Examples:
+#     # Use defaults
+#     ./cdn-delivery.sh
+#
+#     # Override for fork
+#     GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./cdn-delivery.sh
+#
+#     # Custom output file
+#     OUTPUT_FILE="my-urls.txt" ./cdn-delivery.sh
+#
+# Output:
+#   - Console: Colored output with all CDN URLs
+#   - File: cdn-urls.txt (or OUTPUT_FILE, persistent record)
 # ==============================================================================
 
 set -e
@@ -15,11 +47,86 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Project configuration
-GITHUB_USER="mpbarbosa"
-GITHUB_REPO="guia_js"
-PACKAGE_VERSION=$(node -p "require('./package.json').version")
-MAIN_FILE="src/guia.js"
+# ==============================================================================
+# Prerequisite Checks
+# ==============================================================================
+
+echo -e "${BLUE}🔍 Checking prerequisites...${NC}"
+echo ""
+
+# Check if Node.js is available
+if ! command -v node &> /dev/null; then
+    echo -e "${RED}❌ Error: Node.js not found${NC}"
+    echo "This script requires Node.js v18+ to parse package.json"
+    echo "Install: https://nodejs.org/ or run 'brew install node' (macOS)"
+    exit 1
+fi
+echo -e "${GREEN}✅ Node.js found: $(node --version)${NC}"
+
+# Check if we're in the project root
+if [ ! -f "package.json" ]; then
+    echo -e "${RED}❌ Error: package.json not found${NC}"
+    echo "This script must be run from the project root directory"
+    echo "Current directory: $(pwd)"
+    echo "Fix: cd /path/to/guia_js && ./cdn-delivery.sh"
+    exit 1
+fi
+echo -e "${GREEN}✅ package.json found${NC}"
+
+# Check if Git is available
+if ! command -v git &> /dev/null; then
+    echo -e "${RED}❌ Error: Git not found${NC}"
+    echo "This script requires Git to extract commit information"
+    echo "Install: https://git-scm.com/ or run 'brew install git' (macOS)"
+    exit 1
+fi
+echo -e "${GREEN}✅ Git found: $(git --version | head -n1)${NC}"
+
+# Check if we're in a Git repository
+if ! git rev-parse --git-dir &> /dev/null; then
+    echo -e "${RED}❌ Error: Not a Git repository${NC}"
+    echo "This script requires a Git repository to extract commit hash"
+    echo "Current directory: $(pwd)"
+    exit 1
+fi
+echo -e "${GREEN}✅ Git repository detected${NC}"
+
+echo ""
+echo -e "${GREEN}✅ All prerequisites met!${NC}"
+echo ""
+
+# ==============================================================================
+# Configuration
+# ==============================================================================
+
+# Project configuration (can be overridden via environment variables)
+GITHUB_USER="${GITHUB_USER:-mpbarbosa}"
+GITHUB_REPO="${GITHUB_REPO:-guia_js}"
+MAIN_FILE="${MAIN_FILE:-src/guia.js}"
+OUTPUT_FILE="${OUTPUT_FILE:-cdn-urls.txt}"
+
+# Display configuration
+echo -e "${BLUE}⚙️  Configuration:${NC}"
+echo "   GitHub User: ${GITHUB_USER}"
+echo "   Repository: ${GITHUB_REPO}"
+echo "   Main File: ${MAIN_FILE}"
+echo "   Output File: ${OUTPUT_FILE}"
+echo ""
+
+# Extract version from package.json
+PACKAGE_VERSION=$(node -p "require('./package.json').version" 2>&1)
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Error: Failed to read package.json${NC}"
+    echo "Details: $PACKAGE_VERSION"
+    exit 1
+fi
+
+# Verify main file exists
+if [ ! -f "$MAIN_FILE" ]; then
+    echo -e "${RED}Error: Main file not found: $MAIN_FILE${NC}"
+    echo "The project structure may have changed"
+    exit 1
+fi
 
 echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
 echo -e "${BLUE}║         jsDelivr CDN URLs for guia.js                      ║${NC}"
@@ -159,7 +266,6 @@ echo ""
 # ==============================================================================
 # 11. Save URLs to file
 # ==============================================================================
-OUTPUT_FILE="cdn-urls.txt"
 echo -e "${GREEN}💾 Saving URLs to ${OUTPUT_FILE}...${NC}"
 
 cat > "${OUTPUT_FILE}" << EOF
@@ -209,12 +315,28 @@ if command -v curl &> /dev/null; then
         echo -e "   Test URL: ${TEST_URL}"
     else
         echo -e "${RED}⚠️  Package not yet available on CDN${NC}"
-        echo -e "   Make sure you have:"
-        echo -e "   1. Pushed your code to GitHub"
-        echo -e "   2. Created a git tag: git tag v${PACKAGE_VERSION}"
-        echo -e "   3. Pushed the tag: git push origin v${PACKAGE_VERSION}"
         echo -e ""
-        echo -e "   Or wait a few minutes for jsDelivr to sync from GitHub"
+        echo -e "   ${YELLOW}Possible causes:${NC}"
+        echo -e "   1. Git tag not pushed to GitHub"
+        echo -e "   2. jsDelivr is still syncing (takes 5-10 minutes)"
+        echo -e "   3. Package not yet indexed by CDN"
+        echo -e ""
+        echo -e "   ${GREEN}Solution:${NC}"
+        echo -e "   ${BLUE}# Check if tag exists${NC}"
+        echo -e "   git tag | grep v${PACKAGE_VERSION}"
+        echo -e ""
+        echo -e "   ${BLUE}# If missing, create and push tag${NC}"
+        echo -e "   git tag v${PACKAGE_VERSION}"
+        echo -e "   git push origin v${PACKAGE_VERSION}"
+        echo -e ""
+        echo -e "   ${BLUE}# Wait 5-10 minutes, then verify${NC}"
+        echo -e "   curl -I \"${TEST_URL}\""
+        echo -e ""
+        echo -e "   ${YELLOW}Alternative: Use commit-based URL (available immediately)${NC}"
+        echo -e "   https://cdn.jsdelivr.net/gh/${GITHUB_USER}/${GITHUB_REPO}@${LATEST_COMMIT}/${MAIN_FILE}"
+        echo -e ""
+        echo -e "   ${BLUE}Check CDN status:${NC}"
+        echo -e "   https://www.jsdelivr.com/package/gh/${GITHUB_USER}/${GITHUB_REPO}"
     fi
 else
     echo -e "${YELLOW}ℹ️  Install curl to test CDN availability${NC}"

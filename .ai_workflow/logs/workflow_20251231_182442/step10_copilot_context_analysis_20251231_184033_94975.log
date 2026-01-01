@@ -151,7 +151,7 @@ git push origin main --tags  # Ensure v0.6.0-alpha tag is synced
    ```
    **Expected Benefit**: 12 minutes → 6 minutes (50% reduction)
 
-2. **Caching Strategy** 💡 **Medium Impact**
+3. **Caching Strategy** 💡 **Medium Impact**
    ```bash
    # Cache analysis results for unchanged files
    - Documentation analysis: Cache by file content hash

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project integrates [ibira.js](https://github.com/mpbarbosa/ibira.js) v0.2.1-alpha for API fetching and caching capabilities.
+This project integrates [ibira.js](https://github.com/mpbarbosa/ibira.js) v0.2.2-alpha for API fetching and caching capabilities.
 
 ## Integration Strategy
 
@@ -16,11 +16,11 @@ The integration uses a **three-tier fallback approach**:
 
 ### Production URL (Recommended)
 ```javascript
-https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.1-alpha/src/index.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js
 ```
 
 **Benefits:**
-- ✅ Specific version pinning (0.2.1-alpha)
+- ✅ Specific version pinning (0.2.2-alpha)
 - ✅ Global CDN with 750+ locations
 - ✅ Automatic compression (Brotli/Gzip)
 - ✅ HTTP/2 and HTTP/3 support
@@ -31,7 +31,7 @@ If you want to preload ibira.js before guia.js loads:
 
 ```html
 <!-- Preload ibira.js from CDN -->
-<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.1-alpha/src/index.js">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js">
 
 <!-- Then load guia.js which will use the cached version -->
 <script type="module" src="src/guia.js"></script>
@@ -58,7 +58,7 @@ const ibiraLoadingPromise = (async () => {
     try {
         // 1. Try CDN first (browser only)
         if (typeof window !== 'undefined') {
-            const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.1-alpha/src/index.js');
+            const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js');
             const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
             // Success: return { success: true, source: 'cdn', manager }
         }
@@ -137,9 +137,10 @@ manager.subscribe(observer);
 
 ## Version Information
 
-- **ibira.js version:** 0.2.1-alpha
+- **ibira.js version:** 0.2.2-alpha (updated 2026-01-01)
 - **CDN Provider:** jsDelivr
 - **Integration date:** 2025-12-15
+- **Last updated:** 2026-01-01
 - **Status:** ✅ Active
 
 ## Troubleshooting
@@ -197,7 +198,7 @@ If you need to upgrade to a newer version:
 
 1. Update CDN URL in `src/guia.js`:
    ```javascript
-   // Change @0.2.1-alpha to new version
+   // Change @0.2.2-alpha to new version
    import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@NEW_VERSION/src/index.js')
    ```
 

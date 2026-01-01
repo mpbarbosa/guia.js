@@ -505,9 +505,9 @@ This refactoring follows the same principles as the `GeoPosition` class refactor
 ## Related Documentation
 
 - [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md) - Functional programming guidelines
-- [GEO_POSITION.md](./GEO_POSITION.md) - Pure, referentially transparent GeoPosition class
-- [GEOPOSITION_REFACTORING_SUMMARY.md](./GEOPOSITION_REFACTORING_SUMMARY.md) - Similar refactoring pattern
-- [CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md) - System architecture overview
+- [GEO_POSITION.md](../architecture/GEO_POSITION.md) - Pure, referentially transparent GeoPosition class
+- [GEOPOSITION_REFACTORING_SUMMARY.md](../architecture/GEOPOSITION_REFACTORING_SUMMARY.md) - Similar refactoring pattern
+- [CLASS_DIAGRAM.md](../architecture/CLASS_DIAGRAM.md) - System architecture overview
 
 ## See Also
 

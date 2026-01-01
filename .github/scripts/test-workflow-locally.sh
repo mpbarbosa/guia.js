@@ -4,7 +4,8 @@
 # This script simulates what the GitHub Actions workflow will do
 # Run this before pushing to verify everything works
 
-set -e  # Exit on error
+# Track overall exit code
+EXIT_CODE=0
 
 echo "========================================"
 echo "Testing GitHub Actions Workflow Locally"
@@ -23,6 +24,7 @@ print_status() {
         echo -e "${GREEN}✅ $2${NC}"
     else
         echo -e "${RED}❌ $2${NC}"
+        EXIT_CODE=1
         return 1
     fi
 }
@@ -83,7 +85,11 @@ echo ""
 if [ "$JS_CHANGED" = true ] || [ "$SRC_CHANGED" = true ]; then
     echo "Step 2: Validating JavaScript syntax"
     echo "-------------------------------------"
-    npm run validate && print_status $? "JavaScript syntax validation" || print_status $? "JavaScript syntax validation"
+    if npm run validate; then
+        print_status 0 "JavaScript syntax validation"
+    else
+        print_status 1 "JavaScript syntax validation"
+    fi
     echo ""
 fi
 
@@ -92,12 +98,20 @@ if [ "$JS_CHANGED" = true ] || [ "$TEST_CHANGED" = true ]; then
     echo "Step 3: Running tests"
     echo "---------------------"
     print_info "Running full test suite..."
-    npm test && print_status $? "All tests" || print_status $? "All tests"
+    if npm test; then
+        print_status 0 "All tests"
+    else
+        print_status 1 "All tests"
+    fi
     echo ""
     
     echo "Step 4: Generating coverage report"
     echo "-----------------------------------"
-    npm run test:coverage && print_status $? "Coverage generation" || print_status $? "Coverage generation"
+    if npm run test:coverage; then
+        print_status 0 "Coverage generation"
+    else
+        print_status 1 "Coverage generation"
+    fi
     echo ""
 fi
 
@@ -176,7 +190,7 @@ echo "  └─ Source files: $SRC_CHANGED"
 echo ""
 
 # Check if everything passed
-if [ $? -eq 0 ]; then
+if [ $EXIT_CODE -eq 0 ]; then
     echo -e "${GREEN}✅ All checks passed! Safe to push.${NC}"
     echo ""
     echo "What will happen when you push:"

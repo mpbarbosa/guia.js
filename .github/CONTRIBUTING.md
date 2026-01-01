@@ -57,7 +57,7 @@ Use the **Agile Ticket** template to create actionable user stories and tasks. T
 
 - Follow existing code style and conventions
 - Use meaningful variable and function names
-- Add JSDoc comments for public APIs
+- Add JSDoc comments for public APIs (see [JSDoc Guide](JSDOC_GUIDE.md))
 - Write tests for new functionality
 - Ensure all tests pass before submitting a PR
 
@@ -482,3 +482,9 @@ npm run test:all
 If you have questions about contributing, please open an issue for discussion.
 
 Thank you for contributing to Guia.js! 🎉
+
+---
+
+**Version**: 0.6.0-alpha  
+**Status**: Active Development  
+**Last Updated**: 2026-01-01

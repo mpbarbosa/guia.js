@@ -143,6 +143,15 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Performance and maintainability improvements
   - Reading guide for new contributors and implementation details
 
+- **[class-extraction/CLASS_LOCATION_GUIDE.md](./class-extraction/CLASS_LOCATION_GUIDE.md)** - Finding Classes After Modularization 🆕
+  - **Quick reference table: Old line numbers → New module paths**
+  - Directory structure and organization by functionality
+  - Import examples (before/after modularization)
+  - Test file locations matching source structure
+  - Links to all phase documentation (Phases 2-16)
+  - Migration tips for updating code references
+  - Statistics: 93% reduction from 6,055 to 468 lines
+
 - **[MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)** - JavaScript Module Splitting Guide 🆕
   - Understanding JavaScript modules (ES6 vs CommonJS)
   - Benefits of modularization for maintainability and testability
@@ -224,7 +233,7 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
 
 - **[IBIRA_INTEGRATION.md](./IBIRA_INTEGRATION.md)** - ibira.js CDN and local module integration 🆕
   - Three-tier loading strategy (CDN → local module → fallback)
-  - jsDelivr CDN configuration (v0.2.1-alpha)
+  - jsDelivr CDN configuration (v0.2.2-alpha)
   - API fetching and caching capabilities
   - Observer pattern support
   - Usage examples and troubleshooting
@@ -263,6 +272,14 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Error handling and async programming
   - Code organization and naming conventions
   - Common pitfalls and anti-patterns
+
+- **[JSDOC_GUIDE.md](../.github/JSDOC_GUIDE.md)** - JSDoc Documentation Standards 🆕
+  - Required tags for all code (@module, @param, @returns, etc.)
+  - Common patterns for classes, functions, and modules
+  - Examples by component type (singletons, factories, services)
+  - Best practices for type definitions and optional parameters
+  - Documentation for immutability and deprecation
+  - Tag ordering conventions
   - Performance and testing considerations
   - **GitHub Copilot-optimized format**
   - **Essential reading for all contributors**
@@ -322,6 +339,33 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Testing immutability
   - Jest integration and best practices
   - **GitHub Copilot-optimized format**
+
+- **[E2E_TESTING_GUIDE.md](./testing/E2E_TESTING_GUIDE.md)** - End-to-End Testing Guide 🆕
+  - Complete user workflow testing
+  - 5 E2E test files with 63 test cases
+  - Test patterns: user journeys, multi-component coordination, error recovery
+  - Writing E2E tests with realistic scenarios
+  - Mocking guidelines (external dependencies only)
+  - Running and debugging E2E tests
+  - Best practices for comprehensive testing
+
+- **[PERFORMANCE_TESTING_GUIDE.md](./testing/PERFORMANCE_TESTING_GUIDE.md)** - Performance Testing Guide 🆕
+  - Core Web Vitals (LCP, FID, CLS)
+  - Custom application metrics (geolocation, geocoding, rendering)
+  - Performance testing tools (DevTools, Lighthouse, custom scripts)
+  - Benchmarking with automated suites
+  - Optimization strategies (DOM, debouncing, lazy loading, caching, Web Workers)
+  - Production monitoring and performance budgets
+  - Performance targets: LCP < 2.5s, FID < 100ms, CLS < 0.1
+
+- **[BROWSER_COMPATIBILITY_GUIDE.md](./testing/BROWSER_COMPATIBILITY_GUIDE.md)** - Browser Compatibility Testing 🆕
+  - Supported browsers (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)
+  - Feature support matrix and browser-specific behaviors
+  - Testing tools (BrowserStack, DevTools, Playwright)
+  - Manual testing checklist for all target browsers
+  - Automated cross-browser testing with Playwright
+  - Known issues and workarounds (Safari iOS speech, Firefox timing, Chrome accuracy)
+  - Mobile-specific considerations and testing
 
 - **[HTML_CSS_JS_SEPARATION.md](../.github/HTML_CSS_JS_SEPARATION.md)** - HTML, CSS, and JavaScript Separation Guide 🆕
   - Separation of concerns in web development
@@ -413,6 +457,7 @@ When creating issues, use these templates for consistency:
    - [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Understand project conventions
    - [HTML_CSS_JS_SEPARATION.md](../.github/HTML_CSS_JS_SEPARATION.md) - Separation of HTML, CSS, and JavaScript
    - [JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md) - JavaScript coding standards
+   - [JSDOC_GUIDE.md](../.github/JSDOC_GUIDE.md) - JSDoc documentation standards 🆕
    - [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md) - Learn core principles
 
 2. **Before coding**:
@@ -530,9 +575,10 @@ Major documentation update to formalize the project's commitment to functional p
 
 ## Project Information
 
-- **Version**: 0.8.5-alpha (unstable development)
-- **License**: See repository root
+- **Version**: 0.6.0-alpha (unstable development)
+- **License**: ISC (see LICENSE file)
 - **Author**: Marcelo Pereira Barbosa
+- **Last Updated**: 2026-01-01
 
 ---
 

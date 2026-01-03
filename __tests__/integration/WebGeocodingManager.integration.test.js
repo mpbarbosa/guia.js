@@ -18,7 +18,7 @@
  */
 
 import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globals';
-import WebGeocodingManager from '../src/coordination/WebGeocodingManager.js';
+import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
 
 // TODO: Import actual dependencies for integration testing
 // These modules don't exist yet - they are planned for a future refactoring

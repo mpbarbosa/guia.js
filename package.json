@@ -11,8 +11,8 @@
     "test:verbose": "node --experimental-vm-modules node_modules/jest/bin/jest.js --verbose",
     "validate": "node -c src/guia.js && node -c src/guia_ibge.js",
     "test:all": "npm run validate && npm test",
-    "lint": "eslint src/**/*.js __tests__/**/*.js tests/**/*.js",
-    "lint:fix": "eslint --fix src/**/*.js __tests__/**/*.js tests/**/*.js"
+    "lint": "eslint src/**/*.js __tests__/**/*.js",
+    "lint:fix": "eslint --fix src/**/*.js __tests__/**/*.js"
   },
   "keywords": [
     "geolocation",

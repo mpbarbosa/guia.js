@@ -1,49 +1,25 @@
 {
-  "workflow_run_id": "workflow_20260101_200910",
-  "start_time": "2026-01-01T20:09:11-03:00",
-  "start_epoch": 1767308951,
+  "workflow_run_id": "workflow_20260103_114441",
+  "start_time": "2026-01-03T11:44:44-03:00",
+  "start_epoch": 1767451484,
   "version": "2.3.0",
-  "mode": "auto",
+  "mode": "interactive",
   "steps": {
     "step_0": {
       "name": "Pre-Analysis",
-      "status": "success",
+      "status": "skipped",
       "start_time": 0,
-      "end_time": 1767308951,
-      "duration_seconds": 1767308951,
-      "timestamp": "2026-01-01T20:09:11-03:00"
+      "end_time": 1767451486,
+      "duration_seconds": 1767451486,
+      "timestamp": "2026-01-03T11:44:46-03:00"
     },
-    "step_1": {
-      "name": "Documentation Update",
-      "status": "success",
-      "start_time": 0,
-      "end_time": 1767308957,
-      "duration_seconds": 1767308957,
-      "timestamp": "2026-01-01T20:09:17-03:00"
-    },
-    "step_2": {
-      "name": "Consistency Analysis",
-      "status": "success",
-      "start_time": 0,
-      "end_time": 1767308959,
-      "duration_seconds": 1767308959,
-      "timestamp": "2026-01-01T20:09:19-03:00"
-    },
-    "step_3": {
-      "name": "Script Reference Validation",
-      "status": "success",
-      "start_time": 0,
-      "end_time": 1767308959,
-      "duration_seconds": 1767308959,
-      "timestamp": "2026-01-01T20:09:19-03:00"
-    },
-    "step_4": {
-      "name": "Directory Structure Validation",
-      "status": "success",
-      "start_time": 0,
-      "end_time": 1767308960,
-      "duration_seconds": 1767308960,
-      "timestamp": "2026-01-01T20:09:20-03:00"
+    "step_11": {
+      "name": "Git Finalization",
+      "status": "running",
+      "start_time": 1767451486,
+      "end_time": 0,
+      "duration_seconds": 0,
+      "timestamp": "2026-01-03T11:44:46-03:00"
     }
   }
 }

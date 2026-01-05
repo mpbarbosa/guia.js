@@ -20,6 +20,11 @@ import ReverseGeocoder from './services/ReverseGeocoder.js';
 import GeolocationService from './services/GeolocationService.js';
 import ChangeDetectionCoordinator from './services/ChangeDetectionCoordinator.js';
 
+// Import geolocation provider classes
+import GeolocationProvider from './services/providers/GeolocationProvider.js';
+import BrowserGeolocationProvider from './services/providers/BrowserGeolocationProvider.js';
+import MockGeolocationProvider from './services/providers/MockGeolocationProvider.js';
+
 // Import data processing layer classes
 import BrazilianStandardAddress from './data/BrazilianStandardAddress.js';
 import ReferencePlace from './data/ReferencePlace.js';
@@ -407,6 +412,9 @@ export {
 	SingletonStatusManager,
 	ReverseGeocoder,
 	GeolocationService,
+	GeolocationProvider,
+	BrowserGeolocationProvider,
+	MockGeolocationProvider,
 	ChangeDetectionCoordinator,
 	WebGeocodingManager,
 	BrazilianStandardAddress,
@@ -445,6 +453,9 @@ if (typeof window !== 'undefined') {
 	window.SingletonStatusManager = SingletonStatusManager;
 	window.ReverseGeocoder = ReverseGeocoder;
 	window.GeolocationService = GeolocationService;
+	window.GeolocationProvider = GeolocationProvider;
+	window.BrowserGeolocationProvider = BrowserGeolocationProvider;
+	window.MockGeolocationProvider = MockGeolocationProvider;
 	window.ChangeDetectionCoordinator = ChangeDetectionCoordinator;
 	window.WebGeocodingManager = WebGeocodingManager;
 	window.BrazilianStandardAddress = BrazilianStandardAddress;

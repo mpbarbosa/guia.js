@@ -30,6 +30,7 @@
 import PositionManager from '../core/PositionManager.js';
 import { log } from '../utils/logger.js';
 import { GEOLOCATION_OPTIONS } from '../config/defaults.js';
+import BrowserGeolocationProvider from './providers/BrowserGeolocationProvider.js';
 
 /**
  * Gets error information for a geolocation error code.
@@ -164,6 +165,10 @@ const generateErrorDisplayHTML = (error) => {
  * navigator existence and geolocation API availability before attempting
  * to access location services.
  * 
+ * NOTE: This function is deprecated. Use provider.isSupported() instead.
+ * Kept for backward compatibility with existing code.
+ * 
+ * @deprecated Use GeolocationProvider.isSupported() instead
  * @param {Object} navigatorObj - Navigator object to check
  * @returns {boolean} True if geolocation is supported
  * @private
@@ -176,6 +181,10 @@ const isGeolocationSupported = (navigatorObj) => {
 /**
  * Checks if Permissions API is supported.
  * 
+ * NOTE: This function is deprecated. Use provider.isPermissionsAPISupported() instead.
+ * Kept for backward compatibility with existing code.
+ * 
+ * @deprecated Use BrowserGeolocationProvider.isPermissionsAPISupported() instead
  * @param {Object} navigatorObj - Navigator object to check
  * @returns {boolean} True if Permissions API is supported
  * @private
@@ -223,12 +232,18 @@ class GeolocationService {
 	 * position management.
 	 * 
 	 * **Dependency Injection:**
-	 * The navigator parameter enables dependency injection for testing. By allowing
-	 * the navigator object to be passed in, the class becomes more testable and
-	 * follows the Dependency Inversion Principle.
+	 * The provider parameter enables dependency injection for testing. By allowing
+	 * a GeolocationProvider to be passed in, the class becomes more testable and
+	 * follows the Dependency Inversion Principle. Falls back to BrowserGeolocationProvider
+	 * if no provider is specified.
+	 * 
+	 * **Breaking Change Note:**
+	 * The second parameter changed from navigatorObj to geolocationProvider.
+	 * For backward compatibility, if navigatorObj is provided (detected by checking
+	 * if it has a 'geolocation' property), it will be wrapped in a BrowserGeolocationProvider.
 	 * 
 	 * @param {HTMLElement} [locationResult] - DOM element for displaying location results
-	 * @param {Object} [navigatorObj] - Navigator object (injectable for testing)
+	 * @param {GeolocationProvider|Object} [geolocationProvider] - Provider for geolocation operations (or navigator for backward compat)
 	 * @param {Object} [positionManagerInstance] - PositionManager instance (injectable for testing)
 	 * @param {Object} [config] - Configuration options
 	 * @param {Object} [config.geolocationOptions] - Geolocation API options
@@ -238,14 +253,19 @@ class GeolocationService {
 	 * const service = new GeolocationService(resultDiv);
 	 * 
 	 * @example
-	 * // With dependency injection for testing
-	 * const mockNavigator = { geolocation: mockGeolocationAPI };
+	 * // With dependency injection for testing (new way)
+	 * const mockProvider = new MockGeolocationProvider({ defaultPosition: mockPosition });
 	 * const mockPositionManager = { update: jest.fn() };
-	 * const service = new GeolocationService(null, mockNavigator, mockPositionManager);
+	 * const service = new GeolocationService(null, mockProvider, mockPositionManager);
+	 * 
+	 * @example
+	 * // Backward compatible (old way still works)
+	 * const mockNavigator = { geolocation: mockGeolocationAPI };
+	 * const service = new GeolocationService(null, mockNavigator);
 	 * 
 	 * @since 0.8.3-alpha
 	 */
-	constructor(locationResult, navigatorObj, positionManagerInstance, config = {}) {
+	constructor(locationResult, geolocationProvider, positionManagerInstance, config = {}) {
 		// Store DOM element for location result display
 		this.locationResult = locationResult;
 		
@@ -268,11 +288,27 @@ class GeolocationService {
 			geolocationOptions: config.geolocationOptions || GEOLOCATION_OPTIONS
 		};
 
-		// DEPENDENCY INJECTION PATTERN:
-		// Store navigator for dependency injection (enables testing with mock objects)
-		// Use provided navigator or global navigator if available
-		// This design supports flexible testing and different browser environments
-		this.navigator = navigatorObj || (typeof navigator !== 'undefined' ? navigator : null);
+		// DEPENDENCY INJECTION PATTERN - GEOLOCATION PROVIDER:
+		// Inject GeolocationProvider for flexible testing and different implementations
+		// Supports three scenarios:
+		// 1. Explicit provider injection (preferred for testing)
+		// 2. Navigator object for backward compatibility (will be wrapped)
+		// 3. Default to BrowserGeolocationProvider with global navigator
+		if (geolocationProvider && typeof geolocationProvider.getCurrentPosition === 'function') {
+			// Case 1: Already a provider instance
+			this.provider = geolocationProvider;
+			// Keep navigator reference for backward compatibility with checkPermissions()
+			this.navigator = geolocationProvider.getNavigator ? geolocationProvider.getNavigator() : null;
+		} else if (geolocationProvider && 'geolocation' in geolocationProvider) {
+			// Case 2: Backward compatibility - navigator object passed
+			this.provider = new BrowserGeolocationProvider(geolocationProvider);
+			this.navigator = geolocationProvider;
+		} else {
+			// Case 3: Default - create BrowserGeolocationProvider with global navigator
+			const nav = typeof navigator !== 'undefined' ? navigator : null;
+			this.provider = new BrowserGeolocationProvider(nav);
+			this.navigator = nav;
+		}
 
 		// POSITIONMANAGER INTEGRATION:
 		// Get reference to PositionManager singleton (or use injected instance for testing)
@@ -301,7 +337,12 @@ class GeolocationService {
 	 */
 	async checkPermissions() {
 		try {
-			if (isPermissionsAPISupported(this.navigator)) {
+			// Use provider's isPermissionsAPISupported if available, fallback to checking navigator
+			const hasPermissionsAPI = this.provider.isPermissionsAPISupported 
+				? this.provider.isPermissionsAPISupported()
+				: isPermissionsAPISupported(this.navigator);
+				
+			if (hasPermissionsAPI) {
 				const permission = await this.navigator.permissions.query({ name: 'geolocation' });
 				this.permissionStatus = permission.state;
 				return permission.state;
@@ -363,7 +404,8 @@ class GeolocationService {
 				return;
 			}
 
-			if (!isGeolocationSupported(this.navigator)) {
+			// Check if geolocation is supported using provider
+			if (!this.provider.isSupported()) {
 				const error = new Error("Geolocation is not supported by this browser");
 				error.name = "NotSupportedError";
 				reject(error);
@@ -372,7 +414,7 @@ class GeolocationService {
 
 			this.isPendingRequest = true;
 
-			this.navigator.geolocation.getCurrentPosition(
+			this.provider.getCurrentPosition(
 				(position) => {
 					this.isPendingRequest = false;
 					this.lastKnownPosition = position;
@@ -426,7 +468,8 @@ class GeolocationService {
 	 * @since 0.8.3-alpha
 	 */
 	watchCurrentLocation() {
-		if (!isGeolocationSupported(this.navigator)) {
+		// Check if geolocation is supported using provider
+		if (!this.provider.isSupported()) {
 			console.error("(GeolocationService) Geolocation is not supported by this browser");
 			return null;
 		}
@@ -435,7 +478,7 @@ class GeolocationService {
 			return this.watchId;
 		}
 
-		this.watchId = this.navigator.geolocation.watchPosition(
+		this.watchId = this.provider.watchPosition(
 			(position) => {
 				this.lastKnownPosition = position;
 
@@ -479,7 +522,7 @@ class GeolocationService {
 	 */
 	stopWatching() {
 		if (this.watchId !== null && this.isWatching) {
-			this.navigator.geolocation.clearWatch(this.watchId);
+			this.provider.clearWatch(this.watchId);
 			this.watchId = null;
 			this.isWatching = false;
 		} else {

@@ -1,25 +1,17 @@
 {
-  "workflow_run_id": "workflow_20260103_114441",
-  "start_time": "2026-01-03T11:44:44-03:00",
-  "start_epoch": 1767451484,
+  "workflow_run_id": "workflow_20260103_123558",
+  "start_time": "2026-01-03T12:36:00-03:00",
+  "start_epoch": 1767454560,
   "version": "2.3.0",
   "mode": "interactive",
   "steps": {
     "step_0": {
       "name": "Pre-Analysis",
-      "status": "skipped",
+      "status": "success",
       "start_time": 0,
-      "end_time": 1767451486,
-      "duration_seconds": 1767451486,
-      "timestamp": "2026-01-03T11:44:46-03:00"
-    },
-    "step_11": {
-      "name": "Git Finalization",
-      "status": "running",
-      "start_time": 1767451486,
-      "end_time": 0,
-      "duration_seconds": 0,
-      "timestamp": "2026-01-03T11:44:46-03:00"
+      "end_time": 1767454563,
+      "duration_seconds": 1767454563,
+      "timestamp": "2026-01-03T12:36:03-03:00"
     }
   }
 }

@@ -14,6 +14,15 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
 
 ## Core Documentation
 
+### Project Structure
+
+- **[PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)** - Project structure and organization 🆕
+  - Purpose as library component (not standalone site)
+  - Integration with mpbarbosa.com personal website
+  - Directory structure explanation (/src for library organization)
+  - Historical context of restructuring commit
+  - Development workflow and CDN distribution
+
 ### Architecture & Design
 
 - **[CLASS_DIAGRAM.md](./architecture/CLASS_DIAGRAM.md)** - Comprehensive overview of the class architecture

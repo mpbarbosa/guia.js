@@ -1,0 +1,119 @@
+/* WCAG 2.1 AA Accessibility Compliance */
+
+/* Focus Indicators */
+*:focus {
+  outline: 2px solid var(--md-sys-color-primary, #1976d2);
+  outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary, #1976d2);
+  outline-offset: 2px;
+}
+
+/* High Contrast Focus for Keyboard Navigation */
+@media (prefers-contrast: high) {
+  *:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
+  }
+}
+
+/* Screen Reader Only Content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Ensure sufficient color contrast */
+:root {
+  --color-text-primary: #1c1b1f;
+  --color-text-secondary: #49454f;
+  --color-text-disabled: rgba(0, 0, 0, 0.38);
+}
+
+body {
+  color: var(--color-text-primary);
+}
+
+/* Link Accessibility */
+a {
+  color: var(--md-sys-color-primary, #1976d2);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+a:visited {
+  color: #6a1b9a;
+}
+
+/* Ensure interactive elements meet minimum size requirements */
+button,
+a,
+input[type="button"],
+input[type="submit"],
+input[type="checkbox"],
+input[type="radio"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Form Labels */
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+/* Required Field Indicator */
+.required::after {
+  content: " *";
+  color: var(--md-sys-color-error, #ba1a1a);
+}
+
+/* Error Messages */
+.error-message {
+  color: var(--md-sys-color-error, #ba1a1a);
+  font-size: 12px;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.error-message::before {
+  content: "⚠️";
+  font-size: 14px;
+}
+
+/* ARIA Live Regions */
+[aria-live="polite"],
+[aria-live="assertive"] {
+  position: relative;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  button {
+    border: 2px solid currentColor;
+  }
+  
+  .md3-card {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+}

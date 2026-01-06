@@ -1,0 +1,136 @@
+/* No JavaScript Fallback Styles */
+.noscript-banner {
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: 8px;
+  padding: 24px;
+  margin: 20px;
+  text-align: center;
+}
+
+.noscript-banner h2 {
+  color: #856404;
+  margin-top: 0;
+  font-size: 24px;
+}
+
+.noscript-banner p {
+  color: #856404;
+  font-size: 16px;
+  margin: 12px 0;
+}
+
+.noscript-instructions {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.noscript-instructions h3 {
+  color: #1976d2;
+  border-bottom: 2px solid #1976d2;
+  padding-bottom: 8px;
+  margin-top: 0;
+}
+
+.browser-help {
+  margin: 24px 0;
+  padding: 16px;
+  background: #f9f9f9;
+  border-left: 4px solid #1976d2;
+  border-radius: 4px;
+}
+
+.browser-help h4 {
+  color: #1565c0;
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.browser-help ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.browser-help li {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.browser-help code {
+  background: #e0e0e0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+}
+
+.browser-help strong {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.noscript-alternatives {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #e3f2fd;
+  border-radius: 8px;
+  border: 1px solid #90caf9;
+}
+
+.noscript-alternatives h4 {
+  color: #1565c0;
+  margin-top: 0;
+}
+
+.noscript-alternatives ul {
+  list-style: none;
+  padding: 0;
+}
+
+.noscript-alternatives li {
+  margin: 16px 0;
+  padding: 12px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.noscript-alternatives strong {
+  color: #1976d2;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.noscript-alternatives a {
+  color: #1565c0;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.noscript-alternatives a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .noscript-banner,
+  .noscript-instructions,
+  .noscript-alternatives {
+    margin: 12px;
+    padding: 16px;
+  }
+  
+  .noscript-banner h2 {
+    font-size: 20px;
+  }
+  
+  .browser-help {
+    padding: 12px;
+  }
+}

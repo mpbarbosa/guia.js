@@ -1,0 +1,382 @@
+<html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Turístico - Localização - Guia Turístico</title>
+    
+    <!-- Resource Hints for Performance -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+    <link rel="dns-prefetch" href="https://nominatim.openstreetmap.org">
+    <link rel="dns-prefetch" href="https://servicodados.ibge.gov.br">
+    <link rel="dns-prefetch" href="https://pt.wikipedia.org">
+    
+    <!-- Critical CSS - Common across all views -->
+    <link rel="stylesheet" href="skip-link.css">
+    <link rel="stylesheet" href="typography.css">
+    <link rel="stylesheet" href="reduced-motion.css">
+    <link rel="stylesheet" href="loading-states.css">
+    <link rel="stylesheet" href="touch-device-fixes.css">
+    <link rel="stylesheet" href="design-patterns.css">
+    <link rel="stylesheet" href="accessibility-compliance.css">
+    <link rel="stylesheet" href="performance-optimizations.css">
+    <link rel="stylesheet" href="navigation.css">
+    <link rel="stylesheet" href="geolocation-banner.css">
+    <link rel="stylesheet" href="version-display.css">
+    <link rel="stylesheet" href="tooltip.css">
+    <link rel="stylesheet" href="noscript.css">
+    <link rel="stylesheet" href="transitions.css">
+    
+    <!-- App Shell Styles -->
+    <style>
+      /* App shell loading states */
+      .route-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 300px;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .loading-spinner {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.1); }
+      }
+
+      /* App shell error states */
+      .route-error {
+        padding: 2rem;
+        max-width: 600px;
+        margin: 2rem auto;
+        text-align: center;
+      }
+
+      .route-error h2 {
+        color: var(--md-sys-color-error, #ba1a1a);
+        margin-bottom: 1rem;
+      }
+
+      .route-error details {
+        text-align: left;
+        margin: 1.5rem 0;
+        padding: 1rem;
+        background: #f9f9f9;
+        border-radius: 8px;
+      }
+
+      .route-error pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-size: 0.875rem;
+        color: #666;
+      }
+
+      .route-error button {
+        margin: 0.5rem;
+      }
+
+      /* Material Design 3 button styles */
+      .md3-button-filled {
+        min-width: 48px;
+        min-height: 48px;
+        background-color: var(--md-sys-color-primary, #1976d2);
+        color: var(--md-sys-color-on-primary, #ffffff);
+        border: none;
+        padding: 12px 24px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background 0.2s, box-shadow 0.2s;
+      }
+
+      .md3-button-filled:hover {
+        background-color: #1565c0;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+      }
+
+      .md3-button-outlined {
+        min-width: 48px;
+        min-height: 48px;
+        background-color: transparent;
+        color: var(--md-sys-color-primary, #1976d2);
+        border: 1px solid var(--md-sys-color-primary, #1976d2);
+        padding: 12px 24px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background 0.2s;
+      }
+
+      .md3-button-outlined:hover {
+        background-color: rgba(25, 118, 210, 0.08);
+      }
+
+      /* App content container */
+      #app-content {
+        min-height: 400px;
+      }
+
+      /* Ensure proper spacing */
+      main {
+        margin-bottom: 2rem;
+      }
+    </style>
+  </head>
+  <body><div class="navigation-progress" role="progressbar" aria-label="Progresso de navegação"><div class="navigation-progress-bar" style="width: 0%;"></div></div>
+    <a href="#app-content" class="skip-link">Pular para o conteúdo principal</a>
+    
+    <!-- No JavaScript Fallback -->
+    <noscript>
+      <div class="noscript-banner" role="alert">
+        <h2>JavaScript Desabilitado</h2>
+        <p><strong>Este aplicativo requer JavaScript para funcionar.</strong></p>
+        <p>O Guia Turístico usa geolocalização do navegador e APIs externas que necessitam JavaScript ativo.</p>
+      </div>
+      
+      <div class="noscript-instructions">
+        <h3>Como Habilitar JavaScript</h3>
+        
+        <div class="browser-help">
+          <h4>Google Chrome / Microsoft Edge</h4>
+          <ol>
+            <li>Clique no menu (três pontos) no canto superior direito</li>
+            <li>Selecione <strong>Configurações</strong></li>
+            <li>Vá para <strong>Privacidade e segurança</strong> → <strong>Configurações do site</strong></li>
+            <li>Clique em <strong>JavaScript</strong></li>
+            <li>Selecione <strong>Permitir que os sites usem JavaScript</strong></li>
+            <li>Recarregue esta página</li>
+          </ol>
+        </div>
+        
+        <div class="browser-help">
+          <h4>Mozilla Firefox</h4>
+          <ol>
+            <li>Digite <code>about:config</code> na barra de endereços</li>
+            <li>Clique em <strong>Aceitar o Risco e Continuar</strong></li>
+            <li>Pesquise por <code>javascript.enabled</code></li>
+            <li>Altere o valor para <strong>true</strong></li>
+            <li>Recarregue esta página</li>
+          </ol>
+        </div>
+        
+        <div class="browser-help">
+          <h4>Safari (macOS)</h4>
+          <ol>
+            <li>Abra <strong>Safari</strong> → <strong>Preferências</strong></li>
+            <li>Vá para a aba <strong>Segurança</strong></li>
+            <li>Marque a opção <strong>Ativar JavaScript</strong></li>
+            <li>Recarregue esta página</li>
+          </ol>
+        </div>
+      </div>
+      
+      <div class="noscript-alternatives">
+        <h4>Alternativas Sem JavaScript</h4>
+        <ul>
+          <li>
+            <strong>Google Maps:</strong> 
+            <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">
+              maps.google.com
+            </a> - Encontre restaurantes e locais próximos
+          </li>
+          <li>
+            <strong>OpenStreetMap:</strong> 
+            <a href="https://www.openstreetmap.org" target="_blank" rel="noopener noreferrer">
+              openstreetmap.org
+            </a> - Mapa colaborativo de código aberto
+          </li>
+          <li>
+            <strong>IBGE Cidades:</strong> 
+            <a href="https://cidades.ibge.gov.br" target="_blank" rel="noopener noreferrer">
+              cidades.ibge.gov.br
+            </a> - Estatísticas oficiais dos municípios brasileiros
+          </li>
+        </ul>
+      </div>
+    </noscript>
+    
+    <!-- Version Display -->
+    <div class="app-version" role="status" aria-live="polite" aria-label="Versão do aplicativo">
+      v 0.7.0 | 2026-01-03
+    </div>
+    
+    <!-- App Navigation -->
+    <nav class="app-navigation" aria-label="Navegação principal">
+      <ul>
+        <li><a href="#/" aria-label="Ir para página inicial" class="current-page" aria-current="page">Página Inicial</a></li>
+        <li><a href="#/converter" aria-label="Ir para conversor de endereços" class="">Conversor de Endereços</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main App Content (dynamically loaded by router) -->
+    <main id="app-content" role="main">
+      <header class="">
+        <h1>Guia Turístico</h1>
+        <p>Descubra sua localização e encontre restaurantes e estatísticas da cidade próximos.</p>
+        <p>
+          <span id="tracking-timer-container" style="display: none;">
+            Tempo decorrido: <span id="chronometer" aria-live="polite">00:00</span> | 
+            Fila fala: <span id="tam-fila-fala" aria-live="polite">0</span> | 
+          </span>
+          <abbr title="Dados salvos localmente para acesso rápido" aria-label="Cache: dados salvos localmente">Cache</abbr>: 
+          <span id="tam-cache" aria-live="polite">0</span> itens
+        </p>
+      </header>
+
+      <!-- Tracking Mode Toggle -->
+      <section class="tracking-mode-section" aria-label="Modo de rastreamento">
+        <div class="tracking-mode-toggle">
+          <input type="checkbox" id="continuous-tracking-toggle" aria-describedby="tracking-mode-description" role="switch" aria-checked="false">
+          <label for="continuous-tracking-toggle">
+            <strong>Rastreamento Contínuo</strong>
+            <span id="tracking-mode-description" class="toggle-description">
+              Ative para atualizar sua localização automaticamente enquanto você se move
+            </span>
+          </label>
+        </div>
+        
+        <!-- Get Location Button (visible only in single-position mode) -->
+        <div id="get-location-button-container" style="margin-top: 16px;">
+          <button id="getLocationBtn" class="md3-button-filled" aria-label="Obter localização atual">
+            📍 Obter Localização Atual
+          </button>
+        </div>
+      </section>
+
+      <nav aria-label="Ações da página">
+        <div class="button-container">
+          <button id="findRestaurantsBtn" disabled="" aria-disabled="true" aria-describedby="restaurants-status" aria-label="Encontrar restaurantes próximos" class="md3-button-filled">
+            <span class="button-text">Encontrar Restaurantes Próximos</span>
+            <span class="button-loading" aria-hidden="true" hidden="">⏳</span>
+          </button>
+          <span id="restaurants-status" class="button-status" role="status" aria-live="polite">
+            Aguardando localização...
+          </span>
+        </div>
+        
+        <div class="button-container">
+          <button id="cityStatsBtn" disabled="" aria-disabled="true" aria-describedby="stats-status" aria-label="Obter estatísticas da cidade" class="md3-button-filled">
+            <span class="button-text">Obter Estatísticas da Cidade</span>
+            <span class="button-loading" aria-hidden="true" hidden="">⏳</span>
+          </button>
+          <span id="stats-status" class="button-status" role="status" aria-live="polite">
+            Aguardando localização...
+          </span>
+        </div>
+      </nav>
+      
+      <!-- Geolocation status banner container -->
+      <div id="geolocation-banner-container"></div>
+
+      <!-- Location Highlight Cards -->
+      <section class="location-highlights" aria-label="Destaques de localização">
+        <div class="highlight-card" role="region" aria-labelledby="municipio-label">
+          <div id="municipio-label" class="highlight-card-label">Município</div>
+          <div id="municipio-value" class="highlight-card-value" aria-live="polite">—</div>
+        </div>
+        <div class="highlight-card" role="region" aria-labelledby="bairro-label">
+          <div id="bairro-label" class="highlight-card-label">Bairro</div>
+          <div id="bairro-value" class="highlight-card-value" aria-live="polite">—</div>
+        </div>
+      </section>
+
+      <section id="coordinates" aria-labelledby="coordinates-heading">
+        <h2 id="coordinates-heading" class="sr-only">Coordenadas</h2>
+        <p><strong>Coordenadas:</strong> <span id="lat-long-display" aria-live="polite">Aguardando localização...</span></p>
+      </section>
+
+      <section id="reference-place" aria-labelledby="reference-place-heading">
+        <h2 id="reference-place-heading" class="sr-only">Local de Referência</h2>
+        <p><strong>Local de referência:</strong> <span id="reference-place-display" aria-live="polite">Aguardando localização...</span></p>
+      </section>
+
+      <section id="standardized-address" aria-labelledby="address-heading">
+        <h2 id="address-heading" class="sr-only">Endereço Padronizado</h2>
+        <p><strong>Endereço padronizado:</strong> <span id="endereco-padronizado-display" aria-live="polite">Aguardando localização...</span></p>
+      </section>
+
+      <section class="section" id="dadosSidra" aria-labelledby="location-info-heading">
+        <h2 id="location-info-heading">Informações da Localização</h2>
+      </section>
+      
+      <section id="locationResult" aria-live="polite" aria-label="Resultado da localização">
+        <p>As informações da sua localização aparecerão aqui.</p>
+      </section>
+
+      <!-- Tracking Mode Controls (visible only in continuous mode) -->
+      <div id="tracking-controls" style="display: none;">
+        <button id="insertPositionButton" class="md3-button-outlined" aria-label="Inserir posição de teste">
+          Inserir posição de teste
+        </button>
+        
+        <label for="text-input" class="sr-only">Digite o texto para falar</label>
+        <textarea id="text-input" placeholder="Digite o texto para falar..." aria-label="Texto para síntese de voz" style="width: 100%; min-height: 60px; margin: 8px 0; padding: 8px; border-radius: 4px; border: 1px solid #ccc;"></textarea>
+
+        <label for="bottom-scroll-textarea" class="sr-only">Histórico de texto - somente leitura</label>
+        <textarea id="bottom-scroll-textarea" rows="4" readonly="" aria-readonly="true" aria-label="Histórico de texto gerado automaticamente durante navegação - somente leitura" placeholder="O histórico de texto será exibido aqui conforme você se move. Este campo é somente leitura." style="width: 100%; margin: 8px 0; padding: 8px; border-radius: 4px; border: 1px solid #ccc; background: #f5f5f5;"></textarea>
+      </div>
+    </main>
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/sidra.js@main/sidra.js"></script>
+    <script src="error-recovery.js"></script>
+    <script src="geolocation-banner.js"></script>
+    
+    <!-- App Entry Point -->
+    <script type="module" src="app.js"></script>
+  
+
+<div class="toast-container" role="region" aria-label="Notificações" aria-live="polite"></div><div id="give-freely-root-kkkbiiikppgjdiebcabomlbidfodipjg" class="give-freely-root" data-extension-id="kkkbiiikppgjdiebcabomlbidfodipjg" data-extension-name="Substital: Add subtitles to videos and movies" style="display: block;"><template shadowrootmode="open"><style>
+  :host {
+    all: initial;
+  }
+
+  .gf-scroll-remove::-webkit-scrollbar {
+    border-radius-bottom-right: 15px;
+  }
+
+  button {
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  .give-freely-close-button:hover {
+    opacity: 0.7;
+  }
+
+  input[type="radio"] {
+    margin-right: 8px;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #e5e5e5;
+    margin: 1em 0;
+  }
+
+  @media (max-width: 600px), (max-height: 480px) {
+    #give-freely-checkout-popup {
+      display: none !important;
+    }
+  }
+
+  dialog::backdrop  {
+    background-color: rgba(180, 180, 180, 0.8);
+  }
+
+  dialog.backdrop-hidden::backdrop  {
+    background-color: transparent;
+  }
+</style><div><div class="gf-app"></div></div></template></div></body></html>

@@ -1,0 +1,117 @@
+/* Tooltip Component */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-content {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: #ffffff;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10000;
+  transition: opacity 0.3s, visibility 0.3s;
+  pointer-events: none;
+}
+
+.tooltip-content::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+}
+
+.tooltip:hover .tooltip-content,
+.tooltip:focus .tooltip-content {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Tooltip Positions */
+.tooltip-content.tooltip-top {
+  bottom: 125%;
+  top: auto;
+}
+
+.tooltip-content.tooltip-bottom {
+  top: 125%;
+  bottom: auto;
+}
+
+.tooltip-content.tooltip-bottom::after {
+  top: auto;
+  bottom: 100%;
+  border-color: transparent transparent rgba(0, 0, 0, 0.9) transparent;
+}
+
+.tooltip-content.tooltip-left {
+  left: auto;
+  right: 125%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tooltip-content.tooltip-left::after {
+  left: 100%;
+  top: 50%;
+  margin-top: -5px;
+  margin-left: 0;
+  border-color: transparent transparent transparent rgba(0, 0, 0, 0.9);
+}
+
+.tooltip-content.tooltip-right {
+  left: 125%;
+  right: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tooltip-content.tooltip-right::after {
+  right: 100%;
+  left: auto;
+  top: 50%;
+  margin-top: -5px;
+  margin-left: 0;
+  border-color: transparent rgba(0, 0, 0, 0.9) transparent transparent;
+}
+
+/* Accessibility - Show on Focus */
+[data-tooltip]:focus::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10000;
+}
+
+/* Mobile - Disable hover tooltips, use touch */
+@media (hover: none) and (pointer: coarse) {
+  .tooltip-content {
+    display: none;
+  }
+  
+  .tooltip[data-tooltip]:active::after {
+    content: attr(data-tooltip);
+    display: block;
+  }
+}

@@ -1,0 +1,20 @@
+/* Skip Link for Accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--md-sys-color-primary, #1976d2);
+  color: var(--md-sys-color-on-primary, #ffffff);
+  padding: 8px 16px;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 0 0 4px 0;
+  z-index: 10000;
+  transition: top 0.2s ease-in-out;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--md-sys-color-on-primary, #ffffff);
+  outline-offset: 2px;
+}

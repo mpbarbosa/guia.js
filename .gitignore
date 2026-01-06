@@ -31,8 +31,13 @@ Thumbs.db
 *.swp
 *.swo
 
+
 # Temporary files
 *.tmp
 *.temp
 .tmp/
 .temp/demo-issue-218.js
+
+
+tests/integrtion/.env/
+tests/integrtion/__pycache__/

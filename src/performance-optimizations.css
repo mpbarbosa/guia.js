@@ -1,0 +1,77 @@
+/* Performance Optimizations */
+
+/* GPU Acceleration for Transforms */
+.will-transform {
+  will-change: transform;
+}
+
+.will-opacity {
+  will-change: opacity;
+}
+
+/* Optimize animations */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-transform {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+}
+
+/* Content Visibility for Long Lists */
+.lazy-load-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 200px;
+}
+
+/* Font Loading Optimization */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Roboto'), local('Roboto-Regular');
+}
+
+/* Reduce Repaints */
+.no-repaint {
+  contain: layout style paint;
+}
+
+/* Image Loading Optimization */
+img {
+  content-visibility: auto;
+}
+
+img[loading="lazy"] {
+  background: #f0f0f0;
+}
+
+/* Prevent Layout Shift */
+.aspect-ratio-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-ratio-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-ratio-1-1 {
+  aspect-ratio: 1 / 1;
+}
+
+/* Optimize Scrolling */
+.scroll-container {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Reduce Paint Area */
+.isolate {
+  isolation: isolate;
+}
+
+/* Critical CSS - Above the fold content */
+.above-fold {
+  contain: layout style;
+}

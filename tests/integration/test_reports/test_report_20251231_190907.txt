@@ -1,0 +1,229 @@
+Starting tests at: Wed Dec 31 19:09:07 -03 2025
+
+setUpClass (test_api_integration.TestAPIIntegration) ... ERROR
+setUpClass (test_geolocation_flow.TestGeolocationFlow) ... ERROR
+setUpClass (test_performance.TestPerformance) ... ERROR
+setUpClass (test_user_workflows.TestUserWorkflows) ... ERROR
+
+======================================================================
+ERROR: setUpClass (test_api_integration.TestAPIIntegration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_api_integration.py", line 16, in setUpClass
+    cls.driver = webdriver.Chrome(options=chrome_options)
+                 ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/chrome/webdriver.py", line 46, in __init__
+    super().__init__(
+    ~~~~~~~~~~~~~~~~^
+        browser_name=DesiredCapabilities.CHROME["browserName"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        keep_alive=keep_alive,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/chromium/webdriver.py", line 67, in __init__
+    super().__init__(command_executor=executor, options=options)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py", line 257, in __init__
+    self.start_session(capabilities)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py", line 352, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py", line 432, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created
+from unknown error: no chrome binary at /usr/bin/google-chrome; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#sessionnotcreatedexception
+Stacktrace:
+#0 0x5949d4f9351a <unknown>
+#1 0x5949d4a368cb <unknown>
+#2 0x5949d4a6dcc5 <unknown>
+#3 0x5949d4a6ca6f <unknown>
+#4 0x5949d4aba98b <unknown>
+#5 0x5949d4aba10c <unknown>
+#6 0x5949d4a797f7 <unknown>
+#7 0x5949d4a7a4a1 <unknown>
+#8 0x5949d4f5dfcf <unknown>
+#9 0x5949d4f60f71 <unknown>
+#10 0x5949d4f470ce <unknown>
+#11 0x5949d4f61709 <unknown>
+#12 0x5949d4f30257 <unknown>
+#13 0x5949d4f81c18 <unknown>
+#14 0x5949d4f81e2a <unknown>
+#15 0x5949d4f927c8 <unknown>
+#16 0x715ec974eaa4 <unknown>
+#17 0x715ec97dbc6c <unknown>
+
+
+======================================================================
+ERROR: setUpClass (test_geolocation_flow.TestGeolocationFlow)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_geolocation_flow.py", line 32, in setUpClass
+    cls.driver = webdriver.Chrome(options=chrome_options)
+                 ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/chrome/webdriver.py", line 46, in __init__
+    super().__init__(
+    ~~~~~~~~~~~~~~~~^
+        browser_name=DesiredCapabilities.CHROME["browserName"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        keep_alive=keep_alive,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/chromium/webdriver.py", line 67, in __init__
+    super().__init__(command_executor=executor, options=options)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py", line 257, in __init__
+    self.start_session(capabilities)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py", line 352, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py", line 432, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created
+from unknown error: no chrome binary at /usr/bin/google-chrome; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#sessionnotcreatedexception
+Stacktrace:
+#0 0x64fa0a2f851a <unknown>
+#1 0x64fa09d9b8cb <unknown>
+#2 0x64fa09dd2cc5 <unknown>
+#3 0x64fa09dd1a6f <unknown>
+#4 0x64fa09e1f98b <unknown>
+#5 0x64fa09e1f10c <unknown>
+#6 0x64fa09dde7f7 <unknown>
+#7 0x64fa09ddf4a1 <unknown>
+#8 0x64fa0a2c2fcf <unknown>
+#9 0x64fa0a2c5f71 <unknown>
+#10 0x64fa0a2ac0ce <unknown>
+#11 0x64fa0a2c6709 <unknown>
+#12 0x64fa0a295257 <unknown>
+#13 0x64fa0a2e6c18 <unknown>
+#14 0x64fa0a2e6e2a <unknown>
+#15 0x64fa0a2f77c8 <unknown>
+#16 0x7751d5d94aa4 <unknown>
+#17 0x7751d5e21c6c <unknown>
+
+
+======================================================================
+ERROR: setUpClass (test_performance.TestPerformance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_performance.py", line 14, in setUpClass
+    cls.driver = webdriver.Chrome(options=chrome_options)
+                 ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/chrome/webdriver.py", line 46, in __init__
+    super().__init__(
+    ~~~~~~~~~~~~~~~~^
+        browser_name=DesiredCapabilities.CHROME["browserName"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        keep_alive=keep_alive,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/chromium/webdriver.py", line 67, in __init__
+    super().__init__(command_executor=executor, options=options)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py", line 257, in __init__
+    self.start_session(capabilities)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py", line 352, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py", line 432, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created
+from unknown error: no chrome binary at /usr/bin/google-chrome; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#sessionnotcreatedexception
+Stacktrace:
+#0 0x5eea4067351a <unknown>
+#1 0x5eea401168cb <unknown>
+#2 0x5eea4014dcc5 <unknown>
+#3 0x5eea4014ca6f <unknown>
+#4 0x5eea4019a98b <unknown>
+#5 0x5eea4019a10c <unknown>
+#6 0x5eea401597f7 <unknown>
+#7 0x5eea4015a4a1 <unknown>
+#8 0x5eea4063dfcf <unknown>
+#9 0x5eea40640f71 <unknown>
+#10 0x5eea406270ce <unknown>
+#11 0x5eea40641709 <unknown>
+#12 0x5eea40610257 <unknown>
+#13 0x5eea40661c18 <unknown>
+#14 0x5eea40661e2a <unknown>
+#15 0x5eea406727c8 <unknown>
+#16 0x7907a3b1caa4 <unknown>
+#17 0x7907a3ba9c6c <unknown>
+
+
+======================================================================
+ERROR: setUpClass (test_user_workflows.TestUserWorkflows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_user_workflows.py", line 13, in setUpClass
+    cls.driver = webdriver.Chrome(options=chrome_options)
+                 ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/chrome/webdriver.py", line 46, in __init__
+    super().__init__(
+    ~~~~~~~~~~~~~~~~^
+        browser_name=DesiredCapabilities.CHROME["browserName"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        keep_alive=keep_alive,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/chromium/webdriver.py", line 67, in __init__
+    super().__init__(command_executor=executor, options=options)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py", line 257, in __init__
+    self.start_session(capabilities)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py", line 352, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py", line 432, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/home/mpb/.local/lib/python3.13/site-packages/selenium/webdriver/remote/errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created
+from unknown error: no chrome binary at /usr/bin/google-chrome; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#sessionnotcreatedexception
+Stacktrace:
+#0 0x5cc82091c51a <unknown>
+#1 0x5cc8203bf8cb <unknown>
+#2 0x5cc8203f6cc5 <unknown>
+#3 0x5cc8203f5a6f <unknown>
+#4 0x5cc82044398b <unknown>
+#5 0x5cc82044310c <unknown>
+#6 0x5cc8204027f7 <unknown>
+#7 0x5cc8204034a1 <unknown>
+#8 0x5cc8208e6fcf <unknown>
+#9 0x5cc8208e9f71 <unknown>
+#10 0x5cc8208d00ce <unknown>
+#11 0x5cc8208ea709 <unknown>
+#12 0x5cc8208b9257 <unknown>
+#13 0x5cc82090ac18 <unknown>
+#14 0x5cc82090ae2a <unknown>
+#15 0x5cc82091b7c8 <unknown>
+#16 0x77e8ce562aa4 <unknown>
+#17 0x77e8ce5efc6c <unknown>
+
+
+----------------------------------------------------------------------
+Ran 0 tests in 6.600s
+
+FAILED (errors=4)
+
+All tests passed! ✓

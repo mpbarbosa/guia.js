@@ -1,75 +1,38 @@
-I'll analyze the codebase to identify documentation issues and provide a comprehensive report.
+I'll analyze the documentation issues in the codebase and create a comprehensive report.
 ✓ List directory .
-   └ 36 files found
+   └ 31 files found
 ✓ Glob "src/**/*.js"
-   └ 29 files found
-✓ Grep "^(function|class|async function|\s*\*\s*@)" (src)
-   └ 29 files found
-✓ Find JS files without JSDoc tags
- $ find src -name "*.js" -exec grep -L "@param\|@returns\|@throws" {} \;
-    └ 2 lines...
-✓ Read src/core/GeoPosition.js
-   └ 156 lines read
-✓ Read src/services/ReverseGeocoder.js
-   └ 427 lines read
-✓ Read src/coordination/WebGeocodingManager.js
-   └ 932 lines read
-✓ Read src/utils/distance.js
-   └ 76 lines read
-Now let me check a few more files to get a comprehensive picture of documentation issues:
-✓ Read src/core/PositionManager.js:1-100
-   └ 100 lines read
-✓ Read src/guia_ibge.js
-   └ 7 lines read
-✓ Count JSDoc tags per file
- $ cd src && find . -name "*.js" -exec sh -c 'echo "=== $1 ===" && grep -c
- "@param\|@returns\|@throws" "$1" || echo "0"' _ {} \; | head -40
-    └ 51 lines...
-Based on my analysis, I've found several documentation issues. Let me create a comprehensive report:
-## Documentation Issues Detected in Guia.js
-### **Critical Issues**
-1. **Missing JSDoc entirely**: `src/guia_ibge.js` (0 JSDoc tags)
-   - Function `renderUrlUFNome()` has no documentation
-2. **Constructor missing @param tags**:
-   - `GeoPosition` constructor (line 21) - missing @param for `position`
-   - Several other classes have incomplete constructor documentation
-### **Type Safety Issues**
-3. **Missing TypeScript-style type hints**:
-   - Many @param tags lack specific types (should use `{string}`, `{number}`, etc.)
-   - Return types not consistently documented with @returns
-4. **Missing @throws documentation**:
-   - `WebGeocodingManager` constructor throws TypeError but not all paths documented
-   - `ReverseGeocoder.reverseGeocode()` can throw but @throws is present (good example)
-### **Async/Promise Pattern Issues**
-5. **Incomplete async/await documentation**:
-   - `WebGeocodingManager.createAsync()` has @returns Promise but could be more explicit
-   - Promise chains in methods like `getSingleLocationUpdate()` lack @async tag
-### **MDN Web API References**
-6. **Missing MDN links for Web APIs**:
-   - Geolocation API usage not always referenced
-   - Speech Synthesis API could benefit from MDN links
-### **Files Needing Attention** (by priority):
-**High Priority**:
-- ✅ `src/guia_ibge.js` - NO documentation (0 tags)
-- ⚠️ `src/core/GeoPosition.js` - Constructor missing @param
-- ⚠️ `src/utils/distance.js` - Missing @async tag for delay() function
-**Medium Priority**:
-- `src/data/AddressDataExtractor.js` - Only 2 JSDoc tags
-- `src/data/BrazilianStandardAddress.js` - Only 4 JSDoc tags
-- `src/utils/device.js` - Only 4 JSDoc tags
-**Good Examples** (for reference):
-- ✅ `src/services/ReverseGeocoder.js` - Comprehensive docs (47 tags)
-- ✅ `src/coordination/WebGeocodingManager.js` - Well documented (42 tags)
-- ✅ `src/speech/SpeechQueue.js` - Good coverage (24 tags)
-### **Recommendations**
-1. **Immediate**: Add JSDoc to `guia_ibge.js`
-2. **Short-term**: Add missing @param tags to all constructors
-3. **Medium-term**: Add @async tags to all async functions
-4. **Long-term**: Add MDN Web API references throughout
-Would you like me to **fix these issues** starting with the highest priority files?
+   └ 35 files found
+✓ Grep "^/\*\*|^\s+\*\s+@param|^\s+\*\s+@returns|^\s+\*\s+@throws" (src)
+   └ 35 files found
+✓ Grep "^class |^function |^const .+ = \(|^const .+ = async \(|async function" (src)
+   └ 30 files found
+✓ Sample first 30 lines of source files
+ $ find src -name "*.js" -type f | head -10 | xargs -I {} sh -c 'echo "=== {} ===" && head -30
+ {}'
+    └ 216 lines...
+✓ Run comprehensive documentation audit
+ $ cat > /tmp/doc_audit.js << 'EOF'
+ const fs = require('fs');
+ const path = require('path');
+ // Find all JS files recursively...
+    └ 257 lines...
+Now let me create a detailed documentation issues report with specific recommendations:
+✓ Create DOCUMENTATION_ISSUES_REPORT.md
+## Summary
+**Documentation audit complete.** Found **425 issues** across 35 files:
+- **189 missing JSDoc blocks** (44.5%) - Variables/functions without documentation
+- **182 missing @returns tags** (42.8%) - Undocumented return values  
+- **48 missing @param tags** (11.3%) - Incomplete parameter documentation
+- **6 missing @throws tags** (1.4%) - Async functions without error documentation
+**Top offenders:**
+1. `SpeechSynthesisManager.js` - 46 issues
+2. `HTMLAddressDisplayer.js` - 36 issues  
+3. `ReverseGeocoder.js` - 33 issues
+**Report saved:** `DOCUMENTATION_ISSUES_REPORT.md` with detailed recommendations, templates, and 4-week action plan.
 Total usage est:       1 Premium request
-Total duration (API):  33s
-Total duration (wall): 40s
+Total duration (API):  1m 35.027s
+Total duration (wall): 1m 46.388s
 Total code changes:    0 lines added, 0 lines removed
 Usage by model:
-    claude-sonnet-4.5    165.0k input, 1.6k output, 128.3k cache read (Est. 1 Premium request)
+    claude-sonnet-4.5    139.0k input, 7.1k output, 124.4k cache read (Est. 1 Premium request)

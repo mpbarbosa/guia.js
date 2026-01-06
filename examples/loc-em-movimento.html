@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guia Turístico - Localização em Movimento</title>
+  <link rel="stylesheet" href="loc-em-movimento.css">
+</head>
+
+<body onload="init()">
+  <div id="guia-version" class="versioning-numbering" role="status" aria-live="polite"
+    style="position:fixed; top:10px; right:20px; background:#fff; color:#222; padding:8px 16px; border-radius:8px; box-shadow:0 2px 8px #ccc; font-weight:bold; z-index:1000; text-align:left; font-size:0.8rem;">
+    <!-- Version will be rendered here -->
+  </div>
+
+  <header>
+    <h1>Guia de Caminho</h1>
+    <p>Tempo decorrido: <span id="chronometer" aria-live="polite"> </span>; Fila fala: <span id="tam-fila-fala"
+        aria-live="polite"> </span>; Tam cache:
+      <span id="tam-cache" aria-live="polite"> </span>
+    </p>
+  </header>
+
+  <main>
+    <!-- Location Highlight Cards -->
+    <section class="location-highlights" aria-label="Destaques de localização">
+      <div class="highlight-card" role="region" aria-labelledby="municipio-label">
+        <div id="municipio-label" class="highlight-card-label">Município</div>
+        <div id="municipio-value" class="highlight-card-value" aria-live="polite">—</div>
+      </div>
+      <div class="highlight-card" role="region" aria-labelledby="bairro-label">
+        <div id="bairro-label" class="highlight-card-label">Bairro</div>
+        <div id="bairro-value" class="highlight-card-value" aria-live="polite">—</div>
+      </div>
+    </section>
+
+    <section id="coordinates" aria-labelledby="coordinates-heading">
+      <h2 id="coordinates-heading" class="sr-only">Coordenadas</h2>
+      <p><strong>Coordenadas:</strong> <span id="lat-long-display" aria-live="polite">Aguardando localização...</span>
+      </p>
+    </section>
+
+    <section id="reference-place" aria-labelledby="reference-place-heading">
+      <h2 id="reference-place-heading" class="sr-only">Referência</h2>
+      <p><strong>Referência:</strong> <span id="reference-place-display" aria-live="polite">Aguardando
+          localização...</span></p>
+    </section>
+
+    <section id="standardized-address" aria-labelledby="address-heading">
+      <h2 id="address-heading" class="sr-only">Endereço Padronizado</h2>
+      <p><strong>Endereço padronizado:</strong> <span id="endereco-padronizado-display" aria-live="polite">Aguardando
+          localização...</span></p>
+    </section>
+
+    <section class="section" id="dadosSidra" aria-labelledby="location-info-heading">
+      <h2 id="location-info-heading">Informações da Localização</h2>
+    </section>
+
+    <section id="locationResult" aria-live="polite" aria-label="Resultado da localização">
+      <p>As informações da sua localização aparecerão aqui.</p>
+    </section>
+
+    <button id="insertPositionButton" aria-label="Inserir posição de teste">Inserir posição</button>
+    <label for="text-input" class="sr-only">Digite o texto para falar</label>
+    <textarea id="text-input" placeholder="Digite o texto para falar..." onchange="updateTextInput()"
+      aria-label="Texto para síntese de voz"></textarea>
+  </main>
+
+  <footer
+    style="width:100%; position:fixed; bottom:0; left:0; background:#fff; border-top:1px solid #ccc; box-shadow:0 -2px 8px #ccc;">
+    <label for="bottom-scroll-textarea" class="sr-only">Histórico de texto</label>
+    <textarea id="bottom-scroll-textarea" rows="4" style="width:98%; margin:1%; resize:vertical; overflow-y:scroll;"
+      placeholder="Digite ou cole o texto aqui..." readonly aria-label="Histórico de texto gerado"></textarea>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/sidra.js@main/sidra.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"></script>
+  <script>
+
+    async function init() {
+
+      let retries = 0;
+      const maxRetries = 50; // Maximum number of retries
+      const retryDelay = 100; // Delay between retries in milliseconds
+      while ((typeof WebGeocodingManager === 'undefined' || typeof PositionManager === 'undefined' || typeof AddressCache === 'undefined') && retries < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+        retries++;
+      }
+      if (retries === maxRetries) {
+        console.error("Failed to load required classes after multiple retries.");
+        return;
+      }
+
+      log("(guia_turistico) guia.js loaded successfully.");
+
+      const insertPositionButton = document.getElementById("insertPositionButton");
+      insertPositionButton.addEventListener("click", insertPosition);
+      const locationResult = document.getElementById("locationResult");
+      const enderecoPadronizadoDisplay = document.getElementById("endereco-padronizado-display");
+      const referencePlaceDisplay = document.getElementById("reference-place-display");
+      const params = {
+        "locationResult": locationResult,
+        "enderecoPadronizadoDisplay": enderecoPadronizadoDisplay,
+        "referencePlaceDisplay": referencePlaceDisplay
+      };
+      // Wait for Ibira.js to load before creating the manager
+      const manager = await WebGeocodingManager.createAsync(document, params);
+      manager.subscribeFunction((currentPosition, newAddress, enderecoPadronizado) => {
+        // Update coordinates display
+        if (currentPosition && currentPosition.coords) {
+          const latLongDisplay = document.getElementById("lat-long-display");
+          if (latLongDisplay) {
+            latLongDisplay.innerText = `Latitude: ${currentPosition.coords.latitude}, Longitude: ${currentPosition.coords.longitude}`;
+          }
+        }
+        // Update Bairro highlight card
+        if (newAddress) {
+          const bairroValue = document.getElementById("bairro-value");
+          if (bairroValue) {
+            const bairro = newAddress.suburb || newAddress.neighbourhood || newAddress.quarter || newAddress.residential || newAddress.address?.suburb || newAddress.address?.neighbourhood || newAddress.address?.quarter || newAddress.address?.residential;
+            bairroValue.innerText = bairro || "Não disponível";
+          }
+        }
+        // Update standardized address display
+        if (enderecoPadronizado) {
+          const enderecoPadronizadoDisplay = document.getElementById("endereco-padronizado-display");
+          if (enderecoPadronizadoDisplay) {
+            enderecoPadronizadoDisplay.innerText = `${enderecoPadronizado.enderecoCompleto() || ''}`;
+          }
+          // Update Municipio highlight card
+          const municipioValue = document.getElementById("municipio-value");
+          if (municipioValue) {
+            const municipio = enderecoPadronizado.municipio || "Não disponível";
+            const siglaUf = enderecoPadronizado.siglaUF;
+            municipioValue.innerText = siglaUf ? `${municipio}, ${siglaUf}` : municipio;
+          }
+        }
+        const dadosSidraDiv = document.getElementById("dadosSidra");
+        if (enderecoPadronizado) {
+          displaySidraDadosParams(dadosSidraDiv, "PopEst", { "municipio": enderecoPadronizado.municipio, "siglaUf": enderecoPadronizado.siglaUF });
+        }
+      });
+      manager.startTracking();
+      // Subscribe to speech queue size changes
+      if (manager.htmlSpeechSynthesisDisplayer && 
+          manager.htmlSpeechSynthesisDisplayer.speechManager && 
+          manager.htmlSpeechSynthesisDisplayer.speechManager.speechQueue) {
+        const speechQueue = manager.htmlSpeechSynthesisDisplayer.speechManager.speechQueue;
+        // Try to subscribe if the method exists
+        // Runtime type check to verify that the speech queue object has subscription capability
+        // This guard clause prevents runtime errors if the speech queue is not properly initialized
+        // or lacks the expected observer pattern functionality
+        if (typeof speechQueue.subscribeFunction === 'function') {
+          // Register a callback that receives the current queue state as a parameter
+          // This implements the observer pattern for real-time queue monitoring
+          speechQueue.subscribeFunction(queue => {
+            // Sophisticated size calculation strategy using logical OR operator to handle different queue implementations
+            // First attempt: Call dedicated queue.size() method (preferred approach for proper queue data structures)
+            // Fallback: Check if queue.queue is an array and use its length property
+            // Default: Return 0 if neither approach yields a valid result
+            const size = queue.size() || (Array.isArray(queue.queue) ? queue.queue.length : 0);
+            
+            // Update DOM element with ID "tam-fila-fala" (Portuguese: "speech queue size")
+            // Creates live counter showing pending speech announcements to users
+            // Particularly valuable in tourist guide applications where location updates and
+            // announcements might queue up rapidly as users move through different areas
+            document.getElementById("tam-fila-fala").innerHTML = `${size}`;
+          });
+        } else {
+          // Fallback: periodically check queue length
+          console.warn("(loc_em_movimento) speechQueue.subscribeFunction not available - using polling fallback");
+          setInterval(() => {
+            const queueLength = speechQueue.length || (Array.isArray(speechQueue.queue) ? speechQueue.queue.length : 0);
+            document.getElementById("tam-fila-fala").innerHTML = `${queueLength}`;
+          }, 500); // Check every 500ms
+        }
+      } else {
+        console.warn("(loc_em_movimento) speechQueue not available - will not update tam-fila-fala");
+      }
+
+
+      // Subscribe to address cache size changes
+      if (AddressCache && typeof AddressCache.subscribeFunction === 'function') {
+        AddressCache.subscribeFunction(eventData => {
+          document.getElementById("tam-cache").innerHTML = `${eventData.cacheSize || eventData.cache.length || 0}`;
+        });
+      }  else {
+        console.warn("(loc_em_movimento) addressCache not available - will not update tam-cache");
+      }
+    }
+    
+    window.init = init;
+
+    function insertPosition() {
+      const position = { "coords": { "latitude": -23.55052, "longitude": -46.633308, "accuracy": 1 }, "timestamp": Date.now() }; // Default to São Paulo coordinates
+      PositionManager.getInstance(position);
+      const latLongDisplay = document.getElementById("lat-long-display");
+      latLongDisplay.innerText = `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`;
+    }
+
+    function updateTextInput() {
+      const textInput = document.getElementById("text-input");
+      const dadosSidraDiv = document.getElementById("dadosSidra");
+      textInput.value += "." + dadosSidraDiv.innerText;
+    }
+
+    // Render both guia.js and HTML page versioning numbering and status in guia-version div
+    async function displayVersionInfo() {
+      // HTML page version object
+      const pageVersion = {
+        major: 0,
+        minor: 4,
+        patch: 13,
+        prerelease: 'alpha',
+        status: 'unstable, pre-release',
+        toString: function () {
+          return `v${this.major}.${this.minor}.${this.patch}-${this.prerelease} (${this.status})`;
+        }
+      };
+
+      // Wait for guiaVersion to be available
+      let retries = 0;
+      const maxRetries = 50;
+      const retryDelay = 100;
+      while (typeof guiaVersion === 'undefined' && retries < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+        retries++;
+      }
+
+      let guiaVerStr = '';
+      if (typeof guiaVersion !== 'undefined' && typeof guiaVersion.toString === 'function') {
+        guiaVerStr = 'guia.js ' + guiaVersion.toString();
+      }
+      
+      const versionElement = document.getElementById('guia-version');
+      if (versionElement) {
+        versionElement.innerHTML = `${guiaVerStr}<br>HTML page ${pageVersion.toString()}`;
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', displayVersionInfo);
+
+    // Add event listener instead of using onload attribute
+  </script>
+</body>
+
+</html>

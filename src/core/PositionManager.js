@@ -64,8 +64,28 @@ import { log, warn } from '../utils/logger.js';
 let setupParams = null;
 
 /**
- * Initialize setupParams - called when module loads or can be overridden for testing
- * @param {Object} config - Configuration object
+ * Initialize setupParams - called when module loads or can be overridden for testing.
+ * 
+ * Sets the configuration object for position tracking parameters. This function
+ * allows runtime configuration override, which is particularly useful for testing
+ * scenarios where different configurations need to be tested.
+ * 
+ * @param {Object} config - Configuration object with tracking parameters
+ * @param {string[]} config.notAcceptedAccuracy - Array of unacceptable accuracy levels
+ * @param {number} config.minimumDistanceChange - Minimum distance change in meters to trigger update
+ * @param {number} config.trackingInterval - Tracking interval in milliseconds
+ * @returns {void}
+ * 
+ * @example
+ * // Initialize with custom configuration
+ * initializeConfig({
+ *   notAcceptedAccuracy: ['medium', 'bad'],
+ *   minimumDistanceChange: 50,
+ *   trackingInterval: 30000
+ * });
+ * 
+ * @since 0.8.6-alpha
+ * @author Marcelo Pereira Barbosa
  */
 export function initializeConfig(config) {
 	setupParams = config;

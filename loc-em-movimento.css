@@ -1,0 +1,352 @@
+/* Material Design 3 Color System */
+:root {
+  --md-sys-color-primary: #1976d2;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-secondary: #4caf50;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-surface: #ffffff;
+  --md-sys-color-on-surface: #1c1b1f;
+  --md-sys-color-surface-variant: #f9f9f9;
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-elevation-level1: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --md-sys-elevation-level2: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mobile-first base styles */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  min-height: 100vh;
+  padding-bottom: 120px; /* space for bottom textarea */
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 1rem 0 0.5rem 0;
+}
+
+h2 {
+  font-size: 1.2rem;
+  margin: 1rem 0 0.5rem 0;
+}
+
+.section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #ccc;
+}
+
+#guia-version {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #fff;
+  color: #222;
+  padding: 8px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #ccc;
+  font-weight: bold;
+  z-index: 1000;
+  text-align: left;
+  font-size: 0.95rem;
+  max-width: 90vw;
+  word-break: break-word;
+}
+
+#chronometer,
+#tsPosCapture,
+#locationResult,
+#coordinates {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background: #f9f9f9;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px #eee;
+}
+
+/* Material Design 3 Card for reference place */
+#reference-place {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+#reference-place:hover {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+}
+
+#reference-place p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+#reference-place strong {
+  color: var(--md-sys-color-primary);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Material Design 3 Card for standardized address */
+#standardized-address {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+#standardized-address:hover {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+}
+
+#standardized-address p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+#standardized-address strong {
+  color: var(--md-sys-color-primary);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Material Design 3 Highlight Cards for Municipio and Bairro */
+/* Município has higher information hierarchy than Bairro */
+.location-highlights {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.highlight-card {
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, #1565c0 100%);
+  color: var(--md-sys-color-on-primary);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+  text-align: center;
+}
+
+.highlight-card:hover {
+  box-shadow: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Município card - primary emphasis */
+.highlight-card:first-child {
+  background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, #1565c0 100%);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* Bairro card - secondary emphasis */
+.highlight-card:last-child {
+  background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
+  opacity: 0.95;
+}
+
+.highlight-card-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+/* Município label - enhanced */
+.highlight-card:first-child .highlight-card-label {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.highlight-card-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+/* Município value - larger and bolder */
+.highlight-card:first-child .highlight-card-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+/* Bairro value - smaller */
+.highlight-card:last-child .highlight-card-value {
+  font-size: 1.25rem;
+}
+
+@media (min-width: 600px) {
+  .highlight-card-value {
+    font-size: 1.75rem;
+  }
+
+  .highlight-card:first-child .highlight-card-value {
+    font-size: 2.25rem;
+  }
+
+  .highlight-card:last-child .highlight-card-value {
+    font-size: 1.5rem;
+  }
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.language-selector,
+.voice-selector,
+.controls {
+  margin: 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+textarea#text-input {
+  width: 100%;
+  min-height: 100px;
+  margin: 1rem 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+button {
+  min-width: 48px;
+  min-height: 48px;
+  padding: 10px 24px;
+  background-color: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-on-secondary);
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 8px 0;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+  background-color: #45a049;
+  box-shadow: var(--md-sys-elevation-level1);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  background-color: rgba(0, 0, 0, 0.12);
+  color: rgba(0, 0, 0, 0.38);
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+
+input[type="range"] {
+  width: 100px;
+}
+
+#rate-value,
+#pitch-value {
+  min-width: 2em;
+  display: inline-block;
+  text-align: center;
+}
+
+#bottom-scroll-textarea {
+  width: 98%;
+  margin: 1%;
+  resize: vertical;
+  overflow-y: scroll;
+  border: none;
+  border-top: 1px solid #ccc;
+  background: #fff;
+  font-size: 1rem;
+  padding: 8px;
+  border-radius: 0 0 8px 8px;
+  box-sizing: border-box;
+}
+
+div[style*="position:fixed"][style*="bottom:0"] {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background: #fff;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 -2px 8px #ccc;
+  z-index: 999;
+}
+
+/* Responsive adjustments for tablets and up */
+@media (min-width: 600px) {
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  #guia-version {
+    font-size: 1.1rem;
+    max-width: 400px;
+  }
+  textarea#text-input {
+    min-height: 120px;
+    font-size: 1.1rem;
+  }
+  #bottom-scroll-textarea {
+    font-size: 1.1rem;
+  }
+}
+
+/* Responsive adjustments for desktops */
+@media (min-width: 900px) {
+  body {
+    padding-left: 10vw;
+    padding-right: 10vw;
+  }
+  #guia-version {
+    right: 40px;
+    top: 20px;
+    max-width: 350px;
+  }
+  div[style*="position:fixed"][style*="bottom:0"] {
+    left: 10vw;
+    width: 80vw;
+  }
+}

@@ -1,0 +1,116 @@
+/* Geolocation Permission Banner */
+.geolocation-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--md-sys-color-surface-variant, #f9f9f9);
+  padding: 16px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  animation: slide-up 0.3s ease-out;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.geolocation-banner.hidden {
+  display: none;
+}
+
+.geolocation-banner-content {
+  flex: 1;
+}
+
+.geolocation-banner-title {
+  font-weight: 500;
+  font-size: 16px;
+  margin: 0 0 4px 0;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.geolocation-banner-message {
+  font-size: 14px;
+  margin: 0;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+.geolocation-banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.geolocation-banner button {
+  padding: 8px 16px;
+  min-width: auto;
+  min-height: 40px;
+  font-size: 14px;
+}
+
+.geolocation-banner .btn-primary {
+  background: var(--md-sys-color-primary, #1976d2);
+  color: var(--md-sys-color-on-primary, #ffffff);
+}
+
+.geolocation-banner .btn-secondary {
+  background: transparent;
+  color: var(--md-sys-color-primary, #1976d2);
+  border: 1px solid var(--md-sys-color-primary, #1976d2);
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .geolocation-banner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .geolocation-banner-actions {
+    width: 100%;
+  }
+  
+  .geolocation-banner button {
+    flex: 1;
+  }
+}
+
+/* Status Indicators */
+.geolocation-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.geolocation-status.granted {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.geolocation-status.denied {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.geolocation-status.prompt {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.geolocation-status-icon {
+  font-size: 14px;
+}

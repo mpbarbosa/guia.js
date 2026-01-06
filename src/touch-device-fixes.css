@@ -1,0 +1,56 @@
+/* Touch Device Optimizations */
+
+/* Prevent 300ms tap delay on mobile */
+a, button, input, select, textarea {
+  touch-action: manipulation;
+}
+
+/* Increase touch target sizes for better accessibility */
+@media (pointer: coarse) {
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px 24px;
+  }
+  
+  /* Comfortable spacing for touch */
+  nav a,
+  nav button {
+    margin: 8px 4px;
+  }
+}
+
+/* Remove tap highlight color on mobile browsers */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Custom tap highlight for interactive elements */
+button:active,
+a:active {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Prevent text selection on buttons */
+button {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Smooth scrolling on touch devices */
+body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix for iOS Safari bottom bar */
+@supports (-webkit-touch-callout: none) {
+  body {
+    min-height: -webkit-fill-available;
+  }
+}

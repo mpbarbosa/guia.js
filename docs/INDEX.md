@@ -14,6 +14,16 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
 
 ## Core Documentation
 
+### Project Purpose & Identity
+
+- **[PROJECT_PURPOSE_AND_ARCHITECTURE.md](./PROJECT_PURPOSE_AND_ARCHITECTURE.md)** - ⚠️ CRITICAL: Project identity and architecture boundaries 🆕
+  - **READ FIRST** before making deployment decisions
+  - Definitive guide on what Guia.js IS and IS NOT
+  - Why GitHub Pages is inappropriate for this project
+  - Correct distribution methods (CDN, npm)
+  - Decision making framework for architecture changes
+  - Prevents inappropriate migrations and architectural mistakes
+
 ### Project Structure
 
 - **[PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)** - Project structure and organization 🆕

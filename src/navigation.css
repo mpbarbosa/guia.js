@@ -1,0 +1,110 @@
+/* Navigation Styles */
+.app-navigation {
+  background: var(--md-sys-color-surface, #ffffff);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 12px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-navigation ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.app-navigation li {
+  display: inline-block;
+}
+
+.app-navigation a {
+  display: inline-block;
+  padding: 10px 20px;
+  color: var(--md-sys-color-primary, #1976d2);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 20px;
+  transition: background 0.2s, color 0.2s;
+  min-height: 40px;
+  line-height: 20px;
+}
+
+.app-navigation a:hover {
+  background: rgba(25, 118, 210, 0.08);
+}
+
+.app-navigation a:active,
+.app-navigation a[aria-current="page"] {
+  background: var(--md-sys-color-primary, #1976d2);
+  color: var(--md-sys-color-on-primary, #ffffff);
+}
+
+/* Navigation Progress Bar */
+.navigation-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.05);
+  z-index: 10001;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.navigation-progress[aria-valuenow] {
+  opacity: 1;
+}
+
+.navigation-progress-bar {
+  height: 100%;
+  background: var(--md-sys-color-primary, #1976d2);
+  width: 0;
+  transition: width 0.3s ease;
+}
+
+/* Mobile Navigation */
+@media (max-width: 600px) {
+  .app-navigation {
+    padding: 8px 12px;
+  }
+  
+  .app-navigation a {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  color: var(--md-sys-color-primary, #1976d2);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-separator {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.breadcrumb-current {
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: 500;
+}

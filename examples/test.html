@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia.js - Teste de Geolocalização</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        /* Prominent location display */
+        #location-info {
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            color: white;
+        }
+        #location-info h2 {
+            margin: 0 0 15px 0;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        #location-info .municipio {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        #location-info .bairro {
+            font-size: 24px;
+            font-weight: 500;
+            margin: 10px 0;
+            opacity: 0.95;
+        }
+        #location-info .separator {
+            height: 2px;
+            background-color: rgba(255,255,255,0.3);
+            margin: 15px 0;
+        }
+        #location-info .empty-state {
+            font-size: 18px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+        /* Less prominent buttons */
+        .button-group {
+            margin: 15px 0;
+            text-align: center;
+        }
+        button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 3px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+        }
+        button:hover {
+            opacity: 1;
+            background-color: #5a6268;
+        }
+        button#location-btn {
+            background-color: #007bff;
+        }
+        button#location-btn:hover {
+            background-color: #0056b3;
+        }
+        #result-area {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            min-height: 100px;
+        }
+        #bottom-scroll-textarea {
+            width: 100%;
+            height: 200px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            background-color: #f8f8f8;
+            overflow-y: auto;
+        }
+        .coords-details {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            #location-info .municipio {
+                font-size: 26px;
+            }
+            #location-info .bairro {
+                font-size: 20px;
+            }
+            button {
+                font-size: 12px;
+                padding: 6px 12px;
+                display: block;
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guia.js - Teste de Geolocalização</h1>
+        <p>Aplicação de geolocalização para endereços brasileiros (versão 0.6.0-alpha)</p>
+        
+        <!-- Prominent Location Information Display -->
+        <div id="location-info">
+            <h2>📍 Sua Localização</h2>
+            <div class="separator"></div>
+            <div id="municipio-display" class="municipio empty-state">Aguardando localização...</div>
+            <div id="bairro-display" class="bairro empty-state"></div>
+        </div>
+        
+        <!-- Less prominent action buttons -->
+        <div class="button-group">
+            <button id="location-btn">Obter Localização</button>
+        </div>
+        
+        <div id="result-area">
+            <p>Clique em "Obter Localização" para começar...</p>
+        </div>
+        
+        <h3>Log de Atividades:</h3>
+        <textarea id="bottom-scroll-textarea" readonly></textarea>
+    </div>
+
+    <!-- Incluir o script principal com type="module" para ES6 imports -->
+    <script type="module" src="src/guia.js"></script>
+    <script type="module" src="src/guia_ibge.js"></script>
+    
+    <script type="module">
+        // Inicializar a aplicação quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página carregada, inicializando Guia.js...');
+            
+            try {
+                // Get display elements
+                const municipioDisplay = document.getElementById('municipio-display');
+                const bairroDisplay = document.getElementById('bairro-display');
+                
+                // Custom observer to update prominent location display
+                class LocationInfoDisplayer {
+                    update(addressData, enderecoPadronizado, posEvent, loading, error) {
+                        if (loading) {
+                            municipioDisplay.textContent = 'Carregando...';
+                            municipioDisplay.className = 'municipio empty-state';
+                            bairroDisplay.textContent = '';
+                            bairroDisplay.className = 'bairro empty-state';
+                            return;
+                        }
+                        
+                        if (error) {
+                            municipioDisplay.textContent = 'Erro ao obter localização';
+                            municipioDisplay.className = 'municipio empty-state';
+                            bairroDisplay.textContent = '';
+                            bairroDisplay.className = 'bairro empty-state';
+                            return;
+                        }
+                        
+                        if (enderecoPadronizado) {
+                            // Update município
+                            if (enderecoPadronizado.municipio) {
+                                municipioDisplay.textContent = enderecoPadronizado.municipio;
+                                municipioDisplay.className = 'municipio';
+                            } else {
+                                municipioDisplay.textContent = 'Município não identificado';
+                                municipioDisplay.className = 'municipio empty-state';
+                            }
+                            
+                            // Update bairro
+                            if (enderecoPadronizado.bairro) {
+                                const bairroCompleto = enderecoPadronizado.bairroCompleto ? 
+                                    enderecoPadronizado.bairroCompleto() : enderecoPadronizado.bairro;
+                                bairroDisplay.textContent = bairroCompleto;
+                                bairroDisplay.className = 'bairro';
+                            } else {
+                                bairroDisplay.textContent = 'Bairro não identificado';
+                                bairroDisplay.className = 'bairro empty-state';
+                            }
+                        }
+                    }
+                }
+                
+                // Inicializar o gerenciador principal
+                const resultArea = document.getElementById('result-area');
+                const manager = new WebGeocodingManager(document, {
+                    locationResult: resultArea.id
+                });
+                
+                // Subscribe custom displayer to reverse geocoder
+                const locationInfoDisplayer = new LocationInfoDisplayer();
+                if (manager.reverseGeocoder) {
+                    manager.reverseGeocoder.subscribe(locationInfoDisplayer);
+                }
+                
+                // Configurar botão
+                const locationBtn = document.getElementById('location-btn');
+                
+                if (locationBtn) {
+                    locationBtn.addEventListener('click', function() {
+                        console.log('Botão de localização clicado');
+                        manager.startTracking();
+                    });
+                }
+                
+                console.log('Guia.js inicializado com sucesso!');
+                
+            } catch (error) {
+                console.error('Erro ao inicializar Guia.js:', error);
+            }
+        });
+    </script>
+</body>
+</html>

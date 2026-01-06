@@ -1,0 +1,22 @@
+/* Reduced Motion Support for Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Respect prefers-reduced-motion in animations */
+@media (prefers-reduced-motion: no-preference) {
+  .route-loading .loading-spinner {
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  
+  .navigation-progress-bar {
+    transition: width 0.3s ease;
+  }
+}

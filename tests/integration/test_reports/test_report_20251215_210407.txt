@@ -1,0 +1,122 @@
+Starting tests at: Mon Dec 15 21:04:07 -03 2025
+
+test_address_converter_loads (test_api_integration.TestAPIIntegration.test_address_converter_loads)
+Test address converter page loads. ... ok
+test_01_index_page_loads (test_geolocation_flow.TestGeolocationFlow.test_01_index_page_loads)
+Test that index page loads successfully. ... ERROR
+test_02_geolocation_permission_request (test_geolocation_flow.TestGeolocationFlow.test_02_geolocation_permission_request)
+Test that geolocation permission is requested. ... ERROR
+test_03_coordinates_display (test_geolocation_flow.TestGeolocationFlow.test_03_coordinates_display)
+Test that coordinates are displayed after location acquisition. ... ERROR
+test_04_address_converter_page (test_geolocation_flow.TestGeolocationFlow.test_04_address_converter_page)
+Test address converter page functionality. ... ok
+test_page_load_time (test_performance.TestPerformance.test_page_load_time)
+Test page loads within acceptable time. ... ok
+test_page_navigation (test_user_workflows.TestUserWorkflows.test_page_navigation)
+Test basic page navigation. ... ok
+
+======================================================================
+ERROR: test_01_index_page_loads (test_geolocation_flow.TestGeolocationFlow.test_01_index_page_loads)
+Test that index page loads successfully.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_geolocation_flow.py", line 55, in test_01_index_page_loads
+    get_location_btn = self.wait.until(
+        EC.presence_of_element_located((By.ID, "getLocationBtn"))
+    )
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/venv/lib/python3.13/site-packages/selenium/webdriver/support/wait.py", line 122, in until
+    raise TimeoutException(message, screen, stacktrace)
+selenium.common.exceptions.TimeoutException: Message: 
+Stacktrace:
+#0 0x5a815606a19a <unknown>
+#1 0x5a8155ae7c4b <unknown>
+#2 0x5a8155b39318 <unknown>
+#3 0x5a8155b39551 <unknown>
+#4 0x5a8155b87764 <unknown>
+#5 0x5a8155b84bee <unknown>
+#6 0x5a8155b2bc42 <unknown>
+#7 0x5a8155b2c8f1 <unknown>
+#8 0x5a8156032f39 <unknown>
+#9 0x5a8156035e7d <unknown>
+#10 0x5a815601bc81 <unknown>
+#11 0x5a8156036a5b <unknown>
+#12 0x5a8156002a50 <unknown>
+#13 0x5a8156057aa8 <unknown>
+#14 0x5a8156057c79 <unknown>
+#15 0x5a81560694f3 <unknown>
+#16 0x7418c9aa3d64 <unknown>
+#17 0x7418c9b373bc <unknown>
+
+
+======================================================================
+ERROR: test_02_geolocation_permission_request (test_geolocation_flow.TestGeolocationFlow.test_02_geolocation_permission_request)
+Test that geolocation permission is requested.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_geolocation_flow.py", line 65, in test_02_geolocation_permission_request
+    get_location_btn = self.wait.until(
+        EC.element_to_be_clickable((By.ID, "getLocationBtn"))
+    )
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/venv/lib/python3.13/site-packages/selenium/webdriver/support/wait.py", line 122, in until
+    raise TimeoutException(message, screen, stacktrace)
+selenium.common.exceptions.TimeoutException: Message: 
+Stacktrace:
+#0 0x5a815606a19a <unknown>
+#1 0x5a8155ae7c4b <unknown>
+#2 0x5a8155b39318 <unknown>
+#3 0x5a8155b39551 <unknown>
+#4 0x5a8155b87764 <unknown>
+#5 0x5a8155b84bee <unknown>
+#6 0x5a8155b2bc42 <unknown>
+#7 0x5a8155b2c8f1 <unknown>
+#8 0x5a8156032f39 <unknown>
+#9 0x5a8156035e7d <unknown>
+#10 0x5a815601bc81 <unknown>
+#11 0x5a8156036a5b <unknown>
+#12 0x5a8156002a50 <unknown>
+#13 0x5a8156057aa8 <unknown>
+#14 0x5a8156057c79 <unknown>
+#15 0x5a81560694f3 <unknown>
+#16 0x7418c9aa3d64 <unknown>
+#17 0x7418c9b373bc <unknown>
+
+
+======================================================================
+ERROR: test_03_coordinates_display (test_geolocation_flow.TestGeolocationFlow.test_03_coordinates_display)
+Test that coordinates are displayed after location acquisition.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_geolocation_flow.py", line 82, in test_03_coordinates_display
+    get_location_btn = self.wait.until(
+        EC.element_to_be_clickable((By.ID, "getLocationBtn"))
+    )
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/venv/lib/python3.13/site-packages/selenium/webdriver/support/wait.py", line 122, in until
+    raise TimeoutException(message, screen, stacktrace)
+selenium.common.exceptions.TimeoutException: Message: 
+Stacktrace:
+#0 0x5a815606a19a <unknown>
+#1 0x5a8155ae7c4b <unknown>
+#2 0x5a8155b39318 <unknown>
+#3 0x5a8155b39551 <unknown>
+#4 0x5a8155b87764 <unknown>
+#5 0x5a8155b84bee <unknown>
+#6 0x5a8155b2bc42 <unknown>
+#7 0x5a8155b2c8f1 <unknown>
+#8 0x5a8156032f39 <unknown>
+#9 0x5a8156035e7d <unknown>
+#10 0x5a815601bc81 <unknown>
+#11 0x5a8156036a5b <unknown>
+#12 0x5a8156002a50 <unknown>
+#13 0x5a8156057aa8 <unknown>
+#14 0x5a8156057c79 <unknown>
+#15 0x5a81560694f3 <unknown>
+#16 0x7418c9aa3d64 <unknown>
+#17 0x7418c9b373bc <unknown>
+
+
+----------------------------------------------------------------------
+Ran 7 tests in 50.602s
+
+FAILED (errors=3)
+
+All tests passed! ✓

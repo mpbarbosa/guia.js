@@ -1,0 +1,73 @@
+/* Application Version Display */
+.app-version {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  background: var(--md-sys-color-surface-variant, #f9f9f9);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  z-index: 999;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: opacity 0.2s, transform 0.2s;
+  opacity: 0.7;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+.app-version:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* Version Badge Variants */
+.app-version.alpha {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.app-version.beta {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.app-version.stable {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .app-version {
+    top: 4px;
+    right: 4px;
+    padding: 4px 8px;
+    font-size: 10px;
+    border-radius: 8px;
+  }
+}
+
+/* Print - Hide version in print */
+@media print {
+  .app-version {
+    display: none;
+  }
+}
+
+/* Version Details Tooltip */
+.app-version[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.9);
+  color: #ffffff;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+}

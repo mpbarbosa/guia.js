@@ -408,6 +408,110 @@ This provides defense in depth - multiple layers of quality checks.
 
 ---
 
+## 🪝 Git Hooks (Local Validation)
+
+### Overview
+
+The project includes custom git hooks for local validation **before** commits are created. This provides instant feedback and prevents common errors from being committed.
+
+**Custom Hooks Location**: `.github/hooks/`
+- **`pre-commit`** - Comprehensive validation before commits
+  - JavaScript syntax checking
+  - Documentation consistency
+  - Test count validation
+  - Timestamp updates
+
+**Benefits**:
+- 🚀 Instant feedback (no CI/CD wait time)
+- 🛡️ Prevents bad commits
+- ⚡ Faster development cycle
+- 📝 Auto-updates timestamps
+
+### Pre-commit Hook
+
+#### What It Checks
+1. **Version Consistency**: Ensures version numbers match across key files
+2. **Test Counts**: Validates test count references are current
+3. **Timestamps**: Auto-updates "Last Updated" dates in modified files
+4. **Broken Links**: Checks relative markdown links point to existing files
+5. **File References**: Validates `src/*.js` references exist
+
+#### Installation
+
+The hook is stored in `.github/hooks/` but must be installed to `.git/hooks/`:
+
+```bash
+# One-time installation
+cp .github/hooks/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+**Note**: `.git/hooks/` is not tracked by git, so each developer must install manually.
+
+#### Usage
+
+Once installed, the hook runs automatically on every `git commit`:
+
+```bash
+# Make changes
+vim README.md
+
+# Stage changes
+git add README.md
+
+# Commit triggers hook automatically
+git commit -m "docs: update README"
+
+# Output:
+# ═══ Documentation Consistency Check (Pre-commit) ═══
+# 
+# [1/5] Version consistency...
+#   ✓ README.md
+#   ✓ docs/INDEX.md
+# ✓ Versions consistent
+# ...
+# ═══ ✓ All checks passed ═══
+```
+
+#### Bypassing the Hook
+
+**Not recommended**, but if needed for emergency commits:
+
+```bash
+git commit --no-verify -m "emergency: critical fix"
+```
+
+Use sparingly - bypassing checks can introduce inconsistencies.
+
+#### Hook vs GitHub Actions
+
+| Validation | Pre-commit Hook | GitHub Actions |
+|------------|-----------------|----------------|
+| Speed | ⚡ <1 second | 🐌 2-5 minutes |
+| Scope | Staged files only | All repository |
+| When | Every commit | Push/PR only |
+| Installation | Manual | Automatic |
+| Best for | Fast feedback | Comprehensive checks |
+
+**Recommendation**: Use both for maximum quality assurance.
+
+#### Troubleshooting
+
+**Hook doesn't run**:
+- Check installation: `ls -l .git/hooks/pre-commit`
+- Verify executable: `chmod +x .git/hooks/pre-commit`
+
+**Hook fails on valid changes**:
+- Review error messages carefully
+- Check if version/test counts need updating in hook file
+- Temporarily bypass with `--no-verify` if certain issue is false positive
+
+**Timestamp not updating**:
+- Ensure file contains "Last Updated:" marker
+- Check sed compatibility (GNU sed vs BSD sed)
+
+---
+
 ## 📝 Examples
 
 ### Example 1: Adding a New Test
@@ -486,6 +590,7 @@ git push
 
 - **[GITHUB_ACTIONS_GUIDE.md](docs/github/GITHUB_ACTIONS_GUIDE.md)** - Detailed user guide
 - **[.github/workflows/README.md](.github/workflows/README.md)** - Technical reference
+- **[.github/hooks/pre-commit](.github/hooks/pre-commit)** - Pre-commit hook for local validation
 - **[TESTING.md](TESTING.md)** - Test suite documentation
 - **[CONTRIBUTING.md](.github/CONTRIBUTING.md)** - Contribution guidelines
 

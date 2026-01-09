@@ -1,6 +1,6 @@
 # Guia.js Project Structure Documentation
 
-**Version:** 0.6.0-alpha  
+**Version:** 0.7.0-alpha  
 **Last Updated:** 2026-01-06  
 **Project Type:** JavaScript Library Component
 
@@ -25,16 +25,28 @@ guia_turistico/
 ├── src/                          # Source code (modularized library)
 │   ├── guia.js                   # Main entry point and exports
 │   ├── guia_ibge.js              # IBGE utilities
+│   ├── app.js                    # Application entry point
 │   ├── index.html                # Demo/documentation page
-│   ├── core/                     # Core classes
-│   ├── services/                 # External service integrations
+│   ├── config/                   # Configuration constants
+│   │   └── defaults.js           # Default settings and values
 │   ├── coordination/             # Coordination and orchestration
+│   ├── core/                     # Core domain classes
 │   ├── data/                     # Data processing and models
 │   ├── html/                     # UI display components
+│   ├── services/                 # External service integrations
+│   │   └── providers/            # Geolocation providers
 │   ├── speech/                   # Speech synthesis
-│   └── validation/               # Input validation
+│   ├── status/                   # Status management
+│   │   └── SingletonStatusManager.js  # Global status tracking
+│   ├── timing/                   # Performance timing utilities
+│   │   └── Chronometer.js        # Elapsed time tracker
+│   ├── utils/                    # Utility functions
+│   │   ├── distance.js           # Haversine distance calculations
+│   │   ├── device.js             # Device/browser detection
+│   │   └── logger.js             # Logging with timestamps
+│   └── *.css files               # Modular stylesheets
 │
-├── __tests__/                    # Jest test suites (1224+ tests)
+├── __tests__/                    # Jest test suites (1,399 total tests)
 ├── examples/                     # Usage examples
 ├── docs/                         # Documentation
 │
@@ -138,6 +150,87 @@ While not a GitHub Pages site, guia_js is distributed via jsDelivr CDN:
 ```
 
 See `cdn-urls.txt` for current CDN URLs.
+
+## Source Directory Details
+
+### Timing Module (`/src/timing/`)
+
+The timing module provides performance and elapsed time tracking utilities for the application.
+
+#### Components
+
+**`Chronometer.js`** (305 lines, 9.7KB)
+- **Purpose**: Tracks and displays elapsed time since last position update
+- **Pattern**: Observer pattern implementation
+- **Version**: Since 0.8.3-alpha
+- **Test Coverage**: 51 tests in `__tests__/unit/Chronometer.test.js`
+
+**Key Features**:
+- Start/stop/reset timer functionality
+- HH:MM:SS time formatting
+- Automatic display updates (1-second interval)
+- Observer pattern integration with PositionManager
+- Error and loading state handling
+- Configurable event names for flexibility
+
+**Public Methods**:
+```javascript
+start()        // Starts the chronometer
+stop()         // Stops timing and interval updates
+reset()        // Resets elapsed time to zero
+update()       // Observer pattern callback (position updates)
+getElapsedTime()  // Returns elapsed time in milliseconds
+formatTime()   // Formats milliseconds to HH:MM:SS
+toString()     // Debug representation
+```
+
+**Usage Example**:
+```javascript
+import Chronometer from './timing/Chronometer.js';
+
+// Create chronometer
+const element = document.getElementById('timer-display');
+const chronometer = new Chronometer(element);
+
+// Subscribe to position updates (observer pattern)
+PositionManager.getInstance().subscribe(chronometer);
+
+// Manual control
+chronometer.start();  // Begin timing
+chronometer.stop();   // Pause timing
+chronometer.reset();  // Reset to 00:00:00
+```
+
+**Observer Pattern Integration**:
+```javascript
+// Chronometer responds to position events:
+// - 'strCurrPosUpdate': Position successfully updated → reset & restart
+// - 'strImmediateAddressUpdate': Immediate address update → reset & restart
+// - 'strCurrPosNotUpdate': Position rejected → continue if running
+// - Error states: Stop and display "Error"
+// - Loading states: Display "Loading..."
+```
+
+**Custom Event Configuration**:
+```javascript
+// Configure custom event names
+const chronometer = new Chronometer(element, {
+  positionUpdate: 'location.updated',
+  immediateAddressUpdate: 'address.immediate',
+  positionNotUpdate: 'location.rejected'
+});
+```
+
+**Integration Points**:
+- Used by `WebGeocodingManager` for timing display
+- Exported in `src/guia.js` main entry point
+- Tested in `__tests__/unit/Chronometer.test.js`
+
+**Design Decisions**:
+- **Observer Pattern**: Decouples timing from position management
+- **Immutable Time**: Uses timestamps, not mutable counters
+- **DOM Optional**: Works with or without element (headless mode)
+- **Event Injection**: Configurable event names for reusability
 
 ## Development Commands
 

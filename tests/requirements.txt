@@ -1,0 +1,27 @@
+# Python Testing Requirements for Guia Turístico
+# 
+# This file specifies Python packages required for browser-based integration tests
+# using Selenium WebDriver and pytest.
+#
+# Installation:
+#   python3 -m venv venv
+#   source venv/bin/activate
+#   pip install -r requirements.txt
+#
+# Last Updated: 2026-01-09
+# Python Version: 3.11+
+
+# Test Framework
+pytest>=9.0.0           # Test framework for integration tests
+pytest-xdist>=3.5.0     # Parallel test execution (optional)
+
+# Browser Automation
+selenium>=4.39.0        # WebDriver for browser automation
+                        # Supports Firefox, Chrome, and other browsers
+
+# Testing Utilities
+unittest-xml-reporting>=3.2.0  # XML test reports for CI/CD integration
+
+# Optional: Additional Testing Tools
+# pytest-html>=4.1.0    # HTML test reports
+# pytest-cov>=4.1.0     # Coverage reporting for pytest

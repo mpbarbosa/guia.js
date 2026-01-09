@@ -482,8 +482,7 @@ npm test
 
 ## Version History
 
-- **v0.8.5-alpha** - Added comprehensive Nominatim API format documentation
-- **v0.8.3-alpha** - Initial integration with Nominatim reverse geocoding
+- **v0.7.0-alpha** - Added comprehensive Nominatim API format documentation
 - **v0.6.0-alpha** - Basic geocoding support
 
 ## Target Audience
@@ -539,6 +538,6 @@ Documentation is part of the Guia.js project. See repository root for license in
 
 ---
 
-**Last Updated**: 2025-10-07  
-**Version**: 0.8.5-alpha  
+**Last Updated**: 2026-01-06  
+**Version**: 0.7.0-alpha  
 **Status**: ✅ Complete and up-to-date

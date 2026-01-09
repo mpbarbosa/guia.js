@@ -1,6 +1,56 @@
-# Guia.js Documentation Index
+# Documentation Index - Guia Turístico
 
-Welcome to the Guia.js documentation! This index provides an overview of all available documentation and guides.
+**Navigation**: [🏠 Home](../README.md) > 📚 Documentation Index
+
+---
+
+## 🚀 Quick Start Paths
+
+Choose your path based on your role or goal:
+
+### 🆕 New Contributors
+1. Start: [README.md](../README.md) - Project overview
+2. Then: [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Contribution guidelines  
+3. Next: [TDD_GUIDE.md](../.github/TDD_GUIDE.md) - Test-driven development
+4. Finally: [UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md) - Writing tests
+
+**Estimated time**: 2 hours reading
+
+### 🏗️ Architecture Deep Dive
+1. Start: [PROJECT_PURPOSE_AND_ARCHITECTURE.md](./PROJECT_PURPOSE_AND_ARCHITECTURE.md) - Overview
+2. Then: [CLASS_DIAGRAM.md](./architecture/CLASS_DIAGRAM.md) - System design
+3. Next: [MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md) - Module organization
+4. Finally: [WEB_GEOCODING_MANAGER.md](./architecture/WEB_GEOCODING_MANAGER.md) - Core component
+
+**Estimated time**: 3 hours reading + exploration
+
+### 🧪 Testing & Quality
+1. Start: [TESTING.md](../TESTING.md) - Testing overview
+2. Then: [JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md) - Jest setup
+3. Next: [TESTING_HTML_GENERATION.md](./TESTING_HTML_GENERATION.md) - HTML testing  
+4. Finally: [TDD_GUIDE.md](../.github/TDD_GUIDE.md) - TDD methodology
+
+**Estimated time**: 2 hours reading
+
+### 🔧 Development Setup
+1. Start: [README.md](../README.md#installation) - Installation
+2. Then: [WORKFLOW_SETUP.md](./WORKFLOW_SETUP.md) - Development workflow
+3. Next: [JSDOC_GUIDE.md](../.github/JSDOC_GUIDE.md) - Documentation standards
+4. Finally: [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Best practices
+
+**Estimated time**: 1 hour + hands-on setup
+
+### 🐛 Debugging & Troubleshooting
+1. Start: [TESTING.md](../TESTING.md#troubleshooting) - Common issues
+2. Then: [JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md) - Module issues
+3. Next: [FALSE_POSITIVE_PATTERNS.md](../.github/FALSE_POSITIVE_PATTERNS.md) - Tool errors
+4. Finally: [GitHub Issues](https://github.com/mpbarbosa/guia_turistico/issues) - Report bugs
+
+**Estimated time**: Variable
+
+---
+
+Welcome to the Guia Turístico documentation! This index provides an overview of all available documentation and guides.
 
 ## Quick Links
 
@@ -32,6 +82,9 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Directory structure explanation (/src for library organization)
   - Historical context of restructuring commit
   - Development workflow and CDN distribution
+  - **Source Directory Details**: Timing module (`/src/timing/`)
+    - `Chronometer.js` - Elapsed time tracking with observer pattern
+    - 51 tests, HH:MM:SS formatting, configurable events
 
 ### Architecture & Design
 
@@ -120,8 +173,8 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
 ### Testing
 
 - **[TESTING.md](../TESTING.md)** - Automated testing documentation
-  - Test suite overview (180+ tests across 22 suites)
-  - Coverage information (~12% of guia.js, 100% of guia_ibge.js)
+  - Test suite overview (1251 passing tests across 59 passing suites, 1399 total tests in 67 suites)
+  - Coverage information (~70% of guia.js, 100% of guia_ibge.js, ~26% overall)
   - Running tests: `npm test`, `npm run test:coverage`
   - Immutability pattern tests
 
@@ -207,6 +260,14 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - Configuration and customization
   - Integration with existing workflows
 
+- **[workflow-automation/](./workflow-automation/)** - CI/CD and automation documentation 🆕
+  - [AUTOMATION_SUMMARY.md](./workflow-automation/AUTOMATION_SUMMARY.md) - Pre-commit hooks and automation tools (8KB)
+  - [FINAL_AUTOMATION_SUMMARY.md](./workflow-automation/FINAL_AUTOMATION_SUMMARY.md) - Complete automation implementation (12KB)
+  - [WORKFLOW_TERMINOLOGY_DISAMBIGUATION.md](./workflow-automation/WORKFLOW_TERMINOLOGY_DISAMBIGUATION.md) - Workflow terminology clarification (20KB)
+  - **Quick Links**: [Git Hooks](./WORKFLOW_SETUP.md#-git-hooks-local-validation) | [GitHub Actions](../.github/GITHUB_ACTIONS_GUIDE.md) | [Local Testing](../.github/scripts/test-workflow-locally.sh)
+  - Historical automation implementation records (2026-01-01)
+  - Tool installation and usage guides for 10 automation tools
+
 ### API Integration
 
 - **[NOMINATIM_API_FORMAT.md](./api-integration/NOMINATIM_API_FORMAT.md)** - Nominatim API JSON format documentation 🆕
@@ -225,6 +286,16 @@ Welcome to the Guia.js documentation! This index provides an overview of all ava
   - OSM to Brazilian address mapping
   - Priority and fallback chains
   - Usage examples and integration
+
+### Archived Documentation
+
+- **[misc/](./misc/)** - Historical documentation archive 🆕
+  - [README.md](./misc/README.md) - Archive overview and purpose
+  - Implementation summaries from 2026-01-01 documentation audit
+  - Analysis reports (DevOps assessment, CDN delivery planning)
+  - Version update records (ibira.js v0.2.2-alpha)
+  - Error handling and prerequisites improvements
+  - **7 documents, 88KB** of historical records
 
 ### Features
 

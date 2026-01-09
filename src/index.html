@@ -250,33 +250,11 @@
           </button>
         </div>
       </section>
-
-      <nav aria-label="Ações da página">
-        <div class="button-container">
-          <button id="findRestaurantsBtn" disabled="" aria-disabled="true" aria-describedby="restaurants-status" aria-label="Encontrar restaurantes próximos" class="md3-button-filled">
-            <span class="button-text">Encontrar Restaurantes Próximos</span>
-            <span class="button-loading" aria-hidden="true" hidden="">⏳</span>
-          </button>
-          <span id="restaurants-status" class="button-status" role="status" aria-live="polite">
-            Aguardando localização...
-          </span>
-        </div>
-        
-        <div class="button-container">
-          <button id="cityStatsBtn" disabled="" aria-disabled="true" aria-describedby="stats-status" aria-label="Obter estatísticas da cidade" class="md3-button-filled">
-            <span class="button-text">Obter Estatísticas da Cidade</span>
-            <span class="button-loading" aria-hidden="true" hidden="">⏳</span>
-          </button>
-          <span id="stats-status" class="button-status" role="status" aria-live="polite">
-            Aguardando localização...
-          </span>
-        </div>
-      </nav>
       
       <!-- Geolocation status banner container -->
       <div id="geolocation-banner-container"></div>
 
-      <!-- Location Highlight Cards -->
+      <!-- Location Highlight Cards - PRIMARY INFORMATION -->
       <section class="location-highlights" aria-label="Destaques de localização">
         <div class="highlight-card" role="region" aria-labelledby="municipio-label">
           <div id="municipio-label" class="highlight-card-label">Município</div>
@@ -287,6 +265,28 @@
           <div id="bairro-value" class="highlight-card-value" aria-live="polite">—</div>
         </div>
       </section>
+
+      <nav aria-label="Ações da página" class="secondary-actions">
+        <div class="button-container">
+          <button id="findRestaurantsBtn" disabled="" aria-disabled="true" aria-describedby="restaurants-status" aria-label="Encontrar restaurantes próximos" class="md3-button-outlined">
+            <span class="button-text">Encontrar Restaurantes Próximos</span>
+            <span class="button-loading" aria-hidden="true" hidden="">⏳</span>
+          </button>
+          <span id="restaurants-status" class="button-status" role="status" aria-live="polite">
+            Aguardando localização...
+          </span>
+        </div>
+        
+        <div class="button-container">
+          <button id="cityStatsBtn" disabled="" aria-disabled="true" aria-describedby="stats-status" aria-label="Obter estatísticas da cidade" class="md3-button-outlined">
+            <span class="button-text">Obter Estatísticas da Cidade</span>
+            <span class="button-loading" aria-hidden="true" hidden="">⏳</span>
+          </button>
+          <span id="stats-status" class="button-status" role="status" aria-live="polite">
+            Aguardando localização...
+          </span>
+        </div>
+      </nav>
 
       <section id="coordinates" aria-labelledby="coordinates-heading">
         <h2 id="coordinates-heading" class="sr-only">Coordenadas</h2>

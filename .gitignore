@@ -31,6 +31,10 @@ Thumbs.db
 *.swp
 *.swo
 
+# Build tools
+.gradle/
+**/.gradle/
+
 
 # Temporary files
 *.tmp
@@ -38,6 +42,23 @@ Thumbs.db
 .tmp/
 .temp/demo-issue-218.js
 
+# Python
+*.py[cod]
+__pycache__/
+**/__pycache__/
 
-tests/integrtion/.env/
-tests/integrtion/__pycache__/
+# Python test cache
+.pytest_cache/
+**/.pytest_cache/
+
+# Python virtual environments
+venv/
+**/venv/
+env/
+**/env/
+.venv/
+**/.venv/
+
+# Python test environments
+tests/integration/.env/
+tests/integration/__pycache__/

@@ -24,8 +24,17 @@ __tests__/
 # Executar todos os testes
 npm test
 
+# Executar apenas testes E2E (end-to-end)
+npm test -- __tests__/e2e
+
+# Executar arquivo E2E específico
+npm test -- __tests__/e2e/CompleteGeolocationWorkflow.e2e.test.js
+
 # Executar testes com cobertura de código
 npm run test:coverage
+
+# Executar cobertura apenas para E2E
+npm run test:coverage -- __tests__/e2e
 
 # Executar testes em modo watch (reexecuta automaticamente quando arquivos mudam)
 npm run test:watch
@@ -43,9 +52,15 @@ npm run test:all
 ### Resultados Esperados
 
 Todos os testes devem passar:
-- ✅ 180+ testes passando
-- ✅ 22 suites de teste
-- ✅ ~12% de cobertura de código
+- ✅ 1251 testes passando (1399 total)
+  - 91 testes E2E (workflows completos)
+  - ~800 testes de integração
+  - ~360 testes unitários e de features
+- ✅ 59 suites de teste passando (67 total)
+  - 6 suites E2E
+  - ~40 suites de integração
+  - ~21 suites unitárias
+- ✅ ~70% de cobertura em guia.js, 100% em guia_ibge.js (~26% geral)
 
 ## Funcionalidades Testadas
 
@@ -71,7 +86,40 @@ Todos os testes devem passar:
 - **renderUrlUFNome**: Testa geração de URLs para API do IBGE
 - **Tratamento de Dados**: Verifica comportamento com diferentes entradas
 
-### 5. Padrões de Imutabilidade (`Immutability.test.js`)
+### 5. Testes End-to-End (E2E) (`__tests__/e2e/*.e2e.test.js`)
+- **Workflows Completos**: Testa fluxos de ponta a ponta da aplicação (inicialização → geolocalização → geocodificação → exibição)
+- **Integração Multi-componente**: Verifica coordenação entre WebGeocodingManager, PositionManager, ReverseGeocoder, e outros
+- **Processamento de Endereços**: Pipeline completo de geocodificação reversa e extração de endereços brasileiros
+- **Detecção de Mudanças**: Mudança de município/bairro/logradouro + síntese de fala com prioridades
+- **Tratamento de Erros**: Cenários de falha (coordenadas inválidas, timeout de rede, erros de API) e recuperação
+- **Cenários Reais**: Casos de uso de produção (Milho Verde/Serro-MG, São Paulo, Rio de Janeiro)
+- **Performance**: Validação de tempo de execução de workflows completos
+
+**Ver**: [`__tests__/e2e/README.md`](../__tests__/e2e/README.md) para documentação detalhada dos testes E2E.
+
+#### Diferença entre Testes E2E
+
+O projeto possui dois tipos de testes E2E com propósitos distintos:
+
+**JavaScript E2E** (`__tests__/e2e/`)
+- **Framework**: Jest (JavaScript)
+- **Ambiente**: Node.js com mocks
+- **Propósito**: Testa lógica de integração entre componentes
+- **Execução**: `npm test -- __tests__/e2e`
+- **Velocidade**: Rápido (~3 segundos)
+- **Documentação**: [E2E README](../__tests__/e2e/README.md)
+
+**Python E2E** (`tests/e2e/`)
+- **Framework**: Jest (para teste específico de Milho Verde)
+- **Ambiente**: Node.js
+- **Propósito**: Testa casos reais com dados do OpenStreetMap
+- **Execução**: Manual (arquivo específico)
+- **Velocidade**: Rápido (mocks de API)
+- **Documentação**: [tests/e2e/README.md](../tests/e2e/README.md)
+
+**Nota**: Para testes de browser real com Selenium, veja `tests/integration/` (Python + pytest).
+
+### 6. Padrões de Imutabilidade (`Immutability.test.js`)
 - **ObserverSubject**: Verifica que operações de subscribe/unsubscribe não mutam arrays
 - **BrazilianStandardAddress**: Testa construção imutável de arrays com filter(Boolean)
 - **AddressCache**: Verifica operações de cache sem mutação de estado

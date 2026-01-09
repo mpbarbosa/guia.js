@@ -1,32 +1,37 @@
-# Guia.js - Geolocation Web Application
+# Guia Turístico - Tourist Guide Web Application
 
-Guia.js is a JavaScript-based geolocation web application (version 0.6.0-alpha) that provides geolocation services, address geocoding, and mapping integration for Brazilian addresses. The application includes DOM manipulation, OpenStreetMap/Nominatim API integration, and speech synthesis capabilities.
+Guia Turístico is a single-page web application (version 0.7.0-alpha) built on top of the **guia.js** geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
+
+**Project Relationship**:
+- **This Project**: Guia Turístico - Tourist guide web application (SPA)
+- **Dependency**: guia.js library (https://github.com/mpbarbosa/guia_js) - Core geolocation functionality
+- **Additional Dependency**: ibira.js library - Brazilian IBGE integration
 
 **CRITICAL: Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
 
 ## Working Effectively
 
 ### Bootstrap and Run the Application
-- **Node.js Testing**: `node src/guia.js` - takes <1 second. Validates basic functionality and logs version.
-- **Syntax Validation**: `node -c src/guia.js && node -c src/guia_ibge.js` - takes <1 second each. ALWAYS run before commits.
+- **Node.js Testing**: `node src/app.js` - takes <1 second. Validates SPA initialization.
+- **Syntax Validation**: `node -c src/app.js && node -c src/guia.js` - takes <1 second each. ALWAYS run before commits.
 - **Web Server**: `python3 -m http.server 9000` - starts in 3 seconds. NEVER CANCEL - keeps running until stopped.
-- **Access Application**: Navigate to `http://localhost:9000/test.html` for full functionality testing.
+- **Access Application**: Navigate to `http://localhost:9000/src/index.html` for full SPA functionality testing.
 
 ### Build and Test Process
 - **NEVER CANCEL any long-running server processes** - they run indefinitely by design
-- **Install Dependencies**: `npm install` - takes 20 seconds. Downloads 299 packages including Jest testing framework.
-- **Syntax Check**: Always run `node -c src/guia.js` (timeout: 10 seconds) before making changes
-- **Basic Test**: Run `node src/guia.js` (timeout: 10 seconds) to verify core functionality
-- **Automated Tests**: `npm test` - takes 2 seconds. Runs 1224 tests in 57 suites. NEVER CANCEL.
+- **Install Dependencies**: `npm install` - takes 20 seconds. Downloads guia.js library and other dependencies.
+- **Syntax Check**: Always run `node -c src/app.js && node -c src/guia.js` (timeout: 10 seconds) before making changes
+- **Basic Test**: Run `node src/app.js` (timeout: 10 seconds) to verify SPA initialization
+- **Automated Tests**: `npm test` - takes 2 seconds. Runs 1,399 tests (1,251 passing) in 67 suites. NEVER CANCEL.
 - **Test Coverage**: `npm run test:coverage` - takes 2.2 seconds. Shows ~70% coverage. NEVER CANCEL.
 - **Full Validation**: `npm run test:all` - takes 4 seconds. Combines syntax + tests. NEVER CANCEL.
 - **Web Test**: Start web server with `python3 -m http.server 9000` (timeout: 10 seconds to start, runs indefinitely)
 
 ### Development Workflow
 - Always validate JavaScript syntax with `node -c` before committing changes
-- Test core functionality with `node src/guia.js` to see version output and basic initialization
-- Run automated tests with `npm run test:all` before commits to ensure 1224+ tests pass
-- For DOM/web features, use the web server and test.html for manual validation
+- Test SPA functionality with `node src/app.js` to verify routing and initialization
+- Run automated tests with `npm run test:all` before commits to ensure 1,251+ tests pass
+- For UI/web features, use the web server and src/index.html for manual validation
 - **Follow immutability principles** - see `.github/CONTRIBUTING.md` for guidelines
 - **TIMING**: Syntax checks <1 second, tests ~3 seconds, web server startup 3 seconds
 
@@ -37,19 +42,19 @@ After making any changes, ALWAYS run through these validation scenarios:
 
 1. **Basic Node.js Execution**:
    ```bash
-   node src/guia.js
-   # Should output: [timestamp] Guia.js version: 0.6.0-alpha
+   node src/app.js
+   # Should output: Initializing Guia Turístico SPA...
    ```
 
 2. **Automated Test Suite**:
    ```bash
    npm run test:all
-   # Should show: ✅ 1224+ tests passing, ✅ 57 suites, ~3 seconds execution
+   # Should show: ✅ 1,251+ tests passing (1,399 total), ✅ 59 suites passing (67 total), ~3 seconds execution
    ```
 
 3. **Web Application Functionality**:
    - Start web server: `python3 -m http.server 9000`
-   - Open `http://localhost:9000/test.html` 
+   - Open `http://localhost:9000/src/index.html` 
    - Click "Obter Localização" button
    - Verify geolocation prompts appear (if supported)
    - Check console log output in browser developer tools
@@ -69,11 +74,12 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Repository Structure
 
 ### Key Files
-- `src/guia.js` (468 lines) - Main application entry point and exports (modularized from 2288 lines into 29 files)
-- `guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
-- `test.html` (133 lines) - Test page for manual validation
-- `package.json` - Node.js configuration with Jest testing framework
-- `__tests__/` - 60 test files with 1224+ total tests
+- `src/app.js` (550+ lines) - **Main SPA entry point** with routing and application initialization
+- `src/index.html` (336 lines) - Main HTML page for the SPA
+- `src/guia.js` (468 lines) - guia.js library exports (imported from dependency)
+- `src/guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
+- `package.json` - Node.js configuration with guia.js dependency
+- `__tests__/` - 67 test suites with 1,399 total tests (1,251 passing)
 - `.github/CONTRIBUTING.md` - Contribution guidelines including immutability principles
 - `.github/scripts/test-workflow-locally.sh` - Pre-push validation script (simulates CI/CD)
 - `cdn-delivery.sh` - CDN URL generator for jsDelivr distribution
@@ -114,7 +120,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Testing Infrastructure
 
 ### Automated Test Coverage
-- **1224+ tests** across 57 test suites running in ~3 seconds
+- **1,399 total tests** (1,251 passing) across 67 test suites running in ~3 seconds
 - **~70% code coverage** overall (69.82% actual)
 - **100% coverage** of guia_ibge.js (full coverage)
 - **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns
@@ -138,7 +144,7 @@ npm run test:all
 ```
 
 ### Expected Test Results
-- ✅ 1224+ tests passing
+- ✅ 1,251 tests passing (1,399 total)
 - ✅ 57 suites of test files
 - ✅ ~70% code coverage overall
 - ✅ 100% code coverage on guia_ibge.js
@@ -303,7 +309,7 @@ curl -s http://localhost:9000/test.html | head -5
 ### Performance Expectations
 - **Syntax validation**: <1 second each file
 - **Basic Node.js test**: <1 second  
-- **Jest test suite**: ~2 seconds for 1224 tests
+- **Jest test suite**: ~3 seconds for 1,399 tests (1,251 passing)
 - **Jest with coverage**: ~2.2 seconds
 - **Web server startup**: ~3 seconds, then runs indefinitely
 - **npm install**: ~20 seconds (299 packages)

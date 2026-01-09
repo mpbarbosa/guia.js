@@ -2,8 +2,7 @@
  * @jest-environment node
  */
 
-import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globals';
-
+import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';
 
 /*
   * Unit tests for device detection and accuracy configuration in guia.js
@@ -44,8 +43,31 @@ import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globa
   * ACCURACY_CONFIGURATION.md for details on accuracy settings rationale
   * Ensure compatibility with various versions of Jest and Node.js
   * Regularly update tests to reflect changes in the main codebase
+  * 
+  * NOTE: guia.js attempts to load ibira.js via CDN and local fallback.
+  * This causes warnings in test output but does not affect test functionality.
+  * Warnings are suppressed via console mocking to keep test output clean.
 */
 global.document = undefined;
+
+// Suppress ibira.js loading warnings in test output
+const originalConsoleWarn = console.warn;
+beforeAll(() => {
+	console.warn = jest.fn((message) => {
+		// Only suppress ibira.js loading warnings
+		if (typeof message === 'string' && message.includes('ibira.js')) {
+			return;
+		}
+		// Let other warnings through
+		originalConsoleWarn(message);
+	});
+});
+
+afterAll(() => {
+	console.warn = originalConsoleWarn;
+	// Give async operations time to complete to prevent worker crashes
+	return new Promise(resolve => setTimeout(resolve, 100));
+});
 
 describe('Device Detection and Accuracy Configuration', () => {
   let originalNavigator;

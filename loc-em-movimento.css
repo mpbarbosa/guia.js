@@ -133,15 +133,15 @@ h2 {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
-  margin: 1rem 0;
+  margin: 1.5rem 0 2rem 0; /* Increased margin for prominence */
 }
 
 .highlight-card {
-  padding: 1rem;
+  padding: 1.25rem;
   background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, #1565c0 100%);
   color: var(--md-sys-color-on-primary);
-  border-radius: 12px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
   transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
   text-align: center;
 }
@@ -154,7 +154,7 @@ h2 {
 /* Município card - primary emphasis */
 .highlight-card:first-child {
   background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, #1565c0 100%);
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.3), 0 3px 8px 3px rgba(0, 0, 0, 0.15);
 }
 
 /* Bairro card - secondary emphasis */
@@ -164,36 +164,38 @@ h2 {
 }
 
 .highlight-card-label {
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  opacity: 0.9;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.75px;
+  opacity: 0.95;
+  margin-bottom: 0.75rem;
 }
 
 /* Município label - enhanced */
 .highlight-card:first-child .highlight-card-label {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 .highlight-card-value {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.75rem;
+  font-weight: 700;
   line-height: 1.2;
   word-break: break-word;
 }
 
 /* Município value - larger and bolder */
 .highlight-card:first-child .highlight-card-value {
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-size: 2rem;
+  font-weight: 800;
 }
 
 /* Bairro value - smaller */
 .highlight-card:last-child .highlight-card-value {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 @media (min-width: 600px) {
@@ -207,6 +209,59 @@ h2 {
 
   .highlight-card:last-child .highlight-card-value {
     font-size: 1.5rem;
+  }
+}
+
+/* Secondary Actions - Less prominent on mobile */
+.secondary-actions {
+  margin: 1.5rem 0 1rem 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.button-container {
+  margin: 0.75rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.button-container button {
+  font-size: 0.875rem;
+  padding: 10px 16px;
+  min-height: 44px;
+  font-weight: 500;
+}
+
+.button-status {
+  font-size: 0.8125rem;
+  color: rgba(0, 0, 0, 0.6);
+  font-style: italic;
+}
+
+/* Make outlined buttons even less prominent on mobile */
+@media (max-width: 599px) {
+  .secondary-actions .md3-button-outlined {
+    font-size: 0.8125rem;
+    padding: 8px 16px;
+    min-height: 40px;
+    opacity: 0.85;
+  }
+  
+  .button-container {
+    margin: 0.5rem 0;
+  }
+}
+
+/* Larger screens - buttons can be more prominent */
+@media (min-width: 600px) {
+  .button-container button {
+    font-size: 1rem;
+    padding: 12px 24px;
+  }
+  
+  .button-status {
+    font-size: 0.875rem;
   }
 }
 

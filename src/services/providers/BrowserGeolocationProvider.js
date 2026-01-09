@@ -36,22 +36,37 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * Accepts navigator object to enable testing with mock objects and
 	 * support different execution environments (browser, Node.js).
 	 * 
+	 * NULL HANDLING:
+	 * - No argument: Uses global navigator if available, else null
+	 * - Explicit undefined/null: Stores as-is (no fallback to global)
+	 * 
 	 * @param {Object} [navigatorObj] - Navigator object (injectable for testing)
 	 * 
 	 * @example
-	 * // Browser usage
-	 * const provider = new BrowserGeolocationProvider(navigator);
+	 * // Browser usage - uses global navigator
+	 * const provider = new BrowserGeolocationProvider();
 	 * 
 	 * @example
 	 * // Testing with mock
 	 * const mockNavigator = { geolocation: { getCurrentPosition: jest.fn() } };
 	 * const provider = new BrowserGeolocationProvider(mockNavigator);
+	 * 
+	 * @example
+	 * // Explicit null - no navigator, no fallback
+	 * const provider = new BrowserGeolocationProvider(null);
 	 */
 	constructor(navigatorObj) {
 		super();
 		
-		// Use provided navigator or global navigator if available
-		this.navigator = navigatorObj || (typeof navigator !== 'undefined' ? navigator : null);
+		// Distinguish between "no argument" and "explicit undefined/null"
+		// Using arguments.length to detect if argument was provided
+		if (arguments.length === 0) {
+			// No argument provided - use global navigator fallback
+			this.navigator = (typeof navigator !== 'undefined' ? navigator : null);
+		} else {
+			// Argument provided (even if undefined/null) - use it directly, no fallback
+			this.navigator = navigatorObj === undefined ? null : navigatorObj;
+		}
 	}
 
 	/**

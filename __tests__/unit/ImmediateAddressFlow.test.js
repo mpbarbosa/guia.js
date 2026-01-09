@@ -475,17 +475,13 @@ describe('ImmediateAddressFlow - MP Barbosa Travel Guide (v0.4.1-alpha)', () => 
 
     describe('Project Structure Compliance', () => {
         test('should follow MP Barbosa file structure conventions', () => {
-            // Test that we're following the project structure from instructions
-            const expectedPaths = [
-                '__tests__',
-                'guia_js',
-            ];
-
-            // Get directory path from import.meta.url
+            // Test that we're following the project structure
+            // Verify test file is in __tests__ directory (standard Jest convention)
             const currentFilePath = new URL(import.meta.url).pathname;
-            expectedPaths.forEach(pathSegment => {
-                expect(currentFilePath).toContain(pathSegment);
-            });
+            
+            expect(currentFilePath).toContain('__tests__');
+            // Note: Directory name varies by installation (guia_js, guia_turistico, etc.)
+            // so we don't assert the specific project directory name
         });
 
         test('should align with HTML page version (v0.4.1-alpha)', () => {

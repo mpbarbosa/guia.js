@@ -328,9 +328,22 @@ async function initializeHomeView() {
   // Initialize WebGeocodingManager if not already done
   if (!AppState.manager) {
     try {
-      // WebGeocodingManager expects element ID or config
-      AppState.manager = new WebGeocodingManager(document, 'app-content');
+      // WebGeocodingManager expects params object with locationResult property
+      // Use 'locationResult' as the element ID for displaying location info
+      AppState.manager = new WebGeocodingManager(document, {
+        locationResult: 'locationResult'
+      });
       console.log('WebGeocodingManager initialized for home view');
+      
+      // Set up button handler for getLocationBtn
+      const getLocationBtn = document.getElementById('getLocationBtn');
+      if (getLocationBtn) {
+        getLocationBtn.addEventListener('click', () => {
+          console.log('Location button clicked');
+          AppState.manager.getSingleLocationUpdate();
+        });
+        console.log('Location button event handler attached');
+      }
     } catch (error) {
       console.error('Error initializing WebGeocodingManager:', error);
     }

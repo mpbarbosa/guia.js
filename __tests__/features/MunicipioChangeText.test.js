@@ -81,25 +81,29 @@ global.SpeechSynthesisUtterance = jest.fn().mockImplementation((text) => {
 // Import classes from guia.js
 let BrazilianStandardAddress, HtmlSpeechSynthesisDisplayer;
 
-try {
-    const guiaModule = await import('../../src/guia.js');
-    
-    // Extract the pure functions from module
-    if (guiaModule.BrazilianStandardAddress) {
-        BrazilianStandardAddress = guiaModule.BrazilianStandardAddress;
-    }
-    if (guiaModule.HtmlSpeechSynthesisDisplayer) {
-        HtmlSpeechSynthesisDisplayer = guiaModule.HtmlSpeechSynthesisDisplayer;
-    }
-} catch (error) {
-    console.warn('Could not load guia.js:', error.message);
-}
+describe('Municipality Change Text Announcements (Issue #218)', () => {
+    beforeAll(async () => {
+        try {
+            const guiaModule = await import('../../src/guia.js');
+            
+            // Extract the classes from module
+            if (guiaModule.BrazilianStandardAddress) {
+                BrazilianStandardAddress = guiaModule.BrazilianStandardAddress;
+            }
+            if (guiaModule.HtmlSpeechSynthesisDisplayer) {
+                HtmlSpeechSynthesisDisplayer = guiaModule.HtmlSpeechSynthesisDisplayer;
+            }
+        } catch (error) {
+            console.warn('Could not load guia.js:', error.message);
+        }
+    });
 
-// TODO: This test file hangs due to top-level await (line 85)
-// Jest has issues with top-level await in test files
-// Need to refactor to use beforeAll() with async import instead
-// See: https://github.com/jestjs/jest/issues/10784
-describe.skip('Municipality Change Text Announcements (Issue #218)', () => {
+    afterAll(async () => {
+        // Allow async operations from guia.js imports to complete
+        // Similar fix to DeviceDetection.test.js for ibira.js loading
+        await new Promise(resolve => setTimeout(resolve, 200));
+    });
+
     let mockDocument;
     let speechDisplayer;
     let mockTextInput;

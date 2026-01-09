@@ -15,7 +15,7 @@ echo ""
 
 # Check 1: Version Consistency
 echo -e "${YELLOW}[1/5] Version consistency...${NC}"
-VERSION_PATTERN="0\.6\.0-alpha"
+VERSION_PATTERN="0\.7\.0-alpha"
 VERSION_ERRORS=0
 
 for file in README.md docs/INDEX.md .github/copilot-instructions.md src/config/defaults.js; do
@@ -36,7 +36,7 @@ echo -e "${GREEN}✓ Versions consistent${NC}\n"
 # Check 2: Test Count  
 echo -e "${YELLOW}[2/5] Test count...${NC}"
 for file in README.md .github/copilot-instructions.md; do
-    if [ -f "$file" ] && grep -q "1224.*test" "$file"; then
+    if [ -f "$file" ] && grep -q "1399.*test" "$file"; then
         echo "  ✓ $file"
     fi
 done

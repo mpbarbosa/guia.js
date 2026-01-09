@@ -159,7 +159,7 @@ if (typeof window !== 'undefined') {
 	
 	// Export IbiraAPIFetchManager when available
 	ibiraLoadingPromise.then(() => {
-		if (IbiraAPIFetchManager) {
+		if (IbiraAPIFetchManager && typeof window !== 'undefined') {
 			window.IbiraAPIFetchManager = IbiraAPIFetchManager;
 		}
 	});

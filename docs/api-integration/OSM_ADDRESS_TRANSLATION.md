@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the OSM (OpenStreetMap) JSON address tag translation feature implemented in Guia.js version 0.8.5-alpha. The feature enables translation of standard OSM address tags to Brazilian address format while maintaining backward compatibility with the Nominatim API format.
+This document describes the OSM (OpenStreetMap) JSON address tag translation feature implemented in Guia Turístico version 0.7.0-alpha. The feature enables translation of standard OSM address tags to Brazilian address format while maintaining backward compatibility with the Nominatim API format.
 
 ## Motivation
 
@@ -331,7 +331,8 @@ The OSM address translation integrates seamlessly with:
 
 ## Version History
 
-- **v0.8.5-alpha** (2025-10-07) - Initial implementation of OSM address tag translation
+- **v0.7.0-alpha** (2026-01-06) - Updated for Guia Turístico application
+- **v0.6.0-alpha** (2025-10-07) - Initial implementation of OSM address tag translation
 - Implements functional specification for OSM JSON to Brazilian Address translation
 
 ## References

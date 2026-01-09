@@ -1,20 +1,30 @@
-# Guia.js - Brazilian Geolocation Web Application
+# Guia Turístico - Tourist Guide Web Application
 
-[![Tests](https://img.shields.io/badge/tests-1224%20passing-brightgreen)](https://github.com/mpbarbosa/guia_js)
-[![Coverage](https://img.shields.io/badge/coverage-70%25-yellow)](https://github.com/mpbarbosa/guia_js)
-[![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_js)
+[![Tests](https://img.shields.io/badge/tests-1251%20passing%20%2F%201399%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
+[![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
-A JavaScript-based geolocation web application (version 0.6.0-alpha) providing geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses. Features DOM manipulation, OpenStreetMap/Nominatim API integration, and speech synthesis capabilities.
+A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
+
+## 🎯 Project Overview
+
+**Guia Turístico** is a web application that uses the **guia.js** library to provide:
+- Tourist location services
+- Address-based navigation
+- Brazilian location information
+- Interactive SPA routing
+- Mobile-responsive interface
+
+**Dependency**: This project depends on [guia.js](https://github.com/mpbarbosa/guia_js) - the core geolocation library.
 
 ## ✨ Key Features
 
-- 🌍 **Brazilian Address Geocoding** - Specialized support for Brazilian address formats and IBGE integration
-- 📍 **Geolocation Services** - Browser-based geolocation with GPS accuracy classification
-- 🗺️ **OpenStreetMap Integration** - Reverse geocoding using Nominatim API
-- 🎤 **Speech Synthesis** - Brazilian Portuguese text-to-speech support
-- 📱 **Device Detection** - Mobile vs desktop with accuracy thresholds
-- 🧪 **Comprehensive Testing** - 1224+ tests with 70% code coverage
-- ⚙️ **Functional Programming** - Referential transparency and immutability patterns
+- 🗺️ **Single-Page Application** - Modern SPA with client-side routing
+- 🌍 **Tourist Guide Interface** - User-friendly navigation and location services
+- 📍 **Powered by guia.js** - Uses guia.js library for geolocation functionality
+- 🇧🇷 **Brazilian Focus** - Specialized support for Brazilian locations via IBGE integration
+- 📱 **Mobile-First Design** - Responsive interface optimized for mobile devices
+- 🎨 **Material Design 3** - Modern UI following Material Design guidelines
+- ♿ **Accessibility** - WCAG 2.1 compliant with ARIA support
 
 ## 🚀 Quick Start
 
@@ -62,16 +72,16 @@ choco install nodejs python git
 
 ```bash
 # Clone the repository
-git clone https://github.com/mpbarbosa/guia_js.git
-cd guia_js
+git clone https://github.com/mpbarbosa/guia_turistico.git
+cd guia_turistico
 
-# Install dependencies (299 packages, ~20 seconds)
+# Install dependencies (includes guia.js library)
 npm install
 
 # Validate JavaScript syntax (<1 second)
 npm run validate
 
-# Run test suite (1224 tests, ~5 seconds)
+# Run test suite (1,399 total tests, 1,251 passing, ~5 seconds)
 npm test
 
 # Run tests with coverage (~6 seconds)
@@ -88,15 +98,15 @@ npm run test:all
 python3 -m http.server 9000
 
 # Access the application
-# Open http://localhost:9000/test.html in your browser
+# Open http://localhost:9000/src/index.html in your browser
 ```
 
 ### Quick Validation
 
 ```bash
 # Node.js execution test (<1 second)
-node src/guia.js
-# Expected output: [timestamp] Guia.js version: 0.6.0-alpha
+node src/app.js
+# Expected output: Application initialization messages
 
 # Code linting (ESLint v9 flat config)
 npm run lint
@@ -177,10 +187,10 @@ See [examples/README.md](examples/README.md) for detailed documentation and expe
 
 ### Test Suite Overview
 
-- **Total Tests**: 1224 passing tests
-- **Test Suites**: 57 passing suites (5 skipped)
-- **Execution Time**: ~5 seconds
-- **Code Coverage**: ~70% on main codebase
+- **Total Tests**: 1,399 total (1,251 passing, 145 skipped, 3 failed)
+- **Test Suites**: 67 total (59 passing, 5 skipped, 3 failed)
+- **Execution Time**: ~3 seconds
+- **Code Coverage**: ~26% overall (~70% guia.js, 100% guia_ibge.js)
 - **Coverage Details**:
   - guia.js: 69.56% statements, 43.75% branches
   - guia_ibge.js: 100% coverage
@@ -213,7 +223,7 @@ To ensure clear communication about testing concepts:
   
 - **Test**: Individual test case within a suite using `it()` or `test()`
   - Example: `it('should return singleton instance')`
-  - The project has 1224 passing tests total
+  - The project has 1,399 tests total (1,251 passing)
 
 - **Test Category**: Organizational grouping of related test suites
   - **unit/**: Tests for individual classes and functions in isolation
@@ -235,7 +245,7 @@ To ensure clear communication about testing concepts:
 ### Testing Terminology
 
 - **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 57 passing suites
-- **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 1224 passing tests
+- **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 1,399 tests (1,251 passing)
 - **Test Category**: Organizational grouping by functionality (unit, integration, features, external, managers)
 - **Code Coverage**: Percentage of source code executed during tests (~70% overall)
 
@@ -1181,7 +1191,7 @@ Test locally before pushing to catch issues early:
 ✅ Syntax validation passed
 
 🧪 Running Test Suite...
-✅ Tests passed: 1224 passing
+✅ Tests passed: 1,251 passing (1,399 total)
 
 📊 Generating Coverage Report...
 ✅ Coverage: 69.82%
@@ -1299,7 +1309,7 @@ python3 -m http.server 8000
 
 - **Lines of Code**: ~2300+ (main application)
 - **Test Coverage**: 70% (statements), 44% (branches)
-- **Test Count**: 1224 passing tests
+- **Test Count**: 1,399 tests total (1,251 passing, 145 skipped, 3 failed)
 - **Dependencies**: 2 runtime, 2 dev dependencies
 - **Supported Node.js**: v18+
 - **ES Module Type**: ESM (ECMAScript Modules)

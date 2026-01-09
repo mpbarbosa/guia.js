@@ -29,7 +29,8 @@ import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
 // import IbiraAPIFetchManager from '../src/api/IbiraAPIFetchManager.js';
 // import LocationChangeDetector from '../src/tracking/LocationChangeDetector.js';
 
-// TODO: Mock browser environment - jsdom not yet installed
+// TODO: Mock browser environment - DOM testing not yet implemented
+// Consider happy-dom (84% smaller, better ES module support) when enabling
 // import { JSDOM } from 'jsdom';
 
 // Mock the non-existent classes and JSDOM for now

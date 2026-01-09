@@ -23,10 +23,11 @@
 import { jest } from '@jest/globals';
 
 // TODO: Setup real DOM environment for integration testing
-// Temporarily disabled due to jsdom/parse5 ES module compatibility issues
+// DOM testing not yet implemented - consider happy-dom when needed
+// Note: guia.js library includes jsdom as transitive dependency if needed
 // import { JSDOM } from 'jsdom';
 
-// Create a mock DOM environment (jsdom temporarily disabled)
+// Create a mock DOM environment (DOM testing not yet implemented)
 const mockWindow = {
     document: {
         getElementById: jest.fn(),
@@ -44,7 +45,7 @@ const dom = {
 };
 
 /*
-// Disabled due to jsdom/parse5 compatibility
+// DOM testing not yet implemented - consider happy-dom alternative if needed
 const dom = new JSDOM(`
 <!DOCTYPE html>
 <html>
@@ -277,8 +278,8 @@ class TestBrazilianStandardAddress {
     }
 }
 
-// TODO: Temporarily skipped due to jsdom/parse5 ES module compatibility issues
-// Re-enable when jsdom is updated or parse5 compatibility is resolved
+// TODO: DOM testing not yet implemented
+// Consider happy-dom (84% smaller, better ES module support) when enabling these tests
 describe.skip('HtmlSpeechSynthesisDisplayer Integration Tests - MP Barbosa Travel Guide (v0.8.3-alpha)', () => {
     let displayer;
     let elementIds;

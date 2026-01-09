@@ -1,0 +1,77 @@
+# Dependabot configuration for automated dependency updates
+# Documentation: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "mpbarbosa"
+    assignees:
+      - "mpbarbosa"
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      # Group security updates together for immediate review
+      security-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "security"
+      # Group minor and patch updates to reduce PR noise
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+        exclude-patterns:
+          - "jest"  # Jest updates reviewed separately
+          - "eslint"  # ESLint updates reviewed separately
+      # Group development dependencies separately
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+    # Ignore specific updates
+    ignore:
+      # Ignore major version updates (require manual review)
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    # Version update strategy
+    versioning-strategy: increase
+    # Allow automated security updates
+    allow:
+      - dependency-type: "all"
+    # Rebase strategy for conflicts
+    rebase-strategy: "auto"
+
+  # GitHub Actions workflow dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 2
+    reviewers:
+      - "mpbarbosa"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci)"
+      include: "scope"

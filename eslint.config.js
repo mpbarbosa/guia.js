@@ -1,10 +1,12 @@
 /**
- * ESLint Configuration for Guia.js
+ * ESLint Configuration for Guia Turístico
  * 
- * This configuration enforces functional programming patterns by disallowing
- * the use of the 'this' keyword to promote immutability and pure functions.
+ * This configuration enforces code quality and consistency for object-oriented
+ * JavaScript using ES6+ classes and modern patterns. Updated 2026-01-09 to
+ * align with actual OOP architecture used throughout the codebase.
  * 
  * @since 2025-12-15
+ * @updated 2026-01-09 - Removed anti-OOP rules to match codebase architecture
  */
 
 export default [
@@ -41,38 +43,28 @@ export default [
       }
     },
     rules: {
-      // Disallow the use of 'this' keyword - enforce functional programming
-      'no-invalid-this': 'error',
-      'no-restricted-syntax': [
-        'error',
-        {
-          selector: 'ThisExpression',
-          message: 'Use of "this" keyword is not allowed. Use functional programming patterns instead (pure functions, closures, factory functions).'
-        }
-      ],
-      // Additional recommended rules
+      // Code quality rules
       'no-unused-vars': ['warn', { 
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_'
       }],
       'no-console': 'off', // Allow console for logging in this project
-      'prefer-const': 'warn'
+      'prefer-const': 'warn',
+      
+      // OOP-friendly rules (added 2026-01-09)
+      'no-useless-constructor': 'warn',
+      'no-dupe-class-members': 'error',
+      'constructor-super': 'error',
+      'no-class-assign': 'error',
+      'no-this-before-super': 'error'
     }
   },
   {
-    // Specific rules for test files - might need different rules
+    // Specific rules for test files
     files: ['**/__tests__/**/*.js', '**/*.test.js', '**/tests/**/*.js'],
     rules: {
-      // Tests might need to check 'this' in mocks, so we can be more lenient
-      // But still warn about it
-      'no-invalid-this': 'off',
-      'no-restricted-syntax': [
-        'warn', // Changed from 'error' to 'warn' for tests
-        {
-          selector: 'ThisExpression',
-          message: 'Use of "this" keyword is discouraged. Consider using functional patterns.'
-        }
-      ]
+      // Tests can be more lenient with certain rules
+      'no-unused-vars': 'off'  // Test files often import for side effects
     }
   }
 ];

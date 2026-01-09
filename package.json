@@ -1,9 +1,9 @@
 {
-  "name": "guia_js",
-  "version": "0.6.0-alpha",
-  "description": "Geolocation web application for Brazilian addresses",
+  "name": "guia_turistico",
+  "version": "0.7.0-alpha",
+  "description": "Tourist guide web application built on top of guia.js library",
   "type": "module",
-  "main": "src/guia.js",
+  "main": "src/app.js",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
@@ -15,31 +15,48 @@
     "lint:fix": "eslint --fix src/**/*.js __tests__/**/*.js"
   },
   "keywords": [
+    "tourist-guide",
     "geolocation",
     "brazil",
-    "maps",
-    "geocoding"
+    "spa",
+    "guia-js"
   ],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0 <26.0.0",
+    "npm": ">=10.0.0"
+  },
   "jest": {
     "testEnvironment": "node",
     "transform": {},
     "collectCoverageFrom": [
-      "src/*.js",
-      "!node_modules/**"
+      "src/**/*.js",
+      "!src/**/*.test.js",
+      "!src/**/*.spec.js",
+      "!node_modules/**",
+      "!coverage/**"
     ],
     "testMatch": [
       "**/__tests__/**/*.js",
       "**/*.test.js"
-    ]
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 68,
+        "branches": 73,
+        "functions": 57,
+        "lines": 68
+      }
+    }
   },
   "devDependencies": {
     "eslint": "^9.39.2",
-    "jest": "^30.1.3"
+    "jest": "^30.1.3",
+    "jsdom": "^27.3.0"
   },
   "dependencies": {
-    "ibira.js": "github:mpbarbosa/ibira.js",
-    "jsdom": "^27.3.0"
+    "guia.js": "github:mpbarbosa/guia_js",
+    "ibira.js": "github:mpbarbosa/ibira.js"
   }
 }

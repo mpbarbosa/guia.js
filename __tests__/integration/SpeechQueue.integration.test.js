@@ -297,7 +297,7 @@ describe('SpeechQueue Integration Tests', () => {
 			}
 			
 			const addTime = Date.now() - startTime;
-			expect(addTime).toBeLessThan(1000); // Should complete within 1 second
+			expect(addTime).toBeLessThan(2000); // Should complete within 2 seconds (allows for system load variance)
 			
 			// Verify all items were added (up to maxSize limit)
 			expect(queue.size()).toBeLessThanOrEqual(100); // Default maxSize

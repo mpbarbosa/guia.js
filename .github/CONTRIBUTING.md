@@ -485,6 +485,6 @@ Thank you for contributing to Guia.js! 🎉
 
 ---
 
-**Version**: 0.6.0-alpha  
+**Version**: 0.7.0-alpha  
 **Status**: Active Development  
-**Last Updated**: 2026-01-01
+**Last Updated**: 2026-01-09

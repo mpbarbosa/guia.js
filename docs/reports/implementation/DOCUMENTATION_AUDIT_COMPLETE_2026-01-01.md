@@ -226,7 +226,7 @@ OUTPUT_FILE="my-urls.txt"   # Default: cdn-urls.txt
 ## 📊 API Documentation Status
 
 ### Well Documented ✅
-- **OpenStreetMap/Nominatim API**: `docs/api-integration/NOMINATIM_API_FORMAT.md`
+- **OpenStreetMap/Nominatim API**: `docs/api-integration/NOMINATIM_INTEGRATION.md`
 - **IBGE Integration**: `docs/IBIRA_INTEGRATION.md`
 - **CDN Delivery**: `README.md` and `cdn-delivery.sh` header
 

@@ -270,22 +270,21 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 
 ### API Integration
 
-- **[NOMINATIM_API_FORMAT.md](./api-integration/NOMINATIM_API_FORMAT.md)** - Nominatim API JSON format documentation 🆕
-  - Complete JSON response structure
-  - Address object field descriptions
+- **[NOMINATIM_INTEGRATION.md](./api-integration/NOMINATIM_INTEGRATION.md)** - Nominatim API and OSM address translation 🆕
+  - Complete JSON response structure and format specification
+  - Address object field descriptions and mappings
+  - OSM address tags to Brazilian address translation
+  - Priority and fallback chains for field resolution
   - Bounding box format
   - Real-world examples from Brazilian addresses
-  - Integration with Guia.js
+  - Integration with Guia Turístico
   - Field availability by location type
+  - State field handling (uf and siglaUF)
+  - Backward compatibility with both formats
 
 - **[NOMINATIM_JSON_TESTS.md](./api-integration/NOMINATIM_JSON_TESTS.md)** - Nominatim JSON format tests 🆕
   - Test suite for validating Nominatim API responses
   - Test coverage and examples
-
-- **[OSM_ADDRESS_TRANSLATION.md](./api-integration/OSM_ADDRESS_TRANSLATION.md)** - OSM address tag translation
-  - OSM to Brazilian address mapping
-  - Priority and fallback chains
-  - Usage examples and integration
 
 ### Archived Documentation
 
@@ -293,6 +292,38 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - [README.md](./misc/README.md) - Archive overview and purpose
   - Implementation summaries from 2026-01-01 documentation audit
   - Analysis reports (DevOps assessment, CDN delivery planning)
+  - Bugfix summaries (documentation cleanup, deprecation removals)
+  - Implementation reports (Phase 1 completion ✅)
+
+### Reports
+
+**Implementation Reports**
+- **[PHASE_3_COMPLETION_REPORT.md](./reports/implementation/PHASE_3_COMPLETION_REPORT.md)** - WebGeocodingManager Phase 3 optimization complete ✅ 🆕
+  - Created SpeechCoordinator (258 lines) to extract speech synthesis logic
+  - Final reduction: 990 → 928 lines (6.3% reduction, 62 lines removed)
+  - 5 coordinator classes total (consistent architecture achieved)
+  - All 1,516 tests passing, zero regressions, 100% backward compatibility
+  - Phases 1-3 complete, ready for production deployment
+
+- **[PHASE_2_COMPLETION_REPORT.md](./reports/implementation/PHASE_2_COMPLETION_REPORT.md)** - WebGeocodingManager Phase 2 refactoring complete ✅
+  - WebGeocodingManager refactored to use Phase 1 coordinators
+  - Reduced from 990 → 909 lines (8.2% reduction, 81 lines removed)
+  - Removed 11 methods, added 9 backward-compatible getters
+  - All 1,516 tests passing, zero regressions, 100% backward compatibility
+  - Ready for Phase 3 optimization (completed)
+
+- **[PHASE_1_COMPLETION_REPORT.md](./reports/implementation/PHASE_1_COMPLETION_REPORT.md)** - WebGeocodingManager Phase 1 refactoring complete ✅
+  - 4 coordinator classes created (GeocodingState, UICoordinator, EventCoordinator, ServiceCoordinator)
+  - 1,281 lines of new code with 215 comprehensive tests
+  - Zero regressions, 100% coordinator test coverage
+  - Ready for Phase 2 integration (completed)
+
+**Planning Documents**
+- **[WEBGEOCODINGMANAGER_REFACTORING_PLAN.md](./WEBGEOCODINGMANAGER_REFACTORING_PLAN.md)** - Complete refactoring plan (Phases 1-4) ✅
+  - Phase 1: ✅ COMPLETE (4 coordinator classes)
+  - Phase 2: ✅ COMPLETE (WebGeocodingManager integration)
+  - Phase 3: ✅ COMPLETE (SpeechCoordinator extraction)
+  - Phase 4: Optional (documentation updates)
   - Version update records (ibira.js v0.2.2-alpha)
   - Error handling and prerequisites improvements
   - **7 documents, 88KB** of historical records

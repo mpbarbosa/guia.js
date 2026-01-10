@@ -1,6 +1,6 @@
 # Guia Turístico - Tourist Guide Web Application
 
-[![Tests](https://img.shields.io/badge/tests-1251%20passing%20%2F%201399%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-1516%20passing%20%2F%201653%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
@@ -81,7 +81,7 @@ npm install
 # Validate JavaScript syntax (<1 second)
 npm run validate
 
-# Run test suite (1,399 total tests, 1,251 passing, ~5 seconds)
+# Run test suite (1,653 total tests, 1,515 passing, 137 skipped, ~6 seconds)
 npm test
 
 # Run tests with coverage (~6 seconds)
@@ -187,10 +187,10 @@ See [examples/README.md](examples/README.md) for detailed documentation and expe
 
 ### Test Suite Overview
 
-- **Total Tests**: 1,399 total (1,251 passing, 145 skipped, 3 failed)
-- **Test Suites**: 67 total (59 passing, 5 skipped, 3 failed)
-- **Execution Time**: ~3 seconds
-- **Code Coverage**: ~26% overall (~70% guia.js, 100% guia_ibge.js)
+- **Total Tests**: 1,438 total (1,301 passing, 137 skipped)
+- **Test Suites**: 68 total (64 passing, 4 skipped)
+- **Execution Time**: ~7 seconds
+- **Code Coverage**: ~70% overall (includes LRUCache at 100%)
 - **Coverage Details**:
   - guia.js: 69.56% statements, 43.75% branches
   - guia_ibge.js: 100% coverage
@@ -223,7 +223,7 @@ To ensure clear communication about testing concepts:
   
 - **Test**: Individual test case within a suite using `it()` or `test()`
   - Example: `it('should return singleton instance')`
-  - The project has 1,399 tests total (1,251 passing)
+  - The project has 1,438 tests total (1,301 passing, 137 skipped)
 
 - **Test Category**: Organizational grouping of related test suites
   - **unit/**: Tests for individual classes and functions in isolation
@@ -244,8 +244,8 @@ To ensure clear communication about testing concepts:
 
 ### Testing Terminology
 
-- **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 57 passing suites
-- **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 1,399 tests (1,251 passing)
+- **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 64 passing suites
+- **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 1,438 tests (1,301 passing, 137 skipped)
 - **Test Category**: Organizational grouping by functionality (unit, integration, features, external, managers)
 - **Code Coverage**: Percentage of source code executed during tests (~70% overall)
 
@@ -1191,7 +1191,7 @@ Test locally before pushing to catch issues early:
 ✅ Syntax validation passed
 
 🧪 Running Test Suite...
-✅ Tests passed: 1,251 passing (1,399 total)
+✅ Tests passed: 1,301 passing (1,438 total, 137 skipped)
 
 📊 Generating Coverage Report...
 ✅ Coverage: 69.82%
@@ -1309,7 +1309,7 @@ python3 -m http.server 8000
 
 - **Lines of Code**: ~2300+ (main application)
 - **Test Coverage**: 70% (statements), 44% (branches)
-- **Test Count**: 1,399 tests total (1,251 passing, 145 skipped, 3 failed)
+- **Test Count**: 1,438 tests total (1,301 passing, 137 skipped)
 - **Dependencies**: 2 runtime, 2 dev dependencies
 - **Supported Node.js**: v18+
 - **ES Module Type**: ESM (ECMAScript Modules)

@@ -6,7 +6,7 @@ This guide provides step-by-step instructions and issue templates for creating t
 
 ## Prerequisites
 
-- Access to create issues in the mpbarbosa/guia_js repository
+- Access to create issues in the mpbarbosa/guia_turistico repository
 - Technical Debt template available at `.github/ISSUE_TEMPLATE/technical_debt.md`
 
 ## Quick Reference
@@ -24,7 +24,7 @@ This guide provides step-by-step instructions and issue templates for creating t
 ## Issue #1: Configuration Object for Element IDs
 
 ### How to Create
-1. Go to: https://github.com/mpbarbosa/guia_js/issues/new/choose
+1. Go to: https://github.com/mpbarbosa/guia_turistico/issues/new/choose
 2. Select "Technical Debt" template
 3. Copy and paste the content below
 
@@ -165,7 +165,7 @@ See comprehensive analysis in `docs/ISSUE_189_NEXT_STEPS.md` (Section 1).
 ## Issue #2: Factory Pattern for Displayers
 
 ### How to Create
-1. Go to: https://github.com/mpbarbosa/guia_js/issues/new/choose
+1. Go to: https://github.com/mpbarbosa/guia_turistico/issues/new/choose
 2. Select "Technical Debt" template
 3. Copy and paste the content below
 
@@ -316,7 +316,7 @@ See comprehensive analysis in `docs/ISSUE_189_NEXT_STEPS.md` (Section 2).
 ## Issue #3: Remove Legacy Timeout
 
 ### How to Create
-1. Go to: https://github.com/mpbarbosa/guia_js/issues/new/choose
+1. Go to: https://github.com/mpbarbosa/guia_turistico/issues/new/choose
 2. Select "Technical Debt" template
 3. Copy and paste the content below
 
@@ -438,7 +438,7 @@ See comprehensive analysis in `docs/ISSUE_189_NEXT_STEPS.md` (Section 3).
 ## Issue #4: Extract Change Detection Coordinator
 
 ### How to Create
-1. Go to: https://github.com/mpbarbosa/guia_js/issues/new/choose
+1. Go to: https://github.com/mpbarbosa/guia_turistico/issues/new/choose
 2. Select "Technical Debt" template
 3. Copy and paste the content below
 
@@ -624,7 +624,7 @@ See comprehensive analysis in `docs/ISSUE_189_NEXT_STEPS.md` (Section 4).
 ## Issue #5: Dependency Injection for Services
 
 ### How to Create
-1. Go to: https://github.com/mpbarbosa/guia_js/issues/new/choose
+1. Go to: https://github.com/mpbarbosa/guia_turistico/issues/new/choose
 2. Select "Technical Debt" template
 3. Copy and paste the content below
 

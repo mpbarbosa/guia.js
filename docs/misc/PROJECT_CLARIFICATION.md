@@ -82,17 +82,13 @@ When working on this project, remember:
 
 Fixed critical version number inconsistencies in API documentation:
 
-#### 1. docs/api-integration/NOMINATIM_API_FORMAT.md
-- **Line 5**: Updated project reference from "Guia.js" to "Guia Turístico"  
-- **Line 485**: Changed version from `0.8.5-alpha` to `0.7.0-alpha`
-- **Line 486**: Removed obsolete `0.8.3-alpha` entry
-- **Line 542**: Updated footer version from `0.8.5-alpha` to `0.7.0-alpha`
-- **Line 541**: Updated "Last Updated" date from `2025-10-07` to `2026-01-06`
-
-#### 2. docs/api-integration/OSM_ADDRESS_TRANSLATION.md
-- **Line 5**: Changed reference from "Guia.js version 0.8.5-alpha" to "Guia Turístico version 0.7.0-alpha"
-- **Line 334**: Updated version history from `0.8.5-alpha` to `0.7.0-alpha` with date `2026-01-06`
-- **Line 335**: Added historical entry for `0.6.0-alpha` (2025-10-07)
+#### Consolidated Documentation: docs/api-integration/NOMINATIM_INTEGRATION.md
+- **Consolidated** previous NOMINATIM_API_FORMAT.md and OSM_ADDRESS_TRANSLATION.md
+- **Updated**: All project references to "Guia Turístico" 
+- **Version**: Set to `0.7.0-alpha` throughout
+- **Last Updated**: `2026-01-10`
+- **Content**: Combined Nominatim API format specification and OSM address translation
+- **Benefits**: Single comprehensive reference, eliminates duplication, easier maintenance
 
 ### Version Alignment Summary
 

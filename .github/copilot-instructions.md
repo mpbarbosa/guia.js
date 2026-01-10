@@ -22,18 +22,18 @@ Guia Turístico is a single-page web application (version 0.7.0-alpha) built on 
 - **Install Dependencies**: `npm install` - takes 20 seconds. Downloads guia.js library and other dependencies.
 - **Syntax Check**: Always run `node -c src/app.js && node -c src/guia.js` (timeout: 10 seconds) before making changes
 - **Basic Test**: Run `node src/app.js` (timeout: 10 seconds) to verify SPA initialization
-- **Automated Tests**: `npm test` - takes 2 seconds. Runs 1,399 tests (1,251 passing) in 67 suites. NEVER CANCEL.
-- **Test Coverage**: `npm run test:coverage` - takes 2.2 seconds. Shows ~70% coverage. NEVER CANCEL.
-- **Full Validation**: `npm run test:all` - takes 4 seconds. Combines syntax + tests. NEVER CANCEL.
+- **Automated Tests**: `npm test` - takes ~7 seconds. Runs 1,438 tests (1,301 passing, 137 skipped) in 68 suites. NEVER CANCEL.
+- **Test Coverage**: `npm run test:coverage` - takes ~7 seconds. Shows ~70% coverage. NEVER CANCEL.
+- **Full Validation**: `npm run test:all` - takes ~7 seconds. Combines syntax + tests. NEVER CANCEL.
 - **Web Test**: Start web server with `python3 -m http.server 9000` (timeout: 10 seconds to start, runs indefinitely)
 
 ### Development Workflow
 - Always validate JavaScript syntax with `node -c` before committing changes
 - Test SPA functionality with `node src/app.js` to verify routing and initialization
-- Run automated tests with `npm run test:all` before commits to ensure 1,251+ tests pass
+- Run automated tests with `npm run test:all` before commits to ensure 1,301+ tests pass
 - For UI/web features, use the web server and src/index.html for manual validation
 - **Follow immutability principles** - see `.github/CONTRIBUTING.md` for guidelines
-- **TIMING**: Syntax checks <1 second, tests ~3 seconds, web server startup 3 seconds
+- **TIMING**: Syntax checks <1 second, tests ~7 seconds, web server startup 3 seconds
 
 ## Validation Scenarios
 
@@ -49,7 +49,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 2. **Automated Test Suite**:
    ```bash
    npm run test:all
-   # Should show: ✅ 1,251+ tests passing (1,399 total), ✅ 59 suites passing (67 total), ~3 seconds execution
+   # Should show: ✅ 1,301+ tests passing (1,438 total), ✅ 64 suites passing (68 total), ~7 seconds execution
    ```
 
 3. **Web Application Functionality**:
@@ -79,7 +79,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `src/guia.js` (468 lines) - guia.js library exports (imported from dependency)
 - `src/guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
 - `package.json` - Node.js configuration with guia.js dependency
-- `__tests__/` - 67 test suites with 1,399 total tests (1,251 passing)
+- `__tests__/` - 68 test suites with 1,438 total tests (1,301 passing, 137 skipped)
 - `.github/CONTRIBUTING.md` - Contribution guidelines including immutability principles
 - `.github/scripts/test-workflow-locally.sh` - Pre-push validation script (simulates CI/CD)
 - `cdn-delivery.sh` - CDN URL generator for jsDelivr distribution
@@ -120,17 +120,17 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Testing Infrastructure
 
 ### Automated Test Coverage
-- **1,399 total tests** (1,251 passing) across 67 test suites running in ~3 seconds
+- **1,438 total tests** (1,301 passing, 137 skipped) across 68 test suites running in ~7 seconds
 - **~70% code coverage** overall (69.82% actual)
 - **100% coverage** of guia_ibge.js (full coverage)
 - **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns
 
 ### Test Execution Commands
 ```bash
-# Run all tests (2 seconds)
+# Run all tests (~7 seconds)
 npm test
 
-# Run tests with coverage report (2.2 seconds)  
+# Run tests with coverage report (~7 seconds)  
 npm run test:coverage
 
 # Run tests in watch mode (development)
@@ -139,13 +139,13 @@ npm run test:watch
 # Syntax validation only (<1 second)
 npm run validate
 
-# Full validation: syntax + tests (4 seconds total)
+# Full validation: syntax + tests (~7 seconds total)
 npm run test:all
 ```
 
 ### Expected Test Results
-- ✅ 1,251 tests passing (1,399 total)
-- ✅ 57 suites of test files
+- ✅ 1,301 tests passing (1,438 total, 137 skipped)
+- ✅ 64 test suites passing (68 total, 4 skipped)
 - ✅ ~70% code coverage overall
 - ✅ 100% code coverage on guia_ibge.js
 - ✅ 14 immutability pattern tests
@@ -309,15 +309,15 @@ curl -s http://localhost:9000/test.html | head -5
 ### Performance Expectations
 - **Syntax validation**: <1 second each file
 - **Basic Node.js test**: <1 second  
-- **Jest test suite**: ~3 seconds for 1,399 tests (1,251 passing)
-- **Jest with coverage**: ~2.2 seconds
+- **Jest test suite**: ~7 seconds for 1,438 tests (1,301 passing, 137 skipped)
+- **Jest with coverage**: ~7 seconds
 - **Web server startup**: ~3 seconds, then runs indefinitely
 - **npm install**: ~20 seconds (299 packages)
 
 ### Validation Checklist
 - [ ] Node.js syntax validation passes (`node -c src/guia.js`)
 - [ ] Basic Node.js execution shows version output
-- [ ] All 55 automated tests pass (`npm test`)
+- [ ] All 1,301 automated tests pass (`npm test`)
 - [ ] Web server starts successfully (`python3 -m http.server 9000`)
 - [ ] Test page loads without JavaScript errors
 - [ ] Geolocation button triggers proper API calls

@@ -47,7 +47,7 @@ docs/architecture/WEB_GEOCODING_MANAGER.md
 docs/DEVICE_DETECTION.md
 docs/VOICE_SELECTION.md
 docs/IBIRA_INTEGRATION.md
-docs/api-integration/NOMINATIM_API_FORMAT.md
+docs/api-integration/NOMINATIM_INTEGRATION.md
 ```
 
 **Low Priority** (Historical/Archive):

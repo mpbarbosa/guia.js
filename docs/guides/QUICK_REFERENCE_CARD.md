@@ -105,7 +105,7 @@ guia_js/
 - [JEST_COMMONJS_ES6_GUIDE.md](.github/JEST_COMMONJS_ES6_GUIDE.md)
 
 ### API Integration
-- [NOMINATIM_API_FORMAT.md](docs/api-integration/NOMINATIM_API_FORMAT.md)
+- [NOMINATIM_INTEGRATION.md](docs/api-integration/NOMINATIM_INTEGRATION.md)
 - [IBIRA_INTEGRATION.md](docs/IBIRA_INTEGRATION.md)
 
 ## 🐛 Troubleshooting

@@ -15,6 +15,7 @@ This document describes the test suite created for validating Nominatim API JSON
 ## Test Data
 
 The test suite uses a real-world Nominatim API response from:
+
 - **Location:** Mairiporã, São Paulo, Brazil
 - **Coordinates:** -23.3303320, -46.5766545
 - **Type:** shop/car_repair
@@ -121,7 +122,7 @@ npm test
 
 ## Expected Output
 
-```
+```text
 PASS __tests__/NominatimJSONFormat.test.js
   Nominatim JSON Format Tests
     Top-Level Fields
@@ -155,7 +156,7 @@ The tests validate that Guia.js correctly:
 
 ## Related Documentation
 
-- [Nominatim API Format Documentation](./NOMINATIM_API_FORMAT.md)
+- [Nominatim Integration Documentation](./NOMINATIM_INTEGRATION.md)
 - [OSM Address Translation Tests](../__tests__/OSMAddressTranslation.test.js)
 - [Address Data Extractor Tests](../__tests__/AddressDataExtractor.test.js)
 - [Reference Place Tests](../__tests__/ReferencePlace.test.js)

@@ -1,55 +1,61 @@
 # Architecture Decision Record (ADR)
 
-**Project**: Guia.js  
-**Version**: 0.6.0-alpha  
+**Project**: Guia Turístico (Tourist Guide SPA)  
+**Version**: 0.7.0-alpha  
 **Date**: 2026-01-06
 
 ---
 
 ## ⚠️ CRITICAL: Project Type Classification
 
-### Decision: Guia.js is a JavaScript Library/SDK, NOT a Website
+### Decision: Guia Turístico is a Single-Page Application (SPA), NOT a Library
 
 **Status**: ✅ Accepted and Documented
 
-**Context**: 
-This project has been identified as a JavaScript library for geolocation services, specifically designed to be:
-- Imported by other applications
-- Distributed via CDN (jsDelivr)
-- Integrated as a dependency
-- NOT deployed as a standalone website
+**Context**:
+This project is a tourist guide web application built on top of the Guia.js library (https://github.com/mpbarbosa/guia_js), specifically designed to be:
+
+- Deployed as a standalone web application
+- Used directly by end-users through a browser
+- Integrated with geolocation services via the Guia.js library dependency
+- A consumer/implementation of the Guia.js library
 
 **Decision**:
-Guia.js SHALL be treated as a **JavaScript Library/SDK** with the following implications:
+Guia Turístico SHALL be treated as a **Single-Page Web Application** with the following implications:
 
-1. **Distribution Method**: CDN (jsDelivr) + optional npm package
-2. **NOT GitHub Pages**: GitHub Pages is inappropriate for library code
-3. **Test Files**: `test.html` is for development only, not production deployment
-4. **Documentation**: Markdown in `/docs` for repository browsing, not a docs website
+1. **Distribution Method**: Deployed web application (GitHub Pages or web server)
+2. **Application Type**: SPA with routing, DOM manipulation, and user interactions
+3. **Entry Point**: `src/index.html` for end-users accessing the application
+4. **Dependencies**: Consumes Guia.js library for geolocation functionality
 
 **Consequences**:
 
 ✅ **Allowed**:
-- Distributing via jsDelivr CDN (current method)
-- Publishing to npm registry (future enhancement)
-- Creating separate documentation website (new repository)
-- Developers importing Guia.js into their applications
+
+- Deploying to GitHub Pages or web hosting services
+- Creating user-facing web interfaces (`src/index.html`, `src/app.js`)
+- Treating as standalone web application
+- Building and optimizing for website deployment
+- Importing Guia.js library as a dependency
 
 ❌ **Prohibited**:
-- Deploying to GitHub Pages as a website
-- Creating `index.html` landing page in repository
-- Treating as standalone web application
-- Building for website deployment
+
+- Distributing Guia Turístico itself as a library/SDK
+- Publishing the application to npm as a package
+- Treating as a reusable component for other applications
+- Using as a CDN-distributed library
 
 **Rationale**:
-- Project structure analysis shows 100% library characteristics
-- `package.json` configured as ES6 module library
-- 1224+ tests validate library functionality
-- CDN distribution already operational
-- No user-facing website content exists
-- Main file is `src/guia.js` (JavaScript module), not `index.html`
+
+- Project structure analysis shows 100% web application characteristics
+- `src/index.html` is the main entry point for users
+- `src/app.js` contains SPA routing and initialization logic
+- 1,438 tests validate application functionality (1,301 passing)
+- Uses Guia.js library (from https://github.com/mpbarbosa/guia_js) as a dependency
+- Designed for end-user interaction, not developer integration
 
 **References**:
+
 - [PROJECT_PURPOSE_AND_ARCHITECTURE.md](docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md) - Complete documentation
 - [PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) - Structure analysis
 - [README.md](README.md) - Usage and integration guide
@@ -60,23 +66,23 @@ Guia.js SHALL be treated as a **JavaScript Library/SDK** with the following impl
 
 Before making architectural changes, ask:
 
-1. **"Would jQuery do this?"** - If not, Guia.js probably shouldn't either
-2. **"Does this treat Guia.js as a library or a website?"** - Must be library
-3. **"Is CDN distribution already solving this?"** - If yes, don't add complexity
-4. **"Would this confuse developers integrating Guia.js?"** - If yes, don't do it
+1. **"Is this a user-facing feature?"** - If yes, it belongs in Guia Turístico
+2. **"Does this treat Guia Turístico as a SPA or a library?"** - Must be SPA
+3. **"Would end-users directly interact with this?"** - If yes, implement it
+4. **"Does this require deploying to a web server?"** - If yes, that's appropriate
 
 ---
 
-## Quick Reference: Library vs. Website
+## Quick Reference: Library vs. Application
 
-| Aspect | Library (Guia.js) | Website |
-|--------|-------------------|---------|
-| **Entry Point** | `src/guia.js` (imported) | `index.html` (visited) |
-| **Distribution** | CDN, npm | Web server, hosting |
+| Aspect | Library (Guia.js - dependency) | Application (Guia Turístico - this project) |
+|--------|-------------------------------|---------------------------------------------|
+| **Entry Point** | `src/guia.js` (imported) | `src/index.html` (visited) |
+| **Distribution** | CDN, npm | Web server, GitHub Pages |
 | **Users** | Developers integrating code | End-users visiting pages |
-| **Purpose** | Provide functionality | Provide content |
-| **Testing** | `test.html` (development only) | Production pages |
-| **Deployment** | Tag → CDN sync | Build → web server |
+| **Purpose** | Provide geolocation functionality | Provide tourist guide experience |
+| **Testing** | Unit tests, integration tests | SPA functionality, DOM interactions |
+| **Deployment** | Tag → CDN sync | Build → web server deployment |
 
 ---
 

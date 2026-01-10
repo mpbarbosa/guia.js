@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Centralized singleton manager for device geographic position.
  * 

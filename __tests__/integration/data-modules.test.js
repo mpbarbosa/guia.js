@@ -7,7 +7,7 @@
  * @jest-environment node
  */
 
-import { describe, test, expect, jest, beforeEach } from '@jest/globals';
+import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globals';
 
 // Mock globals before importing
 global.document = undefined;
@@ -15,6 +15,19 @@ global.window = { log: jest.fn(), warn: jest.fn() };
 global.console = { ...console, log: jest.fn(), warn: jest.fn() };
 
 describe('Data Processing Modules Integration', () => {
+    
+    afterEach(async () => {
+        // Clean up AddressCache singleton to prevent timer leaks
+        try {
+            const { default: AddressCache } = await import('../../src/data/AddressCache.js');
+            const cache = AddressCache.getInstance();
+            if (cache && typeof cache.destroy === 'function') {
+                cache.destroy();
+            }
+        } catch (error) {
+            // Ignore cleanup errors in test environment
+        }
+    });
     
     describe('Module Imports', () => {
         test('should import BrazilianStandardAddress from data module', async () => {

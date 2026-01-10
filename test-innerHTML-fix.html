@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Test: innerHTML Fix</title>
+</head>
+<body>
+    <h1>Test: Element ID Resolution Fix</h1>
+    <button id="testBtn">Test Geolocation (Deny Permission to Trigger Error)</button>
+    <div id="location-result">Waiting...</div>
+    <div id="console-output"></div>
+    <script type="module">
+        import { WebGeocodingManager } from './src/coordination/WebGeocodingManager.js';
+        
+        const output = document.getElementById('console-output');
+        const btn = document.getElementById('testBtn');
+        
+        btn.addEventListener('click', async () => {
+            output.innerHTML += '<p>Creating manager with string ID...</p>';
+            
+            try {
+                // Pass string ID (old way - should now work)
+                const manager = new WebGeocodingManager(document, {
+                    locationResult: 'location-result'  // String ID, not element
+                });
+                
+                output.innerHTML += '<p>✅ Manager created successfully</p>';
+                output.innerHTML += '<p>Requesting location (deny permission to trigger error display)...</p>';
+                
+                const position = await manager.getSingleLocationUpdate();
+                output.innerHTML += `<p>✅ Position: ${position.coords.latitude}, ${position.coords.longitude}</p>`;
+            } catch (error) {
+                output.innerHTML += `<p>⚠️ Error caught: ${error.name} - ${error.message}</p>`;
+                output.innerHTML += `<p>✅ Error displayed in location-result div (check above)</p>`;
+            }
+        });
+        
+        output.innerHTML = '<p>Ready! Click button to test. Deny permission to verify error display works.</p>';
+    </script>
+</body>
+</html>

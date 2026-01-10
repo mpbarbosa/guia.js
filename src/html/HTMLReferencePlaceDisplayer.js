@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * HTML-based reference place information displayer with Portuguese localization.
  * 
@@ -193,7 +195,8 @@ class HTMLReferencePlaceDisplayer {
 		}
 
 		// Handle successful reference place data for position updates
-		if (posEvent === 'strCurrPosUpdate' && brazilianStandardAddress) {
+		// Note: Using actual event value from PositionManager constant
+		if (posEvent === 'PositionManager updated' && brazilianStandardAddress) {
 			console.log(`(HTMLReferencePlaceDisplayer) Rendering reference place data:`, brazilianStandardAddress);
 			
 			// Extract reference place from the standardized address

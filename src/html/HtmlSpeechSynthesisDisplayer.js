@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * HTML-based speech synthesis controller with UI integration and address change notifications.
  * 
@@ -266,7 +268,7 @@ class HtmlSpeechSynthesisDisplayer {
 		this.pitchValue = this.document.getElementById(elementIds.pitchValueId);
 
 		// Initialize the speech synthesis interface
-		this.init();
+		this._initialize();
 
 		// Freeze instance to prevent external modification (MP Barbosa pattern)
 		Object.freeze(this);
@@ -288,9 +290,9 @@ class HtmlSpeechSynthesisDisplayer {
 	 * @private
 	 * @returns {void}
 	 */
-	init() {
+	_initialize() {
 		this.updateVoices();
-		this.setupEventHandlers();
+		this._setupEventHandlers();
 		this.speechManager.startQueueTimer();
 	}
 
@@ -380,7 +382,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * @private
 	 * @returns {void}
 	 */
-	setupEventHandlers() {
+	_setupEventHandlers() {
 		// Voice selection change handler
 		if (this.voiceSelect) {
 			this.voiceSelect.addEventListener('change', (e) => {

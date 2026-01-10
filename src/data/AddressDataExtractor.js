@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Legacy address data extractor facade.
  * 

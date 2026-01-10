@@ -7,6 +7,9 @@
   'use strict';
 
   let permissionStatus = 'prompt'; // 'prompt', 'granted', 'denied'
+  
+  // Track active timeouts for cleanup
+  const activeTimeouts = new Set();
 
   /**
    * Initialize geolocation banner
@@ -116,7 +119,11 @@
     const banner = document.querySelector('.geolocation-banner');
     if (banner) {
       banner.classList.add('hidden');
-      setTimeout(() => banner.remove(), 300);
+      const timeout = setTimeout(() => {
+        banner.remove();
+        activeTimeouts.delete(timeout);
+      }, 300);
+      activeTimeouts.add(timeout);
     }
   }
 
@@ -139,10 +146,16 @@
       
       container.appendChild(toast);
       
-      setTimeout(() => {
+      const timeout1 = setTimeout(() => {
         toast.classList.add('toast-exit');
-        setTimeout(() => toast.remove(), 300);
+        const timeout2 = setTimeout(() => {
+          toast.remove();
+          activeTimeouts.delete(timeout2);
+        }, 300);
+        activeTimeouts.add(timeout2);
+        activeTimeouts.delete(timeout1);
       }, 3000);
+      activeTimeouts.add(timeout1);
     }
   }
 
@@ -189,7 +202,31 @@
     init: init,
     requestPermission: requestPermission,
     dismiss: dismissBanner,
-    getStatus: getStatus
+    getStatus: getStatus,
+    
+    /**
+     * Cleanup function for timer leaks prevention.
+     * Clears all pending timeouts (banner/toast animations).
+     * Useful in test environments.
+     * 
+     * @since 0.8.7-alpha
+     */
+    destroy: function() {
+      activeTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+      activeTimeouts.clear();
+      
+      // Remove banner if exists
+      const banner = document.querySelector('.geolocation-banner');
+      if (banner) {
+        banner.remove();
+      }
+      
+      // Remove status messages
+      const status = document.querySelector('.geolocation-status');
+      if (status) {
+        status.remove();
+      }
+    }
   };
 
   // Auto-initialize when DOM is ready

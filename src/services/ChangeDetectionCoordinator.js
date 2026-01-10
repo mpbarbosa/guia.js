@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Coordinator for address component change detection.
  * 

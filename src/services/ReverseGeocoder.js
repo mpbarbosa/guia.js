@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Reverse geocoding service for converting coordinates to addresses.
  * 
@@ -370,6 +372,21 @@ class ReverseGeocoder {
 		}
 
 		this._subscribe(this.url);
+
+		// FIXED: Check if fetchManager is available before using it
+		// If IbiraAPIFetchManager is not available, fall back to browser fetch API
+		if (!this.fetchManager) {
+			// Use browser fetch API as fallback (normal operation without ibira.js)
+			try {
+				const response = await fetch(this.url);
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return await response.json();
+			} catch (error) {
+				throw error;
+			}
+		}
 
 		// FIXED: Use modern async/await instead of unnecessary Promise wrapping
 		// The original code wrapped fetchData() in a new Promise, which is an anti-pattern

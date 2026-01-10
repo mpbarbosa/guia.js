@@ -278,17 +278,22 @@ class TestMilhoVerdeGeolocation(unittest.TestCase):
         print(f"Console logs after provider test: {logs2}")
 
     def test_03_coordinates_display_correctly(self):
-        """Test that Milho Verde coordinates are displayed correctly.
+        """Test that Milho Verde coordinates are displayed correctly in the DOM.
         
-        NOTE: This test currently verifies page structure only.  
-        Full geolocation mocking with coordinate display validation requires
-        additional work on the WebGeocodingManager initialization flow.
+        This test validates the complete flow:
+        1. Load page and let WebGeocodingManager initialize
+        2. Inject mock provider into existing GeolocationService
+        3. Click "Obter Localização" button
+        4. Verify coordinates appear in locationResult element
+        5. Extract and validate latitude/longitude values from DOM
+        
+        NOTE: We inject the mock provider AFTER page load, directly into the
+        existing GeolocationService instance, since WebGeocodingManager creates
+        its service during initialization.
         """
-        # Load page
+        # Load page and wait for initialization
         self.driver.get(f"{self.base_url}/index.html")
-        
-        # Wait for page to fully load
-        time.sleep(2)
+        time.sleep(3)  # Wait longer for app initialization
         
         # Verify critical elements exist
         initial_check = self.driver.execute_script("""
@@ -305,10 +310,181 @@ class TestMilhoVerdeGeolocation(unittest.TestCase):
         self.assertTrue(initial_check['hasLocationResult'], "Location result section should be present")
         self.assertTrue(initial_check['hasAppContent'], "App content container should be present")
         
-        # TODO: Complete full geolocation flow testing
-        # The mock geolocation approach needs refinement to properly integrate with
-        # WebGeocodingManager's observer pattern and displayer architecture.
-        print("[TEST] Page structure verified successfully. Full geolocation flow testing TODO.")
+        # Now inject mock provider directly into the existing GeolocationService
+        # First check what global references are available
+        global_check = self.driver.execute_script("""
+            return {
+                hasAppState: typeof window.AppState !== 'undefined',
+                hasPositionManager: typeof window.PositionManager !== 'undefined',
+                hasWebGeocodingManager: typeof window.WebGeocodingManager !== 'undefined',
+                hasGeolocationService: typeof window.GeolocationService !== 'undefined',
+                hasMockProvider: typeof window.MockGeolocationProvider !== 'undefined',
+                globalKeys: Object.keys(window).filter(k => k.includes('Geo') || k.includes('App') || k.includes('Position'))
+            };
+        """)
+        print(f"[TEST] Global check: {global_check}")
+        
+        # Since AppState is module-scoped, we need to find the manager through global references
+        # The PositionManager singleton might have a reference to the service
+        inject_result = self.driver.execute_script(f"""
+            try {{
+                // Create mock position object
+                window.TEST_POSITION = {{
+                    coords: {{
+                        latitude: {self.TEST_LATITUDE},
+                        longitude: {self.TEST_LONGITUDE},
+                        accuracy: 10,
+                        altitude: null,
+                        altitudeAccuracy: null,
+                        heading: null,
+                        speed: null
+                    }},
+                    timestamp: Date.now()
+                }};
+                
+                // Create MockGeolocationProvider instance
+                window.TEST_MOCK_PROVIDER = new window.MockGeolocationProvider({{
+                    defaultPosition: window.TEST_POSITION,
+                    supported: true,
+                    delay: 100
+                }});
+                
+                console.log('[TEST] Mock provider created');
+                
+                // CRITICAL FIX: Override the provider's getCurrentPosition method, not GeolocationService
+                // GeolocationService internally calls this.provider.getCurrentPosition()
+                // So we need to replace the provider on ALL instances
+                
+                // Override BrowserGeolocationProvider.prototype.getCurrentPosition
+                // This will affect all instances including the one in GeolocationService
+                window.BrowserGeolocationProvider.prototype.getCurrentPosition = function(successCallback, errorCallback, options) {{
+                    console.log('[TEST] BrowserGeolocationProvider.getCurrentPosition intercepted - using mock');
+                    return window.TEST_MOCK_PROVIDER.getCurrentPosition(successCallback, errorCallback, options);
+                }};
+                
+                return {{
+                    success: true,
+                    method: 'provider prototype override',
+                    coordinates: {{
+                        latitude: {self.TEST_LATITUDE},
+                        longitude: {self.TEST_LONGITUDE},
+                        accuracy: 10
+                    }}
+                }};
+                
+            }} catch (error) {{
+                console.error('[TEST] Failed to inject mock:', error);
+                return {{
+                    success: false,
+                    error: error.message,
+                    stack: error.stack
+                }};
+            }}
+        """)
+        
+        print(f"[TEST] Mock injection result: {inject_result}")
+        self.assertTrue(inject_result['success'], 
+                       f"Mock injection should succeed: {inject_result.get('error')}")
+
+        # Click "Obter Localização" button to trigger geolocation
+        get_location_btn = self.wait.until(
+            EC.element_to_be_clickable((By.ID, "getLocationBtn"))
+        )
+        print("[TEST] Clicking 'Obter Localização' button...")
+        get_location_btn.click()
+        
+        # Wait for coordinates to appear in locationResult element
+        time.sleep(4)
+        
+        # Check what happened - debug the state
+        debug_info = self.driver.execute_script("""
+            const locationResult = document.getElementById('locationResult');
+            return {
+                locationResultExists: !!locationResult,
+                locationResultHTML: locationResult ? locationResult.innerHTML.substring(0, 300) : 'N/A',
+                hasMockProvider: !!window.TEST_MOCK_PROVIDER,
+                hasGeolocationService: typeof window.GeolocationService !== 'undefined'
+            };
+        """)
+        print(f"[TEST] Debug info: {debug_info}")
+        
+        # Handle any alert dialogs that might appear
+        try:
+            from selenium.webdriver.common.alert import Alert
+            alert = Alert(self.driver)
+            alert_text = alert.text
+            print(f"[TEST] Alert detected: {alert_text}")
+            alert.dismiss()
+            # If alert appeared, the test should fail as coordinates weren't displayed
+            self.fail(f"Unexpected alert appeared: {alert_text}")
+        except Exception:
+            # No alert present, which is expected
+            pass
+        
+        # Extract coordinate values from both possible locations:
+        # 1. The id="locationResult" section (primary display with detailed coordinates)
+        # 2. The id="coordinates" section with id="lat-long-display" span (summary display)
+        coordinate_data = self.driver.execute_script(r"""
+            // First check the main locationResult section
+            const locationResult = document.getElementById('locationResult');
+            if (!locationResult) {
+                return { success: false, error: 'locationResult element not found' };
+            }
+            
+            const locationHTML = locationResult.innerHTML;
+            
+            // Extract latitude and longitude from locationResult using regex
+            const latMatch = locationHTML.match(/Latitude:<\/strong>\s*(-?\d+\.\d+)/i);
+            const lonMatch = locationHTML.match(/Longitude:<\/strong>\s*(-?\d+\.\d+)/i);
+            
+            if (!latMatch || !lonMatch) {
+                return { 
+                    success: false, 
+                    error: 'Coordinates not found in locationResult',
+                    html: locationHTML.substring(0, 500)
+                };
+            }
+            
+            // Also check if the coordinates section is populated (optional validation)
+            const coordinatesSection = document.getElementById('coordinates');
+            const latLongDisplay = document.getElementById('lat-long-display');
+            const coordinatesText = latLongDisplay ? (latLongDisplay.textContent || latLongDisplay.innerText) : 'Not populated';
+            
+            return {
+                success: true,
+                latitude: parseFloat(latMatch[1]),
+                longitude: parseFloat(lonMatch[1]),
+                source: 'locationResult',
+                coordinatesSectionText: coordinatesText,
+                locationResultHTML: locationHTML.substring(0, 300)
+            };
+        """)
+        
+        print(f"[TEST] Coordinate extraction result: success={coordinate_data.get('success')}")
+        
+        # Debug: print relevant info
+        if not coordinate_data['success']:
+            print(f"[TEST] HTML content: {coordinate_data.get('html', 'N/A')[:500]}")
+        else:
+            print(f"[TEST] Extracted from: {coordinate_data.get('source')}")
+            print(f"[TEST] Coordinates section text: {coordinate_data.get('coordinatesSectionText')}")
+        
+        # Validate that coordinates were successfully extracted
+        self.assertTrue(coordinate_data['success'], 
+                       f"Should extract coordinates from DOM: {coordinate_data.get('error')}")
+        
+        # Validate latitude value in DOM matches expected
+        actual_lat = coordinate_data['latitude']
+        self.assertAlmostEqual(actual_lat, self.TEST_LATITUDE, places=6,
+                              msg=f"DOM latitude ({actual_lat}) should match test value ({self.TEST_LATITUDE})")
+        
+        # Validate longitude value in DOM matches expected
+        actual_lon = coordinate_data['longitude']
+        self.assertAlmostEqual(actual_lon, self.TEST_LONGITUDE, places=6,
+                              msg=f"DOM longitude ({actual_lon}) should match test value ({self.TEST_LONGITUDE})")
+        
+        print(f"✅ Coordinates validated in locationResult: lat={actual_lat}, lon={actual_lon}")
+        print(f"✅ Full coordinate display validation passed!")    
 
     def test_04_address_converter_with_milho_verde_coordinates(self):
         """Test address converter with Milho Verde coordinates."""

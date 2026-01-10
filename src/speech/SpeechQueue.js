@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Priority-based speech synthesis queue with automatic cleanup and observer pattern integration.
  * 

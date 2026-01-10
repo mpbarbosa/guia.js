@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Browser-based geolocation provider using the Web Geolocation API.
  * 

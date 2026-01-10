@@ -116,7 +116,7 @@ describe('HTMLAddressDisplayer Integration Tests', () => {
                 }
             };
             
-            instance.update(mockAddressData, null, 'strCurrPosUpdate', false, null);
+            instance.update(mockAddressData, null, 'PositionManager updated', false, null);
             
             expect(testElement.innerHTML).toContain('Shopping Iguatemi');
             expect(testElement.innerHTML).toContain('address-details');
@@ -158,7 +158,7 @@ describe('HTMLAddressDisplayer Integration Tests', () => {
             const instance = new HTMLAddressDisplayer(mockElement);
             
             const error = new Error('Falha na conexão com serviço de geocodificação');
-            instance.update(null, null, 'strCurrPosUpdate', false, error);
+            instance.update(null, null, 'PositionManager updated', false, error);
             
             expect(mockElement.innerHTML).toContain('Erro ao carregar endereço');
             expect(mockElement.innerHTML).toContain('Falha na conexão com serviço de geocodificação');
@@ -366,7 +366,7 @@ describe('HTMLAddressDisplayer Integration Tests', () => {
                 address: { road: 'Factory Test Street' }
             };
             
-            displayer.update(addressData, null, 'strCurrPosUpdate', false, null);
+            displayer.update(addressData, null, 'PositionManager updated', false, null);
             
             expect(element.innerHTML).toContain('Factory Test Address');
             expect(element.innerHTML).toContain('Factory Test Street');

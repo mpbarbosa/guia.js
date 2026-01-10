@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Main Application Entry Point
  * SPA Router and Application Initialization

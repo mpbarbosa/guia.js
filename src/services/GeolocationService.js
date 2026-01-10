@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Geolocation service for browser-based location access.
  * 
@@ -279,6 +281,7 @@ class GeolocationService {
 		// Prevents overlapping geolocation requests that could cause stale data
 		// or inconsistent state in the PositionManager
 		this.isPendingRequest = false;
+		this.pendingPromise = null;
 
 		// CONFIGURATION AND PERFORMANCE OPTIMIZATION:
 		// The service accepts configuration options for geolocation parameters including
@@ -395,8 +398,13 @@ class GeolocationService {
 	 * @since 0.8.3-alpha
 	 */
 	async getSingleLocationUpdate() {
-		return new Promise((resolve, reject) => {
-			// Prevent race conditions from overlapping requests
+		// Return existing promise if request already pending
+		if (this.isPendingRequest && this.pendingPromise) {
+			return this.pendingPromise;
+		}
+
+		this.pendingPromise = new Promise((resolve, reject) => {
+			// Double-check after promise creation
 			if (this.isPendingRequest) {
 				const error = new Error("A geolocation request is already pending");
 				error.name = "RequestPendingError";
@@ -417,6 +425,7 @@ class GeolocationService {
 			this.provider.getCurrentPosition(
 				(position) => {
 					this.isPendingRequest = false;
+					this.pendingPromise = null;
 					this.lastKnownPosition = position;
 
 					// Update PositionManager with new position
@@ -431,6 +440,7 @@ class GeolocationService {
 				},
 				(error) => {
 					this.isPendingRequest = false;
+					this.pendingPromise = null;
 					// Privacy: Log error without coordinates
 					console.error("(GeolocationService) Single location update failed:", error.message || error);
 
@@ -444,6 +454,8 @@ class GeolocationService {
 				this.config.geolocationOptions
 			);
 		});
+
+		return this.pendingPromise;
 	}
 
 	/**

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Default configuration for Guia.js application.
  * 

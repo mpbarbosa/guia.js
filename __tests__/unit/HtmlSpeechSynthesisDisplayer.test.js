@@ -89,8 +89,8 @@ class MockSpeechSynthesisManager {
 
 // Mock PositionManager
 const MockPositionManager = {
-	strCurrPosUpdate: 'strCurrPosUpdate',
-	strImmediateAddressUpdate: 'strImmediateAddressUpdate'
+	strCurrPosUpdate: 'PositionManager updated',
+	strImmediateAddressUpdate: 'Immediate address update'
 };
 
 // Mock BrazilianStandardAddress for testing
@@ -527,7 +527,7 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.8.3-alpha)'
 				current: { municipio: 'São Paulo' }
 			};
 
-			displayer.update(address, 'MunicipioChanged', 'strCurrPosUpdate', changeDetails);
+			displayer.update(address, 'MunicipioChanged', 'PositionManager updated', changeDetails);
 
 			expect(mockElements.textInput.value).toBe('Você saiu de Santos e entrou em São Paulo');
 		});
@@ -537,7 +537,7 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.8.3-alpha)'
 				bairro: 'Centro'
 			});
 
-			displayer.update(address, 'BairroChanged', 'strCurrPosUpdate');
+			displayer.update(address, 'BairroChanged', 'PositionManager updated');
 
 			expect(mockElements.textInput.value).toBe('Você entrou no bairro Centro');
 		});
@@ -548,7 +548,7 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.8.3-alpha)'
 				numero: '123'
 			});
 
-			displayer.update(address, 'LogradouroChanged', 'strCurrPosUpdate');
+			displayer.update(address, 'LogradouroChanged', 'PositionManager updated');
 
 			expect(mockElements.textInput.value).toBe('Você está agora em Rua das Flores, 123');
 		});
@@ -578,7 +578,7 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.8.3-alpha)'
 
 		test('should handle null current address gracefully', () => {
 			expect(() => {
-				displayer.update(null, 'MunicipioChanged', 'strCurrPosUpdate');
+				displayer.update(null, 'MunicipioChanged', 'PositionManager updated');
 			}).not.toThrow();
 
 			expect(mockElements.textInput.value).toBe('');
@@ -599,7 +599,7 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.8.3-alpha)'
 			});
 
 			expect(() => {
-				testDisplayer.update(address, 'MunicipioChanged', 'strCurrPosUpdate');
+				testDisplayer.update(address, 'MunicipioChanged', 'PositionManager updated');
 			}).not.toThrow();
 		});
 
@@ -608,7 +608,7 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.8.3-alpha)'
 				municipio: 'São Paulo'
 			});
 
-			displayer.update(address, 'MunicipioChanged', 'strCurrPosUpdate');
+			displayer.update(address, 'MunicipioChanged', 'PositionManager updated');
 
 			expect(console.log).toHaveBeenCalledWith('+++ (301) HtmlSpeechSynthesisDisplayer.update called +++');
 			expect(console.log).toHaveBeenCalledWith('+++ (302) currentAddress: ', address);
@@ -672,7 +672,7 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.8.3-alpha)'
 			});
 
 			expect(() => {
-				displayer.update(address, 'UnknownEvent', 'strCurrPosUpdate');
+				displayer.update(address, 'UnknownEvent', 'PositionManager updated');
 			}).not.toThrow();
 		});
 

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Mock geolocation provider for testing and development.
  * 
@@ -67,6 +69,9 @@ class MockGeolocationProvider extends GeolocationProvider {
 		// Track watch IDs
 		this.watchIdCounter = 0;
 		this.activeWatches = new Map();
+		
+		// Track pending timeouts for cleanup
+		this.pendingTimeouts = new Set();
 	}
 
 	/**
@@ -262,17 +267,59 @@ class MockGeolocationProvider extends GeolocationProvider {
 	/**
 	 * Helper to call function with configured delay.
 	 * 
+	 * Tracks timeout ID for cleanup in destroy().
+	 * 
 	 * @private
 	 * @param {Function} fn - Function to call
 	 * @returns {void}
 	 */
 	_callWithDelay(fn) {
-		if (this.config.delay > 0) {
-			setTimeout(fn, this.config.delay);
-		} else {
-			// Call synchronously (but still async to simulate Promise behavior)
-			setTimeout(fn, 0);
-		}
+		const timeoutId = this.config.delay > 0
+			? setTimeout(() => {
+				this.pendingTimeouts.delete(timeoutId);
+				fn();
+			}, this.config.delay)
+			: setTimeout(() => {
+				this.pendingTimeouts.delete(timeoutId);
+				fn();
+			}, 0);
+		
+		this.pendingTimeouts.add(timeoutId);
+	}
+
+	/**
+	 * Destroys the mock provider and cleans up all resources.
+	 * 
+	 * Clears all active watches and cancels any pending timeouts to prevent
+	 * timer leaks in test environments. Call this in test teardown (afterEach).
+	 * 
+	 * @returns {void}
+	 * @since 0.8.7-alpha
+	 * @author Marcelo Pereira Barbosa
+	 * 
+	 * @example
+	 * // In tests
+	 * describe('Geolocation Tests', () => {
+	 *   let provider;
+	 *   
+	 *   beforeEach(() => {
+	 *     provider = new MockGeolocationProvider({ delay: 100 });
+	 *   });
+	 *   
+	 *   afterEach(() => {
+	 *     provider.destroy(); // Clean up pending timeouts
+	 *   });
+	 * });
+	 */
+	destroy() {
+		// Clear all active watches
+		this.activeWatches.clear();
+		
+		// Cancel all pending timeouts
+		this.pendingTimeouts.forEach(timeoutId => {
+			clearTimeout(timeoutId);
+		});
+		this.pendingTimeouts.clear();
 	}
 }
 

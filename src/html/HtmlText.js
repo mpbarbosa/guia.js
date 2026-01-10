@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Manages HTML text content updates with timestamp formatting.
  * 
@@ -58,10 +60,10 @@ class HtmlText {
 		this.document = document;
 		this.element = element;
 		
-		// Configure event names with defaults for backward compatibility
+		// Configure event names with defaults matching PositionManager constants
 		this.eventConfig = {
-			positionUpdate: eventConfig.positionUpdate || 'strCurrPosUpdate',
-			immediateAddressUpdate: eventConfig.immediateAddressUpdate || 'strImmediateAddressUpdate'
+			positionUpdate: eventConfig.positionUpdate || 'PositionManager updated',
+			immediateAddressUpdate: eventConfig.immediateAddressUpdate || 'Immediate address update'
 		};
 		
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards

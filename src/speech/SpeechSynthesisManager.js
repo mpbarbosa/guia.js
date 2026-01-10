@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Speech Synthesis Manager for Web Speech API integration with queue-based processing.
  * 
@@ -1036,6 +1038,66 @@ class SpeechSynthesisManager {
      */
     toString() {
         return `${this.constructor.name}: voice=${this.voice?.name || 'none'}, rate=${this.rate}, pitch=${this.pitch}, isSpeaking=${this.isCurrentlySpeaking}, queueSize=${this.speechQueue.size()}`;
+    }
+
+    /**
+     * Destroys the speech manager and cleans up all resources.
+     * 
+     * Stops all timers (voice retry and queue processing), cancels any ongoing speech,
+     * clears the queue, and releases references. This method is critical for preventing
+     * timer leaks in test environments where SpeechSynthesisManager instances are
+     * created and destroyed frequently.
+     * 
+     * Call this method when the speech manager is no longer needed to ensure proper
+     * cleanup of all resources and prevent memory/timer leaks.
+     * 
+     * @returns {void}
+     * @since 0.8.6-alpha
+     * @author Marcelo Pereira Barbosa
+     * 
+     * @example
+     * const speechManager = new SpeechSynthesisManager();
+     * speechManager.speak("Hello world");
+     * // ... use speech manager
+     * speechManager.destroy(); // Clean up when done
+     * 
+     * @example
+     * // In tests
+     * describe('SpeechSynthesisManager', () => {
+     *   let manager;
+     *   
+     *   beforeEach(() => {
+     *     manager = new SpeechSynthesisManager();
+     *   });
+     *   
+     *   afterEach(() => {
+     *     if (manager) {
+     *       manager.destroy(); // Prevent timer leaks
+     *     }
+     *   });
+     * });
+     */
+    destroy() {
+        // Stop all timers to prevent leaks
+        this.stopVoiceRetryTimer();
+        this.stopQueueTimer();
+        
+        // Cancel any ongoing speech
+        if (this.synth) {
+            this.synth.cancel();
+        }
+        
+        // Clear the speech queue
+        if (this.speechQueue) {
+            this.speechQueue.clear();
+        }
+        
+        // Release references to prevent memory leaks
+        this.synth = null;
+        this.speechQueue = null;
+        this.voice = null;
+        this.voiceRetryTimer = null;
+        this.queueTimer = null;
     }
 }
 

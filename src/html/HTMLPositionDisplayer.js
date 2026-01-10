@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * HTML-based position information displayer with coordinates and accuracy details.
  * 
@@ -202,7 +204,8 @@ class HTMLPositionDisplayer {
 		}
 
 		// Handle successful position updates for relevant events
-		if (posEvent === 'strCurrPosUpdate' || posEvent === 'strImmediateAddressUpdate') {
+		// Note: Using actual event values from PositionManager constants
+		if (posEvent === 'PositionManager updated' || posEvent === 'Immediate address update') {
 			if (positionManager && positionManager.lastPosition) {
 				const html = this.renderPositionHtml(positionManager);
 				this.element.innerHTML = html;

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Reference place data extracted from geocoding data.
  * 

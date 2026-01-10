@@ -286,12 +286,12 @@ describe.skip('SpeechSynthesisManager Integration Tests - MP Barbosa Travel Guid
     afterEach(async () => {
         if (speechManager) {
             try {
-                speechManager.stop();
-                speechManager.stopQueueTimer();
-                speechManager.stopVoiceRetryTimer();
+                // Phase 3: Use destroy() for complete cleanup
+                speechManager.destroy();
             } catch (error) {
                 // Ignore cleanup errors
             }
+            speechManager = null;
         }
         
         // Clear any remaining timers

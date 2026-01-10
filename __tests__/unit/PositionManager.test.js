@@ -533,9 +533,9 @@ describe('PositionManager - MP Barbosa Travel Guide (v0.8.5-alpha)', () => {
 
             // Test that string constants use Portuguese (if they exist)
             const expectedConstants = [
-                'strCurrPosUpdate',
+                'PositionManager updated',
                 'strCurrPosNotUpdate', 
-                'strImmediateAddressUpdate'
+                'Immediate address update'
             ];
 
             expectedConstants.forEach(constant => {

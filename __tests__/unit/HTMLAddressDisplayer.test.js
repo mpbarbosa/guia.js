@@ -257,14 +257,14 @@ describe('HTMLAddressDisplayer - MP Barbosa Travel Guide (v0.8.9-alpha)', () => 
                 uf: 'SP'
             });
             
-            displayer.update(addressData, standardizedAddress, 'strCurrPosUpdate', false, null);
+            displayer.update(addressData, standardizedAddress, 'PositionManager updated', false, null);
             
             expect(mockElement.innerHTML).toContain('Praça da Sé');
             expect(mockElement.innerHTML).toContain('São Paulo');
         });
 
         test('should display loading message during loading state', () => {
-            displayer.update(null, null, 'strCurrPosUpdate', true, null);
+            displayer.update(null, null, 'PositionManager updated', true, null);
             
             expect(mockElement.innerHTML).toContain('Carregando endereço...');
             expect(mockElement.innerHTML).toContain('class="loading"');
@@ -272,7 +272,7 @@ describe('HTMLAddressDisplayer - MP Barbosa Travel Guide (v0.8.9-alpha)', () => 
 
         test('should display error message on error', () => {
             const error = new Error('Serviço de geocodificação indisponível');
-            displayer.update(null, null, 'strCurrPosUpdate', false, error);
+            displayer.update(null, null, 'PositionManager updated', false, error);
             
             expect(mockElement.innerHTML).toContain('Erro ao carregar endereço:');
             expect(mockElement.innerHTML).toContain('Serviço de geocodificação indisponível');
@@ -293,7 +293,7 @@ describe('HTMLAddressDisplayer - MP Barbosa Travel Guide (v0.8.9-alpha)', () => 
             const originalContent = 'original content';
             mockElement.innerHTML = originalContent;
             
-            displayer.update(null, null, 'strCurrPosUpdate', false, null);
+            displayer.update(null, null, 'PositionManager updated', false, null);
             
             expect(mockElement.innerHTML).toBe(originalContent);
         });
@@ -302,7 +302,7 @@ describe('HTMLAddressDisplayer - MP Barbosa Travel Guide (v0.8.9-alpha)', () => 
             const displayerWithNull = new HTMLAddressDisplayer(null);
             
             expect(() => {
-                displayerWithNull.update({}, null, 'strCurrPosUpdate', false, null);
+                displayerWithNull.update({}, null, 'PositionManager updated', false, null);
             }).not.toThrow();
         });
     });
@@ -337,7 +337,7 @@ describe('HTMLAddressDisplayer - MP Barbosa Travel Guide (v0.8.9-alpha)', () => 
             const malformedData = { someProperty: 'value' };
             
             expect(() => {
-                displayer.update(malformedData, null, 'strCurrPosUpdate', false, null);
+                displayer.update(malformedData, null, 'PositionManager updated', false, null);
             }).not.toThrow();
         });
     });
@@ -386,7 +386,7 @@ describe('HTMLAddressDisplayer - MP Barbosa Travel Guide (v0.8.9-alpha)', () => 
 
             // Perform many updates
             for (let i = 0; i < 1000; i++) {
-                displayer.update(addressData, null, 'strCurrPosUpdate', false, null);
+                displayer.update(addressData, null, 'PositionManager updated', false, null);
             }
 
             // Should still work correctly

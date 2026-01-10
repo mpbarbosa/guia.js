@@ -201,21 +201,21 @@ describe('HTMLPositionDisplayer - MP Barbosa Travel Guide (v0.8.7-alpha)', () =>
         });
 
         test('should update element on strCurrPosUpdate event', () => {
-            displayer.update(mockPositionManager, 'strCurrPosUpdate', false, null);
+            displayer.update(mockPositionManager, 'PositionManager updated', false, null);
             
             expect(mockElement.innerHTML).toContain('Posição Atual');
             expect(mockElement.innerHTML).toContain('-22.906800°');  // Rio coordinates
         });
 
         test('should update element on strImmediateAddressUpdate event', () => {
-            displayer.update(mockPositionManager, 'strImmediateAddressUpdate', false, null);
+            displayer.update(mockPositionManager, 'Immediate address update', false, null);
             
             expect(mockElement.innerHTML).toContain('Posição Atual');
             expect(mockElement.innerHTML).toContain('-43.172900°');  // Rio coordinates
         });
 
         test('should display Portuguese loading message during loading state', () => {
-            displayer.update(mockPositionManager, 'strCurrPosUpdate', true, null);
+            displayer.update(mockPositionManager, 'PositionManager updated', true, null);
             
             expect(mockElement.innerHTML).toContain('Obtendo posição...');
             expect(mockElement.innerHTML).toContain('class="loading"');
@@ -223,7 +223,7 @@ describe('HTMLPositionDisplayer - MP Barbosa Travel Guide (v0.8.7-alpha)', () =>
 
         test('should display Portuguese error message on error', () => {
             const error = new Error('GPS não disponível');
-            displayer.update(mockPositionManager, 'strCurrPosUpdate', false, error);
+            displayer.update(mockPositionManager, 'PositionManager updated', false, error);
             
             expect(mockElement.innerHTML).toContain('Erro ao obter posição:');
             expect(mockElement.innerHTML).toContain('GPS não disponível');
@@ -232,7 +232,7 @@ describe('HTMLPositionDisplayer - MP Barbosa Travel Guide (v0.8.7-alpha)', () =>
 
         test('should display Portuguese warning for missing position data', () => {
             const mockManagerNoPosition = { lastPosition: null };
-            displayer.update(mockManagerNoPosition, 'strCurrPosUpdate', false, null);
+            displayer.update(mockManagerNoPosition, 'PositionManager updated', false, null);
             
             expect(mockElement.innerHTML).toContain('Dados de posição não disponíveis');
             expect(mockElement.innerHTML).toContain('class="warning"');
@@ -287,7 +287,7 @@ describe('HTMLPositionDisplayer - MP Barbosa Travel Guide (v0.8.7-alpha)', () =>
 
         test('should handle update with null position manager gracefully', () => {
             expect(() => {
-                displayer.update(null, 'strCurrPosUpdate', false, null);
+                displayer.update(null, 'PositionManager updated', false, null);
             }).not.toThrow();
         });
 
@@ -354,7 +354,7 @@ describe('HTMLPositionDisplayer - MP Barbosa Travel Guide (v0.8.7-alpha)', () =>
 
             // Perform many updates
             for (let i = 0; i < 1000; i++) {
-                displayer.update(mockManager, 'strCurrPosUpdate', false, null);
+                displayer.update(mockManager, 'PositionManager updated', false, null);
             }
 
             // Should still work correctly

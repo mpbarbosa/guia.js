@@ -1,3 +1,5 @@
+'use strict';
+
 // Import utility modules  
 import { calculateDistance, delay } from './utils/distance.js';
 import { isMobileDevice } from './utils/device.js';

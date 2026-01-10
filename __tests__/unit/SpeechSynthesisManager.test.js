@@ -107,13 +107,13 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.8.3-alpha)', () =
     });
 
     afterEach(() => {
+        // Clean up speech manager resources (prevent timer leaks)
         if (speechManager) {
             try {
-                speechManager.stop();
-                speechManager.stopQueueTimer();
-                speechManager.stopVoiceRetryTimer();
+                speechManager.destroy();
+                speechManager = null;
             } catch (error) {
-                // Ignore cleanup errors
+                // Ignore cleanup errors in test environment
             }
         }
     });

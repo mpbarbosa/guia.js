@@ -402,8 +402,8 @@ describe('DisplayerFactory Module Integration Tests', () => {
             
             // Should handle Brazilian data without errors
             expect(() => {
-                positionDisplayer.update(brazilianPosition, null, 'strCurrPosUpdate', true, null);
-                addressDisplayer.update(brazilianAddress, null, 'strCurrPosUpdate', true, null);
+                positionDisplayer.update(brazilianPosition, null, 'PositionManager updated', true, null);
+                addressDisplayer.update(brazilianAddress, null, 'PositionManager updated', true, null);
             }).not.toThrow();
         });
     });

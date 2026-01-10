@@ -63,7 +63,7 @@ describe('GeolocationService - Race Condition Protection', () => {
     });
 
     describe('Concurrent Request Prevention', () => {
-        test('should reject second request when first is pending', async () => {
+        test('should return same promise when second request is made while first is pending', async () => {
             if (!GeolocationService) {
                 console.warn('GeolocationService not available - skipping test');
                 expect(true).toBe(true);
@@ -91,14 +91,21 @@ describe('GeolocationService - Race Condition Protection', () => {
             // Start first request (will be pending)
             const firstRequest = service.getSingleLocationUpdate();
 
-            // Try second request while first is pending
-            await expect(service.getSingleLocationUpdate())
-                .rejects
-                .toThrow('A geolocation request is already pending');
+            // Second request while first is pending should return same promise
+            const secondRequest = service.getSingleLocationUpdate();
+            
+            // Both should reference the same promise
+            expect(firstRequest).toBe(secondRequest);
 
             // Resolve first request
             resolveFirst();
+            
+            // Both promises should resolve to same position
             await expect(firstRequest).resolves.toBe(mockPosition);
+            await expect(secondRequest).resolves.toBe(mockPosition);
+            
+            // getCurrentPosition should only be called once
+            expect(mockGeolocation.getCurrentPosition).toHaveBeenCalledTimes(1);
         });
 
         test('should allow new request after first completes successfully', async () => {

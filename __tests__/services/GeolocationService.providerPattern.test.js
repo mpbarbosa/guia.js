@@ -54,9 +54,19 @@ try {
 }
 
 describe('GeolocationService - Provider Pattern Integration', () => {
+	let mockProvider = null;
 	
 	beforeEach(() => {
 		jest.clearAllMocks();
+		mockProvider = null;
+	});
+	
+	afterEach(() => {
+		// Phase 3: Clean up MockGeolocationProvider timers
+		if (mockProvider && typeof mockProvider.destroy === 'function') {
+			mockProvider.destroy();
+			mockProvider = null;
+		}
 	});
 
 	describe('MockGeolocationProvider Integration', () => {
@@ -77,7 +87,7 @@ describe('GeolocationService - Provider Pattern Integration', () => {
 			};
 
 			// Create mock provider with predefined position
-			const mockProvider = new MockGeolocationProvider({
+			mockProvider = new MockGeolocationProvider({
 				defaultPosition: mockPosition
 			});
 
@@ -115,7 +125,7 @@ describe('GeolocationService - Provider Pattern Integration', () => {
 			};
 
 			// Create mock provider that returns error
-			const mockProvider = new MockGeolocationProvider({
+			mockProvider = new MockGeolocationProvider({
 				defaultError: mockError
 			});
 
@@ -158,7 +168,7 @@ describe('GeolocationService - Provider Pattern Integration', () => {
 				timestamp: Date.now()
 			};
 
-			const mockProvider = new MockGeolocationProvider({
+			mockProvider = new MockGeolocationProvider({
 				defaultPosition: mockPosition
 			});
 
@@ -211,7 +221,7 @@ describe('GeolocationService - Provider Pattern Integration', () => {
 				return;
 			}
 
-			const mockProvider = new MockGeolocationProvider();
+			mockProvider = new MockGeolocationProvider();
 			const mockPositionManager = {
 				update: jest.fn()
 			};

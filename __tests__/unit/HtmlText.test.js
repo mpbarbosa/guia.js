@@ -39,8 +39,8 @@ describe('HtmlText', () => {
         test('should use default event configuration when none provided', () => {
             const htmlText = new HtmlText(mockDocument, mockElement);
             
-            expect(htmlText.eventConfig.positionUpdate).toBe('strCurrPosUpdate');
-            expect(htmlText.eventConfig.immediateAddressUpdate).toBe('strImmediateAddressUpdate');
+            expect(htmlText.eventConfig.positionUpdate).toBe('PositionManager updated');
+            expect(htmlText.eventConfig.immediateAddressUpdate).toBe('Immediate address update');
         });
 
         test('should use custom event configuration when provided', () => {
@@ -61,7 +61,7 @@ describe('HtmlText', () => {
             const htmlText = new HtmlText(mockDocument, mockElement, partialConfig);
             
             expect(htmlText.eventConfig.positionUpdate).toBe('custom.position.update');
-            expect(htmlText.eventConfig.immediateAddressUpdate).toBe('strImmediateAddressUpdate');
+            expect(htmlText.eventConfig.immediateAddressUpdate).toBe('Immediate address update');
         });
 
         test('should be immutable after construction', () => {
@@ -90,7 +90,7 @@ describe('HtmlText', () => {
             const mockDate = new Date('2025-10-16T15:30:00Z');
             jest.spyOn(Date.prototype, 'toLocaleString').mockReturnValue('10/16/2025, 3:30:00 PM');
             
-            htmlText.update(mockPositionManager, 'strCurrPosUpdate', false, null);
+            htmlText.update(mockPositionManager, 'PositionManager updated', false, null);
             
             expect(mockElement.textContent).toBe('10/16/2025, 3:30:00 PM');
         });
@@ -98,7 +98,7 @@ describe('HtmlText', () => {
         test('should update element with timestamp on immediate address update', () => {
             jest.spyOn(Date.prototype, 'toLocaleString').mockReturnValue('10/16/2025, 3:30:00 PM');
             
-            htmlText.update(mockPositionManager, 'strImmediateAddressUpdate', false, null);
+            htmlText.update(mockPositionManager, 'Immediate address update', false, null);
             
             expect(mockElement.textContent).toBe('10/16/2025, 3:30:00 PM');
         });
@@ -138,7 +138,7 @@ describe('HtmlText', () => {
             const htmlTextWithNull = new HtmlText(mockDocument, null);
             
             expect(() => {
-                htmlTextWithNull.update(mockPositionManager, 'strCurrPosUpdate', false, null);
+                htmlTextWithNull.update(mockPositionManager, 'PositionManager updated', false, null);
             }).not.toThrow();
         });
 
@@ -158,7 +158,7 @@ describe('HtmlText', () => {
             mockElement.textContent = 'original';
             
             // Should NOT respond to default event name
-            htmlText.update(mockPositionManager, 'strCurrPosUpdate', false, null);
+            htmlText.update(mockPositionManager, 'PositionManager updated', false, null);
             expect(mockElement.textContent).toBe('original');
         });
     });
@@ -168,7 +168,7 @@ describe('HtmlText', () => {
             const toLocaleStringSpy = jest.spyOn(Date.prototype, 'toLocaleString');
             toLocaleStringSpy.mockReturnValue('mocked timestamp');
             
-            htmlText.update({}, 'strCurrPosUpdate', false, null);
+            htmlText.update({}, 'PositionManager updated', false, null);
             
             expect(toLocaleStringSpy).toHaveBeenCalled();
             expect(mockElement.textContent).toBe('mocked timestamp');
@@ -188,7 +188,7 @@ describe('HtmlText', () => {
             
             formats.forEach(format => {
                 toLocaleStringSpy.mockReturnValue(format);
-                htmlText.update({}, 'strCurrPosUpdate', false, null);
+                htmlText.update({}, 'PositionManager updated', false, null);
                 expect(mockElement.textContent).toBe(format);
             });
             
@@ -251,10 +251,10 @@ describe('HtmlText', () => {
             jest.spyOn(Date.prototype, 'toLocaleString').mockReturnValue('Test timestamp');
             
             // Test both configured event types
-            htmlText.update({}, 'strCurrPosUpdate', false, null);
+            htmlText.update({}, 'PositionManager updated', false, null);
             expect(mockElement.textContent).toBe('Test timestamp');
             
-            htmlText.update({}, 'strImmediateAddressUpdate', false, null);
+            htmlText.update({}, 'Immediate address update', false, null);
             expect(mockElement.textContent).toBe('Test timestamp');
         });
     });
@@ -265,7 +265,7 @@ describe('HtmlText', () => {
             const htmlText = new HtmlText(mockDocument, mockElementNoText);
             
             expect(() => {
-                htmlText.update({}, 'strCurrPosUpdate', false, null);
+                htmlText.update({}, 'PositionManager updated', false, null);
             }).not.toThrow();
         });
 
@@ -301,8 +301,8 @@ describe('HtmlText', () => {
             
             jest.spyOn(Date.prototype, 'toLocaleString').mockReturnValue('test timestamp');
             
-            htmlTextDiv.update({}, 'strCurrPosUpdate', false, null);
-            htmlTextSpan.update({}, 'strCurrPosUpdate', false, null);
+            htmlTextDiv.update({}, 'PositionManager updated', false, null);
+            htmlTextSpan.update({}, 'PositionManager updated', false, null);
             
             expect(mockDiv.textContent).toBe('test timestamp');
             expect(mockSpan.textContent).toBe('test timestamp');
@@ -310,7 +310,7 @@ describe('HtmlText', () => {
 
         test('should maintain immutability throughout operations', () => {
             // Try to modify after various operations
-            htmlText.update({}, 'strCurrPosUpdate', false, null);
+            htmlText.update({}, 'PositionManager updated', false, null);
             
             expect(() => {
                 htmlText.newProp = 'test';
@@ -328,7 +328,7 @@ describe('HtmlText', () => {
             
             // Perform many updates
             for (let i = 0; i < 1000; i++) {
-                htmlText.update({}, 'strCurrPosUpdate', false, null);
+                htmlText.update({}, 'PositionManager updated', false, null);
             }
             
             expect(mockElement.textContent).toBe('timestamp');
@@ -341,7 +341,7 @@ describe('HtmlText', () => {
             
             timestamps.forEach((timestamp, index) => {
                 toLocaleStringSpy.mockReturnValueOnce(timestamp);
-                htmlText.update({}, 'strCurrPosUpdate', false, null);
+                htmlText.update({}, 'PositionManager updated', false, null);
                 expect(mockElement.textContent).toBe(timestamp);
             });
             

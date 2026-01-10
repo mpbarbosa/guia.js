@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Standardized Brazilian address structure.
  * 

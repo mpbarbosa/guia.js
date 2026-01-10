@@ -93,12 +93,22 @@ try {
 }
 
 describe('E2E: Complete Geolocation Workflow', () => {
+    let manager = null;
     
     beforeEach(() => {
         jest.clearAllMocks();
+        manager = null;
         // Reset singleton instances
         if (PositionManager && PositionManager.instance) {
             PositionManager.instance = null;
+        }
+    });
+    
+    afterEach(() => {
+        // Phase 3: Clean up WebGeocodingManager
+        if (manager && typeof manager.destroy === 'function') {
+            manager.destroy();
+            manager = null;
         }
     });
 
@@ -261,7 +271,7 @@ describe('E2E: Complete Geolocation Workflow', () => {
             });
 
             // Initialize the main manager
-            const manager = new WebGeocodingManager(mockDocument, mockElement);
+            manager = new WebGeocodingManager(mockDocument, mockElement);
             expect(manager).toBeDefined();
 
             // Verify manager can process coordinates

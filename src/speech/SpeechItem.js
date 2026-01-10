@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Speech synthesis queue item for managing text-to-speech requests with priority support.
  * 

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * SingletonStatusManager - Status and progress tracking with singleton pattern implementation.
  * 

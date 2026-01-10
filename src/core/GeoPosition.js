@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Geographic position data wrapper with convenience methods.
  * 

@@ -172,15 +172,22 @@ describe('Immutability Patterns', () => {
   });
 
   describe('AddressCache - Immutable Operations', () => {
+    let cacheInstance = null;
     
     beforeEach(() => {
+      // Get singleton instance
+      cacheInstance = AddressCache.getInstance();
       // Clear cache before each test
       AddressCache.clearCache();
     });
 
     afterEach(() => {
-      // Clean up after each test
-      AddressCache.clearCache();
+      // Phase 3: Clean up timer and clear cache
+      if (cacheInstance) {
+        cacheInstance.destroy();
+        cacheInstance = null;
+      }
+      AddressCache.instance = null;
     });
 
     test('evictLeastRecentlyUsedIfNeeded() should not mutate source array', () => {

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Address data extractor and standardizer.
  * 

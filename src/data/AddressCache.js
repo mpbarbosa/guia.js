@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Address cache with LRU eviction and change detection.
  * 
@@ -18,6 +20,7 @@
 import ObserverSubject from '../core/ObserverSubject.js';
 import AddressExtractor from './AddressExtractor.js';
 import BrazilianStandardAddress from './BrazilianStandardAddress.js';
+import LRUCache from './LRUCache.js';
 import { log } from '../utils/logger.js';
 
 class AddressCache {
@@ -59,9 +62,10 @@ class AddressCache {
 	 */
 	constructor() {
 		this.observerSubject = new ObserverSubject();
-		this.cache = new Map();
-		this.maxCacheSize = 50;
-		this.cacheExpirationMs = 300000; // 5 minutes
+		
+		// Use LRUCache for efficient caching with automatic eviction
+		this.cache = new LRUCache(50, 300000); // 50 entries, 5 minutes expiration
+		
 		this.lastNotifiedChangeSignature = null;
 		this.lastNotifiedBairroChangeSignature = null;
 		this.lastNotifiedMunicipioChangeSignature = null;
@@ -72,6 +76,16 @@ class AddressCache {
 		this.previousAddress = null;
 		this.currentRawData = null;
 		this.previousRawData = null;
+		
+		// Instance-based cleanup timer (prevents global timer leak)
+		this.cleanupInterval = setInterval(() => {
+			this.cleanExpiredEntries();
+		}, 60000); // Clean expired entries every 60 seconds
+		
+		// Ensure the interval is not blocking Node.js exit
+		if (typeof this.cleanupInterval.unref === 'function') {
+			this.cleanupInterval.unref();
+		}
 	}
 
 	/**
@@ -134,48 +148,33 @@ class AddressCache {
 	/**
 	 * Evicts least recently used cache entries when maximum cache size is reached.
 	 * 
-	 * This method implements LRU (Least Recently Used) eviction policy to maintain
-	 * cache size within configured limits. It removes the oldest entries based on
-	 * lastAccessed timestamp to make room for new entries.
+	 * Delegates to LRUCache which automatically handles LRU eviction when
+	 * entries are added via set(). This method is now a no-op since eviction
+	 * happens automatically, but kept for backward compatibility.
 	 * 
 	 * @private
 	 * @since 0.8.3-alpha
+	 * @deprecated Eviction now automatic in LRUCache.set()
 	 */
 	evictLeastRecentlyUsedIfNeeded() {
-		if (this.cache.size >= this.maxCacheSize) {
-			// Convert cache entries to array and sort by lastAccessed (oldest first)
-			const entries = Array.from(this.cache.entries());
-			entries.sort((a, b) => a[1].lastAccessed - b[1].lastAccessed);
-
-			// Calculate how many entries to remove (25% of max size)
-			const entriesToRemove = Math.ceil(this.maxCacheSize * 0.25);
-
-			// Remove the least recently used entries
-			for (let i = 0; i < entriesToRemove && i < entries.length; i++) {
-				this.cache.delete(entries[i][0]);
-			}
-		}
+		// No-op: LRUCache handles eviction automatically in set()
+		// Kept for backward compatibility
 	}
 
 	/**
 	 * Cleans up expired cache entries based on timestamp.
-	 * Uses immutable pattern to build expired keys array.
+	 * 
+	 * Delegates to LRUCache.cleanExpired() which removes all entries
+	 * that have exceeded the expiration time.
 	 * 
 	 * @private
 	 * @since 0.8.3-alpha
 	 */
 	cleanExpiredEntries() {
-		const now = Date.now();
-
-		// Build expiredKeys array immutably using filter and map
-		const expiredKeys = Array.from(this.cache.entries())
-			.filter(([key, entry]) => now - entry.timestamp > this.cacheExpirationMs)
-			.map(([key]) => key);
-
-		expiredKeys.forEach(key => this.cache.delete(key));
-
-		if (expiredKeys.length > 0) {
-			log(`(AddressCache) Cleaned ${expiredKeys.length} expired cache entries`);
+		const removed = this.cache.cleanExpired();
+		
+		if (removed > 0) {
+			log(`(AddressCache) Cleaned ${removed} expired cache entries`);
 		}
 	}
 
@@ -636,21 +635,10 @@ class AddressCache {
 			this.cleanExpiredEntries();
 
 			// Check if we have a valid cached entry
-			const cacheEntry = this.cache.get(cacheKey);
-			if (cacheEntry) {
-				const now = Date.now();
-				if (now - cacheEntry.timestamp <= this.cacheExpirationMs) {
-					// Update access time for LRU behavior (history-like)
-					cacheEntry.lastAccessed = now;
-					// Re-insert to update position in Map (Map maintains insertion order)
-					this.cache.delete(cacheKey);
-					this.cache.set(cacheKey, cacheEntry);
-
-					return cacheEntry.address;
-				} else {
-					// Remove expired entry
-					this.cache.delete(cacheKey);
-				}
+			const cached = this.cache.get(cacheKey);
+			if (cached) {
+				// LRUCache.get() already handles expiration and LRU updates
+				return cached.address;
 			}
 		}
 
@@ -659,15 +647,10 @@ class AddressCache {
 
 		// Cache the result if we have a valid key
 		if (cacheKey) {
-			// Check if cache has reached maximum size, evict least recently used entries
-			this.evictLeastRecentlyUsedIfNeeded();
-
-			const now = Date.now();
+			// Store in cache (LRUCache handles eviction automatically)
 			this.cache.set(cacheKey, {
 				address: extractor.enderecoPadronizado,
 				rawData: data, // Store raw data for detailed change information
-				timestamp: now,
-				lastAccessed: now,
 			});
 
 			// Update current and previous addresses for change detection
@@ -879,7 +862,7 @@ class AddressCache {
 	 * @static
 	 */
 	static get maxCacheSize() {
-		return AddressCache.getInstance().maxCacheSize;
+		return AddressCache.getInstance().cache.maxSize;
 	}
 
 	/**
@@ -888,7 +871,7 @@ class AddressCache {
 	 * @static
 	 */
 	static set maxCacheSize(value) {
-		AddressCache.getInstance().maxCacheSize = value;
+		AddressCache.getInstance().cache.maxSize = value;
 	}
 
 	/**
@@ -897,7 +880,7 @@ class AddressCache {
 	 * @static
 	 */
 	static get cacheExpirationMs() {
-		return AddressCache.getInstance().cacheExpirationMs;
+		return AddressCache.getInstance().cache.expirationMs;
 	}
 
 	/**
@@ -906,7 +889,7 @@ class AddressCache {
 	 * @static
 	 */
 	static set cacheExpirationMs(value) {
-		AddressCache.getInstance().cacheExpirationMs = value;
+		AddressCache.getInstance().cache.expirationMs = value;
 	}
 
 	/**
@@ -1106,18 +1089,59 @@ class AddressCache {
 	static set observerSubject(value) {
 		AddressCache.getInstance().observerSubject = value;
 	}
-}
 
+	/**
+	 * Destroys the cache and cleans up all resources.
+	 * 
+	 * Stops the cleanup timer, clears the cache, and releases references.
+	 * This method is critical for preventing timer leaks, especially in
+	 * test environments where instances are created and destroyed frequently.
+	 * 
+	 * @returns {void}
+	 * @since 0.8.6-alpha
+	 * @author Marcelo Pereira Barbosa
+	 * 
+	 * @example
+	 * const cache = AddressCache.getInstance();
+	 * // ... use cache
+	 * cache.destroy(); // Clean up when done
+	 * 
+	 * @example
+	 * // In tests
+	 * afterEach(() => {
+	 *   const cache = AddressCache.getInstance();
+	 *   cache.destroy();
+	 * });
+	 */
+	destroy() {
+		// Stop cleanup timer to prevent leak
+		if (this.cleanupInterval) {
+			clearInterval(this.cleanupInterval);
+			this.cleanupInterval = null;
+		}
+		
+		// Clear all cached data
+		this.clearCache();
+		
+		// Release references to prevent memory leaks
+		this.observerSubject = null;
+		this.logradouroChangeCallback = null;
+		this.bairroChangeCallback = null;
+		this.municipioChangeCallback = null;
+		this.currentAddress = null;
+		this.previousAddress = null;
+		this.currentRawData = null;
+		this.previousRawData = null;
+	}
 
-// Set up periodic cleanup of expired cache entries
-// Use a non-blocking interval to avoid preventing Node.js exit
-AddressCache.cleanupInterval = setInterval(() => {
-	AddressCache.cleanExpiredEntries();
-}, 60000); // Clean expired entries every 60 seconds
-
-// Ensure the interval is not blocking Node.js exit
-if (typeof AddressCache.cleanupInterval.unref === 'function') {
-	AddressCache.cleanupInterval.unref();
+	/**
+	 * Static wrapper for backward compatibility.
+	 * @deprecated Use getInstance().destroy() instead
+	 * @static
+	 */
+	static destroy() {
+		return AddressCache.getInstance().destroy();
+	}
 }
 
 /**

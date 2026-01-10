@@ -9,6 +9,9 @@
     <link rel="dns-prefetch" href="https://servicodados.ibge.gov.br">
     <link rel="dns-prefetch" href="https://pt.wikipedia.org">
     
+    <!-- Preload ibira.js for API fetching and caching -->
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js">
+    
     <!-- Critical CSS - Common across all views -->
     <link rel="stylesheet" href="skip-link.css">
     <link rel="stylesheet" href="typography.css">
@@ -327,6 +330,13 @@
 
     <!-- External Libraries -->
     <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/sidra.js@main/sidra.js"></script>
+    
+    <!-- Load ibira.js for API fetching and caching (IbiraAPIFetchManager) -->
+    <script type="module">
+      import { IbiraAPIFetchManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js';
+      window.IbiraAPIFetchManager = IbiraAPIFetchManager;
+    </script>
+    
     <script src="error-recovery.js"></script>
     <script src="geolocation-banner.js"></script>
     

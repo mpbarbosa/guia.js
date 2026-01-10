@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * ObserverSubject - Centralizes observer pattern implementation with immutable state updates
  * 

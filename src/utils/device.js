@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Device detection utilities.
  * 

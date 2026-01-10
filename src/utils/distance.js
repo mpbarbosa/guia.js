@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Distance calculation utilities for geolocation.
  * 

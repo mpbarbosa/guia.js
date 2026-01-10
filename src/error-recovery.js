@@ -6,6 +6,9 @@
 (function() {
   'use strict';
 
+  // Track active timeouts for cleanup
+  const activeTimeouts = new Set();
+
   // Global error handler
   window.addEventListener('error', function(event) {
     console.error('Global error caught:', event.error);
@@ -47,11 +50,17 @@
     
     container.appendChild(toast);
     
-    // Auto-remove after 5 seconds
-    setTimeout(() => {
+    // Auto-remove after 5 seconds (track timeout for cleanup)
+    const timeout1 = setTimeout(() => {
       toast.classList.add('toast-exit');
-      setTimeout(() => toast.remove(), 300);
+      const timeout2 = setTimeout(() => {
+        toast.remove();
+        activeTimeouts.delete(timeout2);
+      }, 300);
+      activeTimeouts.add(timeout2);
+      activeTimeouts.delete(timeout1);
     }, 5000);
+    activeTimeouts.add(timeout1);
   }
 
   /**
@@ -119,7 +128,25 @@
   // Export recovery utilities
   window.ErrorRecovery = {
     displayError: displayError,
-    strategies: recoveryStrategies
+    strategies: recoveryStrategies,
+    
+    /**
+     * Cleanup function for timer leaks prevention.
+     * Clears all pending toast timeouts.
+     * Useful in test environments.
+     * 
+     * @since 0.8.7-alpha
+     */
+    destroy: function() {
+      activeTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+      activeTimeouts.clear();
+      
+      // Remove toast container if exists
+      const container = document.querySelector('.toast-container');
+      if (container) {
+        container.remove();
+      }
+    }
   };
 
   console.log('Error Recovery system initialized');

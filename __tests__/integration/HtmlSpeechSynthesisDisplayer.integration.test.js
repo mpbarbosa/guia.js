@@ -222,8 +222,8 @@ class IntegrationSpeechSynthesisManager {
 }
 
 const IntegrationPositionManager = {
-    strCurrPosUpdate: 'strCurrPosUpdate',
-    strImmediateAddressUpdate: 'strImmediateAddressUpdate'
+    strCurrPosUpdate: 'PositionManager updated',
+    strImmediateAddressUpdate: 'Immediate address update'
 };
 
 // TODO: Mock the module imports for integration (disabled while test is skipped)
@@ -348,10 +348,10 @@ describe.skip('HtmlSpeechSynthesisDisplayer Integration Tests - MP Barbosa Trave
             });
 
             // Legacy pattern
-            displayer.update(address, address, 'strCurrPosUpdate');
+            displayer.update(address, address, 'PositionManager updated');
             
             // New pattern
-            displayer.update(address, 'LogradouroChanged', 'strCurrPosUpdate');
+            displayer.update(address, 'LogradouroChanged', 'PositionManager updated');
 
             expect(displayer.textInput.value).toBeTruthy();
         });

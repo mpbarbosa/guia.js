@@ -67,13 +67,6 @@ import GeoPosition from '../core/GeoPosition.js';
 import ObserverSubject from '../core/ObserverSubject.js';
 import PositionManager from '../core/PositionManager.js';
 
-// Import Phase 1 & Phase 3 coordinator classes
-import GeocodingState from '../core/GeocodingState.js';
-import UICoordinator from './UICoordinator.js';
-import EventCoordinator from './EventCoordinator.js';
-import ServiceCoordinator from './ServiceCoordinator.js';
-import SpeechCoordinator from './SpeechCoordinator.js';
-
 // Import service layer classes
 import ReverseGeocoder from '../services/ReverseGeocoder.js';
 import GeolocationService from '../services/GeolocationService.js';
@@ -88,6 +81,7 @@ import Chronometer from '../timing/Chronometer.js';
 // Import HTML classes
 import HtmlText from '../html/HtmlText.js';
 import DisplayerFactory from '../html/DisplayerFactory.js';
+import HtmlSpeechSynthesisDisplayer from '../html/HtmlSpeechSynthesisDisplayer.js';
 
 // Import utility functions
 import { log, warn, error } from '../utils/logger.js';
@@ -312,94 +306,30 @@ class WebGeocodingManager {
 		// Initialize observer subject for external subscribers
 		this.observerSubject = new ObserverSubject();
 
-		// Phase 2: Initialize Phase 1 coordinators
-		// GeocodingState replaces this.currentPosition and this.currentCoords
-		this.geocodingState = new GeocodingState();
+		// Initialize state
+		this.currentPosition = null;
+		this.currentCoords = null;
+
+		// Initialize DOM elements and event handlers
+		this._initializeUIElements();
+
+		// Inject services or create defaults (maintains backward compatibility)
+		this.geolocationService = params.geolocationService ||
+			new GeolocationService(this.locationResult);
 		
-		// UICoordinator replaces _initializeUIElements()
-		this.uiCoordinator = new UICoordinator(document, this.elementIds);
-		this.uiCoordinator.initializeElements();
-		
-		// EventCoordinator replaces _initializeActionButtons() and click handlers
-		// Must pass UICoordinator and GeocodingState as dependencies
-		this.eventCoordinator = new EventCoordinator(this.uiCoordinator, this.geocodingState);
-		this.eventCoordinator.initializeEventListeners();
-		
-		// Initialize services before ServiceCoordinator
+		// Create fetch manager - try to use IbiraAPIFetchManager if available
 		this._initializeFetchManager(params);
-		
-		// Create change detection coordinator (needs reverseGeocoder and observerSubject)
+
+		// Create change detection coordinator
 		this.changeDetectionCoordinator = new ChangeDetectionCoordinator({
 			reverseGeocoder: this.reverseGeocoder,
 			observerSubject: this.observerSubject
 		});
-		
-		// ServiceCoordinator replaces service initialization and coordination
-		this.serviceCoordinator = new ServiceCoordinator({
-			geolocationService: params.geolocationService || new GeolocationService(this.locationResult),
-			reverseGeocoder: this.reverseGeocoder,
-			changeDetectionCoordinator: this.changeDetectionCoordinator,
-			observerSubject: this.observerSubject,
-			locationResultElement: this.locationResult,
-			displayerFactory: this.displayerFactory
-		});
 
-		// Create displayers and wire observers via ServiceCoordinator
-		this.serviceCoordinator
-			.createDisplayers(
-				this.enderecoPadronizadoDisplay,
-				this.referencePlaceDisplay
-			)
-			.wireObservers();
-		
-		// Phase 3: SpeechCoordinator replaces initSpeechSynthesis() logic
-		this.speechCoordinator = new SpeechCoordinator(
-			document,
-			this.elementIds.speechSynthesis,
-			this.reverseGeocoder,
-			this.observerSubject
-		);
-		
-		// Expose geolocationService for backward compatibility
-		this.geolocationService = this.serviceCoordinator.geolocationService;
-		
-		log("(WebGeocodingManager) Initialized successfully with Phase 1 & Phase 3 coordinators.");
-	}
-
-	/**
-	 * Gets current position from GeocodingState (backward compatibility).
-	 * @returns {Object|null} Current position object or null
-	 */
-	get currentPosition() {
-		return this.geocodingState.getPosition();
-	}
-
-	/**
-	 * Sets current position in GeocodingState (backward compatibility).
-	 * @param {Object} position - Position object to store
-	 */
-	set currentPosition(position) {
-		if (position) {
-			this.geocodingState.setPosition(position);
-		}
-	}
-
-	/**
-	 * Gets current coordinates from GeocodingState (backward compatibility).
-	 * @returns {Object|null} Current coordinates object or null
-	 */
-	get currentCoords() {
-		return this.geocodingState.getCurrentCoordinates();
-	}
-
-	/**
-	 * Sets current coordinates in GeocodingState (backward compatibility).
-	 * @param {Object} coords - Coordinates object to store
-	 */
-	set currentCoords(coords) {
-		if (coords) {
-			this.geocodingState.setCoordinates(coords);
-		}
+		// Create and configure displayers
+		this._createDisplayers();
+		this._wireObservers();
+		log("(WebGeocodingManager) Initialized successfully.");
 	}
 
 	/**
@@ -444,59 +374,189 @@ class WebGeocodingManager {
 	}
 
 	/**
-	 * Gets chronometer element (backward compatibility with UICoordinator).
-	 * @returns {Chronometer|null} Chronometer instance or null
+	 * Creates UI displayer components using the configured factory.
+	 * 
+	 * Uses the displayerFactory (injected via constructor or default) to instantiate
+	 * the three main displayers for position, address, and reference place.
+	 * This design enables dependency injection for testing and alternative implementations.
+	 * 
+	 * @private
+	 * @since 0.8.6-alpha - Updated to use factory pattern
 	 */
-	get chronometer() {
-		return this.uiCoordinator.getElement('chronometer');
+	_createDisplayers() {
+		this.positionDisplayer = this.displayerFactory.createPositionDisplayer(
+			this.locationResult
+		);
+		this.addressDisplayer = this.displayerFactory.createAddressDisplayer(
+			this.locationResult,
+			this.enderecoPadronizadoDisplay
+		);
+		this.referencePlaceDisplayer = this.displayerFactory.createReferencePlaceDisplayer(
+			this.referencePlaceDisplay
+		);
 	}
 
 	/**
-	 * Gets timestamp display element (backward compatibility with UICoordinator).
-	 * @returns {HTMLElement|null} Timestamp element or null
+	 * Establishes observer relationships between components.
+	 * 
+	 * Wires up the observer pattern connections:
+	 * - PositionManager notifies positionDisplayer and reverseGeocoder
+	 * - ReverseGeocoder notifies referencePlaceDisplayer and addressDisplayer
+	 * 
+	 * This centralized wiring makes the observer relationships explicit and
+	 * easier to understand and modify.
+	 * 
+	 * @private
 	 */
-	get tsPosCapture() {
-		return this.uiCoordinator.getElement('timestampDisplay');
+	_wireObservers() {
+		// Position updates flow to displayer and geocoder
+		PositionManager.getInstance().subscribe(this.positionDisplayer);
+		PositionManager.getInstance().subscribe(this.reverseGeocoder);
+
+		// Geocoding results flow to reference place and address displayers
+		// Note: These are commented out in original implementation
+		// this.reverseGeocoder.subscribe(this.referencePlaceDisplayer);
+		// this.reverseGeocoder.subscribe(this.addressDisplayer);
 	}
 
 	/**
-	 * Gets find restaurants button (backward compatibility with EventCoordinator).
-	 * @returns {HTMLElement|null} Button element or null
+	 * Initializes DOM elements and sets up event handlers.
+	 * 
+	 * This method handles all DOM-related initialization:
+	 * - Chronometer display
+	 * - Action buttons (restaurants, city stats)
+	 * - Timestamp display
+	 * 
+	 * Each element is checked for existence before initialization to handle
+	 * cases where certain UI elements may not be present in all contexts.
+	 * 
+	 * @private
 	 */
-	get findRestaurantsBtn() {
-		return this.uiCoordinator.getElement('findRestaurantsBtn');
+	_initializeUIElements() {
+		this._initializeChronometer();
+		this._initializeActionButtons();
+		this._initializeTimestampDisplay();
 	}
 
 	/**
-	 * Gets city stats button (backward compatibility with EventCoordinator).
-	 * @returns {HTMLElement|null} Button element or null
+	 * Initializes chronometer element if present.
+	 * @private
 	 */
-	get cityStatsBtn() {
-		return this.uiCoordinator.getElement('cityStatsBtn');
+	_initializeChronometer() {
+		const chronometerElement = this.document.getElementById(this.elementIds.chronometer);
+		if (chronometerElement) {
+			this.chronometer = new Chronometer(chronometerElement);
+			PositionManager.getInstance().subscribe(this.chronometer);
+		} else {
+			warn("(WebGeocodingManager) Chronometer element not found.");
+		}
 	}
 
 	/**
-	 * Gets position displayer (backward compatibility with ServiceCoordinator).
-	 * @returns {Object|null} Position displayer or null
+	 * Initializes action buttons (restaurants, city stats) and their event handlers.
+	 * @private
 	 */
-	get positionDisplayer() {
-		return this.serviceCoordinator.positionDisplayer;
+	_initializeActionButtons() {
+		this._initializeFindRestaurantsButton();
+		this._initializeCityStatsButton();
 	}
 
 	/**
-	 * Gets address displayer (backward compatibility with ServiceCoordinator).
-	 * @returns {Object|null} Address displayer or null
+	 * Initializes find restaurants button and its click handler.
+	 * @private
 	 */
-	get addressDisplayer() {
-		return this.serviceCoordinator.addressDisplayer;
+	_initializeFindRestaurantsButton() {
+		this.findRestaurantsBtn = this.document.getElementById(this.elementIds.findRestaurantsBtn);
+		if (this.findRestaurantsBtn) {
+			this.findRestaurantsBtn.addEventListener("click", () => {
+				this._handleFindRestaurantsClick();
+			});
+		} else {
+			warn("(WebGeocodingManager) Find Restaurants button not found.");
+		}
 	}
 
 	/**
-	 * Gets reference place displayer (backward compatibility with ServiceCoordinator).
-	 * @returns {Object|null} Reference place displayer or null
+	 * Handles click event for find restaurants button.
+	 * @private
 	 */
-	get referencePlaceDisplayer() {
-		return this.serviceCoordinator.referencePlaceDisplayer;
+	_handleFindRestaurantsClick() {
+		if (this.currentCoords) {
+			// Delegate to external function if available
+			if (typeof window !== 'undefined' && typeof window.findNearbyRestaurants === 'function') {
+				window.findNearbyRestaurants(
+					this.currentCoords.latitude,
+					this.currentCoords.longitude
+				);
+			} else {
+				// Fallback implementation
+				alert(`Procurando restaurantes próximos a ${this.currentCoords.latitude.toFixed(4)}, ${this.currentCoords.longitude.toFixed(4)}`);
+			}
+		} else {
+			alert("Current coordinates not available.");
+		}
+	}
+
+	/**
+	 * Initializes city stats button and its click handler.
+	 * @private
+	 */
+	_initializeCityStatsButton() {
+		this.cityStatsBtn = this.document.getElementById(this.elementIds.cityStatsBtn);
+		if (this.cityStatsBtn) {
+			this.cityStatsBtn.addEventListener("click", () => {
+				this._handleCityStatsClick();
+			});
+		} else {
+			warn("(WebGeocodingManager) City Stats button not found.");
+		}
+	}
+
+	/**
+	 * Handles click event for city stats button.
+	 * @private
+	 */
+	_handleCityStatsClick() {
+		if (this.currentCoords) {
+			// Delegate to external function if available
+			if (typeof window !== 'undefined' && typeof window.fetchCityStatistics === 'function') {
+				window.fetchCityStatistics(
+					this.currentCoords.latitude,
+					this.currentCoords.longitude
+				);
+			} else {
+				// Fallback implementation
+				alert(`Obtendo estatísticas da cidade para ${this.currentCoords.latitude.toFixed(4)}, ${this.currentCoords.longitude.toFixed(4)}`);
+			}
+		} else {
+			alert("Current coordinates not available.");
+		}
+	}
+
+	/**
+	 * Initializes timestamp display element.
+	 * @private
+	 */
+	_initializeTimestampDisplay() {
+		this.tsPosCapture = this.document.getElementById(this.elementIds.timestampDisplay);
+		if (this.tsPosCapture) {
+			this.tsPosCapture.textContent = new Date().toLocaleString();
+			this.posCaptureHtmlText = new HtmlText(this.document, this.tsPosCapture);
+			PositionManager.getInstance().subscribe(this.posCaptureHtmlText);
+			Object.freeze(this.posCaptureHtmlText);
+		} else {
+			warn("(WebGeocodingManager) tsPosCapture element not found.");
+		}
+	}
+
+	/**
+	 * Legacy method for backward compatibility.
+	 * @deprecated Use _initializeUIElements() instead
+	 * @private
+	 */
+	initElements() {
+		warn("(WebGeocodingManager) initElements() is deprecated, using _initializeUIElements()");
+		this._initializeUIElements();
 	}
 
 	/**
@@ -625,8 +685,6 @@ class WebGeocodingManager {
 	/**
 	 * Initializes speech synthesis UI components.
 	 * 
-	 * **Phase 3**: Delegates to SpeechCoordinator
-	 * 
 	 * Creates and configures the HTML speech synthesis displayer with configured
 	 * element IDs for voice controls. Subscribes the displayer to both reverse
 	 * geocoder and manager notifications, then freezes it to prevent modifications.
@@ -637,15 +695,13 @@ class WebGeocodingManager {
 	 * @returns {void}
 	 */
 	initSpeechSynthesis() {
-		this.speechCoordinator.initializeSpeechSynthesis();
-	}
-
-	/**
-	 * Gets speech synthesis displayer (backward compatibility).
-	 * @returns {Object|null} Speech displayer or null
-	 */
-	get htmlSpeechSynthesisDisplayer() {
-		return this.speechCoordinator ? this.speechCoordinator.getSpeechDisplayer() : null;
+		this.htmlSpeechSynthesisDisplayer = new HtmlSpeechSynthesisDisplayer(
+			this.document,
+			this.elementIds.speechSynthesis,
+		);
+		this.reverseGeocoder.subscribe(this.htmlSpeechSynthesisDisplayer);
+		this.subscribe(this.htmlSpeechSynthesisDisplayer);
+		Object.freeze(this.htmlSpeechSynthesisDisplayer);
 	}
 
 	/**
@@ -688,49 +744,62 @@ class WebGeocodingManager {
 	/**
 	 * Gets a single location update from the geolocation service.
 	 * 
-	 * Delegates to ServiceCoordinator which handles:
-	 * 1. Request single location update from GeolocationService
-	 * 2. Store position in GeocodingState
-	 * 3. Trigger reverse geocoding
-	 * 4. Process and store results
-	 * 5. Notify observers
+	 * Requests current position from the GeolocationService, performs reverse
+	 * geocoding on the coordinates, and notifies observers. This is typically
+	 * used for initial position acquisition or manual position refresh.
 	 * 
-	 * @returns {Promise<Object>} Promise resolving to position object
+	 * **Workflow**:
+	 * 1. Request single location update from GeolocationService
+	 * 2. If successful, store position and trigger reverse geocoding
+	 * 3. Process geocoding results and standardize address
+	 * 4. Notify all observers with new position and address
+	 * 
+	 * @returns {void}
 	 * 
 	 * @fires ReverseGeocoder#notifyObservers - When geocoding completes
 	 * @fires WebGeocodingManager#notifyFunctionObservers - After geocoding completes
 	 */
 	getSingleLocationUpdate() {
-		return this.serviceCoordinator
+		this.geolocationService
 			.getSingleLocationUpdate()
 			.then((position) => {
 				if (position && position.coords) {
-					// Update GeocodingState for backward compatibility
 					this.currentPosition = position;
 					this.currentCoords = position.coords;
-					
-					// Update change detection coordinator
 					this.changeDetectionCoordinator.setCurrentPosition(position);
-					
-					// Notify function observers
+					this.reverseGeocoder.latitude = position.coords.latitude;
+					this.reverseGeocoder.longitude = position.coords.longitude;
+					return this.reverseGeocoder.reverseGeocode();
+				} else {
+					return null;
+				}
+			})
+			.then((addressData) => {
+				if (addressData) {
+					this.reverseGeocoder.currentAddress = addressData;
+					this.reverseGeocoder.enderecoPadronizado =
+						AddressDataExtractor.getBrazilianStandardAddress(addressData);
+					this.reverseGeocoder.notifyObservers();
 					this.notifyFunctionObservers();
 				}
-				return position;
 			})
 			.catch((error) => {
 				this._displayError(error);
-				throw error;
 			});
 	}
 
 	/**
 	 * Starts continuous location tracking and initializes all monitoring systems.
 	 * 
-	 * Delegates service coordination to ServiceCoordinator:
+	 * This is the main entry point for starting the geocoding workflow. It:
 	 * 1. Initializes speech synthesis UI
 	 * 2. Gets initial location update
 	 * 3. Starts continuous position watching
 	 * 4. Registers callbacks for address component change detection
+	 * 
+	 * The method sets up the complete tracking infrastructure including
+	 * logradouro, bairro, and municipio change detection callbacks that
+	 * will be triggered automatically when address components change.
 	 * 
 	 * @returns {void}
 	 * 
@@ -744,9 +813,14 @@ class WebGeocodingManager {
 		// Initialize speech synthesis UI components
 		this.initSpeechSynthesis();
 
-		// Get initial location and start continuous tracking via ServiceCoordinator
+		// Get initial location (immediate update)
+		// Note: Permission check is commented out but available for future use
+		// this.geolocationService.checkPermissions().then((value) => {
 		this.getSingleLocationUpdate();
-		this.serviceCoordinator.startTracking();
+		// });
+
+		// Start continuous position watching
+		let watchId = this.geolocationService.watchCurrentLocation();
 
 		// Set up address component change detection callbacks via coordinator
 		this.changeDetectionCoordinator.setupChangeDetection();
@@ -854,12 +928,14 @@ class WebGeocodingManager {
 	/**
 	 * Destroys the manager and cleans up all resources.
 	 * 
-	 * **Phase 2-3 Refactoring**: Delegates cleanup to coordinators
-	 * - ServiceCoordinator handles geolocation service cleanup
-	 * - EventCoordinator handles event listener cleanup
-	 * - UICoordinator handles UI element cleanup
-	 * - GeocodingState handles state cleanup
-	 * - SpeechCoordinator handles speech synthesis cleanup (Phase 3)
+	 * Stops geolocation services, cleans up all timers (chronometer), 
+	 * and releases all references. Important for test environments and
+	 * when the manager needs to be disposed properly.
+	 * 
+	 * **Phase 3: Timer Leak Cleanup**
+	 * - Cleans up Chronometer timer if created
+	 * - Stops geolocation service tracking
+	 * - Releases all component references
 	 * 
 	 * @returns {void}
 	 * @since 0.8.6-alpha
@@ -870,41 +946,27 @@ class WebGeocodingManager {
 	 * manager.destroy(); // Clean up when done
 	 */
 	destroy() {
-		// Clean up coordinators (Phase 2 + Phase 3)
-		if (this.serviceCoordinator && typeof this.serviceCoordinator.destroy === 'function') {
-			this.serviceCoordinator.destroy();
+		// Stop geolocation service if active
+		if (this.geoLocationService && typeof this.geoLocationService.stopTracking === 'function') {
+			this.geoLocationService.stopTracking();
 		}
 		
-		if (this.eventCoordinator && typeof this.eventCoordinator.destroy === 'function') {
-			this.eventCoordinator.destroy();
+		// Clean up chronometer timer
+		if (this.chronometer && typeof this.chronometer.destroy === 'function') {
+			this.chronometer.destroy();
 		}
 		
-		if (this.uiCoordinator && typeof this.uiCoordinator.destroy === 'function') {
-			this.uiCoordinator.destroy();
-		}
-		
-		if (this.geocodingState && typeof this.geocodingState.destroy === 'function') {
-			this.geocodingState.destroy();
-		}
-		
-		// Phase 3: Clean up speech coordinator
-		if (this.speechCoordinator && typeof this.speechCoordinator.destroy === 'function') {
-			this.speechCoordinator.destroy();
-		}
-		
-		// Release coordinator references
-		this.serviceCoordinator = null;
-		this.eventCoordinator = null;
-		this.uiCoordinator = null;
-		this.geocodingState = null;
-		this.speechCoordinator = null;
-		
-		// Release legacy references
+		// Release all references
+		this.positionDisplayer = null;
+		this.addressDisplayer = null;
+		this.referencePlaceDisplayer = null;
+		this.speechDisplayer = null;
 		this.reverseGeocoder = null;
-		this.geolocationService = null;
-		this.changeDetectionCoordinator = null;
-		this.observerSubject = null;
-		this.document = null;
+		this.geoLocationService = null;
+		this.chronometer = null;
+		this.posCaptureHtmlText = null;
+		this.currentCoords = null;
+		this.doc = null;
 	}
 
 	/**

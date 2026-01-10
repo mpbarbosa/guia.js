@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Interface/Base class for geolocation providers.
  * 

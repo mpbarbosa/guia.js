@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Test: Geolocation Race Condition Fix</title>
+</head>
+<body>
+    <h1>Test: Multiple Button Clicks</h1>
+    <button id="testBtn">Click Multiple Times Quickly</button>
+    <div id="output"></div>
+    <script type="module">
+        import { WebGeocodingManager } from './src/coordination/WebGeocodingManager.js';
+        
+        const output = document.getElementById('output');
+        const btn = document.getElementById('testBtn');
+        
+        let clickCount = 0;
+        
+        btn.addEventListener('click', async () => {
+            clickCount++;
+            const currentClick = clickCount;
+            output.innerHTML += `<p>Click ${currentClick}: Starting request...</p>`;
+            
+            try {
+                const manager = new WebGeocodingManager(document);
+                const position = await manager.getSingleLocationUpdate();
+                output.innerHTML += `<p>Click ${currentClick}: ✅ Success - Lat: ${position.coords.latitude}</p>`;
+            } catch (error) {
+                output.innerHTML += `<p>Click ${currentClick}: ❌ Error - ${error.name}: ${error.message}</p>`;
+            }
+        });
+        
+        output.innerHTML = '<p>Ready! Click button multiple times quickly to test race condition fix.</p>';
+    </script>
+</body>
+</html>

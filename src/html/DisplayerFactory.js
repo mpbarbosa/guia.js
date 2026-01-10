@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Factory for creating displayer instances with dependency injection support.
  * 

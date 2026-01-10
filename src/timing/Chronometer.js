@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Displays and manages elapsed time information in HTML format.
  * 
@@ -66,11 +68,11 @@ class Chronometer {
 		this.isRunning = false;
 		this.intervalId = null;
 		
-		// Configure event names with defaults for backward compatibility
+		// Configure event names with defaults matching PositionManager constants
 		this.eventConfig = {
-			positionUpdate: eventConfig.positionUpdate || 'strCurrPosUpdate',
-			immediateAddressUpdate: eventConfig.immediateAddressUpdate || 'strImmediateAddressUpdate',
-			positionNotUpdate: eventConfig.positionNotUpdate || 'strCurrPosNotUpdate'
+			positionUpdate: eventConfig.positionUpdate || 'PositionManager updated',
+			immediateAddressUpdate: eventConfig.immediateAddressUpdate || 'Immediate address update',
+			positionNotUpdate: eventConfig.positionNotUpdate || 'PositionManager not updated'
 		};
 	}
 
@@ -300,6 +302,55 @@ class Chronometer {
 		const state = this.isRunning ? 'running' : 'stopped';
 		const elapsed = this.formatTime(this.getElapsedTime());
 		return `${this.constructor.name}: ${state}, elapsed: ${elapsed}`;
+	}
+
+	/**
+	 * Destroys the chronometer and cleans up all resources.
+	 * 
+	 * Stops the timer, clears the interval, and releases references to prevent
+	 * timer leaks. This method is critical for test environments where chronometer
+	 * instances are created and destroyed frequently. Always call destroy() when
+	 * the chronometer is no longer needed.
+	 * 
+	 * @returns {void}
+	 * @since 0.8.6-alpha
+	 * @author Marcelo Pereira Barbosa
+	 * 
+	 * @example
+	 * const chronometer = new Chronometer(element);
+	 * chronometer.start();
+	 * // ... use chronometer
+	 * chronometer.destroy(); // Clean up when done
+	 * 
+	 * @example
+	 * // In tests
+	 * describe('Chronometer', () => {
+	 *   let chronometer;
+	 *   
+	 *   beforeEach(() => {
+	 *     chronometer = new Chronometer(document.getElementById('test'));
+	 *   });
+	 *   
+	 *   afterEach(() => {
+	 *     if (chronometer) {
+	 *       chronometer.destroy(); // Prevent timer leaks
+	 *     }
+	 *   });
+	 * });
+	 */
+	destroy() {
+		// Stop timer if running
+		this.stop();
+		
+		// Clear interval reference to prevent leaks
+		this.intervalId = null;
+		
+		// Release DOM reference
+		this.element = null;
+		
+		// Clear timing data
+		this.startTime = null;
+		this.lastUpdateTime = null;
 	}
 }
 

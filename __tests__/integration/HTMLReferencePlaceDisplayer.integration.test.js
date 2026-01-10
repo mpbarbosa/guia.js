@@ -96,7 +96,7 @@ describe('HTMLReferencePlaceDisplayer Integration Tests', () => {
                 }
             };
             
-            instance.update(null, mockBrazilianAddress, 'strCurrPosUpdate', false, null);
+            instance.update(null, mockBrazilianAddress, 'PositionManager updated', false, null);
             
             expect(testElement.innerHTML).toContain('Estação Faria Lima');
             expect(testElement.innerHTML).toContain('Estação do Metrô');
@@ -119,7 +119,7 @@ describe('HTMLReferencePlaceDisplayer Integration Tests', () => {
             const instance = new HTMLReferencePlaceDisplayer(mockElement);
             
             const error = new Error('Falha na conexão com serviço de referência');
-            instance.update(null, null, 'strCurrPosUpdate', false, error);
+            instance.update(null, null, 'PositionManager updated', false, error);
             
             expect(mockElement.innerHTML).toContain('Erro ao carregar local de referência');
             expect(mockElement.innerHTML).toContain('Falha na conexão com serviço de referência');

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * HTML-based address information displayer with comprehensive address data visualization.
  * 
@@ -201,7 +203,8 @@ class HTMLAddressDisplayer {
 		}
 
 		// Handle successful address data for position updates
-		if (posEvent === 'strCurrPosUpdate' && (addressData || enderecoPadronizado)) {
+		// Note: Using actual event value from PositionManager constant
+		if (posEvent === 'PositionManager updated' && (addressData || enderecoPadronizado)) {
 			console.log(`(HTMLAddressDisplayer) Rendering address data:`, { addressData, enderecoPadronizado });
 			
 			// Render comprehensive address HTML

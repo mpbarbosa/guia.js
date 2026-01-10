@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Renders an HTML anchor link for a Brazilian state (UF) using IBGE API.
  * 

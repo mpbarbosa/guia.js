@@ -136,14 +136,24 @@ try {
 }
 
 describe('E2E: Multi-Component Integration', () => {
+    let manager = null;
     
     beforeEach(() => {
         jest.clearAllMocks();
+        manager = null;
         if (PositionManager && PositionManager.instance) {
             PositionManager.instance = null;
         }
         if (SingletonStatusManager && SingletonStatusManager.instance) {
             SingletonStatusManager.instance = null;
+        }
+    });
+    
+    afterEach(() => {
+        // Phase 3: Clean up WebGeocodingManager
+        if (manager && typeof manager.destroy === 'function') {
+            manager.destroy();
+            manager = null;
         }
     });
 
@@ -185,7 +195,7 @@ describe('E2E: Multi-Component Integration', () => {
             });
 
             // Initialize manager
-            const manager = new WebGeocodingManager(mockDocument, mockElement);
+            manager = new WebGeocodingManager(mockDocument, mockElement);
             expect(manager).toBeDefined();
 
             // Create position

@@ -22,7 +22,7 @@ Guia Turístico is a single-page web application (version 0.7.0-alpha) built on 
 - **Install Dependencies**: `npm install` - takes 20 seconds. Downloads guia.js library and other dependencies.
 - **Syntax Check**: Always run `node -c src/app.js && node -c src/guia.js` (timeout: 10 seconds) before making changes
 - **Basic Test**: Run `node src/app.js` (timeout: 10 seconds) to verify SPA initialization
-- **Automated Tests**: `npm test` - takes ~7 seconds. Runs 1,438 tests (1,301 passing, 137 skipped) in 68 suites. NEVER CANCEL.
+- **Automated Tests**: `npm test` - takes ~7 seconds. Runs 1,653 tests (1,516 passing, 137 skipped) in 68 suites. NEVER CANCEL.
 - **Test Coverage**: `npm run test:coverage` - takes ~7 seconds. Shows ~70% coverage. NEVER CANCEL.
 - **Full Validation**: `npm run test:all` - takes ~7 seconds. Combines syntax + tests. NEVER CANCEL.
 - **Web Test**: Start web server with `python3 -m http.server 9000` (timeout: 10 seconds to start, runs indefinitely)
@@ -30,10 +30,11 @@ Guia Turístico is a single-page web application (version 0.7.0-alpha) built on 
 ### Development Workflow
 - Always validate JavaScript syntax with `node -c` before committing changes
 - Test SPA functionality with `node src/app.js` to verify routing and initialization
-- Run automated tests with `npm run test:all` before commits to ensure 1,301+ tests pass
+- Run automated tests with `npm run test:all` before commits to ensure 1,516+ tests pass
 - For UI/web features, use the web server and src/index.html for manual validation
 - **Follow immutability principles** - see `.github/CONTRIBUTING.md` for guidelines
 - **TIMING**: Syntax checks <1 second, tests ~7 seconds, web server startup 3 seconds
+  - **Note**: Test times may vary by 1-2 seconds depending on system performance
 
 ## Validation Scenarios
 
@@ -49,7 +50,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 2. **Automated Test Suite**:
    ```bash
    npm run test:all
-   # Should show: ✅ 1,301+ tests passing (1,438 total), ✅ 64 suites passing (68 total), ~7 seconds execution
+   # Should show: ✅ 1,516+ tests passing (1,653 total), ✅ 64 suites passing (68 total), ~7 seconds execution
    ```
 
 3. **Web Application Functionality**:
@@ -79,7 +80,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `src/guia.js` (468 lines) - guia.js library exports (imported from dependency)
 - `src/guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
 - `package.json` - Node.js configuration with guia.js dependency
-- `__tests__/` - 68 test suites with 1,438 total tests (1,301 passing, 137 skipped)
+- `__tests__/` - 68 test suites with 1,653 total tests (1,516 passing, 137 skipped)
 - `.github/CONTRIBUTING.md` - Contribution guidelines including immutability principles
 - `.github/scripts/test-workflow-locally.sh` - Pre-push validation script (simulates CI/CD)
 - `cdn-delivery.sh` - CDN URL generator for jsDelivr distribution
@@ -120,7 +121,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Testing Infrastructure
 
 ### Automated Test Coverage
-- **1,438 total tests** (1,301 passing, 137 skipped) across 68 test suites running in ~7 seconds
+- **1,653 total tests** (1,516 passing, 137 skipped) across 68 test suites running in ~7 seconds
 - **~70% code coverage** overall (69.82% actual)
 - **100% coverage** of guia_ibge.js (full coverage)
 - **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns
@@ -144,7 +145,7 @@ npm run test:all
 ```
 
 ### Expected Test Results
-- ✅ 1,301 tests passing (1,438 total, 137 skipped)
+- ✅ 1,516 tests passing (1,653 total, 137 skipped)
 - ✅ 64 test suites passing (68 total, 4 skipped)
 - ✅ ~70% code coverage overall
 - ✅ 100% code coverage on guia_ibge.js
@@ -190,6 +191,12 @@ npm run test:all
 - No build process - files are used directly
 - Manual testing required for DOM/browser features
 
+### Legacy Test Files
+- **test-fix.html**, **test-innerHTML-fix.html**, **test-geoposition-bug-fix.html**, **test-municipio-value-browser.html** - Legacy test files in root directory for historical reference
+- **demo-issue-218.js** - Demo file for specific issue testing
+- **Deprecated**: Use `src/index.html` for main application testing
+- These files remain for debugging specific historical issues but are not part of the main application
+
 ## CI/CD Integration
 
 ### GitHub Actions Workflow
@@ -207,7 +214,7 @@ Always run before committing changes:
 npm run test:all
 
 # Additional checks
-curl -s http://localhost:9000/test.html | grep "Guia.js"  # If web server running
+curl -s http://localhost:9000/src/index.html | grep "Guia" # If web server running
 ```
 
 ### Local Workflow Testing Script
@@ -303,13 +310,13 @@ npm run test:all
 python3 -m http.server 9000
 
 # Test web functionality
-curl -s http://localhost:9000/test.html | head -5
+curl -s http://localhost:9000/src/index.html | head -5
 ```
 
 ### Performance Expectations
 - **Syntax validation**: <1 second each file
 - **Basic Node.js test**: <1 second  
-- **Jest test suite**: ~7 seconds for 1,438 tests (1,301 passing, 137 skipped)
+- **Jest test suite**: ~7 seconds for 1,653 tests (1,516 passing, 137 skipped)
 - **Jest with coverage**: ~7 seconds
 - **Web server startup**: ~3 seconds, then runs indefinitely
 - **npm install**: ~20 seconds (299 packages)
@@ -317,7 +324,7 @@ curl -s http://localhost:9000/test.html | head -5
 ### Validation Checklist
 - [ ] Node.js syntax validation passes (`node -c src/guia.js`)
 - [ ] Basic Node.js execution shows version output
-- [ ] All 1,301 automated tests pass (`npm test`)
+- [ ] All 1,516 automated tests pass (`npm test`)
 - [ ] Web server starts successfully (`python3 -m http.server 9000`)
 - [ ] Test page loads without JavaScript errors
 - [ ] Geolocation button triggers proper API calls
@@ -376,9 +383,12 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 ## Repository Structure
 
 ### Key Files
-- `guia.js` (2082 lines) - Main application with 25 classes for geolocation functionality
-- `guia_ibge.js` (4 lines) - IBGE (Brazilian statistics) integration utilities
-- `test.html` - Test page for manual validation (created during development)
+- `src/app.js` (550+ lines) - **Main SPA entry point** with routing and application initialization
+- `src/index.html` (336 lines) - Main HTML page for the SPA
+- `src/guia.js` (468 lines) - guia.js library exports (imported from dependency)
+- `src/guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
+
+> **Note**: Legacy test files (test-*.html) exist in root for historical reference but are deprecated. Use `src/index.html` for the main application.
 
 ### Important Classes and Components
 
@@ -452,13 +462,18 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 
 ### Repository Root Structure
 ```
-guia_js/
-├── guia.js (60KB, main application)
-├── guia_ibge.js (146 bytes, IBGE utilities)  
-├── test.html (test page for manual validation)
+guia_turistico/
+├── src/
+│   ├── app.js (main SPA entry point)
+│   ├── index.html (main HTML page)
+│   ├── guia.js (library exports)
+│   └── guia_ibge.js (IBGE utilities)
+├── __tests__/ (test suites)
 └── .github/
     └── copilot-instructions.md (this file)
 ```
+
+> **Note**: Legacy test files (test-*.html) in root directory are deprecated. Use `src/index.html` for the main application.
 
 ### guia.js Overview
 - **Lines 1-61**: Version info, utility functions (calculateDistance, log, warn)
@@ -494,14 +509,15 @@ node src/guia.js
 python3 -m http.server 9000
 
 # Test web functionality
-curl -s http://localhost:9000/test.html | head -5
+curl -s http://localhost:9000/src/index.html | head -5
 ```
 
 ### Validation Checklist
-- [ ] Node.js syntax validation passes
+- [ ] Node.js syntax validation passes (`node -c src/app.js`)
 - [ ] Basic Node.js execution shows version output
-- [ ] Web server starts successfully
-- [ ] Test page loads without JavaScript errors
+- [ ] Web server starts successfully (`python3 -m http.server 9000`)
+- [ ] Main application loads at `http://localhost:9000/src/index.html`
+- [ ] No JavaScript errors in browser console
 - [ ] Geolocation button triggers proper API calls
 - [ ] Address formatting works for Brazilian coordinates
 - [ ] Console logging appears in both Node.js and browser

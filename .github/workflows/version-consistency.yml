@@ -1,0 +1,106 @@
+name: Version Consistency Check
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'src/**/*.js'
+      - 'docs/**/*.md'
+      - '.github/**/*.md'
+
+jobs:
+  check-versions:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Get package version
+        id: package-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Package version: $VERSION"
+      
+      - name: Check version in source files
+        run: |
+          VERSION="${{ steps.package-version.outputs.version }}"
+          echo "Checking version references in source files..."
+          
+          # Check src/app.js
+          if ! grep -q "version $VERSION" src/app.js; then
+            echo "❌ Version mismatch in src/app.js"
+            echo "Expected: $VERSION"
+            echo "Found: $(grep -o 'version [0-9.]*-alpha' src/app.js)"
+            exit 1
+          fi
+          
+          # Check src/index.html
+          if ! grep -q "$VERSION" src/index.html; then
+            echo "❌ Version mismatch in src/index.html"
+            exit 1
+          fi
+          
+          echo "✅ Source file versions match package.json"
+      
+      - name: Check version in documentation
+        run: |
+          VERSION="${{ steps.package-version.outputs.version }}"
+          echo "Checking version references in documentation..."
+          
+          # Check critical docs
+          DOCS=(
+            "README.md"
+            "docs/INDEX.md"
+            "docs/architecture/VERSION_TIMELINE.md"
+            ".github/CONTRIBUTING.md"
+            ".github/copilot-instructions.md"
+          )
+          
+          errors=0
+          for doc in "${DOCS[@]}"; do
+            if [ -f "$doc" ]; then
+              if ! grep -q "$VERSION" "$doc"; then
+                echo "⚠️ Version $VERSION not found in $doc"
+                errors=$((errors + 1))
+              else
+                echo "✅ $doc contains version $VERSION"
+              fi
+            fi
+          done
+          
+          if [ $errors -gt 0 ]; then
+            echo "❌ Found $errors documentation files without current version"
+            echo "💡 Run: npm run update-version to fix"
+            exit 1
+          fi
+          
+          echo "✅ All documentation references current version"
+      
+      - name: Check for version placeholders
+        run: |
+          echo "Checking for version placeholders..."
+          
+          # Find any X.Y.Z or YYYY-MM-DD placeholders
+          if grep -r "version X\.Y\.Z\|0\.0\.0\|YYYY-MM-DD" docs/ .github/ --exclude-dir=node_modules; then
+            echo "❌ Found version placeholders that need updating"
+            exit 1
+          fi
+          
+          echo "✅ No version placeholders found"
+      
+      - name: Report results
+        if: success()
+        run: |
+          echo "✅ Version consistency check passed"
+          echo "Current version: ${{ steps.package-version.outputs.version }}"
+          echo "All references are consistent"

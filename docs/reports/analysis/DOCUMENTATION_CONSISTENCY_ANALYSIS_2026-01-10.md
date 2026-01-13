@@ -1,4 +1,5 @@
 # Documentation Consistency Analysis Report
+
 **Project**: Guia Turístico (Tourist Guide Web Application)  
 **Analysis Date**: 2026-01-10  
 **Project Type**: nodejs_library  
@@ -15,6 +16,7 @@
 The Guia Turístico project demonstrates **strong documentation practices** with comprehensive guides for contributors, detailed architecture documentation, and extensive testing infrastructure. However, the analysis identified **5 critical issues** and **12 high-priority inconsistencies** affecting documentation accuracy and usability.
 
 **Key Findings**:
+
 - ✅ **Strengths**: 44 comprehensive .github guides, clear contribution guidelines, detailed architecture documentation
 - ⚠️ **Critical Issues**: Outdated test counts (1,301 vs 1,516 passing), version mismatches (0.6.0 vs 0.7.0), broken reference patterns in 11 files
 - 📊 **Documentation Quality**: 88 version references tracked, 34 files using outdated project name "guia_js"
@@ -29,7 +31,7 @@ The Guia Turístico project demonstrates **strong documentation practices** with
 **Impact**: Misleading metrics in core documentation (README, copilot-instructions)  
 **Severity**: High - Affects project credibility and CI/CD validation
 
-**Problem**: Documentation reports **1,301 passing tests** but actual test suite shows **1,516 passing tests**.
+**Problem**: Documentation reports **1,516 passing tests** but actual test suite shows **1,516 passing tests**.
 
 **Evidence**:
 ```bash
@@ -38,11 +40,11 @@ Test Suites: 4 skipped, 68 passed, 68 of 72 total
 Tests:       137 skipped, 1516 passed, 1653 total
 
 # Documented in copilot-instructions.md
-- Line 25: "Runs 1,438 tests (1,301 passing, 137 skipped)"
+- Line 25: "Runs 1,653 tests (1,516 passing, 137 skipped)"
 - Line 33: "ensure 1,301+ tests pass"
 - Line 52: "✅ 1,301+ tests passing (1,438 total)"
-- Line 82: "1,438 total tests (1,301 passing, 137 skipped)"
-- Line 123: "1,438 total tests (1,301 passing, 137 skipped)"
+- Line 82: "1,653 total tests (1,516 passing, 137 skipped)"
+- Line 123: "1,653 total tests (1,516 passing, 137 skipped)"
 
 # README.md discrepancy
 - Line 3 badge: "1516 passing / 1653 total" ✅ CORRECT
@@ -59,7 +61,7 @@ Tests:       137 skipped, 1516 passed, 1653 total
 **Recommended Fix**:
 ```markdown
 # .github/copilot-instructions.md (5 locations)
-- 1,438 tests (1,301 passing, 137 skipped)
+- 1,653 tests (1,516 passing, 137 skipped)
 + 1,653 tests (1,516 passing, 137 skipped)
 
 # README.md line 84
@@ -567,6 +569,7 @@ npm run test:all
 ## Medium Priority Suggestions
 
 ### 13. Documentation Date Auditing
+
 **Priority**: 🔷 MEDIUM  
 **Impact**: Helps identify stale documentation  
 

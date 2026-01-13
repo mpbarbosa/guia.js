@@ -431,11 +431,17 @@ Maintain consistent tag ordering for readability:
 
 ## Related Documentation
 
-- [Contributing Guide](CONTRIBUTING.md) - General contribution guidelines
-- [JavaScript Best Practices](JAVASCRIPT_BEST_PRACTICES.md) - Coding standards
-- [Referential Transparency Guide](REFERENTIAL_TRANSPARENCY.md) - Functional programming principles
+### Core Guides
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - General contribution guidelines
+- **[JAVASCRIPT_BEST_PRACTICES.md](JAVASCRIPT_BEST_PRACTICES.md)** - Coding standards
+- **[REFERENTIAL_TRANSPARENCY.md](REFERENTIAL_TRANSPARENCY.md)** - Functional programming principles
+- **[TDD_GUIDE.md](TDD_GUIDE.md)** - Test-driven development
+- **[UNIT_TEST_GUIDE.md](UNIT_TEST_GUIDE.md)** - Unit testing guide
+
+### Complete Guide Index
+- **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
 
 ---
 
-**Version**: 0.6.0-alpha  
-**Last Updated**: 2026-01-01
+**Version**: 0.7.1-alpha  
+**Last Updated**: 2026-01-11

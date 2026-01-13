@@ -165,9 +165,9 @@ describe('HTMLPositionDisplayer - MP Barbosa Travel Guide (v0.8.7-alpha)', () =>
         test('should use Portuguese terms in HTML output', () => {
             const mockPositionManager = {
                 lastPosition: {
+                    accuracyQuality: 'good',
                     geolocationPosition: {
-                        coords: { latitude: -23.5505, longitude: -46.6333, accuracy: 15 },
-                        accuracyQuality: 'good'
+                        coords: { latitude: -23.5505, longitude: -46.6333, accuracy: 15 }
                     }
                 }
             };

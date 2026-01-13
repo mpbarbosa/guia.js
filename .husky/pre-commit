@@ -1,0 +1,15 @@
+#!/bin/sh
+# Husky pre-commit hook
+# Fast validation + affected tests only (~1-2s)
+
+echo "🔍 Running pre-commit validation..."
+
+# Stage 1: Syntax validation (fast feedback)
+echo "  ✓ Validating JavaScript syntax..."
+npm run validate || exit 1
+
+# Stage 2: Run tests only for changed files
+echo "  ✓ Running tests for changed files..."
+npm run test:changed || exit 1
+
+echo "✅ Pre-commit checks passed!"

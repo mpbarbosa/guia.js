@@ -1,0 +1,121 @@
+name: JSDoc Coverage Report
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**/*.js'
+  pull_request:
+    paths:
+      - 'src/**/*.js'
+  workflow_dispatch:
+
+jobs:
+  jsdoc-coverage:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Generate JSDoc
+        run: |
+          mkdir -p docs/api
+          npx jsdoc -c jsdoc.json -r src/ -d docs/api || true
+      
+      - name: Calculate JSDoc coverage
+        id: coverage
+        run: |
+          echo "Calculating JSDoc coverage..."
+          
+          # Count total functions/methods
+          TOTAL=$(grep -r "function\|class.*{" src/ --include="*.js" | wc -l)
+          
+          # Count documented functions (with /** */)
+          DOCUMENTED=$(grep -B1 "function\|class" src/ --include="*.js" | grep -c "/\*\*" || echo 0)
+          
+          # Calculate percentage
+          if [ $TOTAL -gt 0 ]; then
+            PERCENTAGE=$((DOCUMENTED * 100 / TOTAL))
+          else
+            PERCENTAGE=0
+          fi
+          
+          echo "total=$TOTAL" >> $GITHUB_OUTPUT
+          echo "documented=$DOCUMENTED" >> $GITHUB_OUTPUT
+          echo "percentage=$PERCENTAGE" >> $GITHUB_OUTPUT
+          
+          echo "📊 JSDoc Coverage:"
+          echo "  Total functions: $TOTAL"
+          echo "  Documented: $DOCUMENTED"
+          echo "  Coverage: ${PERCENTAGE}%"
+      
+      - name: Update coverage badge
+        run: |
+          PERCENTAGE="${{ steps.coverage.outputs.percentage }}"
+          
+          # Determine badge color
+          if [ $PERCENTAGE -ge 90 ]; then
+            COLOR="brightgreen"
+          elif [ $PERCENTAGE -ge 70 ]; then
+            COLOR="green"
+          elif [ $PERCENTAGE -ge 50 ]; then
+            COLOR="yellow"
+          else
+            COLOR="red"
+          fi
+          
+          echo "Badge URL: https://img.shields.io/badge/JSDoc-${PERCENTAGE}%25-${COLOR}"
+      
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const coverage = {
+              total: ${{ steps.coverage.outputs.total }},
+              documented: ${{ steps.coverage.outputs.documented }},
+              percentage: ${{ steps.coverage.outputs.percentage }}
+            };
+            
+            const emoji = coverage.percentage >= 90 ? '🎉' : 
+                         coverage.percentage >= 70 ? '✅' :
+                         coverage.percentage >= 50 ? '⚠️' : '❌';
+            
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `${emoji} **JSDoc Coverage Report**
+              
+              - **Total Functions**: ${coverage.total}
+              - **Documented**: ${coverage.documented}
+              - **Coverage**: ${coverage.percentage}%
+              
+              ${coverage.percentage < 70 ? '⚠️ Coverage below 70% threshold' : '✅ Coverage meets minimum threshold'}`
+            })
+      
+      - name: Publish coverage report
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          # Update JSDOC_COVERAGE_REPORT.md
+          PERCENTAGE="${{ steps.coverage.outputs.percentage }}"
+          TOTAL="${{ steps.coverage.outputs.total }}"
+          DOCUMENTED="${{ steps.coverage.outputs.documented }}"
+          DATE=$(date -I)
+          
+          if [ -f docs/JSDOC_COVERAGE_REPORT.md ]; then
+            # Update existing report
+            sed -i "s/Last Updated: .*/Last Updated: $DATE/" docs/JSDOC_COVERAGE_REPORT.md
+            sed -i "s/Overall Coverage: .*%/Overall Coverage: ${PERCENTAGE}%/" docs/JSDOC_COVERAGE_REPORT.md
+          fi
+          
+          echo "✅ Updated JSDoc coverage report"

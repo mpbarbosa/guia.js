@@ -159,8 +159,8 @@ git status --short | grep "^??"  # NEW: Explicitly show untracked files
 
 ### Command Execution Times
 - `npm run validate`: <1 second ✅
-- `npm test`: ~5 seconds ✅
-- `npm run test:coverage`: ~6 seconds ✅
+- `npm test`: ~7 seconds ✅
+- `npm run test:coverage`: ~7 seconds ✅
 - `npm run test:all`: ~10 seconds ✅
 
 All timing expectations met from Copilot instructions.

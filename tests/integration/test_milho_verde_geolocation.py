@@ -29,6 +29,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 from firefox_console_capture import (
@@ -145,6 +146,45 @@ class TestMilhoVerdeGeolocation(unittest.TestCase):
             reset_geolocation_service(self.driver)
         except Exception as e:
             print(f"Warning: Could not reset geolocation service: {e}")
+    
+    def _get_chrome_driver(self):
+        """Get Chrome WebDriver with CDP support.
+        
+        Returns:
+            webdriver.Chrome: Configured Chrome driver or None if not available
+        """
+        import os
+        from selenium.webdriver.chrome.options import Options as ChromeOptions
+        
+        chrome_options = ChromeOptions()
+        
+        # Chrome binary location
+        chrome_binary = os.environ.get('CHROME_BIN', '/opt/google/chrome/chrome')
+        
+        if not os.path.exists(chrome_binary):
+            print(f"Chrome binary not found at: {chrome_binary}")
+            return None
+        
+        chrome_options.binary_location = chrome_binary
+        
+        # Required flags for running in automation
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-gpu')
+        
+        # Grant geolocation permission
+        chrome_options.add_experimental_option("prefs", {
+            "profile.default_content_setting_values.geolocation": 1
+        })
+        
+        try:
+            driver = webdriver.Chrome(options=chrome_options)
+            driver.set_window_size(1920, 1080)
+            print(f"✅ Using Chrome at: {chrome_binary}")
+            return driver
+        except Exception as e:
+            print(f"❌ Failed to create Chrome driver: {e}")
+            return None
 
     def _mock_geolocation(self):
         """
@@ -277,7 +317,61 @@ class TestMilhoVerdeGeolocation(unittest.TestCase):
         logs2 = console.get_logs()
         print(f"Console logs after provider test: {logs2}")
 
-    def test_03_coordinates_display_correctly(self):
+    def test_03_chrome_coordinates_display(self):
+        """Test coordinate display using Chrome with CDP geolocation mocking."""
+        chrome_driver = self._get_chrome_driver()
+        if not chrome_driver:
+            self.skipTest("Chrome not available")
+        
+        try:
+            # Set geolocation using CDP
+            chrome_driver.execute_cdp_cmd("Emulation.setGeolocationOverride", {
+                "latitude": self.TEST_LATITUDE,
+                "longitude": self.TEST_LONGITUDE,
+                "accuracy": 100
+            })
+            
+            # Load page
+            import os
+            test_dir = os.path.dirname(os.path.abspath(__file__))
+            repo_root = os.path.dirname(os.path.dirname(test_dir))
+            index_path = f"file://{os.path.join(repo_root, 'src', 'index.html')}"
+            chrome_driver.get(index_path)
+            time.sleep(3)
+            
+            # Enable tracking
+            chrome_driver.execute_script("""
+                const toggle = document.getElementById('continuous-tracking-toggle');
+                if (toggle && !toggle.checked) {
+                    toggle.checked = true;
+                    toggle.dispatchEvent(new Event('change'));
+                }
+            """)
+            time.sleep(5)
+            
+            # Extract coordinates from DOM
+            coords = chrome_driver.execute_script("""
+                const result = document.getElementById('locationResult');
+                const text = result ? result.textContent : '';
+                const latMatch = text.match(/Latitude[:\\s]+([-\\d.]+)/i);
+                const lonMatch = text.match(/Longitude[:\\s]+([-\\d.]+)/i);
+                return {
+                    found: !!(latMatch && lonMatch),
+                    lat: latMatch ? parseFloat(latMatch[1]) : null,
+                    lon: lonMatch ? parseFloat(lonMatch[1]) : null
+                };
+            """)
+            
+            print(f"[TEST] Extracted coordinates: {coords}")
+            self.assertTrue(coords['found'], "Should find coordinates in DOM")
+            self.assertAlmostEqual(coords['lat'], self.TEST_LATITUDE, places=5)
+            self.assertAlmostEqual(coords['lon'], self.TEST_LONGITUDE, places=5)
+            print("✅ Chrome CDP test passed")
+            
+        finally:
+            chrome_driver.quit()
+    
+    def test_03_firefox_coordinates_display_correctly(self):
         """Test that Milho Verde coordinates are displayed correctly in the DOM.
         
         This test validates the complete flow:
@@ -541,11 +635,13 @@ class TestMilhoVerdeGeolocation(unittest.TestCase):
     def test_05_address_components_validation(self):
         """Test that address components are properly extracted and displayed."""
         import os
-        converter_file = f"{self.base_url.replace('file://', '')}/address-converter.html"
+        # address-converter.html is in examples folder, not src
+        base_dir = self.base_url.replace('file://', '').replace('/src', '')
+        converter_file = f"{base_dir}/examples/address-converter.html"
         if not os.path.exists(converter_file):
             self.skipTest("address-converter.html not implemented yet")
         
-        self.driver.get(f"{self.base_url}/address-converter.html")
+        self.driver.get(f"file://{converter_file}")
         
         # Input coordinates
         lat_input = self.wait.until(
@@ -562,16 +658,40 @@ class TestMilhoVerdeGeolocation(unittest.TestCase):
         
         # Convert
         convert_btn = self.wait.until(
-            EC.element_to_be_clickable((By.ID, "convertBtn"))
+            EC.element_to_be_clickable((By.ID, "fetchButton"))
         )
         convert_btn.click()
         
-        # Wait for result
-        time.sleep(6)
+        # Wait for result - wait for loading to disappear
+        print("Waiting for address to load...")
+        time.sleep(3)  # Initial wait for API call to start
+        
+        # Wait for loading indicator to disappear and results to appear
+        max_wait = 15
+        start_time = time.time()
+        while time.time() - start_time < max_wait:
+            address_result = self.driver.find_element(By.ID, "results")
+            result_content = address_result.get_attribute('innerHTML')
+            if 'loading' not in result_content.lower():
+                print(f"Results loaded after {time.time() - start_time:.2f} seconds")
+                break
+            time.sleep(1)
+        
+        # Additional wait for municipio-value to be updated
+        time.sleep(2)
+        
+        # Check browser console for errors
+        console_logs = self.driver.get_log('browser')
+        if console_logs:
+            print("Browser console logs:")
+            for log in console_logs:
+                print(f"  {log['level']}: {log['message']}")
         
         try:
-            address_result = self.driver.find_element(By.ID, "addressResult")
+            address_result = self.driver.find_element(By.ID, "results")
             result_content = address_result.get_attribute('innerHTML')
+            
+            print(f"Results content: {result_content[:500]}")  # Debug output
             
             # Check for key address components
             # Note: Exact format depends on app implementation
@@ -593,6 +713,25 @@ class TestMilhoVerdeGeolocation(unittest.TestCase):
             self.assertGreaterEqual(len(found_components), 2,
                                   f"Should find at least 2 address components. "
                                   f"Found: {found_components}")
+            
+            # Validate municipio-value element
+            municipio_value = self.driver.find_element(By.ID, "municipio-value")
+            municipio_text = municipio_value.text.lower()
+            
+            # Should contain city name (Serro)
+            self.assertIn("serro", municipio_text,
+                         f"municipio-value should contain 'Serro'. Found: '{municipio_value.text}'")
+            
+            # Should not be empty or placeholder
+            self.assertNotIn("não disponível", municipio_text,
+                           "municipio-value should not show 'Não disponível'")
+            self.assertNotEqual(municipio_text.strip(), "—",
+                              "municipio-value should not be placeholder '—'")
+            self.assertNotEqual(municipio_text.strip(), "",
+                              "municipio-value should not be empty")
+            
+            print(f"✅ municipio-value validated: '{municipio_value.text}'")
+            
         except NoSuchElementException:
             self.fail("Could not find address result element")
 

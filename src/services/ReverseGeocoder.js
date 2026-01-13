@@ -205,17 +205,17 @@ class ReverseGeocoder {
 	}
 
 	/**
-	 * Fetches address data using parent class caching mechanisms.
+	 * Fetches address data using reverse geocoding.
 	 * 
 	 * PERFORMANCE INTEGRATION:
-	 * Delegates to the parent class's fetchData() implementation, leveraging
-	 * established caching and retry mechanisms for optimal performance and
-	 * reliability when accessing external geocoding services.
+	 * Delegates to reverseGeocode() method which handles coordinate validation,
+	 * URL generation, and API fetching with built-in caching and retry mechanisms
+	 * for optimal performance and reliability when accessing external geocoding services.
 	 * 
 	 * @returns {Promise} Promise resolving to address data
 	 */
 	async fetchAddress() {
-		return super.fetchData();
+		return this.reverseGeocode();
 	}
 
 	/**

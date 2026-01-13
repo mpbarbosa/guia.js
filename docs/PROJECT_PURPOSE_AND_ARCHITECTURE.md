@@ -1,7 +1,7 @@
 # Guia.js - Project Purpose and Architecture Documentation
 
-**Version**: 0.6.0-alpha  
-**Document Date**: 2026-01-06  
+**Version**: 0.7.1-alpha  
+**Document Date**: 2026-01-11  
 **Purpose**: Define project boundaries and prevent inappropriate architectural decisions
 
 ---
@@ -162,7 +162,7 @@ Guia.js follows these architectural principles:
 ✅ CORRECT APPROACH: CDN Distribution + Integration
 ┌─────────────────────────────────────┐
 │  jsDelivr CDN                        │
-│  ├── guia.js@0.6.0-alpha             │
+│  ├── guia.js@0.7.1-alpha             │
 │  └── Developer imports into app     │
 └─────────────────────────────────────┘
         ↓
@@ -197,7 +197,7 @@ Guia.js follows these architectural principles:
 ./cdn-delivery.sh
 
 # Developers use in their HTML
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.7.1-alpha/src/guia.js"></script>
 ```
 
 **Why this works**:
@@ -359,7 +359,7 @@ git push
 
 ```bash
 # 1. Bump version
-npm version minor  # 0.6.0 → 0.7.0
+npm version minor  # 0.7.0 → 0.8.0
 
 # 2. Generate CDN URLs
 ./cdn-delivery.sh
@@ -416,7 +416,7 @@ echo "<html>...</html>" > index.html
     <div id="map-container"></div>
     
     <!-- Import Guia.js from CDN -->
-    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.7.1-alpha/src/guia.js"></script>
     
     <script>
         // Use Guia.js APIs
@@ -488,7 +488,7 @@ geocode(-23.550520, -46.633309);
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  jsDelivr CDN                                               │
-│  ├── guia.js@0.6.0-alpha                                    │
+│  ├── guia.js@0.7.1-alpha                                    │
 │  ├── Provides APIs                                          │
 │  └── Embedded in developer's app                            │
 │                                                              │

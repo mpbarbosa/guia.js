@@ -208,7 +208,7 @@
     
     <!-- Version Display -->
     <div class="app-version" role="status" aria-live="polite" aria-label="Versão do aplicativo">
-      v 0.7.0 | 2026-01-03
+      v 0.7.1 | 2026-01-11
     </div>
     
     <!-- App Navigation -->
@@ -237,20 +237,13 @@
       <!-- Tracking Mode Toggle -->
       <section class="tracking-mode-section" aria-label="Modo de rastreamento">
         <div class="tracking-mode-toggle">
-          <input type="checkbox" id="continuous-tracking-toggle" aria-describedby="tracking-mode-description" role="switch" aria-checked="false">
+          <input type="checkbox" id="continuous-tracking-toggle" aria-describedby="tracking-mode-description" role="switch" aria-checked="true">
           <label for="continuous-tracking-toggle">
-            <strong>Rastreamento Contínuo</strong>
+            <strong>Rastreamento de Localização</strong>
             <span id="tracking-mode-description" class="toggle-description">
-              Ative para atualizar sua localização automaticamente enquanto você se move
+              Rastreie sua localização automaticamente enquanto você se move
             </span>
           </label>
-        </div>
-        
-        <!-- Get Location Button (visible only in single-position mode) -->
-        <div id="get-location-button-container" style="margin-top: 16px;">
-          <button id="getLocationBtn" class="md3-button-filled" aria-label="Obter localização atual">
-            📍 Obter Localização Atual
-          </button>
         </div>
       </section>
       
@@ -314,8 +307,8 @@
         <p>As informações da sua localização aparecerão aqui.</p>
       </section>
 
-      <!-- Tracking Mode Controls (visible only in continuous mode) -->
-      <div id="tracking-controls" style="display: none;">
+      <!-- Tracking Mode Controls -->
+      <div id="tracking-controls">
         <button id="insertPositionButton" class="md3-button-outlined" aria-label="Inserir posição de teste">
           Inserir posição de teste
         </button>

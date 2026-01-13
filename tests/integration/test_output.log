@@ -1,0 +1,179 @@
+test_01_location_cards_exist (__main__.TestVisualHierarchy.test_01_location_cards_exist)
+Test that location highlight cards are present ... ok
+test_02_location_cards_larger_than_buttons (__main__.TestVisualHierarchy.test_02_location_cards_larger_than_buttons)
+Test that location cards are visually larger than action buttons ... FAIL
+test_03_location_cards_prominent_styling (__main__.TestVisualHierarchy.test_03_location_cards_prominent_styling)
+Test that location cards have prominent visual styling ... FAIL
+test_04_buttons_de_emphasized_styling (__main__.TestVisualHierarchy.test_04_buttons_de_emphasized_styling)
+Test that action buttons have de-emphasized styling ... ok
+test_05_location_card_labels (__main__.TestVisualHierarchy.test_05_location_card_labels)
+Test that location card labels are properly styled ... FAIL
+test_06_responsive_mobile_layout (__main__.TestVisualHierarchy.test_06_responsive_mobile_layout)
+Test visual hierarchy on mobile viewport ... FAIL
+test_07_responsive_tablet_layout (__main__.TestVisualHierarchy.test_07_responsive_tablet_layout)
+Test visual hierarchy on tablet viewport ... ok
+test_08_hover_state_cards (__main__.TestVisualHierarchy.test_08_hover_state_cards)
+Test hover state on location cards ... ok
+test_09_accessibility_aria_labels (__main__.TestVisualHierarchy.test_09_accessibility_aria_labels)
+Test accessibility features on location cards ... ok
+test_10_css_file_loaded (__main__.TestVisualHierarchy.test_10_css_file_loaded)
+Test that location-highlights.css is loaded ... FAIL
+test_11_visual_hierarchy_order (__main__.TestVisualHierarchy.test_11_visual_hierarchy_order)
+Test that elements appear in correct visual order ... ok
+test_12_contrast_ratio_sufficient (__main__.TestVisualHierarchy.test_12_contrast_ratio_sufficient)
+Test that text contrast on cards is sufficient ... FAIL
+
+======================================================================
+FAIL: test_02_location_cards_larger_than_buttons (__main__.TestVisualHierarchy.test_02_location_cards_larger_than_buttons)
+Test that location cards are visually larger than action buttons
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_visual_hierarchy.py", line 103, in test_02_location_cards_larger_than_buttons
+    self.assertGreater(
+    ~~~~~~~~~~~~~~~~~~^
+        card_height,
+        ^^^^^^^^^^^^
+        button_height,
+        ^^^^^^^^^^^^^^
+        f"Location card height ({card_height}px) should be greater than button height ({button_height}px)"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: 48.0 not greater than 49.0 : Location card height (48.0px) should be greater than button height (49.0px)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_visual_hierarchy.py", line 118, in test_02_location_cards_larger_than_buttons
+    self.fail(f"Size comparison failed: {e}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Size comparison failed: 48.0 not greater than 49.0 : Location card height (48.0px) should be greater than button height (49.0px)
+
+======================================================================
+FAIL: test_03_location_cards_prominent_styling (__main__.TestVisualHierarchy.test_03_location_cards_prominent_styling)
+Test that location cards have prominent visual styling
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_visual_hierarchy.py", line 135, in test_03_location_cards_prominent_styling
+    self.assertIn("255", text_color)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: '255' not found in 'rgb(28, 27, 31)'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_visual_hierarchy.py", line 147, in test_03_location_cards_prominent_styling
+    self.fail(f"Prominent styling check failed: {e}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Prominent styling check failed: '255' not found in 'rgb(28, 27, 31)'
+
+======================================================================
+FAIL: test_05_location_card_labels (__main__.TestVisualHierarchy.test_05_location_card_labels)
+Test that location card labels are properly styled
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_visual_hierarchy.py", line 196, in test_05_location_card_labels
+    self.assertIn("uppercase", text_transform.lower())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'uppercase' not found in 'none'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_visual_hierarchy.py", line 214, in test_05_location_card_labels
+    self.fail(f"Label styling check failed: {e}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Label styling check failed: 'uppercase' not found in 'none'
+
+======================================================================
+FAIL: test_06_responsive_mobile_layout (__main__.TestVisualHierarchy.test_06_responsive_mobile_layout)
+Test visual hierarchy on mobile viewport
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_visual_hierarchy.py", line 250, in test_06_responsive_mobile_layout
+    self.assertGreater(card_height, button_height)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 48.0 not greater than 49.0
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_visual_hierarchy.py", line 254, in test_06_responsive_mobile_layout
+    self.fail(f"Mobile layout check failed: {e}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Mobile layout check failed: 48.0 not greater than 49.0
+
+======================================================================
+FAIL: test_10_css_file_loaded (__main__.TestVisualHierarchy.test_10_css_file_loaded)
+Test that location-highlights.css is loaded
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_visual_hierarchy.py", line 349, in test_10_css_file_loaded
+    self.assertTrue(
+    ~~~~~~~~~~~~~~~^
+        css_loaded,
+        ^^^^^^^^^^^
+        "location-highlights.css should be loaded in the page"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: False is not true : location-highlights.css should be loaded in the page
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_visual_hierarchy.py", line 356, in test_10_css_file_loaded
+    self.fail(f"CSS file check failed: {e}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: CSS file check failed: False is not true : location-highlights.css should be loaded in the page
+
+======================================================================
+FAIL: test_12_contrast_ratio_sufficient (__main__.TestVisualHierarchy.test_12_contrast_ratio_sufficient)
+Test that text contrast on cards is sufficient
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_visual_hierarchy.py", line 398, in test_12_contrast_ratio_sufficient
+    self.assertGreater(r, 200, "Text should be white or very light")
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 28 not greater than 200 : Text should be white or very light
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/mpb/Documents/GitHub/guia_turistico/tests/integration/test_visual_hierarchy.py", line 404, in test_12_contrast_ratio_sufficient
+    self.fail(f"Contrast check failed: {e}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Contrast check failed: 28 not greater than 200 : Text should be white or very light
+
+----------------------------------------------------------------------
+Ran 12 tests in 20.899s
+
+FAILED (failures=6)
+Chrome not available, trying Firefox: Message: session not created
+from unknown error: no chrome binary at /usr/bin/google-chrome; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#sessionnotcreatedexception
+Stacktrace:
+#0 0x5d35c224e13a <unknown>
+#1 0x5d35c1cf0d4b <unknown>
+#2 0x5d35c1d28127 <unknown>
+#3 0x5d35c1d26eda <unknown>
+#4 0x5d35c1d74f0b <unknown>
+#5 0x5d35c1d7468c <unknown>
+#6 0x5d35c1d33d57 <unknown>
+#7 0x5d35c1d34a01 <unknown>
+#8 0x5d35c2218a5f <unknown>
+#9 0x5d35c221ba21 <unknown>
+#10 0x5d35c2201b3e <unknown>
+#11 0x5d35c221c1a9 <unknown>
+#12 0x5d35c21ea9a7 <unknown>
+#13 0x5d35c223c868 <unknown>
+#14 0x5d35c223ca7a <unknown>
+#15 0x5d35c224d3ec <unknown>
+#16 0x71f2b7435aa4 <unknown>
+#17 0x71f2b74c2c6c <unknown>
+
+✓ Location cards exist
+✓ Buttons have de-emphasized styling (gray, minimal shadow)
+✓ Tablet layout maintains visual hierarchy
+✓ Hover states defined (initial: none...)
+✓ Accessibility features present (ARIA labels, roles, live regions)
+✓ Visual hierarchy established (cards at y=302, buttons at y=398)

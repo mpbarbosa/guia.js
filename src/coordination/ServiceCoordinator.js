@@ -16,7 +16,7 @@
  * - Resource Management: Handles service cleanup properly
  * 
  * @module coordination/ServiceCoordinator
- * @since 0.7.0-alpha - Phase 1: WebGeocodingManager refactoring
+ * @since 0.7.1-alpha - Phase 1: WebGeocodingManager refactoring
  * @author Marcelo Pereira Barbosa
  * 
  * @requires core/PositionManager
@@ -253,12 +253,25 @@ class ServiceCoordinator {
                         lon: position.coords.longitude
                     });
                     
+                    // Update PositionManager (this will notify all observers including displayers)
+                    const positionManager = PositionManager.getInstance();
+                    positionManager.update(position);
+                    
                     // Update change detection coordinator
                     this._changeDetectionCoordinator.setCurrentPosition(position);
                     
                     // Update reverse geocoder coordinates
                     this._reverseGeocoder.latitude = position.coords.latitude;
                     this._reverseGeocoder.longitude = position.coords.longitude;
+                    
+                    // Trigger reverse geocoding to fetch address
+                    this._reverseGeocoder.fetchAddress()
+                        .then(() => {
+                            log('ServiceCoordinator: Address fetched successfully');
+                        })
+                        .catch((err) => {
+                            logError('ServiceCoordinator: Failed to fetch address', err);
+                        });
                 }
                 return position;
             })

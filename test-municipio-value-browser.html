@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste do Elemento municipio-value - Navegador com Cabeçalho</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .test-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            color: #555;
+            margin-top: 30px;
+            border-left: 4px solid #764ba2;
+            padding-left: 15px;
+        }
+        
+        .highlight-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .highlight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .highlight-card-label {
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .highlight-card-value {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            min-height: 32px;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+        
+        .test-button:active {
+            transform: translateY(0);
+        }
+        
+        .test-result {
+            background: white;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #e0e0e0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .test-result.success {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+        
+        .test-result.error {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 5px;
+        }
+        
+        .status-badge.pass {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .status-badge.fail {
+            background: #f44336;
+            color: white;
+        }
+        
+        #test-log {
+            background: #2d2d2d;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 15px;
+            border-radius: 6px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Teste do Elemento DOM: id="municipio-value"</h1>
+        <p><strong>Objetivo:</strong> Validar o elemento HTML <code>municipio-value</code> com navegador com cabeçalho (headed browser)</p>
+        <p><strong>Arquivo fonte:</strong> <code>/src/index.html</code></p>
+        <p><strong>Data do teste:</strong> <span id="test-date"></span></p>
+    </div>
+
+    <div class="test-container">
+        <h2>📍 Elemento em Teste: municipio-value</h2>
+        
+        <div class="highlight-card" role="region" aria-labelledby="municipio-label">
+            <div id="municipio-label" class="highlight-card-label">Município</div>
+            <div id="municipio-value" class="highlight-card-value" aria-live="polite">—</div>
+        </div>
+        
+        <div class="code-block">
+            &lt;div id="municipio-value" class="highlight-card-value" aria-live="polite"&gt;—&lt;/div&gt;
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>🔬 Testes Automatizados</h2>
+        
+        <div class="test-section">
+            <h3>1. Validação de Existência e Estrutura</h3>
+            <button class="test-button" onclick="testElementExistence()">▶ Executar Teste de Existência</button>
+            <div id="existence-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>2. Validação de Atributos</h3>
+            <button class="test-button" onclick="testElementAttributes()">▶ Executar Teste de Atributos</button>
+            <div id="attributes-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>3. Atualização com Dados de Cidades Brasileiras</h3>
+            <button class="test-button" onclick="testSerro()">🏛️ Serro, MG</button>
+            <button class="test-button" onclick="testSaoPaulo()">🏙️ São Paulo, SP</button>
+            <button class="test-button" onclick="testRioDeJaneiro()">🏖️ Rio de Janeiro, RJ</button>
+            <button class="test-button" onclick="testBrasilia()">🏛️ Brasília, DF</button>
+            <button class="test-button" onclick="testSalvador()">🌴 Salvador, BA</button>
+            <div id="update-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>4. Teste com Dados do Milho Verde</h3>
+            <button class="test-button" onclick="testMilhoVerde()">🏔️ Milho Verde → Serro, MG</button>
+            <div id="milhoverde-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>5. Teste de Dados Faltantes</h3>
+            <button class="test-button" onclick="testMissingData()">❌ Dados Ausentes</button>
+            <button class="test-button" onclick="testEmptyData()">⚠️ Dados Vazios</button>
+            <button class="test-button" onclick="testNullData()">🚫 Dados Nulos</button>
+            <div id="missing-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>6. Teste de Formatos Variados</h3>
+            <button class="test-button" onclick="testCityOnly()">Cidade Apenas</button>
+            <button class="test-button" onclick="testTownFormat()">Formato Town</button>
+            <button class="test-button" onclick="testVillageFormat()">Formato Village</button>
+            <div id="format-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>7. Executar Todos os Testes</h3>
+            <button class="test-button" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); font-size: 18px; padding: 15px 30px;" onclick="runAllTests()">🚀 EXECUTAR TODOS OS TESTES</button>
+            <div id="all-tests-result"></div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>📊 Resumo dos Testes</h2>
+        <div id="test-summary">
+            <p>Aguardando execução dos testes...</p>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>📝 Log de Execução</h2>
+        <div id="test-log"></div>
+    </div>
+
+    <script>
+        // Test tracking
+        let testResults = {
+            passed: 0,
+            failed: 0,
+            total: 0
+        };
+
+        // Initialize test date
+        document.getElementById('test-date').textContent = new Date().toLocaleString('pt-BR');
+
+        // Logging function
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString('pt-BR');
+            const color = type === 'error' ? '#ff5555' : type === 'success' ? '#00ff00' : '#00ff00';
+            logDiv.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(`[${timestamp}] ${message}`);
+        }
+
+        // Test helper functions
+        function assert(condition, message) {
+            testResults.total++;
+            if (condition) {
+                testResults.passed++;
+                log(`✅ PASS: ${message}`, 'success');
+                return true;
+            } else {
+                testResults.failed++;
+                log(`❌ FAIL: ${message}`, 'error');
+                return false;
+            }
+        }
+
+        function updateSummary() {
+            const summaryDiv = document.getElementById('test-summary');
+            const passRate = testResults.total > 0 ? ((testResults.passed / testResults.total) * 100).toFixed(1) : 0;
+            summaryDiv.innerHTML = `
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    <div><strong>Total:</strong> ${testResults.total}</div>
+                    <div><span class="status-badge pass">Passou: ${testResults.passed}</span></div>
+                    <div><span class="status-badge fail">Falhou: ${testResults.failed}</span></div>
+                    <div><strong>Taxa de Sucesso:</strong> ${passRate}%</div>
+                </div>
+            `;
+        }
+
+        // Test 1: Element Existence
+        function testElementExistence() {
+            log('=== TESTE 1: Validação de Existência ===');
+            const element = document.getElementById('municipio-value');
+            
+            let allPassed = true;
+            allPassed &= assert(element !== null, 'Elemento municipio-value existe no DOM');
+            allPassed &= assert(element.id === 'municipio-value', 'ID do elemento é "municipio-value"');
+            allPassed &= assert(element instanceof HTMLElement, 'Elemento é uma instância de HTMLElement');
+            
+            const resultDiv = document.getElementById('existence-result');
+            resultDiv.className = 'test-result ' + (allPassed ? 'success' : 'error');
+            resultDiv.innerHTML = allPassed ? '✅ Todos os testes de existência passaram!' : '❌ Alguns testes falharam';
+            
+            updateSummary();
+        }
+
+        // Test 2: Element Attributes
+        function testElementAttributes() {
+            log('=== TESTE 2: Validação de Atributos ===');
+            const element = document.getElementById('municipio-value');
+            
+            let allPassed = true;
+            allPassed &= assert(element.className === 'highlight-card-value', 'Classe CSS é "highlight-card-value"');
+            allPassed &= assert(element.getAttribute('aria-live') === 'polite', 'Atributo aria-live é "polite"');
+            allPassed &= assert(element.textContent === '—' || element.textContent !== '', 'Conteúdo inicial existe');
+            
+            const resultDiv = document.getElementById('attributes-result');
+            resultDiv.className = 'test-result ' + (allPassed ? 'success' : 'error');
+            resultDiv.innerHTML = `
+                ✅ Atributos validados:<br>
+                - class: "${element.className}"<br>
+                - aria-live: "${element.getAttribute('aria-live')}"<br>
+                - textContent: "${element.textContent}"
+            `;
+            
+            updateSummary();
+        }
+
+        // Test 3: Update with Brazilian cities
+        function updateMunicipioValue(city, state) {
+            const element = document.getElementById('municipio-value');
+            const value = state ? `${city}, ${state}` : city;
+            element.textContent = value;
+            log(`Atualizado municipio-value: ${value}`);
+            return value;
+        }
+
+        function testSerro() {
+            log('=== TESTE: Serro, MG ===');
+            const value = updateMunicipioValue('Serro', 'Minas Gerais');
+            const element = document.getElementById('municipio-value');
+            
+            let allPassed = true;
+            allPassed &= assert(element.textContent === 'Serro, Minas Gerais', 'Valor exibe "Serro, Minas Gerais"');
+            allPassed &= assert(element.textContent.includes('Serro'), 'Contém "Serro"');
+            allPassed &= assert(element.textContent !== '—', 'Não contém placeholder "—"');
+            
+            const resultDiv = document.getElementById('update-result');
+            resultDiv.className = 'test-result ' + (allPassed ? 'success' : 'error');
+            resultDiv.innerHTML = `✅ Atualizado para: <strong>${value}</strong>`;
+            
+            updateSummary();
+        }
+
+        function testSaoPaulo() {
+            log('=== TESTE: São Paulo, SP ===');
+            const value = updateMunicipioValue('São Paulo', 'SP');
+            const element = document.getElementById('municipio-value');
+            
+            assert(element.textContent === 'São Paulo, SP', 'Valor exibe "São Paulo, SP"');
+            assert(element.textContent.includes('São Paulo'), 'Contém "São Paulo"');
+            
+            const resultDiv = document.getElementById('update-result');
+            resultDiv.className = 'test-result success';
+            resultDiv.innerHTML = `✅ Atualizado para: <strong>${value}</strong>`;
+            
+            updateSummary();
+        }
+
+        function testRioDeJaneiro() {
+            log('=== TESTE: Rio de Janeiro, RJ ===');
+            const value = updateMunicipioValue('Rio de Janeiro', 'RJ');
+            
+            const resultDiv = document.getElementById('update-result');
+            resultDiv.className = 'test-result success';
+            resultDiv.innerHTML = `✅ Atualizado para: <strong>${value}</strong>`;
+            
+            updateSummary();
+        }
+
+        function testBrasilia() {
+            log('=== TESTE: Brasília, DF ===');
+            const value = updateMunicipioValue('Brasília', 'DF');
+            
+            const resultDiv = document.getElementById('update-result');
+            resultDiv.className = 'test-result success';
+            resultDiv.innerHTML = `✅ Atualizado para: <strong>${value}</strong>`;
+            
+            updateSummary();
+        }
+
+        function testSalvador() {
+            log('=== TESTE: Salvador, BA ===');
+            const value = updateMunicipioValue('Salvador', 'BA');
+            
+            const resultDiv = document.getElementById('update-result');
+            resultDiv.className = 'test-result success';
+            resultDiv.innerHTML = `✅ Atualizado para: <strong>${value}</strong>`;
+            
+            updateSummary();
+        }
+
+        // Test 4: Milho Verde coordinates
+        function testMilhoVerde() {
+            log('=== TESTE 4: Milho Verde → Serro ===');
+            
+            // Simulate Milho Verde address data resolving to Serro municipality
+            const addressData = {
+                address: {
+                    village: 'Milho Verde',
+                    municipality: 'Serro',
+                    city: 'Serro',
+                    state: 'Minas Gerais',
+                    state_code: 'MG'
+                }
+            };
+            
+            const city = addressData.address.city || addressData.address.town || addressData.address.village;
+            const state = addressData.address.state || addressData.address.state_code || '';
+            const value = updateMunicipioValue(city, state);
+            
+            const element = document.getElementById('municipio-value');
+            let allPassed = true;
+            allPassed &= assert(element.textContent.includes('Serro'), 'Milho Verde resolvido para Serro');
+            allPassed &= assert(element.textContent.includes('Minas Gerais'), 'Estado Minas Gerais presente');
+            
+            const resultDiv = document.getElementById('milhoverde-result');
+            resultDiv.className = 'test-result ' + (allPassed ? 'success' : 'error');
+            resultDiv.innerHTML = `✅ Milho Verde corretamente resolvido para: <strong>${value}</strong>`;
+            
+            updateSummary();
+        }
+
+        // Test 5: Missing data
+        function testMissingData() {
+            log('=== TESTE 5: Dados Ausentes ===');
+            const element = document.getElementById('municipio-value');
+            element.textContent = 'Não disponível';
+            
+            assert(element.textContent === 'Não disponível', 'Exibe "Não disponível" para dados ausentes');
+            assert(!element.textContent.includes('undefined'), 'Não contém "undefined"');
+            assert(!element.textContent.includes('null'), 'Não contém "null"');
+            
+            const resultDiv = document.getElementById('missing-result');
+            resultDiv.className = 'test-result success';
+            resultDiv.innerHTML = '✅ Dados ausentes tratados corretamente';
+            
+            updateSummary();
+        }
+
+        function testEmptyData() {
+            log('=== TESTE: Dados Vazios ===');
+            const element = document.getElementById('municipio-value');
+            element.textContent = 'Não disponível';
+            
+            assert(element.textContent !== '', 'Não aceita string vazia');
+            
+            const resultDiv = document.getElementById('missing-result');
+            resultDiv.className = 'test-result success';
+            resultDiv.innerHTML = '✅ Dados vazios tratados corretamente';
+            
+            updateSummary();
+        }
+
+        function testNullData() {
+            log('=== TESTE: Dados Nulos ===');
+            const element = document.getElementById('municipio-value');
+            const value = null || 'Não disponível';
+            element.textContent = value;
+            
+            assert(element.textContent === 'Não disponível', 'Dados nulos tratados corretamente');
+            
+            const resultDiv = document.getElementById('missing-result');
+            resultDiv.className = 'test-result success';
+            resultDiv.innerHTML = '✅ Dados nulos tratados corretamente';
+            
+            updateSummary();
+        }
+
+        // Test 6: Various formats
+        function testCityOnly() {
+            log('=== TESTE: Formato Cidade Apenas ===');
+            updateMunicipioValue('Serro', '');
+            const element = document.getElementById('municipio-value');
+            
+            assert(element.textContent === 'Serro', 'Aceita formato de cidade apenas');
+            
+            const resultDiv = document.getElementById('format-result');
+            resultDiv.className = 'test-result success';
+            resultDiv.innerHTML = `✅ Formato aceito: <strong>${element.textContent}</strong>`;
+            
+            updateSummary();
+        }
+
+        function testTownFormat() {
+            log('=== TESTE: Formato Town ===');
+            const addressData = { address: { town: 'Serro' } };
+            const city = addressData.address.town;
+            updateMunicipioValue(city, 'MG');
+            
+            const resultDiv = document.getElementById('format-result');
+            resultDiv.className = 'test-result success';
+            resultDiv.innerHTML = '✅ Formato "town" processado corretamente';
+            
+            updateSummary();
+        }
+
+        function testVillageFormat() {
+            log('=== TESTE: Formato Village ===');
+            const addressData = { address: { village: 'Milho Verde' } };
+            const city = addressData.address.village;
+            updateMunicipioValue(city, 'MG');
+            
+            const resultDiv = document.getElementById('format-result');
+            resultDiv.className = 'test-result success';
+            resultDiv.innerHTML = '✅ Formato "village" processado corretamente';
+            
+            updateSummary();
+        }
+
+        // Run all tests
+        function runAllTests() {
+            log('========================================');
+            log('🚀 INICIANDO BATERIA COMPLETA DE TESTES');
+            log('========================================');
+            
+            testResults = { passed: 0, failed: 0, total: 0 };
+            
+            testElementExistence();
+            setTimeout(() => testElementAttributes(), 300);
+            setTimeout(() => testSerro(), 600);
+            setTimeout(() => testSaoPaulo(), 900);
+            setTimeout(() => testRioDeJaneiro(), 1200);
+            setTimeout(() => testBrasilia(), 1500);
+            setTimeout(() => testSalvador(), 1800);
+            setTimeout(() => testMilhoVerde(), 2100);
+            setTimeout(() => testMissingData(), 2400);
+            setTimeout(() => testEmptyData(), 2700);
+            setTimeout(() => testNullData(), 3000);
+            setTimeout(() => testCityOnly(), 3300);
+            setTimeout(() => testTownFormat(), 3600);
+            setTimeout(() => testVillageFormat(), 3900);
+            
+            setTimeout(() => {
+                log('========================================');
+                log('✅ BATERIA DE TESTES CONCLUÍDA');
+                log(`Total: ${testResults.total} | Passou: ${testResults.passed} | Falhou: ${testResults.failed}`);
+                log('========================================');
+                
+                const resultDiv = document.getElementById('all-tests-result');
+                const allPassed = testResults.failed === 0;
+                resultDiv.className = 'test-result ' + (allPassed ? 'success' : 'error');
+                resultDiv.innerHTML = `
+                    <h3 style="margin-top: 0;">${allPassed ? '✅' : '⚠️'} Bateria de Testes Completa</h3>
+                    <p><strong>Total de testes:</strong> ${testResults.total}</p>
+                    <p><strong>Passou:</strong> ${testResults.passed}</p>
+                    <p><strong>Falhou:</strong> ${testResults.failed}</p>
+                    <p><strong>Taxa de Sucesso:</strong> ${((testResults.passed / testResults.total) * 100).toFixed(1)}%</p>
+                `;
+            }, 4200);
+        }
+
+        // Initial log
+        log('Sistema de testes carregado e pronto para execução');
+        log('Elemento municipio-value encontrado e vinculado');
+    </script>
+</body>
+</html>

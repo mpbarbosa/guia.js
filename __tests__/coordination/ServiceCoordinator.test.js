@@ -56,7 +56,8 @@ function createMockReverseGeocoder() {
         enderecoPadronizado: null,
         update: jest.fn(),
         subscribe: jest.fn(),
-        unsubscribe: jest.fn()
+        unsubscribe: jest.fn(),
+        fetchAddress: jest.fn().mockResolvedValue()
     };
 }
 

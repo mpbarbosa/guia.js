@@ -42,11 +42,11 @@ const AppState = {
  * await init();
  * console.log('App ready');
  * 
- * @since 0.7.0-alpha
+ * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 async function init() {
-  console.log('Initializing Guia Turístico SPA v0.7.0...');
+  console.log('Initializing Guia Turístico SPA v0.7.1...');
   
   // Initialize router
   initRouter();
@@ -77,7 +77,7 @@ async function init() {
  * // Called automatically during app initialization
  * initRouter();
  * 
- * @since 0.7.0-alpha
+ * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 function initRouter() {
@@ -104,7 +104,7 @@ function initRouter() {
  * // Called automatically during app initialization
  * initNavigation();
  * 
- * @since 0.7.0-alpha
+ * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 function initNavigation() {
@@ -136,7 +136,7 @@ function initNavigation() {
  * // Manual route handling
  * await handleRoute();
  * 
- * @since 0.7.0-alpha
+ * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 async function handleRoute() {
@@ -188,7 +188,7 @@ async function handleRoute() {
  * // Navigate to converter
  * navigateTo('/converter');
  * 
- * @since 0.7.0-alpha
+ * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 function navigateTo(path) {
@@ -208,7 +208,7 @@ function navigateTo(path) {
  * // Called automatically during route changes
  * updateActiveNavLink();
  * 
- * @since 0.7.0-alpha
+ * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 function updateActiveNavLink() {
@@ -237,7 +237,7 @@ function updateActiveNavLink() {
  * showLoading();
  * await loadConverterView();
  * 
- * @since 0.7.0-alpha
+ * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 function showLoading() {
@@ -269,7 +269,7 @@ function showLoading() {
  *   showError(error);
  * }
  * 
- * @since 0.7.0-alpha
+ * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 function showError(error) {
@@ -311,7 +311,7 @@ function showError(error) {
  * // Called automatically during routing
  * await initializeHomeView();
  * 
- * @since 0.7.0-alpha
+ * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 async function initializeHomeView() {
@@ -320,7 +320,7 @@ async function initializeHomeView() {
   const content = document.getElementById('app-content');
   
   // Check if we need to restore the home view from another route
-  if (!content.querySelector('#getLocationBtn')) {
+  if (!content.querySelector('#continuous-tracking-toggle')) {
     // Home content was replaced, reload to restore it
     console.log('Restoring home view...');
     location.reload();
@@ -337,14 +337,23 @@ async function initializeHomeView() {
       });
       console.log('WebGeocodingManager initialized for home view');
       
-      // Set up button handler for getLocationBtn
-      const getLocationBtn = document.getElementById('getLocationBtn');
-      if (getLocationBtn) {
-        getLocationBtn.addEventListener('click', () => {
-          console.log('Location button clicked');
-          AppState.manager.getSingleLocationUpdate();
+      // Set up tracking toggle handler
+      const trackingToggle = document.getElementById('continuous-tracking-toggle');
+      if (trackingToggle) {
+        // Start tracking by default (toggle is checked initially)
+        AppState.manager.startTracking();
+        console.log('Tracking started automatically');
+        
+        trackingToggle.addEventListener('change', (event) => {
+          if (event.target.checked) {
+            console.log('Starting location tracking');
+            AppState.manager.startTracking();
+          } else {
+            console.log('Stopping location tracking');
+            AppState.manager.stopTracking();
+          }
         });
-        console.log('Location button event handler attached');
+        console.log('Tracking toggle event handler attached');
       }
     } catch (error) {
       console.error('Error initializing WebGeocodingManager:', error);
@@ -367,7 +376,7 @@ async function initializeHomeView() {
  * // Called automatically during routing to /converter
  * await loadConverterView();
  * 
- * @since 0.7.0-alpha
+ * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 async function loadConverterView() {
@@ -442,7 +451,7 @@ async function loadConverterView() {
  * // Called automatically after loadConverterView
  * initializeConverterFeatures();
  * 
- * @since 0.7.0-alpha
+ * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 function initializeConverterFeatures() {
@@ -517,7 +526,7 @@ function initializeConverterFeatures() {
  * // Called automatically for unrecognized routes
  * await loadNotFoundView();
  * 
- * @since 0.7.0-alpha
+ * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 async function loadNotFoundView() {

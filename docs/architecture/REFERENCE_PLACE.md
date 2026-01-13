@@ -2,7 +2,11 @@
 
 ## Overview
 
-The `ReferencePlace` class was introduced in version 0.8.5-alpha to encapsulate information about reference places extracted from geocoding API responses. Reference places include shopping centers, subway stations, cafes, and other points of interest that help provide contextual information about a user's location.
+The `ReferencePlace` class was **introduced in version 0.8.5-alpha** to encapsulate information about reference places extracted from geocoding API responses. Reference places include shopping centers, subway stations, cafes, and other points of interest that help provide contextual information about a user's location.
+
+**Current Status (v0.7.1-alpha)**: This class is planned for future implementation (version 0.8.x-alpha). The documentation describes the intended design and functionality.
+
+**Version Note**: While introduced conceptually in 0.8.5-alpha design documents, the implementation is targeted for version 0.8.x-alpha or later.
 
 ## Motivation
 
@@ -244,3 +248,9 @@ Marcelo Pereira Barbosa
 
 ### Related Issues
 - Issue: [Feature] Implement class ReferencePlace
+
+---
+
+**Last Updated**: 2026-01-11  
+**Version**: 0.7.1-alpha (documentation for planned 0.8.x-alpha feature)  
+**Status**: 🚧 Planned for future implementation

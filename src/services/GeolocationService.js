@@ -567,6 +567,17 @@ class GeolocationService {
 		// FORMAT COORDINATE DATA:
 		// Display coordinates with appropriate precision and timestamp
 		// This ensures consistent presentation across the travel guide application
+		
+		// Update the simple coordinate display in #lat-long-display
+		// This provides immediate visual feedback to the user
+		if (typeof document !== 'undefined') {
+			const latLongDisplay = document.getElementById('lat-long-display');
+			if (latLongDisplay && coords) {
+				const lat = coords.latitude ? coords.latitude.toFixed(6) : 'N/A';
+				const lng = coords.longitude ? coords.longitude.toFixed(6) : 'N/A';
+				latLongDisplay.textContent = `${lat}, ${lng}`;
+			}
+		}
 	}
 
 	/**

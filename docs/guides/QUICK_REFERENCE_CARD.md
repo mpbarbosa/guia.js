@@ -32,10 +32,10 @@ python3 -m http.server 9000
 
 ### Testing
 ```bash
-npm test                    # Run all tests (~3 seconds)
-npm run test:coverage       # Tests with coverage (~6 seconds)
+npm test                    # Run all tests (~7 seconds)
+npm run test:coverage       # Tests with coverage (~7 seconds)
 npm run test:watch          # Watch mode for development
-npm run test:all            # Syntax + tests (~10 seconds)
+npm run test:all            # Syntax + tests (~8 seconds)
 npm run validate            # Syntax check only (<1 second)
 ```
 

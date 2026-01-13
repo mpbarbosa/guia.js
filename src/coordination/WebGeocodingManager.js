@@ -334,6 +334,9 @@ class WebGeocodingManager {
 			observerSubject: this.observerSubject
 		});
 		
+		// Inject AddressDataExtractor into ChangeDetectionCoordinator to resolve dependency warning
+		this.changeDetectionCoordinator.setAddressDataExtractor(AddressDataExtractor);
+		
 		// ServiceCoordinator replaces service initialization and coordination
 		this.serviceCoordinator = new ServiceCoordinator({
 			geolocationService: params.geolocationService || new GeolocationService(this.locationResult),
@@ -371,7 +374,7 @@ class WebGeocodingManager {
 	 * @returns {Object|null} Current position object or null
 	 */
 	get currentPosition() {
-		return this.geocodingState.getPosition();
+		return this.geocodingState.getCurrentPosition();
 	}
 
 	/**
@@ -398,7 +401,15 @@ class WebGeocodingManager {
 	 */
 	set currentCoords(coords) {
 		if (coords) {
-			this.geocodingState.setCoordinates(coords);
+			const position = new GeoPosition({
+				coords: {
+					latitude: coords.latitude,
+					longitude: coords.longitude,
+					accuracy: coords.accuracy || 0
+				},
+				timestamp: Date.now()
+			});
+			this.geocodingState.setPosition(position);
 		}
 	}
 
@@ -705,8 +716,11 @@ class WebGeocodingManager {
 			.getSingleLocationUpdate()
 			.then((position) => {
 				if (position && position.coords) {
+					// Wrap raw browser position in GeoPosition instance
+					const geoPosition = new GeoPosition(position);
+					
 					// Update GeocodingState for backward compatibility
-					this.currentPosition = position;
+					this.currentPosition = geoPosition;
 					this.currentCoords = position.coords;
 					
 					// Update change detection coordinator
@@ -750,6 +764,30 @@ class WebGeocodingManager {
 
 		// Set up address component change detection callbacks via coordinator
 		this.changeDetectionCoordinator.setupChangeDetection();
+	}
+
+	/**
+	 * Stops continuous geolocation tracking.
+	 * 
+	 * Delegates to ServiceCoordinator to stop the GeolocationService tracking.
+	 * This method can be called to stop tracking when the user toggles off
+	 * the tracking feature or when cleaning up resources.
+	 * 
+	 * @returns {void}
+	 * 
+	 * @example
+	 * const manager = new WebGeocodingManager(document, {
+	 *   locationResult: 'location-result'
+	 * });
+	 * manager.startTracking();
+	 * // Later...
+	 * manager.stopTracking(); // Stops tracking
+	 */
+	stopTracking() {
+		if (this.serviceCoordinator && typeof this.serviceCoordinator.stopTracking === 'function') {
+			this.serviceCoordinator.stopTracking();
+			log('WebGeocodingManager: Tracking stopped');
+		}
 	}
 
 	/**

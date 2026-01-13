@@ -218,5 +218,5 @@ __tests__/
 
 ---
 
-**Last Updated**: 2026-01-01  
-**Version**: 0.6.0-alpha
+**Last Updated**: 2026-01-11  
+**Version**: 0.7.1-alpha

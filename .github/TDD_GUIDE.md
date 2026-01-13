@@ -904,3 +904,24 @@ npm run test:all            # Validate + test
 - ✅ Use dependency injection
 - ✅ Avoid global state
 - ✅ Return new values, don't mutate
+
+## Related Documentation
+
+### Testing Guides
+- **[UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)** - Unit testing best practices
+- **[JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md)** - Jest configuration
+- **[docs/testing/E2E_TESTING_GUIDE.md](../docs/testing/E2E_TESTING_GUIDE.md)** - End-to-end testing
+
+### Code Quality
+- **[REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)** - Functional programming principles
+- **[JAVASCRIPT_BEST_PRACTICES.md](./JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript standards
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
+- **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Review checklist
+
+### Complete Guide Index
+- **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
+
+---
+
+**Version**: 0.7.1-alpha  
+**Last Updated**: 2026-01-11

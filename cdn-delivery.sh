@@ -1,8 +1,8 @@
 #!/bin/bash
 # ==============================================================================
-# jsDelivr CDN Delivery Script for guia.js
+# jsDelivr CDN Delivery Script for Guia Turístico
 # ==============================================================================
-# This script generates jsDelivr CDN URLs for delivering guia.js from GitHub
+# This script generates jsDelivr CDN URLs for delivering guia_turistico from GitHub
 # Reference: https://www.jsdelivr.com/?docs=gh
 #
 # Exit Codes:
@@ -19,7 +19,7 @@
 #
 #   Environment Variables (optional):
 #     GITHUB_USER    - GitHub username (default: mpbarbosa)
-#     GITHUB_REPO    - Repository name (default: guia_js)
+#     GITHUB_REPO    - Repository name (default: guia_turistico)
 #     MAIN_FILE      - Main file path (default: src/guia.js)
 #     OUTPUT_FILE    - Output filename (default: cdn-urls.txt)
 #
@@ -101,7 +101,7 @@ echo ""
 
 # Project configuration (can be overridden via environment variables)
 GITHUB_USER="${GITHUB_USER:-mpbarbosa}"
-GITHUB_REPO="${GITHUB_REPO:-guia_js}"
+GITHUB_REPO="${GITHUB_REPO:-guia_turistico}"
 MAIN_FILE="${MAIN_FILE:-src/guia.js}"
 OUTPUT_FILE="${OUTPUT_FILE:-cdn-urls.txt}"
 

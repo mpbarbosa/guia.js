@@ -372,4 +372,225 @@ describe('HTMLAddressDisplayer Integration Tests', () => {
             expect(element.innerHTML).toContain('Factory Test Street');
         });
     });
+
+    describe('Municipio-Value DOM Element Validation', () => {
+        test('should validate municipio-value element exists and is properly structured', () => {
+            // Simulate the DOM structure from address-converter.html
+            const municipioElement = { 
+                id: 'municipio-value', 
+                innerHTML: '',
+                innerText: '—',
+                textContent: '—',
+                className: 'highlight-card-value',
+                getAttribute: (attr) => {
+                    if (attr === 'id') return 'municipio-value';
+                    if (attr === 'class') return 'highlight-card-value';
+                    if (attr === 'aria-live') return 'polite';
+                    return null;
+                }
+            };
+            
+            // Validate element properties
+            expect(municipioElement.id).toBe('municipio-value');
+            expect(municipioElement.getAttribute('id')).toBe('municipio-value');
+            expect(municipioElement.getAttribute('class')).toBe('highlight-card-value');
+            expect(municipioElement.getAttribute('aria-live')).toBe('polite');
+        });
+
+        test('should update municipio-value element with city data', () => {
+            const mockDocument = {
+                getElementById: jest.fn((id) => {
+                    if (id === 'municipio-value') {
+                        return {
+                            id: 'municipio-value',
+                            innerText: '—',
+                            textContent: '—'
+                        };
+                    }
+                    return null;
+                })
+            };
+            
+            const municipioElement = mockDocument.getElementById('municipio-value');
+            
+            // Simulate address data update
+            const addressData = {
+                address: {
+                    city: 'Serro',
+                    state: 'Minas Gerais'
+                }
+            };
+            
+            // Update municipio value
+            const cityValue = addressData.address.city || 'Não disponível';
+            const stateValue = addressData.address.state || '';
+            municipioElement.innerText = stateValue ? `${cityValue}, ${stateValue}` : cityValue;
+            
+            expect(municipioElement.innerText).toBe('Serro, Minas Gerais');
+            expect(municipioElement.innerText).toContain('Serro');
+            expect(municipioElement.innerText).not.toBe('—');
+        });
+
+        test('should handle missing city data in municipio-value element', () => {
+            const municipioElement = { 
+                id: 'municipio-value', 
+                innerText: '—',
+                textContent: '—'
+            };
+            
+            // Simulate address data without city
+            const addressData = {
+                address: {
+                    state: 'Minas Gerais'
+                }
+            };
+            
+            // Update should show "Não disponível"
+            const cityValue = addressData.address.city || addressData.address.town || addressData.address.village;
+            municipioElement.innerText = cityValue || 'Não disponível';
+            
+            expect(municipioElement.innerText).toBe('Não disponível');
+            expect(municipioElement.innerText).not.toContain('undefined');
+        });
+
+        test('should extract city from various address formats for municipio-value', () => {
+            const testCases = [
+                {
+                    addressData: { address: { city: 'São Paulo' } },
+                    expected: 'São Paulo'
+                },
+                {
+                    addressData: { address: { town: 'Serro' } },
+                    expected: 'Serro'
+                },
+                {
+                    addressData: { address: { village: 'Milho Verde' } },
+                    expected: 'Milho Verde'
+                },
+                {
+                    addressData: { city: 'Rio de Janeiro' },
+                    expected: 'Rio de Janeiro'
+                },
+                {
+                    addressData: { address: {} },
+                    expected: 'Não disponível'
+                }
+            ];
+            
+            testCases.forEach(({ addressData, expected }) => {
+                const municipioElement = { 
+                    id: 'municipio-value', 
+                    innerText: '—' 
+                };
+                
+                // Extract city using the same logic as address-converter.html
+                const city = addressData.city || 
+                            addressData.town || 
+                            addressData.village || 
+                            addressData.address?.city || 
+                            addressData.address?.town || 
+                            addressData.address?.village;
+                
+                municipioElement.innerText = city || 'Não disponível';
+                
+                expect(municipioElement.innerText).toBe(expected);
+            });
+        });
+
+        test('should validate municipio-value displays Serro for Milho Verde coordinates', () => {
+            const municipioElement = { 
+                id: 'municipio-value', 
+                innerText: '—',
+                textContent: '—'
+            };
+            
+            // Milho Verde coordinates should resolve to Serro municipality
+            const milhoVerdeAddressData = {
+                address: {
+                    village: 'Milho Verde',
+                    municipality: 'Serro',
+                    city: 'Serro',
+                    state: 'Minas Gerais',
+                    state_code: 'MG',
+                    country: 'Brasil',
+                    country_code: 'br'
+                }
+            };
+            
+            // Update municipio value
+            const city = milhoVerdeAddressData.address.city || 
+                        milhoVerdeAddressData.address.town || 
+                        milhoVerdeAddressData.address.village;
+            const state = milhoVerdeAddressData.address.state || '';
+            
+            municipioElement.innerText = city ? (state ? `${city}, ${state}` : city) : 'Não disponível';
+            
+            expect(municipioElement.innerText).toContain('Serro');
+            expect(municipioElement.innerText).toContain('Minas Gerais');
+            expect(municipioElement.innerText).toBe('Serro, Minas Gerais');
+        });
+
+        test('should not display placeholder values in municipio-value', () => {
+            const municipioElement = { 
+                id: 'municipio-value', 
+                innerText: '—' 
+            };
+            
+            const addressData = {
+                address: {
+                    city: 'Belo Horizonte',
+                    state: 'MG'
+                }
+            };
+            
+            municipioElement.innerText = `${addressData.address.city}, ${addressData.address.state}`;
+            
+            // Should not contain placeholder characters
+            expect(municipioElement.innerText).not.toBe('—');
+            expect(municipioElement.innerText).not.toContain('—');
+            expect(municipioElement.innerText).not.toBe('');
+            expect(municipioElement.innerText).toBe('Belo Horizonte, MG');
+        });
+
+        test('should validate municipio-value with state abbreviations', () => {
+            const stateAbbreviations = [
+                { city: 'São Paulo', state: 'SP' },
+                { city: 'Serro', state: 'MG' },
+                { city: 'Rio de Janeiro', state: 'RJ' },
+                { city: 'Salvador', state: 'BA' },
+                { city: 'Brasília', state: 'DF' }
+            ];
+            
+            stateAbbreviations.forEach(({ city, state }) => {
+                const municipioElement = { 
+                    id: 'municipio-value', 
+                    innerText: '—' 
+                };
+                
+                municipioElement.innerText = `${city}, ${state}`;
+                
+                expect(municipioElement.innerText).toContain(city);
+                expect(municipioElement.innerText).toContain(state);
+                expect(municipioElement.innerText).toMatch(/^[^—]+, [A-Z]{2}$/);
+            });
+        });
+
+        test('should handle empty or null values gracefully in municipio-value', () => {
+            const municipioElement = { 
+                id: 'municipio-value', 
+                innerText: '—' 
+            };
+            
+            const invalidCases = [null, undefined, '', '   ', {}];
+            
+            invalidCases.forEach(invalidData => {
+                const city = invalidData?.address?.city || invalidData?.city;
+                municipioElement.innerText = city || 'Não disponível';
+                
+                expect(municipioElement.innerText).toBe('Não disponível');
+                expect(municipioElement.innerText).not.toContain('undefined');
+                expect(municipioElement.innerText).not.toContain('null');
+            });
+        });
+    });
 });

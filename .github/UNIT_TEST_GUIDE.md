@@ -1564,3 +1564,24 @@ describe('Feature/Module', () => {
 - ✅ Deterministic = predictable tests
 - ✅ Isolate side effects at boundaries
 - ✅ Test immutability in data operations
+
+## Related Documentation
+
+### Testing Guides
+- **[TDD_GUIDE.md](./TDD_GUIDE.md)** - Test-driven development methodology
+- **[JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md)** - Jest configuration
+- **[docs/testing/E2E_TESTING_GUIDE.md](../docs/testing/E2E_TESTING_GUIDE.md)** - End-to-end testing
+
+### Code Quality
+- **[REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)** - Functional programming principles
+- **[JAVASCRIPT_BEST_PRACTICES.md](./JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript standards
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
+- **[JSDOC_GUIDE.md](./JSDOC_GUIDE.md)** - API documentation
+
+### Complete Guide Index
+- **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
+
+---
+
+**Version**: 0.7.1-alpha  
+**Last Updated**: 2026-01-11

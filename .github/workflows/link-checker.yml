@@ -1,0 +1,91 @@
+name: Check External Links
+
+on:
+  schedule:
+    # Run weekly on Mondays at 9am UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '**.md'
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Check links with Lychee
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: |
+            --verbose
+            --no-progress
+            --exclude-all-private
+            --exclude '^https://github.com/[^/]+/[^/]+/(issues|pull)/[0-9]+$'
+            --exclude '^https://img.shields.io'
+            --exclude 'localhost'
+            --exclude 'example.com'
+            --max-retries 3
+            --timeout 20
+            --accept 200,403,999
+            '**/*.md'
+            '**/*.js'
+          
+          # Fail PR if broken links found
+          fail: ${{ github.event_name == 'pull_request' }}
+      
+      - name: Check critical API endpoints
+        run: |
+          echo "Checking critical API endpoints..."
+          
+          # OpenStreetMap Nominatim
+          status=$(curl -s -o /dev/null -w "%{http_code}" "https://nominatim.openstreetmap.org/reverse?format=json&lat=0&lon=0" || echo "000")
+          if [ "$status" = "200" ] || [ "$status" = "400" ]; then
+            echo "✅ OpenStreetMap Nominatim: Available"
+          else
+            echo "❌ OpenStreetMap Nominatim: HTTP $status"
+          fi
+          
+          # IBGE API
+          status=$(curl -s -o /dev/null -w "%{http_code}" "https://servicodados.ibge.gov.br/api/v1/localidades/estados" || echo "000")
+          if [ "$status" = "200" ]; then
+            echo "✅ IBGE API: Available"
+          else
+            echo "❌ IBGE API: HTTP $status"
+          fi
+          
+          # MDN (documentation reference)
+          status=$(curl -s -o /dev/null -w "%{http_code}" "https://developer.mozilla.org/" || echo "000")
+          if [ "$status" = "200" ]; then
+            echo "✅ MDN: Available"
+          else
+            echo "⚠️ MDN: HTTP $status"
+          fi
+      
+      - name: Create issue for broken links
+        if: failure() && github.event_name == 'schedule'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔗 Broken links detected in documentation',
+              body: `Automated link checker found broken links.
+              
+              **When**: ${new Date().toISOString()}
+              **Workflow**: [View Run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+              
+              Please review the workflow logs and update broken links.
+              
+              **Priority Links to Check**:
+              - OpenStreetMap Nominatim API
+              - IBGE API endpoints
+              - MDN documentation references
+              
+              /cc @maintainers`,
+              labels: ['documentation', 'automated', 'maintenance']
+            })

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Page with Mock Geolocation</title>
+    <script>
+        // Override navigator.geolocation BEFORE any other scripts load
+        (function() {
+            const MOCK_LAT = -18.4696091;
+            const MOCK_LON = -43.4953982;
+            
+            console.log('[MOCK] Overriding navigator.geolocation before page loads');
+            
+            Object.defineProperty(navigator, 'geolocation', {
+                value: {
+                    getCurrentPosition: function(successCallback, errorCallback, options) {
+                        console.log('[MOCK] navigator.geolocation.getCurrentPosition called');
+                        const position = {
+                            coords: {
+                                latitude: MOCK_LAT,
+                                longitude: MOCK_LON,
+                                accuracy: 10,
+                                altitude: null,
+                                altitudeAccuracy: null,
+                                heading: null,
+                                speed: null
+                            },
+                            timestamp: Date.now()
+                        };
+                        
+                        setTimeout(() => {
+                            console.log('[MOCK] Calling success callback with position:', position);
+                            successCallback(position);
+                        }, 100);
+                    },
+                    watchPosition: function(successCallback, errorCallback, options) {
+                        console.log('[MOCK] navigator.geolocation.watchPosition called');
+                        const position = {
+                            coords: {
+                                latitude: MOCK_LAT,
+                                longitude: MOCK_LON,
+                                accuracy: 10,
+                                altitude: null,
+                                altitudeAccuracy: null,
+                                heading: null,
+                                speed: null
+                            },
+                            timestamp: Date.now()
+                        };
+                        
+                        setTimeout(() => {
+                            console.log('[MOCK] Calling watchPosition callback with position:', position);
+                            successCallback(position);
+                        }, 100);
+                        
+                        return 12345;
+                    },
+                    clearWatch: function(watchId) {
+                        console.log('[MOCK] navigator.geolocation.clearWatch called with ID:', watchId);
+                    }
+                },
+                configurable: false,
+                writable: false
+            });
+            
+            console.log('[MOCK] navigator.geolocation successfully overridden');
+            
+            // Now redirect to the actual index.html after a short delay
+            setTimeout(() => {
+                console.log('[MOCK] Redirecting to actual application...');
+                window.location.href = '../../src/index.html';
+            }, 500);
+        })();
+    </script>
+</head>
+<body>
+    <div style="text-align: center; padding: 50px;">
+        <h1>Loading Test with Mock Geolocation...</h1>
+        <p>Redirecting to application...</p>
+    </div>
+</body>
+</html>

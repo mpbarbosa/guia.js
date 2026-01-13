@@ -44,7 +44,8 @@ Choose your path based on your role or goal:
 1. Start: [TESTING.md](../TESTING.md#troubleshooting) - Common issues
 2. Then: [JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md) - Module issues
 3. Next: [FALSE_POSITIVE_PATTERNS.md](../.github/FALSE_POSITIVE_PATTERNS.md) - Tool errors
-4. Finally: [GitHub Issues](https://github.com/mpbarbosa/guia_turistico/issues) - Report bugs
+4. Also: [CODE_PATTERN_DOCUMENTATION_GUIDE.md](./CODE_PATTERN_DOCUMENTATION_GUIDE.md) - Valid code patterns
+5. Finally: [GitHub Issues](https://github.com/mpbarbosa/guia_turistico/issues) - Report bugs
 
 **Estimated time**: Variable
 
@@ -87,6 +88,12 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
     - 51 tests, HH:MM:SS formatting, configurable events
 
 ### Architecture & Design
+
+- **[architecture/VERSION_TIMELINE.md](./architecture/VERSION_TIMELINE.md)** - Version History Timeline 🆕
+  - Comprehensive version timeline (0.5.x → 0.7.1-alpha current)
+  - Component evolution (GeoPosition, PositionManager, WebGeocodingManager)
+  - Breaking changes and migration guides
+  - Visual timeline diagram
 
 - **[CLASS_DIAGRAM.md](./architecture/CLASS_DIAGRAM.md)** - Comprehensive overview of the class architecture
   - Design patterns used (Singleton, Observer, Facade, Strategy)
@@ -260,6 +267,19 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - Configuration and customization
   - Integration with existing workflows
 
+- **[AUTOMATION_RECOMMENDATIONS.md](./AUTOMATION_RECOMMENDATIONS.md)** - Automation infrastructure specification 🆕 (2026-01-11)
+  - 4 GitHub Actions workflows: version checking, test badges, link validation, JSDoc coverage
+  - 3 maintenance scripts: version consistency, test counts, documentation dates
+  - Complete implementation guide with ROI analysis (2.7x return, 9.5 hours/month saved)
+  - Ready-to-use YAML and Bash code for immediate deployment
+
+- **[AUTOMATION_IMPLEMENTATION_SUMMARY.md](./AUTOMATION_IMPLEMENTATION_SUMMARY.md)** - Implementation report ✅ (2026-01-11)
+  - Complete deployment of all 4 workflows (427 lines YAML)
+  - 3 executable Bash scripts (171 lines)
+  - Testing results and validation procedures
+  - Usage guide, troubleshooting, and next steps
+  - **Status**: COMPLETE - All automation deployed and validated
+
 - **[workflow-automation/](./workflow-automation/)** - CI/CD and automation documentation 🆕
   - [AUTOMATION_SUMMARY.md](./workflow-automation/AUTOMATION_SUMMARY.md) - Pre-commit hooks and automation tools (8KB)
   - [FINAL_AUTOMATION_SUMMARY.md](./workflow-automation/FINAL_AUTOMATION_SUMMARY.md) - Complete automation implementation (12KB)
@@ -378,6 +398,15 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 
 ### Code Quality Guidelines
 
+- **[CODE_PATTERN_DOCUMENTATION_GUIDE.md](./CODE_PATTERN_DOCUMENTATION_GUIDE.md)** - Valid Code Pattern Reference 🆕
+  - Explains code patterns that may appear as broken references
+  - Comment placeholders (`/* ... */`) and their purpose
+  - Regex patterns in documentation (`/pattern/g`)
+  - HTML tag detection patterns for tests
+  - Directory path references in descriptive text
+  - Guidelines for automated validation tools
+  - Whitelist patterns for reference checkers
+
 - **[CONTRIBUTING.md](../.github/CONTRIBUTING.md)** - Contribution guidelines
   - Code style and best practices
   - **Referential transparency principles** 🆕
@@ -404,6 +433,14 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - Performance and testing considerations
   - **GitHub Copilot-optimized format**
   - **Essential reading for all contributors**
+
+- **[JSDOC_COVERAGE_REPORT.md](./JSDOC_COVERAGE_REPORT.md)** - JSDoc Coverage Report 🆕
+  - **100% coverage** across all 41 source files
+  - Detailed metrics by module (core, coordination, data, services, html, speech)
+  - Exemplary implementations (GeoPosition, WebGeocodingManager)
+  - Quality standards and best practices
+  - Documentation generation instructions
+  - **Proof of excellent documentation quality**
 
 - **[JAVASCRIPT_ECMASCRIPT_VERSIONS.md](../.github/JAVASCRIPT_ECMASCRIPT_VERSIONS.md)** - JavaScript and ECMAScript Version Features 🆕
   - Comprehensive summary of features in every JavaScript/ECMAScript version
@@ -515,6 +552,161 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - PR #121: AddressDataExtractor refactoring
   - Design decisions and trade-offs
   - Migration guides
+
+## .github Documentation Quick Reference
+
+**Complete reference to all 44+ documentation files in the `.github/` directory.**
+
+### Core Contribution Guides
+
+- **[CONTRIBUTING.md](../.github/CONTRIBUTING.md)** - Main contribution guidelines ⭐
+  - Code style and referential transparency principles
+  - Pull request process and review checklist
+  - Testing requirements and documentation standards
+  - **Start here for all new contributors**
+
+- **[CODE_REVIEW_GUIDE.md](../.github/CODE_REVIEW_GUIDE.md)** - Code review checklist
+  - Review process and mindset
+  - Referential transparency verification
+  - Immutability and side effect checks
+
+- **[JSDOC_GUIDE.md](../.github/JSDOC_GUIDE.md)** - API documentation standards
+  - Required tags (@module, @param, @returns, @since)
+  - Type definitions and examples
+  - GitHub Copilot-optimized format
+
+- **[TDD_GUIDE.md](../.github/TDD_GUIDE.md)** - Test-driven development
+  - Red-Green-Refactor cycle
+  - TDD workflow and best practices
+  - Integration with referential transparency
+
+- **[UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md)** - Unit testing guide
+  - AAA pattern (Arrange-Act-Assert)
+  - Testing pure functions
+  - Mocking and Jest integration
+
+### JavaScript & Programming Best Practices
+
+- **[JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md)** - Core JavaScript principles
+  - Pure functions and immutability
+  - Modern ES6+ features
+  - Error handling and async programming
+
+- **[JAVASCRIPT_ECMASCRIPT_VERSIONS.md](../.github/JAVASCRIPT_ECMASCRIPT_VERSIONS.md)** - ECMAScript version features
+  - ES1 (1997) through ES2024 (ES15)
+  - Feature examples and browser compatibility
+  - Functional programming support matrix
+
+- **[JAVASCRIPT_ASYNC_AWAIT_BEST_PRACTICES.md](../.github/JAVASCRIPT_ASYNC_AWAIT_BEST_PRACTICES.md)** - Async/await patterns 🆕
+  - Promise fundamentals and async/await syntax
+  - Error handling with try-catch
+  - Parallel vs sequential execution
+  - Common pitfalls and best practices
+
+- **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](../.github/ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - Module system guide
+  - Named vs default exports
+  - Import patterns and tree shaking
+  - CommonJS vs ES6 modules
+
+- **[REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)** - Functional programming principles ⭐
+  - Pure vs impure functions
+  - Immutability and side effect management
+  - **Required reading for all contributors**
+
+- **[GIT_BEST_PRACTICES_GUIDE.md](../.github/GIT_BEST_PRACTICES_GUIDE.md)** - Version control standards 🆕
+  - Commit message conventions
+  - Branch naming and workflow
+  - Merge vs rebase strategies
+
+### Architecture & Design
+
+- **[architecture/VERSION_TIMELINE.md](./architecture/VERSION_TIMELINE.md)** - Version History and Migration Guide 🆕
+  - **Comprehensive version timeline from 0.5.x to 0.7.1-alpha (current)**
+  - Version-by-version architectural changes
+  - Breaking changes and migration guides
+  - Component-specific version history (GeoPosition, PositionManager, WebGeocodingManager)
+  - Visual timeline diagram showing evolution
+  - Deprecation policy and version stability ratings
+  - Decision matrix for choosing versions
+  - FAQ for version-related questions
+  - **Essential for understanding project evolution**
+
+- **[HIGH_COHESION_GUIDE.md](../.github/HIGH_COHESION_GUIDE.md)** - Cohesion principles
+  - Single responsibility for components
+  - Focused workflows and actions
+  - Real examples from refactoring
+
+- **[LOW_COUPLING_GUIDE.md](../.github/LOW_COUPLING_GUIDE.md)** - Coupling management
+  - Dependency management and interface design
+  - Module boundaries and separation
+
+- **[HTML_CSS_JS_SEPARATION.md](../.github/HTML_CSS_JS_SEPARATION.md)** - Separation of concerns
+  - Structure, presentation, and behavior
+  - File structure recommendations
+  - Common mistakes and anti-patterns
+
+- **[FOLDER_STRUCTURE_GUIDE.md](../.github/FOLDER_STRUCTURE_GUIDE.md)** - Project organization
+  - Directory structure conventions
+  - File naming patterns
+  - Module organization
+
+### Testing & Quality Assurance
+
+- **[JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md)** - Jest configuration
+  - Module format compatibility
+  - Import/export handling
+  - Test environment setup
+
+- **[GITHUB_INTEGRATION_TEST_GUIDE.md](../.github/GITHUB_INTEGRATION_TEST_GUIDE.md)** - Integration testing
+  - Multi-component test patterns
+  - GitHub Actions integration
+  - CI/CD testing strategies
+
+- **[FALSE_POSITIVE_PATTERNS.md](../.github/FALSE_POSITIVE_PATTERNS.md)** - Tool error patterns
+  - Common false positives in automated checks
+  - Whitelist patterns for validators
+  - Debugging validation issues
+
+### GitHub & CI/CD
+
+- **[GITHUB_ACTIONS_GUIDE.md](../.github/GITHUB_ACTIONS_GUIDE.md)** - GitHub Actions workflows
+  - Workflow syntax and triggers
+  - CI/CD pipeline configuration
+  - Action marketplace integration
+
+- **[GIT_HOOKS_INVESTIGATION.md](../.github/GIT_HOOKS_INVESTIGATION.md)** - Git hooks setup
+  - Pre-commit hooks for validation
+  - Husky configuration
+  - Automated quality checks
+
+### Documentation Audits & Reports
+
+- **[DOCUMENTATION_AUDIT_SUMMARY.md](../.github/DOCUMENTATION_AUDIT_SUMMARY.md)** - Documentation status
+- **[DOCUMENTATION_STATISTICS_REPORT.md](../.github/DOCUMENTATION_STATISTICS_REPORT.md)** - Documentation metrics
+- **[CROSS_REFERENCE_AUDIT.md](../.github/CROSS_REFERENCE_AUDIT.md)** - Link validation
+- **[DOC_DATE_AUDIT.md](../.github/DOC_DATE_AUDIT.md)** - Date consistency check
+- **[DOCS_MISC_DIRECTORY_AUDIT.md](../.github/DOCS_MISC_DIRECTORY_AUDIT.md)** - Misc folder audit
+- **[E2E_TESTS_DOCUMENTATION_AUDIT.md](../.github/E2E_TESTS_DOCUMENTATION_AUDIT.md)** - E2E test docs
+- **[EXAMPLES_DIRECTORY_AUDIT.md](../.github/EXAMPLES_DIRECTORY_AUDIT.md)** - Examples audit
+
+### Investigation & Analysis
+
+- **[AI_WORKFLOW_INVESTIGATION.md](../.github/AI_WORKFLOW_INVESTIGATION.md)** - AI workflow analysis
+- **[GRADLE_DIRECTORY_INVESTIGATION.md](../.github/GRADLE_DIRECTORY_INVESTIGATION.md)** - Gradle directory review
+
+### Refactoring Guides
+
+- **[REFACTORING_SUMMARY.md](../.github/REFACTORING_SUMMARY.md)** - Refactoring history
+  - Major refactoring decisions
+  - Migration guides and patterns
+
+---
+
+**💡 Quick Navigation Tips**:
+- Start with [CONTRIBUTING.md](../.github/CONTRIBUTING.md) and [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)
+- For testing: [TDD_GUIDE.md](../.github/TDD_GUIDE.md) → [UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md)
+- For code quality: [JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md) → [CODE_REVIEW_GUIDE.md](../.github/CODE_REVIEW_GUIDE.md)
+- All guides integrate with referential transparency principles
 
 ## Issue Templates
 
@@ -696,10 +888,10 @@ Major documentation update to formalize the project's commitment to functional p
 
 ## Project Information
 
-- **Version**: 0.6.0-alpha (unstable development)
+- **Version**: 0.7.1-alpha (active development)
 - **License**: ISC (see LICENSE file)
 - **Author**: Marcelo Pereira Barbosa
-- **Last Updated**: 2026-01-01
+- **Last Updated**: 2026-01-11
 
 ---
 

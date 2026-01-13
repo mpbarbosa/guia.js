@@ -1,0 +1,112 @@
+name: Update Test Badges
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  update-badges:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run tests with JSON output
+        run: |
+          npm test -- --json --outputFile=test-results.json || true
+      
+      - name: Parse test results
+        id: test-stats
+        run: |
+          if [ -f test-results.json ]; then
+            # Parse JSON results
+            PASSING=$(node -p "
+              const results = require('./test-results.json');
+              results.numPassedTests || 0
+            ")
+            TOTAL=$(node -p "
+              const results = require('./test-results.json');
+              results.numTotalTests || 0
+            ")
+            SKIPPED=$(node -p "
+              const results = require('./test-results.json');
+              (results.numTotalTests || 0) - (results.numPassedTests || 0) - (results.numFailedTests || 0)
+            ")
+            
+            echo "passing=$PASSING" >> $GITHUB_OUTPUT
+            echo "total=$TOTAL" >> $GITHUB_OUTPUT
+            echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
+            
+            echo "📊 Test Results:"
+            echo "  Passing: $PASSING"
+            echo "  Total: $TOTAL"
+            echo "  Skipped: $SKIPPED"
+          else
+            echo "❌ No test results file found"
+            exit 1
+          fi
+      
+      - name: Update README.md badges
+        run: |
+          PASSING="${{ steps.test-stats.outputs.passing }}"
+          TOTAL="${{ steps.test-stats.outputs.total }}"
+          SKIPPED="${{ steps.test-stats.outputs.skipped }}"
+          
+          # Update test count in README.md
+          sed -i "s/[0-9,]* passing/${PASSING} passing/g" README.md
+          sed -i "s/[0-9,]* total/${TOTAL} total/g" README.md
+          sed -i "s/[0-9,]* skipped/${SKIPPED} skipped/g" README.md
+          
+          echo "✅ Updated README.md with test counts"
+      
+      - name: Update documentation
+        run: |
+          PASSING="${{ steps.test-stats.outputs.passing }}"
+          TOTAL="${{ steps.test-stats.outputs.total }}"
+          
+          # Update .github/copilot-instructions.md
+          sed -i "s/[0-9,]* passing/${PASSING} passing/g" .github/copilot-instructions.md
+          sed -i "s/[0-9,]* total/${TOTAL} total/g" .github/copilot-instructions.md
+          
+          # Update docs/INDEX.md
+          sed -i "s/[0-9,]* passing/${PASSING} passing/g" docs/INDEX.md
+          sed -i "s/[0-9,]* total/${TOTAL} total/g" docs/INDEX.md
+          
+          echo "✅ Updated documentation with test counts"
+      
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          if git diff --quiet; then
+            echo "No changes to commit"
+          else
+            git add README.md docs/INDEX.md .github/copilot-instructions.md
+            git commit -m "chore: update test count badges [skip ci]"
+            git push
+            echo "✅ Committed test count updates"
+          fi
+      
+      - name: Create badge URLs
+        run: |
+          PASSING="${{ steps.test-stats.outputs.passing }}"
+          TOTAL="${{ steps.test-stats.outputs.total }}"
+          PERCENTAGE=$((PASSING * 100 / TOTAL))
+          
+          echo "📊 Badge URLs:"
+          echo "Tests: https://img.shields.io/badge/tests-${PASSING}%20passing-brightgreen"
+          echo "Total: https://img.shields.io/badge/tests-${TOTAL}%20total-blue"
+          echo "Coverage: https://img.shields.io/badge/coverage-${PERCENTAGE}%25-green"

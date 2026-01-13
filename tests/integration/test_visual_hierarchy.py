@@ -32,22 +32,22 @@ class TestVisualHierarchy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Set up test fixtures that are shared across all tests"""
-        # Try Firefox first, fall back to Chrome
+        # Try Chrome first, fall back to Firefox
         try:
-            options = webdriver.FirefoxOptions()
-            options.add_argument('--headless')
-            cls.driver = webdriver.Firefox(options=options)
-        except Exception as firefox_error:
-            print(f"Firefox not available, trying Chrome: {firefox_error}")
+            options = webdriver.ChromeOptions()
+            options.add_argument('--headless=new')
+            options.add_argument('--no-sandbox')
+            options.add_argument('--disable-dev-shm-usage')
+            options.add_argument('--disable-gpu')
+            cls.driver = webdriver.Chrome(options=options)
+        except Exception as chrome_error:
+            print(f"Chrome not available, trying Firefox: {chrome_error}")
             try:
-                options = webdriver.ChromeOptions()
-                options.add_argument('--headless=new')
-                options.add_argument('--no-sandbox')
-                options.add_argument('--disable-dev-shm-usage')
-                options.add_argument('--disable-gpu')
-                cls.driver = webdriver.Chrome(options=options)
-            except Exception as chrome_error:
-                raise Exception(f"No browser available. Firefox: {firefox_error}, Chrome: {chrome_error}")
+                options = webdriver.FirefoxOptions()
+                options.add_argument('--headless')
+                cls.driver = webdriver.Firefox(options=options)
+            except Exception as firefox_error:
+                raise Exception(f"No browser available. Chrome: {chrome_error}, Firefox: {firefox_error}")
         
         cls.driver.implicitly_wait(10)
         cls.base_url = "http://localhost:8080"

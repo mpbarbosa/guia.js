@@ -95,15 +95,15 @@ class HTMLPositionDisplayer {
 		// Display core coordinates with high precision
 		html += `<div class="coordinates">
             <h4>Coordenadas:</h4>
-            <p><strong>Latitude:</strong> ${coords ? (coords.latitude ? coords.latitude.toFixed(6) : 'N/A') : 'N/A'}°</p>
-            <p><strong>Longitude:</strong> ${coords ? (coords.longitude ? coords.longitude.toFixed(6) : 'N/A') : 'N/A'}°</p>
+            <p><strong>Latitude:</strong> ${coords && coords.latitude !== null && coords.latitude !== undefined ? coords.latitude.toFixed(6) : 'N/A'}°</p>
+            <p><strong>Longitude:</strong> ${coords && coords.longitude !== null && coords.longitude !== undefined ? coords.longitude.toFixed(6) : 'N/A'}°</p>
         </div>`;
 
 		// Display accuracy information with quality classification
 		html += `<div class="accuracy-info">
             <p><strong>Precisão:</strong> ${coords ? (coords.accuracy ? coords.accuracy.toFixed(2) : 'N/A') : 'N/A'} metros</p>
             <h4>Precisão:</h4>
-            <p><strong>Qualidade:</strong> ${this.formatAccuracyQuality(position.accuracyQuality)}</p>
+            <p><strong>Qualidade:</strong> ${this.formatAccuracyQuality(geoPosition.accuracyQuality)}</p>
         </div>`;
 
 		// Display altitude information when available
@@ -191,6 +191,12 @@ class HTMLPositionDisplayer {
 	 * @since 0.8.3-alpha
 	 */
 	update(positionManager, posEvent, loading, error) {
+		// Validate element exists before attempting DOM updates
+		if (!this.element) {
+			console.warn('HTMLPositionDisplayer: Cannot update - element is null or undefined');
+			return;
+		}
+
 		// Handle loading state with localized message
 		if (loading) {
 			this.element.innerHTML = '<p class="loading">Obtendo posição...</p>';
@@ -231,7 +237,8 @@ class HTMLPositionDisplayer {
 	 * @since 0.8.3-alpha
 	 */
 	toString() {
-		return `${this.constructor.name}: ${this.element.id || 'no-id'}`;
+		const id = this.element.id;
+		return `${this.constructor.name}: ${!id || id === 'null' ? 'no-id' : id}`;
 	}
 }
 

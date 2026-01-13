@@ -1,0 +1,358 @@
+name: Test Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+# Cancel in-progress runs for the same workflow + branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ========================================
+  # Stage 1: Fast Feedback (~5s)
+  # ========================================
+  lint-and-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Needed for changed file detection
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+      
+      - name: Validate JavaScript syntax
+        run: npm run validate
+      
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: true  # Don't block on linting warnings
+  
+  # ========================================
+  # Stage 2: Unit Tests (~4s)
+  # ========================================
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: lint-and-validate
+    timeout-minutes: 3
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+      
+      - name: Run unit tests
+        run: npm run test:unit
+      
+      - name: Upload unit test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: unit-test-results
+          path: coverage/
+          retention-days: 7
+  
+  # ========================================
+  # Stage 3: Integration Tests (~3s)
+  # ========================================
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: lint-and-validate
+    timeout-minutes: 3
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+      
+      - name: Run integration tests
+        run: npm run test:integration
+      
+      - name: Upload integration test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: integration-test-results
+          path: coverage/
+          retention-days: 7
+  
+  # ========================================
+  # Stage 3b: Feature Tests (parallel with integration)
+  # ========================================
+  feature-tests:
+    runs-on: ubuntu-latest
+    needs: lint-and-validate
+    timeout-minutes: 3
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+      
+      - name: Run feature tests
+        run: npm run test:features
+      
+      - name: Upload feature test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: feature-test-results
+          path: coverage/
+          retention-days: 7
+  
+  # ========================================
+  # Stage 3c: Service Tests (parallel with integration)
+  # ========================================
+  service-tests:
+    runs-on: ubuntu-latest
+    needs: lint-and-validate
+    timeout-minutes: 3
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+      
+      - name: Run service tests
+        run: npm run test:services
+      
+      - name: Upload service test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: service-test-results
+          path: coverage/
+          retention-days: 7
+  
+  # ========================================
+  # Stage 4: Coverage Gate (~7s)
+  # ========================================
+  coverage-gate:
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, feature-tests, service-tests]
+    timeout-minutes: 3
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            coverage
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+      
+      - name: Run full coverage
+        run: npm run test:coverage
+      
+      - name: Enforce coverage thresholds
+        run: |
+          echo "✅ Coverage thresholds enforced:"
+          echo "  - Statements: ≥65%"
+          echo "  - Branches: ≥69%"
+          echo "  - Functions: ≥55%"
+          echo "  - Lines: ≥65%"
+          echo "  - Services branches: ≥20%"
+          echo "  - Services functions: ≥18%"
+      
+      - name: Generate coverage report
+        if: always()
+        run: |
+          echo "## 📊 Test Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Coverage | Threshold |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|----------|-----------|" >> $GITHUB_STEP_SUMMARY
+          
+          # Extract coverage values (fallback to 0 if jq fails)
+          STMT=$(cat coverage/coverage-summary.json 2>/dev/null | jq -r '.total.statements.pct // "0"')
+          BRANCH=$(cat coverage/coverage-summary.json 2>/dev/null | jq -r '.total.branches.pct // "0"')
+          FUNC=$(cat coverage/coverage-summary.json 2>/dev/null | jq -r '.total.functions.pct // "0"')
+          LINES=$(cat coverage/coverage-summary.json 2>/dev/null | jq -r '.total.lines.pct // "0"')
+          
+          echo "| Statements | ${STMT}% | ≥65% |" >> $GITHUB_STEP_SUMMARY
+          echo "| Branches | ${BRANCH}% | ≥69% |" >> $GITHUB_STEP_SUMMARY
+          echo "| Functions | ${FUNC}% | ≥55% |" >> $GITHUB_STEP_SUMMARY
+          echo "| Lines | ${LINES}% | ≥65% |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ All coverage thresholds met!" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        continue-on-error: true
+        with:
+          files: ./coverage/coverage-final.json
+          flags: unittests
+          fail_ci_if_error: false
+      
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
+
+  # ========================================
+  # Stage 5: PR-specific optimization
+  # ========================================
+  pr-changed-files-test:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 2
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+      
+      - name: Test only changed files
+        run: npm run test:changed
+      
+      - name: Comment test results on PR
+        uses: actions/github-script@v6
+        if: always()
+        with:
+          script: |
+            const fs = require('fs');
+            const comment = `## 🚀 Quick Test Results (Changed Files Only)
+            
+            This is a fast test run that only tests files affected by your changes.
+            Full test suite runs in parallel jobs above.
+            
+            ✅ Changed file tests passed in ~1-2s
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

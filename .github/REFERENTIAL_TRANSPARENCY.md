@@ -679,6 +679,26 @@ For architecture examples:
 - ["Can Programming Be Liberated from the von Neumann Style?"](https://dl.acm.org/doi/10.1145/359576.359579) - John Backus
 - ["Why Functional Programming Matters"](https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf) - John Hughes
 
+## Related Documentation
+
+### Core Guides
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines with FP principles
+- **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Review checklist with FP focus
+- **[JAVASCRIPT_BEST_PRACTICES.md](./JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript standards
+- **[TDD_GUIDE.md](./TDD_GUIDE.md)** - Test-driven development
+- **[UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)** - Unit testing guide
+
+### Architecture Examples
+- **[docs/architecture/GEO_POSITION.md](../docs/architecture/GEO_POSITION.md)** - Immutable data classes
+- **[docs/architecture/REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md)** - Frozen objects
+- **[docs/architecture/POSITION_MANAGER.md](../docs/architecture/POSITION_MANAGER.md)** - Observer pattern with immutability
+
+### Complete Guide Index
+- **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
+
 ---
 
 **Remember**: Referential transparency is not about dogma—it's about making code more predictable, testable, and maintainable. Use these principles as tools to write better software.
+
+**Version**: 0.7.1-alpha  
+**Last Updated**: 2026-01-11

@@ -435,22 +435,31 @@ For comprehensive guidance on Test Driven Development, see [TDD_GUIDE.md](./TDD_
 
 ### Running Tests
 
+**Quick reference** (see [Pull Request Process](#pre-submission-validation-commands) for detailed information):
+
 ```bash
-# Run all tests
-npm test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Run tests in watch mode
-npm run test:watch
-
-# Validate syntax
+# Syntax validation (~1 second)
 npm run validate
 
-# Run validation + tests
+# Run all tests (~7 seconds, 1,516 passing / 1,653 total)
+npm test
+
+# Run tests with coverage (~7 seconds, ~70% coverage)
+npm run test:coverage
+
+# Run tests in watch mode (continuous, for development)
+npm run test:watch
+
+# Combined validation (~8 seconds, syntax + tests)
 npm run test:all
 ```
+
+**Expected Results** (as of version 0.7.1-alpha):
+- Test Suites: 64 passing, 4 skipped, 68 total
+- Tests: 1,516 passing, 137 skipped, 1,653 total
+- Coverage: ~70% overall (~70% of src/ files)
+
+**Timing Note**: Test execution varies ±1-2 seconds depending on system performance.
 
 ### Test Coverage
 
@@ -468,23 +477,306 @@ npm run test:all
 6. **Push to your fork**: `git push origin feature/your-feature-name`
 7. **Open a Pull Request**: Provide a clear description of your changes
 
+### Pre-Submission Validation Commands
+
+**IMPORTANT**: Run these commands before submitting your pull request to ensure code quality and compatibility.
+
+#### 1. Quick Syntax Validation (~1 second)
+
+```bash
+npm run validate
+```
+
+**Expected Output**:
+```
+> guia_turistico@0.7.1-alpha validate
+> node -c src/app.js && node -c src/guia.js
+
+✓ No syntax errors detected
+```
+
+**What it checks**: JavaScript syntax errors in main source files
+
+---
+
+#### 2. Full Test Suite (~7 seconds)
+
+```bash
+npm test
+```
+
+**Expected Output**:
+```
+Test Suites: 64 passed, 4 skipped, 68 total
+Tests:       1516 passed, 137 skipped, 1653 total
+Snapshots:   0 total
+Time:        6.789 s
+```
+
+**What it checks**: All automated tests across 68 test suites
+
+**Timing Note**: Execution time varies ±1-2 seconds depending on system performance.
+
+---
+
+#### 3. Test Coverage (~7 seconds)
+
+```bash
+npm run test:coverage
+```
+
+**Expected Output**:
+```
+Test Suites: 64 passed, 4 skipped, 68 total
+Tests:       1516 passing, 137 skipped, 1653 total
+Coverage:    ~70% overall
+```
+
+**What it checks**: Test coverage metrics (see coverage/ directory for detailed report)
+
+---
+
+#### 4. Combined Validation (~8 seconds)
+
+```bash
+npm run test:all
+```
+
+**Expected Output**:
+```
+✓ Syntax validation passed
+✓ 1516/1653 tests passed
+✓ All validation checks completed
+```
+
+**What it checks**: Runs both syntax validation and full test suite
+
+---
+
+#### 5. Verify Test Results
+
+**Expected Test Counts** (as of version 0.7.1-alpha):
+- **Total Tests**: 1,653
+- **Passing**: 1,516
+- **Skipped**: 137
+- **Failing**: 0 (all must pass)
+
+**If tests fail**:
+1. Read the error messages carefully
+2. Check if you introduced breaking changes
+3. Update tests if intentionally changing behavior
+4. See [Troubleshooting](#troubleshooting-validation-failures) below
+
+---
+
 ### Pull Request Checklist
 
-- [ ] Code follows immutability principles
-- [ ] All tests pass (`npm run test:all`)
-- [ ] New functionality has tests
+Before submitting your PR, ensure all items are checked:
+
+#### Code Quality
+- [ ] Code follows immutability principles (see [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md))
+- [ ] Functions are pure and referentially transparent where possible
+- [ ] No mutable array operations (push, splice, sort) - use spread operator, filter, map instead
+- [ ] Defensive copying used for object parameters
+- [ ] JSDoc comments added for all public APIs (see [JSDOC_GUIDE.md](./JSDOC_GUIDE.md))
+
+#### Testing
+- [ ] **All validation commands pass** (see [Pre-Submission Validation Commands](#pre-submission-validation-commands) above)
+  - [ ] `npm run validate` - Syntax validation passes
+  - [ ] `npm test` - All 1,516 tests pass, 137 skipped
+  - [ ] Test counts match expected values (1,516 passing / 1,653 total)
+- [ ] New functionality has comprehensive tests
+  - [ ] Happy path tested
+  - [ ] Edge cases covered
+  - [ ] Error conditions handled
+- [ ] Tests follow TDD principles (see [TDD_GUIDE.md](./TDD_GUIDE.md))
+- [ ] Test coverage maintained or improved (~70% minimum)
+
+#### Documentation
 - [ ] Documentation updated if needed
-- [ ] No console.log or debugging code left in
-- [ ] Code is properly formatted and linted
+  - [ ] README.md updated if API changes
+  - [ ] Architecture docs updated if design changes
+  - [ ] JSDoc comments added/updated
+- [ ] Code examples included in documentation
+- [ ] Version numbers updated if releasing (see [VERSION_TIMELINE.md](../docs/architecture/VERSION_TIMELINE.md))
+
+#### Code Hygiene
+- [ ] No `console.log` or debugging code left in source files
+- [ ] No commented-out code (remove or document why it's kept)
+- [ ] No TODO comments without issue references
+- [ ] Code is properly formatted (consistent indentation, spacing)
+- [ ] Commit messages are clear and descriptive
+
+#### Architecture & Design
+- [ ] Changes follow Single Responsibility Principle
+- [ ] No new God Objects or overly complex classes
+- [ ] Dependencies are minimal (low coupling - see [LOW_COUPLING_GUIDE.md](./LOW_COUPLING_GUIDE.md))
+- [ ] Components have high cohesion (see [HIGH_COHESION_GUIDE.md](./HIGH_COHESION_GUIDE.md))
+- [ ] Observer pattern used correctly (no memory leaks)
+
+---
+
+### Troubleshooting Validation Failures
+
+#### Syntax Errors
+```bash
+# If npm run validate fails:
+node -c src/app.js    # Check specific file
+node -c src/guia.js   # Check specific file
+```
+
+**Common causes**:
+- Missing semicolons or brackets
+- Typos in variable names
+- Invalid JavaScript syntax
+- ES6 features not supported
+
+**Fix**: Review error message, locate line number, correct syntax.
+
+---
+
+#### Test Failures
+```bash
+# Run tests in verbose mode to see details
+npm test -- --verbose
+
+# Run specific test file
+npm test -- __tests__/YourTest.test.js
+
+# Run tests with detailed error output
+npm test -- --no-coverage
+```
+
+**Common causes**:
+- Breaking changes to existing APIs
+- Missing imports or dependencies
+- Side effects in tests (not isolated)
+- Timing issues in async tests
+
+**Fix**: Read error messages, check test expectations, update implementation or tests.
+
+---
+
+#### Test Count Mismatch
+
+**If you see different test counts**:
+
+**Expected** (v0.7.1-alpha):
+- 1,516 passing / 1,653 total / 137 skipped
+
+**Your result** shows different numbers? This could mean:
+1. ✅ **You added new tests** (passing count increased) - Good! Document in PR description
+2. ⚠️ **Tests are failing** (passing count decreased) - Must fix before merging
+3. ⚠️ **Tests were deleted** (total count decreased) - Explain why in PR description
+
+**Action**: Verify your changes and explain count differences in PR description.
+
+---
+
+#### Coverage Drop
+
+**If coverage drops below 70%**:
+
+```bash
+# Generate detailed coverage report
+npm run test:coverage
+
+# View HTML report
+open coverage/lcov-report/index.html
+```
+
+**Action**:
+1. Identify uncovered lines in report
+2. Add tests for new functionality
+3. Focus on critical paths and edge cases
+4. Aim for 80%+ coverage on new code
+
+---
+
+### Manual Testing (Web Application)
+
+For UI changes, perform manual testing:
+
+```bash
+# Start development server (runs indefinitely)
+python3 -m http.server 9000
+
+# In browser, navigate to:
+# http://localhost:9000/src/index.html
+```
+
+**Test the following**:
+1. **Geolocation Flow**
+   - Click "Obter Localização" button
+   - Grant location permissions
+   - Verify coordinates display correctly
+   - Check address lookup occurs
+
+2. **UI Elements**
+   - All buttons are clickable and functional
+   - Text displays correctly in result areas
+   - Console shows appropriate log messages
+   - No JavaScript errors in browser console
+
+3. **Error Handling**
+   - Deny location permissions - verify error handling
+   - Disconnect network - verify graceful degradation
+   - Invalid coordinates - verify validation
+
+**Stop server**: Press `Ctrl+C` in terminal
+
+---
+
+### Validation Command Quick Reference
+
+| Command | Purpose | Time | Expected Result |
+|---------|---------|------|-----------------|
+| `npm run validate` | Syntax check | ~1s | No syntax errors |
+| `npm test` | Full test suite | ~7s | 1,516 passing, 137 skipped |
+| `npm run test:coverage` | Tests + coverage | ~7s | ~70% coverage |
+| `npm run test:all` | Syntax + tests | ~8s | All checks pass |
+| `npm run test:watch` | Dev mode tests | Continuous | Watch for changes |
+
+---
+
+### Additional Resources
+
+**Having trouble with validation?**
+- 📚 Read [TDD_GUIDE.md](./TDD_GUIDE.md) for testing methodology
+- 📚 Read [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md) for test patterns
+- 📚 Check [docs/INDEX.md](../docs/INDEX.md) for complete documentation
+- 💬 Ask questions by opening an issue
+
+**Understanding the codebase?**
+- 📚 Read [VERSION_TIMELINE.md](../docs/architecture/VERSION_TIMELINE.md) for version history
+- 📚 Read [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) for architecture
+- 📚 Read [PROJECT_PURPOSE_AND_ARCHITECTURE.md](../docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md) for goals
+
+## Related Documentation
+
+### Essential Reading
+- **[REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)** - Core functional programming principles
+- **[JSDOC_GUIDE.md](./JSDOC_GUIDE.md)** - API documentation standards
+- **[TDD_GUIDE.md](./TDD_GUIDE.md)** - Test-driven development methodology
+- **[UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)** - Unit testing best practices
+
+### Code Quality
+- **[JAVASCRIPT_BEST_PRACTICES.md](./JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript standards
+- **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Review checklist
+- **[HIGH_COHESION_GUIDE.md](./HIGH_COHESION_GUIDE.md)** - Component design
+- **[LOW_COUPLING_GUIDE.md](./LOW_COUPLING_GUIDE.md)** - Dependency management
+
+### Complete Guide Index
+- **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
 
 ## Questions?
 
 If you have questions about contributing, please open an issue for discussion.
 
-Thank you for contributing to Guia.js! 🎉
+Thank you for contributing to Guia Turístico! 🎉
 
 ---
 
-**Version**: 0.7.0-alpha  
+**Version**: 0.7.1-alpha  
 **Status**: Active Development  
-**Last Updated**: 2026-01-09
+**Last Updated**: 2026-01-11

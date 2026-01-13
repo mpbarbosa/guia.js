@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Fix Test - GeoPosition Type Error</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #2196F3;
+            background: #f9f9f9;
+        }
+        .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .error {
+            color: #f44336;
+            font-weight: bold;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #263238;
+            color: #4CAF50;
+            font-family: 'Courier New', monospace;
+            border-radius: 4px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .description {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐛 Bug Fix Test: GeoPosition Type Error</h1>
+        
+        <div class="description">
+            <p>This test demonstrates the fix for the error:</p>
+            <code>TypeError: GeocodingState: position must be a GeoPosition instance or null</code>
+        </div>
+
+        <div class="test-section">
+            <h3>Issue Location</h3>
+            <ul>
+                <li><strong>File:</strong> src/coordination/WebGeocodingManager.js</li>
+                <li><strong>Line:</strong> 709 (before fix)</li>
+                <li><strong>Method:</strong> getSingleLocationUpdate()</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>Root Cause</h3>
+            <p>GeolocationService returns a raw browser position object, but GeocodingState.setPosition() expects a GeoPosition instance.</p>
+        </div>
+
+        <div class="test-section">
+            <h3>The Fix</h3>
+            <p>Wrap the raw browser position in a GeoPosition instance before passing to GeocodingState:</p>
+            <code>const geoPosition = new GeoPosition(position);</code>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <button onclick="testBugScenario()">🔴 Test Bug (Before Fix)</button>
+            <button onclick="testFixedScenario()">✅ Test Fix (After Fix)</button>
+            <button onclick="clearOutput()">🗑️ Clear Output</button>
+        </div>
+
+        <div id="output"></div>
+    </div>
+
+    <script type="module">
+        import GeocodingState from './src/core/GeocodingState.js';
+        import GeoPosition from './src/core/GeoPosition.js';
+
+        const output = document.getElementById('output');
+
+        function log(message, isError = false) {
+            const timestamp = new Date().toISOString();
+            const prefix = isError ? '❌' : '✅';
+            const color = isError ? '#f44336' : '#4CAF50';
+            output.innerHTML += `<span style="color: ${color}">[${timestamp}] ${prefix} ${message}</span>\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Make functions globally available
+        window.testBugScenario = function() {
+            log('=== Testing Bug Scenario (Before Fix) ===');
+            
+            try {
+                // Create a mock raw browser position (what GeolocationService returns)
+                const rawBrowserPosition = {
+                    coords: {
+                        latitude: -23.550520,
+                        longitude: -46.633309,
+                        accuracy: 10,
+                        altitude: null,
+                        altitudeAccuracy: null,
+                        heading: null,
+                        speed: null
+                    },
+                    timestamp: Date.now()
+                };
+
+                log('Created raw browser position object');
+                log(`  Coordinates: ${rawBrowserPosition.coords.latitude}, ${rawBrowserPosition.coords.longitude}`);
+
+                // Try to set it directly (this is the bug)
+                const geocodingState = new GeocodingState();
+                log('Attempting to set raw position directly...');
+                
+                geocodingState.setPosition(rawBrowserPosition);
+                
+                log('ERROR: Should have thrown TypeError!', true);
+            } catch (error) {
+                if (error instanceof TypeError && error.message.includes('GeoPosition instance')) {
+                    log('SUCCESS: TypeError caught as expected', false);
+                    log(`  Message: ${error.message}`);
+                } else {
+                    log(`Unexpected error: ${error.message}`, true);
+                }
+            }
+        };
+
+        window.testFixedScenario = function() {
+            log('=== Testing Fixed Scenario (After Fix) ===');
+            
+            try {
+                // Create a mock raw browser position
+                const rawBrowserPosition = {
+                    coords: {
+                        latitude: -23.550520,
+                        longitude: -46.633309,
+                        accuracy: 10,
+                        altitude: null,
+                        altitudeAccuracy: null,
+                        heading: null,
+                        speed: null
+                    },
+                    timestamp: Date.now()
+                };
+
+                log('Created raw browser position object');
+
+                // THE FIX: Wrap in GeoPosition first
+                const geoPosition = new GeoPosition(rawBrowserPosition);
+                log('Wrapped in GeoPosition instance');
+                log(`  Type check: ${geoPosition instanceof GeoPosition ? 'GeoPosition ✓' : 'Not GeoPosition ✗'}`);
+
+                // Now set it (this should work)
+                const geocodingState = new GeocodingState();
+                log('Setting GeoPosition instance...');
+                
+                geocodingState.setPosition(geoPosition);
+                
+                log('SUCCESS: Position set without errors!', false);
+                
+                // Verify the data is accessible
+                const retrievedPosition = geocodingState.getCurrentPosition();
+                const coords = geocodingState.getCurrentCoordinates();
+                
+                log('Verification:');
+                log(`  Position available: ${geocodingState.hasPosition() ? 'Yes ✓' : 'No ✗'}`);
+                log(`  Latitude: ${coords.latitude}`);
+                log(`  Longitude: ${coords.longitude}`);
+                log(`  Accuracy: ${retrievedPosition.accuracy}m (${retrievedPosition.accuracyQuality})`);
+                
+            } catch (error) {
+                log(`ERROR: ${error.message}`, true);
+                log(error.stack, true);
+            }
+        };
+
+        window.clearOutput = function() {
+            output.innerHTML = '';
+        };
+
+        // Auto-run tests on load
+        log('Page loaded. Click buttons to run tests.');
+        log('Bug fix applied in WebGeocodingManager.js:709');
+    </script>
+</body>
+</html>

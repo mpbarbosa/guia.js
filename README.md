@@ -16,6 +16,8 @@ A single-page web application (SPA) for tourist guidance, built on top of the [g
 
 **Dependency**: This project depends on [guia.js](https://github.com/mpbarbosa/guia_js) - the core geolocation library.
 
+> **Note**: This repository is `guia_turistico` (the web application). The `guia.js` library is a separate dependency from [github.com/mpbarbosa/guia_js](https://github.com/mpbarbosa/guia_js).
+
 ## ✨ Key Features
 
 - 🗺️ **Single-Page Application** - Modern SPA with client-side routing
@@ -81,15 +83,17 @@ npm install
 # Validate JavaScript syntax (<1 second)
 npm run validate
 
-# Run test suite (1,653 total tests, 1,515 passing, 137 skipped, ~6 seconds)
+# Run test suite (1,653 total tests, 1,516 passing, 137 skipped, ~7 seconds)
 npm test
 
-# Run tests with coverage (~6 seconds)
+# Run tests with coverage (~7 seconds)
 npm run test:coverage
 
-# Full validation: syntax + tests (~10 seconds)
+# Full validation: syntax + tests (~8 seconds)
 npm run test:all
 ```
+
+> **Note**: Test execution times may vary by 1-2 seconds depending on system performance and available resources.
 
 ### Running the Application
 
@@ -118,10 +122,12 @@ npm run lint:fix
 ## 📁 Project Structure
 
 ```
-guia_js/
+guia_turistico/
 ├── src/                          # Source code (ES6 modules)
-│   ├── guia.js                   # Main entry point (468 lines, modularized from 2288 lines)
+│   ├── app.js                    # Main application entry point (550+ lines)
+│   ├── guia.js                   # guia.js library exports (468 lines)
 │   ├── guia_ibge.js              # IBGE integration utilities
+│   ├── index.html                # Main HTML page for SPA
 │   ├── core/                     # Core classes (Singletons, Managers)
 │   ├── data/                     # Data processing and extraction
 │   ├── html/                     # HTML display and DOM manipulation
@@ -187,7 +193,7 @@ See [examples/README.md](examples/README.md) for detailed documentation and expe
 
 ### Test Suite Overview
 
-- **Total Tests**: 1,438 total (1,301 passing, 137 skipped)
+- **Total Tests**: 1,653 total (1,516 passing, 137 skipped)
 - **Test Suites**: 68 total (64 passing, 4 skipped)
 - **Execution Time**: ~7 seconds
 - **Code Coverage**: ~70% overall (includes LRUCache at 100%)
@@ -223,7 +229,7 @@ To ensure clear communication about testing concepts:
   
 - **Test**: Individual test case within a suite using `it()` or `test()`
   - Example: `it('should return singleton instance')`
-  - The project has 1,438 tests total (1,301 passing, 137 skipped)
+  - The project has 1,653 tests total (1,516 passing, 137 skipped)
 
 - **Test Category**: Organizational grouping of related test suites
   - **unit/**: Tests for individual classes and functions in isolation
@@ -245,7 +251,7 @@ To ensure clear communication about testing concepts:
 ### Testing Terminology
 
 - **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 64 passing suites
-- **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 1,438 tests (1,301 passing, 137 skipped)
+- **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 1,653 tests (1,516 passing, 137 skipped)
 - **Test Category**: Organizational grouping by functionality (unit, integration, features, external, managers)
 - **Code Coverage**: Percentage of source code executed during tests (~70% overall)
 
@@ -488,7 +494,7 @@ Current directory: /home/user/wrong/path
 ```
 **Solution**: Navigate to project root
 ```bash
-cd /path/to/guia_js
+cd /path/to/guia_turistico
 ./cdn-delivery.sh
 ```
 
@@ -517,8 +523,8 @@ This script requires a Git repository to extract commit hash
 **Solution**: Ensure you're in a cloned repository
 ```bash
 # Clone if needed
-git clone https://github.com/mpbarbosa/guia_js.git
-cd guia_js
+git clone https://github.com/mpbarbosa/guia_turistico.git
+cd guia_turistico
 ./cdn-delivery.sh
 ```
 
@@ -545,23 +551,23 @@ node -p "JSON.parse(require('fs').readFileSync('package.json', 'utf8'))"
 **Solution**: Ensure Git tag is pushed and wait for CDN sync
 ```bash
 # 1. Check if tag exists locally
-git tag | grep v0.6.0-alpha
+git tag | grep v0.7.1-alpha
 
 # 2. If missing, create tag
-git tag v0.6.0-alpha
+git tag v0.7.1-alpha
 
 # 3. Push tag to GitHub
-git push origin v0.6.0-alpha
+git push origin v0.7.1-alpha
 
 # 4. Wait for jsDelivr to sync (5-10 minutes)
-# Check status at: https://www.jsdelivr.com/package/gh/mpbarbosa/guia_js
+# Check status at: https://www.jsdelivr.com/package/gh/mpbarbosa/guia_turistico
 
 # 5. Verify CDN availability
-curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"
+curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/app.js"
 # Should return: HTTP/2 200
 
 # Alternative: Use commit hash instead (available immediately)
-# https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@COMMIT_HASH/src/guia.js
+# https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@COMMIT_HASH/src/app.js
 ```
 
 **Note**: CDN sync times:
@@ -623,7 +629,7 @@ git push origin v0.6.1-alpha
 # 5. Wait 5-10 minutes for jsDelivr sync
 
 # 6. Verify CDN availability
-curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.1-alpha/package.json"
+curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/package.json"
 ```
 
 **Scenario 2: Documentation Update**
@@ -647,7 +653,7 @@ git push
 ./cdn-delivery.sh
 
 # Get commit URL from output:
-# https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@abc1234/src/guia.js
+# https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@abc1234/src/guia.js
 
 # Test in browser immediately (no tag needed)
 # Available within seconds of pushing to GitHub
@@ -750,15 +756,17 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 **Format**:
 ```
 # Generated: 2026-01-01 15:14:51
-# Version: 0.6.0-alpha
+# Version: 1.0.0-alpha
 # Commit: abc1234567890abcdef1234567890abcdef12345
 
 Version-specific URLs:
-https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js
 ...
 ```
 
 #### Best Practices
+
+> **📌 Important**: Always use **version-specific CDN URLs** (e.g., `@0.7.1-alpha`) in production for stability and cache consistency. Avoid branch-based URLs (`@main`) which auto-update and can break applications unexpectedly.
 
 1. **Run after every version change**
    ```bash
@@ -774,10 +782,10 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js
 3. **Use version-specific URLs in production**
    ```html
    <!-- ✅ Good: Pinned version -->
-   <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js"></script>
    
    <!-- ❌ Avoid: Latest version (unpredictable) -->
-   <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@main/src/guia.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@main/src/guia.js"></script>
    ```
 
 4. **Test commit URLs before tagging**
@@ -813,7 +821,7 @@ bash -x ./cdn-delivery.sh
 git ls-remote --tags origin
 
 # Check jsDelivr status
-curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/package.json"
+curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/package.json"
 
 # Use commit URL as temporary alternative
 ```
@@ -837,13 +845,13 @@ Load a specific version for stability and cache consistency:
 
 ```html
 <!-- Main guia.js file -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js"></script>
 
 <!-- Load entire src directory -->
-<link rel="prefetch" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/">
+<link rel="prefetch" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/">
 
 <!-- IBGE utilities -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia_ibge.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia_ibge.js"></script>
 ```
 
 **Benefits:**
@@ -857,10 +865,10 @@ Load from a specific git commit (immutable):
 
 ```html
 <!-- Replace {COMMIT_SHA} with actual commit hash -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@{COMMIT_SHA}/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@{COMMIT_SHA}/src/guia.js"></script>
 
 <!-- Example with full commit hash -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@ba5b3adee7fc5f77e30f5a7a42efadf42eec34dc/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@ba5b3adee7fc5f77e30f5a7a42efadf42eec34dc/src/guia.js"></script>
 ```
 
 **Use case:** Pin to exact commit for audit trails and regulatory compliance
@@ -871,7 +879,7 @@ Load latest from a branch (updates automatically):
 
 ```html
 <!-- Latest from main branch -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@main/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@main/src/guia.js"></script>
 ```
 
 **⚠️ Warning:** Not recommended for production - URLs update as branch changes
@@ -882,10 +890,10 @@ Automatically get latest patches or minor versions:
 
 ```html
 <!-- Latest v0.6.x (patch updates only) -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.6/src/guia.js"></script>
 
 <!-- Latest v0.x.x (minor + patch updates) -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0/src/guia.js"></script>
 ```
 
 **Use case:** Auto-receive bug fixes while maintaining compatibility
@@ -896,10 +904,10 @@ jsDelivr automatically minifies files:
 
 ```html
 <!-- Auto-minified version (adds .min.js) -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.min.js"></script>
 
 <!-- Source maps (for debugging) -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js.map"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js.map"></script>
 ```
 
 ### 📚 Combine Multiple Files
@@ -908,7 +916,7 @@ Combine and minify multiple files in a single request:
 
 ```html
 <!-- Combine guia.js and guia_ibge.js -->
-<script src="https://cdn.jsdelivr.net/combine/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js,gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia_ibge.js"></script>
+<script src="https://cdn.jsdelivr.net/combine/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js,gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia_ibge.js"></script>
 ```
 
 **Benefits:**
@@ -922,7 +930,7 @@ Combine and minify multiple files in a single request:
 
 ```html
 <!-- Load specific version -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js"></script>
 
 <!-- Use after load -->
 <script>
@@ -935,7 +943,7 @@ Combine and minify multiple files in a single request:
 
 ```html
 <!-- Generate SRI hash at: https://www.srihash.org/ -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js"
         integrity="sha384-HASH_HERE"
         crossorigin="anonymous"></script>
 ```
@@ -946,7 +954,7 @@ Combine and minify multiple files in a single request:
 
 ```html
 <script type="module">
-  import { WebGeocodingManager, PositionManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js';
+  import { WebGeocodingManager, PositionManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js';
   
   // Use imported classes
   const manager = new WebGeocodingManager(document, 'map-container');
@@ -958,11 +966,11 @@ Combine and minify multiple files in a single request:
 
 ```html
 <!-- Preload for better performance -->
-<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js">
 
 <script type="module">
   // Module is already cached
-  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js';
+  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js';
 </script>
 ```
 
@@ -972,7 +980,7 @@ If guia_js is published to npm registry:
 
 ```html
 <!-- Load from npm -->
-<script src="https://cdn.jsdelivr.net/npm/guia_js@0.6.0-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/guia_turistico@0.7.1-alpha/src/guia.js"></script>
 
 <!-- Load latest version -->
 <script src="https://cdn.jsdelivr.net/npm/guia_js/src/guia.js"></script>
@@ -984,12 +992,12 @@ If guia_js is published to npm registry:
 
 ```javascript
 // Get package.json
-fetch('https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/package.json')
+fetch('https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/package.json')
   .then(res => res.json())
   .then(pkg => console.log(pkg.version));
 
 // List all files in package
-fetch('https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia_js@0.6.0-alpha')
+fetch('https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia_turistico@0.7.1-alpha')
   .then(res => res.json())
   .then(data => console.log(data.files));
 ```
@@ -1019,7 +1027,7 @@ fetch('https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia_js@0.6.0-alpha')
 
 ```bash
 # Using curl and openssl
-curl -s https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js | \
+curl -s https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js | \
   openssl dgst -sha384 -binary | openssl base64 -A
 
 # Or use online tool: https://www.srihash.org/
@@ -1044,7 +1052,7 @@ git tag v0.6.0-alpha
 git push origin v0.6.0-alpha
 
 # 4. Wait a few minutes for jsDelivr to sync
-# Then test: https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/package.json
+# Then test: https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/package.json
 ```
 
 ### 📁 CDN Files Reference
@@ -1191,7 +1199,7 @@ Test locally before pushing to catch issues early:
 ✅ Syntax validation passed
 
 🧪 Running Test Suite...
-✅ Tests passed: 1,301 passing (1,438 total, 137 skipped)
+✅ Tests passed: 1,516 passing (1,653 total, 137 skipped)
 
 📊 Generating Coverage Report...
 ✅ Coverage: 69.82%
@@ -1309,7 +1317,7 @@ python3 -m http.server 8000
 
 - **Lines of Code**: ~2300+ (main application)
 - **Test Coverage**: 70% (statements), 44% (branches)
-- **Test Count**: 1,438 tests total (1,301 passing, 137 skipped)
+- **Test Count**: 1,653 tests total (1,516 passing, 137 skipped)
 - **Dependencies**: 2 runtime, 2 dev dependencies
 - **Supported Node.js**: v18+
 - **ES Module Type**: ESM (ECMAScript Modules)
@@ -1346,11 +1354,11 @@ ISC License - See repository for details
 ## 📞 Support
 
 - **Documentation**: [docs/INDEX.md](docs/INDEX.md)
-- **Issues**: [GitHub Issues](https://github.com/mpbarbosa/guia_js/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/mpbarbosa/guia_js/discussions)
+- **Issues**: [GitHub Issues](https://github.com/mpbarbosa/guia_turistico/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/mpbarbosa/guia_turistico/discussions)
 
 ---
 
-**Version**: 0.6.0-alpha (unstable development)  
+**Version**: 0.7.1-alpha (active development)  
 **Status**: Active Development  
 **Last Updated**: 2026-01-01

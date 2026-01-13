@@ -1,8 +1,8 @@
 # Testing HTML Generation in JavaScript
 
-**Project**: guia_js v0.6.0-alpha  
+**Project**: Guia Turístico v0.7.1-alpha  
 **Topic**: Strategies for Testing HTML-Generating Code  
-**Last Updated**: 2026-01-01
+**Last Updated**: 2026-01-11
 
 ---
 

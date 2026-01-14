@@ -171,6 +171,9 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	}
 }
 
-// Export as both default and named export for compatibility
 export default BrowserGeolocationProvider;
+/**
+ * Module exports for browser geolocation provider.
+ * @exports BrowserGeolocationProvider - Native browser Geolocation API implementation
+ */
 export { BrowserGeolocationProvider };

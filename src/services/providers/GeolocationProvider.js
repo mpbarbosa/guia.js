@@ -99,6 +99,9 @@ class GeolocationProvider {
 	}
 }
 
-// Export as both default and named export for compatibility
 export default GeolocationProvider;
+/**
+ * Module exports for geolocation provider base class.
+ * @exports GeolocationProvider - Abstract base class for geolocation provider implementations
+ */
 export { GeolocationProvider };

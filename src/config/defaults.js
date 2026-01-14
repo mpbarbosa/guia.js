@@ -1,20 +1,20 @@
 'use strict';
 
 /**
- * Default configuration for Guia.js application.
+ * Default configuration for Guia Turístico application.
  * 
  * All values are immutable to prevent accidental modification.
  * Configuration follows referential transparency principles.
  * 
  * @module config/defaults
- * @since 0.6.0-alpha
+ * @since 0.7.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
 // Version Information
-export const GUIA_VERSION = {
+export const APP_VERSION = {
 	major: 0,
-	minor: 6,
+	minor: 7,
 	patch: 0,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
@@ -22,8 +22,17 @@ export const GUIA_VERSION = {
 	},
 };
 
-export const GUIA_NAME = "Ondeestou";
-export const GUIA_AUTHOR = "Marcelo Pereira Barbosa";
+/**
+ * Application name displayed in UI and logs.
+ * @constant {string}
+ */
+export const APP_NAME = "Ondeestou";
+
+/**
+ * Application author name.
+ * @constant {string}
+ */
+export const APP_AUTHOR = "Marcelo Pereira Barbosa";
 
 // Timing Configuration
 /** Position tracking interval in milliseconds */
@@ -39,12 +48,12 @@ export const QUEUE_TIMER_INTERVAL = 5000;
 /** Default text for unclassified reference places */
 export const NO_REFERENCE_PLACE = "Não classificado";
 
-/** Valid OSM reference place classes */
+/** Valid OSM reference place classes (geographic points, commercial locations, facilities, transport) */
 export const VALID_REF_PLACE_CLASSES = Object.freeze([
-	"place",
-	"shop",
-	"amenity",
-	"railway"
+	"place",    // Geographic locations (cities, towns, neighborhoods)
+	"shop",     // Commercial establishments
+	"amenity",  // Public facilities (restaurants, banks, schools)
+	"railway"   // Railway stations and transport hubs
 ]);
 
 // Device-Specific Accuracy Thresholds

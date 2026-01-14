@@ -177,8 +177,11 @@ class SpeechItem {
 	}
 }
 
-// Export as both default and named export for flexibility
 export default SpeechItem;
+/**
+ * Module exports for speech item.
+ * @exports SpeechItem - Immutable speech synthesis item with priority queuing
+ */
 export { SpeechItem };
 
 // Export to window for browser compatibility

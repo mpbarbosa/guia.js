@@ -176,8 +176,11 @@ class DisplayerFactory {
 // Freeze the class to prevent modifications
 Object.freeze(DisplayerFactory);
 
-// Export as both default and named export for flexibility
 export default DisplayerFactory;
+/**
+ * Module exports for HTML displayer factory.
+ * @exports DisplayerFactory - Factory for creating HTML display components
+ */
 export { DisplayerFactory };
 
 // Export to window for browser compatibility

@@ -319,14 +319,6 @@ async function initializeHomeView() {
   // Just ensure WebGeocodingManager is initialized
   const content = document.getElementById('app-content');
   
-  // Check if we need to restore the home view from another route
-  if (!content.querySelector('#continuous-tracking-toggle')) {
-    // Home content was replaced, reload to restore it
-    console.log('Restoring home view...');
-    location.reload();
-    return;
-  }
-  
   // Initialize WebGeocodingManager if not already done
   if (!AppState.manager) {
     try {
@@ -337,24 +329,9 @@ async function initializeHomeView() {
       });
       console.log('WebGeocodingManager initialized for home view');
       
-      // Set up tracking toggle handler
-      const trackingToggle = document.getElementById('continuous-tracking-toggle');
-      if (trackingToggle) {
-        // Start tracking by default (toggle is checked initially)
-        AppState.manager.startTracking();
-        console.log('Tracking started automatically');
-        
-        trackingToggle.addEventListener('change', (event) => {
-          if (event.target.checked) {
-            console.log('Starting location tracking');
-            AppState.manager.startTracking();
-          } else {
-            console.log('Stopping location tracking');
-            AppState.manager.stopTracking();
-          }
-        });
-        console.log('Tracking toggle event handler attached');
-      }
+      // Start tracking automatically
+      AppState.manager.startTracking();
+      console.log('Tracking started automatically');
     } catch (error) {
       console.error('Error initializing WebGeocodingManager:', error);
     }

@@ -242,8 +242,11 @@ class HTMLPositionDisplayer {
 	}
 }
 
-// Export as both default and named export for flexibility
 export default HTMLPositionDisplayer;
+/**
+ * Module exports for HTML position display.
+ * @exports HTMLPositionDisplayer - Renders geographic coordinates and map links in HTML
+ */
 export { HTMLPositionDisplayer };
 
 // Export to window for browser compatibility

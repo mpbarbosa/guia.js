@@ -1,0 +1,109 @@
+/* Location Highlight Cards - PRIMARY INFORMATION Display */
+
+.location-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin: 32px 0;
+  justify-content: center;
+}
+
+.highlight-card {
+  background: linear-gradient(135deg, var(--md-sys-color-primary-container, #d1e4ff) 0%, var(--md-sys-color-secondary-container, #e8def8) 100%);
+  border-radius: 20px;
+  padding: 32px 24px;
+  min-width: 280px;
+  flex: 1;
+  max-width: 400px;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+}
+
+.highlight-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.highlight-card-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 16px;
+  opacity: 0.85;
+}
+
+.highlight-card-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--md-sys-color-primary, #1976d2);
+  line-height: 1.2;
+  word-wrap: break-word;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Secondary Actions - Reduced prominence */
+.secondary-actions {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.secondary-actions .button-container {
+  margin: 16px 0;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.secondary-actions .button-container:hover {
+  opacity: 1;
+}
+
+.secondary-actions .md3-button-outlined {
+  font-size: 14px;
+  padding: 10px 20px;
+  min-height: 40px;
+}
+
+.secondary-actions .button-status {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .location-highlights {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .highlight-card {
+    min-width: 100%;
+    padding: 24px 20px;
+  }
+  
+  .highlight-card-value {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .highlight-card-value {
+    font-size: 3rem;
+  }
+  
+  .highlight-card {
+    padding: 40px 32px;
+  }
+}

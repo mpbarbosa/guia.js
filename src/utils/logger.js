@@ -235,6 +235,10 @@ export const debug = (message, ...params) => {
  * setLogLevel({ level: 'debug' });
  * 
  * @since 0.7.0-alpha
+ * @param {Object} [options] - Configuration options
+ * @param {string} [options.level] - Log level ('debug', 'info', 'warn', 'error')
+ * @param {boolean} [options.enabled] - Enable/disable logging
+ * @returns {void}
  */
 export const setLogLevel = (options = {}) => {
 	if (options.level && LOG_LEVELS[options.level] !== undefined) {

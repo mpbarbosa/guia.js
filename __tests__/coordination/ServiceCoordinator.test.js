@@ -727,7 +727,7 @@ describe('ServiceCoordinator', () => {
             const result = coordinator.toString();
 
             expect(result).toContain('initialized');
-            expect(result).toContain('3 displayers');
+            expect(result).toContain('4 displayers');
         });
 
         test('should show tracking state with watch ID', () => {

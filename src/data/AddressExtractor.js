@@ -140,4 +140,8 @@ class AddressExtractor {
 }
 
 export default AddressExtractor;
+/**
+ * Module exports for address extraction.
+ * @exports AddressExtractor - Extracts and standardizes Brazilian addresses from geocoding data
+ */
 export { AddressExtractor };

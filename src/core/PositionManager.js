@@ -368,6 +368,8 @@ class PositionManager {
 		let bUpdateCurrPos = true;
 		let error = null;
 
+		console.log("(PositionManager) update called with position:", position);
+		console.log("(PositionManager) lastPosition:", this.lastPosition);
 		// Verifica se a posição é válida
 		if (!position || !position.timestamp) {
 			warn("(PositionManager) Invalid position data:", position);

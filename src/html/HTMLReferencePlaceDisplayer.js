@@ -231,8 +231,11 @@ class HTMLReferencePlaceDisplayer {
 	}
 }
 
-// Export as both default and named export for flexibility
 export default HTMLReferencePlaceDisplayer;
+/**
+ * Module exports for HTML reference place display.
+ * @exports HTMLReferencePlaceDisplayer - Renders reference locations with distance info in HTML
+ */
 export { HTMLReferencePlaceDisplayer };
 
 // Export to window for browser compatibility

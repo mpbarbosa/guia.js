@@ -268,6 +268,7 @@ class GeolocationService {
 	 * @since 0.8.3-alpha
 	 */
 	constructor(locationResult, geolocationProvider, positionManagerInstance, config = {}) {
+		console.log(">>> (GeolocationService) constructor called");
 		// Store DOM element for location result display
 		this.locationResult = locationResult;
 		
@@ -339,6 +340,7 @@ class GeolocationService {
 	 * @since 0.8.3-alpha
 	 */
 	async checkPermissions() {
+		console.log(">>> (GeolocationService) checkPermissions called");
 		try {
 			// Use provider's isPermissionsAPISupported if available, fallback to checking navigator
 			const hasPermissionsAPI = this.provider.isPermissionsAPISupported 
@@ -398,6 +400,7 @@ class GeolocationService {
 	 * @since 0.8.3-alpha
 	 */
 	async getSingleLocationUpdate() {
+		console.log(">>> (GeolocationService) getSingleLocationUpdate called");
 		// Return existing promise if request already pending
 		if (this.isPendingRequest && this.pendingPromise) {
 			return this.pendingPromise;
@@ -424,10 +427,12 @@ class GeolocationService {
 
 			this.provider.getCurrentPosition(
 				(position) => {
+					console.log(">>> (GeolocationService) Single location update successful:", position);
 					this.isPendingRequest = false;
 					this.pendingPromise = null;
 					this.lastKnownPosition = position;
 
+					console.log(">>> (GeolocationService) Updating PositionManager with new position");
 					// Update PositionManager with new position
 					this.positionManager.update(position);
 
@@ -663,6 +668,9 @@ class GeolocationService {
 // pattern infrastructure, maintaining clean separation of concerns that characterizes
 // the MP Barbosa coding standards.
 
-// Export as both default and named export for maximum compatibility
 export default GeolocationService;
+/**
+ * Module exports for geolocation service.
+ * @exports GeolocationService - Browser geolocation API wrapper with provider abstraction
+ */
 export { GeolocationService };

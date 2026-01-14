@@ -105,4 +105,8 @@ class BrazilianStandardAddress {
 }
 
 export default BrazilianStandardAddress;
+/**
+ * Module exports for Brazilian address standardization.
+ * @exports BrazilianStandardAddress - Brazilian address data model with formatting
+ */
 export { BrazilianStandardAddress };

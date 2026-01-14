@@ -371,6 +371,9 @@ class ChangeDetectionCoordinator {
 	}
 }
 
-// Export as both default and named export for flexibility
 export default ChangeDetectionCoordinator;
+/**
+ * Module exports for change detection coordination.
+ * @exports ChangeDetectionCoordinator - Coordinates position and address change notifications
+ */
 export { ChangeDetectionCoordinator };

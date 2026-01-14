@@ -118,6 +118,8 @@ class ReverseGeocoder {
 	/**
 	 * Subscribe an observer to address update notifications.
 	 * Delegates to internal ObserverSubject for consistent observer pattern implementation.
+	 * 
+	 * @param {Object} observer - Observer object with update() method to receive address notifications
 	 */
 	subscribe(observer) {
 		this.observerSubject.subscribe(observer);
@@ -126,6 +128,8 @@ class ReverseGeocoder {
 	/**
 	 * Internal method to subscribe observers to fetch manager URL updates.
 	 * Links geocoding operations with observer notifications for reactive updates.
+	 * 
+	 * @param {string} url - URL to monitor for fetch updates
 	 */
 	_subscribe(url) {
 		this.observerSubject.observers.forEach((observer) => {
@@ -136,6 +140,8 @@ class ReverseGeocoder {
 	/**
 	 * Unsubscribe an observer from address update notifications.
 	 * Maintains clean observer lifecycle management.
+	 * 
+	 * @param {Object} observer - Observer object to remove from notifications
 	 */
 	unsubscribe(observer) {
 		this.observerSubject.unsubscribe(observer);
@@ -144,8 +150,11 @@ class ReverseGeocoder {
 	/**
 	 * Notify all subscribed observers of address changes.
 	 * Enables reactive UI updates when geocoding completes.
+	 * 
+	 * @param {...*} args - Arguments to pass to observer update() methods (typically address data)
 	 */
 	notifyObservers(...args) {
+		console.log("(ReverseGeocoder) Notifying observers with args:", args);
 		this.observerSubject.notifyObservers(...args);
 	}
 
@@ -211,11 +220,58 @@ class ReverseGeocoder {
 	 * Delegates to reverseGeocode() method which handles coordinate validation,
 	 * URL generation, and API fetching with built-in caching and retry mechanisms
 	 * for optimal performance and reliability when accessing external geocoding services.
+	/**
+	 * Fetches address for currently set coordinates and notifies observers.
 	 * 
-	 * @returns {Promise} Promise resolving to address data
+	 * This method performs reverse geocoding for the coordinates set via
+	 * setCoordinates() and notifies all subscribed observers with the result.
+	 * 
+	 * @async
+	 * @returns {Promise<Object>} Promise resolving to Nominatim address data object
+	 * @throws {Error} If coordinates are invalid or geocoding fails
+	 * @since 0.8.3-alpha
 	 */
 	async fetchAddress() {
-		return this.reverseGeocode();
+		try {
+			const addressData = await this.reverseGeocode();
+			
+			// Store raw address data
+			this.currentAddress = addressData;
+			
+			// Standardize address for Brazilian format
+			if (this.AddressDataExtractor) {
+				this.enderecoPadronizado = this.AddressDataExtractor.getBrazilianStandardAddress(addressData);
+				console.log('(ReverseGeocoder.fetchAddress) Standardized address:', {
+					municipio: this.enderecoPadronizado?.municipio,
+					bairro: this.enderecoPadronizado?.bairro,
+					siglaUF: this.enderecoPadronizado?.siglaUF
+				});
+			}
+			
+			// Notify observers with complete parameters
+			console.log('(ReverseGeocoder.fetchAddress) About to notify observers with:', {
+				hasAddressData: !!this.currentAddress,
+				hasEnderecoPadronizado: !!this.enderecoPadronizado,
+				observerCount: this.observerSubject.observers.length
+			});
+			
+			this.notifyObservers(
+				this.currentAddress, 
+				this.enderecoPadronizado, 
+				'Address fetched', // posEvent
+				false, // loading
+				null  // error
+			);
+			
+			console.log('(ReverseGeocoder.fetchAddress) Observers notified successfully');
+			
+			return addressData;
+		} catch (error) {
+			console.error('(ReverseGeocoder.fetchAddress) Failed:', error);
+			this.error = error;
+			this.notifyObservers(null, null, 'Address fetch failed', false, error);
+			throw error;
+		}
 	}
 
 	/**
@@ -279,15 +335,28 @@ class ReverseGeocoder {
 					// Store raw address data from OpenStreetMap
 					this.currentAddress = addressData;
 					
+					console.log('(ReverseGeocoder) Address data received:', addressData);
+					
 					// BRAZILIAN ADDRESS STANDARDIZATION:
 					// Convert raw OpenStreetMap data to Brazilian standard format
 					// Supports Portuguese language display and local address conventions
 					if (this.AddressDataExtractor) {
 						this.enderecoPadronizado = this.AddressDataExtractor.getBrazilianStandardAddress(addressData);
+						console.log('(ReverseGeocoder) Standardized address:', {
+							municipio: this.enderecoPadronizado?.municipio,
+							bairro: this.enderecoPadronizado?.bairro,
+							siglaUF: this.enderecoPadronizado?.siglaUF
+						});
 					}
 					
 					// Notify subscribers that new address data is available
-					this.notifyObservers(posEvent);
+					console.log('(ReverseGeocoder) About to notify observers with:', {
+						hasAddressData: !!this.currentAddress,
+						hasEnderecoPadronizado: !!this.enderecoPadronizado,
+						observerCount: this.observerSubject.observers.length
+					});
+					this.notifyObservers(this.currentAddress, this.enderecoPadronizado, posEvent, false, null);
+					console.log('(ReverseGeocoder) Observers notified successfully');
 				})
 				.catch((error) => {
 					// ERROR HANDLING:
@@ -295,7 +364,7 @@ class ReverseGeocoder {
 					// Ensures application continues functioning even when geocoding fails
 					console.error("(ReverseGeocoder) Reverse geocoding failed:", error);
 					this.error = error;
-					this.notifyObservers(posEvent);
+					this.notifyObservers(null, null, posEvent, false, error);
 				});
 		}
 	}
@@ -438,6 +507,9 @@ class ReverseGeocoder {
 // This dual export strategy aligns with the project's approach of supporting both ES6
 // modules and traditional script loading patterns.
 
-// Export as both default and named export for maximum compatibility
 export default ReverseGeocoder;
+/**
+ * Module exports for reverse geocoding service.
+ * @exports ReverseGeocoder - OpenStreetMap Nominatim reverse geocoding integration
+ */
 export { ReverseGeocoder };

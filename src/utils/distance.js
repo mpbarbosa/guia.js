@@ -11,7 +11,10 @@
  * @author Marcelo Pereira Barbosa
  */
 
-/** Earth's radius in meters (mean radius) */
+/**
+ * Earth's mean radius in meters used for Haversine distance calculations.
+ * @constant {number}
+ */
 export const EARTH_RADIUS_METERS = 6371e3;
 
 /**

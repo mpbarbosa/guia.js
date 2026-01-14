@@ -6,9 +6,9 @@ import { isMobileDevice } from './utils/device.js';
 
 // Import configuration
 import { 
-	GUIA_VERSION,
-	GUIA_NAME,
-	GUIA_AUTHOR,
+	APP_VERSION,
+	APP_NAME,
+	APP_AUTHOR,
 	createDefaultConfig 
 } from './config/defaults.js';
 
@@ -168,9 +168,9 @@ if (typeof window !== 'undefined') {
 }
 
 // Use configuration from imported module
-const guiaVersion = GUIA_VERSION;
-const guiaName = GUIA_NAME;
-const guiaAuthor = GUIA_AUTHOR;
+const guiaVersion = APP_VERSION;
+const guiaName = APP_NAME;
+const guiaAuthor = APP_AUTHOR;
 const setupParams = createDefaultConfig();
 
 const getOpenStreetMapUrl = (latitude, longitude) =>
@@ -399,7 +399,46 @@ function fetchCityStatistics(latitude, longitude) {
 }
 
 
-// Export for ES6 module system
+/**
+ * Module exports for Guia.js library.
+ * 
+ * Provides comprehensive geolocation and geocoding functionality for Brazilian addresses.
+ * 
+ * @exports guiaVersion - Library version information
+ * @exports calculateDistance - Haversine distance calculation between coordinates
+ * @exports delay - Promise-based delay utility
+ * @exports getAddressType - Address type classification
+ * @exports isMobileDevice - Device type detection
+ * @exports setupParams - Global configuration parameters
+ * @exports DEFAULT_ELEMENT_IDS - Default HTML element IDs
+ * @exports ObserverSubject - Observer pattern implementation
+ * @exports GeoPosition - Immutable position value object
+ * @exports PositionManager - Singleton position state manager
+ * @exports SingletonStatusManager - Status management across components
+ * @exports ReverseGeocoder - OpenStreetMap geocoding service
+ * @exports GeolocationService - Browser geolocation API wrapper
+ * @exports GeolocationProvider - Abstract geolocation provider base
+ * @exports BrowserGeolocationProvider - Native browser geolocation
+ * @exports MockGeolocationProvider - Test double for geolocation
+ * @exports ChangeDetectionCoordinator - Change notification coordinator
+ * @exports WebGeocodingManager - Main application coordinator
+ * @exports BrazilianStandardAddress - Brazilian address model
+ * @exports ReferencePlace - Reference location with distance
+ * @exports AddressExtractor - Address data extraction
+ * @exports AddressCache - LRU cache for addresses
+ * @exports AddressDataExtractor - Facade for extraction and caching
+ * @exports HTMLPositionDisplayer - HTML coordinate renderer
+ * @exports HTMLAddressDisplayer - HTML address formatter
+ * @exports HTMLReferencePlaceDisplayer - HTML reference location renderer
+ * @exports DisplayerFactory - Factory for display components
+ * @exports SpeechSynthesisManager - Text-to-speech manager
+ * @exports SpeechQueue - Speech item queue
+ * @exports SpeechItem - Individual speech item
+ * @exports HtmlText - HTML text utilities
+ * @exports Chronometer - Timing and performance measurement
+ * @exports findNearbyRestaurants - Restaurant search placeholder
+ * @exports fetchCityStatistics - City statistics placeholder
+ */
 export {
 	guiaVersion,
 	calculateDistance,

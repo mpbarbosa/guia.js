@@ -323,6 +323,9 @@ class MockGeolocationProvider extends GeolocationProvider {
 	}
 }
 
-// Export as both default and named export for compatibility
 export default MockGeolocationProvider;
+/**
+ * Module exports for mock geolocation provider.
+ * @exports MockGeolocationProvider - Test double for geolocation in automated tests
+ */
 export { MockGeolocationProvider };

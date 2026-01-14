@@ -253,6 +253,9 @@ class SpeechCoordinator {
     }
 }
 
-// Export default and named export for flexibility
 export default SpeechCoordinator;
+/**
+ * Module exports for speech coordination.
+ * @exports SpeechCoordinator - Main speech synthesis coordinator class
+ */
 export { SpeechCoordinator };

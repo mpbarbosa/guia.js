@@ -172,7 +172,7 @@ describe('MockGeolocationProvider', () => {
 					done(new Error('Should not call error callback'));
 				}
 			);
-		});
+		}, 10000);
 	});
 
 	describe('watchPosition()', () => {

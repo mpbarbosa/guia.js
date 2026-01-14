@@ -1165,4 +1165,8 @@ class AddressCache {
  */
 
 export default AddressCache;
+/**
+ * Module exports for address caching.
+ * @exports AddressCache - LRU cache for geocoded addresses
+ */
 export { AddressCache };

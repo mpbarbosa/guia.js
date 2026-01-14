@@ -1101,8 +1101,9 @@ class SpeechSynthesisManager {
     }
 }
 
-// Export the class as default export
 export default SpeechSynthesisManager;
-
-// Export configuration constants for external use if needed
+/**
+ * Module exports for speech synthesis management.
+ * @exports SPEECH_CONFIG - Default speech synthesis configuration
+ */
 export { SPEECH_CONFIG };

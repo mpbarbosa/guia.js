@@ -121,9 +121,12 @@ import { log, warn, error } from '../utils/logger.js';
  */
 const DEFAULT_ELEMENT_IDS = {
 	chronometer: "chronometer",
-	findRestaurantsBtn: "find-restaurants-btn",
-	cityStatsBtn: "city-stats-btn",
-	timestampDisplay: "tsPosCapture",
+	findRestaurantsBtn: "findRestaurantsBtn",
+	cityStatsBtn: "cityStatsBtn",
+	timestampDisplay: "chronometer",
+	positionDisplay: "lat-long-display",
+	referencePlaceDisplay: "reference-place-display",
+	enderecoPadronizadoDisplay: "endereco-padronizado-display",
 	speechSynthesis: {
 		languageSelectId: "language",
 		voiceSelectId: "voice-select",
@@ -299,12 +302,17 @@ class WebGeocodingManager {
 			this.locationResult = params.locationResult;
 		}
 		
-		this.enderecoPadronizadoDisplay = params.enderecoPadronizadoDisplay || null;
-		this.referencePlaceDisplay = params.referencePlaceDisplay || null;
-
 		// Store element IDs configuration (frozen to prevent mutations)
 		this.elementIds = params.elementIds || DEFAULT_ELEMENT_IDS;
 		Object.freeze(this.elementIds);
+
+		// Resolve display elements from element IDs or use provided params
+		this.positionDisplay = params.positionDisplay || 
+			(this.elementIds.positionDisplay ? document.getElementById(this.elementIds.positionDisplay) : null);
+		this.enderecoPadronizadoDisplay = params.enderecoPadronizadoDisplay || 
+			(this.elementIds.enderecoPadronizadoDisplay ? document.getElementById(this.elementIds.enderecoPadronizadoDisplay) : null);
+		this.referencePlaceDisplay = params.referencePlaceDisplay || 
+			(this.elementIds.referencePlaceDisplay ? document.getElementById(this.elementIds.referencePlaceDisplay) : null);
 
 		// Store displayer factory (enables dependency injection for testing)
 		this.displayerFactory = params.displayerFactory || DisplayerFactory;
@@ -344,12 +352,14 @@ class WebGeocodingManager {
 			changeDetectionCoordinator: this.changeDetectionCoordinator,
 			observerSubject: this.observerSubject,
 			locationResultElement: this.locationResult,
-			displayerFactory: this.displayerFactory
+			displayerFactory: this.displayerFactory,
+			document: document
 		});
 
 		// Create displayers and wire observers via ServiceCoordinator
 		this.serviceCoordinator
 			.createDisplayers(
+				this.positionDisplay,
 				this.enderecoPadronizadoDisplay,
 				this.referencePlaceDisplay
 			)
@@ -962,6 +972,10 @@ class WebGeocodingManager {
 	}
 }
 
-// Export default and named export for flexibility
 export default WebGeocodingManager;
+/**
+ * Module exports for web geocoding management.
+ * @exports WebGeocodingManager - Main geocoding coordinator class
+ * @exports DEFAULT_ELEMENT_IDS - Default HTML element IDs configuration
+ */
 export { WebGeocodingManager, DEFAULT_ELEMENT_IDS };

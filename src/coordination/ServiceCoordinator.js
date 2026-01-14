@@ -39,6 +39,7 @@
 
 import PositionManager from '../core/PositionManager.js';
 import { log, warn, error as logError } from '../utils/logger.js';
+import HTMLHighlightCardsDisplayer from '../html/HTMLHighlightCardsDisplayer.js';
 
 /**
  * ServiceCoordinator class - Manages service lifecycle and coordination
@@ -71,6 +72,10 @@ class ServiceCoordinator {
         if (!params) {
             throw new TypeError('ServiceCoordinator: params object is required');
         }
+        console.log('>>> (ServiceCoordinator) constructor called with params:', params);
+        console.log('>>> (ServiceCoordinator) document:', params.document);
+        console.log('>>> (ServiceCoordinator) displayerFactory:', params.displayerFactory);
+        console.log('>>> (ServiceCoordinator) geolocationService:', params.geolocationService); 
         if (!params.geolocationService) {
             throw new TypeError('ServiceCoordinator: geolocationService is required');
         }
@@ -90,6 +95,13 @@ class ServiceCoordinator {
          * @private
          */
         this._geolocationService = params.geolocationService;
+        
+        /**
+         * Document object for DOM manipulation
+         * @type {Document}
+         * @private
+         */
+        this._document = params.document;
 
         /**
          * Reverse geocoder for address lookup
@@ -172,7 +184,8 @@ class ServiceCoordinator {
             ),
             referencePlace: this._displayerFactory.createReferencePlaceDisplayer(
                 referencePlaceDisplay
-            )
+            ),
+            highlightCards: this._document ? new HTMLHighlightCardsDisplayer(this._document) : null
         };
 
         Object.freeze(this._displayers);
@@ -180,7 +193,8 @@ class ServiceCoordinator {
         log('ServiceCoordinator: Displayers created', {
             position: !!this._displayers.position,
             address: !!this._displayers.address,
-            referencePlace: !!this._displayers.referencePlace
+            referencePlace: !!this._displayers.referencePlace,
+            highlightCards: !!this._displayers.highlightCards
         });
 
         return this;
@@ -218,6 +232,16 @@ class ServiceCoordinator {
         if (this._reverseGeocoder) {
             positionManager.subscribe(this._reverseGeocoder);
             log('ServiceCoordinator: Reverse geocoder wired');
+            
+            // Subscribe highlight cards displayer to address updates
+            if (this._displayers.highlightCards) {
+                console.log('(ServiceCoordinator) Subscribing HTMLHighlightCardsDisplayer to ReverseGeocoder');
+                this._reverseGeocoder.subscribe(this._displayers.highlightCards);
+                log('ServiceCoordinator: Highlight cards displayer wired');
+                console.log('(ServiceCoordinator) ReverseGeocoder now has', this._reverseGeocoder.observerSubject.observers.length, 'observers');
+            } else {
+                console.warn('(ServiceCoordinator) highlightCards displayer is null, cannot subscribe!');
+            }
         }
 
         this._initialized = true;

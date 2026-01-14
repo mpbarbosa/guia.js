@@ -141,4 +141,8 @@ class ReferencePlace {
 }
 
 export default ReferencePlace;
+/**
+ * Module exports for reference place management.
+ * @exports ReferencePlace - Immutable reference location with distance calculations
+ */
 export { ReferencePlace };

@@ -236,8 +236,11 @@ class HTMLAddressDisplayer {
 	}
 }
 
-// Export as both default and named export for flexibility
 export default HTMLAddressDisplayer;
+/**
+ * Module exports for HTML address display.
+ * @exports HTMLAddressDisplayer - Renders formatted Brazilian addresses in HTML
+ */
 export { HTMLAddressDisplayer };
 
 // Export to window for browser compatibility

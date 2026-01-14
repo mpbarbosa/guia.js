@@ -241,6 +241,9 @@ Object.defineProperties(AddressDataExtractor, {
 	}
 });
 
-// Export as both default and named export for flexibility
 export default AddressDataExtractor;
+/**
+ * Module exports for address data extraction.
+ * @exports AddressDataExtractor - Facade for address extraction and caching operations
+ */
 export { AddressDataExtractor };

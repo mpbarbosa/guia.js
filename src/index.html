@@ -3,6 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guia Turístico - Localização - Guia Turístico</title>
     
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
     <!-- Resource Hints for Performance -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
     <link rel="dns-prefetch" href="https://nominatim.openstreetmap.org">
@@ -27,6 +30,7 @@
     <link rel="stylesheet" href="tooltip.css">
     <link rel="stylesheet" href="noscript.css">
     <link rel="stylesheet" href="transitions.css">
+    <link rel="stylesheet" href="highlight-cards.css">
     
     <!-- App Shell Styles -->
     <style>
@@ -234,18 +238,6 @@
         </p>
       </header>
 
-      <!-- Tracking Mode Toggle -->
-      <section class="tracking-mode-section" aria-label="Modo de rastreamento">
-        <div class="tracking-mode-toggle">
-          <input type="checkbox" id="continuous-tracking-toggle" aria-describedby="tracking-mode-description" role="switch" aria-checked="true">
-          <label for="continuous-tracking-toggle">
-            <strong>Rastreamento de Localização</strong>
-            <span id="tracking-mode-description" class="toggle-description">
-              Rastreie sua localização automaticamente enquanto você se move
-            </span>
-          </label>
-        </div>
-      </section>
       
       <!-- Geolocation status banner container -->
       <div id="geolocation-banner-container"></div>

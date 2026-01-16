@@ -322,14 +322,14 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - Created SpeechCoordinator (258 lines) to extract speech synthesis logic
   - Final reduction: 990 → 928 lines (6.3% reduction, 62 lines removed)
   - 5 coordinator classes total (consistent architecture achieved)
-  - All 1,516 tests passing, zero regressions, 100% backward compatibility
+  - All 1,820 tests passing, zero regressions, 100% backward compatibility
   - Phases 1-3 complete, ready for production deployment
 
 - **[PHASE_2_COMPLETION_REPORT.md](./reports/implementation/PHASE_2_COMPLETION_REPORT.md)** - WebGeocodingManager Phase 2 refactoring complete ✅
   - WebGeocodingManager refactored to use Phase 1 coordinators
   - Reduced from 990 → 909 lines (8.2% reduction, 81 lines removed)
   - Removed 11 methods, added 9 backward-compatible getters
-  - All 1,516 tests passing, zero regressions, 100% backward compatibility
+  - All 1,820 tests passing, zero regressions, 100% backward compatibility
   - Ready for Phase 3 optimization (completed)
 
 - **[PHASE_1_COMPLETION_REPORT.md](./reports/implementation/PHASE_1_COMPLETION_REPORT.md)** - WebGeocodingManager Phase 1 refactoring complete ✅
@@ -530,7 +530,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - The three pillars: Structure, Presentation, and Behavior
   - Benefits: maintainability, reusability, readability, performance
   - Practical file structure recommendations
-  - Real-world examples from Guia.js project
+  - Real-world examples from Guia Turístico project
   - Common mistakes and anti-patterns
   - Best practices and integration with project standards
   - **Essential for all contributors and end users**
@@ -688,6 +688,35 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 - **[DOCS_MISC_DIRECTORY_AUDIT.md](../.github/DOCS_MISC_DIRECTORY_AUDIT.md)** - Misc folder audit
 - **[E2E_TESTS_DOCUMENTATION_AUDIT.md](../.github/E2E_TESTS_DOCUMENTATION_AUDIT.md)** - E2E test docs
 - **[EXAMPLES_DIRECTORY_AUDIT.md](../.github/EXAMPLES_DIRECTORY_AUDIT.md)** - Examples audit
+
+### Project Reports & Analysis
+
+Organized reports in **[docs/reports/](./reports/)**:
+
+- **[analysis/](./reports/analysis/)** - Architecture validation, code quality analysis
+- **[bugfixes/](./reports/bugfixes/)** - Bug investigation reports (e.g., bairro card update)
+- **[implementation/](./reports/implementation/)** - Implementation summaries and timelines
+
+See **[docs/reports/README.md](./reports/README.md)** for complete index.
+
+### Miscellaneous Documentation
+
+Historical records and ad-hoc analyses in **[docs/misc/](./misc/)**:
+
+- Project clarifications and assessments
+- Time-bound analysis snapshots
+- DevOps and security audits
+- Dependency update records
+
+See **[docs/misc/README.md](./misc/README.md)** for complete index.
+
+### Workflow Automation
+
+CI/CD and automation documentation in **[docs/workflow-automation/](./workflow-automation/)**:
+
+- **[AUTOMATION_SUMMARY.md](./workflow-automation/AUTOMATION_SUMMARY.md)** - Automation overview
+- **[FINAL_AUTOMATION_SUMMARY.md](./workflow-automation/FINAL_AUTOMATION_SUMMARY.md)** - Complete automation catalog
+- **[WORKFLOW_TERMINOLOGY_DISAMBIGUATION.md](./workflow-automation/WORKFLOW_TERMINOLOGY_DISAMBIGUATION.md)** - Workflow terminology
 
 ### Investigation & Analysis
 

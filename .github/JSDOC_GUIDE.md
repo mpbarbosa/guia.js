@@ -1,6 +1,6 @@
 # JSDoc Documentation Standards
 
-This guide defines the JSDoc documentation standards for the Guia.js project.
+This guide defines the JSDoc documentation standards for the Guia Turístico project.
 
 ## Table of Contents
 

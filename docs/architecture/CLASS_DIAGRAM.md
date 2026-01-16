@@ -1,6 +1,6 @@
-# Guia.js - Class Diagram Summary
+# Guia Turístico - Class Diagram Summary
 
-This document provides a comprehensive overview of the Guia.js class architecture, with particular emphasis on the refactoring implemented in PR #121 that split the `AddressDataExtractor` class into specialized components following the Single Responsibility Principle.
+This document provides a comprehensive overview of the Guia Turístico class architecture, with particular emphasis on the refactoring implemented in PR #121 that split the `AddressDataExtractor` class into specialized components following the Single Responsibility Principle.
 
 ## Overview
 

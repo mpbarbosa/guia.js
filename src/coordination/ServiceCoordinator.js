@@ -154,6 +154,19 @@ class ServiceCoordinator {
     }
 
     /**
+     * Gets the geolocation service instance.
+     * 
+     * Exposes the private _geolocationService for external access.
+     * Needed for testing and backward compatibility.
+     * 
+     * @returns {GeolocationService} The geolocation service instance
+     * @since 0.8.4-alpha
+     */
+    get geolocationService() {
+        return this._geolocationService;
+    }
+
+    /**
      * Create and configure all displayers
      * 
      * Creates displayers for position, address, and reference place using

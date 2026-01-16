@@ -49,6 +49,7 @@
     "transform": {},
     "transformIgnorePatterns": [],
     "workerThreads": true,
+    "cacheDirectory": ".jest-cache",
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/**/*.test.js",
@@ -78,7 +79,7 @@
     "husky": "^9.1.7",
     "jest": "^30.1.3",
     "jsdom": "^25.0.1",
-    "puppeteer": "^24.34.0"
+    "puppeteer": "^24.35.0"
   },
   "dependencies": {
     "guia.js": "github:mpbarbosa/guia_js",

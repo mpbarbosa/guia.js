@@ -50,7 +50,7 @@ Guia Turístico SHALL be treated as a **Single-Page Web Application** with the f
 - Project structure analysis shows 100% web application characteristics
 - `src/index.html` is the main entry point for users
 - `src/app.js` contains SPA routing and initialization logic
-- 1,653 tests validate application functionality (1,516 passing)
+- 1,882 tests validate application functionality (1,739 passing)
 - Uses Guia.js library (from https://github.com/mpbarbosa/guia_js) as a dependency
 - Designed for end-user interaction, not developer integration
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide explains the automated workflows in the Guia.js project that help maintain code quality and documentation consistency.
+This guide explains the automated workflows in the Guia Turístico project that help maintain code quality and documentation consistency.
 
 ## Automated File Modification Workflow
 

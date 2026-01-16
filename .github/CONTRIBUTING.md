@@ -1,6 +1,6 @@
-# Contributing to Guia.js
+# Contributing to Guia Turístico
 
-Thank you for your interest in contributing to Guia.js! This document provides guidelines and best practices for contributing to this project.
+Thank you for your interest in contributing to Guia Turístico! This document provides guidelines and best practices for contributing to this project.
 
 ## Table of Contents
 
@@ -15,7 +15,7 @@ Thank you for your interest in contributing to Guia.js! This document provides g
 
 ### Issue Templates
 
-Guia.js provides several issue templates to help structure and communicate different types of work:
+Guia Turístico provides several issue templates to help structure and communicate different types of work:
 
 #### Agile Ticket Template (agile-ticket.yml)
 
@@ -72,7 +72,7 @@ Use the **Agile Ticket** template to create actionable user stories and tasks. T
 
 ### Why It Matters for Contributors
 
-Writing referentially transparent code makes the Guia.js project more:
+Writing referentially transparent code makes the Guia Turístico project more:
 - **Predictable**: Easier to understand and reason about
 - **Testable**: Simple to test without complex setup
 - **Maintainable**: Changes have localized effects
@@ -420,6 +420,118 @@ When reviewing code (your own or others'), check for:
 - [ ] `filter()` used instead of `splice()` for removing items
 - [ ] Observer arrays managed immutably
 - [ ] Cache operations don't mutate shared state
+
+## Development Setup
+
+### Git Hooks Installation
+
+Guia Turístico uses **Husky** to manage Git hooks that ensure code quality before commits and pushes.
+
+#### Automatic Installation (Recommended)
+
+Git hooks are automatically installed when you run:
+
+```bash
+npm install
+```
+
+This triggers the `prepare` script in `package.json` which sets up Husky hooks in `.husky/`.
+
+#### Manual Installation (Alternative)
+
+If automatic installation fails, you can manually set up hooks:
+
+```bash
+# Install Husky and set up hooks
+npm run prepare
+
+# Verify hooks are installed
+ls -la .husky/
+```
+
+#### Available Hooks
+
+**Pre-commit Hook** (`.husky/pre-commit`)
+- **Trigger**: Before each commit
+- **Duration**: ~1-2 seconds
+- **Actions**:
+  1. ✓ Validates JavaScript syntax (`npm run validate`)
+  2. ✓ Runs tests for changed files (`npm run test:changed`)
+- **Purpose**: Fast feedback on code quality
+- **Bypass** (use sparingly): `git commit --no-verify`
+
+**Legacy Documentation Hook** (`.github/hooks/pre-commit`)
+- **Purpose**: Documentation consistency validation
+- **Status**: Reference implementation (not auto-installed)
+- **Checks**:
+  - Version consistency across docs
+  - Test count accuracy
+  - "Last Updated" date freshness
+  - Broken link detection
+  - Code example validity
+- **Manual Installation**:
+  ```bash
+  cp .github/hooks/pre-commit .git/hooks/pre-commit
+  chmod +x .git/hooks/pre-commit
+  ```
+
+#### Troubleshooting Hooks
+
+**Hooks not running?**
+```bash
+# Reinstall Husky
+rm -rf .husky
+npm run prepare
+
+# Check Git hooks are executable
+ls -la .husky/pre-commit
+# Should show: -rwxr-xr-x (executable flag)
+```
+
+**Hook failing unexpectedly?**
+```bash
+# Run hook commands manually to see detailed errors
+npm run validate
+npm run test:changed
+
+# Check Node.js version (requires v18+)
+node --version
+```
+
+**Need to commit despite failing hooks?**
+```bash
+# Bypass hooks (use only when necessary!)
+git commit --no-verify -m "your message"
+
+# Then fix issues immediately after:
+npm run test:all
+```
+
+### Environment Requirements
+
+- **Node.js**: v18+ (tested with v20.19.5)
+- **npm**: 10+ for package management
+- **Python**: 3.11+ (for Python E2E tests only)
+- **Git**: 2.30+ (for Husky hook support)
+
+### Initial Project Setup
+
+```bash
+# 1. Clone repository
+git clone https://github.com/mpbarbosa/guia_turistico.git
+cd guia_turistico
+
+# 2. Install dependencies (includes Husky setup)
+npm install
+
+# 3. Verify installation
+npm run validate
+npm test
+
+# 4. Start development server
+python3 -m http.server 9000
+# Open http://localhost:9000/src/index.html
+```
 
 ## Testing Guidelines
 

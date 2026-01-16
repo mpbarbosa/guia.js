@@ -1,0 +1,685 @@
+/**
+ * @file SpeechCoordinator Tests
+ * @description Unit tests for SpeechCoordinator class
+ * @since 0.8.6-alpha
+ * 
+ * **Test Coverage Goals**:
+ * - Constructor validation and initialization
+ * - Speech synthesis initialization (lines 147-174)
+ * - Observer subscription wiring
+ * - Idempotent initialization behavior
+ * - Error handling during initialization
+ * - Resource cleanup and destruction
+ * - Getter methods and state management
+ * 
+ * **Target Coverage**: 100% of SpeechCoordinator.js (261 lines)
+ */
+
+import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globals';
+import SpeechCoordinator from '../../src/coordination/SpeechCoordinator.js';
+
+/**
+ * Creates a minimal mock document for testing
+ * @returns {Object} Mock document with getElementById method
+ */
+function createMockDocument() {
+    const mockElements = {
+        languageSelect: { value: 'pt-BR', addEventListener: jest.fn() },
+        voiceSelect: { value: 'voice-1', addEventListener: jest.fn(), innerHTML: '' },
+        textInput: { value: '', addEventListener: jest.fn() },
+        speakBtn: { addEventListener: jest.fn(), disabled: false },
+        pauseBtn: { addEventListener: jest.fn(), disabled: true },
+        resumeBtn: { addEventListener: jest.fn(), disabled: true },
+        stopBtn: { addEventListener: jest.fn(), disabled: true },
+        rateInput: { value: '1', addEventListener: jest.fn() },
+        rateValue: { textContent: '1' },
+        pitchInput: { value: '1', addEventListener: jest.fn() },
+        pitchValue: { textContent: '1' }
+    };
+    
+    return {
+        getElementById: jest.fn((id) => {
+            const elementMap = {
+                'languageSelect': mockElements.languageSelect,
+                'voiceSelect': mockElements.voiceSelect,
+                'textInput': mockElements.textInput,
+                'speakBtn': mockElements.speakBtn,
+                'pauseBtn': mockElements.pauseBtn,
+                'resumeBtn': mockElements.resumeBtn,
+                'stopBtn': mockElements.stopBtn,
+                'rateInput': mockElements.rateInput,
+                'rateValue': mockElements.rateValue,
+                'pitchInput': mockElements.pitchInput,
+                'pitchValue': mockElements.pitchValue
+            };
+            return elementMap[id] || null;
+        }),
+        createElement: jest.fn(() => ({
+            textContent: '',
+            value: ''
+        }))
+    };
+}
+
+/**
+ * Creates mock dependencies for SpeechCoordinator
+ * @returns {Object} Mock reverseGeocoder and observerSubject
+ */
+function createMockDependencies() {
+    return {
+        reverseGeocoder: {
+            subscribe: jest.fn(),
+            unsubscribe: jest.fn(),
+            currentAddress: null,
+            enderecoPadronizado: null
+        },
+        observerSubject: {
+            subscribe: jest.fn(),
+            unsubscribe: jest.fn(),
+            observers: []
+        }
+    };
+}
+
+/**
+ * Creates element IDs configuration for speech synthesis
+ * @returns {Object} Element IDs configuration
+ */
+function createElementIds() {
+    return {
+        languageSelectId: 'languageSelect',
+        voiceSelectId: 'voiceSelect',
+        textInputId: 'textInput',
+        speakBtnId: 'speakBtn',
+        pauseBtnId: 'pauseBtn',
+        resumeBtnId: 'resumeBtn',
+        stopBtnId: 'stopBtn',
+        rateInputId: 'rateInput',
+        rateValueId: 'rateValue',
+        pitchInputId: 'pitchInput',
+        pitchValueId: 'pitchValue'
+    };
+}
+
+describe('SpeechCoordinator', () => {
+    let mockDocument;
+    let mockDeps;
+    let elementIds;
+    let coordinator;
+    
+    beforeEach(() => {
+        mockDocument = createMockDocument();
+        mockDeps = createMockDependencies();
+        elementIds = createElementIds();
+        
+        // Mock Web Speech API on window object
+        global.window = {
+            speechSynthesis: {
+                getVoices: jest.fn(() => [
+                    { lang: 'pt-BR', name: 'Portuguese Voice', default: true },
+                    { lang: 'en-US', name: 'English Voice', default: false }
+                ]),
+                speak: jest.fn(),
+                cancel: jest.fn(),
+                pause: jest.fn(),
+                resume: jest.fn(),
+                speaking: false,
+                paused: false,
+                pending: false,
+                addEventListener: jest.fn()
+            },
+            SpeechSynthesisUtterance: jest.fn(function(text) {
+                this.text = text;
+                this.lang = 'pt-BR';
+                this.voice = null;
+                this.volume = 1;
+                this.rate = 1;
+                this.pitch = 1;
+                this.onstart = null;
+                this.onend = null;
+                this.onerror = null;
+            })
+        };
+        
+        jest.clearAllMocks();
+    });
+    
+    afterEach(() => {
+        if (coordinator && typeof coordinator.destroy === 'function') {
+            coordinator.destroy();
+        }
+        coordinator = null;
+        
+        delete global.window;
+    });
+    
+    describe('Constructor', () => {
+        test('should create instance with valid parameters', () => {
+            // Act
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Assert
+            expect(coordinator).toBeDefined();
+            expect(coordinator).toBeInstanceOf(SpeechCoordinator);
+        });
+        
+        test('should throw TypeError when document is missing', () => {
+            // Act & Assert
+            expect(() => {
+                new SpeechCoordinator(
+                    null,
+                    elementIds,
+                    mockDeps.reverseGeocoder,
+                    mockDeps.observerSubject
+                );
+            }).toThrow(TypeError);
+            expect(() => {
+                new SpeechCoordinator(
+                    null,
+                    elementIds,
+                    mockDeps.reverseGeocoder,
+                    mockDeps.observerSubject
+                );
+            }).toThrow('document is required');
+        });
+        
+        test('should throw TypeError when elementIds is missing', () => {
+            // Act & Assert
+            expect(() => {
+                new SpeechCoordinator(
+                    mockDocument,
+                    null,
+                    mockDeps.reverseGeocoder,
+                    mockDeps.observerSubject
+                );
+            }).toThrow(TypeError);
+            expect(() => {
+                new SpeechCoordinator(
+                    mockDocument,
+                    null,
+                    mockDeps.reverseGeocoder,
+                    mockDeps.observerSubject
+                );
+            }).toThrow('elementIds is required');
+        });
+        
+        test('should throw TypeError when reverseGeocoder is missing', () => {
+            // Act & Assert
+            expect(() => {
+                new SpeechCoordinator(
+                    mockDocument,
+                    elementIds,
+                    null,
+                    mockDeps.observerSubject
+                );
+            }).toThrow(TypeError);
+            expect(() => {
+                new SpeechCoordinator(
+                    mockDocument,
+                    elementIds,
+                    null,
+                    mockDeps.observerSubject
+                );
+            }).toThrow('reverseGeocoder is required');
+        });
+        
+        test('should throw TypeError when observerSubject is missing', () => {
+            // Act & Assert
+            expect(() => {
+                new SpeechCoordinator(
+                    mockDocument,
+                    elementIds,
+                    mockDeps.reverseGeocoder,
+                    null
+                );
+            }).toThrow(TypeError);
+            expect(() => {
+                new SpeechCoordinator(
+                    mockDocument,
+                    elementIds,
+                    mockDeps.reverseGeocoder,
+                    null
+                );
+            }).toThrow('observerSubject is required');
+        });
+        
+        test('should initialize with not initialized state', () => {
+            // Act
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Assert
+            expect(coordinator.isInitialized()).toBe(false);
+            expect(coordinator.getSpeechDisplayer()).toBeNull();
+        });
+    });
+    
+    describe('Speech Synthesis Initialization', () => {
+        test('should initialize speech synthesis successfully', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act
+            const result = coordinator.initializeSpeechSynthesis();
+            
+            // Assert
+            expect(result).toBe(coordinator); // Chaining
+            expect(coordinator.isInitialized()).toBe(true);
+            expect(coordinator.getSpeechDisplayer()).toBeTruthy();
+        });
+        
+        test('should subscribe displayer to reverseGeocoder', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act
+            coordinator.initializeSpeechSynthesis();
+            
+            // Assert
+            expect(mockDeps.reverseGeocoder.subscribe).toHaveBeenCalledTimes(1);
+            expect(mockDeps.reverseGeocoder.subscribe).toHaveBeenCalledWith(
+                expect.any(Object)
+            );
+        });
+        
+        test('should subscribe displayer to observerSubject', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act
+            coordinator.initializeSpeechSynthesis();
+            
+            // Assert
+            expect(mockDeps.observerSubject.subscribe).toHaveBeenCalledTimes(1);
+            expect(mockDeps.observerSubject.subscribe).toHaveBeenCalledWith(
+                expect.any(Object)
+            );
+        });
+        
+        test('should freeze displayer after initialization', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act
+            coordinator.initializeSpeechSynthesis();
+            const displayer = coordinator.getSpeechDisplayer();
+            
+            // Assert
+            expect(Object.isFrozen(displayer)).toBe(true);
+        });
+        
+        test('should be idempotent when called multiple times', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act
+            coordinator.initializeSpeechSynthesis();
+            const firstDisplayer = coordinator.getSpeechDisplayer();
+            
+            coordinator.initializeSpeechSynthesis(); // Second call
+            const secondDisplayer = coordinator.getSpeechDisplayer();
+            
+            // Assert
+            expect(firstDisplayer).toBe(secondDisplayer);
+            expect(mockDeps.reverseGeocoder.subscribe).toHaveBeenCalledTimes(1);
+            expect(mockDeps.observerSubject.subscribe).toHaveBeenCalledTimes(1);
+        });
+        
+        test('should handle initialization errors gracefully', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Make HtmlSpeechSynthesisDisplayer constructor throw
+            mockDocument.getElementById = jest.fn(() => {
+                throw new Error('Element not found');
+            });
+            
+            // Act - should not throw
+            expect(() => {
+                coordinator.initializeSpeechSynthesis();
+            }).not.toThrow();
+            
+            // Assert - should not be initialized
+            expect(coordinator.isInitialized()).toBe(false);
+            expect(coordinator.getSpeechDisplayer()).toBeNull();
+        });
+    });
+    
+    describe('Getter Methods', () => {
+        test('should return elementIds via getter', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act
+            const ids = coordinator.elementIds;
+            
+            // Assert
+            expect(ids).toBe(elementIds);
+            expect(ids.languageSelectId).toBe('languageSelect');
+        });
+        
+        test('should return null for speech displayer before initialization', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act
+            const displayer = coordinator.getSpeechDisplayer();
+            
+            // Assert
+            expect(displayer).toBeNull();
+        });
+        
+        test('should return displayer instance after initialization', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            coordinator.initializeSpeechSynthesis();
+            
+            // Act
+            const displayer = coordinator.getSpeechDisplayer();
+            
+            // Assert
+            expect(displayer).toBeTruthy();
+            expect(displayer).toBeInstanceOf(Object);
+        });
+        
+        test('should return false for isInitialized before initialization', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act
+            const initialized = coordinator.isInitialized();
+            
+            // Assert
+            expect(initialized).toBe(false);
+        });
+        
+        test('should return true for isInitialized after initialization', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            coordinator.initializeSpeechSynthesis();
+            
+            // Act
+            const initialized = coordinator.isInitialized();
+            
+            // Assert
+            expect(initialized).toBe(true);
+        });
+    });
+    
+    describe('Resource Cleanup', () => {
+        test('should unsubscribe displayer from reverseGeocoder on destroy', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            coordinator.initializeSpeechSynthesis();
+            const displayer = coordinator.getSpeechDisplayer();
+            
+            // Act
+            coordinator.destroy();
+            
+            // Assert
+            expect(mockDeps.reverseGeocoder.unsubscribe).toHaveBeenCalledTimes(1);
+            expect(mockDeps.reverseGeocoder.unsubscribe).toHaveBeenCalledWith(displayer);
+        });
+        
+        test('should unsubscribe displayer from observerSubject on destroy', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            coordinator.initializeSpeechSynthesis();
+            const displayer = coordinator.getSpeechDisplayer();
+            
+            // Act
+            coordinator.destroy();
+            
+            // Assert
+            expect(mockDeps.observerSubject.unsubscribe).toHaveBeenCalledTimes(1);
+            expect(mockDeps.observerSubject.unsubscribe).toHaveBeenCalledWith(displayer);
+        });
+        
+        test('should reset initialized state on destroy', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            coordinator.initializeSpeechSynthesis();
+            
+            // Act
+            coordinator.destroy();
+            
+            // Assert
+            expect(coordinator.isInitialized()).toBe(false);
+            expect(coordinator.getSpeechDisplayer()).toBeNull();
+        });
+        
+        test('should handle destroy when not initialized', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act - should not throw
+            expect(() => {
+                coordinator.destroy();
+            }).not.toThrow();
+            
+            // Assert
+            expect(mockDeps.reverseGeocoder.unsubscribe).not.toHaveBeenCalled();
+            expect(mockDeps.observerSubject.unsubscribe).not.toHaveBeenCalled();
+        });
+        
+        test('should handle destroy with null dependencies', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            coordinator.initializeSpeechSynthesis();
+            
+            // Null out dependencies
+            coordinator._reverseGeocoder = null;
+            coordinator._observerSubject = null;
+            
+            // Act - should not throw
+            expect(() => {
+                coordinator.destroy();
+            }).not.toThrow();
+        });
+    });
+    
+    describe('String Representation', () => {
+        test('should return "not initialized" string before initialization', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act
+            const str = coordinator.toString();
+            
+            // Assert
+            expect(str).toContain('SpeechCoordinator');
+            expect(str).toContain('not initialized');
+        });
+        
+        test('should return "initialized" string after initialization', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            coordinator.initializeSpeechSynthesis();
+            
+            // Act
+            const str = coordinator.toString();
+            
+            // Assert
+            expect(str).toContain('SpeechCoordinator');
+            expect(str).toContain('initialized');
+            expect(str).not.toContain('not initialized');
+        });
+        
+        test('should return "not initialized" string after destroy', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            coordinator.initializeSpeechSynthesis();
+            coordinator.destroy();
+            
+            // Act
+            const str = coordinator.toString();
+            
+            // Assert
+            expect(str).toContain('not initialized');
+        });
+    });
+    
+    describe('Edge Cases', () => {
+        test('should handle missing DOM elements gracefully', () => {
+            // Arrange
+            mockDocument.getElementById = jest.fn(() => null);
+            
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act - should not throw during construction
+            expect(() => {
+                coordinator.initializeSpeechSynthesis();
+            }).not.toThrow();
+            
+            // Assert - initialization should fail gracefully
+            expect(coordinator.isInitialized()).toBe(false);
+        });
+        
+        test('should handle missing Web Speech API gracefully', () => {
+            // Arrange
+            delete global.window;
+            
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act - should not throw
+            expect(() => {
+                coordinator.initializeSpeechSynthesis();
+            }).not.toThrow();
+        });
+        
+        test('should allow re-initialization after destroy', () => {
+            // Arrange
+            coordinator = new SpeechCoordinator(
+                mockDocument,
+                elementIds,
+                mockDeps.reverseGeocoder,
+                mockDeps.observerSubject
+            );
+            
+            // Act
+            coordinator.initializeSpeechSynthesis();
+            coordinator.destroy();
+            coordinator.initializeSpeechSynthesis(); // Re-initialize
+            
+            // Assert
+            expect(coordinator.isInitialized()).toBe(true);
+            expect(coordinator.getSpeechDisplayer()).toBeTruthy();
+        });
+    });
+});

@@ -1,7 +1,7 @@
 # CLASS EXTRACTION PHASE 5: Chronometer Module
 
 **Extracted on:** October 16, 2025  
-**MP Barbosa Travel Guide - Guia.js Library**  
+**MP Barbosa Travel Guide - Guia Turístico Application**  
 **Version:** 0.8.7-alpha  
 
 ## Overview

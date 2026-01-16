@@ -1,4 +1,4 @@
-# Guia.js - Project Purpose and Architecture Documentation
+# Guia Turístico - Project Purpose and Architecture Documentation
 
 **Version**: 0.7.1-alpha  
 **Document Date**: 2026-01-11  
@@ -484,12 +484,12 @@ geocode(-23.550520, -46.633309);
                          │ (imports from CDN)
                          ↓
 ┌─────────────────────────────────────────────────────────────┐
-│  Guia.js Library (CDN Distribution)                         │
+│  guia.js Library (CDN Distribution)                         │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  jsDelivr CDN                                               │
 │  ├── guia.js@0.7.1-alpha                                    │
-│  ├── Provides APIs                                          │
+│  ├── Provides geolocation APIs                              │
 │  └── Embedded in developer's app                            │
 │                                                              │
 │  Source Repository:                                         │
@@ -811,4 +811,4 @@ If jQuery (a JavaScript library similar to Guia.js) wouldn't do it, Guia.js shou
 **Last Review**: 2026-01-06  
 **Next Review**: When considering new distribution methods
 
-**Purpose**: This document serves as the definitive reference for understanding Guia.js project identity and preventing architectural mistakes like inappropriate GitHub Pages migration.
+**Purpose**: This document serves as the definitive reference for understanding Guia Turístico project identity and preventing architectural mistakes like inappropriate GitHub Pages migration.

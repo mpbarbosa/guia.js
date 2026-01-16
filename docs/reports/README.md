@@ -1,6 +1,6 @@
 # Project Reports Archive
 
-This directory contains historical reports documenting analysis, bug fixes, and implementations throughout the Guia.js project lifecycle.
+This directory contains historical reports documenting analysis, bug fixes, and implementations throughout the Guia Turístico project lifecycle.
 
 ## 📁 Directory Structure
 

@@ -1,6 +1,6 @@
 # Class Extraction Documentation
 
-This folder contains comprehensive documentation for the class extraction and module splitting efforts in the Guia.js project. The extraction process transformed a monolithic 6,000+ line file into a well-organized modular architecture following functional programming principles.
+This folder contains comprehensive documentation for the class extraction and module splitting efforts in the Guia Turístico project. The extraction process transformed a monolithic 6,000+ line file into a well-organized modular architecture following functional programming principles.
 
 ## 📚 Documentation Overview
 

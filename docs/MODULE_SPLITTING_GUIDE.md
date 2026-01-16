@@ -26,7 +26,7 @@ This guide provides comprehensive instructions for splitting large JavaScript fi
 
 ### Why This Guide?
 
-The Guia.js project currently has a 6,000+ line `guia.js` file containing 25+ classes. While functional, this monolithic structure:
+The Guia Turístico project currently has a 6,000+ line `guia.js` file containing 25+ classes. While functional, this monolithic structure:
 - Makes code harder to navigate and understand
 - Increases merge conflicts in team environments
 - Complicates testing individual components

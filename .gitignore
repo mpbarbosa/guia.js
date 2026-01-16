@@ -62,3 +62,6 @@ env/
 # Python test environments
 tests/integration/.env/
 tests/integration/__pycache__/
+
+# Jest cache directory
+.jest-cache/

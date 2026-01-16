@@ -81,9 +81,45 @@ echo "  Documentation files: $DOC_CHANGED"
 echo "  Source files: $SRC_CHANGED"
 echo ""
 
-# Step 2: Validate JavaScript
+# Step 2: Security audit
+echo "Step 2: Running security audit"
+echo "--------------------------------"
+print_info "Checking for known vulnerabilities..."
+
+if npm audit --json > /tmp/audit-results.json 2>&1; then
+    print_status 0 "Security audit (no vulnerabilities)"
+else
+    AUDIT_EXIT=$?
+    
+    # Parse results
+    CRITICAL=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.critical // 0' 2>/dev/null || echo "0")
+    HIGH=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.high // 0' 2>/dev/null || echo "0")
+    MODERATE=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.moderate // 0' 2>/dev/null || echo "0")
+    LOW=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.low // 0' 2>/dev/null || echo "0")
+    
+    echo ""
+    echo "Vulnerabilities found:"
+    echo "  🔴 Critical: $CRITICAL"
+    echo "  🟠 High: $HIGH"
+    echo "  🟡 Moderate: $MODERATE"
+    echo "  🟢 Low: $LOW"
+    echo ""
+    
+    if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+        print_status 1 "Security audit (CRITICAL or HIGH vulnerabilities found!)"
+        print_info "Run 'npm audit fix' to attempt automatic fixes"
+    elif [ "$MODERATE" -gt 0 ]; then
+        print_info "Moderate vulnerabilities found. Review recommended."
+        print_status 0 "Security audit (moderate issues only)"
+    else
+        print_status 0 "Security audit (low severity only)"
+    fi
+fi
+echo ""
+
+# Step 3: Validate JavaScript
 if [ "$JS_CHANGED" = true ] || [ "$SRC_CHANGED" = true ]; then
-    echo "Step 2: Validating JavaScript syntax"
+    echo "Step 3: Validating JavaScript syntax"
     echo "-------------------------------------"
     if npm run validate; then
         print_status 0 "JavaScript syntax validation"
@@ -95,7 +131,7 @@ fi
 
 # Step 3: Run tests
 if [ "$JS_CHANGED" = true ] || [ "$TEST_CHANGED" = true ]; then
-    echo "Step 3: Running tests"
+    echo "Step 4: Running tests"
     echo "---------------------"
     print_info "Running full test suite..."
     if npm test; then
@@ -105,7 +141,7 @@ if [ "$JS_CHANGED" = true ] || [ "$TEST_CHANGED" = true ]; then
     fi
     echo ""
     
-    echo "Step 4: Generating coverage report"
+    echo "Step 5: Generating coverage report"
     echo "-----------------------------------"
     if npm run test:coverage; then
         print_status 0 "Coverage generation"
@@ -117,7 +153,7 @@ fi
 
 # Step 4: Check test documentation updates
 if [ "$TEST_CHANGED" = true ]; then
-    echo "Step 5: Checking test documentation"
+    echo "Step 6: Checking test documentation"
     echo "------------------------------------"
     
     TEST_SUITES=$(find __tests__ -name "*.test.js" | wc -l)
@@ -138,7 +174,7 @@ fi
 
 # Step 5: Validate documentation
 if [ "$DOC_CHANGED" = true ]; then
-    echo "Step 6: Validating documentation"
+    echo "Step 7: Validating documentation"
     echo "---------------------------------"
     
     # Get changed markdown files

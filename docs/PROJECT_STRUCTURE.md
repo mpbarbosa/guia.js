@@ -1,8 +1,8 @@
-# Guia.js Project Structure Documentation
+# Guia Turístico Project Structure Documentation
 
 **Version:** 0.7.0-alpha  
 **Last Updated:** 2026-01-06  
-**Project Type:** JavaScript Library Component
+**Project Type:** Tourist Guide Web Application
 
 ## Overview
 

@@ -1,6 +1,6 @@
 # Issue Template Comparison
 
-This document provides a comprehensive side-by-side comparison of all GitHub Issue templates available in the Guia.js project.
+This document provides a comprehensive side-by-side comparison of all GitHub Issue templates available in the Guia Turístico project.
 
 ## Template Overview
 
@@ -443,5 +443,5 @@ Based on this comparison:
 ---
 
 **Last Updated**: Generated from templates in repository
-**Maintained By**: Guia.js Project Team
+**Maintained By**: Guia Turístico Project Team
 **Version**: 0.8.5-alpha

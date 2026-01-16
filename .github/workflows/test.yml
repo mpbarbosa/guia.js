@@ -13,10 +13,90 @@ concurrency:
 
 jobs:
   # ========================================
+  # Stage 0: Security Audit (~10s)
+  # ========================================
+  security-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            .jest-cache
+          key: ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.js') }}
+          restore-keys: |
+            ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-
+            ${{ runner.os }}-deps-jest-
+            ${{ runner.os }}-
+      
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+      
+      - name: Run npm audit
+        run: |
+          echo "## 🔒 Security Audit Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Run audit and capture results
+          if npm audit --json > audit-results.json 2>&1; then
+            echo "✅ No vulnerabilities found!" >> $GITHUB_STEP_SUMMARY
+          else
+            AUDIT_EXIT=$?
+            echo "⚠️ Vulnerabilities detected (exit code: $AUDIT_EXIT)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Parse JSON results
+            CRITICAL=$(cat audit-results.json | jq -r '.metadata.vulnerabilities.critical // 0')
+            HIGH=$(cat audit-results.json | jq -r '.metadata.vulnerabilities.high // 0')
+            MODERATE=$(cat audit-results.json | jq -r '.metadata.vulnerabilities.moderate // 0')
+            LOW=$(cat audit-results.json | jq -r '.metadata.vulnerabilities.low // 0')
+            
+            echo "| Severity | Count |" >> $GITHUB_STEP_SUMMARY
+            echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔴 Critical | $CRITICAL |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🟠 High | $HIGH |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🟡 Moderate | $MODERATE |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🟢 Low | $LOW |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Fail on critical or high vulnerabilities
+            if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+              echo "❌ **Critical or high vulnerabilities found! Please review and fix.**" >> $GITHUB_STEP_SUMMARY
+              exit 1
+            else
+              echo "⚠️ Low/moderate vulnerabilities found. Review recommended." >> $GITHUB_STEP_SUMMARY
+              exit 0
+            fi
+          fi
+        continue-on-error: false  # Fail workflow on critical/high vulnerabilities
+      
+      - name: Upload audit results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: security-audit-results
+          path: audit-results.json
+          retention-days: 30
+  
+  # ========================================
   # Stage 1: Fast Feedback (~5s)
   # ========================================
   lint-and-validate:
     runs-on: ubuntu-latest
+    needs: security-audit  # Run after security check
     timeout-minutes: 2
     
     steps:
@@ -37,9 +117,12 @@ jobs:
           path: |
             ~/.npm
             node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+            .jest-cache
+          key: ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.js') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-
+            ${{ runner.os }}-deps-jest-
+            ${{ runner.os }}-
       
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
@@ -75,9 +158,12 @@ jobs:
           path: |
             ~/.npm
             node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+            .jest-cache
+          key: ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.js') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-
+            ${{ runner.os }}-deps-jest-
+            ${{ runner.os }}-
       
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
@@ -117,9 +203,12 @@ jobs:
           path: |
             ~/.npm
             node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+            .jest-cache
+          key: ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.js') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-
+            ${{ runner.os }}-deps-jest-
+            ${{ runner.os }}-
       
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
@@ -159,9 +248,12 @@ jobs:
           path: |
             ~/.npm
             node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+            .jest-cache
+          key: ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.js') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-
+            ${{ runner.os }}-deps-jest-
+            ${{ runner.os }}-
       
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
@@ -201,9 +293,12 @@ jobs:
           path: |
             ~/.npm
             node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+            .jest-cache
+          key: ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.js') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-
+            ${{ runner.os }}-deps-jest-
+            ${{ runner.os }}-
       
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
@@ -243,10 +338,13 @@ jobs:
           path: |
             ~/.npm
             node_modules
+            .jest-cache
             coverage
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.js') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-
+            ${{ runner.os }}-deps-jest-
+            ${{ runner.os }}-
       
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
@@ -326,9 +424,12 @@ jobs:
           path: |
             ~/.npm
             node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+            .jest-cache
+          key: ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.js') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-
+            ${{ runner.os }}-deps-jest-
+            ${{ runner.os }}-
       
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit

@@ -1196,7 +1196,7 @@ document.querySelectorAll('.ajax-link').forEach(link => {
 
 ## Integration with Project Standards
 
-The principle of separating HTML, CSS, and JavaScript aligns with several key Guia.js project standards:
+The principle of separating HTML, CSS, and JavaScript aligns with several key Guia Turístico project standards:
 
 ### Referential Transparency
 
@@ -1330,4 +1330,4 @@ See: [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)
 
 ## License
 
-This documentation is part of the Guia.js project and follows the same license terms.
+This documentation is part of the Guia Turístico project and follows the same license terms.

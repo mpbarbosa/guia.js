@@ -746,7 +746,7 @@ const fixed = badString.toWellFormed();
 4. **ES2020 (2020)**: Optional chaining, nullish coalescing
 5. **ES2023 (2023)**: Immutable array methods
 
-### For Guia.js Project
+### For Guia Turístico Project
 
 This project uses:
 - ✅ ES6 modules (import/export)

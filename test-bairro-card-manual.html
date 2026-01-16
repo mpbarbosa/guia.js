@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bairro Card Manual Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .highlight-card {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+        }
+        .highlight-card-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .highlight-card-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 10px 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #1976d2;
+        }
+        #console-output {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .error { color: #ff5252; }
+        .success { color: #69f0ae; }
+        .info { color: #64b5f6; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Bairro Card Update Test</h1>
+    
+    <div class="test-section">
+        <h2>Current Bairro Card Value:</h2>
+        <div class="highlight-card">
+            <div class="highlight-card-label">Bairro</div>
+            <div id="bairro-value" class="highlight-card-value">—</div>
+        </div>
+        <div class="highlight-card">
+            <div class="highlight-card-label">Município</div>
+            <div id="municipio-value" class="highlight-card-value">—</div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Actions:</h2>
+        <button onclick="testDirectUpdate()">Test 1: Direct DOM Update</button>
+        <button onclick="testCreateDisplayer()">Test 2: Create Displayer</button>
+        <button onclick="testDisplayerUpdate()">Test 3: Call Displayer.update()</button>
+        <button onclick="testFullChain()">Test 4: Full Observer Chain</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Console Output:</h2>
+        <div id="console-output"></div>
+    </div>
+
+    <script type="module">
+        // Import the necessary modules
+        import HTMLHighlightCardsDisplayer from '/src/html/HTMLHighlightCardsDisplayer.js';
+        import ReverseGeocoder from '/src/services/ReverseGeocoder.js';
+        import AddressDataExtractor from '/src/data/AddressDataExtractor.js';
+
+        let displayer = null;
+        let geocoder = null;
+
+        // Custom console logger
+        function log(message, type = 'info') {
+            const output = document.getElementById('console-output');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type;
+            const line = document.createElement('div');
+            line.className = className;
+            line.textContent = `[${timestamp}] ${message}`;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+            console.log(message);
+        }
+
+        // Test 1: Direct DOM Update
+        window.testDirectUpdate = function() {
+            log('=== TEST 1: Direct DOM Update ===', 'info');
+            try {
+                const bairroElement = document.getElementById('bairro-value');
+                const municipioElement = document.getElementById('municipio-value');
+                
+                if (!bairroElement) {
+                    log('ERROR: bairro-value element not found!', 'error');
+                    return;
+                }
+                
+                log('✓ Found bairro-value element', 'success');
+                log('Current value: ' + bairroElement.textContent);
+                
+                // Update directly
+                bairroElement.textContent = 'Jardim Paulista';
+                municipioElement.textContent = 'São Paulo';
+                
+                log('✓ Updated to: ' + bairroElement.textContent, 'success');
+                log('TEST 1 PASSED: Direct DOM update works!', 'success');
+            } catch (error) {
+                log('ERROR in Test 1: ' + error.message, 'error');
+                console.error(error);
+            }
+        };
+
+        // Test 2: Create HTMLHighlightCardsDisplayer
+        window.testCreateDisplayer = function() {
+            log('=== TEST 2: Create HTMLHighlightCardsDisplayer ===', 'info');
+            try {
+                displayer = new HTMLHighlightCardsDisplayer(document);
+                log('✓ Displayer created successfully', 'success');
+                log('Displayer type: ' + displayer.constructor.name);
+                log('Has _bairroElement: ' + !!displayer._bairroElement, 'success');
+                log('Has _municipioElement: ' + !!displayer._municipioElement, 'success');
+                log('TEST 2 PASSED: Displayer creation works!', 'success');
+            } catch (error) {
+                log('ERROR in Test 2: ' + error.message, 'error');
+                console.error(error);
+            }
+        };
+
+        // Test 3: Call update() method on displayer
+        window.testDisplayerUpdate = function() {
+            log('=== TEST 3: Call Displayer.update() ===', 'info');
+            try {
+                if (!displayer) {
+                    log('Creating displayer first...', 'info');
+                    displayer = new HTMLHighlightCardsDisplayer(document);
+                }
+                
+                // Create mock enderecoPadronizado
+                const mockEnderecoPadronizado = {
+                    municipio: 'São Paulo',
+                    bairro: 'Vila Mariana',
+                    siglaUF: 'SP'
+                };
+                
+                log('Calling displayer.update() with:', 'info');
+                log(JSON.stringify(mockEnderecoPadronizado, null, 2));
+                
+                displayer.update(null, mockEnderecoPadronizado);
+                
+                const bairroValue = document.getElementById('bairro-value').textContent;
+                const municipioValue = document.getElementById('municipio-value').textContent;
+                
+                log('After update:', 'info');
+                log('  Bairro: ' + bairroValue);
+                log('  Município: ' + municipioValue);
+                
+                if (bairroValue === 'Vila Mariana' && municipioValue === 'São Paulo') {
+                    log('TEST 3 PASSED: Displayer.update() works!', 'success');
+                } else {
+                    log('TEST 3 FAILED: Values not updated correctly', 'error');
+                }
+            } catch (error) {
+                log('ERROR in Test 3: ' + error.message, 'error');
+                console.error(error);
+            }
+        };
+
+        // Test 4: Full observer chain
+        window.testFullChain = async function() {
+            log('=== TEST 4: Full Observer Chain ===', 'info');
+            try {
+                // Create displayer if not exists
+                if (!displayer) {
+                    log('Creating displayer...', 'info');
+                    displayer = new HTMLHighlightCardsDisplayer(document);
+                }
+                
+                // Create ReverseGeocoder
+                log('Creating ReverseGeocoder...', 'info');
+                geocoder = new ReverseGeocoder(-23.565209, -46.664850); // Jardim Paulista
+                geocoder.setAddressDataExtractor(AddressDataExtractor);
+                
+                log('Subscribing displayer to geocoder...', 'info');
+                geocoder.subscribe(displayer);
+                
+                log('Observer count: ' + geocoder.observerSubject.observers.length);
+                
+                // Fetch address
+                log('Fetching address from coordinates...', 'info');
+                log('Coordinates: -23.565209, -46.664850 (Jardim Paulista)', 'info');
+                
+                const addressData = await geocoder.fetchAddress();
+                
+                log('✓ Address fetched successfully', 'success');
+                log('Address data: ' + JSON.stringify(addressData.address, null, 2));
+                
+                const bairroValue = document.getElementById('bairro-value').textContent;
+                const municipioValue = document.getElementById('municipio-value').textContent;
+                
+                log('Final values:', 'info');
+                log('  Bairro: ' + bairroValue);
+                log('  Município: ' + municipioValue);
+                
+                if (bairroValue !== '—' && municipioValue !== '—') {
+                    log('TEST 4 PASSED: Observer chain works!', 'success');
+                } else {
+                    log('TEST 4 FAILED: Values still showing default', 'error');
+                }
+            } catch (error) {
+                log('ERROR in Test 4: ' + error.message, 'error');
+                console.error(error);
+            }
+        };
+
+        window.clearLog = function() {
+            document.getElementById('console-output').innerHTML = '';
+            log('Log cleared', 'info');
+        };
+
+        // Initial log
+        log('Test page loaded successfully', 'success');
+        log('Ready to run tests!', 'info');
+        log('', 'info');
+        log('Click buttons above to run each test', 'info');
+    </script>
+</body>
+</html>

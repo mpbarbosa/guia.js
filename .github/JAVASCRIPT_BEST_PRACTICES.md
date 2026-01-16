@@ -22,7 +22,7 @@
 
 ## Introduction
 
-This guide outlines JavaScript best practices specifically for the Guia.js project, with a strong emphasis on **functional programming**, **referential transparency**, and **immutability**. Following these practices ensures code quality, maintainability, and alignment with project principles.
+This guide outlines JavaScript best practices specifically for the Guia Turístico project, with a strong emphasis on **functional programming**, **referential transparency**, and **immutability**. Following these practices ensures code quality, maintainability, and alignment with project principles.
 
 ### Guiding Principles
 
@@ -1311,4 +1311,4 @@ test('calculateDistance works', () => {
 
 ---
 
-*This guide is part of the Guia.js project documentation. For questions or suggestions, please open an issue.*
+*This guide is part of the Guia Turístico project documentation. For questions or suggestions, please open an issue.*

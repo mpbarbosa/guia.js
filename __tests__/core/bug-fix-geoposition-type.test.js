@@ -7,8 +7,8 @@
  * expects a GeoPosition instance.
  */
 
-import GeocodingState from '../src/core/GeocodingState.js';
-import GeoPosition from '../src/core/GeoPosition.js';
+import GeocodingState from '../../src/core/GeocodingState.js';
+import GeoPosition from '../../src/core/GeoPosition.js';
 
 describe('Bug Fix: GeoPosition Type Error', () => {
 	let geocodingState;

@@ -659,7 +659,7 @@ function generateColor(rand1, rand2, rand3) {
 
 ### In This Project
 
-The Guia.js project demonstrates referential transparency in several areas:
+The Guia Turístico project demonstrates referential transparency in several areas:
 
 - **Distance Calculations**: `calculateDistance()` is a pure function
 - **Address Formatting**: Uses immutable data transformations

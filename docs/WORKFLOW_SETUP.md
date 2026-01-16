@@ -2,7 +2,7 @@
 
 ## 🎯 What Was Implemented
 
-This document provides a complete overview of the new automated workflow infrastructure for the Guia.js project.
+This document provides a complete overview of the new automated workflow infrastructure for the Guia Turístico project.
 
 ### Summary
 

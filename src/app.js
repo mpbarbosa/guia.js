@@ -98,6 +98,8 @@ function initRouter() {
  * Sets up the navigation UI by updating the active navigation link based on
  * the current route. This ensures proper visual feedback for the current page.
  * 
+ * **Modified in v0.8.4**: Adapted to work with footer navigation (primary nav removed).
+ * 
  * @returns {void}
  * 
  * @example
@@ -105,10 +107,11 @@ function initRouter() {
  * initNavigation();
  * 
  * @since 0.7.1-alpha
+ * @modified 0.8.4-alpha - Adapted for footer navigation
  * @author Marcelo Pereira Barbosa
  */
 function initNavigation() {
-  // Update active navigation link
+  // Update active navigation link (footer links)
   updateActiveNavLink();
 }
 
@@ -198,9 +201,12 @@ function navigateTo(path) {
 /**
  * Update active navigation link based on current route.
  * 
- * Adds ARIA attributes (aria-current="page") to the navigation link matching
- * the current URL hash. Removes the attribute from all other links to ensure
+ * Adds ARIA attributes (aria-current="page") to navigation links matching
+ * the current URL hash. Searches both legacy .app-navigation (removed) and
+ * .app-footer locations. Removes the attribute from all other links to ensure
  * proper accessibility and visual feedback.
+ * 
+ * **Modified in v0.8.4**: Updated to search footer navigation after primary nav removal.
  * 
  * @returns {void}
  * 
@@ -209,12 +215,14 @@ function navigateTo(path) {
  * updateActiveNavLink();
  * 
  * @since 0.7.1-alpha
+ * @modified 0.8.4-alpha - Search footer instead of primary nav
  * @author Marcelo Pereira Barbosa
  */
 function updateActiveNavLink() {
   const hash = window.location.hash || '#/';
   
-  document.querySelectorAll('.app-navigation a').forEach(link => {
+  // Search both .app-navigation (legacy) and .app-footer
+  document.querySelectorAll('.app-navigation a, .app-footer a').forEach(link => {
     const href = link.getAttribute('href');
     if (href === hash) {
       link.setAttribute('aria-current', 'page');

@@ -516,16 +516,22 @@ describe('SpeechQueue', () => {
 			expect(items[2].priority).toBe(1);
 		});
 
-		test('getItems should clean expired items before returning', async () => {
+		test('getItems should clean expired items before returning', () => {
+			// Use fake timers for this test
+			jest.useFakeTimers();
+			
 			const shortQueue = new SpeechQueue(100, 1000);
 			
 			shortQueue.enqueue("Will expire");
 			expect(shortQueue.getItems()).toHaveLength(1);
 			
-			// Wait for expiration
-			await new Promise(resolve => setTimeout(resolve, 1100));
+			// Advance time past expiration
+			jest.advanceTimersByTime(1100);
 			
 			expect(shortQueue.getItems()).toHaveLength(0);
+			
+			// Restore real timers
+			jest.useRealTimers();
 		});
 	});
 
@@ -630,7 +636,10 @@ describe('SpeechQueue', () => {
 			expect(item.timestamp).toBeGreaterThan(0);
 		});
 
-		test('should respect SpeechItem expiration logic', async () => {
+		test('should respect SpeechItem expiration logic', () => {
+			// Use fake timers for this test
+			jest.useFakeTimers();
+			
 			const shortQueue = new SpeechQueue(100, 1000);
 			
 			shortQueue.enqueue("Will expire soon");
@@ -638,10 +647,13 @@ describe('SpeechQueue', () => {
 			
 			expect(item.isExpired(1000)).toBe(false);
 			
-			// Wait for expiration
-			await new Promise(resolve => setTimeout(resolve, 1100));
+			// Advance time past expiration
+			jest.advanceTimersByTime(1100);
 			
 			expect(item.isExpired(1000)).toBe(true);
+			
+			// Restore real timers
+			jest.useRealTimers();
 		});
 	});
 });

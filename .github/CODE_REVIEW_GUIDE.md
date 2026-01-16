@@ -13,7 +13,7 @@
 
 ## Overview
 
-This guide helps reviewers ensure code contributions meet the Guia.js project standards, with particular emphasis on **referential transparency**, **immutability**, and **functional programming principles**.
+This guide helps reviewers ensure code contributions meet the Guia Turístico project standards, with particular emphasis on **referential transparency**, **immutability**, and **functional programming principles**.
 
 ### Goals of Code Review
 

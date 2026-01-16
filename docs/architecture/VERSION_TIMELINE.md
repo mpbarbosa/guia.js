@@ -58,14 +58,14 @@ This document provides a comprehensive timeline of architectural changes across 
 
 0.7.1-alpha (January 11, 2026) ← CURRENT VERSION
 ├── Documentation improvements
-│   ├── ✅ Test counts corrected (1,516/1,653)
+│   ├── ✅ Test counts corrected (1,739/1,882)
 │   ├── ✅ Version consistency achieved
 │   ├── ✅ JSDoc coverage documented (100%)
 │   ├── ✅ Cross-references enhanced
 │   └── ✅ Architecture version timeline added
 │
 ├── Stable implementation - no code changes
-├── All tests passing (1,516 passing / 1,653 total)
+├── All tests passing (1,739 passing / 1,968 total)
 └── ✅ Ready for production deployment
 
          │
@@ -244,7 +244,7 @@ Use this matrix to determine which version to use for different scenarios:
 | Scenario | Recommended Version | Notes |
 |----------|---------------------|-------|
 | **New projects** | 0.7.1-alpha | Current stable release |
-| **Production deployment** | 0.7.1-alpha | Thoroughly tested, 1,516 passing tests |
+| **Production deployment** | 0.7.1-alpha | Thoroughly tested, 1,739 passing tests |
 | **Existing 0.6.0 projects** | 0.7.1-alpha | Drop-in upgrade, no changes needed |
 | **Existing 0.5.x projects** | 0.7.1-alpha | Migration required (see guide above) |
 | **Testing/development** | 0.7.1-alpha or 0.8.x-alpha branch | 0.8.x-alpha for upcoming features |
@@ -281,14 +281,14 @@ No deprecations planned. PR #189 refactoring maintains full backward compatibili
 |---------|-------------|---------|---------|----------|
 | 0.6.0-alpha | ~1,400 | ~1,200 | ~100 | ~65% |
 | 0.7.0-alpha | 1,438 | 1,301 | 137 | ~68% |
-| **0.7.1-alpha** | **1,653** | **1,516** | **137** | **~70%** |
+| **0.7.1-alpha** | **1,882** | **1,739** | **143** | **~70%** |
 | 0.8.x-alpha (planned) | 1,680+ | 1,550+ | 130 | ~75% |
 
 ### Running Tests for Specific Versions
 
 ```bash
 # Current version tests (0.7.1-alpha)
-npm test                    # ~7 seconds, 1,516 passing
+npm test                    # ~7 seconds, 1,739 passing
 npm run test:coverage       # ~7 seconds, ~70% coverage
 npm run test:all            # ~8 seconds, syntax + tests
 

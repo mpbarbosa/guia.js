@@ -1,6 +1,6 @@
 # GitHub Actions Workflows
 
-This directory contains GitHub Actions workflows for automating various tasks in the Guia.js project.
+This directory contains GitHub Actions workflows for automating various tasks in the Guia Turístico project.
 
 ## Workflows
 

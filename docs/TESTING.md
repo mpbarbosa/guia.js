@@ -1,6 +1,6 @@
-# Guia.js - Automated Testing
+# Guia Turístico - Automated Testing
 
-Este documento descreve como usar os testes automatizados implementados para o Guia.js usando Jest.
+Este documento descreve como usar os testes automatizados implementados para o Guia Turístico usando Jest.
 
 ## Configuração dos Testes
 

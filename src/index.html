@@ -215,19 +215,13 @@
       v 0.7.1 | 2026-01-11
     </div>
     
-    <!-- App Navigation -->
-    <nav class="app-navigation" aria-label="Navegação principal">
-      <ul>
-        <li><a href="#/" aria-label="Ir para página inicial" class="current-page" aria-current="page">Página Inicial</a></li>
-        <li><a href="#/converter" aria-label="Ir para conversor de endereços" class="">Conversor de Endereços</a></li>
-      </ul>
-    </nav>
+
 
     <!-- Main App Content (dynamically loaded by router) -->
     <main id="app-content" role="main">
       <header class="">
-        <h1>Guia Turístico</h1>
-        <p>Descubra sua localização e encontre restaurantes e estatísticas da cidade próximos.</p>
+        <h1>Guia Turístico - Rastreamento de Localização</h1>
+        <p>Acompanhe sua localização em tempo real durante a navegação pela cidade.</p>
         <p>
           <span id="tracking-timer-container" style="display: none;">
             Tempo decorrido: <span id="chronometer" aria-live="polite">00:00</span> | 
@@ -312,6 +306,15 @@
         <textarea id="bottom-scroll-textarea" rows="4" readonly="" aria-readonly="true" aria-label="Histórico de texto gerado automaticamente durante navegação - somente leitura" placeholder="O histórico de texto será exibido aqui conforme você se move. Este campo é somente leitura." style="width: 100%; margin: 8px 0; padding: 8px; border-radius: 4px; border: 1px solid #ccc; background: #f5f5f5;"></textarea>
       </div>
     </main>
+
+    <!-- Footer with secondary features -->
+    <footer class="app-footer" role="contentinfo">
+      <p>
+        <a href="#/converter" aria-label="Ir para conversor de coordenadas para endereço">
+          Conversor de Coordenadas para Endereço
+        </a>
+      </p>
+    </footer>
 
     <!-- External Libraries -->
     <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/sidra.js@main/sidra.js"></script>

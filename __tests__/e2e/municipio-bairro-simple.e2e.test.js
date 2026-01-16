@@ -74,90 +74,50 @@ describe('E2E: Municipio/Bairro Display (Simple)', () => {
         if (server) await new Promise(resolve => server.close(resolve));
     });
 
-    test.skip('should display municipio and bairro after geolocation', async () => {
+    test('should display municipio and bairro after geolocation', async () => {
         page = await browser.newPage();
         
         // Enable console logging for debugging
         page.on('console', msg => console.log('PAGE LOG:', msg.text()));
         page.on('pageerror', error => console.log('PAGE ERROR:', error.message));
         
-        // Navigate - use domcontentloaded which is faster and more reliable
+        // Grant geolocation permission BEFORE navigation
+        const context = browser.defaultBrowserContext();
+        await context.overridePermissions(`http://localhost:${PORT}`, ['geolocation']);
+        
+        // Set geolocation BEFORE navigation
+        await page.setGeolocation({
+            latitude: TEST_COORD.lat,
+            longitude: TEST_COORD.lon,
+            accuracy: 10
+        });
+        
+        // Intercept Nominatim API calls BEFORE navigation
+        await page.setRequestInterception(true);
+        page.on('request', (request) => {
+            if (request.url().includes('nominatim.openstreetmap.org/reverse')) {
+                console.log('Intercepting Nominatim API call');
+                request.respond({
+                    status: 200,
+                    contentType: 'application/json',
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(MOCK_API)
+                });
+            } else {
+                request.continue();
+            }
+        });
+        
+        // NOW navigate - use domcontentloaded which is faster and more reliable
         await page.goto(`http://localhost:${PORT}/src/index.html`, {
             waitUntil: 'domcontentloaded',
             timeout: 10000
         });
-
-        // Wait a bit for the page to settle
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Mock geolocation and Nominatim API
-        await page.evaluate((coords, mockResp) => {
-            // Mock geolocation
-            window.navigator.geolocation = {
-                getCurrentPosition: (success) => {
-                    setTimeout(() => success({
-                        coords: { latitude: coords.lat, longitude: coords.lon, accuracy: 10 },
-                        timestamp: Date.now()
-                    }), 100);
-                },
-                watchPosition: (success) => {
-                    setTimeout(() => success({
-                        coords: { latitude: coords.lat, longitude: coords.lon, accuracy: 10 },
-                        timestamp: Date.now()
-                    }), 100);
-                    return 1;
-                },
-                clearWatch: () => {}
-            };
-
-            // Mock fetch
-            const originalFetch = window.fetch;
-            window.fetch = function(url, ...args) {
-                if (url.includes('nominatim.openstreetmap.org')) {
-                    console.log('Intercepting Nominatim API call');
-                    return Promise.resolve({
-                        ok: true,
-                        status: 200,
-                        json: () => Promise.resolve(mockResp)
-                    });
-                }
-                return originalFetch ? originalFetch(url, ...args) : fetch(url, ...args);
-            };
-        }, TEST_COORD, MOCK_API);
-
-        // Wait for app to load - check for DOM elements
-        try {
-            await page.waitForSelector('#municipio-value', { timeout: 10000 });
-            await page.waitForSelector('#bairro-value', { timeout: 10000 });
-        } catch (error) {
-            // Debug: print page content
-            const content = await page.content();
-            console.log('Page HTML (first 500 chars):', content.substring(0, 500));
-            throw error;
-        }
-
-        // Check if AppState exists and trigger geolocation
-        const hasAppState = await page.evaluate(() => {
-            return typeof window.AppState !== 'undefined' && window.AppState.manager;
-        });
-
-        if (!hasAppState) {
-            console.log('AppState not found, app may use different initialization');
-            // Try to trigger via button click instead
-            const buttonExists = await page.$('#findRestaurantsBtn');
-            if (buttonExists) {
-                console.log('Trying alternative: clicking geolocation trigger button');
-            }
-        } else {
-            // Trigger geolocation
-            await page.evaluate(() => {
-                if (window.AppState && window.AppState.manager) {
-                    window.AppState.manager.startTracking();
-                }
-            });
-        }
-
-        // Wait for municipio to update (with longer timeout)
+        
+        // Wait for municipio to update (geolocation should trigger automatically)
         await page.waitForFunction(
             () => {
                 const el = document.getElementById('municipio-value');
@@ -165,7 +125,7 @@ describe('E2E: Municipio/Bairro Display (Simple)', () => {
                 console.log('municipio-value:', text);
                 return text && text !== '—' && text.length > 0;
             },
-            { timeout: 20000, polling: 1000 }
+            { timeout: 15000, polling: 500 }
         );
 
         // Get values

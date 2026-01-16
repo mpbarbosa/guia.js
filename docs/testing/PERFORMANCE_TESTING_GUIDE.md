@@ -14,7 +14,7 @@ Comprehensive guide for performance testing and optimization in Guia.js.
 
 ## Overview
 
-Performance testing ensures Guia.js provides a responsive user experience across different devices and network conditions. This guide covers manual testing, automated benchmarks, and optimization techniques.
+Performance testing ensures Guia Turístico provides a responsive user experience across different devices and network conditions. This guide covers manual testing, automated benchmarks, and optimization techniques.
 
 **Key Performance Goals**:
 - Initial load: < 500ms

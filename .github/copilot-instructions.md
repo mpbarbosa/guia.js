@@ -1,6 +1,6 @@
 # Guia Turístico - Tourist Guide Web Application
 
-Guia Turístico is a single-page web application (version 0.7.0-alpha) built on top of the **guia.js** geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
+Guia Turístico is a single-page web application (version 0.7.1-alpha) built on top of the **guia.js** geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
 **Project Relationship**:
 - **This Project**: Guia Turístico - Tourist guide web application (SPA)
@@ -22,19 +22,20 @@ Guia Turístico is a single-page web application (version 0.7.0-alpha) built on 
 - **Install Dependencies**: `npm install` - takes 20 seconds. Downloads guia.js library and other dependencies.
 - **Syntax Check**: Always run `node -c src/app.js && node -c src/guia.js` (timeout: 10 seconds) before making changes
 - **Basic Test**: Run `node src/app.js` (timeout: 10 seconds) to verify SPA initialization
-- **Automated Tests**: `npm test` - takes ~7 seconds. Runs 1,653 tests (1,516 passing, 137 skipped) in 68 suites. NEVER CANCEL.
-- **Test Coverage**: `npm run test:coverage` - takes ~7 seconds. Shows ~70% coverage. NEVER CANCEL.
-- **Full Validation**: `npm run test:all` - takes ~7 seconds. Combines syntax + tests. NEVER CANCEL.
+- **Automated Tests**: `npm test` - takes ~45 seconds. Runs 1,968 tests (1,820 passing, 146 skipped) in 84 suites. NEVER CANCEL.
+- **Test Coverage**: `npm run test:coverage` - takes ~45 seconds. Shows ~70% coverage. NEVER CANCEL.
+- **Full Validation**: `npm run test:all` - takes ~45 seconds. Combines syntax + tests. NEVER CANCEL.
 - **Web Test**: Start web server with `python3 -m http.server 9000` (timeout: 10 seconds to start, runs indefinitely)
 
 ### Development Workflow
 - Always validate JavaScript syntax with `node -c` before committing changes
 - Test SPA functionality with `node src/app.js` to verify routing and initialization
-- Run automated tests with `npm run test:all` before commits to ensure 1,516+ tests pass
+- Run automated tests with `npm run test:all` before commits to ensure 1,820+ tests pass
 - For UI/web features, use the web server and src/index.html for manual validation
 - **Follow immutability principles** - see `.github/CONTRIBUTING.md` for guidelines
-- **TIMING**: Syntax checks <1 second, tests ~7 seconds, web server startup 3 seconds
-  - **Note**: Test times may vary by 1-2 seconds depending on system performance
+- **TIMING**: Syntax checks <1 second, tests ~45 seconds, web server startup 3 seconds
+  - **Note**: Test times may vary depending on system performance and E2E tests
+  - **E2E Tests**: Add significant time due to Puppeteer browser automation
 
 ## Validation Scenarios
 
@@ -50,7 +51,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 2. **Automated Test Suite**:
    ```bash
    npm run test:all
-   # Should show: ✅ 1,516+ tests passing (1,653 total), ✅ 64 suites passing (68 total), ~7 seconds execution
+   # Should show: ✅ 1,820 tests passing (1,968 total), ✅ 78 suites passing (84 total), ~45 seconds execution
    ```
 
 3. **Web Application Functionality**:
@@ -75,15 +76,34 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Repository Structure
 
 ### Key Files
-- `src/app.js` (550+ lines) - **Main SPA entry point** with routing and application initialization
-- `src/index.html` (336 lines) - Main HTML page for the SPA
-- `src/guia.js` (468 lines) - guia.js library exports (imported from dependency)
+- `src/app.js` (543 lines) - **Main SPA entry point** with routing and application initialization
+- `src/index.html` (379 lines) - Main HTML page for the SPA
+- `src/guia.js` (520 lines) - guia.js library exports (imported from dependency)
 - `src/guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
-- `package.json` - Node.js configuration with guia.js dependency
-- `__tests__/` - 68 test suites with 1,653 total tests (1,516 passing, 137 skipped)
+- `src/config/defaults.js` (105 lines) - Application configuration constants (version 0.7.x, timing, etc.)
+- `src/utils/TimerManager.js` (147 lines) - Centralized timer management preventing memory leaks
+- `package.json` - Node.js configuration with guia.js dependency (jsdom v25.0.1, puppeteer v24.35.0)
+- `__tests__/` - 84 test suites with 1,968 total tests (1,820 passing, 146 skipped, 80 active suites)
 - `.github/CONTRIBUTING.md` - Contribution guidelines including immutability principles
 - `.github/scripts/test-workflow-locally.sh` - Pre-push validation script (simulates CI/CD)
+- `.github/scripts/validate-jsdom-update.sh` - jsdom upgrade validation script
 - `cdn-delivery.sh` - CDN URL generator for jsDelivr distribution
+
+### UI Architecture (v0.8.4+)
+
+**Primary Focus**: Real-time location tracking while navigating the city
+
+**Navigation Structure**:
+- **Main page** (`#/` or `#`): Location tracking interface with real-time updates
+- **Footer link**: Access to coordinate converter utility (`#/converter`)
+- **No primary navigation menu**: Simplified UI focusing on core tracking feature
+
+**Key UI Files**:
+- `src/index.html` - Main application page, footer with converter link
+- `src/navigation.css` - Footer styles (primary nav styles deprecated)
+- `src/highlight-cards.css` (109 lines) - Municipio and bairro highlight card styles (v0.7.1+)
+- `src/app.js` - Router handling both `/` and `/converter` routes
+- **15 CSS files** total for modular styling (accessibility, typography, loading states, etc.)
 
 ### Important Classes and Components
 
@@ -105,6 +125,8 @@ After making any changes, ALWAYS run through these validation scenarios:
 #### UI and Display (src/html/)
 - `HTMLPositionDisplayer` (src/html/HTMLPositionDisplayer.js) - Coordinate display and Google Maps integration
 - `HTMLAddressDisplayer` (src/html/HTMLAddressDisplayer.js) - Address formatting and presentation
+- `HTMLHighlightCardsDisplayer` (src/html/HTMLHighlightCardsDisplayer.js) - Municipio and bairro highlight cards (v0.7.1+)
+- `HTMLReferencePlaceDisplayer` (src/html/HTMLReferencePlaceDisplayer.js) - Reference place display
 - `DisplayerFactory` (src/html/DisplayerFactory.js) - Factory for display components
 - `HtmlText` (src/html/HtmlText.js) - Text display utilities
 
@@ -112,6 +134,21 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `SpeechSynthesisManager` (src/speech/SpeechSynthesisManager.js) - Text-to-speech functionality
 - `SpeechQueue` (src/speech/SpeechQueue.js) - Speech queue management
 - `SpeechItem` (src/speech/SpeechItem.js) - Individual speech items
+
+#### Performance Timing (src/timing/)
+- `Chronometer` (src/timing/Chronometer.js) - Performance timing and elapsed time tracking
+  - **356 lines, 51 tests, 100% coverage**
+  - Observer pattern for timing events
+  - Production-ready (v0.8.3-alpha)
+  - Use for performance monitoring and user-facing time displays
+
+#### Utilities (src/utils/)
+- `TimerManager` (src/utils/TimerManager.js) - Centralized timer management singleton
+  - **147 lines, prevents memory leaks**
+  - Tracks setInterval/setTimeout calls
+  - Automatic cleanup on app shutdown
+  - Node.js and browser compatible
+  - Use for all application timers to prevent leaks
 
 ### API Integrations
 - **OpenStreetMap Nominatim**: `https://nominatim.openstreetmap.org/reverse` for geocoding
@@ -121,17 +158,46 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Testing Infrastructure
 
 ### Automated Test Coverage
-- **1,653 total tests** (1,516 passing, 137 skipped) across 68 test suites running in ~7 seconds
+- **1,968 total tests** (1,820 passing, 146 skipped) across 84 test suites running in ~45 seconds
 - **~70% code coverage** overall (69.82% actual)
 - **100% coverage** of guia_ibge.js (full coverage)
 - **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns
+- **Test Infrastructure**: Jest v30.1.3, jsdom v25.0.1, Puppeteer v24.35.0
+- **Performance**: Optimized with fake timers, parallel execution, custom cache directory (.jest-cache)
+
+### End-to-End Testing Infrastructure
+
+#### Jest E2E Tests (`__tests__/e2e/`)
+- **9 E2E test files** using Puppeteer for browser automation (headless Chrome)
+- **Real-world scenarios**: Complete workflows, address changes, speech synthesis, neighborhood tracking
+- **Key tests**:
+  - `NeighborhoodChangeWhileDriving.e2e.test.js` - Bairro card updates while navigating (8 tests)
+  - `CompleteGeolocationWorkflow.e2e.test.js` - Full geolocation pipeline
+  - `AddressChangeAndSpeech.e2e.test.js` - Address updates with speech synthesis
+  - `municipio-bairro-display.e2e.test.js` - Comprehensive municipio/bairro display testing (v0.7.1+)
+  - `municipio-bairro-simple.e2e.test.js` - Simplified municipio/bairro validation (v0.7.1+)
+- **Mock Configuration**: Puppeteer request interception with CORS headers, mock Nominatim API
+- **Test Server**: Local HTTP server on port 9877 for E2E tests
+- **Execution**: `npm test -- __tests__/e2e/[filename]`
+- **Documentation**: See `__tests__/e2e/NeighborhoodChangeWhileDriving.README.md` for detailed test documentation
+
+#### Python Playwright E2E Tests (`tests/e2e/`)
+- **Python-based** browser automation using Playwright
+- **Cross-browser testing**: Chromium, Firefox, WebKit
+- **Visual regression testing** capabilities
+- **Execution**: `pytest tests/e2e/` (requires Python 3.11+)
+- **Use case**: CI/CD pipelines, cross-browser validation
+
+**Test Strategy Distinction**:
+- Use **Jest/Puppeteer** (`__tests__/e2e/`) for rapid development and debugging
+- Use **Python/Playwright** (`tests/e2e/`) for comprehensive cross-browser validation
 
 ### Test Execution Commands
 ```bash
-# Run all tests (~7 seconds)
+# Run all tests (~45 seconds)
 npm test
 
-# Run tests with coverage report (~7 seconds)  
+# Run tests with coverage report (~45 seconds)  
 npm run test:coverage
 
 # Run tests in watch mode (development)
@@ -140,16 +206,20 @@ npm run test:watch
 # Syntax validation only (<1 second)
 npm run validate
 
-# Full validation: syntax + tests (~7 seconds total)
+# Full validation: syntax + tests (~45 seconds total)
 npm run test:all
+
+# Run specific E2E test
+npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 ```
 
 ### Expected Test Results
-- ✅ 1,516 tests passing (1,653 total, 137 skipped)
-- ✅ 64 test suites passing (68 total, 4 skipped)
+- ✅ 1,820 tests passing (1,968 total, 146 skipped)
+- ✅ 78 test suites passing (84 total, 6 skipped)
 - ✅ ~70% code coverage overall
 - ✅ 100% code coverage on guia_ibge.js
 - ✅ 14 immutability pattern tests
+- ⚠️ 2 E2E tests may fail intermittently (timing-dependent)
 
 ## Common Development Tasks
 
@@ -316,15 +386,15 @@ curl -s http://localhost:9000/src/index.html | head -5
 ### Performance Expectations
 - **Syntax validation**: <1 second each file
 - **Basic Node.js test**: <1 second  
-- **Jest test suite**: ~7 seconds for 1,653 tests (1,516 passing, 137 skipped)
-- **Jest with coverage**: ~7 seconds
+- **Jest test suite**: ~45 seconds for 1,968 tests (1,820 passing, 146 skipped)
+- **Jest with coverage**: ~45 seconds
 - **Web server startup**: ~3 seconds, then runs indefinitely
 - **npm install**: ~20 seconds (299 packages)
 
 ### Validation Checklist
 - [ ] Node.js syntax validation passes (`node -c src/guia.js`)
 - [ ] Basic Node.js execution shows version output
-- [ ] All 1,516 automated tests pass (`npm test`)
+- [ ] All 1,739 automated tests pass (`npm test`)
 - [ ] Web server starts successfully (`python3 -m http.server 9000`)
 - [ ] Test page loads without JavaScript errors
 - [ ] Geolocation button triggers proper API calls
@@ -410,6 +480,8 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 #### UI and Display (src/html/)
 - `HTMLPositionDisplayer` (src/html/HTMLPositionDisplayer.js) - Coordinate display and Google Maps integration
 - `HTMLAddressDisplayer` (src/html/HTMLAddressDisplayer.js) - Address formatting and presentation
+- `HTMLHighlightCardsDisplayer` (src/html/HTMLHighlightCardsDisplayer.js) - Municipio and bairro highlight cards (v0.7.1+)
+- `HTMLReferencePlaceDisplayer` (src/html/HTMLReferencePlaceDisplayer.js) - Reference place display
 - `DisplayerFactory` (src/html/DisplayerFactory.js) - Factory for display components
 - `HtmlText` (src/html/HtmlText.js) - Text display utilities
 

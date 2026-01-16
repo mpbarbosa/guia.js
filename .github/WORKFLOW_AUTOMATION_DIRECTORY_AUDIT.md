@@ -328,7 +328,7 @@ WORKFLOW_TERMINOLOGY_DISAMBIGUATION.md
 ```markdown
 # Workflow Automation Documentation
 
-This directory contains historical documentation of automation tools and CI/CD implementations for the Guia.js project.
+This directory contains historical documentation of automation tools and CI/CD implementations for the Guia Turístico project.
 
 ## 📁 Files
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the test suite created for validating Nominatim API JSON responses in the Guia.js project.
+This document describes the test suite created for validating Nominatim API JSON responses in the Guia Turístico project.
 
 ## Test File
 
@@ -171,4 +171,4 @@ MP Barbosa
 
 ## License
 
-Part of the Guia.js project (ISC License)
+Part of the Guia Turístico project (ISC License)

@@ -1,6 +1,6 @@
 # Guia Turístico - Tourist Guide Web Application
 
-[![Tests](https://img.shields.io/badge/tests-1516%20passing%20%2F%201653%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-1820%20passing%20%2F%201968%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
@@ -21,12 +21,13 @@ A single-page web application (SPA) for tourist guidance, built on top of the [g
 ## ✨ Key Features
 
 - 🗺️ **Single-Page Application** - Modern SPA with client-side routing
-- 🌍 **Tourist Guide Interface** - User-friendly navigation and location services
-- 📍 **Powered by guia.js** - Uses guia.js library for geolocation functionality
+- 📍 **Real-Time Location Tracking** - Primary feature: continuous location monitoring while navigating
+- 🌍 **Powered by guia.js** - Uses guia.js library for geolocation functionality
 - 🇧🇷 **Brazilian Focus** - Specialized support for Brazilian locations via IBGE integration
 - 📱 **Mobile-First Design** - Responsive interface optimized for mobile devices
 - 🎨 **Material Design 3** - Modern UI following Material Design guidelines
 - ♿ **Accessibility** - WCAG 2.1 compliant with ARIA support
+- 🔧 **Coordinate Converter** - Secondary utility: convert coordinates to addresses
 
 ## 🚀 Quick Start
 
@@ -83,10 +84,10 @@ npm install
 # Validate JavaScript syntax (<1 second)
 npm run validate
 
-# Run test suite (1,653 total tests, 1,516 passing, 137 skipped, ~7 seconds)
+# Run test suite (1,968 total tests, 1,820 passing, 146 skipped, ~45 seconds)
 npm test
 
-# Run tests with coverage (~7 seconds)
+# Run tests with coverage (~45 seconds)
 npm run test:coverage
 
 # Full validation: syntax + tests (~8 seconds)
@@ -193,9 +194,9 @@ See [examples/README.md](examples/README.md) for detailed documentation and expe
 
 ### Test Suite Overview
 
-- **Total Tests**: 1,653 total (1,516 passing, 137 skipped)
-- **Test Suites**: 68 total (64 passing, 4 skipped)
-- **Execution Time**: ~7 seconds
+- **Total Tests**: 1,968 total (1,820 passing, 146 skipped)
+- **Test Suites**: 84 total (78 passing, 6 skipped)
+- **Execution Time**: ~45 seconds
 - **Code Coverage**: ~70% overall (includes LRUCache at 100%)
 - **Coverage Details**:
   - guia.js: 69.56% statements, 43.75% branches
@@ -229,7 +230,7 @@ To ensure clear communication about testing concepts:
   
 - **Test**: Individual test case within a suite using `it()` or `test()`
   - Example: `it('should return singleton instance')`
-  - The project has 1,653 tests total (1,516 passing, 137 skipped)
+  - The project has 1,968 tests total (1,820 passing, 146 skipped)
 
 - **Test Category**: Organizational grouping of related test suites
   - **unit/**: Tests for individual classes and functions in isolation
@@ -250,8 +251,8 @@ To ensure clear communication about testing concepts:
 
 ### Testing Terminology
 
-- **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 64 passing suites
-- **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 1,653 tests (1,516 passing, 137 skipped)
+- **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 78 passing suites
+- **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 1,968 tests (1,820 passing, 146 skipped)
 - **Test Category**: Organizational grouping by functionality (unit, integration, features, external, managers)
 - **Code Coverage**: Percentage of source code executed during tests (~70% overall)
 
@@ -309,6 +310,7 @@ To ensure clear communication about testing concepts:
 #### Display Layer
 - `HTMLPositionDisplayer` - Coordinate display and Google Maps links
 - `HTMLAddressDisplayer` - Address formatting and presentation
+- `HTMLHighlightCardsDisplayer` - Municipio and bairro highlight cards (v0.7.1+)
 - `DisplayerFactory` - Factory pattern for display component creation
 
 #### Speech Synthesis Layer
@@ -756,7 +758,7 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 **Format**:
 ```
 # Generated: 2026-01-01 15:14:51
-# Version: 1.0.0-alpha
+# Version: 2.0.0-alpha
 # Commit: abc1234567890abcdef1234567890abcdef12345
 
 Version-specific URLs:
@@ -1199,7 +1201,7 @@ Test locally before pushing to catch issues early:
 ✅ Syntax validation passed
 
 🧪 Running Test Suite...
-✅ Tests passed: 1,516 passing (1,653 total, 137 skipped)
+✅ Tests passed: 1,739 passing (1,882 total, 143 skipped)
 
 📊 Generating Coverage Report...
 ✅ Coverage: 69.82%
@@ -1317,7 +1319,7 @@ python3 -m http.server 8000
 
 - **Lines of Code**: ~2300+ (main application)
 - **Test Coverage**: 70% (statements), 44% (branches)
-- **Test Count**: 1,653 tests total (1,516 passing, 137 skipped)
+- **Test Count**: 1,882 tests total (1,739 passing, 143 skipped)
 - **Dependencies**: 2 runtime, 2 dev dependencies
 - **Supported Node.js**: v18+
 - **ES Module Type**: ESM (ECMAScript Modules)

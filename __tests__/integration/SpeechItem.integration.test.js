@@ -412,26 +412,35 @@ describe('SpeechItem Module Integration - MP Barbosa Travel Guide (v0.8.11-alpha
         test('should integrate with automatic queue maintenance', async () => {
             const { default: SpeechItem } = await import('../../src/speech/SpeechItem.js');
             
-            // Simulate automatic queue maintenance scenario
-            const queueItems = [];
-            const now = Date.now();
+            // Mock Date.now() to eliminate timing flakiness in CI/CD
+            const fixedNow = 1000000000;
+            const originalDateNow = Date.now;
+            Date.now = jest.fn(() => fixedNow);
             
-            // Add items over time
-            for (let i = 0; i < 10; i++) {
-                const ageMs = i * 5000; // Each item is 5 seconds older than the last
-                const item = new SpeechItem(`Item ${i}`, 1, now - ageMs);
-                queueItems.push(item);
+            try {
+                // Simulate automatic queue maintenance scenario
+                const queueItems = [];
+                
+                // Add items over time
+                for (let i = 0; i < 10; i++) {
+                    const ageMs = i * 5000; // Each item is 5 seconds older than the last
+                    const item = new SpeechItem(`Item ${i}`, 1, fixedNow - ageMs);
+                    queueItems.push(item);
+                }
+                
+                // Clean up expired items (using 25 second expiration)
+                const cleanedQueue = queueItems.filter(item => !item.isExpired(25000));
+                
+                // Should keep the first 6 items (0-25 seconds old)
+                // Note: isExpired uses > comparison, so items at exactly 25000ms are NOT expired
+                expect(cleanedQueue.length).toBe(6);
+                cleanedQueue.forEach((item, index) => {
+                    expect(item.text).toBe(`Item ${index}`);
+                });
+            } finally {
+                // Restore original Date.now()
+                Date.now = originalDateNow;
             }
-            
-            // Clean up expired items (using 25 second expiration)
-            const cleanedQueue = queueItems.filter(item => !item.isExpired(25000));
-            
-            // Should keep the first 6 items (0-25 seconds old)
-            // Note: isExpired uses > comparison, so items at exactly 25000ms are NOT expired
-            expect(cleanedQueue.length).toBe(6);
-            cleanedQueue.forEach((item, index) => {
-                expect(item.text).toBe(`Item ${index}`);
-            });
         });
     });
 });

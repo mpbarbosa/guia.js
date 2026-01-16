@@ -10,7 +10,7 @@ The `.github/CONTRIBUTING.md` file referenced validation steps but didn't provid
 - Skip important validation steps
 - Not know what commands to run before submitting PRs
 - Not recognize when validation fails vs succeeds
-- Waste time debugging normal behavior (e.g., 137 skipped tests)
+- Waste time debugging normal behavior (e.g., 146 skipped tests)
 
 ## Evidence of Problem
 
@@ -21,7 +21,7 @@ The `.github/CONTRIBUTING.md` file referenced validation steps but didn't provid
 
 # Generic statement without:
 ❌ Exact command output examples
-❌ Expected test counts (1,516 passing, 137 skipped)
+❌ Expected test counts (1,820 passing, 146 skipped)
 ❌ Timing expectations (~7 seconds)
 ❌ Troubleshooting guidance
 ❌ What to do if counts don't match
@@ -53,7 +53,7 @@ npm test
 
 **Expected Output**:
 Test Suites: 64 passed, 4 skipped, 68 total
-Tests:       1516 passed, 137 skipped, 1653 total
+Tests:       1820 passed, 146 skipped, 1968 total
 Time:        6.789 s
 
 **What it checks**: All automated tests across 68 test suites
@@ -125,7 +125,7 @@ Time:        6.789 s
 - Fix instructions
 
 #### C. Test Count Mismatch
-- Expected counts: 1,516 passing / 1,653 total / 137 skipped
+- Expected counts: 1,820 passing / 1,968 total / 146 skipped
 - What different counts mean:
   - Increased passing = new tests added ✅
   - Decreased passing = tests failing ⚠️
@@ -170,7 +170,7 @@ Time:        6.789 s
 | Command | Purpose | Time | Expected Result |
 |---------|---------|------|-----------------|
 | npm run validate | Syntax check | ~1s | No syntax errors |
-| npm test | Full test suite | ~7s | 1,516 passing, 137 skipped |
+| npm test | Full test suite | ~45s | 1,820 passing, 146 skipped |
 ```
 
 ---
@@ -284,7 +284,7 @@ Time:        6.789 s
 **Contributor Experience**:
 - ❌ "What command do I run?" - Had to search README.md
 - ❌ "Did my test pass?" - No expected output to compare
-- ❌ "137 skipped tests, is that bad?" - No guidance
+- ❌ "146 skipped tests, is that bad?" - No guidance
 - ❌ "Tests took 8 seconds, too slow?" - No timing context
 - ❌ "Test count changed, what now?" - No decision tree
 
@@ -297,7 +297,7 @@ Time:        6.789 s
 **Contributor Experience**:
 - ✅ **Clear commands**: Copy-paste ready syntax
 - ✅ **Expected output**: Exact format to match against
-- ✅ **Context**: "137 skipped is normal"
+- ✅ **Context**: "146 skipped is normal"
 - ✅ **Timing**: "~7 seconds ±1-2 is expected"
 - ✅ **Guidance**: "Count changed? Here's what to do"
 
@@ -363,11 +363,11 @@ Test count mismatch?
 ```markdown
 Expected Output:
   Test Suites: 64 passed, 4 skipped, 68 total
-  Tests:       1516 passed, 137 skipped, 1653 total
+  Tests:       1820 passed, 146 skipped, 1968 total
 
 Your Output:
   Test Suites: 64 passed, 4 skipped, 68 total
-  Tests:       1516 passed, 137 skipped, 1653 total
+  Tests:       1820 passed, 146 skipped, 1968 total
   
 ✅ Match! Ready to submit PR.
 ```

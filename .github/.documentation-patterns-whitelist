@@ -1,0 +1,21 @@
+# Documentation Pattern Whitelist
+# These patterns are intentionally used in documentation and should not be flagged as errors
+
+## Valid Regex Patterns (Not broken references)
+- /* ... */           # Code example placeholder pattern
+- /AddressDataExtractor\./g  # Search pattern for refactoring documentation
+- /<\w+/g            # HTML tag detection regex
+- /throw new \w+\(/g # Error detection pattern  
+- /async function \w+/g # Async function detection
+
+## Valid Descriptive Text (Not file paths)
+- "/src for library organization" # Describes directory purpose, not a link
+- Directory structure explanations using path notation
+
+## Guidelines for Documentation Tools
+1. Exclude regex patterns (lines containing /pattern/flags) from link checking
+2. Use context-aware parsing to distinguish file paths from descriptive text
+3. Check for surrounding context (e.g., "explanation", "describes", "for")
+4. Regex patterns typically contain special characters: \w, \., \(, etc.
+
+## Last Updated: 2026-01-16

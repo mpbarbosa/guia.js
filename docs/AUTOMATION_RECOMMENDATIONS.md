@@ -250,8 +250,8 @@ jobs:
           sed -i "s/1,653 total/${TOTAL} total/g" .github/copilot-instructions.md
           
           # Update docs/INDEX.md
-          sed -i "s/1516 passing/${PASSING} passing/g" docs/INDEX.md
-          sed -i "s/1653 total/${TOTAL} total/g" docs/INDEX.md
+          sed -i "s/${PASSING} passing/${PASSING} passing/g" docs/INDEX.md
+          sed -i "s/${TOTAL} total/${TOTAL} total/g" docs/INDEX.md
           
           echo "✅ Updated documentation with test counts"
       

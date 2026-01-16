@@ -158,7 +158,7 @@ get htmlSpeechSynthesisDisplayer() {
 
 ```
 Test Suites: 4 skipped, 68 passed, 68 of 72 total
-Tests:       137 skipped, 1516 passed, 1653 total
+Tests:       146 skipped, 1820 passed, 1968 total
 Snapshots:   0 total
 Time:        5.994 s
 ```

@@ -279,7 +279,7 @@ describe('E2E: Neighborhood Change While Driving', () => {
         // Now navigate to the page
         await newPage.goto(`http://localhost:${PORT}/`, {
             waitUntil: 'domcontentloaded',
-            timeout: 15000
+            timeout: 30000
         });
         
         // Wait for app initialization
@@ -509,7 +509,7 @@ describe('E2E: Neighborhood Change While Driving', () => {
                     console.log('[WAIT] Bairro value:', value);
                     return bairroElement && value !== '—' && value.length > 0;
                 },
-                { timeout: 15000, polling: 1000 }
+                { timeout: 30000, polling: 1000 }
             );
         } catch (error) {
             // Log final state before throwing

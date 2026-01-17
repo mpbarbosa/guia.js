@@ -246,14 +246,27 @@ class ServiceCoordinator {
             positionManager.subscribe(this._reverseGeocoder);
             log('ServiceCoordinator: Reverse geocoder wired');
             
+            // Subscribe address displayer to address updates
+            if (this._displayers.address) {
+                console.log('(ServiceCoordinator) Subscribing HTMLAddressDisplayer to ReverseGeocoder');
+                this._reverseGeocoder.subscribe(this._displayers.address);
+                log('ServiceCoordinator: Address displayer wired');
+            } else {
+                console.warn('(ServiceCoordinator) address displayer is null, cannot subscribe!');
+            }
+            
             // Subscribe highlight cards displayer to address updates
             if (this._displayers.highlightCards) {
                 console.log('(ServiceCoordinator) Subscribing HTMLHighlightCardsDisplayer to ReverseGeocoder');
                 this._reverseGeocoder.subscribe(this._displayers.highlightCards);
                 log('ServiceCoordinator: Highlight cards displayer wired');
-                console.log('(ServiceCoordinator) ReverseGeocoder now has', this._reverseGeocoder.observerSubject.observers.length, 'observers');
             } else {
                 console.warn('(ServiceCoordinator) highlightCards displayer is null, cannot subscribe!');
+            }
+            
+            // Safe logging - check if observerSubject exists
+            if (this._reverseGeocoder.observerSubject?.observers) {
+                console.log('(ServiceCoordinator) ReverseGeocoder now has', this._reverseGeocoder.observerSubject.observers.length, 'observers');
             }
         }
 

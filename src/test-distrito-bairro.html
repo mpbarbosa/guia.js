@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test: District/Bairro Card Logic</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .test-case {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .test-case h3 {
+      margin-top: 0;
+      color: #1976d2;
+    }
+    .result {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      background: #f5f5f5;
+    }
+    .pass { background: #c8e6c9; color: #1b5e20; }
+    .fail { background: #ffcdd2; color: #c62828; }
+    pre {
+      background: #263238;
+      color: #aed581;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Test: District/Bairro Card Logic</h1>
+  <p>Testing the new address parser logic for Brazilian administrative divisions</p>
+
+  <div id="test-results"></div>
+
+  <script>
+    // Pure functions for address parsing (browser-compatible inline version)
+    function extractDistrito(address) {
+      if (!address) return null;
+      const distrito = address.village || address.district || address.hamlet || address.town;
+      if (distrito) return distrito;
+      if (address.address) {
+        return address.address.village || address.address.district || address.address.hamlet || address.address.town || null;
+      }
+      return null;
+    }
+
+    function extractBairro(address) {
+      if (!address) return null;
+      const bairro = address.suburb || address.neighbourhood || address.quarter || address.residential;
+      if (bairro) return bairro;
+      if (address.address) {
+        return address.address.suburb || address.address.neighbourhood || address.address.quarter || address.address.residential || null;
+      }
+      return null;
+    }
+
+    function determineLocationType(address) {
+      const distrito = extractDistrito(address);
+      const bairro = extractBairro(address);
+      if (distrito && !bairro) {
+        return { type: 'distrito', value: distrito };
+      }
+      if (bairro) {
+        return { type: 'bairro', value: bairro };
+      }
+      return { type: 'bairro', value: null };
+    }
+
+    function formatLocationValue(value) {
+      if (!value || value.trim() === '') {
+        return 'Não disponível';
+      }
+      return value;
+    }
+
+    // Test cases
+    const testCases = [
+      {
+        name: "Milho Verde District (district without bairro)",
+        address: {
+          village: "Milho Verde",
+          city: "Serro",
+          state: "Minas Gerais"
+        },
+        expected: {
+          type: "distrito",
+          value: "Milho Verde"
+        }
+      },
+      {
+        name: "City with neighborhood (common case)",
+        address: {
+          suburb: "Copacabana",
+          city: "Rio de Janeiro",
+          state: "Rio de Janeiro"
+        },
+        expected: {
+          type: "bairro",
+          value: "Copacabana"
+        }
+      },
+      {
+        name: "Small city without subdivisions",
+        address: {
+          city: "Pequena Cidade",
+          state: "Goiás"
+        },
+        expected: {
+          type: "bairro",
+          value: null
+        }
+      },
+      {
+        name: "District with neighborhood (prefer bairro)",
+        address: {
+          village: "Grande Distrito",
+          suburb: "Centro do Distrito",
+          city: "Município",
+          state: "São Paulo"
+        },
+        expected: {
+          type: "bairro",
+          value: "Centro do Distrito"
+        }
+      },
+      {
+        name: "Nominatim response with nested address",
+        address: {
+          address: {
+            village: "Vila Pequena",
+            city: "São Paulo"
+          }
+        },
+        expected: {
+          type: "distrito",
+          value: "Vila Pequena"
+        }
+      }
+    ];
+
+    // Run tests
+    const resultsDiv = document.getElementById('test-results');
+    let passCount = 0;
+    let failCount = 0;
+
+    testCases.forEach((testCase, index) => {
+      const result = determineLocationType(testCase.address);
+      const passed = result.type === testCase.expected.type && result.value === testCase.expected.value;
+      
+      if (passed) passCount++;
+      else failCount++;
+
+      const testDiv = document.createElement('div');
+      testDiv.className = 'test-case';
+      testDiv.innerHTML = `
+        <h3>Test ${index + 1}: ${testCase.name}</h3>
+        <div>
+          <strong>Input Address:</strong>
+          <pre>${JSON.stringify(testCase.address, null, 2)}</pre>
+        </div>
+        <div>
+          <strong>Expected:</strong> ${testCase.expected.type} = "${testCase.expected.value || 'null'}"
+        </div>
+        <div>
+          <strong>Actual:</strong> ${result.type} = "${result.value || 'null'}"
+        </div>
+        <div class="result ${passed ? 'pass' : 'fail'}">
+          ${passed ? '✓ PASS' : '✗ FAIL'}
+        </div>
+      `;
+      resultsDiv.appendChild(testDiv);
+    });
+
+    // Summary
+    const summaryDiv = document.createElement('div');
+    summaryDiv.className = 'test-case';
+    summaryDiv.innerHTML = `
+      <h3>Test Summary</h3>
+      <div class="${passCount === testCases.length ? 'result pass' : 'result'}">
+        <strong>Passed:</strong> ${passCount} / ${testCases.length}<br>
+        <strong>Failed:</strong> ${failCount}
+      </div>
+    `;
+    resultsDiv.appendChild(summaryDiv);
+
+    console.log(`Tests completed: ${passCount} passed, ${failCount} failed`);
+  </script>
+</body>
+</html>

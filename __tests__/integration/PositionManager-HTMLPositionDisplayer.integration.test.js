@@ -365,8 +365,9 @@ describe('PositionManager + HTMLPositionDisplayer Integration', () => {
 
 			positionManager.update(position2);
 			
-			// Second update should be rejected due to insignificant movement
-			expect(mockElement.innerHTML).toContain('Movement is not significant enough');
+			// Second update should be rejected due to neither distance nor time threshold being met
+			expect(mockElement.innerHTML).toContain('Neither distance');
+			expect(mockElement.innerHTML).toContain('threshold met');
 		});
 	});
 

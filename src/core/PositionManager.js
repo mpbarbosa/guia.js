@@ -12,13 +12,15 @@
  * - Singleton pattern ensures one position state across application
  * - Observer pattern for decoupled position change notifications
  * - Smart filtering prevents excessive processing from GPS noise
- * - Multi-layer validation (accuracy quality, distance threshold, time interval)
+ * - Multi-layer validation (accuracy quality, distance OR time threshold)
  * - Integration with GeoPosition for enhanced position data
  * 
- * Validation Rules:
+ * Validation Rules (v0.7.2-alpha):
  * 1. Accuracy Quality: Rejects medium/bad/very bad accuracy on mobile devices
- * 2. Distance Threshold: Ignores movements less than 20 meters
- * 3. Time Interval: Distinguishes regular updates (≥50s) from immediate updates (<50s)
+ * 2. Distance OR Time Threshold: Updates if EITHER condition is met:
+ *    - Movement ≥ 20 meters OR
+ *    - Time elapsed ≥ 30 seconds
+ * 3. Event Classification: Distinguishes regular updates (≥50s) from immediate updates (<50s)
  * 
  * @module core/PositionManager
  * @pattern Singleton - Only one instance manages position state
@@ -391,7 +393,12 @@ class PositionManager {
 				position.coords.accuracy,
 			);
 		}
-		// Only update if position has changed significantly (more than 20 meters)
+		
+		// DISTANCE OR TIME VALIDATION (v0.7.2-alpha):
+		// Update position if EITHER condition is met:
+		// 1. Distance > minimumDistanceChange (20 meters) OR
+		// 2. Time elapsed > minimumTimeChange (30 seconds)
+		// This ensures responsive updates even during slow movement
 		if (
 			this.lastPosition &&
 			position &&
@@ -405,13 +412,50 @@ class PositionManager {
 				position.coords.latitude,
 				position.coords.longitude,
 			);
-			if (distance < setupParams.minimumDistanceChange) {
+			
+			const timeElapsed = position.timestamp - (this.lastModified || 0);
+			const timeElapsedSeconds = (timeElapsed / 1000).toFixed(1);
+			
+			// Check if EITHER distance OR time threshold is exceeded
+			const distanceExceeded = distance >= setupParams.minimumDistanceChange;
+			const timeExceeded = timeElapsed >= setupParams.minimumTimeChange;
+			
+			if (!distanceExceeded && !timeExceeded) {
 				bUpdateCurrPos = false;
-				error = { name: "DistanceError", message: "Movement is not significant enough" };
+				error = { 
+					name: "DistanceAndTimeError", 
+					message: `Neither distance (${distance.toFixed(1)}m < ${setupParams.minimumDistanceChange}m) nor time (${timeElapsedSeconds}s < ${setupParams.minimumTimeChange / 1000}s) threshold met`
+				};
 				warn(
-					"(PositionManager) Movement not significant enough:",
-					distance,
+					"(PositionManager) Update blocked - distance:",
+					distance.toFixed(1) + "m",
+					"time:",
+					timeElapsedSeconds + "s"
 				);
+			} else {
+				// Log which condition triggered the update
+				if (distanceExceeded && timeExceeded) {
+					console.log(
+						"(PositionManager) Update triggered - BOTH conditions met - distance:",
+						distance.toFixed(1) + "m",
+						"time:",
+						timeElapsedSeconds + "s"
+					);
+				} else if (distanceExceeded) {
+					console.log(
+						"(PositionManager) Update triggered by DISTANCE -",
+						distance.toFixed(1) + "m",
+						"(time:",
+						timeElapsedSeconds + "s)"
+					);
+				} else {
+					console.log(
+						"(PositionManager) Update triggered by TIME -",
+						timeElapsedSeconds + "s",
+						"(distance:",
+						distance.toFixed(1) + "m)"
+					);
+				}
 			}
 		}
 

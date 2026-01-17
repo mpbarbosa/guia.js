@@ -41,6 +41,18 @@ export const TRACKING_INTERVAL = 50000;
 /** Minimum distance change in meters to trigger position update */
 export const MINIMUM_DISTANCE_CHANGE = 20;
 
+/** 
+ * Minimum time interval in milliseconds to force position update regardless of distance.
+ * Used in conjunction with MINIMUM_DISTANCE_CHANGE to ensure updates occur even during
+ * slow movement. Position updates if EITHER condition is met:
+ * - Distance > MINIMUM_DISTANCE_CHANGE (20 meters) OR
+ * - Time > MINIMUM_TIME_CHANGE (30 seconds)
+ * 
+ * This ensures neighborhood cards update even when driving slowly.
+ * @since 0.7.2-alpha
+ */
+export const MINIMUM_TIME_CHANGE = 30000; // 30 seconds
+
 /** Speech queue timer interval in milliseconds */
 export const QUEUE_TIMER_INTERVAL = 5000;
 
@@ -94,6 +106,7 @@ export const OSM_BASE_URL = "https://nominatim.openstreetmap.org/reverse?format=
 export const createDefaultConfig = () => ({
 	trackingInterval: TRACKING_INTERVAL,
 	minimumDistanceChange: MINIMUM_DISTANCE_CHANGE,
+	minimumTimeChange: MINIMUM_TIME_CHANGE,
 	independentQueueTimerInterval: QUEUE_TIMER_INTERVAL,
 	noReferencePlace: NO_REFERENCE_PLACE,
 	validRefPlaceClasses: [...VALID_REF_PLACE_CLASSES],

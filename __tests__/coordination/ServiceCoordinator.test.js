@@ -244,7 +244,7 @@ describe('ServiceCoordinator', () => {
         test('should create all three displayers', () => {
             const coordinator = new ServiceCoordinator(params);
 
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
+            coordinator.createDisplayers('pos-display', 'loc-result', 'addr-display', 'ref-display');
             const displayers = coordinator.getDisplayers();
 
             expect(displayers).toBeDefined();
@@ -256,9 +256,9 @@ describe('ServiceCoordinator', () => {
         test('should call factory methods with correct arguments', () => {
             const coordinator = new ServiceCoordinator(params);
 
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
+            coordinator.createDisplayers('pos-display', 'loc-result', 'addr-display', 'ref-display');
 
-            expect(params.displayerFactory.createPositionDisplayer).toHaveBeenCalledWith('loc-result');
+            expect(params.displayerFactory.createPositionDisplayer).toHaveBeenCalledWith('pos-display');
             expect(params.displayerFactory.createAddressDisplayer).toHaveBeenCalledWith('loc-result', 'addr-display');
             expect(params.displayerFactory.createReferencePlaceDisplayer).toHaveBeenCalledWith('ref-display');
         });
@@ -266,7 +266,7 @@ describe('ServiceCoordinator', () => {
         test('should return this for chaining', () => {
             const coordinator = new ServiceCoordinator(params);
 
-            const result = coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
+            const result = coordinator.createDisplayers('pos-display', 'loc-result', 'addr-display', 'ref-display');
 
             expect(result).toBe(coordinator);
         });
@@ -727,7 +727,7 @@ describe('ServiceCoordinator', () => {
             const result = coordinator.toString();
 
             expect(result).toContain('initialized');
-            expect(result).toContain('4 displayers');
+            expect(result).toContain('5 displayers');  // Updated: now includes SIDRA displayer
         });
 
         test('should show tracking state with watch ID', () => {

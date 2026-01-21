@@ -1,3 +1,4 @@
+import { ADDRESS_FETCHED_EVENT } from '../../src/config/defaults.js';
 /**
  * Unit Tests for HTMLReferencePlaceDisplayer Class
  * 
@@ -18,6 +19,18 @@ class MockReferencePlace {
         this.typeName = data.typeName || null;
         this.name = data.name || null;
         this.description = data.description || null;
+    }
+
+    calculateCategory() {
+        // Simple mock implementation
+        const categoryMap = {
+            'shop': 'Shopping Center',
+            'amenity': 'Café',
+            'railway': 'Estação do Metrô',
+            'building': 'Edifício',
+            'place': 'Residencial'
+        };
+        return categoryMap[this.className] || 'unknown';
     }
 }
 
@@ -99,7 +112,7 @@ describe('HTMLReferencePlaceDisplayer - MP Barbosa Travel Guide (v0.8.8-alpha)',
             expect(html).toContain('Estação do Metrô');
             expect(html).toContain('Estação Sé');
             expect(html).toContain('reference-place-details');
-            expect(html).toContain('Categoria: railway');
+            expect(html).toContain('Categoria: Estação do Metrô');
             expect(html).toContain('Tipo: subway');
         });
 
@@ -195,14 +208,14 @@ describe('HTMLReferencePlaceDisplayer - MP Barbosa Travel Guide (v0.8.8-alpha)',
         });
 
         test('should update element on position update event', () => {
-            displayer.update(null, mockBrazilianStandardAddress, 'PositionManager updated', false, null);
+            displayer.update(null, mockBrazilianStandardAddress, ADDRESS_FETCHED_EVENT, false, null);
             
             expect(mockElement.innerHTML).toContain('Shopping Center');
             expect(mockElement.innerHTML).toContain('Shopping Vila Olímpia');
         });
 
         test('should display loading message during loading state', () => {
-            displayer.update(null, null, 'PositionManager updated', true, null);
+            displayer.update(null, null, ADDRESS_FETCHED_EVENT, true, null);
             
             expect(mockElement.innerHTML).toContain('Carregando local de referência...');
             expect(mockElement.innerHTML).toContain('class="loading"');
@@ -210,7 +223,7 @@ describe('HTMLReferencePlaceDisplayer - MP Barbosa Travel Guide (v0.8.8-alpha)',
 
         test('should display error message on error', () => {
             const error = new Error('Serviço de localização indisponível');
-            displayer.update(null, null, 'PositionManager updated', false, error);
+            displayer.update(null, null, ADDRESS_FETCHED_EVENT, false, error);
             
             expect(mockElement.innerHTML).toContain('Erro ao carregar local de referência:');
             expect(mockElement.innerHTML).toContain('Serviço de localização indisponível');
@@ -230,7 +243,7 @@ describe('HTMLReferencePlaceDisplayer - MP Barbosa Travel Guide (v0.8.8-alpha)',
             const originalContent = 'original content';
             mockElement.innerHTML = originalContent;
             
-            displayer.update(null, null, 'PositionManager updated', false, null);
+            displayer.update(null, null, ADDRESS_FETCHED_EVENT, false, null);
             
             expect(mockElement.innerHTML).toBe(originalContent);
         });
@@ -262,7 +275,7 @@ describe('HTMLReferencePlaceDisplayer - MP Barbosa Travel Guide (v0.8.8-alpha)',
 
         test('should handle update with null Brazilian standard address', () => {
             expect(() => {
-                displayer.update(null, null, 'PositionManager updated', false, null);
+                displayer.update(null, null, ADDRESS_FETCHED_EVENT, false, null);
             }).not.toThrow();
         });
 
@@ -270,7 +283,7 @@ describe('HTMLReferencePlaceDisplayer - MP Barbosa Travel Guide (v0.8.8-alpha)',
             const malformedAddress = { someProperty: 'value' };
             
             expect(() => {
-                displayer.update(null, malformedAddress, 'PositionManager updated', false, null);
+                displayer.update(null, malformedAddress, ADDRESS_FETCHED_EVENT, false, null);
             }).not.toThrow();
         });
     });
@@ -311,7 +324,7 @@ describe('HTMLReferencePlaceDisplayer - MP Barbosa Travel Guide (v0.8.8-alpha)',
 
             // Perform many updates
             for (let i = 0; i < 1000; i++) {
-                displayer.update(null, mockAddress, 'PositionManager updated', false, null);
+                displayer.update(null, mockAddress, ADDRESS_FETCHED_EVENT, false, null);
             }
 
             // Should still work correctly

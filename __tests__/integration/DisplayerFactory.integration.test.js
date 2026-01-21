@@ -144,6 +144,15 @@ describe('DisplayerFactory Module Integration Tests', () => {
                     referencePlaceDisplay: false,
                     update: jest.fn(), 
                     toString: () => 'MockReferencePlaceDisplayer'
+                }),
+                createHighlightCardsDisplayer: jest.fn().mockReturnValue({
+                    update: jest.fn(),
+                    toString: () => 'MockHighlightCardsDisplayer'
+                }),
+                createSidraDisplayer: jest.fn().mockReturnValue({
+                    element: { id: 'mock-sidra' },
+                    update: jest.fn(),
+                    toString: () => 'MockSidraDisplayer'
                 })
             };
             

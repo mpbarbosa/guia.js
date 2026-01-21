@@ -1,5 +1,7 @@
 'use strict';
 
+import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
+
 /**
  * HTML-based address information displayer with comprehensive address data visualization.
  * 
@@ -204,9 +206,7 @@ class HTMLAddressDisplayer {
 
 		// Handle successful address data for position updates
 		// Note: Using actual event value from PositionManager constant
-		if (posEvent === 'PositionManager updated' && (addressData || enderecoPadronizado)) {
-			console.log(`(HTMLAddressDisplayer) Rendering address data:`, { addressData, enderecoPadronizado });
-			
+		if (posEvent === ADDRESS_FETCHED_EVENT && (addressData || enderecoPadronizado)) {
 			// Render comprehensive address HTML
 			const html = this.renderAddressHtml(addressData, enderecoPadronizado);
 			this.element.innerHTML += html;

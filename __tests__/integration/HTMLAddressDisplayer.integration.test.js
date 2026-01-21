@@ -9,6 +9,7 @@
  */
 
 import { jest } from '@jest/globals';
+import { ADDRESS_FETCHED_EVENT } from '../../src/config/defaults.js';
 
 describe('HTMLAddressDisplayer Integration Tests', () => {
     let HTMLAddressDisplayer;
@@ -116,7 +117,7 @@ describe('HTMLAddressDisplayer Integration Tests', () => {
                 }
             };
             
-            instance.update(mockAddressData, null, 'PositionManager updated', false, null);
+            instance.update(mockAddressData, null, ADDRESS_FETCHED_EVENT, false, null);
             
             expect(testElement.innerHTML).toContain('Shopping Iguatemi');
             expect(testElement.innerHTML).toContain('address-details');
@@ -158,7 +159,7 @@ describe('HTMLAddressDisplayer Integration Tests', () => {
             const instance = new HTMLAddressDisplayer(mockElement);
             
             const error = new Error('Falha na conexão com serviço de geocodificação');
-            instance.update(null, null, 'PositionManager updated', false, error);
+            instance.update(null, null, ADDRESS_FETCHED_EVENT, false, error);
             
             expect(mockElement.innerHTML).toContain('Erro ao carregar endereço');
             expect(mockElement.innerHTML).toContain('Falha na conexão com serviço de geocodificação');
@@ -366,7 +367,7 @@ describe('HTMLAddressDisplayer Integration Tests', () => {
                 address: { road: 'Factory Test Street' }
             };
             
-            displayer.update(addressData, null, 'PositionManager updated', false, null);
+            displayer.update(addressData, null, ADDRESS_FETCHED_EVENT, false, null);
             
             expect(element.innerHTML).toContain('Factory Test Address');
             expect(element.innerHTML).toContain('Factory Test Street');

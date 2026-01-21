@@ -1,5 +1,7 @@
 'use strict';
 
+import { ADDRESS_FETCHED_EVENT, NO_REFERENCE_PLACE } from "../config/defaults.js";
+
 /**
  * HTML-based reference place information displayer with Portuguese localization.
  * 
@@ -105,11 +107,11 @@ class HTMLReferencePlaceDisplayer {
 		html += '<div class="reference-place-attributes">';
 		
 		// Display the Portuguese description (e.g., "Shopping Center", "Estação do Metrô")
-		if (referencePlace.description) {
+		if (referencePlace.description && referencePlace.description != NO_REFERENCE_PLACE) {
 			html += `<span class="reference-place-type">${referencePlace.description}</span>`;
 			
-			// Add the place name if available
-			if (referencePlace.name && referencePlace.name.trim()) {
+			// Add the place name if available and referencePlace.name is not substring of referencePlace.description
+			if (referencePlace.name && referencePlace.name.trim() && !referencePlace.description.includes(referencePlace.name)) {
 				html += ` <span class="reference-place-name">${referencePlace.name}</span>`;
 			}
 		} else if (referencePlace.name) {
@@ -123,10 +125,10 @@ class HTMLReferencePlaceDisplayer {
 		if (referencePlace.className || referencePlace.typeName) {
 			html += '<div class="reference-place-details">';
 			if (referencePlace.className) {
-				html += `<small class="reference-place-class">Categoria: ${referencePlace.className}</small>`;
+				html += `<small class="reference-place-class">Categoria: ${referencePlace.calculateCategory()}</small>`;
 			}
 			if (referencePlace.typeName) {
-				html += `<small class="reference-place-type-detail">Tipo: ${referencePlace.typeName}</small>`;
+				html += ` <small class="reference-place-type-detail">Tipo: ${referencePlace.typeName}</small>`;
 			}
 			html += '</div>';
 		}
@@ -196,7 +198,7 @@ class HTMLReferencePlaceDisplayer {
 
 		// Handle successful reference place data for position updates
 		// Note: Using actual event value from PositionManager constant
-		if (posEvent === 'PositionManager updated' && brazilianStandardAddress) {
+		if (posEvent === ADDRESS_FETCHED_EVENT && brazilianStandardAddress) {
 			console.log(`(HTMLReferencePlaceDisplayer) Rendering reference place data:`, brazilianStandardAddress);
 			
 			// Extract reference place from the standardized address

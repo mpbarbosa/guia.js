@@ -261,7 +261,7 @@ describe('DisplayerFactory - MP Barbosa Travel Guide (v0.8.10-alpha)', () => {
         test('should return meaningful string representation', () => {
             const result = DisplayerFactory.toString();
             
-            expect(result).toBe('DisplayerFactory: 3 factory methods available');
+            expect(result).toBe('DisplayerFactory: 5 factory methods available');
         });
 
         test('should provide static toString method', () => {

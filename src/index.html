@@ -221,7 +221,7 @@
     <main id="app-content" role="main">
       <header class="">
         <h1>Guia Turístico - Rastreamento de Localização</h1>
-        <p>Acompanhe sua localização em tempo real durante a navegação pela cidade.</p>
+
         <p>
           <span id="tracking-timer-container" style="display: none;">
             Tempo decorrido: <span id="chronometer" aria-live="polite">00:00</span> | 
@@ -285,8 +285,9 @@
         <p><strong>Endereço padronizado:</strong> <span id="endereco-padronizado-display" aria-live="polite">Aguardando localização...</span></p>
       </section>
 
-      <section class="section" id="dadosSidra" aria-labelledby="location-info-heading">
+      <section class="section" aria-labelledby="location-info-heading">
         <h2 id="location-info-heading">Informações da Localização</h2>
+        <p><strong>Dados SIDRA:</strong> <span id="dadosSidra" aria-live="polite">Aguardando localização...</span></p>
       </section>
       
       <section id="locationResult" aria-live="polite" aria-label="Resultado da localização">

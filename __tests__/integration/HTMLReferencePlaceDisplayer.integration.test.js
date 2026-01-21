@@ -1,3 +1,4 @@
+import { ADDRESS_FETCHED_EVENT } from '../../src/config/defaults.js';
 /**
  * Integration Tests for HTMLReferencePlaceDisplayer
  * 
@@ -76,7 +77,8 @@ describe('HTMLReferencePlaceDisplayer Integration Tests', () => {
                 description: 'Shopping Center',
                 name: 'Shopping Ibirapuera',
                 className: 'shop',
-                typeName: 'mall'
+                typeName: 'mall',
+                calculateCategory: () => 'Shopping Center'
             };
             
             const html = instance.renderReferencePlaceHtml(mockReferencePlace);
@@ -96,7 +98,7 @@ describe('HTMLReferencePlaceDisplayer Integration Tests', () => {
                 }
             };
             
-            instance.update(null, mockBrazilianAddress, 'PositionManager updated', false, null);
+            instance.update(null, mockBrazilianAddress, ADDRESS_FETCHED_EVENT, false, null);
             
             expect(testElement.innerHTML).toContain('Estação Faria Lima');
             expect(testElement.innerHTML).toContain('Estação do Metrô');
@@ -119,7 +121,7 @@ describe('HTMLReferencePlaceDisplayer Integration Tests', () => {
             const instance = new HTMLReferencePlaceDisplayer(mockElement);
             
             const error = new Error('Falha na conexão com serviço de referência');
-            instance.update(null, null, 'PositionManager updated', false, error);
+            instance.update(null, null, ADDRESS_FETCHED_EVENT, false, error);
             
             expect(mockElement.innerHTML).toContain('Erro ao carregar local de referência');
             expect(mockElement.innerHTML).toContain('Falha na conexão com serviço de referência');
@@ -180,7 +182,8 @@ describe('HTMLReferencePlaceDisplayer Integration Tests', () => {
                 description: 'Açougue',
                 name: 'Açougue São João',
                 className: 'comércio',
-                typeName: 'alimentação'
+                typeName: 'alimentação',
+                calculateCategory: () => 'comércio'
             };
             
             const html = instance.renderReferencePlaceHtml(referencePlace);

@@ -57,6 +57,7 @@ class ReferencePlace {
 			"subway": "Estação do Metrô",
 			"station": "Estação do Metrô"
 		},
+		"building" : { "yes": "Edifício" }
 	};
 
 	/**
@@ -115,6 +116,15 @@ class ReferencePlace {
 
 		// Fallback to class/type combination
 		return `${this.className}: ${this.typeName}`;
+	}
+
+	calculateCategory() {
+		const referenceClassName = ReferencePlace.referencePlaceMap[this.className] || "unknown";
+		if (typeof referenceClassName === 'string') {
+			return referenceClassName;
+		}
+		const category = referenceClassName[this.typeName];
+		return category || "unknown";
 	}
 
 	/**

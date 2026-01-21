@@ -1,6 +1,6 @@
 # Guia Turístico - Tourist Guide Web Application
 
-[![Tests](https://img.shields.io/badge/tests-1820%20passing%20%2F%201968%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-1887%20passing%20%2F%202045%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
@@ -84,13 +84,13 @@ npm install
 # Validate JavaScript syntax (<1 second)
 npm run validate
 
-# Run test suite (1,968 total tests, 1,820 passing, 146 skipped, ~45 seconds)
+# Run test suite (2,045 total tests, 1,887 passing, 146 skipped, ~30 seconds)
 npm test
 
-# Run tests with coverage (~45 seconds)
+# Run tests with coverage (~30 seconds)
 npm run test:coverage
 
-# Full validation: syntax + tests (~8 seconds)
+# Full validation: syntax + tests (~30 seconds total)
 npm run test:all
 ```
 
@@ -311,7 +311,9 @@ To ensure clear communication about testing concepts:
 - `HTMLPositionDisplayer` - Coordinate display and Google Maps links
 - `HTMLAddressDisplayer` - Address formatting and presentation
 - `HTMLHighlightCardsDisplayer` - Municipio and bairro highlight cards (v0.7.1+)
-- `DisplayerFactory` - Factory pattern for display component creation
+- `HTMLReferencePlaceDisplayer` - Displays nearby reference places
+- `HTMLSidraDisplayer` - IBGE SIDRA demographic data display (v0.7.2+)
+- `DisplayerFactory` - Factory pattern for display component creation (5 methods v0.8.6+)
 
 #### Speech Synthesis Layer
 - `SpeechSynthesisManager` - Text-to-speech coordination
@@ -758,7 +760,7 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 **Format**:
 ```
 # Generated: 2026-01-01 15:14:51
-# Version: 2.0.0-alpha
+# Version: 2.1.0-alpha
 # Commit: abc1234567890abcdef1234567890abcdef12345
 
 Version-specific URLs:

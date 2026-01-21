@@ -127,6 +127,7 @@ const DEFAULT_ELEMENT_IDS = {
 	positionDisplay: "lat-long-display",
 	referencePlaceDisplay: "reference-place-display",
 	enderecoPadronizadoDisplay: "endereco-padronizado-display",
+	sidraDisplay: "dadosSidra",
 	speechSynthesis: {
 		languageSelectId: "language",
 		voiceSelectId: "voice-select",
@@ -313,6 +314,8 @@ class WebGeocodingManager {
 			(this.elementIds.enderecoPadronizadoDisplay ? document.getElementById(this.elementIds.enderecoPadronizadoDisplay) : null);
 		this.referencePlaceDisplay = params.referencePlaceDisplay || 
 			(this.elementIds.referencePlaceDisplay ? document.getElementById(this.elementIds.referencePlaceDisplay) : null);
+		this.sidraDisplay = params.sidraDisplay || 
+			(this.elementIds.sidraDisplay ? document.getElementById(this.elementIds.sidraDisplay) : null);
 
 		// Store displayer factory (enables dependency injection for testing)
 		this.displayerFactory = params.displayerFactory || DisplayerFactory;
@@ -356,12 +359,21 @@ class WebGeocodingManager {
 			document: document
 		});
 
+		console.log('>>> (WebGeocodingManager) Created with params:', params);
+		console.log('>>> (WebGeocodingManager) locationResult element:', this.locationResult);
+		console.log('>>> (WebGeocodingManager) positionDisplay element:', this.positionDisplay);
+		console.log('>>> (WebGeocodingManager) enderecoPadronizadoDisplay element:', this.enderecoPadronizadoDisplay);
+		console.log('>>> (WebGeocodingManager) referencePlaceDisplay element:', this.referencePlaceDisplay);
+		console.log('>>> (WebGeocodingManager) sidraDisplay element:', this.sidraDisplay);
 		// Create displayers and wire observers via ServiceCoordinator
+		// Position display goes to positionDisplay, address display goes to locationResult
 		this.serviceCoordinator
 			.createDisplayers(
 				this.positionDisplay,
+				this.locationResult,
 				this.enderecoPadronizadoDisplay,
-				this.referencePlaceDisplay
+				this.referencePlaceDisplay,
+				this.sidraDisplay
 			)
 			.wireObservers();
 		
@@ -879,7 +891,7 @@ class WebGeocodingManager {
 		// Try to find a suitable element to display the error
 		const errorElements = [
 			this.document.getElementById('error-display'),
-			this.document.getElementById(this.locationResult),
+			this.locationResult,
 			this.document.getElementById('result')
 		].filter(element => element !== null);
 

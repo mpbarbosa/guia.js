@@ -43,6 +43,8 @@
 import HTMLPositionDisplayer from './HTMLPositionDisplayer.js';
 import HTMLAddressDisplayer from './HTMLAddressDisplayer.js';
 import HTMLReferencePlaceDisplayer from './HTMLReferencePlaceDisplayer.js';
+import HTMLHighlightCardsDisplayer from './HTMLHighlightCardsDisplayer.js';
+import HTMLSidraDisplayer from './HTMLSidraDisplayer.js';
 
 class DisplayerFactory {
 	/**
@@ -154,6 +156,60 @@ class DisplayerFactory {
 	}
 
 	/**
+	 * Creates a SIDRA displayer instance for IBGE statistical data visualization.
+	 * 
+	 * Creates an HTMLSidraDisplayer instance configured for displaying
+	 * IBGE SIDRA (Sistema IBGE de Recuperação Automática) statistical data
+	 * including demographic information, economic indicators, and municipal
+	 * statistics with Brazilian Portuguese localization.
+	 * 
+	 * The created displayer is automatically frozen to prevent modification,
+	 * following MP Barbosa immutability standards.
+	 * 
+	 * @param {HTMLElement|string} element - DOM element or element ID for display
+	 * @returns {HTMLSidraDisplayer} SIDRA displayer instance (frozen)
+	 * 
+	 * @example
+	 * // With DOM element
+	 * const element = document.getElementById('sidra-display');
+	 * const displayer = DisplayerFactory.createSidraDisplayer(element);
+	 * 
+	 * @example
+	 * // With element ID string
+	 * const displayer = DisplayerFactory.createSidraDisplayer('sidra-display');
+	 * 
+	 * @since 0.8.6-alpha
+	 */
+	static createSidraDisplayer(element) {
+		const displayer = new HTMLSidraDisplayer(element);
+		return displayer; // HTMLSidraDisplayer already freezes itself
+	}
+
+	/**
+	 * Creates a highlight cards displayer instance for municipio and bairro cards.
+	 * 
+	 * Creates an HTMLHighlightCardsDisplayer instance configured for displaying
+	 * municipio and bairro highlight cards that update when address data changes.
+	 * This displayer automatically finds and updates the card elements in the DOM.
+	 * 
+	 * The created displayer is automatically frozen to prevent modification,
+	 * following MP Barbosa immutability standards.
+	 * 
+	 * @param {Document} document - Document object for DOM queries
+	 * @returns {HTMLHighlightCardsDisplayer} Highlight cards displayer instance (frozen)
+	 * 
+	 * @example
+	 * // With document object
+	 * const displayer = DisplayerFactory.createHighlightCardsDisplayer(document);
+	 * 
+	 * @since 0.8.6-alpha
+	 */
+	static createHighlightCardsDisplayer(document) {
+		const displayer = new HTMLHighlightCardsDisplayer(document);
+		return displayer; // HTMLHighlightCardsDisplayer already freezes itself
+	}
+
+	/**
 	 * Returns a string representation of the DisplayerFactory class.
 	 * 
 	 * Provides information about the factory class for debugging and logging.
@@ -169,7 +225,7 @@ class DisplayerFactory {
 	 * @since 0.8.6-alpha
 	 */
 	static toString() {
-		return `${this.name}: 3 factory methods available`;
+		return `${this.name}: 5 factory methods available`;
 	}
 }
 

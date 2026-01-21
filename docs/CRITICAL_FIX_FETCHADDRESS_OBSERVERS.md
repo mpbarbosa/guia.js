@@ -41,6 +41,7 @@ Updated `ReverseGeocoder.fetchAddress()` to match the behavior of `update()` by:
 3. ✅ Standardizing to `this.enderecoPadronizado`
 4. ✅ **Calling `notifyObservers()` with complete parameters**
 5. ✅ Adding comprehensive logging
+6. ✅ Using `ADDRESS_FETCHED_EVENT` constant from config/defaults.js (v0.7.1+)
 
 ### Code Changes
 
@@ -73,7 +74,7 @@ async fetchAddress() {
         this.notifyObservers(
             this.currentAddress, 
             this.enderecoPadronizado, 
-            'Address fetched',
+            ADDRESS_FETCHED_EVENT, // Using constant from config/defaults.js
             false,
             null
         );
@@ -96,7 +97,7 @@ When the application runs now, you should see:
 ✅ ServiceCoordinator: Address fetched successfully
 ✅ (ReverseGeocoder.fetchAddress) Standardized address: { municipio: 'Maceió', bairro: 'Centro', siglaUF: 'AL' }
 ✅ (ReverseGeocoder.fetchAddress) About to notify observers with: { hasAddressData: true, hasEnderecoPadronizado: true, observerCount: 1 }
-✅ +++ (100) (ObserverSubject) Notifying observers with args: [addressData, enderecoPadronizado, 'Address fetched', false, null]
+✅ +++ (100) (ObserverSubject) Notifying observers with args: [addressData, enderecoPadronizado, ADDRESS_FETCHED_EVENT, false, null]
 ✅ +++ (101) (ObserverSubject) Notifying observer: HTMLHighlightCardsDisplayer
 ✅ (HTMLHighlightCardsDisplayer) update called with: { hasAddressData: true, hasEnderecoPadronizado: true, municipio: 'Maceió', bairro: 'Centro' }
 ✅ (HTMLHighlightCardsDisplayer) Updated municipio-value to: Maceió

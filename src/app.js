@@ -331,9 +331,28 @@ async function initializeHomeView() {
   if (!AppState.manager) {
     try {
       // WebGeocodingManager expects params object with locationResult property
-      // Use 'locationResult' as the element ID for displaying location info
+      // locationResult is for address display, positionDisplay is for coordinates
       AppState.manager = new WebGeocodingManager(document, {
-        locationResult: 'locationResult'
+        locationResult: 'locationResult',
+        elementIds: {
+          positionDisplay: 'lat-long-display', // Use default - coordinates go here
+          referencePlaceDisplay: 'reference-place-display',
+          enderecoPadronizadoDisplay: 'endereco-padronizado-display',
+          speechSynthesis: {
+            languageSelectId: "language",
+            voiceSelectId: "voice-select",
+            textInputId: "text-input",
+            speakBtnId: "speak-btn",
+            pauseBtnId: "pause-btn",
+            resumeBtnId: "resume-btn",
+            stopBtnId: "stop-btn",
+            rateInputId: "rate",
+            rateValueId: "rate-value",
+            pitchInputId: "pitch",
+            pitchValueId: "pitch-value"
+          },
+          sidraDisplay: 'dadosSidra'
+        }
       });
       console.log('WebGeocodingManager initialized for home view');
       

@@ -60,12 +60,16 @@ export const QUEUE_TIMER_INTERVAL = 5000;
 /** Default text for unclassified reference places */
 export const NO_REFERENCE_PLACE = "Não classificado";
 
+/** Event name for address fetch completion */
+export const ADDRESS_FETCHED_EVENT = "Address fetched";
+
 /** Valid OSM reference place classes (geographic points, commercial locations, facilities, transport) */
 export const VALID_REF_PLACE_CLASSES = Object.freeze([
 	"place",    // Geographic locations (cities, towns, neighborhoods)
 	"shop",     // Commercial establishments
 	"amenity",  // Public facilities (restaurants, banks, schools)
-	"railway"   // Railway stations and transport hubs
+	"railway",   // Railway stations and transport hubs
+	"building"  // Buildings
 ]);
 
 // Device-Specific Accuracy Thresholds

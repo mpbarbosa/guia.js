@@ -23,6 +23,7 @@
 import { jest } from '@jest/globals';
 import PositionManager from '../../src/core/PositionManager.js';
 import HTMLAddressDisplayer from '../../src/html/HTMLAddressDisplayer.js';
+import { ADDRESS_FETCHED_EVENT } from '../../src/config/defaults.js';
 
 // Mock DOM environment
 global.document = undefined;
@@ -106,7 +107,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			addressDisplayer.update(
 				addressData,
 				standardizedAddress,
-				'PositionManager updated',
+				ADDRESS_FETCHED_EVENT,
 				false,
 				null
 			);
@@ -119,7 +120,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 		});
 
 		it('should handle loading state with Portuguese message', () => {
-			addressDisplayer.update(null, null, 'PositionManager updated', true, null);
+			addressDisplayer.update(null, null, ADDRESS_FETCHED_EVENT, true, null);
 			
 			expect(mockElement.innerHTML).toContain('Carregando endereço');
 			expect(mockElement.innerHTML).toContain('loading');
@@ -128,7 +129,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 		it('should handle error state with Portuguese message', () => {
 			const error = { message: 'Serviço de geocodificação indisponível' };
 			
-			addressDisplayer.update(null, null, 'PositionManager updated', false, error);
+			addressDisplayer.update(null, null, ADDRESS_FETCHED_EVENT, false, error);
 			
 			expect(mockElement.innerHTML).toContain('Erro ao carregar endereço');
 			expect(mockElement.innerHTML).toContain('geocodificação indisponível');
@@ -140,7 +141,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			
 			// Should not throw error
 			expect(() => {
-				nullDisplayer.update({}, null, 'PositionManager updated', false, null);
+				nullDisplayer.update({}, null, ADDRESS_FETCHED_EVENT, false, null);
 			}).not.toThrow();
 		});
 	});
@@ -169,7 +170,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			addressDisplayer.update(
 				addressData,
 				standardizedAddress,
-				'PositionManager updated',
+				ADDRESS_FETCHED_EVENT,
 				false,
 				null
 			);
@@ -204,7 +205,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			addressDisplayer.update(
 				addressData,
 				standardizedAddress,
-				'PositionManager updated',
+				ADDRESS_FETCHED_EVENT,
 				false,
 				null
 			);
@@ -239,7 +240,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			addressDisplayer.update(
 				addressData,
 				standardizedAddress,
-				'PositionManager updated',
+				ADDRESS_FETCHED_EVENT,
 				false,
 				null
 			);
@@ -268,7 +269,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address1, standardized1, 'PositionManager updated', false, null);
+			addressDisplayer.update(address1, standardized1, ADDRESS_FETCHED_EVENT, false, null);
 			expect(mockElement.innerHTML).toContain('Serro');
 			
 			// Second address in Diamantina
@@ -288,7 +289,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address2, standardized2, 'PositionManager updated', false, null);
+			addressDisplayer.update(address2, standardized2, ADDRESS_FETCHED_EVENT, false, null);
 			expect(mockElement.innerHTML).toContain('Diamantina');
 		});
 
@@ -310,7 +311,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address1, standardized1, 'PositionManager updated', false, null);
+			addressDisplayer.update(address1, standardized1, ADDRESS_FETCHED_EVENT, false, null);
 			const html1 = mockElement.innerHTML;
 			expect(html1).toContain('Centro');
 			
@@ -331,7 +332,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address2, standardized2, 'PositionManager updated', false, null);
+			addressDisplayer.update(address2, standardized2, ADDRESS_FETCHED_EVENT, false, null);
 			expect(mockElement.innerHTML).toContain('São Sebastião');
 		});
 
@@ -351,7 +352,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(addressMG, standardizedMG, 'PositionManager updated', false, null);
+			addressDisplayer.update(addressMG, standardizedMG, ADDRESS_FETCHED_EVENT, false, null);
 			expect(mockElement.innerHTML).toContain('Serro');
 			
 			// Address in Rio de Janeiro
@@ -371,7 +372,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'RJ'
 			});
 			
-			addressDisplayer.update(addressRJ, standardizedRJ, 'PositionManager updated', false, null);
+			addressDisplayer.update(addressRJ, standardizedRJ, ADDRESS_FETCHED_EVENT, false, null);
 			expect(mockElement.innerHTML).toContain('Rio de Janeiro');
 		});
 	});
@@ -396,7 +397,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				cep: '39150-000'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			expect(mockElement.innerHTML).toContain('Milho Verde');
 			expect(mockElement.innerHTML).toContain('Serro');
@@ -424,7 +425,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			expect(mockElement.innerHTML).toContain('Rua Direita');
 			expect(mockElement.innerHTML).toContain('Diamantina');
@@ -452,7 +453,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				cep: '30140-000'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			expect(mockElement.innerHTML).toContain('Praça da Liberdade');
 			expect(mockElement.innerHTML).toContain('Savassi');
@@ -482,7 +483,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				cep: '22021-001'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			expect(mockElement.innerHTML).toContain('Atlântica');
 			expect(mockElement.innerHTML).toContain('Copacabana');
@@ -507,7 +508,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				bairro: 'Centro'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			expect(mockElement.innerHTML).toContain('XV de Novembro');
 		});
@@ -526,7 +527,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				numero: '123'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			expect(mockElement.innerHTML).toContain('123');
 		});
@@ -547,7 +548,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			expect(mockElement.innerHTML).toContain('Centro');
 		});
@@ -567,7 +568,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			expect(mockElement.innerHTML).toContain('Serro');
 		});
@@ -588,7 +589,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				cep: '39150-000'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			expect(mockElement.innerHTML).toContain('39150-000');
 		});
@@ -596,7 +597,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 
 	describe('Error and Edge Cases', () => {
 		it('should handle null address data gracefully', () => {
-			addressDisplayer.update(null, null, 'PositionManager updated', false, null);
+			addressDisplayer.update(null, null, ADDRESS_FETCHED_EVENT, false, null);
 			
 			// Should not throw error, element should remain unchanged or show appropriate message
 			expect(mockElement.innerHTML).toBeDefined();
@@ -608,7 +609,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				address: {}
 			};
 			
-			addressDisplayer.update(emptyAddress, null, 'PositionManager updated', false, null);
+			addressDisplayer.update(emptyAddress, null, ADDRESS_FETCHED_EVENT, false, null);
 			
 			expect(mockElement.innerHTML).toBeDefined();
 		});
@@ -621,7 +622,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				}
 			};
 			
-			addressDisplayer.update(address, null, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, null, ADDRESS_FETCHED_EVENT, false, null);
 			
 			expect(mockElement.innerHTML).toBeDefined();
 		});
@@ -633,7 +634,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			};
 			
 			expect(() => {
-				addressDisplayer.update(malformed, null, 'PositionManager updated', false, null);
+				addressDisplayer.update(malformed, null, ADDRESS_FETCHED_EVENT, false, null);
 			}).not.toThrow();
 		});
 
@@ -643,7 +644,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				code: 'TIMEOUT'
 			};
 			
-			addressDisplayer.update(null, null, 'PositionManager updated', false, error);
+			addressDisplayer.update(null, null, ADDRESS_FETCHED_EVENT, false, error);
 			
 			expect(mockElement.innerHTML).toContain('Erro ao carregar endereço');
 			expect(mockElement.innerHTML).toContain('Tempo limite excedido');
@@ -655,7 +656,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				code: 'SERVICE_UNAVAILABLE'
 			};
 			
-			addressDisplayer.update(null, null, 'PositionManager updated', false, error);
+			addressDisplayer.update(null, null, ADDRESS_FETCHED_EVENT, false, error);
 			
 			expect(mockElement.innerHTML).toContain('Erro ao carregar endereço');
 			expect(mockElement.innerHTML).toContain('temporariamente indisponível');
@@ -664,7 +665,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 
 	describe('Portuguese Localization', () => {
 		it('should use Portuguese loading message', () => {
-			addressDisplayer.update(null, null, 'PositionManager updated', true, null);
+			addressDisplayer.update(null, null, ADDRESS_FETCHED_EVENT, true, null);
 			
 			expect(mockElement.innerHTML).toContain('Carregando');
 			expect(mockElement.innerHTML).not.toContain('Loading');
@@ -673,7 +674,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 		it('should use Portuguese error messages', () => {
 			const error = { message: 'Falha ao buscar endereço' };
 			
-			addressDisplayer.update(null, null, 'PositionManager updated', false, error);
+			addressDisplayer.update(null, null, ADDRESS_FETCHED_EVENT, false, error);
 			
 			expect(mockElement.innerHTML).toContain('Erro');
 			expect(mockElement.innerHTML).not.toContain('Error');
@@ -697,7 +698,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'SP'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			expect(mockElement.innerHTML).toContain('Palmeiras');
 			expect(mockElement.innerHTML).toContain('Jardim América');
@@ -716,7 +717,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			});
 			
 			// Update with correct event
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			expect(mockElement.innerHTML).toContain('Test Road');
 			
 			// Clear element
@@ -776,7 +777,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			// Verify municipio appears in JSON representation
 			expect(mockElement.innerHTML).toContain('"municipality": "Serro"');
@@ -800,7 +801,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			// Verify bairro appears in JSON representation
 			expect(mockElement.innerHTML).toContain('"neighbourhood": "Centro"');
@@ -823,7 +824,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			});
 			
 			// Update standardized display element
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			// Verify standardized display shows municipio
 			expect(mockStandardizedElement.innerHTML).toContain('Diamantina');
@@ -846,7 +847,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			// Verify standardized display shows bairro
 			expect(mockStandardizedElement.innerHTML).toContain('Milho Verde');
@@ -881,7 +882,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 					uf: 'MG'
 				});
 				
-				addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+				addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 				
 				// Verify bairro name appears
 				expect(mockElement.innerHTML).toContain(name);
@@ -918,7 +919,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 					uf: uf
 				});
 				
-				addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+				addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 				
 				// Verify municipio name appears
 				expect(mockElement.innerHTML).toContain(name);
@@ -951,7 +952,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				cep: '39150-000'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			// Validate each level of address hierarchy
 			// Raw data validation
@@ -985,7 +986,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			// Verify special characters are preserved
 			expect(mockElement.innerHTML).toContain('São Sebastião');
@@ -1010,7 +1011,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address1, standardized1, 'PositionManager updated', false, null);
+			addressDisplayer.update(address1, standardized1, ADDRESS_FETCHED_EVENT, false, null);
 			const html1 = mockElement.innerHTML;
 			
 			// Verify first update
@@ -1032,7 +1033,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address2, standardized2, 'PositionManager updated', false, null);
+			addressDisplayer.update(address2, standardized2, ADDRESS_FETCHED_EVENT, false, null);
 			
 			// Both bairros should be present (appended)
 			expect(mockElement.innerHTML).toContain('Centro');
@@ -1060,7 +1061,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			// Municipio should appear
 			expect(mockElement.innerHTML).toContain('Serro');
@@ -1085,7 +1086,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				uf: 'MG'
 			});
 			
-			addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+			addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			
 			// Verify village appears in raw data
 			expect(mockElement.innerHTML).toContain('"village": "Milho Verde"');
@@ -1105,7 +1106,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			};
 			const standardized1 = new MockBrazilianStandardAddress({ municipio: 'Serro' });
 			
-			addressDisplayer.update(address1, standardized1, 'PositionManager updated', false, null);
+			addressDisplayer.update(address1, standardized1, ADDRESS_FETCHED_EVENT, false, null);
 			expect(mockElement.innerHTML).toContain('Serro');
 			
 			// Second address (should append)
@@ -1115,7 +1116,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			};
 			const standardized2 = new MockBrazilianStandardAddress({ municipio: 'Diamantina' });
 			
-			addressDisplayer.update(address2, standardized2, 'PositionManager updated', false, null);
+			addressDisplayer.update(address2, standardized2, ADDRESS_FETCHED_EVENT, false, null);
 			
 			// Both addresses should be present (appended)
 			expect(mockElement.innerHTML).toContain('Serro');
@@ -1134,7 +1135,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 					municipio: address.address.municipality || address.address.city
 				});
 				
-				addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
+				addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			});
 			
 			// All addresses should be present

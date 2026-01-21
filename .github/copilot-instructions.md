@@ -80,10 +80,13 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `src/index.html` (379 lines) - Main HTML page for the SPA
 - `src/guia.js` (520 lines) - guia.js library exports (imported from dependency)
 - `src/guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
-- `src/config/defaults.js` (105 lines) - Application configuration constants (version 0.7.x, timing, etc.)
+- `src/config/defaults.js` (130+ lines) - Application configuration constants (version 0.7.x, timing, event names, etc.)
+  - **Key Constants**: ADDRESS_FETCHED_EVENT, MINIMUM_TIME_CHANGE (30s), MINIMUM_DISTANCE_CHANGE (20m)
+  - **Usage**: Import constants for consistency, avoid hardcoded strings
 - `src/utils/TimerManager.js` (147 lines) - Centralized timer management preventing memory leaks
 - `package.json` - Node.js configuration with guia.js dependency (jsdom v25.0.1, puppeteer v24.35.0)
-- `__tests__/` - 84 test suites with 1,968 total tests (1,820 passing, 146 skipped, 80 active suites)
+- `__tests__/` - 88 test suites with 2,045 total tests (1,887 passing, 146 skipped, 12 failing)
+  - **Note**: Test suite includes new E2E tests for address validation and SIDRA integration (v0.7.2+)
 - `.github/CONTRIBUTING.md` - Contribution guidelines including immutability principles
 - `.github/scripts/test-workflow-locally.sh` - Pre-push validation script (simulates CI/CD)
 - `.github/scripts/validate-jsdom-update.sh` - jsdom upgrade validation script
@@ -109,25 +112,33 @@ After making any changes, ALWAYS run through these validation scenarios:
 
 #### Core Architecture (src/core/, src/services/, src/coordination/)
 - `PositionManager` (src/core/PositionManager.js) - Singleton for current geolocation state
+  - **Position Update Logic**: Updates trigger on distance (20m) OR time (30s) thresholds (v0.7.2+)
 - `GeoPosition` (src/core/GeoPosition.js) - Immutable position value object
 - `SingletonStatusManager` (src/status/SingletonStatusManager.js) - Status management across components
 - `ReverseGeocoder` (src/services/ReverseGeocoder.js) - OpenStreetMap/Nominatim integration
+  - **Uses**: ADDRESS_FETCHED_EVENT constant for observer notifications
 - `GeolocationService` (src/services/GeolocationService.js) - Browser geolocation API wrapper
 - `WebGeocodingManager` (src/coordination/WebGeocodingManager.js) - Main coordination class
+- `ServiceCoordinator` (src/coordination/ServiceCoordinator.js) - Service lifecycle manager
+  - **Manages**: Position, Address, ReferencePlace, HighlightCards, SIDRA displayers (v0.8.6+)
 
 #### Data Processing (src/data/)
 - `BrazilianStandardAddress` (src/data/BrazilianStandardAddress.js) - Brazilian address standardization
 - `AddressExtractor` (src/data/AddressExtractor.js) - Address data extraction
 - `AddressCache` (src/data/AddressCache.js) - Address caching functionality
 - `AddressDataExtractor` (src/data/AddressDataExtractor.js) - Complete address data extraction and caching
-- `ReferencePlace` (src/data/ReferencePlace.js) - Reference location handling
+- `ReferencePlace` (src/data/ReferencePlace.js) - Reference location handling with calculateCategory() method
+  - **Supports**: place, shop, amenity, railway, building types (v0.7.2+)
 
 #### UI and Display (src/html/)
 - `HTMLPositionDisplayer` (src/html/HTMLPositionDisplayer.js) - Coordinate display and Google Maps integration
 - `HTMLAddressDisplayer` (src/html/HTMLAddressDisplayer.js) - Address formatting and presentation
 - `HTMLHighlightCardsDisplayer` (src/html/HTMLHighlightCardsDisplayer.js) - Municipio and bairro highlight cards (v0.7.1+)
 - `HTMLReferencePlaceDisplayer` (src/html/HTMLReferencePlaceDisplayer.js) - Reference place display
+- `HTMLSidraDisplayer` (src/html/HTMLSidraDisplayer.js) - IBGE SIDRA data display with observer pattern (v0.7.2+)
+  - **Features**: Population statistics, Brazilian Portuguese localization, automatic updates
 - `DisplayerFactory` (src/html/DisplayerFactory.js) - Factory for display components
+  - **5 factory methods**: Position, Address, ReferencePlace, HighlightCards, Sidra (v0.8.6+)
 - `HtmlText` (src/html/HtmlText.js) - Text display utilities
 
 #### Speech Synthesis (src/speech/)
@@ -153,22 +164,29 @@ After making any changes, ALWAYS run through these validation scenarios:
 ### API Integrations
 - **OpenStreetMap Nominatim**: `https://nominatim.openstreetmap.org/reverse` for geocoding
 - **IBGE API**: `https://servicodados.ibge.gov.br/api/v1/localidades/estados/` for Brazilian location data
+- **SIDRA API**: `https://servicodados.ibge.gov.br/api/v3/agregados/6579/periodos/-6/variaveis/9324` for demographic statistics
 - **Google Maps**: Links for map viewing and Street View integration
+
+### Data Libraries
+- **libs/sidra/**: IBGE SIDRA municipality data (v0.7.2+)
+  - `tab6579_municipios.json` (190KB) - Population estimates for Brazilian municipalities
+  - **Usage**: Offline fallback for IBGE demographic queries
 
 ## Testing Infrastructure
 
 ### Automated Test Coverage
-- **1,968 total tests** (1,820 passing, 146 skipped) across 84 test suites running in ~45 seconds
+- **2,045 total tests** (1,887 passing, 146 skipped, 12 failing) across 88 test suites running in ~30 seconds
 - **~70% code coverage** overall (69.82% actual)
 - **100% coverage** of guia_ibge.js (full coverage)
-- **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns
+- **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns, SIDRA data display
 - **Test Infrastructure**: Jest v30.1.3, jsdom v25.0.1, Puppeteer v24.35.0
 - **Performance**: Optimized with fake timers, parallel execution, custom cache directory (.jest-cache)
+- **New Tests** (v0.7.2+): complete-address-validation.e2e.test.js, milho-verde-locationResult.e2e.test.js, HTMLSidraDisplayer.test.js
 
 ### End-to-End Testing Infrastructure
 
 #### Jest E2E Tests (`__tests__/e2e/`)
-- **9 E2E test files** using Puppeteer for browser automation (headless Chrome)
+- **11 E2E test files** using Puppeteer for browser automation (headless Chrome)
 - **Real-world scenarios**: Complete workflows, address changes, speech synthesis, neighborhood tracking
 - **Key tests**:
   - `NeighborhoodChangeWhileDriving.e2e.test.js` - Bairro card updates while navigating (8 tests)
@@ -176,6 +194,8 @@ After making any changes, ALWAYS run through these validation scenarios:
   - `AddressChangeAndSpeech.e2e.test.js` - Address updates with speech synthesis
   - `municipio-bairro-display.e2e.test.js` - Comprehensive municipio/bairro display testing (v0.7.1+)
   - `municipio-bairro-simple.e2e.test.js` - Simplified municipio/bairro validation (v0.7.1+)
+  - `complete-address-validation.e2e.test.js` - Complete address data validation (v0.7.2+)
+  - `milho-verde-locationResult.e2e.test.js` - Location result integration test (v0.7.2+)
 - **Mock Configuration**: Puppeteer request interception with CORS headers, mock Nominatim API
 - **Test Server**: Local HTTP server on port 9877 for E2E tests
 - **Execution**: `npm test -- __tests__/e2e/[filename]`
@@ -194,10 +214,10 @@ After making any changes, ALWAYS run through these validation scenarios:
 
 ### Test Execution Commands
 ```bash
-# Run all tests (~45 seconds)
+# Run all tests (~30 seconds)
 npm test
 
-# Run tests with coverage report (~45 seconds)  
+# Run tests with coverage report (~30 seconds)  
 npm run test:coverage
 
 # Run tests in watch mode (development)
@@ -206,7 +226,7 @@ npm run test:watch
 # Syntax validation only (<1 second)
 npm run validate
 
-# Full validation: syntax + tests (~45 seconds total)
+# Full validation: syntax + tests (~30 seconds total)
 npm run test:all
 
 # Run specific E2E test
@@ -214,11 +234,12 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 ```
 
 ### Expected Test Results
-- ✅ 1,820 tests passing (1,968 total, 146 skipped)
-- ✅ 78 test suites passing (84 total, 6 skipped)
+- ✅ 1,887 tests passing (2,045 total, 146 skipped)
+- ✅ 78 test suites passing (88 total, 4 skipped, 6 failing)
 - ✅ ~70% code coverage overall
 - ✅ 100% code coverage on guia_ibge.js
 - ✅ 14 immutability pattern tests
+- ⚠️ 12 tests currently failing (known issues being addressed)
 - ⚠️ 2 E2E tests may fail intermittently (timing-dependent)
 
 ## Common Development Tasks

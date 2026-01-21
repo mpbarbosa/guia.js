@@ -15,6 +15,8 @@
  */
 
 import { WebGeocodingManager, PositionManager, AddressCache } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js';
+import HTMLSidraDisplayer from '../html/HTMLSidraDisplayer.js';
+import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 
 /**
  * Home view configuration object
@@ -165,6 +167,9 @@ export default {
     // Initialize geolocation manager
     this.manager = await this._initializeGeocodingManager();
     
+    // Initialize SIDRA displayer
+    this._initializeSidraDisplayer();
+    
     // Setup handlers
     this._setupLocationUpdateHandlers();
     this._setupCacheDisplayHandlers();
@@ -236,6 +241,16 @@ export default {
     return await WebGeocodingManager.createAsync(document, params);
   },
   
+  _initializeSidraDisplayer() {
+    const dadosSidraElement = document.getElementById("dadosSidra");
+    if (dadosSidraElement) {
+      console.log("(home-view) Initializing HTMLSidraDisplayer...");
+      this.sidraDisplayer = new HTMLSidraDisplayer(dadosSidraElement, { dataType: 'PopEst' });
+    } else {
+      console.warn("(home-view) dadosSidra element not found, SIDRA displayer not initialized");
+    }
+  },
+  
   _setupLocationUpdateHandlers() {
     this.manager.subscribeFunction((currentPosition, newAddress, enderecoPadronizado) => {
       console.log(`(home-view) Location updated`);
@@ -269,9 +284,9 @@ export default {
       // Update display elements
       this._updateLocationDisplay(currentPosition, newAddress, enderecoPadronizado);
       
-      // Update SIDRA data if in continuous mode
-      if (this.continuousMode) {
-        this._updateSidraData(enderecoPadronizado);
+      // Update SIDRA data if in continuous mode using the dedicated displayer
+      if (this.continuousMode && this.sidraDisplayer && enderecoPadronizado) {
+        this.sidraDisplayer.update(newAddress, enderecoPadronizado, ADDRESS_FETCHED_EVENT, false, null);
       }
     });
   },
@@ -442,17 +457,6 @@ export default {
       return 'Não disponível';
     }
     return value;
-  },
-  
-  _updateSidraData(enderecoPadronizado) {
-    if (!enderecoPadronizado || typeof window.displaySidraDadosParams !== 'function') return;
-    
-    const dadosSidraDiv = document.getElementById("dadosSidra");
-    const params = {
-      "municipio": enderecoPadronizado.municipio,
-      "siglaUf": enderecoPadronizado.siglaUF
-    };
-    window.displaySidraDadosParams(dadosSidraDiv, "PopEst", params);
   },
   
   _setupCacheDisplayHandlers() {

@@ -40,6 +40,7 @@
 import PositionManager from '../core/PositionManager.js';
 import { log, warn, error as logError } from '../utils/logger.js';
 import HTMLHighlightCardsDisplayer from '../html/HTMLHighlightCardsDisplayer.js';
+import HTMLSidraDisplayer from '../html/HTMLSidraDisplayer.js';
 
 /**
  * ServiceCoordinator class - Manages service lifecycle and coordination
@@ -72,10 +73,6 @@ class ServiceCoordinator {
         if (!params) {
             throw new TypeError('ServiceCoordinator: params object is required');
         }
-        console.log('>>> (ServiceCoordinator) constructor called with params:', params);
-        console.log('>>> (ServiceCoordinator) document:', params.document);
-        console.log('>>> (ServiceCoordinator) displayerFactory:', params.displayerFactory);
-        console.log('>>> (ServiceCoordinator) geolocationService:', params.geolocationService); 
         if (!params.geolocationService) {
             throw new TypeError('ServiceCoordinator: geolocationService is required');
         }
@@ -167,38 +164,57 @@ class ServiceCoordinator {
     }
 
     /**
-     * Create and configure all displayers
+     * Creates displayer instances for UI updates.
      * 
-     * Creates displayers for position, address, and reference place using
-     * the injected displayer factory.
+     * Factory method that creates all displayer instances needed for the application:
+     * - Position displayer (coordinates, accuracy, altitude)
+     * - Address displayer (raw geocoding data and standardized addresses)
+     * - Reference place displayer (nearby landmarks)
+     * - Highlight cards displayer (municipio/bairro cards)
+     * - SIDRA displayer (IBGE statistical data)
      * 
-     * @param {HTMLElement|string} locationResult - Element for position display
-     * @param {HTMLElement|string} enderecoPadronizadoDisplay - Element for address display
-     * @param {HTMLElement|string} referencePlaceDisplay - Element for reference place display
+     * All created displayers are frozen after creation to prevent modification.
+     * 
+     * @param {HTMLElement} positionDisplay - Element for coordinate display  
+     * @param {HTMLElement} addressDisplay - Element for raw address display
+     * @param {HTMLElement} enderecoPadronizadoDisplay - Element for standardized address display
+     * @param {HTMLElement} referencePlaceDisplay - Element for reference place display
+     * @param {HTMLElement} sidraDisplay - Element for SIDRA/IBGE data display
      * @returns {ServiceCoordinator} This instance for chaining
+     * @throws {Error} If displayerFactory not configured
      * 
      * @example
      * const displayers = coordinator.createDisplayers(
-     *   'location-result',
-     *   'address-display',
-     *   'reference-display'
+     *   positionElement,
+     *   addressElement,
+     *   standardizedAddressElement,
+     *   referencePlaceElement,
+     *   sidraElement
      * );
      */
-    createDisplayers(locationResult, enderecoPadronizadoDisplay, referencePlaceDisplay) {
+    createDisplayers(positionDisplay, addressDisplay, enderecoPadronizadoDisplay, referencePlaceDisplay, sidraDisplay) {
         if (!this._displayerFactory) {
             throw new Error('ServiceCoordinator: displayerFactory not configured');
         }
 
+        console.log('>>> (ServiceCoordinator) Creating displayers with elements:', {
+            positionDisplay,
+            addressDisplay,
+            enderecoPadronizadoDisplay,
+            referencePlaceDisplay,
+            sidraDisplay
+        });
         this._displayers = {
-            position: this._displayerFactory.createPositionDisplayer(locationResult),
+            position: this._displayerFactory.createPositionDisplayer(positionDisplay),
             address: this._displayerFactory.createAddressDisplayer(
-                locationResult,
+                addressDisplay,
                 enderecoPadronizadoDisplay
             ),
             referencePlace: this._displayerFactory.createReferencePlaceDisplayer(
                 referencePlaceDisplay
             ),
-            highlightCards: this._document ? new HTMLHighlightCardsDisplayer(this._document) : null
+            highlightCards: this._document ? this._displayerFactory.createHighlightCardsDisplayer(this._document) : null,
+            sidra: sidraDisplay ? this._displayerFactory.createSidraDisplayer(sidraDisplay) : null
         };
 
         Object.freeze(this._displayers);
@@ -207,7 +223,8 @@ class ServiceCoordinator {
             position: !!this._displayers.position,
             address: !!this._displayers.address,
             referencePlace: !!this._displayers.referencePlace,
-            highlightCards: !!this._displayers.highlightCards
+            highlightCards: !!this._displayers.highlightCards,
+            sidra: !!this._displayers.sidra
         });
 
         return this;
@@ -247,21 +264,41 @@ class ServiceCoordinator {
             log('ServiceCoordinator: Reverse geocoder wired');
             
             // Subscribe address displayer to address updates
+            console.log('>>> (ServiceCoordinator) Wiring address-related displayers to ReverseGeocoder');
             if (this._displayers.address) {
-                console.log('(ServiceCoordinator) Subscribing HTMLAddressDisplayer to ReverseGeocoder');
+                console.log('>>> (ServiceCoordinator) Subscribing HTMLAddressDisplayer to ReverseGeocoder', this._displayers.address);
                 this._reverseGeocoder.subscribe(this._displayers.address);
-                log('ServiceCoordinator: Address displayer wired');
+                log('>>> ServiceCoordinator: Address displayer wired');
             } else {
                 console.warn('(ServiceCoordinator) address displayer is null, cannot subscribe!');
             }
             
             // Subscribe highlight cards displayer to address updates
             if (this._displayers.highlightCards) {
-                console.log('(ServiceCoordinator) Subscribing HTMLHighlightCardsDisplayer to ReverseGeocoder');
+                console.log('>>> (ServiceCoordinator) Subscribing HTMLHighlightCardsDisplayer to ReverseGeocoder', this._displayers.highlightCards);
                 this._reverseGeocoder.subscribe(this._displayers.highlightCards);
-                log('ServiceCoordinator: Highlight cards displayer wired');
+                log('>>> ServiceCoordinator: Highlight cards displayer wired');
             } else {
                 console.warn('(ServiceCoordinator) highlightCards displayer is null, cannot subscribe!');
+            }
+            
+            // Subscribe reference place displayer to address updates
+            if (this._displayers.referencePlace) {
+                console.log('>>> (ServiceCoordinator) Subscribing HTMLReferencePlaceDisplayer to ReverseGeocoder', this._displayers.referencePlace);
+                this._reverseGeocoder.subscribe(this._displayers.referencePlace);
+                log('>>> ServiceCoordinator: Reference place displayer wired');
+            } else {
+                console.warn('(ServiceCoordinator) referencePlace displayer is null, cannot subscribe!');
+            }
+            
+            console.log('>>> (ServiceCoordinator) Wiring SIDRA-related displayer to ReverseGeocoder: ', this._displayers.sidra);
+            // Subscribe SIDRA displayer to address updates
+            if (this._displayers.sidra) {
+                console.log('>>> (ServiceCoordinator) Subscribing HTMLSidraDisplayer to ReverseGeocoder', this._displayers.sidra);
+                this._reverseGeocoder.subscribe(this._displayers.sidra);
+                log('>>> ServiceCoordinator: SIDRA displayer wired');
+            } else {
+                console.warn('(ServiceCoordinator) sidra displayer is null, cannot subscribe!');
             }
             
             // Safe logging - check if observerSubject exists

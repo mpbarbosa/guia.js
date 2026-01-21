@@ -18,9 +18,9 @@ Guia Turístico uses **two separate test infrastructures** for different testing
 | **Language** | JavaScript (Node.js) | Python 3.11+ |
 | **Purpose** | Unit, integration, E2E tests | Cross-browser validation |
 | **Browsers** | Chromium (headless) | Chrome, Firefox, Safari/WebKit |
-| **Test Count** | 1,968 tests (1,820 passing) | Separate test suite |
+| **Test Count** | 2,045 tests (1,887 passing) | Separate test suite |
 | **Execution** | `npm test` | `pytest tests/e2e/` |
-| **Speed** | ~45 seconds | Varies by browser |
+| **Speed** | ~30 seconds | Varies by browser |
 | **CI/CD** | Primary test suite | Secondary validation |
 | **Coverage** | Jest coverage reports | Playwright traces |
 

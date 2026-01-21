@@ -34,6 +34,7 @@
 
 import ObserverSubject from '../core/ObserverSubject.js';
 import { warn } from '../utils/logger.js';
+import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 
 /**
  * Generates OpenStreetMap Nominatim API URL for reverse geocoding.
@@ -258,7 +259,7 @@ class ReverseGeocoder {
 			this.notifyObservers(
 				this.currentAddress, 
 				this.enderecoPadronizado, 
-				'Address fetched', // posEvent
+				ADDRESS_FETCHED_EVENT, // posEvent
 				false, // loading
 				null  // error
 			);

@@ -163,6 +163,242 @@
   animation: bounce 1s ease-in-out infinite;
 }
 
+/* Error Panel Styles */
+.error-panel {
+  position: fixed;
+  top: 0;
+  right: -500px;
+  width: 500px;
+  height: 100vh;
+  background: #1e1e1e;
+  color: #ffffff;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.3s ease-out;
+}
+
+.error-panel-visible {
+  right: 0;
+}
+
+.error-panel-header {
+  background: #c62828;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #b71c1c;
+}
+
+.error-panel-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.error-panel-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.error-panel-clear,
+.error-panel-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.error-panel-clear:hover,
+.error-panel-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.error-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.error-panel-footer {
+  background: #252525;
+  padding: 12px 20px;
+  border-top: 1px solid #333;
+  text-align: center;
+}
+
+.error-panel-footer small {
+  color: #888;
+  font-size: 12px;
+}
+
+.error-panel-footer kbd {
+  background: #3a3a3a;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 11px;
+  border: 1px solid #555;
+}
+
+.error-panel-empty {
+  text-align: center;
+  color: #888;
+  padding: 40px 20px;
+  font-style: italic;
+}
+
+.error-item {
+  background: #2d2d2d;
+  border-left: 4px solid #c62828;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+}
+
+.error-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.error-item-type {
+  background: #c62828;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.error-item-time {
+  color: #888;
+  font-size: 12px;
+}
+
+.error-item-message {
+  color: #ff5252;
+  font-weight: 500;
+  margin-bottom: 8px;
+  word-break: break-word;
+}
+
+.error-item-location {
+  color: #aaa;
+  font-size: 12px;
+  font-family: monospace;
+  margin-bottom: 8px;
+}
+
+.error-item-stack {
+  margin-top: 8px;
+}
+
+.error-item-stack summary {
+  cursor: pointer;
+  color: #64b5f6;
+  font-size: 13px;
+  padding: 4px 0;
+}
+
+.error-item-stack summary:hover {
+  color: #90caf9;
+}
+
+.error-item-stack pre {
+  background: #1a1a1a;
+  color: #ccc;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 8px 0 0 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.toast-details-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-top: 6px;
+  transition: background 0.2s;
+}
+
+.toast-details-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Floating Action Button (FAB) for Mobile */
+.error-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #c62828;
+  color: #ffffff;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-fab:hover {
+  background: #b71c1c;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), 0 3px 6px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+
+.error-fab:active {
+  transform: scale(0.95);
+}
+
+.error-fab-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ff5252;
+  color: #ffffff;
+  border-radius: 12px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Hide FAB on desktop when keyboard shortcut is available */
+@media (min-width: 768px) and (pointer: fine) {
+  .error-fab {
+    display: none;
+  }
+}
+
 /* Mobile Responsive */
 @media (max-width: 600px) {
   .toast-container {
@@ -175,5 +411,14 @@
   .toast {
     padding: 10px 12px;
     font-size: 14px;
+  }
+  
+  .error-panel {
+    width: 100%;
+    right: -100%;
+  }
+  
+  .error-panel-visible {
+    right: 0;
   }
 }

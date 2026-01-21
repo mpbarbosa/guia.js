@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Tratamento Global de Erros</title>
+    
+    <!-- CSS Styles -->
+    <link rel="stylesheet" href="transitions.css">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #1976d2;
+            padding-bottom: 10px;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .test-button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        
+        .test-button:hover {
+            background: #1565c0;
+        }
+        
+        .test-button.danger {
+            background: #d32f2f;
+        }
+        
+        .test-button.danger:hover {
+            background: #c62828;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .info-box code {
+            background: #bbdefb;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐛 Teste de Tratamento Global de Erros</h1>
+    
+    <div class="info-box">
+        <strong>Como usar:</strong>
+        <ul>
+            <li>Clique nos botões abaixo para gerar diferentes tipos de erros</li>
+            <li>Os erros serão capturados automaticamente e exibidos em um toast</li>
+            <li>Clique em "Ver detalhes" no toast para abrir o painel de erros</li>
+            <li>Use <code>Ctrl+E</code> (Windows/Linux) ou <code>Cmd+E</code> (Mac) para alternar o painel de erros</li>
+        </ul>
+    </div>
+    
+    <div class="test-section">
+        <h2>Testes de Erros Síncronos</h2>
+        <button class="test-button danger" onclick="testReferenceError()">
+            Gerar ReferenceError
+        </button>
+        <button class="test-button danger" onclick="testTypeError()">
+            Gerar TypeError
+        </button>
+        <button class="test-button danger" onclick="testCustomError()">
+            Gerar Erro Customizado
+        </button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Testes de Erros Assíncronos</h2>
+        <button class="test-button danger" onclick="testPromiseRejection()">
+            Gerar Promise Rejection
+        </button>
+        <button class="test-button danger" onclick="testAsyncError()">
+            Gerar Erro em Async Function
+        </button>
+        <button class="test-button danger" onclick="testTimeoutError()">
+            Gerar Erro em setTimeout
+        </button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Controles do Painel</h2>
+        <button class="test-button" onclick="window.ErrorRecovery.showErrorPanel()">
+            Abrir Painel de Erros
+        </button>
+        <button class="test-button" onclick="window.ErrorRecovery.hideErrorPanel()">
+            Fechar Painel de Erros
+        </button>
+        <button class="test-button" onclick="window.ErrorRecovery.clearErrorHistory()">
+            Limpar Histórico
+        </button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Informações do Sistema</h2>
+        <p id="error-count">Erros capturados: 0</p>
+        <button class="test-button" onclick="updateErrorCount()">
+            Atualizar Contagem
+        </button>
+    </div>
+    
+    <!-- Load Error Recovery System -->
+    <script src="error-recovery.js"></script>
+    
+    <!-- Test Scripts -->
+    <script>
+        console.log('Página de teste carregada');
+        console.log('Use Ctrl+E ou Cmd+E para alternar o painel de erros');
+        
+        // Test functions
+        function testReferenceError() {
+            console.log('Gerando ReferenceError...');
+            undefinedVariable.someProperty;
+        }
+        
+        function testTypeError() {
+            console.log('Gerando TypeError...');
+            null.someMethod();
+        }
+        
+        function testCustomError() {
+            console.log('Gerando erro customizado...');
+            throw new Error('Este é um erro customizado de teste!');
+        }
+        
+        function testPromiseRejection() {
+            console.log('Gerando Promise Rejection...');
+            Promise.reject(new Error('Promise foi rejeitada intencionalmente'));
+        }
+        
+        async function testAsyncError() {
+            console.log('Gerando erro em async function...');
+            await new Promise(resolve => setTimeout(resolve, 100));
+            throw new Error('Erro em função assíncrona');
+        }
+        
+        function testTimeoutError() {
+            console.log('Gerando erro em setTimeout...');
+            setTimeout(() => {
+                throw new Error('Erro dentro de setTimeout');
+            }, 100);
+        }
+        
+        function updateErrorCount() {
+            const history = window.ErrorRecovery.getErrorHistory();
+            document.getElementById('error-count').textContent = 
+                `Erros capturados: ${history.length}`;
+        }
+    </script>
+</body>
+</html>

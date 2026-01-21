@@ -25,10 +25,11 @@ const AppState = {
  * when the DOM is ready.
  * 
  * **Initialization Steps**:
- * 1. Initialize client-side router
- * 2. Set up navigation UI and event handlers
- * 3. Handle initial route based on URL hash
- * 4. Register hashchange and popstate listeners
+ * 1. Wait for dependencies to load (ibira.js from CDN)
+ * 2. Initialize client-side router
+ * 3. Set up navigation UI and event handlers
+ * 4. Handle initial route based on URL hash
+ * 5. Register hashchange and popstate listeners
  * 
  * @async
  * @returns {Promise<void>} Resolves when initialization is complete
@@ -48,6 +49,20 @@ const AppState = {
 async function init() {
   console.log('Initializing Guia Turístico SPA v0.7.1...');
   
+  // Wait for external dependencies to load (max 5 seconds)
+  if (window.dependenciesLoading) {
+    console.log('⏳ Waiting for dependencies to load...');
+    try {
+      await Promise.race([
+        new Promise(resolve => window.addEventListener('dependencies-ready', resolve, { once: true })),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Dependency timeout')), 5000))
+      ]);
+      console.log('✓ Dependencies ready');
+    } catch (error) {
+      console.warn('⚠️ Dependency loading timeout - continuing with fallback:', error.message);
+    }
+  }
+  
   // Initialize router
   initRouter();
   
@@ -61,7 +76,7 @@ async function init() {
   window.addEventListener('hashchange', handleRoute);
   window.addEventListener('popstate', handleRoute);
   
-  console.log('Application initialized successfully');
+  console.log('✓ Application initialized successfully');
 }
 
 /**
@@ -548,15 +563,22 @@ async function loadNotFoundView() {
   `;
 }
 
-// Initialize app when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+// Initialize app when DOM is ready (browser-only)
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 } else {
-  init();
+  // Node.js environment - skip browser initialization
+  console.log('Running in Node.js - skipping browser initialization');
 }
 
 // Export for debugging
-window.GuiaApp = {
-  navigateTo,
-  getState: () => AppState
-};
+if (typeof window !== 'undefined') {
+  window.GuiaApp = {
+    navigateTo,
+    getState: () => AppState
+  };
+}

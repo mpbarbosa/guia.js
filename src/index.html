@@ -318,16 +318,30 @@
     </footer>
 
     <!-- External Libraries -->
-    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/sidra.js@main/sidra.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/sidra.js@main/sidra.js" onerror="console.warn('⚠️ Failed to load sidra.js from CDN')"></script>
     
     <!-- Load ibira.js for API fetching and caching (IbiraAPIFetchManager) -->
     <script type="module">
-      import { IbiraAPIFetchManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js';
-      window.IbiraAPIFetchManager = IbiraAPIFetchManager;
+      // Signal that dependencies are loading
+      window.dependenciesLoading = true;
+      
+      try {
+        const { IbiraAPIFetchManager } = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js');
+        window.IbiraAPIFetchManager = IbiraAPIFetchManager;
+        console.log('✓ IbiraAPIFetchManager loaded successfully from CDN');
+      } catch (error) {
+        console.warn('⚠️ Failed to load IbiraAPIFetchManager from CDN:', error.message);
+        console.log('✓ Application will use fallback fetch implementation');
+        // App will use fallback - guia.js has IbiraAPIFetchManagerFallback
+      } finally {
+        // Signal that dependencies are ready
+        window.dependenciesLoading = false;
+        window.dispatchEvent(new Event('dependencies-ready'));
+      }
     </script>
     
-    <script src="error-recovery.js"></script>
-    <script src="geolocation-banner.js"></script>
+    <script src="error-recovery.js" onerror="console.error('❌ Failed to load error-recovery.js')"></script>
+    <script src="geolocation-banner.js" onerror="console.error('❌ Failed to load geolocation-banner.js')"></script>
     
     <!-- App Entry Point -->
     <script type="module" src="app.js"></script>

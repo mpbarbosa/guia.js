@@ -2,6 +2,7 @@
 
 /**
  * WebGeocodingManager - Main coordination class for geocoding workflow
+ * @version 0.7.1-alpha
  * 
  * @fileoverview Main coordination class for geocoding workflow in the Guia.js application.
  * WebGeocodingManager orchestrates the geolocation services, geocoding operations,

@@ -1,0 +1,209 @@
+# Documentation Directory Organization
+
+**Purpose**: Central documentation hub for all project documentation  
+**Location**: `docs/`
+
+## Directory Structure & Purpose
+
+### Core Documentation Directories
+
+#### `docs/architecture/`
+**Purpose**: Architectural decisions, patterns, and system design documentation
+
+**Key Files**:
+- `VIEWS_LAYER.md` - SPA view controllers documentation
+- `LAYERED_ARCHITECTURE.md` - Layer separation and responsibilities
+- Design patterns and architectural evolution
+
+#### `docs/api-integration/`
+**Purpose**: External API integration guides and specifications
+
+**Key Files**:
+- `NOMINATIM_API_FORMAT.md` - OpenStreetMap Nominatim API documentation
+- API endpoint specifications
+- Integration patterns and examples
+
+#### `docs/class-extraction/`
+**Purpose**: Historical documentation of modularization process
+
+**Key Files**:
+- `README.md` - Overview of class extraction phases
+- `CLASS_EXTRACTION_PHASE_*.md` - 16 phases of refactoring
+- `MODULE_SPLITTING_SUMMARY.md` - Module organization results
+
+**Note**: This directory documents the transformation from a 6,000+ line monolithic file to a modular architecture.
+
+#### `docs/testing/`
+**Purpose**: Test infrastructure, strategy, and execution documentation
+
+**Key Files**:
+- `TEST_INFRASTRUCTURE.md` - Dual test infrastructure comparison
+- `TEST_STRATEGY.md` - Comprehensive testing strategy
+- `E2E_TEST_SUMMARY.md` - End-to-end test documentation
+
+#### `docs/issue-189/`
+**Purpose**: Documentation related to Issue #189 resolution
+
+**Key Files**:
+- Issue-specific implementation details
+- Follow-up tasks and validation
+
+#### `docs/prompts/`
+**Purpose**: AI-assisted development workflow prompts and guides
+
+**Key Files**:
+- Workflow automation prompts
+- Development task templates
+- AI collaboration patterns
+
+#### `docs/guides/`
+**Purpose**: Developer guides and how-to documentation
+
+**Expected Content**:
+- Setup guides
+- Development workflows
+- Contribution guidelines
+
+#### `docs/infrastructure/`
+**Purpose**: Infrastructure and tooling documentation
+
+**Expected Content**:
+- CI/CD pipeline configuration
+- Deployment procedures
+- Tool setup and configuration
+
+#### `docs/reference/`
+**Purpose**: Reference documentation and API specs
+
+**Expected Content**:
+- API reference
+- Class method documentation
+- Configuration reference
+
+#### `docs/reports/`
+**Purpose**: Analysis reports and audits
+
+**Expected Content**:
+- Code quality reports
+- Performance analysis
+- Security audits
+
+#### `docs/workflow-automation/`
+**Purpose**: Automation scripts and workflow documentation
+
+**Expected Content**:
+- Automation tool configurations
+- CI/CD workflow definitions
+- Script documentation
+
+#### `docs/misc/`
+**Purpose**: Miscellaneous documentation not fitting other categories
+
+**Expected Content**:
+- Experimental features
+- Research notes
+- Temporary documentation
+
+## Root-Level Documentation Files
+
+### Technical Documentation
+- `PROJECT_STRUCTURE.md` - Overall project organization
+- `PROJECT_PURPOSE_AND_ARCHITECTURE.md` - High-level purpose and design
+- `MODULES.md` - Module system documentation
+- `NAMING_CONVENTIONS.md` - Code naming standards
+- `TESTING.md` - Testing overview
+- `ERROR_HANDLING.md` - Error handling patterns
+- `LOGGING_GUIDE.md` - Logging best practices
+
+### Integration Documentation
+- `IBIRA_INTEGRATION.md` - ibira.js integration (IBGE data)
+- `SIDRA_INTEGRATION.md` - SIDRA API integration (population data)
+- `REFACTOR_ADDRESS_FETCHED_CONSTANT.md` - Constant extraction refactoring
+
+### Process Documentation
+- `CODE_QUALITY_ACTION_PLAN.md` - Code quality improvement roadmap
+- `DEPENDENCY_MANAGEMENT.md` - Dependency update strategy
+- `WORKFLOW_SETUP.md` - GitHub Actions setup
+- `AUTOMATION_IMPLEMENTATION_SUMMARY.md` - Automation overview
+
+### Historical Documentation
+- `CHANGELOG_v0.7.4.md` - Version 0.7.4 changes
+- `DOCUMENTATION_FIXES_2026-01-09.md` - Documentation update history
+- `PHASE*_*.md` - Implementation phase documentation
+
+## Navigation
+
+### Finding Documentation
+
+**By Topic**:
+- Architecture → `docs/architecture/`
+- APIs → `docs/api-integration/`
+- Testing → `docs/testing/`
+- History → `docs/class-extraction/`
+
+**By Type**:
+- Reference → Root level + `docs/reference/`
+- Guides → `docs/guides/`
+- Reports → `docs/reports/`
+
+**By Status**:
+- Current → Root level + core directories
+- Historical → `docs/class-extraction/`, phase files
+- Experimental → `docs/misc/`
+
+## Documentation Index
+
+For a complete, searchable index of all documentation:
+- **See**: `docs/INDEX.md` - Comprehensive documentation catalog
+
+## Contribution Guidelines
+
+When adding new documentation:
+
+1. **Choose Correct Directory**: Use the purpose statements above
+2. **Follow Naming Conventions**: Use SCREAMING_SNAKE_CASE.md for documentation
+3. **Update INDEX.md**: Add new files to the documentation index
+4. **Cross-Reference**: Link related documentation
+5. **Add Metadata**: Include version, date, purpose at file top
+
+### Documentation Template
+
+```markdown
+# Title
+
+**Version**: X.Y.Z  
+**Date**: YYYY-MM-DD  
+**Purpose**: Brief purpose statement  
+**Related**: [Link to related docs]
+
+## Overview
+...
+
+## Details
+...
+
+## Related Documentation
+- [File 1](./FILE1.md)
+- [File 2](./FILE2.md)
+```
+
+## Maintenance
+
+### Regular Tasks
+
+- **Quarterly**: Review and archive outdated documentation
+- **Per Release**: Update version-specific documentation
+- **As Needed**: Add new guides and reference material
+
+### Archival Policy
+
+Documentation older than 2 releases or 6 months (whichever is longer) should be:
+1. Marked as **[HISTORICAL]** in title
+2. Moved to appropriate historical directory
+3. Linked from newer replacement documentation
+
+## Related Documentation
+
+- [INDEX.md](./INDEX.md) - Complete documentation index
+- [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - Project file organization
+- [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Contribution guidelines

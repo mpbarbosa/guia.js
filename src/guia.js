@@ -59,13 +59,15 @@ import WebGeocodingManager, { DEFAULT_ELEMENT_IDS } from './coordination/WebGeoc
 // Application log functions with DOM integration
 // Note: Pure logging utilities are available in src/utils/logger.js
 // These functions add DOM output to console logging for the web UI
-// TODO: Consider refactoring to use observer pattern for DOM updates
+// Design Note: Direct DOM access intentional for immediate feedback in UI.
+// For event-driven updates, see ObserverSubject pattern in src/core/ObserverSubject.js
 const log = (message, ...params) => {
 	//get all params after message and concatenate them
 	const fullMessage = `[${new Date().toISOString()}] ${message} ${params.join(" ")}`;
 	console.log(fullMessage);
 	if (typeof document !== "undefined") {
-		//TODO: Remover a referência direta ao elemento HTML
+		// Direct DOM reference required for immediate log display in web UI
+		// This is intentional for debugging/development feedback
 		if (document.getElementById("bottom-scroll-textarea")) {
 			document.getElementById("bottom-scroll-textarea").innerHTML +=
 				`${fullMessage}\n`;

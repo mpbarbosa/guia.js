@@ -3,6 +3,7 @@
 /**
  * Main Application Entry Point
  * SPA Router and Application Initialization
+ * @version 0.7.1-alpha
  */
 
 import { WebGeocodingManager } from './guia.js';

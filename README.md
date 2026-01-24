@@ -1,6 +1,6 @@
 # Guia Turístico - Tourist Guide Web Application
 
-[![Tests](https://img.shields.io/badge/tests-1887%20passing%20%2F%202045%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-1899%20passing%20%2F%202045%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
@@ -24,6 +24,7 @@ A single-page web application (SPA) for tourist guidance, built on top of the [g
 - 📍 **Real-Time Location Tracking** - Primary feature: continuous location monitoring while navigating
 - 🌍 **Powered by guia.js** - Uses guia.js library for geolocation functionality
 - 🇧🇷 **Brazilian Focus** - Specialized support for Brazilian locations via IBGE integration
+- 📊 **IBGE SIDRA Integration** - Population statistics and demographic data display (v0.7.2+)
 - 📱 **Mobile-First Design** - Responsive interface optimized for mobile devices
 - 🎨 **Material Design 3** - Modern UI following Material Design guidelines
 - ♿ **Accessibility** - WCAG 2.1 compliant with ARIA support
@@ -33,8 +34,8 @@ A single-page web application (SPA) for tourist guidance, built on top of the [g
 
 ### Prerequisites
 
-- **Node.js v18+** (tested with v20.19.5)
-- **npm v10+**
+- **Node.js v20.19.0+** (tested with v20.19.5 and v25.4.0)
+- **npm v10+** (tested with v10.5.0 and v11.8.0)
 - **Python 3.11+** (for web server during development)
 - **Git** (for version control and CDN script)
 - **Modern browser** with Geolocation API support (Chrome 90+, Firefox 88+, Safari 14+)
@@ -43,7 +44,7 @@ A single-page web application (SPA) for tourist guidance, built on top of the [g
 ```bash
 # Check Node.js version
 node --version
-# Should output: v18.x.x or higher
+# Should output: v20.19.0 or higher (tested up to v25.4.0)
 
 # Check npm version
 npm --version
@@ -133,19 +134,23 @@ guia_turistico/
 │   ├── data/                     # Data processing and extraction
 │   ├── html/                     # HTML display and DOM manipulation
 │   ├── speech/                   # Speech synthesis functionality
+│   ├── views/                    # SPA view controllers (home, converter)
 │   └── utils/                    # Utility functions
-├── __tests__/                    # Test suites (57 passing suites)
+├── __tests__/                    # Test suites (88 suites, 1,899 passing)
 │   ├── unit/                     # Unit tests
 │   ├── integration/              # Integration tests
+│   ├── e2e/                      # End-to-end tests (Puppeteer)
 │   ├── features/                 # Feature tests
 │   ├── external/                 # External API tests
 │   └── managers/                 # Manager class tests
-├── tests/                        # Additional test files
+├── tests/                        # Python/Playwright cross-browser tests
+│   └── e2e/                      # E2E tests (Chrome, Firefox, Safari)
 ├── docs/                         # Documentation hub
 │   ├── INDEX.md                  # Complete documentation index
 │   ├── architecture/             # Architecture documentation
 │   ├── api-integration/          # API integration guides
 │   ├── class-extraction/         # Modularization history
+│   ├── testing/                  # Test infrastructure documentation
 │   ├── issue-189/                # Issue #189 follow-up docs
 │   └── prompts/                  # Workflow prompts and guides
 ├── .github/                      # GitHub configuration
@@ -153,8 +158,11 @@ guia_turistico/
 │   ├── JAVASCRIPT_BEST_PRACTICES.md
 │   ├── REFERENTIAL_TRANSPARENCY.md
 │   ├── workflows/                # CI/CD workflows
+│   ├── scripts/                  # Automation scripts
 │   └── ISSUE_TEMPLATE/           # Issue templates
+├── .husky/                       # Git hooks (pre-commit, pre-push)
 ├── examples/                     # Usage examples
+├── libs/                         # Offline data libraries (SIDRA)
 ├── eslint.config.js              # ESLint v9 flat configuration
 ├── package.json                  # Node.js project configuration
 ├── cdn-delivery.sh               # CDN URL generator script
@@ -195,12 +203,13 @@ See [examples/README.md](examples/README.md) for detailed documentation and expe
 ### Test Suite Overview
 
 - **Total Tests**: 1,968 total (1,820 passing, 146 skipped)
-- **Test Suites**: 84 total (78 passing, 6 skipped)
-- **Execution Time**: ~45 seconds
-- **Code Coverage**: ~70% overall (includes LRUCache at 100%)
-- **Coverage Details**:
-  - guia.js: 69.56% statements, 43.75% branches
-  - guia_ibge.js: 100% coverage
+- **Test Suites**: 84 total (84 passing, 4 skipped)
+- **Test Count**: 1,904 passing tests (2,050 total with 146 skipped)
+- **Execution Time**: ~30-45 seconds
+- **Code Coverage**: 84.7% overall (exceeds 65% threshold by 19.7%)
+  - Statements: 84.69%, Branches: 82.49%, Functions: 74.68%, Lines: 84.99%
+  - Critical modules at 100%: DisplayerFactory, HTMLAddressDisplayer, HTMLPositionDisplayer
+  - guia_ibge.js: 100% coverage (perfect)
 
 ### Running Tests
 
@@ -254,7 +263,7 @@ To ensure clear communication about testing concepts:
 - **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 78 passing suites
 - **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 1,968 tests (1,820 passing, 146 skipped)
 - **Test Category**: Organizational grouping by functionality (unit, integration, features, external, managers)
-- **Code Coverage**: Percentage of source code executed during tests (~70% overall)
+- **Code Coverage**: Percentage of source code executed during tests (84.7% overall, exceeds 65% threshold)
 
 ## 📚 Documentation
 
@@ -312,7 +321,9 @@ To ensure clear communication about testing concepts:
 - `HTMLAddressDisplayer` - Address formatting and presentation
 - `HTMLHighlightCardsDisplayer` - Municipio and bairro highlight cards (v0.7.1+)
 - `HTMLReferencePlaceDisplayer` - Displays nearby reference places
-- `HTMLSidraDisplayer` - IBGE SIDRA demographic data display (v0.7.2+)
+- `HTMLSidraDisplayer` - IBGE SIDRA data display with observer pattern (v0.7.2+)
+  - **Features**: Population statistics, Brazilian Portuguese localization, automatic updates
+  - **Data Source**: IBGE SIDRA API with offline fallback (libs/sidra/tab6579_municipios.json)
 - `DisplayerFactory` - Factory pattern for display component creation (5 methods v0.8.6+)
 
 #### Speech Synthesis Layer

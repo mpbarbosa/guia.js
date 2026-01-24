@@ -2,6 +2,7 @@
 
 /**
  * ServiceCoordinator - Manages services, observers, and displayers
+ * @version 0.7.1-alpha
  * 
  * @fileoverview Handles all service-level coordination for WebGeocodingManager.
  * This class is responsible for managing geolocation services, reverse geocoding,

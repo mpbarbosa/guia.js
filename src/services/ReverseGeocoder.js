@@ -2,6 +2,7 @@
 
 /**
  * Reverse geocoding service for converting coordinates to addresses.
+ * @version 0.7.1-alpha
  * 
  * ARCHITECTURAL OVERVIEW:
  * The ReverseGeocoder class serves as a critical service layer component in the travel guide

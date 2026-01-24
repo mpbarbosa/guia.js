@@ -4,6 +4,7 @@ import { ADDRESS_FETCHED_EVENT, NO_REFERENCE_PLACE } from "../config/defaults.js
 
 /**
  * HTML-based reference place information displayer with Portuguese localization.
+ * @version 0.7.1-alpha
  * 
  * This class handles the display of reference place information in HTML format,
  * including shopping centers, subway stations, cafes, and other points of interest.

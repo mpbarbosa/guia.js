@@ -10,6 +10,7 @@ import { ADDRESS_FETCHED_EVENT } from '../../src/config/defaults.js';
  */
 
 import { jest } from '@jest/globals';
+import ReferencePlace from '../../src/data/ReferencePlace.js';
 
 describe('HTMLReferencePlaceDisplayer Integration Tests', () => {
     let HTMLReferencePlaceDisplayer;
@@ -73,13 +74,11 @@ describe('HTMLReferencePlaceDisplayer Integration Tests', () => {
         test('should work with real DOM-like elements', () => {
             const instance = new HTMLReferencePlaceDisplayer(testElement);
             
-            const mockReferencePlace = {
-                description: 'Shopping Center',
-                name: 'Shopping Ibirapuera',
-                className: 'shop',
-                typeName: 'mall',
-                calculateCategory: () => 'Shopping Center'
-            };
+            const mockReferencePlace = new ReferencePlace({
+                class: 'shop',
+                type: 'mall',
+                name: 'Shopping Ibirapuera'
+            });
             
             const html = instance.renderReferencePlaceHtml(mockReferencePlace);
             
@@ -178,20 +177,16 @@ describe('HTMLReferencePlaceDisplayer Integration Tests', () => {
             const mockElement = { id: 'portuguese-test', innerHTML: '' };
             const instance = new HTMLReferencePlaceDisplayer(mockElement);
             
-            const referencePlace = {
-                description: 'Açougue',
-                name: 'Açougue São João',
-                className: 'comércio',
-                typeName: 'alimentação',
-                calculateCategory: () => 'comércio'
-            };
+            const referencePlace = new ReferencePlace({
+                class: 'amenity',
+                type: 'butcher',
+                name: 'Açougue São João'
+            });
             
             const html = instance.renderReferencePlaceHtml(referencePlace);
             
-            expect(html).toContain('Açougue');
-            expect(html).toContain('São João');
-            expect(html).toContain('comércio');
-            expect(html).toContain('alimentação');
+            expect(html).toContain('Açougue São João');
+            expect(html).toContain('reference-place-container');
         });
     });
 

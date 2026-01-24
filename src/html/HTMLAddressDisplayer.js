@@ -4,6 +4,7 @@ import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 
 /**
  * HTML-based address information displayer with comprehensive address data visualization.
+ * @version 0.7.1-alpha
  * 
  * This class handles the display of address information in HTML format,
  * including raw geocoding data, standardized Brazilian addresses, and detailed

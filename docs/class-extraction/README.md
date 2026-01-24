@@ -65,6 +65,8 @@ src/
 ├── html/              # UI display components
 │   ├── HtmlText.js
 │   ├── HTMLAddressDisplayer.js
+│   ├── HTMLHighlightCardsDisplayer.js
+│   ├── HTMLSidraDisplayer.js
 │   └── DisplayerFactory.js
 ├── speech/            # Speech synthesis system
 │   ├── SpeechItem.js

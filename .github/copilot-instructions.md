@@ -80,16 +80,21 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `src/index.html` (379 lines) - Main HTML page for the SPA
 - `src/guia.js` (520 lines) - guia.js library exports (imported from dependency)
 - `src/guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
+- `src/views/home.js` (24KB) - Home view controller for location tracking
+- `src/views/converter.js` (19KB) - Converter view controller for coordinate conversion
 - `src/config/defaults.js` (130+ lines) - Application configuration constants (version 0.7.x, timing, event names, etc.)
   - **Key Constants**: ADDRESS_FETCHED_EVENT, MINIMUM_TIME_CHANGE (30s), MINIMUM_DISTANCE_CHANGE (20m)
   - **Usage**: Import constants for consistency, avoid hardcoded strings
 - `src/utils/TimerManager.js` (147 lines) - Centralized timer management preventing memory leaks
 - `package.json` - Node.js configuration with guia.js dependency (jsdom v25.0.1, puppeteer v24.35.0)
-- `__tests__/` - 88 test suites with 2,045 total tests (1,887 passing, 146 skipped, 12 failing)
-  - **Note**: Test suite includes new E2E tests for address validation and SIDRA integration (v0.7.2+)
+- `__tests__/` - 88 test suites with 2,045 total tests (1,899 passing, 146 skipped)
+  - **Note**: Test suite includes E2E tests for address validation, SIDRA integration, and location results (v0.7.2+)
+  - **New Tests**: HTMLSidraDisplayer.test.js, complete-address-validation.e2e.test.js, milho-verde-locationResult.e2e.test.js
+  - **Organization**: Domain-based (unit/, integration/, e2e/, managers/, external/, features/)
 - `.github/CONTRIBUTING.md` - Contribution guidelines including immutability principles
 - `.github/scripts/test-workflow-locally.sh` - Pre-push validation script (simulates CI/CD)
 - `.github/scripts/validate-jsdom-update.sh` - jsdom upgrade validation script
+- `.husky/` - Git hooks (pre-commit: syntax + unit tests, pre-push: full test suite)
 - `cdn-delivery.sh` - CDN URL generator for jsDelivr distribution
 
 ### UI Architecture (v0.8.4+)
@@ -503,6 +508,9 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 - `HTMLAddressDisplayer` (src/html/HTMLAddressDisplayer.js) - Address formatting and presentation
 - `HTMLHighlightCardsDisplayer` (src/html/HTMLHighlightCardsDisplayer.js) - Municipio and bairro highlight cards (v0.7.1+)
 - `HTMLReferencePlaceDisplayer` (src/html/HTMLReferencePlaceDisplayer.js) - Reference place display
+- `HTMLSidraDisplayer` (src/html/HTMLSidraDisplayer.js) - IBGE SIDRA data display with observer pattern (v0.7.2+)
+  - **Features**: Population statistics, Brazilian Portuguese localization, automatic updates
+  - **Data Source**: IBGE SIDRA API with offline fallback (libs/sidra/tab6579_municipios.json)
 - `DisplayerFactory` (src/html/DisplayerFactory.js) - Factory for display components
 - `HtmlText` (src/html/HtmlText.js) - Text display utilities
 

@@ -20,6 +20,7 @@ import { WebGeocodingManager, PositionManager, AddressCache } from 'https://cdn.
 import HTMLSidraDisplayer from '../html/HTMLSidraDisplayer.js';
 import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 import { extractDistrito, extractBairro, determineLocationType, formatLocationValue } from '../address-parser.js';
+import timerManager from '../utils/TimerManager.js';
 
 /**
  * Home view configuration object
@@ -194,13 +195,9 @@ export default {
       window.speechSynthesis.cancel();
     }
     
-    // Clear intervals
-    if (this.cacheInterval) {
-      clearInterval(this.cacheInterval);
-    }
-    if (this.speechQueueInterval) {
-      clearInterval(this.speechQueueInterval);
-    }
+    // Clear intervals using TimerManager
+    timerManager.clearTimer('home-cache-display');
+    timerManager.clearTimer('home-speech-queue-display');
     
     // Clear state
     this.manager = null;
@@ -404,7 +401,7 @@ export default {
     
     // Update initially and periodically as fallback
     updateCacheDisplay();
-    this.cacheInterval = setInterval(updateCacheDisplay, 5000);
+    timerManager.setInterval(updateCacheDisplay, 5000, 'home-cache-display');
   },
   
   _setupButtonHandlers() {
@@ -536,10 +533,7 @@ export default {
         }
         
         // Clear speech queue interval
-        if (this.speechQueueInterval) {
-          clearInterval(this.speechQueueInterval);
-          this.speechQueueInterval = null;
-        }
+        timerManager.clearTimer('home-speech-queue-display');
         
         window.toast?.info('Rastreamento contínuo desativado', 2000);
       }
@@ -560,10 +554,10 @@ export default {
       });
     } else {
       // Fallback polling
-      this.speechQueueInterval = setInterval(() => {
+      timerManager.setInterval(() => {
         const queueLength = speechQueue.length || (Array.isArray(speechQueue.queue) ? speechQueue.queue.length : 0);
         this._renderToElement("tam-fila-fala", queueLength.toString());
-      }, 500);
+      }, 500, 'home-speech-queue-display');
     }
   },
   

@@ -22,6 +22,7 @@ import AddressExtractor from './AddressExtractor.js';
 import BrazilianStandardAddress from './BrazilianStandardAddress.js';
 import LRUCache from './LRUCache.js';
 import { log } from '../utils/logger.js';
+import timerManager from '../utils/TimerManager.js';
 
 class AddressCache {
 
@@ -77,15 +78,10 @@ class AddressCache {
 		this.currentRawData = null;
 		this.previousRawData = null;
 		
-		// Instance-based cleanup timer (prevents global timer leak)
-		this.cleanupInterval = setInterval(() => {
+		// Instance-based cleanup timer using TimerManager (prevents memory leaks)
+		timerManager.setInterval(() => {
 			this.cleanExpiredEntries();
-		}, 60000); // Clean expired entries every 60 seconds
-		
-		// Ensure the interval is not blocking Node.js exit
-		if (typeof this.cleanupInterval.unref === 'function') {
-			this.cleanupInterval.unref();
-		}
+		}, 60000, 'address-cache-cleanup'); // Clean expired entries every 60 seconds
 	}
 
 	/**
@@ -1115,10 +1111,7 @@ class AddressCache {
 	 */
 	destroy() {
 		// Stop cleanup timer to prevent leak
-		if (this.cleanupInterval) {
-			clearInterval(this.cleanupInterval);
-			this.cleanupInterval = null;
-		}
+		timerManager.clearTimer('address-cache-cleanup');
 		
 		// Clear all cached data
 		this.clearCache();

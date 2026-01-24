@@ -19,6 +19,7 @@
 import { WebGeocodingManager, PositionManager, AddressCache } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js';
 import HTMLSidraDisplayer from '../html/HTMLSidraDisplayer.js';
 import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
+import { extractDistrito, extractBairro, determineLocationType, formatLocationValue } from '../address-parser.js';
 
 /**
  * Home view configuration object
@@ -363,102 +364,26 @@ export default {
   },
   
   /**
-   * Determine location type from address (pure function logic)
+   * Determine location type from address
    * @param {Object} address - Nominatim address object
    * @returns {{type: 'distrito'|'bairro', value: string|null}} Location type and value
    * @private
-   * @pure
    */
   _determineLocationType(address) {
-    const distrito = this._extractDistrito(address);
-    const bairro = this._extractBairro(address);
-    
-    // If we have a district but no neighborhood, show district
-    if (distrito && !bairro) {
-      return { type: 'distrito', value: distrito };
-    }
-    
-    // If we have a neighborhood, show it (more specific)
-    if (bairro) {
-      return { type: 'bairro', value: bairro };
-    }
+    return determineLocationType(address);
     
     // No subdivision available
     return { type: 'bairro', value: null };
   },
   
   /**
-   * Extract district from address (pure function logic)
-   * @param {Object} address - Nominatim address object
-   * @returns {string|null} District name or null
-   * @private
-   * @pure
-   */
-  _extractDistrito(address) {
-    if (!address) return null;
-    
-    // Check direct properties
-    const distrito = address.village 
-      || address.district 
-      || address.hamlet
-      || address.town;
-    
-    if (distrito) return distrito;
-    
-    // Check nested address object
-    if (address.address) {
-      return address.address.village 
-        || address.address.district 
-        || address.address.hamlet
-        || address.address.town 
-        || null;
-    }
-    
-    return null;
-  },
-  
-  /**
-   * Extract neighborhood from address (pure function logic)
-   * @param {Object} address - Nominatim address object
-   * @returns {string|null} Neighborhood name or null
-   * @private
-   * @pure
-   */
-  _extractBairro(address) {
-    if (!address) return null;
-    
-    // Check direct properties
-    const bairro = address.suburb 
-      || address.neighbourhood 
-      || address.quarter 
-      || address.residential;
-    
-    if (bairro) return bairro;
-    
-    // Check nested address object
-    if (address.address) {
-      return address.address.suburb 
-        || address.address.neighbourhood 
-        || address.address.quarter 
-        || address.address.residential 
-        || null;
-    }
-    
-    return null;
-  },
-  
-  /**
-   * Format location value for display (pure function logic)
+   * Format location value for display
    * @param {string|null} value - Location value
    * @returns {string} Formatted value
    * @private
-   * @pure
    */
   _formatLocationValue(value) {
-    if (!value || value.trim() === '') {
-      return 'Não disponível';
-    }
-    return value;
+    return formatLocationValue(value);
   },
   
   _setupCacheDisplayHandlers() {

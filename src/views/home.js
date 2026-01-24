@@ -1,5 +1,7 @@
 /**
  * @fileoverview Home View - Main landing page for Guia Turístico
+ * @version 0.7.1-alpha
+ * 
  * Displays user's current location with toggle between single-position and continuous tracking
  * 
  * This view is loaded by the SPA router and uses the WebGeocodingManager from guia_js library

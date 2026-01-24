@@ -1,9 +1,10 @@
 'use strict';
 
-import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
+import { ADDRESS_FETCHED_EVENT, IBGE_LOADING_MESSAGE, IBGE_ERROR_MESSAGE, IBGE_UNAVAILABLE_MESSAGE } from '../config/defaults.js';
 
 /**
  * HTML-based SIDRA data displayer with IBGE integration.
+ * @version 0.7.1-alpha
  * 
  * This class handles the display of SIDRA (Sistema IBGE de Recuperação Automática) data
  * in HTML format, including population statistics and other IBGE demographic information.
@@ -101,13 +102,13 @@ class HTMLSidraDisplayer {
 		
 		// Handle loading state with Portuguese localized message
 		if (loading) {
-			this.element.innerHTML = '<p class="loading">Carregando dados do IBGE...</p>';
+			this.element.innerHTML = `<p class="loading">${IBGE_LOADING_MESSAGE}</p>`;
 			return;
 		}
 
 		// Handle error state with Portuguese localized error message
 		if (error) {
-			this.element.innerHTML = `<p class="error">Erro ao carregar dados do IBGE: ${error.message}</p>`;
+			this.element.innerHTML = `<p class="error">${IBGE_ERROR_MESSAGE}: ${error.message}</p>`;
 			return;
 		}
 
@@ -166,7 +167,7 @@ class HTMLSidraDisplayer {
 		} catch (error) {
 			console.error('(HTMLSidraDisplayer) Error updating SIDRA data:', error);
 			// Show user-friendly error message in Portuguese
-			this.element.innerHTML = `<p class="error">Dados do IBGE temporariamente indisponíveis</p>`;
+			this.element.innerHTML = `<p class="error">${IBGE_UNAVAILABLE_MESSAGE}</p>`;
 		}
 	}
 

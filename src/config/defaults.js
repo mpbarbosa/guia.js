@@ -63,6 +63,16 @@ export const NO_REFERENCE_PLACE = "Não classificado";
 /** Event name for address fetch completion */
 export const ADDRESS_FETCHED_EVENT = "Address fetched";
 
+// Portuguese UI Messages (v0.8.6+)
+/** IBGE/SIDRA loading message */
+export const IBGE_LOADING_MESSAGE = "Carregando dados do IBGE...";
+
+/** IBGE/SIDRA error message prefix */
+export const IBGE_ERROR_MESSAGE = "Erro ao carregar dados do IBGE";
+
+/** IBGE/SIDRA temporary unavailability message */
+export const IBGE_UNAVAILABLE_MESSAGE = "Dados do IBGE temporariamente indisponíveis";
+
 /** Valid OSM reference place classes (geographic points, commercial locations, facilities, transport) */
 export const VALID_REF_PLACE_CLASSES = Object.freeze([
 	"place",    // Geographic locations (cities, towns, neighborhoods)

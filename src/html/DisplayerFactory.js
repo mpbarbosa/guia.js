@@ -2,6 +2,7 @@
 
 /**
  * Factory for creating displayer instances with dependency injection support.
+ * @version 0.7.1-alpha
  * 
  * This factory provides a centralized point for creating displayer objects,
  * enabling dependency injection and easier testing. The factory methods are

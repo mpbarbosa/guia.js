@@ -12,6 +12,7 @@
  * location, such as "You are at Shopping Center XYZ" or "Near Subway Station ABC".
  * 
  * @module data/ReferencePlace
+ * @version 0.7.1-alpha
  * @since 0.8.5-alpha
  * @author Marcelo Pereira Barbosa
  */

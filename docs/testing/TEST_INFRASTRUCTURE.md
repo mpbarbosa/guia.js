@@ -18,7 +18,7 @@ Guia Turístico uses **two separate test infrastructures** for different testing
 | **Language** | JavaScript (Node.js) | Python 3.11+ |
 | **Purpose** | Unit, integration, E2E tests | Cross-browser validation |
 | **Browsers** | Chromium (headless) | Chrome, Firefox, Safari/WebKit |
-| **Test Count** | 2,045 tests (1,887 passing) | Separate test suite |
+| **Test Count** | 2,045 tests (1,899 passing, 146 skipped) | Separate test suite |
 | **Execution** | `npm test` | `pytest tests/e2e/` |
 | **Speed** | ~30 seconds | Varies by browser |
 | **CI/CD** | Primary test suite | Secondary validation |
@@ -39,6 +39,11 @@ __tests__/
 ├── external/         # External API integration tests
 └── ui/              # UI component tests
 ```
+
+### Recent E2E Tests (v0.7.2+)
+- `complete-address-validation.e2e.test.js` - Complete address data validation workflow
+- `milho-verde-locationResult.e2e.test.js` - Location result integration testing
+- `HTMLSidraDisplayer.test.js` - IBGE SIDRA data displayer unit tests
 
 ### Python/Playwright: `tests/`
 ```

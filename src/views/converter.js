@@ -469,14 +469,8 @@ export default {
    * @param {Object} data - Nominatim response data
    * @private
    * 
-   * Note: The address parsing logic below is duplicated from address-parser.js
-   * because that module uses CommonJS (for Jest testing) and cannot be directly
-   * imported in browser ES6 modules without a bundler. The logic is kept in sync
-   * through unit tests.
-   * 
-   * TODO: Consider adding a build step (e.g., webpack, rollup) to enable proper
-   * module imports and eliminate code duplication between views and test modules.
-   * This would reduce maintenance burden and ensure consistency across all usages.
+   * Note: Uses address-parser.js module for consistent address parsing logic.
+   * The module is imported as ES6 module and shared between views and tests.
    */
   _updateLocationTypeCard(data) {
     const address = data.address || data;

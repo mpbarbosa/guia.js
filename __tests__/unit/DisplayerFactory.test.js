@@ -163,6 +163,53 @@ describe('DisplayerFactory - MP Barbosa Travel Guide (v0.8.10-alpha)', () => {
         });
     });
 
+    describe('Highlight Cards Displayer Factory', () => {
+        test('should create HTMLHighlightCardsDisplayer instance', () => {
+            const mockDocument = {
+                getElementById: jest.fn((id) => ({ id, innerHTML: '' }))
+            };
+            
+            const displayer = DisplayerFactory.createHighlightCardsDisplayer(mockDocument);
+            
+            expect(displayer).toBeDefined();
+            expect(displayer.constructor.name).toBe('HTMLHighlightCardsDisplayer');
+            expect(Object.isFrozen(displayer)).toBe(true);
+        });
+        
+        test('should create immutable highlight cards displayer (MP Barbosa standards)', () => {
+            const mockDocument = {
+                getElementById: jest.fn((id) => ({ id, innerHTML: '' }))
+            };
+            
+            const displayer = DisplayerFactory.createHighlightCardsDisplayer(mockDocument);
+            
+            expect(Object.isFrozen(displayer)).toBe(true);
+            expect(() => {
+                displayer.newProperty = 'test';
+            }).toThrow();
+        });
+    });
+
+    describe('SIDRA Displayer Factory', () => {
+        test('should create HTMLSidraDisplayer instance', () => {
+            const displayer = DisplayerFactory.createSidraDisplayer(mockElement);
+            
+            expect(displayer).toBeDefined();
+            expect(displayer.constructor.name).toBe('HTMLSidraDisplayer');
+            expect(displayer.element).toBe(mockElement);
+            expect(Object.isFrozen(displayer)).toBe(true);
+        });
+        
+        test('should create immutable SIDRA displayer (MP Barbosa standards)', () => {
+            const displayer = DisplayerFactory.createSidraDisplayer(mockElement);
+            
+            expect(Object.isFrozen(displayer)).toBe(true);
+            expect(() => {
+                displayer.newProperty = 'test';
+            }).toThrow();
+        });
+    });
+
     describe('Referential Transparency (Pure Functions)', () => {
         test('should create equivalent position displayers for same inputs', () => {
             const displayer1 = DisplayerFactory.createPositionDisplayer(mockElement);
@@ -275,6 +322,8 @@ describe('DisplayerFactory - MP Barbosa Travel Guide (v0.8.10-alpha)', () => {
                 'createPositionDisplayer',
                 'createAddressDisplayer', 
                 'createReferencePlaceDisplayer',
+                'createHighlightCardsDisplayer',
+                'createSidraDisplayer',
                 'toString'
             ];
 
@@ -282,6 +331,14 @@ describe('DisplayerFactory - MP Barbosa Travel Guide (v0.8.10-alpha)', () => {
                 expect(DisplayerFactory).toHaveProperty(methodName);
                 expect(typeof DisplayerFactory[methodName]).toBe('function');
             });
+        });
+        
+        test('should have all 5 factory methods available', () => {
+            expect(typeof DisplayerFactory.createPositionDisplayer).toBe('function');
+            expect(typeof DisplayerFactory.createAddressDisplayer).toBe('function');
+            expect(typeof DisplayerFactory.createReferencePlaceDisplayer).toBe('function');
+            expect(typeof DisplayerFactory.createHighlightCardsDisplayer).toBe('function');
+            expect(typeof DisplayerFactory.createSidraDisplayer).toBe('function');
         });
 
         test('should not require instantiation of factory', () => {

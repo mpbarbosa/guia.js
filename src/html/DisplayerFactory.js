@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Factory for creating displayer instances with dependency injection support.
@@ -220,7 +221,7 @@ class DisplayerFactory {
 	 * @returns {string} String representation of the factory
 	 * 
 	 * @example
-	 * console.log(DisplayerFactory.toString());
+	 * log(DisplayerFactory.toString());
 	 * // Output: "DisplayerFactory: 3 factory methods available"
 	 * 
 	 * @since 0.8.6-alpha

@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Speech Synthesis Manager for Web Speech API integration with queue-based processing.
@@ -246,7 +247,7 @@ class SpeechSynthesisManager {
      * 
      * @example
      * const newState = speechManager.toggleLogs();
-     * console.log(`Logging is now ${newState ? 'enabled' : 'disabled'}`);
+     * log(`Logging is now ${newState ? 'enabled' : 'disabled'}`);
      */
     toggleLogs() {
         this.enableLogging = !this.enableLogging;
@@ -264,7 +265,7 @@ class SpeechSynthesisManager {
     safeLog(message, ...params) {
         if (this.enableLogging && typeof console !== 'undefined' && console.log) {
             const fullMessage = `[${new Date().toISOString()}] ${message} ${params.join(" ")}`;
-            console.log(fullMessage);
+            log(fullMessage);
         }
     }
 
@@ -277,7 +278,7 @@ class SpeechSynthesisManager {
      */
     safeWarn(message, ...params) {
         if (this.enableLogging && typeof console !== 'undefined' && console.warn) {
-            console.warn(message, ...params);
+            warn(message, ...params);
         }
     }
 
@@ -581,7 +582,7 @@ class SpeechSynthesisManager {
      * @example
      * // Get all available voices
      * const voices = speechManager.getAvailableVoices();
-     * console.log(`Found ${voices.length} voices`);
+     * log(`Found ${voices.length} voices`);
      * 
      * @example
      * // Find specific language voices
@@ -606,9 +607,9 @@ class SpeechSynthesisManager {
      * // Check current voice
      * const currentVoice = speechManager.getCurrentVoice();
      * if (currentVoice) {
-     *     console.log(`Using voice: ${currentVoice.name} (${currentVoice.lang})`);
+     *     log(`Using voice: ${currentVoice.name} (${currentVoice.lang})`);
      * } else {
-     *     console.log('No voice selected');
+     *     log('No voice selected');
      * }
      */
     getCurrentVoice() {
@@ -939,7 +940,7 @@ class SpeechSynthesisManager {
      * 
      * @example
      * // Check queue status
-     * console.log(`Queue has ${speechManager.getQueueSize()} pending items`);
+     * log(`Queue has ${speechManager.getQueueSize()} pending items`);
      * 
      * @example
      * // Conditional processing based on queue size
@@ -995,14 +996,14 @@ class SpeechSynthesisManager {
      * @example
      * // Get complete status
      * const status = speechManager.getStatus();
-     * console.log('Speech Status:', status);
+     * log('Speech Status:', status);
      * 
      * @example
      * // Monitor queue for debugging
      * setInterval(() => {
      *     const status = speechManager.getStatus();
      *     if (status.queueSize > 0) {
-     *         console.log(`Queue: ${status.queueSize} items, Speaking: ${status.isSpeaking}`);
+     *         log(`Queue: ${status.queueSize} items, Speaking: ${status.isSpeaking}`);
      *     }
      * }, 1000);
      */
@@ -1029,12 +1030,12 @@ class SpeechSynthesisManager {
      * @returns {string} String representation with current configuration
      * 
      * @example
-     * console.log(speechManager.toString());
+     * log(speechManager.toString());
      * // Output: "SpeechSynthesisManager: voice=Google português do Brasil, rate=1, pitch=1, isSpeaking=false, queueSize=0"
      * 
      * @example
      * // Use in error logging
-     * console.error('Speech error in:', speechManager.toString());
+     * error('Speech error in:', speechManager.toString());
      */
     toString() {
         return `${this.constructor.name}: voice=${this.voice?.name || 'none'}, rate=${this.rate}, pitch=${this.pitch}, isSpeaking=${this.isCurrentlySpeaking}, queueSize=${this.speechQueue.size()}`;

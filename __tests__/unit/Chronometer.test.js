@@ -61,7 +61,11 @@ describe('Chronometer', () => {
         test('should log initialization message', () => {
             const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
             new Chronometer(mockElement);
-            expect(consoleSpy).toHaveBeenCalledWith('Initializing Chronometer...');
+            // Logger prepends timestamp as first arg, message is second arg
+            expect(consoleSpy).toHaveBeenCalledWith(
+                expect.any(String), // timestamp
+                'Initializing Chronometer...'
+            );
             consoleSpy.mockRestore();
         });
 

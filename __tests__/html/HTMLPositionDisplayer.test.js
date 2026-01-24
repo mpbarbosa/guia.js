@@ -286,7 +286,9 @@ describe('HTMLPositionDisplayer', () => {
 			const nullDisplayer = new HTMLPositionDisplayer(null);
 			nullDisplayer.update(mockPositionManager, 'PositionManager updated', false, null);
 			
+			// Logger prepends timestamp as first arg, message is second arg
 			expect(consoleSpy).toHaveBeenCalledWith(
+				expect.any(String), // timestamp
 				'HTMLPositionDisplayer: Cannot update - element is null or undefined'
 			);
 		});

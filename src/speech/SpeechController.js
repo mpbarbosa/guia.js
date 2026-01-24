@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * SpeechController handles the core speech synthesis operations using the Web Speech API.
@@ -31,17 +32,17 @@
  * const config = { voice: myVoice, rate: 1.0, pitch: 1.0 };
  * 
  * controller.speak('Hello world', config, {
- *   onEnd: () => console.log('Speech completed'),
- *   onError: (error) => console.error('Speech error:', error)
+ *   onEnd: () => log('Speech completed'),
+ *   onError: (error) => error('Speech error:', error)
  * });
  * 
  * @example
  * // With all callbacks
  * controller.speak('Important message', config, {
- *   onStart: () => console.log('Speech started'),
- *   onEnd: () => console.log('Speech ended'),
- *   onError: (error) => console.error('Error:', error),
- *   onBoundary: (event) => console.log('Word boundary:', event)
+ *   onStart: () => log('Speech started'),
+ *   onEnd: () => log('Speech ended'),
+ *   onError: (error) => error('Error:', error),
+ *   onBoundary: (event) => log('Word boundary:', event)
  * });
  */
 export class SpeechController {
@@ -71,7 +72,7 @@ export class SpeechController {
      */
     _log(message, ...params) {
         if (this.enableLogging && typeof console !== 'undefined' && console.log) {
-            console.log(message, ...params);
+            log(message, ...params);
         }
     }
 
@@ -84,7 +85,7 @@ export class SpeechController {
      */
     _warn(message, ...params) {
         if (this.enableLogging && typeof console !== 'undefined' && console.warn) {
-            console.warn(message, ...params);
+            warn(message, ...params);
         }
     }
 
@@ -195,7 +196,7 @@ export class SpeechController {
      * @example
      * const config = { voice: myVoice, rate: 1.0, pitch: 1.0 };
      * controller.speak('Hello', config, {
-     *   onEnd: () => console.log('Done')
+     *   onEnd: () => log('Done')
      * });
      */
     speak(text, config, callbacks = {}) {

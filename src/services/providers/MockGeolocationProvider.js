@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../../utils/logger.js';
 
 /**
  * Mock geolocation provider for testing and development.

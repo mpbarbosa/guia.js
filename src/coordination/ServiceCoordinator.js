@@ -198,7 +198,7 @@ class ServiceCoordinator {
             throw new Error('ServiceCoordinator: displayerFactory not configured');
         }
 
-        console.log('>>> (ServiceCoordinator) Creating displayers with elements:', {
+        log('>>> (ServiceCoordinator) Creating displayers with elements:', {
             positionDisplay,
             addressDisplay,
             enderecoPadronizadoDisplay,
@@ -265,46 +265,46 @@ class ServiceCoordinator {
             log('ServiceCoordinator: Reverse geocoder wired');
             
             // Subscribe address displayer to address updates
-            console.log('>>> (ServiceCoordinator) Wiring address-related displayers to ReverseGeocoder');
+            log('>>> (ServiceCoordinator) Wiring address-related displayers to ReverseGeocoder');
             if (this._displayers.address) {
-                console.log('>>> (ServiceCoordinator) Subscribing HTMLAddressDisplayer to ReverseGeocoder', this._displayers.address);
+                log('>>> (ServiceCoordinator) Subscribing HTMLAddressDisplayer to ReverseGeocoder', this._displayers.address);
                 this._reverseGeocoder.subscribe(this._displayers.address);
                 log('>>> ServiceCoordinator: Address displayer wired');
             } else {
-                console.warn('(ServiceCoordinator) address displayer is null, cannot subscribe!');
+                warn('(ServiceCoordinator) address displayer is null, cannot subscribe!');
             }
             
             // Subscribe highlight cards displayer to address updates
             if (this._displayers.highlightCards) {
-                console.log('>>> (ServiceCoordinator) Subscribing HTMLHighlightCardsDisplayer to ReverseGeocoder', this._displayers.highlightCards);
+                log('>>> (ServiceCoordinator) Subscribing HTMLHighlightCardsDisplayer to ReverseGeocoder', this._displayers.highlightCards);
                 this._reverseGeocoder.subscribe(this._displayers.highlightCards);
                 log('>>> ServiceCoordinator: Highlight cards displayer wired');
             } else {
-                console.warn('(ServiceCoordinator) highlightCards displayer is null, cannot subscribe!');
+                warn('(ServiceCoordinator) highlightCards displayer is null, cannot subscribe!');
             }
             
             // Subscribe reference place displayer to address updates
             if (this._displayers.referencePlace) {
-                console.log('>>> (ServiceCoordinator) Subscribing HTMLReferencePlaceDisplayer to ReverseGeocoder', this._displayers.referencePlace);
+                log('>>> (ServiceCoordinator) Subscribing HTMLReferencePlaceDisplayer to ReverseGeocoder', this._displayers.referencePlace);
                 this._reverseGeocoder.subscribe(this._displayers.referencePlace);
                 log('>>> ServiceCoordinator: Reference place displayer wired');
             } else {
-                console.warn('(ServiceCoordinator) referencePlace displayer is null, cannot subscribe!');
+                warn('(ServiceCoordinator) referencePlace displayer is null, cannot subscribe!');
             }
             
-            console.log('>>> (ServiceCoordinator) Wiring SIDRA-related displayer to ReverseGeocoder: ', this._displayers.sidra);
+            log('>>> (ServiceCoordinator) Wiring SIDRA-related displayer to ReverseGeocoder: ', this._displayers.sidra);
             // Subscribe SIDRA displayer to address updates
             if (this._displayers.sidra) {
-                console.log('>>> (ServiceCoordinator) Subscribing HTMLSidraDisplayer to ReverseGeocoder', this._displayers.sidra);
+                log('>>> (ServiceCoordinator) Subscribing HTMLSidraDisplayer to ReverseGeocoder', this._displayers.sidra);
                 this._reverseGeocoder.subscribe(this._displayers.sidra);
                 log('>>> ServiceCoordinator: SIDRA displayer wired');
             } else {
-                console.warn('(ServiceCoordinator) sidra displayer is null, cannot subscribe!');
+                warn('(ServiceCoordinator) sidra displayer is null, cannot subscribe!');
             }
             
             // Safe logging - check if observerSubject exists
             if (this._reverseGeocoder.observerSubject?.observers) {
-                console.log('(ServiceCoordinator) ReverseGeocoder now has', this._reverseGeocoder.observerSubject.observers.length, 'observers');
+                log('(ServiceCoordinator) ReverseGeocoder now has', this._reverseGeocoder.observerSubject.observers.length, 'observers');
             }
         }
 
@@ -324,8 +324,8 @@ class ServiceCoordinator {
      * 
      * @example
      * coordinator.getSingleLocationUpdate()
-     *   .then(position => console.log('Got position:', position))
-     *   .catch(err => console.error('Failed:', err));
+     *   .then(position => log('Got position:', position))
+     *   .catch(err => error('Failed:', err));
      */
     getSingleLocationUpdate() {
         if (!this._geolocationService) {
@@ -443,7 +443,7 @@ class ServiceCoordinator {
      * 
      * @example
      * if (coordinator.isTracking()) {
-     *   console.log('Tracking active');
+     *   log('Tracking active');
      * }
      */
     isTracking() {
@@ -494,7 +494,7 @@ class ServiceCoordinator {
      * @example
      * const displayers = coordinator.getDisplayers();
      * if (displayers) {
-     *   console.log(displayers.position);
+     *   log(displayers.position);
      * }
      */
     getDisplayers() {
@@ -533,7 +533,7 @@ class ServiceCoordinator {
      * @returns {string} Debug string
      * 
      * @example
-     * console.log(coordinator.toString());
+     * log(coordinator.toString());
      * // "ServiceCoordinator: initialized, tracking (watchId: 123)"
      */
     toString() {

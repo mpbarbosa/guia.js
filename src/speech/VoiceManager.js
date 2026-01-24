@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * VoiceManager handles voice loading, selection, and retry logic for Web Speech API.
@@ -68,7 +69,7 @@ export class VoiceManager {
      */
     safeLog(message, ...params) {
         if (this.enableLogging && typeof console !== 'undefined' && console.log) {
-            console.log(message, ...params);
+            log(message, ...params);
         }
     }
 
@@ -78,7 +79,7 @@ export class VoiceManager {
      */
     safeWarn(message, ...params) {
         if (this.enableLogging && typeof console !== 'undefined' && console.warn) {
-            console.warn(message, ...params);
+            warn(message, ...params);
         }
     }
 

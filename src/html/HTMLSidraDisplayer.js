@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error as logError } from '../utils/logger.js';
 
 import { ADDRESS_FETCHED_EVENT, IBGE_LOADING_MESSAGE, IBGE_ERROR_MESSAGE, IBGE_UNAVAILABLE_MESSAGE } from '../config/defaults.js';
 
@@ -62,7 +63,7 @@ class HTMLSidraDisplayer {
 	constructor(element, options = {}) {
 		this.element = element;
 		this.dataType = options.dataType || 'PopEst';
-		console.log(`>>> (HTMLSidraDisplayer) Created for element id='${element?.id || 'no-id'}' with dataType='${this.dataType}'`);
+		log(`>>> (HTMLSidraDisplayer) Created for element id='${element?.id || 'no-id'}' with dataType='${this.dataType}'`);
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
 	}
 
@@ -93,10 +94,10 @@ class HTMLSidraDisplayer {
 	 */
 	update(addressData, enderecoPadronizado, posEvent, loading, error) {
 		// Log update for debugging (following MP Barbosa logging standards)
-		console.log(`(HTMLSidraDisplayer) update() called with posEvent: ${posEvent}`);
+		log(`(HTMLSidraDisplayer) update() called with posEvent: ${posEvent}`);
 		
 		if (!this.element) {
-			console.warn('(HTMLSidraDisplayer) No element provided, skipping update');
+			warn('(HTMLSidraDisplayer) No element provided, skipping update');
 			return;
 		}
 		
@@ -142,13 +143,13 @@ class HTMLSidraDisplayer {
 	_updateSidraData(enderecoPadronizado) {
 		// Validate input
 		if (!enderecoPadronizado) {
-			console.warn('(HTMLSidraDisplayer) No enderecoPadronizado provided, skipping SIDRA update');
+			warn('(HTMLSidraDisplayer) No enderecoPadronizado provided, skipping SIDRA update');
 			return;
 		}
 
 		// Check if global SIDRA function is available
 		if (typeof window.displaySidraDadosParams !== 'function') {
-			console.warn('(HTMLSidraDisplayer) window.displaySidraDadosParams not available, SIDRA library not loaded');
+			warn('(HTMLSidraDisplayer) window.displaySidraDadosParams not available, SIDRA library not loaded');
 			this.element.innerHTML = `<p class="info">Dados do IBGE não disponíveis (biblioteca SIDRA não carregada)</p>`;
 			return;
 		}
@@ -159,13 +160,13 @@ class HTMLSidraDisplayer {
 			"siglaUf": enderecoPadronizado.siglaUF
 		};
 
-		console.log(`(HTMLSidraDisplayer) Updating SIDRA data for ${params.municipio}, ${params.siglaUf}`);
+		log(`(HTMLSidraDisplayer) Updating SIDRA data for ${params.municipio}, ${params.siglaUf}`);
 		
 		// Call global SIDRA display function with error handling
 		try {
 			window.displaySidraDadosParams(this.element, this.dataType, params);
-		} catch (error) {
-			console.error('(HTMLSidraDisplayer) Error updating SIDRA data:', error);
+		} catch (err) {
+			logError('(HTMLSidraDisplayer) Error updating SIDRA data:', err);
 			// Show user-friendly error message in Portuguese
 			this.element.innerHTML = `<p class="error">${IBGE_UNAVAILABLE_MESSAGE}</p>`;
 		}
@@ -181,7 +182,7 @@ class HTMLSidraDisplayer {
 	 * @returns {string} String representation of the displayer
 	 * 
 	 * @example
-	 * console.log(displayer.toString());
+	 * log(displayer.toString());
 	 * // Output: "HTMLSidraDisplayer: dadosSidra (PopEst)"
 	 * 
 	 * @since 0.7.1-alpha

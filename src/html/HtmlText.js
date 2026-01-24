@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Manages HTML text content updates with timestamp formatting.
@@ -120,7 +121,7 @@ class HtmlText {
 	 * @since 0.8.3-alpha
 	 * 
 	 * @example
-	 * console.log(htmlText.toString());
+	 * log(htmlText.toString());
 	 * // Output: "HtmlText: timestamp-display" (if element has id="timestamp-display")
 	 * // Output: "HtmlText: no-id" (if element has no id)
 	 */

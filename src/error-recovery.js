@@ -1,4 +1,5 @@
 /**
+import { log, warn, error } from './utils/logger.js';
  * Error Recovery and Global Error Handler
  * Provides centralized error handling and recovery mechanisms
  */
@@ -15,7 +16,7 @@
 
   // Global error handler
   window.addEventListener('error', function(event) {
-    console.error('Global error caught:', event.error);
+    error('Global error caught:', event.error);
     
     const errorInfo = {
       type: 'Error',
@@ -37,7 +38,7 @@
 
   // Unhandled promise rejection handler
   window.addEventListener('unhandledrejection', function(event) {
-    console.error('Unhandled promise rejection:', event.reason);
+    error('Unhandled promise rejection:', event.reason);
     
     const errorInfo = {
       type: 'Promise Rejection',
@@ -401,7 +402,7 @@
     });
   }
 
-  console.log('Error Recovery system initialized');
-  console.log('Press Ctrl+E (or Cmd+E on Mac) to toggle error panel');
-  console.log('Or tap the 🐛 button on mobile devices');
+  log('Error Recovery system initialized');
+  log('Press Ctrl+E (or Cmd+E on Mac) to toggle error panel');
+  log('Or tap the 🐛 button on mobile devices');
 })();

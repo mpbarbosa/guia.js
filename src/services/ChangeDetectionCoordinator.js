@@ -13,7 +13,7 @@
  */
 
 import ObserverSubject from '../core/ObserverSubject.js';
-import { log } from '../utils/logger.js';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Coordinates address component change detection and notifications.
@@ -101,7 +101,7 @@ class ChangeDetectionCoordinator {
 	 */
 	setupLogradouroChangeDetection() {
 		if (!this.AddressDataExtractor) {
-			console.warn("(ChangeDetectionCoordinator) AddressDataExtractor not available");
+			warn("(ChangeDetectionCoordinator) AddressDataExtractor not available");
 			return;
 		}
 		
@@ -133,7 +133,7 @@ class ChangeDetectionCoordinator {
 	 */
 	setupBairroChangeDetection() {
 		if (!this.AddressDataExtractor) {
-			console.warn("(ChangeDetectionCoordinator) AddressDataExtractor not available");
+			warn("(ChangeDetectionCoordinator) AddressDataExtractor not available");
 			return;
 		}
 		
@@ -162,7 +162,7 @@ class ChangeDetectionCoordinator {
 	 */
 	setupMunicipioChangeDetection() {
 		if (!this.AddressDataExtractor) {
-			console.warn("(ChangeDetectionCoordinator) AddressDataExtractor not available");
+			warn("(ChangeDetectionCoordinator) AddressDataExtractor not available");
 			return;
 		}
 		
@@ -197,10 +197,10 @@ class ChangeDetectionCoordinator {
 	handleLogradouroChange(changeDetails) {
 		try {
 			this.notifyLogradouroChangeObservers(changeDetails);
-		} catch (error) {
-			console.error(
+		} catch (err) {
+			error(
 				"(ChangeDetectionCoordinator) Error handling logradouro change:",
-				error,
+				err,
 			);
 		}
 	}
@@ -220,10 +220,10 @@ class ChangeDetectionCoordinator {
 	handleBairroChange(changeDetails) {
 		try {
 			this.notifyBairroChangeObservers(changeDetails);
-		} catch (error) {
-			console.error(
+		} catch (err) {
+			error(
 				"(ChangeDetectionCoordinator) Error handling bairro change:",
-				error,
+				err,
 			);
 		}
 	}
@@ -243,10 +243,10 @@ class ChangeDetectionCoordinator {
 	handleMunicipioChange(changeDetails) {
 		try {
 			this.notifyMunicipioChangeObservers(changeDetails);
-		} catch (error) {
-			console.error(
+		} catch (err) {
+			error(
 				"(ChangeDetectionCoordinator) Error handling municipio change:",
-				error,
+				err,
 			);
 		}
 	}
@@ -307,10 +307,10 @@ class ChangeDetectionCoordinator {
 					this.reverseGeocoder.enderecoPadronizado,
 					changeDetails
 				);
-			} catch (error) {
-				console.error(
+			} catch (err) {
+				error(
 					`(ChangeDetectionCoordinator) Error notifying function observer about ${changeType}:`,
-					error
+					err
 				);
 			}
 		}

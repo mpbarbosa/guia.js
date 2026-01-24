@@ -32,7 +32,7 @@
  * @example
  * // With external handlers (window integration)
  * window.findNearbyRestaurants = (lat, lon) => {
- *   console.log(`Finding restaurants at ${lat}, ${lon}`);
+ *   log(`Finding restaurants at ${lat}, ${lon}`);
  * };
  * eventCoordinator.initializeEventListeners();
  */
@@ -159,7 +159,7 @@ class EventCoordinator {
      * 
      * @example
      * if (coordinator.isInitialized()) {
-     *   console.log('Event listeners are active');
+     *   log('Event listeners are active');
      * }
      */
     isInitialized() {
@@ -172,7 +172,7 @@ class EventCoordinator {
      * @returns {number} Number of active event handlers
      * 
      * @example
-     * console.log(`Active handlers: ${coordinator.getHandlerCount()}`);
+     * log(`Active handlers: ${coordinator.getHandlerCount()}`);
      */
     getHandlerCount() {
         return this._handlers.size;
@@ -282,7 +282,7 @@ class EventCoordinator {
      * @returns {string} Debug string
      * 
      * @example
-     * console.log(coordinator.toString());
+     * log(coordinator.toString());
      * // "EventCoordinator: 2 handlers (initialized)"
      */
     toString() {

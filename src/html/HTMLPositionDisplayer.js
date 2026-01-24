@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * HTML-based position information displayer with coordinates and accuracy details.
@@ -146,7 +147,7 @@ class HTMLPositionDisplayer {
 	 * 
 	 * @example
 	 * const quality = displayer.formatAccuracyQuality('excellent');
-	 * console.log(quality); // "Excelente"
+	 * log(quality); // "Excelente"
 	 * 
 	 * @since 0.8.3-alpha
 	 */
@@ -193,7 +194,7 @@ class HTMLPositionDisplayer {
 	update(positionManager, posEvent, loading, error) {
 		// Validate element exists before attempting DOM updates
 		if (!this.element) {
-			console.warn('HTMLPositionDisplayer: Cannot update - element is null or undefined');
+			warn('HTMLPositionDisplayer: Cannot update - element is null or undefined');
 			return;
 		}
 
@@ -231,7 +232,7 @@ class HTMLPositionDisplayer {
 	 * @returns {string} String representation of the displayer
 	 * 
 	 * @example
-	 * console.log(displayer.toString());
+	 * log(displayer.toString());
 	 * // Output: "HTMLPositionDisplayer: position-display"
 	 * 
 	 * @since 0.8.3-alpha

@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from './logger.js';
 
 /**
  * Device detection utilities.
@@ -35,9 +36,9 @@
  * @example
  * // Default usage (uses global navigator and window)
  * if (isMobileDevice()) {
- *   console.log('Mobile device detected - expecting high GPS accuracy');
+ *   log('Mobile device detected - expecting high GPS accuracy');
  * } else {
- *   console.log('Desktop device detected - expecting lower accuracy');
+ *   log('Desktop device detected - expecting lower accuracy');
  * }
  * 
  * @example

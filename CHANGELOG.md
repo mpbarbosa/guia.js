@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Município State Abbreviation Display (v0.8.7-alpha)**: Municipality highlight card now displays the state abbreviation alongside the município name (e.g., "Recife, PE" instead of just "Recife")
+  - Provides better geographic context for users
+  - Fallback to município name only if state abbreviation is unavailable
+  - Comprehensive test coverage with 42 unit tests covering all 26 Brazilian states
+  - Documentation: `docs/FEATURE_MUNICIPIO_STATE_DISPLAY.md`
+  - `__tests__/html/HTMLHighlightCardsDisplayer.test.js`: New unit test suite (42 tests)
 - `src/html/HTMLSidraDisplayer.js`: IBGE SIDRA data displayer (7,502 bytes, v0.7.2+)
 - `libs/sidra/tab6579_municipios.json`: IBGE municipality population data (190KB offline fallback)
 - `__tests__/unit/HTMLSidraDisplayer.test.js`: Comprehensive test suite for SIDRA displayer
@@ -20,6 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Code quality improvement plan documentation
 
 ### Changed
+- **`HTMLHighlightCardsDisplayer` (v0.8.7-alpha)**: Updated to use `municipioCompleto()` method instead of direct `municipio` property access
+  - Displays município with state abbreviation format: "City, ST"
+  - Maintains backwards compatibility with graceful fallback
+- **E2E test expectations (v0.8.7-alpha)**: Updated assertions to match new município display format
+  - `__tests__/e2e/municipio-bairro-simple.e2e.test.js`: Updated to expect "Arapiraca, AL"
+  - `__tests__/e2e/municipio-bairro-display.e2e.test.js`: Updated TEST_COORDINATES constant
 - `DisplayerFactory`: Now creates 5 displayer types (added Sidra displayer factory method)
 - `ServiceCoordinator`: Manages SIDRA displayer lifecycle and observer subscriptions
 - `ReverseGeocoder`: Uses `ADDRESS_FETCHED_EVENT` constant for observer notifications

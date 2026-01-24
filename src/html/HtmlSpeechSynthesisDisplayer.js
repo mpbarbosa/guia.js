@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * HTML-based speech synthesis controller with UI integration and address change notifications.
@@ -716,10 +717,10 @@ class HtmlSpeechSynthesisDisplayer {
 	update(currentAddress, enderecoPadronizadoOrEvent, posEvent, loadingOrChangeDetails, error) {
 		// Debug logging for troubleshooting (can be removed in production)
 		if (typeof console !== 'undefined' && console.log) {
-			console.log("+++ (301) HtmlSpeechSynthesisDisplayer.update called +++");
-			console.log("+++ (302) currentAddress: ", currentAddress);
-			console.log("+++ (303) enderecoPadronizadoOrEvent: ", enderecoPadronizadoOrEvent);
-			console.log("+++ (304) posEvent: ", posEvent);
+			log("+++ (301) HtmlSpeechSynthesisDisplayer.update called +++");
+			log("+++ (302) currentAddress: ", currentAddress);
+			log("+++ (303) enderecoPadronizadoOrEvent: ", enderecoPadronizadoOrEvent);
+			log("+++ (304) posEvent: ", posEvent);
 		}
 
 		// Early return if no current address
@@ -734,7 +735,7 @@ class HtmlSpeechSynthesisDisplayer {
 		// Priority order: Municipality (3) > Bairro (2) > Logradouro (1) > Full address every 50s (0)
 		if (["MunicipioChanged", "BairroChanged", "LogradouroChanged"].includes(enderecoPadronizadoOrEvent)) {
 			if (typeof console !== 'undefined' && console.log) {
-				console.log("+++ (310) (HtmlSpeechSyntesisDisplayer) Changed");
+				log("+++ (310) (HtmlSpeechSyntesisDisplayer) Changed");
 			}
 
 			// Call the appropriate build method based on event type
@@ -775,12 +776,12 @@ class HtmlSpeechSynthesisDisplayer {
 	 * 
 	 * @example
 	 * const displayer = new HtmlSpeechSynthesisDisplayer(document, elementIds);
-	 * console.log(displayer.toString());
+	 * log(displayer.toString());
 	 * // Output: "HtmlSpeechSynthesisDisplayer: Google português do Brasil"
 	 * 
 	 * @example
 	 * // When no voice is selected
-	 * console.log(displayer.toString());
+	 * log(displayer.toString());
 	 * // Output: "HtmlSpeechSynthesisDisplayer: no voice"
 	 */
 	toString() {

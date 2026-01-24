@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../../utils/logger.js';
 
 /**
  * Interface/Base class for geolocation providers.
@@ -40,8 +41,8 @@ class GeolocationProvider {
 	 * 
 	 * @example
 	 * provider.getCurrentPosition(
-	 *   (position) => console.log(position.coords.latitude),
-	 *   (error) => console.error(error.message),
+	 *   (position) => log(position.coords.latitude),
+	 *   (error) => error(error.message),
 	 *   { enableHighAccuracy: true, timeout: 5000 }
 	 * );
 	 */
@@ -60,8 +61,8 @@ class GeolocationProvider {
 	 * 
 	 * @example
 	 * const watchId = provider.watchPosition(
-	 *   (position) => console.log('Position updated:', position.coords),
-	 *   (error) => console.error(error.message),
+	 *   (position) => log('Position updated:', position.coords),
+	 *   (error) => error(error.message),
 	 *   { enableHighAccuracy: true }
 	 * );
 	 */

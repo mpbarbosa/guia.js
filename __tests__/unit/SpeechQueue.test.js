@@ -154,7 +154,11 @@ describe('SpeechQueue', () => {
 			
 			queue.subscribe(null);
 			
-			expect(consoleSpy).toHaveBeenCalledWith("(SpeechQueue) Attempted to subscribe a null observer.");
+			// Logger prepends timestamp as first arg, message is second arg
+			expect(consoleSpy).toHaveBeenCalledWith(
+				expect.any(String), // timestamp
+				"(SpeechQueue) Attempted to subscribe a null observer."
+			);
 			expect(queue.observers).not.toContain(null);
 			
 			consoleSpy.mockRestore();
@@ -196,7 +200,11 @@ describe('SpeechQueue', () => {
 			
 			queue.subscribeFunction(null);
 			
-			expect(consoleSpy).toHaveBeenCalledWith("(SpeechQueue) Attempted to subscribe a null observer function.");
+			// Logger prepends timestamp as first arg, message is second arg
+			expect(consoleSpy).toHaveBeenCalledWith(
+				expect.any(String), // timestamp
+				"(SpeechQueue) Attempted to subscribe a null observer function."
+			);
 			expect(queue.functionObservers).not.toContain(null);
 			
 			consoleSpy.mockRestore();
@@ -222,7 +230,11 @@ describe('SpeechQueue', () => {
 			
 			queue.unsubscribeFunction(null);
 			
-			expect(consoleSpy).toHaveBeenCalledWith("(SpeechQueue) Attempted to unsubscribe a null observer function.");
+			// Logger prepends timestamp as first arg, message is second arg
+			expect(consoleSpy).toHaveBeenCalledWith(
+				expect.any(String), // timestamp
+				"(SpeechQueue) Attempted to unsubscribe a null observer function."
+			);
 			
 			consoleSpy.mockRestore();
 		});
@@ -242,7 +254,9 @@ describe('SpeechQueue', () => {
 			queue.subscribeFunction(errorObserver);
 			queue.enqueue("Test message");
 			
+			// Logger prepends timestamp as first arg, message and error are subsequent args
 			expect(consoleErrorSpy).toHaveBeenCalledWith(
+				expect.any(String), // timestamp
 				"(SpeechQueue) Error in function observer:", 
 				expect.any(Error)
 			);
@@ -452,8 +466,10 @@ describe('SpeechQueue', () => {
 			// Trigger cleanup
 			shortQueue.size();
 			
+			// Logger prepends timestamp as first arg, message is second arg
 			expect(consoleSpy).toHaveBeenCalledWith(
-				expect.stringContaining("(SpeechQueue) Removed 1 expired items")
+				expect.any(String), // timestamp
+				"(SpeechQueue) Removed 1 expired items"
 			);
 			
 			consoleSpy.mockRestore();

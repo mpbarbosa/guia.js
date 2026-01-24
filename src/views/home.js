@@ -21,6 +21,7 @@ import HTMLSidraDisplayer from '../html/HTMLSidraDisplayer.js';
 import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 import { extractDistrito, extractBairro, determineLocationType, formatLocationValue } from '../address-parser.js';
 import timerManager from '../utils/TimerManager.js';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Home view configuration object
@@ -162,28 +163,43 @@ export default {
   },
   
   async mount(container) {
-    console.log("(home-view) Mounting home view...");
+    log("(home-view) Mounting home view...");
     
-    // Initialize state
-    this.continuousMode = false;
-    this.firstUpdate = true;
-    
-    // Initialize geolocation manager
-    this.manager = await this._initializeGeocodingManager();
-    
-    // Initialize SIDRA displayer
-    this._initializeSidraDisplayer();
-    
-    // Setup handlers
-    this._setupLocationUpdateHandlers();
-    this._setupCacheDisplayHandlers();
-    this._setupButtonHandlers();
-    this._setupGetLocationButton();
-    this._setupTrackingModeToggle();
+    try {
+      // Initialize state
+      this.continuousMode = false;
+      this.firstUpdate = true;
+      
+      // Initialize geolocation manager
+      this.manager = await this._initializeGeocodingManager();
+      
+      // Initialize SIDRA displayer
+      this._initializeSidraDisplayer();
+      
+      // Setup handlers
+      this._setupLocationUpdateHandlers();
+      this._setupCacheDisplayHandlers();
+      this._setupButtonHandlers();
+      this._setupGetLocationButton();
+      this._setupTrackingModeToggle();
+    } catch (err) {
+      error("(home-view) Error mounting home view:", err);
+      // Display user-friendly error message
+      if (container) {
+        container.innerHTML = `
+          <div class="error-message" role="alert">
+            <h2>❌ Erro ao Inicializar</h2>
+            <p>Não foi possível inicializar a visualização. Por favor, recarregue a página.</p>
+            <p class="error-details">${err.message}</p>
+          </div>
+        `;
+      }
+      throw err; // Re-throw for app-level handling
+    }
   },
   
   cleanup() {
-    console.log("(home-view) Cleaning up home view...");
+    log("(home-view) Cleaning up home view...");
     
     // Stop any ongoing geolocation watchers
     if (this.manager && this.manager.watchId) {
@@ -211,7 +227,7 @@ export default {
     const enderecoPadronizadoDisplay = document.getElementById("endereco-padronizado-display");
     const referencePlaceDisplay = document.getElementById("reference-place-display");
     
-    console.log("(home-view) Creating WebGeocodingManager...");
+    log("(home-view) Creating WebGeocodingManager...");
     
     const params = {
       locationResult: locationResult,
@@ -238,22 +254,27 @@ export default {
       }
     };
     
-    return await WebGeocodingManager.createAsync(document, params);
+    try {
+      return await WebGeocodingManager.createAsync(document, params);
+    } catch (err) {
+      error("(home-view) Failed to create WebGeocodingManager:", err);
+      throw new Error(`Falha ao inicializar gerenciador de geolocalização: ${err.message}`);
+    }
   },
   
   _initializeSidraDisplayer() {
     const dadosSidraElement = document.getElementById("dadosSidra");
     if (dadosSidraElement) {
-      console.log("(home-view) Initializing HTMLSidraDisplayer...");
+      log("(home-view) Initializing HTMLSidraDisplayer...");
       this.sidraDisplayer = new HTMLSidraDisplayer(dadosSidraElement, { dataType: 'PopEst' });
     } else {
-      console.warn("(home-view) dadosSidra element not found, SIDRA displayer not initialized");
+      warn("(home-view) dadosSidra element not found, SIDRA displayer not initialized");
     }
   },
   
   _setupLocationUpdateHandlers() {
     this.manager.subscribeFunction((currentPosition, newAddress, enderecoPadronizado) => {
-      console.log(`(home-view) Location updated`);
+      log(`(home-view) Location updated`);
       
       if (currentPosition) {
         // Show success banner on first location update
@@ -404,14 +425,14 @@ export default {
     
     if (findRestaurantsBtn) {
       findRestaurantsBtn.addEventListener('click', () => {
-        console.log("(home-view) Find restaurants clicked");
+        log("(home-view) Find restaurants clicked");
         alert("Funcionalidade de busca de restaurantes será implementada em breve!");
       });
     }
     
     if (cityStatsBtn) {
       cityStatsBtn.addEventListener('click', () => {
-        console.log("(home-view) City stats clicked");
+        log("(home-view) City stats clicked");
         alert("Funcionalidade de estatísticas da cidade será implementada em breve!");
       });
     }
@@ -422,7 +443,7 @@ export default {
     if (!getLocationBtn) return;
     
     getLocationBtn.addEventListener("click", () => {
-      console.log("(home-view) Get location button clicked");
+      log("(home-view) Get location button clicked");
       
       // Show permission request banner
       window.showPermissionRequest?.('geolocation-banner-container');
@@ -434,7 +455,7 @@ export default {
         
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            console.log("(home-view) Location obtained:", position);
+            log("(home-view) Location obtained:", position);
             
             // Trigger location update through manager
             if (this.manager && this.manager.positionManager) {
@@ -447,7 +468,7 @@ export default {
             window.showLocationSuccess?.('geolocation-banner-container', 3000);
           },
           (error) => {
-            console.error("(home-view) Geolocation error:", error);
+            error("(home-view) Geolocation error:", error);
             getLocationBtn.disabled = false;
             getLocationBtn.textContent = "📍 Tentar Novamente";
             
@@ -492,7 +513,7 @@ export default {
       this.continuousMode = e.target.checked;
       e.target.setAttribute('aria-checked', this.continuousMode.toString());
       
-      console.log(`(home-view) Continuous tracking ${this.continuousMode ? 'enabled' : 'disabled'}`);
+      log(`(home-view) Continuous tracking ${this.continuousMode ? 'enabled' : 'disabled'}`);
       
       // Show/hide tracking-specific UI
       const trackingTimer = document.getElementById("tracking-timer-container");

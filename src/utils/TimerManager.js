@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from './logger.js';
 
 /**
  * Centralized timer management to prevent memory leaks
@@ -10,7 +11,7 @@
  * 
  * // Set timer with tracking
  * timerManager.setInterval(
- *     () => console.log('tick'),
+ *     () => log('tick'),
  *     1000,
  *     'myTimer'
  * );

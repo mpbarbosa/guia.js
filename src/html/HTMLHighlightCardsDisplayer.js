@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * HTMLHighlightCardsDisplayer - Updates highlight cards for municipio and bairro
@@ -41,7 +42,7 @@ class HTMLHighlightCardsDisplayer {
      * @param {Object} enderecoPadronizado - Standardized Brazilian address
      */
     update(addressData, enderecoPadronizado) {
-        console.log('(HTMLHighlightCardsDisplayer) update called with:', {
+        log('(HTMLHighlightCardsDisplayer) update called with:', {
             hasAddressData: !!addressData,
             hasEnderecoPadronizado: !!enderecoPadronizado,
             municipio: enderecoPadronizado?.municipio,
@@ -49,26 +50,26 @@ class HTMLHighlightCardsDisplayer {
         });
         
         if (!enderecoPadronizado) {
-            console.warn('(HTMLHighlightCardsDisplayer) No enderecoPadronizado provided, skipping update');
+            warn('(HTMLHighlightCardsDisplayer) No enderecoPadronizado provided, skipping update');
             return;
         }
         
-        // Update municipio
+        // Update municipio with state abbreviation
         if (this._municipioElement) {
-            const municipio = enderecoPadronizado.municipio || '—';
+            const municipio = enderecoPadronizado.municipioCompleto() || '—';
             this._municipioElement.textContent = municipio;
-            console.log('(HTMLHighlightCardsDisplayer) Updated municipio-value to:', municipio);
+            log('(HTMLHighlightCardsDisplayer) Updated municipio-value to:', municipio);
         } else {
-            console.warn('(HTMLHighlightCardsDisplayer) municipioElement not found');
+            warn('(HTMLHighlightCardsDisplayer) municipioElement not found');
         }
         
         // Update bairro
         if (this._bairroElement) {
             const bairro = enderecoPadronizado.bairro || '—';
             this._bairroElement.textContent = bairro;
-            console.log('(HTMLHighlightCardsDisplayer) Updated bairro-value to:', bairro);
+            log('(HTMLHighlightCardsDisplayer) Updated bairro-value to:', bairro);
         } else {
-            console.warn('(HTMLHighlightCardsDisplayer) bairroElement not found');
+            warn('(HTMLHighlightCardsDisplayer) bairroElement not found');
         }
     }
 }

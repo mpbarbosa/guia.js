@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Speech Synthesis Manager - Facade Pattern
@@ -161,7 +162,7 @@ export class SpeechSynthesisManager {
      */
     _log(message, ...params) {
         if (this.enableLogging && typeof console !== 'undefined' && console.log) {
-            console.log(message, ...params);
+            log(message, ...params);
         }
     }
 
@@ -171,7 +172,7 @@ export class SpeechSynthesisManager {
      */
     _warn(message, ...params) {
         if (this.enableLogging && typeof console !== 'undefined' && console.warn) {
-            console.warn(message, ...params);
+            warn(message, ...params);
         }
     }
 

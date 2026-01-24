@@ -37,7 +37,7 @@ const TEST_COORDINATES = {
     latitude: -9.747887,
     longitude: -36.664797,
     expected: {
-        municipio: 'Arapiraca',
+        municipio: 'Arapiraca, AL', // Updated for v0.8.7: Now includes state abbreviation
         bairro: 'Centro',
         state: 'AL'
     }

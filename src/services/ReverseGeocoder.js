@@ -34,7 +34,7 @@
  */
 
 import ObserverSubject from '../core/ObserverSubject.js';
-import { warn } from '../utils/logger.js';
+import { log, warn, error } from '../utils/logger.js';
 import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 
 /**
@@ -156,7 +156,7 @@ class ReverseGeocoder {
 	 * @param {...*} args - Arguments to pass to observer update() methods (typically address data)
 	 */
 	notifyObservers(...args) {
-		console.log("(ReverseGeocoder) Notifying observers with args:", args);
+		log("(ReverseGeocoder) Notifying observers with args:", args);
 		this.observerSubject.notifyObservers(...args);
 	}
 
@@ -243,7 +243,7 @@ class ReverseGeocoder {
 			// Standardize address for Brazilian format
 			if (this.AddressDataExtractor) {
 				this.enderecoPadronizado = this.AddressDataExtractor.getBrazilianStandardAddress(addressData);
-				console.log('(ReverseGeocoder.fetchAddress) Standardized address:', {
+				log('(ReverseGeocoder.fetchAddress) Standardized address:', {
 					municipio: this.enderecoPadronizado?.municipio,
 					bairro: this.enderecoPadronizado?.bairro,
 					siglaUF: this.enderecoPadronizado?.siglaUF
@@ -251,7 +251,7 @@ class ReverseGeocoder {
 			}
 			
 			// Notify observers with complete parameters
-			console.log('(ReverseGeocoder.fetchAddress) About to notify observers with:', {
+			log('(ReverseGeocoder.fetchAddress) About to notify observers with:', {
 				hasAddressData: !!this.currentAddress,
 				hasEnderecoPadronizado: !!this.enderecoPadronizado,
 				observerCount: this.observerSubject.observers.length
@@ -265,14 +265,18 @@ class ReverseGeocoder {
 				null  // error
 			);
 			
-			console.log('(ReverseGeocoder.fetchAddress) Observers notified successfully');
+			log('(ReverseGeocoder.fetchAddress) Observers notified successfully');
 			
 			return addressData;
-		} catch (error) {
-			console.error('(ReverseGeocoder.fetchAddress) Failed:', error);
-			this.error = error;
-			this.notifyObservers(null, null, 'Address fetch failed', false, error);
-			throw error;
+		} catch (err) {
+			if (typeof error === 'function') {
+				error('(ReverseGeocoder.fetchAddress) Failed:', err);
+			} else {
+				console.error('[ReverseGeocoder.fetchAddress] Failed:', err);
+			}
+			this.error = err;
+			this.notifyObservers(null, null, 'Address fetch failed', false, err);
+			throw err;
 		}
 	}
 
@@ -337,14 +341,14 @@ class ReverseGeocoder {
 					// Store raw address data from OpenStreetMap
 					this.currentAddress = addressData;
 					
-					console.log('(ReverseGeocoder) Address data received:', addressData);
+					log('(ReverseGeocoder) Address data received:', addressData);
 					
 					// BRAZILIAN ADDRESS STANDARDIZATION:
 					// Convert raw OpenStreetMap data to Brazilian standard format
 					// Supports Portuguese language display and local address conventions
 					if (this.AddressDataExtractor) {
 						this.enderecoPadronizado = this.AddressDataExtractor.getBrazilianStandardAddress(addressData);
-						console.log('(ReverseGeocoder) Standardized address:', {
+						log('(ReverseGeocoder) Standardized address:', {
 							municipio: this.enderecoPadronizado?.municipio,
 							bairro: this.enderecoPadronizado?.bairro,
 							siglaUF: this.enderecoPadronizado?.siglaUF
@@ -352,21 +356,25 @@ class ReverseGeocoder {
 					}
 					
 					// Notify subscribers that new address data is available
-					console.log('(ReverseGeocoder) About to notify observers with:', {
+					log('(ReverseGeocoder) About to notify observers with:', {
 						hasAddressData: !!this.currentAddress,
 						hasEnderecoPadronizado: !!this.enderecoPadronizado,
 						observerCount: this.observerSubject.observers.length
 					});
 					this.notifyObservers(this.currentAddress, this.enderecoPadronizado, posEvent, false, null);
-					console.log('(ReverseGeocoder) Observers notified successfully');
+					log('(ReverseGeocoder) Observers notified successfully');
 				})
-				.catch((error) => {
+				.catch((err) => {
 					// ERROR HANDLING:
 					// Log geocoding failures and notify observers of error state
 					// Ensures application continues functioning even when geocoding fails
-					console.error("(ReverseGeocoder) Reverse geocoding failed:", error);
-					this.error = error;
-					this.notifyObservers(null, null, posEvent, false, error);
+					if (typeof error === 'function') {
+						error("(ReverseGeocoder) Reverse geocoding failed:", err);
+					} else {
+						console.error("[ReverseGeocoder] Reverse geocoding failed:", err);
+					}
+					this.error = err;
+					this.notifyObservers(null, null, posEvent, false, err);
 				});
 		}
 	}
@@ -413,16 +421,16 @@ class ReverseGeocoder {
  * geocoder.setCoordinates(-23.5505, -46.6333);
  * try {
  *   const addressData = await geocoder.reverseGeocode();
- *   console.log('Address:', addressData.display_name);
+ *   log('Address:', addressData.display_name);
  * } catch (error) {
- *   console.error('Geocoding failed:', error.message);
+ *   error('Geocoding failed:', error.message);
  * }
  * 
  * @example
  * // With promise chaining (legacy style)
  * geocoder.reverseGeocode()
- *   .then(data => console.log('Success:', data))
- *   .catch(error => console.error('Failed:', error));
+ *   .then(data => log('Success:', data))
+ *   .catch(error => error('Failed:', error));
  * 
  * @see {@link https://nominatim.openstreetmap.org/} - OpenStreetMap Nominatim API documentation
  * 
@@ -484,12 +492,12 @@ class ReverseGeocoder {
 	 * @example
 	 * const geocoder = new ReverseGeocoder(fetchManager);
 	 * geocoder.setCoordinates(-23.5505, -46.6333);
-	 * console.log(geocoder.toString());
+	 * log(geocoder.toString());
 	 * // Output: "ReverseGeocoder: -23.5505, -46.6333"
 	 * 
 	 * @example
 	 * const geocoder = new ReverseGeocoder(fetchManager);
-	 * console.log(geocoder.toString());
+	 * log(geocoder.toString());
 	 * // Output: "ReverseGeocoder: No coordinates set"
 	 * 
 	 * @since 0.8.4-alpha

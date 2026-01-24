@@ -71,6 +71,10 @@ src/
 ├── speech/            # Speech synthesis system
 │   ├── SpeechItem.js
 │   ├── SpeechQueue.js
+│   ├── SpeechQueueProcessor.js
+│   ├── SpeechController.js
+│   ├── SpeechConfiguration.js
+│   ├── VoiceManager.js
 │   └── SpeechSynthesisManager.js
 ├── timing/            # Time-related utilities
 │   └── Chronometer.js

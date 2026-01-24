@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 import { ADDRESS_FETCHED_EVENT, NO_REFERENCE_PLACE } from "../config/defaults.js";
 
@@ -178,11 +179,11 @@ class HTMLReferencePlaceDisplayer {
 	 */
 	update(addressData, brazilianStandardAddress, posEvent, loading, error) {
 		// Log update for debugging (following MP Barbosa logging standards)
-		console.log(`(HTMLReferencePlaceDisplayer) update() called with posEvent: ${posEvent}`);
+		log(`(HTMLReferencePlaceDisplayer) update() called with posEvent: ${posEvent}`);
 		
 		if (brazilianStandardAddress) {
-			console.log(`(HTMLReferencePlaceDisplayer) Brazilian standard address: ${brazilianStandardAddress.constructor.name}`);
-			console.log(`(HTMLReferencePlaceDisplayer) Reference place:`, brazilianStandardAddress.referencePlace);
+			log(`(HTMLReferencePlaceDisplayer) Brazilian standard address: ${brazilianStandardAddress.constructor.name}`);
+			log(`(HTMLReferencePlaceDisplayer) Reference place:`, brazilianStandardAddress.referencePlace);
 		}
 
 		// Handle loading state with Portuguese localized message
@@ -200,7 +201,7 @@ class HTMLReferencePlaceDisplayer {
 		// Handle successful reference place data for position updates
 		// Note: Using actual event value from PositionManager constant
 		if (posEvent === ADDRESS_FETCHED_EVENT && brazilianStandardAddress) {
-			console.log(`(HTMLReferencePlaceDisplayer) Rendering reference place data:`, brazilianStandardAddress);
+			log(`(HTMLReferencePlaceDisplayer) Rendering reference place data:`, brazilianStandardAddress);
 			
 			// Extract reference place from the standardized address
 			const referencePlace = brazilianStandardAddress.referencePlace;
@@ -224,7 +225,7 @@ class HTMLReferencePlaceDisplayer {
 	 * @returns {string} String representation of the displayer
 	 * 
 	 * @example
-	 * console.log(displayer.toString());
+	 * log(displayer.toString());
 	 * // Output: "HTMLReferencePlaceDisplayer: reference-place-display"
 	 * 
 	 * @since 0.8.3-alpha

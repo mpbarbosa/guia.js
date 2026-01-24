@@ -1,4 +1,5 @@
 /**
+import { log, warn, error } from '../utils/logger.js';
  * @fileoverview Converter View - Address and Coordinate Converter
  * Converts between geographic coordinates and human-readable addresses
  * 
@@ -287,7 +288,7 @@ export default {
   },
   
   async mount(container) {
-    console.log("(converter-view) Mounting converter view...");
+    log("(converter-view) Mounting converter view...");
     
     // Initialize the converter
     const form = container.querySelector('form');
@@ -300,7 +301,7 @@ export default {
   },
   
   cleanup() {
-    console.log("(converter-view) Cleaning up converter view...");
+    log("(converter-view) Cleaning up converter view...");
     // No specific cleanup needed for converter
   },
   
@@ -414,7 +415,7 @@ export default {
       `;
       
     } catch (error) {
-      console.error("(converter-view) Error fetching address:", error);
+      error("(converter-view) Error fetching address:", error);
       results.innerHTML = `
         <div class="error" role="alert">
           <p><strong>Erro ao buscar endereço</strong></p>

@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * SingletonStatusManager - Status and progress tracking with singleton pattern implementation.
@@ -41,14 +42,14 @@
  * // Track location acquisition status
  * statusManager.setGettingLocation(true);
  * if (statusManager.isGettingLocation()) {
- *   console.log('Location acquisition in progress...');
+ *   log('Location acquisition in progress...');
  * }
  * 
  * @example
  * // Multiple references return same instance
  * const manager1 = SingletonStatusManager.getInstance();
  * const manager2 = SingletonStatusManager.getInstance();
- * console.log(manager1 === manager2); // true
+ * log(manager1 === manager2); // true
  */
 class SingletonStatusManager {
     /**
@@ -79,7 +80,7 @@ class SingletonStatusManager {
      * // Multiple instantiations return same instance
      * const manager1 = new SingletonStatusManager();
      * const manager2 = new SingletonStatusManager();
-     * console.log(manager1 === manager2); // true
+     * log(manager1 === manager2); // true
      * 
      * @since 0.8.3-alpha
      */
@@ -170,7 +171,7 @@ class SingletonStatusManager {
      * try {
      *   statusManager.setGettingLocation("invalid"); // TypeError
      * } catch (error) {
-     *   console.error('Invalid status type:', error.message);
+     *   error('Invalid status type:', error.message);
      * }
      * 
      * @since 0.8.3-alpha
@@ -188,9 +189,9 @@ class SingletonStatusManager {
         // Safely handle console availability across different environments
         if (typeof console !== 'undefined' && console.log) {
             if (status) {
-                console.log('Getting location...');
+                log('Getting location...');
             } else {
-                console.log('Stopped getting location.');
+                log('Stopped getting location.');
             }
         }
     }
@@ -225,7 +226,7 @@ class SingletonStatusManager {
      * // Multiple calls return same instance
      * const manager1 = SingletonStatusManager.getInstance();
      * const manager2 = SingletonStatusManager.getInstance();
-     * console.log(manager1 === manager2); // true
+     * log(manager1 === manager2); // true
      * 
      * @example
      * // Safe to call from different modules
@@ -283,13 +284,13 @@ class SingletonStatusManager {
      * @example
      * const statusManager = SingletonStatusManager.getInstance();
      * statusManager.setGettingLocation(true);
-     * console.log(statusManager.toString());
+     * log(statusManager.toString());
      * // Output: "SingletonStatusManager: gettingLocation=true"
      * 
      * @example
      * // Default state
      * const manager = new SingletonStatusManager();
-     * console.log(manager.toString());
+     * log(manager.toString());
      * // Output: "SingletonStatusManager: gettingLocation=false"
      * 
      * @since 0.8.3-alpha

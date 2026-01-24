@@ -202,7 +202,9 @@ describe('ChangeDetectionCoordinator', () => {
 
             coordinator.handleLogradouroChange(changeDetails);
 
+            // Logger prepends timestamp as first arg
             expect(consoleErrorSpy).toHaveBeenCalledWith(
+                expect.any(String), // timestamp
                 expect.stringContaining('ChangeDetectionCoordinator'),
                 expect.anything()
             );
@@ -323,7 +325,9 @@ describe('ChangeDetectionCoordinator', () => {
                 coordinator.notifyLogradouroChangeObservers(changeDetails);
             }).not.toThrow();
 
+            // Logger prepends timestamp as first arg
             expect(consoleErrorSpy).toHaveBeenCalledWith(
+                expect.any(String), // timestamp
                 expect.stringContaining('Error notifying function observer'),
                 expect.anything()
             );

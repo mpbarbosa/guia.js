@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Geographic position data wrapper with convenience methods.
@@ -58,11 +59,11 @@ class GeoPosition {
 	 * 
 	 * @example
 	 * // Classify different accuracy levels
-	 * console.log(GeoPosition.getAccuracyQuality(5));   // 'excellent'
-	 * console.log(GeoPosition.getAccuracyQuality(25));  // 'good'
-	 * console.log(GeoPosition.getAccuracyQuality(75));  // 'medium'
-	 * console.log(GeoPosition.getAccuracyQuality(150)); // 'bad'
-	 * console.log(GeoPosition.getAccuracyQuality(500)); // 'very bad'
+	 * log(GeoPosition.getAccuracyQuality(5));   // 'excellent'
+	 * log(GeoPosition.getAccuracyQuality(25));  // 'good'
+	 * log(GeoPosition.getAccuracyQuality(75));  // 'medium'
+	 * log(GeoPosition.getAccuracyQuality(150)); // 'bad'
+	 * log(GeoPosition.getAccuracyQuality(500)); // 'very bad'
 	 * 
 	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates/accuracy} GeolocationCoordinates.accuracy
 	 * @since 0.6.0-alpha
@@ -91,7 +92,7 @@ class GeoPosition {
 	 * 
 	 * @example
 	 * const manager = PositionManager.getInstance(position);
-	 * console.log(manager.calculateAccuracyQuality()); // 'good'
+	 * log(manager.calculateAccuracyQuality()); // 'good'
 	 * 
 	 * @since 0.6.0-alpha
 	 * @deprecated Use accuracyQuality property instead - this method has a bug (calls undefined getAccuracyQuality)
@@ -116,7 +117,7 @@ class GeoPosition {
 	 * const manager = PositionManager.getInstance(currentPosition);
 	 * const restaurant = { latitude: -23.5489, longitude: -46.6388 };
 	 * const distance = manager.distanceTo(restaurant);
-	 * console.log(`Restaurant is ${Math.round(distance)} meters away`);
+	 * log(`Restaurant is ${Math.round(distance)} meters away`);
 	 * 
 	 * @see {@link calculateDistance} - The underlying distance calculation function
 	 * @since 0.6.0-alpha
@@ -141,7 +142,7 @@ class GeoPosition {
 	 * 
 	 * @example
 	 * const position = new GeoPosition(geolocationPosition);
-	 * console.log(position.toString());
+	 * log(position.toString());
 	 * // Output: "GeoPosition: -23.5505, -46.6333, good, 760, 0, 0, 1634567890123"
 	 * 
 	 * @since 0.6.0-alpha

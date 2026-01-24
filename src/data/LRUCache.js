@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * LRU (Least Recently Used) cache with time-based expiration.
@@ -159,7 +160,7 @@ class LRUCache {
 	 * // Periodic cleanup (e.g., every 60 seconds)
 	 * setInterval(() => {
 	 *   const removed = cache.cleanExpired();
-	 *   console.log(`Cleaned up ${removed} expired entries`);
+	 *   log(`Cleaned up ${removed} expired entries`);
 	 * }, 60000);
 	 */
 	cleanExpired() {
@@ -185,7 +186,7 @@ class LRUCache {
 	 * 
 	 * @example
 	 * cache.clear();
-	 * console.log(cache.size); // 0
+	 * log(cache.size); // 0
 	 */
 	clear() {
 		this.cache.clear();
@@ -197,7 +198,7 @@ class LRUCache {
 	 * @returns {number} Number of cached entries
 	 * 
 	 * @example
-	 * console.log(`Cache contains ${cache.size} entries`);
+	 * log(`Cache contains ${cache.size} entries`);
 	 */
 	get size() {
 		return this.cache.size;
@@ -214,7 +215,7 @@ class LRUCache {
 	 * 
 	 * @example
 	 * if (cache.has('user:123')) {
-	 *   console.log('User is cached');
+	 *   log('User is cached');
 	 * }
 	 */
 	has(key) {
@@ -230,7 +231,7 @@ class LRUCache {
 	 * @returns {string} String representation of cache
 	 * 
 	 * @example
-	 * console.log(cache.toString());
+	 * log(cache.toString());
 	 * // "LRUCache: size=25/50, expiration=300000ms"
 	 */
 	toString() {

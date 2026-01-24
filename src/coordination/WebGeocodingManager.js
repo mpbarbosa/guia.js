@@ -360,12 +360,12 @@ class WebGeocodingManager {
 			document: document
 		});
 
-		console.log('>>> (WebGeocodingManager) Created with params:', params);
-		console.log('>>> (WebGeocodingManager) locationResult element:', this.locationResult);
-		console.log('>>> (WebGeocodingManager) positionDisplay element:', this.positionDisplay);
-		console.log('>>> (WebGeocodingManager) enderecoPadronizadoDisplay element:', this.enderecoPadronizadoDisplay);
-		console.log('>>> (WebGeocodingManager) referencePlaceDisplay element:', this.referencePlaceDisplay);
-		console.log('>>> (WebGeocodingManager) sidraDisplay element:', this.sidraDisplay);
+		log('>>> (WebGeocodingManager) Created with params:', params);
+		log('>>> (WebGeocodingManager) locationResult element:', this.locationResult);
+		log('>>> (WebGeocodingManager) positionDisplay element:', this.positionDisplay);
+		log('>>> (WebGeocodingManager) enderecoPadronizadoDisplay element:', this.enderecoPadronizadoDisplay);
+		log('>>> (WebGeocodingManager) referencePlaceDisplay element:', this.referencePlaceDisplay);
+		log('>>> (WebGeocodingManager) sidraDisplay element:', this.sidraDisplay);
 		// Create displayers and wire observers via ServiceCoordinator
 		// Position display goes to positionDisplay, address display goes to locationResult
 		this.serviceCoordinator
@@ -572,7 +572,7 @@ class WebGeocodingManager {
 	 * @example
 	 * const myObserver = {
 	 *   update: (pos, addr, endPad) => {
-	 *     console.log('Position changed:', pos);
+	 *     log('Position changed:', pos);
 	 *   }
 	 * };
 	 * manager.subscribe(myObserver);
@@ -622,7 +622,7 @@ class WebGeocodingManager {
 	 * 
 	 * @example
 	 * manager.subscribeFunction((pos, addr, endPad, details) => {
-	 *   console.log('Address changed:', endPad.enderecoCompleto());
+	 *   log('Address changed:', endPad.enderecoCompleto());
 	 * });
 	 */
 	subscribeFunction(observerFunction) {
@@ -977,7 +977,7 @@ class WebGeocodingManager {
 	 * @returns {string} String representation with coordinates or "N/A"
 	 * 
 	 * @example
-	 * console.log(manager.toString());
+	 * log(manager.toString());
 	 * // Output: "WebGeocodingManager: -23.5505, -46.6333"
 	 */
 	toString() {

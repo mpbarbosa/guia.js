@@ -105,7 +105,7 @@ class UICoordinator {
      * 
      * @example
      * const elements = coordinator.initializeElements();
-     * console.log(elements.chronometer); // HTMLElement or null
+     * log(elements.chronometer); // HTMLElement or null
      */
     initializeElements() {
         this._elements.chronometer = this._findElement('chronometer');
@@ -159,7 +159,7 @@ class UICoordinator {
      * 
      * @example
      * const allElements = coordinator.getAllElements();
-     * console.log(Object.keys(allElements)); // ['chronometer', 'findRestaurantsBtn', ...]
+     * log(Object.keys(allElements)); // ['chronometer', 'findRestaurantsBtn', ...]
      */
     getAllElements() {
         return Object.freeze({ ...this._elements });
@@ -236,7 +236,7 @@ class UICoordinator {
      * 
      * @example
      * const config = coordinator.getElementIds();
-     * console.log(config.chronometer); // 'chronometer'
+     * log(config.chronometer); // 'chronometer'
      */
     getElementIds() {
         return this._elementIds;
@@ -271,7 +271,7 @@ class UICoordinator {
      * @returns {string} - Debug string
      * 
      * @example
-     * console.log(coordinator.toString());
+     * log(coordinator.toString());
      * // "UICoordinator: 4 elements (3 found, 1 missing)"
      */
     toString() {

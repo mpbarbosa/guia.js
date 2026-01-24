@@ -260,9 +260,19 @@ describe('SpeechQueue Integration Tests', () => {
 			queue.unsubscribeFunction(null);
 			
 			expect(consoleSpy).toHaveBeenCalledTimes(3);
-			expect(consoleSpy).toHaveBeenCalledWith("(SpeechQueue) Attempted to subscribe a null observer.");
-			expect(consoleSpy).toHaveBeenCalledWith("(SpeechQueue) Attempted to subscribe a null observer function.");
-			expect(consoleSpy).toHaveBeenCalledWith("(SpeechQueue) Attempted to unsubscribe a null observer function.");
+			// Logger prepends timestamp as first arg, message is second arg
+			expect(consoleSpy).toHaveBeenCalledWith(
+				expect.any(String), // timestamp
+				"(SpeechQueue) Attempted to subscribe a null observer."
+			);
+			expect(consoleSpy).toHaveBeenCalledWith(
+				expect.any(String), // timestamp
+				"(SpeechQueue) Attempted to subscribe a null observer function."
+			);
+			expect(consoleSpy).toHaveBeenCalledWith(
+				expect.any(String), // timestamp
+				"(SpeechQueue) Attempted to unsubscribe a null observer function."
+			);
 			
 			consoleSpy.mockRestore();
 		});

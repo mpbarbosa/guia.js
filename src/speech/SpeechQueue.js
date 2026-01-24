@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Priority-based speech synthesis queue with automatic cleanup and observer pattern integration.
@@ -188,7 +189,7 @@ class SpeechQueue {
 	 * 
 	 * @example
 	 * const newState = queue.toggleLogs();
-	 * console.log(`Logging is now ${newState ? 'enabled' : 'disabled'}`);
+	 * log(`Logging is now ${newState ? 'enabled' : 'disabled'}`);
 	 */
 	toggleLogs() {
 		this.enableLogging = !this.enableLogging;
@@ -207,14 +208,14 @@ class SpeechQueue {
 	 * @example
 	 * const observer = {
 	 *   update(queue) {
-	 *     console.log(`Queue size: ${queue.size()}`);
+	 *     log(`Queue size: ${queue.size()}`);
 	 *   }
 	 * };
 	 * queue.subscribe(observer);
 	 */
 	subscribe(observer) {
 		if (observer == null) {
-			console.warn("(SpeechQueue) Attempted to subscribe a null observer.");
+			warn("(SpeechQueue) Attempted to subscribe a null observer.");
 			return;
 		}
 		
@@ -257,12 +258,12 @@ class SpeechQueue {
 	 * 
 	 * @example
 	 * queue.subscribeFunction((queue) => {
-	 *   console.log(`Queue has ${queue.size()} items`);
+	 *   log(`Queue has ${queue.size()} items`);
 	 * });
 	 */
 	subscribeFunction(observerFunction) {
 		if (observerFunction == null) {
-			console.warn("(SpeechQueue) Attempted to subscribe a null observer function.");
+			warn("(SpeechQueue) Attempted to subscribe a null observer function.");
 			return;
 		}
 		
@@ -280,7 +281,7 @@ class SpeechQueue {
 	 */
 	unsubscribeFunction(observerFunction) {
 		if (observerFunction == null) {
-			console.warn("(SpeechQueue) Attempted to unsubscribe a null observer function.");
+			warn("(SpeechQueue) Attempted to unsubscribe a null observer function.");
 			return;
 		}
 		
@@ -299,8 +300,8 @@ class SpeechQueue {
 		this.observerSubject.functionObservers.forEach((fn) => {
 			try {
 				fn(this);
-			} catch (error) {
-				console.error("(SpeechQueue) Error in function observer:", error);
+			} catch (err) {
+				error("(SpeechQueue) Error in function observer:", err);
 			}
 		});
 	}
@@ -377,7 +378,7 @@ class SpeechQueue {
 	 * @example
 	 * const nextItem = queue.dequeue();
 	 * if (nextItem) {
-	 *   console.log(`Speaking: ${nextItem.text}`);
+	 *   log(`Speaking: ${nextItem.text}`);
 	 * }
 	 */
 	dequeue() {
@@ -422,7 +423,7 @@ class SpeechQueue {
 	 * @returns {number} Number of valid items in queue
 	 * 
 	 * @example
-	 * console.log(`Queue has ${queue.size()} pending items`);
+	 * log(`Queue has ${queue.size()} pending items`);
 	 */
 	size() {
 		this.cleanExpired();
@@ -447,7 +448,7 @@ class SpeechQueue {
 		const removedCount = originalSize - this.items.length;
 		if (removedCount > 0 && this.enableLogging) {
 			// Use console.log for compatibility with existing logging system
-			console.log(`(SpeechQueue) Removed ${removedCount} expired items`);
+			log(`(SpeechQueue) Removed ${removedCount} expired items`);
 		}
 	}
 
@@ -474,7 +475,7 @@ class SpeechQueue {
 	 * @returns {string} Queue description with size and configuration
 	 * 
 	 * @example
-	 * console.log(queue.toString());
+	 * log(queue.toString());
 	 * // Output: "SpeechQueue: size=3, maxSize=100, expirationMs=30000"
 	 */
 	toString() {
@@ -492,7 +493,7 @@ class SpeechQueue {
 	 * 
 	 * @example
 	 * const items = queue.getItems();
-	 * items.forEach(item => console.log(`Priority ${item.priority}: ${item.text}`));
+	 * items.forEach(item => log(`Priority ${item.priority}: ${item.text}`));
 	 */
 	getItems() {
 		this.cleanExpired();

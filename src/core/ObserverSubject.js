@@ -46,9 +46,9 @@
  * const array2 = subject.observers; // [observer1, observer2]
  * 
  * // array1 and array2 are different instances (immutable pattern)
- * console.log(array1 !== array2); // true
- * console.log(array1.length); // 1 (original unchanged)
- * console.log(array2.length); // 2 (new array created)
+ * log(array1 !== array2); // true
+ * log(array1.length); // 1 (original unchanged)
+ * log(array2.length); // 2 (new array created)
  */
 
 import { log } from '../utils/logger.js';
@@ -78,7 +78,7 @@ class ObserverSubject {
 	 * @example
 	 * const observer = {
 	 *   update: (subject, ...args) => {
-	 *     console.log('Notified with:', args);
+	 *     log('Notified with:', args);
 	 *   }
 	 * };
 	 * observerSubject.subscribe(observer);
@@ -88,7 +88,7 @@ class ObserverSubject {
 	 * const originalArray = observerSubject.observers;
 	 * observerSubject.subscribe(observer);
 	 * const newArray = observerSubject.observers;
-	 * console.log(originalArray !== newArray); // true - new array created
+	 * log(originalArray !== newArray); // true - new array created
 	 */
 	subscribe(observer) {
 		if (observer) {
@@ -113,7 +113,7 @@ class ObserverSubject {
 	 * const arrayBefore = observerSubject.observers;
 	 * observerSubject.unsubscribe(observer);
 	 * const arrayAfter = observerSubject.observers;
-	 * console.log(arrayBefore !== arrayAfter); // true - new array created
+	 * log(arrayBefore !== arrayAfter); // true - new array created
 	 */
 	unsubscribe(observer) {
 		this.observers = this.observers.filter((o) => o !== observer);
@@ -150,7 +150,7 @@ class ObserverSubject {
 	 * 
 	 * @example
 	 * const handler = (subject, ...args) => {
-	 *   console.log('Function observer notified:', args);
+	 *   log('Function observer notified:', args);
 	 * };
 	 * observerSubject.subscribeFunction(handler);
 	 */

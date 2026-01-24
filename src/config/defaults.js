@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Default configuration for Guia Turístico application.
@@ -115,7 +116,7 @@ export const OSM_BASE_URL = "https://nominatim.openstreetmap.org/reverse?format=
  * @returns {Object} Configuration object
  * @example
  * const config = createDefaultConfig();
- * console.log(config.trackingInterval); // 50000
+ * log(config.trackingInterval); // 50000
  */
 export const createDefaultConfig = () => ({
 	trackingInterval: TRACKING_INTERVAL,

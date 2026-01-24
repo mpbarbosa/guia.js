@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Reference place data extracted from geocoding data.
@@ -32,9 +33,9 @@ import { NO_REFERENCE_PLACE, VALID_REF_PLACE_CLASSES } from '../config/defaults.
  *   name: 'Shopping Morumbi' 
  * };
  * const refPlace = new ReferencePlace(data);
- * console.log(refPlace.description); // "Shopping Center"
- * console.log(refPlace.name); // "Shopping Morumbi"
- * console.log(refPlace.toString()); // "ReferencePlace: Shopping Center - Shopping Morumbi"
+ * log(refPlace.description); // "Shopping Center"
+ * log(refPlace.name); // "Shopping Morumbi"
+ * log(refPlace.toString()); // "ReferencePlace: Shopping Center - Shopping Morumbi"
  */
 class ReferencePlace {
 	/**
@@ -139,7 +140,7 @@ class ReferencePlace {
 	 * 
 	 * @example
 	 * const refPlace = new ReferencePlace({ class: 'shop', type: 'mall', name: 'Shopping Morumbi' });
-	 * console.log(refPlace.toString()); 
+	 * log(refPlace.toString()); 
 	 * // Output: "ReferencePlace: Shopping Center - Shopping Morumbi"
 	 */
 	toString() {

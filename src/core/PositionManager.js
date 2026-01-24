@@ -39,7 +39,7 @@
  * const observer = {
  *   update: (positionManager, eventType) => {
  *     if (eventType === PositionManager.strCurrPosUpdate) {
- *       console.log('Position:', positionManager.latitude, positionManager.longitude);
+ *       log('Position:', positionManager.latitude, positionManager.longitude);
  *     }
  *   }
  * };
@@ -181,7 +181,7 @@ class PositionManager {
 	 * // Create or update with position data
 	 * navigator.geolocation.getCurrentPosition((position) => {
 	 *   const manager = PositionManager.getInstance(position);
-	 *   console.log(manager.latitude, manager.longitude);
+	 *   log(manager.latitude, manager.longitude);
 	 * });
 	 * 
 	 * @since 0.6.0-alpha
@@ -250,7 +250,7 @@ class PositionManager {
 	 * @example
 	 * const myObserver = {
 	 *   update: (positionManager, event) => {
-	 *     console.log('Position event:', event, positionManager.latitude);
+	 *     log('Position event:', event, positionManager.latitude);
 	 *   }
 	 * };
 	 * PositionManager.getInstance().subscribe(myObserver);
@@ -370,8 +370,8 @@ class PositionManager {
 		let bUpdateCurrPos = true;
 		let error = null;
 
-		console.log("(PositionManager) update called with position:", position);
-		console.log("(PositionManager) lastPosition:", this.lastPosition);
+		log("(PositionManager) update called with position:", position);
+		log("(PositionManager) lastPosition:", this.lastPosition);
 		// Verifica se a posição é válida
 		if (!position || !position.timestamp) {
 			warn("(PositionManager) Invalid position data:", position);
@@ -435,21 +435,21 @@ class PositionManager {
 			} else {
 				// Log which condition triggered the update
 				if (distanceExceeded && timeExceeded) {
-					console.log(
+					log(
 						"(PositionManager) Update triggered - BOTH conditions met - distance:",
 						distance.toFixed(1) + "m",
 						"time:",
 						timeElapsedSeconds + "s"
 					);
 				} else if (distanceExceeded) {
-					console.log(
+					log(
 						"(PositionManager) Update triggered by DISTANCE -",
 						distance.toFixed(1) + "m",
 						"(time:",
 						timeElapsedSeconds + "s)"
 					);
 				} else {
-					console.log(
+					log(
 						"(PositionManager) Update triggered by TIME -",
 						timeElapsedSeconds + "s",
 						"(distance:",
@@ -495,7 +495,7 @@ class PositionManager {
 	 * 
 	 * @example
 	 * const manager = PositionManager.getInstance(position);
-	 * console.log(manager.toString());
+	 * log(manager.toString());
 	 * // Output: "PositionManager: -23.5505, -46.6333, good, 760, 0, 0, 1634567890123"
 	 * 
 	 * @since 0.6.0-alpha

@@ -1,6 +1,6 @@
 # Guia Turístico - Tourist Guide Web Application
 
-[![Tests](https://img.shields.io/badge/tests-1899%20passing%20%2F%202045%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-1982%20passing%20%2F%202176%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
@@ -85,7 +85,7 @@ npm install
 # Validate JavaScript syntax (<1 second)
 npm run validate
 
-# Run test suite (2,045 total tests, 1,887 passing, 146 skipped, ~30 seconds)
+# Run test suite (2,176 total tests, 1,982 passing, 146 skipped, ~30 seconds)
 npm test
 
 # Run tests with coverage (~30 seconds)
@@ -136,7 +136,7 @@ guia_turistico/
 │   ├── speech/                   # Speech synthesis functionality
 │   ├── views/                    # SPA view controllers (home, converter)
 │   └── utils/                    # Utility functions
-├── __tests__/                    # Test suites (88 suites, 1,899 passing)
+├── __tests__/                    # Test suites (92 suites, 1,982 passing)
 │   ├── unit/                     # Unit tests
 │   ├── integration/              # Integration tests
 │   ├── e2e/                      # End-to-end tests (Puppeteer)
@@ -202,9 +202,9 @@ See [examples/README.md](examples/README.md) for detailed documentation and expe
 
 ### Test Suite Overview
 
-- **Total Tests**: 1,968 total (1,820 passing, 146 skipped)
-- **Test Suites**: 84 total (84 passing, 4 skipped)
-- **Test Count**: 1,904 passing tests (2,050 total with 146 skipped)
+- **Total Tests**: 2,176 total (1,982 passing, 146 skipped, 48 failing)
+- **Test Suites**: 92 total (76 passing, 4 skipped, 12 failing)
+- **Test Count**: 1,982 passing tests (2,176 total with 146 skipped and 48 failing)
 - **Execution Time**: ~30-45 seconds
 - **Code Coverage**: 84.7% overall (exceeds 65% threshold by 19.7%)
   - Statements: 84.69%, Branches: 82.49%, Functions: 74.68%, Lines: 84.99%
@@ -327,8 +327,12 @@ To ensure clear communication about testing concepts:
 - `DisplayerFactory` - Factory pattern for display component creation (5 methods v0.8.6+)
 
 #### Speech Synthesis Layer
-- `SpeechSynthesisManager` - Text-to-speech coordination
-- `SpeechQueue` - Queue management for speech items
+- `SpeechSynthesisManager` - Main facade for text-to-speech coordination
+- `SpeechController` - Core speech synthesis control logic
+- `SpeechQueueProcessor` - Queue processing and execution
+- `SpeechConfiguration` - Speech synthesis configuration management
+- `VoiceManager` - Voice selection and management
+- `SpeechQueue` - Queue data structure for speech items
 - `SpeechItem` - Individual speech item representation
 
 ### Design Patterns Used

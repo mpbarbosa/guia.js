@@ -268,7 +268,7 @@ class GeolocationService {
 	 * @since 0.8.3-alpha
 	 */
 	constructor(locationResult, geolocationProvider, positionManagerInstance, config = {}) {
-		console.log(">>> (GeolocationService) constructor called");
+		log(">>> (GeolocationService) constructor called");
 		// Store DOM element for location result display
 		this.locationResult = locationResult;
 		
@@ -340,7 +340,7 @@ class GeolocationService {
 	 * @since 0.8.3-alpha
 	 */
 	async checkPermissions() {
-		console.log(">>> (GeolocationService) checkPermissions called");
+		log(">>> (GeolocationService) checkPermissions called");
 		try {
 			// Use provider's isPermissionsAPISupported if available, fallback to checking navigator
 			const hasPermissionsAPI = this.provider.isPermissionsAPISupported 
@@ -356,7 +356,7 @@ class GeolocationService {
 				return 'prompt';
 			}
 		} catch (error) {
-			console.error("(GeolocationService) Error checking permissions:", error);
+			error("(GeolocationService) Error checking permissions:", error);
 			return 'prompt';
 		}
 	}
@@ -385,10 +385,10 @@ class GeolocationService {
 	 * @example
 	 * try {
 	 *   const position = await service.getSingleLocationUpdate();
-	 *   console.log('Lat:', position.coords.latitude);
-	 *   console.log('Lng:', position.coords.longitude);
+	 *   log('Lat:', position.coords.latitude);
+	 *   log('Lng:', position.coords.longitude);
 	 * } catch (error) {
-	 *   console.error('Location error:', error.message);
+	 *   error('Location error:', error.message);
 	 * }
 	 * 
 	 * @example
@@ -400,7 +400,7 @@ class GeolocationService {
 	 * @since 0.8.3-alpha
 	 */
 	async getSingleLocationUpdate() {
-		console.log(">>> (GeolocationService) getSingleLocationUpdate called");
+		log(">>> (GeolocationService) getSingleLocationUpdate called");
 		// Return existing promise if request already pending
 		if (this.isPendingRequest && this.pendingPromise) {
 			return this.pendingPromise;
@@ -427,12 +427,12 @@ class GeolocationService {
 
 			this.provider.getCurrentPosition(
 				(position) => {
-					console.log(">>> (GeolocationService) Single location update successful:", position);
+					log(">>> (GeolocationService) Single location update successful:", position);
 					this.isPendingRequest = false;
 					this.pendingPromise = null;
 					this.lastKnownPosition = position;
 
-					console.log(">>> (GeolocationService) Updating PositionManager with new position");
+					log(">>> (GeolocationService) Updating PositionManager with new position");
 					// Update PositionManager with new position
 					this.positionManager.update(position);
 
@@ -447,7 +447,7 @@ class GeolocationService {
 					this.isPendingRequest = false;
 					this.pendingPromise = null;
 					// Privacy: Log error without coordinates
-					console.error("(GeolocationService) Single location update failed:", error.message || error);
+					error("(GeolocationService) Single location update failed:", error.message || error);
 
 					// Update display with error if element is available
 					if (this.locationResult) {
@@ -487,7 +487,7 @@ class GeolocationService {
 	watchCurrentLocation() {
 		// Check if geolocation is supported using provider
 		if (!this.provider.isSupported()) {
-			console.error("(GeolocationService) Geolocation is not supported by this browser");
+			error("(GeolocationService) Geolocation is not supported by this browser");
 			return null;
 		}
 
@@ -509,7 +509,7 @@ class GeolocationService {
 			},
 			(error) => {
 				// Privacy: Log error without coordinates
-				console.error("(GeolocationService) Position watch error:", error.message || error);
+				error("(GeolocationService) Position watch error:", error.message || error);
 
 				// Update display with error if element is available
 				if (this.locationResult) {
@@ -651,7 +651,7 @@ class GeolocationService {
 	 * if (!service.hasPendingRequest()) {
 	 *   const position = await service.getSingleLocationUpdate();
 	 * } else {
-	 *   console.log('Request already in progress');
+	 *   log('Request already in progress');
 	 * }
 	 * 
 	 * @since 0.8.3-alpha

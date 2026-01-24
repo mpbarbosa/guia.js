@@ -204,13 +204,13 @@ describe('SingletonStatusManager - MP Barbosa Travel Guide (v0.8.3-alpha)', () =
         test('should log "Getting location..." when setting status to true', () => {
             statusManager.setGettingLocation(true);
             
-            expect(console.log).toHaveBeenCalledWith('Getting location...');
+            expect(console.log).toHaveBeenCalledWith(expect.stringContaining('['), 'Getting location...');
         });
 
         test('should log "Stopped getting location." when setting status to false', () => {
             statusManager.setGettingLocation(false);
             
-            expect(console.log).toHaveBeenCalledWith('Stopped getting location.');
+            expect(console.log).toHaveBeenCalledWith(expect.stringContaining('['), 'Stopped getting location.');
         });
 
         test('should log appropriate messages for multiple state changes', () => {
@@ -219,9 +219,9 @@ describe('SingletonStatusManager - MP Barbosa Travel Guide (v0.8.3-alpha)', () =
             statusManager.setGettingLocation(true);
             
             expect(console.log).toHaveBeenCalledTimes(3);
-            expect(console.log).toHaveBeenNthCalledWith(1, 'Getting location...');
-            expect(console.log).toHaveBeenNthCalledWith(2, 'Stopped getting location.');
-            expect(console.log).toHaveBeenNthCalledWith(3, 'Getting location...');
+            expect(console.log).toHaveBeenNthCalledWith(1, expect.stringContaining('['), 'Getting location...');
+            expect(console.log).toHaveBeenNthCalledWith(2, expect.stringContaining('['), 'Stopped getting location.');
+            expect(console.log).toHaveBeenNthCalledWith(3, expect.stringContaining('['), 'Getting location...');
         });
 
         test('should log even when setting same value multiple times', () => {
@@ -229,7 +229,7 @@ describe('SingletonStatusManager - MP Barbosa Travel Guide (v0.8.3-alpha)', () =
             statusManager.setGettingLocation(true);
             
             expect(console.log).toHaveBeenCalledTimes(2);
-            expect(console.log).toHaveBeenCalledWith('Getting location...');
+            expect(console.log).toHaveBeenCalledWith(expect.stringContaining('['), 'Getting location...');
         });
     });
 

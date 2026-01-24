@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from './logger.js';
 
 /**
  * Distance calculation utilities for geolocation.
@@ -43,7 +44,7 @@ export const EARTH_RADIUS_METERS = 6371e3;
  * @example
  * // Distance between São Paulo and Rio de Janeiro
  * const distance = calculateDistance(-23.5505, -46.6333, -22.9068, -43.1729);
- * console.log(distance); // ~357,710 meters (357.7 km)
+ * log(distance); // ~357,710 meters (357.7 km)
  * 
  * @see {@link https://en.wikipedia.org/wiki/Haversine_formula} Haversine formula on Wikipedia
  * @see {@link https://www.movable-type.co.uk/scripts/latlong.html} Calculate distance, bearing and more

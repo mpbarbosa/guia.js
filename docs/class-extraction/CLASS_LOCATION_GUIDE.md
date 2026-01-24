@@ -115,7 +115,11 @@ src/
 - **Create displayers**: `DisplayerFactory` → `src/html/DisplayerFactory.js`
 
 ### Speech Synthesis
-- **Manage speech**: `SpeechSynthesisManager` → `src/speech/SpeechSynthesisManager.js`
+- **Main facade**: `SpeechSynthesisManager` → `src/speech/SpeechSynthesisManager.js`
+- **Speech control**: `SpeechController` → `src/speech/SpeechController.js`
+- **Queue processor**: `SpeechQueueProcessor` → `src/speech/SpeechQueueProcessor.js`
+- **Configuration**: `SpeechConfiguration` → `src/speech/SpeechConfiguration.js`
+- **Voice management**: `VoiceManager` → `src/speech/VoiceManager.js`
 - **Queue speech**: `SpeechQueue` → `src/speech/SpeechQueue.js`
 - **Speech items**: `SpeechItem` → `src/speech/SpeechItem.js`
 

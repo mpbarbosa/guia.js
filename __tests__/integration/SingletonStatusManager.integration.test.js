@@ -68,7 +68,7 @@ describe('SingletonStatusManager Integration Tests - MP Barbosa Travel Guide (v0
             manager.setGettingLocation(true);
             
             expect(manager.isGettingLocation()).toBe(true);
-            expect(console.log).toHaveBeenCalledWith('Getting location...');
+            expect(console.log).toHaveBeenCalledWith(expect.stringContaining('['), 'Getting location...');
         });
 
         test('should work correctly in browser environment', () => {
@@ -78,7 +78,7 @@ describe('SingletonStatusManager Integration Tests - MP Barbosa Travel Guide (v0
             manager.setGettingLocation(true);
             
             expect(manager.isGettingLocation()).toBe(true);
-            expect(console.log).toHaveBeenCalledWith('Getting location...');
+            expect(console.log).toHaveBeenCalledWith(expect.stringContaining('['), 'Getting location...');
         });
 
         test('should work correctly in web worker environment', () => {
@@ -88,7 +88,7 @@ describe('SingletonStatusManager Integration Tests - MP Barbosa Travel Guide (v0
             manager.setGettingLocation(true);
             
             expect(manager.isGettingLocation()).toBe(true);
-            expect(console.log).toHaveBeenCalledWith('Getting location...');
+            expect(console.log).toHaveBeenCalledWith(expect.stringContaining('['), 'Getting location...');
         });
 
         test('should maintain singleton pattern across environments', () => {
@@ -180,13 +180,17 @@ describe('SingletonStatusManager Integration Tests - MP Barbosa Travel Guide (v0
             // Start geolocation process
             manager.setGettingLocation(true);
             expect(manager.isGettingLocation()).toBe(true);
-            expect(console.log).toHaveBeenCalledWith('Getting location...');
+            expect(console.log).toHaveBeenCalledWith(expect.stringContaining('['), 'Getting location...');
             
             // Simulate successful location retrieval
             setTimeout(() => {
                 manager.setGettingLocation(false);
                 expect(manager.isGettingLocation()).toBe(false);
-                expect(console.log).toHaveBeenCalledWith('Stopped getting location.');
+                // Logger prepends timestamp as first arg, message is second arg
+                expect(console.log).toHaveBeenCalledWith(
+                    expect.any(String), // timestamp
+                    'Stopped getting location.'
+                );
             }, 100);
         });
 
@@ -242,10 +246,14 @@ describe('SingletonStatusManager Integration Tests - MP Barbosa Travel Guide (v0
             
             // Normal logging (current behavior)
             manager.setGettingLocation(true);
-            expect(console.log).toHaveBeenCalledWith('Getting location...');
+            expect(console.log).toHaveBeenCalledWith(expect.stringContaining('['), 'Getting location...');
             
             manager.setGettingLocation(false);
-            expect(console.log).toHaveBeenCalledWith('Stopped getting location.');
+            // Logger prepends timestamp as first arg, message is second arg
+            expect(console.log).toHaveBeenCalledWith(
+                expect.any(String), // timestamp
+                'Stopped getting location.'
+            );
         });
 
         test('should handle console unavailability gracefully', () => {

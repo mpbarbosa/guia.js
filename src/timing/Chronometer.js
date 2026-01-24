@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Displays and manages elapsed time information in HTML format.
@@ -61,7 +62,7 @@ class Chronometer {
 	 * });
 	 */
 	constructor(element, eventConfig = {}) {
-		console.log("Initializing Chronometer...");
+		log("Initializing Chronometer...");
 		this.element = element;
 		this.startTime = null;
 		this.lastUpdateTime = null;
@@ -167,7 +168,7 @@ class Chronometer {
 	 * chronometer.start();
 	 * setTimeout(() => {
 	 *   const elapsed = chronometer.getElapsedTime();
-	 *   console.log(`Elapsed: ${elapsed}ms`);
+	 *   log(`Elapsed: ${elapsed}ms`);
 	 * }, 5000);
 	 */
 	getElapsedTime() {
@@ -190,11 +191,11 @@ class Chronometer {
 	 * 
 	 * @example
 	 * const formatted = chronometer.formatTime(125000); // 2 minutes 5 seconds
-	 * console.log(formatted); // "00:02:05"
+	 * log(formatted); // "00:02:05"
 	 * 
 	 * @example
 	 * const formatted = chronometer.formatTime(3661000); // 1 hour 1 minute 1 second
-	 * console.log(formatted); // "01:01:01"
+	 * log(formatted); // "01:01:01"
 	 */
 	formatTime(milliseconds) {
 		const totalSeconds = Math.floor(milliseconds / 1000);
@@ -295,7 +296,7 @@ class Chronometer {
 	 * @since 0.8.3-alpha
 	 * 
 	 * @example
-	 * console.log(chronometer.toString());
+	 * log(chronometer.toString());
 	 * // Output: "Chronometer: running, elapsed: 00:01:23"
 	 */
 	toString() {

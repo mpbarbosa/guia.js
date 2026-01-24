@@ -1,4 +1,5 @@
 'use strict';
+import { log as logToConsole, warn as warnToConsole, error as errorToConsole } from './utils/logger.js';
 
 // Import utility modules  
 import { calculateDistance, delay } from './utils/distance.js';
@@ -64,7 +65,7 @@ import WebGeocodingManager, { DEFAULT_ELEMENT_IDS } from './coordination/WebGeoc
 const log = (message, ...params) => {
 	//get all params after message and concatenate them
 	const fullMessage = `[${new Date().toISOString()}] ${message} ${params.join(" ")}`;
-	console.log(fullMessage);
+	logToConsole(fullMessage);
 	if (typeof document !== "undefined") {
 		// Direct DOM reference required for immediate log display in web UI
 		// This is intentional for debugging/development feedback
@@ -76,7 +77,7 @@ const log = (message, ...params) => {
 };
 
 const warn = (message, ...params) => {
-	console.warn(message, ...params);
+	warnToConsole(message, ...params);
 	if (typeof document !== "undefined") {
 		const logContainer = document.getElementById("bottom-scroll-textarea");
 		if (logContainer) {
@@ -188,8 +189,8 @@ if (typeof navigator !== 'undefined') {
 	setupParams.notAcceptedAccuracy = isMobile
 		? setupParams.mobileNotAcceptedAccuracy
 		: setupParams.desktopNotAcceptedAccuracy;
-	console.log(`[Device Detection] Type: ${isMobile ? 'Mobile/Tablet' : 'Desktop/Laptop'}`);
-	console.log(`[Device Detection] Rejecting accuracy levels: ${setupParams.notAcceptedAccuracy.join(', ')}`);
+	log(`[Device Detection] Type: ${isMobile ? 'Mobile/Tablet' : 'Desktop/Laptop'}`);
+	log(`[Device Detection] Rejecting accuracy levels: ${setupParams.notAcceptedAccuracy.join(', ')}`);
 } else {
 	// Default for non-browser environments (e.g., Node.js testing)
 	setupParams.notAcceptedAccuracy = setupParams.mobileNotAcceptedAccuracy;
@@ -309,7 +310,7 @@ log("Guia.js version:", guiaVersion.toString());
  * @author Marcelo Pereira Barbosa
  */
 function displayError(error) {
-	console.error("Display Error:", error);
+	error("Display Error:", error);
 
 	// Try to find a suitable element to display the error
 	const errorElements = [
@@ -342,7 +343,7 @@ function displayError(error) {
  * 
  * @example
  * const type = getAddressType(geocodingData);
- * console.log('Location type:', type);
+ * log('Location type:', type);
  * 
  * @since 0.8.3-alpha
  * @author Marcelo Pereira Barbosa

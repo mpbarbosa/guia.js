@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Speech synthesis queue item for managing text-to-speech requests with priority support.
@@ -123,7 +124,7 @@ class SpeechItem {
 	 * @example
 	 * // Check with default 30-second expiration
 	 * if (item.isExpired()) {
-	 *     console.log('Item has expired, removing from queue');
+	 *     log('Item has expired, removing from queue');
 	 * }
 	 * 
 	 * @example
@@ -158,13 +159,13 @@ class SpeechItem {
 	 * 
 	 * @example
 	 * const item = new SpeechItem('Você está na Avenida Paulista', 1);
-	 * console.log(item.toString());
+	 * log(item.toString());
 	 * // Output: 'SpeechItem: "Você está na Avenida Paulista" (priority: 1)'
 	 * 
 	 * @example
 	 * // Long text truncation
 	 * const longItem = new SpeechItem('Este é um texto muito longo que será truncado...', 2);
-	 * console.log(longItem.toString());
+	 * log(longItem.toString());
 	 * // Output: 'SpeechItem: "Este é um texto muito longo que será truncado..." (priority: 2)'
 	 * 
 	 * @since 0.8.3-alpha

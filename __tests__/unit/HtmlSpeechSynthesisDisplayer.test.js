@@ -610,8 +610,8 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.8.3-alpha)'
 
 			displayer.update(address, 'MunicipioChanged', 'PositionManager updated');
 
-			expect(console.log).toHaveBeenCalledWith('+++ (301) HtmlSpeechSynthesisDisplayer.update called +++');
-			expect(console.log).toHaveBeenCalledWith('+++ (302) currentAddress: ', address);
+			expect(console.log).toHaveBeenCalledWith(expect.stringContaining('['), '+++ (301) HtmlSpeechSynthesisDisplayer.update called +++');
+			expect(console.log).toHaveBeenCalledWith(expect.stringContaining('['), '+++ (302) currentAddress: ', address);
 		});
 	});
 

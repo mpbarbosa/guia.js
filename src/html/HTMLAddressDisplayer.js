@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 
@@ -98,7 +99,7 @@ class HTMLAddressDisplayer {
 	 * @since 0.8.3-alpha
 	 */
 	renderAddressHtml(addressData, enderecoPadronizado) {
-		console.log('(HTMLAddressDisplayer) renderAddressHtml() called with addressData:', addressData);
+		log('(HTMLAddressDisplayer) renderAddressHtml() called with addressData:', addressData);
 		
 		if (!addressData) {
 			return "<p class='error'>Dados de endereço não disponíveis.</p>";
@@ -106,7 +107,7 @@ class HTMLAddressDisplayer {
 
 		// Update standardized address display if element is provided
 		if (this.enderecoPadronizadoDisplay && enderecoPadronizado) {
-			console.log('(HTMLAddressDisplayer) Updating standardized address display:', enderecoPadronizado.enderecoCompleto());
+			log('(HTMLAddressDisplayer) Updating standardized address display:', enderecoPadronizado.enderecoCompleto());
 			this.enderecoPadronizadoDisplay.innerHTML = enderecoPadronizado.enderecoCompleto();
 		}
 
@@ -186,10 +187,10 @@ class HTMLAddressDisplayer {
 	 */
 	update(addressData, enderecoPadronizado, posEvent, loading, error) {
 		// Log update for debugging (following MP Barbosa logging standards)
-		console.log(`(HTMLAddressDisplayer) update() called with posEvent: ${posEvent}`);
+		log(`(HTMLAddressDisplayer) update() called with posEvent: ${posEvent}`);
 		
 		if (!this.element) {
-			console.warn('(HTMLAddressDisplayer) No element provided, skipping update');
+			warn('(HTMLAddressDisplayer) No element provided, skipping update');
 			return;
 		}
 		
@@ -227,7 +228,7 @@ class HTMLAddressDisplayer {
 	 * @returns {string} String representation of the displayer
 	 * 
 	 * @example
-	 * console.log(displayer.toString());
+	 * log(displayer.toString());
 	 * // Output: "HTMLAddressDisplayer: address-display"
 	 * 
 	 * @since 0.8.3-alpha

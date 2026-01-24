@@ -134,8 +134,8 @@ describe('E2E: Municipio/Bairro Display (Simple)', () => {
 
         console.log('Final values - Municipio:', municipio, 'Bairro:', bairro);
 
-        // Verify
-        expect(municipio).toBe('Arapiraca');
+        // Verify - Feature v0.8.7: Município now displays with state abbreviation
+        expect(municipio).toBe('Arapiraca, AL');
         expect(bairro).toBe('Centro');
 
         await page.close();

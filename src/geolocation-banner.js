@@ -3,6 +3,8 @@
  * Handles geolocation permission requests with user-friendly UI
  */
 
+import { log, warn, error } from './utils/logger.js';
+
 (function() {
   'use strict';
 
@@ -38,8 +40,8 @@
     try {
       const result = await navigator.permissions.query({ name: 'geolocation' });
       return result.state; // 'granted', 'denied', or 'prompt'
-    } catch (error) {
-      console.warn('Could not query geolocation permission:', error);
+    } catch (err) {
+      warn('Could not query geolocation permission:', err);
       return 'prompt';
     }
   }
@@ -88,7 +90,7 @@
 
     navigator.geolocation.getCurrentPosition(
       function success(position) {
-        console.log('Geolocation permission granted:', position);
+        log('Geolocation permission granted:', position);
         permissionStatus = 'granted';
         dismissBanner();
         showSuccessToast();
@@ -98,8 +100,8 @@
           detail: { position }
         }));
       },
-      function error(err) {
-        console.error('Geolocation permission denied:', err);
+      function onError(err) {
+        error('Geolocation permission denied:', err);
         permissionStatus = 'denied';
         dismissBanner();
         showPermissionDeniedMessage();
@@ -236,5 +238,5 @@
     init();
   }
 
-  console.log('Geolocation Banner initialized');
+  log('Geolocation Banner initialized');
 })();

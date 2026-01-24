@@ -203,7 +203,7 @@ class SpeechCoordinator {
      * 
      * @example
      * if (coordinator.isInitialized()) {
-     *   console.log('Speech synthesis ready');
+     *   log('Speech synthesis ready');
      * }
      */
     isInitialized() {
@@ -244,7 +244,7 @@ class SpeechCoordinator {
      * @returns {string} String representation
      * 
      * @example
-     * console.log(coordinator.toString());
+     * log(coordinator.toString());
      * // Output: "SpeechCoordinator: initialized"
      */
     toString() {

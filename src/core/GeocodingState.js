@@ -28,7 +28,7 @@
  * 
  * // Subscribe to state changes
  * state.subscribe((stateSnapshot) => {
- *   console.log('Position updated:', stateSnapshot.position);
+ *   log('Position updated:', stateSnapshot.position);
  * });
  * 
  * // Set position (triggers notification)
@@ -38,10 +38,10 @@
  * @example
  * // Get current state
  * const coords = state.getCurrentCoordinates();
- * console.log(coords.latitude, coords.longitude);
+ * log(coords.latitude, coords.longitude);
  * 
  * const position = state.getCurrentPosition();
- * console.log(position.accuracy, position.accuracyQuality);
+ * log(position.accuracy, position.accuracyQuality);
  */
 
 import GeoPosition from './GeoPosition.js';
@@ -121,7 +121,7 @@ class GeocodingState {
      * @example
      * const position = state.getCurrentPosition();
      * if (position) {
-     *   console.log(position.latitude, position.accuracyQuality);
+     *   log(position.latitude, position.accuracyQuality);
      * }
      */
     getCurrentPosition() {
@@ -136,7 +136,7 @@ class GeocodingState {
      * @example
      * const coords = state.getCurrentCoordinates();
      * if (coords) {
-     *   console.log(`Lat: ${coords.latitude}, Lon: ${coords.longitude}`);
+     *   log(`Lat: ${coords.latitude}, Lon: ${coords.longitude}`);
      * }
      */
     getCurrentCoordinates() {
@@ -169,8 +169,8 @@ class GeocodingState {
      * 
      * @example
      * const unsubscribe = state.subscribe((stateSnapshot) => {
-     *   console.log('New position:', stateSnapshot.position);
-     *   console.log('Coordinates:', stateSnapshot.coordinates);
+     *   log('New position:', stateSnapshot.position);
+     *   log('Coordinates:', stateSnapshot.coordinates);
      * });
      * 
      * // Later, unsubscribe
@@ -198,7 +198,7 @@ class GeocodingState {
      * @returns {boolean} True if callback was found and removed
      * 
      * @example
-     * const handler = (state) => console.log(state);
+     * const handler = (state) => log(state);
      * state.subscribe(handler);
      * // Later...
      * state.unsubscribe(handler);
@@ -218,7 +218,7 @@ class GeocodingState {
      * @returns {number} Number of subscribed observers
      * 
      * @example
-     * console.log(`Active observers: ${state.getObserverCount()}`);
+     * log(`Active observers: ${state.getObserverCount()}`);
      */
     getObserverCount() {
         return this._observers.length;
@@ -241,7 +241,7 @@ class GeocodingState {
      * 
      * @example
      * state.clear();
-     * console.log(state.hasPosition()); // false
+     * log(state.hasPosition()); // false
      */
     clear() {
         this._currentPosition = null;
@@ -277,7 +277,7 @@ class GeocodingState {
      * @returns {string} State summary
      * 
      * @example
-     * console.log(state.toString());
+     * log(state.toString());
      * // "GeocodingState: position: available, coordinates: (lat, lon), observers: 2"
      */
     toString() {

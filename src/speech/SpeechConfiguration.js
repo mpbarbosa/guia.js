@@ -1,4 +1,5 @@
 'use strict';
+import { log, warn, error } from '../utils/logger.js';
 
 /**
  * SpeechConfiguration manages speech synthesis parameters.
@@ -58,7 +59,7 @@ export class SpeechConfiguration {
      */
     safeLog(message, ...params) {
         if (this.enableLogging && typeof console !== 'undefined' && console.log) {
-            console.log(message, ...params);
+            log(message, ...params);
         }
     }
 
@@ -68,7 +69,7 @@ export class SpeechConfiguration {
      */
     safeWarn(message, ...params) {
         if (this.enableLogging && typeof console !== 'undefined' && console.warn) {
-            console.warn(message, ...params);
+            warn(message, ...params);
         }
     }
 

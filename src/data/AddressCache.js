@@ -98,7 +98,7 @@ class AddressCache {
 	 * const cache = AddressCache.getInstance();
 	 * const cacheKey = cache.generateCacheKey(addressData);
 	 * if (cacheKey) {
-	 *   console.log('Cache key:', cacheKey);
+	 *   log('Cache key:', cacheKey);
 	 * }
 	 * 
 	 * @since 0.8.3-alpha
@@ -222,7 +222,7 @@ class AddressCache {
 	 * @example
 	 * const cache = AddressCache.getInstance();
 	 * cache.setLogradouroChangeCallback((changeDetails) => {
-	 *   console.log('Street changed:', changeDetails);
+	 *   log('Street changed:', changeDetails);
 	 * });
 	 * 
 	 * @since 0.8.3-alpha
@@ -254,7 +254,7 @@ class AddressCache {
 	 * @example
 	 * const cache = AddressCache.getInstance();
 	 * cache.setBairroChangeCallback((changeDetails) => {
-	 *   console.log('Neighborhood changed:', changeDetails);
+	 *   log('Neighborhood changed:', changeDetails);
 	 * });
 	 * 
 	 * @since 0.8.3-alpha
@@ -286,7 +286,7 @@ class AddressCache {
 	 * @example
 	 * const cache = AddressCache.getInstance();
 	 * cache.setMunicipioChangeCallback((changeDetails) => {
-	 *   console.log('Municipality changed:', changeDetails);
+	 *   log('Municipality changed:', changeDetails);
 	 * });
 	 * 
 	 * @since 0.8.3-alpha
@@ -670,7 +670,7 @@ class AddressCache {
 				try {
 					this.logradouroChangeCallback(changeDetails);
 				} catch (error) {
-					console.error(
+					error(
 						"(AddressCache) Error calling logradouro change callback:",
 						error,
 					);
@@ -685,7 +685,7 @@ class AddressCache {
 				try {
 					this.bairroChangeCallback(changeDetails);
 				} catch (error) {
-					console.error(
+					error(
 						"(AddressCache) Error calling bairro change callback:",
 						error,
 					);
@@ -700,7 +700,7 @@ class AddressCache {
 				try {
 					this.municipioChangeCallback(changeDetails);
 				} catch (error) {
-					console.error(
+					error(
 						"(AddressCache) Error calling municipio change callback:",
 						error,
 					);

@@ -7,6 +7,7 @@
  */
 
 import { WebGeocodingManager } from './guia.js';
+import { log, warn, error } from './utils/logger.js';
 
 // Application state
 const AppState = {
@@ -42,25 +43,25 @@ const AppState = {
  * @example
  * // Manual initialization
  * await init();
- * console.log('App ready');
+ * log('App ready');
  * 
  * @since 0.7.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 async function init() {
-  console.log('Initializing Guia Turístico SPA v0.7.1...');
+  log('Initializing Guia Turístico SPA v0.7.1...');
   
   // Wait for external dependencies to load (max 5 seconds)
   if (window.dependenciesLoading) {
-    console.log('⏳ Waiting for dependencies to load...');
+    log('⏳ Waiting for dependencies to load...');
     try {
       await Promise.race([
         new Promise(resolve => window.addEventListener('dependencies-ready', resolve, { once: true })),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Dependency timeout')), 5000))
       ]);
-      console.log('✓ Dependencies ready');
+      log('✓ Dependencies ready');
     } catch (error) {
-      console.warn('⚠️ Dependency loading timeout - continuing with fallback:', error.message);
+      warn('⚠️ Dependency loading timeout - continuing with fallback:', error.message);
     }
   }
   
@@ -77,7 +78,7 @@ async function init() {
   window.addEventListener('hashchange', handleRoute);
   window.addEventListener('popstate', handleRoute);
   
-  console.log('✓ Application initialized successfully');
+  log('✓ Application initialized successfully');
 }
 
 /**
@@ -162,7 +163,7 @@ async function handleRoute() {
   const hash = window.location.hash || '#/';
   const route = hash.substring(1); // Remove '#'
   
-  console.log('Routing to:', route);
+  log('Routing to:', route);
   
   // Update navigation
   updateActiveNavLink();
@@ -185,7 +186,7 @@ async function handleRoute() {
     
     AppState.currentRoute = route;
   } catch (error) {
-    console.error('Route loading error:', error);
+    error('Route loading error:', error);
     showError(error);
   }
 }
@@ -370,13 +371,13 @@ async function initializeHomeView() {
           sidraDisplay: 'dadosSidra'
         }
       });
-      console.log('WebGeocodingManager initialized for home view');
+      log('WebGeocodingManager initialized for home view');
       
       // Start tracking automatically
       AppState.manager.startTracking();
-      console.log('Tracking started automatically');
+      log('Tracking started automatically');
     } catch (error) {
-      console.error('Error initializing WebGeocodingManager:', error);
+      error('Error initializing WebGeocodingManager:', error);
     }
   }
 }
@@ -518,7 +519,7 @@ function initializeConverterFeatures() {
           </div>
         `;
       } catch (error) {
-        console.error('Conversion error:', error);
+        error('Conversion error:', error);
         resultDiv.innerHTML = `
           <div class="md3-card text-error">
             <h3>❌ Erro na Conversão</h3>
@@ -573,7 +574,7 @@ if (typeof document !== 'undefined') {
   }
 } else {
   // Node.js environment - skip browser initialization
-  console.log('Running in Node.js - skipping browser initialization');
+  log('Running in Node.js - skipping browser initialization');
 }
 
 // Export for debugging

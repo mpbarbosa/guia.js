@@ -47,7 +47,7 @@ const DRIVING_ROUTE = [
         latitude: -23.550520,
         longitude: -46.633309,
         expected: {
-            municipio: 'São Paulo',
+            municipio: 'São Paulo, SP',
             bairro: 'República',
             state: 'SP'
         }
@@ -57,7 +57,7 @@ const DRIVING_ROUTE = [
         latitude: -23.565209,
         longitude: -46.664850,
         expected: {
-            municipio: 'São Paulo',
+            municipio: 'São Paulo, SP',
             bairro: 'Jardim Paulista',
             state: 'SP'
         }
@@ -67,7 +67,7 @@ const DRIVING_ROUTE = [
         latitude: -23.587370,
         longitude: -46.636040,
         expected: {
-            municipio: 'São Paulo',
+            municipio: 'São Paulo, SP',
             bairro: 'Vila Mariana',
             state: 'SP'
         }
@@ -77,7 +77,7 @@ const DRIVING_ROUTE = [
         latitude: -23.606230,
         longitude: -46.663770,
         expected: {
-            municipio: 'São Paulo',
+            municipio: 'São Paulo, SP',
             bairro: 'Moema',
             state: 'SP'
         }

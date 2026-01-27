@@ -82,7 +82,7 @@
     "puppeteer": "^24.35.0"
   },
   "dependencies": {
-    "guia.js": "github:mpbarbosa/guia_js",
-    "ibira.js": "github:mpbarbosa/ibira.js"
+    "guia.js": "github:mpbarbosa/guia_js#v0.6.0-alpha",
+    "ibira.js": "github:mpbarbosa/ibira.js#v0.2.1-alpha"
   }
 }

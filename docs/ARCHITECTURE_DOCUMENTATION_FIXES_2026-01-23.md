@@ -217,7 +217,7 @@ npm run validate
 
 ## Related Documentation
 
-- [Architecture Validation Report](/tmp/architecture_validation_report.md) - Original findings
+- Architecture Validation Report - Findings integrated into this document
 - [VIEWS_LAYER.md](./architecture/VIEWS_LAYER.md) - Views architecture
 - [TEST_STRATEGY.md](./testing/TEST_STRATEGY.md) - Testing strategy
 - [DIRECTORY_ORGANIZATION.md](./DIRECTORY_ORGANIZATION.md) - Docs organization

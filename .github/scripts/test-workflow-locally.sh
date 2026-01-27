@@ -33,14 +33,57 @@ print_info() {
     echo -e "${YELLOW}ℹ️  $1${NC}"
 }
 
+# Function to check if step should run based on change type
+should_run_step() {
+    local step_name="$1"
+    
+    # If no change type detected, run all steps
+    if [ -z "$CHANGE_STEPS" ] || [ "$CHANGE_TYPE" = "unknown" ]; then
+        return 0
+    fi
+    
+    # Check if step is in the allowed steps list
+    if echo "$CHANGE_STEPS" | grep -qw "$step_name"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 # Check if we're in the right directory
 if [ ! -f "package.json" ]; then
     echo -e "${RED}Error: package.json not found. Run this script from the project root.${NC}"
     exit 1
 fi
 
-echo "Step 1: Detecting changed files"
-echo "--------------------------------"
+echo "Step 1: Detecting change type and files"
+echo "----------------------------------------"
+
+# Detect change type using the detector script
+if [ -x ".github/scripts/change-type-detector.sh" ]; then
+    print_info "Running change-type detection..."
+    CHANGE_TYPE=$(./.github/scripts/change-type-detector.sh HEAD~1 2>&1 | tail -1)
+    
+    # Load cached information
+    if [ -f ".github/cache/change_type.cache" ]; then
+        source .github/cache/change_type.cache
+        echo ""
+        echo "Change Type Analysis:"
+        echo "  Type: $CHANGE_TYPE"
+        echo "  Strategy: $TEST_STRATEGY"
+        echo "  Steps: $CHANGE_STEPS"
+        echo ""
+    else
+        print_info "Using default workflow (change type detection unavailable)"
+        CHANGE_TYPE="unknown"
+        CHANGE_STEPS="security_audit syntax_validation test_execution coverage_report"
+        TEST_STRATEGY="all"
+    fi
+else
+    print_info "Change-type detector not found, using legacy detection"
+    CHANGE_TYPE="unknown"
+fi
+
 CHANGED_FILES=$(git diff --name-only HEAD)
 if [ -z "$CHANGED_FILES" ]; then
     CHANGED_FILES=$(git diff --name-only HEAD~1)
@@ -51,7 +94,8 @@ if [ -z "$CHANGED_FILES" ]; then
     CHANGED_FILES="src/guia.js src/guia_ibge.js"
 else
     echo "Changed files:"
-    echo "$CHANGED_FILES"
+    echo "$CHANGED_FILES" | head -10
+    [ $(echo "$CHANGED_FILES" | wc -l) -gt 10 ] && echo "  ... and $(( $(echo "$CHANGED_FILES" | wc -l) - 10 )) more"
 fi
 echo ""
 
@@ -81,77 +125,121 @@ echo "  Documentation files: $DOC_CHANGED"
 echo "  Source files: $SRC_CHANGED"
 echo ""
 
-# Step 2: Security audit
+# Step 2: Security audit (with change-type routing)
 echo "Step 2: Running security audit"
 echo "--------------------------------"
-print_info "Checking for known vulnerabilities..."
 
-if npm audit --json > /tmp/audit-results.json 2>&1; then
-    print_status 0 "Security audit (no vulnerabilities)"
-else
-    AUDIT_EXIT=$?
+if should_run_step "security_audit"; then
+    print_info "Checking for known vulnerabilities..."
     
-    # Parse results
-    CRITICAL=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.critical // 0' 2>/dev/null || echo "0")
-    HIGH=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.high // 0' 2>/dev/null || echo "0")
-    MODERATE=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.moderate // 0' 2>/dev/null || echo "0")
-    LOW=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.low // 0' 2>/dev/null || echo "0")
-    
-    echo ""
-    echo "Vulnerabilities found:"
-    echo "  🔴 Critical: $CRITICAL"
-    echo "  🟠 High: $HIGH"
-    echo "  🟡 Moderate: $MODERATE"
-    echo "  🟢 Low: $LOW"
-    echo ""
-    
-    if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
-        print_status 1 "Security audit (CRITICAL or HIGH vulnerabilities found!)"
-        print_info "Run 'npm audit fix' to attempt automatic fixes"
-    elif [ "$MODERATE" -gt 0 ]; then
-        print_info "Moderate vulnerabilities found. Review recommended."
-        print_status 0 "Security audit (moderate issues only)"
+    if npm audit --json > /tmp/audit-results.json 2>&1; then
+        print_status 0 "Security audit (no vulnerabilities)"
     else
-        print_status 0 "Security audit (low severity only)"
+        AUDIT_EXIT=$?
+        
+        # Parse results
+        CRITICAL=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.critical // 0' 2>/dev/null || echo "0")
+        HIGH=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.high // 0' 2>/dev/null || echo "0")
+        MODERATE=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.moderate // 0' 2>/dev/null || echo "0")
+        LOW=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.low // 0' 2>/dev/null || echo "0")
+        echo ""
+        echo "Vulnerabilities found:"
+        echo "  🔴 Critical: $CRITICAL"
+        echo "  🟠 High: $HIGH"
+        echo "  🟡 Moderate: $MODERATE"
+        echo "  🟢 Low: $LOW"
+        echo ""
+        
+        if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+            print_status 1 "Security audit (CRITICAL or HIGH vulnerabilities found!)"
+            print_info "Run 'npm audit fix' to attempt automatic fixes"
+        elif [ "$MODERATE" -gt 0 ]; then
+            print_info "Moderate vulnerabilities found. Review recommended."
+            print_status 0 "Security audit (moderate issues only)"
+        else
+            print_status 0 "Security audit (low severity only)"
+        fi
     fi
+else
+    print_info "⏭️  Skipped (change type: $CHANGE_TYPE)"
 fi
 echo ""
 
-# Step 3: Validate JavaScript
-if [ "$JS_CHANGED" = true ] || [ "$SRC_CHANGED" = true ]; then
-    echo "Step 3: Validating JavaScript syntax"
-    echo "-------------------------------------"
-    if npm run validate; then
-        print_status 0 "JavaScript syntax validation"
+# Step 3: Validate JavaScript (with change-type routing and conditional execution)
+echo "Step 3: Validating JavaScript syntax"
+echo "-------------------------------------"
+if should_run_step "syntax_validation"; then
+    if ./.github/scripts/workflow-condition-evaluator.sh step3_syntax_validation 2>/dev/null; then
+        if npm run validate; then
+            print_status 0 "JavaScript syntax validation"
+        else
+            print_status 1 "JavaScript syntax validation"
+        fi
     else
-        print_status 1 "JavaScript syntax validation"
+        print_info "⏭️  Skipped (no JavaScript changes detected)"
     fi
-    echo ""
+else
+    print_info "⏭️  Skipped (change type: $CHANGE_TYPE)"
 fi
+echo ""
 
-# Step 3: Run tests
-if [ "$JS_CHANGED" = true ] || [ "$TEST_CHANGED" = true ]; then
-    echo "Step 4: Running tests"
-    echo "---------------------"
-    print_info "Running full test suite..."
-    if npm test; then
-        print_status 0 "All tests"
+# Step 4: Directory structure scan (with change-type routing and caching)
+echo "Step 4: Directory structure analysis"
+echo "-------------------------------------"
+if should_run_step "directory_structure"; then
+    if ./.github/scripts/workflow-condition-evaluator.sh step4_directory_structure 2>/dev/null; then
+        if [ -d ".github/cache" ] || mkdir -p .github/cache 2>/dev/null; then
+            find src -type f > .github/cache/directory_structure.cache 2>/dev/null
+            print_status 0 "Directory structure cached"
+        else
+            print_info "Cache directory not writable, skipping cache"
+        fi
     else
-        print_status 1 "All tests"
+        print_info "⏭️  Skipped (using cached structure, no new files)"
     fi
-    echo ""
-    
-    echo "Step 5: Generating coverage report"
-    echo "-----------------------------------"
-    if npm run test:coverage; then
-        print_status 0 "Coverage generation"
-    else
-        print_status 1 "Coverage generation"
-    fi
-    echo ""
+else
+    print_info "⏭️  Skipped (change type: $CHANGE_TYPE)"
 fi
+echo ""
 
-# Step 4: Check test documentation updates
+# Step 5: Run tests (with change-type routing and conditional execution)
+echo "Step 5: Running tests"
+echo "---------------------"
+if should_run_step "test_execution"; then
+    if ./.github/scripts/workflow-condition-evaluator.sh step7_test_execution 2>/dev/null; then
+        print_info "Running test suite (strategy: ${TEST_STRATEGY:-all})..."
+        if npm test; then
+            print_status 0 "All tests"
+        else
+            print_status 1 "All tests"
+        fi
+    else
+        print_info "⏭️  Skipped (no code changes detected)"
+    fi
+else
+    print_info "⏭️  Skipped (change type: $CHANGE_TYPE)"
+fi
+echo ""
+
+# Step 6: Generating coverage report (with change-type routing and conditional execution)
+echo "Step 6: Generating coverage report"
+echo "-----------------------------------"
+if should_run_step "coverage_report"; then
+    if ./.github/scripts/workflow-condition-evaluator.sh step5_coverage_report 2>/dev/null; then
+        if npm run test:coverage; then
+            print_status 0 "Coverage generation"
+        else
+            print_status 1 "Coverage generation"
+        fi
+    else
+        print_info "⏭️  Skipped (docs-only or test-only changes)"
+    fi
+else
+    print_info "⏭️  Skipped (change type: $CHANGE_TYPE)"
+fi
+echo ""
+
+# Step 7: Check test documentation updates
 if [ "$TEST_CHANGED" = true ]; then
     echo "Step 6: Checking test documentation"
     echo "------------------------------------"

@@ -23,6 +23,24 @@
 - API endpoint specifications
 - Integration patterns and examples
 
+#### `docs/refactoring/`
+**Purpose**: Active refactoring session documentation and implementation guides  
+**Status**: Working documentation for ongoing refactoring initiatives  
+**Category**: God class elimination, implementation guides, phase resumption
+
+**Key Files**:
+- `GOD_CLASS_REFACTORING_PLAN_2026-01-24.md` - Current refactoring plan
+- `IMPLEMENTATION_GUIDE_2026-01-24.md` - Step-by-step implementation guide
+- `PHASE_3_RESUME_GUIDE.md` - Phase continuation instructions
+
+**Expected Content**:
+- Active refactoring session plans
+- Implementation guides for ongoing work
+- Phase-specific documentation
+- Refactoring checkpoints and progress tracking
+
+**Note**: Unlike `class-extraction/`, this contains **active** working documentation, not historical records.
+
 #### `docs/class-extraction/`
 **Purpose**: Historical documentation of modularization process
 
@@ -81,28 +99,77 @@
 - Configuration reference
 
 #### `docs/reports/`
-**Purpose**: Analysis reports and audits
+**Purpose**: Comprehensive project analysis, audits, and implementation tracking  
+**Status**: Active documentation  
+**Organization**: Subdirectories by report type (analysis, bugfixes, implementation)
 
+**Subdirectories**:
+
+##### `docs/reports/analysis/`
+**Purpose**: Technical analysis, audits, and improvement planning  
 **Expected Content**:
-- Code quality reports
-- Performance analysis
-- Security audits
+- Architecture validation reports
+- Code quality improvement plans
+- Dependency update strategies
+- Documentation consistency audits (dated)
+- UI component validation reports
+
+##### `docs/reports/bugfixes/`
+**Purpose**: Bug fix implementation documentation and resolution records  
+**Expected Content**:
+- Bug fix summaries with root cause analysis
+- E2E test fix documentation
+- Documentation error fixes (dated)
+- Worker process and environment issue resolutions
+
+##### `docs/reports/implementation/`
+**Purpose**: Completed implementation summaries and session records  
+**Expected Content**:
+- Feature implementation summaries
+- Documentation audit completion reports
+- Multi-phase project completion records
+- Environment configuration implementations
 
 #### `docs/workflow-automation/`
-**Purpose**: Automation scripts and workflow documentation
+**Purpose**: CI/CD workflow documentation and automation strategy  
+**Status**: Active documentation  
+**Category**: Automation implementations, security strategies, and workflow configuration
+
+**Key Files**:
+- `AUTOMATION_SUMMARY.md` - Overview of automation implementations
+- `FINAL_AUTOMATION_SUMMARY.md` - Complete automation system summary
+- `WORKFLOW_TERMINOLOGY_DISAMBIGUATION.md` - Workflow terminology and concepts
+- `CI_CACHING_STRATEGY.md` - CI/CD performance optimization
+- `SECURITY_STRATEGY.md` - Security automation and monitoring
 
 **Expected Content**:
-- Automation tool configurations
-- CI/CD workflow definitions
-- Script documentation
+- GitHub Actions workflow documentation
+- Automation tool configurations and strategies
+- CI/CD optimization and caching strategies
+- Security automation patterns
+- Pre-commit and pre-push hook documentation
 
 #### `docs/misc/`
-**Purpose**: Miscellaneous documentation not fitting other categories
+**Purpose**: Historical project records archive from major documentation initiatives (2026-01-01+)  
+**Status**: Archived documentation (reference only)  
+**Category**: Implementation summaries, analysis reports, and completed work records
+
+**Acceptance Criteria** (prevents dumping ground):
+- ✅ Historical records of **completed** work only
+- ✅ Must have clear date in filename (e.g., `*_2026-01-09.md`)
+- ✅ Must be referenced from active documentation
+- ✅ Documents older than current release cycle
+- ❌ NOT for active guides or current documentation
+- ❌ NOT for experimental/draft work (use `docs/reports/analysis/` instead)
+- ❌ NOT for temporary notes (delete instead)
 
 **Expected Content**:
-- Experimental features
-- Research notes
-- Temporary documentation
+- Analysis reports from past improvement initiatives
+- Implementation summaries of completed projects
+- Planning documents for historical reference
+- Audit trail documentation
+
+**See Also**: [docs/misc/README.md](./misc/README.md) for detailed archive index
 
 ## Root-Level Documentation Files
 

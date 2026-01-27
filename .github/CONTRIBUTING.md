@@ -553,7 +553,7 @@ For comprehensive guidance on Test Driven Development, see [TDD_GUIDE.md](./TDD_
 # Syntax validation (~1 second)
 npm run validate
 
-# Run all tests (~45 seconds, 1,820 passing / 1,968 total)
+# Run all tests (~45 seconds, 1,982 passing / 2,176 total)
 npm test
 
 # Run tests with coverage (~45 seconds, ~70% coverage)
@@ -568,7 +568,7 @@ npm run test:all
 
 **Expected Results** (as of version 0.7.1-alpha):
 - Test Suites: 78 passing, 6 skipped, 84 total
-- Tests: 1,820 passing, 146 skipped, 1,968 total
+- Tests: 1,982 passing, 146 skipped, 2,176 total
 - Coverage: ~70% overall (~70% of src/ files)
 
 **Timing Note**: Test execution varies ±1-2 seconds depending on system performance.
@@ -620,7 +620,7 @@ npm test
 **Expected Output**:
 ```
 Test Suites: 78 passed, 6 skipped, 84 total
-Tests:       1820 passed, 146 skipped, 1968 total
+Tests:       1982 passed, 146 skipped, 2176 total
 Snapshots:   0 total
 Time:        6.789 s
 ```
@@ -640,7 +640,7 @@ npm run test:coverage
 **Expected Output**:
 ```
 Test Suites: 78 passed, 6 skipped, 84 total
-Tests:       1820 passing, 146 skipped, 1968 total
+Tests:       1982 passing, 146 skipped, 2176 total
 Coverage:    ~70% overall
 ```
 
@@ -657,7 +657,7 @@ npm run test:all
 **Expected Output**:
 ```
 ✓ Syntax validation passed
-✓ 1820/1968 tests passed
+✓ 1982/2176 tests passed
 ✓ All validation checks completed
 ```
 
@@ -695,8 +695,8 @@ Before submitting your PR, ensure all items are checked:
 #### Testing
 - [ ] **All validation commands pass** (see [Pre-Submission Validation Commands](#pre-submission-validation-commands) above)
   - [ ] `npm run validate` - Syntax validation passes
-  - [ ] `npm test` - All 1,820 tests pass, 146 skipped
-  - [ ] Test counts match expected values (1,820 passing / 1,968 total)
+  - [ ] `npm test` - All 1,982 tests pass, 146 skipped
+  - [ ] Test counts match expected values (1,982 passing / 2,176 total)
 - [ ] New functionality has comprehensive tests
   - [ ] Happy path tested
   - [ ] Edge cases covered
@@ -774,7 +774,7 @@ npm test -- --no-coverage
 **If you see different test counts**:
 
 **Expected** (v0.7.1-alpha):
-- 1,820 passing / 1,968 total / 146 skipped
+- 1,982 passing / 2,176 total / 146 skipped
 
 **Your result** shows different numbers? This could mean:
 1. ✅ **You added new tests** (passing count increased) - Good! Document in PR description
@@ -844,7 +844,7 @@ python3 -m http.server 9000
 | Command | Purpose | Time | Expected Result |
 |---------|---------|------|-----------------|
 | `npm run validate` | Syntax check | ~1s | No syntax errors |
-| `npm test` | Full test suite | ~45s | 1,820 passing, 146 skipped |
+| `npm test` | Full test suite | ~45s | 1,982 passing, 146 skipped |
 | `npm run test:coverage` | Tests + coverage | ~7s | ~70% coverage |
 | `npm run test:all` | Syntax + tests | ~8s | All checks pass |
 | `npm run test:watch` | Dev mode tests | Continuous | Watch for changes |

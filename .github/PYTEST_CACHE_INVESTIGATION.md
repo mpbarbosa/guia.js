@@ -127,11 +127,12 @@ tests/integrtion/__pycache__/   # Line 44 ⚠️ TYPO (integrtion)
 
 **Locations**:
 ```
-tests/integration/venv/lib/python3.13/site-packages/*/
+venv/lib/python3.13/site-packages/*/
 └── Multiple __pycache__/ directories (in venv)
 ```
 
 **Status**: ✅ Already ignored (under `venv/` pattern)
+**Note**: `tests/integration/venv/` was removed during Phase 2 cleanup (2026-01-27)
 
 ---
 
@@ -520,8 +521,12 @@ venv/  # Line 10
 ```
 
 **Also Catches**:
-- `tests/integration/venv/` ✅
+- Root-level `venv/` ✅
 - All `__pycache__/` inside venv ✅
+
+**Historical Note**:
+- `tests/integration/venv/` was removed during Phase 2 cleanup (2026-01-27)
+- All Python dependencies now use root-level `venv/` for consistency
 
 **Doesn't Catch**:
 - `__pycache__/` outside venv ❌

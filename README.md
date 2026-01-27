@@ -1,7 +1,9 @@
 # Guia Turístico - Tourist Guide Web Application
 
-[![Tests](https://img.shields.io/badge/tests-1982%20passing%20%2F%202176%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-1982%20passing%20%2F%202176%20total-yellow)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
+
+> **Note on Test Status**: While 1,982 tests pass successfully, 48 tests are currently failing (primarily timing-dependent E2E tests) and 146 tests are skipped. We're actively working on stabilizing the E2E test suite. See [Testing Overview](#testing-overview) for details.
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 

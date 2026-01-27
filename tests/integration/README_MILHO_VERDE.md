@@ -89,10 +89,12 @@ sudo apt-get install firefox
 
 ### Python Dependencies
 ```bash
+# Use root-level virtual environment
+source ../../venv/bin/activate
 pip install selenium
 ```
 
-Already installed in the virtual environment at `tests/integration/venv/`
+**Note**: Dependencies should be installed in the root-level `venv/` directory for consistency across all tests.
 
 ## Running the Tests
 

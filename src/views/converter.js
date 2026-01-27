@@ -226,11 +226,11 @@ export default {
         <section class="location-highlights" aria-label="Destaques de localização">
           <div class="highlight-card" role="region" aria-labelledby="municipio-label">
             <div id="municipio-label" class="highlight-card-label">Município</div>
-            <div id="municipio-value" class="highlight-card-value" aria-live="polite">—</div>
+            <div id="converter-municipio-value" class="highlight-card-value" aria-live="polite">—</div>
           </div>
           <div id="location-type-card" class="highlight-card" role="region" aria-labelledby="location-type-label">
             <div id="location-type-label" class="highlight-card-label">Bairro</div>
-            <div id="location-type-value" class="highlight-card-value" aria-live="polite">—</div>
+            <div id="converter-location-type-value" class="highlight-card-value" aria-live="polite">—</div>
           </div>
         </section>
 

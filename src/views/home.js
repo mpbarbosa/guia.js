@@ -173,6 +173,11 @@ export default {
       // Initialize geolocation manager
       this.manager = await this._initializeGeocodingManager();
       
+      // Expose manager to window for E2E testing
+      if (typeof window !== 'undefined') {
+        window.webGeocodingManager = this.manager;
+      }
+      
       // Initialize SIDRA displayer
       this._initializeSidraDisplayer();
       

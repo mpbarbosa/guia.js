@@ -368,7 +368,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
             }, TEST_ROUTE[0]);
 
             // Click location button
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
             // Move to different street
@@ -384,7 +384,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[1]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
             // Verify logradouro change was detected
@@ -440,7 +440,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
             // Move to Jardim Paulista (different bairro)
@@ -456,7 +456,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[2]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
             // Verify bairro change was detected
@@ -484,7 +484,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
             // Check initial bairro
@@ -504,7 +504,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[2]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
             // Check updated bairro
@@ -553,7 +553,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
             // Move to Campinas (different city)
@@ -569,7 +569,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[3]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(3000);
 
             // Verify municipio change was detected
@@ -597,7 +597,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
             // Check initial municipio
@@ -617,7 +617,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[3]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(3000);
 
             // Check updated municipio
@@ -661,7 +661,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
             // Verify both observers were called
@@ -706,7 +706,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
             // Verify good observer was still called despite error
@@ -754,7 +754,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
             // Move to trigger change
@@ -770,7 +770,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[2]);
 
-            await page.click('#obterLocalizacaoBtn');
+            await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
             const changeDetails = await page.evaluate(() => window.receivedChangeDetails);

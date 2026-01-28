@@ -1,6 +1,6 @@
 {
   "name": "guia_turistico",
-  "version": "0.7.1-alpha",
+  "version": "0.8.7-alpha",
   "description": "Tourist guide web application built on top of guia.js library",
   "type": "module",
   "main": "src/app.js",

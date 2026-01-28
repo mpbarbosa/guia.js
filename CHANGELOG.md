@@ -8,6 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+## [0.8.7-alpha] - 2026-01-28
+
+### Added
+- **Metropolitan Region Display (v0.8.7-alpha)**: Municipality highlight card now displays "Região Metropolitana" information for municipalities in metropolitan areas
+  - Displays between município label and municipality name with reduced visual prominence
+  - Visual hierarchy: smaller font size (0.875rem) and lighter color (70% opacity)
+  - Example: "Região Metropolitana do Recife" for Recife, Olinda, and other RMR municipalities
+  - Extracts data from Nominatim `address.county` field
+  - Graceful fallback: no display for non-metropolitan municipalities
+  - Documentation: `docs/FEATURE_METROPOLITAN_REGION_DISPLAY.md` (12.5KB)
+  - Comprehensive test coverage:
+    - `__tests__/unit/BrazilianStandardAddress-MetropolitanRegion.test.js`: 19 unit tests
+    - `__tests__/unit/AddressExtractor-MetropolitanRegion.test.js`: 26 unit tests
+    - `__tests__/unit/HTMLHighlightCardsDisplayer-MetropolitanRegion.test.js`: 28 unit tests
+    - `__tests__/e2e/metropolitan-region-display.e2e.test.js`: 4 E2E tests (Recife, São Paulo, non-metro, visual hierarchy)
+  - Total: 77 new tests, all passing
 - **Município State Abbreviation Display (v0.8.7-alpha)**: Municipality highlight card now displays the state abbreviation alongside the município name (e.g., "Recife, PE" instead of just "Recife")
   - Provides better geographic context for users
   - Fallback to município name only if state abbreviation is unavailable
@@ -26,6 +43,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Code quality improvement plan documentation
 
 ### Changed
+- **`BrazilianStandardAddress` (v0.8.7-alpha)**: Added `regiaoMetropolitana` property and `regiaoMetropolitanaFormatada()` method
+  - Stores metropolitan region information from Nominatim API
+  - Returns formatted region name or empty string
+  - Follows same pattern as `bairroCompleto()` method
+- **`AddressExtractor` (v0.8.7-alpha)**: Now extracts metropolitan region from `address.county` field
+  - Maps Nominatim `county` field to `enderecoPadronizado.regiaoMetropolitana`
+  - Supports Brazilian metropolitan regions (Recife, São Paulo, Rio de Janeiro, etc.)
+  - Falls back to null when county field is missing
+- **`HTMLHighlightCardsDisplayer` (v0.8.7-alpha)**: Updated to display metropolitan region in municipality card
+  - Added `_regiaoMetropolitanaElement` reference in constructor
+  - Displays region between label and municipality value
+  - Updates `regiao-metropolitana-value` DOM element
+  - Calls `regiaoMetropolitanaFormatada()` method
+- **`src/index.html` (v0.8.7-alpha)**: Added `<div id="regiao-metropolitana-value">` element in municipality card
+  - Positioned between município label and value for correct visual hierarchy
+  - Includes `aria-live="polite"` for screen reader support
+- **`src/highlight-cards.css` (v0.8.7-alpha)**: Added `.metropolitan-region-value` styling
+  - Font size: 0.875rem (87.5% of base, smaller than municipality)
+  - Opacity: 0.7 (70%, lighter than municipality)
+  - Margin: 8px top, 12px bottom for visual separation
 - **`HTMLHighlightCardsDisplayer` (v0.8.7-alpha)**: Updated to use `municipioCompleto()` method instead of direct `municipio` property access
   - Displays município with state abbreviation format: "City, ST"
   - Maintains backwards compatibility with graceful fallback
@@ -54,7 +91,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `docs/REFACTOR_ADDRESS_FETCHED_CONSTANT.md`: Documents constant extraction refactoring
 - Updated test infrastructure documentation with SIDRA test coverage
 - Updated README.md to reflect focus on location tracking as primary feature
-- Updated test count badges: 1,899 passing / 2,045 total (was 1,516 / 1,653)
+- Updated test count badges: 2,212 passing / 2,374 total (was 1,899 / 2,045)
+  - Added 77 tests for metropolitan region feature (73 unit + 4 E2E)
+  - Total increase: +329 tests, +313 passing tests
 - Updated `.github/copilot-instructions.md` with UI architecture section
 - Added CHANGELOG.md for tracking project changes
 

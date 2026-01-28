@@ -1,9 +1,15 @@
 # Guia Turístico - Tourist Guide Web Application
 
-[![Tests](https://img.shields.io/badge/tests-1982%20passing%20%2F%202176%20total-yellow)](https://github.com/mpbarbosa/guia_turistico)
+---
+Last Updated: 2026-01-28
+Status: Active
+---
+
+
+[![Tests](https://img.shields.io/badge/tests-2212%20passing%20%2F%202374%20total-yellow)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
-> **Note on Test Status**: While 1,982 tests pass successfully, 48 tests are currently failing (primarily timing-dependent E2E tests) and 146 tests are skipped. We're actively working on stabilizing the E2E test suite. See [Testing Overview](#testing-overview) for details.
+> **Note on Test Status**: While 2,212 tests pass successfully, 16 tests are currently failing (primarily timing-dependent E2E tests for incomplete address data scenarios) and 146 tests are skipped. We're actively working on stabilizing the E2E test suite. See [Testing Overview](#testing-overview) for details.
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
@@ -322,11 +328,13 @@ To ensure clear communication about testing concepts:
 - `HTMLPositionDisplayer` - Coordinate display and Google Maps links
 - `HTMLAddressDisplayer` - Address formatting and presentation
 - `HTMLHighlightCardsDisplayer` - Municipio and bairro highlight cards (v0.7.1+)
+  - **v0.8.7-alpha**: Metropolitan region display (Região Metropolitana) with reduced visual prominence ✅
+  - **Features**: Municipality with state abbreviation (e.g., "Recife, PE"), region context for metro areas
 - `HTMLReferencePlaceDisplayer` - Displays nearby reference places
 - `HTMLSidraDisplayer` - IBGE SIDRA data display with observer pattern (v0.7.2+)
   - **Features**: Population statistics, Brazilian Portuguese localization, automatic updates
   - **Data Source**: IBGE SIDRA API with offline fallback (libs/sidra/tab6579_municipios.json)
-- `DisplayerFactory` - Factory pattern for display component creation (5 methods v0.8.6+)
+- `DisplayerFactory` - Factory pattern for display component creation (5 methods, v0.8.6-alpha) ✅
 
 #### Speech Synthesis Layer
 - `SpeechSynthesisManager` - Main facade for text-to-speech coordination

@@ -101,6 +101,7 @@ class AddressExtractor {
 
 		// Map municipality/city information
 		// Supports: Nominatim format (city, town, municipality, village) and OSM tags (addr:city)
+		// Note: hamlet is NOT included here - hamlets are subdivisions within municipalities, not municipalities themselves
 		this.enderecoPadronizado.municipio = address['addr:city'] || address.city || address.town || address.municipality || address.village || null;
 
 		// Map state information

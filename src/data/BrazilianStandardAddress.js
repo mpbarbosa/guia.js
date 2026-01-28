@@ -38,6 +38,7 @@ class BrazilianStandardAddress {
 		this.complemento = null;
 		this.bairro = null;
 		this.municipio = null;
+		this.regiaoMetropolitana = null;
 		this.uf = null;
 		this.siglaUF = null;
 		this.cep = null;
@@ -80,6 +81,20 @@ class BrazilianStandardAddress {
 			return `${this.municipio}, ${this.siglaUF}`;
 		}
 		return this.municipio;
+	}
+
+	/**
+	 * Returns the formatted metropolitan region name.
+	 * 
+	 * @returns {string} Metropolitan region name or empty string
+	 * @since 0.8.7-alpha
+	 * @example
+	 * // Returns "Região Metropolitana do Recife"
+	 * address.regiaoMetropolitana = "Região Metropolitana do Recife";
+	 * address.regiaoMetropolitanaFormatada();
+	 */
+	regiaoMetropolitanaFormatada() {
+		return this.regiaoMetropolitana || "";
 	}
 
 	/**

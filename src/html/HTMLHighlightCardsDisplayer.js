@@ -30,6 +30,7 @@ class HTMLHighlightCardsDisplayer {
         
         this._document = document;
         this._municipioElement = document.getElementById('municipio-value');
+        this._regiaoMetropolitanaElement = document.getElementById('regiao-metropolitana-value');
         this._bairroElement = document.getElementById('bairro-value');
         
         Object.freeze(this);
@@ -46,12 +47,22 @@ class HTMLHighlightCardsDisplayer {
             hasAddressData: !!addressData,
             hasEnderecoPadronizado: !!enderecoPadronizado,
             municipio: enderecoPadronizado?.municipio,
+            regiaoMetropolitana: enderecoPadronizado?.regiaoMetropolitana,
             bairro: enderecoPadronizado?.bairro
         });
         
         if (!enderecoPadronizado) {
             warn('(HTMLHighlightCardsDisplayer) No enderecoPadronizado provided, skipping update');
             return;
+        }
+        
+        // Update metropolitan region (displayed between label and municipality)
+        if (this._regiaoMetropolitanaElement) {
+            const regiaoMetropolitana = enderecoPadronizado.regiaoMetropolitanaFormatada();
+            this._regiaoMetropolitanaElement.textContent = regiaoMetropolitana;
+            log('(HTMLHighlightCardsDisplayer) Updated regiao-metropolitana-value to:', regiaoMetropolitana || '(empty)');
+        } else {
+            warn('(HTMLHighlightCardsDisplayer) regiaoMetropolitanaElement not found');
         }
         
         // Update municipio with state abbreviation

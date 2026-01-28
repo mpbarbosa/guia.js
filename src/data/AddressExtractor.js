@@ -104,6 +104,11 @@ class AddressExtractor {
 		// Note: hamlet is NOT included here - hamlets are subdivisions within municipalities, not municipalities themselves
 		this.enderecoPadronizado.municipio = address['addr:city'] || address.city || address.town || address.municipality || address.village || null;
 
+		// Map metropolitan region information (Região Metropolitana)
+		// Nominatim stores metropolitan regions in the 'county' field for Brazilian addresses
+		// Examples: "Região Metropolitana do Recife", "Região Metropolitana de São Paulo"
+		this.enderecoPadronizado.regiaoMetropolitana = address.county || null;
+
 		// Map state information
 		// uf property: Contains ONLY full state names from addr:state or state fields
 		// Priority: OSM tag (addr:state) > Nominatim state field

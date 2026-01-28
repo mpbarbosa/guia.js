@@ -268,4 +268,92 @@ describe('HTMLHighlightCardsDisplayer - Município State Abbreviation Display', 
             expect(municipioElement.textContent).toBe('Ponta Grossa, PR');
         });
     });
+
+    describe('Constructor Validation', () => {
+        test('should throw TypeError when document is null', () => {
+            expect(() => new HTMLHighlightCardsDisplayer(null))
+                .toThrow(TypeError);
+            expect(() => new HTMLHighlightCardsDisplayer(null))
+                .toThrow('document is required');
+        });
+
+        test('should throw TypeError when document is undefined', () => {
+            expect(() => new HTMLHighlightCardsDisplayer(undefined))
+                .toThrow(TypeError);
+            expect(() => new HTMLHighlightCardsDisplayer(undefined))
+                .toThrow('document is required');
+        });
+
+        test('should be immutable (Object.freeze)', () => {
+            const mockDoc = {
+                getElementById: () => null
+            };
+            const testDisplayer = new HTMLHighlightCardsDisplayer(mockDoc);
+            
+            expect(Object.isFrozen(testDisplayer)).toBe(true);
+            
+            // Attempt to modify frozen object should throw in strict mode
+            expect(() => {
+                'use strict';
+                testDisplayer.newProperty = 'test';
+            }).toThrow(TypeError);
+        });
+    });
+
+    describe('Missing DOM Elements', () => {
+        test('should handle missing municipio element gracefully', () => {
+            const mockDoc = {
+                getElementById: (id) => {
+                    if (id === 'municipio-value') return null;
+                    if (id === 'bairro-value') return { textContent: '' };
+                    if (id === 'regiao-metropolitana-value') return { textContent: '' };
+                    return null;
+                }
+            };
+            
+            const testDisplayer = new HTMLHighlightCardsDisplayer(mockDoc);
+            const enderecoPadronizado = new BrazilianStandardAddress();
+            enderecoPadronizado.municipio = 'Recife';
+            enderecoPadronizado.siglaUF = 'PE';
+            
+            // Should not throw, just log warning
+            expect(() => testDisplayer.update({}, enderecoPadronizado)).not.toThrow();
+        });
+
+        test('should handle missing bairro element gracefully', () => {
+            const mockDoc = {
+                getElementById: (id) => {
+                    if (id === 'municipio-value') return { textContent: '' };
+                    if (id === 'bairro-value') return null;
+                    if (id === 'regiao-metropolitana-value') return { textContent: '' };
+                    return null;
+                }
+            };
+            
+            const testDisplayer = new HTMLHighlightCardsDisplayer(mockDoc);
+            const enderecoPadronizado = new BrazilianStandardAddress();
+            enderecoPadronizado.bairro = 'Centro';
+            
+            // Should not throw, just log warning
+            expect(() => testDisplayer.update({}, enderecoPadronizado)).not.toThrow();
+        });
+
+        test('should handle missing metropolitan region element gracefully', () => {
+            const mockDoc = {
+                getElementById: (id) => {
+                    if (id === 'municipio-value') return { textContent: '' };
+                    if (id === 'bairro-value') return { textContent: '' };
+                    if (id === 'regiao-metropolitana-value') return null;
+                    return null;
+                }
+            };
+            
+            const testDisplayer = new HTMLHighlightCardsDisplayer(mockDoc);
+            const enderecoPadronizado = new BrazilianStandardAddress();
+            enderecoPadronizado.regiaoMetropolitana = 'Região Metropolitana do Recife';
+            
+            // Should not throw, just log warning
+            expect(() => testDisplayer.update({}, enderecoPadronizado)).not.toThrow();
+        });
+    });
 });

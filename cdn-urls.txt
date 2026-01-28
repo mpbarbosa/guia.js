@@ -1,9 +1,9 @@
-jsDelivr CDN URLs for mpbarbosa/guia_turistico v0.7.1-alpha
-Generated: Sun Jan 11 09:54:30 -03 2026
+jsDelivr CDN URLs for mpbarbosa/guia_turistico v0.8.7-alpha
+Generated: Tue Jan 27 23:09:35 -03 2026
 =============================================================================
 
 PRODUCTION (Recommended - Specific Version):
-https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.8.7-alpha/src/guia.js
 
 DEVELOPMENT (Latest from branch):
 https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@main/src/guia.js
@@ -12,17 +12,17 @@ VERSION RANGE (Auto-update patches):
 https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.6/src/guia.js
 
 NPM CDN (if published to npm):
-https://cdn.jsdelivr.net/npm/guia_js@0.7.1-alpha/src/guia.js
+https://cdn.jsdelivr.net/npm/guia_js@0.8.7-alpha/src/guia.js
 
 HTML USAGE:
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.8.7-alpha/src/guia.js"></script>
 
 ES MODULE:
 <script type="module">
-  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js';
+  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.8.7-alpha/src/guia.js';
 </script>
 
 PACKAGE INFO API:
-https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia_turistico@0.7.1-alpha
+https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia_turistico@0.8.7-alpha
 
 =============================================================================

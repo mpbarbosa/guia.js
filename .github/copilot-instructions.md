@@ -22,7 +22,7 @@ Guia Turístico is a single-page web application (version 0.8.7-alpha) built on 
 - **Install Dependencies**: `npm install` - takes 20 seconds. Downloads guia.js library and other dependencies.
 - **Syntax Check**: Always run `node -c src/app.js && node -c src/guia.js` (timeout: 10 seconds) before making changes
 - **Basic Test**: Run `node src/app.js` (timeout: 10 seconds) to verify SPA initialization
-- **Automated Tests**: `npm test` - takes ~45 seconds. Runs 2,176 tests (1,982 passing, 146 skipped, 48 failing) in 92 suites. NEVER CANCEL.
+- **Automated Tests**: `npm test` - takes ~45 seconds. Runs 2,380 tests (2,213 passing, 146 skipped, 21 failing) in 101 suites. NEVER CANCEL.
 - **Test Coverage**: `npm run test:coverage` - takes ~45 seconds. Shows ~70% coverage. NEVER CANCEL.
 - **Full Validation**: `npm run test:all` - takes ~45 seconds. Combines syntax + tests. NEVER CANCEL.
 - **Web Test**: Start web server with `python3 -m http.server 9000` (timeout: 10 seconds to start, runs indefinitely)
@@ -30,7 +30,7 @@ Guia Turístico is a single-page web application (version 0.8.7-alpha) built on 
 ### Development Workflow
 - Always validate JavaScript syntax with `node -c` before committing changes
 - Test SPA functionality with `node src/app.js` to verify routing and initialization
-- Run automated tests with `npm run test:all` before commits to ensure 1,982+ tests pass
+- Run automated tests with `npm run test:all` before commits to ensure 2,213+ tests pass
 - For UI/web features, use the web server and src/index.html for manual validation
 - **Follow immutability principles** - see `.github/CONTRIBUTING.md` for guidelines
 - **TIMING**: Syntax checks <1 second, tests ~45 seconds, web server startup 3 seconds
@@ -51,7 +51,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 2. **Automated Test Suite**:
    ```bash
    npm run test:all
-   # Should show: ✅ 1,982 tests passing (2,176 total), ✅ 76 suites passing (92 total), ~45 seconds execution
+   # Should show: ✅ 2,213 tests passing (2,380 total), ✅ 90 suites passing (101 total), ~45 seconds execution
    ```
 
 3. **Web Application Functionality**:
@@ -87,7 +87,7 @@ After making any changes, ALWAYS run through these validation scenarios:
   - **Usage**: Import constants for consistency, avoid hardcoded strings
 - `src/utils/TimerManager.js` (147 lines) - Centralized timer management preventing memory leaks
 - `package.json` - Node.js configuration with guia.js dependency (jsdom v25.0.1, puppeteer v24.35.0)
-- `__tests__/` - 92 test suites with 2,176 total tests (1,982 passing, 146 skipped, 48 failing)
+- `__tests__/` - 101 test suites with 2,380 total tests (2,213 passing, 146 skipped, 21 failing)
   - **Note**: Test suite includes E2E tests for address validation, SIDRA integration, and location results (v0.7.2+)
   - **New Tests**: HTMLSidraDisplayer.test.js, complete-address-validation.e2e.test.js, milho-verde-locationResult.e2e.test.js
   - **Organization**: Domain-based (unit/, integration/, e2e/, managers/, external/, features/)
@@ -129,7 +129,9 @@ After making any changes, ALWAYS run through these validation scenarios:
 
 #### Data Processing (src/data/)
 - `BrazilianStandardAddress` (src/data/BrazilianStandardAddress.js) - Brazilian address standardization
+  - **v0.8.7-alpha**: Added `regiaoMetropolitana` field and `regiaoMetropolitanaFormatada()` method
 - `AddressExtractor` (src/data/AddressExtractor.js) - Address data extraction
+  - **v0.8.7-alpha**: Extracts metropolitan region from Nominatim `county` field
 - `AddressCache` (src/data/AddressCache.js) - Address caching functionality
 - `AddressDataExtractor` (src/data/AddressDataExtractor.js) - Complete address data extraction and caching
 - `ReferencePlace` (src/data/ReferencePlace.js) - Reference location handling with calculateCategory() method
@@ -138,7 +140,10 @@ After making any changes, ALWAYS run through these validation scenarios:
 #### UI and Display (src/html/)
 - `HTMLPositionDisplayer` (src/html/HTMLPositionDisplayer.js) - Coordinate display and Google Maps integration
 - `HTMLAddressDisplayer` (src/html/HTMLAddressDisplayer.js) - Address formatting and presentation
-- `HTMLHighlightCardsDisplayer` (src/html/HTMLHighlightCardsDisplayer.js) - Municipio and bairro highlight cards (v0.7.1+)
+- `HTMLHighlightCardsDisplayer` (src/html/HTMLHighlightCardsDisplayer.js) - Municipio and bairro highlight cards
+  - **v0.7.1+**: Municipality and neighborhood display cards
+  - **v0.8.7-alpha**: Added metropolitan region display (Região Metropolitana)
+  - **Features**: Municipality with state (e.g., "Recife, PE"), metro region context, neighborhood tracking
 - `HTMLReferencePlaceDisplayer` (src/html/HTMLReferencePlaceDisplayer.js) - Reference place display
 - `HTMLSidraDisplayer` (src/html/HTMLSidraDisplayer.js) - IBGE SIDRA data display with observer pattern (v0.7.2+)
   - **Features**: Population statistics, Brazilian Portuguese localization, automatic updates
@@ -184,13 +189,14 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Testing Infrastructure
 
 ### Automated Test Coverage
-- **2,176 total tests** (1,982 passing, 146 skipped, 48 failing) across 92 test suites running in ~30 seconds
-- **~70% code coverage** overall (69.82% actual)
+- **2,380 total tests** (2,213 passing, 146 skipped, 21 failing) across 101 test suites running in ~30 seconds
+- **~85% code coverage** overall (84.7% actual)
 - **100% coverage** of guia_ibge.js (full coverage)
-- **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns, SIDRA data display
+- **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns, SIDRA data display, Metropolitan region display
 - **Test Infrastructure**: Jest v30.1.3, jsdom v25.0.1, Puppeteer v24.35.0
 - **Performance**: Optimized with fake timers, parallel execution, custom cache directory (.jest-cache)
 - **New Tests** (v0.7.2+): complete-address-validation.e2e.test.js, milho-verde-locationResult.e2e.test.js, HTMLSidraDisplayer.test.js
+- **New Tests** (v0.8.7+): metropolitan-region-display.e2e.test.js, MetropolitanRegion unit tests
 
 ### End-to-End Testing Infrastructure
 
@@ -243,13 +249,13 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 ```
 
 ### Expected Test Results
-- ✅ 1,982 tests passing (2,176 total, 146 skipped, 48 failing)
-- ✅ 76 test suites passing (92 total, 4 skipped, 12 failing)
-- ✅ ~70% code coverage overall
+- ✅ 2,213 tests passing (2,380 total, 146 skipped, 21 failing)
+- ✅ 90 test suites passing (101 total, 4 skipped, 7 failing)
+- ✅ ~85% code coverage overall (84.7% actual)
 - ✅ 100% code coverage on guia_ibge.js
 - ✅ 14 immutability pattern tests
-- ⚠️ 48 tests currently failing (known issues: E2E timing-dependent tests)
-- ⚠️ 12 failing test suites (E2E neighborhood tracking, address validation)
+- ⚠️ 21 tests currently failing (known issues: E2E timing-dependent tests)
+- ⚠️ 7 failing test suites (E2E neighborhood tracking, address validation)
 
 ## Common Development Tasks
 
@@ -270,8 +276,12 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 
 ### Working with Brazilian Address Data
 - Use `BrazilianStandardAddress` class for address standardization
+  - **v0.8.7-alpha**: Supports metropolitan region via `regiaoMetropolitana` field
+  - **Methods**: `municipioCompleto()`, `regiaoMetropolitanaFormatada()`
 - Reference `AddressDataExtractor` for data processing patterns
 - Test with Brazilian coordinate examples: São Paulo (-23.550520, -46.633309)
+- IBGE integration available through `renderUrlUFNome()` function
+- Metropolitan region data extracted from Nominatim `county` field
 - IBGE integration available through `renderUrlUFNome()` function
 
 ## Limitations and Known Issues

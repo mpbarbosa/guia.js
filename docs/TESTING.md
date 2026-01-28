@@ -1,5 +1,13 @@
 # Guia Turístico - Automated Testing
 
+---
+Last Updated: 2026-01-28
+Status: Active
+Category: Testing
+---
+
+**Navigation**: [🏠 Home](../README.md) > [📚 Docs](./docs/README.md) > Testing Guide
+
 Este documento descreve como usar os testes automatizados implementados para o Guia Turístico usando Jest.
 
 ## Configuração dos Testes
@@ -215,6 +223,25 @@ npx jest --detectOpenHandles --forceExit
 # Limpar cache do Jest
 npx jest --clearCache
 ```
+
 ---
 
-_Last updated automatically: 
+## Related Documentation
+
+### Testing Resources
+- [Test Strategy](./testing/TEST_STRATEGY.md) - Overall testing philosophy and approach
+- [Test Infrastructure](./testing/TEST_INFRASTRUCTURE.md) - Test execution and coverage details
+- [Testing HTML Generation](./TESTING_HTML_GENERATION.md) - HTML display component testing
+
+### Development Guides
+- [Contributing Guidelines](../.github/CONTRIBUTING.md) - How to contribute with tests
+- [TDD Guide](../.github/TDD_GUIDE.md) - Test-Driven Development practices
+- [Unit Test Guide](../.github/UNIT_TEST_GUIDE.md) - Writing effective unit tests
+
+### Documentation Hub
+- [Documentation Index](./INDEX.md) - Complete documentation catalog
+- [Documentation Hub](./README.md) - Quick navigation to all docs
+
+---
+
+_Last updated: 2026-01-28_ 

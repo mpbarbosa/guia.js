@@ -1,5 +1,13 @@
 # Guia Turístico - Project Purpose and Architecture Documentation
 
+---
+Last Updated: 2026-01-28
+Status: Active
+Category: Architecture
+---
+
+**Navigation**: [🏠 Home](../README.md) > [📚 Docs](./README.md) > Project Purpose & Architecture
+
 **Version**: 0.7.1-alpha  
 **Document Date**: 2026-01-11  
 **Purpose**: Define project boundaries and prevent inappropriate architectural decisions

@@ -178,6 +178,28 @@ class AddressDataStore {
 	}
 	
 	/**
+	 * Gets current raw data only.
+	 * Convenience method for backward compatibility.
+	 * 
+	 * @returns {Object|null} Current raw data from geocoding API
+	 * @since 0.8.7-alpha
+	 */
+	getCurrentRawData() {
+		return this.currentRawData;
+	}
+	
+	/**
+	 * Gets previous raw data only.
+	 * Convenience method for backward compatibility.
+	 * 
+	 * @returns {Object|null} Previous raw data from geocoding API
+	 * @since 0.8.7-alpha
+	 */
+	getPreviousRawData() {
+		return this.previousRawData;
+	}
+	
+	/**
 	 * Clears all stored address data.
 	 * 
 	 * Resets the store to initial state with all values set to null.

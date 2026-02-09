@@ -60,6 +60,7 @@ import GeoPosition from './GeoPosition.js';
 import ObserverSubject from './ObserverSubject.js';
 import { calculateDistance } from '../utils/distance.js';
 import { log, warn } from '../utils/logger.js';
+import { withObserver } from '../utils/ObserverMixin.js';
 
 /**
  * Get configuration - use imported defaults and allow override
@@ -257,27 +258,6 @@ class PositionManager {
 	 * 
 	 * @since 0.6.0-alpha
 	 */
-	subscribe(observer) {
-		this.observerSubject.subscribe(observer);
-	}
-
-	/**
-	 * Unsubscribes an observer from position change notifications.
-	 * 
-	 * Removes the specified observer from the notification list so it will
-	 * no longer receive position update events.
-	 * 
-	 * @param {Object} observer - Observer object to unsubscribe
-	 * @returns {void}
-	 * 
-	 * @example
-	 * PositionManager.getInstance().unsubscribe(myObserver);
-	 * 
-	 * @since 0.6.0-alpha
-	 */
-	unsubscribe(observer) {
-		this.observerSubject.unsubscribe(observer);
-	}
 
 	/**
 	 * Proxy properties from lastPosition for direct access
@@ -508,5 +488,8 @@ class PositionManager {
 		return `${this.constructor.name}: ${position.latitude}, ${position.longitude}, ${position.accuracyQuality}, ${position.altitude}, ${position.speed}, ${position.heading}, ${position.timestamp}`;
 	}
 }
+
+// Apply observer mixin for subscribe/unsubscribe delegation (notifyObservers has custom signature)
+Object.assign(PositionManager.prototype, withObserver({ excludeNotify: true }));
 
 export default PositionManager;

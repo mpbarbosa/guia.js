@@ -36,6 +36,7 @@
 import ObserverSubject from '../core/ObserverSubject.js';
 import { log, warn, error } from '../utils/logger.js';
 import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
+import { withObserver } from '../utils/ObserverMixin.js';
 
 /**
  * Generates OpenStreetMap Nominatim API URL for reverse geocoding.
@@ -118,16 +119,6 @@ class ReverseGeocoder {
 	// automatic updates when new address data becomes available.
 
 	/**
-	 * Subscribe an observer to address update notifications.
-	 * Delegates to internal ObserverSubject for consistent observer pattern implementation.
-	 * 
-	 * @param {Object} observer - Observer object with update() method to receive address notifications
-	 */
-	subscribe(observer) {
-		this.observerSubject.subscribe(observer);
-	}
-
-	/**
 	 * Internal method to subscribe observers to fetch manager URL updates.
 	 * Links geocoding operations with observer notifications for reactive updates.
 	 * 
@@ -139,16 +130,6 @@ class ReverseGeocoder {
 		});
 	}
 	
-	/**
-	 * Unsubscribe an observer from address update notifications.
-	 * Maintains clean observer lifecycle management.
-	 * 
-	 * @param {Object} observer - Observer object to remove from notifications
-	 */
-	unsubscribe(observer) {
-		this.observerSubject.unsubscribe(observer);
-	}
-
 	/**
 	 * Notify all subscribed observers of address changes.
 	 * Enables reactive UI updates when geocoding completes.
@@ -514,6 +495,9 @@ class ReverseGeocoder {
 		return `${this.constructor.name}: ${this.latitude}, ${this.longitude}`;
 	}
 }
+
+// Apply observer mixin for subscribe/unsubscribe delegation (notifyObservers has custom logging)
+Object.assign(ReverseGeocoder.prototype, withObserver({ excludeNotify: true }));
 
 // MODULE EXPORT STRATEGY:
 // The file includes both default and named exports for flexibility, providing support

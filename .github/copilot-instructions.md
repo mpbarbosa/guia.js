@@ -200,11 +200,14 @@ After making any changes, ALWAYS run through these validation scenarios:
 
 #### Utilities (src/utils/)
 - `TimerManager` (src/utils/TimerManager.js) - Centralized timer management singleton
-  - **147 lines, prevents memory leaks**
-  - Tracks setInterval/setTimeout calls
+  - **162 lines, prevents memory leaks**
+  - Tracks setInterval/setTimeout calls with named IDs
   - Automatic cleanup on app shutdown
   - Node.js and browser compatible
-  - Use for all application timers to prevent leaks
+  - **REQUIRED**: Use for all application timers to prevent leaks
+  - **Migration complete**: SpeechSynthesisManager, VoiceManager, SpeechQueueProcessor, Chronometer (v0.8.7+)
+  - API: `timerManager.setInterval(callback, delay, id)`, `timerManager.setTimeout(callback, delay, id)`, `timerManager.clearTimer(id)`
+  - Returns string IDs for better debugging (e.g., 'speech-synthesis-queue', 'chronometer-display')
 
 ### API Integrations
 - **OpenStreetMap Nominatim**: `https://nominatim.openstreetmap.org/reverse` for geocoding

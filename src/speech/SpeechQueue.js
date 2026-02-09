@@ -1,5 +1,6 @@
 'use strict';
 import { log, warn, error } from '../utils/logger.js';
+import { withObserver } from '../utils/ObserverMixin.js';
 
 /**
  * Priority-based speech synthesis queue with automatic cleanup and observer pattern integration.
@@ -224,15 +225,6 @@ class SpeechQueue {
 		}
 		
 		this.observerSubject.subscribe(observer);
-	}
-
-	/**
-	 * Unsubscribes an observer from queue state changes.
-	 * 
-	 * @param {Object} observer - Observer object to unsubscribe
-	 */
-	unsubscribe(observer) {
-		this.observerSubject.unsubscribe(observer);
 	}
 
 	/**
@@ -500,5 +492,10 @@ class SpeechQueue {
 		return [...this.items]; // Shallow copy for read-only access
 	}
 }
+
+// Apply observer mixin for unsubscribe only (subscribe has custom validation, notifyObservers has custom args)
+const mixinMethods = withObserver({ excludeNotify: true });
+// Only apply unsubscribe, keep custom subscribe and notifyObservers
+Object.assign(SpeechQueue.prototype, { unsubscribe: mixinMethods.unsubscribe });
 
 export default SpeechQueue;

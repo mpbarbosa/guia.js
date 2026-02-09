@@ -1,5 +1,6 @@
 'use strict';
 import { log, warn, error } from '../utils/logger.js';
+import { escapeHtml } from '../utils/html-sanitizer.js';
 
 import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 
@@ -201,8 +202,9 @@ class HTMLAddressDisplayer {
 		}
 
 		// Handle error state with Portuguese localized error message
+		// XSS Protection: Sanitize error.message to prevent script injection
 		if (error) {
-			this.element.innerHTML = `<p class="error">Erro ao carregar endereço: ${error.message}</p>`;
+			this.element.innerHTML = `<p class="error">Erro ao carregar endereço: ${escapeHtml(error.message)}</p>`;
 			return;
 		}
 

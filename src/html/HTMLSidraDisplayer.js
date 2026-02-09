@@ -1,5 +1,6 @@
 'use strict';
 import { log, warn, error as logError } from '../utils/logger.js';
+import { escapeHtml } from '../utils/html-sanitizer.js';
 
 import { ADDRESS_FETCHED_EVENT, IBGE_LOADING_MESSAGE, IBGE_ERROR_MESSAGE, IBGE_UNAVAILABLE_MESSAGE } from '../config/defaults.js';
 
@@ -108,8 +109,9 @@ class HTMLSidraDisplayer {
 		}
 
 		// Handle error state with Portuguese localized error message
+		// XSS Protection: Sanitize error.message to prevent script injection
 		if (error) {
-			this.element.innerHTML = `<p class="error">${IBGE_ERROR_MESSAGE}: ${error.message}</p>`;
+			this.element.innerHTML = `<p class="error">${IBGE_ERROR_MESSAGE}: ${escapeHtml(error.message)}</p>`;
 			return;
 		}
 

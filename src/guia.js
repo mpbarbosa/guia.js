@@ -167,6 +167,10 @@ if (typeof window !== 'undefined') {
 		if (IbiraAPIFetchManager && typeof window !== 'undefined') {
 			window.IbiraAPIFetchManager = IbiraAPIFetchManager;
 		}
+	})
+	// FIXED: Add missing .catch() to prevent unhandled promise rejection
+	.catch((err) => {
+		warn('ibira.js loading failed:', err);
 	});
 }
 

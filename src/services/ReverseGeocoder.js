@@ -375,6 +375,10 @@ class ReverseGeocoder {
 					}
 					this.error = err;
 					this.notifyObservers(null, null, posEvent, false, err);
+					
+					// FIXED: Re-throw error after notification to prevent silent failure
+					// This ensures calling code can catch and handle the error appropriately
+					throw err;
 				});
 		}
 	}

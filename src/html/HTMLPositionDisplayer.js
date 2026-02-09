@@ -1,5 +1,6 @@
 'use strict';
 import { log, warn, error } from '../utils/logger.js';
+import { escapeHtml } from '../utils/html-sanitizer.js';
 
 /**
  * HTML-based position information displayer with coordinates and accuracy details.
@@ -205,8 +206,9 @@ class HTMLPositionDisplayer {
 		}
 
 		// Handle error state with detailed error information
+		// XSS Protection: Sanitize error.message to prevent script injection
 		if (error) {
-			this.element.innerHTML = `<p class="error">Erro ao obter posição: ${error.message}</p>`;
+			this.element.innerHTML = `<p class="error">Erro ao obter posição: ${escapeHtml(error.message)}</p>`;
 			return;
 		}
 

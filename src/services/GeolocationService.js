@@ -1,5 +1,7 @@
 'use strict';
 
+import { escapeHtml } from '../utils/html-sanitizer.js';
+
 /**
  * Geolocation service for browser-based location access.
  * 
@@ -143,12 +145,13 @@ const generateErrorDisplayHTML = (error) => {
 	const errorMessage = getGeolocationErrorMessage(error.code);
 
 	// Generate Material Design compatible error display
+	// XSS Protection: Sanitize error.message to prevent script injection
 	return `
 		<div class="location-error">
 			<h4>Erro na Obtenção da Localização</h4>
 			<p><strong>Código:</strong> ${error.code}</p>
 			<p><strong>Mensagem:</strong> ${errorMessage}</p>
-			<p><strong>Detalhes:</strong> ${error.message}</p>
+			<p><strong>Detalhes:</strong> ${escapeHtml(error.message)}</p>
 		</div>
 	`;
 };

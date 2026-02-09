@@ -38,6 +38,38 @@ A single-page web application (SPA) for tourist guidance, built on top of the [g
 - ♿ **Accessibility** - WCAG 2.1 compliant with ARIA support
 - 🔧 **Coordinate Converter** - Secondary utility: convert coordinates to addresses
 
+### ✨ Latest Features (v0.8.7-alpha)
+
+#### 🌆 Metropolitan Region Display
+Automatically displays metropolitan region context for municipalities in metropolitan areas:
+
+```
+┌─────────────────────────────────────┐
+│ Município                            │
+│ Região Metropolitana do Recife      │  ← NEW!
+│ Recife, PE                          │
+└─────────────────────────────────────┘
+```
+
+**Benefits**:
+- Better geographic context for users
+- Extracted from Nominatim `county` field
+- Supports 9 major Brazilian metropolitan regions
+- 77 comprehensive tests ensuring reliability
+
+#### 🗺️ State Abbreviation Display
+Enhanced geographic context with state codes:
+
+| Before | Now ✨ |
+|--------|--------|
+| "Recife" | "Recife, PE" |
+| "São Paulo" | "São Paulo, SP" |
+| "Salvador" | "Salvador, BA" |
+
+**Coverage**: All 26 Brazilian states + Federal District
+
+📚 **Learn More**: See [FEATURE_METROPOLITAN_REGION_DISPLAY.md](./docs/FEATURE_METROPOLITAN_REGION_DISPLAY.md) and [FEATURE_MUNICIPIO_STATE_DISPLAY.md](./docs/FEATURE_MUNICIPIO_STATE_DISPLAY.md) for complete details.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -129,6 +161,37 @@ npm run lint
 npm run lint:fix
 ```
 
+### Utility Scripts
+
+The project includes several automation and validation scripts accessible via npm:
+
+```bash
+# Version & Consistency Checks
+npm run check:version        # Verify version consistency across files
+npm run check:references     # Check for broken documentation references
+npm run check:terminology    # Validate terminology consistency
+
+# Documentation Updates
+npm run update:dates         # Update "Last Updated" metadata in docs
+npm run update:tests         # Update test count documentation
+npm run update:badges        # Update README badges
+
+# CDN & Distribution
+npm run cdn:generate         # Generate jsDelivr CDN URLs
+
+# CI/CD Testing
+npm run ci:test-local        # Simulate GitHub Actions workflow locally
+
+# API Documentation
+npm run docs:generate        # Generate JSDoc API documentation
+npm run docs:serve           # Serve docs on http://localhost:8080
+
+# Visual Testing
+npm run test:visual          # Run Selenium visual hierarchy tests
+```
+
+> **Tip**: Run `npm run ci:test-local` before pushing to catch issues early.
+
 ## 📁 Project Structure
 
 ```
@@ -173,7 +236,7 @@ guia_turistico/
 ├── libs/                         # Offline data libraries (SIDRA)
 ├── eslint.config.js              # ESLint v9 flat configuration
 ├── package.json                  # Node.js project configuration
-├── cdn-delivery.sh               # CDN URL generator script
+├── .github/scripts/cdn-delivery.sh               # CDN URL generator script
 ├── cdn-urls.txt                  # Pre-generated CDN URLs
 └── *.html                        # Test pages and demos
 ```
@@ -424,7 +487,7 @@ https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=<latitude>,<longit
 
 Guia.js can be delivered via **jsDelivr CDN** for easy integration into web projects with global distribution and automatic optimization.
 
-**Quick Start**: Run `./cdn-delivery.sh` to generate all CDN URLs for the current version.
+**Quick Start**: Run `./.github/scripts/cdn-delivery.sh` to generate all CDN URLs for the current version.
 
 **Reference**: [jsDelivr Documentation](https://www.jsdelivr.com/?docs=gh)
 
@@ -465,11 +528,11 @@ brew install node
 
 ### CDN URL Generator Script
 
-The `cdn-delivery.sh` script automatically generates CDN URLs based on your current version and commit:
+The `.github/scripts/cdn-delivery.sh` script automatically generates CDN URLs based on your current version and commit:
 
 ```bash
 # Generate all CDN URLs
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # Output includes:
 # - Version-specific URLs (recommended for production)
@@ -524,7 +587,7 @@ Current directory: /home/user/wrong/path
 **Solution**: Navigate to project root
 ```bash
 cd /path/to/guia_turistico
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 ```
 
 #### Error: Git not found
@@ -554,7 +617,7 @@ This script requires a Git repository to extract commit hash
 # Clone if needed
 git clone https://github.com/mpbarbosa/guia_turistico.git
 cd guia_turistico
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 ```
 
 #### Error: Failed to read package.json
@@ -608,7 +671,7 @@ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/ap
 
 ```bash
 # From project root directory
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # Output saved to cdn-urls.txt
 ```
@@ -617,7 +680,7 @@ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/ap
 
 #### When to Run the Script
 
-Run `cdn-delivery.sh` when you need CDN URLs:
+Run `.github/scripts/cdn-delivery.sh` when you need CDN URLs:
 
 - ✅ **After version bumps** - Update CDN URLs when `package.json` version changes
 - ✅ **Before releases** - Generate distribution URLs for release notes
@@ -629,7 +692,7 @@ Run `cdn-delivery.sh` when you need CDN URLs:
 
 ```bash
 # Generate all CDN URLs for current version
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # Output appears in terminal with color coding
 # Also saved to: cdn-urls.txt
@@ -644,7 +707,7 @@ npm version patch  # or minor, major
 # Creates: v0.6.1-alpha
 
 # 2. Generate CDN URLs
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # 3. Commit URLs file
 git add cdn-urls.txt package.json package-lock.json
@@ -664,7 +727,7 @@ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/packag
 **Scenario 2: Documentation Update**
 ```bash
 # Need current CDN URLs for docs
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # Copy URLs from cdn-urls.txt
 # Update documentation files
@@ -679,7 +742,7 @@ git push
 **Scenario 3: Pre-release Testing**
 ```bash
 # Use commit-based URL before tagging
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # Get commit URL from output:
 # https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@abc1234/src/guia.js
@@ -709,29 +772,29 @@ git push
 
 ```bash
 # Use defaults (recommended for main repository)
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # Generate URLs for your fork
-GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./cdn-delivery.sh
+GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./.github/scripts/cdn-delivery.sh
 
 # Custom main file
-MAIN_FILE="dist/guia.min.js" ./cdn-delivery.sh
+MAIN_FILE="dist/guia.min.js" ./.github/scripts/cdn-delivery.sh
 
 # Custom output file
-OUTPUT_FILE="production-urls.txt" ./cdn-delivery.sh
+OUTPUT_FILE="production-urls.txt" ./.github/scripts/cdn-delivery.sh
 
 # Combine multiple overrides
-GITHUB_USER="yourname" OUTPUT_FILE="my-urls.txt" ./cdn-delivery.sh
+GITHUB_USER="yourname" OUTPUT_FILE="my-urls.txt" ./.github/scripts/cdn-delivery.sh
 
 # Set for entire session
 export GITHUB_USER="yourname"
 export GITHUB_REPO="yourrepo"
-./cdn-delivery.sh  # Uses exported values
+./.github/scripts/cdn-delivery.sh  # Uses exported values
 ```
 
 **Configuration Display**:
 ```bash
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 🔍 Checking prerequisites...
 ✅ Node.js found: v20.19.5
 ✅ package.json found
@@ -751,7 +814,7 @@ $ ./cdn-delivery.sh
 **For Forks and Custom Setups**:
 ```bash
 # Permanent configuration (edit script directly)
-# Lines 87-90 in cdn-delivery.sh:
+# Lines 87-90 in .github/scripts/cdn-delivery.sh:
 GITHUB_USER="${GITHUB_USER:-yourname}"
 GITHUB_REPO="${GITHUB_REPO:-yourrepo}"
 MAIN_FILE="${MAIN_FILE:-custom/path.js}"
@@ -764,11 +827,11 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 
 **Future**: Planned options:
 ```bash
-./cdn-delivery.sh --help           # Show usage help
-./cdn-delivery.sh --test           # Test CDN availability only
-./cdn-delivery.sh --version X.Y.Z  # Generate URLs for specific version
-./cdn-delivery.sh --commit abc123  # Generate URLs for specific commit
-./cdn-delivery.sh --quiet          # Suppress output, only save file
+./.github/scripts/cdn-delivery.sh --help           # Show usage help
+./.github/scripts/cdn-delivery.sh --test           # Test CDN availability only
+./.github/scripts/cdn-delivery.sh --version X.Y.Z  # Generate URLs for specific version
+./.github/scripts/cdn-delivery.sh --commit abc123  # Generate URLs for specific commit
+./.github/scripts/cdn-delivery.sh --quiet          # Suppress output, only save file
 ```
 
 #### Output Files
@@ -799,7 +862,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js
 
 1. **Run after every version change**
    ```bash
-   npm version patch && ./cdn-delivery.sh
+   npm version patch && ./.github/scripts/cdn-delivery.sh
    ```
 
 2. **Commit cdn-urls.txt with version bumps**
@@ -823,7 +886,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js
    git push
    
    # Generate URLs
-   ./cdn-delivery.sh
+   ./.github/scripts/cdn-delivery.sh
    
    # Test commit URL immediately
    # Then create tag once tested
@@ -841,7 +904,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/guia.js
 **Script fails silently**:
 ```bash
 # Run with bash -x for debugging
-bash -x ./cdn-delivery.sh
+bash -x ./.github/scripts/cdn-delivery.sh
 ```
 
 **URLs not working**:
@@ -1086,10 +1149,10 @@ git push origin v0.6.0-alpha
 
 ### 📁 CDN Files Reference
 
-- **`cdn-delivery.sh`** - Shell script to generate all CDN URLs with current version
+- **`.github/scripts/cdn-delivery.sh`** - Shell script to generate all CDN URLs with current version
 - **`cdn-urls.txt`** - Pre-generated CDN URLs for quick reference
 
-Run `./cdn-delivery.sh` anytime to generate updated URLs after version changes.
+Run `./.github/scripts/cdn-delivery.sh` anytime to generate updated URLs after version changes.
 
 ## ⚙️ Configuration
 
@@ -1390,4 +1453,4 @@ ISC License - See repository for details
 
 **Version**: 0.7.1-alpha (active development)  
 **Status**: Active Development  
-**Last Updated**: 2026-01-16
+**Last Updated**: 2026-02-09

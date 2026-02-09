@@ -119,3 +119,15 @@ Initial release with guia.js integration.
 - IBGE integration
 - Material Design 3 UI
 - Accessibility compliance (WCAG 2.1)
+
+---
+
+[Unreleased]: https://github.com/mpbarbosa/guia_turistico/compare/v0.8.7-alpha...HEAD
+[0.8.7-alpha]: https://github.com/mpbarbosa/guia_turistico/compare/v0.6.0-alpha...v0.8.7-alpha
+[0.7.1-alpha]: https://github.com/mpbarbosa/guia_turistico/compare/v0.7.0-alpha...v0.7.1-alpha
+[0.7.0-alpha]: https://github.com/mpbarbosa/guia_turistico/compare/v0.6.0-alpha...v0.7.0-alpha
+
+---
+
+**Last Updated**: 2026-02-09  
+**Status**: ✅ Active

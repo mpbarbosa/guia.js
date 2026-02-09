@@ -4,6 +4,7 @@
  */
 
 import { log, warn, error } from './utils/logger.js';
+import { showError } from './utils/toast.js';
 
 (function() {
   'use strict';
@@ -83,7 +84,7 @@ import { log, warn, error } from './utils/logger.js';
    */
   function requestPermission() {
     if (!navigator.geolocation) {
-      alert('Geolocalização não é suportada neste navegador.');
+      showError('Geolocalização não é suportada neste navegador.');
       dismissBanner();
       return;
     }

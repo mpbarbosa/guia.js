@@ -9,7 +9,7 @@
 
 ## Summary
 
-The cdn-delivery.sh script now supports **environment variable overrides** for all configuration values, with full documentation and visual feedback.
+The .github/scripts/cdn-delivery.sh script now supports **environment variable overrides** for all configuration values, with full documentation and visual feedback.
 
 ---
 
@@ -26,7 +26,7 @@ The cdn-delivery.sh script now supports **environment variable overrides** for a
 
 ### Code Implementation
 
-**Location**: `cdn-delivery.sh` Lines 87-98
+**Location**: `.github/scripts/cdn-delivery.sh` Lines 87-98
 
 ```bash
 # Project configuration (can be overridden via environment variables)
@@ -52,7 +52,7 @@ echo ""
 
 ### 1. Use Defaults (Original Repository)
 ```bash
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 
 ⚙️  Configuration:
    GitHub User: mpbarbosa
@@ -63,7 +63,7 @@ $ ./cdn-delivery.sh
 
 ### 2. Generate URLs for Fork
 ```bash
-$ GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./cdn-delivery.sh
+$ GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./.github/scripts/cdn-delivery.sh
 
 ⚙️  Configuration:
    GitHub User: yourname
@@ -76,7 +76,7 @@ $ GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./cdn-delivery.sh
 
 ### 3. Custom Main File
 ```bash
-$ MAIN_FILE="dist/guia.min.js" ./cdn-delivery.sh
+$ MAIN_FILE="dist/guia.min.js" ./.github/scripts/cdn-delivery.sh
 
 ⚙️  Configuration:
    GitHub User: mpbarbosa
@@ -89,7 +89,7 @@ $ MAIN_FILE="dist/guia.min.js" ./cdn-delivery.sh
 
 ### 4. Custom Output File
 ```bash
-$ OUTPUT_FILE="production-urls.txt" ./cdn-delivery.sh
+$ OUTPUT_FILE="production-urls.txt" ./.github/scripts/cdn-delivery.sh
 
 ⚙️  Configuration:
    GitHub User: mpbarbosa
@@ -105,7 +105,7 @@ $ OUTPUT_FILE="production-urls.txt" ./cdn-delivery.sh
 $ GITHUB_USER="yourname" \
   GITHUB_REPO="yourrepo" \
   OUTPUT_FILE="my-urls.txt" \
-  ./cdn-delivery.sh
+  ./.github/scripts/cdn-delivery.sh
 
 ⚙️  Configuration:
    GitHub User: yourname
@@ -121,13 +121,13 @@ $ export GITHUB_USER="yourname"
 $ export GITHUB_REPO="yourrepo"
 
 # Now all invocations use your values
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 ⚙️  Configuration:
    GitHub User: yourname
    Repository: yourrepo
    ...
 
-$ ./cdn-delivery.sh  # Still uses yourname/yourrepo
+$ ./.github/scripts/cdn-delivery.sh  # Still uses yourname/yourrepo
 ```
 
 ---
@@ -143,7 +143,7 @@ $ ./cdn-delivery.sh  # Still uses yourname/yourrepo
 
 ```bash
 # Usage:
-#   ./cdn-delivery.sh
+#   ./.github/scripts/cdn-delivery.sh
 #
 #   Environment Variables (optional):
 #     GITHUB_USER    - GitHub username (default: mpbarbosa)
@@ -153,10 +153,10 @@ $ ./cdn-delivery.sh  # Still uses yourname/yourrepo
 #
 #   Examples:
 #     # Use defaults
-#     ./cdn-delivery.sh
+#     ./.github/scripts/cdn-delivery.sh
 #
 #     # Override for fork
-#     GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./cdn-delivery.sh
+#     GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./.github/scripts/cdn-delivery.sh
 ```
 
 ### 2. README.md (Lines 618-680)
@@ -195,7 +195,7 @@ $ ./cdn-delivery.sh  # Still uses yourname/yourrepo
 **Solution**:
 ```bash
 # Generate URLs for your fork
-GITHUB_USER="myuser" GITHUB_REPO="myrepo" ./cdn-delivery.sh
+GITHUB_USER="myuser" GITHUB_REPO="myrepo" ./.github/scripts/cdn-delivery.sh
 
 # Output includes:
 # https://cdn.jsdelivr.net/gh/myuser/myrepo@0.6.0-alpha/src/guia.js
@@ -207,10 +207,10 @@ GITHUB_USER="myuser" GITHUB_REPO="myrepo" ./cdn-delivery.sh
 **Solution**:
 ```bash
 # Development URLs (unminified)
-MAIN_FILE="src/guia.js" OUTPUT_FILE="dev-urls.txt" ./cdn-delivery.sh
+MAIN_FILE="src/guia.js" OUTPUT_FILE="dev-urls.txt" ./.github/scripts/cdn-delivery.sh
 
 # Production URLs (minified)
-MAIN_FILE="dist/guia.min.js" OUTPUT_FILE="prod-urls.txt" ./cdn-delivery.sh
+MAIN_FILE="dist/guia.min.js" OUTPUT_FILE="prod-urls.txt" ./.github/scripts/cdn-delivery.sh
 
 # Now you have:
 # - dev-urls.txt with src/guia.js URLs
@@ -225,7 +225,7 @@ MAIN_FILE="dist/guia.min.js" OUTPUT_FILE="prod-urls.txt" ./cdn-delivery.sh
 # .github/workflows/cdn-urls.yml
 - name: Generate CDN URLs
   run: |
-    OUTPUT_FILE="cdn-urls-${{ github.sha }}.txt" ./cdn-delivery.sh
+    OUTPUT_FILE="cdn-urls-${{ github.sha }}.txt" ./.github/scripts/cdn-delivery.sh
     
 - name: Upload artifact
   uses: actions/upload-artifact@v3
@@ -241,7 +241,7 @@ MAIN_FILE="dist/guia.min.js" OUTPUT_FILE="prod-urls.txt" ./cdn-delivery.sh
 ```bash
 # Generate URLs for each repo
 for repo in guia_js guia_extras guia_plugins; do
-  GITHUB_REPO="$repo" OUTPUT_FILE="${repo}-urls.txt" ./cdn-delivery.sh
+  GITHUB_REPO="$repo" OUTPUT_FILE="${repo}-urls.txt" ./.github/scripts/cdn-delivery.sh
 done
 
 # Results:
@@ -256,7 +256,7 @@ done
 
 ### Test 1: Default Values
 ```bash
-$ ./cdn-delivery.sh | grep "Configuration:" -A 4
+$ ./.github/scripts/cdn-delivery.sh | grep "Configuration:" -A 4
 
 ⚙️  Configuration:
    GitHub User: mpbarbosa
@@ -269,7 +269,7 @@ $ ./cdn-delivery.sh | grep "Configuration:" -A 4
 
 ### Test 2: Override GITHUB_USER
 ```bash
-$ GITHUB_USER="testuser" ./cdn-delivery.sh | grep "Configuration:" -A 4
+$ GITHUB_USER="testuser" ./.github/scripts/cdn-delivery.sh | grep "Configuration:" -A 4
 
 ⚙️  Configuration:
    GitHub User: testuser
@@ -283,7 +283,7 @@ $ GITHUB_USER="testuser" ./cdn-delivery.sh | grep "Configuration:" -A 4
 ### Test 3: Override Multiple Variables
 ```bash
 $ GITHUB_USER="test" GITHUB_REPO="testrepo" OUTPUT_FILE="test.txt" \
-  ./cdn-delivery.sh | grep "Configuration:" -A 4
+  ./.github/scripts/cdn-delivery.sh | grep "Configuration:" -A 4
 
 ⚙️  Configuration:
    GitHub User: test
@@ -296,7 +296,7 @@ $ GITHUB_USER="test" GITHUB_REPO="testrepo" OUTPUT_FILE="test.txt" \
 
 ### Test 4: Custom Output File Created
 ```bash
-$ OUTPUT_FILE="custom.txt" ./cdn-delivery.sh > /dev/null
+$ OUTPUT_FILE="custom.txt" ./.github/scripts/cdn-delivery.sh > /dev/null
 $ ls -l custom.txt
 
 -rw-rw-r-- 1 user user 1009 Jan  1 12:21 custom.txt
@@ -306,7 +306,7 @@ $ ls -l custom.txt
 
 ### Test 5: Invalid Main File
 ```bash
-$ MAIN_FILE="nonexistent.js" ./cdn-delivery.sh
+$ MAIN_FILE="nonexistent.js" ./.github/scripts/cdn-delivery.sh
 
 ⚙️  Configuration:
    GitHub User: mpbarbosa
@@ -355,7 +355,7 @@ The project structure may have changed
 
 ### Before (Hardcoded)
 ```bash
-# cdn-delivery.sh (old)
+# .github/scripts/cdn-delivery.sh (old)
 GITHUB_USER="mpbarbosa"
 GITHUB_REPO="guia_js"
 OUTPUT_FILE="cdn-urls.txt"
@@ -367,17 +367,17 @@ OUTPUT_FILE="cdn-urls.txt"
 
 ### After (Configurable)
 ```bash
-# cdn-delivery.sh (new)
+# .github/scripts/cdn-delivery.sh (new)
 GITHUB_USER="${GITHUB_USER:-mpbarbosa}"
 GITHUB_REPO="${GITHUB_REPO:-guia_js}"
 OUTPUT_FILE="${OUTPUT_FILE:-cdn-urls.txt}"
 
 # For forks: 
-GITHUB_USER="yourname" ./cdn-delivery.sh
+GITHUB_USER="yourname" ./.github/scripts/cdn-delivery.sh
 
 # For multiple configs:
-OUTPUT_FILE="dev.txt" ./cdn-delivery.sh
-OUTPUT_FILE="prod.txt" ./cdn-delivery.sh
+OUTPUT_FILE="dev.txt" ./.github/scripts/cdn-delivery.sh
+OUTPUT_FILE="prod.txt" ./.github/scripts/cdn-delivery.sh
 
 # Configuration displayed:
 ⚙️  Configuration:

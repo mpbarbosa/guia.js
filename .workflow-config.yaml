@@ -194,6 +194,7 @@ change_detection:
         - coverage_report
         - quality_checks
         - doc_validation
+        - git_finalization
       description: "Run all validation steps for new features"
     
     fix:
@@ -202,12 +203,14 @@ change_detection:
         - syntax_validation
         - test_execution
         - quality_checks
+        - git_finalization
       description: "Focus on testing and quality for bug fixes"
     
     docs:
       steps:
         - syntax_validation
         - doc_validation
+        - git_finalization
       description: "Minimal validation for documentation changes"
     
     refactor:
@@ -217,18 +220,21 @@ change_detection:
         - test_execution
         - coverage_report
         - quality_checks
+        - git_finalization
       description: "Comprehensive testing for refactoring"
     
     test:
       steps:
         - syntax_validation
         - test_execution
+        - git_finalization
       description: "Run test suite for test changes"
     
     style:
       steps:
         - syntax_validation
         - quality_checks
+        - git_finalization
       description: "Syntax and style validation only"
     
     perf:
@@ -237,17 +243,20 @@ change_detection:
         - syntax_validation
         - test_execution
         - coverage_report
+        - git_finalization
       description: "Full testing for performance changes"
     
     chore:
       steps:
         - security_audit
         - syntax_validation
+        - git_finalization
       description: "Minimal validation for maintenance tasks"
     
     ci:
       steps:
         - syntax_validation
+        - git_finalization
       description: "Syntax check only for CI changes"
     
     build:
@@ -255,6 +264,7 @@ change_detection:
         - security_audit
         - syntax_validation
         - test_execution
+        - git_finalization
       description: "Validate build system changes"
   
   # Fallback configuration
@@ -264,6 +274,7 @@ change_detection:
       - syntax_validation
       - test_execution
       - coverage_report
+      - git_finalization
     description: "Default steps when type cannot be determined"
   
   # Pattern detection (if commit message doesn't follow convention)

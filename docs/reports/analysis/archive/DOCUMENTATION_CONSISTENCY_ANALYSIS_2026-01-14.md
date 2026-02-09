@@ -398,7 +398,7 @@ Update line counts quarterly or add note "(approximate)". Line count precision i
 **Impact**: Users may use unstable CDN URLs
 
 **Current State**:
-- `cdn-delivery.sh` script exists and works correctly ✅
+- `.github/scripts/cdn-delivery.sh` script exists and works correctly ✅
 - README warns about version-specific vs branch-based URLs ✅
 - Copilot instructions mention script but lack usage examples
 
@@ -408,7 +408,7 @@ Add to `.github/copilot-instructions.md` around line 250:
 ```markdown
 ### CDN URL Generation Best Practices
 
-**When to run `cdn-delivery.sh`**:
+**When to run `.github/scripts/cdn-delivery.sh`**:
 - After version bumps (`npm version patch|minor|major`)
 - Before creating git tags
 - Before releases to verify CDN availability
@@ -417,7 +417,7 @@ Add to `.github/copilot-instructions.md` around line 250:
 ```bash
 # Recommended workflow
 npm version minor           # Updates package.json
-./cdn-delivery.sh          # Regenerates cdn-urls.txt
+./.github/scripts/cdn-delivery.sh          # Regenerates cdn-urls.txt
 git add cdn-urls.txt package.json
 git commit -m "chore: bump version to $(node -p "require('./package.json').version")"
 git tag v$(node -p "require('./package.json').version")

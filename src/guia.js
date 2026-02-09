@@ -1,5 +1,6 @@
 'use strict';
 import { log as logToConsole, warn as warnToConsole, error as errorToConsole } from './utils/logger.js';
+import { showError, showInfo } from './utils/toast.js';
 
 // Import utility modules  
 import { calculateDistance, delay } from './utils/distance.js';
@@ -334,8 +335,8 @@ function displayError(error) {
             </div>
         `;
 	} else {
-		// Fallback to alert if no suitable element found
-		alert(`Erro: ${error.message}`);
+		// Fallback to toast notification if no suitable element found
+		showError(`Erro: ${error.message}`);
 	}
 }
 
@@ -387,7 +388,7 @@ function getAddressType(addressData) {
  */
 function findNearbyRestaurants(latitude, longitude) {
 	// Implementation would go here for restaurant search
-	alert(`Procurando restaurantes próximos a ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+	showInfo(`Procurando restaurantes próximos a ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
 }
 
 /**
@@ -402,7 +403,7 @@ function findNearbyRestaurants(latitude, longitude) {
  */
 function fetchCityStatistics(latitude, longitude) {
 	// Implementation would go here for city statistics
-	alert(`Obtendo estatísticas da cidade para ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+	showInfo(`Obtendo estatísticas da cidade para ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
 }
 
 

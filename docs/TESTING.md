@@ -38,6 +38,9 @@ npm test -- __tests__/e2e
 # Executar arquivo E2E específico
 npm test -- __tests__/e2e/CompleteGeolocationWorkflow.e2e.test.js
 
+# Executar testes visuais de hierarquia (Selenium)
+npm run test:visual
+
 # Executar testes com cobertura de código
 npm run test:coverage
 
@@ -224,6 +227,66 @@ npx jest --detectOpenHandles --forceExit
 npx jest --clearCache
 ```
 
+## Visual Hierarchy Tests
+
+### Overview
+
+The project includes automated visual hierarchy tests using Selenium to verify that location information (município and bairro cards) is visually more prominent than action buttons.
+
+### Prerequisites
+
+- **Python 3**: Required for running the test script and HTTP server
+- **Selenium**: Installed automatically if missing
+- **Browser**: Chrome or Firefox with appropriate driver
+
+### Running Visual Tests
+
+```bash
+# Via npm script (recommended)
+npm run test:visual
+
+# Direct execution
+./tests/integration/run_visual_hierarchy_tests.sh
+```
+
+### What Gets Tested
+
+The visual hierarchy test script:
+
+1. **Starts HTTP Server**: Launches a local server on port 8080
+2. **Runs Selenium Tests**: Automated browser tests for visual hierarchy
+3. **Validates Layout**: Checks that location cards are more prominent than buttons
+4. **Cleanup**: Automatically stops the server after tests complete
+
+### Test Assertions
+
+- ✅ Location cards (município/bairro) are larger than action buttons (at least 2x height)
+- ✅ Cards have prominent visual styling (gradient background, shadows, large fonts)
+- ✅ Buttons appear secondary with minimal styling
+- ✅ Color contrast meets accessibility standards
+
+### Manual Testing
+
+For manual verification, see detailed checklist in:
+- [Visual Hierarchy Tests Guide](./testing/VISUAL_HIERARCHY_TESTS.md)
+
+### Test Output
+
+Successful test output:
+```
+========================================
+Visual Hierarchy Integration Tests
+========================================
+
+✓ Server started (PID: 12345)
+✓ Running Selenium tests...
+✓ Visual hierarchy validated
+✓ All tests passed
+
+Cleaning up...
+✓ Server stopped
+```
+
 ---
 
 ## Related Documentation
@@ -232,6 +295,7 @@ npx jest --clearCache
 - [Test Strategy](./testing/TEST_STRATEGY.md) - Overall testing philosophy and approach
 - [Test Infrastructure](./testing/TEST_INFRASTRUCTURE.md) - Test execution and coverage details
 - [Testing HTML Generation](./TESTING_HTML_GENERATION.md) - HTML display component testing
+- [Visual Hierarchy Tests](./testing/VISUAL_HIERARCHY_TESTS.md) - Manual and automated visual hierarchy testing
 
 ### Development Guides
 - [Contributing Guidelines](../.github/CONTRIBUTING.md) - How to contribute with tests

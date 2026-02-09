@@ -65,3 +65,6 @@ tests/integration/__pycache__/
 
 # Jest cache directory
 .jest-cache/
+
+# JSDoc generated API documentation
+docs/api-generated/

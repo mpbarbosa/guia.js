@@ -140,7 +140,7 @@ Comprehensive audit of guia.js documentation completed on 2026-01-01. This docum
 
 ## 🔧 Automation & Scripts Status
 
-### CDN Delivery Script (`cdn-delivery.sh`) ✅
+### CDN Delivery Script (`.github/scripts/cdn-delivery.sh`) ✅
 **Status**: FULLY DOCUMENTED & ENHANCED
 
 **Features**:
@@ -228,7 +228,7 @@ OUTPUT_FILE="my-urls.txt"   # Default: cdn-urls.txt
 ### Well Documented ✅
 - **OpenStreetMap/Nominatim API**: `docs/api-integration/NOMINATIM_INTEGRATION.md`
 - **IBGE Integration**: `docs/IBIRA_INTEGRATION.md`
-- **CDN Delivery**: `README.md` and `cdn-delivery.sh` header
+- **CDN Delivery**: `README.md` and `.github/scripts/cdn-delivery.sh` header
 
 ### Needs Enhancement 🔧
 - **Google Maps Integration**: Mentioned but no dedicated guide (future enhancement)
@@ -329,7 +329,7 @@ Create: `docs/MIGRATION_GUIDE.md`
 - **Total**: 24/24 issues resolved (100%)
 
 ### Scripts Enhanced
-- `cdn-delivery.sh`: Added prerequisites validation, error handling, environment variables
+- `.github/scripts/cdn-delivery.sh`: Added prerequisites validation, error handling, environment variables
 - `test-workflow-locally.sh`: Fixed exit code bug (Issue #8), added error documentation
 
 ### Quality Metrics

@@ -687,7 +687,7 @@ npm run test:all
 ### Documentation Maintenance Scripts
 ```bash
 # Version consistency checker
-./scripts/check-version-consistency.sh
+./.github/scripts/check-version-consistency.sh
 
 # Test count updater
 ./scripts/update-test-counts.sh

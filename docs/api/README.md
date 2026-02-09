@@ -1,7 +1,8 @@
 # API Documentation - Guia Turístico
 
 **Version**: 0.8.7-alpha  
-**Last Updated**: 2026-02-09
+**Last Updated**: 2026-02-09  
+**Service APIs Documentation Complete**: GeolocationService, ReverseGeocoder, ChangeDetectionCoordinator
 
 ## Overview
 

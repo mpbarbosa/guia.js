@@ -9,7 +9,7 @@
 
 ## Changes Made
 
-### 1. Enhanced cdn-delivery.sh Script
+### 1. Enhanced .github/scripts/cdn-delivery.sh Script
 
 **Added** (Lines 1-85):
 - Comprehensive header with exit codes documentation
@@ -33,7 +33,7 @@ fi
 # Check package.json exists
 if [ ! -f "package.json" ]; then
     echo "Error: package.json not found"
-    echo "Fix: cd /path/to/guia_js && ./cdn-delivery.sh"
+    echo "Fix: cd /path/to/guia_js && ./.github/scripts/cdn-delivery.sh"
     exit 1
 fi
 
@@ -69,7 +69,7 @@ fi
 
 ## Summary Files Created
 
-1. ✅ Updated `cdn-delivery.sh` with error checks
+1. ✅ Updated `.github/scripts/cdn-delivery.sh` with error checks
 2. ✅ Added error handling to README.md (82 lines)
 3. ✅ Created ERROR_HANDLING_DOCUMENTATION.md (this file)
 

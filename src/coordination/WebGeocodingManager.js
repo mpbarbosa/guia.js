@@ -92,6 +92,7 @@ import DisplayerFactory from '../html/DisplayerFactory.js';
 
 // Import utility functions
 import { log, warn, error } from '../utils/logger.js';
+import { showError } from '../utils/toast.js';
 import { withObserver } from '../utils/ObserverMixin.js';
 
 /**
@@ -891,8 +892,8 @@ class WebGeocodingManager {
 				</div>
 			`;
 		} else {
-			// Fallback to alert if no suitable element found
-			alert(`Erro: ${errorObj.message}`);
+			// Fallback to toast notification if no suitable element found
+			showError(`Erro: ${errorObj.message}`);
 		}
 	}
 

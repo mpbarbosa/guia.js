@@ -16,6 +16,7 @@
     "test:features": "node --experimental-vm-modules node_modules/jest/bin/jest.js __tests__/features",
     "test:services": "node --experimental-vm-modules node_modules/jest/bin/jest.js __tests__/services",
     "test:changed": "node --experimental-vm-modules node_modules/jest/bin/jest.js --onlyChanged --passWithNoTests",
+    "test:visual": "./tests/integration/run_visual_hierarchy_tests.sh",
     "lint": "eslint 'src/**/*.js' '__tests__/**/*.js'",
     "lint:fix": "eslint --fix 'src/**/*.js' '__tests__/**/*.js'",
     "deps:check": "npx npm-check-updates",
@@ -25,10 +26,17 @@
     "deps:doctor": "npx npm-check-updates --doctor",
     "deps:audit": "npm audit && npm outdated",
     "test:chrome": "node tests/integration/test_chrome_geolocation.js",
-    "check:version": "./scripts/check-version-consistency.sh",
+    "check:version": "./.github/scripts/check-version-consistency.sh",
+    "check:references": "./.github/scripts/check-references.sh",
+    "check:terminology": "./.github/scripts/check-terminology.sh",
     "update:tests": "./scripts/update-test-counts.sh",
     "update:dates": "./scripts/update-doc-dates.sh",
+    "update:badges": "./.github/scripts/update-badges.sh",
+    "cdn:generate": "./.github/scripts/cdn-delivery.sh",
+    "ci:test-local": "./.github/scripts/test-workflow-locally.sh",
     "automation:test": "npm run check:version && echo '✅ Automation scripts ready'",
+    "docs:generate": "jsdoc -c jsdoc.json -r src/ -d docs/api-generated/",
+    "docs:serve": "npx http-server docs/api-generated/ -p 8080",
     "prepare": "husky"
   },
   "keywords": [
@@ -76,9 +84,11 @@
   },
   "devDependencies": {
     "eslint": "^9.39.2",
+    "http-server": "^14.1.1",
     "husky": "^9.1.7",
     "jest": "^30.1.3",
     "jest-environment-jsdom": "^30.2.0",
+    "jsdoc": "^4.0.5",
     "jsdom": "^25.0.1",
     "puppeteer": "^24.36.1"
   },

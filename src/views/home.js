@@ -22,211 +22,91 @@ import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 import { extractDistrito, extractBairro, determineLocationType, formatLocationValue } from '../address-parser.js';
 import timerManager from '../utils/TimerManager.js';
 import { log, warn, error } from '../utils/logger.js';
+import { showInfo } from '../utils/toast.js';
 
 /**
- * Home view configuration object
- * @type {Object}
- * @property {string} title - Page title for document.title
- * @property {Array<string>} styles - CSS files to load for this view
- * @property {Function} render - Returns HTML string for view content
- * @property {Function} mount - Called after view is mounted to DOM
- * @property {Function} cleanup - Called before view is unmounted
+ * Home view implementation
+ * 
+ * Note: This file contains helper functions for the home view.
+ * The actual HTML is embedded in src/index.html and initialization
+ * is handled by src/app.js.
+ * 
+ * @deprecated The view configuration object structure is unused.
+ * This file is kept for potential future refactoring.
  */
-export default {
-  title: 'Guia Turístico - Localização',
+
+// State
+let continuousMode = false;
+let firstUpdate = true;
+let manager = null;
+let sidraDisplayer = null;
+
+async function mount(container) {
+  log("(home-view) Mounting home view...");
   
-  styles: [],
-  
-  /**
-   * Render home view HTML
-   * @returns {string} HTML string for home view
-   */
-  render() {
-    return `
-      <header>
-        <h1>Guia Turístico</h1>
-        <p>Descubra sua localização e encontre restaurantes e estatísticas da cidade próximos.</p>
-        <p>
-          <span id="tracking-timer-container" style="display: none;">
-            Tempo decorrido: <span id="chronometer" aria-live="polite">00:00</span> | 
-            Fila fala: <span id="tam-fila-fala" aria-live="polite">0</span> | 
-          </span>
-          <abbr title="Dados salvos localmente para acesso rápido" aria-label="Cache: dados salvos localmente">Cache</abbr>: 
-          <span id="tam-cache" aria-live="polite">0</span> itens
-        </p>
-      </header>
-
-      <!-- Tracking Mode Toggle -->
-      <section class="tracking-mode-section" aria-label="Modo de rastreamento">
-        <div class="tracking-mode-toggle">
-          <input 
-            type="checkbox" 
-            id="continuous-tracking-toggle" 
-            aria-describedby="tracking-mode-description"
-            role="switch"
-            aria-checked="false"
-          />
-          <label for="continuous-tracking-toggle">
-            <strong>Rastreamento Contínuo</strong>
-            <span id="tracking-mode-description" class="toggle-description">
-              Ative para atualizar sua localização automaticamente enquanto você se move
-            </span>
-          </label>
-        </div>
-        
-        <!-- Get Location Button (visible only in single-position mode) -->
-        <div id="get-location-button-container" style="margin-top: 16px;">
-          <button 
-            id="getLocationBtn" 
-            class="md3-button-filled"
-            aria-label="Obter localização atual"
-          >
-            📍 Obter Localização Atual
-          </button>
-        </div>
-      </section>
-
-      <nav aria-label="Ações da página">
-        <div class="button-container">
-          <button 
-            id="findRestaurantsBtn" 
-            disabled 
-            aria-disabled="true"
-            aria-describedby="restaurants-status"
-            aria-label="Encontrar restaurantes próximos"
-            class="md3-button-filled"
-          >
-            <span class="button-text">Encontrar Restaurantes Próximos</span>
-            <span class="button-loading" aria-hidden="true" hidden>⏳</span>
-          </button>
-          <span id="restaurants-status" class="button-status" role="status" aria-live="polite">
-            Aguardando localização...
-          </span>
-        </div>
-        
-        <div class="button-container">
-          <button 
-            id="cityStatsBtn" 
-            disabled 
-            aria-disabled="true"
-            aria-describedby="stats-status"
-            aria-label="Obter estatísticas da cidade"
-            class="md3-button-filled"
-          >
-            <span class="button-text">Obter Estatísticas da Cidade</span>
-            <span class="button-loading" aria-hidden="true" hidden>⏳</span>
-          </button>
-          <span id="stats-status" class="button-status" role="status" aria-live="polite">
-            Aguardando localização...
-          </span>
-        </div>
-      </nav>
-      
-      <!-- Geolocation status banner container -->
-      <div id="geolocation-banner-container"></div>
-
-      <!-- Location Highlight Cards -->
-      <section class="location-highlights" aria-label="Destaques de localização">
-        <div class="highlight-card" role="region" aria-labelledby="municipio-label">
-          <div id="municipio-label" class="highlight-card-label">Município</div>
-          <div id="home-municipio-value" class="highlight-card-value" aria-live="polite">—</div>
-        </div>
-        <div id="location-type-card" class="highlight-card" role="region" aria-labelledby="location-type-label">
-          <div id="location-type-label" class="highlight-card-label">Bairro</div>
-          <div id="home-location-type-value" class="highlight-card-value" aria-live="polite">—</div>
-        </div>
-      </section>
-
-      <section id="coordinates" aria-labelledby="coordinates-heading">
-        <h2 id="coordinates-heading" class="sr-only">Coordenadas</h2>
-        <p><strong>Coordenadas:</strong> <span id="lat-long-display" aria-live="polite">Aguardando localização...</span></p>
-      </section>
-
-      <section id="reference-place" aria-labelledby="reference-place-heading">
-        <h2 id="reference-place-heading" class="sr-only">Local de Referência</h2>
-        <p><strong>Local de referência:</strong> <span id="reference-place-display" aria-live="polite">Aguardando localização...</span></p>
-      </section>
-
-      <section id="standardized-address" aria-labelledby="address-heading">
-        <h2 id="address-heading" class="sr-only">Endereço Padronizado</h2>
-        <p><strong>Endereço:</strong> <span id="endereco-padronizado-display" aria-live="polite">Aguardando localização...</span></p>
-      </section>
-
-      <section class="section" id="dadosSidra" aria-labelledby="location-info-heading">
-        <h2 id="location-info-heading">Informações da Localização</h2>
-      </section>
-      
-      <section id="locationResult" aria-live="polite" aria-label="Resultado da localização">
-      </section>
-    `;
-  },
-  
-  async mount(container) {
-    log("(home-view) Mounting home view...");
+  try {
+    // Initialize state
+    continuousMode = false;
+    firstUpdate = true;
     
-    try {
-      // Initialize state
-      this.continuousMode = false;
-      this.firstUpdate = true;
-      
-      // Initialize geolocation manager
-      this.manager = await this._initializeGeocodingManager();
-      
-      // Expose manager to window for E2E testing
-      if (typeof window !== 'undefined') {
-        window.webGeocodingManager = this.manager;
-      }
-      
-      // Initialize SIDRA displayer
-      this._initializeSidraDisplayer();
-      
-      // Setup handlers
-      this._setupLocationUpdateHandlers();
-      this._setupCacheDisplayHandlers();
-      this._setupButtonHandlers();
-      this._setupGetLocationButton();
-      this._setupTrackingModeToggle();
-    } catch (err) {
-      error("(home-view) Error mounting home view:", err);
-      // Display user-friendly error message
+    // Initialize geolocation manager
+    manager = await _initializeGeocodingManager();
+    
+    // Expose manager to window for E2E testing
+    if (typeof window !== 'undefined') {
+      window.webGeocodingManager = manager;
+    }
+    
+    // Initialize SIDRA displayer
+    _initializeSidraDisplayer();
+    
+    // Setup handlers
+    _setupLocationUpdateHandlers();
+    _setupCacheDisplayHandlers();
+    _setupButtonHandlers();
+    _setupGetLocationButton();
+    _setupTrackingModeToggle();
+  } catch (err) {
+    error("(home-view) Error mounting home view:", err);
+    // Display user-friendly error message
       if (container) {
         container.innerHTML = `
           <div class="error-message" role="alert">
             <h2>❌ Erro ao Inicializar</h2>
-            <p>Não foi possível inicializar a visualização. Por favor, recarregue a página.</p>
-            <p class="error-details">${err.message}</p>
-          </div>
-        `;
-      }
-      throw err; // Re-throw for app-level handling
+      <p>Não foi possível inicializar a visualização. Por favor, recarregue a página.</p>
+      <p class="error-details">${err.message}</p>
+    </div>
+  `;
     }
-  },
+    throw err; // Re-throw for app-level handling
+  }
+}
+
+function cleanup() {
+  log("(home-view) Cleaning up home view...");
   
-  cleanup() {
-    log("(home-view) Cleaning up home view...");
-    
-    // Stop any ongoing geolocation watchers
-    if (this.manager && this.manager.watchId) {
-      navigator.geolocation.clearWatch(this.manager.watchId);
-    }
-    
-    // Stop speech synthesis
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
-    
-    // Clear intervals using TimerManager
-    timerManager.clearTimer('home-cache-display');
-    timerManager.clearTimer('home-speech-queue-display');
-    
-    // Clear state
-    this.manager = null;
-    this.continuousMode = false;
-    this.firstUpdate = true;
-  },
+  // Stop any ongoing geolocation watchers
+  if (manager && manager.watchId) {
+    navigator.geolocation.clearWatch(manager.watchId);
+  }
   
-  // Helper methods (impure functions)
-  async _initializeGeocodingManager() {
+  // Stop speech synthesis
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+  
+  // Clear intervals using TimerManager
+  timerManager.clearTimer('home-cache-display');
+  timerManager.clearTimer('home-speech-queue-display');
+  
+  // Clear state
+  manager = null;
+  continuousMode = false;
+  firstUpdate = true;
+}
+
+// Helper methods (impure functions)
+async function _initializeGeocodingManager() {
     const locationResult = document.getElementById("locationResult");
     const enderecoPadronizadoDisplay = document.getElementById("endereco-padronizado-display");
     const referencePlaceDisplay = document.getElementById("reference-place-display");
@@ -258,191 +138,191 @@ export default {
       }
     };
     
-    try {
-      return await WebGeocodingManager.createAsync(document, params);
-    } catch (err) {
-      error("(home-view) Failed to create WebGeocodingManager:", err);
-      throw new Error(`Falha ao inicializar gerenciador de geolocalização: ${err.message}`);
-    }
-  },
-  
-  _initializeSidraDisplayer() {
-    const dadosSidraElement = document.getElementById("dadosSidra");
-    if (dadosSidraElement) {
-      log("(home-view) Initializing HTMLSidraDisplayer...");
-      this.sidraDisplayer = new HTMLSidraDisplayer(dadosSidraElement, { dataType: 'PopEst' });
-    } else {
-      warn("(home-view) dadosSidra element not found, SIDRA displayer not initialized");
-    }
-  },
-  
-  _setupLocationUpdateHandlers() {
-    this.manager.subscribeFunction((currentPosition, newAddress, enderecoPadronizado) => {
-      log(`(home-view) Location updated`);
-      
-      if (currentPosition) {
-        // Show success banner on first location update
-        if (this.firstUpdate) {
-          window.showLocationSuccess?.('geolocation-banner-container', 3000);
-          this.firstUpdate = false;
-        }
-        
-        // Enable buttons
-        const findRestaurantsBtn = document.getElementById("findRestaurantsBtn");
-        const cityStatsBtn = document.getElementById("cityStatsBtn");
-        
-        if (findRestaurantsBtn) {
-          findRestaurantsBtn.disabled = false;
-          findRestaurantsBtn.setAttribute('aria-disabled', 'false');
-          const status = document.getElementById("restaurants-status");
-          if (status) status.textContent = "Pronto";
-        }
-        
-        if (cityStatsBtn) {
-          cityStatsBtn.disabled = false;
-          cityStatsBtn.setAttribute('aria-disabled', 'false');
-          const status = document.getElementById("stats-status");
-          if (status) status.textContent = "Pronto";
-        }
-      }
-      
-      // Update display elements
-      this._updateLocationDisplay(currentPosition, newAddress, enderecoPadronizado);
-      
-      // Update SIDRA data if in continuous mode using the dedicated displayer
-      if (this.continuousMode && this.sidraDisplayer && enderecoPadronizado) {
-        this.sidraDisplayer.update(newAddress, enderecoPadronizado, ADDRESS_FETCHED_EVENT, false, null);
-      }
-    });
-  },
-  
-  _updateLocationDisplay(currentPosition, newAddress, enderecoPadronizado) {
-    // Update coordinates
+  try {
+    return await WebGeocodingManager.createAsync(document, params);
+  } catch (err) {
+    error("(home-view) Failed to create WebGeocodingManager:", err);
+    throw new Error(`Falha ao inicializar gerenciador de geolocalização: ${err.message}`);
+  }
+}
+
+function _initializeSidraDisplayer() {
+  const dadosSidraElement = document.getElementById("dadosSidra");
+  if (dadosSidraElement) {
+    log("(home-view) Initializing HTMLSidraDisplayer...");
+    sidraDisplayer = new HTMLSidraDisplayer(dadosSidraElement, { dataType: 'PopEst' });
+  } else {
+    warn("(home-view) dadosSidra element not found, SIDRA displayer not initialized");
+  }
+}
+
+function _setupLocationUpdateHandlers() {
+  manager.subscribeFunction((currentPosition, newAddress, enderecoPadronizado) => {
+    log(`(home-view) Location updated`);
+    
     if (currentPosition) {
-      const coords = currentPosition.coords || currentPosition;
-      const latLongDisplay = document.getElementById("lat-long-display");
-      if (latLongDisplay) {
-        const lat = coords.latitude || currentPosition.latitude;
-        const lng = coords.longitude || currentPosition.longitude;
-        latLongDisplay.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-      }
-    }
-    
-    // Update location type card (Distrito or Bairro) based on address
-    if (newAddress) {
-      this._updateLocationTypeCard(newAddress);
-    }
-    
-    // Update standardized address
-    if (enderecoPadronizado) {
-      const enderecoCompleto = enderecoPadronizado.enderecoCompleto 
-        ? enderecoPadronizado.enderecoCompleto() 
-        : enderecoPadronizado;
-      
-      const enderecoPadronizadoDisplay = document.getElementById("endereco-padronizado-display");
-      if (enderecoPadronizadoDisplay) {
-        enderecoPadronizadoDisplay.textContent = enderecoCompleto;
+      // Show success banner on first location update
+      if (firstUpdate) {
+        window.showLocationSuccess?.('geolocation-banner-container', 3000);
+        firstUpdate = false;
       }
       
-      // Update município highlight card
-      const municipio = enderecoPadronizado.municipio || "Não disponível";
-      const siglaUf = enderecoPadronizado.siglaUF;
-      const municipioText = siglaUf ? `${municipio}, ${siglaUf}` : municipio;
-      this._renderToElement("municipio-value", municipioText);
-    }
-  },
-  
-  /**
-   * Update location type card (Distrito or Bairro) dynamically
-   * @param {Object} address - Nominatim address object
-   * @private
-   * 
-   * Note: Uses address-parser.js module for consistent address parsing logic.
-   * The module is imported as ES6 module and shared between views and tests.
-   */
-  _updateLocationTypeCard(address) {
-    // Determine location type using address parser logic
-    const locationType = this._determineLocationType(address);
-    
-    // Update card label
-    const label = locationType.type === 'distrito' ? 'Distrito' : 'Bairro';
-    this._renderToElement("location-type-label", label);
-    
-    // Update card value
-    const value = this._formatLocationValue(locationType.value);
-    this._renderToElement("location-type-value", value);
-    
-    // Update ARIA label for accessibility
-    const card = document.getElementById("location-type-card");
-    if (card) {
-      card.setAttribute('aria-labelledby', 'location-type-label');
-    }
-  },
-  
-  /**
-   * Determine location type from address
-   * @param {Object} address - Nominatim address object
-   * @returns {{type: 'distrito'|'bairro', value: string|null}} Location type and value
-   * @private
-   */
-  _determineLocationType(address) {
-    return determineLocationType(address);
-    
-    // No subdivision available
-    return { type: 'bairro', value: null };
-  },
-  
-  /**
-   * Format location value for display
-   * @param {string|null} value - Location value
-   * @returns {string} Formatted value
-   * @private
-   */
-  _formatLocationValue(value) {
-    return formatLocationValue(value);
-  },
-  
-  _setupCacheDisplayHandlers() {
-    const updateCacheDisplay = () => {
-      const tamCache = document.getElementById("tam-cache");
-      if (tamCache && this.manager.cache) {
-        tamCache.textContent = this.manager.cache.size || 0;
+      // Enable buttons
+      const findRestaurantsBtn = document.getElementById("findRestaurantsBtn");
+      const cityStatsBtn = document.getElementById("cityStatsBtn");
+      
+      if (findRestaurantsBtn) {
+        findRestaurantsBtn.disabled = false;
+        findRestaurantsBtn.setAttribute('aria-disabled', 'false');
+        const status = document.getElementById("restaurants-status");
+        if (status) status.textContent = "Pronto";
       }
-    };
+      
+      if (cityStatsBtn) {
+        cityStatsBtn.disabled = false;
+        cityStatsBtn.setAttribute('aria-disabled', 'false');
+        const status = document.getElementById("stats-status");
+        if (status) status.textContent = "Pronto";
+      }
+    }
+    
+    // Update display elements
+    _updateLocationDisplay(currentPosition, newAddress, enderecoPadronizado);
+    
+    // Update SIDRA data if in continuous mode using the dedicated displayer
+    if (continuousMode && sidraDisplayer && enderecoPadronizado) {
+      sidraDisplayer.update(newAddress, enderecoPadronizado, ADDRESS_FETCHED_EVENT, false, null);
+    }
+  });
+}
+
+function _updateLocationDisplay(currentPosition, newAddress, enderecoPadronizado) {
+  // Update coordinates
+  if (currentPosition) {
+    const coords = currentPosition.coords || currentPosition;
+    const latLongDisplay = document.getElementById("lat-long-display");
+    if (latLongDisplay) {
+      const lat = coords.latitude || currentPosition.latitude;
+      const lng = coords.longitude || currentPosition.longitude;
+      latLongDisplay.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+    }
+  }
+  
+  // Update location type card (Distrito or Bairro) based on address
+  if (newAddress) {
+    _updateLocationTypeCard(newAddress);
+  }
+  
+  // Update standardized address
+  if (enderecoPadronizado) {
+    const enderecoCompleto = enderecoPadronizado.enderecoCompleto 
+      ? enderecoPadronizado.enderecoCompleto() 
+      : enderecoPadronizado;
+    
+    const enderecoPadronizadoDisplay = document.getElementById("endereco-padronizado-display");
+    if (enderecoPadronizadoDisplay) {
+      enderecoPadronizadoDisplay.textContent = enderecoCompleto;
+    }
+    
+    // Update município highlight card
+    const municipio = enderecoPadronizado.municipio || "Não disponível";
+    const siglaUf = enderecoPadronizado.siglaUF;
+    const municipioText = siglaUf ? `${municipio}, ${siglaUf}` : municipio;
+    _renderToElement("municipio-value", municipioText);
+  }
+}
+  
+/**
+ * Update location type card (Distrito or Bairro) dynamically
+ * @param {Object} address - Nominatim address object
+ * @private
+ * 
+ * Note: Uses address-parser.js module for consistent address parsing logic.
+ * The module is imported as ES6 module and shared between views and tests.
+ */
+function _updateLocationTypeCard(address) {
+  // Determine location type using address parser logic
+  const locationType = _determineLocationType(address);
+  
+  // Update card label
+  const label = locationType.type === 'distrito' ? 'Distrito' : 'Bairro';
+  _renderToElement("location-type-label", label);
+  
+  // Update card value
+  const value = _formatLocationValue(locationType.value);
+  _renderToElement("location-type-value", value);
+  
+  // Update ARIA label for accessibility
+  const card = document.getElementById("location-type-card");
+  if (card) {
+    card.setAttribute('aria-labelledby', 'location-type-label');
+  }
+}
+  
+/**
+ * Determine location type from address
+ * @param {Object} address - Nominatim address object
+ * @returns {{type: 'distrito'|'bairro', value: string|null}} Location type and value
+ * @private
+ */
+function _determineLocationType(address) {
+  return determineLocationType(address);
+  
+  // No subdivision available
+  return { type: 'bairro', value: null };
+}
+
+/**
+ * Format location value for display
+ * @param {string|null} value - Location value
+ * @returns {string} Formatted value
+ * @private
+ */
+function _formatLocationValue(value) {
+  return formatLocationValue(value);
+}
+
+function _setupCacheDisplayHandlers() {
+  const updateCacheDisplay = () => {
+    const tamCache = document.getElementById("tam-cache");
+    if (tamCache && manager.cache) {
+      tamCache.textContent = manager.cache.size || 0;
+    }
+  };
     
     // Try to subscribe to cache updates
     if (AddressCache && typeof AddressCache.subscribeFunction === 'function') {
       AddressCache.subscribeFunction(eventData => {
-        const cacheSize = eventData?.cacheSize || eventData?.cache?.length || 0;
-        this._renderToElement("tam-cache", cacheSize.toString());
-      });
-    }
-    
-    // Update initially and periodically as fallback
-    updateCacheDisplay();
-    timerManager.setInterval(updateCacheDisplay, 5000, 'home-cache-display');
-  },
+      const cacheSize = eventData?.cacheSize || eventData?.cache?.length || 0;
+      _renderToElement("tam-cache", cacheSize.toString());
+    });
+  }
   
-  _setupButtonHandlers() {
-    const findRestaurantsBtn = document.getElementById("findRestaurantsBtn");
-    const cityStatsBtn = document.getElementById("cityStatsBtn");
-    
-    if (findRestaurantsBtn) {
-      findRestaurantsBtn.addEventListener('click', () => {
-        log("(home-view) Find restaurants clicked");
-        alert("Funcionalidade de busca de restaurantes será implementada em breve!");
-      });
-    }
-    
-    if (cityStatsBtn) {
-      cityStatsBtn.addEventListener('click', () => {
-        log("(home-view) City stats clicked");
-        alert("Funcionalidade de estatísticas da cidade será implementada em breve!");
-      });
-    }
-  },
+  // Update initially and periodically as fallback
+  updateCacheDisplay();
+  timerManager.setInterval(updateCacheDisplay, 5000, 'home-cache-display');
+}
+
+function _setupButtonHandlers() {
+  const findRestaurantsBtn = document.getElementById("findRestaurantsBtn");
+  const cityStatsBtn = document.getElementById("cityStatsBtn");
   
-  _setupGetLocationButton() {
+  if (findRestaurantsBtn) {
+    findRestaurantsBtn.addEventListener('click', () => {
+      log("(home-view) Find restaurants clicked");
+      showInfo("Funcionalidade de busca de restaurantes será implementada em breve!");
+    });
+  }
+  
+  if (cityStatsBtn) {
+    cityStatsBtn.addEventListener('click', () => {
+      log("(home-view) City stats clicked");
+      showInfo("Funcionalidade de estatísticas da cidade será implementada em breve!");
+    });
+  }
+}
+
+function _setupGetLocationButton() {
     const getLocationBtn = document.getElementById("getLocationBtn");
     if (!getLocationBtn) return;
     
@@ -458,16 +338,16 @@ export default {
         getLocationBtn.textContent = "⏳ Obtendo localização...";
         
         navigator.geolocation.getCurrentPosition(
-          (position) => {
-            log("(home-view) Location obtained:", position);
-            
-            // Trigger location update through manager
-            if (this.manager && this.manager.positionManager) {
-              this.manager.positionManager.updatePosition(position);
-            }
-            
-            getLocationBtn.disabled = false;
-            getLocationBtn.textContent = "📍 Obter Localização Atual";
+        (position) => {
+          log("(home-view) Location obtained:", position);
+          
+          // Trigger location update through manager
+          if (manager && manager.positionManager) {
+            manager.positionManager.updatePosition(position);
+          }
+          
+          getLocationBtn.disabled = false;
+          getLocationBtn.textContent = "📍 Obter Localização Atual";
             
             window.showLocationSuccess?.('geolocation-banner-container', 3000);
           },
@@ -498,103 +378,102 @@ export default {
             }
           },
           {
-            enableHighAccuracy: true,
-            timeout: 30000, // Increased from 10s to 30s
-            maximumAge: 60000 // Accept cached positions up to 1 minute old
-          }
-        );
-      } else {
-        window.toast?.error("Geolocalização não é suportada neste navegador.", 5000);
+        enableHighAccuracy: true,
+        timeout: 30000, // Increased from 10s to 30s
+        maximumAge: 60000 // Accept cached positions up to 1 minute old
       }
-    });
-  },
-  
-  _setupTrackingModeToggle() {
-    const toggle = document.getElementById("continuous-tracking-toggle");
-    if (!toggle) return;
-    
-    toggle.addEventListener("change", (e) => {
-      this.continuousMode = e.target.checked;
-      e.target.setAttribute('aria-checked', this.continuousMode.toString());
-      
-      log(`(home-view) Continuous tracking ${this.continuousMode ? 'enabled' : 'disabled'}`);
-      
-      // Show/hide tracking-specific UI
-      const trackingTimer = document.getElementById("tracking-timer-container");
-      const getLocationBtnContainer = document.getElementById("get-location-button-container");
-      
-      if (this.continuousMode) {
-        // Start continuous tracking
-        if (trackingTimer) trackingTimer.style.display = 'inline';
-        if (getLocationBtnContainer) getLocationBtnContainer.style.display = 'none';
-        
-        // Start tracking
-        this.manager.startTracking();
-        
-        // Setup speech queue monitoring
-        this._setupSpeechQueueMonitoring();
-        
-        window.toast?.info('Rastreamento contínuo ativado', 2000);
-      } else {
-        // Stop continuous tracking
-        if (trackingTimer) trackingTimer.style.display = 'none';
-        if (getLocationBtnContainer) getLocationBtnContainer.style.display = 'block';
-        
-        // Stop tracking
-        if (this.manager && this.manager.watchId) {
-          navigator.geolocation.clearWatch(this.manager.watchId);
-          this.manager.watchId = null;
-        }
-        
-        // Stop speech
-        if (window.speechSynthesis) {
-          window.speechSynthesis.cancel();
-        }
-        
-        // Clear speech queue interval
-        timerManager.clearTimer('home-speech-queue-display');
-        
-        window.toast?.info('Rastreamento contínuo desativado', 2000);
-      }
-    });
-  },
-  
-  _setupSpeechQueueMonitoring() {
-    if (!this.manager.htmlSpeechSynthesisDisplayer) return;
-    if (!this.manager.htmlSpeechSynthesisDisplayer.speechManager) return;
-    
-    const speechQueue = this.manager.htmlSpeechSynthesisDisplayer.speechManager.speechQueue;
-    if (!speechQueue) return;
-    
-    if (typeof speechQueue.subscribeFunction === 'function') {
-      speechQueue.subscribeFunction(queue => {
-        const size = this._calculateQueueSize(queue);
-        this._renderToElement("tam-fila-fala", size.toString());
-      });
-    } else {
-      // Fallback polling
-      timerManager.setInterval(() => {
-        const queueLength = speechQueue.length || (Array.isArray(speechQueue.queue) ? speechQueue.queue.length : 0);
-        this._renderToElement("tam-fila-fala", queueLength.toString());
-      }, 500, 'home-speech-queue-display');
-    }
-  },
-  
-  _renderToElement(elementId, content) {
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.innerText = content;
-      // Add tooltip for potentially truncated text in highlight cards
-      if (element.classList.contains('highlight-card-value')) {
-        element.title = content;
-      }
-    }
-  },
-  
-  _calculateQueueSize(queue) {
-    if (!queue) return 0;
-    if (typeof queue.size === 'function') return queue.size();
-    if (Array.isArray(queue.queue)) return queue.queue.length;
-    return 0;
+    );
+  } else {
+    window.toast?.error("Geolocalização não é suportada neste navegador.", 5000);
   }
-};
+  });
+}
+
+function _setupTrackingModeToggle() {
+  const toggle = document.getElementById("continuous-tracking-toggle");
+  if (!toggle) return;
+  
+  toggle.addEventListener("change", (e) => {
+    continuousMode = e.target.checked;
+    e.target.setAttribute('aria-checked', continuousMode.toString());
+    
+    log(`(home-view) Continuous tracking ${continuousMode ? 'enabled' : 'disabled'}`);
+    
+    // Show/hide tracking-specific UI
+    const trackingTimer = document.getElementById("tracking-timer-container");
+    const getLocationBtnContainer = document.getElementById("get-location-button-container");
+    
+    if (continuousMode) {
+      // Start continuous tracking
+      if (trackingTimer) trackingTimer.style.display = 'inline';
+      if (getLocationBtnContainer) getLocationBtnContainer.style.display = 'none';
+      
+      // Start tracking
+      manager.startTracking();
+      
+      // Setup speech queue monitoring
+      _setupSpeechQueueMonitoring();
+      
+      window.toast?.info('Rastreamento contínuo ativado', 2000);
+    } else {
+      // Stop continuous tracking
+      if (trackingTimer) trackingTimer.style.display = 'none';
+      if (getLocationBtnContainer) getLocationBtnContainer.style.display = 'block';
+      
+      // Stop tracking
+      if (manager && manager.watchId) {
+        navigator.geolocation.clearWatch(manager.watchId);
+        manager.watchId = null;
+      }
+      
+      // Stop speech
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      
+      // Clear speech queue interval
+      timerManager.clearTimer('home-speech-queue-display');
+      
+      window.toast?.info('Rastreamento contínuo desativado', 2000);
+    }
+  });
+}
+
+function _setupSpeechQueueMonitoring() {
+  if (!manager.htmlSpeechSynthesisDisplayer) return;
+  if (!manager.htmlSpeechSynthesisDisplayer.speechManager) return;
+  
+  const speechQueue = manager.htmlSpeechSynthesisDisplayer.speechManager.speechQueue;
+  if (!speechQueue) return;
+  
+  if (typeof speechQueue.subscribeFunction === 'function') {
+    speechQueue.subscribeFunction(queue => {
+      const size = _calculateQueueSize(queue);
+      _renderToElement("tam-fila-fala", size.toString());
+    });
+  } else {
+    // Fallback polling
+    timerManager.setInterval(() => {
+      const queueLength = speechQueue.length || (Array.isArray(speechQueue.queue) ? speechQueue.queue.length : 0);
+      _renderToElement("tam-fila-fala", queueLength.toString());
+    }, 500, 'home-speech-queue-display');
+  }
+}
+
+function _renderToElement(elementId, content) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.innerText = content;
+    // Add tooltip for potentially truncated text in highlight cards
+    if (element.classList.contains('highlight-card-value')) {
+      element.title = content;
+    }
+  }
+}
+
+function _calculateQueueSize(queue) {
+  if (!queue) return 0;
+  if (typeof queue.size === 'function') return queue.size();
+  if (Array.isArray(queue.queue)) return queue.queue.length;
+  return 0;
+}

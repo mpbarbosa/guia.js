@@ -431,8 +431,8 @@ Category: Architecture|Testing|API|Guide|Report|Utility (optional)
 - **Usage**: `python3 .github/scripts/check-terminology.py docs/`
 
 ### Version Management
-- **cdn-delivery.sh**: CDN URL generator (existing)
-- **Usage**: `./cdn-delivery.sh` (generates cdn-urls.txt)
+- **.github/scripts/cdn-delivery.sh**: CDN URL generator (existing)
+- **Usage**: `./.github/scripts/cdn-delivery.sh` (generates cdn-urls.txt)
 
 ---
 

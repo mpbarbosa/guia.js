@@ -191,7 +191,7 @@ EXCLUDE_PATTERNS=(
 **Findings**:
 - **README.md**: All CDN examples use `@0.7.1-alpha` version tag ✅
 - Strong warning about avoiding `@main` branch URLs ✅
-- `cdn-delivery.sh` script for generating CDN URLs ✅
+- `.github/scripts/cdn-delivery.sh` script for generating CDN URLs ✅
 - Comprehensive troubleshooting section ✅
 
 **Priority**: ✅ **NONE** (exemplary practice)

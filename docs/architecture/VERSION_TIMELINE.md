@@ -4,7 +4,7 @@
 
 This document provides a comprehensive timeline of architectural changes across versions of the Guia Turístico project. It helps developers understand when features were introduced, when breaking changes occurred, and the evolution of the codebase.
 
-**Current Version**: 0.7.1-alpha (January 11, 2026)
+**Current Version**: 0.8.7-alpha (February 9, 2026)
 
 ## Version Timeline Diagram
 
@@ -56,7 +56,7 @@ This document provides a comprehensive timeline of architectural changes across 
          │
          ↓
 
-0.7.1-alpha (January 11, 2026) ← CURRENT VERSION
+0.7.1-alpha (January 11, 2026)
 ├── Documentation improvements
 │   ├── ✅ Test counts corrected (1,739/1,882)
 │   ├── ✅ Version consistency achieved
@@ -67,6 +67,39 @@ This document provides a comprehensive timeline of architectural changes across 
 ├── Stable implementation - no code changes
 ├── All tests passing (1,739 passing / 1,968 total)
 └── ✅ Ready for production deployment
+
+         │
+         ↓
+
+0.8.7-alpha (January 28, 2026) ← CURRENT VERSION
+├── Metropolitan Region Display Feature ⭐
+│   ├── ✅ BrazilianStandardAddress: regiaoMetropolitana property
+│   ├── ✅ AddressExtractor: Extract county field from Nominatim
+│   ├── ✅ HTMLHighlightCardsDisplayer: Show metro region
+│   ├── ✅ regiaoMetropolitanaFormatada() method
+│   └── ✅ 77 new tests (19 unit + 26 unit + 28 unit + 4 E2E)
+│
+├── Município State Abbreviation Display ⭐
+│   ├── ✅ Display format: "Recife, PE" instead of "Recife"
+│   ├── ✅ Fallback to município name only
+│   ├── ✅ BrazilianStandardAddress.municipioCompleto() method
+│   └── ✅ 42 unit tests covering all 26 states
+│
+├── Test Suite Expansion
+│   ├── ✅ 2,236 tests passing (vs 1,739 in v0.7.1)
+│   ├── ✅ +497 new tests (+28.6% coverage)
+│   ├── ✅ 4 E2E suites, 93 passing
+│   └── ✅ 101 test suites (97 passing)
+│
+├── Documentation Improvements
+│   ├── ✅ FEATURE_METROPOLITAN_REGION_DISPLAY.md
+│   ├── ✅ FEATURE_MUNICIPIO_STATE_DISPLAY.md
+│   ├── ✅ Enhanced copilot-instructions.md
+│   └── ✅ Updated version consistency across codebase
+│
+└── Code Quality
+    ├── ✅ Removed unused export default from home.js
+    └── ✅ Version alignment (package.json ↔ defaults.js)
 
          │
          ↓
@@ -383,7 +416,7 @@ When documenting new features or changes:
 
 ---
 
-**Last Updated**: 2026-01-11  
+**Last Updated**: 2026-02-09  
 **Document Version**: 1.0  
 **Status**: ✅ Complete and up-to-date
 

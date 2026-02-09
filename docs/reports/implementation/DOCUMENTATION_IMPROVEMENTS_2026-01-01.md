@@ -267,7 +267,7 @@ Comprehensive documentation audit and improvements addressing 17+ critical issue
 
 ## Script Documentation Enhancements
 
-### CDN Delivery Script (`cdn-delivery.sh`)
+### CDN Delivery Script (`.github/scripts/cdn-delivery.sh`)
 **Added** (144 new lines):
 - ✅ Comprehensive error handling and exit codes
 - ✅ Prerequisite validation (Node.js, git, package.json)
@@ -529,7 +529,7 @@ This comprehensive documentation improvement addresses:
 - ✅ `docs/INDEX.md` (+52 lines, accuracy fixes)
 
 ### Scripts
-- ✅ `cdn-delivery.sh` (+144 lines, error handling & validation)
+- ✅ `.github/scripts/cdn-delivery.sh` (+144 lines, error handling & validation)
 - ✅ `.github/scripts/test-workflow-locally.sh` (+24 lines, bug fixes)
 
 ### New Guides Created

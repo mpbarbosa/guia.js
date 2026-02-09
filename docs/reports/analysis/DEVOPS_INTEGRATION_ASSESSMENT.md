@@ -16,7 +16,7 @@
 - ⚠️ **Release Automation**: No automated workflow for version releases
 
 ### Critical Gaps
-1. **No Release Workflow**: cdn-delivery.sh runs manually, not on git tags
+1. **No Release Workflow**: .github/scripts/cdn-delivery.sh runs manually, not on git tags
 2. **Missing Tag Trigger**: Version tags don't trigger automated CDN URL generation
 3. **No Deployment Pipeline**: No automated deployment to CDN or hosting
 
@@ -223,7 +223,7 @@ version-consistency:
 
 **Integration**: Used in documentation-lint.yml
 
-### 4. cdn-delivery.sh (Root Directory)
+### 4. .github/scripts/cdn-delivery.sh (Root Directory)
 **Purpose**: jsDelivr CDN URL generation  
 **Status**: ⚠️ **NOT INTEGRATED** into CI/CD  
 **Location**: Project root (not in .github/scripts/)
@@ -255,7 +255,7 @@ version-consistency:
 ```bash
 # Manual process:
 npm version minor          # Bump version
-./cdn-delivery.sh          # Generate CDN URLs
+./.github/scripts/cdn-delivery.sh          # Generate CDN URLs
 git add cdn-urls.txt       # Stage changes
 git commit -m "..."        # Commit
 git tag v0.7.0             # Create tag
@@ -348,8 +348,8 @@ jobs:
       
       - name: Run CDN delivery script
         run: |
-          chmod +x ./cdn-delivery.sh
-          ./cdn-delivery.sh
+          chmod +x ./.github/scripts/cdn-delivery.sh
+          ./.github/scripts/cdn-delivery.sh
       
       - name: Upload CDN URLs artifact
         uses: actions/upload-artifact@v4
@@ -589,13 +589,13 @@ jobs:
 - uses: actions/setup-node@v4    # Currently @v3
 ```
 
-### Priority 5: Move cdn-delivery.sh to .github/scripts/
+### Priority 5: Move .github/scripts/cdn-delivery.sh to .github/scripts/
 
 **Rationale**: Better organization, consistency with other scripts
 
 ```bash
 # Migration:
-git mv cdn-delivery.sh .github/scripts/cdn-delivery.sh
+git mv .github/scripts/cdn-delivery.sh .github/script./.github/scripts/cdn-delivery.sh
 
 # Update references in:
 - .github/copilot-instructions.md
@@ -724,7 +724,7 @@ jobs:
 - [ ] Create release.yml workflow
 - [ ] Test release workflow with alpha tag
 - [ ] Update action versions in documentation-lint.yml
-- [ ] Move cdn-delivery.sh to .github/scripts/
+- [ ] Move .github/scripts/cdn-delivery.sh to .github/scripts/
 
 ### Phase 2: Enhanced Testing (Week 2)
 - [ ] Add test result artifacts to modified-files.yml
@@ -756,7 +756,7 @@ jobs:
 5. **Version Consistency**: Enforced across multiple files
 
 ### ⚠️ Current Gaps
-1. **No Release Automation**: cdn-delivery.sh not integrated into CI/CD
+1. **No Release Automation**: .github/scripts/cdn-delivery.sh not integrated into CI/CD
 2. **Manual CDN URL Generation**: Prone to human error
 3. **Limited Security Scanning**: No dependency audits or CodeQL
 4. **No Historical Metrics**: Coverage trends not tracked

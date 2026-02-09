@@ -8,45 +8,51 @@ Category: Architecture
 
 **Navigation**: [🏠 Home](../README.md) > [📚 Docs](./README.md) > Project Purpose & Architecture
 
-**Version**: 0.7.1-alpha  
-**Document Date**: 2026-01-11  
+**Version**: 0.8.7-alpha  
+**Document Date**: 2026-02-09  
 **Purpose**: Define project boundaries and prevent inappropriate architectural decisions
 
 ---
 
 ## 🎯 Project Purpose and Identity
 
-### What Guia.js IS
+**Guia Turístico** is a **single-page web application (SPA)** built on top of the **guia.js** geolocation library. This document clarifies the relationship between:
 
-**Guia.js is a JavaScript library/SDK for geolocation-aware web applications**, specifically designed for Brazilian addresses with the following characteristics:
+- **Guia Turístico** (this project): Tourist guide web application for end users
+- **guia.js** (dependency): Geolocation library (https://github.com/mpbarbosa/guia_js)
 
-1. **JavaScript Library** - Distributable code that other developers integrate into their applications
-2. **Geolocation Engine** - Provides GPS positioning, geocoding, and address standardization services
-3. **Brazilian Address Specialist** - Deep integration with Brazilian geographic data (IBGE, state codes, address formats)
-4. **Multi-Environment Runtime** - Runs in both Node.js (testing/CLI) and browser (production) environments
-5. **CDN-Deliverable** - Available via jsDelivr CDN for easy integration without npm installation
-6. **SDK/Framework Component** - Designed to be embedded in larger applications, not a standalone website
+### What Guia Turístico IS
 
-### What Guia.js IS NOT
+**Guia Turístico is a web application providing tourist guidance services**, with the following characteristics:
 
-**Guia.js is NOT a static website or documentation site**, and therefore:
+1. **Single-Page Application (SPA)** - Modern web app with client-side routing (hash-based)
+2. **Tourist Guide Interface** - Real-time location tracking while navigating cities
+3. **Built on guia.js** - Uses guia.js library for core geolocation functionality
+4. **Brazilian Focus** - Specialized for Brazilian locations with IBGE integration
+5. **Mobile-First Design** - Responsive interface optimized for mobile devices
+6. **Web-Deployable** - Can be hosted on static site hosts (GitHub Pages, Netlify, etc.)
 
-❌ **NOT suitable for GitHub Pages deployment** - GitHub Pages is for static HTML/CSS/JS sites, not JavaScript SDKs  
-❌ **NOT a standalone web application** - It's a library that powers web applications  
-❌ **NOT a blog or content website** - No static content to serve  
-❌ **NOT a single-page application (SPA)** - It's imported by SPAs, not an SPA itself  
-❌ **NOT documentation hosting** - Docs are in `/docs` for developers, not end-users  
+### What Guia Turístico IS NOT
 
-### Core Design Philosophy
+**Guia Turístico is NOT a library or SDK**, and therefore:
 
-Guia.js follows these architectural principles:
+❌ **NOT a reusable JavaScript library** - It's a web application that uses guia.js library  
+❌ **NOT published to npm** - It's deployed as a website, not installed as a dependency  
+❌ **NOT embeddable in other apps** - It's a standalone application for end users  
+❌ **NOT a backend service** - Pure frontend application (uses external APIs)  
+❌ **NOT a general-purpose geolocation tool** - Specialized for tourist guidance use case  
+
+### Relationship with guia.js Library
+
+**Guia Turístico** depends on **guia.js** as its core geolocation engine:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  Guia.js Architecture Philosophy                            │
+│  Guia Turístico Architecture                                 │
 ├─────────────────────────────────────────────────────────────┤
-│  1. LIBRARY, NOT APPLICATION                                │
-│     → Consumed by applications, not deployed standalone     │
+│  1. APPLICATION, NOT LIBRARY                                │
+│     → End-user web application deployed to hosting          │
+│     → Consumes guia.js library for geolocation features     │
 │                                                              │
 │  2. FUNCTIONAL PROGRAMMING FIRST                            │
 │     → Referential transparency, immutability, pure functions│
@@ -70,34 +76,43 @@ Guia.js follows these architectural principles:
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│                    Guia.js Architecture                         │
+│              Guia Turístico Application Architecture            │
 ├────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────┐  │
-│  │  DISTRIBUTION LAYER (How developers get it)             │  │
+│  │  USER INTERFACE LAYER (What users see)                  │  │
 │  ├─────────────────────────────────────────────────────────┤  │
-│  │  • jsDelivr CDN (production)                            │  │
-│  │  • npm package (optional)                               │  │
-│  │  • Direct file inclusion                                │  │
-│  │  • ES Module imports                                    │  │
+│  │  • Home View - Real-time location tracking             │  │
+│  │  • Converter View - Coordinate converter utility       │  │
+│  │  • Material Design 3 UI, Mobile-first responsive       │  │
+│  │  • Accessibility (ARIA, WCAG 2.1)                      │  │
 │  └─────────────────────────────────────────────────────────┘  │
 │                           ↓                                     │
 │  ┌─────────────────────────────────────────────────────────┐  │
-│  │  PUBLIC API LAYER (What developers use)                 │  │
+│  │  APPLICATION LAYER (SPA routing & state)                │  │
+│  ├─────────────────────────────────────────────────────────┤  │
+│  │  • app.js - SPA router (hash-based)                     │  │
+│  │  • View controllers (home.js, converter.js)            │  │
+│  │  • Application state management                         │  │
+│  │  • Navigation and focus management                      │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                           ↓                                     │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  GUIA.JS LIBRARY LAYER (Core geolocation)              │  │
 │  ├─────────────────────────────────────────────────────────┤  │
 │  │  • WebGeocodingManager (main coordinator)               │  │
-│  │  • PositionManager (singleton state)                    │  │
+│  │  • PositionManager (position state)                     │  │
 │  │  • GeolocationService (GPS integration)                 │  │
 │  │  • BrazilianStandardAddress (address handling)          │  │
 │  └─────────────────────────────────────────────────────────┘  │
 │                           ↓                                     │
 │  ┌─────────────────────────────────────────────────────────┐  │
-│  │  BUSINESS LOGIC LAYER (Core functionality)              │  │
+│  │  DISPLAY LAYER (Render data to UI)                      │  │
 │  ├─────────────────────────────────────────────────────────┤  │
-│  │  • GeoPosition (immutable position object)              │  │
-│  │  • AddressDataExtractor (data processing)               │  │
-│  │  • ReferencePlace (location references)                 │  │
-│  │  • AddressCache (caching)                               │  │
+│  │  • HTMLPositionDisplayer (coordinates + maps)           │  │
+│  │  • HTMLAddressDisplayer (formatted addresses)           │  │
+│  │  • HTMLHighlightCardsDisplayer (municipio/bairro)      │  │
+│  │  • HTMLSidraDisplayer (population statistics)           │  │
 │  └─────────────────────────────────────────────────────────┘  │
 │                           ↓                                     │
 │  ┌─────────────────────────────────────────────────────────┐  │
@@ -108,10 +123,6 @@ Guia.js follows these architectural principles:
 │  │  • Browser Geolocation API                              │  │
 │  │  • Speech Synthesis API                                 │  │
 │  └─────────────────────────────────────────────────────────┘  │
-│                           ↓                                     │
-│  ┌─────────────────────────────────────────────────────────┐  │
-│  │  PRESENTATION LAYER (Optional UI helpers)               │  │
-│  ├─────────────────────────────────────────────────────────┤  │
 │  │  • HTMLPositionDisplayer (coordinate display)           │  │
 │  │  • HTMLAddressDisplayer (address formatting)            │  │
 │  │  • SpeechSynthesisManager (text-to-speech)             │  │
@@ -202,7 +213,7 @@ Guia.js follows these architectural principles:
 
 ```bash
 # Generate CDN URLs
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # Developers use in their HTML
 <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.7.1-alpha/src/guia.js"></script>
@@ -308,7 +319,7 @@ guia_turistico/
 │
 ├── test.html               # DEVELOPER TEST PAGE (not production)
 ├── package.json            # NODE.JS METADATA
-├── cdn-delivery.sh         # CDN URL GENERATOR
+├── .github/scripts/cdn-delivery.sh         # CDN URL GENERATOR
 ├── cdn-urls.txt            # GENERATED CDN URLS
 └── .github/                # GITHUB CONFIGURATION
     ├── workflows/          # CI/CD automation
@@ -325,7 +336,7 @@ guia_turistico/
 | `examples/` | ✅ Code examples for integration | ❌ JavaScript files, not HTML pages |
 | `test.html` | ⚠️ Test harness only | ❌ Not production website |
 | `package.json` | ✅ Library metadata | ❌ No website build config |
-| `cdn-delivery.sh` | ✅ CDN distribution | ❌ Not website deployment |
+| `.github/scripts/cdn-delivery.sh` | ✅ CDN distribution | ❌ Not website deployment |
 
 **Conclusion**: 100% library structure, 0% website structure
 
@@ -370,7 +381,7 @@ git push
 npm version minor  # 0.7.0 → 0.8.0
 
 # 2. Generate CDN URLs
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # 3. Commit version bump
 git add package.json cdn-urls.txt
@@ -533,7 +544,7 @@ geocode(-23.550520, -46.633309);
 2. ✅ **`src/` directory structure** - Source code organization for library
 3. ✅ **`__tests__/` with 1224 tests** - Comprehensive test suite for library
 4. ✅ **`examples/` directory** - Code examples for developers, not website pages
-5. ✅ **`cdn-delivery.sh` script** - CDN distribution automation
+5. ✅ **`.github/scripts/cdn-delivery.sh` script** - CDN distribution automation
 6. ✅ **No `index.html` in root** - Not a website entry point
 7. ✅ **`test.html` is test harness** - Development tool, not production page
 8. ✅ **ES6 modules everywhere** - Modern JavaScript module system
@@ -806,7 +817,7 @@ If jQuery (a JavaScript library similar to Guia.js) wouldn't do it, Guia.js shou
 - [README.md](../README.md) - Project overview
 - [Architecture Documentation](architecture/) - Technical architecture details
 - [Contributing Guide](../.github/CONTRIBUTING.md) - Development guidelines
-- [CDN Delivery Script](../cdn-delivery.sh) - Distribution automation
+- [CDN Delivery Script](../.github/scripts/cdn-delivery.sh) - Distribution automation
 
 ### External Resources
 - [jsDelivr Documentation](https://www.jsdelivr.com/docs) - CDN service docs

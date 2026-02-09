@@ -38,6 +38,7 @@
  */
 
 import { log, warn } from '../utils/logger.js';
+import { showError, showInfo } from '../utils/toast.js';
 
 /**
  * EventCoordinator class - Manages event listeners and handlers
@@ -209,7 +210,7 @@ class EventCoordinator {
         const coords = this._geocodingState.getCurrentCoordinates();
         
         if (!coords) {
-            alert('Current coordinates not available.');
+            showError('Coordenadas atuais não disponíveis.');
             warn('EventCoordinator: Find restaurants clicked but coordinates not available');
             return;
         }
@@ -220,10 +221,10 @@ class EventCoordinator {
         if (typeof window !== 'undefined' && typeof window.findNearbyRestaurants === 'function') {
             window.findNearbyRestaurants(coords.latitude, coords.longitude);
         } else {
-            // Fallback: show alert
+            // Fallback: show info toast
             const message = `Procurando restaurantes próximos a ` +
                 `${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}`;
-            alert(message);
+            showInfo(message);
         }
     }
 
@@ -258,7 +259,7 @@ class EventCoordinator {
         const coords = this._geocodingState.getCurrentCoordinates();
         
         if (!coords) {
-            alert('Current coordinates not available.');
+            showError('Coordenadas atuais não disponíveis.');
             warn('EventCoordinator: City stats clicked but coordinates not available');
             return;
         }
@@ -269,10 +270,10 @@ class EventCoordinator {
         if (typeof window !== 'undefined' && typeof window.fetchCityStatistics === 'function') {
             window.fetchCityStatistics(coords.latitude, coords.longitude);
         } else {
-            // Fallback: show alert
+            // Fallback: show info toast
             const message = `Obtendo estatísticas da cidade para ` +
                 `${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}`;
-            alert(message);
+            showInfo(message);
         }
     }
 

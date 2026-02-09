@@ -34,7 +34,7 @@ git push
 npm version patch  # or minor, major
 
 # 3. Generate CDN URLs for new version
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # 4. Commit updated URLs
 git add cdn-urls.txt package.json package-lock.json
@@ -230,7 +230,7 @@ If all checks pass, proceed. Otherwise, reconsider.
 - Check: [ARCHITECTURE_DECISION_RECORD.md](ARCHITECTURE_DECISION_RECORD.md)
 
 **Questions about CDN**:
-- Script: `./cdn-delivery.sh`
+- Script: `./.github/scripts/cdn-delivery.sh`
 - Output: `cdn-urls.txt`
 - Docs: [README.md](README.md) - CDN Delivery section
 

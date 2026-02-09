@@ -9,7 +9,7 @@
 
 ### Files Enhanced
 
-1. **cdn-delivery.sh** - Enhanced with comprehensive error handling
+1. **.github/scripts/cdn-delivery.sh** - Enhanced with comprehensive error handling
 2. **README.md** - Added complete error documentation section
 3. **ERROR_HANDLING_DOCUMENTATION.md** - Initial summary
 4. **ERROR_HANDLING_COMPLETE.md** - This complete summary
@@ -18,7 +18,7 @@
 
 ## Error Coverage: Complete Matrix
 
-### cdn-delivery.sh Script Errors
+### .github/scripts/cdn-delivery.sh Script Errors
 
 | # | Error | Detection | Solution | Status |
 |---|-------|-----------|----------|--------|
@@ -48,7 +48,7 @@
 
 ## Implementation Details
 
-### 1. Script Error Checks (cdn-delivery.sh)
+### 1. Script Error Checks (.github/scripts/cdn-delivery.sh)
 
 #### Pre-execution Validation
 ```bash
@@ -65,7 +65,7 @@ fi
 if [ ! -f "package.json" ]; then
     echo "Error: package.json not found"
     echo "Current directory: $(pwd)"
-    echo "Fix: cd /path/to/guia_js && ./cdn-delivery.sh"
+    echo "Fix: cd /path/to/guia_js && ./.github/scripts/cdn-delivery.sh"
     exit 1
 fi
 
@@ -171,14 +171,14 @@ fi
 
 ### Before Enhancement
 ```bash
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 /cdn-delivery.sh: line 21: node: command not found
 ```
 **Issues**: Cryptic, no solution, exits immediately
 
 ### After Enhancement
 ```bash
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 Error: Node.js not found
 This script requires Node.js v18+ to parse package.json
 Install: https://nodejs.org/ or run 'brew install node' (macOS)
@@ -193,20 +193,20 @@ Install: https://nodejs.org/ or run 'brew install node' (macOS)
 
 **Before**:
 ```bash
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 node: command not found
 # User confused - what is "node"?
 ```
 
 **After**:
 ```bash
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 Error: Node.js not found
 This script requires Node.js v18+ to parse package.json
 Install: https://nodejs.org/ or run 'brew install node' (macOS)
 
 $ brew install node
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 ✅ Success!
 ```
 
@@ -215,7 +215,7 @@ $ ./cdn-delivery.sh
 **Before**:
 ```bash
 $ cd /tmp
-$ ~/guia_js/cdn-delivery.sh
+$ ~/guia_j./.github/scripts/cdn-delivery.sh
 Cannot find module './package.json'
 # User confused about paths
 ```
@@ -223,14 +223,14 @@ Cannot find module './package.json'
 **After**:
 ```bash
 $ cd /tmp
-$ ~/guia_js/cdn-delivery.sh
+$ ~/guia_j./.github/scripts/cdn-delivery.sh
 Error: package.json not found
 This script must be run from the project root directory
 Current directory: /tmp
-Fix: cd /path/to/guia_js && ./cdn-delivery.sh
+Fix: cd /path/to/guia_js && ./.github/scripts/cdn-delivery.sh
 
 $ cd ~/guia_js
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 ✅ Success!
 ```
 
@@ -238,7 +238,7 @@ $ ./cdn-delivery.sh
 
 **Before**:
 ```bash
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 # URLs generated, but when user tries to use them:
 $ curl https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js
 404 Not Found
@@ -247,7 +247,7 @@ $ curl https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js
 
 **After**:
 ```bash
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 ...
 🧪 Testing CDN availability...
 ⚠️  Package not yet available on CDN
@@ -335,7 +335,7 @@ https://www.jsdelivr.com/package/gh/mpbarbosa/guia_js
 export PATH=$(echo $PATH | sed 's|:/usr/local/bin||')
 
 # Run script
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # Expected output:
 Error: Node.js not found
@@ -348,13 +348,13 @@ Install: https://nodejs.org/ or run 'brew install node' (macOS)
 #### Test 2: Wrong Directory
 ```bash
 cd /tmp
-~/guia_js/cdn-delivery.sh
+~/guia_j./.github/scripts/cdn-delivery.sh
 
 # Expected output:
 Error: package.json not found
 This script must be run from the project root directory
 Current directory: /tmp
-Fix: cd /path/to/guia_js && ./cdn-delivery.sh
+Fix: cd /path/to/guia_js && ./.github/scripts/cdn-delivery.sh
 
 # ✅ PASS: Shows current dir and fix
 ```
@@ -362,7 +362,7 @@ Fix: cd /path/to/guia_js && ./cdn-delivery.sh
 #### Test 3: CDN Not Available
 ```bash
 # Before pushing tag
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # Expected output:
 ⚠️  Package not yet available on CDN
@@ -383,7 +383,7 @@ Fix: cd /path/to/guia_js && ./cdn-delivery.sh
 
 ### Phase 2: Interactive Mode (Future)
 ```bash
-./cdn-delivery.sh --interactive
+./.github/scripts/cdn-delivery.sh --interactive
 
 # Would prompt:
 ? Node.js not found. Install now? (Y/n)

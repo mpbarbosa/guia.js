@@ -569,7 +569,7 @@ jobs:
 
 ### 1. Version Consistency Checker
 
-**File**: `scripts/check-version-consistency.sh`
+**File**: `.github/scripts/check-version-consistency.sh`
 
 ```bash
 #!/bin/bash
@@ -629,7 +629,7 @@ fi
 
 **Usage**:
 ```bash
-./scripts/check-version-consistency.sh
+./.github/scripts/check-version-consistency.sh
 ```
 
 **Exit codes**:
@@ -817,7 +817,7 @@ git commit -m "docs: update Last Updated dates"
 **Deliverables**:
 - `.github/workflows/version-consistency.yml`
 - `.github/workflows/test-badges.yml`
-- `scripts/check-version-consistency.sh`
+- `.github/scripts/check-version-consistency.sh`
 - `scripts/update-test-counts.sh`
 
 ---
@@ -1017,7 +1017,7 @@ git commit -m "docs: update Last Updated dates"
 npm run update-version
 
 # Or manually
-./scripts/check-version-consistency.sh
+./.github/scripts/check-version-consistency.sh
 ```
 
 #### 2. Test Badge Update Conflicts
@@ -1063,7 +1063,7 @@ git commit --amend
 ```json
 {
   "scripts": {
-    "check-version": "./scripts/check-version-consistency.sh",
+    "check-version": "./.github/scripts/check-version-consistency.sh",
     "update-test-counts": "./scripts/update-test-counts.sh",
     "update-dates": "./scripts/update-doc-dates.sh",
     "update-version": "npm run check-version && npm run update-test-counts && npm run update-dates",

@@ -356,6 +356,30 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 
 ### Features
 
+#### Feature Documentation (v0.8.7-alpha)
+
+- **[FEATURE_METROPOLITAN_REGION_DISPLAY.md](./FEATURE_METROPOLITAN_REGION_DISPLAY.md)** - Metropolitan Region Display 🆕
+  - Municipality highlight cards show "Região Metropolitana" context
+  - Example: "Região Metropolitana do Recife"
+  - Extracted from Nominatim `county` field
+  - 77 comprehensive tests validating 9 metro regions
+  - Integration with HTMLHighlightCardsDisplayer
+
+- **[FEATURE_MUNICIPIO_STATE_DISPLAY.md](./FEATURE_MUNICIPIO_STATE_DISPLAY.md)** - Município State Abbreviation 🆕
+  - Display format: "Recife, PE" instead of "Recife"
+  - Better geographic context for Brazilian municipalities
+  - 42 unit tests covering all 26 Brazilian states
+  - State abbreviation extraction and validation
+
+- **[SIDRA_INTEGRATION.md](./SIDRA_INTEGRATION.md)** - IBGE SIDRA Data Integration (v0.7.2+)
+  - Population statistics display with HTMLSidraDisplayer
+  - Brazilian Portuguese localization
+  - Offline fallback support (libs/sidra/tab6579_municipios.json)
+  - Observer pattern for automatic updates
+  - 190KB municipality data library
+
+#### Device & User Experience Features
+
 - **[DEVICE_DETECTION.md](../DEVICE_DETECTION.md)** - Device detection and accuracy thresholds
   - Mobile vs desktop detection
   - GPS accuracy classification
@@ -388,7 +412,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 
 ### CDN Delivery
 
-- **cdn-delivery.sh** - jsDelivr CDN URL generator script 🆕
+- **.github/scripts/cdn-delivery.sh** - jsDelivr CDN URL generator script 🆕
   - Generates CDN URLs for all guia.js files
   - Version-specific and branch-based URLs
   - HTML usage examples and ES module imports
@@ -926,7 +950,7 @@ Major documentation update to formalize the project's commitment to functional p
 - **Version**: 0.7.1-alpha (active development)
 - **License**: ISC (see LICENSE file)
 - **Author**: Marcelo Pereira Barbosa
-- **Last Updated**: 2026-01-11
+- **Last Updated**: 2026-02-09
 
 ---
 

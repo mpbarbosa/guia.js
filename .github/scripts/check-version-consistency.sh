@@ -13,7 +13,7 @@
 #   ./check-version-consistency.sh
 #   
 #   Or as a pre-commit hook:
-#   ln -s ../../scripts/check-version-consistency.sh .git/hooks/pre-commit
+#   ln -s ../../.github/scripts/check-version-consistency.sh .git/hooks/pre-commit
 #
 # What it checks:
 #   - package.json version
@@ -236,7 +236,7 @@ else
     echo "  # Edit other documentation as needed"
     echo ""
     echo "  ${BLUE}# Verify consistency${NC}"
-    echo "  ./scripts/check-version-consistency.sh"
+    echo "  ./.github/scripts/check-version-consistency.sh"
     echo ""
     exit 1
 fi

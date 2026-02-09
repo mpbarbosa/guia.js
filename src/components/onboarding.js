@@ -4,6 +4,8 @@
  * @since 0.8.7-alpha
  */
 
+import { showError } from '../utils/toast.js';
+
 /**
  * OnboardingManager - Singleton for managing onboarding state
  */
@@ -121,7 +123,7 @@ class OnboardingManager {
    */
   requestLocation() {
     if (!navigator.geolocation) {
-      alert('Geolocalização não é suportada pelo seu navegador.');
+      showError('Geolocalização não é suportada pelo seu navegador.');
       return;
     }
 

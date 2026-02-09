@@ -73,7 +73,7 @@ git mv docs/misc/DEVOPS_INTEGRATION_ASSESSMENT.md docs/reports/analysis/
 **Status**: Proposed
 
 **Content Summary**:
-- Plan to relocate `cdn-delivery.sh`
+- Plan to relocate `.github/scripts/cdn-delivery.sh`
 - Script organization proposal
 - Low priority organizational improvement
 

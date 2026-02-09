@@ -34,14 +34,14 @@ All **22 documentation issues** identified in the comprehensive audit have been 
 - Cross-referenced and internally consistent
 
 ### Code Enhancements
-- **cdn-delivery.sh**: Environment variable support (4 configurable values)
+- **.github/scripts/cdn-delivery.sh**: Environment variable support (4 configurable values)
 - **README.md**: Pre-push validation prominent
 - **Configuration display**: Visual feedback for all settings
 
 ### Files Modified
 1. `.github/copilot-instructions.md` - Version, tests, coverage, structure
 2. `README.md` - ibira.js, pre-push validation, env vars, examples
-3. `cdn-delivery.sh` - Environment variables, prerequisites, error handling
+3. `.github/scripts/cdn-delivery.sh` - Environment variables, prerequisites, error handling
 4. `docs/INDEX.md` - Version consistency
 5. `package.json` - Verified version (0.6.0-alpha)
 6. `src/config/defaults.js` - Verified version source
@@ -145,7 +145,7 @@ All **22 documentation issues** identified in the comprehensive audit have been 
 - **Impact**: Documentation stays accurate as code evolves
 
 #### 18. Incomplete Prerequisites Documentation ✅
-- **Added**: Comprehensive prerequisites to cdn-delivery.sh
+- **Added**: Comprehensive prerequisites to .github/scripts/cdn-delivery.sh
 - **Included**: Verification commands for each prerequisite
 - **Documented**: In script header and README.md
 - **Impact**: Users can verify dependencies before running
@@ -354,7 +354,7 @@ Individual comprehensive reports created for major enhancements:
 - `docs/INDEX.md` - Documentation index (version fixed)
 
 ### Scripts Enhanced
-- `cdn-delivery.sh` - CDN URL generator (env vars + validation)
+- `.github/scripts/cdn-delivery.sh` - CDN URL generator (env vars + validation)
 - `.github/scripts/test-workflow-locally.sh` - Pre-push validation
 
 ### Completion Reports

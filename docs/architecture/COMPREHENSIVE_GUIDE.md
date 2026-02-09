@@ -203,9 +203,9 @@ HTMLAddressDisplayer.display()
 **Key Components**:
 - **HTMLPositionDisplayer**: Coordinate display and Google Maps links
 - **HTMLAddressDisplayer**: Address formatting and display
-- **HTMLHighlightCardsDisplayer**: Municipality and neighborhood cards
+- **HTMLHighlightCardsDisplayer**: Municipality and neighborhood cards (v0.8.7: metro region support)
 - **HTMLReferencePlaceDisplayer**: Reference place display
-- **HTMLSidraDisplayer**: IBGE demographic statistics display
+- **HTMLSidraDisplayer**: IBGE demographic statistics display (v0.7.2+)
 - **DisplayerFactory**: Factory for creating display components
 - **HtmlText**: Text display utilities
 
@@ -226,6 +226,53 @@ class HTMLAddressDisplayer {
     // Update DOM with formatted address
     this.element.innerHTML = this.formatAddress(addressData);
   }
+}
+```
+
+#### HTMLSidraDisplayer (v0.7.2+)
+
+**Purpose**: Display IBGE SIDRA demographic data (population statistics) for Brazilian municipalities
+
+**Key Features**:
+- Population estimates with Brazilian Portuguese formatting (e.g., "123.456 habitantes")
+- Observer pattern integration (listens to ADDRESS_FETCHED_EVENT)
+- Offline fallback: `libs/sidra/tab6579_municipios.json` (190KB local data)
+- Automatic updates on address changes
+- Error handling with user-friendly messages
+
+**API Integration**: 
+- **Primary**: `https://servicodados.ibge.gov.br/api/v3/agregados/6579/periodos/-6/variaveis/9324`
+- **Fallback**: Local JSON file with pre-cached municipality data
+
+**Usage Example**:
+```javascript
+// Initialize with DOM container
+const sidraDisplayer = new HTMLSidraDisplayer(
+  document.getElementById('sidra-container'),
+  { dataType: 'PopEst' }
+);
+
+// Update displays population for município
+sidraDisplayer.update(newAddress, enderecoPadronizado, ADDRESS_FETCHED_EVENT, false, null);
+
+// Observer pattern - automatic updates
+manager.subscribeFunction((position, address, enderecoPadronizado) => {
+  if (continuousMode && enderecoPadronizado) {
+    sidraDisplayer.update(address, enderecoPadronizado, ADDRESS_FETCHED_EVENT, false, null);
+  }
+});
+```
+
+**Test Coverage**: 
+- `__tests__/unit/HTMLSidraDisplayer.test.js` - Comprehensive test suite
+- Integration with E2E tests (address validation workflows)
+
+**Data Format**:
+```javascript
+{
+  "codigoMunicipio": "2611606",  // IBGE 7-digit code
+  "populacao": "1653461",         // Latest estimate
+  "ano": "2021"                   // Reference year
 }
 ```
 

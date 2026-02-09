@@ -120,7 +120,9 @@ describe('E2E: Pontal do Coruripe - Hamlet in Distrito Card', () => {
         
         // Enable console logging
         page.on('console', msg => console.log('PAGE:', msg.text()));
-        page.on('pageerror', error => console.log('ERROR:', error.message));
+        page.on('pageerror', error => {
+            console.log('PAGE ERROR:', error.toString());
+        });
         
         // Grant geolocation permission
         const context = browser.defaultBrowserContext();

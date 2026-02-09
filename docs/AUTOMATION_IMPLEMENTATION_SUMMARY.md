@@ -5,6 +5,9 @@
 **Status**: ✅ Complete  
 **Priority**: 🟢 HIGH (Quality Assurance Automation)
 
+> **Note**: This document reflects automation state as of v0.7.1-alpha (2026-01-11).  
+> For current automation status (v0.8.7-alpha), see [WORKFLOW_SETUP.md](./WORKFLOW_SETUP.md).
+
 ---
 
 ## Executive Summary
@@ -179,13 +182,13 @@ PERCENTAGE=$((DOCUMENTED * 100 / TOTAL))
 ### Maintenance Scripts
 
 #### 1. Version Consistency Checker
-**File**: `scripts/check-version-consistency.sh` (53 lines)
+**File**: `.github/scripts/check-version-consistency.sh` (243 lines)
 
 **Purpose**: Manual version consistency validation  
 **Usage**:
 ```bash
 # Run directly
-./scripts/check-version-consistency.sh
+./.github/scripts/check-version-consistency.sh
 
 # Run via npm
 npm run check:version
@@ -338,7 +341,7 @@ docs/architecture/VERSION_TIMELINE.md
 ```markdown
 ---
 
-**Last Updated**: 2026-01-11  
+**Last Updated**: 2026-02-09  
 **Status**: ✅ Active
 ```
 
@@ -354,7 +357,7 @@ docs/architecture/VERSION_TIMELINE.md
 Added 4 new npm scripts to `package.json`:
 
 ```json
-"check:version": "./scripts/check-version-consistency.sh",
+"check:version": "./.github/scripts/check-version-consistency.sh",
 "update:tests": "./scripts/update-test-counts.sh",
 "update:dates": "./scripts/update-doc-dates.sh",
 "automation:test": "npm run check:version && echo '✅ Automation scripts ready'"
@@ -387,8 +390,8 @@ npm run automation:test
 3. `.github/workflows/link-checker.yml` - 91 lines
 4. `.github/workflows/jsdoc-coverage.yml` - 121 lines
 
-**Maintenance Scripts** (3 files, 171 lines):
-1. `scripts/check-version-consistency.sh` - 53 lines
+**Maintenance Scripts** (3 files, 361 lines):
+1. `.github/scripts/check-version-consistency.sh` - 243 lines
 2. `scripts/update-test-counts.sh` - 58 lines
 3. `scripts/update-doc-dates.sh` - 60 lines
 
@@ -675,7 +678,7 @@ gh workflow run jsdoc-coverage.yml
 
 ```bash
 # Test script execution
-bash -x scripts/check-version-consistency.sh
+bash -x .github/scripts/check-version-consistency.sh
 
 # Validate YAML syntax
 yamllint .github/workflows/version-consistency.yml
@@ -766,7 +769,7 @@ Successfully implemented all recommended automation infrastructure in **45 minut
 
 ---
 
-**Last Updated**: 2026-01-11  
+**Last Updated**: 2026-02-09  
 **Status**: ✅ Complete  
 **Implementation Time**: 45 minutes  
 **Files Created**: 7 (468 total lines)  

@@ -141,7 +141,7 @@
 
 **Solution**: Comprehensive error handling and documentation
 
-#### 1. Enhanced cdn-delivery.sh Script
+#### 1. Enhanced .github/scripts/cdn-delivery.sh Script
 
 **Added** (74 lines):
 ```bash
@@ -158,7 +158,7 @@ Error: Node.js not found
 → Install: brew install node (macOS)
 
 Error: package.json not found
-→ Fix: cd /path/to/guia_js && ./cdn-delivery.sh
+→ Fix: cd /path/to/guia_js && ./.github/scripts/cdn-delivery.sh
 
 Error: Git not found
 → Install: sudo apt install git (Linux)
@@ -232,7 +232,7 @@ Error: Failed to read package.json
 3. `docs/INDEX.md` (+52 lines)
 4. `docs/IBIRA_INTEGRATION.md` (+15 lines)
 5. `src/guia.js` (+4 lines)
-6. `cdn-delivery.sh` (+74 lines)
+6. `.github/scripts/cdn-delivery.sh` (+74 lines)
 
 ---
 

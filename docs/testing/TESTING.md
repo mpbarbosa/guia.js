@@ -20,6 +20,9 @@ npm run test:coverage
 # Run tests in watch mode (for development)
 npm run test:watch
 
+# Run visual hierarchy tests (Selenium)
+npm run test:visual
+
 # Validate syntax + run tests
 npm run test:all
 

@@ -17,11 +17,11 @@
 **Example Failure Scenarios**:
 ```bash
 # Without Node.js
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 node: command not found
 
 # Without Git
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 git: command not found
 
 # Users unclear what versions needed
@@ -220,7 +220,7 @@ npm --version
 $ npm install
 # Might fail if Node.js too old, unclear why
 
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 node: command not found
 # User confused - what's "node"?
 ```
@@ -239,7 +239,7 @@ v20.x.x  # Good to go!
 $ npm install
 # Success
 
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 # Success
 ```
 
@@ -247,7 +247,7 @@ $ ./cdn-delivery.sh
 
 **Before**:
 ```bash
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 git: command not found
 # User doesn't know Git is needed
 ```
@@ -263,7 +263,7 @@ $ git --version
 # Follows installation instructions
 $ sudo apt install git
 
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 # Success - URLs generated
 ```
 

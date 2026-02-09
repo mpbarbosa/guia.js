@@ -203,7 +203,7 @@ Comprehensive documentation audit and update addressing 17 critical issues ident
 
 #### CDN Delivery Documentation Enhancement
 - Added prominent Quick Start command
-- Documented cdn-delivery.sh script features:
+- Documented .github/scripts/cdn-delivery.sh script features:
   - Automatic version detection
   - Multiple URL format outputs
   - Persistent cdn-urls.txt file

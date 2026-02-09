@@ -1,0 +1,22 @@
+{
+  "source": {
+    "include": ["src/"],
+    "includePattern": ".+\\.js$",
+    "excludePattern": "(node_modules|__tests__|coverage|legacy-tests)"
+  },
+  "opts": {
+    "encoding": "utf8",
+    "destination": "docs/api-generated/",
+    "recurse": true,
+    "readme": "README.md"
+  },
+  "plugins": [],
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  },
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  }
+}

@@ -58,7 +58,7 @@ Simulates GitHub Actions workflow locally. Validates:
 
 ### CDN URL Generation
 ```bash
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 ```
 Generates jsDelivr CDN URLs for current version. Output saved to `cdn-urls.txt`.
 
@@ -140,7 +140,7 @@ ls package.json            # Must be in project root
 
 # Run from project root
 cd /path/to/guia_js
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 ```
 
 ## 🎯 Common Workflows
@@ -156,7 +156,7 @@ cd /path/to/guia_js
 
 ### Releasing New Version
 1. Update version: `npm version minor` (or major/patch)
-2. Generate CDN URLs: `./cdn-delivery.sh`
+2. Generate CDN URLs: `./.github/scripts/cdn-delivery.sh`
 3. Commit changes: `git add . && git commit -m "chore: bump version"`
 4. Create tag: `git tag v0.X.Y-alpha`
 5. Push: `git push origin main --tags`

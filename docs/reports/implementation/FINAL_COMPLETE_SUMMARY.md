@@ -81,7 +81,7 @@ All documentation issues resolved, automation implemented, and comprehensive gui
 | # | File | Changes | Type |
 |---|------|---------|------|
 | 1 | README.md | +350 lines | Enhanced |
-| 2 | cdn-delivery.sh | +100 lines | Enhanced |
+| 2  .github/scripts/cdn-delivery.sh  +100 lines | Enhanced |
 | 3 | .github/copilot-instructions.md | +94 lines | Updated |
 | 4 | docs/INDEX.md | +52 lines | Updated |
 | 5 | docs/IBIRA_INTEGRATION.md | +15 lines | Updated |
@@ -95,7 +95,7 @@ All documentation issues resolved, automation implemented, and comprehensive gui
 
 ### **1. Prerequisites Documentation** ⭐
 
-**Added to**: README.md, docs/AUTOMATION_TOOLS.md, cdn-delivery.sh
+**Added to**: README.md, docs/AUTOMATION_TOOLS.md, .github/scripts/cdn-delivery.sh
 
 **Coverage**:
 - ✅ Node.js v18+ (verification commands)
@@ -110,7 +110,7 @@ All documentation issues resolved, automation implemented, and comprehensive gui
 
 ### **2. Error Handling Documentation** ⭐⭐
 
-**Enhanced**: cdn-delivery.sh, README.md
+**Enhanced**: .github/scripts/cdn-delivery.sh, README.md
 
 **Error Coverage** (7 Scenarios):
 1. ✅ Node.js not found → Install guide
@@ -428,7 +428,7 @@ git commit -m "test: verify automation"
 grep -r "Last Updated: 2025" docs/
 
 # Update CDN URLs
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 ```
 
 ---

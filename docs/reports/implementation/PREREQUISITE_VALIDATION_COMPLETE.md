@@ -9,14 +9,14 @@
 
 ## Summary
 
-The cdn-delivery.sh script now includes **comprehensive prerequisite validation** with visual feedback, clear error messages, and helpful solutions.
+The .github/scripts/cdn-delivery.sh script now includes **comprehensive prerequisite validation** with visual feedback, clear error messages, and helpful solutions.
 
 ---
 
 ## Implementation Details
 
 ### Location
-**File**: `cdn-delivery.sh`  
+**File**: `.github/scripts/cdn-delivery.sh`  
 **Lines**: 34-72 (39 lines)  
 **Section**: "Prerequisite Checks"
 
@@ -64,7 +64,7 @@ Install: https://nodejs.org/ or run 'brew install node' (macOS)
 ❌ Error: package.json not found
 This script must be run from the project root directory
 Current directory: /tmp
-Fix: cd /path/to/guia_js && ./cdn-delivery.sh
+Fix: cd /path/to/guia_js && ./.github/scripts/cdn-delivery.sh
 ```
 
 ---
@@ -95,7 +95,7 @@ if [ ! -f "package.json" ]; then
     echo -e "${RED}❌ Error: package.json not found${NC}"
     echo "This script must be run from the project root directory"
     echo "Current directory: $(pwd)"
-    echo "Fix: cd /path/to/guia_js && ./cdn-delivery.sh"
+    echo "Fix: cd /path/to/guia_js && ./.github/scripts/cdn-delivery.sh"
     exit 1
 fi
 echo -e "${GREEN}✅ package.json found${NC}"
@@ -176,14 +176,14 @@ fi
 
 ### Before Enhancement
 ```bash
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 /cdn-delivery.sh: line 21: node: command not found
 # Cryptic, no context, no solution
 ```
 
 ### After Enhancement
 ```bash
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 🔍 Checking prerequisites...
 
 ❌ Error: Node.js not found
@@ -214,7 +214,7 @@ Each check provides:
 
 ### Test 1: All Prerequisites Met
 ```bash
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 
 Output:
 🔍 Checking prerequisites...
@@ -231,7 +231,7 @@ Result: ✅ PASS
 ### Test 2: Node.js Missing
 ```bash
 $ export PATH="/usr/bin:/bin"  # Remove Node.js
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 
 Output:
 🔍 Checking prerequisites...
@@ -246,7 +246,7 @@ Result: ✅ PASS (fails gracefully with clear message)
 ### Test 3: Wrong Directory
 ```bash
 $ cd /tmp
-$ ~/guia_js/cdn-delivery.sh
+$ ~/guia_j./.github/scripts/cdn-delivery.sh
 
 Output:
 🔍 Checking prerequisites...
@@ -254,7 +254,7 @@ Output:
 ❌ Error: package.json not found
 This script must be run from the project root directory
 Current directory: /tmp
-Fix: cd /path/to/guia_js && ./cdn-delivery.sh
+Fix: cd /path/to/guia_js && ./.github/scripts/cdn-delivery.sh
 
 Exit Code: 1
 Result: ✅ PASS (shows current directory, provides fix)
@@ -263,7 +263,7 @@ Result: ✅ PASS (shows current directory, provides fix)
 ### Test 4: Git Not Installed
 ```bash
 $ export PATH="/usr/bin:/bin"  # Remove Git
-$ ./cdn-delivery.sh
+$ ./.github/scripts/cdn-delivery.sh
 
 Output:
 🔍 Checking prerequisites...
@@ -282,7 +282,7 @@ Result: ✅ PASS (clear error with install link)
 $ mkdir /tmp/test-no-git
 $ cd /tmp/test-no-git
 $ touch package.json
-$ ~/guia_js/cdn-delivery.sh
+$ ~/guia_j./.github/scripts/cdn-delivery.sh
 
 Output:
 🔍 Checking prerequisites...
@@ -363,7 +363,7 @@ The prerequisite validation is fully documented in:
    - Common errors with solutions
    - Troubleshooting guide
 
-3. **cdn-delivery.sh** (Lines 1-24)
+3. **.github/scripts/cdn-delivery.sh** (Lines 1-24)
    - Script header with exit codes
    - Prerequisites listed
    - Usage instructions

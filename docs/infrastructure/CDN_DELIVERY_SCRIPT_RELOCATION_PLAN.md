@@ -1,6 +1,6 @@
 # CDN Delivery Script Relocation Plan
 
-**Issue**: `cdn-delivery.sh` located in project root instead of scripts directory  
+**Issue**: `.github/scripts/cdn-delivery.sh` located in project root instead of scripts directory  
 **Priority**: LOW (organizational improvement, no functionality impact)  
 **Date**: 2026-01-01  
 **Status**: Proposed
@@ -9,7 +9,7 @@
 
 ## 📋 Executive Summary
 
-The `cdn-delivery.sh` script (348 lines, 15KB) is currently in the project root directory. For better organization and consistency with other scripts, it should be moved to `.github/scripts/` alongside other build/deployment scripts.
+The `.github/scripts/cdn-delivery.sh` script (348 lines, 15KB) is currently in the project root directory. For better organization and consistency with other scripts, it should be moved to `.github/scripts/` alongside other build/deployment scripts.
 
 ---
 
@@ -18,7 +18,7 @@ The `cdn-delivery.sh` script (348 lines, 15KB) is currently in the project root 
 ### File Location
 ```
 guia_js/                               ❌ ROOT DIRECTORY
-├── cdn-delivery.sh                    (348 lines, 15KB, executable)
+├── .github/scripts/cdn-delivery.sh                    (348 lines, 15KB, executable)
 ├── package.json
 ├── README.md
 └── ... (other root files)
@@ -36,13 +36,13 @@ guia_js/                               ❌ ROOT DIRECTORY
 ### Current Usage Pattern
 ```bash
 # From project root
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # With environment variables
-GITHUB_USER="username" ./cdn-delivery.sh
+GITHUB_USER="username" ./.github/scripts/cdn-delivery.sh
 
 # Custom output
-OUTPUT_FILE="my-urls.txt" ./cdn-delivery.sh
+OUTPUT_FILE="my-urls.txt" ./.github/scripts/cdn-delivery.sh
 ```
 
 ---
@@ -63,7 +63,7 @@ OUTPUT_FILE="my-urls.txt" ./cdn-delivery.sh
 
 | Script | Size | Lines | Purpose |
 |--------|------|-------|---------|
-| cdn-delivery.sh | 15KB | 348 | CDN URL generation |
+| .github/scripts/cdn-delivery.sh | 15KB | 348 | CDN URL generation |
 
 **Total**: 1 script, clutters root ❌
 
@@ -97,7 +97,7 @@ OUTPUT_FILE="my-urls.txt" ./cdn-delivery.sh
 ### 5. **Path Dependency**
 Script requires being run from project root:
 ```bash
-# Line 67-72 in cdn-delivery.sh
+# Line 67-72 in .github/scripts/cdn-delivery.sh
 if [ ! -f "package.json" ]; then
     echo "❌ Error: package.json not found"
     echo "This script must be run from the project root directory"
@@ -116,7 +116,7 @@ This requirement works from **any location** if we keep the script callable from
 **Target Location**:
 ```
 .github/scripts/
-├── cdn-delivery.sh                    ✅ Moved here
+├── .github/scripts/cdn-delivery.sh                    ✅ Moved here
 ├── check-version-consistency.sh
 ├── test-workflow-locally.sh
 └── update-badges.sh
@@ -132,13 +132,13 @@ This requirement works from **any location** if we keep the script callable from
 **Usage Pattern After Move**:
 ```bash
 # From project root
-./.github/scripts/cdn-delivery.sh
+./.github/script./.github/scripts/cdn-delivery.sh
 
 # With environment variables
-GITHUB_USER="username" ./.github/scripts/cdn-delivery.sh
+GITHUB_USER="username" ./.github/script./.github/scripts/cdn-delivery.sh
 
 # From any directory (absolute path)
-/path/to/guia_js/.github/scripts/cdn-delivery.sh
+/path/to/guia_js/.github/script./.github/scripts/cdn-delivery.sh
 ```
 
 **Script Works From Any Location** because:
@@ -153,11 +153,11 @@ GITHUB_USER="username" ./.github/scripts/cdn-delivery.sh
 **Target Location**:
 ```
 scripts/
-└── cdn-delivery.sh                    ✅ Moved here
+└── .github/scripts/cdn-delivery.sh                    ✅ Moved here
 ```
 
 **Benefits**:
-- ✅ Shorter path (`./scripts/cdn-delivery.sh`)
+- ✅ Shorter path (`./script./.github/scripts/cdn-delivery.sh`)
 - ✅ Separate from GitHub-specific files
 - ✅ Common pattern in open-source projects
 
@@ -190,13 +190,13 @@ scripts/
 
 ```bash
 # Preserve git history with git mv
-git mv cdn-delivery.sh .github/scripts/cdn-delivery.sh
+git mv .github/scripts/cdn-delivery.sh .github/script./.github/scripts/cdn-delivery.sh
 
 # Verify move
-ls -la .github/scripts/cdn-delivery.sh
+ls -la .github/script./.github/scripts/cdn-delivery.sh
 
 # Check permissions preserved
-test -x .github/scripts/cdn-delivery.sh && echo "Executable: Yes"
+test -x .github/script./.github/scripts/cdn-delivery.sh && echo "Executable: Yes"
 ```
 
 **Result**: Script moved, history preserved, permissions maintained
@@ -210,7 +210,7 @@ test -x .github/scripts/cdn-delivery.sh && echo "Executable: Yes"
 cd /path/to/guia_js
 
 # Test script from new location
-./.github/scripts/cdn-delivery.sh
+./.github/script./.github/scripts/cdn-delivery.sh
 
 # Verify output file created
 test -f cdn-urls.txt && echo "✅ Output file created"
@@ -236,7 +236,7 @@ rm cdn-urls.txt
 grep -n "cdn-delivery.sh" README.md
 
 # Update references
-sed -i 's|./cdn-delivery.sh|./.github/scripts/cdn-delivery.sh|g' README.md
+sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cdn-delivery.sh|g' README.md
 ```
 
 **2. .github/copilot-instructions.md**:
@@ -245,13 +245,13 @@ sed -i 's|./cdn-delivery.sh|./.github/scripts/cdn-delivery.sh|g' README.md
 grep -n "cdn-delivery.sh" .github/copilot-instructions.md
 
 # Update references
-sed -i 's|./cdn-delivery.sh|./.github/scripts/cdn-delivery.sh|g' .github/copilot-instructions.md
+sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cdn-delivery.sh|g' .github/copilot-instructions.md
 ```
 
 **3. DEVOPS_INTEGRATION_ASSESSMENT.md**:
 ```bash
 # Update script path references
-sed -i 's|./cdn-delivery.sh|./.github/scripts/cdn-delivery.sh|g' DEVOPS_INTEGRATION_ASSESSMENT.md
+sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cdn-delivery.sh|g' DEVOPS_INTEGRATION_ASSESSMENT.md
 
 # Update location description
 sed -i 's|cdn-delivery.sh (Root Directory)|cdn-delivery.sh (.github/scripts/)|g' DEVOPS_INTEGRATION_ASSESSMENT.md
@@ -259,12 +259,12 @@ sed -i 's|cdn-delivery.sh (Root Directory)|cdn-delivery.sh (.github/scripts/)|g'
 
 **4. PREREQUISITES_DOCUMENTATION_UPDATE.md**:
 ```bash
-sed -i 's|./cdn-delivery.sh|./.github/scripts/cdn-delivery.sh|g' PREREQUISITES_DOCUMENTATION_UPDATE.md
+sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cdn-delivery.sh|g' PREREQUISITES_DOCUMENTATION_UPDATE.md
 ```
 
 **5. ERROR_HANDLING_COMPLETE.md**:
 ```bash
-sed -i 's|./cdn-delivery.sh|./.github/scripts/cdn-delivery.sh|g' ERROR_HANDLING_COMPLETE.md
+sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cdn-delivery.sh|g' ERROR_HANDLING_COMPLETE.md
 ```
 
 **6. Proposed release.yml workflow** (DEVOPS_INTEGRATION_ASSESSMENT.md):
@@ -272,8 +272,8 @@ sed -i 's|./cdn-delivery.sh|./.github/scripts/cdn-delivery.sh|g' ERROR_HANDLING_
 # Update in proposed workflow YAML
 - name: Run CDN delivery script
   run: |
-    chmod +x ./.github/scripts/cdn-delivery.sh
-    ./.github/scripts/cdn-delivery.sh
+    chmod +x ./.github/script./.github/scripts/cdn-delivery.sh
+    ./.github/script./.github/scripts/cdn-delivery.sh
 ```
 
 ---
@@ -284,10 +284,10 @@ The script itself may reference its location. Check and update:
 
 ```bash
 # Check for self-references
-grep -n "cdn-delivery.sh" .github/scripts/cdn-delivery.sh
+grep -n "cdn-delivery.sh" .github/script./.github/scripts/cdn-delivery.sh
 
 # If found in usage examples, update:
-sed -i 's|./cdn-delivery.sh|./.github/scripts/cdn-delivery.sh|g' .github/scripts/cdn-delivery.sh
+sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cdn-delivery.sh|g' .github/script./.github/scripts/cdn-delivery.sh
 ```
 
 **Lines to update** (if referencing old path):
@@ -298,7 +298,7 @@ sed -i 's|./cdn-delivery.sh|./.github/scripts/cdn-delivery.sh|g' .github/scripts
 **Updated Usage Block**:
 ```bash
 # Usage:
-#   ./.github/scripts/cdn-delivery.sh
+#   ./.github/script./.github/scripts/cdn-delivery.sh
 #
 #   Environment Variables (optional):
 #     GITHUB_USER    - GitHub username (default: mpbarbosa)
@@ -308,10 +308,10 @@ sed -i 's|./cdn-delivery.sh|./.github/scripts/cdn-delivery.sh|g' .github/scripts
 #
 #   Examples:
 #     # Use defaults
-#     ./.github/scripts/cdn-delivery.sh
+#     ./.github/script./.github/scripts/cdn-delivery.sh
 #
 #     # Override for fork
-#     GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./.github/scripts/cdn-delivery.sh
+#     GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./.github/script./.github/scripts/cdn-delivery.sh
 ```
 
 ---
@@ -323,11 +323,11 @@ If shorter path is desired, create a root wrapper script:
 **Create `cdn-delivery` (no .sh)**:
 ```bash
 #!/bin/bash
-# Convenience wrapper for cdn-delivery.sh
+# Convenience wrapper for .github/scripts/cdn-delivery.sh
 # Usage: ./cdn-delivery [args...]
 
 # Forward all arguments to actual script
-exec "$(dirname "$0")/.github/scripts/cdn-delivery.sh" "$@"
+exec "$(dirname "$0")/.github/script./.github/scripts/cdn-delivery.sh" "$@"
 ```
 
 **Make executable**:
@@ -342,7 +342,7 @@ git add cdn-delivery
 ./cdn-delivery
 
 # Long form (direct)
-./.github/scripts/cdn-delivery.sh
+./.github/script./.github/scripts/cdn-delivery.sh
 ```
 
 **Benefits**:
@@ -358,7 +358,7 @@ git add cdn-delivery
 
 ### Phase 6: Update .gitignore (If Needed)
 
-Check if `cdn-delivery.sh` or its output is gitignored:
+Check if `.github/scripts/cdn-delivery.sh` or its output is gitignored:
 
 ```bash
 grep -n "cdn-delivery\|cdn-urls" .gitignore
@@ -374,13 +374,13 @@ If patterns exist, verify they still work after move.
 
 ```bash
 # 1. Verify script exists in new location
-test -f .github/scripts/cdn-delivery.sh && echo "✅ Script exists"
+test -f .github/script./.github/scripts/cdn-delivery.sh && echo "✅ Script exists"
 
 # 2. Verify executable permission
-test -x .github/scripts/cdn-delivery.sh && echo "✅ Executable"
+test -x .github/script./.github/scripts/cdn-delivery.sh && echo "✅ Executable"
 
 # 3. Test script execution
-./.github/scripts/cdn-delivery.sh
+./.github/script./.github/scripts/cdn-delivery.sh
 
 # 4. Verify output created
 test -f cdn-urls.txt && echo "✅ Output file created"
@@ -393,7 +393,7 @@ grep -q "cdn.jsdelivr.net" cdn-urls.txt && echo "✅ URLs valid"
 rm cdn-urls.txt
 
 # 7. Check git history preserved
-git log --follow .github/scripts/cdn-delivery.sh | head -20
+git log --follow .github/script./.github/scripts/cdn-delivery.sh | head -20
 
 # 8. Verify documentation updates
 grep "cdn-delivery.sh" README.md
@@ -413,7 +413,7 @@ npm test
 
 ```bash
 # Stage all changes
-git add .github/scripts/cdn-delivery.sh
+git add .github/script./.github/scripts/cdn-delivery.sh
 git add README.md
 git add .github/copilot-instructions.md
 git add DEVOPS_INTEGRATION_ASSESSMENT.md
@@ -424,9 +424,9 @@ git add ERROR_HANDLING_COMPLETE.md
 git status | grep "cdn-delivery.sh"
 
 # Commit with descriptive message
-git commit -m "refactor: move cdn-delivery.sh to .github/scripts/
+git commit -m "refactor: move .github/scripts/cdn-delivery.sh to .github/scripts/
 
-- Move cdn-delivery.sh from root to .github/scripts/
+- Move .github/scripts/cdn-delivery.sh from root to .github/scripts/
 - Co-locate with other build/deployment scripts
 - Update all documentation references
 - Update internal script usage examples
@@ -440,8 +440,8 @@ Benefits:
 - Better alignment with open-source conventions
 
 Usage:
-- Old: ./cdn-delivery.sh
-- New: ./.github/scripts/cdn-delivery.sh
+- Old: ./.github/scripts/cdn-delivery.sh
+- New: ./.github/script./.github/scripts/cdn-delivery.sh
 
 Breaking: Path changed (documentation updated)
 Impact: Low - Script rarely executed manually
@@ -458,7 +458,7 @@ git show --stat
 ### Before (Current State)
 ```
 guia_js/                               ❌ CLUTTERED ROOT
-├── cdn-delivery.sh                    ❌ Inconsistent location
+├── .github/scripts/cdn-delivery.sh                    ❌ Inconsistent location
 ├── cdn-urls.txt                       (output file, OK in root)
 ├── package.json
 ├── README.md
@@ -490,7 +490,7 @@ guia_js/                               ✅ CLEAN ROOT
 ├── docs/
 └── .github/
     └── scripts/
-        ├── cdn-delivery.sh                 ✅ Organized
+        ├── .github/scripts/cdn-delivery.sh                 ✅ Organized
         ├── check-version-consistency.sh    ✅ Organized
         ├── test-workflow-locally.sh        ✅ Organized
         └── update-badges.sh                ✅ Organized
@@ -544,7 +544,7 @@ OUTPUT_FILE=${OUTPUT_FILE:-cdn-urls.txt}
 ## ⚠️ Risks and Mitigation
 
 ### Risk 1: Path References in External Tools
-**Risk**: External scripts/tools may reference `./cdn-delivery.sh`  
+**Risk**: External scripts/tools may reference `./.github/scripts/cdn-delivery.sh`  
 **Likelihood**: Low (script is new, not widely integrated)  
 **Mitigation**:
 - Search entire project for references
@@ -552,7 +552,7 @@ OUTPUT_FILE=${OUTPUT_FILE:-cdn-urls.txt}
 - Document new path in migration notes
 
 ### Risk 2: User Muscle Memory
-**Risk**: Users accustomed to `./cdn-delivery.sh`  
+**Risk**: Users accustomed to `./.github/scripts/cdn-delivery.sh`  
 **Likelihood**: Low (script rarely executed manually)  
 **Mitigation**:
 - Update all documentation
@@ -578,7 +578,7 @@ OUTPUT_FILE=${OUTPUT_FILE:-cdn-urls.txt}
 **Likelihood**: Zero (`git mv` preserves permissions)  
 **Mitigation**:
 - Verify with `test -x` after move
-- Re-add if needed: `chmod +x .github/scripts/cdn-delivery.sh`
+- Re-add if needed: `chmod +x .github/script./.github/scripts/cdn-delivery.sh`
 
 ---
 
@@ -628,7 +628,7 @@ express/
 
 Move is successful when:
 
-- [x] Script exists at `.github/scripts/cdn-delivery.sh`
+- [x] Script exists at `.github/script./.github/scripts/cdn-delivery.sh`
 - [x] Script is executable (`chmod +x`)
 - [x] Script runs successfully from project root
 - [x] Generates `cdn-urls.txt` with valid URLs
@@ -666,7 +666,7 @@ If issues arise:
 
 ```bash
 # Restore to original location
-git mv .github/scripts/cdn-delivery.sh cdn-delivery.sh
+git mv .github/script./.github/scripts/cdn-delivery.sh .github/scripts/cdn-delivery.sh
 
 # Revert documentation
 git checkout README.md
@@ -674,7 +674,7 @@ git checkout .github/copilot-instructions.md
 git checkout DEVOPS_INTEGRATION_ASSESSMENT.md
 
 # Verify working
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 
 # Run tests
 npm test
@@ -693,7 +693,7 @@ npm test
 | DEVOPS_INTEGRATION_ASSESSMENT.md | ~12-15 references | Technical docs |
 | PREREQUISITES_DOCUMENTATION_UPDATE.md | ~6 references | Setup guide |
 | ERROR_HANDLING_COMPLETE.md | ~5 references | Error docs |
-| cdn-delivery.sh (internal) | ~3 references | Usage examples |
+| .github/scripts/cdn-delivery.sh (internal) | ~3 references | Usage examples |
 
 **Total**: ~37-43 references to update
 
@@ -701,7 +701,7 @@ npm test
 ```bash
 # One-line update for all files
 find . -type f \( -name "*.md" -o -name "*.sh" \) -not -path "./node_modules/*" \
-  -exec sed -i 's|\./cdn-delivery\.sh|./.github/scripts/cdn-delivery.sh|g' {} \;
+  -exec sed -i 's|\./cdn-delivery\.sh|./.github/script./.github/scripts/cdn-delivery.sh|g' {} \;
 ```
 
 ---

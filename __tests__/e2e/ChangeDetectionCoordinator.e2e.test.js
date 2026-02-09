@@ -368,6 +368,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
             }, TEST_ROUTE[0]);
 
             // Click location button
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
@@ -384,6 +385,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[1]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
@@ -440,6 +442,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
@@ -456,6 +459,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[2]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
@@ -484,6 +488,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
@@ -504,6 +509,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[2]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
@@ -553,6 +559,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
@@ -569,6 +576,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[3]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(3000);
 
@@ -597,6 +605,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
@@ -617,6 +626,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[3]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(3000);
 
@@ -661,6 +671,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
@@ -706,6 +717,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
@@ -754,6 +766,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[0]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 
@@ -770,6 +783,7 @@ describe('ChangeDetectionCoordinator E2E Tests', () => {
                 };
             }, TEST_ROUTE[2]);
 
+            await page.waitForSelector('#getLocationBtn', { visible: true, timeout: 10000 });
             await page.click('#getLocationBtn');
             await page.waitForTimeout(2000);
 

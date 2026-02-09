@@ -24,6 +24,7 @@ import timerManager from '../utils/TimerManager.js';
 import { log, warn, error } from '../utils/logger.js';
 import { showInfo } from '../utils/toast.js';
 import { initializeEmptyStates, clearAllEmptyStates } from '../utils/empty-state-manager.js';
+import { disableWithReason, enableWithMessage, BUTTON_STATUS_MESSAGES } from '../utils/button-status.js';
 
 /**
  * Home view implementation
@@ -71,6 +72,9 @@ async function mount(container) {
     _setupButtonHandlers();
     _setupGetLocationButton();
     _setupTrackingModeToggle();
+    
+    // Initialize buttons with disabled status messages
+    _initializeButtonStates();
   } catch (err) {
     error("(home-view) Error mounting home view:", err);
     // Display user-friendly error message
@@ -178,17 +182,11 @@ function _setupLocationUpdateHandlers() {
       const cityStatsBtn = document.getElementById("cityStatsBtn");
       
       if (findRestaurantsBtn) {
-        findRestaurantsBtn.disabled = false;
-        findRestaurantsBtn.setAttribute('aria-disabled', 'false');
-        const status = document.getElementById("restaurants-status");
-        if (status) status.textContent = "Pronto";
+        enableWithMessage(findRestaurantsBtn, BUTTON_STATUS_MESSAGES.READY);
       }
       
       if (cityStatsBtn) {
-        cityStatsBtn.disabled = false;
-        cityStatsBtn.setAttribute('aria-disabled', 'false');
-        const status = document.getElementById("stats-status");
-        if (status) status.textContent = "Pronto";
+        enableWithMessage(cityStatsBtn, BUTTON_STATUS_MESSAGES.READY);
       }
     }
     

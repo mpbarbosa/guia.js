@@ -23,6 +23,7 @@ import { extractDistrito, extractBairro, determineLocationType, formatLocationVa
 import timerManager from '../utils/TimerManager.js';
 import { log, warn, error } from '../utils/logger.js';
 import { showInfo } from '../utils/toast.js';
+import { initializeEmptyStates, clearAllEmptyStates } from '../utils/empty-state-manager.js';
 
 /**
  * Home view implementation
@@ -48,6 +49,10 @@ async function mount(container) {
     // Initialize state
     continuousMode = false;
     firstUpdate = true;
+    
+    // Initialize empty states for better UX
+    initializeEmptyStates();
+    log("(home-view) Empty states initialized");
     
     // Initialize geolocation manager
     manager = await _initializeGeocodingManager();
@@ -161,8 +166,9 @@ function _setupLocationUpdateHandlers() {
     log(`(home-view) Location updated`);
     
     if (currentPosition) {
-      // Show success banner on first location update
+      // Clear empty states when first location arrives
       if (firstUpdate) {
+        clearAllEmptyStates();
         window.showLocationSuccess?.('geolocation-banner-container', 3000);
         firstUpdate = false;
       }

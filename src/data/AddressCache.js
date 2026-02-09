@@ -12,6 +12,9 @@
  * 
  * Implements singleton pattern ensuring only one cache instance exists.
  * 
+ * **REFACTORED v0.8.7-alpha**: Now uses composition with AddressChangeDetector,
+ * CallbackRegistry, and AddressDataStore for improved maintainability.
+ * 
  * @module data/AddressCache
  * @since 0.8.4-alpha
  * @author Marcelo Pereira Barbosa
@@ -23,6 +26,11 @@ import BrazilianStandardAddress from './BrazilianStandardAddress.js';
 import LRUCache from './LRUCache.js';
 import { log } from '../utils/logger.js';
 import timerManager from '../utils/TimerManager.js';
+
+// NEW: Import refactored classes (v0.8.7-alpha)
+import AddressChangeDetector from './AddressChangeDetector.js';
+import CallbackRegistry from './CallbackRegistry.js';
+import AddressDataStore from './AddressDataStore.js';
 
 class AddressCache {
 
@@ -58,6 +66,11 @@ class AddressCache {
 	 * This constructor is typically called internally by the getInstance() method
 	 * to maintain the singleton pattern.
 	 * 
+	 * **REFACTORED v0.8.7-alpha**: Now uses composition with three focused classes:
+	 * - AddressChangeDetector for change detection logic
+	 * - CallbackRegistry for callback management
+	 * - AddressDataStore for data storage
+	 * 
 	 * @private
 	 * @since 0.8.5-alpha
 	 */
@@ -67,6 +80,14 @@ class AddressCache {
 		// Use LRUCache for efficient caching with automatic eviction
 		this.cache = new LRUCache(50, 300000); // 50 entries, 5 minutes expiration
 		
+		// NEW (v0.8.7-alpha): Composition with focused classes
+		this.changeDetector = new AddressChangeDetector();
+		this.callbackRegistry = new CallbackRegistry();
+		this.dataStore = new AddressDataStore();
+		
+		// DEPRECATED (v0.8.7-alpha): Legacy properties kept for backward compatibility
+		// These are now managed by the composed classes above but maintained
+		// for any direct property access (use getInstance() methods instead)
 		this.lastNotifiedChangeSignature = null;
 		this.lastNotifiedBairroChangeSignature = null;
 		this.lastNotifiedMunicipioChangeSignature = null;
@@ -87,58 +108,24 @@ class AddressCache {
 	/**
 	 * Generates a cache key for address data to enable efficient caching and retrieval.
 	 * 
-	 * Creates a unique identifier based on address components that can be used to cache
-	 * processed address data and avoid redundant processing. The cache key is designed
-	 * to be stable for the same address data while being unique across different addresses.
+	 * **REFACTORED v0.8.7-alpha**: Delegates to AddressDataStore.generateCacheKey()
 	 * 
 	 * @param {Object} data - Address data from geocoding API
 	 * @returns {string|null} Cache key string or null if data is invalid
-	 * 
-	 * @example
-	 * const cache = AddressCache.getInstance();
-	 * const cacheKey = cache.generateCacheKey(addressData);
-	 * if (cacheKey) {
-	 *   log('Cache key:', cacheKey);
-	 * }
-	 * 
 	 * @since 0.8.3-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
 	generateCacheKey(data) {
-		// Validate input data
-		if (!data || !data.address) {
-			return null;
-		}
-
-		const address = data.address;
-
-		// Create cache key from essential address components
-		// Use components that uniquely identify a location
-		const keyComponents = [
-			address.road || address.street || '',
-			address.house_number || '',
-			address.neighbourhood || address.suburb || '',
-			address.city || address.town || address.municipality || '',
-			address.postcode || '',
-			address.country_code || ''
-		];
-
-		// Filter out empty components and join with separator
-		const cacheKey = keyComponents
-			.filter(component => component.trim() !== '')
-			.join('|');
-
-		// Return null if no meaningful components found
-		return cacheKey.length > 0 ? cacheKey : null;
+		return AddressDataStore.generateCacheKey(data);
 	}
 
 	/**
 	 * Static wrapper for backward compatibility.
-	 * @deprecated Use getInstance().generateCacheKey() instead
+	 * @deprecated Use getInstance().generateCacheKey() or AddressDataStore.generateCacheKey() instead
 	 * @static
 	 */
 	static generateCacheKey(data) {
-		return AddressCache.getInstance().generateCacheKey(data);
+		return AddressDataStore.generateCacheKey(data);
 	}
 
 	/**
@@ -219,6 +206,8 @@ class AddressCache {
 	 * @param {Object} callback.changeDetails - Details about the logradouro change
 	 * @returns {void}
 	 * 
+	 * **REFACTORED v0.8.7-alpha**: Delegates to CallbackRegistry
+	 * 
 	 * @example
 	 * const cache = AddressCache.getInstance();
 	 * cache.setLogradouroChangeCallback((changeDetails) => {
@@ -229,6 +218,8 @@ class AddressCache {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	setLogradouroChangeCallback(callback) {
+		this.callbackRegistry.register('logradouro', callback);
+		// Legacy: Keep property synchronized for backward compatibility
 		this.logradouroChangeCallback = callback;
 	}
 
@@ -261,6 +252,7 @@ class AddressCache {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	setBairroChangeCallback(callback) {
+		this.callbackRegistry.register('bairro', callback);
 		this.bairroChangeCallback = callback;
 	}
 
@@ -270,6 +262,7 @@ class AddressCache {
 	 * @static
 	 */
 	static setBairroChangeCallback(callback) {
+		this.callbackRegistry.register('bairro', callback);
 		return AddressCache.getInstance().setBairroChangeCallback(callback);
 	}
 
@@ -293,6 +286,7 @@ class AddressCache {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	setMunicipioChangeCallback(callback) {
+		this.callbackRegistry.register('municipio', callback);
 		this.municipioChangeCallback = callback;
 	}
 
@@ -302,6 +296,7 @@ class AddressCache {
 	 * @static
 	 */
 	static setMunicipioChangeCallback(callback) {
+		this.callbackRegistry.register('municipio', callback);
 		return AddressCache.getInstance().setMunicipioChangeCallback(callback);
 	}
 
@@ -312,7 +307,7 @@ class AddressCache {
 	 * @since 0.8.3-alpha
 	 */
 	getLogradouroChangeCallback() {
-		return this.logradouroChangeCallback;
+		return this.callbackRegistry.get('logradouro');
 	}
 
 	/**
@@ -321,6 +316,7 @@ class AddressCache {
 	 * @static
 	 */
 	static getLogradouroChangeCallback() {
+		return this.callbackRegistry.get('logradouro');
 		return AddressCache.getInstance().getLogradouroChangeCallback();
 	}
 
@@ -331,7 +327,7 @@ class AddressCache {
 	 * @since 0.8.3-alpha
 	 */
 	getBairroChangeCallback() {
-		return this.bairroChangeCallback;
+		return this.callbackRegistry.get('bairro');
 	}
 
 	/**
@@ -340,6 +336,7 @@ class AddressCache {
 	 * @static
 	 */
 	static getBairroChangeCallback() {
+		return this.callbackRegistry.get('bairro');
 		return AddressCache.getInstance().getBairroChangeCallback();
 	}
 
@@ -350,7 +347,7 @@ class AddressCache {
 	 * @since 0.8.3-alpha
 	 */
 	getMunicipioChangeCallback() {
-		return this.municipioChangeCallback;
+		return this.callbackRegistry.get('municipio');
 	}
 
 	/**
@@ -359,6 +356,7 @@ class AddressCache {
 	 * @static
 	 */
 	static getMunicipioChangeCallback() {
+		return this.callbackRegistry.get('municipio');
 		return AddressCache.getInstance().getMunicipioChangeCallback();
 	}
 

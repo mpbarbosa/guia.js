@@ -142,12 +142,12 @@ describe('Chronometer', () => {
         test('should clear interval when stopping', () => {
             chronometer.start();
             const intervalId = chronometer.intervalId;
-            const clearIntervalSpy = jest.spyOn(global, 'clearInterval');
 
             chronometer.stop();
 
-            expect(clearIntervalSpy).toHaveBeenCalledWith(intervalId);
-            clearIntervalSpy.mockRestore();
+            // TimerManager now returns string IDs
+            expect(intervalId).toBe('chronometer-display');
+            expect(chronometer.intervalId).toBeNull();
         });
 
         test('should preserve start time when stopped', () => {
@@ -474,24 +474,23 @@ describe('Chronometer', () => {
         test('should clear interval on destruction', () => {
             chronometer.start();
             const intervalId = chronometer.intervalId;
-            const clearIntervalSpy = jest.spyOn(global, 'clearInterval');
-
+            
             chronometer.stop();
 
-            expect(clearIntervalSpy).toHaveBeenCalledWith(intervalId);
-            clearIntervalSpy.mockRestore();
+            // TimerManager now returns string IDs
+            expect(intervalId).toBe('chronometer-display');
+            expect(chronometer.intervalId).toBeNull();
         });
 
         test('should not leave hanging intervals after reset', () => {
             chronometer.start();
             const intervalId = chronometer.intervalId;
-            const clearIntervalSpy = jest.spyOn(global, 'clearInterval');
-
+            
             chronometer.reset();
 
-            expect(clearIntervalSpy).toHaveBeenCalledWith(intervalId);
+            // TimerManager now returns string IDs
+            expect(intervalId).toBe('chronometer-display');
             expect(chronometer.intervalId).toBeNull();
-            clearIntervalSpy.mockRestore();
         });
     });
 

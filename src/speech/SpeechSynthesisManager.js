@@ -64,6 +64,7 @@ import SpeechQueue from './SpeechQueue.js';
 import VoiceLoader from './VoiceLoader.js';
 import VoiceSelector from './VoiceSelector.js';
 import SpeechConfiguration from './SpeechConfiguration.js';
+import timerManager from '../utils/TimerManager.js';
 
 // Logging functions are now instance methods for configurable logging control
 
@@ -853,9 +854,12 @@ class SpeechSynthesisManager {
 
         this.safeLog(`(SpeechSynthesisManager) Starting queue timer (${this.independentQueueTimerInterval}ms interval)`);
 
-        this.queueTimer = setInterval(() => {
-            this.processQueue();
-        }, this.independentQueueTimerInterval);
+        // Use TimerManager for automatic cleanup and leak prevention
+        this.queueTimer = timerManager.setInterval(
+            () => this.processQueue(),
+            this.independentQueueTimerInterval,
+            'speech-synthesis-queue'
+        );
     }
 
     /**
@@ -873,7 +877,8 @@ class SpeechSynthesisManager {
      */
     stopQueueTimer() {
         if (this.queueTimer) {
-            clearInterval(this.queueTimer);
+            // Use TimerManager for cleanup
+            timerManager.clearTimer('speech-synthesis-queue');
             this.queueTimer = null;
             this.safeLog('(SpeechSynthesisManager) Queue timer stopped');
         }

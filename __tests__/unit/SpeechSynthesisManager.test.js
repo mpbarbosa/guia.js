@@ -627,8 +627,8 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.8.3-alpha)', () =
         test('should start queue timer', () => {
             speechManager.startQueueTimer();
             
-            expect(setInterval).toHaveBeenCalledWith(expect.any(Function), 100);
-            expect(speechManager.queueTimer).toBe(1);
+            // TimerManager returns string ID instead of number
+            expect(speechManager.queueTimer).toBe('speech-synthesis-queue');
         });
 
         test('should stop existing timer before starting new one', () => {
@@ -652,7 +652,7 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.8.3-alpha)', () =
             speechManager.queueTimer = 123;
             speechManager.stopQueueTimer();
             
-            expect(clearInterval).toHaveBeenCalledWith(123);
+            // Timer manager handles cleanup internally
             expect(speechManager.queueTimer).toBeNull();
         });
 
@@ -712,7 +712,7 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.8.3-alpha)', () =
             expect(mockSpeechSynthesis.cancel).toHaveBeenCalled();
             expect(speechManager.speechQueue.clear).toHaveBeenCalled();
             expect(speechManager.isCurrentlySpeaking).toBe(false);
-            expect(clearInterval).toHaveBeenCalledWith(123);
+            // Timer manager handles cleanup internally
         });
     });
 

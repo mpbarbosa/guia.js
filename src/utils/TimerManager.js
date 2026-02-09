@@ -142,7 +142,19 @@ class TimerManager {
     getTimerIds() {
         return Array.from(this.timers.keys());
     }
+    
+    /**
+     * Get the singleton instance
+     * @returns {TimerManager} The TimerManager instance
+     */
+    static getInstance() {
+        if (!TimerManager.instance) {
+            TimerManager.instance = new TimerManager();
+        }
+        return TimerManager.instance;
+    }
 }
 
-// Export singleton instance
+// Export singleton instance and class
+export { TimerManager };
 export default new TimerManager();

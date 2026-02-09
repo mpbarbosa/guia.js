@@ -1,5 +1,8 @@
 'use strict';
 import { log, warn, error } from '../utils/logger.js';
+import { TimerManager } from '../utils/TimerManager.js';
+
+const timerManager = TimerManager.getInstance();
 
 /**
  * SpeechQueueProcessor manages timer-based queue processing.
@@ -104,13 +107,13 @@ export class SpeechQueueProcessor {
 
         this.safeLog(`(SpeechQueueProcessor) Starting queue timer (${this.interval}ms interval)`);
 
-        this.timer = setInterval(() => {
+        this.timer = timerManager.setInterval(() => {
             try {
                 this.processCallback();
             } catch (error) {
                 this.safeWarn('(SpeechQueueProcessor) Error in process callback:', error);
             }
-        }, this.interval);
+        }, this.interval, 'speech-queue-processor');
 
         this.isRunning = true;
     }
@@ -128,7 +131,7 @@ export class SpeechQueueProcessor {
      */
     stop() {
         if (this.timer) {
-            clearInterval(this.timer);
+            timerManager.clearTimer(this.timer);
             this.timer = null;
             this.isRunning = false;
             this.safeLog('(SpeechQueueProcessor) Queue timer stopped');

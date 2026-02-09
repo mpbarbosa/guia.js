@@ -1,5 +1,8 @@
 'use strict';
 import { log, warn, error } from '../utils/logger.js';
+import { TimerManager } from '../utils/TimerManager.js';
+
+const timerManager = TimerManager.getInstance();
 
 /**
  * VoiceManager handles voice loading, selection, and retry logic for Web Speech API.
@@ -163,7 +166,7 @@ export class VoiceManager {
 
         this.safeLog(`(VoiceManager) Starting voice retry timer (max ${this.maxVoiceRetryAttempts} attempts)`);
 
-        this.voiceRetryTimer = setInterval(() => {
+        this.voiceRetryTimer = timerManager.setInterval(() => {
             this.voiceRetryAttempts++;
             this.safeLog(`(VoiceManager) Voice retry attempt ${this.voiceRetryAttempts}/${this.maxVoiceRetryAttempts}`);
 
@@ -180,7 +183,7 @@ export class VoiceManager {
                 this.safeWarn(`(VoiceManager) Maximum voice retry attempts (${this.maxVoiceRetryAttempts}) reached`);
                 this.stopVoiceRetryTimer();
             }
-        }, this.voiceRetryInterval);
+        }, this.voiceRetryInterval, 'voice-retry-timer');
     }
 
     /**
@@ -191,7 +194,7 @@ export class VoiceManager {
      */
     stopVoiceRetryTimer() {
         if (this.voiceRetryTimer) {
-            clearInterval(this.voiceRetryTimer);
+            timerManager.clearTimer(this.voiceRetryTimer);
             this.voiceRetryTimer = null;
             this.safeLog('(VoiceManager) Voice retry timer stopped');
         }

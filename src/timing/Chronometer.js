@@ -1,5 +1,8 @@
 'use strict';
 import { log, warn, error } from '../utils/logger.js';
+import { TimerManager } from '../utils/TimerManager.js';
+
+const timerManager = TimerManager.getInstance();
 
 /**
  * Displays and manages elapsed time information in HTML format.
@@ -102,9 +105,9 @@ class Chronometer {
 			this.updateDisplay();
 
 			// Start interval to update display every second
-			this.intervalId = setInterval(() => {
+			this.intervalId = timerManager.setInterval(() => {
 				this.updateDisplay();
-			}, 1000);
+			}, 1000, 'chronometer-display');
 		}
 	}
 
@@ -126,7 +129,7 @@ class Chronometer {
 		if (this.isRunning) {
 			this.isRunning = false;
 			if (this.intervalId) {
-				clearInterval(this.intervalId);
+				timerManager.clearTimer(this.intervalId);
 				this.intervalId = null;
 			}
 		}

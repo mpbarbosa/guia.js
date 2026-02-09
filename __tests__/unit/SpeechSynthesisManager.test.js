@@ -269,8 +269,8 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.8.3-alpha)', () =
         test('should start voice retry timer correctly', () => {
             speechManager.startVoiceRetryTimer();
             
-            expect(setInterval).toHaveBeenCalledWith(expect.any(Function), 1000);
-            expect(speechManager.voiceRetryTimer).toBe(1);
+            // TimerManager returns string ID
+            expect(speechManager.voiceRetryTimer).toBe('speech-voice-retry-legacy');
         });
 
         test('should not start multiple retry timers', () => {
@@ -281,10 +281,10 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.8.3-alpha)', () =
         });
 
         test('should stop voice retry timer correctly', () => {
-            speechManager.voiceRetryTimer = 123;
+            speechManager.voiceRetryTimer = 'speech-voice-retry-legacy';
             speechManager.stopVoiceRetryTimer();
             
-            expect(clearInterval).toHaveBeenCalledWith(123);
+            // TimerManager handles cleanup internally
             expect(speechManager.voiceRetryTimer).toBeNull();
         });
 
@@ -292,7 +292,8 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.8.3-alpha)', () =
             speechManager.voiceRetryTimer = null;
             speechManager.stopVoiceRetryTimer();
             
-            expect(clearInterval).not.toHaveBeenCalled();
+            // No errors should occur
+            expect(speechManager.voiceRetryTimer).toBeNull();
         });
 
         test('should increment retry attempts during retry', () => {

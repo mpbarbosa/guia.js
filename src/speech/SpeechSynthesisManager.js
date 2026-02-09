@@ -445,7 +445,7 @@ class SpeechSynthesisManager {
 
         this.safeLog(`(SpeechSynthesisManager) Starting voice retry timer (max ${this.maxVoiceRetryAttempts} attempts)`);
 
-        this.voiceRetryTimer = setInterval(() => {
+        this.voiceRetryTimer = timerManager.setInterval(() => {
             this.voiceRetryAttempts++;
             this.safeLog(`(SpeechSynthesisManager) Voice retry attempt ${this.voiceRetryAttempts}/${this.maxVoiceRetryAttempts}`);
 
@@ -465,7 +465,7 @@ class SpeechSynthesisManager {
                 this.safeWarn(`(SpeechSynthesisManager) Maximum voice retry attempts (${this.maxVoiceRetryAttempts}) reached`);
                 this.stopVoiceRetryTimer();
             }
-        }, this.voiceRetryInterval);
+        }, this.voiceRetryInterval, 'speech-voice-retry-legacy');
     }
 
     /**
@@ -488,7 +488,7 @@ class SpeechSynthesisManager {
      */
     stopVoiceRetryTimer() {
         if (this.voiceRetryTimer) {
-            clearInterval(this.voiceRetryTimer);
+            timerManager.clearTimer(this.voiceRetryTimer);
             this.voiceRetryTimer = null;
             this.safeLog('(SpeechSynthesisManager) Voice retry timer stopped');
         }
@@ -791,7 +791,7 @@ class SpeechSynthesisManager {
             if (!this.speechQueue.isEmpty()) {
                 this.safeLog('(SpeechSynthesisManager) Continuing with next queue item');
                 // Use setTimeout to avoid potential recursion issues
-                setTimeout(() => this.processQueue(), 10);
+                timerManager.setTimeout(() => this.processQueue(), 10, 'speech-queue-next');
             }
         };
 
@@ -803,7 +803,7 @@ class SpeechSynthesisManager {
             // Continue processing queue even after errors to prevent queue stalling
             if (!this.speechQueue.isEmpty()) {
                 this.safeLog('(SpeechSynthesisManager) Continuing queue processing after error');
-                setTimeout(() => this.processQueue(), 10);
+                timerManager.setTimeout(() => this.processQueue(), 10, 'speech-queue-error-recovery');
             }
         };
 
@@ -817,7 +817,7 @@ class SpeechSynthesisManager {
             
             // Continue processing queue after synthesis errors
             if (!this.speechQueue.isEmpty()) {
-                setTimeout(() => this.processQueue(), 10);
+                timerManager.setTimeout(() => this.processQueue(), 10, 'speech-queue-catch-recovery');
             }
         }
     }

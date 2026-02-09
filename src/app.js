@@ -3,11 +3,12 @@
 /**
  * Main Application Entry Point
  * SPA Router and Application Initialization
- * @version 0.7.1-alpha
+ * @version 0.8.7-alpha
  */
 
 import { WebGeocodingManager } from './guia.js';
 import { log, warn, error } from './utils/logger.js';
+import { VERSION, VERSION_STRING } from './config/version.js';
 
 // Application state
 const AppState = {
@@ -49,7 +50,18 @@ const AppState = {
  * @author Marcelo Pereira Barbosa
  */
 async function init() {
-  log('Initializing Guia Turístico SPA v0.7.1...');
+  log(`Initializing ${VERSION_STRING}...`);
+  
+  // Hide app loading screen
+  const appLoading = document.getElementById('app-loading');
+  if (appLoading) {
+    // Add hidden class with fade out animation
+    appLoading.classList.add('hidden');
+    // Remove from DOM after animation completes
+    setTimeout(() => {
+      appLoading.remove();
+    }, 300);
+  }
   
   // Wait for external dependencies to load (max 5 seconds)
   if (window.dependenciesLoading) {
@@ -185,9 +197,41 @@ async function handleRoute() {
     }
     
     AppState.currentRoute = route;
+    
+    // Focus management for accessibility
+    manageFocusAfterRouteChange();
   } catch (error) {
     error('Route loading error:', error);
     showError(error);
+  }
+}
+
+/**
+ * Manage keyboard focus after route changes.
+ * Moves focus to the main heading of the new view for screen reader users
+ * and keyboard navigation users.
+ * 
+ * @returns {void}
+ * @since 0.8.7-alpha
+ */
+function manageFocusAfterRouteChange() {
+  // Find the main content area
+  const mainContent = document.getElementById('app-content');
+  if (!mainContent) return;
+  
+  // Find the first h1 heading in the view
+  const heading = mainContent.querySelector('h1');
+  if (heading) {
+    // Make heading focusable
+    heading.setAttribute('tabindex', '-1');
+    // Move focus to heading
+    heading.focus();
+    // Announce route change to screen readers
+    heading.setAttribute('aria-live', 'polite');
+    // Remove aria-live after announcement
+    setTimeout(() => {
+      heading.removeAttribute('aria-live');
+    }, 1000);
   }
 }
 

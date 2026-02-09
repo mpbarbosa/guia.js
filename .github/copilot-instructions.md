@@ -22,7 +22,7 @@ Guia Turístico is a single-page web application (version 0.8.7-alpha) built on 
 - **Install Dependencies**: `npm install` - takes 20 seconds. Downloads guia.js library and other dependencies.
 - **Syntax Check**: Always run `node -c src/app.js && node -c src/guia.js` (timeout: 10 seconds) before making changes
 - **Basic Test**: Run `node src/app.js` (timeout: 10 seconds) to verify SPA initialization
-- **Automated Tests**: `npm test` - takes ~45 seconds. Runs 2,380 tests (2,213 passing, 146 skipped, 21 failing) in 101 suites. NEVER CANCEL.
+- **Automated Tests**: `npm test` - takes ~45 seconds. Runs 2,380 tests (2,214 passing, 146 skipped, 20 failing) in 101 suites. NEVER CANCEL.
 - **Test Coverage**: `npm run test:coverage` - takes ~45 seconds. Shows ~70% coverage. NEVER CANCEL.
 - **Full Validation**: `npm run test:all` - takes ~45 seconds. Combines syntax + tests. NEVER CANCEL.
 - **Web Test**: Start web server with `python3 -m http.server 9000` (timeout: 10 seconds to start, runs indefinitely)
@@ -30,7 +30,7 @@ Guia Turístico is a single-page web application (version 0.8.7-alpha) built on 
 ### Development Workflow
 - Always validate JavaScript syntax with `node -c` before committing changes
 - Test SPA functionality with `node src/app.js` to verify routing and initialization
-- Run automated tests with `npm run test:all` before commits to ensure 2,213+ tests pass
+- Run automated tests with `npm run test:all` before commits to ensure 2,214+ tests pass
 - For UI/web features, use the web server and src/index.html for manual validation
 - **Follow immutability principles** - see `.github/CONTRIBUTING.md` for guidelines
 - **TIMING**: Syntax checks <1 second, tests ~45 seconds, web server startup 3 seconds
@@ -51,7 +51,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 2. **Automated Test Suite**:
    ```bash
    npm run test:all
-   # Should show: ✅ 2,213 tests passing (2,380 total), ✅ 90 suites passing (101 total), ~45 seconds execution
+   # Should show: ✅ 2,214 tests passing (2,380 total), ✅ 90 suites passing (101 total), ~45 seconds execution
    ```
 
 3. **Web Application Functionality**:
@@ -82,12 +82,12 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `src/guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
 - `src/views/home.js` (595 lines, 24KB) - Home view controller for location tracking
 - `src/views/converter.js` (521 lines, 20KB) - Converter view controller for coordinate conversion
-- `src/config/defaults.js` (130+ lines) - Application configuration constants (version 0.7.x, timing, event names, etc.)
+- `src/config/defaults.js` (130+ lines) - Application configuration constants (version 0.8.7-alpha, timing, event names, etc.)
   - **Key Constants**: ADDRESS_FETCHED_EVENT, MINIMUM_TIME_CHANGE (30s), MINIMUM_DISTANCE_CHANGE (20m)
   - **Usage**: Import constants for consistency, avoid hardcoded strings
 - `src/utils/TimerManager.js` (147 lines) - Centralized timer management preventing memory leaks
 - `package.json` - Node.js configuration with guia.js dependency (jsdom v25.0.1, puppeteer v24.35.0)
-- `__tests__/` - 101 test suites with 2,380 total tests (2,213 passing, 146 skipped, 21 failing)
+- `__tests__/` - 101 test suites with 2,380 total tests (2,214 passing, 146 skipped, 20 failing)
   - **Note**: Test suite includes E2E tests for address validation, SIDRA integration, and location results (v0.7.2+)
   - **New Tests**: HTMLSidraDisplayer.test.js, complete-address-validation.e2e.test.js, milho-verde-locationResult.e2e.test.js
   - **Organization**: Domain-based (unit/, integration/, e2e/, managers/, external/, features/)
@@ -189,7 +189,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Testing Infrastructure
 
 ### Automated Test Coverage
-- **2,380 total tests** (2,213 passing, 146 skipped, 21 failing) across 101 test suites running in ~30 seconds
+- **2,380 total tests** (2,214 passing, 146 skipped, 20 failing) across 101 test suites running in ~30 seconds
 - **~85% code coverage** overall (84.7% actual)
 - **100% coverage** of guia_ibge.js (full coverage)
 - **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns, SIDRA data display, Metropolitan region display
@@ -249,7 +249,7 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 ```
 
 ### Expected Test Results
-- ✅ 2,213 tests passing (2,380 total, 146 skipped, 21 failing)
+- ✅ 2,214 tests passing (2,380 total, 146 skipped, 20 failing)
 - ✅ 90 test suites passing (101 total, 4 skipped, 7 failing)
 - ✅ ~85% code coverage overall (84.7% actual)
 - ✅ 100% code coverage on guia_ibge.js
@@ -302,10 +302,10 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 - Manual testing required for DOM/browser features
 
 ### Legacy Test Files
-- **test-fix.html**, **test-innerHTML-fix.html**, **test-geoposition-bug-fix.html**, **test-municipio-value-browser.html** - Legacy test files in root directory for historical reference
-- **demo-issue-218.js** - Demo file for specific issue testing
+- **legacy-tests/** - Archived historical test files (deprecated, see legacy-tests/README.md for context)
+- **demo-issue-218.js** - Moved to legacy-tests/ directory
 - **Deprecated**: Use `src/index.html` for main application testing
-- These files remain for debugging specific historical issues but are not part of the main application
+- These files remain in legacy-tests/ for debugging specific historical issues but are not part of the main application
 
 ## CI/CD Integration
 
@@ -498,7 +498,7 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 - `src/guia.js` (468 lines) - guia.js library exports (imported from dependency)
 - `src/guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
 
-> **Note**: Legacy test files (test-*.html) exist in root for historical reference but are deprecated. Use `src/index.html` for the main application.
+> **Note**: Legacy test files have been archived to `legacy-tests/` directory. Use `src/index.html` for the main application.
 
 ### Important Classes and Components
 
@@ -592,7 +592,7 @@ guia_turistico/
     └── copilot-instructions.md (this file)
 ```
 
-> **Note**: Legacy test files (test-*.html) in root directory are deprecated. Use `src/index.html` for the main application.
+> **Note**: Legacy test files have been archived to `legacy-tests/` directory. Use `src/index.html` for the main application.
 
 ### guia.js Overview
 - **Lines 1-61**: Version info, utility functions (calculateDistance, log, warn)

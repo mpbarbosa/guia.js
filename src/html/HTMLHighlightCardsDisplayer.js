@@ -2,9 +2,9 @@
 import { log, warn, error } from '../utils/logger.js';
 
 /**
- * HTMLHighlightCardsDisplayer - Updates highlight cards for municipio and bairro
+ * HTMLHighlightCardsDisplayer - Updates highlight cards for municipio, bairro, and logradouro
  * 
- * @fileoverview Simple displayer that updates the municipio and bairro highlight cards
+ * @fileoverview Simple displayer that updates the municipio, bairro, and logradouro highlight cards
  * when address data changes.
  * 
  * @module html/HTMLHighlightCardsDisplayer
@@ -13,7 +13,7 @@ import { log, warn, error } from '../utils/logger.js';
  */
 
 /**
- * Displayer for municipio and bairro highlight cards
+ * Displayer for municipio, bairro, and logradouro highlight cards
  * 
  * @class
  */
@@ -32,6 +32,7 @@ class HTMLHighlightCardsDisplayer {
         this._municipioElement = document.getElementById('municipio-value');
         this._regiaoMetropolitanaElement = document.getElementById('regiao-metropolitana-value');
         this._bairroElement = document.getElementById('bairro-value');
+        this._logradouroElement = document.getElementById('logradouro-value');
         
         Object.freeze(this);
     }
@@ -81,6 +82,15 @@ class HTMLHighlightCardsDisplayer {
             log('(HTMLHighlightCardsDisplayer) Updated bairro-value to:', bairro);
         } else {
             warn('(HTMLHighlightCardsDisplayer) bairroElement not found');
+        }
+        
+        // Update logradouro
+        if (this._logradouroElement) {
+            const logradouro = enderecoPadronizado.logradouro || '—';
+            this._logradouroElement.textContent = logradouro;
+            log('(HTMLHighlightCardsDisplayer) Updated logradouro-value to:', logradouro);
+        } else {
+            warn('(HTMLHighlightCardsDisplayer) logradouroElement not found');
         }
     }
 }

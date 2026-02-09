@@ -1,0 +1,113 @@
+/**
+ * Advanced Controls Styles
+ * Progressive disclosure pattern for debug/advanced features
+ * @since 0.8.7-alpha
+ */
+
+.advanced-controls {
+  margin: 32px 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background: var(--md-sys-color-surface, #ffffff);
+  overflow: hidden;
+}
+
+.advanced-controls-summary {
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f9f9f9;
+  transition: background-color 0.2s ease;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.advanced-controls-summary::-webkit-details-marker {
+  display: none;
+}
+
+.advanced-controls-summary::before {
+  content: '▶';
+  font-size: 0.875rem;
+  transition: transform 0.2s ease;
+  color: var(--md-sys-color-primary, #2563eb);
+}
+
+.advanced-controls[open] .advanced-controls-summary::before {
+  transform: rotate(90deg);
+}
+
+.advanced-controls-summary:hover {
+  background: #f0f0f0;
+}
+
+.advanced-controls-summary:focus-visible {
+  outline: 3px solid var(--md-sys-color-primary, #2563eb);
+  outline-offset: -3px;
+}
+
+.summary-icon {
+  font-size: 1.25rem;
+}
+
+.summary-text {
+  flex: 1;
+}
+
+.advanced-controls-content {
+  padding: 24px;
+  border-top: 1px solid #e0e0e0;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.advanced-control-group {
+  margin: 16px 0;
+}
+
+.advanced-control-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+#tracking-controls {
+  margin-bottom: 16px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .advanced-controls-summary {
+    padding: 12px 16px;
+  }
+  
+  .advanced-controls-content {
+    padding: 16px;
+  }
+  
+  .summary-icon {
+    font-size: 1rem;
+  }
+}
+
+/* Print - Hide advanced controls */
+@media print {
+  .advanced-controls {
+    display: none;
+  }
+}

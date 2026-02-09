@@ -3,7 +3,7 @@
 ---
 Last Updated: 2026-01-28
 Status: Active
-Version: 0.7.1-alpha
+Version: 0.8.7-alpha
 Category: Guide
 ---
 

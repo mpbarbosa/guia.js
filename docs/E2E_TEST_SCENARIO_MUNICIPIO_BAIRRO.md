@@ -297,7 +297,7 @@ To manually verify the fix:
 
 4. **Verify Display**:
    - Check that **Município** and **Bairro** highlight cards update
-   - Check that **Endereço padronizado** section shows complete address
+   - Check that **Endereço** section shows complete address
    - Verify values match your current location
 
 5. **Test with Specific Coordinates** (using browser console):

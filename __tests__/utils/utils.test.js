@@ -259,7 +259,7 @@ describe('Utility Functions', () => {
             const portugueseTexts = [
                 'Localização obtida com sucesso',    // Contains "ção" and "ê"
                 'Erro na obtenção da localização',   // Contains "ção" and "ê"
-                'Endereço padronizado',              // Contains "ç" and "ã"
+                'Endereço',              // Contains "ç"
                 'Região detectada com precisão'      // Contains "ã", "ã", and "ã"
             ];
 

@@ -234,8 +234,8 @@ describe('E2E: locationResult with Milho Verde Coordinates', () => {
     console.log('Município:', highlightCards.municipio);
     console.log('Bairro:', highlightCards.bairro);
 
-    // Municipio should show Serro
-    expect(highlightCards.municipio).toBe('Serro');
+    // Municipio should show Serro with state abbreviation (v0.8.7-alpha format)
+    expect(highlightCards.municipio).toBe('Serro, MG');
     
     // Bairro should show Milho Verde
     expect(highlightCards.bairro).toBe('Milho Verde');

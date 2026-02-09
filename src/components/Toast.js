@@ -88,7 +88,14 @@ class ToastManager {
   _createToast(message, config, toastId) {
     const toast = document.createElement('div');
     toast.className = `toast ${config.className}`;
-    toast.setAttribute('role', 'status');
+    
+    // Enhanced ARIA attributes for accessibility
+    const toastRole = config.className === 'toast-error' ? 'alert' : 'status';
+    const ariaLive = config.className === 'toast-error' ? 'assertive' : 'polite';
+    
+    toast.setAttribute('role', toastRole);
+    toast.setAttribute('aria-live', ariaLive);
+    toast.setAttribute('aria-atomic', 'true');
     toast.setAttribute('data-toast-id', toastId);
 
     const icon = document.createElement('span');
@@ -103,6 +110,7 @@ class ToastManager {
     const closeBtn = document.createElement('button');
     closeBtn.className = 'toast-close';
     closeBtn.setAttribute('aria-label', 'Fechar notificação');
+    closeBtn.setAttribute('type', 'button');
     closeBtn.textContent = '×';
     closeBtn.addEventListener('click', () => this.dismiss(toastId));
 
@@ -148,7 +156,8 @@ class ToastManager {
   }
 
   error(message, options = {}) {
-    return this.show({ ...options, message, type: 'error' });
+    // Error toasts should persist until manually dismissed
+    return this.show({ ...options, message, type: 'error', duration: 0 });
   }
 
   info(message, options = {}) {

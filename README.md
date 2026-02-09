@@ -6,10 +6,10 @@ Status: Active
 ---
 
 
-[![Tests](https://img.shields.io/badge/tests-2213%20passing%20%2F%202380%20total-yellow)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-2214%20passing%20%2F%202380%20total-yellow)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
-> **Note on Test Status**: While 2,213 tests pass successfully, 21 tests are currently failing (primarily timing-dependent E2E tests for incomplete address data scenarios) and 146 tests are skipped. We're actively working on stabilizing the E2E test suite. See [Testing Overview](#testing-overview) for details.
+> **Note on Test Status**: While 2,214 tests pass successfully, 20 tests are currently failing (primarily timing-dependent E2E tests for incomplete address data scenarios) and 146 tests are skipped. We're actively working on stabilizing the E2E test suite. See [Testing Overview](#testing-overview) for details.
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
@@ -93,7 +93,7 @@ npm install
 # Validate JavaScript syntax (<1 second)
 npm run validate
 
-# Run test suite (2,380 total tests, 2,213 passing, 146 skipped, ~30 seconds)
+# Run test suite (2,380 total tests, 2,214 passing, 146 skipped, ~30 seconds)
 npm test
 
 # Run tests with coverage (~30 seconds)
@@ -144,7 +144,7 @@ guia_turistico/
 │   ├── speech/                   # Speech synthesis functionality
 │   ├── views/                    # SPA view controllers (home, converter)
 │   └── utils/                    # Utility functions
-├── __tests__/                    # Test suites (101 suites, 2,213 passing)
+├── __tests__/                    # Test suites (101 suites, 2,214 passing)
 │   ├── unit/                     # Unit tests
 │   ├── integration/              # Integration tests
 │   ├── e2e/                      # End-to-end tests (Puppeteer)
@@ -210,9 +210,9 @@ See [examples/README.md](examples/README.md) for detailed documentation and expe
 
 ### Test Suite Overview
 
-- **Total Tests**: 2,380 total (2,213 passing, 146 skipped, 21 failing)
+- **Total Tests**: 2,380 total (2,214 passing, 146 skipped, 20 failing)
 - **Test Suites**: 101 total (90 passing, 4 skipped, 7 failing)
-- **Test Count**: 2,213 passing tests (2,380 total with 146 skipped and 21 failing)
+- **Test Count**: 2,214 passing tests (2,380 total with 146 skipped and 20 failing)
 - **Execution Time**: ~30-45 seconds
 - **Code Coverage**: 84.7% overall (exceeds 65% threshold by 19.7%)
   - Statements: 84.69%, Branches: 82.49%, Functions: 74.68%, Lines: 84.99%
@@ -785,7 +785,7 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 **Format**:
 ```
 # Generated: 2026-01-01 15:14:51
-# Version: 2.1.0-alpha
+# Version: 2.2.0-alpha
 # Commit: abc1234567890abcdef1234567890abcdef12345
 
 Version-specific URLs:
@@ -1346,7 +1346,7 @@ python3 -m http.server 8000
 
 - **Lines of Code**: ~2300+ (main application)
 - **Test Coverage**: 84.7% (statements), 82.5% (branches)
-- **Test Count**: 2,380 tests total (2,213 passing, 146 skipped, 21 failing)
+- **Test Count**: 2,380 tests total (2,214 passing, 146 skipped, 20 failing)
 - **Dependencies**: 2 runtime, 2 dev dependencies
 - **Supported Node.js**: v18+
 - **ES Module Type**: ESM (ECMAScript Modules)

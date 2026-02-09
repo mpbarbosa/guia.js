@@ -149,7 +149,7 @@ export default {
 
       <section id="standardized-address" aria-labelledby="address-heading">
         <h2 id="address-heading" class="sr-only">Endereço Padronizado</h2>
-        <p><strong>Endereço padronizado:</strong> <span id="endereco-padronizado-display" aria-live="polite">Aguardando localização...</span></p>
+        <p><strong>Endereço:</strong> <span id="endereco-padronizado-display" aria-live="polite">Aguardando localização...</span></p>
       </section>
 
       <section class="section" id="dadosSidra" aria-labelledby="location-info-heading">
@@ -157,7 +157,6 @@ export default {
       </section>
       
       <section id="locationResult" aria-live="polite" aria-label="Resultado da localização">
-        <p>As informações da sua localização aparecerão aqui.</p>
       </section>
     `;
   },

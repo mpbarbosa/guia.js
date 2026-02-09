@@ -244,7 +244,7 @@ describe('E2E: Complete Address Display Validation', () => {
     console.log('Município:', addressElements.municipio.textContent);
     console.log('Bairro:', addressElements.bairro.textContent);
     expect(addressElements.municipio.exists).toBe(true);
-    expect(addressElements.municipio.textContent).toBe('São Paulo');
+    expect(addressElements.municipio.textContent).toBe('São Paulo, SP');
     expect(addressElements.bairro.exists).toBe(true);
     expect(addressElements.bairro.textContent).toBe('Bela Vista');
     console.log('✅ Highlight cards: Both populated');

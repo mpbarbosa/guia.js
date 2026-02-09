@@ -52,7 +52,7 @@ Simplified the application UI to focus on the **primary feature: real-time locat
 **Updated**:
 ```html
 <!-- Page header - Lines 228-229 -->
-<h1>Guia Turístico - Rastreamento de Localização</h1>
+<h1>Onde estou?</h1>
 <p>Acompanhe sua localização em tempo real durante a navegação pela cidade.</p>
 ```
 
@@ -126,7 +126,7 @@ npm run validate
 ### Browser Testing Checklist
 
 - [ ] Open `http://localhost:9000/src/index.html`
-- [ ] Verify page title: "Guia Turístico - Rastreamento de Localização"
+- [ ] Verify page title: "Onde estou?"
 - [ ] Verify no navigation menu at top
 - [ ] Scroll to bottom - verify footer with converter link
 - [ ] Click footer link - verify converter page loads

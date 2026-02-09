@@ -1,8 +1,15 @@
 <html lang="pt-BR"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="0.7.1-alpha">
+    <meta name="version" content="0.8.7-alpha" data-source="src/config/version.js">
     <title>Guia Turístico - Localização - Guia Turístico</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Guia Turístico">
     
     <!-- Favicon -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -16,6 +23,9 @@
     <!-- Preload ibira.js for API fetching and caching -->
     <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js">
     
+    <!-- Design System -->
+    <link rel="stylesheet" href="design-tokens.css">
+    
     <!-- Critical CSS - Common across all views -->
     <link rel="stylesheet" href="skip-link.css">
     <link rel="stylesheet" href="typography.css">
@@ -26,6 +36,8 @@
     <link rel="stylesheet" href="accessibility-compliance.css">
     <link rel="stylesheet" href="performance-optimizations.css">
     <link rel="stylesheet" href="navigation.css">
+    <link rel="stylesheet" href="onboarding.css">
+    <link rel="stylesheet" href="advanced-controls.css">
     <link rel="stylesheet" href="geolocation-banner.css">
     <link rel="stylesheet" href="version-display.css">
     <link rel="stylesheet" href="tooltip.css">
@@ -313,7 +325,7 @@
         height: 24px;
         border: none;
         background: transparent;
-        color: #718096;
+        color: #4a5568; /* 7.5:1 contrast ratio - WCAG AA compliant */
         font-size: 24px;
         line-height: 1;
         cursor: pointer;
@@ -326,7 +338,13 @@
       }
 
       .toast-close:hover {
-        background: rgba(0, 0, 0, 0.05);
+        background: rgba(0, 0, 0, 0.08);
+        color: #2d3748; /* Darker on hover */
+      }
+      
+      .toast-close:focus-visible {
+        outline: 2px solid #2563eb;
+        outline-offset: 2px;
       }
 
       /* Toast types */
@@ -391,6 +409,20 @@
     </style>
   </head>
   <body><div class="navigation-progress" role="progressbar" aria-label="Progresso de navegação"><div class="navigation-progress-bar" style="width: 0%;"></div></div>
+    
+    <!-- App Loading State (shown until JavaScript initializes) -->
+    <div id="app-loading" class="app-loading" role="status" aria-live="polite" aria-label="Carregando aplicativo">
+      <div class="app-loading-content">
+        <div class="app-loading-spinner">
+          <svg class="spinner" viewBox="0 0 50 50" aria-hidden="true">
+            <circle class="spinner-path" cx="25" cy="25" r="20" fill="none" stroke-width="4"></circle>
+          </svg>
+        </div>
+        <h2 class="app-loading-title">Guia Turístico</h2>
+        <p class="app-loading-message">Carregando aplicativo...</p>
+      </div>
+    </div>
+    
     <a href="#app-content" class="skip-link">Pular para o conteúdo principal</a>
     
     <!-- No JavaScript Fallback -->
@@ -463,28 +495,47 @@
       </div>
     </noscript>
     
-    <!-- Version Display -->
-    <div class="app-version" role="status" aria-live="polite" aria-label="Versão do aplicativo">
-      v 0.7.1 | 2026-01-11
-    </div>
-    
 
 
     <!-- Main App Content (dynamically loaded by router) -->
     <main id="app-content" role="main">
       <header class="">
-        <h1>Guia Turístico - Rastreamento de Localização</h1>
-
-        <p>
-          <span id="tracking-timer-container" style="display: none;">
-            Tempo decorrido: <span id="chronometer" aria-live="polite">00:00</span> | 
-            Fila fala: <span id="tam-fila-fala" aria-live="polite">0</span> | 
-          </span>
-          <abbr title="Dados salvos localmente para acesso rápido" aria-label="Cache: dados salvos localmente">Cache</abbr>: 
-          <span id="tam-cache" aria-live="polite">0</span> itens
-        </p>
+        <h1>Onde estou?</h1>
       </header>
 
+      <!-- Onboarding Card (shown for first-time users or when location denied) -->
+      <div id="onboarding-card" class="onboarding-card" role="region" aria-labelledby="onboarding-title">
+        <div class="onboarding-content">
+          <div class="onboarding-icon" aria-hidden="true">📍</div>
+          <h2 id="onboarding-title" class="onboarding-title">Bem-vindo ao Guia Turístico</h2>
+          <p class="onboarding-description">
+            Para começar a usar o guia, precisamos acessar sua localização atual.
+          </p>
+          <button id="enable-location-btn" class="md3-button-filled onboarding-cta" aria-label="Ativar localização">
+            <span class="button-icon" aria-hidden="true">📍</span>
+            <span class="button-text">Ativar Localização</span>
+          </button>
+          <details class="onboarding-details">
+            <summary>Por que precisamos de sua localização?</summary>
+            <div class="onboarding-details-content">
+              <p>
+                Usamos sua localização para mostrar informações relevantes sobre 
+                o local onde você está, incluindo:
+              </p>
+              <ul>
+                <li>Nome da cidade e bairro</li>
+                <li>Endereço formatado</li>
+                <li>Dados demográficos do IBGE</li>
+                <li>Pontos de referência próximos</li>
+              </ul>
+              <p class="onboarding-privacy">
+                <strong>Privacidade:</strong> Sua localização nunca é compartilhada 
+                ou armazenada em nossos servidores. Todos os dados permanecem no seu dispositivo.
+              </p>
+            </div>
+          </details>
+        </div>
+      </div>
       
       <!-- Geolocation status banner container -->
       <div id="geolocation-banner-container"></div>
@@ -500,28 +551,13 @@
           <div id="bairro-label" class="highlight-card-label">Bairro</div>
           <div id="bairro-value" class="highlight-card-value" aria-live="polite">—</div>
         </div>
+        <div class="highlight-card" role="region" aria-labelledby="logradouro-label">
+          <div id="logradouro-label" class="highlight-card-label">Logradouro</div>
+          <div id="logradouro-value" class="highlight-card-value" aria-live="polite">—</div>
+        </div>
       </section>
 
       <nav aria-label="Ações da página" class="secondary-actions">
-        <div class="button-container">
-          <button id="findRestaurantsBtn" disabled="" aria-disabled="true" aria-describedby="restaurants-status" aria-label="Encontrar restaurantes próximos" class="md3-button-outlined">
-            <span class="button-text">Encontrar Restaurantes Próximos</span>
-            <span class="button-loading" aria-hidden="true" hidden="">⏳</span>
-          </button>
-          <span id="restaurants-status" class="button-status" role="status" aria-live="polite">
-            Aguardando localização...
-          </span>
-        </div>
-        
-        <div class="button-container">
-          <button id="cityStatsBtn" disabled="" aria-disabled="true" aria-describedby="stats-status" aria-label="Obter estatísticas da cidade" class="md3-button-outlined">
-            <span class="button-text">Obter Estatísticas da Cidade</span>
-            <span class="button-loading" aria-hidden="true" hidden="">⏳</span>
-          </button>
-          <span id="stats-status" class="button-status" role="status" aria-live="polite">
-            Aguardando localização...
-          </span>
-        </div>
       </nav>
 
       <section id="coordinates" aria-labelledby="coordinates-heading">
@@ -536,39 +572,77 @@
 
       <section id="standardized-address" aria-labelledby="address-heading">
         <h2 id="address-heading" class="sr-only">Endereço Padronizado</h2>
-        <p><strong>Endereço padronizado:</strong> <span id="endereco-padronizado-display" aria-live="polite">Aguardando localização...</span></p>
+        <p><strong>Endereço:</strong> <span id="endereco-padronizado-display" aria-live="polite">Aguardando localização...</span></p>
       </section>
 
       <section class="section" aria-labelledby="location-info-heading">
-        <h2 id="location-info-heading">Informações da Localização</h2>
-        <p><strong>Dados SIDRA:</strong> <span id="dadosSidra" aria-live="polite">Aguardando localização...</span></p>
+        <p><strong>Dados IBGE:</strong> <span id="dadosSidra" aria-live="polite">Aguardando localização...</span></p>
       </section>
       
       <section id="locationResult" aria-live="polite" aria-label="Resultado da localização">
-        <p>As informações da sua localização aparecerão aqui.</p>
       </section>
 
-      <!-- Tracking Mode Controls -->
-      <div id="tracking-controls">
-        <button id="insertPositionButton" class="md3-button-outlined" aria-label="Inserir posição de teste">
-          Inserir posição de teste
-        </button>
-        
-        <label for="text-input" class="sr-only">Digite o texto para falar</label>
-        <textarea id="text-input" placeholder="Digite o texto para falar..." aria-label="Texto para síntese de voz" style="width: 100%; min-height: 60px; margin: 8px 0; padding: 8px; border-radius: 4px; border: 1px solid #ccc;"></textarea>
+      <!-- Tracking Mode Controls - Progressive Disclosure -->
+      <details id="advanced-controls" class="advanced-controls">
+        <summary class="advanced-controls-summary">
+          <span class="summary-icon" aria-hidden="true">⚙️</span>
+          <span class="summary-text">Opções Avançadas</span>
+        </summary>
+        <div class="advanced-controls-content">
+          <div id="tracking-controls">
+            <button id="insertPositionButton" class="md3-button-outlined" aria-label="Inserir posição de teste">
+              Inserir posição de teste
+            </button>
+          </div>
+          
+          <div class="advanced-control-group">
+            <label for="text-input">Síntese de Voz</label>
+            <textarea id="text-input" placeholder="Digite o texto para falar..." aria-label="Texto para síntese de voz" style="width: 100%; min-height: 60px; margin: 8px 0; padding: 8px; border-radius: 4px; border: 1px solid #ccc;"></textarea>
+          </div>
+        </div>
+      </details>
 
-        <label for="bottom-scroll-textarea" class="sr-only">Histórico de texto - somente leitura</label>
-        <textarea id="bottom-scroll-textarea" rows="4" readonly="" aria-readonly="true" aria-label="Histórico de texto gerado automaticamente durante navegação - somente leitura" placeholder="O histórico de texto será exibido aqui conforme você se move. Este campo é somente leitura." style="width: 100%; margin: 8px 0; padding: 8px; border-radius: 4px; border: 1px solid #ccc; background: #f5f5f5;"></textarea>
+      <!-- Navigation Log Display (Semantic HTML) -->
+        <label for="navigation-log" class="sr-only">Histórico de navegação</label>
+        <output 
+          id="navigation-log" 
+          role="log" 
+          aria-live="polite" 
+          aria-atomic="false"
+          class="navigation-log"
+          style="width: 100%; min-height: 96px; margin: 8px 0; padding: 8px; border-radius: 4px; border: 1px solid #ccc; background: #f5f5f5; display: block; overflow-y: auto; font-family: monospace; white-space: pre-wrap;"
+        ></output>
+        <!-- Keep old ID for backwards compatibility (hidden) -->
+        <textarea id="bottom-scroll-textarea" style="display: none;" aria-hidden="true"></textarea>
       </div>
     </main>
 
     <!-- Footer with secondary features -->
     <footer class="app-footer" role="contentinfo">
+      <!-- Feature Discovery Card -->
+      <aside class="feature-discovery" role="complementary" aria-labelledby="feature-discovery-title">
+        <h3 id="feature-discovery-title" class="feature-discovery-title">Outras Ferramentas</h3>
+        <div class="feature-card">
+          <a href="#/converter" class="feature-link" aria-label="Ir para conversor de coordenadas">
+            <span class="feature-icon" aria-hidden="true">🗺️</span>
+            <div class="feature-content">
+              <h4 class="feature-title">Conversor de Coordenadas</h4>
+              <p class="feature-description">Converta coordenadas geográficas para endereços brasileiros</p>
+            </div>
+            <span class="feature-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </aside>
+      
       <p>
         <a href="#/converter" aria-label="Ir para conversor de coordenadas para endereço">
           Conversor de Coordenadas para Endereço
         </a>
       </p>
+      <!-- Version Display (moved from top) -->
+      <div class="app-version" role="status" aria-label="Versão do aplicativo">
+        <!-- Updated dynamically by version.js -->
+      </div>
     </footer>
 
     <!-- External Libraries -->
@@ -596,6 +670,18 @@
     
     <script src="error-recovery.js" onerror="console.error('❌ Failed to load error-recovery.js')"></script>
     <script src="geolocation-banner.js" onerror="console.error('❌ Failed to load geolocation-banner.js')"></script>
+    
+    <!-- Onboarding component -->
+    <script type="module" src="components/onboarding.js"></script>
+    
+    <!-- Update version display from centralized config -->
+    <script type="module">
+      import { VERSION_WITH_DATE } from './config/version.js';
+      const versionEl = document.querySelector('.app-version');
+      if (versionEl) {
+        versionEl.textContent = VERSION_WITH_DATE;
+      }
+    </script>
     
     <!-- App Entry Point -->
     <script type="module" src="app.js"></script>
@@ -647,3 +733,34 @@
     background-color: transparent;
   }
 </style><div><div class="gf-app"></div></div></template></div></body></html>
+<!-- Button Utilities -->
+<script type="module" src="utils/button-utils.js"></script>
+
+<!-- Service Worker Registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(registration => {
+          console.log('✓ Service Worker registered:', registration.scope);
+          
+          // Check for updates
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New service worker available
+                if (confirm('Nova versão disponível! Recarregar a página?')) {
+                  newWorker.postMessage({ type: 'SKIP_WAITING' });
+                  window.location.reload();
+                }
+              }
+            });
+          });
+        })
+        .catch(error => {
+          console.warn('⚠️ Service Worker registration failed:', error);
+        });
+    });
+  }
+</script>

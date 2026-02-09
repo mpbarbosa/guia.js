@@ -17,7 +17,7 @@
 - `<footer class="app-footer">` with single link to coordinate converter
 
 **Updated** (Lines 228-229):
-- Page title: "Guia Turístico - Rastreamento de Localização"
+- Page title: "Onde estou?"
 - Description: "Acompanhe sua localização em tempo real durante a navegação pela cidade."
 
 ### 2. CSS Updates (`src/navigation.css`)
@@ -160,7 +160,7 @@ curl -s http://localhost:9000/src/index.html | grep -c "Rastreamento de Localiza
 
 - [ ] Open `http://localhost:9000/src/index.html` in browser
 - [ ] Verify page loads without JavaScript errors (check console)
-- [ ] Verify page title: "Guia Turístico - Rastreamento de Localização"
+- [ ] Verify page title: "Onde estou?"
 - [ ] Verify no navigation menu at top of page
 - [ ] Click "Obter Localização" button (if geolocation supported)
 - [ ] Scroll to bottom - verify footer with converter link

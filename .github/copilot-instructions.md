@@ -158,13 +158,38 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `HtmlText` (src/html/HtmlText.js) - Text display utilities
 
 #### Speech Synthesis (src/speech/)
-- `SpeechSynthesisManager` (src/speech/SpeechSynthesisManager.js) - Main facade for text-to-speech
+- **SpeechSynthesisManager** (src/speech/SpeechSynthesisManager.js) - Main orchestrator using composition pattern
+  - **Architecture**: Manager/Controller with Composition (v0.8.7-alpha refactored)
+  - **1148 lines** - Coordinates 4 focused components for speech synthesis
+  - **Composition Components**:
+    - `VoiceLoader` - Asynchronous voice loading with exponential backoff retry
+    - `VoiceSelector` - Brazilian Portuguese voice prioritization strategy
+    - `SpeechConfiguration` - Rate/pitch parameter validation and clamping
+    - `SpeechQueue` - Priority-based request queue management
+  - **Key Features**: Queue-based processing, Brazilian Portuguese optimization, retry mechanisms
+  - **Tests**: 69/72 passing (3 skipped for cross-environment compatibility)
+- **VoiceLoader** (src/speech/VoiceLoader.js) - Voice loading with exponential backoff (v0.8.7-alpha)
+  - **258 lines, 21 tests passing** - Replaces circular timer with exponential backoff
+  - Promise-based API: `loadVoices()`, `getVoices()`, `hasVoices()`, `clearCache()`
+  - Retry delays: 100ms → 200ms → 400ms → 800ms → 1600ms → 3200ms → 5000ms (capped)
+  - Max 10 retry attempts, concurrent load protection
+- **VoiceSelector** (src/speech/VoiceSelector.js) - Intelligent voice selection (v0.8.7-alpha)
+  - **237 lines, 30 tests passing** - Priority-based Brazilian Portuguese selection
+  - 3-level strategy: pt-BR exact → pt-* prefix → first available → null
+  - Voice quality scoring: local +10, primary language +20
+  - Methods: `selectVoice()`, `filterByLanguage()`, `scoreVoice()`, `getVoiceInfo()`
+- **SpeechConfiguration** (src/speech/SpeechConfiguration.js) - Parameter management (v0.8.7-alpha)
+  - **226 lines, 44 tests passing** - Rate/pitch validation and clamping
+  - Valid ranges: rate (0.1-10.0), pitch (0.0-2.0)
+  - Methods: `setRate()`, `setPitch()`, `getRate()`, `getPitch()`, `reset()`
+  - Automatic value clamping with logging
+- `SpeechQueue` (src/speech/SpeechQueue.js) - Priority-based queue data structure
+- `SpeechItem` (src/speech/SpeechItem.js) - Individual speech request items
+
+**Legacy Components** (deprecated in favor of above composition):
 - `SpeechController` (src/speech/SpeechController.js) - Core speech synthesis control
-- `SpeechQueueProcessor` (src/speech/SpeechQueueProcessor.js) - Queue processing and execution
-- `SpeechConfiguration` (src/speech/SpeechConfiguration.js) - Configuration management
-- `VoiceManager` (src/speech/VoiceManager.js) - Voice selection and management
-- `SpeechQueue` (src/speech/SpeechQueue.js) - Speech queue data structure
-- `SpeechItem` (src/speech/SpeechItem.js) - Individual speech items
+- `SpeechQueueProcessor` (src/speech/SpeechQueueProcessor.js) - Queue processing
+- `VoiceManager` (src/speech/VoiceManager.js) - Voice selection (replaced by VoiceLoader + VoiceSelector)
 
 #### Performance Timing (src/timing/)
 - `Chronometer` (src/timing/Chronometer.js) - Performance timing and elapsed time tracking
@@ -535,13 +560,38 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 - `HtmlText` (src/html/HtmlText.js) - Text display utilities
 
 #### Speech Synthesis (src/speech/)
-- `SpeechSynthesisManager` (src/speech/SpeechSynthesisManager.js) - Main facade for text-to-speech
+- **SpeechSynthesisManager** (src/speech/SpeechSynthesisManager.js) - Main orchestrator using composition pattern
+  - **Architecture**: Manager/Controller with Composition (v0.8.7-alpha refactored)
+  - **1148 lines** - Coordinates 4 focused components for speech synthesis
+  - **Composition Components**:
+    - `VoiceLoader` - Asynchronous voice loading with exponential backoff retry
+    - `VoiceSelector` - Brazilian Portuguese voice prioritization strategy
+    - `SpeechConfiguration` - Rate/pitch parameter validation and clamping
+    - `SpeechQueue` - Priority-based request queue management
+  - **Key Features**: Queue-based processing, Brazilian Portuguese optimization, retry mechanisms
+  - **Tests**: 69/72 passing (3 skipped for cross-environment compatibility)
+- **VoiceLoader** (src/speech/VoiceLoader.js) - Voice loading with exponential backoff (v0.8.7-alpha)
+  - **258 lines, 21 tests passing** - Replaces circular timer with exponential backoff
+  - Promise-based API: `loadVoices()`, `getVoices()`, `hasVoices()`, `clearCache()`
+  - Retry delays: 100ms → 200ms → 400ms → 800ms → 1600ms → 3200ms → 5000ms (capped)
+  - Max 10 retry attempts, concurrent load protection
+- **VoiceSelector** (src/speech/VoiceSelector.js) - Intelligent voice selection (v0.8.7-alpha)
+  - **237 lines, 30 tests passing** - Priority-based Brazilian Portuguese selection
+  - 3-level strategy: pt-BR exact → pt-* prefix → first available → null
+  - Voice quality scoring: local +10, primary language +20
+  - Methods: `selectVoice()`, `filterByLanguage()`, `scoreVoice()`, `getVoiceInfo()`
+- **SpeechConfiguration** (src/speech/SpeechConfiguration.js) - Parameter management (v0.8.7-alpha)
+  - **226 lines, 44 tests passing** - Rate/pitch validation and clamping
+  - Valid ranges: rate (0.1-10.0), pitch (0.0-2.0)
+  - Methods: `setRate()`, `setPitch()`, `getRate()`, `getPitch()`, `reset()`
+  - Automatic value clamping with logging
+- `SpeechQueue` (src/speech/SpeechQueue.js) - Priority-based queue data structure
+- `SpeechItem` (src/speech/SpeechItem.js) - Individual speech request items
+
+**Legacy Components** (deprecated in favor of above composition):
 - `SpeechController` (src/speech/SpeechController.js) - Core speech synthesis control
-- `SpeechQueueProcessor` (src/speech/SpeechQueueProcessor.js) - Queue processing and execution
-- `SpeechConfiguration` (src/speech/SpeechConfiguration.js) - Configuration management
-- `VoiceManager` (src/speech/VoiceManager.js) - Voice selection and management
-- `SpeechQueue` (src/speech/SpeechQueue.js) - Speech queue data structure
-- `SpeechItem` (src/speech/SpeechItem.js) - Individual speech items
+- `SpeechQueueProcessor` (src/speech/SpeechQueueProcessor.js) - Queue processing
+- `VoiceManager` (src/speech/VoiceManager.js) - Voice selection (replaced by VoiceLoader + VoiceSelector)
 
 ### API Integrations
 - **OpenStreetMap Nominatim**: `https://nominatim.openstreetmap.org/reverse` for geocoding

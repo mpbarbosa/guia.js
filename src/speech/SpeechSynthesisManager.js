@@ -61,6 +61,9 @@ import { log, warn, error } from '../utils/logger.js';
 
 // Import dependencies
 import SpeechQueue from './SpeechQueue.js';
+import VoiceLoader from './VoiceLoader.js';
+import VoiceSelector from './VoiceSelector.js';
+import SpeechConfiguration from './SpeechConfiguration.js';
 
 // Logging functions are now instance methods for configurable logging control
 
@@ -106,9 +109,16 @@ Object.freeze(SPEECH_CONFIG);
  * It automatically prioritizes Brazilian Portuguese voices and includes retry mechanisms
  * for reliable voice loading across different browsers and environments.
  * 
+ * **Architecture Pattern**: Manager/Controller with Composition
+ * - Uses extracted composition classes: VoiceLoader, VoiceSelector, SpeechConfiguration
+ * - Delegates voice loading to VoiceLoader
+ * - Delegates voice selection to VoiceSelector
+ * - Delegates rate/pitch configuration to SpeechConfiguration
+ * - Manages overall speech synthesis orchestration
+ * 
  * **State Management**:
  * - Tracks current speaking status to prevent overlapping speech
- * - Manages voice loading state with retry mechanisms
+ * - Manages voice loading state with retry mechanisms (legacy, for backward compatibility)
  * - Maintains queue processing timers for independent operation
  * 
  * **Voice Selection Strategy**:
@@ -176,13 +186,21 @@ class SpeechSynthesisManager {
         // Initialize Web Speech API interface
         this.synth = window.speechSynthesis;
         
-        // Initialize voice selection and storage
+        // Initialize composition components (extracted classes)
+        this.voiceLoader = new VoiceLoader({ enableLogging });
+        this.voiceSelector = new VoiceSelector({ 
+            primaryLanguage: SPEECH_CONFIG.primaryLanguage,
+            fallbackLanguagePrefix: SPEECH_CONFIG.fallbackLanguagePrefix 
+        });
+        this.configuration = new SpeechConfiguration(enableLogging);
+        
+        // Initialize voice selection and storage (for backward compatibility)
         this.voices = [];                    // Array of available SpeechSynthesisVoice objects
         this.voice = null;                   // Currently selected voice (null until loaded)
         
-        // Initialize speech parameters with validated defaults
-        this.rate = SPEECH_CONFIG.defaultRate;      // Speech rate (0.1 to 10.0)
-        this.pitch = SPEECH_CONFIG.defaultPitch;    // Speech pitch (0.0 to 2.0)
+        // Initialize rate and pitch from configuration (synchronized with this.configuration)
+        this.rate = this.configuration.getRate();       // Speech rate (delegated to configuration)
+        this.pitch = this.configuration.getPitch();     // Speech pitch (delegated to configuration)
         
         // Initialize state management
         this.isCurrentlySpeaking = false;    // Concurrency control flag
@@ -194,13 +212,13 @@ class SpeechSynthesisManager {
         this.queueTimer = null;              // Timer for independent queue processing
         this.independentQueueTimerInterval = SPEECH_CONFIG.independentQueueTimerInterval;
         
-        // Initialize voice retry mechanism for Brazilian Portuguese voice loading
-        this.voiceRetryTimer = null;         // Timer for voice retry attempts
-        this.voiceRetryAttempts = 0;         // Counter for retry attempts
+        // Legacy voice retry mechanism properties (kept for backward compatibility)
+        this.voiceRetryTimer = null;         // Timer for voice retry attempts (deprecated)
+        this.voiceRetryAttempts = 0;         // Counter for retry attempts (deprecated)
         this.maxVoiceRetryAttempts = SPEECH_CONFIG.maxVoiceRetryAttempts;
         this.voiceRetryInterval = SPEECH_CONFIG.voiceRetryInterval;
         
-        // Begin voice loading process (may trigger retry mechanism)
+        // Begin voice loading process using new VoiceLoader
         this.loadVoices();
         
         this.safeLog('(SpeechSynthesisManager) Initialized successfully with Web Speech API');
@@ -286,59 +304,49 @@ class SpeechSynthesisManager {
      * Loads available voices and selects the optimal Portuguese voice.
      * 
      * This method implements a sophisticated voice selection strategy that prioritizes
-     * Brazilian Portuguese voices for the target user base. It includes a retry mechanism
-     * to handle asynchronous voice loading in different browsers, ensuring reliable voice
-     * selection even when voices are not immediately available.
+     * Brazilian Portuguese voices for the target user base using the extracted composition
+     * classes VoiceLoader and VoiceSelector. It includes a retry mechanism to handle
+     * asynchronous voice loading in different browsers, ensuring reliable voice selection
+     * even when voices are not immediately available.
      * 
-     * **Voice Selection Priority**:
+     * **Voice Selection Priority** (delegated to VoiceSelector):
      * 1. **Brazilian Portuguese (pt-BR)**: Primary target for Brazilian users
      * 2. **Portuguese variants (pt-*)**: Fallback for any Portuguese dialect
      * 3. **First available voice**: Default fallback for non-Portuguese environments
      * 4. **Null**: If no voices are available
      * 
-     * **Retry Mechanism**:
-     * - Triggers when Brazilian Portuguese is not found but other voices exist
-     * - Limited to configurable maximum attempts to prevent infinite loops
-     * - Uses timer-based polling to check for voice availability changes
-     * - Automatically stops when Brazilian Portuguese voice is found
+     * **Retry Mechanism** (delegated to VoiceLoader):
+     * - Uses exponential backoff for efficient retry
+     * - Handles asynchronous voice loading in different browsers
+     * - Automatically completes when voices are available
+     * 
+     * **Composition Classes**:
+     * - VoiceLoader: Handles voice loading with exponential backoff retry
+     * - VoiceSelector: Implements voice prioritization and selection strategy
      * 
      * @private
      * @returns {void}
      * 
      * @example
-     * // Called automatically by constructor, but can be manually triggered
-     * speechManager.loadVoices();
+     * // Called automatically by constructor
+     * // Constructor calls this.loadVoices() after initializing composition components
      */
     loadVoices() {
         /**
          * Internal voice update logic with priority-based selection.
-         * Encapsulates the voice selection algorithm as a pure function
-         * for easier testing and maintainability.
+         * Synchronous voice selection that works with cached voices.
          * 
          * @private
          * @returns {void}
          */
-        const updateVoices = () => {
-            // Get all available voices from Web Speech API
+        const selectVoiceSync = () => {
+            // Get voices from Web Speech API directly (synchronous fallback for backward compatibility)
             this.voices = this.synth.getVoices();
-            
             this.safeLog(`(SpeechSynthesisManager) Found ${this.voices.length} available voices`);
-
-            // PRIORITY 1: Search for Brazilian Portuguese voice (pt-BR)
-            let portugueseVoice = this.voices.find(voice =>
-                voice.lang && voice.lang.toLowerCase() === SPEECH_CONFIG.primaryLanguage
-            );
-
-            // PRIORITY 2: Fallback to any Portuguese voice (pt-PT, pt, etc.)
-            if (!portugueseVoice) {
-                portugueseVoice = this.voices.find(voice =>
-                    voice.lang && voice.lang.toLowerCase().startsWith(SPEECH_CONFIG.fallbackLanguagePrefix)
-                );
-            }
-
-            // PRIORITY 3: Use first available voice as ultimate fallback
-            this.voice = portugueseVoice || this.voices[0] || null;
-
+            
+            // Select voice using VoiceSelector (with priority strategy)
+            this.voice = this.voiceSelector.selectVoice(this.voices);
+            
             // Log voice selection result for debugging
             if (this.voice) {
                 const voiceType = this.voice.lang?.toLowerCase() === SPEECH_CONFIG.primaryLanguage 
@@ -348,33 +356,64 @@ class SpeechSynthesisManager {
                         : 'fallback';
                 this.safeLog(`(SpeechSynthesisManager) Selected ${voiceType} voice: ${this.voice.name} (${this.voice.lang})`);
             } else {
-                                this.safeWarn('(SpeechSynthesisManager) No voices available for speech synthesis');
+                this.safeWarn('(SpeechSynthesisManager) No voices available for speech synthesis');
             }
-
-            // Retry mechanism management based on voice selection results
-            if (portugueseVoice && portugueseVoice.lang.toLowerCase() === SPEECH_CONFIG.primaryLanguage) {
-                // SUCCESS: Brazilian Portuguese voice found, stop retry timer
-                this.stopVoiceRetryTimer();
-                this.safeLog('(SpeechSynthesisManager) Brazilian Portuguese voice acquired, retry stopped');
-            } else if (this.voices.length > 0 && !this.voiceRetryTimer && this.voiceRetryAttempts < this.maxVoiceRetryAttempts) {
-                // RETRY NEEDED: Voices available but no Brazilian Portuguese, start retry mechanism
-                this.safeLog('(SpeechSynthesisManager) Starting voice retry mechanism for Brazilian Portuguese');
-                this.startVoiceRetryTimer();
+        };
+        
+        /**
+         * Internal async voice loading logic with exponential backoff.
+         * Provides reliable voice loading for browsers that load voices asynchronously.
+         * 
+         * @private
+         * @returns {void}
+         */
+        const loadVoicesAsync = async () => {
+            try {
+                // Step 1: Load voices using VoiceLoader (with exponential backoff retry)
+                await this.voiceLoader.loadVoices();
+                
+                // Step 2: Get cached voices from loader
+                this.voices = this.voiceLoader.getVoices();
+                this.safeLog(`(SpeechSynthesisManager) Found ${this.voices.length} available voices (async)`);
+                
+                // Step 3: Select voice using VoiceSelector (with priority strategy)
+                this.voice = this.voiceSelector.selectVoice(this.voices);
+                
+                // Step 4: Log voice selection result for debugging
+                if (this.voice) {
+                    const voiceType = this.voice.lang?.toLowerCase() === SPEECH_CONFIG.primaryLanguage 
+                        ? 'Brazilian Portuguese' 
+                        : this.voice.lang?.toLowerCase().startsWith(SPEECH_CONFIG.fallbackLanguagePrefix)
+                            ? 'Portuguese variant'
+                            : 'fallback';
+                    this.safeLog(`(SpeechSynthesisManager) Selected ${voiceType} voice (async): ${this.voice.name} (${this.voice.lang})`);
+                } else {
+                    this.safeWarn('(SpeechSynthesisManager) No voices available for speech synthesis (async)');
+                }
+                
+            } catch (err) {
+                this.safeWarn('(SpeechSynthesisManager) Error loading voices asynchronously:', err);
             }
         };
 
-        // Immediate voice update attempt (handles cases where voices are already loaded)
-        updateVoices();
+        // Step 1: Immediate synchronous voice selection (handles cases where voices are already loaded)
+        selectVoiceSync();
+        
+        // Step 2: Trigger asynchronous voice loading for delayed voice availability
+        loadVoicesAsync();
 
-        // Set up event listener for asynchronous voice loading (handles delayed voice loading)
+        // Step 3: Set up event listener for asynchronous voice loading (handles voice changes)
         if (typeof window !== "undefined" && window.speechSynthesis) {
-            window.speechSynthesis.onvoiceschanged = updateVoices;
+            window.speechSynthesis.onvoiceschanged = selectVoiceSync;
             this.safeLog('(SpeechSynthesisManager) Voice change listener registered');
         }
     }
 
     /**
      * Starts the retry timer for Brazilian Portuguese voice detection.
+     * 
+     * @deprecated This method is no longer used. VoiceLoader now handles voice loading
+     * with exponential backoff retry. This method is kept for backward compatibility only.
      * 
      * This method implements a timer-based retry mechanism that periodically checks
      * for the availability of Brazilian Portuguese voices. This is necessary because
@@ -430,6 +469,9 @@ class SpeechSynthesisManager {
 
     /**
      * Stops the voice retry timer and cleans up retry state.
+     * 
+     * @deprecated This method is no longer used. VoiceLoader now handles voice loading
+     * with exponential backoff retry. This method is kept for backward compatibility only.
      * 
      * This method safely terminates the voice retry mechanism, clearing the interval
      * timer and resetting the timer reference. It can be called multiple times safely
@@ -495,6 +537,9 @@ class SpeechSynthesisManager {
      * validation and clamping to ensure values remain within the valid range
      * supported by the Web Speech API. Invalid values are automatically corrected.
      * 
+     * **Implementation**: Delegates to SpeechConfiguration for parameter management
+     * while maintaining backward compatibility by syncing this.rate property.
+     * 
      * @param {number} rate - Speech rate (0.1 to 10.0, where 1.0 is normal speed)
      * @throws {TypeError} If rate is not a number
      * @returns {void}
@@ -517,16 +562,11 @@ class SpeechSynthesisManager {
             throw new TypeError('Rate must be a valid number');
         }
 
-        // Clamp rate to valid range and store
-        const clampedRate = Math.max(SPEECH_CONFIG.minRate, Math.min(SPEECH_CONFIG.maxRate, rate));
-        this.rate = clampedRate;
+        // Delegate to configuration object (handles clamping and logging)
+        const result = this.configuration.setRate(rate);
         
-        // Log rate change with clamping notification if needed
-        if (clampedRate !== rate) {
-            this.safeWarn(`(SpeechSynthesisManager) Rate ${rate} clamped to ${clampedRate} (valid range: ${SPEECH_CONFIG.minRate}-${SPEECH_CONFIG.maxRate})`);
-        } else {
-            this.safeLog(`(SpeechSynthesisManager) Speech rate set to ${clampedRate}`);
-        }
+        // Sync to this.rate for backward compatibility
+        this.rate = result;
     }
 
     /**
@@ -535,6 +575,9 @@ class SpeechSynthesisManager {
      * This method configures the speech synthesis pitch with automatic validation
      * and clamping to ensure values remain within the valid range supported by
      * the Web Speech API. Invalid values are automatically corrected.
+     * 
+     * **Implementation**: Delegates to SpeechConfiguration for parameter management
+     * while maintaining backward compatibility by syncing this.pitch property.
      * 
      * @param {number} pitch - Speech pitch (0.0 to 2.0, where 1.0 is normal pitch)
      * @throws {TypeError} If pitch is not a number
@@ -558,16 +601,11 @@ class SpeechSynthesisManager {
             throw new TypeError('Pitch must be a valid number');
         }
 
-        // Clamp pitch to valid range and store
-        const clampedPitch = Math.max(SPEECH_CONFIG.minPitch, Math.min(SPEECH_CONFIG.maxPitch, pitch));
-        this.pitch = clampedPitch;
+        // Delegate to configuration object (handles clamping and logging)
+        const result = this.configuration.setPitch(pitch);
         
-        // Log pitch change with clamping notification if needed
-        if (clampedPitch !== pitch) {
-            this.safeWarn(`(SpeechSynthesisManager) Pitch ${pitch} clamped to ${clampedPitch} (valid range: ${SPEECH_CONFIG.minPitch}-${SPEECH_CONFIG.maxPitch})`);
-        } else {
-            this.safeLog(`(SpeechSynthesisManager) Speech pitch set to ${clampedPitch}`);
-        }
+        // Sync to this.pitch for backward compatibility
+        this.pitch = result;
     }
 
     /**
@@ -981,17 +1019,18 @@ class SpeechSynthesisManager {
      * 
      * Returns an object containing current configuration, state, and queue information
      * for debugging, monitoring, or UI display purposes. This provides a complete
-     * snapshot of the speech synthesis system state.
+     * snapshot of the speech synthesis system state including values from the
+     * SpeechConfiguration composition object.
      * 
      * @returns {Object} Status object with comprehensive system information
      * @returns {Object} return.voice - Current voice information (name, lang) or null
-     * @returns {number} return.rate - Current speech rate
-     * @returns {number} return.pitch - Current speech pitch  
+     * @returns {number} return.rate - Current speech rate (from SpeechConfiguration)
+     * @returns {number} return.pitch - Current speech pitch (from SpeechConfiguration)  
      * @returns {boolean} return.isSpeaking - Whether currently speaking
      * @returns {number} return.queueSize - Number of items in queue
      * @returns {boolean} return.queueTimerActive - Whether queue timer is running
-     * @returns {number} return.voiceRetryAttempts - Number of voice retry attempts made
-     * @returns {boolean} return.voiceRetryActive - Whether voice retry timer is running
+     * @returns {number} return.voiceRetryAttempts - Number of voice retry attempts made (legacy)
+     * @returns {boolean} return.voiceRetryActive - Whether voice retry timer is running (legacy)
      * 
      * @example
      * // Get complete status
@@ -1010,8 +1049,8 @@ class SpeechSynthesisManager {
     getStatus() {
         return {
             voice: this.voice ? { name: this.voice.name, lang: this.voice.lang } : null,
-            rate: this.rate,
-            pitch: this.pitch,
+            rate: this.rate,  // Synchronized with this.configuration.rate
+            pitch: this.pitch,  // Synchronized with this.configuration.pitch
             isSpeaking: this.isCurrentlySpeaking,
             queueSize: this.speechQueue.size(),
             queueTimerActive: this.queueTimer !== null,

@@ -238,24 +238,26 @@ describe('SpeechSynthesisManager - MP Barbosa Travel Guide (v0.8.3-alpha)', () =
             expect(mockSpeechSynthesis.onvoiceschanged).toBeInstanceOf(Function);
         });
 
-        test('should start retry timer when Brazilian Portuguese not found', () => {
-            const startRetrySpy = jest.spyOn(speechManager, 'startVoiceRetryTimer');
+        test('should use VoiceLoader for voice loading (refactored)', async () => {
             const voices = [createMockVoice('English Voice', 'en-US')];
             
             mockSpeechSynthesis.getVoices.mockReturnValue(voices);
-            speechManager.loadVoices();
+            await speechManager.loadVoices();
             
-            expect(startRetrySpy).toHaveBeenCalled();
+            // Verify VoiceLoader was used
+            expect(speechManager.voiceLoader).toBeDefined();
+            expect(speechManager.voices).toEqual(voices);
         });
 
-        test('should stop retry timer when Brazilian Portuguese found', () => {
-            const stopRetrySpy = jest.spyOn(speechManager, 'stopVoiceRetryTimer');
+        test('should use VoiceSelector for voice selection (refactored)', async () => {
             const voices = [createMockVoice('Brazilian Voice', 'pt-BR')];
             
             mockSpeechSynthesis.getVoices.mockReturnValue(voices);
-            speechManager.loadVoices();
+            await speechManager.loadVoices();
             
-            expect(stopRetrySpy).toHaveBeenCalled();
+            // Verify VoiceSelector was used
+            expect(speechManager.voiceSelector).toBeDefined();
+            expect(speechManager.voice).toBe(voices[0]);
         });
     });
 

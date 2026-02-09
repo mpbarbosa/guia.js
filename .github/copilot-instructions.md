@@ -22,7 +22,7 @@ Guia Turístico is a single-page web application (version 0.8.7-alpha) built on 
 - **Install Dependencies**: `npm install` - takes 20 seconds. Downloads guia.js library and other dependencies.
 - **Syntax Check**: Always run `node -c src/app.js && node -c src/guia.js` (timeout: 10 seconds) before making changes
 - **Basic Test**: Run `node src/app.js` (timeout: 10 seconds) to verify SPA initialization
-- **Automated Tests**: `npm test` - takes ~45 seconds. Runs 2,380 tests (2,214 passing, 146 skipped, 20 failing) in 101 suites. NEVER CANCEL.
+- **Automated Tests**: `npm test` - takes ~65 seconds. Runs 2,401 tests (2,235 passing, 146 skipped, 20 failing) in 101 suites. NEVER CANCEL.
 - **Test Coverage**: `npm run test:coverage` - takes ~45 seconds. Shows ~70% coverage. NEVER CANCEL.
 - **Full Validation**: `npm run test:all` - takes ~45 seconds. Combines syntax + tests. NEVER CANCEL.
 - **Web Test**: Start web server with `python3 -m http.server 9000` (timeout: 10 seconds to start, runs indefinitely)
@@ -30,7 +30,7 @@ Guia Turístico is a single-page web application (version 0.8.7-alpha) built on 
 ### Development Workflow
 - Always validate JavaScript syntax with `node -c` before committing changes
 - Test SPA functionality with `node src/app.js` to verify routing and initialization
-- Run automated tests with `npm run test:all` before commits to ensure 2,214+ tests pass
+- Run automated tests with `npm run test:all` before commits to ensure 2,235+ tests pass
 - For UI/web features, use the web server and src/index.html for manual validation
 - **Follow immutability principles** - see `.github/CONTRIBUTING.md` for guidelines
 - **TIMING**: Syntax checks <1 second, tests ~45 seconds, web server startup 3 seconds
@@ -51,7 +51,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 2. **Automated Test Suite**:
    ```bash
    npm run test:all
-   # Should show: ✅ 2,214 tests passing (2,380 total), ✅ 90 suites passing (101 total), ~45 seconds execution
+   # Should show: ✅ 2,235 tests passing (2,401 total), ✅ 92 suites passing (101 total), ~65 seconds execution
    ```
 
 3. **Web Application Functionality**:
@@ -87,7 +87,7 @@ After making any changes, ALWAYS run through these validation scenarios:
   - **Usage**: Import constants for consistency, avoid hardcoded strings
 - `src/utils/TimerManager.js` (147 lines) - Centralized timer management preventing memory leaks
 - `package.json` - Node.js configuration with guia.js dependency (jsdom v25.0.1, puppeteer v24.35.0)
-- `__tests__/` - 101 test suites with 2,380 total tests (2,214 passing, 146 skipped, 20 failing)
+- `__tests__/` - 101 test suites with 2,401 total tests (2,235 passing, 146 skipped, 20 failing)
   - **Note**: Test suite includes E2E tests for address validation, SIDRA integration, and location results (v0.7.2+)
   - **New Tests**: HTMLSidraDisplayer.test.js, complete-address-validation.e2e.test.js, milho-verde-locationResult.e2e.test.js
   - **Organization**: Domain-based (unit/, integration/, e2e/, managers/, external/, features/)
@@ -95,7 +95,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `.github/scripts/test-workflow-locally.sh` - Pre-push validation script (simulates CI/CD)
 - `.github/scripts/validate-jsdom-update.sh` - jsdom upgrade validation script
 - `.husky/` - Git hooks (pre-commit: syntax + unit tests, pre-push: full test suite)
-- `cdn-delivery.sh` - CDN URL generator for jsDelivr distribution
+- `.github/scripts/cdn-delivery.sh` - CDN URL generator for jsDelivr distribution
 
 ### UI Architecture (v0.8.4+)
 
@@ -132,7 +132,13 @@ After making any changes, ALWAYS run through these validation scenarios:
   - **v0.8.7-alpha**: Added `regiaoMetropolitana` field and `regiaoMetropolitanaFormatada()` method
 - `AddressExtractor` (src/data/AddressExtractor.js) - Address data extraction
   - **v0.8.7-alpha**: Extracts metropolitan region from Nominatim `county` field
-- `AddressCache` (src/data/AddressCache.js) - Address caching functionality
+- `AddressCache` (src/data/AddressCache.js) - Address caching with LRU eviction and change detection (1171 lines)
+  - **v0.8.7-alpha REFACTORED**: Now uses composition with 3 focused classes
+  - **AddressChangeDetector** (271 lines): Generic field change detection with signature tracking
+  - **CallbackRegistry** (280 lines): Centralized callback management with error handling
+  - **AddressDataStore** (253 lines): Address data storage with current/previous history tracking
+  - **Architecture**: Composition pattern, Single Responsibility Principle, 100% backward compatibility
+  - **Tests**: 74/74 tests passing for new classes, 18/18 integration tests passing
 - `AddressDataExtractor` (src/data/AddressDataExtractor.js) - Complete address data extraction and caching
 - `ReferencePlace` (src/data/ReferencePlace.js) - Reference location handling with calculateCategory() method
   - **Supports**: place, shop, amenity, railway, building types (v0.7.2+)
@@ -189,7 +195,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Testing Infrastructure
 
 ### Automated Test Coverage
-- **2,380 total tests** (2,214 passing, 146 skipped, 20 failing) across 101 test suites running in ~30 seconds
+- **2,401 total tests** (2,235 passing, 146 skipped, 20 failing) across 101 test suites running in ~65 seconds
 - **~85% code coverage** overall (84.7% actual)
 - **100% coverage** of guia_ibge.js (full coverage)
 - **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns, SIDRA data display, Metropolitan region display
@@ -249,7 +255,7 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 ```
 
 ### Expected Test Results
-- ✅ 2,214 tests passing (2,380 total, 146 skipped, 20 failing)
+- ✅ 2,235 tests passing (2,401 total, 146 skipped, 20 failing)
 - ✅ 90 test suites passing (101 total, 4 skipped, 7 failing)
 - ✅ ~85% code coverage overall (84.7% actual)
 - ✅ 100% code coverage on guia_ibge.js
@@ -358,14 +364,14 @@ The repository includes `.github/scripts/test-workflow-locally.sh` for pre-push 
 See `docs/WORKFLOW_SETUP.md` for detailed usage guide.
 
 ### CDN Delivery Script
-The repository includes `cdn-delivery.sh` for generating CDN URLs:
+The repository includes `.github/scripts/cdn-delivery.sh` for generating CDN URLs:
 
 **Purpose**: Generate jsDelivr CDN URLs for the current version
 
 **Usage**:
 ```bash
 # From project root
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 # Output saved to cdn-urls.txt
 ```
 
@@ -383,7 +389,7 @@ The repository includes `cdn-delivery.sh` for generating CDN URLs:
 **Integration Example**:
 ```bash
 npm version minor
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 git add cdn-urls.txt
 git commit -m "chore: update CDN URLs for v0.7.0"
 git tag v0.7.0
@@ -395,7 +401,7 @@ git push origin v0.7.0
 # Override defaults if needed
 export GITHUB_USER="your-username"
 export GITHUB_REPO="your-repo"
-./cdn-delivery.sh
+./.github/scripts/cdn-delivery.sh
 ```
 
 See README.md CDN Delivery section for troubleshooting guide.
@@ -434,7 +440,7 @@ curl -s http://localhost:9000/src/index.html | head -5
 ### Validation Checklist
 - [ ] Node.js syntax validation passes (`node -c src/guia.js`)
 - [ ] Basic Node.js execution shows version output
-- [ ] All 1,739 automated tests pass (`npm test`)
+- [ ] All 2,235 automated tests pass (`npm test`)
 - [ ] Web server starts successfully (`python3 -m http.server 9000`)
 - [ ] Test page loads without JavaScript errors
 - [ ] Geolocation button triggers proper API calls
@@ -618,17 +624,44 @@ new BrazilianStandardAddress() // Address standardization
 
 ### Daily Development
 ```bash
+# Install dependencies (20 seconds, run once)
+npm install
+
 # Syntax check (always run first)
-node -c guia.js && node -c guia_ibge.js
+npm run validate
 
 # Basic functionality test  
-node src/guia.js
+node src/app.js
+
+# Full test suite
+npm run test:all
 
 # Start web server for full testing
 python3 -m http.server 9000
 
 # Test web functionality
 curl -s http://localhost:9000/src/index.html | head -5
+```
+
+### Utility Scripts
+```bash
+# Check version consistency across all files
+npm run check:version
+
+# Check for broken references in documentation
+npm run check:references
+
+# Validate terminology consistency
+npm run check:terminology
+
+# Update documentation metadata
+npm run update:dates
+
+# Generate CDN URLs
+npm run cdn:generate
+
+# Test CI/CD workflow locally before pushing
+npm run ci:test-local
 ```
 
 ### Validation Checklist
@@ -640,3 +673,7 @@ curl -s http://localhost:9000/src/index.html | head -5
 - [ ] Geolocation button triggers proper API calls
 - [ ] Address formatting works for Brazilian coordinates
 - [ ] Console logging appears in both Node.js and browser
+---
+
+**Last Updated**: 2026-02-09  
+**Status**: ✅ Active

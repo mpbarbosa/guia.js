@@ -6,7 +6,7 @@
  * @version 0.8.7-alpha
  */
 
-import { WebGeocodingManager } from './guia.js';
+import WebGeocodingManager from './coordination/WebGeocodingManager.js';
 import { log, warn, error } from './utils/logger.js';
 import { VERSION, VERSION_STRING } from './config/version.js';
 

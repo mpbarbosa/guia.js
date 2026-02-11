@@ -1,6 +1,6 @@
 {
   "name": "guia_turistico",
-  "version": "0.8.7-alpha",
+  "version": "0.9.0-alpha",
   "description": "Tourist guide web application built on top of guia.js library",
   "type": "module",
   "main": "src/app.js",
@@ -54,7 +54,9 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ],
     "transform": {},
     "transformIgnorePatterns": [],
     "maxWorkers": 1,

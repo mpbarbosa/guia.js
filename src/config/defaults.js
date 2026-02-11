@@ -15,8 +15,8 @@ import { log, warn, error } from '../utils/logger.js';
 // Version Information
 export const APP_VERSION = {
 	major: 0,
-	minor: 8,
-	patch: 7,
+	minor: 9,
+	patch: 0,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;

@@ -7,6 +7,7 @@ Status: Active
 
 
 [![Tests](https://img.shields.io/badge/tests-2235%20passing%20%2F%3.0.01%20total-yellow)](https://github.com/mpbarbosa/guia_turistico)
+[![Version](https://img.shields.io/badge/version-0.9.0--alpha-blue)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
 > **Note on Test Status**: While 2,235 tests pass successfully, 20 tests are currently failing (primarily timing-dependent E2E tests for incomplete address data scenarios) and 146 tests are skipped. We're actively working on stabilizing the E2E test suite. See [Testing Overview](#testing-overview) for details.
@@ -826,7 +827,7 @@ $ ./.github/scripts/cdn-delivery.sh
 🔍 Checking prerequisites...
 ✅ Node.js found: v20.19.5
 ✅ package.json found
-✅ Git found: git version 2.51.0
+✅ Git found: git v2.x.x
 ✅ Git repository detected
 ✅ All prerequisites met!
 

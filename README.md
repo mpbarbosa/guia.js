@@ -1,15 +1,15 @@
 # Guia Turístico - Tourist Guide Web Application
 
 ---
-Last Updated: 2026-01-28
+Last Updated: 2026-02-11
 Status: Active
 ---
 
 
-[![Tests](https://img.shields.io/badge/tests-2214%20passing%20%2F%202380%20total-yellow)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-2235%20passing%20%2F%3.0.01%20total-yellow)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
-> **Note on Test Status**: While 2,214 tests pass successfully, 20 tests are currently failing (primarily timing-dependent E2E tests for incomplete address data scenarios) and 146 tests are skipped. We're actively working on stabilizing the E2E test suite. See [Testing Overview](#testing-overview) for details.
+> **Note on Test Status**: While 2,235 tests pass successfully, 20 tests are currently failing (primarily timing-dependent E2E tests for incomplete address data scenarios) and 146 tests are skipped. We're actively working on stabilizing the E2E test suite. See [Testing Overview](#testing-overview) for details.
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
@@ -40,6 +40,34 @@ A single-page web application (SPA) for tourist guidance, built on top of the [g
 
 ### ✨ Latest Features (v0.8.7-alpha)
 
+#### 🔘 Contextual Button Status Messages
+Smart status messages for disabled buttons, reducing user confusion:
+
+```javascript
+// Initially disabled
+"Aguardando localização para habilitar"
+
+// After location is obtained
+"Pronto para usar"
+```
+
+**Benefits**:
+- Clear explanation for disabled buttons
+- WCAG 2.1 AA accessible with ARIA attributes
+- Color-coded status types (info, warning, success, error)
+- Automatic screen reader announcements
+
+**Implementation** (`src/utils/button-status.js`):
+```javascript
+import { disableWithReason, enableWithMessage, BUTTON_STATUS_MESSAGES } from '../utils/button-status.js';
+
+// Disable with explanation
+disableWithReason(button, "Aguardando localização para habilitar");
+
+// Enable with success message
+enableWithMessage(button, "Pronto para usar");
+```
+
 #### 🌆 Metropolitan Region Display
 Automatically displays metropolitan region context for municipalities in metropolitan areas:
 
@@ -68,7 +96,7 @@ Enhanced geographic context with state codes:
 
 **Coverage**: All 26 Brazilian states + Federal District
 
-📚 **Learn More**: See [FEATURE_METROPOLITAN_REGION_DISPLAY.md](./docs/FEATURE_METROPOLITAN_REGION_DISPLAY.md) and [FEATURE_MUNICIPIO_STATE_DISPLAY.md](./docs/FEATURE_MUNICIPIO_STATE_DISPLAY.md) for complete details.
+📚 **Learn More**: See [FEATURE_BUTTON_STATUS_MESSAGES.md](./docs/FEATURE_BUTTON_STATUS_MESSAGES.md), [FEATURE_METROPOLITAN_REGION_DISPLAY.md](./docs/FEATURE_METROPOLITAN_REGION_DISPLAY.md), and [FEATURE_MUNICIPIO_STATE_DISPLAY.md](./docs/FEATURE_MUNICIPIO_STATE_DISPLAY.md) for complete details.
 
 ## 🚀 Quick Start
 
@@ -656,7 +684,7 @@ git push origin v0.7.1-alpha
 
 # 5. Verify CDN availability
 curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.1-alpha/src/app.js"
-# Should return: HTTP/2 200
+# Should return: HTTP/3.0.0
 
 # Alternative: Use commit hash instead (available immediately)
 # https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@COMMIT_HASH/src/app.js
@@ -848,7 +876,7 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 **Format**:
 ```
 # Generated: 2026-01-01 15:14:51
-# Version: 2.2.0-alpha
+# Version: 3.0.0-alpha
 # Commit: abc1234567890abcdef1234567890abcdef12345
 
 Version-specific URLs:

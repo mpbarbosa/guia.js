@@ -1,6 +1,6 @@
 /**
  * @fileoverview Home View - Main landing page for Guia Turístico
- * @version 0.7.1-alpha
+ * @version 0.8.7-alpha
  * 
  * Displays user's current location with toggle between single-position and continuous tracking
  * 
@@ -11,6 +11,7 @@
  * - Single location capture (one-time)
  * - Continuous location tracking (loop mode)
  * - Toggle between modes with checkbox
+ * - Contextual button status messages (v0.8.7-alpha)
  * 
  * @module views/home
  * @requires https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js
@@ -480,4 +481,17 @@ function _calculateQueueSize(queue) {
   if (typeof queue.size === 'function') return queue.size();
   if (Array.isArray(queue.queue)) return queue.queue.length;
   return 0;
+}
+
+function _initializeButtonStates() {
+  const findRestaurantsBtn = document.getElementById("findRestaurantsBtn");
+  const cityStatsBtn = document.getElementById("cityStatsBtn");
+  
+  if (findRestaurantsBtn) {
+    disableWithReason(findRestaurantsBtn, BUTTON_STATUS_MESSAGES.WAITING_LOCATION);
+  }
+  
+  if (cityStatsBtn) {
+    disableWithReason(cityStatsBtn, BUTTON_STATUS_MESSAGES.WAITING_LOCATION);
+  }
 }

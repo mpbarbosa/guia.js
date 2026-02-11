@@ -80,7 +80,9 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `src/index.html` (379 lines) - Main HTML page for the SPA
 - `src/guia.js` (520 lines) - guia.js library exports (imported from dependency)
 - `src/guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
-- `src/views/home.js` (595 lines, 24KB) - Home view controller for location tracking
+- `src/views/home.js` (495 lines, 24KB) - Home view controller for location tracking
+  - **v0.8.7-alpha**: Added `_initializeButtonStates()` for contextual button status messages
+  - **Features**: Single-position capture, continuous tracking toggle, button status feedback
 - `src/views/converter.js` (521 lines, 20KB) - Converter view controller for coordinate conversion
 - `src/config/defaults.js` (130+ lines) - Application configuration constants (version 0.8.7-alpha, timing, event names, etc.)
   - **Key Constants**: ADDRESS_FETCHED_EVENT, MINIMUM_TIME_CHANGE (30s), MINIMUM_DISTANCE_CHANGE (20m)
@@ -208,6 +210,14 @@ After making any changes, ALWAYS run through these validation scenarios:
   - **Migration complete**: SpeechSynthesisManager, VoiceManager, SpeechQueueProcessor, Chronometer (v0.8.7+)
   - API: `timerManager.setInterval(callback, delay, id)`, `timerManager.setTimeout(callback, delay, id)`, `timerManager.clearTimer(id)`
   - Returns string IDs for better debugging (e.g., 'speech-synthesis-queue', 'chronometer-display')
+- `button-status` (src/utils/button-status.js) - Contextual status messages for disabled buttons (v0.8.7-alpha)
+  - **142 lines, improves UX and accessibility**
+  - Functions: `addButtonStatus()`, `removeButtonStatus()`, `updateButtonStatus()`, `disableWithReason()`, `enableWithMessage()`
+  - WCAG 2.1 AA accessible with ARIA attributes (`aria-describedby`, `role="status"`, `aria-live="polite"`)
+  - Color-coded status types: info (blue), warning (orange), success (green), error (red)
+  - Brazilian Portuguese status messages via `BUTTON_STATUS_MESSAGES` constant
+  - **Usage**: Use in place of manual DOM manipulation for button state changes
+  - Example: `disableWithReason(button, "Aguardando localização para habilitar")`
 
 ### API Integrations
 - **OpenStreetMap Nominatim**: `https://nominatim.openstreetmap.org/reverse` for geocoding
@@ -728,5 +738,5 @@ npm run ci:test-local
 - [ ] Console logging appears in both Node.js and browser
 ---
 
-**Last Updated**: 2026-02-09  
+**Last Updated**: 2026-02-11  
 **Status**: ✅ Active

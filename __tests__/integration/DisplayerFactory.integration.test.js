@@ -98,8 +98,10 @@ describe('DisplayerFactory Module Integration Tests', () => {
 
     describe('WebGeocodingManager Integration', () => {
         test('should work with WebGeocodingManager dependency injection', async () => {
+            // Import directly from source to avoid circular dependency
+            const WebGeocodingManager = (await import('../../src/coordination/WebGeocodingManager.js')).default;
             const guia = await import('../../src/guia.js');
-            const { WebGeocodingManager, DisplayerFactory: GuiaDisplayerFactory } = guia;
+            const { DisplayerFactory: GuiaDisplayerFactory } = guia;
             
             // Mock document and basic DOM structure
             const mockDocument = {
@@ -123,8 +125,8 @@ describe('DisplayerFactory Module Integration Tests', () => {
         });
 
         test('should enable mock factory injection for testing', async () => {
-            const guia = await import('../../src/guia.js');
-            const { WebGeocodingManager } = guia;
+            // Import directly from source to avoid circular dependency
+            const WebGeocodingManager = (await import('../../src/coordination/WebGeocodingManager.js')).default;
             
             // Create mock factory
             const MockDisplayerFactory = {
@@ -431,8 +433,10 @@ describe('DisplayerFactory Module Integration Tests', () => {
         });
 
         test('should maintain factory functionality after WebGeocodingManager errors', async () => {
+            // Import directly from source to avoid circular dependency
+            const WebGeocodingManager = (await import('../../src/coordination/WebGeocodingManager.js')).default;
             const guia = await import('../../src/guia.js');
-            const { WebGeocodingManager, DisplayerFactory: GuiaDisplayerFactory } = guia;
+            const { DisplayerFactory: GuiaDisplayerFactory } = guia;
             
             // Try to create WebGeocodingManager with invalid config
             const mockDocument = {
@@ -459,8 +463,10 @@ describe('DisplayerFactory Module Integration Tests', () => {
 
     describe('Configuration and Dependency Injection Integration', () => {
         test('should work with different WebGeocodingManager configurations', async () => {
+            // Import directly from source to avoid circular dependency
+            const WebGeocodingManager = (await import('../../src/coordination/WebGeocodingManager.js')).default;
             const guia = await import('../../src/guia.js');
-            const { WebGeocodingManager, DisplayerFactory: GuiaDisplayerFactory } = guia;
+            const { DisplayerFactory: GuiaDisplayerFactory } = guia;
             
             const configurations = [
                 {

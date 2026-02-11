@@ -109,7 +109,7 @@ class HTMLAddressDisplayer {
 		// Update standardized address display if element is provided
 		if (this.enderecoPadronizadoDisplay && enderecoPadronizado) {
 			log('(HTMLAddressDisplayer) Updating standardized address display:', enderecoPadronizado.enderecoCompleto());
-			this.enderecoPadronizadoDisplay.innerHTML = enderecoPadronizado.enderecoCompleto();
+			this.enderecoPadronizadoDisplay.innerHTML = escapeHtml(enderecoPadronizado.enderecoCompleto());
 		}
 
 		// Create progressive disclosure structure

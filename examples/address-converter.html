@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Conversor de Coordenadas para Endereço</title>
     <style>
+      /* Developer Test Page Banner */
+      .dev-banner {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 16px;
+        text-align: center;
+        font-family: system-ui, -apple-system, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        position: sticky;
+        top: 0;
+        z-index: 9999;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .dev-banner strong {
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
       /* Material Design 3 Color System */
       :root {
         --md-sys-color-primary: #1976d2;
@@ -235,6 +255,11 @@
     </style>
   </head>
   <body onload="init()">
+    <!-- Developer Test Page Banner -->
+    <div class="dev-banner" role="banner">
+      <strong>⚠️ Página de Teste para Desenvolvedores</strong> — Esta não é a interface de produção
+    </div>
+    
     <main class="container">
       <header>
         <h1>Conversor de Latitude/Longitude para Endereço</h1>
@@ -317,7 +342,7 @@
         const resultsDiv = document.getElementById("results");
 
         if (!latitude || !longitude) {
-          showError("Please enter both latitude and longitude.");
+          showError("Por favor, insira latitude e longitude.");
           return;
         }
 
@@ -330,11 +355,11 @@
           longitude < -180 ||
           longitude > 180
         ) {
-          showError("Invalid latitude or longitude values.");
+          showError("Valores de latitude ou longitude inválidos.");
           return;
         }
 
-        resultsDiv.innerHTML = '<p class="loading">Loading...</p>';
+        resultsDiv.innerHTML = '<p class="loading">Carregando...</p>';
 
         var reverseGeocoder = new ReverseGeocoder(latitude, longitude);
         var htmlDisplayer = new HTMLAddressDisplayer(resultsDiv);

@@ -186,6 +186,12 @@ class AddressCache {
 		this.lastNotifiedChangeSignature = null;
 		this.lastNotifiedBairroChangeSignature = null;
 		this.lastNotifiedMunicipioChangeSignature = null;
+		
+		// Clear changeDetector signatures for fresh start
+		this.changeDetector.clearAllSignatures();
+		
+		// Clear dataStore history
+		this.dataStore.clear();
 	}
 
 	/**
@@ -263,7 +269,6 @@ class AddressCache {
 	 * @static
 	 */
 	static setBairroChangeCallback(callback) {
-		this.callbackRegistry.register('bairro', callback);
 		return AddressCache.getInstance().setBairroChangeCallback(callback);
 	}
 
@@ -297,7 +302,6 @@ class AddressCache {
 	 * @static
 	 */
 	static setMunicipioChangeCallback(callback) {
-		this.callbackRegistry.register('municipio', callback);
 		return AddressCache.getInstance().setMunicipioChangeCallback(callback);
 	}
 
@@ -317,7 +321,6 @@ class AddressCache {
 	 * @static
 	 */
 	static getLogradouroChangeCallback() {
-		return this.callbackRegistry.get('logradouro');
 		return AddressCache.getInstance().getLogradouroChangeCallback();
 	}
 
@@ -337,7 +340,6 @@ class AddressCache {
 	 * @static
 	 */
 	static getBairroChangeCallback() {
-		return this.callbackRegistry.get('bairro');
 		return AddressCache.getInstance().getBairroChangeCallback();
 	}
 
@@ -357,7 +359,6 @@ class AddressCache {
 	 * @static
 	 */
 	static getMunicipioChangeCallback() {
-		return this.callbackRegistry.get('municipio');
 		return AddressCache.getInstance().getMunicipioChangeCallback();
 	}
 
@@ -380,8 +381,8 @@ class AddressCache {
 		
 		const hasChanged = this.changeDetector.hasFieldChanged(
 			'logradouro',
-			previous.logradouro,
-			current.logradouro
+			current,
+			previous
 		);
 		
 		// Sync legacy property for backward compatibility
@@ -421,8 +422,8 @@ class AddressCache {
 		
 		const hasChanged = this.changeDetector.hasFieldChanged(
 			'bairro',
-			previous.bairro,
-			current.bairro
+			current,
+			previous
 		);
 		
 		// Sync legacy property for backward compatibility
@@ -462,8 +463,8 @@ class AddressCache {
 		
 		const hasChanged = this.changeDetector.hasFieldChanged(
 			'municipio',
-			previous.municipio,
-			current.municipio
+			current,
+			previous
 		);
 		
 		// Sync legacy property for backward compatibility
@@ -495,8 +496,8 @@ class AddressCache {
 	getLogradouroChangeDetails() {
 		return this.changeDetector.getChangeDetails(
 			'logradouro',
-			this.dataStore.getPrevious().address,
-			this.dataStore.getCurrent().address
+			this.dataStore.getCurrent().address,
+			this.dataStore.getPrevious().address
 		);
 	}
 
@@ -518,6 +519,8 @@ class AddressCache {
 	 * @since 0.8.3-alpha
 	 */
 	getBairroChangeDetails() {
+		const current = this.dataStore.getCurrent().address;
+		const previous = this.dataStore.getPrevious().address;
 		const currentRawData = this.dataStore.getCurrentRawData();
 		const previousRawData = this.dataStore.getPreviousRawData();
 		
@@ -525,18 +528,19 @@ class AddressCache {
 		const currentBairroCompleto = this._computeBairroCompleto(currentRawData);
 		const previousBairroCompleto = this._computeBairroCompleto(previousRawData);
 		
-		// Get base change details from changeDetector
-		const details = this.changeDetector.getChangeDetails(
-			'bairro',
-			this.dataStore.getPrevious().address,
-			this.dataStore.getCurrent().address
-		);
-		
-		// Enhance with bairroCompleto information
-		details.current.bairroCompleto = currentBairroCompleto;
-		details.previous.bairroCompleto = previousBairroCompleto;
-		
-		return details;
+		// Return legacy format for backward compatibility
+		return {
+			hasChanged: (current?.bairro ?? null) !== (previous?.bairro ?? null),
+			current: {
+				bairro: current?.bairro,
+				bairroCompleto: currentBairroCompleto
+			},
+			previous: {
+				bairro: previous?.bairro,
+				bairroCompleto: previousBairroCompleto
+			},
+			timestamp: Date.now()
+		};
 	}
 
 	/**

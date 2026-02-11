@@ -46,15 +46,16 @@ describe('HTMLSidraDisplayer Class', () => {
 
     beforeEach(() => {
       mockElement = { id: 'test-sidra', innerHTML: '' };
-      displayer = new HTMLSidraDisplayer(mockElement);
       
-      // Mock global function
+      // Mock global function BEFORE creating displayer
       mockDisplaySidraDadosParams = jest.fn();
-      global.window = { displaySidraDadosParams: mockDisplaySidraDadosParams };
+      window.displaySidraDadosParams = mockDisplaySidraDadosParams;
+      
+      displayer = new HTMLSidraDisplayer(mockElement);
     });
 
     afterEach(() => {
-      delete global.window;
+      delete window.displaySidraDadosParams;
     });
 
     test('should handle loading state', () => {
@@ -114,7 +115,7 @@ describe('HTMLSidraDisplayer Class', () => {
     });
 
     test('should handle missing global function', () => {
-      delete global.window.displaySidraDadosParams;
+      delete window.displaySidraDadosParams;
       
       const mockEnderecoPadronizado = {
         municipio: 'São Paulo',
@@ -127,7 +128,7 @@ describe('HTMLSidraDisplayer Class', () => {
     });
 
     test('should handle errors from global function', () => {
-      global.window.displaySidraDadosParams = jest.fn(() => {
+      window.displaySidraDadosParams = jest.fn(() => {
         throw new Error('SIDRA API error');
       });
 
@@ -175,12 +176,12 @@ describe('HTMLSidraDisplayer Class', () => {
   describe('Observer Pattern Integration', () => {
     test('should work as observer with update() method', () => {
       const mockElement = { id: 'test-sidra', innerHTML: '' };
-      const displayer = new HTMLSidraDisplayer(mockElement);
       
-      // Mock global function
-      global.window = {
-        displaySidraDadosParams: jest.fn()
-      };
+      // Mock global function BEFORE creating displayer
+      const mockFn = jest.fn();
+      window.displaySidraDadosParams = mockFn;
+      
+      const displayer = new HTMLSidraDisplayer(mockElement);
 
       const mockEnderecoPadronizado = {
         municipio: 'Rio de Janeiro',
@@ -190,9 +191,9 @@ describe('HTMLSidraDisplayer Class', () => {
       // Simulate observer notification
       displayer.update(null, mockEnderecoPadronizado, ADDRESS_FETCHED_EVENT, false, null);
 
-      expect(global.window.displaySidraDadosParams).toHaveBeenCalled();
+      expect(mockFn).toHaveBeenCalled();
       
-      delete global.window;
+      delete window.displaySidraDadosParams;
     });
   });
 
@@ -218,10 +219,11 @@ describe('HTMLSidraDisplayer Class', () => {
 
     test('should handle Brazilian municipalities correctly', () => {
       const mockElement = { id: 'test-sidra', innerHTML: '' };
-      const displayer = new HTMLSidraDisplayer(mockElement);
       
       const mockDisplaySidraDadosParams = jest.fn();
-      global.window = { displaySidraDadosParams: mockDisplaySidraDadosParams };
+      window.displaySidraDadosParams = mockDisplaySidraDadosParams;
+      
+      const displayer = new HTMLSidraDisplayer(mockElement);
 
       const brazilianMunicipalities = [
         { municipio: 'São Paulo', siglaUF: 'SP' },
@@ -240,7 +242,7 @@ describe('HTMLSidraDisplayer Class', () => {
         );
       });
 
-      delete global.window;
+      delete window.displaySidraDadosParams;
     });
   });
 

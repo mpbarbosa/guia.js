@@ -111,27 +111,19 @@ describe('Utility Functions', () => {
         test('should return formatted address type for valid data', () => {
             const addressData = {
                 class: 'amenity',
-                type: 'restaurant'
+                type: 'cafe'
             };
 
-            // Mock setupParams for testing
-            global.setupParams = {
-                validRefPlaceClasses: ['amenity', 'building', 'shop'],
-                referencePlaceMap: {
-                    amenity: {
-                        restaurant: 'Restaurante'
-                    }
-                },
-                noReferencePlace: 'Local não identificado'
-            };
+            // Note: getAddressType uses ReferencePlace.referencePlaceMap
+            // amenity: cafe is mapped to 'Café' in ReferencePlace.js
 
             if (typeof getAddressType !== 'undefined') {
                 const result = getAddressType(addressData);
-                expect(result).toBe('Restaurante');
+                expect(result).toBe('Café');
             } else {
                 // Test the expected logic
                 expect(addressData.class).toBe('amenity');
-                expect(addressData.type).toBe('restaurant');
+                expect(addressData.type).toBe('cafe');
             }
         });
 
@@ -141,28 +133,25 @@ describe('Utility Functions', () => {
                 type: 'unknown'
             };
 
-            global.setupParams = {
-                validRefPlaceClasses: ['amenity'],
-                noReferencePlace: 'Local não identificado'
-            };
-
+            // Note: setupParams comes from the module, not global
+            // The actual value is "Não classificado" from config/defaults.js
+            
             if (typeof getAddressType !== 'undefined') {
                 const result = getAddressType(invalidData);
-                expect(result).toBe('Local não identificado');
+                expect(result).toBe('Não classificado');
             } else {
                 expect(invalidData.class).toBe('invalid');
             }
         });
 
         test('should handle null or undefined input', () => {
-            global.setupParams = {
-                noReferencePlace: 'Local não identificado'
-            };
+            // Note: setupParams comes from the module, not global
+            // The actual value is "Não classificado" from config/defaults.js
 
             if (typeof getAddressType !== 'undefined') {
-                expect(getAddressType(null)).toBe('Local não identificado');
-                expect(getAddressType(undefined)).toBe('Local não identificado');
-                expect(getAddressType({})).toBe('Local não identificado');
+                expect(getAddressType(null)).toBe('Não classificado');
+                expect(getAddressType(undefined)).toBe('Não classificado');
+                expect(getAddressType({})).toBe('Não classificado');
             } else {
                 // Test defensive programming approach
                 expect(null).toBeNull();
@@ -279,19 +268,19 @@ describe('Utility Functions', () => {
 
 describe('Mock Browser API Functions', () => {
     test('should mock geolocation API correctly', () => {
-        expect(global.window.navigator.geolocation.getCurrentPosition).toBeDefined();
-        expect(global.window.navigator.geolocation.watchPosition).toBeDefined();
-        expect(global.window.navigator.geolocation.clearWatch).toBeDefined();
+        expect(window.navigator.geolocation.getCurrentPosition).toBeDefined();
+        expect(window.navigator.geolocation.watchPosition).toBeDefined();
+        expect(window.navigator.geolocation.clearWatch).toBeDefined();
     });
 
     test('should mock speech synthesis API correctly', () => {
-        expect(global.window.speechSynthesis.getVoices).toBeDefined();
-        expect(global.window.speechSynthesis.speak).toBeDefined();
-        expect(global.window.speechSynthesis.cancel).toBeDefined();
+        expect(window.speechSynthesis.getVoices).toBeDefined();
+        expect(window.speechSynthesis.speak).toBeDefined();
+        expect(window.speechSynthesis.cancel).toBeDefined();
     });
 
     test('should mock DOM methods correctly', () => {
-        expect(global.document.getElementById).toBeDefined();
-        expect(global.document.createElement).toBeDefined();
+        expect(document.getElementById).toBeDefined();
+        expect(document.createElement).toBeDefined();
     });
 });

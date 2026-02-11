@@ -260,8 +260,8 @@ class Chronometer {
 	 */
 	update(positionManager, posEvent, loading, error) {
 		// Handle different position events using injected configuration
-		if (posEvent === this.eventConfig.positionUpdate ||
-			posEvent === this.eventConfig.immediateAddressUpdate) {
+		if (posEvent === this.eventConfig.positionUpdate || 
+		    posEvent === this.eventConfig.immediateAddressUpdate) {
 			// Position successfully updated - restart chronometer
 			this.reset();
 			this.start();

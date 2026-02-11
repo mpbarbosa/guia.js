@@ -35,6 +35,37 @@ export const APP_NAME = "Ondeestou";
  */
 export const APP_AUTHOR = "Marcelo Pereira Barbosa";
 
+// API Configuration
+/**
+ * CORS proxy URL for development (optional).
+ * Set to null to use direct API access.
+ * 
+ * For local development with CORS issues, use one of:
+ * - null (default - direct access, requires HTTPS or browser extension)
+ * - 'https://api.allorigins.win/raw?url=' (public proxy)
+ * - Your own proxy server URL
+ * 
+ * @constant {string|null}
+ * @since 0.8.7-alpha
+ */
+export const CORS_PROXY = null;
+
+/**
+ * Enable CORS proxy fallback on error.
+ * If true, will automatically try CORS proxy if direct request fails.
+ * Only use in development.
+ * 
+ * @constant {boolean}
+ * @since 0.8.7-alpha
+ */
+export const ENABLE_CORS_FALLBACK = true;  // ✅ ENABLED FOR TESTING
+
+/**
+ * Nominatim API base URL.
+ * @constant {string}
+ */
+export const NOMINATIM_API_BASE = 'https://nominatim.openstreetmap.org';
+
 // Timing Configuration
 /** Position tracking interval in milliseconds */
 export const TRACKING_INTERVAL = 50000;

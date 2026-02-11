@@ -187,7 +187,7 @@ class EventCoordinator {
     _setupFindRestaurantsButton() {
         const button = this._uiCoordinator.getElement('findRestaurantsBtn');
         if (!button) {
-            warn('EventCoordinator: Find restaurants button not found');
+            // Button removed - feature not available
             return;
         }
 
@@ -236,7 +236,7 @@ class EventCoordinator {
     _setupCityStatsButton() {
         const button = this._uiCoordinator.getElement('cityStatsBtn');
         if (!button) {
-            warn('EventCoordinator: City stats button not found');
+            // Button removed - feature not available
             return;
         }
 

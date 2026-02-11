@@ -1,5 +1,6 @@
 #!/bin/bash
 # Pre-commit Hook: Documentation Consistency Checker
+# ⚠️ DEPRECATED: Use .husky/pre-commit instead. This hook uses a stale version pattern.
 # Installation: cp .github/hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
 
 set -e
@@ -11,11 +12,12 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 echo -e "${BLUE}═══ Documentation Consistency Check (Pre-commit) ═══${NC}"
+echo -e "${YELLOW}⚠️  DEPRECATED: This hook is no longer maintained. Use .husky/pre-commit${NC}"
 echo ""
 
 # Check 1: Version Consistency
 echo -e "${YELLOW}[1/5] Version consistency...${NC}"
-VERSION_PATTERN="0\.7\.0-alpha"
+VERSION_PATTERN="0\.8\.7-alpha"
 VERSION_ERRORS=0
 
 for file in README.md docs/INDEX.md .github/copilot-instructions.md src/config/defaults.js; do

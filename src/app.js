@@ -72,8 +72,8 @@ async function init() {
         new Promise((_, reject) => setTimeout(() => reject(new Error('Dependency timeout')), 5000))
       ]);
       log('✓ Dependencies ready');
-    } catch (error) {
-      warn('⚠️ Dependency loading timeout - continuing with fallback:', error.message);
+    } catch (err) {
+      warn('⚠️ Dependency loading timeout - continuing with fallback:', err.message);
     }
   }
   
@@ -200,9 +200,9 @@ async function handleRoute() {
     
     // Focus management for accessibility
     manageFocusAfterRouteChange();
-  } catch (error) {
-    error('Route loading error:', error);
-    showError(error);
+  } catch (err) {
+    error('Route loading error:', err);
+    showError(err);
   }
 }
 
@@ -420,8 +420,8 @@ async function initializeHomeView() {
       // Start tracking automatically
       AppState.manager.startTracking();
       log('Tracking started automatically');
-    } catch (error) {
-      error('Error initializing WebGeocodingManager:', error);
+    } catch (err) {
+      error('Error initializing WebGeocodingManager:', err);
     }
   }
 }
@@ -562,12 +562,12 @@ function initializeConverterFeatures() {
             ` : ''}
           </div>
         `;
-      } catch (error) {
-        error('Conversion error:', error);
+      } catch (err) {
+        error('Conversion error:', err);
         resultDiv.innerHTML = `
           <div class="md3-card text-error">
             <h3>❌ Erro na Conversão</h3>
-            <p>${error.message}</p>
+            <p>${err.message}</p>
           </div>
         `;
       }

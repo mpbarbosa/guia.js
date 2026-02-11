@@ -44,6 +44,9 @@ let firstUpdate = true;
 let manager = null;
 let sidraDisplayer = null;
 
+// Track event listeners for cleanup
+const eventListeners = new Map();
+
 async function mount(container) {
   log("(home-view) Mounting home view...");
   
@@ -94,6 +97,15 @@ async function mount(container) {
 
 function cleanup() {
   log("(home-view) Cleaning up home view...");
+  
+  // Remove all tracked event listeners
+  eventListeners.forEach(({ element, event, handler }) => {
+    if (element) {
+      element.removeEventListener(event, handler);
+      log(`(home-view) Removed ${event} listener from`, element.id || element.tagName);
+    }
+  });
+  eventListeners.clear();
   
   // Stop any ongoing geolocation watchers
   if (manager && manager.watchId) {
@@ -313,17 +325,21 @@ function _setupButtonHandlers() {
   const cityStatsBtn = document.getElementById("cityStatsBtn");
   
   if (findRestaurantsBtn) {
-    findRestaurantsBtn.addEventListener('click', () => {
+    const handler = () => {
       log("(home-view) Find restaurants clicked");
       showInfo("Funcionalidade de busca de restaurantes será implementada em breve!");
-    });
+    };
+    findRestaurantsBtn.addEventListener('click', handler);
+    eventListeners.set('findRestaurantsBtn', { element: findRestaurantsBtn, event: 'click', handler });
   }
   
   if (cityStatsBtn) {
-    cityStatsBtn.addEventListener('click', () => {
+    const handler = () => {
       log("(home-view) City stats clicked");
       showInfo("Funcionalidade de estatísticas da cidade será implementada em breve!");
-    });
+    };
+    cityStatsBtn.addEventListener('click', handler);
+    eventListeners.set('cityStatsBtn', { element: cityStatsBtn, event: 'click', handler });
   }
 }
 
@@ -331,7 +347,7 @@ function _setupGetLocationButton() {
     const getLocationBtn = document.getElementById("getLocationBtn");
     if (!getLocationBtn) return;
     
-    getLocationBtn.addEventListener("click", () => {
+    const handler = () => {
       log("(home-view) Get location button clicked");
       
       // Show permission request banner
@@ -356,21 +372,21 @@ function _setupGetLocationButton() {
             
             window.showLocationSuccess?.('geolocation-banner-container', 3000);
           },
-          (error) => {
-            error("(home-view) Geolocation error:", error);
+          (err) => {
+            error("(home-view) Geolocation error:", err);
             getLocationBtn.disabled = false;
             getLocationBtn.textContent = "📍 Tentar Novamente";
             
             // Better error messages
             let errorMessage = "Erro ao obter localização";
-            switch(error.code) {
-              case error.PERMISSION_DENIED:
+            switch(err.code) {
+              case err.PERMISSION_DENIED:
                 errorMessage = "Permissão de localização negada. Habilite nas configurações do navegador.";
                 break;
-              case error.POSITION_UNAVAILABLE:
+              case err.POSITION_UNAVAILABLE:
                 errorMessage = "Localização indisponível. Verifique se o GPS está ativado.";
                 break;
-              case error.TIMEOUT:
+              case err.TIMEOUT:
                 errorMessage = "Tempo esgotado ao buscar localização. Tente novamente ou use localização aproximada.";
                 break;
             }
@@ -391,14 +407,17 @@ function _setupGetLocationButton() {
   } else {
     window.toast?.error("Geolocalização não é suportada neste navegador.", 5000);
   }
-  });
+  };
+  
+  getLocationBtn.addEventListener("click", handler);
+  eventListeners.set('getLocationBtn', { element: getLocationBtn, event: 'click', handler });
 }
 
 function _setupTrackingModeToggle() {
   const toggle = document.getElementById("continuous-tracking-toggle");
   if (!toggle) return;
   
-  toggle.addEventListener("change", (e) => {
+  const handler = (e) => {
     continuousMode = e.target.checked;
     e.target.setAttribute('aria-checked', continuousMode.toString());
     
@@ -441,7 +460,10 @@ function _setupTrackingModeToggle() {
       
       window.toast?.info('Rastreamento contínuo desativado', 2000);
     }
-  });
+  };
+  
+  toggle.addEventListener("change", handler);
+  eventListeners.set('continuous-tracking-toggle', { element: toggle, event: 'change', handler });
 }
 
 function _setupSpeechQueueMonitoring() {

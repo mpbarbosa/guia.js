@@ -88,6 +88,8 @@ class ReverseGeocoder {
 	 * @param {Object} fetchManager - API fetch manager (IbiraAPIFetchManager or fallback)
 	 * @param {Object} [config] - Configuration options
 	 * @param {string} [config.openstreetmapBaseUrl] - Base URL for OpenStreetMap API
+	 * @param {string|null} [config.corsProxy] - CORS proxy URL (null for direct access)
+	 * @param {boolean} [config.enableCorsFallback] - Auto-retry with CORS proxy on error
 	 */
 	constructor(fetchManager, config = {}) {
 		// Store fetch manager for API operations (supports IbiraAPIFetchManager or fallback)
@@ -96,8 +98,13 @@ class ReverseGeocoder {
 		// Configure OpenStreetMap Nominatim API with fallback to default endpoint
 		this.config = {
 			openstreetmapBaseUrl: config.openstreetmapBaseUrl || 
-				'https://nominatim.openstreetmap.org/reverse?format=json'
+				'https://nominatim.openstreetmap.org/reverse?format=json',
+			corsProxy: config.corsProxy || null,
+			enableCorsFallback: config.enableCorsFallback || false
 		};
+		
+		// Track if CORS fallback has been used
+		this._corsRetryAttempted = false;
 		
 		// Define getter/setter property for current address data
 		// This pattern maintains backward compatibility while enabling reactive updates
@@ -173,7 +180,12 @@ class ReverseGeocoder {
 		this.longitude = longitude;
 		
 		// Generate OpenStreetMap Nominatim API URL for these coordinates
-		this.url = getOpenStreetMapUrl(this.latitude, this.longitude, this.config.openstreetmapBaseUrl);
+		this.url = getOpenStreetMapUrl(
+			this.latitude, 
+			this.longitude, 
+			this.config.openstreetmapBaseUrl,
+			this.config.corsProxy
+		);
 		
 		// Reset state for new geocoding operation
 		this.data = null;
@@ -217,7 +229,7 @@ class ReverseGeocoder {
 	async fetchAddress() {
 		try {
 			const addressData = await this.reverseGeocode();
-			
+			console.log('(ReverseGeocoder.fetchAddress) Reverse geocode result:', addressData);
 			// Store raw address data
 			this.currentAddress = addressData;
 			
@@ -232,7 +244,7 @@ class ReverseGeocoder {
 			}
 			
 			// Notify observers with complete parameters
-			log('(ReverseGeocoder.fetchAddress) About to notify observers with:', {
+			console.log('(ReverseGeocoder.fetchAddress) About to notify observers with:', {
 				hasAddressData: !!this.currentAddress,
 				hasEnderecoPadronizado: !!this.enderecoPadronizado,
 				observerCount: this.observerSubject.observers.length
@@ -250,13 +262,74 @@ class ReverseGeocoder {
 			
 			return addressData;
 		} catch (err) {
+			// Enhanced error handling with user-friendly messages
+			let errorMessage = 'Falha ao buscar endereço';
+			let shouldNotifyUser = false;
+			let shouldRetryWithProxy = false;
+			
+			// Detect CORS errors
+			if (err.message && (err.message.includes('CORS') || err.message.includes('Failed to fetch'))) {
+				errorMessage = 'Não foi possível acessar o serviço de geocodificação.';
+				shouldNotifyUser = true;
+				shouldRetryWithProxy = this.config.enableCorsFallback && !this._corsRetryAttempted;
+				
+				if (shouldRetryWithProxy) {
+					errorMessage += ' Tentando via proxy...';
+				} else {
+					errorMessage += ' Verifique sua conexão ou consulte CORS_TROUBLESHOOTING.md';
+				}
+			} else if (err.message && err.message.includes('429')) {
+				errorMessage = 'Limite de requisições atingido. Aguarde alguns segundos e tente novamente.';
+				shouldNotifyUser = true;
+			} else if (err.message && err.message.includes('425')) {
+				errorMessage = 'Serviço temporariamente indisponível. Tente novamente em alguns segundos.';
+				shouldNotifyUser = true;
+			}
+			
+			// Log the error
 			if (typeof error === 'function') {
 				error('(ReverseGeocoder.fetchAddress) Failed:', err);
 			} else {
 				console.error('[ReverseGeocoder.fetchAddress] Failed:', err);
 			}
+			
+			// Show user-friendly error notification if applicable
+			if (shouldNotifyUser && typeof window !== 'undefined' && window.ErrorRecovery) {
+				window.ErrorRecovery.displayError('Erro de Rede', errorMessage);
+			}
+			
+			// Try CORS proxy fallback if enabled and not already attempted
+			if (shouldRetryWithProxy) {
+				warn('(ReverseGeocoder) Retrying with CORS proxy fallback...');
+				this._corsRetryAttempted = true;
+				
+				// Use allorigins.win as fallback CORS proxy
+				const originalUrl = this.config.openstreetmapBaseUrl;
+				this.config.corsProxy = 'https://api.allorigins.win/raw?url=';
+				
+				try {
+					// Retry the fetch
+					const result = await this.fetchAddress();
+					
+					// Reset proxy after successful fetch
+					this.config.corsProxy = null;
+					this._corsRetryAttempted = false;
+					
+					log('(ReverseGeocoder) CORS proxy fallback succeeded');
+					return result;
+				} catch (retryErr) {
+					// Reset state
+					this.config.corsProxy = null;
+					warn('(ReverseGeocoder) CORS proxy fallback also failed:', retryErr);
+				}
+			}
+			
+			// Store error state
 			this.error = err;
+			
+			// Notify observers with error
 			this.notifyObservers(null, null, 'Address fetch failed', false, err);
+			
 			throw err;
 		}
 	}
@@ -290,6 +363,7 @@ class ReverseGeocoder {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	update(positionManager, posEvent, loading, error) {
+		log(`(ReverseGeocoder) update() called with posEvent: ${posEvent}`);
 		// DEPENDENCY MANAGEMENT:
 		// AddressDataExtractor is imported dynamically to avoid circular dependency
 		// This is a temporary solution until AddressDataExtractor is also extracted
@@ -432,7 +506,12 @@ class ReverseGeocoder {
 		// FIXED: Single URL generation check (was duplicated twice in original)  
 		// Generate OpenStreetMap URL if not already configured
 		if (!this.url) {
-			this.url = getOpenStreetMapUrl(this.latitude, this.longitude, this.config.openstreetmapBaseUrl);
+			this.url = getOpenStreetMapUrl(
+				this.latitude, 
+				this.longitude, 
+				this.config.openstreetmapBaseUrl,
+				this.config.corsProxy
+			);
 		}
 
 		this._subscribe(this.url);

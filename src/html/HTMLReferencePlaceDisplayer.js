@@ -111,15 +111,15 @@ class HTMLReferencePlaceDisplayer {
 		
 		// Display the Portuguese description (e.g., "Shopping Center", "Estação do Metrô")
 		if (referencePlace.description && referencePlace.description != NO_REFERENCE_PLACE) {
-			html += `<span class="reference-place-type">${referencePlace.description}</span>`;
+			html += `<span class="reference-place-type">${escapeHtml(referencePlace.description)}</span>`;
 			
 			// Add the place name if available and referencePlace.name is not substring of referencePlace.description
 			if (referencePlace.name && referencePlace.name.trim() && !referencePlace.description.includes(referencePlace.name)) {
-				html += ` <span class="reference-place-name">${referencePlace.name}</span>`;
+				html += ` <span class="reference-place-name">${escapeHtml(referencePlace.name)}</span>`;
 			}
 		} else if (referencePlace.name) {
 			// If we only have a name without description, show just the name
-			html += `<span class="reference-place-name">${referencePlace.name}</span>`;
+			html += `<span class="reference-place-name">${escapeHtml(referencePlace.name)}</span>`;
 		}
 		
 		html += '</div>';
@@ -128,10 +128,10 @@ class HTMLReferencePlaceDisplayer {
 		if (referencePlace.className || referencePlace.typeName) {
 			html += '<div class="reference-place-details">';
 			if (referencePlace.className) {
-				html += `<small class="reference-place-class">Categoria: ${referencePlace.calculateCategory()}</small>`;
+				html += `<small class="reference-place-class">Categoria: ${escapeHtml(referencePlace.calculateCategory())}</small>`;
 			}
 			if (referencePlace.typeName) {
-				html += ` <small class="reference-place-type-detail">Tipo: ${referencePlace.typeName}</small>`;
+				html += ` <small class="reference-place-type-detail">Tipo: ${escapeHtml(referencePlace.typeName)}</small>`;
 			}
 			html += '</div>';
 		}

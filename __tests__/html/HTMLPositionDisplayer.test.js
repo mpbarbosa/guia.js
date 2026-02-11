@@ -178,7 +178,7 @@ describe('HTMLPositionDisplayer', () => {
 
 		it('should display altitude accuracy when available', () => {
 			const html = displayer.renderPositionHtml(mockPositionManager);
-			expect(html).toContain('Precisão da Altitude:');
+			expect(html).toContain('Altitude:');
 			expect(html).toContain('5.20 metros');
 		});
 

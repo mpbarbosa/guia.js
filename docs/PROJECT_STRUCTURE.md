@@ -44,6 +44,9 @@ guia_turistico/
 │   │   ├── distance.js           # Haversine distance calculations
 │   │   ├── device.js             # Device/browser detection
 │   │   └── logger.js             # Logging with timestamps
+│   ├── views/                    # SPA view components (v0.8.4+)
+│   │   ├── home.js               # Main location tracking interface
+│   │   └── converter.js          # Coordinate converter utility
 │   └── *.css files               # Modular stylesheets
 │
 ├── __tests__/                    # Jest test suites (1,399 total tests)
@@ -152,6 +155,78 @@ While not a GitHub Pages site, guia_js is distributed via jsDelivr CDN:
 See `cdn-urls.txt` for current CDN URLs.
 
 ## Source Directory Details
+
+### Views Module (`/src/views/`)
+
+SPA view components implementing application pages.
+
+**Purpose**: Provides page-level components for the Single Page Application (SPA) router, handling user interface and interaction logic for different routes.
+
+#### Components
+
+**`home.js`** (495 lines, 24KB)
+- **Purpose**: Main location tracking interface (landing page)
+- **Route**: `#/` or `#` (default route)
+- **Version**: Since 0.8.4-alpha
+- **Test Coverage**: E2E tests in `__tests__/e2e/`
+
+**Key Features**:
+- Single location capture (one-time positioning)
+- Continuous location tracking (loop mode)
+- Toggle between tracking modes with checkbox
+- Contextual button status messages (v0.8.7-alpha)
+- Real-time coordinate and address display
+- Integration with WebGeocodingManager
+
+**Public API**:
+```javascript
+export default {
+    title: 'Guia Turístico - Localização',
+    styles: [],  // Uses inline styles
+    render: () => String,  // Returns HTML for route
+    mount: (router) => void  // Initializes view logic
+}
+```
+
+**`converter.js`** (521 lines, 20KB)
+- **Purpose**: Coordinate-to-address converter utility
+- **Route**: `#/converter`
+- **Version**: Since 0.8.4-alpha
+- **Test Coverage**: Unit tests for address parsing
+
+**Key Features**:
+- Bidirectional coordinate/address conversion
+- Geographic coordinate input (lat/lon)
+- Address parsing and standardization
+- District (distrito) and neighborhood (bairro) extraction
+- Location type determination (urban, rural, etc.)
+
+**Public API**:
+```javascript
+export default {
+    title: 'Conversor de Coordenadas',
+    styles: [],  // Uses inline styles
+    render: () => String,  // Returns HTML for route
+    mount: (router) => void  // Initializes converter logic
+}
+```
+
+**Router Integration**:
+```javascript
+// In src/app.js
+import homeView from './views/home.js';
+import converterView from './views/converter.js';
+
+const routes = {
+    '/': homeView,
+    '/converter': converterView
+};
+```
+
+**Design Patterns**:
+- **View Object Pattern**: Each view exports title, styles, render, and mount
+- **Separation of Concerns**: Views handle UI, WebGeocodingManager handles logic
+- **Progressive Enhancement**: Works with or without JavaScript (noscript fallback)
 
 ### Timing Module (`/src/timing/`)
 

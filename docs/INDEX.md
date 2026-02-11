@@ -89,9 +89,13 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - Directory structure explanation (/src for library organization)
   - Historical context of restructuring commit
   - Development workflow and CDN distribution
-  - **Source Directory Details**: Timing module (`/src/timing/`)
-    - `Chronometer.js` - Elapsed time tracking with observer pattern
-    - 51 tests, HH:MM:SS formatting, configurable events
+  - **Source Directory Details**:
+    - **Views Module** (`/src/views/`) - SPA view components (v0.8.4+)
+      - `home.js` - Main location tracking interface (495 lines)
+      - `converter.js` - Coordinate converter utility (521 lines)
+    - **Timing Module** (`/src/timing/`)
+      - `Chronometer.js` - Elapsed time tracking with observer pattern
+      - 51 tests, HH:MM:SS formatting, configurable events
 
 ### Architecture & Design
 
@@ -744,9 +748,31 @@ See **[docs/misc/README.md](./misc/README.md)** for complete index.
 
 CI/CD and automation documentation in **[docs/workflow-automation/](./workflow-automation/)**:
 
+- Workflow automation strategies and implementation guides
+- CI/CD optimization, caching strategies, and security workflows
+- See **[docs/workflow-automation/README.md](./workflow-automation/README.md)** for purpose and guidelines
+
+**Key Documents:**
 - **[AUTOMATION_SUMMARY.md](./workflow-automation/AUTOMATION_SUMMARY.md)** - Automation overview
 - **[FINAL_AUTOMATION_SUMMARY.md](./workflow-automation/FINAL_AUTOMATION_SUMMARY.md)** - Complete automation catalog
+- **[CI_CACHING_STRATEGY.md](./workflow-automation/CI_CACHING_STRATEGY.md)** - GitHub Actions caching optimization
+- **[SECURITY_STRATEGY.md](./workflow-automation/SECURITY_STRATEGY.md)** - Security automation and monitoring
 - **[WORKFLOW_TERMINOLOGY_DISAMBIGUATION.md](./workflow-automation/WORKFLOW_TERMINOLOGY_DISAMBIGUATION.md)** - Workflow terminology
+
+### Infrastructure
+
+Project infrastructure, CI/CD, and development environment documentation in **[docs/infrastructure/](./infrastructure/)**:
+
+- Infrastructure planning and configuration guides
+- Development environment setup and Node.js version management
+- CDN deployment and build tooling
+- See **[docs/infrastructure/README.md](./infrastructure/README.md)** for purpose and guidelines
+
+**Key Documents:**
+- **[AI_WORKFLOW_INFRASTRUCTURE.md](./infrastructure/AI_WORKFLOW_INFRASTRUCTURE.md)** - AI-assisted development setup
+- **[CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md](./infrastructure/CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md)** - jsDelivr CDN strategy
+- **[NODE_VERSION_ALIGNMENT_PLAN.md](./infrastructure/NODE_VERSION_ALIGNMENT_PLAN.md)** - Node.js standardization
+- **[EXAMPLES_DIRECTORY.md](./infrastructure/EXAMPLES_DIRECTORY.md)** - Examples directory organization
 
 ### Investigation & Analysis
 

@@ -4,9 +4,10 @@
     <meta name="version" content="0.8.7-alpha" data-source="src/config/version.js">
     <title>Guia Turístico - Localização - Guia Turístico</title>
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
+    <!-- PWA Manifest (inline to prevent 404) -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiR3VpYSBUdXLDrXN0aWNvIiwic2hvcnRfbmFtZSI6Ikd1aWEiLCJzdGFydF91cmwiOiIvIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2ZmZmZmZiIsInRoZW1lX2NvbG9yIjoiIzI1NjNlYiIsImljb25zIjpbXX0=">
     <meta name="theme-color" content="#2563eb">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Guia Turístico">
@@ -577,16 +578,16 @@
       <section class="location-highlights" aria-label="Destaques de localização">
         <div class="highlight-card" role="region" aria-labelledby="municipio-label">
           <div id="municipio-label" class="highlight-card-label">Município</div>
-          <div id="regiao-metropolitana-value" class="metropolitan-region-value" aria-live="polite"></div>
-          <div id="municipio-value" class="highlight-card-value" aria-live="polite">—</div>
+          <div id="regiao-metropolitana-value" class="metropolitan-region-value"></div>
+          <div id="municipio-value" class="highlight-card-value">—</div>
         </div>
         <div class="highlight-card" role="region" aria-labelledby="bairro-label">
           <div id="bairro-label" class="highlight-card-label">Bairro</div>
-          <div id="bairro-value" class="highlight-card-value" aria-live="polite">—</div>
+          <div id="bairro-value" class="highlight-card-value">—</div>
         </div>
         <div class="highlight-card" role="region" aria-labelledby="logradouro-label">
           <div id="logradouro-label" class="highlight-card-label">Logradouro</div>
-          <div id="logradouro-value" class="highlight-card-value" aria-live="polite">—</div>
+          <div id="logradouro-value" class="highlight-card-value">—</div>
         </div>
       </section>
 
@@ -595,24 +596,25 @@
 
       <section id="coordinates" aria-labelledby="coordinates-heading">
         <h2 id="coordinates-heading" class="sr-only">Coordenadas</h2>
-        <p><strong>Coordenadas:</strong> <span id="lat-long-display" aria-live="polite">Aguardando localização...</span></p>
+        <p><strong>Coordenadas:</strong> <span id="lat-long-display">Aguardando localização...</span></p>
+        <p id="altitude-container" style="display: none;"><strong>Altitude:</strong> <span id="altitude-display"></span></p>
       </section>
 
       <section id="reference-place" aria-labelledby="reference-place-heading">
         <h2 id="reference-place-heading" class="sr-only">Local de Referência</h2>
-        <p><strong>Local de referência:</strong> <span id="reference-place-display" aria-live="polite">Aguardando localização...</span></p>
+        <p><strong>Local de referência:</strong> <span id="reference-place-display">Aguardando localização...</span></p>
       </section>
 
       <section id="standardized-address" aria-labelledby="address-heading">
         <h2 id="address-heading" class="sr-only">Endereço Padronizado</h2>
-        <p><strong>Endereço:</strong> <span id="endereco-padronizado-display" aria-live="polite">Aguardando localização...</span></p>
+        <p><strong>Endereço:</strong> <span id="endereco-padronizado-display">Aguardando localização...</span></p>
       </section>
 
       <section class="section" aria-labelledby="location-info-heading">
-        <p><strong>Dados IBGE:</strong> <span id="dadosSidra" aria-live="polite">Aguardando localização...</span></p>
+        <p><strong>Dados IBGE:</strong> <span id="dadosSidra">Aguardando localização...</span></p>
       </section>
       
-      <section id="locationResult" aria-live="polite" aria-label="Resultado da localização">
+      <section id="locationResult" aria-label="Resultado da localização">
       </section>
 
       <!-- Tracking Mode Controls - Progressive Disclosure -->
@@ -765,16 +767,27 @@
   dialog.backdrop-hidden::backdrop  {
     background-color: transparent;
   }
-</style><div><div class="gf-app"></div></div></template></div></body></html>
+</style><div><div class="gf-app"></div></div></template></div>
+
 <!-- Button Utilities -->
 <script type="module" src="utils/button-utils.js"></script>
 
-<!-- Service Worker Registration -->
+<!-- Service Worker Registration (optional, graceful fallback) -->
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js')
+      // Silently check if service-worker.js exists without logging errors
+      fetch('/service-worker.js', { method: 'HEAD' })
+        .then(response => {
+          if (response.ok) {
+            return navigator.serviceWorker.register('/service-worker.js');
+          }
+          // File doesn't exist - silently skip (development mode)
+          return null;
+        })
         .then(registration => {
+          if (!registration) return;
+          
           console.log('✓ Service Worker registered:', registration.scope);
           
           // Check for updates
@@ -782,8 +795,13 @@
             const newWorker = registration.installing;
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // New service worker available
-                if (confirm('Nova versão disponível! Recarregar a página?')) {
+                // New version available - show toast instead of blocking confirm dialog
+                if (window.toast) {
+                  window.toast.info('Nova versão disponível!', 0, () => {
+                    newWorker.postMessage({ type: 'SKIP_WAITING' });
+                    window.location.reload();
+                  });
+                } else if (confirm('Nova versão disponível! Recarregar a página?')) {
                   newWorker.postMessage({ type: 'SKIP_WAITING' });
                   window.location.reload();
                 }
@@ -791,9 +809,11 @@
             });
           });
         })
-        .catch(error => {
-          console.warn('⚠️ Service Worker registration failed:', error);
+        .catch(() => {
+          // Silently ignore - development mode without service worker
         });
     });
   }
 </script>
+</body>
+</html>

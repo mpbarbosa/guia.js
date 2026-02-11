@@ -3,11 +3,29 @@
  * Handles geolocation permission requests with user-friendly UI
  */
 
-import { log, warn, error } from './utils/logger.js';
-import { showError } from './utils/toast.js';
-
 (function() {
   'use strict';
+
+  // Logging utilities (inline implementation)
+  function log(...args) {
+    console.log('[GeolocationBanner]', ...args);
+  }
+  
+  function warn(...args) {
+    console.warn('[GeolocationBanner]', ...args);
+  }
+  
+  function error(...args) {
+    console.error('[GeolocationBanner]', ...args);
+  }
+  
+  function showError(message) {
+    if (window.ErrorRecovery && window.ErrorRecovery.displayError) {
+      window.ErrorRecovery.displayError('Erro', message);
+    } else {
+      alert(message);
+    }
+  }
 
   let permissionStatus = 'prompt'; // 'prompt', 'granted', 'denied'
   

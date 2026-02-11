@@ -1,5 +1,4 @@
 /**
-import { log, warn, error } from '../utils/logger.js';
  * @fileoverview Converter View - Address and Coordinate Converter
  * Converts between geographic coordinates and human-readable addresses
  * 
@@ -9,6 +8,8 @@ import { log, warn, error } from '../utils/logger.js';
  * @module views/converter
  */
 
+import { log, warn, error } from '../utils/logger.js';
+import { escapeHtml } from '../utils/html-sanitizer.js';
 import { extractDistrito, extractBairro, determineLocationType, formatLocationValue } from '../address-parser.js';
 
 /**
@@ -402,7 +403,7 @@ export default {
       // Display full results
       results.innerHTML = `
         <h3>Endereço Encontrado</h3>
-        <p><strong>Endereço completo:</strong> ${data.display_name}</p>
+        <p><strong>Endereço completo:</strong> ${escapeHtml(data.display_name)}</p>
         ${data.address ? this._formatAddress(data.address) : ''}
         <p class="map-link">
           <a href="https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}&zoom=16" 
@@ -414,12 +415,12 @@ export default {
         </p>
       `;
       
-    } catch (error) {
-      error("(converter-view) Error fetching address:", error);
+    } catch (err) {
+      error("(converter-view) Error fetching address:", err);
       results.innerHTML = `
         <div class="error" role="alert">
           <p><strong>Erro ao buscar endereço</strong></p>
-          <p>${error.message}</p>
+          <p>${escapeHtml(err.message)}</p>
         </div>
       `;
     }

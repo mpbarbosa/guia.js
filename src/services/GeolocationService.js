@@ -32,7 +32,7 @@ import { escapeHtml } from '../utils/html-sanitizer.js';
  */
 
 import PositionManager from '../core/PositionManager.js';
-import { log } from '../utils/logger.js';
+import { log, error } from '../utils/logger.js';
 import { GEOLOCATION_OPTIONS } from '../config/defaults.js';
 import BrowserGeolocationProvider from './providers/BrowserGeolocationProvider.js';
 
@@ -446,18 +446,18 @@ class GeolocationService {
 
 					resolve(position);
 				},
-				(error) => {
+				(err) => {
 					this.isPendingRequest = false;
 					this.pendingPromise = null;
 					// Privacy: Log error without coordinates
-					error("(GeolocationService) Single location update failed:", error.message || error);
+					error("(GeolocationService) Single location update failed:", err.message || err);
 
 					// Update display with error if element is available
 					if (this.locationResult) {
-						this.updateErrorDisplay(error);
+						this.updateErrorDisplay(err);
 					}
 
-					reject(formatGeolocationError(error));
+					reject(formatGeolocationError(err));
 				},
 				this.config.geolocationOptions
 			);
@@ -510,13 +510,13 @@ class GeolocationService {
 					this.updateLocationDisplay(position);
 				}
 			},
-			(error) => {
+			(err) => {
 				// Privacy: Log error without coordinates
-				error("(GeolocationService) Position watch error:", error.message || error);
+				error("(GeolocationService) Position watch error:", err.message || err);
 
 				// Update display with error if element is available
 				if (this.locationResult) {
-					this.updateErrorDisplay(error);
+					this.updateErrorDisplay(err);
 				}
 			},
 			this.config.geolocationOptions
@@ -584,6 +584,25 @@ class GeolocationService {
 				const lat = coords.latitude ? coords.latitude.toFixed(6) : 'N/A';
 				const lng = coords.longitude ? coords.longitude.toFixed(6) : 'N/A';
 				latLongDisplay.textContent = `${lat}, ${lng}`;
+			}
+			
+			// Update altitude display with Brazilian locale formatting
+			const altitudeContainer = document.getElementById('altitude-container');
+			const altitudeDisplay = document.getElementById('altitude-display');
+			
+			if (altitudeContainer && altitudeDisplay && coords) {
+				if (coords.altitude !== null && coords.altitude !== undefined) {
+					// Format altitude with Brazilian locale (comma as decimal separator)
+					const altitudeFormatted = coords.altitude.toLocaleString('pt-BR', {
+						minimumFractionDigits: 2,
+						maximumFractionDigits: 2
+					});
+					altitudeDisplay.textContent = `${altitudeFormatted} metros`;
+					altitudeContainer.style.display = ''; // Show the altitude
+				} else {
+					// Hide altitude when not available
+					altitudeContainer.style.display = 'none';
+				}
 			}
 		}
 	}

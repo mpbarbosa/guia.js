@@ -24,7 +24,7 @@ import { log, warn, error } from '../utils/logger.js';
  * @author Marcelo Pereira Barbosa
  */
 
-import { SpeechSynthesisManager } from '../guia.js';
+import SpeechSynthesisManager from '../speech/SpeechSynthesisManager.js';
 import PositionManager from '../core/PositionManager.js';
 
 /**

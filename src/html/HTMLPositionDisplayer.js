@@ -112,10 +112,10 @@ class HTMLPositionDisplayer {
 		if (coords && coords.altitude !== null && coords.altitude !== undefined) {
 			html += `<div class="altitude-info">
                 <h4>Altitude:</h4>
-                <p><strong>Altitude:</strong> ${coords.altitude.toFixed(2)} metros</p>`;
+                <p>${coords.altitude.toFixed(2)} metros</p>`;
 
 			if (coords.altitudeAccuracy !== null && coords.altitudeAccuracy !== undefined) {
-				html += `<p><strong>Precisão da Altitude:</strong> ${coords.altitudeAccuracy.toFixed(2)} metros</p>`;
+				html += `<p><strong>Precisão:</strong> ${coords.altitudeAccuracy.toFixed(2)} metros</p>`;
 			}
 			html += `</div>`;
 		}

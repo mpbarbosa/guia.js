@@ -73,6 +73,9 @@ import GeocodingState from '../core/GeocodingState.js';
 import UICoordinator from './UICoordinator.js';
 import EventCoordinator from './EventCoordinator.js';
 import ServiceCoordinator from './ServiceCoordinator.js';
+
+// Import configuration
+import { CORS_PROXY, ENABLE_CORS_FALLBACK } from '../config/defaults.js';
 import SpeechCoordinator from './SpeechCoordinator.js';
 
 // Import service layer classes
@@ -472,8 +475,12 @@ class WebGeocodingManager {
 		}
 
 		// Create reverse geocoder with or without fetch manager
+		// Pass CORS configuration from defaults
 		this.reverseGeocoder = params.reverseGeocoder ||
-			new ReverseGeocoder(fetchManager);
+			new ReverseGeocoder(fetchManager, {
+				corsProxy: CORS_PROXY,
+				enableCorsFallback: ENABLE_CORS_FALLBACK
+			});
 		
 		// Inject AddressDataExtractor into ReverseGeocoder to resolve dependency warning
 		this.reverseGeocoder.AddressDataExtractor = AddressDataExtractor;

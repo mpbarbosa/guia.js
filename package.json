@@ -9,7 +9,7 @@
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "test:verbose": "node --experimental-vm-modules node_modules/jest/bin/jest.js --verbose",
-    "validate": "node -c src/guia.js && node -c src/guia_ibge.js",
+    "validate": "node -c src/app.js && node -c src/guia.js && node -c src/guia_ibge.js",
     "test:all": "npm run validate && npm test",
     "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js __tests__/unit",
     "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js __tests__/integration",
@@ -53,11 +53,17 @@
     "npm": ">=10.0.0"
   },
   "jest": {
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
     "transform": {},
     "transformIgnorePatterns": [],
-    "workerThreads": true,
+    "maxWorkers": 1,
     "cacheDirectory": ".jest-cache",
+    "testTimeout": 30000,
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/__mocks__/"
+    ],
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/**/*.test.js",

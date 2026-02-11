@@ -1,11 +1,23 @@
 /**
-import { log, warn, error } from './utils/logger.js';
  * Error Recovery and Global Error Handler
  * Provides centralized error handling and recovery mechanisms
  */
 
 (function() {
   'use strict';
+
+  // Logging utilities (inline implementation)
+  function log(...args) {
+    console.log('[ErrorRecovery]', ...args);
+  }
+  
+  function warn(...args) {
+    console.warn('[ErrorRecovery]', ...args);
+  }
+  
+  function error(...args) {
+    console.error('[ErrorRecovery]', ...args);
+  }
 
   // Track active timeouts for cleanup
   const activeTimeouts = new Set();

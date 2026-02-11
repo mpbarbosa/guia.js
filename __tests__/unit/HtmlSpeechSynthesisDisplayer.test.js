@@ -29,21 +29,26 @@ const mockDocument = {
 };
 
 // Mock window for speech synthesis
-global.window = {
-	speechSynthesis: {
+// Note: jest.setup.js creates window, so we override its properties
+if (typeof window !== 'undefined') {
+	window.speechSynthesis = {
 		onvoiceschanged: null,
 		getVoices: jest.fn().mockReturnValue([
 			{ name: 'Google português do Brasil', lang: 'pt-BR' },
 			{ name: 'Microsoft Helena', lang: 'pt-PT' },
 			{ name: 'System Voice', lang: 'en-US' }
-		])
-	}
-};
+		]),
+		speak: jest.fn(),
+		cancel: jest.fn(),
+		pause: jest.fn(),
+		resume: jest.fn()
+	};
+}
 
 // Mock SpeechSynthesisManager
 class MockSpeechSynthesisManager {
 	constructor() {
-		this.synth = global.window.speechSynthesis;
+		this.synth = window.speechSynthesis;
 		this.voice = null;
 		this.rate = 1.0;
 		this.pitch = 1.0;

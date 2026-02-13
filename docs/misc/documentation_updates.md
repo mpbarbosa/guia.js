@@ -90,20 +90,20 @@ Based on the code changes, I need to update the E2E test count and add the new t
   - `NeighborhoodChangeWhileDriving.e2e.test.js` - Bairro card updates while navigating (8 tests)
   - `CompleteGeolocationWorkflow.e2e.test.js` - Full geolocation pipeline
   - `AddressChangeAndSpeech.e2e.test.js` - Address updates with speech synthesis
-  - `municipio-bairro-display.e2e.test.js` - Comprehensive municipio/bairro display testing (v0.7.1+)
-  - `municipio-bairro-simple.e2e.test.js` - Simplified municipio/bairro validation (v0.7.1+)
-  - `complete-address-validation.e2e.test.js` - Complete address data validation (v0.7.2+)
-  - `milho-verde-locationResult.e2e.test.js` - Location result integration test (v0.7.2+)
+  - `municipio-bairro-display.e2e.test.js` - Comprehensive municipio/bairro display testing (v0.9.0+)
+  - `municipio-bairro-simple.e2e.test.js` - Simplified municipio/bairro validation (v0.9.0+)
+  - `complete-address-validation.e2e.test.js` - Complete address data validation (v0.9.0+)
+  - `milho-verde-locationResult.e2e.test.js` - Location result integration test (v0.9.0+)
 # AFTER:
 - **Key tests**:
-  - `ChangeDetectionCoordinator.e2e.test.js` - Change detection for logradouro, bairro, municipio (v0.8.7+)
+  - `ChangeDetectionCoordinator.e2e.test.js` - Change detection for logradouro, bairro, municipio (v0.9.0+)
   - `NeighborhoodChangeWhileDriving.e2e.test.js` - Bairro card updates while navigating (8 tests)
   - `CompleteGeolocationWorkflow.e2e.test.js` - Full geolocation pipeline
   - `AddressChangeAndSpeech.e2e.test.js` - Address updates with speech synthesis
-  - `municipio-bairro-display.e2e.test.js` - Comprehensive municipio/bairro display testing (v0.7.1+)
-  - `municipio-bairro-simple.e2e.test.js` - Simplified municipio/bairro validation (v0.7.1+)
-  - `complete-address-validation.e2e.test.js` - Complete address data validation (v0.7.2+)
-  - `milho-verde-locationResult.e2e.test.js` - Location result integration test (v0.7.2+)
+  - `municipio-bairro-display.e2e.test.js` - Comprehensive municipio/bairro display testing (v0.9.0+)
+  - `municipio-bairro-simple.e2e.test.js` - Simplified municipio/bairro validation (v0.9.0+)
+  - `complete-address-validation.e2e.test.js` - Complete address data validation (v0.9.0+)
+  - `milho-verde-locationResult.e2e.test.js` - Location result integration test (v0.9.0+)
 ```
 **Line 211** - Update documentation reference:
 ```markdown

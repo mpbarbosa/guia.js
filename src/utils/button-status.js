@@ -1,7 +1,7 @@
 /**
  * Button Status Helper
  * Adds helpful status messages below buttons (especially disabled ones)
- * @since 0.8.7-alpha - UX Quick Win #3
+ * @since 0.9.0-alpha - UX Quick Win #3
  * @module utils/button-status
  */
 
@@ -101,6 +101,45 @@ export function disableWithReason(button, reason) {
 }
 
 /**
+ * Set button to loading state with spinner and message
+ * Combines visual loading indicator with status text
+ * 
+ * @param {HTMLButtonElement} button - Target button
+ * @param {string} [message='Carregando...'] - Loading message
+ * @returns {void}
+ * 
+ * @example
+ * setLoadingState(myButton, 'Buscando localização...');
+ * 
+ * @since 0.9.0-alpha
+ */
+export function setLoadingState(button, message = BUTTON_STATUS_MESSAGES.LOADING) {
+  if (!button) return;
+
+  button.disabled = true;
+  button.setAttribute('aria-disabled', 'true');
+  button.classList.add('loading');
+  addButtonStatus(button, message, 'info');
+}
+
+/**
+ * Remove loading state from button
+ * 
+ * @param {HTMLButtonElement} button - Target button
+ * @returns {void}
+ * 
+ * @since 0.9.0-alpha
+ */
+export function clearLoadingState(button) {
+  if (!button) return;
+
+  button.classList.remove('loading');
+  button.disabled = false;
+  button.setAttribute('aria-disabled', 'false');
+  removeButtonStatus(button);
+}
+
+/**
  * Enable button and remove disabled message
  * 
  * @param {HTMLButtonElement} button - Target button
@@ -137,5 +176,7 @@ export default {
   updateButtonStatus,
   disableWithReason,
   enableWithMessage,
+  setLoadingState,
+  clearLoadingState,
   BUTTON_STATUS_MESSAGES
 };

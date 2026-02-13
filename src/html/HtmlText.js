@@ -28,7 +28,7 @@ import { log, warn, error } from '../utils/logger.js';
  * ```
  * 
  * @class HtmlText
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 class HtmlText {
@@ -91,7 +91,7 @@ class HtmlText {
 	 * @param {Object} loading - Loading state information
 	 * @param {Object} error - Error information if any
 	 * @returns {void}
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * // Typically called automatically via observer pattern
@@ -118,7 +118,7 @@ class HtmlText {
 	 * debugging and logging purposes.
 	 * 
 	 * @returns {string} String representation with class name and element ID
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * log(htmlText.toString());

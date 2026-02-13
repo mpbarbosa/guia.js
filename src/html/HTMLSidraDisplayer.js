@@ -6,7 +6,7 @@ import { ADDRESS_FETCHED_EVENT, IBGE_LOADING_MESSAGE, IBGE_ERROR_MESSAGE, IBGE_U
 
 /**
  * HTML-based SIDRA data displayer with IBGE integration.
- * @version 0.7.1-alpha
+ * @version 0.9.0-alpha
  * 
  * This class handles the display of SIDRA (Sistema IBGE de Recuperação Automática) data
  * in HTML format, including population statistics and other IBGE demographic information.
@@ -34,7 +34,7 @@ import { ADDRESS_FETCHED_EVENT, IBGE_LOADING_MESSAGE, IBGE_ERROR_MESSAGE, IBGE_U
  * ```
  * 
  * @class HTMLSidraDisplayer
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 class HTMLSidraDisplayer {
@@ -59,7 +59,7 @@ class HTMLSidraDisplayer {
 	 * const element = document.getElementById('dadosSidra');
 	 * const displayer = new HTMLSidraDisplayer(element, { dataType: 'GDP' });
 	 * 
-	 * @since 0.7.1-alpha
+	 * @since 0.9.0-alpha
 	 */
 	constructor(element, options = {}) {
 		this.element = element;
@@ -91,7 +91,7 @@ class HTMLSidraDisplayer {
 	 * // Called automatically by observer pattern
 	 * displayer.update(addressData, { municipio: 'São Paulo', siglaUF: 'SP' }, ADDRESS_FETCHED_EVENT, false, null);
 	 * 
-	 * @since 0.7.1-alpha
+	 * @since 0.9.0-alpha
 	 */
 	update(addressData, enderecoPadronizado, posEvent, loading, error) {
 		// Log update for debugging (following MP Barbosa logging standards)
@@ -140,7 +140,7 @@ class HTMLSidraDisplayer {
 	 * // Internal usage
 	 * this._updateSidraData({ municipio: 'São Paulo', siglaUF: 'SP' });
 	 * 
-	 * @since 0.7.1-alpha
+	 * @since 0.9.0-alpha
 	 */
 	_updateSidraData(enderecoPadronizado) {
 		// Validate input
@@ -187,7 +187,7 @@ class HTMLSidraDisplayer {
 	 * log(displayer.toString());
 	 * // Output: "HTMLSidraDisplayer: dadosSidra (PopEst)"
 	 * 
-	 * @since 0.7.1-alpha
+	 * @since 0.9.0-alpha
 	 */
 	toString() {
 		const elementId = this.element?.id || 'no-id';

@@ -3,7 +3,7 @@
 **Analysis Date**: 2026-01-27  
 **Project**: Guia Turístico (guia_turistico)  
 **Project Type**: client_spa (JavaScript SPA)  
-**Current Version**: 0.7.1-alpha (package.json)  
+**Current Version**: 0.9.0-alpha (package.json)  
 **Change Scope**: no-changes (comprehensive analysis)  
 **Analyzer**: GitHub Copilot CLI
 
@@ -11,13 +11,13 @@
 
 ## Executive Summary
 
-The Guia Turístico project demonstrates **excellent documentation practices** with 289+ documentation files (1,327 total markdown files including tests and .github). The project has strong version control practices with consistent version numbering across key files. However, **version progression inconsistency** exists where CHANGELOG.md documents unreleased features (v0.8.7-alpha) while package.json remains at v0.7.1-alpha, creating potential confusion about the current state. The automated "broken references" report contains **18 false positives** (regex patterns and code placeholders) but may contain 1-2 legitimate issues requiring manual verification.
+The Guia Turístico project demonstrates **excellent documentation practices** with 289+ documentation files (1,327 total markdown files including tests and .github). The project has strong version control practices with consistent version numbering across key files. However, **version progression inconsistency** exists where CHANGELOG.md documents unreleased features (v0.9.0-alpha) while package.json remains at v0.9.0-alpha, creating potential confusion about the current state. The automated "broken references" report contains **18 false positives** (regex patterns and code placeholders) but may contain 1-2 legitimate issues requiring manual verification.
 
 **Overall Health**: ✅ **Excellent** - Strong documentation foundation with minor version communication issues.
 
 **Key Strengths**:
 - ✅ Comprehensive documentation coverage (289+ files)
-- ✅ Consistent version numbering (0.7.1-alpha) in canonical sources
+- ✅ Consistent version numbering (0.9.0-alpha) in canonical sources
 - ✅ Well-organized directory structure (docs/, .github/, tests/)
 - ✅ Multiple historical consistency analyses (4 previous reports)
 - ✅ Strong contributor guidelines and best practices documentation
@@ -33,15 +33,15 @@ The Guia Turístico project demonstrates **excellent documentation practices** w
 
 ### 1.1 Version Progression Inconsistency ⚠️ HIGH PRIORITY
 
-**Problem**: CHANGELOG.md documents features as "v0.8.7-alpha" and "v0.8.6+" while package.json version is "0.7.1-alpha".
+**Problem**: CHANGELOG.md documents features as "v0.9.0-alpha" and "v0.9.0+" while package.json version is "0.9.0-alpha".
 
 **Findings**:
-- **package.json**: `"version": "0.7.1-alpha"` ✅ (canonical, correct)
-- **CHANGELOG.md line 11**: "Município State Abbreviation Display (v0.8.7-alpha)"
-- **CHANGELOG.md line 29**: "`HTMLHighlightCardsDisplayer` (v0.8.7-alpha)"
+- **package.json**: `"version": "0.9.0-alpha"` ✅ (canonical, correct)
+- **CHANGELOG.md line 11**: "Município State Abbreviation Display (v0.9.0-alpha)"
+- **CHANGELOG.md line 29**: "`HTMLHighlightCardsDisplayer` (v0.9.0-alpha)"
 - **CHANGELOG.md line 8**: Section header is `## [Unreleased]` ✅ (correct placement)
-- **README.md line 329**: "DisplayerFactory - Factory pattern... (5 methods v0.8.6+)"
-- **.github/copilot-instructions.md line 3**: States "version 0.7.1-alpha" ✅
+- **README.md line 329**: "DisplayerFactory - Factory pattern... (5 methods v0.9.0+)"
+- **.github/copilot-instructions.md line 3**: States "version 0.9.0-alpha" ✅
 
 **Root Cause**: Features documented with future version numbers in [Unreleased] section before formal version bump.
 
@@ -59,10 +59,10 @@ The Guia Turístico project demonstrates **excellent documentation practices** w
 ## [Unreleased]
 
 > **Note**: Features below are marked with future version numbers (v0.8.x) indicating 
-> planned release version. Current released version is 0.7.1-alpha.
+> planned release version. Current released version is 0.9.0-alpha.
 
 ### Added
-- **Município State Abbreviation Display (planned for v0.8.7-alpha)**: Municipality highlight...
+- **Município State Abbreviation Display (planned for v0.9.0-alpha)**: Municipality highlight...
 ```
 
 **Option B**: Remove specific version markers from unreleased features
@@ -73,13 +73,13 @@ The Guia Turístico project demonstrates **excellent documentation practices** w
 - **Município State Abbreviation Display**: Municipality highlight card now displays...
 ```
 
-**Option C**: Bump version to 0.8.7-alpha in package.json if features are complete
+**Option C**: Bump version to 0.9.0-alpha in package.json if features are complete
 
 **Action Items**:
 1. 🟡 Decide on version numbering strategy for unreleased features
 2. 🟡 Update CHANGELOG.md to clarify Unreleased vs Current version
 3. 🟡 Consider adding note in README.md about version progression
-4. ✅ Keep current version in package.json at 0.7.1-alpha until formal release
+4. ✅ Keep current version in package.json at 0.9.0-alpha until formal release
 
 ---
 
@@ -150,7 +150,7 @@ EXCLUDE_PATTERNS=(
 **Problem**: Some architecture documents reference older versions or contain outdated information.
 
 **Findings**:
-- **docs/INDEX.md line 93**: "Comprehensive version timeline (0.5.x → 0.7.1-alpha current)" ✅
+- **docs/INDEX.md line 93**: "Comprehensive version timeline (0.5.x → 0.9.0-alpha current)" ✅
 - **.github/copilot-instructions.md line 85**: "version 0.7.x" (vague reference)
 - **docs/architecture/VERSION_TIMELINE.md**: Needs verification for accuracy
 
@@ -159,7 +159,7 @@ EXCLUDE_PATTERNS=(
 **Priority**: 🟡 **MEDIUM**
 
 **Recommended Fix**:
-- Update generic "0.7.x" references to specific "0.7.1-alpha" where appropriate
+- Update generic "0.7.x" references to specific "0.9.0-alpha" where appropriate
 - Verify VERSION_TIMELINE.md reflects current state
 - Add "Last Updated" dates to architecture documents
 
@@ -189,7 +189,7 @@ EXCLUDE_PATTERNS=(
 **Problem**: None - CDN documentation is excellent.
 
 **Findings**:
-- **README.md**: All CDN examples use `@0.7.1-alpha` version tag ✅
+- **README.md**: All CDN examples use `@0.9.0-alpha` version tag ✅
 - Strong warning about avoiding `@main` branch URLs ✅
 - `.github/scripts/cdn-delivery.sh` script for generating CDN URLs ✅
 - Comprehensive troubleshooting section ✅
@@ -265,7 +265,7 @@ docs/
 ```markdown
 ---
 Document Version: 1.0
-Project Version: 0.7.1-alpha
+Project Version: 0.9.0-alpha
 Last Updated: 2026-01-27
 Status: Current | Draft | Deprecated
 ---
@@ -330,14 +330,14 @@ Status: Current | Draft | Deprecated
 ### 5.1 Version Accuracy ✅ VERIFIED
 
 **Canonical Version Sources**:
-- `package.json`: `0.7.1-alpha` ✅
-- Git tags: `v0.7.1-alpha` ✅ (assumed based on CDN references)
+- `package.json`: `0.9.0-alpha` ✅
+- Git tags: `v0.9.0-alpha` ✅ (assumed based on CDN references)
 
 **Documentation Verification**:
-- README.md: References 0.7.1-alpha consistently ✅
-- CHANGELOG.md: Correctly uses `[0.7.1-alpha]` section header ✅
-- .github/copilot-instructions.md: States "version 0.7.1-alpha" ✅
-- CDN examples: Use `@0.7.1-alpha` tag consistently ✅
+- README.md: References 0.9.0-alpha consistently ✅
+- CHANGELOG.md: Correctly uses `[0.9.0-alpha]` section header ✅
+- .github/copilot-instructions.md: States "version 0.9.0-alpha" ✅
+- CDN examples: Use `@0.9.0-alpha` tag consistently ✅
 
 **Unreleased Features**: 
 - CHANGELOG uses `[Unreleased]` section with future version markers (v0.8.x)
@@ -353,18 +353,18 @@ Status: Current | Draft | Deprecated
 
 | Feature | Documented | Implemented | Verdict |
 |---------|-----------|-------------|---------|
-| HTMLSidraDisplayer | CHANGELOG.md v0.7.2+ | File exists (src/html/) | ✅ Match |
-| HTMLHighlightCardsDisplayer | Multiple docs v0.7.1+ | File exists (src/html/) | ✅ Match |
-| TimerManager | CHANGELOG.md v0.7.1+ | File exists (src/utils/) | ✅ Match |
-| DisplayerFactory (5 methods) | README.md v0.8.6+ | Marked as Unreleased | ⚠️ Verify |
-| Município State Display | CHANGELOG v0.8.7-alpha | Marked as Unreleased | ⚠️ Verify |
+| HTMLSidraDisplayer | CHANGELOG.md v0.9.0+ | File exists (src/html/) | ✅ Match |
+| HTMLHighlightCardsDisplayer | Multiple docs v0.9.0+ | File exists (src/html/) | ✅ Match |
+| TimerManager | CHANGELOG.md v0.9.0+ | File exists (src/utils/) | ✅ Match |
+| DisplayerFactory (5 methods) | README.md v0.9.0+ | Marked as Unreleased | ⚠️ Verify |
+| Município State Display | CHANGELOG v0.9.0-alpha | Marked as Unreleased | ⚠️ Verify |
 
 **Note**: v0.8.x features are in `[Unreleased]` section - verify implementation status.
 
 **Action Items**:
 1. 🟡 Verify DisplayerFactory has 5 methods as documented
 2. 🟡 Verify município state display implementation status
-3. 🟡 If implemented, consider version bump to 0.8.7-alpha
+3. 🟡 If implemented, consider version bump to 0.9.0-alpha
 
 **Verdict**: ✅ **MOSTLY ACCURATE** - Released features match, unreleased features need verification
 
@@ -471,9 +471,9 @@ Status: Current | Draft | Deprecated
 
 ### 🟡 HIGH PRIORITY (Fix Soon)
 1. **Clarify version progression** in CHANGELOG.md (1.1)
-   - Add note distinguishing Unreleased (v0.8.x) from Current (v0.7.1-alpha)
+   - Add note distinguishing Unreleased (v0.8.x) from Current (v0.9.0-alpha)
    - OR remove specific version markers from unreleased features
-   - OR bump version to 0.8.7-alpha if features are complete
+   - OR bump version to 0.9.0-alpha if features are complete
 
 2. **Verify and fix potential temp file reference** (1.2)
    - Manually inspect `ARCHITECTURE_DOCUMENTATION_FIXES_2026-01-23.md`
@@ -481,13 +481,13 @@ Status: Current | Draft | Deprecated
 
 ### 🟡 MEDIUM PRIORITY (Improve Quality)
 3. **Update vague version references** (2.1)
-   - Replace "0.7.x" with "0.7.1-alpha" in `.github/copilot-instructions.md`
+   - Replace "0.7.x" with "0.9.0-alpha" in `.github/copilot-instructions.md`
    - Review architecture docs for version-specific info
 
 4. **Verify unreleased feature implementation** (5.2)
    - Confirm DisplayerFactory has 5 methods
    - Confirm município state display implementation
-   - Decide if version bump to 0.8.7-alpha is warranted
+   - Decide if version bump to 0.9.0-alpha is warranted
 
 ### 🟢 LOW PRIORITY (Nice to Have)
 5. **Improve automated reference checking** (1.2)
@@ -511,7 +511,7 @@ Status: Current | Draft | Deprecated
 
 The Guia Turístico project demonstrates **exemplary documentation practices** with:
 - ✅ Comprehensive coverage (289+ documentation files)
-- ✅ Consistent version numbering (0.7.1-alpha)
+- ✅ Consistent version numbering (0.9.0-alpha)
 - ✅ Excellent organization and structure
 - ✅ Clear, accessible writing
 - ✅ Strong historical documentation preservation

@@ -8,7 +8,7 @@ import { log, warn, error } from '../utils/logger.js';
  * Configuration follows referential transparency principles.
  * 
  * @module config/defaults
- * @since 0.7.0-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -46,7 +46,7 @@ export const APP_AUTHOR = "Marcelo Pereira Barbosa";
  * - Your own proxy server URL
  * 
  * @constant {string|null}
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  */
 export const CORS_PROXY = null;
 
@@ -56,7 +56,7 @@ export const CORS_PROXY = null;
  * Only use in development.
  * 
  * @constant {boolean}
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  */
 export const ENABLE_CORS_FALLBACK = true;  // ✅ ENABLED FOR TESTING
 
@@ -81,7 +81,7 @@ export const MINIMUM_DISTANCE_CHANGE = 20;
  * - Time > MINIMUM_TIME_CHANGE (30 seconds)
  * 
  * This ensures neighborhood cards update even when driving slowly.
- * @since 0.7.2-alpha
+ * @since 0.9.0-alpha
  */
 export const MINIMUM_TIME_CHANGE = 30000; // 30 seconds
 
@@ -95,7 +95,7 @@ export const NO_REFERENCE_PLACE = "Não classificado";
 /** Event name for address fetch completion */
 export const ADDRESS_FETCHED_EVENT = "Address fetched";
 
-// Portuguese UI Messages (v0.8.6+)
+// Portuguese UI Messages (v0.9.0+)
 /** IBGE/SIDRA loading message */
 export const IBGE_LOADING_MESSAGE = "Carregando dados do IBGE...";
 

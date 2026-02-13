@@ -365,7 +365,7 @@
      * Clears all pending toast timeouts.
      * Useful in test environments.
      * 
-     * @since 0.8.7-alpha
+     * @since 0.9.0-alpha
      */
     destroy: function() {
       activeTimeouts.forEach(timeoutId => clearTimeout(timeoutId));

@@ -1,7 +1,7 @@
 # SpeechQueue Class Extraction - Phase 12
 
 **Date:** December 2024  
-**Version:** 0.8.3-alpha  
+**Version:** 0.9.0-alpha  
 **Author:** Marcelo Pereira Barbosa  
 **Phase:** 12 - SpeechQueue Module Extraction  
 

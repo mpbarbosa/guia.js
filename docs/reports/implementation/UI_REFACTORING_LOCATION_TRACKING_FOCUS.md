@@ -1,4 +1,4 @@
-# UI Refactoring: Focus on Location Tracking (v0.8.4)
+# UI Refactoring: Focus on Location Tracking (v0.9.0)
 
 **Date**: 2026-01-15  
 **Type**: User Interface Simplification  
@@ -200,7 +200,7 @@ npm run validate
 ### Files Modified
 - ✅ `README.md` - Updated feature list, test badge
 - ✅ `.github/copilot-instructions.md` - Added UI Architecture section
-- ✅ `CHANGELOG.md` - Created with v0.8.4 changes
+- ✅ `CHANGELOG.md` - Created with v0.9.0 changes
 - ✅ `docs/reports/implementation/UI_REFACTORING_LOCATION_TRACKING_FOCUS.md` - This file
 
 ### Test Count Updates

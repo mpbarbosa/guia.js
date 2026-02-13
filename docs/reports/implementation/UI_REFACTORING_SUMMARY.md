@@ -39,7 +39,7 @@
 
 1. **`initNavigation()`** (Line 110):
    - Updated JSDoc to reflect footer navigation
-   - Added version notation: `@modified 0.8.4-alpha`
+   - Added version notation: `@modified 0.9.0-alpha`
 
 2. **`updateActiveNavLink()`** (Line 214):
    - Updated selector to: `.app-navigation a, .app-footer a`
@@ -59,7 +59,7 @@
   - Added "Coordinate Converter" as secondary utility
 
 - `.github/copilot-instructions.md`:
-  - Added "UI Architecture (v0.8.4+)" section
+  - Added "UI Architecture (v0.9.0+)" section
   - Updated test counts throughout (1,820 passing / 1,968 total)
   - Updated suite counts (84 total suites)
   - Updated file line counts
@@ -263,7 +263,7 @@ git push origin main
 
 - **Main documentation**: `docs/reports/implementation/UI_REFACTORING_LOCATION_TRACKING_FOCUS.md`
 - **Changelog**: `CHANGELOG.md`
-- **Architecture**: `.github/copilot-instructions.md` → "UI Architecture (v0.8.4+)"
+- **Architecture**: `.github/copilot-instructions.md` → "UI Architecture (v0.9.0+)"
 - **Testing**: Test suite validation in this document
 - **Contributing**: `.github/CONTRIBUTING.md`
 

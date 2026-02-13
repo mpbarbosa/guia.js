@@ -41,7 +41,7 @@ Updated `ReverseGeocoder.fetchAddress()` to match the behavior of `update()` by:
 3. ✅ Standardizing to `this.enderecoPadronizado`
 4. ✅ **Calling `notifyObservers()` with complete parameters**
 5. ✅ Adding comprehensive logging
-6. ✅ Using `ADDRESS_FETCHED_EVENT` constant from config/defaults.js (v0.7.1+)
+6. ✅ Using `ADDRESS_FETCHED_EVENT` constant from config/defaults.js (v0.9.0+)
 
 ### Code Changes
 

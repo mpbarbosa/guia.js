@@ -3,14 +3,14 @@
 **Analysis Date**: 2026-01-24  
 **Project**: Guia Turístico (guia_turistico)  
 **Project Type**: client_spa (JavaScript SPA)  
-**Version**: 0.7.1-alpha  
+**Version**: 0.9.0-alpha  
 **Scope**: Comprehensive mixed-changes analysis
 
 ---
 
 ## Executive Summary
 
-The Guia Turístico project demonstrates **strong documentation practices with 293 documentation files** across 1,327 total markdown files. However, critical consistency issues exist: **version mismatches** (0.7.1-alpha in package.json vs 1,982 passing tests documented in multiple locations), **test count discrepancies** (badges show "1982 passing" but actual test run shows 1,982 passing with 48 failing), and **19 broken references** requiring immediate attention. Documentation quality is high with comprehensive guides for contributors, architecture, and testing, but requires targeted updates for version accuracy and cross-reference validation.
+The Guia Turístico project demonstrates **strong documentation practices with 293 documentation files** across 1,327 total markdown files. However, critical consistency issues exist: **version mismatches** (0.9.0-alpha in package.json vs 1,982 passing tests documented in multiple locations), **test count discrepancies** (badges show "1982 passing" but actual test run shows 1,982 passing with 48 failing), and **19 broken references** requiring immediate attention. Documentation quality is high with comprehensive guides for contributors, architecture, and testing, but requires targeted updates for version accuracy and cross-reference validation.
 
 **Overall Health**: ⚠️ **Good with Critical Issues** - Strong documentation foundation with specific accuracy problems.
 
@@ -23,10 +23,10 @@ The Guia Turístico project demonstrates **strong documentation practices with 2
 **Problem**: Multiple version references across documentation with inconsistencies.
 
 **Findings**:
-- `package.json`: `"version": "0.7.1-alpha"` ✅ (canonical source)
-- `.github/CONTRIBUTING.md` line 892: `"version": "0.7.1-alpha"` ✅ (correct)
-- `.github/copilot-instructions.md` line 3: References `version 0.7.1-alpha` ✅ (correct)
-- Historical references preserved correctly (e.g., "Introduced in version 0.6.0-alpha")
+- `package.json`: `"version": "0.9.0-alpha"` ✅ (canonical source)
+- `.github/CONTRIBUTING.md` line 892: `"version": "0.9.0-alpha"` ✅ (correct)
+- `.github/copilot-instructions.md` line 3: References `version 0.9.0-alpha` ✅ (correct)
+- Historical references preserved correctly (e.g., "Introduced in version 0.9.0-alpha")
 
 **Test Count Accuracy Issue**:
 - **README.md line 3**: Badge shows `1982 passing / 2176 total` ✅
@@ -141,17 +141,17 @@ sed -i 's/2,045 total/2,176 total/g' CHANGELOG.md
 
 **Identified Gaps**:
 
-1. **Município State Abbreviation Display (v0.8.7-alpha)**
+1. **Município State Abbreviation Display (v0.9.0-alpha)**
    - **Status**: ✅ Documented in `CHANGELOG.md` (line 11-16)
    - **Issue**: ❌ Missing from `README.md` Key Features section
    - **Fix**: Add feature to README.md
 
-2. **Navigation UI Simplification (v0.8.4+)**
+2. **Navigation UI Simplification (v0.9.0+)**
    - **Status**: ✅ Documented in `CHANGELOG.md` (line 41-48)
    - **Issue**: ❌ Missing from `.github/copilot-instructions.md` UI Architecture section
    - **Fix**: Already documented in copilot-instructions.md (lines 103-111) ✅
 
-3. **TimerManager Utility (v0.7.1+)**
+3. **TimerManager Utility (v0.9.0+)**
    - **Status**: ✅ Documented in `CHANGELOG.md` (line 24-25)
    - **Issue**: ❌ Missing from `README.md` Core Components section
    - **Fix**: Add to README.md architecture section
@@ -305,14 +305,14 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 ```
 
 **Root Cause**: 
-- Feature change in v0.8.7-alpha: Municipality cards now display state abbreviation
+- Feature change in v0.9.0-alpha: Municipality cards now display state abbreviation
 - E2E tests not updated to match new format
 
 **Priority**: 🟡 **MEDIUM**  
 **Impact**: Test reliability, CI/CD confidence
 
 **Action Items**:
-1. 🟡 Update E2E test expectations to match v0.8.7 format ("City, ST")
+1. 🟡 Update E2E test expectations to match v0.9.0 format ("City, ST")
 2. 🟡 Document breaking test changes in CHANGELOG.md
 3. 🟢 Add test update checklist to feature change template
 
@@ -444,7 +444,7 @@ docs/
 5. 🟠 **Create TimerManager documentation** (`docs/utils/TIMER_MANAGER.md`)
 6. 🟠 **Add município feature** to README.md Key Features section
 7. 🟠 **Verify cross-references** in CONTRIBUTING.md (CODE_REVIEW_GUIDE.md, etc.)
-8. 🟡 **Update E2E tests** to match v0.8.7 format expectations
+8. 🟡 **Update E2E tests** to match v0.9.0 format expectations
 9. 🟡 **Create terminology glossary** (`docs/GLOSSARY.md`)
 
 ### Medium-Term Actions (Next Month)
@@ -504,7 +504,7 @@ docs/
 The Guia Turístico project demonstrates **strong documentation practices** with comprehensive guides for contributors, well-organized architecture documentation, and clear testing guidelines. The primary issues are **tactical rather than strategic**: test count synchronization, one broken reference, and minor API documentation gaps.
 
 **Key Strengths**:
-- ✅ Version management is generally accurate (0.7.1-alpha consistent)
+- ✅ Version management is generally accurate (0.9.0-alpha consistent)
 - ✅ Comprehensive contributor guidelines with immutability patterns
 - ✅ Excellent architecture documentation for core classes
 - ✅ Well-structured docs/INDEX.md navigation
@@ -521,4 +521,4 @@ The Guia Turístico project demonstrates **strong documentation practices** with
 
 **Report Prepared By**: Documentation Analysis System  
 **Report Date**: 2026-01-24  
-**Next Review**: After v0.8.0 release or 3 months (whichever comes first)
+**Next Review**: After v0.9.0 release or 3 months (whichever comes first)

@@ -311,7 +311,7 @@ log("Guia.js version:", guiaVersion.toString());
  * @example
  * displayError(new Error('Location not available'));
  * 
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 function displayError(error) {
@@ -350,7 +350,7 @@ function displayError(error) {
  * const type = getAddressType(geocodingData);
  * log('Location type:', type);
  * 
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 function getAddressType(addressData) {
@@ -383,7 +383,7 @@ function getAddressType(addressData) {
  * @param {number} longitude - Longitude coordinate
  * @returns {void}
  * 
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 function findNearbyRestaurants(latitude, longitude) {
@@ -398,7 +398,7 @@ function findNearbyRestaurants(latitude, longitude) {
  * @param {number} longitude - Longitude coordinate
  * @returns {void}
  * 
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 function fetchCityStatistics(latitude, longitude) {

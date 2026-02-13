@@ -32,7 +32,7 @@ import { escapeHtml } from '../utils/html-sanitizer.js';
  * ```
  * 
  * @class HTMLPositionDisplayer
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 class HTMLPositionDisplayer {
@@ -50,7 +50,7 @@ class HTMLPositionDisplayer {
 	 * const element = document.getElementById('position-display');
 	 * const displayer = new HTMLPositionDisplayer(element);
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	constructor(element) {
 		this.element = element;
@@ -76,7 +76,7 @@ class HTMLPositionDisplayer {
 	 * const html = displayer.renderPositionHtml(positionManager);
 	 * element.innerHTML = html;
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	renderPositionHtml(positionManager) {
 		if (!positionManager || !positionManager.lastPosition) {
@@ -150,7 +150,7 @@ class HTMLPositionDisplayer {
 	 * const quality = displayer.formatAccuracyQuality('excellent');
 	 * log(quality); // "Excelente"
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	formatAccuracyQuality(quality) {
 		const qualityMap = {
@@ -190,7 +190,7 @@ class HTMLPositionDisplayer {
 	 * // Typically called automatically via observer pattern
 	 * positionManager.subscribe(displayer);
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	update(positionManager, posEvent, loading, error) {
 		// Validate element exists before attempting DOM updates
@@ -237,7 +237,7 @@ class HTMLPositionDisplayer {
 	 * log(displayer.toString());
 	 * // Output: "HTMLPositionDisplayer: position-display"
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	toString() {
 		const id = this.element.id;

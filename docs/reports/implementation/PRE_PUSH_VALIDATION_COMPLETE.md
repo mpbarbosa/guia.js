@@ -578,6 +578,6 @@ Pre-push validation tool is now **prominently documented** in main README.md:
 
 ---
 
-**Version**: 0.6.0-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-01-01  
 **Issue #6**: ✅ **RESOLVED**

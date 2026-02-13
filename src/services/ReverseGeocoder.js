@@ -2,7 +2,7 @@
 
 /**
  * Reverse geocoding service for converting coordinates to addresses.
- * @version 0.7.1-alpha
+ * @version 0.9.0-alpha
  * 
  * ARCHITECTURAL OVERVIEW:
  * The ReverseGeocoder class serves as a critical service layer component in the travel guide
@@ -29,7 +29,7 @@
  * (neighborhood), and municipio (municipality) components, with Portuguese language support.
  * 
  * @module services/ReverseGeocoder
- * @since 0.8.7-alpha (extracted from guia.js in Phase 2)
+ * @since 0.9.0-alpha (extracted from guia.js in Phase 2)
  * @author Marcelo Pereira Barbosa
  */
 
@@ -224,7 +224,7 @@ class ReverseGeocoder {
 	 * @async
 	 * @returns {Promise<Object>} Promise resolving to Nominatim address data object
 	 * @throws {Error} If coordinates are invalid or geocoding fails
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	async fetchAddress() {
 		try {
@@ -359,7 +359,7 @@ class ReverseGeocoder {
 	 * @param {Object} error - Error information if any
 	 * @returns {void}
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
 	update(positionManager, posEvent, loading, error) {
@@ -385,6 +385,10 @@ class ReverseGeocoder {
 		// Extract coordinates from position data with proper validation
 		const coords = positionManager.lastPosition.coords;
 		if (coords && coords.latitude && coords.longitude) {
+			console.log('(ReverseGeocoder) Received position update with coordinates:', {
+				latitude: coords.latitude,
+				longitude: coords.longitude
+			});
 			// Update internal coordinates for geocoding operation
 			this.setCoordinates(coords.latitude, coords.longitude);
 
@@ -435,6 +439,8 @@ class ReverseGeocoder {
 					// This ensures calling code can catch and handle the error appropriately
 					throw err;
 				});
+		} else {
+			warn("(ReverseGeocoder) Position update received without valid coordinates.");
 		}
 	}
 
@@ -493,7 +499,7 @@ class ReverseGeocoder {
  * 
  * @see {@link https://nominatim.openstreetmap.org/} - OpenStreetMap Nominatim API documentation
  * 
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 	async reverseGeocode() {
@@ -564,7 +570,7 @@ class ReverseGeocoder {
 	 * log(geocoder.toString());
 	 * // Output: "ReverseGeocoder: No coordinates set"
 	 * 
-	 * @since 0.8.4-alpha
+	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
 	toString() {

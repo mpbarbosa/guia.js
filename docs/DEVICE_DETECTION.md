@@ -371,13 +371,13 @@ setupParams.notAcceptedAccuracy = setupParams.mobileNotAcceptedAccuracy;
 
 ## Version History
 
-- **v0.8.5-alpha**: Enhanced device detection with referential transparency
+- **v0.9.0-alpha**: Enhanced device detection with referential transparency
   - Added dependency injection support via optional `options` parameter
   - Improved defensive coding with graceful fallbacks
   - Added comprehensive edge case handling
   - Expanded test coverage to 20 tests
   - Updated documentation with edge cases and limitations
-- **v0.8.4-alpha**: Added device detection and device-specific accuracy adjustment
+- **v0.9.0-alpha**: Added device detection and device-specific accuracy adjustment
   - Device detection uses multi-method scoring approach
   - Automatic configuration based on device capabilities
   - Initial test coverage with 11 automated tests

@@ -198,7 +198,7 @@ $ ./.github/scripts/cdn-delivery.sh  # Still uses yourname/yourrepo
 GITHUB_USER="myuser" GITHUB_REPO="myrepo" ./.github/scripts/cdn-delivery.sh
 
 # Output includes:
-# https://cdn.jsdelivr.net/gh/myuser/myrepo@0.6.0-alpha/src/guia.js
+# https://cdn.jsdelivr.net/gh/myuser/myrepo@0.9.0-alpha/src/guia.js
 ```
 
 ### Use Case 2: Multiple Configurations
@@ -484,6 +484,6 @@ Environment variable support is now **complete and production-ready**:
 
 ---
 
-**Version**: 0.6.0-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-01-01  
 **Issue #5**: ✅ **RESOLVED**

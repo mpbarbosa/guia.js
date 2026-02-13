@@ -1,7 +1,7 @@
 # Test Infrastructure Documentation
 
 **Last Updated**: 2026-01-16  
-**Version**: 0.7.1-alpha  
+**Version**: 0.9.0-alpha  
 **Purpose**: Clarify the distinction between Jest and Playwright test suites
 
 ## Overview
@@ -40,7 +40,7 @@ __tests__/
 └── ui/              # UI component tests
 ```
 
-### Recent E2E Tests (v0.7.2+)
+### Recent E2E Tests (v0.9.0+)
 - `complete-address-validation.e2e.test.js` - Complete address data validation workflow
 - `milho-verde-locationResult.e2e.test.js` - Location result integration testing
 - `HTMLSidraDisplayer.test.js` - IBGE SIDRA data displayer unit tests
@@ -108,11 +108,11 @@ pytest tests/e2e/ --html=report.html
 
 ## Test Strategy by Project Phase
 
-### Development Phase (Current: v0.7.1-alpha)
+### Development Phase (Current: v0.9.0-alpha)
 - **Primary**: Jest/Puppeteer for rapid iteration
 - **Secondary**: Manual Python/Playwright spot checks
 
-### Pre-Release Phase (v0.8.0+)
+### Pre-Release Phase (v0.9.0+)
 - **Primary**: Jest/Puppeteer for regression testing
 - **Secondary**: Full Python/Playwright cross-browser suite
 

@@ -1,6 +1,6 @@
 # GeocodingState API Documentation
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Module:** `src/core/GeocodingState.js`  
 **Pattern:** Observer, State Management  
 **Author:** Marcelo Pereira Barbosa
@@ -54,7 +54,7 @@ import GeocodingState from './core/GeocodingState.js';
 const state = new GeocodingState();
 ```
 
-**Since:** 0.7.0-alpha
+**Since:** 0.9.0-alpha
 
 ## Public Methods
 
@@ -83,7 +83,7 @@ state.setPosition(null);
 state.setPosition(position).subscribe(observer);
 ```
 
-**Since:** 0.7.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -101,7 +101,7 @@ if (position) {
 }
 ```
 
-**Since:** 0.7.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -121,7 +121,7 @@ if (coords) {
 }
 ```
 
-**Since:** 0.7.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -139,7 +139,7 @@ if (state.hasPosition()) {
 }
 ```
 
-**Since:** 0.7.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -168,7 +168,7 @@ const unsubscribe = state.subscribe((stateSnapshot) => {
 unsubscribe();
 ```
 
-**Since:** 0.7.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -190,7 +190,7 @@ state.subscribe(handler);
 state.unsubscribe(handler);
 ```
 
-**Since:** 0.7.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -205,7 +205,7 @@ Get number of active observers.
 console.log(`Active observers: ${state.getObserverCount()}`);
 ```
 
-**Since:** 0.7.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -223,7 +223,7 @@ state.clearObservers();
 console.log(state.getObserverCount()); // 0
 ```
 
-**Since:** 0.7.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -239,7 +239,7 @@ state.clear();
 console.log(state.hasPosition()); // false
 ```
 
-**Since:** 0.7.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -257,7 +257,7 @@ console.log(state.toString());
 // Output: "GeocodingState: position: available, coordinates: (-23.5505, -46.6333), observers: 2"
 ```
 
-**Since:** 0.7.0-alpha
+**Since:** 0.9.0-alpha
 
 ## Usage Examples
 
@@ -468,7 +468,7 @@ console.log(coords3.latitude); // Original value, not 0
 
 ## History
 
-**Since:** 0.7.0-alpha  
+**Since:** 0.9.0-alpha  
 **Extraction:** Extracted from WebGeocodingManager during Phase 17 refactoring  
 **Purpose:** Separate state management concerns from coordination logic
 

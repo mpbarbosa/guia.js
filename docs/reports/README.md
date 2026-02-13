@@ -18,7 +18,7 @@ Reports documenting bugs fixed, issues resolved, and problem postmortems.
 
 - **[DOCUMENTATION_FIXES_SUMMARY.md](bugfixes/DOCUMENTATION_FIXES_SUMMARY.md)** (411 lines, 16KB)
   - 17 critical documentation fixes
-  - Date: 2026-01-01, Version: 0.6.0-alpha
+  - Date: 2026-01-01, Version: 0.9.0-alpha
   - Changes: 273 insertions, 350 deletions, 16 files
   - Status: ✅ Complete
 
@@ -169,7 +169,7 @@ Session summaries, completion reports, and implementation documentation.
 - **Bug Fix Reports**: 2 files (32KB)
 - **Implementation Reports**: 8 files (128KB)
 - **Date Range**: 2026-01-01 to 2026-01-06
-- **Project Version**: 0.6.0-alpha to 0.7.0-alpha
+- **Project Version**: 0.9.0-alpha to 0.9.0-alpha
 
 ---
 

@@ -21,7 +21,7 @@ import { log, warn, error } from '../utils/logger.js';
  * - Handles error scenarios gracefully
  * 
  * @class SpeechController
- * @since 0.8.4-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  * 
  * @example

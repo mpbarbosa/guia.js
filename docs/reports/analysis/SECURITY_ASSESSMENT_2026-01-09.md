@@ -213,7 +213,7 @@ npm audit
 - ⚠️ Jest 29→30 might have breaking changes
 - ⚠️ Need to re-test everything
 
-**When to do**: Before next release (v0.8.0)
+**When to do**: Before next release (v0.9.0)
 
 ---
 
@@ -319,7 +319,7 @@ npm audit fix
 
 ---
 
-### Short Term (Next release - v0.8.0)
+### Short Term (Next release - v0.9.0)
 
 **Action**: Clean install to fix lockfile drift
 
@@ -381,4 +381,4 @@ cat node_modules/[package]/package.json | grep version
 **Security Status**: ✅ **SECURE**  
 **Actual Vulnerabilities**: 0 (both are false positives)  
 **Immediate Action**: None required  
-**Next Action**: Fix lockfile during v0.8.0 release cycle
+**Next Action**: Fix lockfile during v0.9.0 release cycle

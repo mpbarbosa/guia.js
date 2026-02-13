@@ -324,7 +324,7 @@ All changes are **backward compatible**:
 ✅ All public method signatures remain unchanged  
 ✅ No breaking changes to existing consumers
 
-## Race Condition Protection (Added in 0.8.6-alpha)
+## Race Condition Protection (Added in 0.9.0-alpha)
 
 ### Problem
 
@@ -369,7 +369,7 @@ New test suite: `GeolocationService.raceCondition.test.js` (9 tests)
 - ✅ Error type verification
 - ✅ Privacy-conscious logging
 
-## Privacy and Security Improvements (Added in 0.8.6-alpha)
+## Privacy and Security Improvements (Added in 0.9.0-alpha)
 
 ### Problem
 
@@ -517,12 +517,12 @@ This refactoring follows the same principles as the `GeoPosition` class refactor
 
 ## Version History
 
-- **0.8.5-alpha** (2025-10-11): Refactored for referential transparency
+- **0.9.0-alpha** (2025-10-11): Refactored for referential transparency
   - Added 6 pure helper functions
   - Added dependency injection support
   - Added 37 comprehensive tests
   - Isolated side effects in minimal methods
-- **0.8.3-alpha**: Initial implementation with mixed concerns
+- **0.9.0-alpha**: Initial implementation with mixed concerns
 
 ## Conclusion
 

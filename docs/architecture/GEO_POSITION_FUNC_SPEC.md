@@ -525,7 +525,7 @@ Missing coordinates:
 
 ## Version History
 
-- **Version 0.6.0-alpha**: Referentially transparent implementation
+- **Version 0.9.0-alpha**: Referentially transparent implementation
   - **Breaking change**: Removed accuracy setter (immutability)
   - **Breaking change**: Constructor no longer mutates input objects
   - **Breaking change**: Constructor no longer logs (pure function)

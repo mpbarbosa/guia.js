@@ -31,6 +31,44 @@ structure:
   static_assets:
     - src/index.html
     - src/favicon.ico
+
+# Workflow Step Configuration
+workflow:
+  steps:
+    # Pre-Flight Phase (0x)
+    - id: "0a"
+      name: "Version Pre-Update"
+      file: "version_update.sh"
+      description: "Pre-increment version for development cycle"
+      phase: "pre-flight"
+      can_parallelize: false
+      
+    - id: "0b"
+      name: "Bootstrap Documentation"
+      file: "bootstrap_docs.sh"
+      description: "Generate initial documentation from scratch"
+      phase: "pre-flight"
+      can_parallelize: false
+      dependencies: ["0a"]
+      ai_persona: "technical_writer"
+      
+    - id: "0c"
+      name: "Requirements Analysis"
+      file: "requirements_analysis.sh"
+      description: "Analyze and generate requirements documentation"
+      phase: "pre-flight"
+      can_parallelize: false
+      dependencies: ["0b"]
+      ai_persona: "requirements_engineer"
+      
+    - id: "00"
+      name: "Pre-Analysis"
+      file: "pre_analysis.sh"
+      description: "Analyze project structure and changes"
+      phase: "pre-flight"
+      can_parallelize: false
+      dependencies: ["0c"]
+
 spa:
   routes:
     - path: "/"

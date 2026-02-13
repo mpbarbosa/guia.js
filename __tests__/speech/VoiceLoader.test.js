@@ -163,7 +163,7 @@ describe('VoiceLoader', () => {
             const loader = new VoiceLoader({ speechSynthesis: null });
             
             await expect(loader.loadVoices()).rejects.toThrow(
-                'Speech synthesis not available'
+                'Speech synthesis not available (browser environment required)'
             );
         });
 

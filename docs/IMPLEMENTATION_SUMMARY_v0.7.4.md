@@ -1,4 +1,4 @@
-# Implementation Summary - Visual Hierarchy v0.7.4
+# Implementation Summary - Visual Hierarchy v0.9.0
 
 **Date**: 2026-01-03  
 **Implementation Time**: ~30 minutes  
@@ -16,11 +16,11 @@ Successfully inverted the visual prominence of location information (município/
 3. ✅ `tests/integration/run_visual_hierarchy_tests.sh` - 2.2 KB, executable
 4. ✅ `docs/VISUAL_HIERARCHY.md` - 8.0 KB, complete guide
 5. ✅ `docs/testing/VISUAL_HIERARCHY_TESTS.md` - 8.5 KB, test checklist
-6. ✅ `docs/CHANGELOG_v0.7.4.md` - 6.5 KB, detailed changelog
+6. ✅ `docs/CHANGELOG_v0.9.0.md` - 6.5 KB, detailed changelog
 
 ### Modified Files (3)
 1. ✅ `src/views/home.js` - Added CSS to styles array
-2. ✅ `src/index.html` - Version 0.7.3 → 0.7.4
+2. ✅ `src/index.html` - Version 0.9.0 → 0.9.0
 3. ✅ `docs/testing/INTEGRATION_TESTS.md` - Updated test documentation
 
 ### Total Impact
@@ -116,7 +116,7 @@ docs/testing/VISUAL_HIERARCHY_TESTS.md
 ```
 docs/
 ├── VISUAL_HIERARCHY.md          # Implementation guide
-├── CHANGELOG_v0.7.4.md          # Version changelog
+├── CHANGELOG_v0.9.0.md          # Version changelog
 └── testing/
     ├── VISUAL_HIERARCHY_TESTS.md # Manual test checklist
     └── INTEGRATION_TESTS.md      # Updated test suite docs
@@ -182,7 +182,7 @@ tests/integration/
 **Questions?** Check documentation:
 - Implementation: `docs/VISUAL_HIERARCHY.md`
 - Testing: `docs/testing/VISUAL_HIERARCHY_TESTS.md`
-- Changes: `docs/CHANGELOG_v0.7.4.md`
+- Changes: `docs/CHANGELOG_v0.9.0.md`
 
 **Issues?** Verify:
 1. CSS file loads in browser DevTools Network tab
@@ -197,5 +197,5 @@ tests/integration/
 **Ready for**: Code Review → Deployment
 
 **Date**: 2026-01-03  
-**Version**: 0.7.4  
+**Version**: 0.9.0  
 **Implemented by**: GitHub Copilot CLI

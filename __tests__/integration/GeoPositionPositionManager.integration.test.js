@@ -8,7 +8,7 @@
  * 
  * @jest-environment node
  * @author MP Barbosa
- * @since 0.8.5-alpha
+ * @since 0.9.0-alpha
  */
 
 import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';
@@ -73,7 +73,7 @@ try {
     console.warn('Could not load guia.js, some tests may be skipped:', error.message);
 }
 
-describe('GeoPosition and PositionManager Integration Tests (v0.8.5-alpha)', () => {
+describe('GeoPosition and PositionManager Integration Tests (v0.9.0-alpha)', () => {
     
     beforeEach(() => {
         // Reset singleton instance before each test

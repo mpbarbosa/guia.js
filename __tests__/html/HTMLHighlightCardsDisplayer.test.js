@@ -1,6 +1,6 @@
 /**
  * HTMLHighlightCardsDisplayer Unit Tests
- * Tests for município state abbreviation display feature (v0.8.7-alpha)
+ * Tests for município state abbreviation display feature (v0.9.0-alpha)
  * 
  * @jest-environment node
  */
@@ -38,7 +38,7 @@ describe('HTMLHighlightCardsDisplayer - Município State Abbreviation Display', 
         displayer = new HTMLHighlightCardsDisplayer(mockDocument);
     });
 
-    describe('Feature: Município with State Abbreviation (v0.8.7-alpha)', () => {
+    describe('Feature: Município with State Abbreviation (v0.9.0-alpha)', () => {
         test('should display município with state abbreviation when siglaUF is available', () => {
             const enderecoPadronizado = new BrazilianStandardAddress();
             enderecoPadronizado.municipio = 'Recife';

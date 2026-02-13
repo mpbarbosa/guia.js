@@ -5,7 +5,7 @@
  * observer pattern integration, and IBGE API integration.
  * 
  * @author Marcelo Pereira Barbosa
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  */
 
 import { jest } from '@jest/globals';

@@ -1,7 +1,7 @@
 /**
  * Onboarding Component
  * Manages first-time user experience and location permission flow
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  */
 
 import { showError } from '../utils/toast.js';

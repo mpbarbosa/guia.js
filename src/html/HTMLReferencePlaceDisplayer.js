@@ -6,7 +6,7 @@ import { ADDRESS_FETCHED_EVENT, NO_REFERENCE_PLACE } from "../config/defaults.js
 
 /**
  * HTML-based reference place information displayer with Portuguese localization.
- * @version 0.7.1-alpha
+ * @version 0.9.0-alpha
  * 
  * This class handles the display of reference place information in HTML format,
  * including shopping centers, subway stations, cafes, and other points of interest.
@@ -35,7 +35,7 @@ import { ADDRESS_FETCHED_EVENT, NO_REFERENCE_PLACE } from "../config/defaults.js
  * ```
  * 
  * @class HTMLReferencePlaceDisplayer
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 class HTMLReferencePlaceDisplayer {
@@ -60,7 +60,7 @@ class HTMLReferencePlaceDisplayer {
 	 * const additionalElement = document.getElementById('reference-detail');
 	 * const displayer = new HTMLReferencePlaceDisplayer(mainElement, additionalElement);
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	constructor(element, referencePlaceDisplay = false) {
 		this.element = element;
@@ -91,7 +91,7 @@ class HTMLReferencePlaceDisplayer {
 	 * const html = displayer.renderReferencePlaceHtml(referencePlace);
 	 * // Returns: '<div class="reference-place-attributes">Shopping Center Shopping Morumbi</div>'
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	renderReferencePlaceHtml(referencePlace) {
 		if (!referencePlace) {
@@ -176,7 +176,7 @@ class HTMLReferencePlaceDisplayer {
 	 * // Manual update for testing
 	 * displayer.update(rawData, standardizedAddress, 'strCurrPosUpdate', false, null);
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	update(addressData, brazilianStandardAddress, posEvent, loading, error) {
 		// Log update for debugging (following MP Barbosa logging standards)
@@ -230,7 +230,7 @@ class HTMLReferencePlaceDisplayer {
 	 * log(displayer.toString());
 	 * // Output: "HTMLReferencePlaceDisplayer: reference-place-display"
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	toString() {
 		return `${this.constructor.name}: ${this.element.id || 'no-id'}`;

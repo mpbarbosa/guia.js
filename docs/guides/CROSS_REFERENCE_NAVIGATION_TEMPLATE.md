@@ -242,7 +242,7 @@ Category: Testing
 ### Testing Resources
 - [Test Infrastructure](./TEST_INFRASTRUCTURE.md) - Test execution and coverage
 - [E2E Test Scenarios](../E2E_TEST_SCENARIO_MUNICIPIO_BAIRRO.md) - Example scenarios
-- [Testing HTML Generation](../TESTING_HTML_GENERATION.md) - Component testing
+- [Testing HTML Generation](../testing/HTML_GENERATION.md) - Component testing
 
 ### Development Guides
 - [Contributing Guidelines](../../.github/CONTRIBUTING.md) - How to contribute

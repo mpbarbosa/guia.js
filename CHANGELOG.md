@@ -9,10 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-## [0.8.7-alpha] - 2026-01-28
+## [0.9.0-alpha] - 2026-01-28
 
 ### Added
-- **Metropolitan Region Display (v0.8.7-alpha)**: Municipality highlight card now displays "Região Metropolitana" information for municipalities in metropolitan areas
+- **Metropolitan Region Display (v0.9.0-alpha)**: Municipality highlight card now displays "Região Metropolitana" information for municipalities in metropolitan areas
   - Displays between município label and municipality name with reduced visual prominence
   - Visual hierarchy: smaller font size (0.875rem) and lighter color (70% opacity)
   - Example: "Região Metropolitana do Recife" for Recife, Olinda, and other RMR municipalities
@@ -25,13 +25,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `__tests__/unit/HTMLHighlightCardsDisplayer-MetropolitanRegion.test.js`: 28 unit tests
     - `__tests__/e2e/metropolitan-region-display.e2e.test.js`: 4 E2E tests (Recife, São Paulo, non-metro, visual hierarchy)
   - Total: 77 new tests, all passing
-- **Município State Abbreviation Display (v0.8.7-alpha)**: Municipality highlight card now displays the state abbreviation alongside the município name (e.g., "Recife, PE" instead of just "Recife")
+- **Município State Abbreviation Display (v0.9.0-alpha)**: Municipality highlight card now displays the state abbreviation alongside the município name (e.g., "Recife, PE" instead of just "Recife")
   - Provides better geographic context for users
   - Fallback to município name only if state abbreviation is unavailable
   - Comprehensive test coverage with 42 unit tests covering all 26 Brazilian states
   - Documentation: `docs/FEATURE_MUNICIPIO_STATE_DISPLAY.md`
   - `__tests__/html/HTMLHighlightCardsDisplayer.test.js`: New unit test suite (42 tests)
-- `src/html/HTMLSidraDisplayer.js`: IBGE SIDRA data displayer (7,502 bytes, v0.7.2+)
+- `src/html/HTMLSidraDisplayer.js`: IBGE SIDRA data displayer (7,502 bytes, v0.9.0+)
 - `libs/sidra/tab6579_municipios.json`: IBGE municipality population data (190KB offline fallback)
 - `__tests__/unit/HTMLSidraDisplayer.test.js`: Comprehensive test suite for SIDRA displayer
 - `__tests__/e2e/complete-address-validation.e2e.test.js`: Complete address data validation E2E test
@@ -43,30 +43,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Code quality improvement plan documentation
 
 ### Changed
-- **`BrazilianStandardAddress` (v0.8.7-alpha)**: Added `regiaoMetropolitana` property and `regiaoMetropolitanaFormatada()` method
+- **`BrazilianStandardAddress` (v0.9.0-alpha)**: Added `regiaoMetropolitana` property and `regiaoMetropolitanaFormatada()` method
   - Stores metropolitan region information from Nominatim API
   - Returns formatted region name or empty string
   - Follows same pattern as `bairroCompleto()` method
-- **`AddressExtractor` (v0.8.7-alpha)**: Now extracts metropolitan region from `address.county` field
+- **`AddressExtractor` (v0.9.0-alpha)**: Now extracts metropolitan region from `address.county` field
   - Maps Nominatim `county` field to `enderecoPadronizado.regiaoMetropolitana`
   - Supports Brazilian metropolitan regions (Recife, São Paulo, Rio de Janeiro, etc.)
   - Falls back to null when county field is missing
-- **`HTMLHighlightCardsDisplayer` (v0.8.7-alpha)**: Updated to display metropolitan region in municipality card
+- **`HTMLHighlightCardsDisplayer` (v0.9.0-alpha)**: Updated to display metropolitan region in municipality card
   - Added `_regiaoMetropolitanaElement` reference in constructor
   - Displays region between label and municipality value
   - Updates `regiao-metropolitana-value` DOM element
   - Calls `regiaoMetropolitanaFormatada()` method
-- **`src/index.html` (v0.8.7-alpha)**: Added `<div id="regiao-metropolitana-value">` element in municipality card
+- **`src/index.html` (v0.9.0-alpha)**: Added `<div id="regiao-metropolitana-value">` element in municipality card
   - Positioned between município label and value for correct visual hierarchy
   - Includes `aria-live="polite"` for screen reader support
-- **`src/highlight-cards.css` (v0.8.7-alpha)**: Added `.metropolitan-region-value` styling
+- **`src/highlight-cards.css` (v0.9.0-alpha)**: Added `.metropolitan-region-value` styling
   - Font size: 0.875rem (87.5% of base, smaller than municipality)
   - Opacity: 0.7 (70%, lighter than municipality)
   - Margin: 8px top, 12px bottom for visual separation
-- **`HTMLHighlightCardsDisplayer` (v0.8.7-alpha)**: Updated to use `municipioCompleto()` method instead of direct `municipio` property access
+- **`HTMLHighlightCardsDisplayer` (v0.9.0-alpha)**: Updated to use `municipioCompleto()` method instead of direct `municipio` property access
   - Displays município with state abbreviation format: "City, ST"
   - Maintains backwards compatibility with graceful fallback
-- **E2E test expectations (v0.8.7-alpha)**: Updated assertions to match new município display format
+- **E2E test expectations (v0.9.0-alpha)**: Updated assertions to match new município display format
   - `__tests__/e2e/municipio-bairro-simple.e2e.test.js`: Updated to expect "Arapiraca, AL"
   - `__tests__/e2e/municipio-bairro-display.e2e.test.js`: Updated TEST_COORDINATES constant
 - `DisplayerFactory`: Now creates 5 displayer types (added Sidra displayer factory method)
@@ -97,7 +97,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated `.github/copilot-instructions.md` with UI architecture section
 - Added CHANGELOG.md for tracking project changes
 
-## [0.7.1-alpha] - 2026-01-11
+## [0.9.0-alpha] - 2026-01-11
 
 ### Added
 - Municipio/bairro display fix
@@ -107,7 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Bairro card not updating when changing neighborhoods
 
-## [0.7.0-alpha] - 2025-12-XX
+## [0.9.0-alpha] - 2025-12-XX
 
 Initial release with guia.js integration.
 
@@ -122,10 +122,10 @@ Initial release with guia.js integration.
 
 ---
 
-[Unreleased]: https://github.com/mpbarbosa/guia_turistico/compare/v0.8.7-alpha...HEAD
-[0.8.7-alpha]: https://github.com/mpbarbosa/guia_turistico/compare/v0.6.0-alpha...v0.8.7-alpha
-[0.7.1-alpha]: https://github.com/mpbarbosa/guia_turistico/compare/v0.7.0-alpha...v0.7.1-alpha
-[0.7.0-alpha]: https://github.com/mpbarbosa/guia_turistico/compare/v0.6.0-alpha...v0.7.0-alpha
+[Unreleased]: https://github.com/mpbarbosa/guia_turistico/compare/v0.9.0-alpha...HEAD
+[0.9.0-alpha]: https://github.com/mpbarbosa/guia_turistico/compare/v0.6.0-alpha...v0.9.0-alpha
+[0.9.0-alpha]: https://github.com/mpbarbosa/guia_turistico/compare/v0.9.0-alpha...v0.9.0-alpha
+[0.9.0-alpha]: https://github.com/mpbarbosa/guia_turistico/compare/v0.6.0-alpha...v0.9.0-alpha
 
 ---
 

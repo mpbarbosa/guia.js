@@ -525,6 +525,6 @@ it('should call mocked function', async () => {
 
 ---
 
-**Version**: 0.6.0-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-01-01  
 **Test Coverage**: 63 E2E tests across 5 test files

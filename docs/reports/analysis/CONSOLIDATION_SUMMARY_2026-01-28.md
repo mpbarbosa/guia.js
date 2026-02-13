@@ -92,12 +92,12 @@ Use archived files only when you need:
 ## Evolution Highlights
 
 ### Version Progression
-- 2026-01-09: 0.6.0-alpha → 0.7.0-alpha (issue identified)
-- 2026-01-10: 0.7.0-alpha (partially updated)
-- 2026-01-14: 0.7.1-alpha (critical mismatch found)
-- 2026-01-24: 0.7.1-alpha (stable)
-- 2026-01-27: v0.8.7-alpha documented (unreleased)
-- 2026-01-28: **0.8.7-alpha** (fully aligned) ✅
+- 2026-01-09: 0.9.0-alpha → 0.9.0-alpha (issue identified)
+- 2026-01-10: 0.9.0-alpha (partially updated)
+- 2026-01-14: 0.9.0-alpha (critical mismatch found)
+- 2026-01-24: 0.9.0-alpha (stable)
+- 2026-01-27: v0.9.0-alpha documented (unreleased)
+- 2026-01-28: **0.9.0-alpha** (fully aligned) ✅
 
 ### Test Count Progression
 - 2026-01-09: 1,282 passing / 1,399 total

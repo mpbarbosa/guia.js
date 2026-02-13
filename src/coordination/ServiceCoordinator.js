@@ -2,7 +2,7 @@
 
 /**
  * ServiceCoordinator - Manages services, observers, and displayers
- * @version 0.7.1-alpha
+ * @version 0.9.0-alpha
  * 
  * @fileoverview Handles all service-level coordination for WebGeocodingManager.
  * This class is responsible for managing geolocation services, reverse geocoding,
@@ -17,7 +17,7 @@
  * - Resource Management: Handles service cleanup properly
  * 
  * @module coordination/ServiceCoordinator
- * @since 0.7.1-alpha - Phase 1: WebGeocodingManager refactoring
+ * @since 0.9.0-alpha - Phase 1: WebGeocodingManager refactoring
  * @author Marcelo Pereira Barbosa
  * 
  * @requires core/PositionManager
@@ -158,7 +158,7 @@ class ServiceCoordinator {
      * Needed for testing and backward compatibility.
      * 
      * @returns {GeolocationService} The geolocation service instance
-     * @since 0.8.4-alpha
+     * @since 0.9.0-alpha
      */
     get geolocationService() {
         return this._geolocationService;

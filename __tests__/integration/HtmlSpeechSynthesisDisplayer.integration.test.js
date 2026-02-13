@@ -16,7 +16,7 @@
  * - Performance considerations and memory management
  * - Edge cases in production-like environments
  * 
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -280,7 +280,7 @@ class TestBrazilianStandardAddress {
 
 // TODO: DOM testing not yet implemented
 // Consider happy-dom (84% smaller, better ES module support) when enabling these tests
-describe.skip('HtmlSpeechSynthesisDisplayer Integration Tests - MP Barbosa Travel Guide (v0.8.3-alpha)', () => {
+describe.skip('HtmlSpeechSynthesisDisplayer Integration Tests - MP Barbosa Travel Guide (v0.9.0-alpha)', () => {
     let displayer;
     let elementIds;
 

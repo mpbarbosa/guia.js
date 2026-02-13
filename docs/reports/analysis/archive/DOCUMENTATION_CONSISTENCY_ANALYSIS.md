@@ -11,7 +11,7 @@
 
 ## Executive Summary
 
-The Guia Turístico project has **comprehensive but inconsistent documentation** across 1,035 markdown files. Critical issues include **version mismatches** (0.6.0-alpha vs 0.7.0-alpha), **outdated test counts** (1,251 passing vs actual 1,282 passing), and **broken repository references** pointing to the wrong GitHub repository (guia_js vs guia_turistico). The project demonstrates strong documentation practices with detailed guides for contributors, but requires immediate attention to version alignment and cross-reference accuracy.
+The Guia Turístico project has **comprehensive but inconsistent documentation** across 1,035 markdown files. Critical issues include **version mismatches** (0.9.0-alpha vs 0.9.0-alpha), **outdated test counts** (1,251 passing vs actual 1,282 passing), and **broken repository references** pointing to the wrong GitHub repository (guia_js vs guia_turistico). The project demonstrates strong documentation practices with detailed guides for contributors, but requires immediate attention to version alignment and cross-reference accuracy.
 
 **Priority Actions**: Update version numbers in CONTRIBUTING.md (line 488), fix test counts in README.md, and correct repository references in issue creation guides.
 
@@ -24,30 +24,30 @@ The Guia Turístico project has **comprehensive but inconsistent documentation**
 **Impact**: Misleading information about project status
 
 **Problem**: Version inconsistency between documentation files
-- **package.json**: `0.7.0-alpha` (canonical source) ✅
-- **.github/CONTRIBUTING.md** line 488: `0.6.0-alpha` ❌
+- **package.json**: `0.9.0-alpha` (canonical source) ✅
+- **.github/CONTRIBUTING.md** line 488: `0.9.0-alpha` ❌
 - **Multiple docs files**: Mixed references to both versions (66 occurrences)
-- **src/app.js** line 47: `0.7.0-alpha` ✅
+- **src/app.js** line 47: `0.9.0-alpha` ✅
 
 **Files Affected**:
-- `.github/CONTRIBUTING.md` - Line 488: "**Version**: 0.6.0-alpha"
-- `docs/TESTING_HTML_GENERATION.md` - Line 3: "guia_js v0.6.0-alpha"
+- `.github/CONTRIBUTING.md` - Line 488: "**Version**: 0.9.0-alpha"
+- `docs/TESTING_HTML_GENERATION.md` - Line 3: "guia_js v0.9.0-alpha"
 - 66 additional documentation files with version references
 
 **Recommended Fix**:
 ```markdown
 # In .github/CONTRIBUTING.md line 488
-- **Version**: 0.6.0-alpha
-+ **Version**: 0.7.0-alpha
+- **Version**: 0.9.0-alpha
++ **Version**: 0.9.0-alpha
 
 # In docs/TESTING_HTML_GENERATION.md line 3
-- **Project**: guia_js v0.6.0-alpha
-+ **Project**: guia_turistico v0.7.0-alpha
+- **Project**: guia_js v0.9.0-alpha
++ **Project**: guia_turistico v0.9.0-alpha
 ```
 
 **Action Required**: 
-1. Update CONTRIBUTING.md version to 0.7.0-alpha
-2. Run global search-replace for "0.6.0-alpha" → "0.7.0-alpha" in docs/
+1. Update CONTRIBUTING.md version to 0.9.0-alpha
+2. Run global search-replace for "0.9.0-alpha" → "0.9.0-alpha" in docs/
 3. Verify all version references align with package.json
 
 ---
@@ -207,7 +207,7 @@ function example() {
  * @param {Document} document - DOM document object
  * @param {string} elementId - Root element ID for manager
  * @returns {WebGeocodingManager} Manager instance
- * @since 0.7.0-alpha
+ * @since 0.9.0-alpha
  * @example
  * const manager = new WebGeocodingManager(document, 'app-root');
  */
@@ -611,7 +611,7 @@ Add to GitHub Actions workflow:
 ## Recommended Action Plan
 
 ### Immediate Actions (This Week)
-1. ✅ Update CONTRIBUTING.md version to 0.7.0-alpha (line 488)
+1. ✅ Update CONTRIBUTING.md version to 0.9.0-alpha (line 488)
 2. ✅ Update README.md test counts (4 locations)
 3. ✅ Fix repository references in docs/issue-189/ (5 locations)
 4. ✅ Update TESTING.md badge to reflect actual counts
@@ -619,7 +619,7 @@ Add to GitHub Actions workflow:
 **Estimated Time**: 2 hours
 
 ### Short-Term Actions (This Month)
-1. Run global version update: `0.6.0-alpha` → `0.7.0-alpha` in docs/
+1. Run global version update: `0.9.0-alpha` → `0.9.0-alpha` in docs/
 2. Add JSDoc to src/guia.js exported functions
 3. Consolidate testing documentation (remove duplicates)
 4. Add dependency architecture diagram to README.md
@@ -688,7 +688,7 @@ The Guia Turístico project demonstrates **excellent documentation practices** w
 - ✅ Good use of issue templates
 
 **Areas for Improvement**:
-- ⚠️ Version number alignment (0.6.0 → 0.7.0)
+- ⚠️ Version number alignment (0.9.0 → 0.9.0)
 - ⚠️ Test count accuracy (1,251 → 1,282)
 - ⚠️ Repository reference corrections
 - ⚠️ JSDoc coverage enforcement

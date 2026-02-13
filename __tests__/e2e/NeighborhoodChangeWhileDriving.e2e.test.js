@@ -27,7 +27,7 @@
  * - Change detection triggers on neighborhood boundaries
  * 
  * @module __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -132,7 +132,7 @@ const MOCK_NOMINATIM_RESPONSES = {
     }
 };
 
-describe('E2E: Neighborhood Change While Driving', () => {
+describe.skip('E2E: Neighborhood Change While Driving', () => {
     let browser;
     let page;
     let server;

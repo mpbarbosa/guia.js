@@ -10,7 +10,7 @@ import { log, warn, error } from '../utils/logger.js';
  * specialized components with clear, focused responsibilities.
  * 
  * @module data/AddressDataExtractor
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -33,7 +33,7 @@ import AddressCache from './AddressCache.js';
  * 
  * @class AddressDataExtractor
  * @deprecated Use AddressCache for cache operations and AddressExtractor for extraction
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  * 
  * @example
@@ -185,7 +185,7 @@ class AddressDataExtractor {
 	 * Returns a string representation of this extractor.
 	 * 
 	 * @returns {string} String representation
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	toString() {
 		return `${this.constructor.name}: ${this.enderecoPadronizado.enderecoCompleto()}`;

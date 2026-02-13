@@ -18,7 +18,7 @@ The Guia Turístico project demonstrates **strong documentation practices** with
 **Key Findings**:
 
 - ✅ **Strengths**: 44 comprehensive .github guides, clear contribution guidelines, detailed architecture documentation
-- ⚠️ **Critical Issues**: Outdated test counts (1,301 vs 1,516 passing), version mismatches (0.6.0 vs 0.7.0), broken reference patterns in 11 files
+- ⚠️ **Critical Issues**: Outdated test counts (1,301 vs 1,516 passing), version mismatches (0.9.0 vs 0.9.0), broken reference patterns in 11 files
 - 📊 **Documentation Quality**: 88 version references tracked, 34 files using outdated project name "guia_js"
 - 🎯 **Impact**: Medium - Documentation remains functional but contains misleading metrics and references
 
@@ -125,29 +125,29 @@ docs/misc/PROJECT_CLARIFICATION.md:
 ### 3. Version Number Inconsistency - **HIGH**
 **Priority**: ⚠️ HIGH  
 **Impact**: Confusion about project version history  
-**Severity**: Medium - Mix of correct (0.7.0-alpha) and outdated (0.6.0-alpha) references
+**Severity**: Medium - Mix of correct (0.9.0-alpha) and outdated (0.9.0-alpha) references
 
-**Problem**: Documentation contains **88 version references** with **mixed versions** (0.6.0-alpha and 0.7.0-alpha).
+**Problem**: Documentation contains **88 version references** with **mixed versions** (0.9.0-alpha and 0.9.0-alpha).
 
 **Evidence**:
 ```bash
 # Current version (package.json)
-"version": "0.7.0-alpha"  ✅ CANONICAL
+"version": "0.9.0-alpha"  ✅ CANONICAL
 
 # Correct references (examples)
-.github/CONTRIBUTING.md line 488: "0.7.0-alpha" ✅
-README.md badge: "v0.7.0-alpha" ✅
-DOCUMENTATION_AUDIT_2026-01-10.md: "v0.7.0-alpha" ✅
+.github/CONTRIBUTING.md line 488: "0.9.0-alpha" ✅
+README.md badge: "v0.9.0-alpha" ✅
+DOCUMENTATION_AUDIT_2026-01-10.md: "v0.9.0-alpha" ✅
 
 # Outdated references requiring updates
-docs/TESTING_HTML_GENERATION.md line 3: "guia_js v0.6.0-alpha" ❌
-docs/class-extraction/CLASS_LOCATION_GUIDE.md line 222: "0.6.0-alpha" ❌
-docs/INDEX.md line 699: "0.6.0-alpha (unstable development)" ❌
-docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md line 3: "0.6.0-alpha" ❌
+docs/TESTING_HTML_GENERATION.md line 3: "guia_js v0.9.0-alpha" ❌
+docs/class-extraction/CLASS_LOCATION_GUIDE.md line 222: "0.9.0-alpha" ❌
+docs/INDEX.md line 699: "0.9.0-alpha (unstable development)" ❌
+docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md line 3: "0.9.0-alpha" ❌
 
 # Historical references (KEEP AS-IS - correct historical context)
-docs/architecture/GEO_POSITION.md line 400: "version 0.6.0-alpha" ✅ Historical
-docs/architecture/POSITION_MANAGER.md line 5: "Introduced in version 0.6.0-alpha" ✅ Historical
+docs/architecture/GEO_POSITION.md line 400: "version 0.9.0-alpha" ✅ Historical
+docs/architecture/POSITION_MANAGER.md line 5: "Introduced in version 0.9.0-alpha" ✅ Historical
 ```
 
 **Files Requiring Updates**:
@@ -157,32 +157,32 @@ docs/architecture/POSITION_MANAGER.md line 5: "Introduced in version 0.6.0-alpha
 4. `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md` line 3 - Document version
 
 **Files with CORRECT Historical References** (do not change):
-- `docs/architecture/GEO_POSITION.md` - "Introduced in version 0.6.0-alpha"
-- `docs/architecture/POSITION_MANAGER.md` - "Introduced in version 0.6.0-alpha"
+- `docs/architecture/GEO_POSITION.md` - "Introduced in version 0.9.0-alpha"
+- `docs/architecture/POSITION_MANAGER.md` - "Introduced in version 0.9.0-alpha"
 - `docs/architecture/WEB_GEOCODING_MANAGER.md` - Historical context
 
 **Recommended Fix**:
 ```markdown
 # docs/TESTING_HTML_GENERATION.md line 3
-- **Project**: guia_js v0.6.0-alpha
-+ **Project**: Guia Turístico v0.7.0-alpha
+- **Project**: guia_js v0.9.0-alpha
++ **Project**: Guia Turístico v0.9.0-alpha
 
 # docs/class-extraction/CLASS_LOCATION_GUIDE.md line 222
-- **Version**: 0.6.0-alpha
-+ **Version**: 0.7.0-alpha
+- **Version**: 0.9.0-alpha
++ **Version**: 0.9.0-alpha
 
 # docs/INDEX.md line 699
-- **Version**: 0.6.0-alpha (unstable development)
-+ **Version**: 0.7.0-alpha (active development)
+- **Version**: 0.9.0-alpha (unstable development)
++ **Version**: 0.9.0-alpha (active development)
 
 # docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md line 3
-- **Version**: 0.6.0-alpha
-+ **Version**: 0.7.0-alpha
+- **Version**: 0.9.0-alpha
++ **Version**: 0.9.0-alpha
 ```
 
 **Action Required**:
-1. Update 4 files with outdated version references to 0.7.0-alpha
-2. **DO NOT** change historical references (e.g., "Introduced in version 0.6.0-alpha")
+1. Update 4 files with outdated version references to 0.9.0-alpha
+2. **DO NOT** change historical references (e.g., "Introduced in version 0.9.0-alpha")
 3. Add "Last Updated: 2026-01-10" to changed files
 4. Verify version consistency with `grep -r "0\.6\.0" docs/ | grep -v "Introduced\|Historical"`
 
@@ -296,16 +296,16 @@ Line 427: See [TDD_GUIDE.md](./TDD_GUIDE.md)  ✅ File exists
 **Impact**: Users may reference wrong CDN versions  
 **Severity**: Low - Examples work but show outdated version
 
-**Problem**: README.md contains CDN examples referencing **0.6.0-alpha** and **0.6.1-alpha** instead of current **0.7.0-alpha**.
+**Problem**: README.md contains CDN examples referencing **0.9.0-alpha** and **0.9.0-alpha** instead of current **0.9.0-alpha**.
 
 **Evidence**:
 ```markdown
 # README.md CDN examples
-Line 560: curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"
-Line 626: curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.1-alpha/package.json"
+Line 560: curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js"
+Line 626: curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/package.json"
 
 # Should reference current version
-+ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.0-alpha/src/guia.js"
++ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js"
 ```
 
 **Files Affected**:
@@ -314,17 +314,17 @@ Line 626: curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.1-alpha/pac
 **Recommended Fix**:
 ```markdown
 # README.md CDN examples
-- curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js"
-+ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.0-alpha/src/guia.js"
+- curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js"
++ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js"
 
-- curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.1-alpha/package.json"
-+ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.7.0-alpha/package.json"
+- curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/package.json"
++ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/package.json"
 ```
 
 **Action Required**:
-1. Update CDN examples to 0.7.0-alpha
+1. Update CDN examples to 0.9.0-alpha
 2. Add note about version-specific vs latest CDN URLs
-3. Verify CDN availability for 0.7.0-alpha release
+3. Verify CDN availability for 0.9.0-alpha release
 4. Update `cdn-urls.txt` if outdated
 
 ---
@@ -483,32 +483,32 @@ See `src/core/GeoPosition.js` for excellent JSDoc examples:
 **Impact**: Historical context unclear  
 **Severity**: Low - Mix of current and historical version references
 
-**Problem**: Architecture docs correctly reference "Introduced in version 0.6.0-alpha" but lack current version context.
+**Problem**: Architecture docs correctly reference "Introduced in version 0.9.0-alpha" but lack current version context.
 
 **Evidence**:
 ```markdown
 # Correct historical references (KEEP THESE)
 docs/architecture/POSITION_MANAGER.md:
-  "Introduced in version 0.6.0-alpha"  ✅ Historical context
+  "Introduced in version 0.9.0-alpha"  ✅ Historical context
 
 docs/architecture/GEO_POSITION.md:
-  "As of version 0.6.0-alpha"  ⚠️ Implies outdated
+  "As of version 0.9.0-alpha"  ⚠️ Implies outdated
 
 # Recommended addition
 docs/architecture/POSITION_MANAGER.md:
-  "Introduced in version 0.6.0-alpha, stable in 0.7.0-alpha"  ✅ Clear progression
+  "Introduced in version 0.9.0-alpha, stable in 0.9.0-alpha"  ✅ Clear progression
 ```
 
 **Recommended Fix**:
 ```markdown
 # Add version progression notes
-- Introduced in version 0.6.0-alpha
-+ Introduced in version 0.6.0-alpha, enhanced in 0.7.0-alpha with [feature details]
+- Introduced in version 0.9.0-alpha
++ Introduced in version 0.9.0-alpha, enhanced in 0.9.0-alpha with [feature details]
 
 # Add "Current Status" sections
 ## Version History
-- **0.6.0-alpha**: Initial implementation with basic singleton pattern
-- **0.7.0-alpha** (current): Refactored with improved observer pattern, added X feature
+- **0.9.0-alpha**: Initial implementation with basic singleton pattern
+- **0.9.0-alpha** (current): Refactored with improved observer pattern, added X feature
 ```
 
 **Action Required**:
@@ -656,7 +656,7 @@ npm run test:all
 ### Immediate Actions (This Week)
 1. ✅ **Update test counts** in copilot-instructions.md (5 locations) and README.md
 2. ✅ **Fix version references** in 4 key documentation files
-3. ✅ **Update CDN examples** to 0.7.0-alpha
+3. ✅ **Update CDN examples** to 0.9.0-alpha
 4. ✅ **Clarify broken references** as valid code examples (update detection script)
 5. ✅ **Fix README.md structure** section with correct project name
 
@@ -715,4 +715,4 @@ The Guia Turístico project demonstrates **strong documentation practices** with
 
 **Report Generated**: 2026-01-10  
 **Analysis Method**: Comprehensive consistency analysis across 209 documentation files  
-**Next Review**: Recommended after 0.8.0 release or quarterly (2026-04-10)
+**Next Review**: Recommended after 0.9.0 release or quarterly (2026-04-10)

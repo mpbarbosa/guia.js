@@ -85,16 +85,23 @@
         </p>
       </div>
       <div class="geolocation-banner-actions">
-        <button class="btn-primary" onclick="window.GeolocationBanner.requestPermission()">
+        <button class="btn-primary">
           Permitir
         </button>
-        <button class="btn-secondary" onclick="window.GeolocationBanner.dismiss()">
+        <button class="btn-secondary">
           Agora Não
         </button>
       </div>
     `;
     
     document.body.appendChild(banner);
+    
+    // Attach event listeners (CSP-compliant)
+    const allowBtn = banner.querySelector('.btn-primary');
+    const dismissBtn = banner.querySelector('.btn-secondary');
+    
+    allowBtn.addEventListener('click', requestPermission);
+    dismissBtn.addEventListener('click', dismissBanner);
   }
 
   /**
@@ -230,7 +237,7 @@
      * Clears all pending timeouts (banner/toast animations).
      * Useful in test environments.
      * 
-     * @since 0.8.7-alpha
+     * @since 0.9.0-alpha
      */
     destroy: function() {
       activeTimeouts.forEach(timeoutId => clearTimeout(timeoutId));

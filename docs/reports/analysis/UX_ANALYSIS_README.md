@@ -1,4 +1,4 @@
-# 🎨 UX/UI Analysis Report - Guia Turístico v0.8.7-alpha
+# 🎨 UX/UI Analysis Report - Guia Turístico v0.9.0-alpha
 
 **Analysis Date**: 2026-02-11  
 **Analyst Role**: Senior UI/UX Designer  

@@ -31,9 +31,9 @@ Choose your path based on your role or goal:
 **Estimated time**: 3 hours reading + exploration
 
 ### 🧪 Testing & Quality
-1. Start: [TESTING.md](../TESTING.md) - Testing overview
+1. Start: [TESTING.md](./testing/TESTING.md) - Testing overview
 2. Then: [JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md) - Jest setup
-3. Next: [TESTING_HTML_GENERATION.md](./TESTING_HTML_GENERATION.md) - HTML testing  
+3. Next: [HTML_GENERATION.md](./testing/HTML_GENERATION.md) - HTML testing  
 4. Finally: [TDD_GUIDE.md](../.github/TDD_GUIDE.md) - TDD methodology
 
 **Estimated time**: 2 hours reading
@@ -47,7 +47,7 @@ Choose your path based on your role or goal:
 **Estimated time**: 1 hour + hands-on setup
 
 ### 🐛 Debugging & Troubleshooting
-1. Start: [TESTING.md](../TESTING.md#troubleshooting) - Common issues
+1. Start: [TESTING.md](./testing/TESTING.md#troubleshooting) - Common issues
 2. Then: [JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md) - Module issues
 3. Next: [FALSE_POSITIVE_PATTERNS.md](../.github/FALSE_POSITIVE_PATTERNS.md) - Tool errors
 4. Also: [CODE_PATTERN_DOCUMENTATION_GUIDE.md](./CODE_PATTERN_DOCUMENTATION_GUIDE.md) - Valid code patterns
@@ -88,9 +88,14 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - Integration with mpbarbosa.com personal website
   - Directory structure explanation (/src for library organization)
   - Historical context of restructuring commit
+  
+- **[PROJECT_CLARIFICATION.md](./PROJECT_CLARIFICATION.md)** - 📦 ARCHIVED: Historical clarifications (2026-01-06)
+  - Historical record of project identity confusion resolution
+  - Preserved for audit trail and AI tool reference
+  - See current docs: README.md, PROJECT_PURPOSE_AND_ARCHITECTURE.md
   - Development workflow and CDN distribution
   - **Source Directory Details**:
-    - **Views Module** (`/src/views/`) - SPA view components (v0.8.4+)
+    - **Views Module** (`/src/views/`) - SPA view components (v0.9.0+)
       - `home.js` - Main location tracking interface (495 lines)
       - `converter.js` - Coordinate converter utility (521 lines)
     - **Timing Module** (`/src/timing/`)
@@ -189,7 +194,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 
 ### Testing
 
-- **[TESTING.md](../TESTING.md)** - Automated testing documentation
+- **[TESTING.md](./testing/TESTING.md)** - Automated testing documentation
   - Test suite overview (1251 passing tests across 59 passing suites, 1399 total tests in 67 suites)
   - Coverage information (~70% of guia.js, 100% of guia_ibge.js, ~26% overall)
   - Running tests: `npm test`, `npm run test:coverage`
@@ -258,7 +263,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 
 ### Automation & CI/CD
 
-- **[WORKFLOW_SETUP.md](../WORKFLOW_SETUP.md)** - Complete workflow setup guide 🆕
+- **[WORKFLOW_SETUP.md](./WORKFLOW_SETUP.md)** - Complete workflow setup guide 🆕
   - Comprehensive GitHub Actions implementation
   - Smart test detection and execution
   - Automatic documentation updates
@@ -360,7 +365,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 
 ### Features
 
-#### Feature Documentation (v0.8.7-alpha)
+#### Feature Documentation (v0.9.0-alpha)
 
 - **[FEATURE_METROPOLITAN_REGION_DISPLAY.md](./FEATURE_METROPOLITAN_REGION_DISPLAY.md)** - Metropolitan Region Display 🆕
   - Municipality highlight cards show "Região Metropolitana" context
@@ -375,7 +380,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - 42 unit tests covering all 26 Brazilian states
   - State abbreviation extraction and validation
 
-- **[SIDRA_INTEGRATION.md](./SIDRA_INTEGRATION.md)** - IBGE SIDRA Data Integration (v0.7.2+)
+- **[SIDRA_INTEGRATION.md](./SIDRA_INTEGRATION.md)** - IBGE SIDRA Data Integration (v0.9.0+)
   - Population statistics display with HTMLSidraDisplayer
   - Brazilian Portuguese localization
   - Offline fallback support (libs/sidra/tab6579_municipios.json)
@@ -865,7 +870,7 @@ When creating issues, use these templates for consistency:
 3. **Learn testing**:
    - [UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md) - Unit testing fundamentals
    - [TDD_GUIDE.md](../.github/TDD_GUIDE.md) - Test-driven development workflow
-   - [TESTING.md](../TESTING.md) - Project test suite overview
+   - [TESTING.md](./testing/TESTING.md) - Project test suite overview
 
 4. **Development workflow**:
    ```bash

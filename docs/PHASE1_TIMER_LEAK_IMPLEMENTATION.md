@@ -68,7 +68,7 @@ constructor() {
  * test environments where instances are created and destroyed frequently.
  * 
  * @returns {void}
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  */
 destroy() {
     // Stop cleanup timer to prevent leak
@@ -153,7 +153,7 @@ class Chronometer {
  * the chronometer is no longer needed.
  * 
  * @returns {void}
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  * 
  * @example
  * const chronometer = new Chronometer(element);
@@ -248,7 +248,7 @@ class SpeechSynthesisManager {
  * cleanup of all resources and prevent memory/timer leaks.
  * 
  * @returns {void}
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  * 
  * @example
  * const speechManager = new SpeechSynthesisManager();

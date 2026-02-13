@@ -1,4 +1,4 @@
-# Documentation Audit Report - Guia Turístico v0.7.0-alpha
+# Documentation Audit Report - Guia Turístico v0.9.0-alpha
 **Date**: 2026-01-10  
 **Auditor**: GitHub Copilot CLI  
 **Standard**: JSDoc 3 with MDN Web Docs style  
@@ -223,7 +223,7 @@ export interface WebGeocodingManagerParams {
 ```json
 {
   "dependencies": {
-    "guia.js": "github:mpbarbosa/guia_js#v0.8.7-alpha",
+    "guia.js": "github:mpbarbosa/guia_js#v0.9.0-alpha",
     "ibira.js": "github:mpbarbosa/ibira.js#v1.2.0"
   }
 }
@@ -359,9 +359,9 @@ Or publish to npm with proper semantic versioning.
  * - **Immutability**: Uses Object.freeze on created displayers
  * 
  * @module coordination/WebGeocodingManager
- * @since 0.6.0-alpha - Initial WebGeocodingManager implementation
- * @since 0.8.6-alpha - Updated to use factory pattern for displayers
- * @since 0.8.7-alpha - Extracted to dedicated coordination module (Phase 16)
+ * @since 0.9.0-alpha - Initial WebGeocodingManager implementation
+ * @since 0.9.0-alpha - Updated to use factory pattern for displayers
+ * @since 0.9.0-alpha - Extracted to dedicated coordination module (Phase 16)
  * @author Marcelo Pereira Barbosa
  * 
  * @requires core/GeoPosition
@@ -483,7 +483,7 @@ async function fetchAddressWithRetry(latitude, longitude) { ... }
 ```json
 {
   "dependencies": {
-    "guia.js": "github:mpbarbosa/guia_js#v0.8.7-alpha",
+    "guia.js": "github:mpbarbosa/guia_js#v0.9.0-alpha",
     "ibira.js": "github:mpbarbosa/ibira.js#v1.2.0"
   }
 }
@@ -619,4 +619,4 @@ With these improvements, the documentation would achieve a **9.5/10** rating and
 **Audit Completed**: 2026-01-10  
 **Auditor**: GitHub Copilot CLI  
 **Standard**: JSDoc 3 with MDN Web Docs style  
-**Version**: Guia Turístico v0.7.0-alpha
+**Version**: Guia Turístico v0.9.0-alpha

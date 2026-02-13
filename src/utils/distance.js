@@ -8,7 +8,7 @@ import { log, warn, error } from './logger.js';
  * All functions are referentially transparent with no side effects.
  * 
  * @module utils/distance
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -49,7 +49,7 @@ export const EARTH_RADIUS_METERS = 6371e3;
  * @see {@link https://en.wikipedia.org/wiki/Haversine_formula} Haversine formula on Wikipedia
  * @see {@link https://www.movable-type.co.uk/scripts/latlong.html} Calculate distance, bearing and more
  * 
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 export const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -76,6 +76,6 @@ export const calculateDistance = (lat1, lon1, lat2, lon2) => {
  * @example
  * await delay(1000); // Wait 1 second
  * 
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  */
 export const delay = (ms) => new Promise((res) => setTimeout(res, ms));

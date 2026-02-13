@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `PositionManager` class is the central singleton for managing the current geographic position in the Guia.js application. Introduced in version 0.6.0-alpha, it wraps the browser's Geolocation API, implements sophisticated position validation and filtering rules, and provides an observer-based notification system for position changes. Following the Singleton and Observer design patterns, it ensures only one position state exists throughout the application while allowing multiple components to react to position updates.
+The `PositionManager` class is the central singleton for managing the current geographic position in the Guia.js application. Introduced in version 0.9.0-alpha, it wraps the browser's Geolocation API, implements sophisticated position validation and filtering rules, and provides an observer-based notification system for position changes. Following the Singleton and Observer design patterns, it ensures only one position state exists throughout the application while allowing multiple components to react to position updates.
 
 ## Motivation
 
@@ -307,7 +307,7 @@ Singleton instance holder. Only one PositionManager exists per application.
 
 **Type:** `PositionManager|null`  
 **Access:** Private (used internally by getInstance())  
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -321,7 +321,7 @@ Event string constant fired when position is successfully updated.
 
 **Type:** `string` (readonly)  
 **Value:** `"PositionManager updated"`  
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -335,7 +335,7 @@ Event string constant fired when position update is rejected due to validation r
 
 **Type:** `string` (readonly)  
 **Value:** `"PositionManager not updated"`  
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -349,7 +349,7 @@ Event string constant fired when position is successfully updated and must be im
 
 **Type:** `string` (readonly)  
 **Value:** `'Immediate address update'`  
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -393,7 +393,7 @@ const manager2 = PositionManager.getInstance();
 console.log(manager1 === manager2); // true
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -419,7 +419,7 @@ Initializes the position manager with empty observer list and optional initial p
 const manager = new PositionManager(geolocationPosition);
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -463,7 +463,7 @@ const myObserver = {
 PositionManager.getInstance().subscribe(myObserver);
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -488,7 +488,7 @@ manager.subscribe(myObserver);
 manager.unsubscribe(myObserver);
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -505,7 +505,7 @@ Called internally when position updates occur or are rejected. All subscribed ob
 
 **Access:** Private (internal use only)
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -573,7 +573,7 @@ navigator.geolocation.getCurrentPosition((position) => {
 **See Also:**
 - [MDN GeolocationPosition](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition)
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -600,7 +600,7 @@ console.log(emptyManager.toString());
 // Output: "PositionManager: No position data"
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -618,7 +618,7 @@ Gets the observers array for backward compatibility.
 
 **Access:** Private (internal use, delegates to ObserverSubject)
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -1092,11 +1092,11 @@ Side effects are isolated:
 
 This architecture makes it clear where side effects occur and enables testing coordination logic independently.
 
-## Current Status (v0.7.1-alpha)
+## Current Status (v0.9.0-alpha)
 
 **Implementation Status**: ✅ Stable and Production-Ready
 
-The `PositionManager` class has been stable since version 0.6.0-alpha with incremental enhancements through version 0.7.1-alpha (current). The singleton pattern and observer-based architecture have proven reliable with:
+The `PositionManager` class has been stable since version 0.9.0-alpha with incremental enhancements through version 0.9.0-alpha (current). The singleton pattern and observer-based architecture have proven reliable with:
 - ✅ 17+ comprehensive tests covering all functionality
 - ✅ 100% JSDoc coverage
 - ✅ Robust multi-layer validation (accuracy, distance, time thresholds)
@@ -1109,35 +1109,35 @@ The `PositionManager` class has been stable since version 0.6.0-alpha with incre
 ### Version Timeline
 
 ```
-0.6.0-alpha (October 2025)
+0.9.0-alpha (October 2025)
     └─> Initial PositionManager implementation
     └─> Singleton + Observer patterns
 
-0.7.0-alpha (January 3, 2026)
+0.9.0-alpha (January 3, 2026)
     └─> Stable, refinements to validation logic
 
-0.7.1-alpha (January 11, 2026) ← Current
+0.9.0-alpha (January 11, 2026) ← Current
     └─> Documentation updates, stable implementation
 
 0.8.x-alpha (Future)
     └─> Planned: Enhanced observer management
 ```
 
-### 0.7.1-alpha (January 11, 2026) - Current Version
+### 0.9.0-alpha (January 11, 2026) - Current Version
 - **Status**: Stable, no breaking changes
 - Documentation improvements and cross-references enhanced
 - JSDoc coverage verified at 100%
 - All tests passing (17 tests for PositionManager)
-- Maintained full compatibility with 0.6.0-alpha API
+- Maintained full compatibility with 0.9.0-alpha API
 
-### 0.7.0-alpha (January 3, 2026)
+### 0.9.0-alpha (January 3, 2026)
 - **Status**: Stable
 - Refined validation logic for position filtering
 - Enhanced distance threshold calculations
 - Improved event type handling (strCurrPosUpdate, strCurrPosNotUpdate, strImmediateAddressUpdate)
 - Maintained full backward compatibility
 
-### 0.6.0-alpha (October 2025) - Initial Implementation
+### 0.9.0-alpha (October 2025) - Initial Implementation
 - **Initial release**: Singleton pattern implementation
 - Observer pattern for subscriptions (subscribe/unsubscribe)
 - Multi-layer position validation
@@ -1189,5 +1189,5 @@ See repository root for license information.
 ---
 
 **Last Updated**: 2026-01-11  
-**Version**: 0.7.1-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Complete and up-to-date

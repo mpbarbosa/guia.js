@@ -365,4 +365,4 @@ The test suite is production-ready and provides comprehensive coverage of the Gu
 **Tests Added**: 76 E2E tests (all passing)  
 **Test Files**: 5 new test files + comprehensive documentation  
 **Execution Time**: ~1 second  
-**Version**: Guia.js 0.6.0-alpha
+**Version**: Guia.js 0.9.0-alpha

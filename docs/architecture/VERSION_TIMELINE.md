@@ -4,7 +4,7 @@
 
 This document provides a comprehensive timeline of architectural changes across versions of the Guia Turístico project. It helps developers understand when features were introduced, when breaking changes occurred, and the evolution of the codebase.
 
-**Current Version**: 0.8.7-alpha (February 9, 2026)
+**Current Version**: 0.9.0-alpha (February 9, 2026)
 
 ## Version Timeline Diagram
 
@@ -24,7 +24,7 @@ This document provides a comprehensive timeline of architectural changes across 
          │
          ↓
 
-0.6.0-alpha (October 11, 2025) ⭐ Major Milestone
+0.9.0-alpha (October 11, 2025) ⭐ Major Milestone
 ├── GeoPosition refactored to immutable/pure
 │   ├── ✅ Removed accuracy setter
 │   ├── ✅ Constructor no longer mutates inputs
@@ -46,7 +46,7 @@ This document provides a comprehensive timeline of architectural changes across 
          │
          ↓
 
-0.7.0-alpha (January 3, 2026)
+0.9.0-alpha (January 3, 2026)
 ├── Stable release - refinements only
 ├── Enhanced validation logic in PositionManager
 ├── Improved observer pattern integration
@@ -56,7 +56,7 @@ This document provides a comprehensive timeline of architectural changes across 
          │
          ↓
 
-0.7.1-alpha (January 11, 2026)
+0.9.0-alpha (January 11, 2026)
 ├── Documentation improvements
 │   ├── ✅ Test counts corrected (1,739/1,882)
 │   ├── ✅ Version consistency achieved
@@ -71,7 +71,7 @@ This document provides a comprehensive timeline of architectural changes across 
          │
          ↓
 
-0.8.7-alpha (January 28, 2026) ← CURRENT VERSION
+0.9.0-alpha (January 28, 2026) ← CURRENT VERSION
 ├── Metropolitan Region Display Feature ⭐
 │   ├── ✅ BrazilianStandardAddress: regiaoMetropolitana property
 │   ├── ✅ AddressExtractor: Extract county field from Nominatim
@@ -86,7 +86,7 @@ This document provides a comprehensive timeline of architectural changes across 
 │   └── ✅ 42 unit tests covering all 26 states
 │
 ├── Test Suite Expansion
-│   ├── ✅ 2,236 tests passing (vs 1,739 in v0.7.1)
+│   ├── ✅ 2,236 tests passing (vs 1,739 in v0.9.0)
 │   ├── ✅ +497 new tests (+28.6% coverage)
 │   ├── ✅ 4 E2E suites, 93 passing
 │   └── ✅ 101 test suites (97 passing)
@@ -131,11 +131,11 @@ This document provides a comprehensive timeline of architectural changes across 
 | Version | Date | Status | Key Changes |
 |---------|------|--------|-------------|
 | 0.5.x-alpha | Pre-Oct 2025 | ⚠️ Deprecated | Mutable implementation with side effects |
-| **0.6.0-alpha** | Oct 11, 2025 | ⭐ Breaking | Immutable, pure functions, defensive copying |
-| 0.7.0-alpha | Jan 3, 2026 | ✅ Stable | No changes |
-| **0.7.1-alpha** | Jan 11, 2026 | ✅ Current | Documentation updates only |
+| **0.9.0-alpha** | Oct 11, 2025 | ⭐ Breaking | Immutable, pure functions, defensive copying |
+| 0.9.0-alpha | Jan 3, 2026 | ✅ Stable | No changes |
+| **0.9.0-alpha** | Jan 11, 2026 | ✅ Current | Documentation updates only |
 
-**Breaking Changes in 0.6.0-alpha**:
+**Breaking Changes in 0.9.0-alpha**:
 - ❌ Removed `accuracy` setter (immutability)
 - ❌ Constructor no longer logs creation
 - ❌ Constructor no longer mutates input objects
@@ -150,9 +150,9 @@ This document provides a comprehensive timeline of architectural changes across 
 
 | Version | Date | Status | Key Changes |
 |---------|------|--------|-------------|
-| **0.6.0-alpha** | Oct 2025 | ⭐ Initial | Singleton + Observer patterns, validation rules |
-| 0.7.0-alpha | Jan 3, 2026 | ✅ Stable | Refined validation logic |
-| **0.7.1-alpha** | Jan 11, 2026 | ✅ Current | Documentation updates only |
+| **0.9.0-alpha** | Oct 2025 | ⭐ Initial | Singleton + Observer patterns, validation rules |
+| 0.9.0-alpha | Jan 3, 2026 | ✅ Stable | Refined validation logic |
+| **0.9.0-alpha** | Jan 11, 2026 | ✅ Current | Documentation updates only |
 | 0.8.x-alpha | Planned | 🔄 Future | Enhanced observer management |
 
 **Key Features**:
@@ -169,9 +169,9 @@ This document provides a comprehensive timeline of architectural changes across 
 
 | Version | Date | Status | Key Changes |
 |---------|------|--------|-------------|
-| **0.6.0-alpha** | Oct 2025 | ⭐ Initial | Coordinator pattern, service creation, UI management |
-| 0.7.0-alpha | Jan 3, 2026 | ✅ Stable | Planning for refactoring |
-| **0.7.1-alpha** | Jan 11, 2026 | ✅ Current | Documentation updates only |
+| **0.9.0-alpha** | Oct 2025 | ⭐ Initial | Coordinator pattern, service creation, UI management |
+| 0.9.0-alpha | Jan 3, 2026 | ✅ Stable | Planning for refactoring |
+| **0.9.0-alpha** | Jan 11, 2026 | ✅ Current | Documentation updates only |
 | 0.8.x-alpha | Planned | 🔄 Major | PR #189 refactoring (dependency injection, extraction) |
 
 **Current Features**:
@@ -207,7 +207,7 @@ This document provides a comprehensive timeline of architectural changes across 
 
 ## Migration Guides
 
-### Migrating from 0.5.x-alpha to 0.6.0-alpha
+### Migrating from 0.5.x-alpha to 0.9.0-alpha
 
 #### GeoPosition Breaking Changes
 
@@ -218,7 +218,7 @@ position.accuracy = 20;  // Mutates and updates accuracyQuality
 console.log(position.toString());  // Logs during construction
 ```
 
-**After (0.6.0-alpha and later)**:
+**After (0.9.0-alpha and later)**:
 ```javascript
 // Option 1: Create new instance with different accuracy
 const newBrowserPosition = {
@@ -237,15 +237,15 @@ navigator.geolocation.watchPosition((browserPos) => {
 console.log("Created position:", position.toString());
 ```
 
-### No Breaking Changes from 0.6.0-alpha to 0.7.1-alpha
+### No Breaking Changes from 0.9.0-alpha to 0.9.0-alpha
 
-✅ **Full backward compatibility maintained**. Code written for 0.6.0-alpha works unchanged in 0.7.0-alpha and 0.7.1-alpha.
+✅ **Full backward compatibility maintained**. Code written for 0.9.0-alpha works unchanged in 0.9.0-alpha and 0.9.0-alpha.
 
 ### Preparing for 0.8.x-alpha (PR #189)
 
 While PR #189 introduces significant refactoring, **100% backward compatibility is maintained**. However, new code should prefer the enhanced patterns:
 
-**Current (0.7.1-alpha)** - Still works in 0.8.x-alpha:
+**Current (0.9.0-alpha)** - Still works in 0.8.x-alpha:
 ```javascript
 const manager = new WebGeocodingManager(document, {
     locationResult: 'location-result'
@@ -276,12 +276,12 @@ Use this matrix to determine which version to use for different scenarios:
 
 | Scenario | Recommended Version | Notes |
 |----------|---------------------|-------|
-| **New projects** | 0.7.1-alpha | Current stable release |
-| **Production deployment** | 0.7.1-alpha | Thoroughly tested, 1,739 passing tests |
-| **Existing 0.6.0 projects** | 0.7.1-alpha | Drop-in upgrade, no changes needed |
-| **Existing 0.5.x projects** | 0.7.1-alpha | Migration required (see guide above) |
-| **Testing/development** | 0.7.1-alpha or 0.8.x-alpha branch | 0.8.x-alpha for upcoming features |
-| **Legacy support** | 0.6.0-alpha | If migration not feasible |
+| **New projects** | 0.9.0-alpha | Current stable release |
+| **Production deployment** | 0.9.0-alpha | Thoroughly tested, 1,739 passing tests |
+| **Existing 0.9.0 projects** | 0.9.0-alpha | Drop-in upgrade, no changes needed |
+| **Existing 0.5.x projects** | 0.9.0-alpha | Migration required (see guide above) |
+| **Testing/development** | 0.9.0-alpha or 0.8.x-alpha branch | 0.8.x-alpha for upcoming features |
+| **Legacy support** | 0.9.0-alpha | If migration not feasible |
 
 ---
 
@@ -289,13 +289,13 @@ Use this matrix to determine which version to use for different scenarios:
 
 ### Currently Deprecated
 
-1. **GeoPosition 0.5.x-alpha patterns** (Deprecated in 0.6.0-alpha)
+1. **GeoPosition 0.5.x-alpha patterns** (Deprecated in 0.9.0-alpha)
    - ❌ Using `position.accuracy = value` setter
    - ❌ Relying on constructor logging
    - ❌ Sharing position object references
    - **Action**: Migrate to immutable patterns (see migration guide)
 
-2. **GeoPosition.calculateAccuracyQuality() method** (Deprecated in 0.6.0-alpha)
+2. **GeoPosition.calculateAccuracyQuality() method** (Deprecated in 0.9.0-alpha)
    - ❌ Instance method has bug (calls undefined function)
    - ✅ Use `position.accuracyQuality` property instead
    - ✅ Or use static method `GeoPosition.getAccuracyQuality(accuracy)`
@@ -312,15 +312,15 @@ No deprecations planned. PR #189 refactoring maintains full backward compatibili
 
 | Version | Total Tests | Passing | Skipped | Coverage |
 |---------|-------------|---------|---------|----------|
-| 0.6.0-alpha | ~1,400 | ~1,200 | ~100 | ~65% |
-| 0.7.0-alpha | 1,438 | 1,301 | 137 | ~68% |
-| **0.7.1-alpha** | **1,882** | **1,739** | **143** | **~70%** |
+| 0.9.0-alpha | ~1,400 | ~1,200 | ~100 | ~65% |
+| 0.9.0-alpha | 1,438 | 1,301 | 137 | ~68% |
+| **0.9.0-alpha** | **1,882** | **1,739** | **143** | **~70%** |
 | 0.8.x-alpha (planned) | 1,680+ | 1,550+ | 130 | ~75% |
 
 ### Running Tests for Specific Versions
 
 ```bash
-# Current version tests (0.7.1-alpha)
+# Current version tests (0.9.0-alpha)
 npm test                    # ~7 seconds, 1,739 passing
 npm run test:coverage       # ~7 seconds, ~70% coverage
 npm run test:all            # ~8 seconds, syntax + tests
@@ -359,33 +359,33 @@ npm test -- __tests__/PositionManager.test.js           # PositionManager tests
 | Version | Stability | Recommended For | Notes |
 |---------|-----------|-----------------|-------|
 | 0.5.x-alpha | ⚠️ Deprecated | Legacy support only | Mutable patterns, side effects |
-| 0.6.0-alpha | ✅ Stable | Legacy projects | Breaking changes, use for compatibility |
-| 0.7.0-alpha | ✅ Stable | Production | Minor refinements, fully compatible |
-| **0.7.1-alpha** | ✅ **Current** | **Production** | **Recommended for all new projects** |
+| 0.9.0-alpha | ✅ Stable | Legacy projects | Breaking changes, use for compatibility |
+| 0.9.0-alpha | ✅ Stable | Production | Minor refinements, fully compatible |
+| **0.9.0-alpha** | ✅ **Current** | **Production** | **Recommended for all new projects** |
 | 0.8.x-alpha | 🔄 In Development | Testing/Development | Major refactoring, 100% backward compatible |
 
 ---
 
 ## Frequently Asked Questions
 
-### Q: Can I upgrade from 0.6.0-alpha to 0.7.1-alpha without changes?
+### Q: Can I upgrade from 0.9.0-alpha to 0.9.0-alpha without changes?
 **A**: Yes! ✅ Full backward compatibility is maintained. Simply update package.json version.
 
-### Q: What happens to my 0.5.x-alpha code in 0.7.1-alpha?
+### Q: What happens to my 0.5.x-alpha code in 0.9.0-alpha?
 **A**: It will break. ❌ You must migrate to immutable patterns. See migration guide above.
 
-### Q: Will 0.8.x-alpha break my 0.7.1-alpha code?
+### Q: Will 0.8.x-alpha break my 0.9.0-alpha code?
 **A**: No! ✅ PR #189 maintains 100% backward compatibility. New features are additive.
 
 ### Q: Which version should I use for production?
-**A**: Version 0.7.1-alpha is recommended. It's stable, thoroughly tested, and production-ready.
+**A**: Version 0.9.0-alpha is recommended. It's stable, thoroughly tested, and production-ready.
 
 ### Q: How do I test against multiple versions?
 **A**: Use git tags and npm version management:
 ```bash
-git checkout v0.6.0-alpha && npm install && npm test
-git checkout v0.7.0-alpha && npm install && npm test
-git checkout v0.7.1-alpha && npm install && npm test
+git checkout v0.9.0-alpha && npm install && npm test
+git checkout v0.9.0-alpha && npm install && npm test
+git checkout v0.9.0-alpha && npm install && npm test
 ```
 
 ### Q: What's the release schedule?
@@ -410,8 +410,8 @@ When documenting new features or changes:
 
 5. **Tag git commits** with version numbers:
    ```bash
-   git tag v0.7.1-alpha
-   git push origin v0.7.1-alpha
+   git tag v0.9.0-alpha
+   git push origin v0.9.0-alpha
    ```
 
 ---

@@ -3,7 +3,7 @@
 ## Overview
 Display the state abbreviation alongside the município name in the highlight card to provide better geographic context to users.
 
-**Version**: 0.8.7-alpha  
+**Version**: 0.9.0-alpha  
 **Date**: 2026-01-24  
 **Author**: Marcelo Pereira Barbosa
 
@@ -213,7 +213,7 @@ State abbreviation provides better context for screen reader users:
 ### Files to Update
 1. ✅ `docs/FEATURE_MUNICIPIO_STATE_DISPLAY.md` (this file)
 2. ✅ `README.md` - Add to feature list
-3. ✅ `CHANGELOG.md` - Add entry for v0.8.7-alpha
+3. ✅ `CHANGELOG.md` - Add entry for v0.9.0-alpha
 
 ## Rollout Plan
 
@@ -234,7 +234,7 @@ State abbreviation provides better context for screen reader users:
 
 ### Phase 4: Release
 - Commit changes
-- Tag version 0.8.7-alpha
+- Tag version 0.9.0-alpha
 - Update version in package.json
 
 ## References

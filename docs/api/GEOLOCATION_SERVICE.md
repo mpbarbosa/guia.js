@@ -1,6 +1,6 @@
 # GeolocationService API Documentation
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Module:** `services/GeolocationService`  
 **Location:** `src/services/GeolocationService.js`
 
@@ -566,14 +566,14 @@ const mockPosition = {
 
 ## Change Log
 
-### v0.8.7-alpha
+### v0.9.0-alpha
 - Extracted from `guia.js` in Phase 2 modularization
 - Added provider abstraction pattern with `BrowserGeolocationProvider`
 - Enhanced dependency injection support
 - Added race condition prevention with `isPendingRequest` flag
 - Improved documentation and type annotations
 
-### v0.8.3-alpha
+### v0.9.0-alpha
 - Enhanced PositionManager integration
 - Added permission checking via Permissions API
 - Improved error handling and localization

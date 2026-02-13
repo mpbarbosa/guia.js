@@ -16,7 +16,7 @@
  * - Extensibility: Supports external callback delegation (window functions)
  * 
  * @module coordination/EventCoordinator
- * @since 0.7.0-alpha - Phase 1: WebGeocodingManager refactoring
+ * @since 0.9.0-alpha - Phase 1: WebGeocodingManager refactoring
  * @author Marcelo Pereira Barbosa
  * 
  * @requires utils/logger

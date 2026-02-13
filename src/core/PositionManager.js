@@ -15,7 +15,7 @@
  * - Multi-layer validation (accuracy quality, distance OR time threshold)
  * - Integration with GeoPosition for enhanced position data
  * 
- * Validation Rules (v0.7.2-alpha):
+ * Validation Rules (v0.9.0-alpha):
  * 1. Accuracy Quality: Rejects medium/bad/very bad accuracy on mobile devices
  * 2. Distance OR Time Threshold: Updates if EITHER condition is met:
  *    - Movement ≥ 20 meters OR
@@ -89,7 +89,7 @@ let setupParams = null;
  *   trackingInterval: 30000
  * });
  * 
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 export function initializeConfig(config) {
@@ -374,7 +374,7 @@ class PositionManager {
 			);
 		}
 		
-		// DISTANCE OR TIME VALIDATION (v0.7.2-alpha):
+		// DISTANCE OR TIME VALIDATION (v0.9.0-alpha):
 		// Update position if EITHER condition is met:
 		// 1. Distance > minimumDistanceChange (20 meters) OR
 		// 2. Time elapsed > minimumTimeChange (30 seconds)

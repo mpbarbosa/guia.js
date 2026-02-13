@@ -4,7 +4,7 @@
  * 
  * @jest-environment node
  * @author MP Barbosa
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  */
 
 import { describe, test, expect, beforeEach } from '@jest/globals';
@@ -18,7 +18,7 @@ try {
     console.warn('Could not load BrazilianStandardAddress:', error.message);
 }
 
-describe('BrazilianStandardAddress - Metropolitan Region (v0.8.7-alpha)', () => {
+describe('BrazilianStandardAddress - Metropolitan Region (v0.9.0-alpha)', () => {
     
     describe('Constructor - regiaoMetropolitana property', () => {
         test('should initialize regiaoMetropolitana to null', () => {

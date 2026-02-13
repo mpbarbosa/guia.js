@@ -1,6 +1,6 @@
 # ChangeDetectionCoordinator API Documentation
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Module:** `services/ChangeDetectionCoordinator`  
 **Location:** `src/services/ChangeDetectionCoordinator.js`
 
@@ -46,7 +46,7 @@ The class expects these to be injected or set externally:
 
 The coordinator replaces timer-based polling with event-driven callbacks:
 
-**Old Approach (v0.7.0 and earlier):**
+**Old Approach (v0.9.0 and earlier):**
 ```javascript
 // Timer-based polling (inefficient)
 setInterval(() => {
@@ -56,7 +56,7 @@ setInterval(() => {
 }, 1000);
 ```
 
-**New Approach (v0.8.7-alpha):**
+**New Approach (v0.9.0-alpha):**
 ```javascript
 // Callback-based (efficient)
 AddressDataExtractor.setLogradouroChangeCallback((changeDetails) => {
@@ -842,7 +842,7 @@ const analyticsObserver = {
 
 ## Change Log
 
-### v0.8.7-alpha
+### v0.9.0-alpha
 - Initial extraction from `guia.js` in Phase 2 modularization
 - Replaced timer-based polling with callback mechanism
 - Introduced `setupChangeDetection()` and `removeAllChangeDetection()` methods
@@ -853,13 +853,13 @@ const analyticsObserver = {
 
 ### Design Evolution
 
-**Previous Approach (v0.7.0):**
+**Previous Approach (v0.9.0):**
 - Timer-based polling every second
 - High CPU overhead
 - Delayed change detection
 - Scattered timer management
 
-**Current Approach (v0.8.7-alpha):**
+**Current Approach (v0.9.0-alpha):**
 - Callback-based change detection
 - Zero overhead when idle
 - Immediate change notifications

@@ -6,12 +6,12 @@
  * and other speech synthesis components.
  * 
  * @author Marcelo Pereira Barbosa
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  */
 
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
 
-describe('SpeechItem Module Integration - MP Barbosa Travel Guide (v0.8.11-alpha)', () => {
+describe('SpeechItem Module Integration - MP Barbosa Travel Guide (v0.9.01-alpha)', () => {
     
     describe('Module Import and Export Validation', () => {
         test('should import SpeechItem from speech module', async () => {

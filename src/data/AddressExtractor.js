@@ -9,7 +9,7 @@ import { log, warn, error } from '../utils/logger.js';
  * Supports both Nominatim API format and standard OSM address tags.
  * 
  * @module data/AddressExtractor
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -51,7 +51,7 @@ class AddressExtractor {
 	 * @private
 	 * @param {string} iso3166Code - The ISO3166-2-lvl4 code (e.g., "BR-RJ", "BR-SP")
 	 * @returns {string|null} The state abbreviation (e.g., "RJ", "SP") or null if invalid
-	 * @since 0.8.6-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * extractSiglaUF("BR-RJ")  // Returns "RJ"
@@ -78,7 +78,7 @@ class AddressExtractor {
 	 * standard OSM address tags (addr:street, addr:housenumber, etc.).
 	 * 
 	 * @private
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	padronizaEndereco() {
 		if (!this.data || !this.data.address) {
@@ -139,7 +139,7 @@ class AddressExtractor {
 	 * Returns a string representation of this extractor.
 	 * 
 	 * @returns {string} String representation
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	toString() {
 		return `${this.constructor.name}: ${this.enderecoPadronizado.enderecoCompleto()}`;

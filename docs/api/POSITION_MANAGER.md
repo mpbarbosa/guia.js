@@ -1,6 +1,6 @@
 # PositionManager API Documentation
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Module:** `src/core/PositionManager.js`  
 **Pattern:** Singleton, Observer  
 **Author:** Marcelo Pereira Barbosa
@@ -25,7 +25,7 @@ Centralized singleton manager for device geographic position. `PositionManager` 
 - Multi-layer validation (accuracy quality, distance OR time threshold)
 - Integration with GeoPosition for enhanced position data
 
-## Validation Rules (v0.7.2-alpha)
+## Validation Rules (v0.9.0-alpha)
 
 1. **Accuracy Quality**: Rejects medium/bad/very bad accuracy on mobile devices
 2. **Distance OR Time Threshold**: Updates if EITHER condition is met:
@@ -63,7 +63,7 @@ Creates a new PositionManager instance (private - use `getInstance()` instead).
 const manager = new PositionManager(geolocationPosition);
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ## Static Methods
 
@@ -93,7 +93,7 @@ navigator.geolocation.getCurrentPosition((position) => {
 });
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ## Static Constants
 
@@ -132,7 +132,7 @@ const myObserver = {
 PositionManager.getInstance().subscribe(myObserver);
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -150,7 +150,7 @@ Unsubscribes an observer from position change notifications.
 PositionManager.getInstance().unsubscribe(myObserver);
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -192,7 +192,7 @@ navigator.geolocation.getCurrentPosition((position) => {
 });
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -209,7 +209,7 @@ console.log(manager.toString());
 // Output: "PositionManager: -23.5505, -46.6333, good, 760, 0, 0, 1634567890123"
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ## Properties (Read-Only)
 
@@ -255,7 +255,7 @@ initializeConfig({
 });
 ```
 
-**Since:** 0.8.6-alpha
+**Since:** 0.9.0-alpha
 
 ### Default Configuration
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `WebGeocodingManager` class is the main coordination layer for the geocoding workflow in the Guia.js application. Introduced in version 0.6.0-alpha and significantly refactored in PR #189, it orchestrates geolocation services, reverse geocoding operations, and UI updates for displaying location-based information. Following the Coordinator/Mediator pattern, it manages communication between services and UI displayers while providing a clean observer-based API for external consumers.
+The `WebGeocodingManager` class is the main coordination layer for the geocoding workflow in the Guia.js application. Introduced in version 0.9.0-alpha and significantly refactored in PR #189, it orchestrates geolocation services, reverse geocoding operations, and UI updates for displaying location-based information. Following the Coordinator/Mediator pattern, it manages communication between services and UI displayers while providing a clean observer-based API for external consumers.
 
 ## Motivation
 
@@ -309,7 +309,7 @@ new WebGeocodingManager(document, params)
 
 **Examples:** See [Usage](#usage) section above.
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -364,7 +364,7 @@ const manager = new WebGeocodingManager(document, {
 manager.startTracking(); // Begins continuous tracking
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -390,7 +390,7 @@ const myObserver = {
 manager.subscribe(myObserver);
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -408,7 +408,7 @@ Unsubscribes an observer object from receiving notifications.
 manager.unsubscribe(myObserver);
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -434,7 +434,7 @@ manager.subscribeFunction((pos, addr, endPad, details) => {
 });
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -452,7 +452,7 @@ Unsubscribes a function observer from receiving notifications.
 manager.unsubscribeFunction(myFunction);
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -470,7 +470,7 @@ Sends current position, raw address, and standardized address to all observers t
 manager.notifyObservers();
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -488,7 +488,7 @@ Calls each subscribed function observer with current position, address, and stan
 manager.notifyFunctionObservers();
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -509,7 +509,7 @@ if (address) {
 }
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -537,7 +537,7 @@ Requests current position from the GeolocationService, performs reverse geocodin
 manager.getSingleLocationUpdate();
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -558,7 +558,7 @@ This method should be called after the relevant DOM elements are available. Elem
 manager.initSpeechSynthesis();
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -576,7 +576,7 @@ console.log(manager.toString());
 // Output: "WebGeocodingManager: -23.5505, -46.6333"
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -909,18 +909,18 @@ Side effects are isolated at boundaries:
 
 This architecture makes it clear where side effects occur and enables testing coordination logic independently.
 
-## Current Status (v0.7.1-alpha)
+## Current Status (v0.9.0-alpha)
 
 **Implementation Status**: ✅ Stable and Production-Ready
 
-The `WebGeocodingManager` class has evolved significantly from its initial implementation in version 0.6.0-alpha. Through version 0.7.1-alpha (current), it has maintained stability with:
+The `WebGeocodingManager` class has evolved significantly from its initial implementation in version 0.9.0-alpha. Through version 0.9.0-alpha (current), it has maintained stability with:
 - ✅ 23 comprehensive unit tests with 100% backward compatibility
 - ✅ 100% JSDoc coverage (200+ lines of documentation)
 - ✅ Dependency injection pattern for testability
 - ✅ High cohesion (focused, single-purpose methods)
 - ✅ Low coupling (configuration objects, injected dependencies)
 
-**Major Refactoring**: PR #189 (version 0.8.5-alpha planned) introduced significant architectural improvements while maintaining full backward compatibility.
+**Major Refactoring**: PR #189 (version 0.9.0-alpha planned) introduced significant architectural improvements while maintaining full backward compatibility.
 
 **Future Roadmap**: Continued refinement of coordinator pattern, potential extraction of additional responsibilities. No breaking changes planned.
 
@@ -929,14 +929,14 @@ The `WebGeocodingManager` class has evolved significantly from its initial imple
 ### Version Timeline
 
 ```
-0.6.0-alpha (October 2025)
+0.9.0-alpha (October 2025)
     └─> Initial WebGeocodingManager implementation
     └─> Basic service coordination and UI management
 
-0.7.0-alpha (January 3, 2026)
+0.9.0-alpha (January 3, 2026)
     └─> Stable, planning for major refactoring
 
-0.7.1-alpha (January 11, 2026) ← Current
+0.9.0-alpha (January 11, 2026) ← Current
     └─> Documentation updates, stable implementation
     └─> Preparing for PR #189 refactoring
 
@@ -945,21 +945,21 @@ The `WebGeocodingManager` class has evolved significantly from its initial imple
     └─> ChangeDetectionCoordinator extraction
 ```
 
-### 0.7.1-alpha (January 11, 2026) - Current Version
+### 0.9.0-alpha (January 11, 2026) - Current Version
 - **Status**: Stable, preparing for major refactoring in PR #189
 - Documentation improvements and cross-references enhanced
 - JSDoc coverage verified at 100%
 - All tests passing
-- Maintained full compatibility with 0.6.0-alpha API
+- Maintained full compatibility with 0.9.0-alpha API
 
-### 0.7.0-alpha (January 3, 2026)
+### 0.9.0-alpha (January 3, 2026)
 - **Status**: Stable
 - Planning phase for major architectural refactoring
 - Enhanced observer pattern integration
 - Improved service coordination logic
 - Maintained full backward compatibility
 
-### 0.6.0-alpha (October 2025) - Initial Implementation
+### 0.9.0-alpha (October 2025) - Initial Implementation
 - **Initial release**: Main coordinator for geocoding workflow
 - Constructor with automatic service creation (GeolocationService, ReverseGeocoder)
 - Observer pattern for position and address changes
@@ -1023,5 +1023,5 @@ See repository root for license information.
 ---
 
 **Last Updated**: 2026-01-11  
-**Version**: 0.7.1-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Complete and up-to-date

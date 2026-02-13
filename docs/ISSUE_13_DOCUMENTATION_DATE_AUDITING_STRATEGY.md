@@ -162,7 +162,7 @@
 ---
 
 **Last Updated**: 2026-01-11  
-**Version**: 0.7.1-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Active
 ```
 
@@ -200,7 +200,7 @@
 ---
 
 **Last Updated**: 2026-01-11  
-**Version**: 0.7.1-alpha (if applicable)
+**Version**: 0.9.0-alpha (if applicable)
 **Status**: ✅ Active / 🚧 In Progress / ⚠️ Deprecated
 ```
 
@@ -310,7 +310,7 @@ Use consistent status indicators in documentation footers:
 ---
 
 **Last Updated**: 2026-01-11  
-**Version**: 0.7.1-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Active  
 **Reviewers**: Marcelo Pereira Barbosa  
 **Next Review**: 2026-04-11 (quarterly)

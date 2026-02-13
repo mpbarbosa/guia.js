@@ -1,7 +1,7 @@
 # Documentation Cross-Reference Audit Report
 
 **Generated**: 2026-01-06  
-**Project**: Guia Turístico v0.7.0-alpha  
+**Project**: Guia Turístico v0.9.0-alpha  
 **Status**: 🟡 **Action Recommended**
 
 ---

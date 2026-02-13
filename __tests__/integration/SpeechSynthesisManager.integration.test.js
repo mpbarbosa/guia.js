@@ -17,7 +17,7 @@
  * - Queue processing under load
  * - Voice loading and retry scenarios
  * 
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -263,7 +263,7 @@ const simulateUserInteraction = async (manager, actions) => {
 // TODO: This test suite has async timing issues that cause tests to hang indefinitely
 // The timer mocking was causing infinite recursion, and removing it causes tests to wait forever
 // Skip until async behavior can be properly mocked or tests can be refactored
-describe.skip('SpeechSynthesisManager Integration Tests - MP Barbosa Travel Guide (v0.8.3-alpha)', () => {
+describe.skip('SpeechSynthesisManager Integration Tests - MP Barbosa Travel Guide (v0.9.0-alpha)', () => {
     
     let speechManager;
     let mockSpeechSynthesis;

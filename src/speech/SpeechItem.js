@@ -34,7 +34,7 @@ import { log, warn, error } from '../utils/logger.js';
  * ```
  * 
  * @class SpeechItem
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 class SpeechItem {
@@ -76,7 +76,7 @@ class SpeechItem {
 	 * // Custom timestamp for testing
 	 * const testItem = new SpeechItem('Teste', 1, Date.now() - 5000);
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	constructor(text, priority = 0, timestamp = Date.now()) {
 		// Validate input parameters
@@ -135,7 +135,7 @@ class SpeechItem {
 	 * // Filter expired items from queue
 	 * const validItems = queue.filter(item => !item.isExpired());
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	isExpired(expirationMs = 30000) { // 30 seconds default
 		return Date.now() - this.timestamp > expirationMs;
@@ -168,7 +168,7 @@ class SpeechItem {
 	 * log(longItem.toString());
 	 * // Output: 'SpeechItem: "Este é um texto muito longo que será truncado..." (priority: 2)'
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	toString() {
 		const displayText = this.text.length > 50 

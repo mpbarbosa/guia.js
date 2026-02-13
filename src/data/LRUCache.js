@@ -28,7 +28,7 @@ import { log, warn, error } from '../utils/logger.js';
  * ```
  * 
  * @class LRUCache
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa (extracted from AddressCache)
  */
 class LRUCache {

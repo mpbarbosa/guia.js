@@ -1,7 +1,7 @@
 /**
  * @file SpeechCoordinator Basic Tests
  * @description Unit tests for SpeechCoordinator class (constructor and getters only)
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  * 
  * **Note**: Full speech synthesis initialization tests require E2E environment
  * due to Web Speech API async voice loading. See docs/testing/SPEECHCOORDINATOR_TEST_NOTES.md

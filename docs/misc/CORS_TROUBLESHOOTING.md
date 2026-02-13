@@ -91,7 +91,7 @@ app.get('/api/reverse', async (req, res) => {
   const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`;
   
   const response = await fetch(url, {
-    headers: { 'User-Agent': 'GuiaTuristico/0.8.7' }
+    headers: { 'User-Agent': 'GuiaTuristico/0.9.0' }
   });
   
   const data = await response.json();

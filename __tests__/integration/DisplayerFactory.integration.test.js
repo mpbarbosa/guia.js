@@ -6,7 +6,7 @@
  * other system components following MP Barbosa standards.
  * 
  * @author Marcelo Pereira Barbosa  
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  */
 
 import { jest } from '@jest/globals';

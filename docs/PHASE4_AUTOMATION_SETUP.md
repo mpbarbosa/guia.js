@@ -1,6 +1,6 @@
 # Phase 4: Automation Setup Guide
 **Date:** 2026-01-09  
-**Project:** Guia Turístico v0.7.0-alpha  
+**Project:** Guia Turístico v0.9.0-alpha  
 **Purpose:** Automated dependency management with Dependabot and npm-check-updates
 
 ---

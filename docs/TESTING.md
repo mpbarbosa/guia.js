@@ -294,7 +294,7 @@ Cleaning up...
 ### Testing Resources
 - [Test Strategy](./testing/TEST_STRATEGY.md) - Overall testing philosophy and approach
 - [Test Infrastructure](./testing/TEST_INFRASTRUCTURE.md) - Test execution and coverage details
-- [Testing HTML Generation](./TESTING_HTML_GENERATION.md) - HTML display component testing
+- [Testing HTML Generation](./testing/HTML_GENERATION.md) - HTML display component testing
 - [Visual Hierarchy Tests](./testing/VISUAL_HIERARCHY_TESTS.md) - Manual and automated visual hierarchy testing
 
 ### Development Guides

@@ -1,7 +1,7 @@
 # Navigation Structure Improvement Guide
 
 **Generated**: 2026-01-06  
-**Project**: Guia Turístico v0.7.0-alpha  
+**Project**: Guia Turístico v0.9.0-alpha  
 **Status**: 🟢 **Implementation Guide**
 
 ---
@@ -225,7 +225,7 @@ Continue your testing journey:
 ---
 
 **Last Updated**: 2026-01-06  
-**Version**: 0.7.0-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Current
 ```
 
@@ -447,5 +447,5 @@ Measure effectiveness and user preference.
 ---
 
 **Last Updated**: 2026-01-06  
-**Version**: 0.7.0-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Implementation Guide

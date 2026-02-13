@@ -2,7 +2,7 @@
 
 /**
  * WebGeocodingManager - Main coordination class for geocoding workflow
- * @version 0.7.1-alpha
+ * @version 0.9.0-alpha
  * 
  * @fileoverview Main coordination class for geocoding workflow in the Guia.js application.
  * WebGeocodingManager orchestrates the geolocation services, geocoding operations,
@@ -22,8 +22,8 @@
  * 
  * @module coordination/WebGeocodingManager
  * @since 0.6.0-alpha - Initial WebGeocodingManager implementation
- * @since 0.8.6-alpha - Updated to use factory pattern for displayers
- * @since 0.8.7-alpha - Extracted to dedicated coordination module (Phase 16)
+ * @since 0.9.0-alpha - Updated to use factory pattern for displayers
+ * @since 0.9.0-alpha - Extracted to dedicated coordination module (Phase 16)
  * @author Marcelo Pereira Barbosa
  * 
  * @requires core/GeoPosition
@@ -123,7 +123,7 @@ import { withObserver } from '../utils/ObserverMixin.js';
  * @property {string} speechSynthesis.pitchInputId - ID for pitch input slider
  * @property {string} speechSynthesis.pitchValueId - ID for pitch value display
  * 
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  */
 const DEFAULT_ELEMENT_IDS = {
 	chronometer: "chronometer",
@@ -215,7 +215,7 @@ class WebGeocodingManager {
 	 *     manager.startTracking();
 	 *   });
 	 * 
-	 * @since 0.8.5-alpha
+	 * @since 0.9.0-alpha
 	 */
 	static async createAsync(document, params) {
 		// Wait for Ibira.js loading to complete
@@ -915,7 +915,7 @@ class WebGeocodingManager {
 	 * - SpeechCoordinator handles speech synthesis cleanup (Phase 3)
 	 * 
 	 * @returns {void}
-	 * @since 0.8.6-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * const manager = new WebGeocodingManager(document, config);

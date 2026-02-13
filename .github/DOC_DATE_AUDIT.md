@@ -1,7 +1,7 @@
 # Documentation Date Audit Report
 
 **Generated**: 2026-01-06  
-**Project**: Guia Turístico v0.7.0-alpha  
+**Project**: Guia Turístico v0.9.0-alpha  
 **Status**: 🟡 **Minor Updates Needed**
 
 ---
@@ -168,7 +168,7 @@ Add footer to files without dates:
 ---
 
 **Last Updated**: 2026-01-06  
-**Version**: 0.7.0-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Current
 ```
 
@@ -237,7 +237,7 @@ Add to PR template:
 ---
 
 **Last Updated**: 2026-01-06  
-**Version**: 0.7.0-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Current
 ```
 
@@ -397,5 +397,5 @@ if __name__ == '__main__':
 ---
 
 **Last Updated**: 2026-01-06  
-**Version**: 0.7.0-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Complete

@@ -1,7 +1,7 @@
 /**
  * Empty State Manager
  * Manages empty state displays across the application
- * @since 0.8.7-alpha - UX Quick Win #2
+ * @since 0.9.0-alpha - UX Quick Win #2
  * @module utils/empty-state-manager
  */
 

@@ -1,4 +1,4 @@
-# Button Status Messages Feature (v0.8.7-alpha)
+# Button Status Messages Feature (v0.9.0-alpha)
 
 **Component**: `src/utils/button-status.js`  
 **Integration**: `src/views/home.js`, `src/index.html`  
@@ -11,7 +11,7 @@ The button status messages feature provides contextual feedback to users about w
 
 ## Problem Statement
 
-**Before v0.8.7-alpha**: Users encountered disabled buttons without understanding why they were disabled or what action would enable them. This created confusion and a poor user experience.
+**Before v0.9.0-alpha**: Users encountered disabled buttons without understanding why they were disabled or what action would enable them. This created confusion and a poor user experience.
 
 **Solution**: Add contextual status messages below disabled buttons to explain the reason for the disabled state and what action is needed.
 
@@ -352,5 +352,5 @@ addButtonStatus(button, 'Custom message', 'info');
 ---
 
 **Last Updated**: 2026-02-11  
-**Version**: 0.8.7-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Production Ready

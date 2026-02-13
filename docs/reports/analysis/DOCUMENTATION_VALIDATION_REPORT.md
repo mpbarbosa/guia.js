@@ -1,6 +1,6 @@
 # JSDoc Documentation Validation Report
 **Project**: Guia Turístico (Tourist Guide SPA)  
-**Version**: 0.7.0-alpha  
+**Version**: 0.9.0-alpha  
 **Date**: 2026-01-09  
 **Status**: ✅ **APPROVED - All Requirements Met**
 
@@ -144,7 +144,7 @@ Web API references follow MDN style guidelines:
  * console.log(distance); // ~357,710 meters (357.7 km)
  * 
  * @see {@link https://en.wikipedia.org/wiki/Haversine_formula} Haversine formula on Wikipedia
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  */
 export const calculateDistance = (lat1, lon1, lat2, lon2) => { ... };
 ```
@@ -172,7 +172,7 @@ export const calculateDistance = (lat1, lon1, lat2, lon2) => { ... };
  *   console.error('Location error:', error.message);
  * }
  * 
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  */
 async getSingleLocationUpdate() { ... }
 ```
@@ -190,7 +190,7 @@ async getSingleLocationUpdate() { ... }
  * console.log(position.toString());
  * // Output: "GeoPosition: -23.5505, -46.6333, good, 760, 0, 0, 1634567890123"
  * 
- * @since 0.6.0-alpha
+ * @since 0.9.0-alpha
  */
 class GeoPosition {
   /**
@@ -223,7 +223,7 @@ class GeoPosition {
  * // Returns: '<a href="https://servicodados.ibge.gov.br/api/v1/localidades/estados/35">São Paulo</a>'
  * 
  * @see {@link https://servicodados.ibge.gov.br/api/docs/localidades} IBGE API Docs
- * @since 0.6.0-alpha
+ * @since 0.9.0-alpha
  */
 function renderUrlUFNome(nomeUF, idUF) { ... }
 ```

@@ -1,6 +1,6 @@
 # Comprehensive Architecture Guide - Guia Turístico
 
-**Version**: 0.8.7-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-02-09  
 **Status**: Production-ready (with 20 known failing tests)
 
@@ -203,9 +203,9 @@ HTMLAddressDisplayer.display()
 **Key Components**:
 - **HTMLPositionDisplayer**: Coordinate display and Google Maps links
 - **HTMLAddressDisplayer**: Address formatting and display
-- **HTMLHighlightCardsDisplayer**: Municipality and neighborhood cards (v0.8.7: metro region support)
+- **HTMLHighlightCardsDisplayer**: Municipality and neighborhood cards (v0.9.0: metro region support)
 - **HTMLReferencePlaceDisplayer**: Reference place display
-- **HTMLSidraDisplayer**: IBGE demographic statistics display (v0.7.2+)
+- **HTMLSidraDisplayer**: IBGE demographic statistics display (v0.9.0+)
 - **DisplayerFactory**: Factory for creating display components
 - **HtmlText**: Text display utilities
 
@@ -229,7 +229,7 @@ class HTMLAddressDisplayer {
 }
 ```
 
-#### HTMLSidraDisplayer (v0.7.2+)
+#### HTMLSidraDisplayer (v0.9.0+)
 
 **Purpose**: Display IBGE SIDRA demographic data (population statistics) for Brazilian municipalities
 
@@ -572,7 +572,7 @@ class GeoPosition {
     └─→ SpeechCoordinator: Announce address change (if enabled)
 ```
 
-### Position Update Logic (v0.7.2+)
+### Position Update Logic (v0.9.0+)
 
 **Critical Business Rule**: Updates trigger on **distance OR time** threshold:
 
@@ -654,14 +654,14 @@ if (isMobileDevice() && ['medium', 'bad', 'very bad'].includes(accuracyQuality))
 ### 1. guia.js Library
 
 **Repository**: [github.com/mpbarbosa/guia_js](https://github.com/mpbarbosa/guia_js)  
-**Version**: v0.6.0-alpha  
+**Version**: v0.9.0-alpha  
 **Purpose**: Core geolocation functionality
 
 **Integration**:
 ```javascript
 // package.json
 "dependencies": {
-  "guia.js": "github:mpbarbosa/guia_js#v0.6.0-alpha"
+  "guia.js": "github:mpbarbosa/guia_js#v0.9.0-alpha"
 }
 ```
 

@@ -3,7 +3,7 @@ import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Factory for creating displayer instances with dependency injection support.
- * @version 0.7.1-alpha
+ * @version 0.9.0-alpha
  * 
  * This factory provides a centralized point for creating displayer objects,
  * enabling dependency injection and easier testing. The factory methods are
@@ -38,7 +38,7 @@ import { log, warn, error } from '../utils/logger.js';
  * ```
  * 
  * @class DisplayerFactory
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -81,7 +81,7 @@ class DisplayerFactory {
 	 * // With element ID string
 	 * const displayer = DisplayerFactory.createPositionDisplayer('position-display');
 	 * 
-	 * @since 0.8.6-alpha
+	 * @since 0.9.0-alpha
 	 */
 	static createPositionDisplayer(element) {
 		const displayer = new HTMLPositionDisplayer(element);
@@ -115,7 +115,7 @@ class DisplayerFactory {
 	 * const standardizedElement = document.getElementById('standardized-display');
 	 * const displayer = DisplayerFactory.createAddressDisplayer(mainElement, standardizedElement);
 	 * 
-	 * @since 0.8.6-alpha
+	 * @since 0.9.0-alpha
 	 */
 	static createAddressDisplayer(element, enderecoPadronizadoDisplay = false) {
 		const displayer = new HTMLAddressDisplayer(element, enderecoPadronizadoDisplay);
@@ -150,7 +150,7 @@ class DisplayerFactory {
 	 * const additionalElement = document.getElementById('reference-detail');
 	 * const displayer = DisplayerFactory.createReferencePlaceDisplayer(mainElement, additionalElement);
 	 * 
-	 * @since 0.8.6-alpha
+	 * @since 0.9.0-alpha
 	 */
 	static createReferencePlaceDisplayer(element, referencePlaceDisplay = false) {
 		const displayer = new HTMLReferencePlaceDisplayer(element, referencePlaceDisplay);
@@ -180,7 +180,7 @@ class DisplayerFactory {
 	 * // With element ID string
 	 * const displayer = DisplayerFactory.createSidraDisplayer('sidra-display');
 	 * 
-	 * @since 0.8.6-alpha
+	 * @since 0.9.0-alpha
 	 */
 	static createSidraDisplayer(element) {
 		const displayer = new HTMLSidraDisplayer(element);
@@ -204,7 +204,7 @@ class DisplayerFactory {
 	 * // With document object
 	 * const displayer = DisplayerFactory.createHighlightCardsDisplayer(document);
 	 * 
-	 * @since 0.8.6-alpha
+	 * @since 0.9.0-alpha
 	 */
 	static createHighlightCardsDisplayer(document) {
 		const displayer = new HTMLHighlightCardsDisplayer(document);
@@ -224,7 +224,7 @@ class DisplayerFactory {
 	 * log(DisplayerFactory.toString());
 	 * // Output: "DisplayerFactory: 3 factory methods available"
 	 * 
-	 * @since 0.8.6-alpha
+	 * @since 0.9.0-alpha
 	 */
 	static toString() {
 		return `${this.name}: 5 factory methods available`;

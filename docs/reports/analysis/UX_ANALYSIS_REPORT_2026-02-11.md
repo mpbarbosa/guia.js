@@ -1,4 +1,4 @@
-# UX Analysis Report: Guia Turístico v0.8.7-alpha
+# UX Analysis Report: Guia Turístico v0.9.0-alpha
 
 ## Executive Summary
 **5 critical issues | 12 improvements | 8 optimizations**
@@ -61,7 +61,7 @@ The Guia Turístico application demonstrates solid foundational design with Mate
   - Accessibility barrier for people with motor impairments
   - Violates WCAG 2.5.5 AAA standards
 - **Recommendation**:
-  - Standardize all interactive elements to min-height: 48px (v0.8.7+) on mobile
+  - Standardize all interactive elements to min-height: 48px (v0.9.0+) on mobile
   - Increase button padding to 16px (horizontal) × 12px (vertical) minimum
   - Fix footer textarea: use `box-sizing: border-box` and `width: 100%` with consistent padding
   - Add `gap: 8px` between button clusters to prevent accidental activation
@@ -169,7 +169,7 @@ The Guia Turístico application demonstrates solid foundational design with Mate
 - **Category**: User Feedback / Consistency
 - **Severity**: Medium
 - **Location**: `src/loading-states.css`, skeleton loaders
-- **Description**: Skeleton loading animation exists for cards (`skeleton-shimmer` keyframe, v0.8.7-alpha) but:
+- **Description**: Skeleton loading animation exists for cards (`skeleton-shimmer` keyframe, v0.9.0-alpha) but:
   - Not applied consistently to all data sections
   - Coordinates section shows "Aguardando localização..." as text instead of skeleton
   - Address data has no placeholder animation
@@ -488,7 +488,7 @@ The Guia Turístico application demonstrates solid foundational design with Mate
 ✅ Button component well-documented
 ✅ Card component patterns established
 ✅ Form element styling consistent
-⚠️ **Gap**: No navigation component (removed in v0.8.4)
+⚠️ **Gap**: No navigation component (removed in v0.9.0)
 ⚠️ **Gap**: Modal/dialog styling missing
 
 ### Utilization Rate

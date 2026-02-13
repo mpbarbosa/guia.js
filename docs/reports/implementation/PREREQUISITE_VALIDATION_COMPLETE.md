@@ -463,6 +463,6 @@ Prerequisite validation is now **complete and production-ready**:
 
 ---
 
-**Version**: 0.6.0-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-01-01  
 **Issue #4**: ✅ **RESOLVED**

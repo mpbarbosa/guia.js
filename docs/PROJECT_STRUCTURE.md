@@ -1,8 +1,10 @@
 # Guia Turístico Project Structure Documentation
 
-**Version:** 0.7.1-alpha  
+**Version:** 0.9.0-alpha  
 **Last Updated:** 2026-01-16  
 **Project Type:** Tourist Guide Web Application
+
+> **Project Overview**: For project identity, features, and quick start guide, see the [README.md](../README.md). This document focuses on directory organization and file structure.
 
 ## Overview
 
@@ -44,7 +46,7 @@ guia_turistico/
 │   │   ├── distance.js           # Haversine distance calculations
 │   │   ├── device.js             # Device/browser detection
 │   │   └── logger.js             # Logging with timestamps
-│   ├── views/                    # SPA view components (v0.8.4+)
+│   ├── views/                    # SPA view components (v0.9.0+)
 │   │   ├── home.js               # Main location tracking interface
 │   │   └── converter.js          # Coordinate converter utility
 │   └── *.css files               # Modular stylesheets
@@ -62,6 +64,8 @@ guia_turistico/
 ```
 
 ## Project Purpose
+
+> **Note**: For complete project identity and purpose, see the [README.md](../README.md) and [PROJECT_PURPOSE_AND_ARCHITECTURE.md](./PROJECT_PURPOSE_AND_ARCHITECTURE.md). This section focuses on the structural purpose of this repository.
 
 ### Primary Purpose
 - **Reusable library component** for Brazilian address geolocation
@@ -148,7 +152,7 @@ While not a GitHub Pages site, guia_js is distributed via jsDelivr CDN:
 ```html
 <!-- CDN usage in mpbarbosa.com -->
 <script type="module">
-  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js';
+  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js';
 </script>
 ```
 
@@ -167,14 +171,14 @@ SPA view components implementing application pages.
 **`home.js`** (495 lines, 24KB)
 - **Purpose**: Main location tracking interface (landing page)
 - **Route**: `#/` or `#` (default route)
-- **Version**: Since 0.8.4-alpha
+- **Version**: Since 0.9.0-alpha
 - **Test Coverage**: E2E tests in `__tests__/e2e/`
 
 **Key Features**:
 - Single location capture (one-time positioning)
 - Continuous location tracking (loop mode)
 - Toggle between tracking modes with checkbox
-- Contextual button status messages (v0.8.7-alpha)
+- Contextual button status messages (v0.9.0-alpha)
 - Real-time coordinate and address display
 - Integration with WebGeocodingManager
 
@@ -191,7 +195,7 @@ export default {
 **`converter.js`** (521 lines, 20KB)
 - **Purpose**: Coordinate-to-address converter utility
 - **Route**: `#/converter`
-- **Version**: Since 0.8.4-alpha
+- **Version**: Since 0.9.0-alpha
 - **Test Coverage**: Unit tests for address parsing
 
 **Key Features**:
@@ -237,7 +241,7 @@ The timing module provides performance and elapsed time tracking utilities for t
 **`Chronometer.js`** (305 lines, 9.7KB)
 - **Purpose**: Tracks and displays elapsed time since last position update
 - **Pattern**: Observer pattern implementation
-- **Version**: Since 0.8.3-alpha
+- **Version**: Since 0.9.0-alpha
 - **Test Coverage**: 51 tests in `__tests__/unit/Chronometer.test.js`
 
 **Key Features**:

@@ -21,7 +21,7 @@ import { log, warn, error } from '../utils/logger.js';
  * - SpeechController: Core speech synthesis operations
  * 
  * @class SpeechSynthesisManager
- * @since 0.8.4-alpha (refactored to facade pattern)
+ * @since 0.9.0-alpha (refactored to facade pattern)
  * @author Marcelo Pereira Barbosa
  * 
  * @example

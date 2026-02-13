@@ -27,7 +27,7 @@ import { escapeHtml } from '../utils/html-sanitizer.js';
  * degradation across different environments following MP Barbosa standards.
  * 
  * @module services/GeolocationService
- * @since 0.8.7-alpha (extracted from guia.js in Phase 2)
+ * @since 0.9.0-alpha (extracted from guia.js in Phase 2)
  * @author Marcelo Pereira Barbosa
  */
 
@@ -268,7 +268,7 @@ class GeolocationService {
 	 * const mockNavigator = { geolocation: mockGeolocationAPI };
 	 * const service = new GeolocationService(null, mockNavigator);
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	constructor(locationResult, geolocationProvider, positionManagerInstance, config = {}) {
 		log(">>> (GeolocationService) constructor called");
@@ -340,7 +340,7 @@ class GeolocationService {
 	 *   // Safe to request location
 	 * }
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	async checkPermissions() {
 		log(">>> (GeolocationService) checkPermissions called");
@@ -400,7 +400,7 @@ class GeolocationService {
 	 *   const position = await service.getSingleLocationUpdate();
 	 * }
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	async getSingleLocationUpdate() {
 		log(">>> (GeolocationService) getSingleLocationUpdate called");
@@ -485,7 +485,7 @@ class GeolocationService {
 	 * // Later, to stop watching:
 	 * service.stopWatching();
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	watchCurrentLocation() {
 		// Check if geolocation is supported using provider
@@ -538,7 +538,7 @@ class GeolocationService {
 	 * @example
 	 * service.stopWatching(); // Stops position monitoring
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	stopWatching() {
 		if (this.watchId !== null && this.isWatching) {
@@ -562,7 +562,7 @@ class GeolocationService {
 	 * @private
 	 * @param {GeolocationPosition} position - Position data from Geolocation API
 	 * @returns {void}
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	updateLocationDisplay(position) {
 		// Validate display element availability
@@ -619,7 +619,7 @@ class GeolocationService {
 	 * @private
 	 * @param {GeolocationPositionError} error - Geolocation error from API
 	 * @returns {void}
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	updateErrorDisplay(error) {
 		// Validate display element availability
@@ -635,7 +635,7 @@ class GeolocationService {
 	 * Gets the last known position without making a new API request.
 	 * 
 	 * @returns {GeolocationPosition|null} Last known position or null if none available
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getLastKnownPosition() {
 		return this.lastKnownPosition;
@@ -645,7 +645,7 @@ class GeolocationService {
 	 * Checks if the service is currently watching position.
 	 * 
 	 * @returns {boolean} True if position watching is active
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	isCurrentlyWatching() {
 		return this.isWatching;
@@ -655,7 +655,7 @@ class GeolocationService {
 	 * Gets the current watch ID.
 	 * 
 	 * @returns {number|null} Watch ID or null if not watching
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getCurrentWatchId() {
 		return this.watchId;
@@ -676,7 +676,7 @@ class GeolocationService {
 	 *   log('Request already in progress');
 	 * }
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	hasPendingRequest() {
 		return this.isPendingRequest;

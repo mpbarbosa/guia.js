@@ -1,7 +1,7 @@
 # Git Hooks Directory Investigation
 
 **Investigation Date**: 2026-01-06  
-**Project**: guia_turistico v0.7.0-alpha  
+**Project**: guia_turistico v0.9.0-alpha  
 **Focus Area**: `.github/hooks/` directory documentation  
 **Status**: ✅ Complete
 
@@ -52,7 +52,7 @@ Validates documentation consistency before commits are allowed, preventing:
 
 **Pattern**: `0.6.0-alpha` (hardcoded)
 
-**Issue Identified**: ⚠️ Hook checks for version `0.6.0-alpha` but project is currently `0.7.0-alpha`
+**Issue Identified**: ⚠️ Hook checks for version `0.6.0-alpha` but project is currently `0.9.0-alpha`
 
 #### Check 2: Test Count Validation
 **Files Checked**:
@@ -87,7 +87,7 @@ Validates documentation consistency before commits are allowed, preventing:
 ## ⚠️ Critical Issues Identified
 
 ### 1. Outdated Version Check (HIGH PRIORITY)
-**Problem**: Hook validates for version `0.6.0-alpha` when project is at `0.7.0-alpha`
+**Problem**: Hook validates for version `0.6.0-alpha` when project is at `0.9.0-alpha`
 
 **Impact**: Version updates would fail pre-commit check
 
@@ -456,7 +456,7 @@ If all developers install the hook:
 ## ✅ Implementation Checklist
 
 ### Phase 1: Critical Fixes (30 minutes)
-- [ ] Update hook version pattern: `0.6.0-alpha` → `0.7.0-alpha`
+- [ ] Update hook version pattern: `0.6.0-alpha` → `0.9.0-alpha`
 - [ ] Update hook test count pattern: `1224` → `1399`
 - [ ] Add git hooks section to `WORKFLOW_SETUP.md`
 - [ ] Test hook with both passing and failing scenarios
@@ -504,7 +504,7 @@ git commit -m "test: validate hook works"
 # Should pass all 5 checks
 
 # 4. Test version mismatch detection
-sed -i 's/0\.7\.0-alpha/0.8.0-alpha/' README.md
+sed -i 's/0\.7\.0-alpha/0.9.0-alpha/' README.md
 git add README.md
 git commit -m "test: should fail"
 # Should fail with version error

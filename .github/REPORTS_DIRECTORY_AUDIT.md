@@ -1,7 +1,7 @@
 # Reports Directory Documentation Audit
 
 **Audit Date**: 2026-01-06  
-**Project**: guia_turistico v0.7.0-alpha  
+**Project**: guia_turistico v0.9.0-alpha  
 **Focus Area**: `docs/reports/` directory structure  
 **Priority**: Low  
 **Status**: ✅ Complete

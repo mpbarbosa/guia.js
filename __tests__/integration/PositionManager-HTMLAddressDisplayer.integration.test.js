@@ -17,7 +17,7 @@
  * 8. Portuguese localization
  * 
  * @author Marcelo Pereira Barbosa
- * @since 0.7.0-alpha
+ * @since 0.9.0-alpha
  */
 
 import { jest } from '@jest/globals';

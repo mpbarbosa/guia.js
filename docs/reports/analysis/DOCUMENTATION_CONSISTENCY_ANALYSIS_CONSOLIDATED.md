@@ -1,7 +1,7 @@
 # Documentation Consistency Analysis - Consolidated Report
 
 **Project**: Guia Turístico (guia_turistico)  
-**Current Version**: 0.8.7-alpha (as of 2026-01-28)  
+**Current Version**: 0.9.0-alpha (as of 2026-01-28)  
 **Report Period**: 2026-01-09 to 2026-01-28  
 **Consolidated**: 2026-01-28  
 **Analysis Count**: 5 historical reports consolidated
@@ -29,11 +29,11 @@ This consolidated report combines findings from 5 documentation consistency anal
 
 The Guia Turístico project has demonstrated **consistent improvement in documentation practices** over the analysis period (Jan 9-27, 2026), with comprehensive guides across 289-1,035 documentation files (depending on scope). Key improvements include:
 
-- ✅ **Version consistency achieved**: All major version mismatches resolved (0.6.0 → 0.7.0 → 0.7.1-alpha → 0.8.7-alpha)
+- ✅ **Version consistency achieved**: All major version mismatches resolved (0.9.0 → 0.9.0 → 0.9.0-alpha → 0.9.0-alpha)
 - ✅ **Test count accuracy improved**: From 1,251 to 1,282 to 1,516 to 1,982 passing tests documented accurately
 - ✅ **Project identity clarified**: Clear distinction between "Guia Turístico" (application) and "guia.js" (library)
 - ✅ **Reference checking automated**: Implemented tooling with 96% false positive reduction
-- ⚠️ **Version progression resolved**: package.json bumped to 0.8.7-alpha (2026-01-28)
+- ⚠️ **Version progression resolved**: package.json bumped to 0.9.0-alpha (2026-01-28)
 
 ### Current Status (2026-01-28)
 
@@ -41,7 +41,7 @@ The Guia Turístico project has demonstrated **consistent improvement in documen
 
 **Documentation Metrics**:
 - **Total Files**: 289+ documentation files, 1,327+ markdown files total
-- **Version Consistency**: ✅ 100% aligned (0.8.7-alpha)
+- **Version Consistency**: ✅ 100% aligned (0.9.0-alpha)
 - **Test Count Accuracy**: ✅ 2,212 passing / 2,374 total (documented accurately)
 - **Broken References**: 115 legitimate issues identified (requires separate cleanup)
 - **JSDoc Coverage**: 100% across all source files
@@ -55,18 +55,18 @@ The Guia Turístico project has demonstrated **consistent improvement in documen
 #### 1. Version Number Mismatches (RESOLVED)
 
 **Timeline**:
-- **2026-01-09**: Discovered 0.6.0-alpha in CONTRIBUTING.md vs 0.7.0-alpha in package.json
-- **2026-01-10**: Updated to 0.7.0-alpha, but 1,301 references remained outdated
-- **2026-01-14**: CRITICAL issue - src/config/defaults.js showed 0.6.0, package.json showed 0.7.1-alpha
-- **2026-01-24**: Version consistency good at 0.7.1-alpha
-- **2026-01-27**: Documented v0.8.7-alpha features in CHANGELOG (Unreleased section)
-- **2026-01-28**: ✅ **RESOLVED** - Bumped package.json to 0.8.7-alpha, all docs aligned
+- **2026-01-09**: Discovered 0.9.0-alpha in CONTRIBUTING.md vs 0.9.0-alpha in package.json
+- **2026-01-10**: Updated to 0.9.0-alpha, but 1,301 references remained outdated
+- **2026-01-14**: CRITICAL issue - src/config/defaults.js showed 0.9.0, package.json showed 0.9.0-alpha
+- **2026-01-24**: Version consistency good at 0.9.0-alpha
+- **2026-01-27**: Documented v0.9.0-alpha features in CHANGELOG (Unreleased section)
+- **2026-01-28**: ✅ **RESOLVED** - Bumped package.json to 0.9.0-alpha, all docs aligned
 
 **Final Resolution**:
-- package.json: `0.8.7-alpha` ✅
-- CHANGELOG.md: [0.8.7-alpha] section created ✅
+- package.json: `0.9.0-alpha` ✅
+- CHANGELOG.md: [0.9.0-alpha] section created ✅
 - README.md: Version references updated with ✅ markers
-- .github/copilot-instructions.md: Updated to 0.8.7-alpha ✅
+- .github/copilot-instructions.md: Updated to 0.9.0-alpha ✅
 - All source code version constants aligned ✅
 
 **Impact**: HIGH → **RESOLVED** - No more version confusion across 289+ documentation files
@@ -253,7 +253,7 @@ The Guia Turístico project has demonstrated **consistent improvement in documen
 ---
 Last Updated: 2026-01-28
 Status: Active
-Version: 0.8.7-alpha
+Version: 0.9.0-alpha
 Category: Architecture|Testing|API|Guide|Report
 ---
 ```
@@ -322,9 +322,9 @@ Category: Architecture|Testing|API|Guide|Report
    - Breadcrumb navigation added
 
 5. **Version Progression** ✅
-   - 0.6.0 → 0.7.0 → 0.7.1 → 0.8.7-alpha
+   - 0.9.0 → 0.9.0 → 0.9.0 → 0.9.0-alpha
    - All critical features documented and tested
-   - Git tag v0.8.7-alpha created
+   - Git tag v0.9.0-alpha created
 
 ---
 
@@ -374,7 +374,7 @@ None ✅
 
 - **Canonical Source**: package.json
 - **Semantic Versioning**: MAJOR.MINOR.PATCH-prerelease
-- **Current**: 0.8.7-alpha
+- **Current**: 0.9.0-alpha
 - **Convention**: Update CHANGELOG first, then bump package.json at release
 
 ### 2. Project Terminology
@@ -526,7 +526,7 @@ grep -rh "https\?://" docs/*.md | wc -l
 The Guia Turístico project has demonstrated **exceptional commitment to documentation quality** over the analysis period. Starting with 21 identified issues across critical, high, medium, and low priorities, the project achieved a **90% resolution rate** with only 2 non-critical items remaining. Key accomplishments include:
 
 - ✅ **100% critical issue resolution** (5/5 resolved)
-- ✅ **Version progression from 0.6.0 to 0.8.7-alpha** with complete alignment
+- ✅ **Version progression from 0.9.0 to 0.9.0-alpha** with complete alignment
 - ✅ **Test count accuracy improved from 91% to 99.3%** (2,212/2,374)
 - ✅ **Automated tooling infrastructure** (4 new scripts, 96% accuracy)
 - ✅ **Documentation hub and navigation** (6.8KB hub, breadcrumbs, metadata)

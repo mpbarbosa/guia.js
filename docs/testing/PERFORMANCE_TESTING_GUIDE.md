@@ -651,6 +651,6 @@ function checkBudget(metric, value) {
 
 ---
 
-**Version**: 0.6.0-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-01-01  
 **Performance Targets**: LCP < 2.5s, FID < 100ms, CLS < 0.1

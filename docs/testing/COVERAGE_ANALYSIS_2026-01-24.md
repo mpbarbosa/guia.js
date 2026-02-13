@@ -1,7 +1,7 @@
 # Test Coverage Analysis Report
 
 **Date**: 2026-01-24  
-**Version**: 0.8.6+  
+**Version**: 0.9.0+  
 **Test Count**: 1,904 passing (2,050 total)
 
 ## Executive Summary

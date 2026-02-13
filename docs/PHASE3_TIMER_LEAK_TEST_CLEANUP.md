@@ -60,7 +60,7 @@ Investigation revealed **WebGeocodingManager** as the primary leak source:
  * when the manager needs to be disposed properly.
  * 
  * @returns {void}
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  */
 destroy() {
     // Stop geolocation service if active
@@ -603,5 +603,5 @@ Phase 3 successfully completes the Timer Leak Cleanup initiative by adding compr
 
 **Report Generated**: 2026-01-09  
 **Author**: GitHub Copilot CLI (MP Barbosa)  
-**Project**: Guia Turístico v0.8.6-alpha  
+**Project**: Guia Turístico v0.9.0-alpha  
 **Phase**: Timer Leak Cleanup - Phase 3 Complete ✅

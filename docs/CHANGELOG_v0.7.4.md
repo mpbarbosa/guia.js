@@ -1,6 +1,6 @@
 # Changelog - Visual Hierarchy Improvements
 
-## Version 0.7.4 (2026-01-03)
+## Version 1.0.0 (2026-01-03)
 
 ### 🎨 Visual Hierarchy Improvements
 
@@ -61,7 +61,7 @@
   - No breaking changes to HTML structure
 
 - **src/index.html**
-  - Version bumped: 0.7.3 → 0.7.4
+  - Version bumped: 1.0.0 → 1.0.0
   - Date updated: 2026-01-03
 
 - **docs/testing/INTEGRATION_TESTS.md**
@@ -228,6 +228,6 @@ Potential improvements for future versions:
 ---
 
 **Status**: ✅ Complete  
-**Version**: 0.7.4  
+**Version**: 1.0.0  
 **Date**: 2026-01-03  
 **Next**: Code review and merge to main

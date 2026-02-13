@@ -49,7 +49,7 @@ src/
 ```javascript
 import { GUIA_VERSION, createDefaultConfig } from './config/defaults.js';
 
-console.log(GUIA_VERSION.toString()); // "0.8.6-alpha"
+console.log(GUIA_VERSION.toString()); // "0.9.0-alpha"
 const config = createDefaultConfig();
 ```
 
@@ -219,7 +219,7 @@ See `.github/REFERENTIAL_TRANSPARENCY.md` for more details.
 
 ## Version History
 
-- **v0.8.6-alpha**: Module splitting implementation (2025-10-15)
+- **v0.9.0-alpha**: Module splitting implementation (2025-10-15)
   - Created utils/ and config/ directories
   - Extracted 157 lines into 4 new modules
   - Enabled ES6 module system

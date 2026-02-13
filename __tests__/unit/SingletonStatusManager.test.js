@@ -14,7 +14,7 @@
  * - Memory management and instance lifecycle
  * - Cross-environment compatibility (browser/Node.js)
  * 
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -30,7 +30,7 @@ global.console = {
 // Import the class under test
 const SingletonStatusManager = (await import('../../src/status/SingletonStatusManager.js')).default;
 
-describe('SingletonStatusManager - MP Barbosa Travel Guide (v0.8.3-alpha)', () => {
+describe('SingletonStatusManager - MP Barbosa Travel Guide (v0.9.0-alpha)', () => {
     
     beforeEach(() => {
         jest.clearAllMocks();

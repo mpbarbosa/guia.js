@@ -34,7 +34,7 @@ content = content.replace(/AddressDataExtractor\./g, 'AddressCache.getInstance()
 **Files Affected**:
 - `docs/CODE_PATTERN_DOCUMENTATION_GUIDE.md`
 - `docs/STATIC_WRAPPER_ELIMINATION.md`
-- `docs/TESTING_HTML_GENERATION.md`
+- `docs/testing/HTML_GENERATION.md`
 - Other documentation files with code examples
 
 ### 2. Code Comment Placeholders (6 instances)
@@ -192,7 +192,7 @@ grep -rn "\/src for" docs/ | head -5
 ## Related Documentation
 
 - [CODE_PATTERN_DOCUMENTATION_GUIDE.md](../CODE_PATTERN_DOCUMENTATION_GUIDE.md) - Code documentation standards
-- [TESTING_HTML_GENERATION.md](../TESTING_HTML_GENERATION.md) - HTML generation testing patterns
+- [HTML_GENERATION.md](../testing/HTML_GENERATION.md) - HTML generation testing patterns
 - [DIRECTORY_ORGANIZATION.md](../DIRECTORY_ORGANIZATION.md) - Documentation organization structure
 
 ## Conclusion

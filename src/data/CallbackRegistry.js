@@ -19,7 +19,7 @@
  * reducing ~240 lines of code duplication.
  * 
  * @module data/CallbackRegistry
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  * 
  * @example
@@ -56,7 +56,7 @@ class CallbackRegistry {
 	 * 
 	 * Initializes the internal Map to store callbacks by type.
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	constructor() {
 		/**
@@ -92,7 +92,7 @@ class CallbackRegistry {
 	 * // Invalid - throws TypeError
 	 * registry.register('municipio', 'not a function'); // TypeError
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	register(type, callback) {
 		if (callback !== null && typeof callback !== 'function') {
@@ -123,7 +123,7 @@ class CallbackRegistry {
 	 * // Returns null if not registered
 	 * const cb = registry.get('nonexistent'); // null
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	get(type) {
 		return this.callbacks.get(type) || null;
@@ -155,7 +155,7 @@ class CallbackRegistry {
 	 * });
 	 * registry.execute('municipio'); // Logs error, doesn't crash
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	execute(type, ...args) {
 		const callback = this.callbacks.get(type);
@@ -194,7 +194,7 @@ class CallbackRegistry {
 	 * @example
 	 * registry.has('nonexistent'); // false
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	has(type) {
 		return this.callbacks.has(type);
@@ -216,7 +216,7 @@ class CallbackRegistry {
 	 * @example
 	 * const success = registry.unregister('nonexistent'); // false
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	unregister(type) {
 		return this.callbacks.delete(type);
@@ -234,7 +234,7 @@ class CallbackRegistry {
 	 * registry.has('logradouro'); // false
 	 * registry.has('bairro'); // false
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	clear() {
 		this.callbacks.clear();
@@ -258,7 +258,7 @@ class CallbackRegistry {
 	 * const emptyRegistry = new CallbackRegistry();
 	 * emptyRegistry.getRegisteredTypes(); // []
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getRegisteredTypes() {
 		return Array.from(this.callbacks.keys());
@@ -274,7 +274,7 @@ class CallbackRegistry {
 	 * registry.register('bairro', callback);
 	 * registry.size(); // 2
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	size() {
 		return this.callbacks.size;
@@ -292,7 +292,7 @@ class CallbackRegistry {
 	 * registry.register('logradouro', callback);
 	 * registry.isEmpty(); // false
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	isEmpty() {
 		return this.callbacks.size === 0;

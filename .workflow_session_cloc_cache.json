@@ -1,0 +1,153 @@
+{"header" : {
+  "cloc_url"           : "github.com/AlDanial/cloc",
+  "cloc_version"       : "2.04",
+  "elapsed_seconds"    : 19.2047238349915,
+  "n_files"            : 20694,
+  "n_lines"            : 5749771,
+  "files_per_second"   : 1077.54738770547,
+  "lines_per_second"   : 299393.578861248},
+"Markdown" :{
+  "nFiles": 1855,
+  "blank": 284682,
+  "comment": 686,
+  "code": 1543598},
+"JavaScript" :{
+  "nFiles": 12659,
+  "blank": 143809,
+  "comment": 241624,
+  "code": 1335549},
+"Python" :{
+  "nFiles": 2393,
+  "blank": 119863,
+  "comment": 173245,
+  "code": 608442},
+"TypeScript" :{
+  "nFiles": 2291,
+  "blank": 23438,
+  "comment": 150787,
+  "code": 275209},
+"HTML" :{
+  "nFiles": 302,
+  "blank": 397399,
+  "comment": 637,
+  "code": 236753},
+"JSON" :{
+  "nFiles": 828,
+  "blank": 25,
+  "comment": 0,
+  "code": 168631},
+"SVG" :{
+  "nFiles": 6,
+  "blank": 0,
+  "comment": 0,
+  "code": 10987},
+"Text" :{
+  "nFiles": 157,
+  "blank": 748,
+  "comment": 0,
+  "code": 8858},
+"CSS" :{
+  "nFiles": 34,
+  "blank": 806,
+  "comment": 402,
+  "code": 4519},
+"XML" :{
+  "nFiles": 10,
+  "blank": 0,
+  "comment": 1,
+  "code": 3856},
+"C" :{
+  "nFiles": 6,
+  "blank": 1088,
+  "comment": 176,
+  "code": 3555},
+"Bourne Shell" :{
+  "nFiles": 31,
+  "blank": 678,
+  "comment": 670,
+  "code": 3163},
+"YAML" :{
+  "nFiles": 82,
+  "blank": 437,
+  "comment": 177,
+  "code": 2751},
+"Windows Module Definition" :{
+  "nFiles": 5,
+  "blank": 83,
+  "comment": 0,
+  "code": 451},
+"Bourne Again Shell" :{
+  "nFiles": 7,
+  "blank": 60,
+  "comment": 27,
+  "code": 376},
+"CoffeeScript" :{
+  "nFiles": 4,
+  "blank": 32,
+  "comment": 19,
+  "code": 287},
+"reStructuredText" :{
+  "nFiles": 2,
+  "blank": 66,
+  "comment": 60,
+  "code": 174},
+"INI" :{
+  "nFiles": 8,
+  "blank": 35,
+  "comment": 0,
+  "code": 130},
+"PHP" :{
+  "nFiles": 1,
+  "blank": 13,
+  "comment": 19,
+  "code": 124},
+"Jinja Template" :{
+  "nFiles": 1,
+  "blank": 0,
+  "comment": 0,
+  "code": 120},
+"PowerShell" :{
+  "nFiles": 1,
+  "blank": 50,
+  "comment": 90,
+  "code": 108},
+"Fish Shell" :{
+  "nFiles": 1,
+  "blank": 13,
+  "comment": 14,
+  "code": 42},
+"CMake" :{
+  "nFiles": 3,
+  "blank": 14,
+  "comment": 0,
+  "code": 39},
+"SQL" :{
+  "nFiles": 1,
+  "blank": 2,
+  "comment": 0,
+  "code": 28},
+"C Shell" :{
+  "nFiles": 1,
+  "blank": 10,
+  "comment": 5,
+  "code": 12},
+"make" :{
+  "nFiles": 2,
+  "blank": 6,
+  "comment": 0,
+  "code": 9},
+"DOS Batch" :{
+  "nFiles": 2,
+  "blank": 0,
+  "comment": 0,
+  "code": 2},
+"Properties" :{
+  "nFiles": 1,
+  "blank": 0,
+  "comment": 1,
+  "code": 1},
+"SUM": {
+  "blank": 973357,
+  "comment": 568640,
+  "code": 4207774,
+  "nFiles": 20694} }

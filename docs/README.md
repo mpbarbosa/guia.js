@@ -95,7 +95,7 @@ General purpose guides and how-tos:
 - [SIDRA Data](./SIDRA_INTEGRATION.md)
 
 **UI & Display**
-- [HTML Generation Testing](./TESTING_HTML_GENERATION.md)
+- [HTML Generation Testing](./testing/HTML_GENERATION.md)
 - [Highlight Cards Display](./architecture/HTML_HIGHLIGHT_CARDS_DISPLAYER.md)
 - [Views Layer](./architecture/VIEWS_LAYER.md)
 
@@ -179,5 +179,5 @@ Found outdated information or broken links? Want to improve documentation?
 ---
 
 **Last Updated**: 2026-01-28  
-**Documentation Version**: 0.7.1-alpha  
+**Documentation Version**: 0.9.0-alpha  
 **Total Documentation Files**: 312+ markdown files

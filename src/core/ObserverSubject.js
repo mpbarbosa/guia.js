@@ -15,7 +15,7 @@
  * 
  * @module core/ObserverSubject
  * @class
- * @since 0.8.4-alpha
+ * @since 0.9.0-alpha
  * 
  * @example
  * // Using in a class via composition

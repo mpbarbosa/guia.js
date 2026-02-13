@@ -78,5 +78,5 @@ fi
 ---
 
 **Status**: ✅ **Complete**  
-**Version**: 0.6.0-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-01-01

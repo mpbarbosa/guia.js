@@ -1,9 +1,9 @@
 # AddressCache API Documentation
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **File:** `src/data/AddressCache.js` (1,165 lines)  
 **Author:** Marcelo Pereira Barbosa  
-**Since:** 0.8.4-alpha
+**Since:** 0.9.0-alpha
 
 ## Overview
 

@@ -1,5 +1,19 @@
 # Project Clarification - Guia Turístico vs Guia.js
 
+---
+**⚠️ ARCHIVED DOCUMENT - Historical Reference Only**
+
+**Status**: Archived (2026-02-13)  
+**Original Date**: 2026-01-06  
+**Purpose**: Historical record of project identity clarifications made on 2026-01-06
+
+**Note**: This document preserves the historical context of confusion resolution between guia.js library and guia_turistico application. For current project information, see:
+- [README.md](../README.md) - Current project overview
+- [PROJECT_PURPOSE_AND_ARCHITECTURE.md](./PROJECT_PURPOSE_AND_ARCHITECTURE.md) - Architectural details
+- [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - Directory organization
+
+---
+
 ## Summary
 
 This document clarifies the relationship between two separate projects:
@@ -8,7 +22,7 @@ This document clarifies the relationship between two separate projects:
 - **Location**: `/home/mpb/Documents/GitHub/guia_js`
 - **Repository**: `https://github.com/mpbarbosa/guia_js`
 - **Purpose**: JavaScript geolocation library for Brazilian addresses
-- **Version**: 0.6.0 (stable)
+- **Version**: 0.9.0 (stable)
 - **Main File**: `src/guia.js`
 - **Nature**: Reusable library/module
 
@@ -16,7 +30,7 @@ This document clarifies the relationship between two separate projects:
 - **Location**: `/home/mpb/Documents/GitHub/guia_turistico` (THIS PROJECT)
 - **Repository**: `https://github.com/mpbarbosa/guia.js` (TBD - may need separate repo)
 - **Purpose**: Tourist guide web application (SPA) that uses guia.js
-- **Version**: 0.7.0-alpha (development)
+- **Version**: 0.9.0-alpha (development)
 - **Main File**: `src/app.js`
 - **Nature**: End-user application with routing, UI, and features
 
@@ -32,7 +46,7 @@ guia_turistico (Application)
 
 ### 1. package.json
 - Changed `name` from `"guia_js"` to `"guia_turistico"`
-- Updated `version` from `"0.6.0-alpha"` to `"0.7.0-alpha"`
+- Updated `version` from `"0.9.0-alpha"` to `"0.9.0-alpha"`
 - Updated `description` to clarify this is an application
 - Changed `main` from `"src/guia.js"` to `"src/app.js"`
 - Updated `keywords` to include "tourist-guide", "spa", "guia-js"
@@ -85,7 +99,7 @@ Fixed critical version number inconsistencies in API documentation:
 #### Consolidated Documentation: docs/api-integration/NOMINATIM_INTEGRATION.md
 - **Consolidated** previous NOMINATIM_API_FORMAT.md and OSM_ADDRESS_TRANSLATION.md
 - **Updated**: All project references to "Guia Turístico" 
-- **Version**: Set to `0.7.0-alpha` throughout
+- **Version**: Set to `0.9.0-alpha` throughout
 - **Last Updated**: `2026-01-10`
 - **Content**: Combined Nominatim API format specification and OSM address translation
 - **Benefits**: Single comprehensive reference, eliminates duplication, easier maintenance
@@ -93,8 +107,8 @@ Fixed critical version number inconsistencies in API documentation:
 ### Version Alignment Summary
 
 All documentation now correctly references:
-- **Current Version**: 0.7.0-alpha (Guia Turístico application)
-- **Historical Version**: 0.6.0-alpha (previous guia.js library version)
+- **Current Version**: 0.9.0-alpha (Guia Turístico application)
+- **Historical Version**: 0.9.0-alpha (previous guia.js library version)
 - **Last Updated**: 2026-01-06 (reflects current documentation state)
 
 ### Impact
@@ -102,7 +116,7 @@ All documentation now correctly references:
 - ✅ Documentation credibility restored
 - ✅ Version consistency across all files
 - ✅ Clear historical timeline established
-- ✅ No more confusion between 0.6.0, 0.7.0, and 0.8.5 versions
+- ✅ No more confusion between 0.9.0, 0.9.0, and 0.9.0 versions
 
 ## Test Count Inconsistency Fix (2026-01-06)
 
@@ -200,7 +214,7 @@ Created `/home/mpb/Documents/GitHub/guia_turistico/TESTING.md` as central testin
 - .github/TDD_GUIDE.md
 - .github/UNIT_TEST_GUIDE.md
 - .github/JEST_COMMONJS_ES6_GUIDE.md (essential reading)
-- docs/TESTING_HTML_GENERATION.md
+- docs/testing/HTML_GENERATION.md
 - docs/testing/E2E_TESTING_GUIDE.md
 - docs/testing/PERFORMANCE_TESTING_GUIDE.md
 - And 6 more specialized guides
@@ -343,7 +357,7 @@ No changes needed to documentation - all patterns are intentional and valid.
 
 **Total Issues Resolved in This Session**: 4 Critical
 1. ✅ Project identity confusion (guia.js vs guia_turistico)
-2. ✅ Version number mismatches (0.8.5-alpha → 0.7.0-alpha)
+2. ✅ Version number mismatches (0.9.0-alpha → 0.9.0-alpha)
 3. ✅ Test count inconsistency (180 → 1,251 tests)
 4. ✅ Missing TESTING.md file (created comprehensive hub)
 5. ✅ False positive patterns (documented and provided exclusion rules)
@@ -593,7 +607,7 @@ node .github/scripts/jsdoc-audit.js || exit 1
 
 **Session Summary - All Issues Resolved**:
 1. ✅ Project identity (guia_turistico vs guia.js)
-2. ✅ Version mismatches (0.8.5 → 0.7.0)
+2. ✅ Version mismatches (0.9.0 → 0.9.0)
 3. ✅ Test count inconsistency (180/1224 → 1,251/1,399)
 4. ✅ Missing TESTING.md (created 11KB hub)
 5. ✅ False positives (documented patterns, 8.7KB guide)
@@ -732,7 +746,7 @@ python3 .github/scripts/check-links.py
 **All 8 Documentation Issues Resolved**:
 
 1. ✅ **Project Identity** - Clarified guia_turistico vs guia.js
-2. ✅ **Version Mismatches** - Fixed 0.8.5 → 0.7.0 (2 files)
+2. ✅ **Version Mismatches** - Fixed 0.9.0 → 0.9.0 (2 files)
 3. ✅ **Test Counts** - Updated 180/1224 → 1,251/1,399 (15+ refs)
 4. ✅ **Missing TESTING.md** - Created 11KB hub
 5. ✅ **False Positives** - Documented 44+ patterns (8.7KB)
@@ -871,7 +885,7 @@ python3 .github/scripts/check-links.py
 **All 9 Issues Addressed**:
 
 1. ✅ **Project Identity** - guia_turistico vs guia.js clarified
-2. ✅ **Version Mismatches** - 0.8.5 → 0.7.0 fixed
+2. ✅ **Version Mismatches** - 0.9.0 → 0.9.0 fixed
 3. ✅ **Test Counts** - 180/1224 → 1,251/1,399 accurate
 4. ✅ **Missing TESTING.md** - 11KB hub created
 5. ✅ **False Positives** - 44+ patterns documented
@@ -1030,7 +1044,7 @@ Each path includes:
 **All 10 Issues Fully Addressed**:
 
 1. ✅ **Project Identity** - Clarified guia_turistico vs guia.js
-2. ✅ **Version Mismatches** - Fixed 0.8.5 → 0.7.0
+2. ✅ **Version Mismatches** - Fixed 0.9.0 → 0.9.0
 3. ✅ **Test Counts** - Updated to 1,251/1,399 everywhere
 4. ✅ **Missing TESTING.md** - Created 11KB hub
 5. ✅ **False Positives** - Documented 44+ patterns

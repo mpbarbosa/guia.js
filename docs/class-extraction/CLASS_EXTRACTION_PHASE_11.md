@@ -1,7 +1,7 @@
 # Class Extraction Phase 11: SpeechItem
 
 **Data de Extração:** Dezembro 2024  
-**Versão:** 0.8.11-alpha  
+**Versão:** 0.9.0-alpha  
 **Autor:** Marcelo Pereira Barbosa  
 **Status:** Concluído
 

@@ -1,6 +1,6 @@
 # GeoPosition API Documentation
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Module:** `src/core/GeoPosition.js`  
 **Pattern:** Value Object (Immutable)  
 **Author:** Marcelo Pereira Barbosa
@@ -66,7 +66,7 @@ navigator.geolocation.getCurrentPosition((browserPosition) => {
 });
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ## Static Methods
 
@@ -96,7 +96,7 @@ console.log(GeoPosition.getAccuracyQuality(150));  // 'bad'
 console.log(GeoPosition.getAccuracyQuality(500));  // 'very bad'
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ## Instance Properties
 
@@ -153,7 +153,7 @@ console.log(`Restaurant is ${Math.round(distance)} meters away`);
 - Implement proximity-based features
 - Validate minimum distance thresholds
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -174,7 +174,7 @@ const quality = position.calculateAccuracyQuality(); // May throw error
 const quality = position.accuracyQuality; // Correct
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -193,7 +193,7 @@ console.log(position.toString());
 // Output: "GeoPosition: -23.5505, -46.6333, good, 760, 0, 0, 1634567890123"
 ```
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ## Usage Examples
 

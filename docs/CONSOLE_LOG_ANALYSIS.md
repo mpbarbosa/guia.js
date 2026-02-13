@@ -210,4 +210,4 @@ After the fix, we should see this complete flow:
 - `src/services/ReverseGeocoder.js` - Geocoding and observer notifications
 - `src/coordination/ServiceCoordinator.js` - Observer wiring
 - `src/html/HTMLHighlightCardsDisplayer.js` - DOM update handler
-- `src/config/defaults.js` - Configuration constants (includes ADDRESS_FETCHED_EVENT since v0.7.1+)
+- `src/config/defaults.js` - Configuration constants (includes ADDRESS_FETCHED_EVENT since v0.9.0+)

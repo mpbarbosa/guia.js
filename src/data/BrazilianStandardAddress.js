@@ -9,7 +9,7 @@ import { log, warn, error } from '../utils/logger.js';
  * Follows immutable patterns for data manipulation.
  * 
  * @module data/BrazilianStandardAddress
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -49,7 +49,7 @@ class BrazilianStandardAddress {
 	 * Returns the complete formatted street address (logradouro + número).
 	 * 
 	 * @returns {string} Formatted street address or just street name
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	logradouroCompleto() {
 		if (!this.logradouro) return "";
@@ -63,7 +63,7 @@ class BrazilianStandardAddress {
 	 * Returns the complete formatted neighborhood information.
 	 * 
 	 * @returns {string} Formatted neighborhood name
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	bairroCompleto() {
 		return this.bairro || "";
@@ -73,7 +73,7 @@ class BrazilianStandardAddress {
 	 * Returns the complete formatted city and state information.
 	 * 
 	 * @returns {string} Formatted city and state
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	municipioCompleto() {
 		if (!this.municipio) return "";
@@ -87,7 +87,7 @@ class BrazilianStandardAddress {
 	 * Returns the formatted metropolitan region name.
 	 * 
 	 * @returns {string} Metropolitan region name or empty string
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 * @example
 	 * // Returns "Região Metropolitana do Recife"
 	 * address.regiaoMetropolitana = "Região Metropolitana do Recife";
@@ -102,7 +102,7 @@ class BrazilianStandardAddress {
 	 * Uses immutable pattern to build address parts array.
 	 * 
 	 * @returns {string} Complete formatted address
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	enderecoCompleto() {
 		return [

@@ -75,7 +75,7 @@ Status: Active
 ---
 Last Updated: 2026-01-28
 Status: Active
-Version: 0.7.1-alpha
+Version: 0.9.0-alpha
 Category: Testing
 Maintainer: @username
 Related: [Link](./path.md)

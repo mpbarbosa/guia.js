@@ -4,7 +4,7 @@
  * 
  * @jest-environment node
  * @author MP Barbosa
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  */
 
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
@@ -34,7 +34,7 @@ try {
     console.warn('Could not load modules:', error.message);
 }
 
-describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.8.7-alpha)', () => {
+describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () => {
     let dom;
     let document;
     let displayer;

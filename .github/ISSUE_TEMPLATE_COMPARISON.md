@@ -444,4 +444,4 @@ Based on this comparison:
 
 **Last Updated**: Generated from templates in repository
 **Maintained By**: Guia Turístico Project Team
-**Version**: 0.8.5-alpha
+**Version**: 0.9.0-alpha

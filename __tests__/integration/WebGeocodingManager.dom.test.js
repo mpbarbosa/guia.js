@@ -1,7 +1,7 @@
 /**
  * @file WebGeocodingManager DOM Interaction Tests
  * @description Integration tests for WebGeocodingManager DOM manipulation and UI coordination
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  * 
  * **Test Coverage Goals**:
  * - DOM element getters (lines 472-521)

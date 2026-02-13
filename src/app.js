@@ -3,10 +3,12 @@
 /**
  * Main Application Entry Point
  * SPA Router and Application Initialization
- * @version 0.8.7-alpha
+ * @version 0.9.0-alpha
  */
 
 import WebGeocodingManager from './coordination/WebGeocodingManager.js';
+import Chronometer from './timing/Chronometer.js';
+import PositionManager from './core/PositionManager.js';
 import { log, warn, error } from './utils/logger.js';
 import { VERSION, VERSION_STRING } from './config/version.js';
 
@@ -46,7 +48,7 @@ const AppState = {
  * await init();
  * log('App ready');
  * 
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 async function init() {
@@ -106,7 +108,7 @@ async function init() {
  * // Called automatically during app initialization
  * initRouter();
  * 
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 function initRouter() {
@@ -127,7 +129,7 @@ function initRouter() {
  * Sets up the navigation UI by updating the active navigation link based on
  * the current route. This ensures proper visual feedback for the current page.
  * 
- * **Modified in v0.8.4**: Adapted to work with footer navigation (primary nav removed).
+ * **Modified in v0.9.0**: Adapted to work with footer navigation (primary nav removed).
  * 
  * @returns {void}
  * 
@@ -135,8 +137,8 @@ function initRouter() {
  * // Called automatically during app initialization
  * initNavigation();
  * 
- * @since 0.7.1-alpha
- * @modified 0.8.4-alpha - Adapted for footer navigation
+ * @since 0.9.0-alpha
+ * @modified 0.9.0-alpha - Adapted for footer navigation
  * @author Marcelo Pereira Barbosa
  */
 function initNavigation() {
@@ -168,7 +170,7 @@ function initNavigation() {
  * // Manual route handling
  * await handleRoute();
  * 
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 async function handleRoute() {
@@ -209,30 +211,45 @@ async function handleRoute() {
 /**
  * Manage keyboard focus after route changes.
  * Moves focus to the main heading of the new view for screen reader users
- * and keyboard navigation users.
+ * and keyboard navigation users. Falls back to main content area if no heading exists.
+ * 
+ * Uses requestAnimationFrame to ensure DOM is fully updated before focusing.
  * 
  * @returns {void}
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  */
 function manageFocusAfterRouteChange() {
-  // Find the main content area
-  const mainContent = document.getElementById('app-content');
-  if (!mainContent) return;
-  
-  // Find the first h1 heading in the view
-  const heading = mainContent.querySelector('h1');
-  if (heading) {
-    // Make heading focusable
-    heading.setAttribute('tabindex', '-1');
-    // Move focus to heading
-    heading.focus();
-    // Announce route change to screen readers
-    heading.setAttribute('aria-live', 'polite');
-    // Remove aria-live after announcement
-    setTimeout(() => {
-      heading.removeAttribute('aria-live');
-    }, 1000);
-  }
+  // Use requestAnimationFrame to ensure DOM is fully updated
+  requestAnimationFrame(() => {
+    // Find the main content area
+    const mainContent = document.getElementById('app-content');
+    if (!mainContent) {
+      warn('Main content element not found for focus management');
+      return;
+    }
+    
+    // Find the first h1 heading in the view
+    const heading = mainContent.querySelector('h1');
+    if (heading) {
+      // Make heading focusable
+      heading.setAttribute('tabindex', '-1');
+      // Move focus to heading
+      heading.focus();
+      // Announce route change to screen readers
+      heading.setAttribute('aria-live', 'polite');
+      // Remove aria-live after announcement
+      setTimeout(() => {
+        heading.removeAttribute('aria-live');
+      }, 1000);
+      log('Focus moved to h1 heading:', heading.textContent);
+    } else {
+      // Fallback: Focus on main content if no h1 found
+      // This ensures focus always moves on route change
+      mainContent.setAttribute('tabindex', '-1');
+      mainContent.focus();
+      log('Focus moved to main content (no h1 heading found)');
+    }
+  });
 }
 
 /**
@@ -252,7 +269,7 @@ function manageFocusAfterRouteChange() {
  * // Navigate to converter
  * navigateTo('/converter');
  * 
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 function navigateTo(path) {
@@ -267,7 +284,7 @@ function navigateTo(path) {
  * .app-footer locations. Removes the attribute from all other links to ensure
  * proper accessibility and visual feedback.
  * 
- * **Modified in v0.8.4**: Updated to search footer navigation after primary nav removal.
+ * **Modified in v0.9.0**: Updated to search footer navigation after primary nav removal.
  * 
  * @returns {void}
  * 
@@ -275,8 +292,8 @@ function navigateTo(path) {
  * // Called automatically during route changes
  * updateActiveNavLink();
  * 
- * @since 0.7.1-alpha
- * @modified 0.8.4-alpha - Search footer instead of primary nav
+ * @since 0.9.0-alpha
+ * @modified 0.9.0-alpha - Search footer instead of primary nav
  * @author Marcelo Pereira Barbosa
  */
 function updateActiveNavLink() {
@@ -306,7 +323,7 @@ function updateActiveNavLink() {
  * showLoading();
  * await loadConverterView();
  * 
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 function showLoading() {
@@ -338,7 +355,7 @@ function showLoading() {
  *   showError(error);
  * }
  * 
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 function showError(error) {
@@ -380,7 +397,7 @@ function showError(error) {
  * // Called automatically during routing
  * await initializeHomeView();
  * 
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 async function initializeHomeView() {
@@ -417,6 +434,23 @@ async function initializeHomeView() {
       });
       log('WebGeocodingManager initialized for home view');
       
+      // Initialize Chronometer for elapsed time display
+      const chronometerElement = document.getElementById('chronometer');
+      if (chronometerElement) {
+        const chronometer = new Chronometer(chronometerElement);
+        
+        // Subscribe chronometer to PositionManager for automatic updates
+        const positionManager = PositionManager.getInstance();
+        positionManager.subscribe(chronometer);
+        
+        // Start the chronometer immediately
+        chronometer.start();
+        
+        log('Chronometer initialized and started');
+      } else {
+        warn('chronometer element not found');
+      }
+      
       // Start tracking automatically
       AppState.manager.startTracking();
       log('Tracking started automatically');
@@ -441,7 +475,7 @@ async function initializeHomeView() {
  * // Called automatically during routing to /converter
  * await loadConverterView();
  * 
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 async function loadConverterView() {
@@ -516,7 +550,7 @@ async function loadConverterView() {
  * // Called automatically after loadConverterView
  * initializeConverterFeatures();
  * 
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 function initializeConverterFeatures() {
@@ -591,7 +625,7 @@ function initializeConverterFeatures() {
  * // Called automatically for unrecognized routes
  * await loadNotFoundView();
  * 
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 async function loadNotFoundView() {

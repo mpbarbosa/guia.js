@@ -15,7 +15,7 @@ The Guia Turístico project demonstrates **strong documentation practices** with
 
 **Key Findings**:
 - ✅ Excellent JSDoc coverage (100% of 41 files)
-- ⚠️ **CRITICAL**: Version inconsistency (0.6.0 in source, 0.7.1-alpha in package.json)
+- ⚠️ **CRITICAL**: Version inconsistency (0.9.0 in source, 0.9.0-alpha in package.json)
 - ⚠️ **CRITICAL**: Project identity confusion (Guia.js vs Guia Turístico terminology)
 - ⚠️ **HIGH**: Outdated test counts (1516 tests documented, 1739 actual)
 - ⚠️ **MEDIUM**: 19 broken reference patterns (valid code but flagged incorrectly)
@@ -31,10 +31,10 @@ The Guia Turístico project demonstrates **strong documentation practices** with
 **Affected Files**: 2 core files + 30+ documentation files
 
 **Problem**:
-- `package.json`: `"version": "0.7.1-alpha"` ✅ (correct)
-- `src/config/defaults.js` lines 15-23: Version object shows `0.6.0-alpha` ❌ (outdated)
-- `.github/copilot-instructions.md` line 3: References `version 0.7.0-alpha` ❌ (outdated)
-- Multiple docs reference `0.7.0-alpha` instead of `0.7.1-alpha`
+- `package.json`: `"version": "0.9.0-alpha"` ✅ (correct)
+- `src/config/defaults.js` lines 15-23: Version object shows `0.9.0-alpha` ❌ (outdated)
+- `.github/copilot-instructions.md` line 3: References `version 0.9.0-alpha` ❌ (outdated)
+- Multiple docs reference `0.9.0-alpha` instead of `0.9.0-alpha`
 
 **Recommended Fixes**:
 ```javascript
@@ -52,9 +52,9 @@ export const GUIA_VERSION = {
 
 **Files Requiring Updates**:
 1. `src/config/defaults.js` (line 16-18) - **SOURCE CODE CHANGE REQUIRED**
-2. `.github/copilot-instructions.md` (line 3) - Update to `version 0.7.1-alpha`
-3. `docs/misc/PROJECT_CLARIFICATION.md` (line 19) - Update to `0.7.1-alpha`
-4. `docs/DOCUMENTATION_AUDIT_FIXES_SUMMARY.md` - Search/replace `0.7.0` → `0.7.1`
+2. `.github/copilot-instructions.md` (line 3) - Update to `version 0.9.0-alpha`
+3. `docs/misc/PROJECT_CLARIFICATION.md` (line 19) - Update to `0.9.0-alpha`
+4. `docs/DOCUMENTATION_AUDIT_FIXES_SUMMARY.md` - Search/replace `0.9.0` → `0.9.0`
 5. All 30+ docs with version references (run: `npm run update:dates`)
 
 **Validation Command**:
@@ -103,7 +103,7 @@ provides guidelines for contributing to this tourist guide web application.
 ```markdown
 # Guia Turístico - Project Purpose and Architecture
 
-**Version**: 0.7.1-alpha  
+**Version**: 0.9.0-alpha  
 **Project Type**: Tourist Guide Web Application (SPA)  
 **Core Dependency**: [guia.js](https://github.com/mpbarbosa/guia_js)
 
@@ -206,14 +206,14 @@ export const GUIA_VERSION = {
 
 **Why Critical**:
 This is the ONLY source code file requiring changes. The version object is exported and used throughout the application. Misalignment causes:
-- Runtime version reporting shows `0.6.0-alpha` instead of `0.7.1-alpha`
+- Runtime version reporting shows `0.9.0-alpha` instead of `0.9.0-alpha`
 - CDN script generates wrong URLs
 - Developer confusion when debugging
 
 **Validation Test**:
 ```bash
 node -e "import('./src/config/defaults.js').then(m => console.log(m.GUIA_VERSION.toString()))"
-# Should output: 0.7.1-alpha
+# Should output: 0.9.0-alpha
 ```
 
 ---
@@ -226,12 +226,12 @@ node -e "import('./src/config/defaults.js').then(m => console.log(m.GUIA_VERSION
 
 **Current**:
 ```markdown
-Guia Turístico is a single-page web application (version 0.7.0-alpha) built on top of...
+Guia Turístico is a single-page web application (version 0.9.0-alpha) built on top of...
 ```
 
 **Correct**:
 ```markdown
-Guia Turístico is a single-page web application (version 0.7.1-alpha) built on top of...
+Guia Turístico is a single-page web application (version 0.9.0-alpha) built on top of...
 ```
 
 **Additional Copilot Instructions Updates Required**:
@@ -424,7 +424,7 @@ git tag v$(node -p "require('./package.json').version")
 ```
 
 **CDN URL Stability**:
-- ✅ **USE**: `@0.7.1-alpha` (version-specific, stable, cacheable)
+- ✅ **USE**: `@0.9.0-alpha` (version-specific, stable, cacheable)
 - ❌ **AVOID**: `@main` (branch-based, auto-updates, breaks unexpectedly)
 ```
 
@@ -540,7 +540,7 @@ Run these commands to verify all critical issues are resolved:
 ```bash
 # 1. Version Consistency Check
 grep -r "0\.7\.1-alpha" package.json src/config/defaults.js .github/copilot-instructions.md
-# Expected: All three files show 0.7.1-alpha
+# Expected: All three files show 0.9.0-alpha
 
 # 2. Test Count Verification
 npm test 2>&1 | grep "Tests:"
@@ -568,7 +568,7 @@ npm run automation:test
 ## Summary of Required Actions
 
 ### Immediate (Next Commit)
-1. ✅ **Update** `src/config/defaults.js` version to `0.7.1-alpha` (lines 16-18)
+1. ✅ **Update** `src/config/defaults.js` version to `0.9.0-alpha` (lines 16-18)
 2. ✅ **Update** `.github/copilot-instructions.md` version references
 3. ✅ **Update** `.github/CONTRIBUTING.md` project name references
 4. ✅ **Run** `npm run update:tests` to refresh test counts
@@ -599,7 +599,7 @@ npm run automation:test
 The Guia Turístico project maintains **excellent technical documentation** with industry-leading JSDoc coverage. The critical issues identified are straightforward to fix:
 
 **Primary Fix Required**: 
-- Update source code version in `src/config/defaults.js` from `0.6.0` to `0.7.1-alpha`
+- Update source code version in `src/config/defaults.js` from `0.9.0` to `0.9.0-alpha`
 - Align all documentation references to use consistent version and project identity
 
 **Estimated Fix Time**: 45 minutes total (1 source code change + documentation updates + validation)

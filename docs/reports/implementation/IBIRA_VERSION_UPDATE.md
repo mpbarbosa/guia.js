@@ -56,7 +56,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js
 $ node src/guia.js
 [Device Detection] Type: Desktop/Laptop
 [Device Detection] Rejecting accuracy levels: bad, very bad
-[2026-01-01T15:02:23.970Z] Guia.js version: 0.6.0-alpha
+[2026-01-01T15:02:23.970Z] Guia.js version: 0.9.0-alpha
 [2026-01-01T15:02:23.970Z] (guia.js) Ibira.js loaded successfully from node_modules
 ```
 
@@ -134,5 +134,5 @@ Follow the update procedure documented in `docs/IBIRA_INTEGRATION.md`:
 ---
 
 **Status**: ✅ **Update Complete and Verified**  
-**Version**: 0.6.0-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-01-01

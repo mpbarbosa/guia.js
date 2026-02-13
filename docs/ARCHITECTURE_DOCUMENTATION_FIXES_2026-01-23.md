@@ -1,7 +1,7 @@
 # Architecture Documentation Fixes - January 2026
 
 **Date**: 2026-01-23  
-**Version**: 0.8.6+  
+**Version**: 0.9.0+  
 **Scope**: Architecture validation and documentation gap resolution
 
 ## Overview
@@ -33,7 +33,7 @@ This document summarizes all documentation fixes applied based on the architectu
 ### 3. CHANGELOG.md - Recent Changes Documentation ✅
 
 **Issue**: Unreleased changes not documented  
-**Fix**: Added comprehensive changelog entries for v0.7.2+ features
+**Fix**: Added comprehensive changelog entries for v0.9.0+ features
 
 **Files Modified**:
 - `CHANGELOG.md` - [Unreleased] section:
@@ -70,7 +70,7 @@ This document summarizes all documentation fixes applied based on the architectu
 **Files Modified**:
 - `docs/testing/TEST_INFRASTRUCTURE.md`:
   - Updated test count to 1,899 passing, 146 skipped (line 21)
-  - Added "Recent E2E Tests (v0.7.2+)" section (lines 43-46)
+  - Added "Recent E2E Tests (v0.9.0+)" section (lines 43-46)
 
 ### 7. New Documentation: docs/SIDRA_INTEGRATION.md ✅
 

@@ -1,6 +1,6 @@
 # Developer Guide - Guia Turístico
 
-**Version**: 0.8.7-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-02-09  
 **Audience**: Developers contributing to or building on Guia Turístico
 
@@ -450,7 +450,7 @@ if (distance >= 20) {  // Magic number
  * console.log(distance); // 357870.6 (São Paulo to Rio, ~358km)
  * 
  * @see {@link https://en.wikipedia.org/wiki/Haversine_formula} Haversine formula
- * @since 0.6.0-alpha
+ * @since 0.9.0-alpha
  */
 function calculateDistance(lat1, lon1, lat2, lon2) {
   // Implementation...

@@ -326,7 +326,7 @@ class Chronometer {
    * especially in test environments to prevent timer leaks.
    * 
    * @returns {void}
-   * @since 0.7.0-alpha
+   * @since 0.9.0-alpha
    * 
    * @example
    * const chrono = new Chronometer();
@@ -355,7 +355,7 @@ class SpeechSynthesisManager {
    * test environments.
    * 
    * @returns {void}
-   * @since 0.7.0-alpha
+   * @since 0.9.0-alpha
    * 
    * @example
    * const manager = new SpeechSynthesisManager();
@@ -404,7 +404,7 @@ class AddressCache {
    * Important for test environments to prevent timer leaks.
    * 
    * @returns {void}
-   * @since 0.7.0-alpha
+   * @since 0.9.0-alpha
    */
   destroy() {
     // Stop cleanup timer

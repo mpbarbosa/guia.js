@@ -5,7 +5,7 @@
  * @jest-environment node
  * @author Marcelo Pereira Barbosa
  * @see [PositionManager Documentation](../../docs/architecture/POSITION_MANAGER.md)
- * @since 0.8.5-alpha
+ * @since 0.9.0-alpha
  */
 
 import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globals';
@@ -60,7 +60,7 @@ try {
     console.warn('Could not load guia.js, some tests may be skipped:', error.message);
 }
 
-describe('PositionManager - MP Barbosa Travel Guide (v0.8.5-alpha)', () => {
+describe('PositionManager - MP Barbosa Travel Guide (v0.9.0-alpha)', () => {
     
     beforeEach(() => {
         // Reset singleton instance before each test
@@ -546,10 +546,10 @@ describe('PositionManager - MP Barbosa Travel Guide (v0.8.5-alpha)', () => {
             });
         });
 
-        test('should follow v0.8.5-alpha development standards', () => {
+        test('should follow v0.9.0-alpha development standards', () => {
             // Test that we're following current version standards
-            const versionPattern = /^0\.8\.\d+-alpha$/;
-            expect('0.8.5-alpha').toMatch(versionPattern);
+            const versionPattern = /^0\.9\.\d+-alpha$/;
+            expect('0.9.0-alpha').toMatch(versionPattern);
             
             // Test development phase characteristics
             expect('alpha').toBe('alpha'); // Pre-release development phase

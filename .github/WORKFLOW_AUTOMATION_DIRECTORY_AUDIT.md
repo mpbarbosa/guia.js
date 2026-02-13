@@ -1,7 +1,7 @@
 # Workflow-Automation Directory Documentation Audit
 
 **Audit Date**: 2026-01-06  
-**Project**: guia_turistico v0.7.0-alpha  
+**Project**: guia_turistico v0.9.0-alpha  
 **Focus Area**: `docs/workflow-automation/` directory visibility in INDEX.md  
 **Priority**: Low  
 **Status**: ✅ Complete
@@ -226,7 +226,7 @@ WORKFLOW_TERMINOLOGY_DISAMBIGUATION.md
 
 **Problem**: All 3 files reference version 0.6.0-alpha
 
-**Current Project Version**: 0.7.0-alpha
+**Current Project Version**: 0.9.0-alpha
 
 **Files Affected**:
 - `AUTOMATION_SUMMARY.md` line 4
@@ -426,7 +426,7 @@ These documents serve as **historical records** of automation implementation wor
 
 **Action**: Add disclaimer to README.md:
 ```markdown
-**Note**: These documents reference version 0.6.0-alpha and 1224 tests, which were correct at the time of implementation (2026-01-01). Current project is at version 0.7.0-alpha with 1,399 tests.
+**Note**: These documents reference version 0.6.0-alpha and 1224 tests, which were correct at the time of implementation (2026-01-01). Current project is at version 0.9.0-alpha with 1,399 tests.
 ```
 
 ---

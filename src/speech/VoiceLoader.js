@@ -25,7 +25,7 @@
  * - Safari: Voices available after 'voiceschanged' event
  * 
  * @class VoiceLoader
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  * 
  * @example
@@ -98,8 +98,9 @@ class VoiceLoader {
          * @type {SpeechSynthesis|null}
          * @private
          */
-        this.speechSynthesis = config.speechSynthesis || 
-            (typeof window !== 'undefined' ? window.speechSynthesis : null);
+        this.speechSynthesis = config.hasOwnProperty('speechSynthesis') 
+            ? config.speechSynthesis
+            : (typeof window !== 'undefined' ? window.speechSynthesis : null);
         
         /**
          * Promise for ongoing voice loading operation.

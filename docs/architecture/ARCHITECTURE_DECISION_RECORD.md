@@ -1,7 +1,7 @@
 # Architecture Decision Record (ADR)
 
 **Project**: Guia Turístico (Tourist Guide SPA)  
-**Version**: 0.7.0-alpha  
+**Version**: 0.9.0-alpha  
 **Date**: 2026-01-06
 
 ---

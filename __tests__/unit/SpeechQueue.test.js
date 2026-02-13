@@ -7,7 +7,7 @@
  * 
  * @fileoverview SpeechQueue unit tests
  * @author Marcelo Pereira Barbosa
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  */
 
 import SpeechQueue from '../../src/speech/SpeechQueue.js';

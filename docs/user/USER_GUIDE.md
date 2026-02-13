@@ -1,67 +1,97 @@
-# Guia Turístico - User Guide
+# User Guide - Guia Turístico
 
-**Version**: 0.8.7-alpha  
-**Last Updated**: 2026-02-11  
+**Complete guide for using the Guia Turístico tourist guide application.**
+
+**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-02-12  
 **Status**: Complete
 
 ---
 
 ## Table of Contents
 
-- [What is Guia Turístico?](#what-is-guia-turístico)
-- [Getting Started](#getting-started)
-- [Browser Requirements](#browser-requirements)
-- [Main Features](#main-features)
-- [Using Location Tracking](#using-location-tracking)
-- [Using the Coordinate Converter](#using-the-coordinate-converter)
-- [Understanding the Display](#understanding-the-display)
-- [Privacy and Permissions](#privacy-and-permissions)
-- [Troubleshooting](#troubleshooting)
-- [Accessibility Features](#accessibility-features)
+1. [Introduction](#introduction)
+2. [Getting Started](#getting-started)
+3. [Browser Requirements](#browser-requirements)
+4. [Main Features](#main-features)
+5. [Using Location Tracking](#using-location-tracking)
+6. [Coordinate Converter](#coordinate-converter)
+7. [Understanding the Display](#understanding-the-display)
+8. [Accessibility Features](#accessibility-features)
+9. [Troubleshooting](#troubleshooting)
+10. [Privacy & Permissions](#privacy--permissions)
+11. [Tips for Best Experience](#tips-for-best-experience)
+12. [Frequently Asked Questions](#frequently-asked-questions)
+13. [Getting Help](#getting-help)
 
 ---
 
-## What is Guia Turístico?
+## Introduction
 
-**Guia Turístico** (Tourist Guide) is a web application that helps you track your location in real-time and displays detailed information about where you are. It's particularly useful for:
+Guia Turístico is a web-based tourist guide application that helps you explore Brazilian cities using real-time location tracking. The application shows your current location, nearby landmarks, and provides demographic information about your area.
 
-- 🚶 **Navigating Brazilian cities** - Get detailed location information as you walk
-- 📍 **Understanding your location** - See your neighborhood, municipality, and state
-- 🗺️ **Converting coordinates** - Turn GPS coordinates into human-readable addresses
-- 📊 **Learning about places** - View population statistics and demographic data
-- 🔊 **Hearing location updates** - Optional speech synthesis for location changes
+### What Can You Do?
+
+- 📍 **Track your location in real-time** as you walk or drive
+- 🗺️ **View your address** automatically based on your coordinates
+- 🏛️ **Discover nearby landmarks** and points of interest
+- 📊 **See population statistics** for your current municipality
+- 🔄 **Convert coordinates** to addresses manually
+- 🔊 **Hear location updates** via speech synthesis (optional)
 
 ### Primary Use Case
 
 The **main feature** is **real-time location tracking** while you're moving around a city. The secondary utility is the coordinate converter for looking up specific locations.
 
+### System Requirements
+
+- **Modern web browser**: Chrome 94+, Firefox 93+, Safari 15+
+- **Location Services**: GPS or network-based positioning
+- **Internet Connection**: Required for address lookup and maps
+- **Device**: Desktop, laptop, tablet, or smartphone
+
 ---
 
 ## Getting Started
 
-### 1. Open the Application
+### Step 1: Access the Application
 
-Navigate to the application URL in your web browser (typically `http://localhost:9000/src/index.html` for local development).
+Open your web browser and navigate to:
+```
+https://[your-deployment-url]/
+```
 
-### 2. Grant Location Permission
+Or for local development:
+```
+http://localhost:9000/
+```
 
-When you first click "**Obter Localização**" (Get Location), your browser will ask for permission to access your location.
+### Step 2: Grant Location Permissions
 
-**What you'll see**:
-- Chrome/Edge: "Allow [site] to access your location?"
-- Firefox: "[site] would like to know your location"
-- Safari: "[site] Would Like to Use Your Current Location"
+When you first click **"Obter Localização"**, your browser will ask for permission to access your location.
 
-**Click**: "Allow" or "Permitir" to continue.
+**Important**: You must allow location access for the application to work.
 
-### 3. Wait for Location Data
+#### Browser-Specific Instructions
 
-The application will:
-1. Obtain your GPS coordinates (usually takes 1-3 seconds)
-2. Look up your address using OpenStreetMap
-3. Display comprehensive location information
-4. Show nearby reference places (if available)
-5. Display population statistics for your municipality
+**Chrome/Edge**:
+1. Click the location icon in the address bar
+2. Select "Always allow [site] to access your location"
+3. Click "Done"
+
+**Firefox**:
+1. Click the location icon in the address bar
+2. Select "Allow"
+3. Optionally check "Remember this decision"
+
+**Safari**:
+1. Safari → Preferences → Websites → Location Services
+2. Find the website in the list
+3. Select "Allow"
+
+### Step 3: Start Tracking
+
+Click the **"Obter Localização"** button to begin tracking your position.
 
 ---
 
@@ -103,156 +133,223 @@ The application is **mobile-first** and works best on:
 
 ### 1. Real-Time Location Tracking
 
-**Default Mode**: Single Position Capture
-- Click "**Obter Localização**" to get your current location once
-- Perfect for: checking where you are right now
+**Primary feature of Guia Turístico**
 
-**Continuous Mode**: Loop Tracking
-- Check the "**Ativar modo contínuo**" (Enable continuous mode) checkbox
-- Click "**Obter Localização**" to start continuous tracking
-- Location updates automatically as you move (every 30 seconds or 20 meters)
-- Perfect for: walking tours, navigation, exploring new areas
+The application continuously monitors your location as you move around the city.
 
-**Stop Tracking**:
-- Click "**Parar Rastreamento**" (Stop Tracking) button
-- Location updates will cease immediately
+#### How It Works
 
-### 2. Coordinate Converter
+1. Click **"Obter Localização"** to start
+2. Your coordinates appear immediately
+3. Address lookup happens automatically
+4. Updates occur when you move:
+   - **20 meters** distance change, OR
+   - **30 seconds** time elapsed
 
-Access via the footer link: "**Conversor de Coordenadas**"
+#### Visual Feedback
 
-**What it does**:
-- Convert latitude/longitude to addresses
-- Look up addresses for specific coordinates
-- View location details without enabling continuous tracking
+```
+┌─────────────────────────────────────┐
+│ Coordinates                          │
+│ Latitude: -23.550520                │
+│ Longitude: -46.633309               │
+│ Accuracy: ±10 meters                │
+└─────────────────────────────────────┘
 
-**How to use**:
-1. Enter latitude (e.g., `-8.05389`)
-2. Enter longitude (e.g., `-34.8813`)
-3. Click "**Converter para Endereço**" (Convert to Address)
-4. View detailed location information
+┌─────────────────────────────────────┐
+│ Address                              │
+│ Avenida Paulista, 1578              │
+│ Bela Vista                          │
+│ São Paulo, SP                       │
+│ Brazil                              │
+└─────────────────────────────────────┘
+```
 
-### 3. Location Information Display
+#### Continuous vs. Single Position
 
-When you get your location, you'll see:
+**Single Position Mode** (default):
+- Click once to get current location
+- No automatic updates
+- Lower battery usage
 
-#### 📍 Coordinates Section
-- **Latitude** and **Longitude** (decimal degrees)
-- **Google Maps** link (opens in new tab)
-- **Street View** link (if available)
+**Continuous Tracking Mode**:
+- Toggle "Rastreamento Contínuo" button
+- Automatic updates as you move
+- Higher battery usage
 
-#### 🏠 Address Section
-- **Complete Address**: Full formatted address
-- **Street**: Road or avenue name
-- **Neighborhood** (Bairro): Local area name
-- **Municipality**: City or town
-- **State**: Brazilian state with abbreviation (e.g., "PE" for Pernambuco)
-- **Postal Code** (CEP): Brazilian postal code
-- **Country**: Always "Brasil" for Brazilian locations
+### 2. Municipality & Neighborhood Display
 
-#### 🌆 Highlight Cards (v0.7.1+)
-Two prominent cards showing:
-1. **Município Card**: Municipality name with state (e.g., "Recife, PE")
-   - Metropolitan region (if applicable): "Região Metropolitana do Recife"
-2. **Bairro Card**: Neighborhood name (changes as you move)
+**Enhanced geographic context with highlight cards**
 
-#### 🏢 Reference Place (if available)
-- Nearby points of interest
-- Examples: Shopping centers, metro stations, parks, cafes
-- Type and category information
-- Portuguese descriptions
+```
+┌─────────────────────────────────────┐
+│ Município                            │
+│ Região Metropolitana do Recife      │  ← Metropolitan region
+│ Recife, PE                          │  ← City, State
+└─────────────────────────────────────┘
 
-#### 📊 Population Statistics (v0.7.2+)
-- **Municipal population**: Latest IBGE estimates
-- **Data source**: IBGE SIDRA database
-- **Format**: Brazilian Portuguese number formatting (e.g., "1.653.461 habitantes")
+┌─────────────────────────────────────┐
+│ Bairro                               │
+│ Boa Viagem                          │  ← Neighborhood
+└─────────────────────────────────────┘
+```
 
-### 4. Speech Synthesis (Optional)
+**Features**:
+- Automatic municipality detection
+- State abbreviation (all 26 Brazilian states + DF)
+- Metropolitan region context (9 major regions)
+- Neighborhood tracking as you move
 
-If enabled, the application will announce:
-- Address changes (when you move to a new street)
-- Neighborhood changes (when you enter a new bairro)
-- Municipality changes (when you cross city boundaries)
+### 3. Population Statistics
 
-**Configuration**:
-- Speaks in **Brazilian Portuguese** (pt-BR)
-- Adjustable rate and pitch (in settings, if available)
-- Queue-based processing (won't interrupt ongoing announcements)
+**IBGE SIDRA integration displays demographic data**
+
+```
+┌─────────────────────────────────────┐
+│ População Estimada                   │
+│ 1.653.461 habitantes (2021)         │
+│ Fonte: IBGE SIDRA                   │
+└─────────────────────────────────────┘
+```
+
+**Data Source**: Brazilian Institute of Geography and Statistics (IBGE)
+
+### 4. Reference Places
+
+**Nearby landmarks and points of interest**
+
+The application automatically detects nearby:
+- 🏛️ **Cultural sites**: Museums, theaters
+- 🏪 **Shops**: Stores, shopping centers
+- 🍽️ **Restaurants**: Cafés, restaurants
+- 🚉 **Transit**: Bus stops, train stations
+- 🏢 **Buildings**: Notable buildings
+
+```
+┌─────────────────────────────────────┐
+│ Ponto de Referência                  │
+│ 📍 Museu de Arte de São Paulo       │
+│ Cultural institution                 │
+└─────────────────────────────────────┘
+```
+
+### 5. Google Maps Integration
+
+**Quick access to map views**
+
+- **🗺️ View on Map**: Opens location in Google Maps
+- **👁️ Street View**: Opens Google Street View at your location
 
 ---
 
 ## Using Location Tracking
 
-### Step-by-Step: Single Position
+### Starting Location Tracking
 
-1. **Open the application** in your web browser
-2. **Click** the "**Obter Localização**" button
-3. **Grant permission** when browser asks
-4. **Wait** 2-5 seconds for data to load
-5. **View** your location information on screen
+1. **Click "Obter Localização"** button
+2. **Grant permission** when browser prompts
+3. **Wait for coordinates** to appear (~1-3 seconds)
+4. **View address** as it loads (~2-5 seconds)
 
-### Step-by-Step: Continuous Tracking
+### Understanding Updates
 
-1. **Check** the "**Ativar modo contínuo**" checkbox
-2. **Click** "**Obter Localização**" to start tracking
-3. **Move around** - location updates automatically
-4. **Watch** the display update as you walk
-5. **Click** "**Parar Rastreamento**" when done
+The application updates your location when:
 
-### Update Triggers
+| Condition | Threshold | Example |
+|-----------|-----------|---------|
+| Distance change | 20 meters | Walking/driving |
+| Time elapsed | 30 seconds | Standing still |
 
-Location updates occur when **either** condition is met:
-- ⏱️ **Time**: 30 seconds since last update
-- 📏 **Distance**: 20 meters from last position
+**Battery Optimization**: Updates are throttled to preserve battery life.
 
-This prevents excessive API calls while ensuring timely updates.
+### Stopping Tracking
 
-### Button Status Messages (v0.8.7-alpha)
+- **Single position**: Automatic stop after one reading
+- **Continuous mode**: Click "Parar Rastreamento" to stop
 
-The "**Obter Localização**" button shows contextual status:
-- 🔵 **"Aguardando localização para habilitar"** - Waiting for location data (disabled)
-- 🟢 **"Pronto para usar"** - Ready to use (enabled)
+### Button Status Messages
 
-These messages improve user experience by explaining why buttons are disabled.
+The **"Obter Localização"** button shows contextual status:
+
+**Before location obtained**:
+```
+🔵 "Aguardando localização para habilitar"
+(Waiting for location to enable)
+```
+
+**After location obtained**:
+```
+🟢 "Pronto para usar"
+(Ready to use)
+```
+
+**During processing**:
+```
+🟠 "Processando..."
+(Processing...)
+```
+
+**Error state**:
+```
+🔴 "Erro ao obter localização"
+(Error obtaining location)
+```
 
 ---
 
-## Using the Coordinate Converter
+## Coordinate Converter
+
+**Secondary utility: Convert coordinates to addresses manually**
 
 ### Accessing the Converter
 
 1. Scroll to the bottom of the page
-2. Click "**Conversor de Coordenadas**" link in footer
-3. Converter page loads
+2. Click **"Conversor de Coordenadas"** link in the footer
+3. Or navigate to: `#/converter`
 
-### Converting Coordinates
+### Using the Converter
 
-1. **Enter Latitude**:
-   - Example: `-8.05389` (Recife)
-   - Format: Decimal degrees (negative for South)
+1. **Enter Latitude**: Example: `-23.550520`
+2. **Enter Longitude**: Example: `-46.633309`
+3. **Click "Converter"**
+4. **View Results**: Address displays below
 
-2. **Enter Longitude**:
-   - Example: `-34.8813` (Recife)
-   - Format: Decimal degrees (negative for West)
+### Supported Formats
 
-3. **Click** "**Converter para Endereço**"
+```javascript
+// Decimal degrees (recommended)
+Latitude: -23.550520
+Longitude: -46.633309
 
-4. **View Results**:
-   - Complete address
-   - Formatted location components
-   - Links to OpenStreetMap
+// Also supported (auto-converted):
+Latitude: 23° 33' 01.87" S
+Longitude: 46° 38' 0.00" W
+```
 
-### Supported Coordinate Formats
-
-✅ **Decimal Degrees** (DD): `-23.550520, -46.633309`
-- Most common format
-- Example: São Paulo coordinates
-
-**Note**: DMS (Degrees, Minutes, Seconds) format is not currently supported. Convert DMS to DD first using online tools.
+**Note**: DMS (Degrees, Minutes, Seconds) format may require conversion to decimal degrees first using online tools for best results.
 
 ---
 
 ## Understanding the Display
+
+### Status Messages
+
+The application provides contextual status messages to guide you.
+
+#### Button Status Messages
+
+See [Using Location Tracking](#button-status-messages) section for detailed button status information.
+
+### Information Hierarchy
+
+The display is organized by importance:
+
+1. **Coordinates** (top): Most accurate data
+2. **Address**: Human-readable location
+3. **Municipality Card**: City and state context
+4. **Neighborhood Card**: Local area name
+5. **Reference Place**: Nearby landmark
+6. **Population Stats**: Demographic information
 
 ### Color Coding
 
@@ -281,7 +378,170 @@ The application uses colors for visual clarity:
 
 ---
 
-## Privacy and Permissions
+## Accessibility Features
+
+Guia Turístico is designed to be accessible to all users.
+
+### WCAG 2.1 AA Compliance
+
+- ✅ **Keyboard Navigation**: All features accessible via keyboard
+- ✅ **Screen Reader Support**: ARIA labels and live regions
+- ✅ **Color Contrast**: Minimum 4.5:1 contrast ratio
+- ✅ **Focus Indicators**: Clear visual focus states
+- ✅ **Text Alternatives**: Alt text for icons and images
+
+The application meets **WCAG 2.1 Level AA** standards:
+- ✅ **Perceivable**: Content is presented clearly
+- ✅ **Operable**: All functions work with keyboard
+- ✅ **Understandable**: Clear language and behavior
+- ✅ **Robust**: Works with assistive technologies
+
+### Screen Reader Support
+
+The application is fully accessible with:
+- ✅ **ARIA landmarks** for navigation
+- ✅ **ARIA live regions** for dynamic updates
+- ✅ **Semantic HTML** for proper structure
+- ✅ **Button labels** with clear descriptions
+- ✅ **Status announcements** for state changes
+
+**Tested with**:
+- NVDA (Windows)
+- JAWS (Windows)
+- VoiceOver (macOS, iOS)
+
+### Speech Synthesis
+
+**Optional voice announcements for location updates**
+
+**Enable Speech**:
+1. Look for speaker icon (🔊) near buttons
+2. Click to enable/disable voice announcements
+3. Voice announces: Address, municipality, neighborhood
+
+**Voice Settings**:
+- Automatically selects Brazilian Portuguese voice
+- Adjustable rate and pitch (developer settings)
+- Queue-based processing prevents overlapping speech
+
+**Configuration**:
+- Speaks in **Brazilian Portuguese** (pt-BR)
+- Queue-based processing (won't interrupt ongoing announcements)
+
+### Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `Tab` | Navigate between buttons |
+| `Enter` / `Space` | Activate button |
+| `Escape` | Close modals/dialogs |
+
+### Visual Accessibility
+
+- ✅ **High contrast** text and UI elements
+- ✅ **Focus indicators** for keyboard navigation
+- ✅ **Color-blind friendly** design
+- ✅ **Scalable text** (respects browser zoom)
+- ✅ **Responsive design** (works on all screen sizes)
+
+---
+
+## Troubleshooting
+
+### Location Not Working
+
+**Problem**: "Unable to get location" error
+
+**Solutions**:
+1. **Check browser permissions**:
+   - Click the location icon in address bar
+   - Ensure location access is allowed
+
+2. **Enable device location services**:
+   - **Windows**: Settings → Privacy → Location
+   - **macOS**: System Preferences → Security & Privacy → Location Services
+   - **Android**: Settings → Location → Turn on
+   - **iOS**: Settings → Privacy → Location Services
+
+3. **Use HTTPS or localhost**:
+   - Modern browsers require secure connections for geolocation
+   - HTTP sites (except localhost) won't have access
+
+4. **Try a different browser**:
+   - Test in Chrome, Firefox, or Safari
+
+### Address Not Loading
+
+**Problem**: Coordinates show, but address stays blank
+
+**Solutions**:
+1. **Check internet connection**:
+   - Address lookup requires network access
+   - Test: Open google.com in another tab
+
+2. **Wait longer**:
+   - Address lookup can take 5-10 seconds
+   - Watch for loading indicator
+
+3. **Check for API rate limits**:
+   - OpenStreetMap Nominatim has usage limits
+   - Wait a few minutes and try again
+
+4. **Verify coordinates are valid**:
+   - Latitude: -90 to 90
+   - Longitude: -180 to 180
+
+### Map Links Not Opening
+
+**Problem**: Google Maps button does nothing
+
+**Solutions**:
+1. **Allow pop-ups**: Browser may be blocking pop-ups
+2. **Check coordinates**: Invalid coordinates won't generate links
+3. **Try manual link**: Right-click → "Open in new tab"
+
+### Slow Performance
+
+**Problem**: Application feels sluggish
+
+**Solutions**:
+1. **Close other tabs**: Free up browser memory
+2. **Disable continuous tracking**: Use single position mode
+3. **Clear browser cache**: Settings → Clear browsing data
+4. **Update browser**: Ensure you're on the latest version
+
+### GPS Signal Not Available
+
+**Problem**: Device can't determine location
+
+**Solutions**:
+1. **Move outdoors** - GPS works poorly indoors
+2. **Wait** 30-60 seconds for GPS to acquire satellites
+3. **Check device GPS** is enabled (Settings > Location)
+4. **Try WiFi-based location** (turn on WiFi even if not connected)
+
+### Speech Synthesis Not Working
+
+**Problem**: No voice announcements
+
+**Solutions**:
+1. **Check browser support** - Some browsers don't support speech synthesis
+2. **Enable system audio** - Ensure device isn't muted
+3. **Check language** - Browser needs Brazilian Portuguese voice
+4. **Try different browser** - Chrome has best speech support
+
+---
+
+## Privacy & Permissions
+
+### What Data Is Collected?
+
+**Guia Turístico respects your privacy:**
+
+- ✅ **Location data is NOT stored** on servers
+- ✅ **All processing happens in your browser**
+- ✅ **No tracking cookies**
+- ✅ **No user accounts required**
 
 ### What Data We Access
 
@@ -298,6 +558,23 @@ The application accesses:
 - ❌ No user accounts or profiles
 - ❌ No tracking cookies for advertising
 
+### What Data Is Shared?
+
+**With OpenStreetMap Nominatim**:
+- Your coordinates (latitude, longitude)
+- Used solely for address lookup
+- Subject to OpenStreetMap's privacy policy
+
+**With IBGE**:
+- Municipality code (not your exact location)
+- Used for population statistics
+- Public data from Brazilian government
+
+**With Google Maps** (optional):
+- Coordinates when you click "View on Map"
+- Only when you explicitly click map links
+- Subject to Google's privacy policy
+
 ### Data Usage
 
 Your location data is used **only** to:
@@ -306,9 +583,7 @@ Your location data is used **only** to:
 3. Show nearby reference places
 4. Display municipal statistics
 
-**All processing happens in your browser**. Location data is not sent to any third-party servers except:
-- **OpenStreetMap/Nominatim** (for address lookup)
-- **IBGE** (for population statistics)
+**All processing happens in your browser**. Location data is not sent to any third-party servers except those listed above.
 
 ### Revoking Permissions
 
@@ -329,115 +604,90 @@ To revoke location permission:
 2. Websites tab > Location
 3. Change setting for the site
 
----
+**To stop location tracking**:
+1. Click browser's location icon in address bar
+2. Select "Block" or "Remove permission"
+3. Refresh the page
 
-## Troubleshooting
-
-### "Location permission denied"
-
-**Problem**: Browser won't share your location
-
-**Solutions**:
-1. Grant permission when browser asks
-2. Check browser settings: Enable location for the site
-3. Check device settings: Enable location services system-wide
-4. Reload the page and try again
-
-### "Fetching address information timed out"
-
-**Problem**: Network request to OpenStreetMap failed
-
-**Solutions**:
-1. Check internet connection
-2. Verify OpenStreetMap is accessible (visit openstreetmap.org)
-3. Wait a moment and click "**Obter Localização**" again
-4. Try a different network (mobile data vs WiFi)
-
-### "GPS signal not available"
-
-**Problem**: Device can't determine location
-
-**Solutions**:
-1. **Move outdoors** - GPS works poorly indoors
-2. **Wait** 30-60 seconds for GPS to acquire satellites
-3. **Check device GPS** is enabled (Settings > Location)
-4. Try **WiFi-based location** (turn on WiFi even if not connected)
-
-### "No address data available"
-
-**Problem**: Coordinates found but no address returned
-
-**Solutions**:
-1. **Remote areas** may lack address data
-2. **Ocean/water locations** won't have addresses
-3. **Wait and try again** - temporary API issue
-4. Use **Coordinate Converter** to verify coordinates
-
-### Location updates are slow
-
-**Problem**: Continuous tracking isn't updating frequently
-
-**Solutions**:
-1. Check update thresholds (30s time or 20m distance required)
-2. **Walk farther** to trigger distance threshold
-3. **Wait longer** to trigger time threshold
-4. **Restart tracking** - Stop and start again
-
-### Speech synthesis not working
-
-**Problem**: No voice announcements
-
-**Solutions**:
-1. **Check browser support** - Some browsers don't support speech synthesis
-2. **Enable system audio** - Ensure device isn't muted
-3. **Check language** - Browser needs Brazilian Portuguese voice
-4. **Try different browser** - Chrome has best speech support
+**To clear all data**:
+1. Browser Settings → Privacy → Clear browsing data
+2. Select "Cookies and site data"
+3. Click "Clear data"
 
 ---
 
-## Accessibility Features
+## Tips for Best Experience
 
-### Screen Reader Support
+### For Tourists
 
-The application is fully accessible with:
-- ✅ **ARIA landmarks** for navigation
-- ✅ **ARIA live regions** for dynamic updates
-- ✅ **Semantic HTML** for proper structure
-- ✅ **Button labels** with clear descriptions
-- ✅ **Status announcements** for state changes (v0.8.7-alpha)
+1. **Enable continuous tracking** when exploring
+2. **Use Street View** to preview destinations
+3. **Check population stats** to understand city size
+4. **Note reference places** for navigation
 
-**Tested with**:
-- NVDA (Windows)
-- JAWS (Windows)
-- VoiceOver (macOS, iOS)
+### For Hikers/Walkers
 
-### Keyboard Navigation
+1. **Use single position mode** to save battery
+2. **Take periodic readings** at landmarks
+3. **Screenshot coordinates** for record keeping
 
-All features accessible via keyboard:
-- **Tab** - Move between interactive elements
-- **Enter/Space** - Activate buttons
-- **Escape** - Close modals/dialogs
-- **Arrow keys** - Navigate within components
+### For Drivers
 
-### Visual Accessibility
+1. **Use hands-free mode** with speech synthesis
+2. **Enable voice announcements** for safe navigation
+3. **Set phone in car holder** for easy viewing
 
-- ✅ **High contrast** text and UI elements
-- ✅ **Focus indicators** for keyboard navigation
-- ✅ **Color-blind friendly** design
-- ✅ **Scalable text** (respects browser zoom)
-- ✅ **Responsive design** (works on all screen sizes)
+### Battery Saving
 
-### WCAG 2.1 Compliance
-
-The application meets **WCAG 2.1 Level AA** standards:
-- ✅ **Perceivable**: Content is presented clearly
-- ✅ **Operable**: All functions work with keyboard
-- ✅ **Understandable**: Clear language and behavior
-- ✅ **Robust**: Works with assistive technologies
+1. **Use single position mode** when possible
+2. **Disable speech synthesis** if not needed
+3. **Close app when not in use**
+4. **Reduce screen brightness**
 
 ---
 
-## Need More Help?
+## Frequently Asked Questions
+
+### Q: Does this work offline?
+
+**A**: Partially. Coordinates work offline if your device has GPS. Address lookup requires internet connection.
+
+### Q: Can I use this outside Brazil?
+
+**A**: Yes, but Brazilian-specific features (IBGE, municipalities) only work in Brazil.
+
+### Q: Is this free?
+
+**A**: Yes, Guia Turístico is free and open-source.
+
+### Q: How accurate is the location?
+
+**A**: Accuracy depends on your device:
+- **GPS (outdoor)**: ±5-10 meters
+- **Wi-Fi**: ±20-50 meters
+- **Cell towers**: ±100-1000 meters
+
+### Q: Why does it ask for location permission?
+
+**A**: Browsers require explicit user permission to access location data for privacy reasons.
+
+### Q: Can I embed this in my website?
+
+**A**: See [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) for embedding instructions.
+
+---
+
+## Getting Help
+
+**Found a bug?**
+- Report at: https://github.com/mpbarbosa/guia_turistico/issues
+
+**Have a question?**
+- Check documentation: `docs/` directory
+- Ask in GitHub Discussions
+
+**Want to contribute?**
+- See: [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md)
 
 ### Documentation
 
@@ -448,9 +698,9 @@ The application meets **WCAG 2.1 Level AA** standards:
 
 ### Feature Guides
 
-- 🔘 **[Button Status Messages](../FEATURE_BUTTON_STATUS_MESSAGES.md)** - v0.8.7 feature
-- 🌆 **[Metropolitan Region Display](../FEATURE_METROPOLITAN_REGION_DISPLAY.md)** - v0.8.7 feature
-- 🗺️ **[State Abbreviation Display](../FEATURE_MUNICIPIO_STATE_DISPLAY.md)** - v0.8.7 feature
+- 🔘 **[Button Status Messages](../FEATURE_BUTTON_STATUS_MESSAGES.md)** - Button state feature
+- 🌆 **[Metropolitan Region Display](../FEATURE_METROPOLITAN_REGION_DISPLAY.md)** - Region feature
+- 🗺️ **[State Abbreviation Display](../FEATURE_MUNICIPIO_STATE_DISPLAY.md)** - State display feature
 
 ### External Resources
 
@@ -460,7 +710,6 @@ The application meets **WCAG 2.1 Level AA** standards:
 
 ---
 
-**Version**: 0.8.7-alpha  
-**Last Updated**: 2026-02-11  
-**Maintainer**: GitHub Copilot CLI  
-**Status**: ✅ Complete
+**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-02-12  
+**Status**: Complete

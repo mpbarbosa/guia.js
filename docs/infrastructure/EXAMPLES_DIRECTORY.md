@@ -1,7 +1,7 @@
 # Examples Directory Documentation
 
 **Last Updated**: 2026-01-16  
-**Version**: 0.7.1-alpha  
+**Version**: 0.9.0-alpha  
 **Purpose**: Document the purpose and organization of the `examples/` directory
 
 ## Overview
@@ -96,13 +96,13 @@ node examples/geoposition-immutability-demo.js
 
 ## Maintenance Strategy
 
-### Current Status (v0.7.1-alpha)
+### Current Status (v0.9.0-alpha)
 - ✅ 18 example files maintained
 - ✅ README.md up to date
-- ⚠️ Some examples may be outdated (pre-v0.7.0)
+- ⚠️ Some examples may be outdated (pre-v0.9.0)
 
 ### Recommended Actions
-1. **Audit Examples**: Verify all examples work with v0.7.1-alpha
+1. **Audit Examples**: Verify all examples work with v0.9.0-alpha
 2. **Categorize**: Add category comments to file headers
 3. **Archive**: Move deprecated examples to `examples/archive/`
 4. **Index**: Create `examples/INDEX.md` with categorized list
@@ -146,5 +146,5 @@ examples/
 ---
 
 **Status**: Active directory with 18 examples  
-**Maintenance**: Audit recommended for v0.8.0  
+**Maintenance**: Audit recommended for v0.9.0  
 **Organization**: Subcategory structure planned

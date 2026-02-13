@@ -3,7 +3,7 @@
 ## SpeechSynthesisManager Class Extraction - Phase 15
 
 **Project**: MP Barbosa Travel Guide (Guia Turístico)  
-**Version**: 0.8.3-alpha  
+**Version**: 0.9.0-alpha  
 **Date**: October 16, 2025  
 **Author**: Marcelo Pereira Barbosa  
 

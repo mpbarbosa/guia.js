@@ -1,6 +1,6 @@
 # Phase 3: Dependency Optimization Analysis
 **Date:** 2026-01-09  
-**Project:** Guia Turístico v0.7.0-alpha  
+**Project:** Guia Turístico v0.9.0-alpha  
 **Status:** 📋 ANALYSIS & RECOMMENDATIONS
 
 ---
@@ -66,7 +66,7 @@ npm list jsdom
 
 **Result:**
 ```
-guia_turistico@0.7.0-alpha
+guia_turistico@0.9.0-alpha
 ├─┬ guia.js (git dependency)
 │ └── jsdom@27.4.0 deduped
 └── jsdom@27.4.0
@@ -484,7 +484,7 @@ Refs: docs/PHASE3_OPTIMIZATION_ANALYSIS.md"
 **Risk Level:** ⚠️ MODERATE  
 **Benefits:** Long-term optimization  
 
-**Execute?** 🟡 **DEFER - Evaluate during v0.8.0 sprint**
+**Execute?** 🟡 **DEFER - Evaluate during v0.9.0 sprint**
 
 ---
 

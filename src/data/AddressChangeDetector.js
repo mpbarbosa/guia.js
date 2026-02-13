@@ -19,7 +19,7 @@
  * single generic implementation, reducing ~120 lines of code duplication.
  * 
  * @module data/AddressChangeDetector
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  * 
  * @example
@@ -47,7 +47,7 @@ class AddressChangeDetector {
 	 * Initializes the notification signature tracking Map to prevent
 	 * duplicate change notifications for the same field transition.
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	constructor() {
 		/**
@@ -91,7 +91,7 @@ class AddressChangeDetector {
 	 * detector.hasFieldChanged('logradouro', current, previous); // true (first time)
 	 * detector.hasFieldChanged('logradouro', current, previous); // false (duplicate)
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	hasFieldChanged(field, current, previous) {
 		// Validate addresses exist
@@ -153,7 +153,7 @@ class AddressChangeDetector {
 	 * );
 	 * console.log('Full context:', details);
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getChangeDetails(field, current, previous, rawCurrent = null, rawPrevious = null) {
 		return {
@@ -180,7 +180,7 @@ class AddressChangeDetector {
 	 * detector.clearFieldSignature('logradouro');
 	 * // Now the next logradouro change will notify even if same values
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	clearFieldSignature(field) {
 		return this.notificationSignatures.delete(field);
@@ -198,7 +198,7 @@ class AddressChangeDetector {
 	 * detector.clearAllSignatures();
 	 * // All fields will now trigger notifications on next change
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	clearAllSignatures() {
 		this.notificationSignatures.clear();
@@ -216,7 +216,7 @@ class AddressChangeDetector {
 	 * const signature = detector.getFieldSignature('bairro');
 	 * console.log('Last bairro change:', signature); // "Centro=>Boa Vista"
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getFieldSignature(field) {
 		return this.notificationSignatures.get(field);
@@ -233,7 +233,7 @@ class AddressChangeDetector {
 	 *   console.log('No municipio change notified yet');
 	 * }
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	hasFieldSignature(field) {
 		return this.notificationSignatures.has(field);
@@ -248,7 +248,7 @@ class AddressChangeDetector {
 	 * const fields = detector.getTrackedFields();
 	 * console.log('Tracking changes for:', fields); // ['logradouro', 'bairro']
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getTrackedFields() {
 		return Array.from(this.notificationSignatures.keys());

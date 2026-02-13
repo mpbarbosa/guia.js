@@ -1,8 +1,8 @@
-# Complete API Reference - Guia Turístico v0.8.7-alpha
+# Complete API Reference - Guia Turístico v0.9.0-alpha
 
 ---
 **Last Updated**: 2026-02-11  
-**Version**: 0.8.7-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: Complete Reference
 
 ---
@@ -684,7 +684,7 @@ const address = new BrazilianStandardAddress({
 | `uf` | String | State abbreviation (2 letters) |
 | `cep` | String | Postal code (CEP) |
 | `pais` | String | Country (default: 'Brasil') |
-| `regiaoMetropolitana` | String | Metropolitan region name (v0.8.7+) |
+| `regiaoMetropolitana` | String | Metropolitan region name (v0.9.0+) |
 
 #### Methods
 
@@ -757,7 +757,7 @@ const address = extractor.extractAddress(nominatimData);
 - `municipio`: From `city`, `town`, `municipality`, or `village`
 - `uf`: From `state` (mapped to abbreviation)
 - `cep`: From `postcode`
-- `regiaoMetropolitana`: From `county` field (v0.8.7+)
+- `regiaoMetropolitana`: From `county` field (v0.9.0+)
 
 ##### `extractReferencePlace(raw)`
 
@@ -1043,7 +1043,7 @@ displayer.displayMunicipioCard(address, cardElement);
 - `address` (BrazilianStandardAddress): Address with municipality data
 - `element` (HTMLElement): Target card element
 
-**Card Content (v0.8.7+):**
+**Card Content (v0.9.0+):**
 ```
 ┌─────────────────────────────────┐
 │ 🏛️ Município                    │
@@ -1945,7 +1945,7 @@ console.log(ACCESSIBLE_EMOJIS.get('🗺️')); // "Map icon"
 
 ### button-status
 
-Contextual button status messages for improved UX (v0.8.7-alpha).
+Contextual button status messages for improved UX (v0.9.0-alpha).
 
 #### Functions
 
@@ -2411,7 +2411,7 @@ import {
 | Constant | Value | Description |
 |----------|-------|-------------|
 | `APP_NAME` | 'Guia Turístico' | Application name |
-| `APP_VERSION` | '0.8.7-alpha' | Current version |
+| `APP_VERSION` | '0.9.0-alpha' | Current version |
 | `NOMINATIM_API_BASE` | 'https://nominatim.openstreetmap.org' | Nominatim API base URL |
 | `CORS_PROXY` | '' | CORS proxy URL (empty = direct) |
 | `MINIMUM_DISTANCE_CHANGE` | 20 | Minimum distance in meters to trigger update |
@@ -2936,7 +2936,7 @@ disableWithReason(button, 'Aguardando localização');
 
 ## Migration Guides
 
-### From v0.8.6 to v0.8.7-alpha
+### From v0.9.0 to v0.9.0-alpha
 
 **New Features:**
 - Metropolitan region display support

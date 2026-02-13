@@ -1,9 +1,9 @@
 # AddressExtractor API Documentation
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **File:** `src/data/AddressExtractor.js`  
 **Author:** Marcelo Pereira Barbosa  
-**Since:** 0.8.3-alpha
+**Since:** 0.9.0-alpha
 
 ## Overview
 
@@ -126,7 +126,7 @@ Extracts the state abbreviation (siglaUF) from ISO3166-2-lvl4 field.
 
 **Returns:** `string | null` - The state abbreviation (e.g., "RJ", "SP") or null if invalid
 
-**Since:** 0.8.6-alpha
+**Since:** 0.9.0-alpha
 
 **Example:**
 ```javascript
@@ -237,7 +237,7 @@ this.enderecoPadronizado.municipio =
 
 **Note:** `hamlet` is intentionally NOT included - hamlets are subdivisions within municipalities, not municipalities themselves.
 
-#### 5. Metropolitan Region (`regiaoMetropolitana`) - *v0.8.7-alpha*
+#### 5. Metropolitan Region (`regiaoMetropolitana`) - *v0.9.0-alpha*
 ```javascript
 this.enderecoPadronizado.regiaoMetropolitana = address.county || null;
 ```
@@ -321,7 +321,7 @@ Creates a `ReferencePlace` instance from the geocoding data (includes `class`, `
 | `numero` | `house_number` | `addr:housenumber` | OSM tag first | Street number |
 | `bairro` | `neighbourhood`, `suburb`, `quarter` | `addr:neighbourhood` | OSM tag first | Neighborhood |
 | `municipio` | `city`, `town`, `municipality`, `village` | `addr:city` | OSM tag first | Municipality |
-| `regiaoMetropolitana` | `county` | - | - | Metropolitan region (v0.8.7) |
+| `regiaoMetropolitana` | `county` | - | - | Metropolitan region (v0.9.0) |
 | `uf` | `state` | `addr:state` | OSM tag first | State full name |
 | `siglaUF` | `state_code`, `ISO3166-2-lvl4` | - | state_code first | State abbreviation |
 | `cep` | `postcode` | `addr:postcode` | OSM tag first | Postal code |
@@ -508,17 +508,17 @@ console.log(Object.isFrozen(extractor));  // true
 
 ## Version History
 
-### v0.8.7-alpha (Current)
+### v0.9.0-alpha (Current)
 - **Added**: Metropolitan region extraction from `county` field
 - **Enhancement**: `regiaoMetropolitana` support in `BrazilianStandardAddress`
 - **Integration**: Used by `HTMLHighlightCardsDisplayer` for metro region display
 
-### v0.8.6-alpha
+### v0.9.0-alpha
 - **Added**: `extractSiglaUF()` static method for ISO3166-2-lvl4 parsing
 - **Enhancement**: Improved state abbreviation extraction logic
 - **Documentation**: Added comprehensive field mapping documentation
 
-### v0.8.3-alpha (Initial)
+### v0.9.0-alpha (Initial)
 - Initial implementation with full field mapping
 - Support for both Nominatim format and OSM address tags
 - Immutable pattern with `Object.freeze()`

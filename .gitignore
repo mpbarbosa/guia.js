@@ -68,3 +68,6 @@ tests/integration/__pycache__/
 
 # JSDoc generated API documentation
 docs/api-generated/
+
+# Vite build output
+dist/

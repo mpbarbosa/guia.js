@@ -1,7 +1,7 @@
 # Python venv/ Directory Investigation
 
 **Investigation Date**: 2026-01-06  
-**Project**: guia_turistico v0.7.0-alpha  
+**Project**: guia_turistico v0.9.0-alpha  
 **Focus Area**: `venv/` Python virtual environment  
 **Priority**: Low  
 **Status**: ✅ Complete - Already Correct

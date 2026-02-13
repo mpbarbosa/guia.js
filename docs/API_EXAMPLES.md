@@ -1,6 +1,6 @@
 # Guia Turístico API Examples
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Last Updated:** 2026-02-11
 
 Comprehensive code examples for all major API features.
@@ -155,7 +155,7 @@ async function fetchAddress(latitude, longitude) {
     console.log('Municipality:', address.municipioCompleto());
     console.log('Neighborhood:', address.bairro);
     
-    // Display metropolitan region (v0.8.7-alpha+)
+    // Display metropolitan region (v0.9.0-alpha+)
     if (address.regiaoMetropolitana) {
       console.log('Metro Region:', address.regiaoMetropolitanaFormatada());
     }
@@ -587,7 +587,7 @@ class AddressChangeObserver {
       }
     });
 
-    // Metropolitan region changes (v0.8.7-alpha+)
+    // Metropolitan region changes (v0.9.0-alpha+)
     this.cache.registerCallback('regiaoMetropolitana', (current, previous) => {
       if (current && current !== previous) {
         this.speech.speak(
@@ -943,5 +943,5 @@ if (voices.length === 0) {
 
 ---
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Last Updated:** 2026-02-11

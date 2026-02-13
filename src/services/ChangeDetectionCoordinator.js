@@ -8,7 +8,7 @@
  * between AddressDataExtractor change detection and observer notifications.
  * 
  * @module services/ChangeDetectionCoordinator
- * @since 0.8.7-alpha (extracted from guia.js in Phase 2)
+ * @since 0.9.0-alpha (extracted from guia.js in Phase 2)
  * @author Marcelo Pereira Barbosa
  */
 

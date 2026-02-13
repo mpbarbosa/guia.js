@@ -19,7 +19,7 @@ import { withObserver } from '../utils/ObserverMixin.js';
  * - Brazilian Portuguese travel context optimizations
  * 
  * @module SpeechQueue
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -39,7 +39,7 @@ import ObserverSubject from '../core/ObserverSubject.js';
  * that need to react to queue modifications.
  * 
  * @class SpeechQueue
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  * 
  * @example

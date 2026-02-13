@@ -1,6 +1,6 @@
 # Guia Turístico API Reference
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Last Updated:** 2026-02-11  
 **Status:** ✅ Production Ready
 
@@ -304,7 +304,7 @@ const address = new BrazilianStandardAddress();
 - `municipio` (string): Municipality (city)
 - `uf` (string): State abbreviation (e.g., "SP", "RJ")
 - `cep` (string): Postal code (CEP)
-- `regiaoMetropolitana` (string): Metropolitan region (v0.8.7-alpha+)
+- `regiaoMetropolitana` (string): Metropolitan region (v0.9.0-alpha+)
 
 #### Methods
 
@@ -340,7 +340,7 @@ console.log(address.municipioCompleto());
 ```
 
 ##### `regiaoMetropolitanaFormatada()`
-Returns formatted metropolitan region name (v0.8.7-alpha+).
+Returns formatted metropolitan region name (v0.9.0-alpha+).
 
 **Returns:** `string` - Format: "Região Metropolitana de [City]"
 
@@ -354,7 +354,7 @@ console.log(address.regiaoMetropolitanaFormatada());
 ### AddressCache
 
 **File:** `src/data/AddressCache.js`  
-**Type:** Composition-based cache system (v0.8.7-alpha refactored)  
+**Type:** Composition-based cache system (v0.9.0-alpha refactored)  
 **Purpose:** Caches addresses with change detection and callback management
 
 #### Constructor
@@ -471,7 +471,7 @@ Determines place category from type.
 
 **Returns:** `string` - Category: 'Ponto de Referência', 'Comércio', 'Transporte', 'Edifício', 'Outro'
 
-**Supported Types:** (v0.7.2+)
+**Supported Types:** (v0.9.0+)
 - `place`, `amenity`, `shop`, `railway`, `building`
 
 ```javascript
@@ -551,7 +551,7 @@ displayer.display(address);
 ### HTMLHighlightCardsDisplayer
 
 **File:** `src/html/HTMLHighlightCardsDisplayer.js`  
-**Purpose:** Displays municipality and neighborhood highlight cards (v0.7.1+)
+**Purpose:** Displays municipality and neighborhood highlight cards (v0.9.0+)
 
 #### Constructor
 
@@ -571,7 +571,7 @@ Displays municipality and neighborhood cards.
 
 **Features:**
 - Municipality with state (e.g., "Recife, PE")
-- Metropolitan region display (v0.8.7-alpha+)
+- Metropolitan region display (v0.9.0-alpha+)
 - Neighborhood tracking
 
 ```javascript
@@ -583,7 +583,7 @@ displayer.display(address);
 ### HTMLSidraDisplayer
 
 **File:** `src/html/HTMLSidraDisplayer.js`  
-**Purpose:** Displays IBGE SIDRA demographic statistics (v0.7.2+)
+**Purpose:** Displays IBGE SIDRA demographic statistics (v0.9.0+)
 
 #### Constructor
 
@@ -634,7 +634,7 @@ Creates HTMLReferencePlaceDisplayer instance.
 Creates HTMLHighlightCardsDisplayer instance.
 
 ##### `createSidraDisplayer(document, elementId)`
-Creates HTMLSidraDisplayer instance (v0.8.6+).
+Creates HTMLSidraDisplayer instance (v0.9.0+).
 
 ```javascript
 import DisplayerFactory from './src/html/DisplayerFactory.js';
@@ -651,7 +651,7 @@ const addressDisplayer = factory.createAddressDisplayer(document, 'address-conta
 ### SpeechSynthesisManager
 
 **File:** `src/speech/SpeechSynthesisManager.js`  
-**Type:** Singleton, Composition Pattern (v0.8.7-alpha refactored)  
+**Type:** Singleton, Composition Pattern (v0.9.0-alpha refactored)  
 **Purpose:** Main orchestrator for speech synthesis
 
 #### Architecture
@@ -729,7 +729,7 @@ manager.resume();
 
 ### VoiceLoader
 
-**File:** `src/speech/VoiceLoader.js` (v0.8.7-alpha)  
+**File:** `src/speech/VoiceLoader.js` (v0.9.0-alpha)  
 **Purpose:** Voice loading with exponential backoff retry
 
 #### Methods
@@ -754,7 +754,7 @@ const voices = await loader.loadVoices();
 
 ### VoiceSelector
 
-**File:** `src/speech/VoiceSelector.js` (v0.8.7-alpha)  
+**File:** `src/speech/VoiceSelector.js` (v0.9.0-alpha)  
 **Purpose:** Intelligent Brazilian Portuguese voice selection
 
 #### Methods
@@ -964,7 +964,7 @@ export const MINIMUM_DISTANCE_CHANGE = 20;     // 20 meters
 
 ##### Version
 ```javascript
-export const VERSION = '0.8.7-alpha';
+export const VERSION = '0.9.0-alpha';
 ```
 
 #### Usage
@@ -1075,7 +1075,7 @@ try {
 
 ## Migration Guides
 
-### Upgrading to v0.8.7-alpha
+### Upgrading to v0.9.0-alpha
 
 **New Features:**
 - Metropolitan region display in `BrazilianStandardAddress`
@@ -1111,5 +1111,5 @@ See [API_EXAMPLES.md](./API_EXAMPLES.md) for comprehensive code examples.
 
 ---
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Last Updated:** 2026-02-11

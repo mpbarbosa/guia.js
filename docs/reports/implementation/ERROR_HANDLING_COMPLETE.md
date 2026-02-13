@@ -240,7 +240,7 @@ $ ./.github/scripts/cdn-delivery.sh
 ```bash
 $ ./.github/scripts/cdn-delivery.sh
 # URLs generated, but when user tries to use them:
-$ curl https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js
+$ curl https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js
 404 Not Found
 # User doesn't know why
 ```
@@ -259,14 +259,14 @@ Possible causes:
 
 Solution:
 # Check if tag exists
-git tag | grep v0.6.0-alpha
+git tag | grep v0.9.0-alpha
 
 # If missing, create and push tag
-git tag v0.6.0-alpha
-git push origin v0.6.0-alpha
+git tag v0.9.0-alpha
+git push origin v0.9.0-alpha
 
 # Wait 5-10 minutes, then verify
-curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/package.json"
+curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/package.json"
 
 Alternative: Use commit-based URL (available immediately)
 https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@abc1234/src/guia.js
@@ -387,7 +387,7 @@ Fix: cd /path/to/guia_js && ./.github/scripts/cdn-delivery.sh
 
 # Would prompt:
 ? Node.js not found. Install now? (Y/n)
-? Create Git tag v0.6.0-alpha? (Y/n)
+? Create Git tag v0.9.0-alpha? (Y/n)
 ? Push to GitHub? (Y/n)
 ? Wait for CDN sync? (Y/n)
 ```
@@ -411,6 +411,6 @@ Error handling is now **comprehensive and production-ready**:
 
 ---
 
-**Version**: 0.6.0-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-01-01  
 **Error Coverage**: Complete (7/7)

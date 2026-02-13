@@ -131,7 +131,7 @@ Issue #13 identified that 86 out of 193 documentation files (45%) lack "Last Upd
 ---
 
 **Last Updated**: 2026-01-11  
-**Version**: 0.7.1-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Active
 ```
 
@@ -270,7 +270,7 @@ Create `docs/DOCUMENTATION_HEALTH.md` with:
 
 ### Previously Resolved
 - **Issue #1**: Test count discrepancy - ✅ Resolved (1,516/1,653)
-- **Issue #3**: Version inconsistency - ✅ Resolved (0.7.1-alpha)
+- **Issue #3**: Version inconsistency - ✅ Resolved (0.9.0-alpha)
 - **Issue #4**: Project name confusion - ✅ Resolved (guia_turistico)
 - **Issue #11**: Architecture version confusion - ✅ Resolved (VERSION_TIMELINE.md)
 - **Issue #12**: Contribution workflow validation - ✅ Resolved (enhanced CONTRIBUTING.md)
@@ -339,7 +339,7 @@ Create `docs/DOCUMENTATION_HEALTH.md` with:
 
 - **GitHub Issue**: https://github.com/mpbarbosa/guia.js/issues/264
 - **Strategy Document**: `docs/ISSUE_13_DOCUMENTATION_DATE_AUDITING_STRATEGY.md`
-- **Current Version**: 0.7.1-alpha
+- **Current Version**: 0.9.0-alpha
 - **Date Standard**: ISO 8601 (https://en.wikipedia.org/wiki/ISO_8601)
 - **Assigned to**: @copilot (GitHub Copilot)
 

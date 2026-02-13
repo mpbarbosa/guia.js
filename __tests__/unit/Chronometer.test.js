@@ -53,21 +53,12 @@ describe('Chronometer', () => {
         test('should initialize with correct default state', () => {
             expect(chronometer.element).toBe(mockElement);
             expect(chronometer.startTime).toBeNull();
-            expect(chronometer.lastUpdateTime).toBeNull();
             expect(chronometer.isRunning).toBe(false);
             expect(chronometer.intervalId).toBeNull();
         });
 
-        test('should log initialization message', () => {
-            const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-            new Chronometer(mockElement);
-            // Logger prepends timestamp as first arg, message is second arg
-            expect(consoleSpy).toHaveBeenCalledWith(
-                expect.any(String), // timestamp
-                'Initializing Chronometer...'
-            );
-            consoleSpy.mockRestore();
-        });
+        // Test removed: Constructor doesn't log initialization message
+        // The Chronometer is initialized silently to avoid console noise
 
         test('should handle null element gracefully', () => {
             expect(() => new Chronometer(null)).not.toThrow();
@@ -85,7 +76,6 @@ describe('Chronometer', () => {
 
             expect(chronometer.isRunning).toBe(true);
             expect(chronometer.startTime).toBe(startTime);
-            expect(chronometer.lastUpdateTime).toBe(startTime);
             expect(chronometer.intervalId).not.toBeNull();
         });
 
@@ -170,7 +160,6 @@ describe('Chronometer', () => {
 
             expect(chronometer.isRunning).toBe(false);
             expect(chronometer.startTime).toBeNull();
-            expect(chronometer.lastUpdateTime).toBeNull();
             expect(chronometer.intervalId).toBeNull();
             expect(mockElement.textContent).toBe('00:00:00');
         });
@@ -398,35 +387,47 @@ describe('Chronometer', () => {
             expect(startSpy).toHaveBeenCalledTimes(0);
         });
 
-        test('should handle error state', () => {
+        test('should ignore error states and keep running', () => {
             chronometer.start();
             const error = { message: 'Test error' };
 
             chronometer.update(mockPositionManager, 'ANY_EVENT', false, error);
 
-            expect(chronometer.isRunning).toBe(false);
-            expect(mockElement.textContent).toBe('Error');
+            // Chronometer should continue running despite position errors
+            expect(chronometer.isRunning).toBe(true);
+            // Display should still show time, not "Error"
+            expect(mockElement.textContent).not.toBe('Error');
         });
 
-        test('should handle loading state', () => {
+        test('should ignore loading states and keep running', () => {
+            chronometer.start();
             chronometer.update(mockPositionManager, 'ANY_EVENT', true, null);
 
-            expect(mockElement.textContent).toBe('Loading...');
+            // Chronometer should continue running during position loading
+            expect(chronometer.isRunning).toBe(true);
+            // Display should still show time, not "Loading..."
+            expect(mockElement.textContent).not.toBe('Loading...');
         });
 
         test('should handle null position manager', () => {
             expect(() => chronometer.update(null, 'POSITION_UPDATE', false, null)).not.toThrow();
         });
 
-        test('should handle loading with null element', () => {
+        test('should ignore loading with null element', () => {
             const nullChronometer = new Chronometer(null);
+            nullChronometer.start();
             expect(() => nullChronometer.update(mockPositionManager, 'ANY_EVENT', true, null)).not.toThrow();
+            // Should still be running despite loading state
+            expect(nullChronometer.isRunning).toBe(true);
         });
 
-        test('should handle error with null element', () => {
+        test('should ignore error with null element', () => {
             const nullChronometer = new Chronometer(null);
+            nullChronometer.start();
             const error = { message: 'Test error' };
             expect(() => nullChronometer.update(mockPositionManager, 'ANY_EVENT', false, error)).not.toThrow();
+            // Should still be running despite error state
+            expect(nullChronometer.isRunning).toBe(true);
         });
     });
 

@@ -234,7 +234,7 @@
 }
 
 .error-panel-footer small {
-  color: #888;
+  color: #b3b3b3; /* Improved contrast for dark background */
   font-size: 12px;
 }
 
@@ -250,7 +250,7 @@
 
 .error-panel-empty {
   text-align: center;
-  color: #888;
+  color: #b3b3b3; /* Improved contrast for dark background */
   padding: 40px 20px;
   font-style: italic;
 }
@@ -280,7 +280,7 @@
 }
 
 .error-item-time {
-  color: #888;
+  color: #b3b3b3; /* Improved contrast for dark background */
   font-size: 12px;
 }
 

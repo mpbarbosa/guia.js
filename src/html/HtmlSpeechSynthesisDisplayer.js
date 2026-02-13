@@ -20,7 +20,7 @@ import { log, warn, error } from '../utils/logger.js';
  * - Immutable design with comprehensive error handling
  * 
  * @module HtmlSpeechSynthesisDisplayer
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -53,7 +53,7 @@ import PositionManager from '../core/PositionManager.js';
  * - Travel guide context with accessibility features
  * 
  * @class HtmlSpeechSynthesisDisplayer
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  * 
  * @example
@@ -683,7 +683,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * 
 	 * @fires SpeechSynthesisManager#speak - When speech synthesis is triggered
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 * 
 	 * @example
@@ -772,7 +772,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * and current voice information. Useful for debugging and logging purposes.
 	 * 
 	 * @returns {string} String representation including class name and current voice
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * const displayer = new HtmlSpeechSynthesisDisplayer(document, elementIds);

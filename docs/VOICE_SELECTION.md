@@ -220,7 +220,7 @@ Potential improvements:
 
 ## Changelog
 
-**Version 0.8.3-alpha**
+**Version 0.9.0-alpha**
 - Added Brazilian Portuguese (pt-BR) voice prioritization
 - Implemented retry mechanism for voice loading
 - Updated HtmlSpeechSynthesisDisplayer for consistent priority

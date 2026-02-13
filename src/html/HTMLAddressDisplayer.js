@@ -6,7 +6,7 @@ import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 
 /**
  * HTML-based address information displayer with comprehensive address data visualization.
- * @version 0.7.1-alpha
+ * @version 0.9.0-alpha
  * 
  * This class handles the display of address information in HTML format,
  * including raw geocoding data, standardized Brazilian addresses, and detailed
@@ -36,7 +36,7 @@ import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
  * ```
  * 
  * @class HTMLAddressDisplayer
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 class HTMLAddressDisplayer {
@@ -61,7 +61,7 @@ class HTMLAddressDisplayer {
 	 * const standardizedElement = document.getElementById('standardized-address');
 	 * const displayer = new HTMLAddressDisplayer(mainElement, standardizedElement);
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	constructor(element, enderecoPadronizadoDisplay = false) {
 		this.element = element;
@@ -97,7 +97,7 @@ class HTMLAddressDisplayer {
 	 * };
 	 * const html = displayer.renderAddressHtml(addressData, standardizedAddress);
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	renderAddressHtml(addressData, enderecoPadronizado) {
 		log('(HTMLAddressDisplayer) renderAddressHtml() called with addressData:', addressData);
@@ -184,7 +184,7 @@ class HTMLAddressDisplayer {
 	 * // Manual update for testing
 	 * displayer.update(addressData, standardizedAddress, 'strCurrPosUpdate', false, null);
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	update(addressData, enderecoPadronizado, posEvent, loading, error) {
 		// Log update for debugging (following MP Barbosa logging standards)
@@ -233,7 +233,7 @@ class HTMLAddressDisplayer {
 	 * log(displayer.toString());
 	 * // Output: "HTMLAddressDisplayer: address-display"
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	toString() {
 		return `${this.constructor.name}: ${this.element?.id || 'no-id'}`;

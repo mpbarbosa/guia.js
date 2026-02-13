@@ -14,7 +14,7 @@
  * - Long-running operations and state persistence
  * - Error recovery and system resilience
  * 
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -49,7 +49,7 @@ global.console = {
 // Import the class under test
 const SingletonStatusManager = (await import('../../src/status/SingletonStatusManager.js')).default;
 
-describe('SingletonStatusManager Integration Tests - MP Barbosa Travel Guide (v0.8.3-alpha)', () => {
+describe('SingletonStatusManager Integration Tests - MP Barbosa Travel Guide (v0.9.0-alpha)', () => {
     
     beforeEach(() => {
         jest.clearAllMocks();

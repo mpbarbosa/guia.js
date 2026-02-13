@@ -186,4 +186,4 @@ Production uses HTTPS, so Nominatim allows CORS naturally.
 
 **Status**: ✅ READY FOR TESTING
 **Date**: 2026-02-11
-**Version**: 0.8.7-alpha
+**Version**: 0.9.0-alpha

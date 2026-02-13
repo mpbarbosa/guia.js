@@ -218,4 +218,4 @@ The remaining test failures are not due to broken functionality but rather test 
 
 **Implemented by**: GitHub Copilot  
 **Date**: 2025-10-15  
-**Version**: 0.8.6-alpha
+**Version**: 0.9.0-alpha

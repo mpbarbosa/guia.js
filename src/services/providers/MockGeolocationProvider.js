@@ -295,7 +295,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * timer leaks in test environments. Call this in test teardown (afterEach).
 	 * 
 	 * @returns {void}
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 * 
 	 * @example

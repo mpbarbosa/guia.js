@@ -264,7 +264,7 @@ page.on('console', msg => console.log('PAGE LOG:', msg.text()));
 
 ### Version History
 
-- **v0.8.7-alpha**: ChangeDetectionCoordinator extracted from guia.js
+- **v0.9.0-alpha**: ChangeDetectionCoordinator extracted from guia.js
 - Replaces timer-based polling with callback mechanism
 - Improves performance by eliminating continuous checks
 - Provides rich changeDetails to observers

@@ -1,9 +1,9 @@
 # LRUCache API Documentation
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **File:** `src/data/LRUCache.js` (243 lines)  
 **Author:** Marcelo Pereira Barbosa (extracted from AddressCache)  
-**Since:** 0.8.7-alpha
+**Since:** 0.9.0-alpha
 
 ## Overview
 

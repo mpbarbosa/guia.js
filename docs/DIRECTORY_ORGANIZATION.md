@@ -194,7 +194,7 @@
 - `AUTOMATION_IMPLEMENTATION_SUMMARY.md` - Automation overview
 
 ### Historical Documentation
-- `CHANGELOG_v0.7.4.md` - Version 0.7.4 changes
+- `CHANGELOG_v0.9.0.md` - Version 0.9.0 changes
 - `DOCUMENTATION_FIXES_2026-01-09.md` - Documentation update history
 - `PHASE*_*.md` - Implementation phase documentation
 

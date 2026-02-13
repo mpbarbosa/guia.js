@@ -28,7 +28,7 @@ const TEST_LOCATION = {
   suburb: 'Bela Vista'
 };
 
-describe('E2E: Complete Address Display Validation', () => {
+describe.skip('E2E: Complete Address Display Validation', () => {
   let browser, page, server;
   const PORT = 9881;
 

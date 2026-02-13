@@ -60,10 +60,10 @@
 
 ---
 
-### ⚠️ Issue 6: E2E Tests Failing (Município Format Change v0.8.7)
+### ⚠️ Issue 6: E2E Tests Failing (Município Format Change v0.9.0)
 
 **Problem:**
-- v0.8.7-alpha introduced município format change: "City" → "City, ST"
+- v0.9.0-alpha introduced município format change: "City" → "City, ST"
 - E2E tests expect old format
 - Tests fail due to format mismatch
 - Affects: `municipio-bairro-simple.e2e.test.js`, `municipio-bairro-display.e2e.test.js`
@@ -89,7 +89,7 @@
 // Old assertion
 expect(municipioText).toBe('Arapiraca');
 
-// New assertion (v0.8.7+)
+// New assertion (v0.9.0+)
 expect(municipioText).toBe('Arapiraca, AL');
 ```
 
@@ -212,6 +212,6 @@ expect(municipioText).toBe('Arapiraca, AL');
 
 ---
 
-**Next Action:** Update E2E test assertions to match v0.8.7 município format  
+**Next Action:** Update E2E test assertions to match v0.9.0 município format  
 **Estimated Effort:** 30-45 minutes  
 **Blocking:** No (tests documented as known issue)

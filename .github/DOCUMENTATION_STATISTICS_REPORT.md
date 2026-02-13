@@ -1,7 +1,7 @@
 # Documentation Statistics Report
 
 **Date**: 2026-01-06  
-**Project**: Guia Turístico v0.7.0-alpha  
+**Project**: Guia Turístico v0.9.0-alpha  
 **Status**: 📊 Complete Metrics
 
 ---
@@ -301,10 +301,10 @@ Add after the "Features" section, before "Quick Start":
 **Phase 3** (Modularization - v0.5.0):
 - 50+ files added (architecture docs)
 
-**Phase 4** (Current - v0.7.0-alpha):
+**Phase 4** (Current - v0.9.0-alpha):
 - 157 files total (comprehensive coverage)
 
-**Growth Rate**: 3,040% increase from v0.1.0 to v0.7.0
+**Growth Rate**: 3,040% increase from v0.1.0 to v0.9.0
 
 ### Test Growth
 
@@ -326,7 +326,7 @@ Add after the "Features" section, before "Quick Start":
 | v0.1.0 | 1 | 2,288 | 2,288 lines | Monolith |
 | v0.4.0 | 8 | 2,400 | 600 lines | Partial split |
 | v0.6.0 | 29 | 3,200 | 470 lines | Modular |
-| v0.7.0 | 35 | 3,370 | 470 lines | Full modular |
+| v0.9.0 | 35 | 3,370 | 470 lines | Full modular |
 
 ---
 

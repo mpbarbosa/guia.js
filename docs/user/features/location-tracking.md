@@ -1,6 +1,6 @@
 # Location Tracking Feature
 
-**Version**: 0.8.7-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: Core Feature  
 **Last Updated**: 2026-02-11
 
@@ -62,6 +62,6 @@ Location updates occur when **either** threshold is reached:
 
 ---
 
-**Version**: 0.8.7-alpha  
+**Version**: 0.9.0-alpha  
 **Feature Status**: ✅ Production Ready  
 **Last Updated**: 2026-02-11

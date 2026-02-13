@@ -185,7 +185,7 @@ The repository contains **356 markdown files** with generally consistent formatt
 
 | Emoji | Meaning | Usage | Example |
 |-------|---------|-------|---------|
-| 🆕 | New content, features | Recent additions | `🆕 Added in v0.7.0` |
+| 🆕 | New content, features | Recent additions | `🆕 Added in v0.9.0` |
 | 🎯 | Goals, objectives | Targets and aims | `🎯 Goal: 100% coverage` |
 | 🚀 | Quick start, launch | Getting started guides | `🚀 Quick Start` |
 | 💡 | Tips, insights, ideas | Helpful suggestions | `💡 Pro tip: Use caching` |

@@ -3,7 +3,7 @@
 **Status**: COMPLETED  
 **Date**: December 2024  
 **Author**: Marcelo Pereira Barbosa  
-**Version**: v0.8.8-alpha  
+**Version**: v0.9.0-alpha  
 
 ## Overview
 

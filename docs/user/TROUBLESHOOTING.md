@@ -1,6 +1,6 @@
 # Guia Turístico - Troubleshooting Guide
 
-**Version**: 0.8.7-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-02-11  
 **Status**: Complete
 
@@ -390,7 +390,7 @@ In browser console:
 
 **Solutions**:
 
-#### Check Status Message (v0.8.7-alpha):
+#### Check Status Message (v0.9.0-alpha):
 ```
 Button shows reason:
 - "Aguardando localização para habilitar"
@@ -725,7 +725,7 @@ When reporting bugs, provide:
 
 ---
 
-**Version**: 0.8.7-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-02-11  
 **Maintainer**: GitHub Copilot CLI  
 **Status**: ✅ Complete

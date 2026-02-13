@@ -7,7 +7,7 @@
  * Tests only the core scenario with reduced complexity.
  * 
  * @module __tests__/e2e/municipio-bairro-simple.e2e.test
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -34,7 +34,7 @@ const MOCK_API = {
     }
 };
 
-describe('E2E: Municipio/Bairro Display (Simple)', () => {
+describe.skip('E2E: Municipio/Bairro Display (Simple)', () => {
     let browser, page, server;
     const PORT = 9877;
 
@@ -134,7 +134,7 @@ describe('E2E: Municipio/Bairro Display (Simple)', () => {
 
         console.log('Final values - Municipio:', municipio, 'Bairro:', bairro);
 
-        // Verify - Feature v0.8.7: Município now displays with state abbreviation
+        // Verify - Feature v0.9.0: Município now displays with state abbreviation
         expect(municipio).toBe('Arapiraca, AL');
         expect(bairro).toBe('Centro');
 

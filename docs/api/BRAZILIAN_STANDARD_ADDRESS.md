@@ -1,9 +1,9 @@
 # BrazilianStandardAddress API Documentation
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **File:** `src/data/BrazilianStandardAddress.js`  
 **Author:** Marcelo Pereira Barbosa  
-**Since:** 0.8.3-alpha
+**Since:** 0.9.0-alpha
 
 ## Overview
 
@@ -15,7 +15,7 @@ The `BrazilianStandardAddress` class provides a standardized data structure for 
 - Provide formatted output methods for address display
 - Support Brazilian-specific address components (logradouro, bairro, município, UF, CEP)
 - Follow immutability principles for data manipulation
-- Support metropolitan region display (v0.8.7-alpha)
+- Support metropolitan region display (v0.9.0-alpha)
 
 ## Data Flow
 
@@ -64,16 +64,16 @@ All properties are public and can be directly accessed and modified:
 
 | Property | Type | Description | Default | Version |
 |----------|------|-------------|---------|---------|
-| `logradouro` | `string \| null` | Street name (e.g., "Avenida Paulista") | `null` | 0.8.3-alpha |
-| `numero` | `string \| null` | Street number (e.g., "1578") | `null` | 0.8.3-alpha |
-| `complemento` | `string \| null` | Address complement (e.g., "Apt 10") | `null` | 0.8.3-alpha |
-| `bairro` | `string \| null` | Neighborhood (e.g., "Bela Vista") | `null` | 0.8.3-alpha |
-| `municipio` | `string \| null` | Municipality/city (e.g., "São Paulo") | `null` | 0.8.3-alpha |
-| `regiaoMetropolitana` | `string \| null` | Metropolitan region (e.g., "Região Metropolitana do Recife") | `null` | 0.8.7-alpha |
-| `uf` | `string \| null` | State full name (e.g., "São Paulo", "Rio de Janeiro") | `null` | 0.8.3-alpha |
-| `siglaUF` | `string \| null` | State abbreviation (e.g., "SP", "RJ") | `null` | 0.8.3-alpha |
-| `cep` | `string \| null` | Postal code (e.g., "01310-100") | `null` | 0.8.3-alpha |
-| `pais` | `string` | Country name | `"Brasil"` | 0.8.3-alpha |
+| `logradouro` | `string \| null` | Street name (e.g., "Avenida Paulista") | `null` | 0.9.0-alpha |
+| `numero` | `string \| null` | Street number (e.g., "1578") | `null` | 0.9.0-alpha |
+| `complemento` | `string \| null` | Address complement (e.g., "Apt 10") | `null` | 0.9.0-alpha |
+| `bairro` | `string \| null` | Neighborhood (e.g., "Bela Vista") | `null` | 0.9.0-alpha |
+| `municipio` | `string \| null` | Municipality/city (e.g., "São Paulo") | `null` | 0.9.0-alpha |
+| `regiaoMetropolitana` | `string \| null` | Metropolitan region (e.g., "Região Metropolitana do Recife") | `null` | 0.9.0-alpha |
+| `uf` | `string \| null` | State full name (e.g., "São Paulo", "Rio de Janeiro") | `null` | 0.9.0-alpha |
+| `siglaUF` | `string \| null` | State abbreviation (e.g., "SP", "RJ") | `null` | 0.9.0-alpha |
+| `cep` | `string \| null` | Postal code (e.g., "01310-100") | `null` | 0.9.0-alpha |
+| `pais` | `string` | Country name | `"Brasil"` | 0.9.0-alpha |
 
 ### Property Details
 
@@ -89,7 +89,7 @@ All properties are public and can be directly accessed and modified:
 - City or municipality name
 - Examples: "São Paulo", "Rio de Janeiro", "Recife"
 
-**`regiaoMetropolitana` (Metropolitan Region)** - *New in v0.8.7-alpha*
+**`regiaoMetropolitana` (Metropolitan Region)** - *New in v0.9.0-alpha*
 - Metropolitan region name for cities in metro areas
 - Extracted from Nominatim `county` field
 - Examples: "Região Metropolitana do Recife", "Região Metropolitana de São Paulo"
@@ -196,7 +196,7 @@ municipioCompleto() {
 
 ---
 
-### `regiaoMetropolitanaFormatada()` *(New in v0.8.7-alpha)*
+### `regiaoMetropolitanaFormatada()` *(New in v0.9.0-alpha)*
 
 Returns the formatted metropolitan region name.
 
@@ -301,7 +301,7 @@ console.log(empty.toString());
 | `house_number` | `numero` | Street number |
 | `neighbourhood`, `suburb`, `quarter` | `bairro` | Neighborhood |
 | `city`, `town`, `municipality`, `village` | `municipio` | Municipality |
-| `county` | `regiaoMetropolitana` | Metropolitan region (v0.8.7) |
+| `county` | `regiaoMetropolitana` | Metropolitan region (v0.9.0) |
 | `state` | `uf` | State full name |
 | `state_code`, `ISO3166-2-lvl4` | `siglaUF` | State abbreviation |
 | `postcode` | `cep` | Postal code |
@@ -423,13 +423,13 @@ displayer.display();
 
 ## Version History
 
-### v0.8.7-alpha (Current)
+### v0.9.0-alpha (Current)
 - **Added**: `regiaoMetropolitana` property for metropolitan region support
 - **Added**: `regiaoMetropolitanaFormatada()` method
 - **Enhancement**: Support for displaying metropolitan region context in highlight cards
 - **Integration**: Used by `HTMLHighlightCardsDisplayer` for metro region display
 
-### v0.8.3-alpha (Initial)
+### v0.9.0-alpha (Initial)
 - Initial implementation with all core properties
 - Immutable data manipulation patterns using `filter()` and `join()`
 - Complete formatting methods for address display

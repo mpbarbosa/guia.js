@@ -1,6 +1,6 @@
 # Quick Start Guide
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Get up and running in under 10 minutes**
 
 ## Prerequisites
@@ -82,10 +82,10 @@ http://localhost:9000/src/index.html
 
 ```javascript
 // Change this:
-this.log('Guia Turístico v0.8.7-alpha inicializado');
+this.log('Guia Turístico v0.9.0-alpha inicializado');
 
 // To this:
-this.log('My Custom Tourist Guide v0.8.7-alpha inicializado');
+this.log('My Custom Tourist Guide v0.9.0-alpha inicializado');
 ```
 
 **Reload the page** and you'll see your custom message in the log area.
@@ -492,7 +492,7 @@ Quick checklist:
 
 ## Updates and Versioning
 
-Current version: **0.8.7-alpha**
+Current version: **0.9.0-alpha**
 
 Check for updates:
 ```bash
@@ -560,7 +560,7 @@ Choose your path:
 
 ### 🎨 Frontend Developer
 → Explore `src/html/` display components  
-→ Read [USER_GUIDE.md](./USER_GUIDE.md)  
+→ Read [USER_GUIDE.md](./user/USER_GUIDE.md)  
 → Modify CSS in `src/*.css`
 
 ### 🔧 Backend Developer
@@ -584,6 +584,6 @@ Choose your path:
 
 ---
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Last Updated:** 2026-02-11  
 **Status:** ✅ Production Ready

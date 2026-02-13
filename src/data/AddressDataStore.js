@@ -18,7 +18,7 @@
  * the cache coordination logic.
  * 
  * @module data/AddressDataStore
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  * 
  * @example
@@ -49,7 +49,7 @@ class AddressDataStore {
 	 * 
 	 * Initializes storage with null values for all address data.
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	constructor() {
 		/**
@@ -100,7 +100,7 @@ class AddressDataStore {
 	 * // Can update with null to clear current
 	 * store.update(null, null);
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	update(newAddress, newRawData) {
 		// Move current to previous
@@ -125,7 +125,7 @@ class AddressDataStore {
 	 *   console.log('Current:', address.logradouro);
 	 * }
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getCurrent() {
 		return {
@@ -148,7 +148,7 @@ class AddressDataStore {
 	 *   console.log('Previous:', address.logradouro);
 	 * }
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getPrevious() {
 		return {
@@ -171,7 +171,7 @@ class AddressDataStore {
 	 *   const changed = current.bairro !== previous.bairro;
 	 * }
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	hasHistory() {
 		return this.currentAddress !== null && this.previousAddress !== null;
@@ -182,7 +182,7 @@ class AddressDataStore {
 	 * Convenience method for backward compatibility.
 	 * 
 	 * @returns {Object|null} Current raw data from geocoding API
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getCurrentRawData() {
 		return this.currentRawData;
@@ -193,7 +193,7 @@ class AddressDataStore {
 	 * Convenience method for backward compatibility.
 	 * 
 	 * @returns {Object|null} Previous raw data from geocoding API
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getPreviousRawData() {
 		return this.previousRawData;
@@ -210,7 +210,7 @@ class AddressDataStore {
 	 * store.clear();
 	 * console.log(store.hasHistory()); // false
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	clear() {
 		this.currentAddress = null;
@@ -229,7 +229,7 @@ class AddressDataStore {
 	 *   console.log('We have a current address');
 	 * }
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	hasCurrent() {
 		return this.currentAddress !== null;
@@ -245,7 +245,7 @@ class AddressDataStore {
 	 *   console.log('We have a previous address');
 	 * }
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	hasPrevious() {
 		return this.previousAddress !== null;
@@ -264,7 +264,7 @@ class AddressDataStore {
 	 * console.log(store.getCurrent().address); // null
 	 * console.log(store.hasHistory()); // false
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	clear() {
 		this.currentAddress = null;
@@ -298,7 +298,7 @@ class AddressDataStore {
 	 * const key = AddressDataStore.generateCacheKey(null); // null
 	 * const key2 = AddressDataStore.generateCacheKey({}); // null
 	 * 
-	 * @since 0.8.7-alpha
+	 * @since 0.9.0-alpha
 	 */
 	static generateCacheKey(data) {
 		// Validate input data

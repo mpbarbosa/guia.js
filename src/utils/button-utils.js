@@ -1,7 +1,7 @@
 /**
  * Button Utilities
  * Standardized button state management and loading patterns
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  */
 
 /**

@@ -302,7 +302,7 @@ async fetchAddress() {
  * const result = functionName(arg1, arg2);
  * // Returns: expectedValue
  * 
- * @since 0.6.0-alpha
+ * @since 0.9.0-alpha
  * @see {@link RelatedFunction}
  */
 function functionName(paramName, optionalParam = default) {
@@ -329,7 +329,7 @@ function functionName(paramName, optionalParam = default) {
  * const instance = new ClassName(config);
  * instance.method();
  * 
- * @since 0.6.0-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 class ClassName {

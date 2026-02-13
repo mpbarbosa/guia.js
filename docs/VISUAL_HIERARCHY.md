@@ -1,7 +1,7 @@
 # Visual Hierarchy Improvements - Location Information Prominence
 
 **Date**: 2026-01-03  
-**Version**: 0.7.4  
+**Version**: 0.9.0  
 **Changes**: Location information (município/bairro) now has visual priority over action buttons
 
 ## Problem Statement
@@ -48,7 +48,7 @@ Created a new CSS module (`src/location-highlights.css`) that implements:
    - No HTML changes needed (existing structure works)
 
 3. **src/index.html**
-   - Version bump: 0.7.3 → 0.7.4
+   - Version bump: 0.9.0 → 0.9.0
 
 ## Visual Hierarchy (Before vs After)
 

@@ -14,18 +14,21 @@ Guia Turístico is a single-page web application (version 0.9.0-alpha) built on 
 ### Bootstrap and Run the Application
 - **Node.js Testing**: `node src/app.js` - takes <1 second. Validates SPA initialization.
 - **Syntax Validation**: `node -c src/app.js && node -c src/guia.js` - takes <1 second each. ALWAYS run before commits.
-- **Web Server**: `python3 -m http.server 9000` - starts in 3 seconds. NEVER CANCEL - keeps running until stopped.
-- **Access Application**: Navigate to `http://localhost:9000/src/index.html` for full SPA functionality testing.
+- **Development Server (Recommended)**: `npm run dev` - Vite dev server with HMR, starts in 3 seconds on port 9000
+- **Production Build**: `npm run build` - Creates optimized bundle in dist/, takes ~5 seconds
+- **Production Preview**: `npm run preview` - Preview production build on port 9001
+- **Legacy Web Server**: `python3 -m http.server 9000` - Direct file serving, access at `http://localhost:9000/src/index.html`
 
 ### Build and Test Process
 - **NEVER CANCEL any long-running server processes** - they run indefinitely by design
-- **Install Dependencies**: `npm install` - takes 20 seconds. Downloads guia.js library and other dependencies.
+- **Install Dependencies**: `npm install` - takes 20 seconds. Downloads guia.js library, Vite, and other dependencies.
 - **Syntax Check**: Always run `node -c src/app.js && node -c src/guia.js` (timeout: 10 seconds) before making changes
 - **Basic Test**: Run `node src/app.js` (timeout: 10 seconds) to verify SPA initialization
 - **Automated Tests**: `npm test` - takes ~65 seconds. Runs 2,401 tests (2,235 passing, 146 skipped, 20 failing) in 101 suites. NEVER CANCEL.
 - **Test Coverage**: `npm run test:coverage` - takes ~45 seconds. Shows ~70% coverage. NEVER CANCEL.
 - **Full Validation**: `npm run test:all` - takes ~45 seconds. Combines syntax + tests. NEVER CANCEL.
-- **Web Test**: Start web server with `python3 -m http.server 9000` (timeout: 10 seconds to start, runs indefinitely)
+- **Development**: Use `npm run dev` for active development with HMR (Hot Module Replacement)
+- **Production**: Use `npm run build` before deployment, verify with `npm run preview`
 
 ### Development Workflow
 - Always validate JavaScript syntax with `node -c` before committing changes
@@ -81,7 +84,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `src/guia.js` (520 lines) - guia.js library exports (imported from dependency)
 - `src/guia_ibge.js` (10 lines) - IBGE (Brazilian statistics) integration utilities
 - `src/views/home.js` (495 lines, 24KB) - Home view controller for location tracking
-  - **v0.8.7-alpha**: Added `_initializeButtonStates()` for contextual button status messages
+  - **v0.9.0-alpha**: Added `_initializeButtonStates()` for contextual button status messages
   - **Features**: Single-position capture, continuous tracking toggle, button status feedback
 - `src/views/converter.js` (521 lines, 20KB) - Converter view controller for coordinate conversion
 - `src/config/defaults.js` (130+ lines) - Application configuration constants (version 0.9.0-alpha, timing, event names, etc.)
@@ -90,7 +93,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `src/utils/TimerManager.js` (147 lines) - Centralized timer management preventing memory leaks
 - `package.json` - Node.js configuration with guia.js dependency (jsdom v25.0.1, puppeteer v24.35.0)
 - `__tests__/` - 101 test suites with 2,401 total tests (2,235 passing, 146 skipped, 20 failing)
-  - **Note**: Test suite includes E2E tests for address validation, SIDRA integration, and location results (v0.7.2+)
+  - **Note**: Test suite includes E2E tests for address validation, SIDRA integration, and location results (v0.9.0+)
   - **New Tests**: HTMLSidraDisplayer.test.js, complete-address-validation.e2e.test.js, milho-verde-locationResult.e2e.test.js
   - **Organization**: Domain-based (unit/, integration/, e2e/, managers/, external/, features/)
 - `.github/CONTRIBUTING.md` - Contribution guidelines including immutability principles
@@ -99,7 +102,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `.husky/` - Git hooks (pre-commit: syntax + unit tests, pre-push: full test suite)
 - `.github/scripts/cdn-delivery.sh` - CDN URL generator for jsDelivr distribution
 
-### UI Architecture (v0.8.4+)
+### UI Architecture (v0.9.0+)
 
 **Primary Focus**: Real-time location tracking while navigating the city
 
@@ -111,7 +114,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 **Key UI Files**:
 - `src/index.html` - Main application page, footer with converter link
 - `src/navigation.css` - Footer styles (primary nav styles deprecated)
-- `src/highlight-cards.css` (109 lines) - Municipio and bairro highlight card styles (v0.7.1+)
+- `src/highlight-cards.css` (109 lines) - Municipio and bairro highlight card styles (v0.9.0+)
 - `src/app.js` - Router handling both `/` and `/converter` routes
 - **15 CSS files** total for modular styling (accessibility, typography, loading states, etc.)
 
@@ -119,7 +122,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 
 #### Core Architecture (src/core/, src/services/, src/coordination/)
 - `PositionManager` (src/core/PositionManager.js) - Singleton for current geolocation state
-  - **Position Update Logic**: Updates trigger on distance (20m) OR time (30s) thresholds (v0.7.2+)
+  - **Position Update Logic**: Updates trigger on distance (20m) OR time (30s) thresholds (v0.9.0+)
 - `GeoPosition` (src/core/GeoPosition.js) - Immutable position value object
 - `SingletonStatusManager` (src/status/SingletonStatusManager.js) - Status management across components
 - `ReverseGeocoder` (src/services/ReverseGeocoder.js) - OpenStreetMap/Nominatim integration
@@ -127,15 +130,15 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `GeolocationService` (src/services/GeolocationService.js) - Browser geolocation API wrapper
 - `WebGeocodingManager` (src/coordination/WebGeocodingManager.js) - Main coordination class
 - `ServiceCoordinator` (src/coordination/ServiceCoordinator.js) - Service lifecycle manager
-  - **Manages**: Position, Address, ReferencePlace, HighlightCards, SIDRA displayers (v0.8.6+)
+  - **Manages**: Position, Address, ReferencePlace, HighlightCards, SIDRA displayers (v0.9.0+)
 
 #### Data Processing (src/data/)
 - `BrazilianStandardAddress` (src/data/BrazilianStandardAddress.js) - Brazilian address standardization
-  - **v0.8.7-alpha**: Added `regiaoMetropolitana` field and `regiaoMetropolitanaFormatada()` method
+  - **v0.9.0-alpha**: Added `regiaoMetropolitana` field and `regiaoMetropolitanaFormatada()` method
 - `AddressExtractor` (src/data/AddressExtractor.js) - Address data extraction
-  - **v0.8.7-alpha**: Extracts metropolitan region from Nominatim `county` field
+  - **v0.9.0-alpha**: Extracts metropolitan region from Nominatim `county` field
 - `AddressCache` (src/data/AddressCache.js) - Address caching with LRU eviction and change detection (1171 lines)
-  - **v0.8.7-alpha REFACTORED**: Now uses composition with 3 focused classes
+  - **v0.9.0-alpha REFACTORED**: Now uses composition with 3 focused classes
   - **AddressChangeDetector** (271 lines): Generic field change detection with signature tracking
   - **CallbackRegistry** (280 lines): Centralized callback management with error handling
   - **AddressDataStore** (253 lines): Address data storage with current/previous history tracking
@@ -143,25 +146,25 @@ After making any changes, ALWAYS run through these validation scenarios:
   - **Tests**: 74/74 tests passing for new classes, 18/18 integration tests passing
 - `AddressDataExtractor` (src/data/AddressDataExtractor.js) - Complete address data extraction and caching
 - `ReferencePlace` (src/data/ReferencePlace.js) - Reference location handling with calculateCategory() method
-  - **Supports**: place, shop, amenity, railway, building types (v0.7.2+)
+  - **Supports**: place, shop, amenity, railway, building types (v0.9.0+)
 
 #### UI and Display (src/html/)
 - `HTMLPositionDisplayer` (src/html/HTMLPositionDisplayer.js) - Coordinate display and Google Maps integration
 - `HTMLAddressDisplayer` (src/html/HTMLAddressDisplayer.js) - Address formatting and presentation
 - `HTMLHighlightCardsDisplayer` (src/html/HTMLHighlightCardsDisplayer.js) - Municipio and bairro highlight cards
-  - **v0.7.1+**: Municipality and neighborhood display cards
-  - **v0.8.7-alpha**: Added metropolitan region display (Região Metropolitana)
+  - **v0.9.0+**: Municipality and neighborhood display cards
+  - **v0.9.0-alpha**: Added metropolitan region display (Região Metropolitana)
   - **Features**: Municipality with state (e.g., "Recife, PE"), metro region context, neighborhood tracking
 - `HTMLReferencePlaceDisplayer` (src/html/HTMLReferencePlaceDisplayer.js) - Reference place display
-- `HTMLSidraDisplayer` (src/html/HTMLSidraDisplayer.js) - IBGE SIDRA data display with observer pattern (v0.7.2+)
+- `HTMLSidraDisplayer` (src/html/HTMLSidraDisplayer.js) - IBGE SIDRA data display with observer pattern (v0.9.0+)
   - **Features**: Population statistics, Brazilian Portuguese localization, automatic updates
 - `DisplayerFactory` (src/html/DisplayerFactory.js) - Factory for display components
-  - **5 factory methods**: Position, Address, ReferencePlace, HighlightCards, Sidra (v0.8.6+)
+  - **5 factory methods**: Position, Address, ReferencePlace, HighlightCards, Sidra (v0.9.0+)
 - `HtmlText` (src/html/HtmlText.js) - Text display utilities
 
 #### Speech Synthesis (src/speech/)
 - **SpeechSynthesisManager** (src/speech/SpeechSynthesisManager.js) - Main orchestrator using composition pattern
-  - **Architecture**: Manager/Controller with Composition (v0.8.7-alpha refactored)
+  - **Architecture**: Manager/Controller with Composition (v0.9.0-alpha refactored)
   - **1148 lines** - Coordinates 4 focused components for speech synthesis
   - **Composition Components**:
     - `VoiceLoader` - Asynchronous voice loading with exponential backoff retry
@@ -170,17 +173,17 @@ After making any changes, ALWAYS run through these validation scenarios:
     - `SpeechQueue` - Priority-based request queue management
   - **Key Features**: Queue-based processing, Brazilian Portuguese optimization, retry mechanisms
   - **Tests**: 69/72 passing (3 skipped for cross-environment compatibility)
-- **VoiceLoader** (src/speech/VoiceLoader.js) - Voice loading with exponential backoff (v0.8.7-alpha)
+- **VoiceLoader** (src/speech/VoiceLoader.js) - Voice loading with exponential backoff (v0.9.0-alpha)
   - **258 lines, 21 tests passing** - Replaces circular timer with exponential backoff
   - Promise-based API: `loadVoices()`, `getVoices()`, `hasVoices()`, `clearCache()`
   - Retry delays: 100ms → 200ms → 400ms → 800ms → 1600ms → 3200ms → 5000ms (capped)
   - Max 10 retry attempts, concurrent load protection
-- **VoiceSelector** (src/speech/VoiceSelector.js) - Intelligent voice selection (v0.8.7-alpha)
+- **VoiceSelector** (src/speech/VoiceSelector.js) - Intelligent voice selection (v0.9.0-alpha)
   - **237 lines, 30 tests passing** - Priority-based Brazilian Portuguese selection
   - 3-level strategy: pt-BR exact → pt-* prefix → first available → null
   - Voice quality scoring: local +10, primary language +20
   - Methods: `selectVoice()`, `filterByLanguage()`, `scoreVoice()`, `getVoiceInfo()`
-- **SpeechConfiguration** (src/speech/SpeechConfiguration.js) - Parameter management (v0.8.7-alpha)
+- **SpeechConfiguration** (src/speech/SpeechConfiguration.js) - Parameter management (v0.9.0-alpha)
   - **226 lines, 44 tests passing** - Rate/pitch validation and clamping
   - Valid ranges: rate (0.1-10.0), pitch (0.0-2.0)
   - Methods: `setRate()`, `setPitch()`, `getRate()`, `getPitch()`, `reset()`
@@ -197,7 +200,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `Chronometer` (src/timing/Chronometer.js) - Performance timing and elapsed time tracking
   - **356 lines, 51 tests, 100% coverage**
   - Observer pattern for timing events
-  - Production-ready (v0.8.3-alpha)
+  - Production-ready (v0.9.0-alpha)
   - Use for performance monitoring and user-facing time displays
 
 #### Utilities (src/utils/)
@@ -207,10 +210,10 @@ After making any changes, ALWAYS run through these validation scenarios:
   - Automatic cleanup on app shutdown
   - Node.js and browser compatible
   - **REQUIRED**: Use for all application timers to prevent leaks
-  - **Migration complete**: SpeechSynthesisManager, VoiceManager, SpeechQueueProcessor, Chronometer (v0.8.7+)
+  - **Migration complete**: SpeechSynthesisManager, VoiceManager, SpeechQueueProcessor, Chronometer (v0.9.0+)
   - API: `timerManager.setInterval(callback, delay, id)`, `timerManager.setTimeout(callback, delay, id)`, `timerManager.clearTimer(id)`
   - Returns string IDs for better debugging (e.g., 'speech-synthesis-queue', 'chronometer-display')
-- `button-status` (src/utils/button-status.js) - Contextual status messages for disabled buttons (v0.8.7-alpha)
+- `button-status` (src/utils/button-status.js) - Contextual status messages for disabled buttons (v0.9.0-alpha)
   - **142 lines, improves UX and accessibility**
   - Functions: `addButtonStatus()`, `removeButtonStatus()`, `updateButtonStatus()`, `disableWithReason()`, `enableWithMessage()`
   - WCAG 2.1 AA accessible with ARIA attributes (`aria-describedby`, `role="status"`, `aria-live="polite"`)
@@ -226,7 +229,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 - **Google Maps**: Links for map viewing and Street View integration
 
 ### Data Libraries
-- **libs/sidra/**: IBGE SIDRA municipality data (v0.7.2+)
+- **libs/sidra/**: IBGE SIDRA municipality data (v0.9.0+)
   - `tab6579_municipios.json` (190KB) - Population estimates for Brazilian municipalities
   - **Usage**: Offline fallback for IBGE demographic queries
 
@@ -239,8 +242,8 @@ After making any changes, ALWAYS run through these validation scenarios:
 - **Test Categories**: Core utilities, Singleton patterns, Position management, IBGE integration, Immutability patterns, SIDRA data display, Metropolitan region display
 - **Test Infrastructure**: Jest v30.1.3, jsdom v25.0.1, Puppeteer v24.35.0
 - **Performance**: Optimized with fake timers, parallel execution, custom cache directory (.jest-cache)
-- **New Tests** (v0.7.2+): complete-address-validation.e2e.test.js, milho-verde-locationResult.e2e.test.js, HTMLSidraDisplayer.test.js
-- **New Tests** (v0.8.7+): metropolitan-region-display.e2e.test.js, MetropolitanRegion unit tests
+- **New Tests** (v0.9.0+): complete-address-validation.e2e.test.js, milho-verde-locationResult.e2e.test.js, HTMLSidraDisplayer.test.js
+- **New Tests** (v0.9.0+): metropolitan-region-display.e2e.test.js, MetropolitanRegion unit tests
 
 ### End-to-End Testing Infrastructure
 
@@ -251,10 +254,10 @@ After making any changes, ALWAYS run through these validation scenarios:
   - `NeighborhoodChangeWhileDriving.e2e.test.js` - Bairro card updates while navigating (8 tests)
   - `CompleteGeolocationWorkflow.e2e.test.js` - Full geolocation pipeline
   - `AddressChangeAndSpeech.e2e.test.js` - Address updates with speech synthesis
-  - `municipio-bairro-display.e2e.test.js` - Comprehensive municipio/bairro display testing (v0.7.1+)
-  - `municipio-bairro-simple.e2e.test.js` - Simplified municipio/bairro validation (v0.7.1+)
-  - `complete-address-validation.e2e.test.js` - Complete address data validation (v0.7.2+)
-  - `milho-verde-locationResult.e2e.test.js` - Location result integration test (v0.7.2+)
+  - `municipio-bairro-display.e2e.test.js` - Comprehensive municipio/bairro display testing (v0.9.0+)
+  - `municipio-bairro-simple.e2e.test.js` - Simplified municipio/bairro validation (v0.9.0+)
+  - `complete-address-validation.e2e.test.js` - Complete address data validation (v0.9.0+)
+  - `milho-verde-locationResult.e2e.test.js` - Location result integration test (v0.9.0+)
 - **Mock Configuration**: Puppeteer request interception with CORS headers, mock Nominatim API
 - **Test Server**: Local HTTP server on port 9877 for E2E tests
 - **Execution**: `npm test -- __tests__/e2e/[filename]`
@@ -320,13 +323,73 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 
 ### Working with Brazilian Address Data
 - Use `BrazilianStandardAddress` class for address standardization
-  - **v0.8.7-alpha**: Supports metropolitan region via `regiaoMetropolitana` field
+  - **v0.9.0-alpha**: Supports metropolitan region via `regiaoMetropolitana` field
   - **Methods**: `municipioCompleto()`, `regiaoMetropolitanaFormatada()`
 - Reference `AddressDataExtractor` for data processing patterns
 - Test with Brazilian coordinate examples: São Paulo (-23.550520, -46.633309)
 - IBGE integration available through `renderUrlUFNome()` function
 - Metropolitan region data extracted from Nominatim `county` field
 - IBGE integration available through `renderUrlUFNome()` function
+
+## Build System & Performance
+
+### Vite Build Process
+The application uses **Vite v7.3.1** as the build tool:
+
+**Performance Benefits**:
+- ✅ 25% bundle size reduction (1.2M source → 900K dist)
+- ✅ Automatic code splitting into 7 logical chunks
+- ✅ Terser minification with source maps
+- ✅ HMR (Hot Module Replacement) in development
+- ✅ Fast refresh without page reload
+
+**Build Configuration** (`vite.config.js`):
+```javascript
+{
+  target: 'es2022',        // Modern browsers with top-level await
+  minify: 'terser',        // Aggressive minification
+  sourcemap: true,         // Debug support
+  root: 'src',             // Source directory
+  outDir: '../dist',       // Output directory
+  manualChunks: {
+    'vendor': [...],       // External dependencies
+    'speech': [...],       // Speech synthesis (17.5 KB)
+    'core': [...],         // Position management (9.5 KB)
+    'services': [...],     // API services (13.9 KB)
+    'data': [...],         // Data processing (19.7 KB)
+    'html': [...],         // UI displayers (16.0 KB)
+    'coordination': [...]  // Service coordinators (23.0 KB)
+  }
+}
+```
+
+**Bundle Analysis**:
+```
+dist/
+├── assets/
+│   ├── coordination-*.js    23 KB (gzip: 5.6 KB)
+│   ├── core-*.js             9 KB (gzip: 3.3 KB)
+│   ├── data-*.js            20 KB (gzip: 4.1 KB)
+│   ├── html-*.js            16 KB (gzip: 5.0 KB)
+│   ├── main-*.js            22 KB (gzip: 6.7 KB)
+│   ├── services-*.js        14 KB (gzip: 3.9 KB)
+│   ├── speech-*.js          18 KB (gzip: 4.5 KB)
+│   └── main-*.css           33 KB (gzip: 7.6 KB)
+└── index.html               26 KB (gzip: 7.3 KB)
+
+Total: 900 KB (25% smaller than source)
+```
+
+**Browser Requirements**:
+- ES2022 support (Chrome 94+, Firefox 93+, Safari 15+)
+- Top-level await support
+- ES modules support
+
+**Development Modes**:
+1. **Development**: `npm run dev` (HMR, fast refresh, port 9000)
+2. **Production Build**: `npm run build` (minified, optimized, dist/)
+3. **Production Preview**: `npm run preview` (test build, port 9001)
+4. **Legacy**: `python3 -m http.server 9000` (direct source files)
 
 ## Limitations and Known Issues
 
@@ -341,9 +404,9 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 - Error handling for API failures could be enhanced
 
 ### Development Environment
-- No formal linting configuration - use `node -c` for syntax validation
-- No build process - files are used directly
-- Manual testing required for DOM/browser features
+- ESLint v9 with flat configuration for linting
+- **Vite build process** with code splitting and minification
+- Jest test framework with jsdom for DOM testing
 
 ### Legacy Test Files
 - **legacy-tests/** - Archived historical test files (deprecated, see legacy-tests/README.md for context)
@@ -429,9 +492,9 @@ The repository includes `.github/scripts/cdn-delivery.sh` for generating CDN URL
 npm version minor
 ./.github/scripts/cdn-delivery.sh
 git add cdn-urls.txt
-git commit -m "chore: update CDN URLs for v0.7.0"
-git tag v0.7.0
-git push origin v0.7.0
+git commit -m "chore: update CDN URLs for v0.9.0"
+git tag v0.9.0
+git push origin v0.9.0
 ```
 
 **Environment Variables** (optional):
@@ -564,9 +627,9 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 #### UI and Display (src/html/)
 - `HTMLPositionDisplayer` (src/html/HTMLPositionDisplayer.js) - Coordinate display and Google Maps integration
 - `HTMLAddressDisplayer` (src/html/HTMLAddressDisplayer.js) - Address formatting and presentation
-- `HTMLHighlightCardsDisplayer` (src/html/HTMLHighlightCardsDisplayer.js) - Municipio and bairro highlight cards (v0.7.1+)
+- `HTMLHighlightCardsDisplayer` (src/html/HTMLHighlightCardsDisplayer.js) - Municipio and bairro highlight cards (v0.9.0+)
 - `HTMLReferencePlaceDisplayer` (src/html/HTMLReferencePlaceDisplayer.js) - Reference place display
-- `HTMLSidraDisplayer` (src/html/HTMLSidraDisplayer.js) - IBGE SIDRA data display with observer pattern (v0.7.2+)
+- `HTMLSidraDisplayer` (src/html/HTMLSidraDisplayer.js) - IBGE SIDRA data display with observer pattern (v0.9.0+)
   - **Features**: Population statistics, Brazilian Portuguese localization, automatic updates
   - **Data Source**: IBGE SIDRA API with offline fallback (libs/sidra/tab6579_municipios.json)
 - `DisplayerFactory` (src/html/DisplayerFactory.js) - Factory for display components
@@ -574,7 +637,7 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 
 #### Speech Synthesis (src/speech/)
 - **SpeechSynthesisManager** (src/speech/SpeechSynthesisManager.js) - Main orchestrator using composition pattern
-  - **Architecture**: Manager/Controller with Composition (v0.8.7-alpha refactored)
+  - **Architecture**: Manager/Controller with Composition (v0.9.0-alpha refactored)
   - **1148 lines** - Coordinates 4 focused components for speech synthesis
   - **Composition Components**:
     - `VoiceLoader` - Asynchronous voice loading with exponential backoff retry
@@ -583,17 +646,17 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
     - `SpeechQueue` - Priority-based request queue management
   - **Key Features**: Queue-based processing, Brazilian Portuguese optimization, retry mechanisms
   - **Tests**: 69/72 passing (3 skipped for cross-environment compatibility)
-- **VoiceLoader** (src/speech/VoiceLoader.js) - Voice loading with exponential backoff (v0.8.7-alpha)
+- **VoiceLoader** (src/speech/VoiceLoader.js) - Voice loading with exponential backoff (v0.9.0-alpha)
   - **258 lines, 21 tests passing** - Replaces circular timer with exponential backoff
   - Promise-based API: `loadVoices()`, `getVoices()`, `hasVoices()`, `clearCache()`
   - Retry delays: 100ms → 200ms → 400ms → 800ms → 1600ms → 3200ms → 5000ms (capped)
   - Max 10 retry attempts, concurrent load protection
-- **VoiceSelector** (src/speech/VoiceSelector.js) - Intelligent voice selection (v0.8.7-alpha)
+- **VoiceSelector** (src/speech/VoiceSelector.js) - Intelligent voice selection (v0.9.0-alpha)
   - **237 lines, 30 tests passing** - Priority-based Brazilian Portuguese selection
   - 3-level strategy: pt-BR exact → pt-* prefix → first available → null
   - Voice quality scoring: local +10, primary language +20
   - Methods: `selectVoice()`, `filterByLanguage()`, `scoreVoice()`, `getVoiceInfo()`
-- **SpeechConfiguration** (src/speech/SpeechConfiguration.js) - Parameter management (v0.8.7-alpha)
+- **SpeechConfiguration** (src/speech/SpeechConfiguration.js) - Parameter management (v0.9.0-alpha)
   - **226 lines, 44 tests passing** - Rate/pitch validation and clamping
   - Valid ranges: rate (0.1-10.0), pitch (0.0-2.0)
   - Methods: `setRate()`, `setPitch()`, `getRate()`, `getPitch()`, `reset()`
@@ -696,14 +759,38 @@ npm run validate
 # Basic functionality test  
 node src/app.js
 
+# Start development server with HMR (recommended)
+npm run dev
+
+# Build production bundle
+npm run build
+
+# Preview production build
+npm run preview
+
 # Full test suite
 npm run test:all
 
-# Start web server for full testing
+# Legacy: Start Python web server for source files
 python3 -m http.server 9000
 
-# Test web functionality
+# Test web functionality (legacy mode)
 curl -s http://localhost:9000/src/index.html | head -5
+```
+
+### Build System Commands
+```bash
+# Development mode (HMR, fast refresh)
+npm run dev
+# → Starts at http://localhost:9000
+
+# Production build (optimized, minified, code-split)
+npm run build
+# → Output: dist/ folder (900 KB, 25% reduction)
+
+# Preview production build locally
+npm run preview
+# → Starts at http://localhost:9001
 ```
 
 ### Utility Scripts

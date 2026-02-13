@@ -314,6 +314,6 @@ A dedicated test page is available at `src/test-error-handling.html` with button
 
 ---
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Last Updated:** 2026-01-21  
 **Author:** Marcelo Pereira Barbosa

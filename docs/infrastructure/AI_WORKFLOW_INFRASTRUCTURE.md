@@ -1,7 +1,7 @@
 # AI Workflow Infrastructure Documentation
 
 **Last Updated**: 2026-01-16  
-**Version**: 0.7.1-alpha  
+**Version**: 0.9.0-alpha  
 **Purpose**: Document the `.ai_workflow/` directory structure and usage
 
 ## Overview

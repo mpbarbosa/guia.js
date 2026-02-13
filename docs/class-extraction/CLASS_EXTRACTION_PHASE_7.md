@@ -368,7 +368,7 @@ window.HTMLPositionDisplayer
  * // Typically called automatically via observer pattern
  * positionManager.subscribe(displayer);
  * 
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  */
 ```
 

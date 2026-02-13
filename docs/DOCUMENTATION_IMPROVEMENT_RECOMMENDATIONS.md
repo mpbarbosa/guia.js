@@ -1,7 +1,7 @@
 # Documentation Improvement Recommendations
 
 **Date**: 2026-01-01  
-**Version**: 0.6.0-alpha
+**Version**: 1.0.0-alpha
 
 ## Overview
 
@@ -21,7 +21,7 @@ Create a standard footer template for all documentation files:
 ```markdown
 ---
 
-**Version**: 0.6.0-alpha  
+**Version**: 1.0.0-alpha  
 **Status**: Active Development  
 **Last Updated**: 2026-01-01  
 **Related**: [Link to related docs]
@@ -93,7 +93,7 @@ done
 #### A. MIGRATION_GUIDE_MODULARIZATION.md
 
 ```markdown
-# Migrating to Modularized Guia.js (0.6.0-alpha)
+# Migrating to Modularized Guia.js (1.0.0-alpha)
 
 ## Breaking Changes
 
@@ -107,7 +107,7 @@ done
 </script>
 ```
 
-**After (0.6.0)**:
+**After (1.0.0)**:
 ```html
 <script type="module">
   import { WebGeocodingManager } from './src/guia.js';
@@ -141,7 +141,7 @@ Change all `guia.js` references to `src/guia.js`
 ### Step 3: Update CDN URLs
 Use new modular CDN structure:
 ```
-https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.6.0-alpha/src/guia.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@1.0.0-alpha/src/guia.js
 ```
 
 ### Step 4: Test Thoroughly
@@ -156,7 +156,7 @@ Run full test suite: `npm run test:all`
 
 If issues arise, pin to previous version:
 ```html
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.5.0/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@1.0.0/guia.js"></script>
 ```
 ```
 
@@ -166,14 +166,14 @@ Document any API changes between versions:
 ```markdown
 # API Changes and Deprecations
 
-## Version 0.6.0-alpha
+## Version 1.0.0-alpha
 
 ### Deprecated Methods
 
 **GeoPosition.calculateAccuracyQuality()** (line 97)  
 - **Status**: Deprecated, has bug
 - **Replacement**: Use `position.accuracyQuality` property
-- **Removal**: Planned for 0.7.0
+- **Removal**: Planned for 1.0.0
 
 ### Renamed Classes
 
@@ -202,7 +202,7 @@ Help developers migrate tests:
 }
 ```
 
-**After (0.6.0)**:
+**After (1.0.0)**:
 ```json
 {
   "testEnvironment": "node",
@@ -743,6 +743,6 @@ All improvements leverage existing tools (Mermaid, git hooks) and align with cur
 
 ---
 
-**Version**: 0.6.0-alpha  
+**Version**: 1.0.0-alpha  
 **Last Updated**: 2026-01-01  
 **Priority**: Phase 1 recommended for immediate implementation

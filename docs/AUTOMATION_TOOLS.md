@@ -1,6 +1,6 @@
 # Documentation Automation Tools
 
-**Version**: 0.6.0-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-01-01
 
 ## Overview
@@ -31,7 +31,7 @@ ls -la .git/hooks/pre-commit
 #### Checks Performed
 
 ##### Check 1: Version Consistency ✅
-Verifies version number (`0.6.0-alpha`) appears in all key files:
+Verifies version number (`0.9.0-alpha`) appears in all key files:
 - `package.json`
 - `README.md`
 - `docs/INDEX.md`
@@ -229,13 +229,13 @@ Create `.github/scripts/bump-version.sh`:
 ```bash
 #!/bin/bash
 # Version Bump Script
-# Usage: ./bump-version.sh 0.7.0-alpha
+# Usage: ./bump-version.sh 0.9.0-alpha
 
 set -e
 
 if [ -z "$1" ]; then
     echo "Usage: $0 <new-version>"
-    echo "Example: $0 0.7.0-alpha"
+    echo "Example: $0 0.9.0-alpha"
     exit 1
 fi
 
@@ -276,7 +276,7 @@ echo "  5. Push: git push && git push --tags"
 chmod +x .github/scripts/bump-version.sh
 
 # Bump version
-./.github/scripts/bump-version.sh 0.7.0-alpha
+./.github/scripts/bump-version.sh 0.9.0-alpha
 ```
 
 ---
@@ -491,14 +491,14 @@ git commit -m "docs: update feature description"
 
 ```bash
 # Bump version
-./.github/scripts/bump-version.sh 0.7.0-alpha
+./.github/scripts/bump-version.sh 0.9.0-alpha
 
 # Review changes
 git diff
 
 # Commit and tag
-git commit -am "chore: bump version to 0.7.0-alpha"
-git tag v0.7.0-alpha
+git commit -am "chore: bump version to 0.9.0-alpha"
+git tag v0.9.0-alpha
 
 # Push
 git push && git push --tags
@@ -616,7 +616,7 @@ git push
 
 ---
 
-**Version**: 0.6.0-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-01-01  
 **Maintainer**: Guia.js Team
 
@@ -1007,6 +1007,6 @@ git commit -m "chore: update badges after adding tests"
 
 ---
 
-**Version**: 0.6.0-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-01-01  
 **Status**: ✅ Complete Automation Stack

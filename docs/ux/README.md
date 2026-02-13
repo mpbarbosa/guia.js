@@ -1,7 +1,7 @@
 # UX Improvement Summary
 
 **Date**: 2026-01-27  
-**Project**: Guia Turístico v0.7.1-alpha  
+**Project**: Guia Turístico v0.9.0-alpha  
 **Overall UX Grade**: B- → Target: A-
 
 ---

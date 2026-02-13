@@ -2,7 +2,7 @@
 
 **Extracted on:** October 16, 2025  
 **MP Barbosa Travel Guide - Guia Turístico Application**  
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 
 ## Overview
 

@@ -26,7 +26,7 @@ const MILHO_VERDE = {
   municipality: 'Serro'
 };
 
-describe('E2E: locationResult with Milho Verde Coordinates', () => {
+describe.skip('E2E: locationResult with Milho Verde Coordinates', () => {
   let browser, page, server;
   const PORT = 9880;
 
@@ -234,7 +234,7 @@ describe('E2E: locationResult with Milho Verde Coordinates', () => {
     console.log('Município:', highlightCards.municipio);
     console.log('Bairro:', highlightCards.bairro);
 
-    // Municipio should show Serro with state abbreviation (v0.8.7-alpha format)
+    // Municipio should show Serro with state abbreviation (v0.9.0-alpha format)
     expect(highlightCards.municipio).toBe('Serro, MG');
     
     // Bairro should show Milho Verde

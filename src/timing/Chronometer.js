@@ -33,7 +33,7 @@ const timerManager = TimerManager.getInstance();
  * ```
  * 
  * @class Chronometer
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 class Chronometer {
@@ -65,10 +65,8 @@ class Chronometer {
 	 * });
 	 */
 	constructor(element, eventConfig = {}) {
-		log("Initializing Chronometer...");
 		this.element = element;
 		this.startTime = null;
-		this.lastUpdateTime = null;
 		this.isRunning = false;
 		this.intervalId = null;
 		
@@ -89,7 +87,7 @@ class Chronometer {
 	 * every second thereafter.
 	 * 
 	 * @returns {void}
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * chronometer.start();
@@ -98,7 +96,6 @@ class Chronometer {
 	start() {
 		if (!this.isRunning) {
 			this.startTime = Date.now();
-			this.lastUpdateTime = this.startTime;
 			this.isRunning = true;
 
 			// Update display immediately
@@ -119,7 +116,7 @@ class Chronometer {
 	 * The chronometer can be restarted from where it left off using start().
 	 * 
 	 * @returns {void}
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * chronometer.stop();
@@ -142,7 +139,7 @@ class Chronometer {
 	 * to "00:00:00". This is a complete reset that cannot be undone.
 	 * 
 	 * @returns {void}
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * chronometer.reset();
@@ -151,7 +148,6 @@ class Chronometer {
 	reset() {
 		this.stop();
 		this.startTime = null;
-		this.lastUpdateTime = null;
 		if (this.element) {
 			this.element.textContent = "00:00:00";
 		}
@@ -165,7 +161,7 @@ class Chronometer {
 	 * continues to increment while running and is frozen when stopped.
 	 * 
 	 * @returns {number} Elapsed time in milliseconds
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * chronometer.start();
@@ -190,7 +186,7 @@ class Chronometer {
 	 * 
 	 * @param {number} milliseconds - Time duration in milliseconds
 	 * @returns {string} Formatted time string in HH:MM:SS format
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * const formatted = chronometer.formatTime(125000); // 2 minutes 5 seconds
@@ -221,7 +217,7 @@ class Chronometer {
 	 * 
 	 * @private
 	 * @returns {void}
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	updateDisplay() {
 		if (this.element) {
@@ -252,7 +248,7 @@ class Chronometer {
 	 * @param {Object} loading - Loading state information  
 	 * @param {Object} error - Error information if any
 	 * @returns {void}
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * // Typically called automatically via observer pattern
@@ -272,20 +268,9 @@ class Chronometer {
 			}
 		}
 
-		// Handle error states
-		if (error) {
-			this.stop();
-			if (this.element) {
-				this.element.textContent = "Error";
-			}
-		}
-
-		// Handle loading states
-		if (loading) {
-			if (this.element) {
-				this.element.textContent = "Loading...";
-			}
-		}
+		// Note: We do NOT handle error or loading states here
+		// The chronometer tracks elapsed time independently of position status
+		// Errors or loading states from PositionManager should not stop the timer
 	}
 
 	/**
@@ -296,7 +281,7 @@ class Chronometer {
 	 * debugging and logging purposes.
 	 * 
 	 * @returns {string} String representation with state and elapsed time
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * log(chronometer.toString());
@@ -317,7 +302,7 @@ class Chronometer {
 	 * the chronometer is no longer needed.
 	 * 
 	 * @returns {void}
-	 * @since 0.8.6-alpha
+	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 * 
 	 * @example
@@ -354,7 +339,6 @@ class Chronometer {
 		
 		// Clear timing data
 		this.startTime = null;
-		this.lastUpdateTime = null;
 	}
 }
 

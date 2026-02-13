@@ -16,7 +16,7 @@
  * - Immutability: Freezes displayer after creation
  * 
  * @module coordination/SpeechCoordinator
- * @since 0.7.0-alpha - Phase 3: WebGeocodingManager optimization
+ * @since 0.9.0-alpha - Phase 3: WebGeocodingManager optimization
  * @author Marcelo Pereira Barbosa
  * 
  * @requires html/HtmlSpeechSynthesisDisplayer

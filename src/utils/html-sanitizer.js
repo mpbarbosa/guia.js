@@ -5,7 +5,7 @@
  * when displaying user-generated or error content in innerHTML contexts.
  * 
  * @module utils/html-sanitizer
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  */
 
 /**
@@ -21,8 +21,8 @@
  * - Protects against XSS attacks where error.message might contain malicious code
  * 
  * **Implementation:**
- * - Browser: Uses DOM textContent → innerHTML conversion (native escaping)
- * - Node.js: Manual character replacement for server-side safety
+ * - Uses consistent manual character replacement across all environments
+ * - Ensures quotes are properly escaped (DOM textContent doesn't escape quotes)
  * 
  * @param {string|null|undefined} text - The text to escape
  * @returns {string} HTML-safe escaped text
@@ -51,14 +51,8 @@ export function escapeHtml(text) {
 	// Convert to string if needed
 	const str = String(text);
 
-	// Browser environment: Use DOM for native HTML escaping
-	if (typeof document !== 'undefined') {
-		const div = document.createElement('div');
-		div.textContent = str;
-		return div.innerHTML;
-	}
-
-	// Node.js environment: Manual character replacement
+	// Use manual character replacement for consistent behavior across environments
+	// Note: DOM textContent -> innerHTML doesn't escape quotes, so we use manual replacement
 	return str
 		.replace(/&/g, '&amp;')
 		.replace(/</g, '&lt;')

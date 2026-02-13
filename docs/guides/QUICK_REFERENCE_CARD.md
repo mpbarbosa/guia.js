@@ -22,7 +22,7 @@ python3 -m http.server 9000
 
 ## 📊 Current Project Status
 
-- **Version**: 0.6.0-alpha
+- **Version**: 0.9.0-alpha
 - **Tests**: 1224 passing in 57 suites (60 test files)
 - **Coverage**: ~70% (69.82%)
 - **Architecture**: 29 modular source files
@@ -206,5 +206,5 @@ cd /path/to/guia_js
 ---
 
 **Last Updated**: 2026-01-01  
-**Version**: 0.6.0-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: Active Development

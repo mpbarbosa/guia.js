@@ -79,7 +79,7 @@ npm run validate
 
 ### Specialized Testing
 
-6. **[HTML Generation Testing](./docs/TESTING_HTML_GENERATION.md)**
+6. **[HTML Generation Testing](./HTML_GENERATION.md)**
    - Testing DOM manipulation without browser
    - JSDOM integration strategies
    - HTML element testing patterns
@@ -452,7 +452,7 @@ See [JEST_COMMONJS_ES6_GUIDE.md](./.github/JEST_COMMONJS_ES6_GUIDE.md).
 ReferenceError: document is not defined
 ```
 **Solution**: Set `global.document = undefined` in tests that don't need DOM, or use JSDOM.
-See [TESTING_HTML_GENERATION.md](./docs/TESTING_HTML_GENERATION.md).
+See [HTML_GENERATION.md](./HTML_GENERATION.md).
 
 #### Test Timeouts
 ```
@@ -542,7 +542,7 @@ See [GITHUB_INTEGRATION_TEST_GUIDE.md](./.github/GITHUB_INTEGRATION_TEST_GUIDE.m
 ---
 
 **Last Updated**: 2026-01-09  
-**Version**: 0.7.0-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Active and maintained
 
 For questions or issues with testing, see [CONTRIBUTING.md](./.github/CONTRIBUTING.md) or open a GitHub issue.

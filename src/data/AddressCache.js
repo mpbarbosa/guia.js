@@ -12,11 +12,11 @@
  * 
  * Implements singleton pattern ensuring only one cache instance exists.
  * 
- * **REFACTORED v0.8.7-alpha**: Now uses composition with AddressChangeDetector,
+ * **REFACTORED v0.9.0-alpha**: Now uses composition with AddressChangeDetector,
  * CallbackRegistry, and AddressDataStore for improved maintainability.
  * 
  * @module data/AddressCache
- * @since 0.8.4-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -27,7 +27,7 @@ import LRUCache from './LRUCache.js';
 import { log } from '../utils/logger.js';
 import timerManager from '../utils/TimerManager.js';
 
-// NEW: Import refactored classes (v0.8.7-alpha)
+// NEW: Import refactored classes (v0.9.0-alpha)
 import AddressChangeDetector from './AddressChangeDetector.js';
 import CallbackRegistry from './CallbackRegistry.js';
 import AddressDataStore from './AddressDataStore.js';
@@ -50,7 +50,7 @@ class AddressCache {
 	 * 
 	 * @static
 	 * @returns {AddressCache} The singleton AddressCache instance
-	 * @since 0.8.5-alpha
+	 * @since 0.9.0-alpha
 	 */
 	static getInstance() {
 		if (!AddressCache.instance) {
@@ -66,13 +66,13 @@ class AddressCache {
 	 * This constructor is typically called internally by the getInstance() method
 	 * to maintain the singleton pattern.
 	 * 
-	 * **REFACTORED v0.8.7-alpha**: Now uses composition with three focused classes:
+	 * **REFACTORED v0.9.0-alpha**: Now uses composition with three focused classes:
 	 * - AddressChangeDetector for change detection logic
 	 * - CallbackRegistry for callback management
 	 * - AddressDataStore for data storage
 	 * 
 	 * @private
-	 * @since 0.8.5-alpha
+	 * @since 0.9.0-alpha
 	 */
 	constructor() {
 		this.observerSubject = new ObserverSubject();
@@ -80,12 +80,12 @@ class AddressCache {
 		// Use LRUCache for efficient caching with automatic eviction
 		this.cache = new LRUCache(50, 300000); // 50 entries, 5 minutes expiration
 		
-		// NEW (v0.8.7-alpha): Composition with focused classes
+		// NEW (v0.9.0-alpha): Composition with focused classes
 		this.changeDetector = new AddressChangeDetector();
 		this.callbackRegistry = new CallbackRegistry();
 		this.dataStore = new AddressDataStore();
 		
-		// DEPRECATED (v0.8.7-alpha): Legacy properties kept for backward compatibility
+		// DEPRECATED (v0.9.0-alpha): Legacy properties kept for backward compatibility
 		// These are now managed by the composed classes above but maintained
 		// for any direct property access (use getInstance() methods instead)
 		// Initialize from dataStore to ensure consistency
@@ -109,11 +109,11 @@ class AddressCache {
 	/**
 	 * Generates a cache key for address data to enable efficient caching and retrieval.
 	 * 
-	 * **REFACTORED v0.8.7-alpha**: Delegates to AddressDataStore.generateCacheKey()
+	 * **REFACTORED v0.9.0-alpha**: Delegates to AddressDataStore.generateCacheKey()
 	 * 
 	 * @param {Object} data - Address data from geocoding API
 	 * @returns {string|null} Cache key string or null if data is invalid
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
 	generateCacheKey(data) {
@@ -137,7 +137,7 @@ class AddressCache {
 	 * happens automatically, but kept for backward compatibility.
 	 * 
 	 * @private
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * @deprecated Eviction now automatic in LRUCache.set()
 	 */
 	evictLeastRecentlyUsedIfNeeded() {
@@ -152,7 +152,7 @@ class AddressCache {
 	 * that have exceeded the expiration time.
 	 * 
 	 * @private
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	cleanExpiredEntries() {
 		const removed = this.cache.cleanExpired();
@@ -175,7 +175,7 @@ class AddressCache {
 	 * Clears all cache entries and resets change tracking.
 	 * This method is primarily used for testing purposes.
 	 * 
-	 * @since 0.8.4-alpha
+	 * @since 0.9.0-alpha
 	 */
 	clearCache() {
 		this.cache.clear();
@@ -213,7 +213,7 @@ class AddressCache {
 	 * @param {Object} callback.changeDetails - Details about the logradouro change
 	 * @returns {void}
 	 * 
-	 * **REFACTORED v0.8.7-alpha**: Delegates to CallbackRegistry
+	 * **REFACTORED v0.9.0-alpha**: Delegates to CallbackRegistry
 	 * 
 	 * @example
 	 * const cache = AddressCache.getInstance();
@@ -221,7 +221,7 @@ class AddressCache {
 	 *   log('Street changed:', changeDetails);
 	 * });
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
 	setLogradouroChangeCallback(callback) {
@@ -255,7 +255,7 @@ class AddressCache {
 	 *   log('Neighborhood changed:', changeDetails);
 	 * });
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
 	setBairroChangeCallback(callback) {
@@ -288,7 +288,7 @@ class AddressCache {
 	 *   log('Municipality changed:', changeDetails);
 	 * });
 	 * 
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
 	setMunicipioChangeCallback(callback) {
@@ -309,7 +309,7 @@ class AddressCache {
 	 * Gets the currently registered logradouro change callback.
 	 * 
 	 * @returns {Function|null} The current callback function or null if none is set
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getLogradouroChangeCallback() {
 		return this.callbackRegistry.get('logradouro');
@@ -328,7 +328,7 @@ class AddressCache {
 	 * Gets the currently registered bairro change callback.
 	 * 
 	 * @returns {Function|null} The current callback function or null if none is set
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getBairroChangeCallback() {
 		return this.callbackRegistry.get('bairro');
@@ -347,7 +347,7 @@ class AddressCache {
 	 * Gets the currently registered municipio change callback.
 	 * 
 	 * @returns {Function|null} The current callback function or null if none is set
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getMunicipioChangeCallback() {
 		return this.callbackRegistry.get('municipio');
@@ -366,10 +366,10 @@ class AddressCache {
 	 * Checks if logradouro has changed compared to previous address.
 	 * Returns true only once per change to prevent notification loops.
 	 * 
-	 * **REFACTORED v0.8.7-alpha**: Now delegates to AddressChangeDetector
+	 * **REFACTORED v0.9.0-alpha**: Now delegates to AddressChangeDetector
 	 * 
 	 * @returns {boolean} True if logradouro has changed and not yet notified
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	hasLogradouroChanged() {
 		const current = this.dataStore.getCurrent().address;
@@ -407,10 +407,10 @@ class AddressCache {
 	 * Checks if bairro has changed compared to previous address.
 	 * Returns true only once per change to prevent notification loops.
 	 * 
-	 * **REFACTORED v0.8.7-alpha**: Now delegates to AddressChangeDetector
+	 * **REFACTORED v0.9.0-alpha**: Now delegates to AddressChangeDetector
 	 * 
 	 * @returns {boolean} True if bairro has changed and not yet notified
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	hasBairroChanged() {
 		const current = this.dataStore.getCurrent().address;
@@ -448,10 +448,10 @@ class AddressCache {
 	 * Checks if municipio has changed compared to previous address.
 	 * Returns true only once per change to prevent notification loops.
 	 * 
-	 * **REFACTORED v0.8.7-alpha**: Now delegates to AddressChangeDetector
+	 * **REFACTORED v0.9.0-alpha**: Now delegates to AddressChangeDetector
 	 * 
 	 * @returns {boolean} True if municipio has changed and not yet notified
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	hasMunicipioChanged() {
 		const current = this.dataStore.getCurrent().address;
@@ -488,10 +488,10 @@ class AddressCache {
 	/**
 	 * Gets details about logradouro change.
 	 * 
-	 * **REFACTORED v0.8.7-alpha**: Now delegates to AddressChangeDetector
+	 * **REFACTORED v0.9.0-alpha**: Now delegates to AddressChangeDetector
 	 * 
 	 * @returns {Object} Change details with current and previous logradouro
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getLogradouroChangeDetails() {
 		return this.changeDetector.getChangeDetails(
@@ -513,10 +513,10 @@ class AddressCache {
 	/**
 	 * Gets details about bairro change.
 	 * 
-	 * **REFACTORED v0.8.7-alpha**: Now delegates to AddressChangeDetector
+	 * **REFACTORED v0.9.0-alpha**: Now delegates to AddressChangeDetector
 	 * 
 	 * @returns {Object} Change details with current and previous bairro
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getBairroChangeDetails() {
 		const current = this.dataStore.getCurrent().address;
@@ -559,7 +559,7 @@ class AddressCache {
 	 * @private
 	 * @param {Object} rawData - Raw address data from geocoding API
 	 * @returns {string} Complete bairro string
-	 * @since 0.8.4-alpha
+	 * @since 0.9.0-alpha
 	 */
 	_computeBairroCompleto(rawData) {
 		if (!rawData || !rawData.address) {
@@ -583,10 +583,10 @@ class AddressCache {
 	/**
 	 * Gets details about municipio change.
 	 * 
-	 * **REFACTORED v0.8.7-alpha**: Now delegates to AddressChangeDetector
+	 * **REFACTORED v0.9.0-alpha**: Now delegates to AddressChangeDetector
 	 * 
 	 * @returns {Object} Change details with current and previous municipio
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getMunicipioChangeDetails() {
 		const current = this.dataStore.getCurrent().address;
@@ -628,7 +628,7 @@ class AddressCache {
 	 * 
 	 * @param {Object} data - Raw address data from geocoding API
 	 * @returns {BrazilianStandardAddress} Standardized address object
-	 * @since 0.8.3-alpha
+	 * @since 0.9.0-alpha
 	 */
 	getBrazilianStandardAddress(data) {
 		const cacheKey = this.generateCacheKey(data);
@@ -656,7 +656,7 @@ class AddressCache {
 				rawData: data, // Store raw data for detailed change information
 			});
 
-			// Update data store with new address and raw data (v0.8.7-alpha refactoring)
+			// Update data store with new address and raw data (v0.9.0-alpha refactoring)
 			this.dataStore.update(extractor.enderecoPadronizado, data);
 			
 			// Sync legacy properties for backward compatibility
@@ -1104,7 +1104,7 @@ class AddressCache {
 	 * test environments where instances are created and destroyed frequently.
 	 * 
 	 * @returns {void}
-	 * @since 0.8.6-alpha
+	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 * 
 	 * @example
@@ -1163,7 +1163,7 @@ class AddressCache {
  * 
  * @class AddressDataExtractor
  * @deprecated Use AddressCache for cache operations and AddressExtractor for extraction
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 

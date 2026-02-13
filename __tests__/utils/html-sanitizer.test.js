@@ -7,7 +7,7 @@
  * test cases are based on real-world XSS attack vectors from the OWASP
  * XSS Prevention Cheat Sheet.
  * 
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  * @see {@link https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html|OWASP XSS Prevention}
  */
 

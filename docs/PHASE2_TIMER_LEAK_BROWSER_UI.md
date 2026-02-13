@@ -96,7 +96,7 @@ _callWithDelay(fn) {
  * timer leaks in test environments. Call this in test teardown (afterEach).
  * 
  * @returns {void}
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  * 
  * @example
  * // In tests
@@ -200,7 +200,7 @@ destroy() {
      * Clears all pending toast timeouts.
      * Useful in test environments.
      * 
-     * @since 0.8.7-alpha
+     * @since 0.9.0-alpha
      */
     destroy: function() {
       activeTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
@@ -314,7 +314,7 @@ destroy() {
      * Clears all pending timeouts (banner/toast animations).
      * Useful in test environments.
      * 
-     * @since 0.8.7-alpha
+     * @since 0.9.0-alpha
      */
     destroy: function() {
       activeTimeouts.forEach(timeoutId => clearTimeout(timeoutId));

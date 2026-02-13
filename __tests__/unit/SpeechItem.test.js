@@ -5,13 +5,13 @@
  * expiration logic, and string representation for the Brazilian Portuguese travel guide context.
  * 
  * @author Marcelo Pereira Barbosa
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  */
 
 import { jest } from '@jest/globals';
 import SpeechItem from '../../src/speech/SpeechItem.js';
 
-describe('SpeechItem - MP Barbosa Travel Guide (v0.8.11-alpha)', () => {
+describe('SpeechItem - MP Barbosa Travel Guide (v0.9.01-alpha)', () => {
 
     describe('Constructor and Initialization', () => {
         test('should create speech item with default parameters', () => {

@@ -1,7 +1,7 @@
 # JSDoc Documentation Audit Report
 
 **Generated**: 2026-01-06  
-**Project**: Guia Turístico v0.7.0-alpha  
+**Project**: Guia Turístico v0.9.0-alpha  
 **Status**: 🔴 **Action Required**
 
 ---
@@ -270,7 +270,7 @@ See [.github/JSDOC_GUIDE.md](./JSDOC_GUIDE.md) for comprehensive standards.
  * const result = myFunction(param);
  * // result: expected output
  * 
- * @since 0.7.0-alpha
+ * @since 0.9.0-alpha
  * @see {@link RelatedClass}
  */
 export function myFunction(paramName) { ... }
@@ -290,7 +290,7 @@ export function myFunction(paramName) { ... }
  * const instance = new MyClass();
  * instance.method();
  * 
- * @since 0.7.0-alpha
+ * @since 0.9.0-alpha
  */
 export default class MyClass { ... }
 ```

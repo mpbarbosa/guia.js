@@ -1,7 +1,7 @@
 # Class Extraction Phase 10: DisplayerFactory
 
 **Data de Extração:** Dezembro 2024  
-**Versão:** 0.8.6-alpha  
+**Versão:** 0.9.0-alpha  
 **Autor:** Marcelo Pereira Barbosa  
 **Status:** Concluído
 

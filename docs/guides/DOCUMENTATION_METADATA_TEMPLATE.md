@@ -39,7 +39,7 @@ Related: [Link to related docs] (optional)
 ### Optional Fields
 
 **Version**
-- Format: Semantic versioning (e.g., `0.7.1-alpha`)
+- Format: Semantic versioning (e.g., `0.9.0-alpha`)
 - Use when: Documentation is version-specific
 - Sync with: `package.json` version
 
@@ -87,7 +87,7 @@ Status: Active
 ---
 Last Updated: 2026-01-28
 Status: Active
-Version: 0.7.2+
+Version: 0.9.0+
 Category: API
 Maintainer: @mpbarbosa
 Related: [IBGE Integration](./IBIRA_INTEGRATION.md), [Data Architecture](./architecture/DATA_LAYER.md)
@@ -105,7 +105,7 @@ Related: [IBGE Integration](./IBIRA_INTEGRATION.md), [Data Architecture](./archi
 ---
 Last Updated: 2026-01-28
 Status: Draft
-Version: 0.8.0-alpha
+Version: 0.9.0-alpha
 Category: Guide
 ---
 
@@ -123,7 +123,7 @@ Category: Guide
 ---
 Last Updated: 2025-12-15
 Status: Deprecated
-Version: 0.5.0
+Version: 0.9.0
 Category: API
 ---
 

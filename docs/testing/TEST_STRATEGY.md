@@ -1,6 +1,6 @@
 # Test Strategy Documentation
 
-**Version**: 0.8.6+  
+**Version**: 0.9.0+  
 **Test Count**: 2,045 tests (1,899 passing, 146 skipped)  
 **Coverage**: ~70% overall, 100% on critical components
 

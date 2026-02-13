@@ -1,7 +1,7 @@
 # Test Flakiness Analysis Report
 
 **Date**: 2026-01-24  
-**Version**: 0.8.6+  
+**Version**: 0.9.0+  
 **Test Suite**: 1,904 passing tests (2,050 total)
 
 ## Executive Summary

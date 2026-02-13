@@ -10,7 +10,7 @@
  * npm test -- __tests__/services/
  * 
  * @author MP Barbosa
- * @since 0.8.5-alpha
+ * @since 0.9.0-alpha
  */
 
 console.log('======================================================================');

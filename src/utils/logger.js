@@ -13,7 +13,7 @@
  * - Production detection via NODE_ENV or manual configuration
  * 
  * @module utils/logger
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -121,7 +121,7 @@ const _isLevelEnabled = (level) => {
  * @example
  * formatTimestamp(); // "2025-10-15T04:33:48.006Z"
  * 
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  */
 export const formatTimestamp = () => new Date().toISOString();
 
@@ -139,7 +139,7 @@ export const formatTimestamp = () => new Date().toISOString();
  * // Output: [2025-10-15T04:33:48.006Z] Position updated { lat: -23.5505, lon: -46.6333 }
  * // (only if log level >= 'log')
  * 
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  */
 export const log = (message, ...params) => {
 	if (_isLevelEnabled(LOG_LEVELS.log)) {
@@ -161,7 +161,7 @@ export const log = (message, ...params) => {
  * // Output: [2025-10-15T04:33:48.006Z] Low accuracy detected { accuracy: 500 }
  * // (only if log level >= 'warn')
  * 
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  */
 export const warn = (message, ...params) => {
 	if (_isLevelEnabled(LOG_LEVELS.warn)) {
@@ -183,7 +183,7 @@ export const warn = (message, ...params) => {
  * // Output: [2025-10-15T04:33:48.006Z] Geolocation failed { code: 1, message: 'Permission denied' }
  * // (only if log level >= 'error')
  * 
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  */
 export const error = (message, ...params) => {
 	if (_isLevelEnabled(LOG_LEVELS.error)) {
@@ -205,7 +205,7 @@ export const error = (message, ...params) => {
  * // Output: [2025-10-15T04:33:48.006Z] Observer notified { observerCount: 5 }
  * // (only if log level >= 'debug')
  * 
- * @since 0.7.0-alpha
+ * @since 0.9.0-alpha
  */
 export const debug = (message, ...params) => {
 	if (_isLevelEnabled(LOG_LEVELS.debug)) {
@@ -234,7 +234,7 @@ export const debug = (message, ...params) => {
  * // Enable debug mode for development
  * setLogLevel({ level: 'debug' });
  * 
- * @since 0.7.0-alpha
+ * @since 0.9.0-alpha
  * @param {Object} [options] - Configuration options
  * @param {string} [options.level] - Log level ('debug', 'info', 'warn', 'error')
  * @param {boolean} [options.enabled] - Enable/disable logging
@@ -261,7 +261,7 @@ export const setLogLevel = (options = {}) => {
  * const config = getLogLevel();
  * console.log(config); // { level: 'log', levelName: 'log', enabled: true }
  * 
- * @since 0.7.0-alpha
+ * @since 0.9.0-alpha
  */
 export const getLogLevel = () => {
 	const levelName = Object.keys(LOG_LEVELS).find(

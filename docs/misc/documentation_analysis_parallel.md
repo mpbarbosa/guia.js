@@ -117,7 +117,7 @@ I've analyzed all 29 root documentation files. Here's the summary:
 
 **Critical Issues (3):**
 1. **Test Count Inconsistencies** - CONTRIBUTING.md has outdated counts (1,982 vs actual 2,214 passing)
-2. **Version References Mixed** - Some files still show 0.7.1-alpha instead of 0.8.7-alpha
+2. **Version References Mixed** - Some files still show 0.9.0-alpha instead of 0.9.0-alpha
 3. **File Line Counts** - Metropolitan region feature changed several file sizes
 
 **Moderate Issues (5):**
@@ -144,7 +144,7 @@ I've analyzed all 29 root documentation files. Here's the summary:
 
 ⚠️ **Needs Immediate Updates:**
 - `.github/CONTRIBUTING.md` lines 563, 577, 626-628, 678: Update test counts to 2,380 total / 2,214 passing
-- `.github/CONTRIBUTING.md` line 899: Update version to 0.8.7-alpha
+- `.github/CONTRIBUTING.md` line 899: Update version to 0.9.0-alpha
 - `docs/TESTING.md`: Update test results section
 
 ### **Detailed Report:**

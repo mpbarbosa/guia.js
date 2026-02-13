@@ -8,7 +8,7 @@ import { log, warn, error } from '../utils/logger.js';
  * when address data changes.
  * 
  * @module html/HTMLHighlightCardsDisplayer
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 

@@ -1,7 +1,7 @@
 <html lang="pt-BR"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="0.8.7-alpha" data-source="src/config/version.js">
+    <meta name="version" content="0.9.0-alpha" data-source="src/config/version.js">
     <title>Guia Turístico - Localização - Guia Turístico</title>
     
     <!-- PWA Manifest (inline to prevent 404) -->
@@ -594,6 +594,11 @@
       <nav aria-label="Ações da página" class="secondary-actions">
       </nav>
 
+      <section id="standardized-address" aria-labelledby="address-heading">
+        <h2 id="address-heading" class="sr-only">Endereço Padronizado</h2>
+        <p><strong>Endereço:</strong> <span id="endereco-padronizado-display">Aguardando localização...</span></p>
+      </section>
+
       <section id="coordinates" aria-labelledby="coordinates-heading">
         <h2 id="coordinates-heading" class="sr-only">Coordenadas</h2>
         <p><strong>Coordenadas:</strong> <span id="lat-long-display">Aguardando localização...</span></p>
@@ -602,16 +607,12 @@
 
       <section id="reference-place" aria-labelledby="reference-place-heading">
         <h2 id="reference-place-heading" class="sr-only">Local de Referência</h2>
-        <p><strong>Local de referência:</strong> <span id="reference-place-display">Aguardando localização...</span></p>
-      </section>
-
-      <section id="standardized-address" aria-labelledby="address-heading">
-        <h2 id="address-heading" class="sr-only">Endereço Padronizado</h2>
-        <p><strong>Endereço:</strong> <span id="endereco-padronizado-display">Aguardando localização...</span></p>
+        <p><strong>Referências próximas:</strong> <span id="reference-place-display">Aguardando localização...</span></p>
       </section>
 
       <section class="section" aria-labelledby="location-info-heading">
         <p><strong>Dados IBGE:</strong> <span id="dadosSidra">Aguardando localização...</span></p>
+        <p><strong>Tempo decorrido:</strong> <span id="chronometer">00:00:00</span></p>
       </section>
       
       <section id="locationResult" aria-label="Resultado da localização">
@@ -703,8 +704,8 @@
       }
     </script>
     
-    <script src="error-recovery.js" onerror="console.error('❌ Failed to load error-recovery.js')"></script>
-    <script src="geolocation-banner.js" onerror="console.error('❌ Failed to load geolocation-banner.js')"></script>
+    <script type="module" src="error-recovery.js" onerror="console.error('❌ Failed to load error-recovery.js')"></script>
+    <script type="module" src="geolocation-banner.js" onerror="console.error('❌ Failed to load geolocation-banner.js')"></script>
     
     <!-- Onboarding component -->
     <script type="module" src="components/onboarding.js"></script>

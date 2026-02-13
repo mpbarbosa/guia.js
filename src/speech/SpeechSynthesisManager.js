@@ -32,7 +32,7 @@ import { log, warn, error } from '../utils/logger.js';
  * - **Browser Compatibility**: Graceful degradation for environments without speech synthesis
  * 
  * @class SpeechSynthesisManager
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  * 
  * @example
@@ -692,7 +692,7 @@ class SpeechSynthesisManager {
      * // Low priority background information
      * speechManager.speak("Background processing complete", -1);
      * 
-     * @since 0.8.3-alpha
+     * @since 0.9.0-alpha
      * @author Marcelo Pereira Barbosa
      */
     speak(text, priority = 0) {
@@ -747,7 +747,7 @@ class SpeechSynthesisManager {
      * 
      * @private
      * @returns {void}
-     * @since 0.8.3-alpha
+     * @since 0.9.0-alpha
      * @author Marcelo Pereira Barbosa
      */
     processQueue() {
@@ -1097,7 +1097,7 @@ class SpeechSynthesisManager {
      * cleanup of all resources and prevent memory/timer leaks.
      * 
      * @returns {void}
-     * @since 0.8.6-alpha
+     * @since 0.9.0-alpha
      * @author Marcelo Pereira Barbosa
      * 
      * @example

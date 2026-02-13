@@ -72,7 +72,7 @@ src/
  * the observer pattern to automatically update when new position data becomes available.
  * 
  * @class Chronometer
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  */
 ```
 
@@ -112,7 +112,7 @@ src/
  * Distance calculation utilities for geolocation.
  * Pure functions for geographic distance calculations using the Haversine formula.
  * @module utils/distance
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  */
 ```
 
@@ -122,7 +122,7 @@ src/
  * Device and browser detection utilities.
  * Pure functions for detecting device capabilities and characteristics.
  * @module utils/device
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  */
 ```
 
@@ -346,7 +346,7 @@ guia_turistico/
    - Change from "1224+ tests" to "1,399 total tests"
 
 3. **Add version reference**
-   - Change line 3 from "0.6.0-alpha" to "0.7.0-alpha"
+   - Change line 3 from "0.6.0-alpha" to "0.9.0-alpha"
 
 ### Medium-term (30 minutes)
 
@@ -410,7 +410,7 @@ This audit uncovered:
 - [ ] Update PROJECT_STRUCTURE.md with all 10 directories
 - [ ] Remove non-existent validation/ reference
 - [ ] Update test count (1224 → 1,399)
-- [ ] Update version (0.6.0-alpha → 0.7.0-alpha)
+- [ ] Update version (0.6.0-alpha → 0.9.0-alpha)
 - [ ] Add file-level detail for each directory
 - [ ] Add cross-references to architecture docs
 - [ ] Verify all directory names match actual structure

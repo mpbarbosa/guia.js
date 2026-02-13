@@ -6,7 +6,7 @@
  * following MP Barbosa standards.
  * 
  * @author Marcelo Pereira Barbosa
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  */
 
 import { jest } from '@jest/globals';
@@ -15,7 +15,7 @@ import HTMLPositionDisplayer from '../../src/html/HTMLPositionDisplayer.js';
 import HTMLAddressDisplayer from '../../src/html/HTMLAddressDisplayer.js';
 import HTMLReferencePlaceDisplayer from '../../src/html/HTMLReferencePlaceDisplayer.js';
 
-describe('DisplayerFactory - MP Barbosa Travel Guide (v0.8.10-alpha)', () => {
+describe('DisplayerFactory - MP Barbosa Travel Guide (v0.9.00-alpha)', () => {
     let mockElement;
 
     beforeEach(() => {

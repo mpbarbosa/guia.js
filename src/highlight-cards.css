@@ -164,7 +164,7 @@
 
 .highlight-card-empty-text {
   font-size: 0.875rem;
-  color: #999;
+  color: #595959; /* 7:1 contrast - WCAG AA compliant */
   font-style: italic;
 }
 

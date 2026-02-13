@@ -965,7 +965,7 @@ const totalDistance = previousDistance + newDistance;
  * console.log(distance); // ~357,710 meters
  * 
  * @see {@link https://en.wikipedia.org/wiki/Haversine_formula}
- * @since 0.7.1-alpha
+ * @since 0.9.0-alpha
  */
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
     // Implementation

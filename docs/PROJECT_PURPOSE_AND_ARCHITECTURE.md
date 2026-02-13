@@ -8,9 +8,11 @@ Category: Architecture
 
 **Navigation**: [🏠 Home](../README.md) > [📚 Docs](./README.md) > Project Purpose & Architecture
 
-**Version**: 0.8.7-alpha  
+**Version**: 0.9.0-alpha  
 **Document Date**: 2026-02-09  
 **Purpose**: Define project boundaries and prevent inappropriate architectural decisions
+
+> **Quick Start**: For a brief project overview and getting started guide, see the [README.md](../README.md). This document provides detailed architectural reasoning and design decisions.
 
 ---
 
@@ -22,6 +24,8 @@ Category: Architecture
 - **guia.js** (dependency): Geolocation library (https://github.com/mpbarbosa/guia_js)
 
 ### What Guia Turístico IS
+
+> **Note**: For a quick overview, see the [README.md Project Overview](../README.md#-project-overview) section. This section provides detailed architectural characteristics.
 
 **Guia Turístico is a web application providing tourist guidance services**, with the following characteristics:
 
@@ -181,7 +185,7 @@ Category: Architecture
 ✅ CORRECT APPROACH: CDN Distribution + Integration
 ┌─────────────────────────────────────┐
 │  jsDelivr CDN                        │
-│  ├── guia.js@0.7.1-alpha             │
+│  ├── guia.js@0.9.0-alpha             │
 │  └── Developer imports into app     │
 └─────────────────────────────────────┘
         ↓
@@ -216,7 +220,7 @@ Category: Architecture
 ./.github/scripts/cdn-delivery.sh
 
 # Developers use in their HTML
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.7.1-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js"></script>
 ```
 
 **Why this works**:
@@ -378,23 +382,23 @@ git push
 
 ```bash
 # 1. Bump version
-npm version minor  # 0.7.0 → 0.8.0
+npm version minor  # 0.9.0 → 0.9.0
 
 # 2. Generate CDN URLs
 ./.github/scripts/cdn-delivery.sh
 
 # 3. Commit version bump
 git add package.json cdn-urls.txt
-git commit -m "chore: bump version to v0.7.0"
+git commit -m "chore: bump version to v0.9.0"
 
 # 4. Create and push tag
-git tag v0.7.0
+git tag v0.9.0
 git push origin main
-git push origin v0.7.0
+git push origin v0.9.0
 
 # 5. jsDelivr automatically syncs (5-10 minutes)
 # Library is now available at:
-# https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.7.0/src/guia.js
+# https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0/src/guia.js
 ```
 
 ### What NOT to Do (Incorrect Approaches)
@@ -435,7 +439,7 @@ echo "<html>...</html>" > index.html
     <div id="map-container"></div>
     
     <!-- Import Guia.js from CDN -->
-    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.7.1-alpha/src/guia.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js"></script>
     
     <script>
         // Use Guia.js APIs
@@ -507,7 +511,7 @@ geocode(-23.550520, -46.633309);
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  jsDelivr CDN                                               │
-│  ├── guia.js@0.7.1-alpha                                    │
+│  ├── guia.js@0.9.0-alpha                                    │
 │  ├── Provides geolocation APIs                              │
 │  └── Embedded in developer's app                            │
 │                                                              │

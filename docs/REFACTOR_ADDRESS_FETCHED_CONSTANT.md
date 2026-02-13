@@ -58,7 +58,7 @@ export const ADDRESS_FETCHED_EVENT = "Address fetched";
 
 4. **docs/CRITICAL_FIX_FETCHADDRESS_OBSERVERS.md**
    - Updated code examples to reference `ADDRESS_FETCHED_EVENT`
-   - Added note about constant usage (v0.7.1+)
+   - Added note about constant usage (v0.9.0+)
    - Updated console output examples
 
 5. **docs/CONSOLE_LOG_ANALYSIS.md**
@@ -176,4 +176,4 @@ Potential enhancements:
 
 ## Version History
 
-- **v0.7.1-alpha** (2026-01-20): Initial implementation of ADDRESS_FETCHED_EVENT constant
+- **v0.9.0-alpha** (2026-01-20): Initial implementation of ADDRESS_FETCHED_EVENT constant

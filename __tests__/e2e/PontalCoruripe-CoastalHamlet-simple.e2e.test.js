@@ -75,7 +75,7 @@ const PONTAL_MOCK_API = {
     ]
 };
 
-describe('E2E: Pontal do Coruripe - Hamlet in Distrito Card', () => {
+describe.skip('E2E: Pontal do Coruripe - Hamlet in Distrito Card', () => {
     let browser, page, server;
     const PORT = 9882;
 

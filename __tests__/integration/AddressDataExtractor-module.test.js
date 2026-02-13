@@ -5,7 +5,7 @@
  * extracted from guia.js into its own module while maintaining full backward compatibility.
  * 
  * @module tests/integration/AddressDataExtractor-module
- * @since v0.8.6-alpha
+ * @since v0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 

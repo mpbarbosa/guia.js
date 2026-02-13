@@ -1,7 +1,7 @@
 /**
  * Toast Notification System
  * Non-blocking notifications with proper accessibility support
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  * @module utils/toast
  */
 

@@ -1,7 +1,7 @@
 # E2E Tests Documentation Audit
 
 **Audit Date**: 2026-01-06  
-**Project**: guia_turistico v0.7.0-alpha  
+**Project**: guia_turistico v0.9.0-alpha  
 **Focus Area**: `__tests__/e2e/` directory and main TESTING.md integration  
 **Priority**: Low  
 **Status**: ✅ Complete
@@ -231,7 +231,7 @@ Guia.js Version: **0.6.0-alpha**
 
 **Fix Required**:
 ```markdown
-Guia.js Version: **0.7.0-alpha**
+Guia.js Version: **0.9.0-alpha**
 ```
 
 ### 4. Timestamp Outdated in E2E README (LOW PRIORITY)
@@ -403,7 +403,7 @@ Guia.js Version: **0.6.0-alpha**
 Last Updated: 2024
 
 # NEW
-Guia.js Version: **0.7.0-alpha**  
+Guia.js Version: **0.9.0-alpha**  
 Last Updated: 2026-01-06
 ```
 
@@ -573,7 +573,7 @@ node .github/scripts/count-tests.js
 - [ ] Update test count: 76 → 91 tests
 - [ ] Update file count: 5 → 6 test files
 - [ ] Add MilhoVerde-SerroMG.e2e.test.js documentation
-- [ ] Update version: 0.6.0-alpha → 0.7.0-alpha
+- [ ] Update version: 0.6.0-alpha → 0.9.0-alpha
 - [ ] Update timestamp to 2026-01-06
 - [ ] Fix broken relative links
 - [ ] Verify all links work

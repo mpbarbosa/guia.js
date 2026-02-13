@@ -13,8 +13,8 @@ import { log, warn, error } from '../utils/logger.js';
  * location, such as "You are at Shopping Center XYZ" or "Near Subway Station ABC".
  * 
  * @module data/ReferencePlace
- * @version 0.7.1-alpha
- * @since 0.8.5-alpha
+ * @version 0.9.0-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -46,7 +46,7 @@ class ReferencePlace {
 	 * @static
 	 * @type {Object.<string, Object.<string, string>>}
 	 * @see {@link https://wiki.openstreetmap.org/wiki/Map_Features} OSM feature documentation
-	 * @since 0.8.5-alpha
+	 * @since 0.9.0-alpha
 	 */
 	static referencePlaceMap = {
 		"place": { "house": "Residencial" },
@@ -73,7 +73,7 @@ class ReferencePlace {
 	 * @param {string} [data.type] - The specific type within the class (e.g., 'mall', 'cafe', 'subway')
 	 * @param {string} [data.name] - The name of the reference place
 	 * 
-	 * @since 0.8.5-alpha
+	 * @since 0.9.0-alpha
 	 */
 	constructor(data) {
 		this.className = (data && data.class) || null;
@@ -92,7 +92,7 @@ class ReferencePlace {
 	 * 
 	 * @private
 	 * @returns {string} Portuguese description of the reference place type
-	 * @since 0.8.5-alpha
+	 * @since 0.9.0-alpha
 	 */
 	calculateDescription() {
 		if (!this.className || !this.typeName) {
@@ -136,7 +136,7 @@ class ReferencePlace {
 	 * of the reference place.
 	 * 
 	 * @returns {string} String representation
-	 * @since 0.8.5-alpha
+	 * @since 0.9.0-alpha
 	 * 
 	 * @example
 	 * const refPlace = new ReferencePlace({ class: 'shop', type: 'mall', name: 'Shopping Morumbi' });

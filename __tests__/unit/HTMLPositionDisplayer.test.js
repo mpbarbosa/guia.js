@@ -5,13 +5,13 @@
  * observer pattern integration, and Portuguese localization capabilities.
  * 
  * @author Marcelo Pereira Barbosa
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  */
 
 import { jest } from '@jest/globals';
 import HTMLPositionDisplayer from '../../src/html/HTMLPositionDisplayer.js';
 
-describe('HTMLPositionDisplayer - MP Barbosa Travel Guide (v0.8.7-alpha)', () => {
+describe('HTMLPositionDisplayer - MP Barbosa Travel Guide (v0.9.0-alpha)', () => {
     let mockElement, displayer;
 
     beforeEach(() => {

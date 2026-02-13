@@ -14,7 +14,7 @@
  * - **Encapsulation:** Private state with public accessors
  * 
  * @module core/GeocodingState
- * @since 0.7.0-alpha - Extracted from WebGeocodingManager during Phase 17 refactoring
+ * @since 0.9.0-alpha - Extracted from WebGeocodingManager during Phase 17 refactoring
  * @author Marcelo Pereira Barbosa
  * 
  * @requires core/GeoPosition

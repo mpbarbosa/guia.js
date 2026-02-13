@@ -127,7 +127,7 @@ posManager.update(position);
  * Needed for testing and backward compatibility.
  * 
  * @returns {GeolocationService} The geolocation service instance
- * @since 0.8.4-alpha
+ * @since 0.9.0-alpha
  */
 get geolocationService() {
     return this._geolocationService;

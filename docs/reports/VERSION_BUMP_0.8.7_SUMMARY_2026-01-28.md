@@ -1,14 +1,14 @@
-# Version Bump 0.8.7-alpha - Completion Summary
+# Version Bump 0.9.0-alpha - Completion Summary
 
 **Date**: 2026-01-28  
-**Version**: 0.7.1-alpha → 0.8.7-alpha  
+**Version**: 0.9.0-alpha → 0.9.0-alpha  
 **Status**: ✅ **COMPLETED**
 
 ---
 
 ## Executive Summary
 
-Successfully bumped Guia Turístico from version **0.7.1-alpha** to **0.8.7-alpha** to reflect the current implementation state of documented features.
+Successfully bumped Guia Turístico from version **0.9.0-alpha** to **0.9.0-alpha** to reflect the current implementation state of documented features.
 
 **Key Achievement**: Documentation now accurately reflects implemented functionality, eliminating version inconsistencies.
 
@@ -19,10 +19,10 @@ Successfully bumped Guia Turístico from version **0.7.1-alpha** to **0.8.7-alph
 ### 1. Version Updates ✅
 
 **Files Modified**:
-- `package.json`: `0.7.1-alpha` → `0.8.7-alpha`
-- `CHANGELOG.md`: Moved features from `[Unreleased]` to `[0.8.7-alpha] - 2026-01-28`
+- `package.json`: `0.9.0-alpha` → `0.9.0-alpha`
+- `CHANGELOG.md`: Moved features from `[Unreleased]` to `[0.9.0-alpha] - 2026-01-28`
 - `README.md`: Changed "Planned v0.8.x" to "v0.8.x-alpha ✅" markers
-- `.github/copilot-instructions.md`: Updated version reference to 0.8.7-alpha
+- `.github/copilot-instructions.md`: Updated version reference to 0.9.0-alpha
 
 ### 2. Git Operations ✅
 
@@ -32,16 +32,16 @@ commit cef4a71
 Author: [automated]
 Date: 2026-01-28
 
-chore: bump version to 0.8.7-alpha
+chore: bump version to 0.9.0-alpha
 
-- Reflects implemented DisplayerFactory (5 methods, v0.8.6-alpha)
-- Reflects implemented município state display (v0.8.7-alpha)
-- Reflects implemented metropolitan region display (v0.8.7-alpha)
+- Reflects implemented DisplayerFactory (5 methods, v0.9.0-alpha)
+- Reflects implemented município state display (v0.9.0-alpha)
+- Reflects implemented metropolitan region display (v0.9.0-alpha)
 ```
 
 **Git Tag**:
 ```bash
-v0.8.7-alpha (annotated tag)
+v0.9.0-alpha (annotated tag)
 Created: 2026-01-28
 Commit: cef4a71
 ```
@@ -52,7 +52,7 @@ Commit: cef4a71
 
 **Primary CDN URL**:
 ```
-https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.8.7-alpha/src/guia.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js
 ```
 
 **Commit-Specific URL** (available immediately):
@@ -66,7 +66,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 
 ## Features Verified and Released
 
-### Feature 1: DisplayerFactory (v0.8.6-alpha) ✅
+### Feature 1: DisplayerFactory (v0.9.0-alpha) ✅
 
 **Status**: FULLY IMPLEMENTED
 
@@ -81,7 +81,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 
 **Test Coverage**: 3 test suites, 100% coverage
 
-### Feature 2: Município State Abbreviation Display (v0.8.7-alpha) ✅
+### Feature 2: Município State Abbreviation Display (v0.9.0-alpha) ✅
 
 **Status**: FULLY IMPLEMENTED
 
@@ -98,7 +98,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 
 **Documentation**: `docs/FEATURE_MUNICIPIO_STATE_DISPLAY.md`
 
-### Feature 3: Metropolitan Region Display (v0.8.7-alpha) ✅
+### Feature 3: Metropolitan Region Display (v0.9.0-alpha) ✅
 
 **Status**: FULLY IMPLEMENTED
 
@@ -126,7 +126,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 - ⚠️ **Failing**: 16 tests (0.7%, timing-dependent E2E tests)
 - ⏭️ **Skipped**: 146 tests (6.1%)
 
-### New Tests for v0.8.7-alpha Features
+### New Tests for v0.9.0-alpha Features
 
 **Município State Display**:
 - `__tests__/html/HTMLHighlightCardsDisplayer.test.js`: 42 tests ✅
@@ -154,11 +154,11 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 
 ### Post-Version Bump Checks ✅
 
-- [x] package.json version updated to 0.8.7-alpha
-- [x] CHANGELOG.md has `[0.8.7-alpha] - 2026-01-28` section
+- [x] package.json version updated to 0.9.0-alpha
+- [x] CHANGELOG.md has `[0.9.0-alpha] - 2026-01-28` section
 - [x] README.md version references updated with ✅ markers
 - [x] Git commit successful (cef4a71)
-- [x] Git tag created (v0.8.7-alpha)
+- [x] Git tag created (v0.9.0-alpha)
 - [x] CDN URLs generated
 
 ---
@@ -171,20 +171,20 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
    ```bash
    cd /home/mpb/Documents/GitHub/guia_turistico
    git push origin main
-   git push origin v0.8.7-alpha
+   git push origin v0.9.0-alpha
    ```
 
 2. **Verify CDN Availability** (5-10 minutes after push)
    ```bash
-   curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.8.7-alpha/package.json"
+   curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/package.json"
    ```
 
 ### Optional (Recommended)
 
 3. **Create GitHub Release** 🟢 **MEDIUM PRIORITY**
    - Go to: https://github.com/mpbarbosa/guia_turistico/releases/new
-   - Tag: v0.8.7-alpha
-   - Title: "Release v0.8.7-alpha"
+   - Tag: v0.9.0-alpha
+   - Title: "Release v0.9.0-alpha"
    - Description: Copy from CHANGELOG.md section
    - Mark as "pre-release" (alpha version)
 
@@ -213,7 +213,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 - `docs/reports/VERSION_BUMP_0.8.7_SUMMARY_2026-01-28.md` (this file)
 
 **CDN Configuration** (1 file):
-- `cdn-urls.txt` - Updated with v0.8.7-alpha URLs
+- `cdn-urls.txt` - Updated with v0.9.0-alpha URLs
 
 ---
 
@@ -241,7 +241,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 - **Feature Details**: 
   - `docs/FEATURE_MUNICIPIO_STATE_DISPLAY.md`
   - `docs/FEATURE_METROPOLITAN_REGION_DISPLAY.md`
-- **Changelog**: `CHANGELOG.md` (section `[0.8.7-alpha] - 2026-01-28`)
+- **Changelog**: `CHANGELOG.md` (section `[0.9.0-alpha] - 2026-01-28`)
 - **CDN Delivery**: `cdn-urls.txt`
 
 ### External Links
@@ -254,14 +254,14 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 ## Version History Context
 
 ### Previous Releases
-- **v0.7.1-alpha** (2026-01-11): Last tagged release
+- **v0.9.0-alpha** (2026-01-11): Last tagged release
 - **v0.6.x-alpha**: Earlier development versions
 
 ### This Release
-- **v0.8.7-alpha** (2026-01-28): Current release
-  - Major feature: DisplayerFactory (v0.8.6-alpha)
-  - Major feature: Município state display (v0.8.7-alpha)
-  - Major feature: Metropolitan region display (v0.8.7-alpha)
+- **v0.9.0-alpha** (2026-01-28): Current release
+  - Major feature: DisplayerFactory (v0.9.0-alpha)
+  - Major feature: Município state display (v0.9.0-alpha)
+  - Major feature: Metropolitan region display (v0.9.0-alpha)
 
 ### Semantic Versioning Explanation
 - **Major**: 0 (no breaking changes)
@@ -298,7 +298,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 **Version Bump**: ✅ **COMPLETED**  
 **Date**: 2026-01-28  
 **Commit**: cef4a71  
-**Tag**: v0.8.7-alpha  
+**Tag**: v0.9.0-alpha  
 
 **Status**: Ready for push to GitHub
 

@@ -1,5 +1,5 @@
 # ObserverSubject Pattern Documentation - Guia Turístico
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **Date:** 2026-02-11  
 **Author:** Comprehensive analysis of Observer pattern implementation
 
@@ -411,7 +411,7 @@ Publishes various geocoding workflow events coordinating the entire application 
 
 **File:** `src/data/AddressCache.js` (1171 lines)  
 **Role:** Subject only  
-**Pattern:** Singleton with composition architecture (v0.8.7-alpha)
+**Pattern:** Singleton with composition architecture (v0.9.0-alpha)
 
 #### Subject Behavior
 
@@ -827,7 +827,7 @@ update(addressData, enderecoPadronizado) {
     const municipio = enderecoPadronizado.municipioCompleto(); // e.g., "Recife, PE"
     this.updateMunicipioCard(municipio);
 
-    // Update metropolitan region (v0.8.7-alpha)
+    // Update metropolitan region (v0.9.0-alpha)
     const regiaoMetro = enderecoPadronizado.regiaoMetropolitanaFormatada();
     this.updateRegiaoMetropolitanaCard(regiaoMetro);
 
@@ -1102,7 +1102,7 @@ update(newAddress, newRawData) {
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        NOTIFICATION CHAINS                           │
-│                     Guia Turístico v0.8.7-alpha                     │
+│                     Guia Turístico v0.9.0-alpha                     │
 └─────────────────────────────────────────────────────────────────────┘
 
 ═══════════════════════════════════════════════════════════════════════
@@ -1209,7 +1209,7 @@ update(newAddress, newRawData) {
 ┌──────────────────────────────────────────────────────────────────────┐
 │ AddressCache ⭐ SUBJECT                                               │
 │                                                                       │
-│ Composition Architecture (v0.8.7-alpha):                             │
+│ Composition Architecture (v0.9.0-alpha):                             │
 │ ┌──────────────────┐  ┌─────────────────┐  ┌──────────────────┐   │
 │ │AddressChangeDetector│  │CallbackRegistry │  │AddressDataStore │   │
 │ │                  │  │                 │  │                  │   │
@@ -1827,10 +1827,10 @@ async reverseGeocode(lat, lon) {
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 0.8.7-alpha | 2026-02-11 | Added metropolitan region display, refactored AddressCache composition |
-| 0.8.4-alpha | 2025-12-15 | Introduced ObserverSubject class, refactored to composition pattern |
-| 0.7.2-alpha | 2025-11-10 | Added ReverseGeocoder observer role, SIDRA displayer |
-| 0.7.1-alpha | 2025-10-20 | Added highlight cards displayer, municipio/bairro observers |
+| 0.9.0-alpha | 2026-02-11 | Added metropolitan region display, refactored AddressCache composition |
+| 0.9.0-alpha | 2025-12-15 | Introduced ObserverSubject class, refactored to composition pattern |
+| 0.9.0-alpha | 2025-11-10 | Added ReverseGeocoder observer role, SIDRA displayer |
+| 0.9.0-alpha | 2025-10-20 | Added highlight cards displayer, municipio/bairro observers |
 
 ---
 
@@ -1887,5 +1887,5 @@ ObserverSubject (base class)
 **END OF DOCUMENTATION**
 
 *Generated: 2026-02-11*  
-*Version: 0.8.7-alpha*  
+*Version: 0.9.0-alpha*  
 *Guia Turístico - Tourist Guide Application*

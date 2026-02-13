@@ -1,10 +1,10 @@
 # ReferencePlace API Documentation
 
-**Version:** 0.8.7-alpha  
+**Version:** 0.9.0-alpha  
 **File:** `src/data/ReferencePlace.js`  
 **Author:** Marcelo Pereira Barbosa  
-**Since:** 0.8.5-alpha  
-**Version Info:** 0.7.1-alpha
+**Since:** 0.9.0-alpha  
+**Version Info:** 0.9.0-alpha
 
 ## Overview
 
@@ -650,13 +650,13 @@ describe('ReferencePlace', () => {
 
 ## Version History
 
-### v0.8.5-alpha (Current)
+### v0.9.0-alpha (Current)
 - Initial implementation with OSM feature mapping
 - Support for 5 OSM classes: place, shop, amenity, railway, building
 - Immutable pattern with `Object.freeze()`
 - Integration with `AddressExtractor` and display components
 
-### v0.7.1-alpha
+### v0.9.0-alpha
 - Version info field added to module documentation
 - Referenced in address validation tests
 

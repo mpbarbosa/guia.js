@@ -6,7 +6,7 @@ import { ADDRESS_FETCHED_EVENT } from '../../src/config/defaults.js';
  * Portuguese localization, observer pattern integration, and Brazilian context features.
  * 
  * @author Marcelo Pereira Barbosa
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  */
 
 import { jest } from '@jest/globals';

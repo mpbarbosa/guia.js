@@ -5,7 +5,7 @@
 Comprehensive audit of guia.js documentation completed on 2026-01-01. This document summarizes all findings, fixes applied, and recommendations for future maintenance.
 
 **Project Status**:
-- **Version**: 0.6.0-alpha (consistent across all files)
+- **Version**: 0.9.0-alpha (consistent across all files)
 - **Test Count**: 1224 passing tests in 57 suites (60 test files)
 - **Coverage**: 69.82% overall
 - **Architecture**: Modularized into 29 source files (from original 2288-line monolith)
@@ -16,7 +16,7 @@ Comprehensive audit of guia.js documentation completed on 2026-01-01. This docum
 
 ### 1. Version Number Consistency ✅
 **Status**: FIXED
-- All files now correctly reference `0.6.0-alpha`
+- All files now correctly reference `0.9.0-alpha`
 - Verified in: `package.json`, `src/config/defaults.js`, `README.md`, `.github/copilot-instructions.md`, `docs/INDEX.md`
 - No conflicting version references found
 
@@ -245,7 +245,7 @@ OUTPUT_FILE="my-urls.txt"   # Default: cdn-urls.txt
 
 ### Code-Documentation Alignment ✅
 All documentation now accurately reflects codebase:
-- ✅ Version: 0.6.0-alpha (consistent everywhere)
+- ✅ Version: 0.9.0-alpha (consistent everywhere)
 - ✅ Test count: 1224 passing tests in 57 suites (60 test files)
 - ✅ Coverage: ~70% (69.82% actual)
 - ✅ Architecture: 29 modular source files (correctly documented)
@@ -346,7 +346,7 @@ Create: `docs/MIGRATION_GUIDE.md`
 **Status**: COMPLETE
 
 All critical, high, and medium priority documentation issues have been resolved. The documentation now accurately reflects:
-1. Current version (0.6.0-alpha)
+1. Current version (0.9.0-alpha)
 2. Actual test counts (1224 tests, 57 suites, 60 files)
 3. Real coverage (70%)
 4. Modular architecture (29 source files, 468-line entry point)
@@ -358,4 +358,4 @@ All scripts are fully documented with prerequisites, error handling, and usage e
 
 **Audit Completed**: 2026-01-01  
 **Auditor**: GitHub Copilot CLI  
-**Next Review Recommended**: After version 0.7.0 release or major structural changes
+**Next Review Recommended**: After version 0.9.0 release or major structural changes

@@ -3,7 +3,7 @@
 ---
 Last Updated: 2026-01-28
 Status: Active
-Version: 0.8.7-alpha
+Version: 0.9.0-alpha
 Category: Guide
 ---
 
@@ -573,7 +573,7 @@ npm run test:watch
 npm run test:all
 ```
 
-**Expected Results** (as of version 0.7.1-alpha):
+**Expected Results** (as of version 0.9.0-alpha):
 - Test Suites: 78 passing, 6 skipped, 84 total
 - Tests: 1,982 passing, 146 skipped, 2,176 total
 - Coverage: ~70% overall (~70% of src/ files)
@@ -608,7 +608,7 @@ npm run validate
 
 **Expected Output**:
 ```
-> guia_turistico@0.7.1-alpha validate
+> guia_turistico@0.9.0-alpha validate
 > node -c src/app.js && node -c src/guia.js
 
 ✓ No syntax errors detected
@@ -674,7 +674,7 @@ npm run test:all
 
 #### 5. Verify Test Results
 
-**Expected Test Counts** (as of version 0.7.1-alpha):
+**Expected Test Counts** (as of version 0.9.0-alpha):
 - **Total Tests**: 1,653
 - **Passing**: 1,516
 - **Skipped**: 137
@@ -780,7 +780,7 @@ npm test -- --no-coverage
 
 **If you see different test counts**:
 
-**Expected** (v0.7.1-alpha):
+**Expected** (v0.9.0-alpha):
 - 1,982 passing / 2,176 total / 146 skipped
 
 **Your result** shows different numbers? This could mean:
@@ -896,6 +896,6 @@ Thank you for contributing to Guia Turístico! 🎉
 
 ---
 
-**Version**: 0.7.1-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: Active Development  
 **Last Updated**: 2026-01-16

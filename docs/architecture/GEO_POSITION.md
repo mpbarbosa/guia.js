@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `GeoPosition` class was introduced in version 0.6.0-alpha to encapsulate and manage geographic position data obtained from the browser's Geolocation API. It provides a **pure, referentially transparent, immutable** way to handle GPS coordinates, accuracy information, altitude, speed, and heading data with automatic quality classification.
+The `GeoPosition` class was introduced in version 0.9.0-alpha to encapsulate and manage geographic position data obtained from the browser's Geolocation API. It provides a **pure, referentially transparent, immutable** way to handle GPS coordinates, accuracy information, altitude, speed, and heading data with automatic quality classification.
 
 **Key Characteristics:**
 - **Referential Transparency**: No side effects, predictable behavior
@@ -314,7 +314,7 @@ console.log(GeoPosition.getAccuracyQuality(500));  // 'very bad'
 - No side effects: Does not modify any external state
 - Referentially transparent: Can be replaced with its return value
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -328,7 +328,7 @@ Convenience method that applies the static getAccuracyQuality() method to this i
 
 **Note:** This method has a bug - it calls undefined `getAccuracyQuality()` function instead of the static method. Use the `accuracyQuality` property which is automatically calculated and maintained.
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -360,7 +360,7 @@ console.log(`Restaurant is ${Math.round(distance)} meters away`);
 **See Also:** 
 - `calculateDistance()` - The underlying distance calculation utility function
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ---
 
@@ -391,13 +391,13 @@ console.log(invalidPosition.toString());
 - No side effects: Does not modify any external state
 - Referentially transparent: Result depends only on instance properties
 
-**Since:** 0.6.0-alpha
+**Since:** 0.9.0-alpha
 
 ## Design Considerations
 
 ### Referential Transparency and Immutability
 
-**Introduced in version 0.6.0-alpha** (October 2025), the `GeoPosition` class is **designed to be referentially transparent and immutable** and remains stable through version 0.7.1-alpha (current):
+**Introduced in version 0.9.0-alpha** (October 2025), the `GeoPosition` class is **designed to be referentially transparent and immutable** and remains stable through version 0.9.0-alpha (current):
 
 1. **No side effects**: The constructor does not log or mutate input objects
 2. **Immutable properties**: All properties are set once at construction time
@@ -405,7 +405,7 @@ console.log(invalidPosition.toString());
 4. **Defensive copying**: The constructor creates defensive copies of input objects to prevent shared mutable state
 5. **Pure methods**: All methods (distanceTo, toString) are pure functions that depend only on their inputs
 
-### Implementation Changes (Version 2.0.0-alpha)
+### Implementation Changes (Version 3.0.0-alpha)
 
 **Before (Mutable with Side Effects):**
 ```javascript
@@ -515,7 +515,7 @@ All tests pass:
 ✓ 62 total tests related to GeoPosition
 ```
 
-## Breaking Changes (Version 2.0.0-alpha)
+## Breaking Changes (Version 3.0.0-alpha)
 
 ### For Existing Code
 
@@ -622,11 +622,11 @@ if (isNearby(position, store, 50)) {
 - ✅ toString() format unchanged
 - ✅ Full backward compatibility maintained for read operations
 
-## Current Status (v0.7.1-alpha)
+## Current Status (v0.9.0-alpha)
 
 **Implementation Status**: ✅ Stable and Production-Ready
 
-The `GeoPosition` class has been stable since version 0.6.0-alpha with no breaking changes through version 0.7.1-alpha (current). The referentially transparent implementation has proven reliable with:
+The `GeoPosition` class has been stable since version 0.9.0-alpha with no breaking changes through version 0.9.0-alpha (current). The referentially transparent implementation has proven reliable with:
 - ✅ 62+ passing tests (24 standard, 13 immutability, 25 integration)
 - ✅ 100% JSDoc coverage
 - ✅ Zero reported bugs in immutable implementation
@@ -642,30 +642,30 @@ The `GeoPosition` class has been stable since version 0.6.0-alpha with no breaki
 0.5.x-alpha (Pre-October 2025)
     └─> Mutable implementation with side effects
 
-0.6.0-alpha (October 11, 2025) ← Breaking Changes
+0.9.0-alpha (October 11, 2025) ← Breaking Changes
     └─> Referentially transparent implementation
     └─> Immutable properties, pure functions
     └─> Comprehensive test suite added
 
-0.7.0-alpha (January 3, 2026)
+0.9.0-alpha (January 3, 2026)
     └─> Stable, no changes to GeoPosition
 
-0.7.1-alpha (January 11, 2026) ← Current
+0.9.0-alpha (January 11, 2026) ← Current
     └─> Stable, documentation updates only
 ```
 
-### 0.7.1-alpha (January 11, 2026) - Current Version
+### 0.9.0-alpha (January 11, 2026) - Current Version
 - **Status**: Stable, no code changes
 - Documentation improvements and JSDoc coverage report
 - Enhanced cross-references to related architecture docs
 - All tests passing (1,739 passing / 1,968 total across project)
 
-### 0.7.0-alpha (January 3, 2026)
+### 0.9.0-alpha (January 3, 2026)
 - **Status**: Stable, no changes to GeoPosition class
 - Version bump for project-wide updates
-- Maintained full compatibility with 0.6.0-alpha implementation
+- Maintained full compatibility with 0.9.0-alpha implementation
 
-### 0.6.0-alpha (October 11, 2025) - Referentially Transparent Implementation
+### 0.9.0-alpha (October 11, 2025) - Referentially Transparent Implementation
 - **Breaking change**: Removed accuracy setter for immutability
 - **Breaking change**: Constructor no longer mutates input position object
 - **Breaking change**: Constructor no longer logs creation
@@ -728,5 +728,5 @@ Marcelo Pereira Barbosa
 ---
 
 **Last Updated**: 2026-01-11  
-**Version**: 0.7.1-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Complete and up-to-date

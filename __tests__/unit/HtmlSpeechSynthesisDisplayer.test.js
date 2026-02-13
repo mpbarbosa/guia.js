@@ -16,7 +16,7 @@
  * - Error handling and edge cases
  * - DOM element interaction and event handling
  * 
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -139,7 +139,7 @@ jest.unstable_mockModule('../../src/core/PositionManager.js', () => ({
 // Import the class under test
 const HtmlSpeechSynthesisDisplayer = (await import('../../src/html/HtmlSpeechSynthesisDisplayer.js')).default;
 
-describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.8.3-alpha)', () => {
+describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.9.0-alpha)', () => {
 	let displayer;
 	let mockElementIds;
 	let mockElements;

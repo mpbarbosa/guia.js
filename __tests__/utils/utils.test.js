@@ -3,7 +3,7 @@
  * Tests focus on core functionality used throughout the travel guide application.
  * 
  * @author Marcelo Pereira Barbosa
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  */
 
 import { describe, test, expect, jest, beforeEach } from '@jest/globals';
@@ -233,7 +233,7 @@ describe('Utility Functions', () => {
             const mockFunction = function testFunction() {
                 /**
                  * Mock function for testing JSDoc standards
-                 * @since 0.8.3-alpha
+                 * @since 0.9.0-alpha
                  * @author Marcelo Pereira Barbosa
                  */
                 return 'test';

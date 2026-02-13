@@ -1,6 +1,6 @@
 # Class Extraction Phase 13: HtmlSpeechSynthesisDisplayer
 
-**MP Barbosa Travel Guide v0.8.3-alpha**  
+**MP Barbosa Travel Guide v0.9.0-alpha**  
 **Date:** Phase 13 Implementation  
 **Author:** Marcelo Pereira Barbosa  
 

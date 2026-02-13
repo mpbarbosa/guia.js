@@ -473,7 +473,7 @@ Each test should:
 
 ## Related Documentation
 
-- [Test Coverage](../../docs/TESTING_HTML_GENERATION.md)
+- [Test Coverage](../testing/HTML_GENERATION.md)
 - [CI/CD Workflows](../../.github/workflows/)
 - [Contributing Guide](../../.github/CONTRIBUTING.md)
 ```

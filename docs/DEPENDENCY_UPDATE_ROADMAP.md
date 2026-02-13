@@ -1,5 +1,5 @@
 # Dependency Update Roadmap
-**Project:** Guia Turístico v0.7.0-alpha  
+**Project:** Guia Turístico v0.9.0-alpha  
 **Created:** 2026-01-09  
 **Status:** Planning Phase
 
@@ -26,7 +26,7 @@
 ## 🎯 Update Strategy Overview
 
 ### Philosophy
-- **Alpha stage (0.7.0-alpha):** Prioritize flexibility over absolute stability
+- **Alpha stage (0.9.0-alpha):** Prioritize flexibility over absolute stability
 - **Minimal disruption:** Only fix actual issues, not cosmetic warnings
 - **Test-driven:** Every change must pass 1,282 tests + coverage thresholds
 - **Documented decisions:** Track why we changed (or didn't change) each item
@@ -106,7 +106,7 @@ nvm use 25 && npm test
 ```bash
 git add -A
 git commit -m "chore: snapshot before lockfile regeneration"
-git tag -a "v0.7.0-alpha-pre-lockfile-fix" -m "Backup before dependency updates"
+git tag -a "v0.9.0-alpha-pre-lockfile-fix" -m "Backup before dependency updates"
 ```
 
 #### 2.2 Regenerate lockfile
@@ -163,8 +163,8 @@ python3 -m http.server 9000
 
 ### Rollback Plan (if tests fail)
 ```bash
-git reset --hard v0.7.0-alpha-pre-lockfile-fix
-git tag -d v0.7.0-alpha-pre-lockfile-fix
+git reset --hard v0.9.0-alpha-pre-lockfile-fix
+git tag -d v0.9.0-alpha-pre-lockfile-fix
 npm install
 ```
 
@@ -182,19 +182,19 @@ npm install
 
 **Goal:** Update to latest patch/minor versions for bug fixes
 
-**When:** Next release cycle (v0.8.0-alpha or v1.0.0)
+**When:** Next release cycle (v0.9.0-alpha or v1.0.0)
 
 ### Current Status (As of 2026-01-09)
 
 | Package | Specified | Currently Installed | Latest Available | Update Recommended? |
 |---------|-----------|---------------------|------------------|---------------------|
-| **eslint** | ^9.39.2 | 9.39.2 | Check with `npm outdated` | Wait for 0.8.0 |
+| **eslint** | ^9.39.2 | 9.39.2 | Check with `npm outdated` | Wait for 0.9.0 |
 | **jest** | ^30.1.3 | 29.7.0 → will be 30.x after Phase 2 | 30.x | ✅ Phase 2 |
-| **jsdom** | ^27.3.0 | 27.3.0 | Check with `npm outdated` | Wait for 0.8.0 |
+| **jsdom** | ^27.3.0 | 27.3.0 | Check with `npm outdated` | Wait for 0.9.0 |
 | **guia.js** | github HEAD | Latest commit | N/A (git dep) | Track upstream |
 | **ibira.js** | github HEAD | Latest commit | N/A (git dep) | Track upstream |
 
-### Update Commands (for v0.8.0 cycle)
+### Update Commands (for v0.9.0 cycle)
 ```bash
 # Check for updates
 npm outdated
@@ -227,16 +227,16 @@ npm audit
 
 ## 📋 Version Pinning Strategy (For Future Production Release)
 
-**Current (0.7.0-alpha):** Caret ranges (`^`) - ✅ Correct for alpha
+**Current (0.9.0-alpha):** Caret ranges (`^`) - ✅ Correct for alpha
 
 **Future (1.0.0 production):** Consider exact versions
 
 ### Recommended Transition Plan
 
-#### Alpha/Beta Phases (0.7.0 → 0.9.0)
+#### Alpha/Beta Phases (0.9.0 → 0.9.0)
 ```json
 {
-  "version": "0.7.0-alpha",
+  "version": "0.9.0-alpha",
   "devDependencies": {
     "eslint": "^9.39.2",  // ✅ Keep flexible
     "jest": "^30.1.3"
@@ -291,7 +291,7 @@ npm audit
 - [ ] Verify Jest 30.x compatibility
 - [ ] Confirm npm audit clean
 
-### Next Release Cycle (v0.8.0-alpha)
+### Next Release Cycle (v0.9.0-alpha)
 - [ ] **Phase 3:** Update outdated dependencies
 - [ ] Run `npm outdated` and evaluate updates
 - [ ] Test comprehensively with updated dependencies
@@ -357,7 +357,7 @@ npm audit
 
 ### 2026-01-09: Version Pinning Strategy
 **Decision:** Keep caret ranges (`^`) for alpha/beta phases  
-**Rationale:** Project is 0.7.0-alpha, needs flexibility for rapid development  
+**Rationale:** Project is 0.9.0-alpha, needs flexibility for rapid development  
 **Impact:** Easier to stay current with security patches and bug fixes  
 **Status:** ✅ ACCEPTED (revisit at 1.0.0)  
 
@@ -381,7 +381,7 @@ npm audit
 **Likelihood of breakage:** 20-30% (depends on specific updates)  
 **Impact if breaks:** High (may require code changes, API migrations)  
 **Rollback complexity:** Moderate (may need per-package rollback)  
-**Recommended:** ⏳ Defer to v0.8.0 cycle  
+**Recommended:** ⏳ Defer to v0.9.0 cycle  
 
 ---
 
@@ -405,18 +405,18 @@ npm audit
 
 ### Before Executing Phase 2
 1. Ensure all current work committed
-2. Create backup tag: `git tag v0.7.0-alpha-pre-lockfile-fix`
+2. Create backup tag: `git tag v0.9.0-alpha-pre-lockfile-fix`
 3. Allocate 30-45 minutes for testing
 4. Have rollback plan ready
 
 ### Questions to Resolve
 - [ ] Is there a team? (affects .npmrc engine-strict setting)
-- [ ] Target release date for v0.8.0-alpha? (affects Phase 3 timing)
+- [ ] Target release date for v0.9.0-alpha? (affects Phase 3 timing)
 - [ ] Production timeline for v1.0.0? (affects version pinning strategy)
 
 ---
 
 **Last Updated:** 2026-01-09  
-**Next Review:** Before v0.8.0-alpha release  
+**Next Review:** Before v0.9.0-alpha release  
 **Owner:** Project maintainer  
 **Status:** 📋 Planning → ⏭️ Ready for Phase 1 execution

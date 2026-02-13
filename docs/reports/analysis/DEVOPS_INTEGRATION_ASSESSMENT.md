@@ -1,7 +1,7 @@
 # DevOps Integration Assessment - guia_js
 
 **Assessment Date**: 2026-01-01  
-**Repository**: guia_js v0.6.0-alpha  
+**Repository**: guia_js v0.9.0-alpha  
 **CI/CD Platform**: GitHub Actions
 
 ---
@@ -258,8 +258,8 @@ npm version minor          # Bump version
 ./.github/scripts/cdn-delivery.sh          # Generate CDN URLs
 git add cdn-urls.txt       # Stage changes
 git commit -m "..."        # Commit
-git tag v0.7.0             # Create tag
-git push origin v0.7.0     # Push tag
+git tag v0.9.0             # Create tag
+git push origin v0.9.0     # Push tag
 ```
 
 ### Issues
@@ -291,7 +291,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to release (e.g., v0.7.0)'
+        description: 'Version to release (e.g., v0.9.0)'
         required: true
         type: string
 

@@ -2,8 +2,8 @@
 
 **Date**: 2026-01-28  
 **Reporter**: Documentation Audit System  
-**Version Evaluated**: 0.7.1-alpha  
-**Recommended Version**: 0.8.7-alpha
+**Version Evaluated**: 0.9.0-alpha  
+**Recommended Version**: 0.9.0-alpha
 
 ---
 
@@ -11,10 +11,10 @@
 
 ✅ **VERIFIED**: Both documented features are fully implemented with comprehensive test coverage.
 
-**Recommendation**: Version bump from `0.7.1-alpha` to `0.8.7-alpha` is warranted based on:
-1. DisplayerFactory with 5 methods (v0.8.6+ feature) ✅ **IMPLEMENTED**
-2. Município state abbreviation display (v0.8.7-alpha feature) ✅ **IMPLEMENTED**
-3. Metropolitan region display (v0.8.7-alpha feature) ✅ **IMPLEMENTED**
+**Recommendation**: Version bump from `0.9.0-alpha` to `0.9.0-alpha` is warranted based on:
+1. DisplayerFactory with 5 methods (v0.9.0+ feature) ✅ **IMPLEMENTED**
+2. Município state abbreviation display (v0.9.0-alpha feature) ✅ **IMPLEMENTED**
+3. Metropolitan region display (v0.9.0-alpha feature) ✅ **IMPLEMENTED**
 
 ---
 
@@ -22,7 +22,7 @@
 
 ### 1. DisplayerFactory - 5 Methods ✅
 
-**Documentation Claims**: "DisplayerFactory - Factory pattern for display component creation (5 methods, planned v0.8.6+)"
+**Documentation Claims**: "DisplayerFactory - Factory pattern for display component creation (5 methods, planned v0.9.0+)"
 
 **Implementation Status**: ✅ **FULLY IMPLEMENTED**
 
@@ -43,7 +43,7 @@ static toString() {
 }
 ```
 
-**Version Tag in Code**: `@since 0.8.6-alpha`
+**Version Tag in Code**: `@since 0.9.0-alpha`
 
 **Test Coverage**:
 - `__tests__/unit/DisplayerFactory.test.js` ✅
@@ -54,7 +54,7 @@ static toString() {
 
 ### 2. Município State Abbreviation Display ✅
 
-**Documentation Claims**: "Município State Abbreviation Display (v0.8.7-alpha): Municipality highlight card now displays the state abbreviation alongside the município name (e.g., "Recife, PE" instead of just "Recife")"
+**Documentation Claims**: "Município State Abbreviation Display (v0.9.0-alpha): Municipality highlight card now displays the state abbreviation alongside the município name (e.g., "Recife, PE" instead of just "Recife")"
 
 **Implementation Status**: ✅ **FULLY IMPLEMENTED**
 
@@ -64,7 +64,7 @@ static toString() {
 - Method: `municipioCompleto()` - Lines 78-84
 - Returns: `"${municipio}, ${siglaUF}"` format
 - Fallback: Returns municipality name only if siglaUF unavailable
-- Version tag: `@since 0.8.3-alpha`
+- Version tag: `@since 0.9.0-alpha`
 
 **Code Evidence**:
 ```javascript
@@ -93,7 +93,7 @@ municipioCompleto() {
 **Test Coverage**:
 
 **File**: `__tests__/html/HTMLHighlightCardsDisplayer.test.js`
-- Description: "Município State Abbreviation Display feature (v0.8.7-alpha)"
+- Description: "Município State Abbreviation Display feature (v0.9.0-alpha)"
 - Test count: 42 tests covering all 26 Brazilian states
 - Status: All tests passing ✅
 
@@ -109,7 +109,7 @@ municipioCompleto() {
 
 ### 3. Metropolitan Region Display (Bonus) ✅
 
-**Documentation Claims**: "Metropolitan Region Display (v0.8.7-alpha): Municipality highlight card now displays "Região Metropolitana" information"
+**Documentation Claims**: "Metropolitan Region Display (v0.9.0-alpha): Municipality highlight card now displays "Região Metropolitana" information"
 
 **Implementation Status**: ✅ **FULLY IMPLEMENTED**
 
@@ -118,7 +118,7 @@ municipioCompleto() {
 **File**: `src/data/BrazilianStandardAddress.js`
 - Property: `regiaoMetropolitana`
 - Method: `regiaoMetropolitanaFormatada()` - Lines 96-100
-- Version tag: `@since 0.8.7-alpha`
+- Version tag: `@since 0.9.0-alpha`
 
 **Data Extraction**:
 
@@ -144,27 +144,27 @@ municipioCompleto() {
 
 ### Current State
 
-**package.json**: `"version": "0.7.1-alpha"` (outdated)
+**package.json**: `"version": "0.9.0-alpha"` (outdated)
 
 **Documentation References**:
-- CHANGELOG.md: Features marked as "v0.8.7-alpha" ✅
-- README.md: Features marked as "Planned v0.8.7" (now misleading)
-- Source code: `@since 0.8.6-alpha` and `@since 0.8.7-alpha` tags ✅
+- CHANGELOG.md: Features marked as "v0.9.0-alpha" ✅
+- README.md: Features marked as "Planned v0.9.0" (now misleading)
+- Source code: `@since 0.9.0-alpha` and `@since 0.9.0-alpha` tags ✅
 
 ### Discrepancy Impact
 
-**Current**: Version 0.7.1-alpha does NOT accurately reflect implemented features
+**Current**: Version 0.9.0-alpha does NOT accurately reflect implemented features
 
 **Reality**:
-- DisplayerFactory (v0.8.6+ feature) is IMPLEMENTED
-- Município state display (v0.8.7-alpha feature) is IMPLEMENTED
-- Metropolitan region display (v0.8.7-alpha feature) is IMPLEMENTED
+- DisplayerFactory (v0.9.0+ feature) is IMPLEMENTED
+- Município state display (v0.9.0-alpha feature) is IMPLEMENTED
+- Metropolitan region display (v0.9.0-alpha feature) is IMPLEMENTED
 - 77 new tests for metropolitan region ✅
 - 42 new tests for município state display ✅
 
 ### Semantic Versioning Analysis
 
-**From 0.7.1-alpha to 0.8.7-alpha**:
+**From 0.9.0-alpha to 0.9.0-alpha**:
 
 **Major**: 0 (no breaking changes)
 **Minor**: 0.7 → 0.8 ✅ (new features added)
@@ -209,28 +209,28 @@ municipioCompleto() {
 Update `package.json`:
 ```json
 {
-  "version": "0.8.7-alpha"
+  "version": "0.9.0-alpha"
 }
 ```
 
 **Rationale**:
-- Features documented as v0.8.7-alpha are fully implemented
+- Features documented as v0.9.0-alpha are fully implemented
 - 119+ new tests passing
 - Source code already tagged with correct version numbers
-- Current version (0.7.1-alpha) misleads users about available features
+- Current version (0.9.0-alpha) misleads users about available features
 
 **2. Update Documentation References** 🟢 **MEDIUM PRIORITY**
 
 Update README.md:
 ```markdown
-- DisplayerFactory - Factory pattern (5 methods, v0.8.6+) ← Remove "Planned"
-- Município state display (v0.8.7-alpha) ← Mark as implemented
-- Metropolitan region display (v0.8.7-alpha) ← Mark as implemented
+- DisplayerFactory - Factory pattern (5 methods, v0.9.0+) ← Remove "Planned"
+- Município state display (v0.9.0-alpha) ← Mark as implemented
+- Metropolitan region display (v0.9.0-alpha) ← Mark as implemented
 ```
 
 **3. Update CHANGELOG.md** 🟢 **LOW PRIORITY**
 
-Move features from `[Unreleased]` to `[0.8.7-alpha] - 2026-01-28`:
+Move features from `[Unreleased]` to `[0.9.0-alpha] - 2026-01-28`:
 - Close the unreleased section
 - Create versioned release entry
 - Update release notes
@@ -243,13 +243,13 @@ Move features from `[Unreleased]` to `[0.8.7-alpha] - 2026-01-28`:
 
 ```bash
 # 1. Update package.json version
-npm version 0.8.7-alpha --no-git-tag-version
+npm version 0.9.0-alpha --no-git-tag-version
 
 # 2. Update CHANGELOG.md
-# Move [Unreleased] features to [0.8.7-alpha] - 2026-01-28
+# Move [Unreleased] features to [0.9.0-alpha] - 2026-01-28
 
 # 3. Update README.md version references
-# Change "Planned v0.8.7" to "v0.8.7-alpha"
+# Change "Planned v0.9.0" to "v0.9.0-alpha"
 
 # 4. Run version consistency check
 npm run check:version
@@ -259,7 +259,7 @@ npm run update:tests
 
 # 6. Commit changes
 git add package.json CHANGELOG.md README.md
-git commit -m "chore: bump version to 0.8.7-alpha
+git commit -m "chore: bump version to 0.9.0-alpha
 
 - Reflects implemented DisplayerFactory (5 methods)
 - Reflects implemented município state display
@@ -267,8 +267,8 @@ git commit -m "chore: bump version to 0.8.7-alpha
 - Updates documentation to match implementation"
 
 # 7. Create git tag
-git tag v0.8.7-alpha
-git push origin v0.8.7-alpha
+git tag v0.9.0-alpha
+git push origin v0.9.0-alpha
 git push origin main
 ```
 
@@ -304,11 +304,11 @@ Before version bump:
 - [x] Source code has correct version tags
 
 After version bump:
-- [ ] package.json version updated to 0.8.7-alpha
+- [ ] package.json version updated to 0.9.0-alpha
 - [ ] CHANGELOG.md updated with release section
 - [ ] README.md version references updated
 - [ ] Version consistency check passes
-- [ ] Git tag created (v0.8.7-alpha)
+- [ ] Git tag created (v0.9.0-alpha)
 - [ ] CDN URLs regenerated (optional)
 
 ---
@@ -317,9 +317,9 @@ After version bump:
 
 ✅ **VERIFIED**: Both features fully implemented with comprehensive test coverage
 
-🟡 **RECOMMENDED**: Version bump from 0.7.1-alpha to 0.8.7-alpha
+🟡 **RECOMMENDED**: Version bump from 0.9.0-alpha to 0.9.0-alpha
 
-**Justification**: Current version does not reflect actual implementation state. Documentation and source code already reference v0.8.6+ and v0.8.7-alpha features that are complete and tested.
+**Justification**: Current version does not reflect actual implementation state. Documentation and source code already reference v0.9.0+ and v0.9.0-alpha features that are complete and tested.
 
 **Action**: Proceed with version bump following the provided procedure.
 

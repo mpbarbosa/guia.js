@@ -205,5 +205,5 @@ Consider adding:
 
 **Fix Author:** GitHub Copilot CLI  
 **Date:** 2026-01-10  
-**Version:** 0.7.0-alpha  
+**Version:** 0.9.0-alpha  
 **Status:** ✅ Complete and Verified

@@ -14,7 +14,7 @@ This directory contains **5 historical documentation consistency analysis report
 
 1. **DOCUMENTATION_CONSISTENCY_ANALYSIS.md** (2026-01-09, 708 lines)
    - Initial comprehensive analysis
-   - Found: Version mismatches (0.6.0 vs 0.7.0), test count discrepancies
+   - Found: Version mismatches (0.9.0 vs 0.7.0), test count discrepancies
    - Grade: B+ (85/100)
 
 2. **DOCUMENTATION_CONSISTENCY_ANALYSIS_2026-01-10.md** (718 lines)
@@ -30,11 +30,11 @@ This directory contains **5 historical documentation consistency analysis report
 
 4. **DOCUMENTATION_CONSISTENCY_ANALYSIS_2026-01-24.md** (524 lines)
    - Test count: 1,982 passing / 2,176 total (48 failing)
-   - Version: 0.7.1-alpha confirmed
+   - Version: 0.9.0-alpha confirmed
    - Focus: Badge color and failure disclosure
 
 5. **DOCUMENTATION_CONSISTENCY_ANALYSIS_2026-01-27.md** (534 lines)
-   - Version progression issue identified (v0.8.7-alpha in CHANGELOG)
+   - Version progression issue identified (v0.9.0-alpha in CHANGELOG)
    - False positive analysis: 18/19 "broken" references were code examples
    - Overall health: Excellent
 

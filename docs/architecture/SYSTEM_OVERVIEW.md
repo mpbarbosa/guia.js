@@ -1,6 +1,6 @@
 # System Architecture Overview
 
-**Version**: 0.8.7-alpha  
+**Version**: 0.9.0-alpha  
 **Last Updated**: 2026-02-11  
 **Document Type**: Technical Architecture Guide
 
@@ -33,7 +33,7 @@
 ### Design Philosophy
 
 1. **Immutability**: Data objects are immutable by default
-2. **Composition over Inheritance**: Favor composition (v0.8.7-alpha refactor)
+2. **Composition over Inheritance**: Favor composition (v0.9.0-alpha refactor)
 3. **Single Responsibility**: Each component has one clear purpose
 4. **Observer Pattern**: Event-driven communication between components
 5. **Dependency Injection**: Services injected via constructors
@@ -216,7 +216,7 @@ manager.setCurrentPosition(geoPosition);
 **Components**:
 - `BrazilianStandardAddress.js` - Address standardization
 - `AddressExtractor.js` - Nominatim data extraction
-- `AddressCache.js` - LRU cache with change detection (refactored v0.8.7-alpha)
+- `AddressCache.js` - LRU cache with change detection (refactored v0.9.0-alpha)
   - `AddressChangeDetector.js` - Change detection
   - `CallbackRegistry.js` - Callback management
   - `AddressDataStore.js` - Data storage
@@ -231,10 +231,10 @@ manager.setCurrentPosition(geoPosition);
 - LRU eviction policy
 - Reference place categorization
 
-**Design Pattern**: **Value Object** + **Composition** (v0.8.7-alpha) + **Strategy**
+**Design Pattern**: **Value Object** + **Composition** (v0.9.0-alpha) + **Strategy**
 
 ```javascript
-// Composition-based caching (v0.8.7-alpha)
+// Composition-based caching (v0.9.0-alpha)
 const cache = new AddressCache(100);
 cache.registerChangeCallback('bairro', (old, new) => {
   console.log(`Bairro changed: ${old} → ${new}`);
@@ -251,10 +251,10 @@ cache.set('current', addressData);
 **Components**:
 - `HTMLPositionDisplayer.js` - Coordinate display + Google Maps links
 - `HTMLAddressDisplayer.js` - Address formatting and display
-- `HTMLHighlightCardsDisplayer.js` - Municipality/neighborhood cards (v0.7.1+)
+- `HTMLHighlightCardsDisplayer.js` - Municipality/neighborhood cards (v0.9.0+)
 - `HTMLReferencePlaceDisplayer.js` - Reference place display
-- `HTMLSidraDisplayer.js` - IBGE demographic statistics (v0.7.2+)
-- `DisplayerFactory.js` - Factory for displayer creation (v0.8.6+)
+- `HTMLSidraDisplayer.js` - IBGE demographic statistics (v0.9.0+)
+- `DisplayerFactory.js` - Factory for displayer creation (v0.9.0+)
 - `HtmlText.js` - Text utilities
 - `HtmlSpeechSynthesisDisplayer.js` - Speech synthesis UI
 
@@ -263,7 +263,7 @@ cache.set('current', addressData);
 - DOM element updates
 - Google Maps integration
 - IBGE SIDRA statistics display
-- Metropolitan region display (v0.8.7-alpha)
+- Metropolitan region display (v0.9.0-alpha)
 - Brazilian Portuguese localization
 
 **Design Pattern**: **Factory** + **Template Method** + **Presenter**
@@ -281,7 +281,7 @@ const sidraDisplayer = factory.createSidraDisplayer(document, 'stats-id');
 
 **Responsibility**: Text-to-speech synthesis with Brazilian Portuguese optimization
 
-**Components** (v0.8.7-alpha Composition Refactor):
+**Components** (v0.9.0-alpha Composition Refactor):
 - `SpeechSynthesisManager.js` - Main orchestrator (1148 lines)
   - Coordinates 4 focused components via composition
 - `VoiceLoader.js` - Asynchronous voice loading with exponential backoff
@@ -300,10 +300,10 @@ const sidraDisplayer = factory.createSidraDisplayer(document, 'stats-id');
 - Rate and pitch configuration with validation
 - Queue management (pause, resume, stop, clear)
 
-**Design Pattern**: **Composition** (v0.8.7-alpha) + **Queue** + **Strategy**
+**Design Pattern**: **Composition** (v0.9.0-alpha) + **Queue** + **Strategy**
 
 ```javascript
-// Composition-based architecture (v0.8.7-alpha)
+// Composition-based architecture (v0.9.0-alpha)
 const speechManager = new SpeechSynthesisManager();
 // Internally uses: VoiceLoader, VoiceSelector, SpeechConfiguration, SpeechQueue
 
@@ -312,7 +312,7 @@ speechManager.setPitch(1.0);
 speechManager.speak('Bem-vindo ao Guia Turístico', 'high');
 ```
 
-**Voice Loading Strategy** (v0.8.7-alpha):
+**Voice Loading Strategy** (v0.9.0-alpha):
 - Retry delays: 100ms → 200ms → 400ms → 800ms → 1600ms → 3200ms → 5000ms
 - Max 10 attempts
 - Concurrent load protection
@@ -342,8 +342,8 @@ speechManager.speak('Bem-vindo ao Guia Turístico', 'high');
 │  │  │  - Position displayer                        │ │    │
 │  │  │  - Address displayer                         │ │    │
 │  │  │  - Reference place displayer                 │ │    │
-│  │  │  - Highlight cards displayer (v0.7.1+)       │ │    │
-│  │  │  - SIDRA displayer (v0.7.2+, v0.8.6+)        │ │    │
+│  │  │  - Highlight cards displayer (v0.9.0+)       │ │    │
+│  │  │  - SIDRA displayer (v0.9.0+, v0.9.0+)        │ │    │
 │  │  └──────────────────────────────────────────────┘ │    │
 │  └───────────────────┬────────────────────────────────┘    │
 │                      │                                      │
@@ -360,7 +360,7 @@ speechManager.speak('Bem-vindo ao Guia Turístico', 'high');
 │  ┌─────────────────────────────────────────────────┐     │
 │  │          Data Processing Layer                   │     │
 │  │  - AddressExtractor                              │     │
-│  │  - AddressCache (composition v0.8.7-alpha)       │     │
+│  │  - AddressCache (composition v0.9.0-alpha)       │     │
 │  │  - BrazilianStandardAddress                      │     │
 │  │  - ReferencePlace                                │     │
 │  └─────────────────────────────────────────────────┘     │
@@ -370,9 +370,9 @@ speechManager.speak('Bem-vindo ao Guia Turístico', 'high');
 │  │          Presentation Layer                      │     │
 │  │  - HTMLPositionDisplayer                         │     │
 │  │  - HTMLAddressDisplayer                          │     │
-│  │  - HTMLHighlightCardsDisplayer (v0.7.1+)         │     │
-│  │  - HTMLSidraDisplayer (v0.7.2+)                  │     │
-│  │  - DisplayerFactory (v0.8.6+)                    │     │
+│  │  - HTMLHighlightCardsDisplayer (v0.9.0+)         │     │
+│  │  - HTMLSidraDisplayer (v0.9.0+)                  │     │
+│  │  - DisplayerFactory (v0.9.0+)                    │     │
 │  └─────────────────────────────────────────────────┘     │
 │                                                            │
 └────────────────────────────────────────────────────────────┘
@@ -386,7 +386,7 @@ app.js
  ├── views/home.js
  │    └── WebGeocodingManager
  │         ├── ServiceCoordinator
- │         │    ├── DisplayerFactory (v0.8.6+)
+ │         │    ├── DisplayerFactory (v0.9.0+)
  │         │    │    ├── HTMLPositionDisplayer
  │         │    │    ├── HTMLAddressDisplayer
  │         │    │    ├── HTMLHighlightCardsDisplayer
@@ -486,7 +486,7 @@ app.js
 └──────────────────┘
 ```
 
-### Address Change Detection Flow (v0.8.7-alpha)
+### Address Change Detection Flow (v0.9.0-alpha)
 
 ```
 ┌─────────────────────────┐
@@ -621,14 +621,14 @@ class GeoPosition {
 
 ---
 
-### 4. Composition Pattern (v0.8.7-alpha)
+### 4. Composition Pattern (v0.9.0-alpha)
 
 **Usage**: `SpeechSynthesisManager`, `AddressCache`
 
 **Purpose**: Build complex behavior from focused components
 
 ```javascript
-// SpeechSynthesisManager.js (v0.8.7-alpha)
+// SpeechSynthesisManager.js (v0.9.0-alpha)
 class SpeechSynthesisManager {
   #voiceLoader;
   #voiceSelector;
@@ -661,7 +661,7 @@ class SpeechSynthesisManager {
 
 ### 5. Factory Pattern
 
-**Usage**: `DisplayerFactory` (v0.8.6+)
+**Usage**: `DisplayerFactory` (v0.9.0+)
 
 **Purpose**: Centralized object creation
 
@@ -743,7 +743,7 @@ class WebGeocodingManager {
 
 ### 8. Strategy Pattern
 
-**Usage**: `VoiceSelector` (v0.8.7-alpha)
+**Usage**: `VoiceSelector` (v0.9.0-alpha)
 
 **Purpose**: Pluggable voice selection algorithms
 
@@ -821,7 +821,7 @@ GET /reverse?format=json&lat=-23.5505&lon=-46.6333&addressdetails=1
 
 ---
 
-#### 3. IBGE SIDRA API (v0.7.2+)
+#### 3. IBGE SIDRA API (v0.9.0+)
 
 **Purpose**: Demographic statistics (population data)
 
@@ -944,7 +944,7 @@ GET /reverse?format=json&lat=-23.5505&lon=-46.6333&addressdetails=1
 
 #### 2. Memory Management
 
-- **TimerManager**: Prevents memory leaks (v0.8.7+)
+- **TimerManager**: Prevents memory leaks (v0.9.0+)
 - **Observer cleanup**: Unsubscribe functions returned
 - **DOM references**: Cleaned up on view destruction
 
@@ -1000,5 +1000,5 @@ GET /reverse?format=json&lat=-23.5505&lon=-46.6333&addressdetails=1
 ---
 
 **Last Updated**: 2026-02-11  
-**Version**: 0.8.7-alpha  
+**Version**: 0.9.0-alpha  
 **Status**: ✅ Complete and Validated

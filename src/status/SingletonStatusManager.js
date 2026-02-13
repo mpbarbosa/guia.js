@@ -31,7 +31,7 @@ import { log, warn, error } from '../utils/logger.js';
  * - Immutable instance after creation for data integrity
  * 
  * @class SingletonStatusManager
- * @since 0.8.3-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  * 
  * @example
@@ -82,7 +82,7 @@ class SingletonStatusManager {
      * const manager2 = new SingletonStatusManager();
      * log(manager1 === manager2); // true
      * 
-     * @since 0.8.3-alpha
+     * @since 0.9.0-alpha
      */
     constructor() {
         // Singleton pattern: return existing instance if available
@@ -128,7 +128,7 @@ class SingletonStatusManager {
      * const isActive = statusManager.isGettingLocation();
      * toggleLoadingSpinner(isActive);
      * 
-     * @since 0.8.3-alpha
+     * @since 0.9.0-alpha
      */
     isGettingLocation() {
         return this.gettingLocation;
@@ -174,7 +174,7 @@ class SingletonStatusManager {
      *   error('Invalid status type:', error.message);
      * }
      * 
-     * @since 0.8.3-alpha
+     * @since 0.9.0-alpha
      */
     setGettingLocation(status) {
         // Validate input parameter type
@@ -233,7 +233,7 @@ class SingletonStatusManager {
      * import SingletonStatusManager from './status/SingletonStatusManager.js';
      * const manager = SingletonStatusManager.getInstance();
      * 
-     * @since 0.8.3-alpha
+     * @since 0.9.0-alpha
      */
     static getInstance() {
         // Create instance if it doesn't exist (lazy initialization)
@@ -266,7 +266,7 @@ class SingletonStatusManager {
      * const manager = SingletonStatusManager.getInstance();
      * expect(manager.isGettingLocation()).toBe(false);
      * 
-     * @since 0.8.3-alpha
+     * @since 0.9.0-alpha
      */
     static resetInstance() {
         SingletonStatusManager.instance = null;
@@ -293,7 +293,7 @@ class SingletonStatusManager {
      * log(manager.toString());
      * // Output: "SingletonStatusManager: gettingLocation=false"
      * 
-     * @since 0.8.3-alpha
+     * @since 0.9.0-alpha
      */
     toString() {
         return `${this.constructor.name}: gettingLocation=${this.gettingLocation}`;

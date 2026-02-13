@@ -12,7 +12,7 @@
  * - Static range methods
  * - Error handling
  * 
- * @since 0.8.7-alpha
+ * @since 0.9.0-alpha
  */
 
 import { SpeechConfiguration } from '../../src/speech/SpeechConfiguration.js';

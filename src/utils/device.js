@@ -8,7 +8,7 @@ import { log, warn, error } from './logger.js';
  * Functions use dependency injection for testability and referential transparency.
  * 
  * @module utils/device
- * @since 0.8.6-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -72,7 +72,7 @@ import { log, warn, error } from './logger.js';
  * @see {@link https://caniuse.com/mdn-api_navigator_maxtouchpoints} Browser compatibility for maxTouchPoints
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent} User Agent Detection
  * @see (DEVICE_DETECTION.md) - Additional documentation on device detection strategies
- * @since 0.8.4-alpha
+ * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 export const isMobileDevice = (options = {}) => {

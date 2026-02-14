@@ -10,20 +10,41 @@
  */
 
 import { jest } from '@jest/globals';
-import { JSDOM } from 'jsdom';
 import HTMLPositionDisplayer from '../../src/html/HTMLPositionDisplayer.js';
 
+// Mock DOM environment
+global.document = undefined;
+
+/**
+ * Creates a mock DOM element with required properties
+ */
+function createMockElement(id = 'test-element') {
+	return {
+		id,
+		innerHTML: '',
+		textContent: '',
+		className: '',
+		style: {},
+		setAttribute: jest.fn(),
+		getAttribute: jest.fn(),
+		removeAttribute: jest.fn(),
+		addEventListener: jest.fn(),
+		removeEventListener: jest.fn(),
+		querySelector: jest.fn(),
+		querySelectorAll: jest.fn(() => []),
+		appendChild: jest.fn(),
+		removeChild: jest.fn(),
+		replaceChild: jest.fn()
+	};
+}
+
 describe('HTMLPositionDisplayer', () => {
-	let dom;
-	let document;
 	let element;
 	let displayer;
 
 	beforeEach(() => {
-		// Create a new JSDOM instance for each test
-		dom = new JSDOM('<!DOCTYPE html><div id="test-element"></div>');
-		document = dom.window.document;
-		element = document.getElementById('test-element');
+		// Create a mock element for each test
+		element = createMockElement();
 		displayer = new HTMLPositionDisplayer(element);
 	});
 

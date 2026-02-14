@@ -8,12 +8,11 @@
  */
 
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
-import { JSDOM } from 'jsdom';
-import { TextEncoder, TextDecoder } from 'util';
+import HTMLHighlightCardsDisplayer from '../../src/html/HTMLHighlightCardsDisplayer.js';
+import BrazilianStandardAddress from '../../src/data/BrazilianStandardAddress.js';
 
-// Polyfill for TextEncoder/TextDecoder (required for jsdom in Node.js)
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
+// Mock DOM environment
+global.document = undefined;
 
 // Mock console
 global.console = {
@@ -23,15 +22,39 @@ global.console = {
     info: jest.fn()
 };
 
-// Import the classes
-let HTMLHighlightCardsDisplayer, BrazilianStandardAddress;
-try {
-    const displayerModule = await import('../../src/html/HTMLHighlightCardsDisplayer.js');
-    const addressModule = await import('../../src/data/BrazilianStandardAddress.js');
-    HTMLHighlightCardsDisplayer = displayerModule.default;
-    BrazilianStandardAddress = addressModule.default;
-} catch (error) {
-    console.warn('Could not load modules:', error.message);
+/**
+ * Creates a mock DOM element with required properties
+ */
+function createMockElement(id, innerHTML = '—') {
+    return {
+        id,
+        innerHTML,
+        textContent: innerHTML,
+        className: '',
+        style: {},
+        setAttribute: jest.fn(),
+        getAttribute: jest.fn(() => null),
+        removeAttribute: jest.fn(),
+        remove: jest.fn()
+    };
+}
+
+/**
+ * Creates a mock document with getElementById functionality
+ */
+function createMockDocument() {
+    const elements = {
+        'municipio-value': createMockElement('municipio-value'),
+        'regiao-metropolitana-value': createMockElement('regiao-metropolitana-value'),
+        'bairro-value': createMockElement('bairro-value')
+    };
+    
+    return {
+        getElementById: jest.fn((id) => elements[id] || null),
+        querySelector: jest.fn(),
+        createElement: jest.fn(() => createMockElement('dynamic')),
+        _elements: elements  // For test inspection
+    };
 }
 
 describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () => {
@@ -40,24 +63,8 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
     let displayer;
 
     beforeEach(() => {
-        // Create a fresh DOM for each test
-        dom = new JSDOM(`
-            <!DOCTYPE html>
-            <html>
-            <body>
-                <div class="highlight-card">
-                    <div id="municipio-label" class="highlight-card-label">Município</div>
-                    <div id="regiao-metropolitana-value" class="metropolitan-region-value"></div>
-                    <div id="municipio-value" class="highlight-card-value">—</div>
-                </div>
-                <div class="highlight-card">
-                    <div id="bairro-label" class="highlight-card-label">Bairro</div>
-                    <div id="bairro-value" class="highlight-card-value">—</div>
-                </div>
-            </body>
-            </html>
-        `);
-        document = dom.window.document;
+        // Create a fresh mock DOM for each test
+        document = createMockDocument();
         
         // Clear mock calls
         jest.clearAllMocks();
@@ -96,8 +103,7 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
             }
 
             // Remove the element
-            const element = document.getElementById('regiao-metropolitana-value');
-            element.remove();
+            document._elements['regiao-metropolitana-value'] = null;
 
             displayer = new HTMLHighlightCardsDisplayer(document);
             
@@ -122,7 +128,7 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
 
             displayer.update({}, address);
 
-            const regionElement = document.getElementById('regiao-metropolitana-value');
+            const regionElement = document._elements['regiao-metropolitana-value'];
             expect(regionElement.textContent).toBe('Região Metropolitana do Recife');
         });
 
@@ -141,7 +147,7 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
 
             displayer.update({}, address);
 
-            const regionElement = document.getElementById('regiao-metropolitana-value');
+            const regionElement = document._elements['regiao-metropolitana-value'];
             expect(regionElement.textContent).toBe('');
         });
 
@@ -173,8 +179,7 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
             }
 
             // Remove the element
-            const element = document.getElementById('regiao-metropolitana-value');
-            element.remove();
+            document._elements['regiao-metropolitana-value'] = null;
 
             displayer = new HTMLHighlightCardsDisplayer(document);
             
@@ -204,9 +209,9 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
 
             displayer.update({}, address);
 
-            expect(document.getElementById('regiao-metropolitana-value').textContent).toBe('Região Metropolitana do Recife');
-            expect(document.getElementById('municipio-value').textContent).toBe('Recife, PE');
-            expect(document.getElementById('bairro-value').textContent).toBe('Santo Amaro');
+            expect(document._elements['regiao-metropolitana-value'].textContent).toBe('Região Metropolitana do Recife');
+            expect(document._elements['municipio-value'].textContent).toBe('Recife, PE');
+            expect(document._elements['bairro-value'].textContent).toBe('Santo Amaro');
         });
 
         test('should display Região Metropolitana de São Paulo', () => {
@@ -225,9 +230,9 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
 
             displayer.update({}, address);
 
-            expect(document.getElementById('regiao-metropolitana-value').textContent).toBe('Região Metropolitana de São Paulo');
-            expect(document.getElementById('municipio-value').textContent).toBe('São Paulo, SP');
-            expect(document.getElementById('bairro-value').textContent).toBe('Glicério');
+            expect(document._elements['regiao-metropolitana-value'].textContent).toBe('Região Metropolitana de São Paulo');
+            expect(document._elements['municipio-value'].textContent).toBe('São Paulo, SP');
+            expect(document._elements['bairro-value'].textContent).toBe('Glicério');
         });
 
         test('should display Olinda in Recife metropolitan region', () => {
@@ -245,8 +250,8 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
 
             displayer.update({}, address);
 
-            expect(document.getElementById('regiao-metropolitana-value').textContent).toBe('Região Metropolitana do Recife');
-            expect(document.getElementById('municipio-value').textContent).toBe('Olinda, PE');
+            expect(document._elements['regiao-metropolitana-value'].textContent).toBe('Região Metropolitana do Recife');
+            expect(document._elements['municipio-value'].textContent).toBe('Olinda, PE');
         });
     });
 
@@ -266,8 +271,8 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
 
             displayer.update({}, address);
 
-            expect(document.getElementById('regiao-metropolitana-value').textContent).toBe('');
-            expect(document.getElementById('municipio-value').textContent).toBe('Arapiraca, AL');
+            expect(document._elements['regiao-metropolitana-value'].textContent).toBe('');
+            expect(document._elements['municipio-value'].textContent).toBe('Arapiraca, AL');
         });
 
         test('should handle Pontal do Coruripe (incomplete data)', () => {
@@ -283,8 +288,8 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
 
             displayer.update({}, address);
 
-            expect(document.getElementById('regiao-metropolitana-value').textContent).toBe('');
-            expect(document.getElementById('municipio-value').textContent).toBe('—');
+            expect(document._elements['regiao-metropolitana-value'].textContent).toBe('');
+            expect(document._elements['municipio-value'].textContent).toBe('—');
         });
     });
 
@@ -306,9 +311,9 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
             displayer.update({}, address);
 
             // All three should be updated
-            expect(document.getElementById('regiao-metropolitana-value').textContent).toBe('Região Metropolitana do Recife');
-            expect(document.getElementById('municipio-value').textContent).toBe('Recife, PE');
-            expect(document.getElementById('bairro-value').textContent).toBe('Boa Viagem');
+            expect(document._elements['regiao-metropolitana-value'].textContent).toBe('Região Metropolitana do Recife');
+            expect(document._elements['municipio-value'].textContent).toBe('Recife, PE');
+            expect(document._elements['bairro-value'].textContent).toBe('Boa Viagem');
         });
 
         test('should maintain independence between region and municipality updates', () => {
@@ -327,7 +332,7 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
 
             displayer.update({}, address1);
             
-            expect(document.getElementById('regiao-metropolitana-value').textContent).toBe('Região Metropolitana do Recife');
+            expect(document._elements['regiao-metropolitana-value'].textContent).toBe('Região Metropolitana do Recife');
 
             // Second update - no region
             const address2 = new BrazilianStandardAddress();
@@ -336,8 +341,8 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
 
             displayer.update({}, address2);
 
-            expect(document.getElementById('regiao-metropolitana-value').textContent).toBe('');
-            expect(document.getElementById('municipio-value').textContent).toBe('Arapiraca, AL');
+            expect(document._elements['regiao-metropolitana-value'].textContent).toBe('');
+            expect(document._elements['municipio-value'].textContent).toBe('Arapiraca, AL');
         });
     });
 
@@ -357,7 +362,7 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
 
             displayer.update({}, address);
 
-            const regionText = document.getElementById('regiao-metropolitana-value').textContent;
+            const regionText = document._elements['regiao-metropolitana-value'].textContent;
             expect(regionText.length).toBeGreaterThan(70);
         });
 
@@ -376,7 +381,7 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
 
             displayer.update({}, address);
 
-            const regionText = document.getElementById('regiao-metropolitana-value').textContent;
+            const regionText = document._elements['regiao-metropolitana-value'].textContent;
             expect(regionText).toContain('ã');
             expect(regionText).toContain('é');
         });
@@ -454,27 +459,21 @@ describe('HTMLHighlightCardsDisplayer - Metropolitan Region (v0.9.0-alpha)', () 
     });
 
     describe('DOM element order verification', () => {
-        test('should have region element between label and municipality value', () => {
-            if (!HTMLHighlightCardsDisplayer || !BrazilianStandardAddress) {
-                expect(true).toBe(true);
-                return;
-            }
+        test('should update all three elements correctly', () => {
+            displayer = new HTMLHighlightCardsDisplayer(document);
+            
+            const address = new BrazilianStandardAddress();
+            address.regiaoMetropolitana = 'Região Metropolitana do Recife';
+            address.municipio = 'Recife';
+            address.siglaUF = 'PE';
+            address.bairro = 'Boa Viagem';
 
-            const label = document.getElementById('municipio-label');
-            const region = document.getElementById('regiao-metropolitana-value');
-            const municipio = document.getElementById('municipio-value');
+            displayer.update({}, address);
 
-            // Get parent container
-            const container = label.parentElement;
-            const children = Array.from(container.children);
-
-            const labelIndex = children.indexOf(label);
-            const regionIndex = children.indexOf(region);
-            const municipioIndex = children.indexOf(municipio);
-
-            // Verify order: label < region < municipio
-            expect(regionIndex).toBeGreaterThan(labelIndex);
-            expect(municipioIndex).toBeGreaterThan(regionIndex);
+            // Verify all three elements are updated correctly
+            expect(document._elements['municipio-value'].textContent).toBe('Recife, PE');
+            expect(document._elements['regiao-metropolitana-value'].textContent).toBe('Região Metropolitana do Recife');
+            expect(document._elements['bairro-value'].textContent).toBe('Boa Viagem');
         });
     });
 });

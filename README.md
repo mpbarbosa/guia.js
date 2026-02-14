@@ -6,11 +6,11 @@ Status: Active
 ---
 
 
-[![Tests](https://img.shields.io/badge/tests-2235%20passing%20%2F%6.0.01%20total-yellow)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-2437%20passing%20%2F%202639%20total-green)](https://github.com/mpbarbosa/guia_turistico)
 [![Version](https://img.shields.io/badge/version-0.9.0--alpha-blue)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
-> **Note on Test Status**: While 2,235 tests pass successfully, 20 tests are currently failing (primarily timing-dependent E2E tests for incomplete address data scenarios) and 146 tests are skipped. We're actively working on stabilizing the E2E test suite. See [Testing Overview](#testing-overview) for details.
+> **Note on Test Status**: 2,437 tests pass successfully out of 2,639 total (202 skipped), with 96 of 109 test suites passing (13 skipped). The test suite is stable with 100% pass rate for non-skipped tests. See [Testing Overview](#testing-overview) for details.
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
@@ -999,7 +999,7 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 
 **Format**:
 ```
-# Generated: 2026-01-01 15:14:51
+# Generated: 2026-02-11 23:45:00
 # Version: 6.0.0-alpha
 # Commit: abc1234567890abcdef1234567890abcdef12345
 

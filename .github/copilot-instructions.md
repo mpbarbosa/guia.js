@@ -296,6 +296,15 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 ```
 
 ### Expected Test Results
+- ✅ 2,437 tests passing (2,639 total)
+- ✅ 202 tests skipped
+- ✅ 96 test suites passing (109 total)
+- ✅ 13 test suites skipped
+- ✅ ~85% code coverage overall (84.7% actual)
+- ✅ 100% code coverage on guia_ibge.js
+- ✅ 100% pass rate (0 failing tests)
+
+### Expected Test Results
 - ✅ 2,235 tests passing (2,401 total, 146 skipped, 20 failing)
 - ✅ 90 test suites passing (101 total, 4 skipped, 7 failing)
 - ✅ ~85% code coverage overall (84.7% actual)

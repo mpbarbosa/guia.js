@@ -133,51 +133,249 @@
 
 #### 9. change-type-detector.sh (308 lines)
 **Purpose**: Detects change type from Conventional Commits messages  
-**Usage**: `./.github/scripts/change-type-detector.sh <commit-message>`  
-**Documentation**: ❌ **UNDOCUMENTED**
+**Usage**: `./.github/scripts/change-type-detector.sh [base_ref]`  
+**Used by**: `.github/workflows/modified-files.yml`  
+**Documentation**: ✅ **COMPLETE**
 
 **What it does**:
-- Parses Conventional Commits format
-- Determines change type: feat, fix, docs, test, refactor, etc.
-- Used by conditional workflow execution
+- Analyzes commit messages since `base_ref` (default: HEAD~1)
+- Parses Conventional Commits format (feat, fix, docs, test, etc.)
+- Outputs change type for conditional workflow execution
+- Supports all standard Conventional Commits types
 
-**Output**: Change type string (feat/fix/docs/test/...)
+**Parameters**:
+- `base_ref` (optional): Git reference to compare against (default: HEAD~1)
+  - Examples: `HEAD~1`, `abc123`, `origin/main`, `v0.9.0`
+
+**Output**: 
+- Change type string to stdout: `feat`|`fix`|`docs`|`test`|`refactor`|`chore`|`ci`|`perf`|`style`
+- Diagnostic messages to stderr (colored)
+
+**Exit codes**:
+- `0`: Success, change type detected and output
+- `1`: Error (invalid git ref, parsing failure, unknown change type)
+
+**Examples**:
+```bash
+# Detect changes since last commit
+./.github/scripts/change-type-detector.sh
+# Output: "feat" (or "fix", "docs", etc.)
+
+# Detect changes since specific commit
+./.github/scripts/change-type-detector.sh abc123
+
+# Detect changes in PR branch
+./.github/scripts/change-type-detector.sh origin/main
+
+# Use in conditional logic
+CHANGE_TYPE=$(./.github/scripts/change-type-detector.sh origin/main)
+if [ "$CHANGE_TYPE" = "test" ]; then
+  npm test
+fi
+```
+
+**Conventional Commits Types Supported**:
+- `feat:` - New features (triggers version bump)
+- `fix:` - Bug fixes (triggers version bump)
+- `docs:` - Documentation changes only
+- `test:` - Test additions/updates
+- `refactor:` - Code refactoring (no behavior change)
+- `chore:` - Maintenance tasks (dependencies, config)
+- `ci:` - CI/CD pipeline changes
+- `perf:` - Performance improvements
+- `style:` - Code style/formatting changes
+
+**Workflow Integration**:
+Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
+```yaml
+- name: Detect change type
+  id: change-type
+  run: |
+    CHANGE_TYPE=$(./.github/scripts/change-type-detector.sh ${{ github.event.before }})
+    echo "type=$CHANGE_TYPE" >> $GITHUB_OUTPUT
+
+- name: Run tests only for code changes
+  if: steps.change-type.outputs.type == 'feat' || steps.change-type.outputs.type == 'fix'
+  run: npm test
+```
+
+**Testing**: See `test-change-type-detection.sh` for test suite
 
 ---
 
 #### 10. test-change-type-detection.sh (237 lines)
 **Purpose**: Test suite for change-type-detector.sh  
 **Usage**: `./.github/scripts/test-change-type-detection.sh`  
-**Documentation**: ❌ **UNDOCUMENTED**
+**Documentation**: ✅ **COMPLETE**
 
 **What it does**:
-- Runs test cases for change type detection
-- Validates Conventional Commits parsing
-- Reports pass/fail for each scenario
+- Runs 20+ test cases for change type detection
+- Validates Conventional Commits parsing accuracy
+- Tests edge cases (empty commits, invalid formats, multiple types)
+- Reports pass/fail status for each test scenario
+
+**Test Coverage**:
+- All Conventional Commits types (feat, fix, docs, test, etc.)
+- Scoped commits: `feat(api):`, `fix(ui):`
+- Breaking changes: `feat!:`, `fix(api)!:`
+- Multi-line commit messages
+- Invalid/malformed commits
+- Empty commit ranges
+
+**Expected Output**:
+```
+🧪 Testing change-type-detector.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Test 1: feat: commit → "feat"
+✅ Test 2: fix: commit → "fix"
+✅ Test 3: docs: commit → "docs"
+...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ All tests passed (20/20)
+```
+
+**Run before**:
+- Modifying `change-type-detector.sh`
+- Adding new commit type patterns
+- Updating Conventional Commits parsing logic
+- Deploying workflow changes
+
+**Execution time**: ~5 seconds
 
 ---
 
 #### 11. test-conditional-execution.sh (203 lines)
 **Purpose**: Test suite for workflow-condition-evaluator.sh  
 **Usage**: `./.github/scripts/test-conditional-execution.sh`  
-**Documentation**: ❌ **UNDOCUMENTED**
+**Documentation**: ✅ **COMPLETE**
 
 **What it does**:
-- Tests workflow condition evaluation logic
-- Validates conditional execution rules
-- Ensures CI/CD workflows run appropriately
+- Tests workflow condition evaluation logic (15+ scenarios)
+- Validates file pattern matching accuracy
+- Checks `.workflow-config.yaml` rule parsing
+- Ensures conditional execution works correctly
+
+**Test Coverage**:
+- File pattern matching (`src/**/*.js`, `__tests__/**`, etc.)
+- Change type conditions (docs-only, test-only, etc.)
+- Combined conditions (file patterns + change types)
+- Edge cases (no changes, all files changed, invalid patterns)
+
+**Expected Output**:
+```
+🧪 Testing workflow-condition-evaluator.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Test 1: src/ changes → "run"
+✅ Test 2: docs/ changes → "skip" (for test step)
+✅ Test 3: docs/ changes → "run" (for docs step)
+...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ All tests passed (15/15)
+```
+
+**Run before**:
+- Modifying `workflow-condition-evaluator.sh`
+- Changing `.workflow-config.yaml` rules
+- Updating workflow logic in modified-files.yml
+- Adding new file pattern conditions
+
+**Dependencies**:
+- Requires `.workflow-config.yaml` in project root
+- Uses `git diff` for file detection
+
+**Execution time**: ~3 seconds
 
 ---
 
 #### 12. workflow-condition-evaluator.sh (225 lines)
-**Purpose**: Evaluates conditional workflow execution rules  
-**Usage**: `./.github/scripts/workflow-condition-evaluator.sh <condition>`  
-**Documentation**: ❌ **UNDOCUMENTED**
+**Purpose**: Evaluates conditional workflow execution rules from .workflow-config.yaml  
+**Usage**: `./.github/scripts/workflow-condition-evaluator.sh <step_name> [base_ref]`  
+**Used by**: `.github/workflows/modified-files.yml`  
+**Documentation**: ✅ **COMPLETE**
 
 **What it does**:
-- Determines if workflow should run based on changes
-- Evaluates file path patterns
-- Used by modified-files.yml workflow
+- Reads workflow rules from `.workflow-config.yaml`
+- Detects changed files since `base_ref` using `git diff`
+- Determines if specified step should run based on file patterns and change types
+- Outputs "run" or "skip" for workflow conditional execution
+
+**Parameters**:
+- `step_name` (required): Name of workflow step to evaluate (must match `.workflow-config.yaml` key)
+- `base_ref` (optional): Git reference for comparison (default: HEAD~1)
+
+**Output**: 
+- `"run"` or `"skip"` to stdout
+- Diagnostic messages to stderr (colored)
+
+**Exit codes**:
+- `0`: Success (step should run or skip as determined)
+- `1`: Error (invalid step name, missing config, git failure)
+
+**Examples**:
+```bash
+# Check if tests should run
+./.github/scripts/workflow-condition-evaluator.sh test-suite
+# Output: "run" (if src/ files changed) or "skip" (if only docs/ changed)
+
+# Check if docs update needed
+./.github/scripts/workflow-condition-evaluator.sh update-docs origin/main
+# Output: "run" (if docs/ or README.md changed)
+
+# Use in workflow conditional
+SHOULD_RUN=$(./.github/scripts/workflow-condition-evaluator.sh test-suite)
+if [ "$SHOULD_RUN" = "run" ]; then
+  npm test
+fi
+```
+
+**Configuration File** (`.workflow-config.yaml`):
+```yaml
+steps:
+  test-suite:
+    run_on:
+      - file_patterns:
+          - "src/**/*.js"
+          - "__tests__/**/*.js"
+      - change_types: ["feat", "fix", "refactor"]
+  
+  update-docs:
+    run_on:
+      - file_patterns:
+          - "docs/**/*.md"
+          - "README.md"
+      - change_types: ["docs", "feat"]
+```
+
+**File Pattern Rules**:
+- Glob patterns supported: `*`, `**`, `?`, `{a,b}`
+- Multiple patterns: ANY match triggers "run"
+- Negation not supported (use separate steps)
+
+**Change Type Rules**:
+- Detected via `change-type-detector.sh`
+- Multiple types: ANY match triggers "run"
+- Combines with file patterns (OR logic)
+
+**Workflow Integration**:
+Used in `.github/workflows/modified-files.yml`:
+```yaml
+- name: Check if tests should run
+  id: check-tests
+  run: |
+    RESULT=$(./.github/scripts/workflow-condition-evaluator.sh test-suite ${{ github.event.before }})
+    echo "should_run=$RESULT" >> $GITHUB_OUTPUT
+
+- name: Run tests
+  if: steps.check-tests.outputs.should_run == 'run'
+  run: npm test
+```
+
+**Testing**: See `test-conditional-execution.sh` for test suite
+
+**Dependencies**:
+- `git` (for diff detection)
+- `.workflow-config.yaml` (configuration file)
+- `change-type-detector.sh` (for change type detection)
 
 ---
 

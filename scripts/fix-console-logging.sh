@@ -2,7 +2,10 @@
 # Fix console logging violations by replacing with centralized logger
 set -e
 
-cd /home/mpb/Documents/GitHub/guia_turistico/src
+# Portable path resolution - works across all environments
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT/src"
 
 # List of files to process (excluding test files, HTML, and logger.js itself)
 FILES=(

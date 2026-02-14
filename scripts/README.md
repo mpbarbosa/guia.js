@@ -9,17 +9,19 @@
 ### 1. fix-console-logging.sh
 **Purpose**: Automatically fixes direct console.* usage to use centralized logger  
 **Usage**: `./scripts/fix-console-logging.sh`  
-**Status**: ⚠️ **Contains hardcoded path** - needs update for portability  
-**Documentation**: Currently undocumented  
+**Status**: ✅ **Portable** - works across all environments  
+**Documentation**: ✅ **COMPLETE**
 
 **What it does**:
 - Scans `src/` directory for direct `console.log`, `console.warn`, `console.error` usage
 - Replaces with imports from `utils/logger.js`
 - Helps maintain centralized logging standards
+- Uses portable path resolution (works on any system)
 
-**Known Issues**:
-- Line 4 has hardcoded path: `/home/mpb/Documents/GitHub/guia_turistico/src`
-- Should use relative path: `cd "$(dirname "$0")/../src"`
+**Fixed Issues** (v0.9.0+):
+- ✅ Removed hardcoded absolute path
+- ✅ Added portable `SCRIPT_DIR` resolution
+- ✅ Works in any environment (local, CI/CD, Docker)
 
 ---
 

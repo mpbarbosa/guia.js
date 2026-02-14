@@ -6,6 +6,84 @@
 
 set -e
 
+# Show help message
+show_help() {
+    cat << 'EOF'
+workflow-condition-evaluator.sh - Evaluates conditional workflow execution
+
+USAGE:
+    ./workflow-condition-evaluator.sh <step_name> [base_ref]
+
+PARAMETERS:
+    step_name   Required. Name of workflow step (must match .workflow-config.yaml)
+                Examples: test-suite, update-docs, lint-code
+    
+    base_ref    Optional git reference for comparison (default: HEAD~1)
+                Examples: HEAD~1, abc123, origin/main
+
+OUTPUT:
+    "run"       Step should run (conditions met)
+    "skip"      Step should be skipped (conditions not met)
+
+EXIT CODES:
+    0    Success (step evaluated, run or skip)
+    1    Error (invalid step, missing config, git failure)
+
+EXAMPLES:
+    # Check if tests should run
+    ./workflow-condition-evaluator.sh test-suite
+
+    # Check if docs update needed (compare to main)
+    ./workflow-condition-evaluator.sh update-docs origin/main
+
+    # Use in conditional logic
+    SHOULD_RUN=$(./workflow-condition-evaluator.sh test-suite)
+    if [ "$SHOULD_RUN" = "run" ]; then
+        npm test
+    fi
+
+CONFIGURATION:
+    Rules defined in .workflow-config.yaml:
+    
+    steps:
+      test-suite:
+        run_on:
+          - file_patterns: ["src/**/*.js", "__tests__/**"]
+          - change_types: ["feat", "fix", "refactor"]
+      
+      update-docs:
+        run_on:
+          - file_patterns: ["docs/**/*.md", "README.md"]
+          - change_types: ["docs", "feat"]
+
+FILE PATTERN RULES:
+    - Glob patterns: *, **, ?, {a,b}
+    - Multiple patterns: ANY match → "run"
+    - Case-sensitive matching
+
+CHANGE TYPE RULES:
+    - Detected via change-type-detector.sh
+    - Multiple types: ANY match → "run"
+    - Combined with file patterns (OR logic)
+
+DEPENDENCIES:
+    - git (for diff detection)
+    - .workflow-config.yaml (configuration file)
+    - change-type-detector.sh (for change type detection)
+
+DOCUMENTATION:
+    See .github/scripts/README.md for detailed documentation
+    Testing: Run ./test-conditional-execution.sh
+
+EOF
+}
+
+# Check for help flag
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+    show_help
+    exit 0
+fi
+
 STEP_NAME="${1:-}"
 BASE_REF="${2:-HEAD~1}"
 

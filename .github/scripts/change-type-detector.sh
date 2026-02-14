@@ -6,6 +6,59 @@
 
 set -e
 
+# Show help message
+show_help() {
+    cat << 'EOF'
+change-type-detector.sh - Detects change type from Conventional Commits
+
+USAGE:
+    ./change-type-detector.sh [base_ref]
+
+PARAMETERS:
+    base_ref    Optional git reference to compare against (default: HEAD~1)
+                Examples: HEAD~1, abc123, origin/main, v0.9.0
+
+OUTPUT:
+    Change type string: feat|fix|docs|test|refactor|chore|ci|perf|style
+
+EXIT CODES:
+    0    Success - change type detected
+    1    Error - invalid git ref or parsing failure
+
+EXAMPLES:
+    # Detect changes since last commit
+    ./change-type-detector.sh
+
+    # Detect changes since specific commit
+    ./change-type-detector.sh abc123
+
+    # Detect changes in PR branch
+    ./change-type-detector.sh origin/main
+
+CONVENTIONAL COMMITS TYPES:
+    feat:       New features (triggers version bump)
+    fix:        Bug fixes (triggers version bump)
+    docs:       Documentation changes only
+    test:       Test additions/updates
+    refactor:   Code refactoring (no behavior change)
+    chore:      Maintenance tasks (dependencies, config)
+    ci:         CI/CD pipeline changes
+    perf:       Performance improvements
+    style:      Code style/formatting changes
+
+DOCUMENTATION:
+    See .github/scripts/README.md for detailed documentation
+    Testing: Run ./test-change-type-detection.sh
+
+EOF
+}
+
+# Check for help flag
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+    show_help
+    exit 0
+fi
+
 BASE_REF="${1:-HEAD~1}"
 
 # Colors for output

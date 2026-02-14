@@ -1,7 +1,7 @@
 name: Weekly Dependency Audit
 
 # Run every Monday at 9 AM UTC and allow manual trigger
-on:
+'on':
   schedule:
     - cron: '0 9 * * 1'  # Every Monday at 9 AM UTC
   workflow_dispatch:  # Allow manual workflow runs

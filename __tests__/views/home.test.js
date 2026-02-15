@@ -110,7 +110,8 @@ describe('HomeViewController', () => {
   describe('Initialization', () => {
     beforeEach(() => {
       controller = new HomeViewController(mockDocument, {
-        locationResult: 'locationResult'
+        locationResult: 'locationResult',
+        autoStartTracking: false // Disable for these tests
       });
     });
     
@@ -139,12 +140,96 @@ describe('HomeViewController', () => {
       expect(firstInitState).toBe(true);
       expect(controller.initialized).toBe(true);
     });
+    
+    it('should create WebGeocodingManager if not provided', async () => {
+      await controller.init();
+      
+      expect(controller.manager).toBeDefined();
+      expect(controller.manager).not.toBeNull();
+    });
+    
+    it('should use provided manager via dependency injection', async () => {
+      const mockManager = { test: 'manager' };
+      const diController = new HomeViewController(mockDocument, {
+        locationResult: 'locationResult',
+        manager: mockManager,
+        autoStartTracking: false
+      });
+      
+      await diController.init();
+      
+      expect(diController.manager).toBe(mockManager);
+    });
+    
+    it('should initialize chronometer if element exists', async () => {
+      const mockChronometerElement = { id: 'chronometer' };
+      mockDocument.getElementById.mockReturnValue(mockChronometerElement);
+      
+      await controller.init();
+      
+      expect(mockDocument.getElementById).toHaveBeenCalledWith('chronometer');
+      // Chronometer should be created
+      expect(controller.chronometer).toBeDefined();
+    });
+    
+    it('should handle missing chronometer element gracefully', async () => {
+      mockDocument.getElementById.mockReturnValue(null);
+      
+      await expect(controller.init()).resolves.not.toThrow();
+      expect(controller.initialized).toBe(true);
+    });
+    
+    it('should use provided chronometer via dependency injection', async () => {
+      const mockChronometer = { test: 'chronometer' };
+      const diController = new HomeViewController(mockDocument, {
+        locationResult: 'locationResult',
+        chronometer: mockChronometer,
+        autoStartTracking: false
+      });
+      
+      await diController.init();
+      
+      expect(diController.chronometer).toBe(mockChronometer);
+    });
+    
+    it('should auto-start tracking if enabled', async () => {
+      const mockManager = {
+        startTracking: jest.fn()
+      };
+      const autoStartController = new HomeViewController(mockDocument, {
+        locationResult: 'locationResult',
+        manager: mockManager,
+        autoStartTracking: true
+      });
+      
+      await autoStartController.init();
+      
+      expect(mockManager.startTracking).toHaveBeenCalled();
+      expect(autoStartController.tracking).toBe(true);
+    });
+    
+    it('should not auto-start tracking if disabled', async () => {
+      const mockManager = {
+        startTracking: jest.fn()
+      };
+      const noAutoStartController = new HomeViewController(mockDocument, {
+        locationResult: 'locationResult',
+        manager: mockManager,
+        autoStartTracking: false
+      });
+      
+      await noAutoStartController.init();
+      
+      expect(mockManager.startTracking).not.toHaveBeenCalled();
+      expect(noAutoStartController.tracking).toBe(false);
+    });
   });
   
   describe('State Management', () => {
     beforeEach(async () => {
       controller = new HomeViewController(mockDocument, {
-        locationResult: 'locationResult'
+        locationResult: 'locationResult',
+        autoStartTracking: false // Disable auto-start
       });
       await controller.init();
     });
@@ -165,7 +250,8 @@ describe('HomeViewController', () => {
   describe('Lifecycle Methods', () => {
     beforeEach(async () => {
       controller = new HomeViewController(mockDocument, {
-        locationResult: 'locationResult'
+        locationResult: 'locationResult',
+        autoStartTracking: false // Disable auto-start
       });
       await controller.init();
     });
@@ -189,8 +275,15 @@ describe('HomeViewController', () => {
   
   describe('Tracking Methods (Stubs)', () => {
     beforeEach(async () => {
+      const mockManager = {
+        startTracking: jest.fn(),
+        stopTracking: jest.fn()
+      };
+      
       controller = new HomeViewController(mockDocument, {
-        locationResult: 'locationResult'
+        locationResult: 'locationResult',
+        manager: mockManager,
+        autoStartTracking: false // Disable auto-start
       });
       await controller.init();
     });
@@ -233,8 +326,12 @@ describe('HomeViewController', () => {
   
   describe('Static Factory Method', () => {
     it('should create and initialize in one step', async () => {
+      const mockManager = { startTracking: jest.fn() };
+      
       controller = await HomeViewController.create(mockDocument, {
-        locationResult: 'locationResult'
+        locationResult: 'locationResult',
+        manager: mockManager,
+        autoStartTracking: false
       });
       
       expect(controller).toBeInstanceOf(HomeViewController);

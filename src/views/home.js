@@ -16,6 +16,9 @@
 
 'use strict';
 
+import WebGeocodingManager from '../coordination/WebGeocodingManager.js';
+import Chronometer from '../timing/Chronometer.js';
+import PositionManager from '../core/PositionManager.js';
 import { log, warn, error } from '../utils/logger.js';
 
 /**
@@ -131,13 +134,23 @@ class HomeViewController {
     }
     
     try {
-      // TODO: Step 2 - Implement initialization logic
       // 1. Create WebGeocodingManager
-      // 2. Initialize Chronometer
-      // 3. Set up event listeners
-      // 4. Auto-start tracking if enabled
+      await this._initializeManager();
       
+      // 2. Initialize Chronometer
+      await this._initializeChronometer();
+      
+      // 3. Set up event listeners (stub for Step 4)
+      this._setupEventListeners();
+      
+      // Mark as initialized BEFORE auto-start to avoid check error
       this.initialized = true;
+      
+      // 4. Auto-start tracking if enabled
+      if (this.autoStartTracking) {
+        this.startTracking();
+      }
+      
       log('HomeViewController initialized successfully');
       
       // Emit initialized event
@@ -228,24 +241,94 @@ class HomeViewController {
   
   /**
    * Initializes the WebGeocodingManager instance.
+   * 
+   * Extracted from app.js initializeHomeView() (lines 409-434).
+   * 
    * @private
    * @async
    * @returns {Promise<void>}
+   * @throws {Error} If manager creation fails
    */
   async _initializeManager() {
-    // TODO: Step 2 - Extract from app.js
-    log('_initializeManager: Not yet implemented');
+    // Skip if manager already provided via dependency injection
+    if (this.manager) {
+      log('HomeViewController: Using provided manager (dependency injection)');
+      return;
+    }
+    
+    try {
+      // WebGeocodingManager expects params object with locationResult property
+      this.manager = new WebGeocodingManager(this.document, {
+        locationResult: this.params.locationResult,
+        elementIds: this.params.elementIds || {
+          positionDisplay: 'lat-long-display',
+          referencePlaceDisplay: 'reference-place-display',
+          enderecoPadronizadoDisplay: 'endereco-padronizado-display',
+          speechSynthesis: {
+            languageSelectId: "language",
+            voiceSelectId: "voice-select",
+            textInputId: "text-input",
+            speakBtnId: "speak-btn",
+            pauseBtnId: "pause-btn",
+            resumeBtnId: "resume-btn",
+            stopBtnId: "stop-btn",
+            rateInputId: "rate",
+            rateValueId: "rate-value",
+            pitchInputId: "pitch",
+            pitchValueId: "pitch-value"
+          },
+          sidraDisplay: 'dadosSidra'
+        }
+      });
+      
+      log('HomeViewController: WebGeocodingManager initialized');
+    } catch (err) {
+      error('HomeViewController: Failed to initialize WebGeocodingManager:', err);
+      throw err;
+    }
   }
   
   /**
    * Initializes the Chronometer instance.
+   * 
+   * Extracted from app.js initializeHomeView() (lines 438-452).
+   * 
    * @private
    * @async
    * @returns {Promise<void>}
+   * @throws {Error} If chronometer element not found or initialization fails
    */
   async _initializeChronometer() {
-    // TODO: Step 2 - Extract from app.js
-    log('_initializeChronometer: Not yet implemented');
+    // Skip if chronometer already provided via dependency injection
+    if (this.chronometer) {
+      log('HomeViewController: Using provided chronometer (dependency injection)');
+      return;
+    }
+    
+    try {
+      const chronometerElement = this.document.getElementById('chronometer');
+      
+      if (!chronometerElement) {
+        warn('HomeViewController: chronometer element not found - chronometer not initialized');
+        return; // Non-critical, allow initialization to continue
+      }
+      
+      // Create chronometer instance
+      this.chronometer = new Chronometer(chronometerElement);
+      
+      // Subscribe chronometer to PositionManager for automatic updates
+      const positionManager = PositionManager.getInstance();
+      positionManager.subscribe(this.chronometer);
+      
+      // Start the chronometer immediately
+      this.chronometer.start();
+      
+      log('HomeViewController: Chronometer initialized and started');
+    } catch (err) {
+      error('HomeViewController: Failed to initialize chronometer:', err);
+      // Non-critical - don't throw, allow app to continue without chronometer
+      warn('HomeViewController: Continuing without chronometer');
+    }
   }
   
   /**
@@ -314,8 +397,21 @@ class HomeViewController {
     if (!this.initialized) {
       throw new Error('HomeViewController not initialized. Call init() first.');
     }
+    
     // TODO: Step 3 - Move from WebGeocodingManager
-    log('startTracking: Not yet implemented');
+    // For now, delegate to manager if autoStartTracking is enabled
+    if (this.manager && typeof this.manager.startTracking === 'function') {
+      this.manager.startTracking();
+      this.tracking = true;
+      log('HomeViewController: Tracking started via manager');
+      
+      // Emit tracking started event
+      this.document.dispatchEvent(new CustomEvent('homeview:tracking:started', {
+        detail: { controller: this }
+      }));
+    } else {
+      warn('HomeViewController: startTracking() not yet fully implemented');
+    }
   }
   
   /**

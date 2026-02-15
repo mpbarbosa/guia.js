@@ -6,16 +6,14 @@
  * @version 0.9.0-alpha
  */
 
-import WebGeocodingManager from './coordination/WebGeocodingManager.js';
-import Chronometer from './timing/Chronometer.js';
-import PositionManager from './core/PositionManager.js';
+import HomeViewController from './views/home.js';
 import { log, warn, error } from './utils/logger.js';
 import { VERSION, VERSION_STRING } from './config/version.js';
 
 // Application state
 const AppState = {
   currentRoute: null,
-  manager: null,
+  homeController: null, // Changed from 'manager' to 'homeController'
   routes: {
     '/': 'home',
     '/converter': 'converter'
@@ -383,37 +381,37 @@ function showError(error) {
 }
 
 /**
- * Initialize home view and preserve existing HTML content.
+ * Initialize the home view using HomeViewController.
  * 
- * Initializes the home view by ensuring WebGeocodingManager is set up for
- * geolocation functionality. If the home view content was replaced during
- * navigation, triggers a page reload to restore it.
+ * Creates and initializes the HomeViewController which handles all home view
+ * functionality including location tracking, geocoding, and UI management.
+ * 
+ * **Refactored in v0.10.0**: Now uses HomeViewController instead of inline
+ * WebGeocodingManager initialization. This improves separation of concerns
+ * and makes the home view logic more maintainable.
  * 
  * @async
  * @returns {Promise<void>} Resolves when home view is initialized
- * @throws {Error} If WebGeocodingManager initialization fails (error is logged)
+ * @throws {Error} If HomeViewController initialization fails
  * 
  * @example
  * // Called automatically during routing
  * await initializeHomeView();
  * 
  * @since 0.9.0-alpha
+ * @modified 0.10.0-alpha - Refactored to use HomeViewController
  * @author Marcelo Pereira Barbosa
  */
 async function initializeHomeView() {
   // Home view content is already in index.html
-  // Just ensure WebGeocodingManager is initialized
-  const content = document.getElementById('app-content');
-  
-  // Initialize WebGeocodingManager if not already done
-  if (!AppState.manager) {
+  // Initialize HomeViewController if not already done
+  if (!AppState.homeController) {
     try {
-      // WebGeocodingManager expects params object with locationResult property
-      // locationResult is for address display, positionDisplay is for coordinates
-      AppState.manager = new WebGeocodingManager(document, {
+      // Create and initialize HomeViewController
+      AppState.homeController = new HomeViewController(document, {
         locationResult: 'locationResult',
         elementIds: {
-          positionDisplay: 'lat-long-display', // Use default - coordinates go here
+          positionDisplay: 'lat-long-display',
           referencePlaceDisplay: 'reference-place-display',
           enderecoPadronizadoDisplay: 'endereco-padronizado-display',
           speechSynthesis: {
@@ -430,32 +428,15 @@ async function initializeHomeView() {
             pitchValueId: "pitch-value"
           },
           sidraDisplay: 'dadosSidra'
-        }
+        },
+        autoStartTracking: true
       });
-      log('WebGeocodingManager initialized for home view');
       
-      // Initialize Chronometer for elapsed time display
-      const chronometerElement = document.getElementById('chronometer');
-      if (chronometerElement) {
-        const chronometer = new Chronometer(chronometerElement);
-        
-        // Subscribe chronometer to PositionManager for automatic updates
-        const positionManager = PositionManager.getInstance();
-        positionManager.subscribe(chronometer);
-        
-        // Start the chronometer immediately
-        chronometer.start();
-        
-        log('Chronometer initialized and started');
-      } else {
-        warn('chronometer element not found');
-      }
-      
-      // Start tracking automatically
-      AppState.manager.startTracking();
-      log('Tracking started automatically');
+      await AppState.homeController.init();
+      log('Home view initialized successfully');
     } catch (err) {
-      error('Error initializing WebGeocodingManager:', err);
+      error('Error initializing home view:', err);
+      throw err;
     }
   }
 }

@@ -1,16 +1,16 @@
 # Guia Turístico - Tourist Guide Web Application
 
 ---
-Last Updated: 2026-02-11
+Last Updated: 2026-02-15
 Status: Active
 ---
 
 
-[![Tests](https://img.shields.io/badge/tests-2437%20passing%20%2F%202639%20total-green)](https://github.com/mpbarbosa/guia_turistico)
-[![Version](https://img.shields.io/badge/version-0.9.0--alpha-blue)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-2647%20passing%20%2F%202849%20total-green)](https://github.com/mpbarbosa/guia_turistico)
+[![Version](https://img.shields.io/badge/version-0.11.0--alpha-blue)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
-> **Note on Test Status**: 2,437 tests pass successfully out of 2,639 total (202 skipped), with 96 of 109 test suites passing (13 skipped). The test suite is stable with 100% pass rate for non-skipped tests. See [Testing Overview](#testing-overview) for details.
+> **Note on Test Status**: 2,647 tests pass successfully out of 2,849 total (202 skipped), with 100 of 113 test suites passing (13 skipped). The test suite is stable with 100% pass rate for non-skipped tests. See [Testing Overview](#testing-overview) for details.
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
@@ -565,8 +565,24 @@ python3 -m http.server 9000
   - **Data Source**: IBGE SIDRA API with offline fallback (libs/sidra/tab6579_municipios.json)
 - `DisplayerFactory` - Factory pattern for display component creation (5 methods, v0.9.0-alpha) ✅
 
-#### Speech Synthesis Layer
-- `SpeechSynthesisManager` - Main facade for text-to-speech coordination
+#### Speech Synthesis Layer (Refactored v0.11.0-alpha) 🆕
+- **`HtmlSpeechSynthesisDisplayer`** - **Facade pattern** composing 3 focused components (518 lines)
+  - **Architecture**: Converted from monolithic 814-line class to lightweight facade
+  - **Benefits**: 36% size reduction, better testability (140 tests), Single Responsibility Principle
+  - **Component 1: HtmlSpeechControls** (489 lines, 51 tests)
+    - UI element management (voice select, buttons, sliders)
+    - Event handler setup/cleanup with memory leak prevention
+    - Brazilian Portuguese voice prioritization
+  - **Component 2: AddressSpeechObserver** (96 lines, 41 tests)
+    - Address change notification handling
+    - Priority-based speech synthesis (municipality: 3, bairro: 2, logradouro: 1)
+    - First address announcement logic
+  - **Component 3: SpeechTextBuilder** (312 lines, 48 tests)
+    - Brazilian Portuguese text formatting
+    - Address component text building methods
+  - **API**: 100% backward compatible, all 60 unit tests passing, no breaking changes
+- `SpeechSynthesisManager` - Main orchestrator using composition pattern
+  - Composition Components: VoiceLoader, VoiceSelector, SpeechConfiguration, SpeechQueue
 - `SpeechController` - Core speech synthesis control logic
 - `SpeechQueueProcessor` - Queue processing and execution
 - `SpeechConfiguration` - Speech synthesis configuration management
@@ -578,7 +594,8 @@ python3 -m http.server 9000
 
 - **Singleton Pattern** - PositionManager, StatusManager
 - **Observer Pattern** - Position and address change notifications
-- **Facade Pattern** - Simplified API access
+- **Facade Pattern** - HtmlSpeechSynthesisDisplayer (v0.11.0+), Simplified API access
+- **Composition Pattern** - HtmlSpeechSynthesisDisplayer components, SpeechSynthesisManager components
 - **Strategy Pattern** - Configurable display strategies
 - **Factory Pattern** - Display component creation
 

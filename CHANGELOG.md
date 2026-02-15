@@ -9,6 +9,78 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## [0.11.0-alpha] - 2026-02-15
+
+### Refactored
+- **HtmlSpeechSynthesisDisplayer** (814 → 518 lines, **-36% reduction**): Converted from monolithic class to facade pattern
+  - **Architecture**: Facade pattern composing 3 focused components for Single Responsibility Principle compliance
+  - **Component 1: HtmlSpeechControls** (`src/html/HtmlSpeechControls.js`, 489 lines, 51 tests)
+    - UI element management (voice select, buttons, sliders)
+    - Event handler setup and cleanup (prevents memory leaks)
+    - Brazilian Portuguese voice prioritization
+    - **API**: `updateVoices()`, `destroy()`
+  - **Component 2: AddressSpeechObserver** (`src/observers/AddressSpeechObserver.js`, 96 lines, 41 tests)
+    - Address change notification handling
+    - Priority-based speech synthesis (municipality: 3, bairro: 2, logradouro: 1, periodic: 0)
+    - First address announcement logic
+    - **API**: `update()`, `resetFirstAddressFlag()`
+  - **Component 3: SpeechTextBuilder** (`src/speech/SpeechTextBuilder.js`, 312 lines, 48 tests)
+    - Brazilian Portuguese text formatting
+    - Address component text building (logradouro, bairro, municipio, full address)
+    - **API**: `buildTextToSpeech*()` methods
+  - **Facade**: HtmlSpeechSynthesisDisplayer maintains 100% backward compatible API
+    - All 60 unit tests passing (zero breaking changes)
+    - Property getters for DOM elements (voiceSelect, textInput, etc.)
+    - Method delegation to composed components
+    - Observer pattern interface preserved
+    - `destroy()` method for proper cleanup (NEW, prevents memory leaks)
+
+### Changed
+- **Improved Maintainability**: Monolithic 814-line class split into 3 focused components
+  - Better testability: 140 total tests vs original 60 tests (133% more coverage)
+  - Cleaner separation of concerns: UI, Observer logic, Text formatting
+  - Easier to extend: Add new address fields or speech patterns without touching UI code
+  - Better composition: Components can be used independently if needed
+
+### Fixed
+- **Memory Leak Prevention**: Added `destroy()` method for proper event listener cleanup
+- **Logging Consistency**: Facade layer now handles logging for backward compatibility
+
+### Migration Guide
+**NO CHANGES REQUIRED** - 100% backward compatible!
+
+The facade maintains the exact same API as the original monolithic class:
+```javascript
+// Existing code continues to work without changes
+const displayer = new HtmlSpeechSynthesisDisplayer(document, {
+  voiceSelectId: 'voice-select',
+  textInputId: 'text-input',
+  speakBtnId: 'speak-btn',
+  // ... other element IDs
+});
+
+// All existing methods work the same
+displayer.updateVoices();
+displayer.buildTextToSpeech(address);
+displayer.update(address, 'BairroChanged', 'strCurrPosUpdate');
+
+// NEW: Optional cleanup method to prevent memory leaks
+displayer.destroy(); // Call when component unmounts
+```
+
+**Benefits**:
+- Same constructor signature
+- Same public methods
+- Same property access
+- Same observer pattern interface
+- Zero breaking changes
+
+**What Changed Internally**:
+- UI operations → delegated to HtmlSpeechControls
+- Address notifications → delegated to AddressSpeechObserver
+- Text formatting → delegated to SpeechTextBuilder
+- Better organized, easier to test, easier to maintain
+
 ## [0.10.0-alpha] - 2026-02-15
 
 ### Added

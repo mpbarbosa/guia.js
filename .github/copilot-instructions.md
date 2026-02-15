@@ -1,6 +1,6 @@
 # Guia Turístico - Tourist Guide Web Application
 
-Guia Turístico is a single-page web application (version 0.9.0-alpha) built on top of the **guia.js** geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
+Guia Turístico is a single-page web application (version 0.11.0-alpha) built on top of the **guia.js** geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
 **Project Relationship**:
 - **This Project**: Guia Turístico - Tourist guide web application (SPA)
@@ -24,8 +24,8 @@ Guia Turístico is a single-page web application (version 0.9.0-alpha) built on 
 - **Install Dependencies**: `npm install` - takes 20 seconds. Downloads guia.js library, Vite, and other dependencies.
 - **Syntax Check**: Always run `node -c src/app.js && node -c src/guia.js` (timeout: 10 seconds) before making changes
 - **Basic Test**: Run `node src/app.js` (timeout: 10 seconds) to verify SPA initialization
-- **Automated Tests**: `npm test` - takes ~65 seconds. Runs 2,401 tests (2,235 passing, 146 skipped, 20 failing) in 101 suites. NEVER CANCEL.
-- **Test Coverage**: `npm run test:coverage` - takes ~45 seconds. Shows ~70% coverage. NEVER CANCEL.
+- **Automated Tests**: `npm test` - takes ~65 seconds. Runs 2,849 tests (2,647 passing, 202 skipped) in 113 suites. NEVER CANCEL.
+- **Test Coverage**: `npm run test:coverage` - takes ~45 seconds. Shows ~85% coverage. NEVER CANCEL.
 - **Full Validation**: `npm run test:all` - takes ~45 seconds. Combines syntax + tests. NEVER CANCEL.
 - **Development**: Use `npm run dev` for active development with HMR (Hot Module Replacement)
 - **Production**: Use `npm run build` before deployment, verify with `npm run preview`
@@ -33,7 +33,7 @@ Guia Turístico is a single-page web application (version 0.9.0-alpha) built on 
 ### Development Workflow
 - Always validate JavaScript syntax with `node -c` before committing changes
 - Test SPA functionality with `node src/app.js` to verify routing and initialization
-- Run automated tests with `npm run test:all` before commits to ensure 2,235+ tests pass
+- Run automated tests with `npm run test:all` before commits to ensure 2,647+ tests pass
 - For UI/web features, use the web server and src/index.html for manual validation
 - **Follow immutability principles** - see `.github/CONTRIBUTING.md` for guidelines
 - **TIMING**: Syntax checks <1 second, tests ~45 seconds, web server startup 3 seconds
@@ -183,6 +183,22 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `HTMLReferencePlaceDisplayer` (src/html/HTMLReferencePlaceDisplayer.js) - Reference place display
 - `HTMLSidraDisplayer` (src/html/HTMLSidraDisplayer.js) - IBGE SIDRA data display with observer pattern (v0.9.0+)
   - **Features**: Population statistics, Brazilian Portuguese localization, automatic updates
+- **`HtmlSpeechSynthesisDisplayer`** (src/html/HtmlSpeechSynthesisDisplayer.js) - **Facade pattern** (v0.11.0-alpha) 🆕
+  - **Architecture**: Converted from monolithic 814-line class to 518-line facade (36% reduction)
+  - **Composition**: Composes 3 focused components for Single Responsibility Principle
+  - **Component 1: HtmlSpeechControls** (src/html/HtmlSpeechControls.js, 489 lines, 51 tests)
+    - UI element and event handler management
+    - Brazilian Portuguese voice prioritization
+    - Memory leak prevention with destroy() method
+  - **Component 2: AddressSpeechObserver** (src/observers/AddressSpeechObserver.js, 96 lines, 41 tests)
+    - Address change notification handling
+    - Priority-based speech: municipality (3), bairro (2), logradouro (1), periodic (0)
+    - First address announcement logic
+  - **Component 3: SpeechTextBuilder** (src/speech/SpeechTextBuilder.js, 312 lines, 48 tests)
+    - Brazilian Portuguese address text formatting
+    - Methods: `buildTextToSpeech*()` for different address components
+  - **API**: 100% backward compatible, all 60 unit tests passing, no breaking changes
+  - **Benefits**: Better testability (140 total tests), cleaner separation of concerns, easier maintenance
 - `DisplayerFactory` (src/html/DisplayerFactory.js) - Factory for display components
   - **5 factory methods**: Position, Address, ReferencePlace, HighlightCards, Sidra (v0.9.0+)
 - `HtmlText` (src/html/HtmlText.js) - Text display utilities

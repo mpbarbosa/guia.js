@@ -68,12 +68,61 @@
 #### 5. validate-cross-references.sh (78 lines)
 **Purpose**: Validates cross-references between documentation files  
 **Usage**: `./.github/scripts/validate-cross-references.sh`  
-**Documentation**: ❌ **UNDOCUMENTED**
+**npm script**: Consider adding `npm run check:cross-refs`  
+**Documentation**: ✅ **COMPLETE**
 
 **What it does**:
-- Checks internal doc links
-- Validates relative paths
-- Reports broken references
+- Checks internal documentation links (markdown)
+- Validates relative path references (`./`, `../`)
+- Reports broken or circular references with file and line numbers
+- Verifies file existence for all linked paths
+- Excludes external URLs (http/https) and anchor-only links (#)
+
+**Output**:
+- Success: `✓ All N references valid` (green)
+- Failure: List of broken references with:
+  - Source file path
+  - Target link path
+  - Line number (when available)
+  - Error type (file not found, invalid path, etc.)
+
+**Exit codes**:
+- `0`: All references valid, no broken links
+- `1`: Broken references found
+
+**Examples**:
+```bash
+# Validate all cross-references
+./.github/scripts/validate-cross-references.sh
+
+# Run as part of documentation checks
+npm run check:references && ./.github/scripts/validate-cross-references.sh
+
+# Use in CI/CD
+- name: Validate cross-references
+  run: ./.github/scripts/validate-cross-references.sh
+```
+
+**Link Patterns Checked**:
+```markdown
+[text](./relative/path.md)           # Relative to current file
+[text](../parent/doc.md)             # Parent directory
+[text](docs/guide.md)                # From project root
+[text](./file.md#section)            # With anchor (file checked)
+```
+
+**Exclusions**:
+- External links: `[text](https://example.com)`
+- Anchor-only: `[text](#section)`
+- node_modules/, .git/, venv/ directories
+
+**Related Tools**:
+- `check-references.sh` - File reference validation
+- `check-references.py` - Enhanced reference checking with false positive filtering
+- `check-links.py` - External link validation
+
+**Integration**:
+Used in documentation validation workflows to ensure all internal links remain valid across restructuring and updates.
 
 ---
 
@@ -119,15 +168,76 @@
 
 ---
 
-#### 8. validate-jsdom-update.sh
-**Purpose**: Validates jsdom dependency updates  
-**Usage**: `./.github/scripts/validate-jsdom-update.sh`  
-**Documentation**: copilot-instructions.md
+#### 8. validate-jsdom-update.sh (120+ lines)
+**Purpose**: Validates jsdom dependency updates for DOM API compatibility  
+**Usage**: `./.github/scripts/validate-jsdom-update.sh [version]`  
+**Documentation**: ✅ **COMPLETE**
 
 **What it does**:
-- Tests jsdom upgrade compatibility
-- Runs test suite with new version
+- Backs up current state with git stash
+- Updates jsdom to specified version (or 27.4.0 default)
+- Runs full test suite (syntax validation + all tests)
 - Validates DOM API compatibility
+- Reports any breaking changes or test failures
+- Provides rollback instructions if update fails
+
+**Parameters**:
+- `version` (optional): Specific jsdom version to test (default: 27.4.0)
+  - Examples: `27.4.0`, `28.0.0`, `latest`
+
+**Process Steps**:
+1. Check current jsdom version (`npm list jsdom`)
+2. Create backup (`git stash`)
+3. Update jsdom to target version
+4. Run syntax validation (`npm run validate`)
+5. Run full test suite (`npm test`)
+6. Report results and recommendations
+
+**Output**:
+- ✓ Success indicators for each step (green)
+- ✗ Failure indicators with error details (red)
+- Test results summary
+- Compatibility report
+- Recommendation: proceed or rollback
+
+**Exit codes**:
+- `0`: Update safe - all tests pass, no breaking changes
+- `1`: Breaking changes detected - rollback recommended
+
+**Examples**:
+```bash
+# Test default jsdom version (27.4.0)
+./.github/scripts/validate-jsdom-update.sh
+
+# Test specific version
+./.github/scripts/validate-jsdom-update.sh 28.0.0
+
+# Test latest version
+./.github/scripts/validate-jsdom-update.sh latest
+```
+
+**When to use**:
+- Before upgrading jsdom in package.json
+- After jsdom releases new major version
+- When DOM API tests fail unexpectedly
+- As part of quarterly dependency upgrade process
+- Before major releases (pre-release validation)
+
+**Rollback Procedure** (if update fails):
+```bash
+# Script automatically restores backup on failure
+git stash pop  # Restore pre-update state
+npm install    # Reinstall original dependencies
+```
+
+**Known Issues**:
+- jsdom 28.0.0+ has ES module compatibility issues (see Issue #114)
+- Some versions may have CORS-related test failures
+- Puppeteer tests may timeout with newer jsdom versions
+
+**Related Documentation**:
+- copilot-instructions.md (line 101) - jsdom upgrade validation process
+- Issue #114 - jsdom ES module compatibility resolution
 
 ---
 
@@ -398,21 +508,177 @@ Used in `.github/workflows/modified-files.yml`:
 
 ### Python Utilities (3 scripts)
 
-#### 14. extract_docs.py
-**Purpose**: Extracts documentation from source files  
-**Usage**: `python3 .github/scripts/extract_docs.py`
+#### Python vs Shell Script Comparison
+
+Some validation checks have both Python and shell implementations. Understanding when to use each version:
+
+| Feature | Python Version | Shell Version | Best Use Case |
+|---------|---------------|---------------|---------------|
+| **check-references** | ✅ Advanced regex filtering | ✅ Basic path checks | Python for CI/CD (fewer false positives) |
+| **check-terminology** | ✅ Context-aware patterns | ✅ Simple string matching | Python for comprehensive audits |
+| **check-links** | ✅ External link validation | ❌ Not available | Python only (HTTP requests) |
+
+**Key Differences**:
+- **Python scripts**: Better regex support, structured output, false positive filtering
+- **Shell scripts**: Faster for simple checks, no Python dependency, easier to debug
 
 ---
 
-#### 15. analyze_code_structure.py
-**Purpose**: Analyzes codebase structure and generates reports  
-**Usage**: `python3 .github/scripts/analyze_code_structure.py`
+#### 14. check-references.py
+**Purpose**: Enhanced reference checker with false positive filtering  
+**Usage**: `python3 .github/scripts/check-references.py`  
+**Shell wrapper**: `check-references.sh` (basic version)  
+**Version**: 1.0.0 (2026-01-28)
+
+**What it does**:
+- Scans all markdown files for file references
+- Validates file paths exist and are accessible
+- Filters out false positives (code examples, regex patterns)
+- Provides structured error reporting with line numbers
+
+**Advantages over shell version**:
+- Advanced regex pattern matching
+- False positive exclusion patterns:
+  - JavaScript regex: `/pattern/g`, `/pattern/gi`
+  - String operations: `.replace()`, `.match()`, `.test()`
+  - Code comments and examples
+- Better handling of edge cases
+- Structured JSON-like output option
+
+**Exclusion Patterns**:
+```python
+EXCLUDE_REGEX_PATTERNS = [
+    r'/.*?/g[im]*',              # JavaScript regex
+    r'\.replace\s*\(',           # String replacement
+    r'\.match\s*\(',             # String matching
+    r'\.test\s*\(',              # Regex testing
+]
+```
+
+**When to use**:
+- ✅ CI/CD workflows (better accuracy, fewer false positives)
+- ✅ When code comments cause false positives
+- ✅ Detailed reference auditing with structured output
+- ✅ Large codebases with mixed content (code + docs)
+
+**When to use shell version instead**:
+- ✅ Quick local checks (faster startup)
+- ✅ Environments without Python 3
+- ✅ Simple validation without regex patterns
 
 ---
 
-#### 16. validate_imports.py
-**Purpose**: Validates ES6 module imports  
-**Usage**: `python3 .github/scripts/validate_imports.py`
+#### 15. check-terminology.py
+**Purpose**: Terminology consistency validator with context awareness  
+**Usage**: `python3 .github/scripts/check-terminology.py`  
+**Shell wrapper**: `check-terminology.sh` (basic version)  
+**Version**: 1.0.0 (2026-01-28)
+
+**What it does**:
+- Validates documentation against terminology guide standards
+- Context-aware checking (code vs. documentation)
+- Brazilian Portuguese accent validation
+- Consistent capitalization enforcement
+
+**Terminology Checks**:
+1. **Brazilian Portuguese accents**:
+   - ❌ `municipio` (code context: allowed)
+   - ✅ `município` (documentation: required)
+   - Pattern: `\bmunicipios?\b` with code exclusion
+
+2. **Correct capitalization**:
+   - ❌ `Guia.js`, `GUIA.JS`
+   - ✅ `guia.js`
+   - Pattern: Case-sensitive matching with code context awareness
+
+3. **Consistent naming conventions**:
+   - Library names, class names, method names
+   - File path references
+   - API endpoint formatting
+
+**Context Awareness**:
+```python
+'exclude_pattern': r'var\s+municipio|const\s+municipio|\.municipio'  # Exclude code
+```
+
+**Output**:
+- Color-coded findings (yellow warnings, red errors)
+- File path, line number, and column position
+- Suggested corrections
+- Summary statistics (errors vs. warnings)
+
+**When to use**:
+- ✅ Before documentation commits (pre-commit hook)
+- ✅ CI/CD workflows for terminology enforcement
+- ✅ Documentation audits and style guide compliance
+- ✅ Quarterly consistency reviews
+
+**When to use shell version instead**:
+- ✅ Quick local checks without detailed output
+- ✅ Simple string replacement validation
+- ✅ Environments without Python 3
+
+---
+
+#### 16. check-links.py
+**Purpose**: External link checker with timeout handling and status validation  
+**Usage**: `python3 .github/scripts/check-links.py`  
+**No shell equivalent** (requires HTTP client)
+
+**What it checks**:
+- HTTP/HTTPS external links in markdown files
+- Response status codes (200 OK, 301 Moved, 404 Not Found, etc.)
+- Timeout handling for slow/unresponsive sites (30s default)
+- Broken anchor links on external pages
+- Redirect chains (301 → 302 → 200)
+
+**Exclusions** (rate limiting / always-available):
+```python
+EXCLUDE_DOMAINS = [
+    'shields.io',           # Badge CDN (rate-limited)
+    'localhost',            # Local development
+    '127.0.0.1',           # Loopback address
+    '192.168.',            # Private network
+]
+```
+
+**Output**:
+- ✓ Valid links (200, 301, 302) with response time
+- ✗ Broken links (404, 500, timeout) with error details
+- ⚠ Redirected links (301, 302) with final destination
+- Summary statistics (total, valid, broken, excluded)
+
+**Exit codes**:
+- `0`: All links valid or excluded
+- `1`: Broken links found
+
+**Examples**:
+```bash
+# Check all external links
+python3 .github/scripts/check-links.py
+
+# Check specific file
+python3 .github/scripts/check-links.py README.md
+
+# Verbose output with response details
+python3 .github/scripts/check-links.py --verbose
+```
+
+**When to use**:
+- ✅ Monthly documentation audits (external links decay)
+- ✅ Before major releases (ensure all references valid)
+- ✅ After restructuring documentation
+- ✅ When users report broken links
+- ❌ Not in CI/CD (external sites unreliable, rate limiting)
+
+**Performance**:
+- Timeout: 30 seconds per link
+- Concurrent requests: 5 (configurable)
+- Execution time: ~2-5 minutes for 100 links
+
+**Related Tools**:
+- `validate-cross-references.sh` - Internal markdown links
+- `check-references.py` - File path references
 
 ---
 

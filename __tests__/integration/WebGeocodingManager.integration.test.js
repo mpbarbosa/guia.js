@@ -44,12 +44,12 @@ class JSDOM {
         }; 
     } 
 }
-class Logger { constructor() {} }
-class LocationDisplayer { constructor() {} }
-class SpeechManager { constructor() {} }
-class GeolocationService { constructor() {} }
-class IbiraAPIFetchManager { constructor() {} }
-class LocationChangeDetector { constructor() {} }
+class Logger {}
+class LocationDisplayer {}
+class SpeechManager {}
+class GeolocationService {}
+class IbiraAPIFetchManager {}
+class LocationChangeDetector {}
 
 // TODO: This test suite is for a future refactoring where dependencies are extracted to separate modules
 // Currently these modules don't exist yet (Logger, LocationDisplayer, SpeechManager, etc.)

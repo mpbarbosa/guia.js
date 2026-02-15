@@ -158,7 +158,7 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
                 requestPath = '/src' + requestPath;
             }
             
-            let filePath = path.join(projectRoot, requestPath);
+            const filePath = path.join(projectRoot, requestPath);
 
             const ext = path.extname(filePath);
             const contentType = {

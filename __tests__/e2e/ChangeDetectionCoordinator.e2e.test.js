@@ -180,7 +180,7 @@ describe.skip('ChangeDetectionCoordinator E2E Tests', () => {
             }
 
             // Serve static files
-            let filePath = path.join(__dirname, '../../src', req.url === '/' ? 'index.html' : req.url);
+            const filePath = path.join(__dirname, '../../src', req.url === '/' ? 'index.html' : req.url);
             
             // Check if file exists
             if (!fs.existsSync(filePath)) {

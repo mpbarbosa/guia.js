@@ -192,7 +192,7 @@ describe.skip('E2E: Municipio and Bairro Display Fix', () => {
         
         // Start local HTTP server
         server = http.createServer((request, response) => {
-            let filePath = path.join(projectRoot, request.url === '/' ? '/src/index.html' : request.url);
+            const filePath = path.join(projectRoot, request.url === '/' ? '/src/index.html' : request.url);
             
             // Determine content type
             const ext = path.extname(filePath);

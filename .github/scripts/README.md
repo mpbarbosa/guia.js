@@ -722,6 +722,64 @@ npm run ci:test-local         # Test workflow locally
 
 ---
 
+## CI/CD Integration Matrix
+
+### Workflows Using Scripts
+
+| Workflow | Scripts Used | Integration Status |
+|----------|--------------|-------------------|
+| version-consistency.yml | ⚠️ Inline (could use check-version-consistency.sh) | 🔴 Migration recommended |
+| documentation-lint.yml | ⚠️ References update-badges.sh | 🟡 Partial integration |
+| link-checker.yml | ⚠️ Inline curl (could use check-links.py) | 🟡 Enhancement opportunity |
+| modified-files.yml | ⚠️ Inline git diff (could use change-type-detector.sh) | 🔴 Migration recommended |
+| jsdoc-coverage.yml | ✅ Uses jsdoc-audit.js via npm | ✅ Properly integrated |
+| test-badges.yml | ⚠️ Inline (could integrate update-badges.sh) | 🟡 Enhancement opportunity |
+| dependency-audit.yml | ✅ Self-contained workflow | ✅ Well documented |
+| test.yml | ✅ Uses npm scripts | ✅ Appropriate architecture |
+
+### Migration Opportunities (High Priority)
+
+**1. version-consistency.yml** → `check-version-consistency.sh`
+- Benefit: More comprehensive version checks
+- Effort: 10 minutes
+- Impact: HIGH - Catch more version inconsistencies
+
+**2. modified-files.yml** → `change-type-detector.sh` + `workflow-condition-evaluator.sh`
+- Benefit: Standardized Conventional Commits parsing
+- Effort: 30 minutes
+- Impact: HIGH - Better conditional execution logic
+- Requires: `.workflow-config.yaml` configuration
+
+**3. link-checker.yml** → `check-links.py`
+- Benefit: Better error handling, timeout support
+- Effort: 10 minutes
+- Impact: MEDIUM - More reliable link validation
+
+### Example Integration
+
+```yaml
+# .github/workflows/version-consistency.yml (proposed)
+- name: Check version consistency
+  run: ./.github/scripts/check-version-consistency.sh
+
+# .github/workflows/modified-files.yml (proposed)
+- name: Detect change type
+  id: change-type
+  run: |
+    TYPE=$(./.github/scripts/change-type-detector.sh ${{ github.event.before }})
+    echo "type=$TYPE" >> $GITHUB_OUTPUT
+
+- name: Check if tests should run
+  id: should-test
+  run: |
+    RESULT=$(./.github/scripts/workflow-condition-evaluator.sh test-suite)
+    echo "run=$RESULT" >> $GITHUB_OUTPUT
+```
+
+**Documentation**: See CI/CD Integration Analysis section above for complete migration guide
+
+---
+
 ## Script Development Guidelines
 
 ### Requirements
@@ -769,6 +827,8 @@ npm run ci:test-local         # Test workflow locally
 
 ---
 
-**Last Updated**: 2026-02-11  
-**Maintainer**: DevOps team  
-**Status**: 5 scripts need documentation (issues #3, #5, #9-12)
+**Last Updated**: 2026-02-15  
+**Script Count**: 20 documented  
+**Workflow Count**: 10 analyzed  
+**Integration Opportunities**: 6 identified  
+**Status**: ✅ All scripts documented and standardized

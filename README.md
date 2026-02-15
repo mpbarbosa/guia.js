@@ -527,6 +527,20 @@ python3 -m http.server 9000
 - `GeolocationService` - Browser geolocation API wrapper
 - `WebGeocodingManager` - Main coordination and workflow management
 
+#### View Controllers (v0.10.0-alpha) 🆕
+- **`HomeViewController`** - Home view controller for location tracking
+  - **Purpose**: Manages the home view (/) with real-time location tracking
+  - **Features**: Single-position capture, continuous tracking toggle, button management
+  - **Lines**: 672 lines (src/views/home.js)
+  - **Tests**: 70 comprehensive unit tests with 100% coverage
+  - **API**: 
+    - `init()` - Initialize manager and chronometer
+    - `getSingleLocationUpdate()` - Capture current position
+    - `startTracking()` / `stopTracking()` - Control continuous tracking
+    - `toggleTracking()` - Convenience method for tracking control
+  - **Migration**: Replaces inline logic from app.js (664→645 lines, -2.9%)
+- `ConverterViewController` - Converter view for coordinate conversion (unchanged)
+
 #### Data Processing Layer
 - `GeoDataParser` - Parse geographic data from APIs
 - `GeoDataExtractor` - Extract structured data from raw responses

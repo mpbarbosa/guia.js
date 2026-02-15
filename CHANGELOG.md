@@ -9,6 +9,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## [0.10.0-alpha] - 2026-02-15
+
+### Added
+- **HomeViewController** (`src/views/home.js`, 672 lines): New view controller for home view location tracking
+  - Manages single-position capture and continuous tracking workflows
+  - Event listener management with memory leak prevention
+  - UI state management with accessibility (button text, icons, ARIA labels)
+  - Dependency injection pattern for testing
+  - **API**: `init()`, `getSingleLocationUpdate()`, `startTracking()`, `stopTracking()`, `toggleTracking()`
+  - **Tests**: 70 comprehensive unit tests with 100% coverage (`__tests__/views/home.test.js`, 872 lines)
+  - **Documentation**: Complete JSDoc with examples and error handling
+
+### Changed
+- **`app.js`** (664 → 645 lines, -2.9%): Refactored to use HomeViewController
+  - Replaced inline WebGeocodingManager instantiation with HomeViewController
+  - Removed inline Chronometer initialization (now handled by HomeViewController)
+  - Simplified `initializeHomeView()` from ~60 lines to ~25 lines (-58% complexity)
+  - Updated AppState from `manager` to `homeController`
+  - Cleaner separation of concerns and consistent view controller pattern
+
+### Deprecated
+- **WebGeocodingManager tracking methods** (will be removed in v1.0.0):
+  - `getSingleLocationUpdate()` → Use `HomeViewController.getSingleLocationUpdate()`
+  - `startTracking()` → Use `HomeViewController.startTracking()`
+  - `stopTracking()` → Use `HomeViewController.stopTracking()`
+  - `initSpeechSynthesis()` → Automatic initialization in `HomeViewController.startTracking()`
+  - All deprecated methods emit `warn()` deprecation warnings with migration guidance
+  - Full backward compatibility maintained for smooth migration
+  - Documentation added to tests explaining deprecation strategy
+
+### Fixed
+- **Code organization**: Extracted 300+ lines of view-specific logic from WebGeocodingManager
+- **Architecture**: Established consistent view controller pattern (HomeViewController + ConverterViewController)
+- **Testing**: Improved test organization with separate test suites for view controllers
+
+### Migration Guide
+```javascript
+// OLD (deprecated)
+const manager = new WebGeocodingManager(document, { locationResult: 'location-result' });
+manager.getSingleLocationUpdate();
+manager.startTracking();
+
+// NEW (v0.10.0+)
+const controller = new HomeViewController(document, { locationResult: 'location-result' });
+await controller.init();
+controller.getSingleLocationUpdate();
+controller.startTracking();
+```
+
+**Breaking Changes**: None (deprecation warnings only)  
+**Removal Timeline**: Deprecated methods will be fully removed in v1.0.0
+
+
 ## [0.9.0-alpha] - 2026-01-28
 
 ### Added

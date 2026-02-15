@@ -120,6 +120,31 @@ After making any changes, ALWAYS run through these validation scenarios:
 
 ### Important Classes and Components
 
+#### View Controllers (src/views/) - v0.10.0-alpha 🆕
+- **`HomeViewController`** (src/views/home.js, 672 lines) - Home view controller for location tracking
+  - **Purpose**: Manages the home view (/) with real-time location tracking workflows
+  - **Features**: Single-position capture, continuous tracking toggle, button management, UI state updates
+  - **Tests**: 70 comprehensive unit tests with 100% coverage (__tests__/views/home.test.js)
+  - **Public API**:
+    - `constructor(document, params)` - Initialize with document and configuration
+    - `async init()` - Initialize WebGeocodingManager and Chronometer
+    - `async getSingleLocationUpdate()` - Capture current position once
+    - `startTracking()` - Start continuous location tracking
+    - `stopTracking()` - Stop continuous tracking
+    - `toggleTracking()` - Toggle tracking on/off (convenience method)
+    - `destroy()` - Clean up resources (stops tracking, removes listeners)
+    - `isTracking()` - Check if currently tracking
+    - `static async create(document, params)` - Factory method (create + init)
+  - **Dependency Injection**: Accepts optional manager and chronometer for testing
+  - **Event Management**: Bound handlers with automatic cleanup to prevent memory leaks
+  - **UI Updates**: Manages button text, icons, and ARIA labels for accessibility
+  - **Migration**: Replaces inline logic from app.js (664→645 lines, -2.9% complexity)
+  - **Documentation**: See [MIGRATION_v0.10.0.md](../docs/MIGRATION_v0.10.0.md) for migration guide
+  - **Deprecates**: 4 WebGeocodingManager methods (getSingleLocationUpdate, startTracking, stopTracking, initSpeechSynthesis)
+- **`ConverterViewController`** (src/views/converter.js, 521 lines) - Converter view for coordinate conversion
+  - **Purpose**: Manages the converter view (/converter) for coordinate format conversion
+  - **Unchanged**: No changes in v0.10.0-alpha
+
 #### Core Architecture (src/core/, src/services/, src/coordination/)
 - `PositionManager` (src/core/PositionManager.js) - Singleton for current geolocation state
   - **Position Update Logic**: Updates trigger on distance (20m) OR time (30s) thresholds (v0.9.0+)

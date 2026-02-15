@@ -5,6 +5,80 @@
 
 set -e
 
+# Show help message
+show_help() {
+    cat << 'EOF'
+test-conditional-execution.sh - Test suite for workflow-condition-evaluator.sh
+
+USAGE:
+    ./test-conditional-execution.sh [OPTIONS]
+
+DESCRIPTION:
+    Comprehensive test suite for workflow-condition-evaluator.sh validation.
+    Tests file pattern matching and conditional execution logic.
+
+OPTIONS:
+    -h, --help          Show this help message
+    --verbose           Show detailed test output
+    --stop-on-fail      Stop at first test failure
+
+TEST COVERAGE:
+    ✅ File pattern matching (src/**/*.js, __tests__/**)
+    ✅ Change type conditions (docs-only, test-only)
+    ✅ Combined conditions (file patterns + change types)
+    ✅ Edge cases (no changes, all files changed)
+    ✅ Invalid patterns and configurations
+    ✅ .workflow-config.yaml parsing
+
+EXPECTED OUTPUT:
+    🧪 Testing workflow-condition-evaluator.sh
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ✅ PASS: Test 1 - src/ changes returns "run"
+    ✅ PASS: Test 2 - docs/ changes returns "skip"
+    ...
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ✅ All tests passed (15/15)
+
+EXIT CODES:
+    0    All tests passed
+    1    One or more tests failed
+
+EXECUTION TIME:
+    ~3 seconds (15+ test scenarios)
+
+EXAMPLES:
+    # Run all tests
+    ./test-conditional-execution.sh
+
+    # Verbose output
+    ./test-conditional-execution.sh --verbose
+
+    # Stop at first failure
+    ./test-conditional-execution.sh --stop-on-fail
+
+WHEN TO RUN:
+    - Before modifying workflow-condition-evaluator.sh
+    - After changing .workflow-config.yaml rules
+    - Before updating workflow logic in modified-files.yml
+    - Before adding new file pattern conditions
+
+DEPENDENCIES:
+    - .workflow-config.yaml in project root
+    - git (for diff detection)
+    - workflow-condition-evaluator.sh
+
+DOCUMENTATION:
+    See .github/scripts/README.md for complete documentation
+
+EOF
+}
+
+# Check for help flag
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+    show_help
+    exit 0
+fi
+
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'

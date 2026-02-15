@@ -5,6 +5,76 @@
 
 set -e
 
+# Show help message
+show_help() {
+    cat << 'EOF'
+test-change-type-detection.sh - Test suite for change-type-detector.sh
+
+USAGE:
+    ./test-change-type-detection.sh [OPTIONS]
+
+DESCRIPTION:
+    Comprehensive test suite for change-type-detector.sh validation.
+    Tests all Conventional Commits types and edge cases.
+
+OPTIONS:
+    -h, --help          Show this help message
+    --verbose           Show detailed test output
+    --stop-on-fail      Stop at first test failure
+
+TEST COVERAGE:
+    ✅ All Conventional Commits types (feat, fix, docs, test, etc.)
+    ✅ Scoped commits: feat(api):, fix(ui):
+    ✅ Breaking changes: feat!:, fix(api)!:
+    ✅ Multi-line commit messages
+    ✅ Invalid/malformed commits
+    ✅ Empty commit ranges
+    ✅ Edge cases and error conditions
+
+EXPECTED OUTPUT:
+    🧪 Testing change-type-detector.sh
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ✅ PASS: Test 1 - feat: commit returns "feat"
+    ✅ PASS: Test 2 - fix: commit returns "fix"
+    ...
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ✅ All tests passed (20/20)
+
+EXIT CODES:
+    0    All tests passed
+    1    One or more tests failed
+
+EXECUTION TIME:
+    ~5 seconds (20+ test scenarios)
+
+EXAMPLES:
+    # Run all tests
+    ./test-change-type-detection.sh
+
+    # Verbose output
+    ./test-change-type-detection.sh --verbose
+
+    # Stop at first failure
+    ./test-change-type-detection.sh --stop-on-fail
+
+WHEN TO RUN:
+    - Before modifying change-type-detector.sh
+    - After adding new commit type patterns
+    - Before deploying workflow changes
+    - As part of pre-commit validation
+
+DOCUMENTATION:
+    See .github/scripts/README.md for complete documentation
+
+EOF
+}
+
+# Check for help flag
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+    show_help
+    exit 0
+fi
+
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'

@@ -64,9 +64,10 @@
 
 ### 4. build_and_deploy.sh
 **Purpose**: Build production bundle and deploy to staging environment  
-**Usage**: `./scripts/build_and_deploy.sh`  
+**Usage**: `./scripts/build_and_deploy.sh [OPTIONS]`  
 **Status**: ⚠️ **External dependency** - requires mpbarbosa_site repository  
-**Documentation**: ✅ **COMPLETE**
+**Documentation**: ✅ **COMPLETE**  
+**--help flag**: ✅ **YES**
 
 **What it does**:
 1. Changes to parent directory (`cd ..`)

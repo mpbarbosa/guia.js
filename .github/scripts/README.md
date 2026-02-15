@@ -67,9 +67,10 @@
 
 #### 5. validate-cross-references.sh (78 lines)
 **Purpose**: Validates cross-references between documentation files  
-**Usage**: `./.github/scripts/validate-cross-references.sh`  
+**Usage**: `./.github/scripts/validate-cross-references.sh [OPTIONS]`  
 **npm script**: Consider adding `npm run check:cross-refs`  
-**Documentation**: ✅ **COMPLETE**
+**Documentation**: ✅ **COMPLETE**  
+**--help flag**: ✅ **YES**
 
 **What it does**:
 - Checks internal documentation links (markdown)
@@ -315,8 +316,9 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 
 #### 10. test-change-type-detection.sh (237 lines)
 **Purpose**: Test suite for change-type-detector.sh  
-**Usage**: `./.github/scripts/test-change-type-detection.sh`  
-**Documentation**: ✅ **COMPLETE**
+**Usage**: `./.github/scripts/test-change-type-detection.sh [OPTIONS]`  
+**Documentation**: ✅ **COMPLETE**  
+**--help flag**: ✅ **YES**
 
 **What it does**:
 - Runs 20+ test cases for change type detection
@@ -356,8 +358,9 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 
 #### 11. test-conditional-execution.sh (203 lines)
 **Purpose**: Test suite for workflow-condition-evaluator.sh  
-**Usage**: `./.github/scripts/test-conditional-execution.sh`  
-**Documentation**: ✅ **COMPLETE**
+**Usage**: `./.github/scripts/test-conditional-execution.sh [OPTIONS]`  
+**Documentation**: ✅ **COMPLETE**  
+**--help flag**: ✅ **YES**
 
 **What it does**:
 - Tests workflow condition evaluation logic (15+ scenarios)

@@ -662,7 +662,20 @@ class WebGeocodingManager {
 	 * 
 	 * @returns {void}
 	 */
+	/**
+	 * Initializes the speech synthesis manager and UI components.
+	 * 
+	 * @deprecated Since v0.10.0-alpha - Moved to HomeViewController
+	 * @see HomeViewController - Speech synthesis is initialized automatically during tracking
+	 * 
+	 * Delegates to SpeechCoordinator to initialize the speech synthesis system.
+	 * This method should be called after the relevant DOM elements are available.
+	 * Element IDs can be customized via the elementIds configuration in constructor.
+	 * 
+	 * @returns {void}
+	 */
 	initSpeechSynthesis() {
+		warn('WebGeocodingManager.initSpeechSynthesis() is deprecated since v0.10.0-alpha. Speech synthesis is now initialized automatically by HomeViewController.startTracking().');
 		this.speechCoordinator.initializeSpeechSynthesis();
 	}
 
@@ -712,21 +725,38 @@ class WebGeocodingManager {
 	}
 
 	/**
-	 * Gets a single location update from the geolocation service.
+	 * Gets a single location update without starting continuous tracking.
 	 * 
-	 * Delegates to ServiceCoordinator which handles:
-	 * 1. Request single location update from GeolocationService
-	 * 2. Store position in GeocodingState
+	 * @deprecated Since v0.10.0-alpha - Moved to HomeViewController.getSingleLocationUpdate()
+	 * @see HomeViewController#getSingleLocationUpdate
+	 * 
+	 * Initiates a one-time location request without starting continuous tracking.
+	 * Useful for situations where you only need the current location without monitoring.
+	 * 
+	 * **Workflow**:
+	 * 1. Request current position from GeolocationService
+	 * 2. Update internal state with coordinates
 	 * 3. Trigger reverse geocoding
 	 * 4. Process and store results
 	 * 5. Notify observers
 	 * 
 	 * @returns {Promise<Object>} Promise resolving to position object
 	 * 
+	 * @example
+	 * // OLD (deprecated):
+	 * manager.getSingleLocationUpdate();
+	 * 
+	 * // NEW (recommended):
+	 * const controller = new HomeViewController(document, { locationResult: 'location-result' });
+	 * await controller.init();
+	 * await controller.getSingleLocationUpdate();
+	 * 
 	 * @fires ReverseGeocoder#notifyObservers - When geocoding completes
 	 * @fires WebGeocodingManager#notifyFunctionObservers - After geocoding completes
 	 */
 	getSingleLocationUpdate() {
+		warn('WebGeocodingManager.getSingleLocationUpdate() is deprecated since v0.10.0-alpha. Use HomeViewController.getSingleLocationUpdate() instead.');
+		
 		return this.serviceCoordinator
 			.getSingleLocationUpdate()
 			.then((position) => {
@@ -762,27 +792,38 @@ class WebGeocodingManager {
 	 * 4. Registers callbacks for address component change detection
 	 * 
 	 * @returns {void}
+	 * @deprecated Since v0.10.0-alpha - Moved to HomeViewController.startTracking()
+	 * @see HomeViewController#startTracking
 	 * 
 	 * @example
+	 * // OLD (deprecated):
 	 * const manager = new WebGeocodingManager(document, {
 	 *   locationResult: 'location-result'
 	 * });
 	 * manager.startTracking(); // Begins continuous tracking
+	 * 
+	 * // NEW (recommended):
+	 * const controller = new HomeViewController(document, {
+	 *   locationResult: 'location-result'
+	 * });
+	 * await controller.init();
+	 * controller.startTracking();
 	 */
 	startTracking() {
-		// Initialize speech synthesis UI components
-		this.initSpeechSynthesis();
-
-		// Get initial location and start continuous tracking via ServiceCoordinator
-		this.getSingleLocationUpdate();
+		warn('WebGeocodingManager.startTracking() is deprecated since v0.10.0-alpha. Use HomeViewController.startTracking() instead.');
+		
+		// Delegate implementation for backward compatibility
+		this.speechCoordinator.initializeSpeechSynthesis();
+		this.getSingleLocationUpdate(); // Call getSingleLocationUpdate which handles errors internally
 		this.serviceCoordinator.startTracking();
-
-		// Set up address component change detection callbacks via coordinator
 		this.changeDetectionCoordinator.setupChangeDetection();
 	}
 
 	/**
 	 * Stops continuous geolocation tracking.
+	 * 
+	 * @deprecated Since v0.10.0-alpha - Moved to HomeViewController.stopTracking()
+	 * @see HomeViewController#stopTracking
 	 * 
 	 * Delegates to ServiceCoordinator to stop the GeolocationService tracking.
 	 * This method can be called to stop tracking when the user toggles off
@@ -791,17 +832,29 @@ class WebGeocodingManager {
 	 * @returns {void}
 	 * 
 	 * @example
+	 * // OLD (deprecated):
 	 * const manager = new WebGeocodingManager(document, {
 	 *   locationResult: 'location-result'
 	 * });
 	 * manager.startTracking();
 	 * // Later...
 	 * manager.stopTracking(); // Stops tracking
+	 * 
+	 * // NEW (recommended):
+	 * const controller = new HomeViewController(document, {
+	 *   locationResult: 'location-result'
+	 * });
+	 * await controller.init();
+	 * controller.startTracking();
+	 * // Later...
+	 * controller.stopTracking();
 	 */
 	stopTracking() {
+		warn('WebGeocodingManager.stopTracking() is deprecated since v0.10.0-alpha. Use HomeViewController.stopTracking() instead.');
+		
 		if (this.serviceCoordinator && typeof this.serviceCoordinator.stopTracking === 'function') {
 			this.serviceCoordinator.stopTracking();
-			log('WebGeocodingManager: Tracking stopped');
+			log('WebGeocodingManager: Tracking stopped (deprecated method)');
 		}
 	}
 

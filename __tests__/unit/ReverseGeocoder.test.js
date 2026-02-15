@@ -394,7 +394,7 @@ describe('ReverseGeocoder Class', () => {
           }
         };
         
-        geocoder.update(mockPositionManager, 'strCurrPosUpdate');
+        geocoder.update(mockPositionManager, 'PositionManager updated');
         
         // Note: warn() might be called, but we're testing the branch
         warnSpy.mockRestore();
@@ -404,7 +404,7 @@ describe('ReverseGeocoder Class', () => {
         const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
         const geocoder = new ReverseGeocoder(createMockFetchManager());
         
-        geocoder.update(null, 'strCurrPosUpdate');
+        geocoder.update(null, 'PositionManager updated');
         
         // Should exit early without crashing
         warnSpy.mockRestore();
@@ -414,7 +414,7 @@ describe('ReverseGeocoder Class', () => {
         const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
         const geocoder = new ReverseGeocoder(createMockFetchManager());
         
-        geocoder.update({}, 'strCurrPosUpdate');
+        geocoder.update({}, 'PositionManager updated');
         
         warnSpy.mockRestore();
       });
@@ -435,7 +435,7 @@ describe('ReverseGeocoder Class', () => {
           }
         };
         
-        geocoder.update(mockPositionManager, 'strCurrPosUpdate');
+        geocoder.update(mockPositionManager, 'PositionManager updated');
         
         // Wait for async geocoding to complete
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -461,7 +461,7 @@ describe('ReverseGeocoder Class', () => {
         };
         
         // Call update - this triggers fetchAddress which will reject
-        geocoder.update(mockPositionManager, 'strCurrPosUpdate');
+        geocoder.update(mockPositionManager, 'PositionManager updated');
         
         // Wait for async operation to complete and catch the rejection
         await new Promise(resolve => setTimeout(resolve, 150));
@@ -496,13 +496,36 @@ describe('ReverseGeocoder Class', () => {
           }
         };
         
-        geocoder.update(mockPositionManager, 'strCurrPosUpdate');
+        geocoder.update(mockPositionManager, 'PositionManager updated');
         
         // Wait for async operation
         await new Promise(resolve => setTimeout(resolve, 100));
         
         expect(geocoder.AddressDataExtractor.getBrazilianStandardAddress).toHaveBeenCalled();
         expect(geocoder.enderecoPadronizado).toBeDefined();
+      });
+
+      test('should NOT trigger geocoding when position update is rejected (strCurrPosNotUpdate)', () => {
+        const mockFetchManager = createMockFetchManager();
+        const mockReverseGeocode = jest.spyOn(ReverseGeocoder.prototype, 'reverseGeocode');
+        
+        const geocoder = new ReverseGeocoder(mockFetchManager);
+        
+        const mockPositionManager = {
+          lastPosition: {
+            coords: { latitude: -23.55, longitude: -46.63 }
+          }
+        };
+        
+        // Call with strCurrPosNotUpdate event (position was rejected by PositionManager)
+        geocoder.update(mockPositionManager, 'PositionManager not updated');
+        
+        // Geocoding should NOT be triggered
+        expect(mockReverseGeocode).not.toHaveBeenCalled();
+        expect(geocoder.latitude).toBeUndefined();
+        expect(geocoder.longitude).toBeUndefined();
+        
+        mockReverseGeocode.mockRestore();
       });
 
       test('should skip geocoding when coords are missing', () => {
@@ -514,7 +537,7 @@ describe('ReverseGeocoder Class', () => {
           }
         };
         
-        geocoder.update(mockPositionManager, 'strCurrPosUpdate');
+        geocoder.update(mockPositionManager, 'PositionManager updated');
         
         // Should not set coordinates
         expect(geocoder.latitude).toBeUndefined();
@@ -529,7 +552,7 @@ describe('ReverseGeocoder Class', () => {
           }
         };
         
-        geocoder.update(mockPositionManager, 'strCurrPosUpdate');
+        geocoder.update(mockPositionManager, 'PositionManager updated');
         
         expect(geocoder.latitude).toBeUndefined();
       });
@@ -543,7 +566,7 @@ describe('ReverseGeocoder Class', () => {
           }
         };
         
-        geocoder.update(mockPositionManager, 'strCurrPosUpdate');
+        geocoder.update(mockPositionManager, 'PositionManager updated');
         
         expect(geocoder.latitude).toBeUndefined();
       });

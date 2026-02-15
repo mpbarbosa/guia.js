@@ -34,8 +34,9 @@
  */
 
 import ObserverSubject from '../core/ObserverSubject.js';
+import PositionManager from '../core/PositionManager.js';
 import { log, warn, error } from '../utils/logger.js';
-import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
+import { ADDRESS_FETCHED_EVENT, GEOCODING_ERROR_EVENT } from '../config/defaults.js';
 import { withObserver } from '../utils/ObserverMixin.js';
 
 /**
@@ -327,8 +328,8 @@ class ReverseGeocoder {
 			// Store error state
 			this.error = err;
 			
-			// Notify observers with error
-			this.notifyObservers(null, null, 'Address fetch failed', false, err);
+			// Notify observers with proper error event
+			this.notifyObservers(null, null, GEOCODING_ERROR_EVENT, false, err);
 			
 			throw err;
 		}
@@ -380,6 +381,15 @@ class ReverseGeocoder {
 			return;
 		}
 
+		// EVENT TYPE VALIDATION:
+		// Only process when position was actually updated, not when rejected
+		// Prevents unnecessary geocoding when position fails validation (accuracy, distance, time)
+		if (posEvent !== PositionManager.strCurrPosUpdate && 
+		    posEvent !== PositionManager.strImmediateAddressUpdate) {
+			log(`(ReverseGeocoder) Ignoring event: ${posEvent} - not a position update`);
+			return;
+		}
+
 		// EVENT FILTERING AND COORDINATE EXTRACTION:
 		// Only process actual position updates, ignore other events for performance optimization
 		// Extract coordinates from position data with proper validation
@@ -393,54 +403,31 @@ class ReverseGeocoder {
 			this.setCoordinates(coords.latitude, coords.longitude);
 
 			// ASYNCHRONOUS GEOCODING PIPELINE:
-			// Trigger reverse geocoding asynchronously to avoid blocking the UI thread
-			// Handle both success and error cases with proper observer notifications
-			this.reverseGeocode()
-				.then((addressData) => {
-					// Store raw address data from OpenStreetMap
-					this.currentAddress = addressData;
-					
-					log('(ReverseGeocoder) Address data received:', addressData);
-					
-					// BRAZILIAN ADDRESS STANDARDIZATION:
-					// Convert raw OpenStreetMap data to Brazilian standard format
-					// Supports Portuguese language display and local address conventions
-					if (this.AddressDataExtractor) {
-						this.enderecoPadronizado = this.AddressDataExtractor.getBrazilianStandardAddress(addressData);
-						log('(ReverseGeocoder) Standardized address:', {
-							municipio: this.enderecoPadronizado?.municipio,
-							bairro: this.enderecoPadronizado?.bairro,
-							siglaUF: this.enderecoPadronizado?.siglaUF
-						});
-					}
-					
-					// Notify subscribers that new address data is available
-					log('(ReverseGeocoder) About to notify observers with:', {
-						hasAddressData: !!this.currentAddress,
-						hasEnderecoPadronizado: !!this.enderecoPadronizado,
-						observerCount: this.observerSubject.observers.length
-					});
-					this.notifyObservers(this.currentAddress, this.enderecoPadronizado, posEvent, false, null);
-					log('(ReverseGeocoder) Observers notified successfully');
+			// Use fetchAddress() which includes CORS retry logic and proper error handling
+			// This ensures consistent behavior whether called directly or via observer pattern
+			this.fetchAddress()
+				.then(() => {
+					// fetchAddress() handles observer notifications internally
+					// Success path logs are already included in fetchAddress()
+					log('(ReverseGeocoder.update) Geocoding completed successfully');
 				})
 				.catch((err) => {
 					// ERROR HANDLING:
-					// Log geocoding failures and notify observers of error state
-					// Ensures application continues functioning even when geocoding fails
+					// Log geocoding failures but DO NOT notify observers
+					// fetchAddress() already handles CORS retry and error notifications
+					// Just log the error here for debugging purposes
 					if (typeof error === 'function') {
-						error("(ReverseGeocoder) Reverse geocoding failed:", err);
+						error("(ReverseGeocoder.update) Geocoding failed:", err);
 					} else {
-						console.error("[ReverseGeocoder] Reverse geocoding failed:", err);
+						console.error("[ReverseGeocoder.update] Geocoding failed:", err);
 					}
 					this.error = err;
-					this.notifyObservers(null, null, posEvent, false, err);
 					
-					// FIXED: Re-throw error after notification to prevent silent failure
-					// This ensures calling code can catch and handle the error appropriately
-					throw err;
+					// Error already logged, no need to re-throw since observers
+					// don't need notification on error (no data to display)
 				});
 		} else {
-			warn("(ReverseGeocoder) Position update received without valid coordinates.");
+			warn("(ReverseGeocoder) Position update received without valid coordinates. Coordinates:", coords);
 		}
 	}
 

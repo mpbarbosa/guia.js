@@ -522,19 +522,56 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.9.0-alpha)'
 			mockElements.textInput.value = '';
 		});
 
+		test('should announce first address fetch (change from no address to some address)', () => {
+			const mockAddress = {
+				logradouro: 'Rua Elói Cerqueira',
+				numero: '73',
+				bairro: 'Belém',
+				municipio: 'São Paulo',
+				uf: 'SP'
+			};
+
+			const standardizedAddress = new MockBrazilianStandardAddress(mockAddress);
+
+			// Create a spy on the speak method
+			const speakSpy = jest.spyOn(displayer.speechManager, 'speak');
+
+			// First address fetch should trigger speech
+			displayer.update(mockAddress, standardizedAddress, 'Address fetched', null, null);
+
+			expect(speakSpy).toHaveBeenCalledTimes(1);
+			expect(speakSpy).toHaveBeenCalledWith(
+				expect.stringContaining('Você está'),
+				2.5 // High priority for first address
+			);
+
+			// Second address fetch should NOT trigger speech (no longer first)
+			speakSpy.mockClear();
+			displayer.update(mockAddress, standardizedAddress, 'Address fetched', null, null);
+
+			expect(speakSpy).not.toHaveBeenCalled();
+			
+			// Clean up
+			speakSpy.mockRestore();
+		});
+
 		test('should handle municipality change with priority 3', () => {
 			const address = new MockBrazilianStandardAddress({
 				municipio: 'São Paulo'
 			});
 
 			const changeDetails = {
-				previous: { municipio: 'Santos' },
-				current: { municipio: 'São Paulo' }
+				from: 'Santos',
+				to: 'São Paulo',
+				currentAddress: address, // Full address object (real-world structure)
+				previousAddress: new MockBrazilianStandardAddress({ municipio: 'Santos' })
 			};
 
-			displayer.update(address, 'MunicipioChanged', 'PositionManager updated', changeDetails);
+			// ChangeDetectionCoordinator passes: (changeData, changeType, null, changeDetails)
+			// where changeData = changeDetails.currentAddress for municipio changes
+			displayer.update(address, 'MunicipioChanged', null, changeDetails);
 
-			expect(mockElements.textInput.value).toBe('Você saiu de Santos e entrou em São Paulo');
+			expect(mockElements.textInput.value).toBe('Você entrou no município de São Paulo');
 		});
 
 		test('should handle bairro change with priority 2', () => {
@@ -542,7 +579,16 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.9.0-alpha)'
 				bairro: 'Centro'
 			});
 
-			displayer.update(address, 'BairroChanged', 'PositionManager updated');
+			const changeDetails = {
+				from: 'Copacabana',
+				to: 'Centro',
+				currentAddress: address, // Full address object (real-world structure)
+				previousAddress: new MockBrazilianStandardAddress({ bairro: 'Copacabana' })
+			};
+
+			// ChangeDetectionCoordinator passes: (changeData, changeType, null, changeDetails)
+			// where changeData = changeDetails.to for bairro changes (just the bairro string)
+			displayer.update('Centro', 'BairroChanged', null, changeDetails);
 
 			expect(mockElements.textInput.value).toBe('Você entrou no bairro Centro');
 		});
@@ -553,7 +599,19 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.9.0-alpha)'
 				numero: '123'
 			});
 
-			displayer.update(address, 'LogradouroChanged', 'PositionManager updated');
+			const changeDetails = {
+				from: 'Rua das Palmeiras',
+				to: 'Rua das Flores',
+				currentAddress: address, // Full address object (real-world structure)
+				previousAddress: new MockBrazilianStandardAddress({ 
+					logradouro: 'Rua das Palmeiras',
+					numero: '456'
+				})
+			};
+
+			// ChangeDetectionCoordinator passes: (changeData, changeType, null, changeDetails)
+			// where changeData = changeDetails.to for logradouro changes (just the logradouro string)
+			displayer.update('Rua das Flores', 'LogradouroChanged', null, changeDetails);
 
 			expect(mockElements.textInput.value).toBe('Você está agora em Rua das Flores, 123');
 		});

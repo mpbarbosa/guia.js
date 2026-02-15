@@ -221,9 +221,11 @@ describe('ChangeDetectionCoordinator', () => {
             mockObserverSubject.subscribe(mockObserver);
 
             const changeDetails = {
-                previous: { logradouro: 'Rua Antiga' },
-                current: { logradouro: 'Rua Nova' },
-                hasChanged: true
+                to: 'Rua Nova',          // New value
+                from: 'Rua Antiga',      // Previous value
+                field: 'logradouro',
+                currentAddress: { logradouro: 'Rua Nova' },
+                previousAddress: { logradouro: 'Rua Antiga' }
             };
 
             coordinator.notifyLogradouroChangeObservers(changeDetails);
@@ -243,9 +245,11 @@ describe('ChangeDetectionCoordinator', () => {
             mockObserverSubject.subscribe(mockObserver);
 
             const changeDetails = {
-                previous: { bairro: 'Bairro Antigo' },
-                current: { bairro: 'Bairro Novo' },
-                hasChanged: true
+                to: 'Bairro Novo',       // New value
+                from: 'Bairro Antigo',   // Previous value
+                field: 'bairro',
+                currentAddress: { bairro: 'Bairro Novo' },
+                previousAddress: { bairro: 'Bairro Antigo' }
             };
 
             coordinator.notifyBairroChangeObservers(changeDetails);

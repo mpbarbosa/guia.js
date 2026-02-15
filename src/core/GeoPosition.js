@@ -22,10 +22,27 @@ import { calculateDistance } from '../utils/distance.js';
  */
 class GeoPosition {
 	constructor(position) {
-		// Create defensive copies to avoid sharing references with external state
-		const coords = position?.coords ?? {};
-		this.geolocationPosition = position ? { ...position, coords: { ...coords } } : null;
-		this.coords = coords ? { ...coords } : null;
+		// FIX: GeolocationCoordinates uses getters (not enumerable), spread operator creates empty object
+		// Extract properties manually to handle browser Geolocation API correctly
+		const rawCoords = position?.coords;
+		
+		// Create defensive copy with explicit property extraction
+		// This handles both plain objects (tests) and GeolocationCoordinates (browser)
+		const coords = rawCoords ? {
+			latitude: rawCoords.latitude,
+			longitude: rawCoords.longitude,
+			accuracy: rawCoords.accuracy,
+			altitude: rawCoords.altitude,
+			altitudeAccuracy: rawCoords.altitudeAccuracy,
+			heading: rawCoords.heading,
+			speed: rawCoords.speed
+		} : {};
+		
+		this.geolocationPosition = position ? { 
+			timestamp: position.timestamp,
+			coords: coords 
+		} : null;
+		this.coords = Object.keys(coords).length > 0 ? coords : null;
 		this.latitude = coords.latitude;
 		this.longitude = coords.longitude;
 		this.accuracy = coords.accuracy;

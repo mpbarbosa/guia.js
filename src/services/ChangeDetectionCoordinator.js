@@ -321,15 +321,21 @@ class ChangeDetectionCoordinator {
 	 * 
 	 * Uses the generalized notification method with logradouro-specific parameters.
 	 * 
+	 * **BUGFIX v0.9.0-alpha**: Fixed to use AddressChangeDetector's structure
+	 * - changeDetails.to instead of changeDetails.current.logradouro
+	 * - Prevents "Cannot read properties of undefined" error
+	 * 
 	 * @param {Object} changeDetails - Details about the logradouro change
-	 * @param {Object} changeDetails.current - Current address component values
-	 * @param {string} changeDetails.current.logradouro - New logradouro value
+	 * @param {string} changeDetails.to - New logradouro value
+	 * @param {string} changeDetails.from - Previous logradouro value
+	 * @param {Object} changeDetails.currentAddress - Current full address
+	 * @param {Object} changeDetails.previousAddress - Previous full address
 	 */
 	notifyLogradouroChangeObservers(changeDetails) {
 		this._notifyAddressChangeObservers(
 			changeDetails,
 			"LogradouroChanged",
-			changeDetails.current.logradouro,
+			changeDetails.to, // Use 'to' field from AddressChangeDetector
 			null // No specific log message for logradouro
 		);
 	}
@@ -339,15 +345,21 @@ class ChangeDetectionCoordinator {
 	 * 
 	 * Uses the generalized notification method with bairro-specific parameters.
 	 * 
+	 * **BUGFIX v0.9.0-alpha**: Fixed to use AddressChangeDetector's structure
+	 * - changeDetails.to instead of changeDetails.current.bairro
+	 * - Prevents "Cannot read properties of undefined" error
+	 * 
 	 * @param {Object} changeDetails - Details about the bairro change
-	 * @param {Object} changeDetails.current - Current address component values
-	 * @param {string} changeDetails.current.bairro - New bairro value
+	 * @param {string} changeDetails.to - New bairro value
+	 * @param {string} changeDetails.from - Previous bairro value
+	 * @param {Object} changeDetails.currentAddress - Current full address
+	 * @param {Object} changeDetails.previousAddress - Previous full address
 	 */
 	notifyBairroChangeObservers(changeDetails) {
 		this._notifyAddressChangeObservers(
 			changeDetails,
 			"BairroChanged",
-			changeDetails.current.bairro,
+			changeDetails.to, // Use 'to' field from AddressChangeDetector
 			'(ChangeDetectionCoordinator) Notificando os observadores da mudança de bairro.'
 		);
 	}
@@ -359,13 +371,21 @@ class ChangeDetectionCoordinator {
 	 * Note: For municipio changes, the entire currentAddress is passed as changeData
 	 * to maintain backward compatibility with existing observers.
 	 * 
+	 * **BUGFIX v0.9.0-alpha**: Fixed to use AddressChangeDetector's structure
+	 * - changeDetails.currentAddress instead of changeDetails.current
+	 * - Also available via this.reverseGeocoder.currentAddress
+	 * 
 	 * @param {Object} changeDetails - Details about the municipio change
+	 * @param {string} changeDetails.to - New municipio value
+	 * @param {string} changeDetails.from - Previous municipio value
+	 * @param {Object} changeDetails.currentAddress - Current full address
+	 * @param {Object} changeDetails.previousAddress - Previous full address
 	 */
 	notifyMunicipioChangeObservers(changeDetails) {
 		this._notifyAddressChangeObservers(
 			changeDetails,
 			"MunicipioChanged",
-			this.reverseGeocoder.currentAddress, // Full address for municipio
+			this.reverseGeocoder.currentAddress, // Full address for municipio (backward compatible)
 			'(ChangeDetectionCoordinator) Notificando os observadores da mudança de município.'
 		);
 	}

@@ -95,6 +95,9 @@ export const NO_REFERENCE_PLACE = "Não classificado";
 /** Event name for address fetch completion */
 export const ADDRESS_FETCHED_EVENT = "Address fetched";
 
+/** Event name for geocoding errors */
+export const GEOCODING_ERROR_EVENT = "Geocoding error";
+
 // Portuguese UI Messages (v0.9.0+)
 /** IBGE/SIDRA loading message */
 export const IBGE_LOADING_MESSAGE = "Carregando dados do IBGE...";

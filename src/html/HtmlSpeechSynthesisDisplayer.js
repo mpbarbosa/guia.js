@@ -1,5 +1,6 @@
 'use strict';
 import { log, warn, error } from '../utils/logger.js';
+import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 
 /**
  * HTML-based speech synthesis controller with UI integration and address change notifications.
@@ -189,6 +190,10 @@ class HtmlSpeechSynthesisDisplayer {
 		 * @type {SpeechSynthesisManager}
 		 */
 		this.speechManager = new SpeechSynthesisManager();
+		
+		// Configure first address announcement flag in speech manager
+		// This allows mutation even after this displayer is frozen
+		this.speechManager._firstAddressAnnouncedByDisplayer = false;
 
 		// Get DOM elements with error handling
 		/**
@@ -732,24 +737,41 @@ class HtmlSpeechSynthesisDisplayer {
 		let priority = 0;
 
 		// Determine speech content and priority based on event type
-		// Priority order: Municipality (3) > Bairro (2) > Logradouro (1) > Full address every 50s (0)
-		if (["MunicipioChanged", "BairroChanged", "LogradouroChanged"].includes(enderecoPadronizadoOrEvent)) {
+		// Priority order: First address (2.5) > Municipality (3) > Bairro (2) > Logradouro (1) > Periodic (0)
+		
+		// SPECIAL CASE: First address fetch is a change from "no address" to "some address"
+		if (posEvent === ADDRESS_FETCHED_EVENT && !this.speechManager._firstAddressAnnouncedByDisplayer) {
+			if (typeof console !== 'undefined' && console.log) {
+				log("+++ (305) (HtmlSpeechSynthesisDisplayer) First address - announcing");
+			}
+			textToBeSpoken = this.buildTextToSpeech(enderecoPadronizadoOrEvent);
+			priority = 2.5; // High priority for first address (between bairro and municipio)
+			this.speechManager._firstAddressAnnouncedByDisplayer = true;
+		}
+		// Address field changes (municipality, bairro, logradouro)
+		else if (["MunicipioChanged", "BairroChanged", "LogradouroChanged"].includes(enderecoPadronizadoOrEvent)) {
 			if (typeof console !== 'undefined' && console.log) {
 				log("+++ (310) (HtmlSpeechSyntesisDisplayer) Changed");
 			}
 
+			// Extract full address from changeDetails for building speech text
+			// changeDetails.currentAddress contains the complete BrazilianStandardAddress object
+			const fullAddress = loadingOrChangeDetails?.currentAddress || currentAddress;
+
 			// Call the appropriate build method based on event type
 			if (enderecoPadronizadoOrEvent === "MunicipioChanged") {
-				textToBeSpoken = this.buildTextToSpeechMunicipio(currentAddress, loadingOrChangeDetails);
+				textToBeSpoken = this.buildTextToSpeechMunicipio(fullAddress, loadingOrChangeDetails);
 				priority = 3; // Highest priority for municipality changes
 			} else if (enderecoPadronizadoOrEvent === "BairroChanged") {
-				textToBeSpoken = this.buildTextToSpeechBairro(currentAddress);
+				textToBeSpoken = this.buildTextToSpeechBairro(fullAddress);
 				priority = 2; // Medium priority for neighborhood changes
 			} else if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
-				textToBeSpoken = this.buildTextToSpeechLogradouro(currentAddress);
+				textToBeSpoken = this.buildTextToSpeechLogradouro(fullAddress);
 				priority = 1; // Low priority for street changes
 			}
-		} else if (posEvent === PositionManager.strCurrPosUpdate) {
+		}
+		// Periodic full address updates (every 50+ seconds)
+		else if (posEvent === PositionManager.strCurrPosUpdate) {
 			// Full address update every 50 seconds (trackingInterval)
 			// This is the main feature: speak full address at regular 50-second intervals
 			textToBeSpoken = this.buildTextToSpeech(enderecoPadronizadoOrEvent);

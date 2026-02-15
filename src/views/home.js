@@ -19,6 +19,7 @@
 import WebGeocodingManager from '../coordination/WebGeocodingManager.js';
 import Chronometer from '../timing/Chronometer.js';
 import PositionManager from '../core/PositionManager.js';
+import GeoPosition from '../core/GeoPosition.js';
 import { log, warn, error } from '../utils/logger.js';
 
 /**
@@ -362,14 +363,24 @@ class HomeViewController {
     log(`_updateTrackingUI: isTracking=${isTracking} - Not yet implemented`);
   }
   
-  // ===== Public Methods (Stubs for future implementation) =====
+  // ===== Public Methods (Tracking) =====
   
   /**
    * Gets a single location update without starting continuous tracking.
    * 
+   * Extracted from WebGeocodingManager (lines 729-752).
+   * 
+   * **Workflow**:
+   * 1. Delegate to ServiceCoordinator for position retrieval
+   * 2. Wrap position in GeoPosition instance
+   * 3. Update change detection coordinator
+   * 4. Notify function observers
+   * 5. Handle errors gracefully
+   * 
    * @async
-   * @returns {Promise<void>} Resolves when location is obtained
+   * @returns {Promise<GeolocationPosition>} Resolves with position object
    * @throws {Error} If not initialized
+   * @throws {GeolocationError} If geolocation fails
    * 
    * @example
    * await controller.getSingleLocationUpdate();
@@ -378,12 +389,58 @@ class HomeViewController {
     if (!this.initialized) {
       throw new Error('HomeViewController not initialized. Call init() first.');
     }
-    // TODO: Step 3 - Move from WebGeocodingManager
-    log('getSingleLocationUpdate: Not yet implemented');
+    
+    if (!this.manager || !this.manager.serviceCoordinator) {
+      throw new Error('ServiceCoordinator not available');
+    }
+    
+    try {
+      const position = await this.manager.serviceCoordinator.getSingleLocationUpdate();
+      
+      if (position && position.coords) {
+        // Wrap raw browser position in GeoPosition instance
+        const geoPosition = new GeoPosition(position);
+        
+        // Update GeocodingState for backward compatibility
+        this.manager.currentPosition = geoPosition;
+        this.manager.currentCoords = position.coords;
+        
+        // Update change detection coordinator
+        if (this.manager.changeDetectionCoordinator) {
+          this.manager.changeDetectionCoordinator.setCurrentPosition(position);
+        }
+        
+        // Notify function observers
+        if (typeof this.manager.notifyFunctionObservers === 'function') {
+          this.manager.notifyFunctionObservers();
+        }
+        
+        log('HomeViewController: Single location update successful');
+      }
+      
+      return position;
+    } catch (err) {
+      error('HomeViewController: Single location update failed:', err);
+      
+      // Display error via manager
+      if (this.manager && typeof this.manager._displayError === 'function') {
+        this.manager._displayError(err);
+      }
+      
+      throw err;
+    }
   }
   
   /**
    * Starts continuous location tracking.
+   * 
+   * Extracted from WebGeocodingManager (lines 772-782).
+   * 
+   * **Initialization Steps**:
+   * 1. Initialize speech synthesis UI components
+   * 2. Get initial location update
+   * 3. Start continuous position watching via ServiceCoordinator
+   * 4. Set up address component change detection callbacks
    * 
    * @returns {void}
    * @throws {Error} If not initialized
@@ -398,24 +455,54 @@ class HomeViewController {
       throw new Error('HomeViewController not initialized. Call init() first.');
     }
     
-    // TODO: Step 3 - Move from WebGeocodingManager
-    // For now, delegate to manager if autoStartTracking is enabled
-    if (this.manager && typeof this.manager.startTracking === 'function') {
-      this.manager.startTracking();
+    if (this.tracking) {
+      warn('HomeViewController: Tracking already started');
+      return;
+    }
+    
+    try {
+      // Initialize speech synthesis UI components (extracted from WebGeocodingManager)
+      if (this.manager && this.manager.speechCoordinator) {
+        this.manager.speechCoordinator.initializeSpeechSynthesis();
+      }
+      
+      // Get initial location and start continuous tracking
+      this.getSingleLocationUpdate().catch(err => {
+        warn('HomeViewController: Initial location update failed:', err.message);
+        // Continue with tracking even if initial update fails
+      });
+      
+      // Start continuous tracking via ServiceCoordinator
+      if (this.manager && this.manager.serviceCoordinator) {
+        this.manager.serviceCoordinator.startTracking();
+      }
+      
+      // Set up address component change detection callbacks
+      if (this.manager && this.manager.changeDetectionCoordinator) {
+        this.manager.changeDetectionCoordinator.setupChangeDetection();
+      }
+      
       this.tracking = true;
-      log('HomeViewController: Tracking started via manager');
+      log('HomeViewController: Tracking started');
       
       // Emit tracking started event
       this.document.dispatchEvent(new CustomEvent('homeview:tracking:started', {
         detail: { controller: this }
       }));
-    } else {
-      warn('HomeViewController: startTracking() not yet fully implemented');
+    } catch (err) {
+      error('HomeViewController: Failed to start tracking:', err);
+      throw err;
     }
   }
   
   /**
    * Stops continuous location tracking.
+   * 
+   * Extracted from WebGeocodingManager (lines 801-806).
+   * 
+   * Delegates to ServiceCoordinator to stop the GeolocationService tracking.
+   * This method can be called to stop tracking when the user toggles off
+   * the tracking feature or when cleaning up resources.
    * 
    * @returns {void}
    * 
@@ -429,8 +516,35 @@ class HomeViewController {
       warn('HomeViewController not initialized');
       return;
     }
-    // TODO: Step 3 - Move from WebGeocodingManager
-    log('stopTracking: Not yet implemented');
+    
+    if (!this.tracking) {
+      warn('HomeViewController: Tracking not started');
+      return;
+    }
+    
+    // Always set tracking to false first for fault tolerance
+    const wasTracking = this.tracking;
+    this.tracking = false;
+    
+    try {
+      // Stop tracking via ServiceCoordinator
+      if (this.manager && this.manager.serviceCoordinator && typeof this.manager.serviceCoordinator.stopTracking === 'function') {
+        this.manager.serviceCoordinator.stopTracking();
+      }
+      
+      log('HomeViewController: Tracking stopped');
+      
+      // Emit tracking stopped event
+      if (wasTracking) {
+        this.document.dispatchEvent(new CustomEvent('homeview:tracking:stopped', {
+          detail: { controller: this }
+        }));
+      }
+    } catch (err) {
+      error('HomeViewController: Failed to stop tracking:', err);
+      // Don't throw - stopping tracking should be fault-tolerant
+      // tracking flag already set to false above
+    }
   }
   
   /**

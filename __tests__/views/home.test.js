@@ -193,9 +193,26 @@ describe('HomeViewController', () => {
     });
     
     it('should auto-start tracking if enabled', async () => {
-      const mockManager = {
+      const mockServiceCoordinator = {
+        getSingleLocationUpdate: jest.fn().mockResolvedValue({
+          coords: { latitude: -8.05, longitude: -35.0 }
+        }),
         startTracking: jest.fn()
       };
+      const mockChangeDetectionCoordinator = {
+        setCurrentPosition: jest.fn(),
+        setupChangeDetection: jest.fn()
+      };
+      const mockSpeechCoordinator = {
+        initializeSpeechSynthesis: jest.fn()
+      };
+      const mockManager = {
+        serviceCoordinator: mockServiceCoordinator,
+        changeDetectionCoordinator: mockChangeDetectionCoordinator,
+        speechCoordinator: mockSpeechCoordinator,
+        notifyFunctionObservers: jest.fn()
+      };
+      
       const autoStartController = new HomeViewController(mockDocument, {
         locationResult: 'locationResult',
         manager: mockManager,
@@ -204,7 +221,7 @@ describe('HomeViewController', () => {
       
       await autoStartController.init();
       
-      expect(mockManager.startTracking).toHaveBeenCalled();
+      expect(mockServiceCoordinator.startTracking).toHaveBeenCalled();
       expect(autoStartController.tracking).toBe(true);
     });
     
@@ -336,6 +353,199 @@ describe('HomeViewController', () => {
       
       expect(controller).toBeInstanceOf(HomeViewController);
       expect(controller.initialized).toBe(true);
+    });
+  });
+  
+  describe('Tracking Methods (Full Implementation)', () => {
+    let mockServiceCoordinator;
+    let mockChangeDetectionCoordinator;
+    let mockSpeechCoordinator;
+    let mockManager;
+    
+    beforeEach(async () => {
+      mockServiceCoordinator = {
+        getSingleLocationUpdate: jest.fn().mockResolvedValue({
+          coords: { 
+            latitude: -8.05428, 
+            longitude: -35.0000,
+            accuracy: 10
+          }
+        }),
+        startTracking: jest.fn(),
+        stopTracking: jest.fn()
+      };
+      
+      mockChangeDetectionCoordinator = {
+        setCurrentPosition: jest.fn(),
+        setupChangeDetection: jest.fn()
+      };
+      
+      mockSpeechCoordinator = {
+        initializeSpeechSynthesis: jest.fn()
+      };
+      
+      mockManager = {
+        serviceCoordinator: mockServiceCoordinator,
+        changeDetectionCoordinator: mockChangeDetectionCoordinator,
+        speechCoordinator: mockSpeechCoordinator,
+        notifyFunctionObservers: jest.fn(),
+        _displayError: jest.fn()
+      };
+      
+      controller = new HomeViewController(mockDocument, {
+        locationResult: 'locationResult',
+        manager: mockManager,
+        autoStartTracking: false
+      });
+      
+      await controller.init();
+    });
+    
+    describe('getSingleLocationUpdate()', () => {
+      it('should get single location update successfully', async () => {
+        const position = await controller.getSingleLocationUpdate();
+        
+        expect(position).toBeDefined();
+        expect(position.coords).toBeDefined();
+        expect(mockServiceCoordinator.getSingleLocationUpdate).toHaveBeenCalled();
+      });
+      
+      it('should wrap position in GeoPosition instance', async () => {
+        await controller.getSingleLocationUpdate();
+        
+        expect(mockManager.currentPosition).toBeDefined();
+        expect(mockManager.currentCoords).toBeDefined();
+      });
+      
+      it('should update change detection coordinator', async () => {
+        await controller.getSingleLocationUpdate();
+        
+        expect(mockChangeDetectionCoordinator.setCurrentPosition).toHaveBeenCalled();
+      });
+      
+      it('should notify function observers', async () => {
+        await controller.getSingleLocationUpdate();
+        
+        expect(mockManager.notifyFunctionObservers).toHaveBeenCalled();
+      });
+      
+      it('should handle ServiceCoordinator errors', async () => {
+        const mockError = new Error('Geolocation failed');
+        mockServiceCoordinator.getSingleLocationUpdate.mockRejectedValue(mockError);
+        
+        await expect(controller.getSingleLocationUpdate()).rejects.toThrow('Geolocation failed');
+        expect(mockManager._displayError).toHaveBeenCalledWith(mockError);
+      });
+      
+      it('should throw if ServiceCoordinator not available', async () => {
+        controller.manager.serviceCoordinator = null;
+        
+        await expect(controller.getSingleLocationUpdate()).rejects.toThrow('ServiceCoordinator not available');
+      });
+    });
+    
+    describe('startTracking()', () => {
+      it('should start tracking successfully', () => {
+        controller.startTracking();
+        
+        expect(controller.tracking).toBe(true);
+        expect(mockServiceCoordinator.startTracking).toHaveBeenCalled();
+      });
+      
+      it('should initialize speech synthesis', () => {
+        controller.startTracking();
+        
+        expect(mockSpeechCoordinator.initializeSpeechSynthesis).toHaveBeenCalled();
+      });
+      
+      it('should get initial location update', () => {
+        controller.startTracking();
+        
+        expect(mockServiceCoordinator.getSingleLocationUpdate).toHaveBeenCalled();
+      });
+      
+      it('should set up change detection', () => {
+        controller.startTracking();
+        
+        expect(mockChangeDetectionCoordinator.setupChangeDetection).toHaveBeenCalled();
+      });
+      
+      it('should dispatch tracking:started event', () => {
+        controller.startTracking();
+        
+        expect(mockDocument.dispatchEvent).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: 'homeview:tracking:started'
+          })
+        );
+      });
+      
+      it('should not start if already tracking', () => {
+        controller.startTracking();
+        mockServiceCoordinator.startTracking.mockClear();
+        
+        controller.startTracking(); // Second call
+        
+        expect(mockServiceCoordinator.startTracking).not.toHaveBeenCalled();
+      });
+    });
+    
+    describe('stopTracking()', () => {
+      beforeEach(() => {
+        controller.startTracking();
+        mockDocument.dispatchEvent.mockClear();
+      });
+      
+      it('should stop tracking successfully', () => {
+        controller.stopTracking();
+        
+        expect(controller.tracking).toBe(false);
+        expect(mockServiceCoordinator.stopTracking).toHaveBeenCalled();
+      });
+      
+      it('should dispatch tracking:stopped event', () => {
+        controller.stopTracking();
+        
+        expect(mockDocument.dispatchEvent).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: 'homeview:tracking:stopped'
+          })
+        );
+      });
+      
+      it('should not stop if not tracking', () => {
+        controller.stopTracking(); // First stop
+        mockServiceCoordinator.stopTracking.mockClear();
+        
+        controller.stopTracking(); // Second stop
+        
+        expect(mockServiceCoordinator.stopTracking).not.toHaveBeenCalled();
+      });
+      
+      it('should handle ServiceCoordinator errors gracefully', () => {
+        mockServiceCoordinator.stopTracking.mockImplementation(() => {
+          throw new Error('Stop failed');
+        });
+        
+        expect(() => controller.stopTracking()).not.toThrow();
+        expect(controller.tracking).toBe(false);
+      });
+    });
+    
+    describe('toggleTracking()', () => {
+      it('should start tracking if not tracking', () => {
+        controller.toggleTracking();
+        
+        expect(controller.tracking).toBe(true);
+      });
+      
+      it('should stop tracking if tracking', () => {
+        controller.startTracking();
+        
+        controller.toggleTracking();
+        
+        expect(controller.tracking).toBe(false);
+      });
     });
   });
 });

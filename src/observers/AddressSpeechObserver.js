@@ -26,12 +26,13 @@ this._firstAddressAnnounced = false;
 }
 
 update(currentAddress, enderecoPadronizadoOrEvent, posEvent, loadingOrChangeDetails, error) {
-if (typeof console !== 'undefined' && console.log) {
-log("+++ (301) AddressSpeechObserver.update called +++");
-log("+++ (302) currentAddress: ", currentAddress);
-log("+++ (303) enderecoPadronizadoOrEvent: ", enderecoPadronizadoOrEvent);
-log("+++ (304) posEvent: ", posEvent);
-}
+// Logging is now handled by HtmlSpeechSynthesisDisplayer facade for backward compatibility
+// if (typeof console !== 'undefined' && console.log) {
+// log("+++ (301) AddressSpeechObserver.update called +++");
+// log("+++ (302) currentAddress: ", currentAddress);
+// log("+++ (303) enderecoPadronizadoOrEvent: ", enderecoPadronizadoOrEvent);
+// log("+++ (304) posEvent: ", posEvent);
+// }
 
 if (!currentAddress) {
 return;

@@ -2,7 +2,54 @@
 
 This directory contains all test files for the Guia.js project, organized by test subject and purpose.
 
+## Quick Reference
+
+| Directory | Test Type | Count | Purpose |
+|-----------|-----------|-------|---------|
+| `__mocks__/` | Mocks | 2 files | Jest module mocks (toast, logger) |
+| `unit/` | Unit | 10 files | Individual class tests |
+| `integration/` | Integration | 1 file | Multi-component tests |
+| `features/` | Feature | 7 files | Feature behavior tests |
+| `ui/` | UI | 2 files | Display component tests |
+| `managers/` | Managers | 2 files | High-level coordinator tests |
+| `external/` | External | 3 files | API integration tests |
+| `utils/` | Utils | 2 files | Utility function tests |
+| `patterns/` | Patterns | 1 file | Design pattern tests |
+| `e2e/` | E2E | 11 files | End-to-end workflow tests |
+| **Total** | | **41 files** | **2,437 passing tests** |
+
 ## Directory Structure
+
+### `__mocks__/` - Jest Module Mocks
+Standard Jest convention for mocking modules and dependencies:
+- **Purpose**: Provides mock implementations for external dependencies
+- **Convention**: Jest automatically uses mocks from `__mocks__/` when `jest.mock()` is called
+- **Usage**: Manual mocks for npm packages or project modules
+- **Documentation**: [Jest Manual Mocks](https://jestjs.io/docs/manual-mocks)
+
+**Current Mocks**:
+- `src/utils/toast.js` - Mock toast notification system
+- `src/utils/logger.js` - Mock logging utilities
+
+**When to use**:
+- ✅ Mocking external libraries (e.g., browser APIs, third-party packages)
+- ✅ Providing consistent test fixtures
+- ✅ Isolating tests from network calls or file system
+- ✅ Replacing utilities that have side effects (logging, notifications, etc.)
+
+**Example Structure**:
+```
+__tests__/__mocks__/
+├── src/
+│   └── utils/
+│       ├── toast.js       # Mock toast notifications
+│       └── logger.js      # Mock console logging
+└── external-library.js    # Mock third-party package (if needed)
+```
+
+**Note**: Jest automatically discovers mocks in `__mocks__/` directory when `jest.mock()` is called in test files.
+
+---
 
 ### `unit/` - Unit Tests (10 files)
 Tests for individual classes and their methods in isolation:

@@ -338,29 +338,103 @@ class HomeViewController {
    * @returns {void}
    */
   _setupEventListeners() {
-    // TODO: Step 4 - Implement event listener setup
-    log('_setupEventListeners: Not yet implemented');
+    // Get Location button (primary action)
+    const locationBtn = this.document.getElementById('enable-location-btn');
+    if (locationBtn) {
+      this._boundHandlers.locationClick = async () => {
+        try {
+          await this.toggleTracking();
+        } catch (err) {
+          error('Error toggling tracking:', err);
+        }
+      };
+      locationBtn.addEventListener('click', this._boundHandlers.locationClick);
+      log('HomeViewController: Location button listener added');
+    } else {
+      warn('HomeViewController: enable-location-btn not found');
+    }
+    
+    // Test Position button (advanced controls)
+    const testBtn = this.document.getElementById('insertPositionButton');
+    if (testBtn) {
+      this._boundHandlers.testPositionClick = async () => {
+        try {
+          await this.getSingleLocationUpdate();
+        } catch (err) {
+          error('Error getting test position:', err);
+        }
+      };
+      testBtn.addEventListener('click', this._boundHandlers.testPositionClick);
+      log('HomeViewController: Test position button listener added');
+    }
   }
   
   /**
-   * Removes all event listeners.
+   * Removes all event listeners set up by _setupEventListeners().
+   * 
+   * Called during destroy() to prevent memory leaks.
+   * 
    * @private
    * @returns {void}
+   * @since 0.10.0-alpha
    */
   _removeEventListeners() {
-    // TODO: Step 4 - Implement event listener removal
-    log('_removeEventListeners: Not yet implemented');
+    // Remove location button listener
+    const locationBtn = this.document.getElementById('enable-location-btn');
+    if (locationBtn && this._boundHandlers.locationClick) {
+      locationBtn.removeEventListener('click', this._boundHandlers.locationClick);
+      log('HomeViewController: Location button listener removed');
+    }
+    
+    // Remove test button listener
+    const testBtn = this.document.getElementById('insertPositionButton');
+    if (testBtn && this._boundHandlers.testPositionClick) {
+      testBtn.removeEventListener('click', this._boundHandlers.testPositionClick);
+      log('HomeViewController: Test position button listener removed');
+    }
+    
+    // Clear bound handlers
+    this._boundHandlers = {};
   }
   
   /**
-   * Updates tracking UI state (button states, status messages).
+   * Updates the tracking UI button states.
+   * 
+   * Changes button text and state based on tracking status:
+   * - Not tracking: "Ativar Localização" (enabled)
+   * - Tracking: "Parar Rastreamento" (enabled)
+   * 
    * @private
-   * @param {boolean} isTracking - Current tracking state
+   * @param {boolean} isTracking - Whether tracking is active
    * @returns {void}
+   * @since 0.10.0-alpha
    */
   _updateTrackingUI(isTracking) {
-    // TODO: Step 4 - Implement UI updates
-    log(`_updateTrackingUI: isTracking=${isTracking} - Not yet implemented`);
+    const locationBtn = this.document.getElementById('enable-location-btn');
+    if (!locationBtn) {
+      warn('HomeViewController: Cannot update UI - enable-location-btn not found');
+      return;
+    }
+    
+    // Update button text
+    const textSpan = locationBtn.querySelector('.button-text');
+    if (textSpan) {
+      textSpan.textContent = isTracking ? 'Parar Rastreamento' : 'Ativar Localização';
+    } else {
+      locationBtn.textContent = isTracking ? 'Parar Rastreamento' : 'Ativar Localização';
+    }
+    
+    // Update button icon
+    const iconSpan = locationBtn.querySelector('.button-icon');
+    if (iconSpan) {
+      iconSpan.textContent = isTracking ? '⏹️' : '📍';
+    }
+    
+    // Update ARIA label for accessibility
+    locationBtn.setAttribute('aria-label', 
+      isTracking ? 'Parar rastreamento de localização' : 'Ativar localização');
+    
+    log(`HomeViewController: UI updated (tracking: ${isTracking})`);
   }
   
   // ===== Public Methods (Tracking) =====
@@ -485,6 +559,9 @@ class HomeViewController {
       this.tracking = true;
       log('HomeViewController: Tracking started');
       
+      // Update UI to reflect tracking state
+      this._updateTrackingUI(true);
+      
       // Emit tracking started event
       this.document.dispatchEvent(new CustomEvent('homeview:tracking:started', {
         detail: { controller: this }
@@ -533,6 +610,9 @@ class HomeViewController {
       }
       
       log('HomeViewController: Tracking stopped');
+      
+      // Update UI to reflect stopped state
+      this._updateTrackingUI(false);
       
       // Emit tracking stopped event
       if (wasTracking) {

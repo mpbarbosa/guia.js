@@ -163,7 +163,17 @@ describe('HomeViewController', () => {
     
     it('should initialize chronometer if element exists', async () => {
       const mockChronometerElement = { id: 'chronometer' };
-      mockDocument.getElementById.mockReturnValue(mockChronometerElement);
+      const locationBtn = {
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn()
+      };
+      
+      mockDocument.getElementById.mockImplementation((id) => {
+        if (id === 'chronometer') return mockChronometerElement;
+        if (id === 'enable-location-btn') return locationBtn;
+        if (id === 'locationResult') return { innerHTML: '' };
+        return null;
+      });
       
       await controller.init();
       
@@ -546,6 +556,317 @@ describe('HomeViewController', () => {
         
         expect(controller.tracking).toBe(false);
       });
+    });
+  });
+});
+
+// ===== Event Listeners and UI Tests =====
+
+describe('HomeViewController - Event Listeners', () => {
+  let document, controller, mockManager;
+  
+  beforeEach(() => {
+    // Create mock document with buttons
+    const locationBtn = {
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      querySelector: jest.fn(),
+      setAttribute: jest.fn(),
+      id: 'enable-location-btn'
+    };
+    
+    const testBtn = {
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      id: 'insertPositionButton'
+    };
+    
+    document = {
+      getElementById: jest.fn((id) => {
+        if (id === 'enable-location-btn') return locationBtn;
+        if (id === 'insertPositionButton') return testBtn;
+        if (id === 'chronometer') return null;
+        if (id === 'locationResult') return { innerHTML: '' };
+        return null;
+      }),
+      dispatchEvent: jest.fn()
+    };
+    
+    // Create mock manager
+    mockManager = {
+      serviceCoordinator: {
+        getSingleLocationUpdate: jest.fn().mockResolvedValue({
+          coords: { latitude: 10, longitude: 20 }
+        }),
+        startTracking: jest.fn(),
+        stopTracking: jest.fn()
+      },
+      changeDetectionCoordinator: {
+        setCurrentPosition: jest.fn(),
+        setupChangeDetection: jest.fn()
+      },
+      speechCoordinator: {
+        initializeSpeechSynthesis: jest.fn()
+      },
+      notifyFunctionObservers: jest.fn(),
+      _displayError: jest.fn()
+    };
+    
+    controller = new HomeViewController(document, {
+      locationResult: 'locationResult',
+      manager: mockManager,
+      autoStartTracking: false
+    });
+  });
+  
+  describe('_setupEventListeners()', () => {
+    test('should add click listener to enable-location-btn', async () => {
+      await controller.init();
+      
+      const locationBtn = document.getElementById('enable-location-btn');
+      expect(locationBtn.addEventListener).toHaveBeenCalledWith('click', expect.any(Function));
+    });
+    
+    test('should add click listener to insertPositionButton', async () => {
+      await controller.init();
+      
+      const testBtn = document.getElementById('insertPositionButton');
+      expect(testBtn.addEventListener).toHaveBeenCalledWith('click', expect.any(Function));
+    });
+    
+    test('should store bound handlers for cleanup', async () => {
+      await controller.init();
+      
+      expect(controller._boundHandlers.locationClick).toBeInstanceOf(Function);
+      expect(controller._boundHandlers.testPositionClick).toBeInstanceOf(Function);
+    });
+    
+    test('should handle missing enable-location-btn gracefully', async () => {
+      document.getElementById = jest.fn((id) => {
+        if (id === 'insertPositionButton') return { addEventListener: jest.fn() };
+        return null;
+      });
+      
+      await controller.init(); // Should not throw
+      
+      expect(controller._boundHandlers.locationClick).toBeUndefined();
+    });
+    
+    test('should handle missing insertPositionButton gracefully', async () => {
+      document.getElementById = jest.fn((id) => {
+        if (id === 'enable-location-btn') return { addEventListener: jest.fn() };
+        return null;
+      });
+      
+      await controller.init(); // Should not throw
+      
+      expect(controller._boundHandlers.testPositionClick).toBeUndefined();
+    });
+  });
+  
+  describe('_removeEventListeners()', () => {
+    test('should remove location button listener on destroy', async () => {
+      await controller.init();
+      const locationBtn = document.getElementById('enable-location-btn');
+      const boundHandler = controller._boundHandlers.locationClick;
+      
+      controller.destroy();
+      
+      expect(locationBtn.removeEventListener).toHaveBeenCalledWith('click', boundHandler);
+    });
+    
+    test('should remove test button listener on destroy', async () => {
+      await controller.init();
+      const testBtn = document.getElementById('insertPositionButton');
+      
+      controller.destroy();
+      
+      expect(testBtn.removeEventListener).toHaveBeenCalledWith('click', expect.any(Function));
+    });
+    
+    test('should clear bound handlers on destroy', async () => {
+      await controller.init();
+      
+      controller.destroy();
+      
+      expect(controller._boundHandlers).toEqual({});
+    });
+    
+    test('should handle missing button gracefully during cleanup', async () => {
+      await controller.init();
+      
+      // Replace getElementById to return null
+      document.getElementById = jest.fn(() => null);
+      
+      expect(() => controller.destroy()).not.toThrow();
+    });
+  });
+  
+  describe('_updateTrackingUI()', () => {
+    let locationBtn, textSpan, iconSpan;
+    
+    beforeEach(async () => {
+      textSpan = { textContent: 'Ativar Localização' };
+      iconSpan = { textContent: '📍' };
+      
+      locationBtn = {
+        querySelector: jest.fn((selector) => {
+          if (selector === '.button-text') return textSpan;
+          if (selector === '.button-icon') return iconSpan;
+          return null;
+        }),
+        setAttribute: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn()
+      };
+      
+      document.getElementById = jest.fn((id) => {
+        if (id === 'enable-location-btn') return locationBtn;
+        if (id === 'locationResult') return { innerHTML: '' };
+        return null;
+      });
+      
+      controller = new HomeViewController(document, {
+        locationResult: 'locationResult',
+        manager: mockManager,
+        autoStartTracking: false
+      });
+      
+      await controller.init();
+    });
+    
+    test('should update button text when tracking starts', () => {
+      controller._updateTrackingUI(true);
+      
+      expect(textSpan.textContent).toBe('Parar Rastreamento');
+    });
+    
+    test('should update button text when tracking stops', () => {
+      controller._updateTrackingUI(false);
+      
+      expect(textSpan.textContent).toBe('Ativar Localização');
+    });
+    
+    test('should update button icon when tracking starts', () => {
+      controller._updateTrackingUI(true);
+      
+      expect(iconSpan.textContent).toBe('⏹️');
+    });
+    
+    test('should update button icon when tracking stops', () => {
+      controller._updateTrackingUI(false);
+      
+      expect(iconSpan.textContent).toBe('📍');
+    });
+    
+    test('should update ARIA label when tracking starts', () => {
+      controller._updateTrackingUI(true);
+      
+      expect(locationBtn.setAttribute).toHaveBeenCalledWith('aria-label', 'Parar rastreamento de localização');
+    });
+    
+    test('should update ARIA label when tracking stops', () => {
+      controller._updateTrackingUI(false);
+      
+      expect(locationBtn.setAttribute).toHaveBeenCalledWith('aria-label', 'Ativar localização');
+    });
+    
+    test('should handle missing button-text span', () => {
+      locationBtn.querySelector = jest.fn(() => null);
+      locationBtn.textContent = 'Ativar Localização';
+      
+      controller._updateTrackingUI(true);
+      
+      expect(locationBtn.textContent).toBe('Parar Rastreamento');
+    });
+    
+    test('should handle missing button-icon span', () => {
+      locationBtn.querySelector = jest.fn((selector) => {
+        if (selector === '.button-text') return textSpan;
+        return null;
+      });
+      
+      expect(() => controller._updateTrackingUI(true)).not.toThrow();
+    });
+    
+    test('should handle missing button gracefully', () => {
+      document.getElementById = jest.fn(() => null);
+      
+      expect(() => controller._updateTrackingUI(true)).not.toThrow();
+    });
+  });
+  
+  describe('Button Click Integration', () => {
+    test('should call toggleTracking when location button is clicked', async () => {
+      await controller.init();
+      
+      const locationBtn = document.getElementById('enable-location-btn');
+      const clickHandler = locationBtn.addEventListener.mock.calls[0][1];
+      
+      controller.toggleTracking = jest.fn().mockResolvedValue();
+      
+      await clickHandler();
+      
+      expect(controller.toggleTracking).toHaveBeenCalled();
+    });
+    
+    test('should call getSingleLocationUpdate when test button is clicked', async () => {
+      await controller.init();
+      
+      const testBtn = document.getElementById('insertPositionButton');
+      const clickHandler = testBtn.addEventListener.mock.calls[0][1];
+      
+      controller.getSingleLocationUpdate = jest.fn().mockResolvedValue();
+      
+      await clickHandler();
+      
+      expect(controller.getSingleLocationUpdate).toHaveBeenCalled();
+    });
+    
+    test('should handle errors in location button click', async () => {
+      await controller.init();
+      
+      const locationBtn = document.getElementById('enable-location-btn');
+      const clickHandler = locationBtn.addEventListener.mock.calls[0][1];
+      
+      controller.toggleTracking = jest.fn().mockRejectedValue(new Error('Test error'));
+      
+      await clickHandler(); // Should not throw
+    });
+    
+    test('should handle errors in test button click', async () => {
+      await controller.init();
+      
+      const testBtn = document.getElementById('insertPositionButton');
+      const clickHandler = testBtn.addEventListener.mock.calls[0][1];
+      
+      controller.getSingleLocationUpdate = jest.fn().mockRejectedValue(new Error('Test error'));
+      
+      await clickHandler(); // Should not throw
+    });
+  });
+  
+  describe('UI Updates During Tracking', () => {
+    test('should update UI when startTracking is called', async () => {
+      await controller.init();
+      
+      controller.startTracking();
+      
+      const locationBtn = document.getElementById('enable-location-btn');
+      expect(locationBtn.setAttribute).toHaveBeenCalledWith('aria-label', 'Parar rastreamento de localização');
+    });
+    
+    test('should update UI when stopTracking is called', async () => {
+      await controller.init();
+      
+      controller.startTracking();
+      controller.stopTracking();
+      
+      const locationBtn = document.getElementById('enable-location-btn');
+      const calls = locationBtn.setAttribute.mock.calls;
+      const lastCall = calls[calls.length - 1];
+      
+      expect(lastCall).toEqual(['aria-label', 'Ativar localização']);
     });
   });
 });

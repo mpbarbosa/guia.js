@@ -769,3 +769,19 @@ describe('WebGeocodingManager DOM Integration', () => {
         });
     });
 });
+
+/**
+ * NOTE: Deprecation Warnings (v0.10.0-alpha)
+ * 
+ * The following methods are deprecated and emit console warnings:
+ * - initSpeechSynthesis() → Use HomeViewController (automatic initialization)
+ * - getSingleLocationUpdate() → Use HomeViewController.getSingleLocationUpdate()
+ * - startTracking() → Use HomeViewController.startTracking()
+ * - stopTracking() → Use HomeViewController.stopTracking()
+ * 
+ * Backward compatibility is maintained - all methods still work correctly.
+ * Tests above verify functional correctness of deprecated methods.
+ * Deprecation warnings are emitted via warn() calls in WebGeocodingManager.js.
+ * 
+ * See HomeViewController tests (__tests__/views/home.test.js) for new API tests.
+ */

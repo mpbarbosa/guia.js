@@ -78,6 +78,22 @@ CI/CD, scripts, and automation documentation:
 General purpose guides and how-tos:
 - [guides/](./guides/) - Various development and contribution guides
 
+### 📚 Developer Resources
+Developer-specific documentation and references:
+- [developer/](./developer/) - Developer guides, patterns, and best practices
+- [reference/](./reference/) - Technical references and specifications
+- [prompts/](./prompts/) - AI assistant prompts and templates
+
+### 🔍 Generated & Auto-Generated
+Auto-generated documentation (should not be manually edited):
+- [api-generated/](./api-generated/) - JSDoc-generated API docs (ignored in git)
+- [api/](./api/) - API documentation (may include generated content)
+
+### 🗃️ Miscellaneous & Temporary
+Uncategorized and work-in-progress documentation:
+- [misc/](./misc/) - Temporary docs, scratch notes, uncategorized content
+- [issue-189/](./issue-189/) - Issue-specific documentation (temporary)
+
 ---
 
 ## 🔍 Quick Search
@@ -178,6 +194,7 @@ Found outdated information or broken links? Want to improve documentation?
 
 ---
 
-**Last Updated**: 2026-01-28  
+**Last Updated**: 2026-02-15  
 **Documentation Version**: 0.9.0-alpha  
-**Total Documentation Files**: 312+ markdown files
+**Total Documentation Files**: 312+ markdown files  
+**Directory Structure**: 20 documented categories

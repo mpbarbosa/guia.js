@@ -12,9 +12,11 @@
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "test:verbose": "node --experimental-vm-modules node_modules/jest/bin/jest.js --verbose",
+    "test:e2e": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.config.e2e.js",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.config.unit.js",
+    "test:all-suites": "npm run test:unit && npm run test:e2e",
     "validate": "node -c src/app.js && node -c src/guia.js && node -c src/guia_ibge.js",
     "test:all": "npm run validate && npm test",
-    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js __tests__/unit",
     "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js __tests__/integration",
     "test:features": "node --experimental-vm-modules node_modules/jest/bin/jest.js __tests__/features",
     "test:services": "node --experimental-vm-modules node_modules/jest/bin/jest.js __tests__/services",
@@ -69,7 +71,9 @@
     "testTimeout": 30000,
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/__mocks__/"
+      "/__mocks__/",
+      "/__tests__/helpers/",
+      "/__tests__/e2e/"
     ],
     "collectCoverageFrom": [
       "src/**/*.js",

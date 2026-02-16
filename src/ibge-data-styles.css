@@ -1,0 +1,356 @@
+/* ============================================
+   IBGE DATA FORMATTED DISPLAY
+   ============================================ */
+
+/* Container */
+.ibge-data-formatted {
+  padding: 12px;
+  background: var(--md-sys-color-surface-variant, #f9fafb);
+  border-radius: 12px;
+  border: 1px solid var(--md-sys-color-outline-variant, #e5e7eb);
+}
+
+/* Primary Display (Natural Language) */
+.ibge-primary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: var(--md-sys-typescale-body-large);
+  font-weight: var(--md-sys-typescale-body-large-weight);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+  color: var(--md-sys-color-on-surface, #1d1b20);
+}
+
+.ibge-icon {
+  font-size: var(--md-sys-typescale-headline-small);
+  line-height: 1;
+}
+
+.ibge-primary-text {
+  font-weight: 400;
+}
+
+.ibge-primary-text strong {
+  font-weight: 600;
+  color: var(--md-sys-color-primary, #6750a4);
+}
+
+/* City Classification Badge 
+ * ACCESSIBILITY: Gradient colors meet WCAG 2.1 AAA (7:1+)
+ * - Start (#e8def8): 7.22:1 contrast with text ✓ AAA
+ * - End (#f5f0fa): 8.33:1 contrast with text ✓ AAA
+ * - Solid fallback for older browsers
+ */
+.ibge-classification {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  /* Solid fallback */
+  background: #eee7f9;
+  /* AAA-compliant gradient */
+  background: linear-gradient(135deg, #e8def8 0%, #f5f0fa 100%);
+  border-radius: 20px;
+  border: 1px solid var(--md-sys-color-outline, #79747e);
+  margin-bottom: 12px;
+}
+
+.classification-icon {
+  font-size: 20px; /* Decorative icon size */
+  line-height: 1;
+}
+
+.classification-label {
+  font-weight: 600;
+  font-size: var(--md-sys-typescale-title-small);
+  color: var(--md-sys-color-primary, #6750a4);
+  /* Text shadow enhances readability on gradient background */
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.classification-description {
+  font-size: var(--md-sys-typescale-body-small);
+  font-weight: var(--md-sys-typescale-body-small-weight);
+  line-height: var(--md-sys-typescale-body-small-line-height);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  font-style: italic;
+}
+
+/* Details (Progressive Disclosure) */
+.ibge-details {
+  margin-top: 12px;
+}
+
+.ibge-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--md-sys-color-surface, #fff);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: var(--md-sys-typescale-label-large);
+  font-weight: var(--md-sys-typescale-label-large-weight);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+  letter-spacing: var(--md-sys-typescale-label-large-tracking);
+  color: var(--md-sys-color-primary, #6750a4);
+  transition: background 0.2s;
+  user-select: none;
+}
+
+.ibge-summary:hover {
+  background: var(--md-sys-color-secondary-container, #e8def8);
+}
+
+.ibge-summary:focus {
+  outline: 2px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: 2px;
+}
+
+.summary-icon {
+  font-size: 16px; /* Decorative icon size */
+  line-height: 1;
+}
+
+.summary-text {
+  font-size: var(--md-sys-typescale-body-medium);
+}
+
+/* Details Content */
+.ibge-details-content {
+  padding: 12px;
+  margin-top: 8px;
+  background: var(--md-sys-color-surface, #fff);
+  border-radius: 8px;
+  border: 1px solid var(--md-sys-color-outline-variant, #e5e7eb);
+}
+
+.ibge-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--md-sys-color-surface-variant, #f5f5f5);
+}
+
+.ibge-detail-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.detail-label {
+  font-size: var(--md-sys-typescale-body-small);
+  font-weight: var(--md-sys-typescale-body-small-weight);
+  line-height: var(--md-sys-typescale-body-small-line-height);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+}
+
+.detail-value {
+  font-weight: 600;
+  font-size: var(--md-sys-typescale-body-medium);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
+  color: var(--md-sys-color-on-surface, #1d1b20);
+  text-align: right;
+}
+
+/* Source Link */
+.ibge-source {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--md-sys-color-outline-variant, #e5e7eb);
+  font-size: var(--md-sys-typescale-label-small);
+  font-weight: var(--md-sys-typescale-label-small-weight);
+  line-height: var(--md-sys-typescale-label-small-line-height);
+  letter-spacing: var(--md-sys-typescale-label-small-tracking);
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  text-align: center;
+}
+
+.ibge-source a {
+  color: var(--md-sys-color-primary, #6750a4);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.ibge-source a:hover {
+  text-decoration: underline;
+}
+
+/* State Messages */
+.ibge-loading,
+.ibge-no-data,
+.ibge-unavailable,
+.ibge-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  font-size: var(--md-sys-typescale-body-medium);
+  font-weight: var(--md-sys-typescale-body-medium-weight);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
+  border-radius: 8px;
+}
+
+.ibge-loading {
+  background: var(--md-sys-color-primary-container, #eaddff);
+  color: var(--md-sys-color-on-primary-container, #21005e);
+}
+
+.ibge-no-data,
+.ibge-unavailable {
+  background: var(--md-sys-color-tertiary-container, #ffd8e4);
+  color: var(--md-sys-color-on-tertiary-container, #31111d);
+}
+
+.ibge-error {
+  background: var(--md-sys-color-error-container, #ffdad6);
+  color: var(--md-sys-color-on-error-container, #410002);
+}
+
+.ibge-loading .icon,
+.ibge-no-data .icon,
+.ibge-unavailable .icon,
+.ibge-error .icon {
+  font-size: 20px; /* Decorative icon size */
+  line-height: 1;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .ibge-data-formatted {
+    padding: 10px;
+  }
+
+  .ibge-primary {
+    /* Typography tokens handle responsive scaling automatically */
+    gap: 8px;
+  }
+
+  .ibge-icon {
+    font-size: 20px; /* Decorative icon size */
+  }
+
+  .ibge-classification {
+    padding: 6px 12px;
+    gap: 6px;
+  }
+
+  .classification-icon {
+    font-size: 18px; /* Decorative icon size */
+  }
+
+  /* Typography tokens handle font-size scaling automatically */
+
+  .ibge-detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .detail-value {
+    text-align: left;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .ibge-classification {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+/* Print - Simplify for print */
+@media print {
+  .ibge-data-formatted {
+    background: none;
+    border: 1px solid #ccc;
+  }
+
+  .ibge-details {
+    display: block !important;
+  }
+
+  .ibge-summary {
+    display: none;
+  }
+
+  .ibge-details-content {
+    padding: 0;
+    border: none;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .ibge-data-formatted {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .ibge-classification {
+    background: linear-gradient(135deg, rgba(232, 222, 248, 0.1) 0%, rgba(245, 240, 250, 0.05) 100%);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .ibge-summary,
+  .ibge-details-content {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .ibge-summary:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .ibge-summary {
+    transition: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .ibge-data-formatted,
+  .ibge-classification,
+  .ibge-details-content {
+    border-width: 2px;
+  }
+
+  .detail-label,
+  .detail-value {
+    font-weight: 700;
+  }
+}
+
+/* Accessibility - Focus Visible Enhancement */
+.ibge-summary:focus-visible {
+  outline: 3px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: 3px;
+}
+
+/* Animation for details open/close */
+.ibge-details[open] .ibge-details-content {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ibge-details[open] .ibge-details-content {
+    animation: none;
+  }
+}

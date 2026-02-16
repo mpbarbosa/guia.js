@@ -34,7 +34,51 @@ class HTMLHighlightCardsDisplayer {
         this._bairroElement = document.getElementById('bairro-value');
         this._logradouroElement = document.getElementById('logradouro-value');
         
+        // Get parent cards for aria-busy management
+        // Use closest() only if available (browser environment)
+        this._municipioCard = this._municipioElement?.closest ? this._municipioElement.closest('.highlight-card') : null;
+        this._bairroCard = this._bairroElement?.closest ? this._bairroElement.closest('.highlight-card') : null;
+        this._logradouroCard = this._logradouroElement?.closest ? this._logradouroElement.closest('.highlight-card') : null;
+        
         Object.freeze(this);
+    }
+    
+    /**
+     * Sets loading state with ARIA attributes for screen readers
+     * 
+     * @param {boolean} isLoading - Whether content is loading
+     * @private
+     */
+    _setLoadingState(isLoading) {
+        const cards = [this._municipioCard, this._bairroCard, this._logradouroCard];
+        
+        cards.forEach(card => {
+            if (card) {
+                if (isLoading) {
+                    card.setAttribute('aria-busy', 'true');
+                    card.classList.add('skeleton-loading');
+                } else {
+                    card.removeAttribute('aria-busy');
+                    card.classList.remove('skeleton-loading');
+                }
+            }
+        });
+        
+        log(`(HTMLHighlightCardsDisplayer) Loading state: ${isLoading ? 'started' : 'completed'}`);
+    }
+    
+    /**
+     * Shows loading state (call before geocoding starts)
+     */
+    showLoading() {
+        this._setLoadingState(true);
+    }
+    
+    /**
+     * Hides loading state (automatically called by update)
+     */
+    hideLoading() {
+        this._setLoadingState(false);
     }
     
     /**
@@ -56,6 +100,9 @@ class HTMLHighlightCardsDisplayer {
             warn('(HTMLHighlightCardsDisplayer) No enderecoPadronizado provided, skipping update');
             return;
         }
+        
+        // Clear loading state before updating content
+        this._setLoadingState(false);
         
         // Update metropolitan region (displayed between label and municipality)
         if (this._regiaoMetropolitanaElement) {

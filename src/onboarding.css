@@ -2,10 +2,21 @@
  * Onboarding Card Styles
  * First-time user experience component
  * @since 0.9.0-alpha
+ * 
+ * ACCESSIBILITY: Gradient colors meet WCAG 2.1 AAA (7:1+)
+ * - Start (#3848a8): 7.89:1 contrast with white ✓ AAA
+ * - End (#6a4291): 7.50:1 contrast with white ✓ AAA
+ * - Fallback solid color for older browsers
+ * - Text shadow enhances readability on all gradient points
  */
 
 .onboarding-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* Solid fallback for browsers without gradient support */
+  background: #4557c0;
+  
+  /* AAA-compliant gradient (WCAG 2.1 Level AAA: 7:1+) */
+  background: linear-gradient(135deg, #3848a8 0%, #6a4291 100%);
+  
   border-radius: 16px;
   padding: 32px;
   margin: 24px 0;
@@ -46,7 +57,8 @@
   font-weight: 700;
   margin: 0 0 16px 0;
   color: #ffffff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Enhanced text shadow for gradient readability (WCAG AAA enhancement) */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .onboarding-description {
@@ -57,6 +69,8 @@
   max-width: 500px;
   margin-left: auto;
   margin-right: auto;
+  /* Enhanced text shadow for gradient readability */
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 .onboarding-cta {
@@ -198,10 +212,17 @@
   }
 }
 
-/* Dark mode support (if implemented) */
+/* Dark mode support (if implemented) 
+ * ACCESSIBILITY: Dark mode gradient also meets WCAG 2.1 AAA
+ * - #3848a8: 7.89:1 with white ✓ AAA (same as light mode)
+ * - #5f3a82: 8.70:1 with white ✓ AAA
+ */
 @media (prefers-color-scheme: dark) {
   .onboarding-card {
-    background: linear-gradient(135deg, #4c5fd5 0%, #5a3d7f 100%);
+    /* Solid fallback */
+    background: #3848a8;
+    /* AAA-compliant dark mode gradient */
+    background: linear-gradient(135deg, #3848a8 0%, #5f3a82 100%);
   }
 }
 
@@ -309,3 +330,52 @@
   }
 }
 
+
+/* Converter Fallback Link - Error Recovery */
+.converter-fallback-link {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 12px 24px;
+  background: #ffffff;
+  color: #667eea;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 2px solid #667eea;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.converter-fallback-link:hover {
+  background: #667eea;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.converter-fallback-link:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.converter-fallback-link:active {
+  transform: translateY(0);
+}
+
+/* Error state descriptions */
+.onboarding-description ul {
+  text-align: left;
+  margin: 16px auto;
+  padding-left: 24px;
+  max-width: 500px;
+  list-style-type: disc;
+}
+
+.onboarding-description ul li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.onboarding-description strong {
+  font-weight: 700;
+}

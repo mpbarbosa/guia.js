@@ -95,12 +95,36 @@ class HTMLReferencePlaceDisplayer {
 	 */
 	renderReferencePlaceHtml(referencePlace) {
 		if (!referencePlace) {
-			return "<p class='error'>Dados de local de referência não disponíveis.</p>";
+			return `
+				<div class="empty-state reference-place-empty">
+					<div class="empty-state-icon" aria-hidden="true">📍</div>
+					<p class="empty-state-title">Dados de localização não disponíveis</p>
+					<p class="empty-state-description">Aguardando informações de localização para identificar pontos de referência próximos.</p>
+				</div>
+			`;
+		}
+
+		// Check for NO_REFERENCE_PLACE constant
+		if (referencePlace.description === NO_REFERENCE_PLACE || 
+		    (referencePlace.description && referencePlace.description.includes('Nenhuma referência'))) {
+			return `
+				<div class="empty-state reference-place-empty reference-place-compact">
+					<p class="empty-state-title">Nenhuma referência próxima encontrada</p>
+				</div>
+			`;
 		}
 
 		// Validate that we have a proper ReferencePlace object with required properties
 		if (!referencePlace.description && !referencePlace.name) {
-			return "<p class='warning'>Local de referência sem informações disponíveis.</p>";
+			return `
+				<div class="empty-state reference-place-empty">
+					<div class="empty-state-icon" aria-hidden="true">ℹ️</div>
+					<p class="empty-state-title">Local de referência sem informações</p>
+					<p class="empty-state-description">
+						Os dados de referência para esta localização estão incompletos ou indisponíveis no momento.
+					</p>
+				</div>
+			`;
 		}
 
 		// Create comprehensive HTML structure for reference place information
@@ -110,7 +134,10 @@ class HTMLReferencePlaceDisplayer {
 		html += '<div class="reference-place-attributes">';
 		
 		// Display the Portuguese description (e.g., "Shopping Center", "Estação do Metrô")
-		if (referencePlace.description && referencePlace.description != NO_REFERENCE_PLACE) {
+		// Skip if it's the NO_REFERENCE_PLACE constant
+		if (referencePlace.description && 
+		    referencePlace.description !== NO_REFERENCE_PLACE && 
+		    !referencePlace.description.includes('Nenhuma referência')) {
 			html += `<span class="reference-place-type">${escapeHtml(referencePlace.description)}</span>`;
 			
 			// Add the place name if available and referencePlace.name is not substring of referencePlace.description

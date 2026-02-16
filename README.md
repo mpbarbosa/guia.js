@@ -6,11 +6,11 @@ Status: Active
 ---
 
 
-[![Tests](https://img.shields.io/badge/tests-2647%20passing%20%2F%202849%20total-green)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-2668%20passing%20%2F%202867%20total-green)](https://github.com/mpbarbosa/guia_turistico)
 [![Version](https://img.shields.io/badge/version-0.11.0--alpha-blue)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
-> **Note on Test Status**: 2,647 tests pass successfully out of 2,849 total (202 skipped), with 100 of 113 test suites passing (13 skipped). The test suite is stable with 100% pass rate for non-skipped tests. See [Testing Overview](#testing-overview) for details.
+> **Note on Test Status**: 2,668 tests pass successfully out of 2,867 total (198 skipped, 1 failing), with 101 of 114 test suites passing (7 skipped, 6 failing E2E). The test suite is stable with 99.96% pass rate. See [Testing Overview](#testing-overview) for details.
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
@@ -839,7 +839,7 @@ git push origin v0.9.0-alpha
 
 # 5. Verify CDN availability
 curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/app.js"
-# Should return: HTTP/6.0.0
+# Should return: HTTP/7.0.0
 
 # Alternative: Use commit hash instead (available immediately)
 # https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@COMMIT_HASH/src/app.js
@@ -1031,7 +1031,7 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 **Format**:
 ```
 # Generated: 2026-02-11 23:45:00
-# Version: 6.0.0-alpha
+# Version: 7.0.0-alpha
 # Commit: abc1234567890abcdef1234567890abcdef12345
 
 Version-specific URLs:

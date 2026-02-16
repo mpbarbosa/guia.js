@@ -11,8 +11,21 @@
 import { jest } from '@jest/globals';
 import HTMLSidraDisplayer from '../../src/html/HTMLSidraDisplayer.js';
 import { ADDRESS_FETCHED_EVENT } from '../../src/config/defaults.js';
+import ibgeDataFormatter from '../../src/utils/ibge-data-formatter.js';
 
 describe('HTMLSidraDisplayer Class', () => {
+  
+  // Setup spy on ibgeDataFormatter to test fallback behavior
+  beforeAll(() => {
+    jest.spyOn(ibgeDataFormatter, 'interceptAndFormat').mockImplementation(() => {
+      // Throw error to trigger fallback to window.displaySidraDadosParams
+      throw new Error('Formatter not available - testing fallback');
+    });
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
   
   describe('Constructor', () => {
     test('should create instance with element', () => {

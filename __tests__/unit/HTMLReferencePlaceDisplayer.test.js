@@ -156,16 +156,16 @@ describe('HTMLReferencePlaceDisplayer - MP Barbosa Travel Guide (v0.8.8-alpha)',
         test('should return error message for null reference place', () => {
             const html = displayer.renderReferencePlaceHtml(null);
             
-            expect(html).toContain("Dados de local de referência não disponíveis");
-            expect(html).toContain("class='error'");
+            expect(html).toContain("Dados de localização não disponíveis");
+            expect(html).toContain("empty-state reference-place-empty");
         });
 
         test('should return warning for empty reference place', () => {
             const emptyReferencePlace = new MockReferencePlace({});
             const html = displayer.renderReferencePlaceHtml(emptyReferencePlace);
             
-            expect(html).toContain("Local de referência sem informações disponíveis");
-            expect(html).toContain("class='warning'");
+            expect(html).toContain("Local de referência sem informações");
+            expect(html).toContain("empty-state reference-place-empty");
         });
     });
 
@@ -188,7 +188,7 @@ describe('HTMLReferencePlaceDisplayer - MP Barbosa Travel Guide (v0.8.8-alpha)',
             const warningHtml = displayer.renderReferencePlaceHtml(new MockReferencePlace({}));
             
             expect(errorHtml).toContain('não disponíveis');
-            expect(warningHtml).toContain('sem informações disponíveis');
+            expect(warningHtml).toContain('sem informações');
         });
     });
 
@@ -258,7 +258,7 @@ describe('HTMLReferencePlaceDisplayer - MP Barbosa Travel Guide (v0.8.8-alpha)',
             
             const html = displayer.renderReferencePlaceHtml(referencePlace);
             
-            expect(html).toContain('sem informações disponíveis');
+            expect(html).toContain('sem informações');
         });
 
         test('should handle reference place with whitespace-only name', () => {

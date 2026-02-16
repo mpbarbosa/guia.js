@@ -96,11 +96,55 @@
   --radius-2xl: 1.25rem;  /* 20px */
   --radius-full: 9999px;  /* Fully rounded */
 
-  /* ===== SHADOWS ===== */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  /* ===== ELEVATION SYSTEM ===== 
+   * Material Design 3 elevation levels
+   * Based on https://m3.material.io/styles/elevation/tokens
+   * 
+   * Semantic Usage:
+   * - level0: Disabled/inactive states, no elevation
+   * - level1: Resting cards, standard components (1dp elevation)
+   * - level2: Raised/hover cards, search bars (3dp elevation)
+   * - level3: Menus, dialogs, floating action buttons (6dp elevation)
+   * - level4: Navigation drawers, modal dialogs (8dp elevation)
+   * - level5: App bars, overlays, notifications (12dp elevation)
+   */
+  
+  /* Level 0: No elevation (flat surfaces) */
+  --md-sys-elevation-level0: none;
+  
+  /* Level 1: Resting cards (1dp) */
+  --md-sys-elevation-level1: 
+    0 1px 2px 0 rgba(0, 0, 0, 0.3),
+    0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  
+  /* Level 2: Raised cards, hover states (3dp) */
+  --md-sys-elevation-level2: 
+    0 1px 2px 0 rgba(0, 0, 0, 0.3),
+    0 2px 6px 2px rgba(0, 0, 0, 0.15);
+  
+  /* Level 3: Menus, dialogs (6dp) */
+  --md-sys-elevation-level3: 
+    0 1px 3px 0 rgba(0, 0, 0, 0.3),
+    0 4px 8px 3px rgba(0, 0, 0, 0.15);
+  
+  /* Level 4: Navigation, modals (8dp) */
+  --md-sys-elevation-level4: 
+    0 2px 3px 0 rgba(0, 0, 0, 0.3),
+    0 6px 10px 4px rgba(0, 0, 0, 0.15);
+  
+  /* Level 5: Overlays, notifications (12dp) */
+  --md-sys-elevation-level5: 
+    0 4px 4px 0 rgba(0, 0, 0, 0.3),
+    0 8px 12px 6px rgba(0, 0, 0, 0.15);
+
+  /* ===== LEGACY SHADOWS (Deprecated) ===== 
+   * Use elevation levels above instead
+   * Kept for backward compatibility
+   */
+  --shadow-sm: var(--md-sys-elevation-level1);
+  --shadow-md: var(--md-sys-elevation-level2);
+  --shadow-lg: var(--md-sys-elevation-level3);
+  --shadow-xl: var(--md-sys-elevation-level5);
 
   /* ===== TRANSITIONS ===== */
   --transition-fast: 150ms ease;
@@ -144,22 +188,195 @@
 
 /**
  * Utility Classes using Design Tokens
+ * 
+ * SPACING SYSTEM (8px base grid)
+ * All spacing utilities follow Material Design 3 8dp grid system
+ * Usage: .m-{side?}-{size} for margin, .p-{side?}-{size} for padding
+ * 
+ * Sizes: xs(4px), sm(8px), md(16px), lg(24px), xl(32px), 2xl(48px), 3xl(64px)
+ * Sides: t(top), r(right), b(bottom), l(left), x(horizontal), y(vertical)
+ * 
+ * Examples:
+ *   .mt-lg    → margin-top: 24px
+ *   .px-md    → padding-left: 16px; padding-right: 16px;
+ *   .mb-xl    → margin-bottom: 32px
+ *   .gap-sm   → gap: 8px
  */
 
-/* Spacing Utilities */
+/* ===== MARGIN UTILITIES ===== */
+
+/* All sides */
 .m-0 { margin: 0; }
 .m-xs { margin: var(--spacing-xs); }
 .m-sm { margin: var(--spacing-sm); }
 .m-md { margin: var(--spacing-md); }
 .m-lg { margin: var(--spacing-lg); }
 .m-xl { margin: var(--spacing-xl); }
+.m-2xl { margin: var(--spacing-2xl); }
+.m-3xl { margin: var(--spacing-3xl); }
 
+/* Margin Top */
+.mt-0 { margin-top: 0; }
+.mt-xs { margin-top: var(--spacing-xs); }
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mt-xl { margin-top: var(--spacing-xl); }
+.mt-2xl { margin-top: var(--spacing-2xl); }
+.mt-3xl { margin-top: var(--spacing-3xl); }
+
+/* Margin Right */
+.mr-0 { margin-right: 0; }
+.mr-xs { margin-right: var(--spacing-xs); }
+.mr-sm { margin-right: var(--spacing-sm); }
+.mr-md { margin-right: var(--spacing-md); }
+.mr-lg { margin-right: var(--spacing-lg); }
+.mr-xl { margin-right: var(--spacing-xl); }
+.mr-2xl { margin-right: var(--spacing-2xl); }
+.mr-3xl { margin-right: var(--spacing-3xl); }
+
+/* Margin Bottom */
+.mb-0 { margin-bottom: 0; }
+.mb-xs { margin-bottom: var(--spacing-xs); }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
+.mb-2xl { margin-bottom: var(--spacing-2xl); }
+.mb-3xl { margin-bottom: var(--spacing-3xl); }
+
+/* Margin Left */
+.ml-0 { margin-left: 0; }
+.ml-xs { margin-left: var(--spacing-xs); }
+.ml-sm { margin-left: var(--spacing-sm); }
+.ml-md { margin-left: var(--spacing-md); }
+.ml-lg { margin-left: var(--spacing-lg); }
+.ml-xl { margin-left: var(--spacing-xl); }
+.ml-2xl { margin-left: var(--spacing-2xl); }
+.ml-3xl { margin-left: var(--spacing-3xl); }
+
+/* Margin Horizontal (left + right) */
+.mx-0 { margin-left: 0; margin-right: 0; }
+.mx-xs { margin-left: var(--spacing-xs); margin-right: var(--spacing-xs); }
+.mx-sm { margin-left: var(--spacing-sm); margin-right: var(--spacing-sm); }
+.mx-md { margin-left: var(--spacing-md); margin-right: var(--spacing-md); }
+.mx-lg { margin-left: var(--spacing-lg); margin-right: var(--spacing-lg); }
+.mx-xl { margin-left: var(--spacing-xl); margin-right: var(--spacing-xl); }
+.mx-2xl { margin-left: var(--spacing-2xl); margin-right: var(--spacing-2xl); }
+.mx-3xl { margin-left: var(--spacing-3xl); margin-right: var(--spacing-3xl); }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+/* Margin Vertical (top + bottom) */
+.my-0 { margin-top: 0; margin-bottom: 0; }
+.my-xs { margin-top: var(--spacing-xs); margin-bottom: var(--spacing-xs); }
+.my-sm { margin-top: var(--spacing-sm); margin-bottom: var(--spacing-sm); }
+.my-md { margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); }
+.my-lg { margin-top: var(--spacing-lg); margin-bottom: var(--spacing-lg); }
+.my-xl { margin-top: var(--spacing-xl); margin-bottom: var(--spacing-xl); }
+.my-2xl { margin-top: var(--spacing-2xl); margin-bottom: var(--spacing-2xl); }
+.my-3xl { margin-top: var(--spacing-3xl); margin-bottom: var(--spacing-3xl); }
+
+/* ===== PADDING UTILITIES ===== */
+
+/* All sides */
 .p-0 { padding: 0; }
 .p-xs { padding: var(--spacing-xs); }
 .p-sm { padding: var(--spacing-sm); }
 .p-md { padding: var(--spacing-md); }
 .p-lg { padding: var(--spacing-lg); }
 .p-xl { padding: var(--spacing-xl); }
+.p-2xl { padding: var(--spacing-2xl); }
+.p-3xl { padding: var(--spacing-3xl); }
+
+/* Padding Top */
+.pt-0 { padding-top: 0; }
+.pt-xs { padding-top: var(--spacing-xs); }
+.pt-sm { padding-top: var(--spacing-sm); }
+.pt-md { padding-top: var(--spacing-md); }
+.pt-lg { padding-top: var(--spacing-lg); }
+.pt-xl { padding-top: var(--spacing-xl); }
+.pt-2xl { padding-top: var(--spacing-2xl); }
+.pt-3xl { padding-top: var(--spacing-3xl); }
+
+/* Padding Right */
+.pr-0 { padding-right: 0; }
+.pr-xs { padding-right: var(--spacing-xs); }
+.pr-sm { padding-right: var(--spacing-sm); }
+.pr-md { padding-right: var(--spacing-md); }
+.pr-lg { padding-right: var(--spacing-lg); }
+.pr-xl { padding-right: var(--spacing-xl); }
+.pr-2xl { padding-right: var(--spacing-2xl); }
+.pr-3xl { padding-right: var(--spacing-3xl); }
+
+/* Padding Bottom */
+.pb-0 { padding-bottom: 0; }
+.pb-xs { padding-bottom: var(--spacing-xs); }
+.pb-sm { padding-bottom: var(--spacing-sm); }
+.pb-md { padding-bottom: var(--spacing-md); }
+.pb-lg { padding-bottom: var(--spacing-lg); }
+.pb-xl { padding-bottom: var(--spacing-xl); }
+.pb-2xl { padding-bottom: var(--spacing-2xl); }
+.pb-3xl { padding-bottom: var(--spacing-3xl); }
+
+/* Padding Left */
+.pl-0 { padding-left: 0; }
+.pl-xs { padding-left: var(--spacing-xs); }
+.pl-sm { padding-left: var(--spacing-sm); }
+.pl-md { padding-left: var(--spacing-md); }
+.pl-lg { padding-left: var(--spacing-lg); }
+.pl-xl { padding-left: var(--spacing-xl); }
+.pl-2xl { padding-left: var(--spacing-2xl); }
+.pl-3xl { padding-left: var(--spacing-3xl); }
+
+/* Padding Horizontal (left + right) */
+.px-0 { padding-left: 0; padding-right: 0; }
+.px-xs { padding-left: var(--spacing-xs); padding-right: var(--spacing-xs); }
+.px-sm { padding-left: var(--spacing-sm); padding-right: var(--spacing-sm); }
+.px-md { padding-left: var(--spacing-md); padding-right: var(--spacing-md); }
+.px-lg { padding-left: var(--spacing-lg); padding-right: var(--spacing-lg); }
+.px-xl { padding-left: var(--spacing-xl); padding-right: var(--spacing-xl); }
+.px-2xl { padding-left: var(--spacing-2xl); padding-right: var(--spacing-2xl); }
+.px-3xl { padding-left: var(--spacing-3xl); padding-right: var(--spacing-3xl); }
+
+/* Padding Vertical (top + bottom) */
+.py-0 { padding-top: 0; padding-bottom: 0; }
+.py-xs { padding-top: var(--spacing-xs); padding-bottom: var(--spacing-xs); }
+.py-sm { padding-top: var(--spacing-sm); padding-bottom: var(--spacing-sm); }
+.py-md { padding-top: var(--spacing-md); padding-bottom: var(--spacing-md); }
+.py-lg { padding-top: var(--spacing-lg); padding-bottom: var(--spacing-lg); }
+.py-xl { padding-top: var(--spacing-xl); padding-bottom: var(--spacing-xl); }
+.py-2xl { padding-top: var(--spacing-2xl); padding-bottom: var(--spacing-2xl); }
+.py-3xl { padding-top: var(--spacing-3xl); padding-bottom: var(--spacing-3xl); }
+
+/* ===== GAP UTILITIES (Flexbox/Grid) ===== */
+.gap-0 { gap: 0; }
+.gap-xs { gap: var(--spacing-xs); }
+.gap-sm { gap: var(--spacing-sm); }
+.gap-md { gap: var(--spacing-md); }
+.gap-lg { gap: var(--spacing-lg); }
+.gap-xl { gap: var(--spacing-xl); }
+.gap-2xl { gap: var(--spacing-2xl); }
+.gap-3xl { gap: var(--spacing-3xl); }
+
+/* Row Gap */
+.row-gap-0 { row-gap: 0; }
+.row-gap-xs { row-gap: var(--spacing-xs); }
+.row-gap-sm { row-gap: var(--spacing-sm); }
+.row-gap-md { row-gap: var(--spacing-md); }
+.row-gap-lg { row-gap: var(--spacing-lg); }
+.row-gap-xl { row-gap: var(--spacing-xl); }
+.row-gap-2xl { row-gap: var(--spacing-2xl); }
+.row-gap-3xl { row-gap: var(--spacing-3xl); }
+
+/* Column Gap */
+.column-gap-0 { column-gap: 0; }
+.column-gap-xs { column-gap: var(--spacing-xs); }
+.column-gap-sm { column-gap: var(--spacing-sm); }
+.column-gap-md { column-gap: var(--spacing-md); }
+.column-gap-lg { column-gap: var(--spacing-lg); }
+.column-gap-xl { column-gap: var(--spacing-xl); }
+.column-gap-2xl { column-gap: var(--spacing-2xl); }
+.column-gap-3xl { column-gap: var(--spacing-3xl); }
 
 /* Text Size Utilities */
 .text-xs { font-size: var(--font-size-xs); }
@@ -177,6 +394,57 @@
 .rounded-full { border-radius: var(--radius-full); }
 
 /* Shadow Utilities */
+/* ===== ELEVATION UTILITY CLASSES ===== 
+ * Material Design 3 elevation system utilities
+ * Provides semantic elevation levels for components
+ * 
+ * Usage:
+ * - .elevation-0: Disabled/flat surfaces
+ * - .elevation-1: Standard resting cards
+ * - .elevation-2: Raised/hover states
+ * - .elevation-3: Menus, dialogs
+ * - .elevation-4: Modals, navigation
+ * - .elevation-5: Overlays, toasts
+ * 
+ * Hover states (automatic elevation transition):
+ * - .elevation-1-hover: Level 1 → Level 2 on hover
+ * - .elevation-2-hover: Level 2 → Level 3 on hover
+ */
+
+/* Base elevation levels */
+.elevation-0 { box-shadow: var(--md-sys-elevation-level0); }
+.elevation-1 { box-shadow: var(--md-sys-elevation-level1); }
+.elevation-2 { box-shadow: var(--md-sys-elevation-level2); }
+.elevation-3 { box-shadow: var(--md-sys-elevation-level3); }
+.elevation-4 { box-shadow: var(--md-sys-elevation-level4); }
+.elevation-5 { box-shadow: var(--md-sys-elevation-level5); }
+
+/* Hover state elevation transitions */
+.elevation-1-hover {
+  box-shadow: var(--md-sys-elevation-level1);
+  transition: box-shadow var(--transition-base);
+}
+.elevation-1-hover:hover {
+  box-shadow: var(--md-sys-elevation-level2);
+}
+
+.elevation-2-hover {
+  box-shadow: var(--md-sys-elevation-level2);
+  transition: box-shadow var(--transition-base);
+}
+.elevation-2-hover:hover {
+  box-shadow: var(--md-sys-elevation-level3);
+}
+
+.elevation-3-hover {
+  box-shadow: var(--md-sys-elevation-level3);
+  transition: box-shadow var(--transition-base);
+}
+.elevation-3-hover:hover {
+  box-shadow: var(--md-sys-elevation-level4);
+}
+
+/* Legacy shadow utilities (deprecated, use elevation-* instead) */
 .shadow-sm { box-shadow: var(--shadow-sm); }
 .shadow-md { box-shadow: var(--shadow-md); }
 .shadow-lg { box-shadow: var(--shadow-lg); }

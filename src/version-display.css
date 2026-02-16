@@ -1,27 +1,256 @@
-/* Application Version Display */
+/* ============================================
+   APPLICATION VERSION DISPLAY (MD3 ENHANCED)
+   ============================================ */
+
+/* Version Badge Container */
 .app-version {
-  /* Removed fixed positioning - now in footer */
-  color: var(--md-sys-color-on-surface-variant, #595959); /* 7:1 contrast - WCAG AA compliant */
-  padding: 4px 0;
-  font-size: 11px;
-  font-weight: 400;
-  opacity: 1; /* Removed opacity to maintain contrast ratio */
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  margin: 12px auto;
+  background: var(--md-sys-color-surface-variant, #e7e0ec);
+  border: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+  border-radius: 16px;
   font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
   text-align: center;
-  margin-top: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+/* Hover State */
+.app-version:hover {
+  background: var(--md-sys-color-secondary-container, #e8def8);
+  border-color: var(--md-sys-color-outline, #79747e);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+/* Focus State (Keyboard Accessibility) */
+.app-version:focus {
+  outline: 2px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: 2px;
+}
+
+/* Active State */
+.app-version:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* Info Icon */
+.app-version::before {
+  content: "ℹ️";
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Version Modal Overlay */
+.version-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.version-modal-overlay.visible {
+  display: flex;
+}
+
+/* Version Modal Dialog */
+.version-modal {
+  background: var(--md-sys-color-surface, #fff);
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Modal Header */
+.version-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
+}
+
+.version-modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface, #1d1b20);
+}
+
+.version-modal-icon {
+  font-size: 24px;
+}
+
+/* Modal Body */
+.version-modal-body {
+  margin: 16px 0;
+}
+
+.version-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--md-sys-color-surface-variant, #e7e0ec);
+}
+
+.version-info-row:last-child {
+  border-bottom: none;
+}
+
+.version-info-label {
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  font-size: 14px;
+}
+
+.version-info-value {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface, #1d1b20);
+}
+
+/* Changelog Link */
+.version-changelog-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--md-sys-color-primary, #6750a4);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.version-changelog-link:hover {
+  background: var(--md-sys-color-primary-container, #eaddff);
+}
+
+.version-changelog-link::after {
+  content: "→";
+  font-size: 16px;
+}
+
+/* Modal Close Button */
+.version-modal-close {
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px 24px;
+  background: var(--md-sys-color-primary, #6750a4);
+  color: var(--md-sys-color-on-primary, #fff);
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.version-modal-close:hover {
+  background: var(--md-sys-color-primary-hover, #7965af);
+  box-shadow: 0 2px 8px rgba(103, 80, 164, 0.3);
+}
+
+.version-modal-close:focus {
+  outline: 2px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: 2px;
 }
 
 /* Mobile Responsive */
 @media (max-width: 600px) {
   .app-version {
-    font-size: 10px;
-    padding: 2px 0;
+    font-size: 11px;
+    padding: 5px 10px;
+    gap: 4px;
+  }
+
+  .app-version::before {
+    font-size: 12px;
+  }
+
+  .version-modal {
+    padding: 20px;
+    max-width: 95%;
+  }
+
+  .version-modal-header h3 {
+    font-size: 18px;
+  }
+
+  .version-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .version-info-value {
+    font-size: 13px;
   }
 }
 
 /* Print - Hide version in print */
 @media print {
-  .app-version {
-    display: none;
+  .app-version,
+  .version-modal-overlay {
+    display: none !important;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .app-version,
+  .version-modal,
+  .version-modal-overlay {
+    animation: none;
+    transition: none;
+  }
+
+  .app-version:hover {
+    transform: none;
   }
 }

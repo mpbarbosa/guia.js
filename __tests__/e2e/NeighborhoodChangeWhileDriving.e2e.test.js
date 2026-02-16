@@ -26,6 +26,7 @@
  * - ReverseGeocoder passes complete parameters to observers
  * - Change detection triggers on neighborhood boundaries
  * 
+ * @jest-environment node
  * @module __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test
  * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
@@ -36,6 +37,12 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import {
+    waitForElement,
+    waitForElementText,
+    waitForPageCondition,
+    waitForNetworkIdle
+} from '../helpers/e2e-helpers-lib.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -132,7 +139,7 @@ const MOCK_NOMINATIM_RESPONSES = {
     }
 };
 
-describe.skip('E2E: Neighborhood Change While Driving', () => {
+describe('E2E: Neighborhood Change While Driving', () => {
     let browser;
     let page;
     let server;
@@ -225,7 +232,8 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
 
         // Log failed requests
         newPage.on('requestfailed', (request) => {
-            console.error('REQUEST FAILED:', request.url(), request.failure().errorText);
+            const failure = request.failure();
+            console.error('REQUEST FAILED:', request.url(), failure ? failure.errorText : 'Unknown error');
         });
 
         // Grant geolocation permission
@@ -282,8 +290,12 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
             timeout: 30000
         });
         
-        // Wait for app initialization
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Wait for app initialization using helper
+        await waitForPageCondition(
+            newPage,
+            () => window.GuiaApp && window.GuiaApp.getState && window.GuiaApp.getState().homeController,
+            { timeout: 15000, timeoutMessage: 'App failed to initialize' }
+        );
         
         // Debug: Check app state
         const appState = await newPage.evaluate(() => {
@@ -291,7 +303,8 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
                 hasGuiaApp: !!window.GuiaApp,
                 hasGetState: !!(window.GuiaApp && window.GuiaApp.getState),
                 state: window.GuiaApp && window.GuiaApp.getState ? window.GuiaApp.getState() : null,
-                hasManager: !!(window.GuiaApp && window.GuiaApp.getState && window.GuiaApp.getState().manager)
+                hasController: !!(window.GuiaApp && window.GuiaApp.getState && window.GuiaApp.getState().homeController),
+                hasManager: !!(window.GuiaApp && window.GuiaApp.getState && window.GuiaApp.getState().homeController && window.GuiaApp.getState().homeController.manager)
             };
         });
         console.log('App state after initialization:', JSON.stringify(appState, null, 2));
@@ -359,27 +372,6 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
             accuracy: 10
         });
 
-        // Wait a moment for the watchPosition to fire
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Debug: Check current state before manual update
-        const stateBefore = await page.evaluate(() => {
-            const appState = window.GuiaApp && window.GuiaApp.getState ? window.GuiaApp.getState() : null;
-            const manager = appState?.manager;
-            const geoService = manager?.geolocationService;
-            const posManager = geoService?.positionManager;
-            return {
-                hasManager: !!manager,
-                hasGeoService: !!geoService,
-                hasPositionManager: !!posManager,
-                lastPosition: posManager?.lastPosition ? {
-                    lat: posManager.lastPosition.coords.latitude,
-                    lon: posManager.lastPosition.coords.longitude
-                } : null
-            };
-        });
-        console.log('[SIMULATE] State before manual update:', JSON.stringify(stateBefore, null, 2));
-        
         // NOW manually trigger position update with NEW coordinates
         // This bypasses the distance/time checks for testing
         const updateResult = await page.evaluate((lat, lon) => {
@@ -400,9 +392,9 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
                 
                 // Get the app state
                 const appState = window.GuiaApp && window.GuiaApp.getState ? window.GuiaApp.getState() : null;
-                if (appState && appState.manager) {
+                if (appState && appState.homeController && appState.homeController.manager) {
                     // Access the geolocation service DIRECTLY from manager
-                    const geolocationService = appState.manager.geolocationService;
+                    const geolocationService = appState.homeController.manager.geolocationService;
                     
                     if (geolocationService && geolocationService.positionManager) {
                         const posManager = geolocationService.positionManager;
@@ -448,23 +440,8 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
         
         console.log('[SIMULATE] Update result:', updateResult);
 
-        // Wait for geocoding API call and DOM update
-        await new Promise(resolve => setTimeout(resolve, 4000));
-        
-        // Debug: Check bairro value after update
-        const stateAfter = await page.evaluate(() => {
-            const el = document.querySelector('#bairro-value');
-            const appState = window.GuiaApp && window.GuiaApp.getState ? window.GuiaApp.getState() : null;
-            const posManager = appState?.manager?.geolocationService?.positionManager;
-            return {
-                bairro: el ? el.textContent.trim() : null,
-                currentPosition: posManager?.lastPosition ? {
-                    lat: posManager.lastPosition.coords.latitude,
-                    lon: posManager.lastPosition.coords.longitude
-                } : null
-            };
-        });
-        console.log('[SIMULATE] State after update:', stateAfter);
+        // Wait for network to be idle (all API calls complete)
+        await waitForNetworkIdle(page, { timeout: 5000, idleTime: 300, throwOnTimeout: false });
     }
 
     /**
@@ -494,36 +471,13 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
         // Create page with mock geolocation at República coordinates
         page = await setupPageWithGeolocation(DRIVING_ROUTE[0]);
 
-        // Wait for app to initialize
-        await page.waitForFunction(
-            () => window.GuiaApp && window.GuiaApp.getState && window.GuiaApp.getState().manager,
-            { timeout: 10000 }
+        // Wait for geocoding to complete using helper
+        await waitForElementText(
+            page,
+            '#bairro-value',
+            DRIVING_ROUTE[0].expected.bairro,
+            { timeout: 30000, exact: true }
         );
-
-        // Wait for geocoding to complete
-        try {
-            await page.waitForFunction(
-                () => {
-                    const bairroElement = document.querySelector('#bairro-value');
-                    const value = bairroElement ? bairroElement.textContent.trim() : null;
-                    console.log('[WAIT] Bairro value:', value);
-                    return bairroElement && value !== '—' && value.length > 0;
-                },
-                { timeout: 30000, polling: 1000 }
-            );
-        } catch (error) {
-            // Log final state before throwing
-            const finalBairro = await page.evaluate(() => {
-                const el = document.querySelector('#bairro-value');
-                return {
-                    exists: !!el,
-                    value: el ? el.textContent : null,
-                    innerHTML: el ? el.innerHTML : null
-                };
-            });
-            console.log('[TEST FAILURE] Final bairro state:', finalBairro);
-            throw error;
-        }
 
         // Verify initial bairro
         const bairro = await getBairroCardContent();
@@ -540,18 +494,12 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
         // Create page with mock geolocation at República coordinates
         page = await setupPageWithGeolocation(DRIVING_ROUTE[0]);
 
-        await page.waitForFunction(
-            () => window.GuiaApp && window.GuiaApp.getState && window.GuiaApp.getState().manager,
-            { timeout: 10000 }
-        );
-
-        // Wait for initial bairro to load (increased timeout for CI stability)
-        await page.waitForFunction(
-            () => {
-                const bairroElement = document.querySelector('#bairro-value');
-                return bairroElement && bairroElement.textContent.trim() !== '—';
-            },
-            { timeout: 30000, polling: 500 }
+        // Wait for initial bairro to load using helper
+        await waitForElementText(
+            page,
+            '#bairro-value',
+            DRIVING_ROUTE[0].expected.bairro,
+            { timeout: 30000, exact: true }
         );
 
         const initialBairro = await getBairroCardContent();
@@ -563,14 +511,12 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
             DRIVING_ROUTE[1].longitude
         );
 
-        // Wait for bairro to update (increased timeout for CI stability)
-        await page.waitForFunction(
-            (expectedBairro) => {
-                const bairroElement = document.querySelector('#bairro-value');
-                return bairroElement && bairroElement.textContent.trim() === expectedBairro;
-            },
-            { timeout: 30000, polling: 500 },
-            DRIVING_ROUTE[1].expected.bairro
+        // Wait for bairro to update using helper
+        await waitForElementText(
+            page,
+            '#bairro-value',
+            DRIVING_ROUTE[1].expected.bairro,
+            { timeout: 30000, exact: true }
         );
 
         const updatedBairro = await getBairroCardContent();
@@ -590,15 +536,12 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
         // Create page with mock geolocation at República coordinates
         page = await setupPageWithGeolocation(DRIVING_ROUTE[0]);
 
-        await page.waitForFunction(() => window.GuiaApp && window.GuiaApp.getState &&  window.GuiaApp.getState().manager, { timeout: 10000 });
-
-        // Wait for initial bairro (increased timeout for CI stability)
-        await page.waitForFunction(
-            () => {
-                const el = document.querySelector('#bairro-value');
-                return el && el.textContent.trim() !== '—';
-            },
-            { timeout: 30000, polling: 500 }
+        // Wait for initial bairro using helper
+        await waitForElementText(
+            page,
+            '#bairro-value',
+            '—',  
+            { timeout: 30000, exact: false }  // Wait for it to NOT be placeholder
         );
 
         // Record initial bairro
@@ -608,15 +551,12 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
         for (let i = 1; i < DRIVING_ROUTE.length; i++) {
             await simulateLocationUpdate(DRIVING_ROUTE[i].latitude, DRIVING_ROUTE[i].longitude);
             
-            // Wait for bairro to update (increased timeout for CI stability)
-            await page.waitForFunction(
-                (oldBairro) => {
-                    const el = document.querySelector('#bairro-value');
-                    const newBairro = el ? el.textContent.trim() : '';
-                    return newBairro !== oldBairro && newBairro !== '—' && newBairro.length > 0;
-                },
-                { timeout: 30000, polling: 500 },
-                bairroHistory[bairroHistory.length - 1]
+            // Wait for bairro to update using helper
+            await waitForElementText(
+                page,
+                '#bairro-value',
+                DRIVING_ROUTE[i].expected.bairro,
+                { timeout: 30000, exact: true }
             );
 
             const currentBairro = await getBairroCardContent();
@@ -642,11 +582,8 @@ describe.skip('E2E: Neighborhood Change While Driving', () => {
         // Create page with mock geolocation at República coordinates
         page = await setupPageWithGeolocation(DRIVING_ROUTE[0]);
         
-        // Wait for app to initialize
-        await page.waitForFunction(
-            () => document.querySelector('#bairro-value') !== null,
-            { timeout: 5000 }
-        );
+        // Wait for element to exist using helper
+        await waitForElement(page, '#bairro-value', { timeout: 10000 });
         
         const bairroCardExists = await page.evaluate(() => {
             const element = document.querySelector('#bairro-value');

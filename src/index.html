@@ -2,6 +2,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="version" content="0.9.0-alpha" data-source="src/config/version.js">
+    
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+    
+    <!-- Security Headers (meta tag fallback for static hosting) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
     <title>Guia Turístico - Localização - Guia Turístico</title>
     
     <!-- PWA Manifest (inline to prevent 404) -->
@@ -41,10 +48,13 @@
     <link rel="stylesheet" href="advanced-controls.css">
     <link rel="stylesheet" href="geolocation-banner.css">
     <link rel="stylesheet" href="version-display.css">
+    <link rel="stylesheet" href="maps-actions.css">
+    <link rel="stylesheet" href="ibge-data-styles.css">
     <link rel="stylesheet" href="tooltip.css">
     <link rel="stylesheet" href="noscript.css">
     <link rel="stylesheet" href="transitions.css">
     <link rel="stylesheet" href="highlight-cards.css">
+    <link rel="stylesheet" href="error-styles.css">
     
     <!-- App Shell Styles -->
     <style>
@@ -295,6 +305,21 @@
         margin-bottom: 0;
       }
 
+      /* Compact empty state for reference places */
+      .empty-state.reference-place-compact {
+        min-height: auto;
+        padding: 16px 24px;
+        background: transparent;
+      }
+
+      .empty-state.reference-place-compact .empty-state-title {
+        font-size: var(--text-body-medium-size);
+        font-weight: var(--text-body-medium-weight);
+        line-height: var(--text-body-medium-line-height);
+        color: #718096;
+        margin: 0;
+      }
+
       /* ============================================
          TOAST NOTIFICATIONS (UX Quick Win #4)
          ============================================ */
@@ -355,25 +380,31 @@
 
       .toast-close {
         flex-shrink: 0;
-        width: 24px;
-        height: 24px;
+        min-width: 44px;  /* WCAG 2.1 AAA minimum touch target */
+        min-height: 44px; /* WCAG 2.1 AAA minimum touch target */
         border: none;
         background: transparent;
         color: #4a5568; /* 7.5:1 contrast ratio - WCAG AA compliant */
-        font-size: 24px;
+        font-size: 20px;  /* Slightly smaller icon within larger button */
         line-height: 1;
         cursor: pointer;
-        padding: 0;
+        padding: 10px;    /* Creates larger interactive area */
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 4px;
-        transition: background 0.2s;
+        transition: background 0.2s, transform 0.1s;
+        margin: -10px -10px -10px 8px; /* Negative margin to prevent toast expansion */
       }
 
       .toast-close:hover {
         background: rgba(0, 0, 0, 0.08);
         color: #2d3748; /* Darker on hover */
+      }
+      
+      .toast-close:active {
+        transform: scale(0.95); /* Tactile feedback on press */
+        background: rgba(0, 0, 0, 0.12);
       }
       
       .toast-close:focus-visible {
@@ -579,44 +610,54 @@
         <div class="highlight-card" role="region" aria-labelledby="municipio-label">
           <div id="municipio-label" class="highlight-card-label">Município</div>
           <div id="regiao-metropolitana-value" class="metropolitan-region-value"></div>
-          <div id="municipio-value" class="highlight-card-value">—</div>
+          <div id="municipio-value" class="highlight-card-value" aria-live="polite">—</div>
         </div>
         <div class="highlight-card" role="region" aria-labelledby="bairro-label">
           <div id="bairro-label" class="highlight-card-label">Bairro</div>
-          <div id="bairro-value" class="highlight-card-value">—</div>
+          <div id="bairro-value" class="highlight-card-value" aria-live="polite">—</div>
         </div>
         <div class="highlight-card" role="region" aria-labelledby="logradouro-label">
           <div id="logradouro-label" class="highlight-card-label">Logradouro</div>
-          <div id="logradouro-value" class="highlight-card-value">—</div>
+          <div id="logradouro-value" class="highlight-card-value" aria-live="polite">—</div>
         </div>
       </section>
 
       <nav aria-label="Ações da página" class="secondary-actions">
       </nav>
 
-      <section id="standardized-address" aria-labelledby="address-heading">
-        <h2 id="address-heading" class="sr-only">Endereço Padronizado</h2>
-        <p><strong>Endereço:</strong> <span id="endereco-padronizado-display">Aguardando localização...</span></p>
-      </section>
+      <!-- Collapsible Secondary Information (Mobile Progressive Disclosure) -->
+      <details id="secondary-info" class="secondary-info-collapse" open>
+        <summary class="secondary-info-summary">
+          <span class="summary-icon" aria-hidden="true">ℹ️</span>
+          <span class="summary-text">Informações Adicionais</span>
+          <span class="summary-arrow" aria-hidden="true">▼</span>
+        </summary>
+        
+        <div class="secondary-info-content">
+          <section id="standardized-address" aria-labelledby="address-heading">
+            <h2 id="address-heading" class="sr-only">Endereço Padronizado</h2>
+            <p><strong>Endereço:</strong> <span id="endereco-padronizado-display">Aguardando localização...</span></p>
+          </section>
 
-      <section id="coordinates" aria-labelledby="coordinates-heading">
-        <h2 id="coordinates-heading" class="sr-only">Coordenadas</h2>
-        <p><strong>Coordenadas:</strong> <span id="lat-long-display">Aguardando localização...</span></p>
-        <p id="altitude-container" style="display: none;"><strong>Altitude:</strong> <span id="altitude-display"></span></p>
-      </section>
+          <section id="coordinates" aria-labelledby="coordinates-heading">
+            <h2 id="coordinates-heading" class="sr-only">Coordenadas</h2>
+            <p><strong>Coordenadas:</strong> <span id="lat-long-display">Aguardando localização...</span></p>
+            <p id="altitude-container" style="display: none;"><strong>Altitude:</strong> <span id="altitude-display"></span></p>
+          </section>
 
-      <section id="reference-place" aria-labelledby="reference-place-heading">
-        <h2 id="reference-place-heading" class="sr-only">Local de Referência</h2>
-        <p><strong>Referências próximas:</strong> <span id="reference-place-display">Aguardando localização...</span></p>
-      </section>
+          <section id="reference-place" aria-labelledby="reference-place-heading">
+            <h2 id="reference-place-heading" class="sr-only">Local de Referência</h2>
+            <p><strong>Referências próximas:</strong> <span id="reference-place-display">Aguardando localização...</span></p>
+          </section>
 
-      <section class="section" aria-labelledby="location-info-heading">
-        <p><strong>Dados IBGE:</strong> <span id="dadosSidra">Aguardando localização...</span></p>
-        <p><strong>Tempo decorrido:</strong> <span id="chronometer">00:00:00</span></p>
-      </section>
-      
-      <section id="locationResult" aria-label="Resultado da localização">
-      </section>
+          <section class="section" aria-labelledby="location-info-heading">
+            <p><strong>Dados IBGE:</strong> <span id="dadosSidra">Aguardando localização...</span></p>
+          </section>
+          
+          <section id="locationResult" aria-label="Resultado da localização">
+          </section>
+        </div>
+      </details>
 
       <!-- Tracking Mode Controls - Progressive Disclosure -->
       <details id="advanced-controls" class="advanced-controls">
@@ -629,6 +670,18 @@
             <button id="insertPositionButton" class="md3-button-outlined" aria-label="Inserir posição de teste">
               Inserir posição de teste
             </button>
+          </div>
+          
+          <!-- Chronometer - Developer/Power User Metric -->
+          <div class="advanced-control-group chronometer-group">
+            <label for="chronometer" class="chronometer-label">
+              <span class="label-text">Tempo de rastreamento</span>
+              <span class="label-hint" aria-label="Tempo desde que iniciou o rastreamento contínuo">ℹ️</span>
+            </label>
+            <div class="chronometer-display">
+              <span id="chronometer" class="chronometer-value" role="timer" aria-live="off">00:00:00</span>
+              <small class="chronometer-description">Tempo desde que iniciou o rastreamento contínuo</small>
+            </div>
           </div>
           
           <div class="advanced-control-group">
@@ -675,9 +728,57 @@
           Conversor de Coordenadas para Endereço
         </a>
       </p>
-      <!-- Version Display (moved from top) -->
-      <div class="app-version" role="status" aria-label="Versão do aplicativo">
+      <!-- Version Display (Enhanced with Modal) -->
+      <div 
+        class="app-version" 
+        role="button" 
+        tabindex="0"
+        aria-label="Versão do aplicativo - clique para ver detalhes"
+        aria-haspopup="dialog"
+      >
         <!-- Updated dynamically by version.js -->
+      </div>
+      
+      <!-- Version Info Modal -->
+      <div class="version-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="version-modal-title">
+        <div class="version-modal">
+          <div class="version-modal-header">
+            <span class="version-modal-icon" aria-hidden="true">ℹ️</span>
+            <h3 id="version-modal-title">Informações da Versão</h3>
+          </div>
+          
+          <div class="version-modal-body">
+            <div class="version-info-row">
+              <span class="version-info-label">Versão:</span>
+              <span class="version-info-value" id="modal-version">-</span>
+            </div>
+            <div class="version-info-row">
+              <span class="version-info-label">Data de Build:</span>
+              <span class="version-info-value" id="modal-build-date">-</span>
+            </div>
+            <div class="version-info-row">
+              <span class="version-info-label">Navegador:</span>
+              <span class="version-info-value" id="modal-browser">-</span>
+            </div>
+            <div class="version-info-row">
+              <span class="version-info-label">User Agent:</span>
+              <span class="version-info-value" id="modal-user-agent" style="font-size: 11px; word-break: break-word;">-</span>
+            </div>
+            
+            <a 
+              href="https://github.com/mpbarbosa/guia_turistico/blob/main/CHANGELOG.md" 
+              target="_blank"
+              rel="noopener noreferrer"
+              class="version-changelog-link"
+            >
+              Ver Changelog Completo
+            </a>
+          </div>
+          
+          <button class="version-modal-close" aria-label="Fechar modal de informações">
+            Fechar
+          </button>
+        </div>
       </div>
     </footer>
 
@@ -706,17 +807,31 @@
     
     <script type="module" src="error-recovery.js" onerror="console.error('❌ Failed to load error-recovery.js')"></script>
     <script type="module" src="geolocation-banner.js" onerror="console.error('❌ Failed to load geolocation-banner.js')"></script>
+    <script type="module" src="utils/progressive-disclosure.js" onerror="console.error('❌ Failed to load progressive-disclosure.js')"></script>
     
     <!-- Onboarding component -->
     <script type="module" src="components/onboarding.js"></script>
     
-    <!-- Update version display from centralized config -->
+    <!-- Update version display with enhanced manager -->
     <script type="module">
-      import { VERSION_WITH_DATE } from './config/version.js';
-      const versionEl = document.querySelector('.app-version');
-      if (versionEl) {
-        versionEl.textContent = VERSION_WITH_DATE;
-      }
+      import versionDisplayManager from './utils/version-display-manager.js';
+      
+      // Initialize version display manager
+      // - Updates version badge
+      // - Sets up modal interactions
+      // - Logs version to console for bug reports
+      versionDisplayManager.init();
+    </script>
+    
+    <!-- Maps Integration - Discoverable map viewing options -->
+    <script type="module">
+      import mapsIntegration from './utils/maps-integration.js';
+      
+      // Initialize maps integration
+      // - Creates action buttons for Google Maps, Street View, OSM, Waze
+      // - Observes coordinate updates
+      // - Handles deep linking for native apps
+      mapsIntegration.init();
     </script>
     
     <!-- App Entry Point -->
@@ -818,3 +933,231 @@
 </script>
 </body>
 </html>
+
+    <style>
+      /* ============================================
+         PROGRESSIVE DISCLOSURE (Mobile UX)
+         ============================================ */
+      
+      /* Secondary Information Collapse */
+      .secondary-info-collapse {
+        margin: 24px 0;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+      }
+
+      .secondary-info-summary {
+        padding: 16px 20px;
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        transition: background 0.2s;
+        user-select: none;
+        font-weight: 600;
+        color: #1f2937;
+      }
+
+      .secondary-info-summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .secondary-info-summary:hover {
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      }
+
+      .secondary-info-summary:focus {
+        outline: 2px solid #2563eb;
+        outline-offset: -2px;
+      }
+
+      .summary-icon {
+        font-size: 1.25rem;
+        flex-shrink: 0;
+      }
+
+      .summary-text {
+        flex: 1;
+        font-size: 1rem;
+      }
+
+      .summary-arrow {
+        font-size: 0.875rem;
+        transition: transform 0.3s ease;
+        flex-shrink: 0;
+      }
+
+      .secondary-info-collapse[open] .summary-arrow {
+        transform: rotate(180deg);
+      }
+
+      .secondary-info-content {
+        padding: 20px;
+        border-top: 1px solid #e5e7eb;
+        animation: slideDown 0.3s ease-out;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Sticky Highlight Cards on Mobile */
+      @media (max-width: 768px) {
+        .location-highlights {
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          background: #ffffff;
+          padding: 16px 0;
+          margin: 0 -16px 24px -16px;
+          padding-left: 16px;
+          padding-right: 16px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Reduce card size on mobile for sticky header */
+        .location-highlights .highlight-card {
+          min-width: 0;
+          flex: 1;
+          padding: 16px 12px;
+          max-width: none;
+        }
+
+        .highlight-card-label {
+          font-size: 0.75rem;
+        }
+
+        .highlight-card-value {
+          font-size: 1rem;
+          min-height: 40px;
+        }
+
+        .metropolitan-region-value {
+          font-size: 0.75rem;
+          margin-top: 4px;
+          margin-bottom: 8px;
+        }
+
+        /* Secondary info starts collapsed on mobile */
+        .secondary-info-collapse {
+          margin: 16px 0;
+        }
+
+        .secondary-info-content {
+          padding: 16px;
+        }
+
+        .secondary-info-content section {
+          margin-bottom: 16px;
+        }
+
+        .secondary-info-content section:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      /* Desktop: Keep original layout */
+      @media (min-width: 769px) {
+        /* Hide collapse UI on desktop, show all content */
+        .secondary-info-summary {
+          display: none;
+        }
+
+        .secondary-info-collapse {
+          border: none;
+          background: transparent;
+        }
+
+        .secondary-info-content {
+          padding: 0;
+          border: none;
+        }
+      }
+
+      /* Accessibility: Reduce motion */
+      @media (prefers-reduced-motion: reduce) {
+        .summary-arrow,
+        .secondary-info-content {
+          animation: none;
+          transition: none;
+        }
+      }
+    </style>
+
+    <style>
+      /* ============================================
+         CHRONOMETER STYLING (Advanced Controls)
+         ============================================ */
+      
+      .chronometer-group {
+        margin: 24px 0;
+        padding: 16px;
+        background: #f9fafb;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+      }
+
+      .chronometer-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+      }
+
+      .label-hint {
+        font-size: 1rem;
+        cursor: help;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+      }
+
+      .label-hint:hover,
+      .label-hint:focus {
+        opacity: 1;
+      }
+
+      .chronometer-display {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .chronometer-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        font-family: 'Courier New', monospace;
+        color: #1f2937;
+        letter-spacing: 0.05em;
+      }
+
+      .chronometer-description {
+        font-size: 0.75rem;
+        color: #6b7280;
+        font-style: italic;
+      }
+
+      /* Hide chronometer initially (show only when tracking) */
+      .chronometer-group.hidden {
+        display: none;
+      }
+
+      /* Responsive: Stack on mobile */
+      @media (max-width: 640px) {
+        .chronometer-value {
+          font-size: 1.25rem;
+        }
+      }
+    </style>

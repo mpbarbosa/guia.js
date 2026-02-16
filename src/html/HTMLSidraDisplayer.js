@@ -1,6 +1,7 @@
 'use strict';
 import { log, warn, error as logError } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
+import ibgeDataFormatter from '../utils/ibge-data-formatter.js';
 
 import { ADDRESS_FETCHED_EVENT, IBGE_LOADING_MESSAGE, IBGE_ERROR_MESSAGE, IBGE_UNAVAILABLE_MESSAGE } from '../config/defaults.js';
 
@@ -122,14 +123,14 @@ class HTMLSidraDisplayer {
 	}
 
 	/**
-	 * Updates SIDRA data display using the global displaySidraDadosParams function.
+	 * Updates SIDRA data display using the enhanced IBGE formatter.
 	 * 
 	 * This method is called internally by update() to fetch and display SIDRA data
-	 * for the given municipality. It relies on the global window.displaySidraDadosParams
-	 * function (typically loaded from andarilho.js or similar SIDRA integration script).
+	 * for the given municipality. It uses the IBGEDataFormatter to provide user-friendly,
+	 * contextualized demographic information with natural language and visual formatting.
 	 * 
-	 * If the global function is not available, the method silently returns without
-	 * error, allowing the application to continue functioning without SIDRA data.
+	 * Falls back to the global window.displaySidraDadosParams function if formatter fails,
+	 * allowing the application to continue functioning with original SIDRA data display.
 	 * 
 	 * @param {Object} enderecoPadronizado - Standardized Brazilian address object
 	 * @param {string} enderecoPadronizado.municipio - Municipality name
@@ -141,18 +142,12 @@ class HTMLSidraDisplayer {
 	 * this._updateSidraData({ municipio: 'São Paulo', siglaUF: 'SP' });
 	 * 
 	 * @since 0.9.0-alpha
+	 * @updated 0.11.0-alpha - Enhanced with IBGEDataFormatter for user-friendly display
 	 */
 	_updateSidraData(enderecoPadronizado) {
 		// Validate input
 		if (!enderecoPadronizado) {
 			warn('(HTMLSidraDisplayer) No enderecoPadronizado provided, skipping SIDRA update');
-			return;
-		}
-
-		// Check if global SIDRA function is available
-		if (typeof window.displaySidraDadosParams !== 'function') {
-			warn('(HTMLSidraDisplayer) window.displaySidraDadosParams not available, SIDRA library not loaded');
-			this.element.innerHTML = `<p class="info">Dados do IBGE não disponíveis (biblioteca SIDRA não carregada)</p>`;
 			return;
 		}
 
@@ -162,15 +157,26 @@ class HTMLSidraDisplayer {
 			"siglaUf": enderecoPadronizado.siglaUF
 		};
 
-		log(`(HTMLSidraDisplayer) Updating SIDRA data for ${params.municipio}, ${params.siglaUf}`);
+		log(`(HTMLSidraDisplayer) Updating SIDRA data for ${params.municipio}, ${params.siglaUf} with enhanced formatter`);
 		
-		// Call global SIDRA display function with error handling
+		// Use enhanced IBGE Data Formatter for user-friendly display
 		try {
-			window.displaySidraDadosParams(this.element, this.dataType, params);
+			ibgeDataFormatter.interceptAndFormat(this.element, this.dataType, params);
 		} catch (err) {
-			logError('(HTMLSidraDisplayer) Error updating SIDRA data:', err);
-			// Show user-friendly error message in Portuguese
-			this.element.innerHTML = `<p class="error">${IBGE_UNAVAILABLE_MESSAGE}</p>`;
+			logError('(HTMLSidraDisplayer) Error using IBGE formatter, falling back to original:', err);
+			
+			// Fallback to original SIDRA display function if available
+			if (typeof window.displaySidraDadosParams === 'function') {
+				try {
+					window.displaySidraDadosParams(this.element, this.dataType, params);
+				} catch (fallbackErr) {
+					logError('(HTMLSidraDisplayer) Error in fallback SIDRA display:', fallbackErr);
+					this.element.innerHTML = `<p class="error">${IBGE_UNAVAILABLE_MESSAGE}</p>`;
+				}
+			} else {
+				warn('(HTMLSidraDisplayer) window.displaySidraDadosParams not available, SIDRA library not loaded');
+				this.element.innerHTML = `<p class="info">Dados do IBGE não disponíveis (biblioteca SIDRA não carregada)</p>`;
+			}
 		}
 	}
 

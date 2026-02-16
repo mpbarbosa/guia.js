@@ -71,3 +71,8 @@ docs/api-generated/
 
 # Vite build output
 dist/
+
+# Environment variables (sensitive configuration)
+.env
+.env.local
+.env.*.local

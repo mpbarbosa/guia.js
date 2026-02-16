@@ -1,69 +1,319 @@
-/* Material Design 3 Typography System */
+/* ============================================
+   MATERIAL DESIGN 3 TYPOGRAPHY SYSTEM
+   ============================================
+   
+   Design Tokens for consistent typographic hierarchy.
+   
+   USAGE GUIDE:
+   - Display: Hero sections, splash screens (57px-36px)
+   - Headline: Page titles, section headers (32px-24px)
+   - Title: Card titles, list headers (22px-14px)
+   - Body: Paragraphs, descriptions (16px-12px)
+   - Label: Buttons, badges, tags (14px-11px)
+   
+   ALWAYS use design tokens instead of hardcoded px/rem values.
+   See: https://m3.material.io/styles/typography/type-scale-tokens
+   ============================================ */
+
 :root {
+  /* Display - Hero sections, large promotional text */
   --md-sys-typescale-display-large: 57px;
+  --md-sys-typescale-display-large-weight: 400;
+  --md-sys-typescale-display-large-line-height: 1.12;
+  
   --md-sys-typescale-display-medium: 45px;
+  --md-sys-typescale-display-medium-weight: 400;
+  --md-sys-typescale-display-medium-line-height: 1.16;
+  
   --md-sys-typescale-display-small: 36px;
+  --md-sys-typescale-display-small-weight: 400;
+  --md-sys-typescale-display-small-line-height: 1.22;
+  
+  /* Headline - Page titles, prominent section headers */
   --md-sys-typescale-headline-large: 32px;
+  --md-sys-typescale-headline-large-weight: 400;
+  --md-sys-typescale-headline-large-line-height: 1.25;
+  
   --md-sys-typescale-headline-medium: 28px;
+  --md-sys-typescale-headline-medium-weight: 400;
+  --md-sys-typescale-headline-medium-line-height: 1.29;
+  
   --md-sys-typescale-headline-small: 24px;
+  --md-sys-typescale-headline-small-weight: 400;
+  --md-sys-typescale-headline-small-line-height: 1.33;
+  
+  /* Title - Subsection headers, card titles, list items */
   --md-sys-typescale-title-large: 22px;
+  --md-sys-typescale-title-large-weight: 400;
+  --md-sys-typescale-title-large-line-height: 1.27;
+  
   --md-sys-typescale-title-medium: 16px;
+  --md-sys-typescale-title-medium-weight: 500;
+  --md-sys-typescale-title-medium-line-height: 1.5;
+  
   --md-sys-typescale-title-small: 14px;
+  --md-sys-typescale-title-small-weight: 500;
+  --md-sys-typescale-title-small-line-height: 1.43;
+  
+  /* Body - Paragraphs, content text, descriptions */
   --md-sys-typescale-body-large: 16px;
+  --md-sys-typescale-body-large-weight: 400;
+  --md-sys-typescale-body-large-line-height: 1.5;
+  
   --md-sys-typescale-body-medium: 14px;
+  --md-sys-typescale-body-medium-weight: 400;
+  --md-sys-typescale-body-medium-line-height: 1.43;
+  
   --md-sys-typescale-body-small: 12px;
+  --md-sys-typescale-body-small-weight: 400;
+  --md-sys-typescale-body-small-line-height: 1.33;
+  
+  /* Label - Buttons, badges, tags, form labels */
   --md-sys-typescale-label-large: 14px;
+  --md-sys-typescale-label-large-weight: 500;
+  --md-sys-typescale-label-large-line-height: 1.43;
+  --md-sys-typescale-label-large-tracking: 0.1px;
+  
   --md-sys-typescale-label-medium: 12px;
+  --md-sys-typescale-label-medium-weight: 500;
+  --md-sys-typescale-label-medium-line-height: 1.33;
+  --md-sys-typescale-label-medium-tracking: 0.5px;
+  
   --md-sys-typescale-label-small: 11px;
+  --md-sys-typescale-label-small-weight: 500;
+  --md-sys-typescale-label-small-line-height: 1.45;
+  --md-sys-typescale-label-small-tracking: 0.5px;
 }
+
+/* ============================================
+   BASE ELEMENT STYLES
+   ============================================ */
 
 body {
   font-family: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   font-size: var(--md-sys-typescale-body-large);
-  line-height: 1.5;
+  font-weight: var(--md-sys-typescale-body-large-weight);
+  line-height: var(--md-sys-typescale-body-large-line-height);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 h1 {
   font-size: var(--md-sys-typescale-headline-large);
-  font-weight: 400;
-  line-height: 1.2;
+  font-weight: var(--md-sys-typescale-headline-large-weight);
+  line-height: var(--md-sys-typescale-headline-large-line-height);
   margin: 0 0 1rem 0;
 }
 
 h2 {
   font-size: var(--md-sys-typescale-headline-medium);
-  font-weight: 400;
-  line-height: 1.3;
+  font-weight: var(--md-sys-typescale-headline-medium-weight);
+  line-height: var(--md-sys-typescale-headline-medium-line-height);
   margin: 0 0 0.875rem 0;
 }
 
 h3 {
   font-size: var(--md-sys-typescale-headline-small);
-  font-weight: 400;
-  line-height: 1.4;
+  font-weight: var(--md-sys-typescale-headline-small-weight);
+  line-height: var(--md-sys-typescale-headline-small-line-height);
   margin: 0 0 0.75rem 0;
+}
+
+h4 {
+  font-size: var(--md-sys-typescale-title-large);
+  font-weight: var(--md-sys-typescale-title-large-weight);
+  line-height: var(--md-sys-typescale-title-large-line-height);
+  margin: 0 0 0.625rem 0;
+}
+
+h5 {
+  font-size: var(--md-sys-typescale-title-medium);
+  font-weight: var(--md-sys-typescale-title-medium-weight);
+  line-height: var(--md-sys-typescale-title-medium-line-height);
+  margin: 0 0 0.5rem 0;
+}
+
+h6 {
+  font-size: var(--md-sys-typescale-title-small);
+  font-weight: var(--md-sys-typescale-title-small-weight);
+  line-height: var(--md-sys-typescale-title-small-line-height);
+  margin: 0 0 0.5rem 0;
 }
 
 p {
   font-size: var(--md-sys-typescale-body-medium);
-  line-height: 1.6;
+  font-weight: var(--md-sys-typescale-body-medium-weight);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
   margin: 0 0 1rem 0;
 }
 
+/* ============================================
+   UTILITY CLASSES - DISPLAY SCALE
+   ============================================ */
+
+.text-display-large {
+  font-size: var(--md-sys-typescale-display-large);
+  font-weight: var(--md-sys-typescale-display-large-weight);
+  line-height: var(--md-sys-typescale-display-large-line-height);
+}
+
+.text-display-medium {
+  font-size: var(--md-sys-typescale-display-medium);
+  font-weight: var(--md-sys-typescale-display-medium-weight);
+  line-height: var(--md-sys-typescale-display-medium-line-height);
+}
+
+.text-display-small {
+  font-size: var(--md-sys-typescale-display-small);
+  font-weight: var(--md-sys-typescale-display-small-weight);
+  line-height: var(--md-sys-typescale-display-small-line-height);
+}
+
+/* ============================================
+   UTILITY CLASSES - HEADLINE SCALE
+   ============================================ */
+
+.text-headline-large {
+  font-size: var(--md-sys-typescale-headline-large);
+  font-weight: var(--md-sys-typescale-headline-large-weight);
+  line-height: var(--md-sys-typescale-headline-large-line-height);
+}
+
+.text-headline-medium {
+  font-size: var(--md-sys-typescale-headline-medium);
+  font-weight: var(--md-sys-typescale-headline-medium-weight);
+  line-height: var(--md-sys-typescale-headline-medium-line-height);
+}
+
+.text-headline-small {
+  font-size: var(--md-sys-typescale-headline-small);
+  font-weight: var(--md-sys-typescale-headline-small-weight);
+  line-height: var(--md-sys-typescale-headline-small-line-height);
+}
+
+/* ============================================
+   UTILITY CLASSES - TITLE SCALE
+   ============================================ */
+
+.text-title-large,
 .title-large {
   font-size: var(--md-sys-typescale-title-large);
-  font-weight: 400;
+  font-weight: var(--md-sys-typescale-title-large-weight);
+  line-height: var(--md-sys-typescale-title-large-line-height);
 }
 
+.text-title-medium {
+  font-size: var(--md-sys-typescale-title-medium);
+  font-weight: var(--md-sys-typescale-title-medium-weight);
+  line-height: var(--md-sys-typescale-title-medium-line-height);
+}
+
+.text-title-small {
+  font-size: var(--md-sys-typescale-title-small);
+  font-weight: var(--md-sys-typescale-title-small-weight);
+  line-height: var(--md-sys-typescale-title-small-line-height);
+}
+
+/* ============================================
+   UTILITY CLASSES - BODY SCALE
+   ============================================ */
+
+.text-body-large,
 .body-large {
   font-size: var(--md-sys-typescale-body-large);
-  line-height: 1.5;
+  font-weight: var(--md-sys-typescale-body-large-weight);
+  line-height: var(--md-sys-typescale-body-large-line-height);
 }
 
+.text-body-medium {
+  font-size: var(--md-sys-typescale-body-medium);
+  font-weight: var(--md-sys-typescale-body-medium-weight);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
+}
+
+.text-body-small {
+  font-size: var(--md-sys-typescale-body-small);
+  font-weight: var(--md-sys-typescale-body-small-weight);
+  line-height: var(--md-sys-typescale-body-small-line-height);
+}
+
+/* ============================================
+   UTILITY CLASSES - LABEL SCALE
+   ============================================ */
+
+.text-label-large,
 .label-large {
   font-size: var(--md-sys-typescale-label-large);
-  font-weight: 500;
-  letter-spacing: 0.1px;
+  font-weight: var(--md-sys-typescale-label-large-weight);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+  letter-spacing: var(--md-sys-typescale-label-large-tracking);
+}
+
+.text-label-medium {
+  font-size: var(--md-sys-typescale-label-medium);
+  font-weight: var(--md-sys-typescale-label-medium-weight);
+  line-height: var(--md-sys-typescale-label-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-label-medium-tracking);
+}
+
+.text-label-small {
+  font-size: var(--md-sys-typescale-label-small);
+  font-weight: var(--md-sys-typescale-label-small-weight);
+  line-height: var(--md-sys-typescale-label-small-line-height);
+  letter-spacing: var(--md-sys-typescale-label-small-tracking);
+}
+
+/* ============================================
+   RESPONSIVE TYPOGRAPHY
+   ============================================ */
+
+/* Mobile: Scale down display and headline sizes */
+@media (max-width: 768px) {
+  :root {
+    --md-sys-typescale-display-large: 45px;
+    --md-sys-typescale-display-medium: 36px;
+    --md-sys-typescale-display-small: 32px;
+    --md-sys-typescale-headline-large: 28px;
+    --md-sys-typescale-headline-medium: 24px;
+  }
+}
+
+/* Small Mobile: Further scale reduction */
+@media (max-width: 480px) {
+  :root {
+    --md-sys-typescale-display-large: 36px;
+    --md-sys-typescale-display-medium: 32px;
+    --md-sys-typescale-display-small: 28px;
+    --md-sys-typescale-headline-large: 24px;
+    --md-sys-typescale-headline-medium: 20px;
+  }
+}
+
+/* ============================================
+   MIGRATION ALIASES (Deprecated)
+   ============================================
+   These classes exist for backward compatibility.
+   Use .text-* prefixed classes in new code.
+   ============================================ */
+
+/* Deprecated: Use .text-title-large */
+.title-large {
+  font-size: var(--md-sys-typescale-title-large);
+  font-weight: var(--md-sys-typescale-title-large-weight);
+  line-height: var(--md-sys-typescale-title-large-line-height);
+}
+
+/* Deprecated: Use .text-body-large */
+.body-large {
+  font-size: var(--md-sys-typescale-body-large);
+  font-weight: var(--md-sys-typescale-body-large-weight);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+}
+
+/* Deprecated: Use .text-label-large */
+.label-large {
+  font-size: var(--md-sys-typescale-label-large);
+  font-weight: var(--md-sys-typescale-label-large-weight);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+  letter-spacing: var(--md-sys-typescale-label-large-tracking);
 }

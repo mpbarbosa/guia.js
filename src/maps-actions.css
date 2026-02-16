@@ -1,0 +1,249 @@
+/* ============================================
+   MAPS INTEGRATION ACTION BUTTONS
+   ============================================ */
+
+/* Maps Actions Container */
+.maps-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+  padding: 12px;
+  background: var(--md-sys-color-surface-variant, #f5f5f5);
+  border-radius: 12px;
+  border: 1px solid var(--md-sys-color-outline-variant, #e0e0e0);
+}
+
+/* Maps Action Button Base Styles */
+.maps-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  text-decoration: none;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Primary Action (Google Maps) */
+.maps-action-primary {
+  background: var(--md-sys-color-primary, #6750a4);
+  color: var(--md-sys-color-on-primary, #fff);
+  box-shadow: 0 1px 3px rgba(103, 80, 164, 0.2);
+}
+
+.maps-action-primary:hover {
+  background: var(--md-sys-color-primary-hover, #7965af);
+  box-shadow: 0 2px 6px rgba(103, 80, 164, 0.3);
+  transform: translateY(-1px);
+}
+
+.maps-action-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(103, 80, 164, 0.2);
+}
+
+.maps-action-primary:focus {
+  outline: 2px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: 2px;
+}
+
+/* Secondary Actions (Street View, OSM, Waze) */
+.maps-action-secondary {
+  background: var(--md-sys-color-surface, #fff);
+  color: var(--md-sys-color-primary, #6750a4);
+  border: 1px solid var(--md-sys-color-outline, #79747e);
+}
+
+.maps-action-secondary:hover {
+  background: var(--md-sys-color-secondary-container, #e8def8);
+  border-color: var(--md-sys-color-primary, #6750a4);
+  transform: translateY(-1px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.maps-action-secondary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.maps-action-secondary:focus {
+  outline: 2px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: 2px;
+}
+
+/* Button Icon */
+.maps-action-btn .btn-icon {
+  font-size: 18px; /* Decorative icon size */
+  line-height: 1;
+}
+
+/* Button Text */
+.maps-action-btn .btn-text {
+  font-size: var(--md-sys-typescale-body-medium);
+  font-weight: 500;
+}
+
+/* Placeholder (when no coordinates) */
+.maps-actions-placeholder {
+  margin: 0;
+  padding: 8px 0;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  font-size: var(--md-sys-typescale-body-medium);
+  font-style: italic;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .maps-actions {
+    padding: 10px;
+    gap: 6px;
+  }
+
+  .maps-action-btn {
+    padding: 8px 14px;
+    /* Typography tokens handle font-size scaling */
+  }
+
+  .maps-action-btn .btn-icon {
+    font-size: 16px; /* Decorative icon size */
+  }
+
+  .maps-action-btn .btn-text {
+    /* Typography tokens handle font-size scaling */
+  }
+}
+
+/* Small Mobile (stacked layout) */
+@media (max-width: 480px) {
+  .maps-actions {
+    flex-direction: column;
+  }
+
+  .maps-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Primary button larger on mobile */
+  .maps-action-primary {
+    padding: 12px 16px;
+    /* Typography tokens handle font-size scaling */
+  }
+}
+
+/* Tablet (2-column layout) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .maps-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Primary button spans both columns */
+  .maps-action-primary {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Desktop (4-column layout) */
+@media (min-width: 769px) {
+  .maps-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .maps-action-btn {
+    justify-content: center;
+  }
+}
+
+/* Loading State (when coordinates updating) */
+.maps-actions.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.maps-actions.loading .maps-action-btn {
+  cursor: wait;
+}
+
+/* Disabled State */
+.maps-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .maps-action-btn {
+    border-width: 2px;
+  }
+
+  .maps-action-primary {
+    border: 2px solid transparent;
+  }
+
+  .maps-action-secondary {
+    border-width: 2px;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .maps-action-btn {
+    transition: none;
+  }
+
+  .maps-action-btn:hover,
+  .maps-action-btn:active {
+    transform: none;
+  }
+}
+
+/* Print - Hide maps actions in print */
+@media print {
+  .maps-actions {
+    display: none !important;
+  }
+}
+
+/* Dark Mode Support (if implemented in future) */
+@media (prefers-color-scheme: dark) {
+  .maps-actions {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .maps-action-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .maps-action-secondary:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* Accessibility - Focus Visible Enhancement */
+.maps-action-btn:focus-visible {
+  outline: 3px solid var(--md-sys-color-primary, #6750a4);
+  outline-offset: 3px;
+}
+
+/* Touch Feedback (mobile) */
+@media (hover: none) and (pointer: coarse) {
+  .maps-action-btn:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease-out;
+  }
+}

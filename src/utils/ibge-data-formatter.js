@@ -291,6 +291,7 @@ class IBGEDataFormatter {
   async _fetchLocalPopulationData(municipio, uf) {
     try {
       // Try to fetch from local cached data
+      // Note: The dist/libs/ folder must be deployed to production
       const response = await fetch('/libs/sidra/tab6579_municipios.json');
       if (!response.ok) return null;
 

@@ -41,6 +41,7 @@
     "update:badges": "./.github/scripts/update-badges.sh",
     "cdn:generate": "./.github/scripts/cdn-delivery.sh",
     "ci:test-local": "./.github/scripts/test-workflow-locally.sh",
+    "deploy:preflight": "./scripts/deploy-preflight.sh",
     "automation:test": "npm run check:version && echo '✅ Automation scripts ready'",
     "docs:generate": "jsdoc -c jsdoc.json -r src/ -d docs/api-generated/",
     "docs:serve": "npx http-server docs/api-generated/ -p 8080",

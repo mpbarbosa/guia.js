@@ -64,34 +64,49 @@ For browser environments, inject environment variables at build time:
 
 ## 2. Content Security Policy (CSP)
 
-### Meta Tag Integration
+### Important: Meta Tag Limitations
 
-Add to `index.html` `<head>`:
+⚠️ **The `frame-ancestors` CSP directive is NOT supported in `<meta>` tags.** It only works when delivered via HTTP headers. 
+
+For clickjacking protection when using meta tags, the application uses:
+- **X-Frame-Options: DENY** header (fallback for meta tag deployments)
+- **frame-ancestors** directive only in HTTP headers (when available)
+
+### Meta Tag Integration (Static Hosting)
+
+For static hosting (GitHub Pages, Netlify, etc.) without HTTP header control:
 
 ```html
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br;">
+<!-- CSP meta tag (without frame-ancestors) -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br; base-uri 'self'; form-action 'self'">
+
+<!-- X-Frame-Options for clickjacking protection -->
+<meta http-equiv="X-Frame-Options" content="DENY">
 ```
 
 ### Dynamic CSP Injection
 
 ```javascript
-import { getCSPMetaContent, env } from './config/csp.js';
+import { getCSPMetaContent } from './config/csp.js';
 
-// Set CSP meta tag dynamically
+// For meta tag (excludes frame-ancestors)
 const meta = document.createElement('meta');
 meta.httpEquiv = 'Content-Security-Policy';
-meta.content = getCSPMetaContent(env.isProduction());
+meta.content = getCSPMetaContent(true); // No frame-ancestors
 document.head.appendChild(meta);
 ```
 
-### Server Configuration
+### HTTP Header Configuration (Full CSP Support)
+
+When you control the server and can set HTTP headers, use the full CSP with `frame-ancestors`:
 
 #### Express.js
 ```javascript
 import { getAllSecurityHeaders } from './config/csp.js';
 
 app.use((req, res, next) => {
-  const headers = getAllSecurityHeaders(process.env.NODE_ENV === 'production');
+  // includeFrameAncestors=true for HTTP headers
+  const headers = getAllSecurityHeaders(true, true);
   Object.entries(headers).forEach(([key, value]) => {
     res.setHeader(key, value);
   });
@@ -102,7 +117,7 @@ app.use((req, res, next) => {
 #### Nginx
 ```nginx
 location / {
-  add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;";
+  add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; frame-ancestors 'none';";
   add_header X-Content-Type-Options "nosniff";
   add_header X-Frame-Options "DENY";
   add_header X-XSS-Protection "1; mode=block";
@@ -111,11 +126,27 @@ location / {
 
 #### Apache
 ```apache
-Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;"
+Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; frame-ancestors 'none';"
 Header set X-Content-Type-Options "nosniff"
 Header set X-Frame-Options "DENY"
 Header set X-XSS-Protection "1; mode=block"
 ```
+
+### CSP Configuration Summary
+
+| Directive | Meta Tag | HTTP Header | Notes |
+|-----------|----------|-------------|-------|
+| `default-src` | ✅ | ✅ | Fallback for unspecified directives |
+| `script-src` | ✅ | ✅ | Controls JavaScript sources |
+| `style-src` | ✅ | ✅ | Controls CSS sources |
+| `img-src` | ✅ | ✅ | Controls image sources |
+| `connect-src` | ✅ | ✅ | Controls fetch/XHR destinations |
+| `font-src` | ✅ | ✅ | Controls font sources |
+| `base-uri` | ✅ | ✅ | Restricts `<base>` tag |
+| `form-action` | ✅ | ✅ | Restricts form submission |
+| `frame-ancestors` | ❌ | ✅ | **HTTP header only!** |
+
+**Recommendation**: Use `X-Frame-Options: DENY` alongside CSP for defense-in-depth, as it's supported in both meta tags and HTTP headers.
 
 ## 3. API Rate Limiting
 

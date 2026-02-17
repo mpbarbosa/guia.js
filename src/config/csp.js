@@ -43,9 +43,10 @@ export const productionCSP = {
     'https://servicodados.ibge.gov.br', // IBGE API
     'https://www.google-analytics.com' // If analytics enabled
   ],
-  'frame-ancestors': ["'none'"], // Prevent clickjacking
   'base-uri': ["'self'"],
   'form-action': ["'self'"]
+  // NOTE: 'frame-ancestors' cannot be used in <meta> tags, only in HTTP headers
+  // Use X-Frame-Options header instead (see securityHeaders below)
 };
 
 /**
@@ -81,9 +82,10 @@ export const developmentCSP = {
     'http://localhost:*', // Local development servers
     'ws://localhost:*' // WebSocket for hot reload
   ],
-  'frame-ancestors': ["'none'"],
   'base-uri': ["'self'"],
   'form-action': ["'self'"]
+  // NOTE: 'frame-ancestors' cannot be used in <meta> tags, only in HTTP headers
+  // Use X-Frame-Options header instead (see securityHeaders below)
 };
 
 /**
@@ -121,8 +123,51 @@ export function getCSPMetaContent(isProduction = true) {
 /**
  * Get CSP header value for server configuration.
  * 
+ * NOTE: This version is for meta tags and does NOT include HTTP-only directives
+ * like 'frame-ancestors'. Use getCSPHeadersWithFrameAncestors() for HTTP headers.
+ * 
  * @param {boolean} isProduction - Whether running in production mode
  * @returns {Object} Headers object with CSP
+ * 
+ * @example
+ * // For meta tag injection
+ * const cspHeaders = getCSPHeaders(true);
+ * meta.setAttribute('content', cspHeaders['Content-Security-Policy']);
+ */
+export function getCSPHeaders(isProduction = true) {
+  const directives = isProduction ? productionCSP : developmentCSP;
+  return {
+    'Content-Security-Policy': formatCSP(directives)
+  };
+}
+
+/**
+ * Additional security headers for production.
+ * 
+ * NOTE: X-Frame-Options provides clickjacking protection since 'frame-ancestors'
+ * CSP directive cannot be used in <meta> tags (only in HTTP headers).
+ */
+export const securityHeaders = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY', // Replaces frame-ancestors for meta tag deployments
+  'X-XSS-Protection': '1; mode=block',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'geolocation=(self), microphone=(), camera=()'
+};
+
+/**
+ * CSP directives that can ONLY be used in HTTP headers (not in meta tags).
+ * These should be added by the server when serving via HTTP headers.
+ */
+export const httpOnlyCSP = {
+  'frame-ancestors': ["'none'"] // Prevent clickjacking (HTTP header only)
+};
+
+/**
+ * Get CSP header value for server configuration (includes HTTP-only directives).
+ * 
+ * @param {boolean} isProduction - Whether running in production mode
+ * @returns {Object} Headers object with CSP including HTTP-only directives
  * 
  * @example
  * // Express.js
@@ -134,33 +179,35 @@ export function getCSPMetaContent(isProduction = true) {
  *   next();
  * });
  */
-export function getCSPHeaders(isProduction = true) {
+export function getCSPHeadersWithFrameAncestors(isProduction = true) {
   const directives = isProduction ? productionCSP : developmentCSP;
+  const combinedDirectives = { ...directives, ...httpOnlyCSP };
   return {
-    'Content-Security-Policy': formatCSP(directives)
+    'Content-Security-Policy': formatCSP(combinedDirectives)
   };
 }
-
-/**
- * Additional security headers for production.
- */
-export const securityHeaders = {
-  'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'DENY',
-  'X-XSS-Protection': '1; mode=block',
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Permissions-Policy': 'geolocation=(self), microphone=(), camera=()'
-};
 
 /**
  * Get all security headers including CSP.
  * 
  * @param {boolean} isProduction - Whether running in production mode
+ * @param {boolean} includeFrameAncestors - Include frame-ancestors (only for HTTP headers)
  * @returns {Object} Complete set of security headers
+ * 
+ * @example
+ * // For static hosting (meta tags)
+ * const headers = getAllSecurityHeaders(true, false);
+ * 
+ * // For HTTP server
+ * const headers = getAllSecurityHeaders(true, true);
  */
-export function getAllSecurityHeaders(isProduction = true) {
+export function getAllSecurityHeaders(isProduction = true, includeFrameAncestors = false) {
+  const cspHeaders = includeFrameAncestors 
+    ? getCSPHeadersWithFrameAncestors(isProduction)
+    : getCSPHeaders(isProduction);
+  
   return {
-    ...getCSPHeaders(isProduction),
+    ...cspHeaders,
     ...securityHeaders
   };
 }

@@ -2,7 +2,7 @@
   "name": "Guia Turístico",
   "short_name": "Guia",
   "description": "Descubra sua localização em tempo real com informações detalhadas sobre cidades e bairros brasileiros",
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
@@ -31,7 +31,7 @@
       "name": "Conversor",
       "short_name": "Conversor",
       "description": "Conversor de Coordenadas",
-      "url": "/src/index.html#/converter",
+      "url": "/#/converter",
       "icons": []
     }
   ],

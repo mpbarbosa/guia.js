@@ -4,7 +4,14 @@
 
 'use strict';
 
-import { getCSPMetaContent, getAllSecurityHeaders, productionCSP, developmentCSP } from '../../src/config/csp.js';
+import { 
+  getCSPMetaContent, 
+  getAllSecurityHeaders, 
+  getCSPHeadersWithFrameAncestors,
+  productionCSP, 
+  developmentCSP,
+  httpOnlyCSP 
+} from '../../src/config/csp.js';
 
 describe('Content Security Policy (CSP)', () => {
   describe('CSP Meta Content Generation', () => {
@@ -14,7 +21,8 @@ describe('Content Security Policy (CSP)', () => {
       expect(csp).toContain("default-src 'self'");
       expect(csp).toContain("script-src");
       expect(csp).toContain("style-src");
-      expect(csp).toContain("frame-ancestors 'none'");
+      // frame-ancestors should NOT be in meta content (HTTP-only directive)
+      expect(csp).not.toContain("frame-ancestors");
     });
 
     test('should generate development CSP meta content', () => {
@@ -22,6 +30,8 @@ describe('Content Security Policy (CSP)', () => {
       
       expect(csp).toContain("default-src 'self'");
       expect(csp).toContain("unsafe-eval"); // Development allows eval
+      // frame-ancestors should NOT be in meta content (HTTP-only directive)
+      expect(csp).not.toContain("frame-ancestors");
     });
 
     test('should include required API endpoints in connect-src', () => {
@@ -82,9 +92,13 @@ describe('Content Security Policy (CSP)', () => {
       expect(scriptSrc).toContain("'unsafe-eval'");
     });
 
-    test('should prevent framing from all origins', () => {
-      expect(productionCSP['frame-ancestors']).toEqual(["'none'"]);
-      expect(developmentCSP['frame-ancestors']).toEqual(["'none'"]);
+    test('frame-ancestors should be in HTTP-only directives', () => {
+      expect(httpOnlyCSP['frame-ancestors']).toEqual(["'none'"]);
+    });
+
+    test('frame-ancestors should NOT be in meta tag directives', () => {
+      expect(productionCSP['frame-ancestors']).toBeUndefined();
+      expect(developmentCSP['frame-ancestors']).toBeUndefined();
     });
 
     test('should allow inline styles (required for Material Design)', () => {
@@ -146,6 +160,33 @@ describe('Content Security Policy (CSP)', () => {
       
       expect(csp).toContain('script-src');
       expect(csp).toContain('cdn.jsdelivr.net');
+    });
+  });
+
+  describe('HTTP-Only Directives', () => {
+    test('should include frame-ancestors when using HTTP headers', () => {
+      const headers = getCSPHeadersWithFrameAncestors(true);
+      
+      expect(headers['Content-Security-Policy']).toContain("frame-ancestors 'none'");
+    });
+
+    test('should NOT include frame-ancestors in meta tag CSP', () => {
+      const headers = getAllSecurityHeaders(true, false);
+      
+      expect(headers['Content-Security-Policy']).not.toContain("frame-ancestors");
+    });
+
+    test('should use X-Frame-Options as fallback for meta tags', () => {
+      const headers = getAllSecurityHeaders(true, false);
+      
+      expect(headers['X-Frame-Options']).toBe('DENY');
+    });
+
+    test('getAllSecurityHeaders with includeFrameAncestors=true', () => {
+      const headers = getAllSecurityHeaders(true, true);
+      
+      expect(headers['Content-Security-Policy']).toContain("frame-ancestors 'none'");
+      expect(headers['X-Frame-Options']).toBe('DENY'); // Both for defense in depth
     });
   });
 });

@@ -48,11 +48,15 @@ import { withObserver } from '../utils/ObserverMixin.js';
  * @param {number} latitude - Latitude coordinate
  * @param {number} longitude - Longitude coordinate
  * @param {string} baseUrl - Base URL for OpenStreetMap API
- * @returns {string} Complete API URL
+ * @param {string|null} corsProxy - Optional CORS proxy URL prefix
+ * @returns {string} Complete API URL (with or without CORS proxy)
  * @private
  */
-const getOpenStreetMapUrl = (latitude, longitude, baseUrl) =>
-	`${baseUrl}&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+const getOpenStreetMapUrl = (latitude, longitude, baseUrl, corsProxy = null) => {
+	const nominatimUrl = `${baseUrl}&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+	// Wrap with CORS proxy if provided
+	return corsProxy ? `${corsProxy}${encodeURIComponent(nominatimUrl)}` : nominatimUrl;
+};
 
 /**
  * Reverse geocoder for converting geographic coordinates to addresses.

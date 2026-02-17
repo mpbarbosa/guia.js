@@ -1,0 +1,9 @@
+{
+  "name": "guia-turistico-geocode-reverse",
+  "version": "1.0.0",
+  "description": "AWS Lambda function for reverse geocoding using AWS Location Service",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-location": "^3.700.0"
+  }
+}

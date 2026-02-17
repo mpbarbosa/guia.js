@@ -206,6 +206,8 @@ python3 -m http.server 9000
 - Use `npm run build` before deployment to production
 - Use `npm run preview` to test production build locally
 
+**⚠️ Production Deployment**: Ensure the entire `dist/` folder is deployed, including the `dist/libs/sidra/` directory. See [DEPLOYMENT.md](docs/DEPLOYMENT.md) for details.
+
 ### Quick Validation
 
 ```bash
@@ -839,7 +841,7 @@ git push origin v0.9.0-alpha
 
 # 5. Verify CDN availability
 curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/app.js"
-# Should return: HTTP/7.0.0
+# Should return: HTTP/7.1.0
 
 # Alternative: Use commit hash instead (available immediately)
 # https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@COMMIT_HASH/src/app.js
@@ -1031,7 +1033,7 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 **Format**:
 ```
 # Generated: 2026-02-11 23:45:00
-# Version: 7.0.0-alpha
+# Version: 7.1.0-alpha
 # Commit: abc1234567890abcdef1234567890abcdef12345
 
 Version-specific URLs:

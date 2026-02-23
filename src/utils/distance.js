@@ -1,5 +1,4 @@
 'use strict';
-import { log, warn, error } from './logger.js';
 
 /**
  * Distance calculation utilities for geolocation.

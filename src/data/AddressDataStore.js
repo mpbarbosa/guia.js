@@ -252,28 +252,6 @@ class AddressDataStore {
 	}
 	
 	/**
-	 * Clears all stored address data and resets history.
-	 * 
-	 * Resets both current and previous address data (standardized and raw formats)
-	 * to null, effectively clearing the entire address history.
-	 * 
-	 * @returns {void}
-	 * 
-	 * @example
-	 * store.clear();
-	 * console.log(store.getCurrent().address); // null
-	 * console.log(store.hasHistory()); // false
-	 * 
-	 * @since 0.9.0-alpha
-	 */
-	clear() {
-		this.currentAddress = null;
-		this.previousAddress = null;
-		this.currentRawData = null;
-		this.previousRawData = null;
-	}
-	
-	/**
 	 * Generates a cache key for address data to enable efficient caching and retrieval.
 	 * 
 	 * Creates a unique identifier based on address components that can be used to cache

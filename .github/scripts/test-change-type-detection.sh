@@ -77,7 +77,6 @@ fi
 
 GREEN='\033[0;32m'
 RED='\033[0;31m'
-YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
@@ -118,7 +117,8 @@ test_change_type() {
     source .github/scripts/change-type-detector.sh
     
     # Test conventional commit extraction
-    local detected=$(extract_conventional_type "$commit_message" || echo "")
+    local detected
+    detected=$(extract_conventional_type "$commit_message" || echo "")
     
     if [ -z "$detected" ]; then
         # Try pattern matching

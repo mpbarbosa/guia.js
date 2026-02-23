@@ -1,5 +1,4 @@
 'use strict';
-import { log, warn, error } from '../../utils/logger.js';
 
 /**
  * Mock geolocation provider for testing and development.
@@ -85,7 +84,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} options - Geolocation options (unused in mock)
 	 * @returns {void}
 	 */
-	getCurrentPosition(successCallback, errorCallback, options) {
+	getCurrentPosition(successCallback, errorCallback, _options) {
 		if (!this.isSupported()) {
 			const error = {
 				code: 0,

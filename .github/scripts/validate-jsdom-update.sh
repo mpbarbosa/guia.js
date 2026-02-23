@@ -32,7 +32,7 @@ echo ""
 echo "Step 3: Updating jsdom to 27.4.0"
 echo "----------------------------------"
 npm install jsdom@27.4.0 --save-dev
-if [ $? -eq 0 ]; then
+if npm install jsdom@27.4.0 --save-dev; then
     echo -e "${GREEN}✓${NC} jsdom updated successfully"
 else
     echo -e "${RED}✗${NC} jsdom update failed"

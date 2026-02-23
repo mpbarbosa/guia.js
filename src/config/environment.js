@@ -60,7 +60,7 @@ function parseValue(value) {
 /**
  * Get environment variable with fallback to default.
  * Resolution order:
- *   1. import.meta.env.VITE_* – injected by Vite from .env at build/dev time
+ *   1. import.meta.env.VITE_* – inlined by Vite via VITE_STATIC_ENV static map
  *   2. window.__ENV__          – runtime injection (legacy / server-side rendering)
  *   3. process.env             – Node.js / Jest test environment
  *   4. defaultValue            – hardcoded fallback
@@ -69,13 +69,34 @@ function parseValue(value) {
  * @param {*} defaultValue - Default value if not found
  * @returns {*} Environment variable value or default
  */
+/**
+ * Static map of Vite env variables using literal property access so Vite can
+ * inline the values at build time. Dynamic key access (import.meta.env[key])
+ * is NOT replaced by Vite; only literal references are.
+ */
+const VITE_STATIC_ENV = typeof import.meta !== 'undefined' && import.meta.env
+  ? {
+      NOMINATIM_API_URL:      import.meta.env.VITE_NOMINATIM_API_URL,
+      NOMINATIM_USER_AGENT:   import.meta.env.VITE_NOMINATIM_USER_AGENT,
+      IBGE_API_URL:           import.meta.env.VITE_IBGE_API_URL,
+      AWS_LBS_BASE_URL:       import.meta.env.VITE_AWS_LBS_BASE_URL,
+      AWS_LBS_ENABLED:        import.meta.env.VITE_AWS_LBS_ENABLED,
+      RATE_LIMIT_NOMINATIM:   import.meta.env.VITE_RATE_LIMIT_NOMINATIM,
+      RATE_LIMIT_IBGE:        import.meta.env.VITE_RATE_LIMIT_IBGE,
+      ENABLE_SPEECH_SYNTHESIS:import.meta.env.VITE_ENABLE_SPEECH_SYNTHESIS,
+      ENABLE_OFFLINE_MODE:    import.meta.env.VITE_ENABLE_OFFLINE_MODE,
+      ENABLE_ANALYTICS:       import.meta.env.VITE_ENABLE_ANALYTICS,
+      DEBUG_MODE:             import.meta.env.VITE_DEBUG_MODE,
+      LOG_LEVEL:              import.meta.env.VITE_LOG_LEVEL,
+      CSP_ENABLED:            import.meta.env.VITE_CSP_ENABLED,
+      CORS_ENABLED:           import.meta.env.VITE_CORS_ENABLED,
+    }
+  : {};
+
 function getEnv(key, defaultValue) {
-  // 1. Vite build/dev environment – variables must be prefixed with VITE_
-  // import.meta.env is statically replaced by Vite; undefined in Node.js ESM.
-  if (typeof import.meta !== 'undefined' && import.meta.env) {
-    const viteValue = import.meta.env[`VITE_${key}`];
-    if (viteValue !== undefined) return parseValue(viteValue);
-  }
+  // 1. Vite build/dev environment – use the static map so Vite inlines values.
+  const viteValue = VITE_STATIC_ENV[key];
+  if (viteValue !== undefined) return parseValue(String(viteValue));
 
   // 2. Browser runtime injection via window.__ENV__ (e.g. from a server template)
   if (typeof window !== 'undefined' && window.__ENV__) {

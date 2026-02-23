@@ -12,7 +12,7 @@
  * @author Marcelo Pereira Barbosa
  */
 
-import { log, warn, error } from '../utils/logger.js';
+import { log } from '../utils/logger.js';
 import { env } from '../config/environment.js';
 import AwsAddressExtractor from '../data/AwsAddressExtractor.js';
 

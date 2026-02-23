@@ -211,6 +211,42 @@ jobs:
 
 ---
 
+### 6. cleanup-ai-workflow.sh
+**Path**: `scripts/cleanup-ai-workflow.sh`  
+**Purpose**: Removes old `.ai_workflow/` run artifact directories and local build/test caches  
+**Usage**: `./scripts/cleanup-ai-workflow.sh [--days N] [--dry-run]`  
+**npm script**: `npm run cleanup:ai-workflow`  
+**Arguments**:
+- `--days N` — delete workflow runs older than N days (default: `30`)
+- `--dry-run` — print what would be deleted without removing anything
+- `-h / --help` — show usage
+
+**Related modules**: `.ai_workflow/logs/`, `.ai_workflow/prompts/`, `.ai_workflow/summaries/`, `.jest-cache/`, `.pytest_cache/`, `coverage/`
+
+**What it does**:
+- Deletes `workflow_*` subdirectories in `.ai_workflow/logs/`, `.ai_workflow/prompts/`, and `.ai_workflow/summaries/` that are older than `--days` (mtime-based)
+- Removes `.jest-cache/`, `.pytest_cache/`, and `coverage/` from the project root
+- Always preserves `.ai_workflow/backlog/`, `.ai_workflow/metrics/`, `.ai_workflow/commit_history.json`, and `.ai_workflow/model_definitions.json`
+- Prints a KB-freed summary when complete
+
+**Exit codes**:
+- `0` — completed (dry-run or actual cleanup)
+- `1` — not run from project root, or unknown argument
+
+**Example**:
+```bash
+# Preview what would be removed (safe, no deletions)
+./scripts/cleanup-ai-workflow.sh --dry-run
+
+# Remove workflow runs older than 14 days
+./scripts/cleanup-ai-workflow.sh --days 14
+
+# Via npm
+npm run cleanup:ai-workflow
+```
+
+---
+
 ## Running Scripts
 
 ### Executable Permissions
@@ -228,6 +264,7 @@ chmod +x scripts/update-doc-dates.sh
 chmod +x scripts/update-test-counts.sh
 chmod +x scripts/deploy-preflight.sh
 chmod +x scripts/build_and_deploy.sh
+chmod +x scripts/cleanup-ai-workflow.sh
 ```
 
 Verify current permissions with:
@@ -254,6 +291,8 @@ Every script begins with `#!/bin/bash` as the first line. This means:
 ./scripts/deploy-preflight.sh             # Pre-flight checklist before production deploy
 ./scripts/build_and_deploy.sh             # Staging deployment (requires ../mpbarbosa_site)
 ./scripts/build_and_deploy.sh --help      # Show build_and_deploy.sh usage
+./scripts/cleanup-ai-workflow.sh          # Remove old .ai_workflow/ runs and caches
+./scripts/cleanup-ai-workflow.sh --dry-run  # Preview what would be deleted
 ```
 
 ### Via npm Scripts
@@ -261,6 +300,7 @@ Every script begins with `#!/bin/bash` as the first line. This means:
 ```bash
 npm run update:dates      # → ./scripts/update-doc-dates.sh
 npm run update:tests      # → ./scripts/update-test-counts.sh
+npm run cleanup:ai-workflow  # → ./scripts/cleanup-ai-workflow.sh
 # Note: fix-console-logging.sh, deploy-preflight.sh, and build_and_deploy.sh
 #       have no npm alias; invoke them directly.
 ```
@@ -279,6 +319,7 @@ All variables they use are defined internally. For reference:
 | `update-test-counts.sh` | `PASSING`, `TOTAL`, `FAILED`, `SKIPPED` | *(none)* |
 | `deploy-preflight.sh` | `NODE_VERSION`, `JS_COUNT`, `CSS_COUNT`, `PREVIEW_PID` | *(none)* |
 | `build_and_deploy.sh` | *(none beyond `$1`)* | *(none)* |
+| `cleanup-ai-workflow.sh` | `DAYS`, `DRY_RUN`, `DELETED`, `BYTES` | *(none)* |
 
 ---
 
@@ -293,6 +334,7 @@ All scripts use `set -e` — any failing command causes immediate exit with code
 | `update-test-counts.sh` | Counts synced to docs | `test-results.json` not produced; shell error |
 | `deploy-preflight.sh` | All checks passed; dist/ ready | Missing file, build failure, or endpoint unreachable |
 | `build_and_deploy.sh` | Deployment completed | Build failed or sync script errored |
+| `cleanup-ai-workflow.sh` | Cleanup (or dry-run) complete | Not in project root; unknown argument |
 
 To capture exit status explicitly:
 
@@ -401,6 +443,42 @@ grep -rn "console\." src/ --include="*.js" | grep -v "logger.js" | grep -v "node
 
 ---
 
+## Integration Test Scripts
+
+These scripts live in `tests/integration/` and are documented here for completeness.
+
+### run_visual_hierarchy_tests.sh
+**Path**: `tests/integration/run_visual_hierarchy_tests.sh`  
+**Purpose**: Runs Selenium-based visual hierarchy integration tests against a local HTTP server  
+**Usage**: `./tests/integration/run_visual_hierarchy_tests.sh`  
+**Arguments**: *(none — no flags supported)*  
+**Related modules**: `tests/integration/test_visual_hierarchy.py`, `src/index.html`
+
+**What it does**:
+1. Validates it is run from the project root (checks for `src/index.html`)
+2. Installs Selenium via `pip3` if not already present
+3. Starts a local HTTP server on port 8080 (`python3 -m http.server 8080 --directory src`)
+4. Runs `tests/integration/test_visual_hierarchy.py` with Python 3
+5. Stops the HTTP server regardless of test outcome (cleanup always runs)
+
+**Exit codes**:
+- `0` — all visual hierarchy tests passed
+- `1` — one or more tests failed, or server failed to start, or a prerequisite is missing
+
+**Prerequisites**:
+- Must be run from the project root
+- Requires Python 3 (`python3` in `PATH`)
+- Requires Selenium (`pip3 install selenium`) — installed automatically if missing
+- Port 8080 must be free
+
+**Example**:
+```bash
+# From project root
+./tests/integration/run_visual_hierarchy_tests.sh
+```
+
+---
+
 ## Common Use Cases
 
 ### "I just edited some docs and want to update timestamps"
@@ -479,8 +557,36 @@ cd guia_turistico
 ./scripts/build_and_deploy.sh
 ```
 
-### A script exits immediately with no output
-**Cause**: `set -e` caused silent exit because a command returned non-zero before any output was produced (e.g. `node` or `git` not found).  
+### `cleanup-ai-workflow.sh` — "No items deleted" but directories seem old
+**Cause**: The `find -mtime` check uses file modification time, not the timestamp in the directory name. A recently-touched workflow directory will be kept even if its name is old.  
+**Fix**: Use `--days 0` to remove all `workflow_*` entries regardless of mtime, or manually remove the specific directory:
+```bash
+rm -rf .ai_workflow/logs/workflow_20260101_000000
+```
+
+### `run_visual_hierarchy_tests.sh` fails with "Failed to start HTTP server"**Cause**: Port 8080 is already in use.  
+**Fix**:
+```bash
+lsof -i :8080
+kill <PID>
+./tests/integration/run_visual_hierarchy_tests.sh
+```
+
+### `run_visual_hierarchy_tests.sh` fails with "ModuleNotFoundError: No module named 'selenium'"
+**Cause**: The automatic `pip3 install selenium` step was skipped or failed (e.g., no internet access).  
+**Fix**: Install manually or use the project virtualenv:
+```bash
+pip3 install selenium
+# or
+source venv/bin/activate
+./tests/integration/run_visual_hierarchy_tests.sh
+```
+
+### `run_visual_hierarchy_tests.sh` — tests fail but server is running
+**Cause**: A visual hierarchy assertion in `test_visual_hierarchy.py` failed (CSS/DOM regression).  
+**Fix**: Open `http://localhost:8080` in a browser while the server is running, inspect the failing element, and fix the relevant CSS or HTML in `src/`.
+
+### A script exits immediately with no output**Cause**: `set -e` caused silent exit because a command returned non-zero before any output was produced (e.g. `node` or `git` not found).  
 **Fix**: Run with `bash -x` for step-by-step trace:
 ```bash
 bash -x ./scripts/update-test-counts.sh

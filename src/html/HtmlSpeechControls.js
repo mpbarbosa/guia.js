@@ -51,7 +51,7 @@
  * controls.destroy();
  */
 
-import SpeechSynthesisManager from '../speech/SpeechSynthesisManager.js';
+import SpeechSynthesisManager from '../speech/SpeechSynthesisManager.js'; // eslint-disable-line no-unused-vars
 
 /**
  * HTML speech synthesis UI controls manager.

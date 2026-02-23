@@ -1,6 +1,5 @@
 'use strict';
-import { log, warn, error } from '../utils/logger.js';
-
+import { log, warn } from '../utils/logger.js';
 /**
  * Speech Synthesis Manager for Web Speech API integration with queue-based processing.
  * 

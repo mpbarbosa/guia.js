@@ -8,9 +8,9 @@
  * @module views/converter
  */
 
-import { log, warn, error } from '../utils/logger.js';
+import { log, error } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
-import { extractDistrito, extractBairro, determineLocationType, formatLocationValue } from '../address-parser.js';
+import { determineLocationType, formatLocationValue } from '../address-parser.js';
 import { env } from '../config/environment.js';
 
 /**

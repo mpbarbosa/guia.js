@@ -341,7 +341,7 @@ class ReverseGeocoder {
 				this._corsRetryAttempted = true;
 				
 				// Use allorigins.win as fallback CORS proxy
-				const originalUrl = this.config.openstreetmapBaseUrl;
+				const _originalUrl = this.config.openstreetmapBaseUrl;
 				this.config.corsProxy = 'https://api.allorigins.win/raw?url=';
 				
 				try {

@@ -1,6 +1,5 @@
 'use strict';
-import { log, warn, error } from '../utils/logger.js';
-
+import { log, warn } from '../utils/logger.js';
 /**
  * SpeechController handles the core speech synthesis operations using the Web Speech API.
  * 

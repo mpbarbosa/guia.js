@@ -90,7 +90,6 @@ BASE_REF="${2:-HEAD~1}"
 # Colors for output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-RED='\033[0;31m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
@@ -144,7 +143,8 @@ pattern_matches() {
     local changed_files="$2"
     
     # Convert glob pattern to grep regex
-    local regex=$(echo "$pattern" | sed 's/\*\*/.*/' | sed 's/\*/[^\/]*/')
+    local regex
+    regex=$(echo "$pattern" | sed 's/\*\*/.*/' | sed 's/\*/[^\/]*/')
     
     if echo "$changed_files" | grep -qE "$regex"; then
         return 0
@@ -283,7 +283,8 @@ evaluate_conditions() {
 main() {
     print_info "Evaluating conditions for step: $STEP_NAME"
     
-    local changed_files=$(get_changed_files "$BASE_REF")
+    local changed_files
+    changed_files=$(get_changed_files "$BASE_REF")
     
     if [ -z "$changed_files" ]; then
         print_info "No changes detected"

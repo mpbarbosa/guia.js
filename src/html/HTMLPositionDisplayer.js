@@ -1,5 +1,5 @@
 'use strict';
-import { log, warn, error } from '../utils/logger.js';
+import { warn } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
 
 /**

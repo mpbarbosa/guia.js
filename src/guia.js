@@ -1,6 +1,6 @@
 'use strict';
-import { log as logToConsole, warn as warnToConsole, error as errorToConsole } from './utils/logger.js';
-import { showError, showInfo } from './utils/toast.js';
+import { log as logToConsole, warn as warnToConsole } from './utils/logger.js';
+import { showInfo } from './utils/toast.js';
 
 // Import utility modules  
 import { calculateDistance, delay } from './utils/distance.js';
@@ -9,8 +9,6 @@ import { isMobileDevice } from './utils/device.js';
 // Import configuration
 import { 
 	APP_VERSION,
-	APP_NAME,
-	APP_AUTHOR,
 	createDefaultConfig 
 } from './config/defaults.js';
 
@@ -142,7 +140,7 @@ const ibiraLoadingPromise = (async () => {
             }
             
             // Add basic methods that might be expected
-            async fetch(url) {
+            async fetch(_url) {
                 warn('(IbiraAPIFetchManagerFallback) fetch() called - ibira.js not available');
                 return Promise.reject(new Error('Fallback fetch manager - ibira.js library not available'));
             }
@@ -177,12 +175,7 @@ if (typeof window !== 'undefined') {
 
 // Use configuration from imported module
 const guiaVersion = APP_VERSION;
-const guiaName = APP_NAME;
-const guiaAuthor = APP_AUTHOR;
 const setupParams = createDefaultConfig();
-
-const getOpenStreetMapUrl = (latitude, longitude) =>
-	`${setupParams.openstreetmapBaseUrl}&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
 
 // Note: calculateDistance, delay, and isMobileDevice now imported from utils modules
 
@@ -301,44 +294,6 @@ log("Guia.js version:", guiaVersion.toString());
 // WebGeocodingManager - Extracted to src/coordination/WebGeocodingManager.js
 
 // Additional utility functions for geolocation support
-
-/**
- * Displays error messages to the user in a formatted way.
- * 
- * @param {Error} error - Error object to display
- * @returns {void}
- * 
- * @example
- * displayError(new Error('Location not available'));
- * 
- * @since 0.9.0-alpha
- * @author Marcelo Pereira Barbosa
- */
-function displayError(error) {
-	error("Display Error:", error);
-
-	// Try to find a suitable element to display the error
-	const errorElements = [
-		document.getElementById('error-display'),
-		document.getElementById('location-result'),
-		document.getElementById('result')
-	].filter(element => element !== null);
-
-	if (errorElements.length > 0) {
-		const element = errorElements[0];
-		element.innerHTML = `
-            <div class="error-message" style="color: red; padding: 10px; border: 1px solid red; border-radius: 4px; margin: 10px 0;">
-                <h4>Erro</h4>
-                <p><strong>Tipo:</strong> ${error.name || 'Error'}</p>
-                <p><strong>Mensagem:</strong> ${error.message}</p>
-                ${error.code ? `<p><strong>Código:</strong> ${error.code}</p>` : ''}
-            </div>
-        `;
-	} else {
-		// Fallback to toast notification if no suitable element found
-		showError(`Erro: ${error.message}`);
-	}
-}
 
 /**
  * Gets the type of address location from geocoding data.
@@ -498,7 +453,7 @@ if (typeof window !== 'undefined') {
 	// Wrap DEFAULT_ELEMENT_IDS assignment to handle circular dependency during initialization
 	try {
 		window.DEFAULT_ELEMENT_IDS = DEFAULT_ELEMENT_IDS;
-	} catch (e) {
+	} catch (_e) {
 		// Circular dependency during test initialization, skip for now
 		// Will be available after all modules are fully loaded
 	}
@@ -513,10 +468,10 @@ if (typeof window !== 'undefined') {
 	window.MockGeolocationProvider = MockGeolocationProvider;
 	try {
 		window.ChangeDetectionCoordinator = ChangeDetectionCoordinator;
-	} catch (e) { /* Circular dependency, skip */ }
+	} catch (_e) { /* Circular dependency, skip */ }
 	try {
 		window.WebGeocodingManager = WebGeocodingManager;
-	} catch (e) { /* Circular dependency, skip */ }
+	} catch (_e) { /* Circular dependency, skip */ }
 	window.BrazilianStandardAddress = BrazilianStandardAddress;
 	window.ReferencePlace = ReferencePlace;
 	window.AddressExtractor = AddressExtractor;

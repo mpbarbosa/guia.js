@@ -1,6 +1,5 @@
 'use strict';
-import { log, warn, error } from '../utils/logger.js';
-
+import { log } from '../utils/logger.js';
 /**
  * SingletonStatusManager - Status and progress tracking with singleton pattern implementation.
  * 

@@ -95,8 +95,7 @@ for file in "${FILES[@]}"; do
         sed -i "/^import .*/a import { log, warn, error } from './utils/logger.js';" "$file" 2>/dev/null || {
           # Try alternative path for nested files
           DEPTH=$(echo "$file" | tr -cd '/' | wc -c)
-          PREFIX=$(printf '../%.0s' $(seq 1 $DEPTH))
-          sed -i "/^import .*/a import { log, warn, error } from '${PREFIX}utils/logger.js';" "$file"
+          PREFIX=$(printf '../%.0s' $(seq 1 "$DEPTH"))
         }
       else
         # Add at top after 'use strict' if present
@@ -104,7 +103,7 @@ for file in "${FILES[@]}"; do
           sed -i "/'use strict';/a\\
 import { log, warn, error } from './utils/logger.js';" "$file" 2>/dev/null || {
             DEPTH=$(echo "$file" | tr -cd '/' | wc -c)
-            PREFIX=$(printf '../%.0s' $(seq 1 $DEPTH))
+            PREFIX=$(printf '../%.0s' $(seq 1 "$DEPTH"))
             sed -i "/'use strict';/a\\
 import { log, warn, error } from '${PREFIX}utils/logger.js';" "$file"
           }

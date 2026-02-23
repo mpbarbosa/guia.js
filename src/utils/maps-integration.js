@@ -145,7 +145,7 @@ class MapsIntegration {
       return `<p class="maps-actions-placeholder">Aguardando coordenadas...</p>`;
     }
 
-    const { latitude, longitude } = coords;
+    const { latitude: _lat, longitude: _lng } = coords; // coords passed to event handlers
 
     return `
       <button 

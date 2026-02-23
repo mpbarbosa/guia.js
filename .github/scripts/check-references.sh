@@ -204,7 +204,7 @@ echo ""
 if [ ${#EXCLUDED_REFS[@]} -gt 0 ]; then
     echo -e "${YELLOW}Excluded Patterns (False Positives):${NC}"
     for i in "${!EXCLUDED_REFS[@]}"; do
-        if [ $i -lt 10 ]; then
+        if [ "$i" -lt 10 ]; then
             echo "  ${EXCLUDED_REFS[$i]}"
         fi
     done

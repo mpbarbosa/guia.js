@@ -10,11 +10,7 @@
   function log(...args) {
     console.log('[ErrorRecovery]', ...args);
   }
-  
-  function warn(...args) {
-    console.warn('[ErrorRecovery]', ...args);
-  }
-  
+
   function error(...args) {
     console.error('[ErrorRecovery]', ...args);
   }
@@ -284,7 +280,7 @@
       return;
     }
     
-    const html = errorHistory.map((error, index) => `
+    const html = errorHistory.map((error, _index) => `
       <div class="error-item">
         <div class="error-item-header">
           <span class="error-item-type">${escapeHtml(error.type)}</span>

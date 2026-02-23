@@ -1,5 +1,4 @@
 'use strict';
-import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Reference place data extracted from geocoding data.

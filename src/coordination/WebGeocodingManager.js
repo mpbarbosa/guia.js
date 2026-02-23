@@ -66,7 +66,7 @@
 // Import core domain classes
 import GeoPosition from '../core/GeoPosition.js';
 import ObserverSubject from '../core/ObserverSubject.js';
-import PositionManager from '../core/PositionManager.js';
+
 
 // Import Phase 1 & Phase 3 coordinator classes
 import GeocodingState from '../core/GeocodingState.js';
@@ -87,10 +87,10 @@ import ChangeDetectionCoordinator from '../services/ChangeDetectionCoordinator.j
 import AddressDataExtractor from '../data/AddressDataExtractor.js';
 
 // Import timing classes
-import Chronometer from '../timing/Chronometer.js';
+
 
 // Import HTML classes
-import HtmlText from '../html/HtmlText.js';
+
 import DisplayerFactory from '../html/DisplayerFactory.js';
 
 // Import utility functions

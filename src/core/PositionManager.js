@@ -413,7 +413,7 @@ class PositionManager {
 		let posEvent = "";
 
 		if (position.timestamp - (this.lastModified || 0) < setupParams.trackingInterval) {
-			let errorMessage = `Less than ${setupParams.trackingInterval / 1000} seconds since last update: ${(position.timestamp - (this.lastModified || 0)) / 1000} seconds`;
+			const errorMessage = `Less than ${setupParams.trackingInterval / 1000} seconds since last update: ${(position.timestamp - (this.lastModified || 0)) / 1000} seconds`;
 			error = {
 				name: "ElapseTimeError",
 				message: errorMessage,
@@ -447,7 +447,7 @@ class PositionManager {
 	 * @since 0.6.0-alpha
 	 */
 	toString() {
-		let position = this.lastPosition || {};
+		const position = this.lastPosition || {};
 		if (!position || !this.latitude || !this.longitude) {
 			return `${this.constructor.name}: No position data`;
 		}

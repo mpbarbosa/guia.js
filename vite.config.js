@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   root: 'src',
   base: './',
+  envDir: '..', // .env files live in project root, not in src/
   publicDir: '../public', // Copy libs/ and service-worker.js from public/
   
   build: {

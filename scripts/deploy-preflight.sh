@@ -53,7 +53,8 @@ fi
 # 2. Run build
 echo ""
 echo "✓ Building production bundle..."
-npm run build > /dev/null 2>&1 && echo "  ✅ Build succeeded" || (echo "  ❌ Build failed" && exit 1)
+npm run build > /dev/null 2>&1
+if ! npm run build > /dev/null 2>&1; then echo "  ❌ Build failed"; exit 1; else echo "  ✅ Build succeeded"; fi
 
 # 3. Check critical files
 echo ""

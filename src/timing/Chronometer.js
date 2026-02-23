@@ -1,5 +1,5 @@
 'use strict';
-import { log, warn, error } from '../utils/logger.js';
+
 import { TimerManager } from '../utils/TimerManager.js';
 
 const timerManager = TimerManager.getInstance();
@@ -254,7 +254,7 @@ class Chronometer {
 	 * // Typically called automatically via observer pattern
 	 * positionManager.subscribe(chronometer);
 	 */
-	update(positionManager, posEvent, loading, error) {
+	update(positionManager, posEvent, _loading, _error) {
 		// Handle different position events using injected configuration
 		if (posEvent === this.eventConfig.positionUpdate || 
 		    posEvent === this.eventConfig.immediateAddressUpdate) {

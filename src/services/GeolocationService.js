@@ -38,32 +38,6 @@ import {
 	generateErrorDisplayHTML 
 } from '../utils/geolocation-error-formatter.js';
 
-/**
- * Checks if navigator geolocation is supported.
- * 
- * BROWSER COMPATIBILITY VALIDATION:
- * Implements robust position validation through defensive programming, checking
- * for navigator object availability and geolocation API support. This approach
- * prevents runtime errors on browsers or devices that don't support location
- * services, maintaining graceful degradation across different environments.
- * 
- * DEFENSIVE PROGRAMMING:
- * Follows MP Barbosa standards for graceful degradation by validating both
- * navigator existence and geolocation API availability before attempting
- * to access location services.
- * 
- * NOTE: This function is deprecated. Use provider.isSupported() instead.
- * Kept for backward compatibility with existing code.
- * 
- * @deprecated Use GeolocationProvider.isSupported() instead
- * @param {Object} navigatorObj - Navigator object to check
- * @returns {boolean} True if geolocation is supported
- * @private
- */
-const isGeolocationSupported = (navigatorObj) => {
-	// Check both navigator existence and geolocation API availability
-	return navigatorObj && 'geolocation' in navigatorObj;
-};
 
 /**
  * Checks if Permissions API is supported.
@@ -452,7 +426,7 @@ class GeolocationService {
 
 		// Extract coordinate data for formatting
 		const coords = position.coords;
-		const timestamp = new Date(position.timestamp).toLocaleString();
+		const timestamp = new Date(position.timestamp).toLocaleString(); // eslint-disable-line no-unused-vars
 		
 		// FORMAT COORDINATE DATA:
 		// Display coordinates with appropriate precision and timestamp

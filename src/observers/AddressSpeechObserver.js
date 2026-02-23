@@ -2,8 +2,8 @@
 
 import { log } from '../utils/logger.js';
 import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
-import SpeechSynthesisManager from '../speech/SpeechSynthesisManager.js';
-import { SpeechTextBuilder } from '../speech/SpeechTextBuilder.js';
+import SpeechSynthesisManager from '../speech/SpeechSynthesisManager.js'; // eslint-disable-line no-unused-vars
+import { SpeechTextBuilder } from '../speech/SpeechTextBuilder.js'; // eslint-disable-line no-unused-vars
 import PositionManager from '../core/PositionManager.js';
 
 export class AddressSpeechObserver {
@@ -25,7 +25,7 @@ this._firstAddressAnnounced = false;
 // to be mutable to track state across update() calls
 }
 
-update(currentAddress, enderecoPadronizadoOrEvent, posEvent, loadingOrChangeDetails, error) {
+update(currentAddress, enderecoPadronizadoOrEvent, posEvent, loadingOrChangeDetails, _error) {
 // Logging is now handled by HtmlSpeechSynthesisDisplayer facade for backward compatibility
 // if (typeof console !== 'undefined' && console.log) {
 // log("+++ (301) AddressSpeechObserver.update called +++");

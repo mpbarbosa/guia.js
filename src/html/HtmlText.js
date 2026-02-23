@@ -1,5 +1,4 @@
 'use strict';
-import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Manages HTML text content updates with timestamp formatting.

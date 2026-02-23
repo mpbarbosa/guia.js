@@ -1,5 +1,4 @@
 'use strict';
-import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Speech synthesis queue item for managing text-to-speech requests with priority support.

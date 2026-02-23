@@ -40,8 +40,7 @@
 
 import PositionManager from '../core/PositionManager.js';
 import { log, warn, error as logError } from '../utils/logger.js';
-import HTMLHighlightCardsDisplayer from '../html/HTMLHighlightCardsDisplayer.js';
-import HTMLSidraDisplayer from '../html/HTMLSidraDisplayer.js';
+
 
 /**
  * ServiceCoordinator class - Manages service lifecycle and coordination

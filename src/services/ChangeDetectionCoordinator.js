@@ -12,7 +12,7 @@
  * @author Marcelo Pereira Barbosa
  */
 
-import ObserverSubject from '../core/ObserverSubject.js';
+import ObserverSubject from '../core/ObserverSubject.js'; // eslint-disable-line no-unused-vars
 import { log, warn, error } from '../utils/logger.js';
 
 /**

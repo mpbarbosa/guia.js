@@ -69,7 +69,7 @@ class IBGEDataFormatter {
    * @returns {Object} Classification object with label, icon, description
    */
   classifyCity(population) {
-    for (const [key, classification] of Object.entries(this.CITY_CLASSIFICATIONS)) {
+    for (const [_key, classification] of Object.entries(this.CITY_CLASSIFICATIONS)) {
       if (population >= classification.min) {
         return classification;
       }

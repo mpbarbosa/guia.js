@@ -1,5 +1,4 @@
 'use strict';
-import { log, warn, error } from './logger.js';
 
 /**
  * Centralized timer management to prevent memory leaks

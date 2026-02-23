@@ -1,6 +1,5 @@
 'use strict';
-import { log, warn, error } from '../utils/logger.js';
-
+import { log, warn } from '../utils/logger.js';
 /**
  * HTMLHighlightCardsDisplayer - Updates highlight cards for municipio, bairro, and logradouro
  * 

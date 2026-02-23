@@ -46,7 +46,8 @@ export default [
       // Code quality rules
       'no-unused-vars': ['warn', { 
         argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_'
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_'
       }],
       'no-console': 'off', // Allow console for logging in this project
       'prefer-const': 'warn',

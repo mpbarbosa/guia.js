@@ -1,5 +1,4 @@
 'use strict';
-import { log, warn, error } from '../../utils/logger.js';
 
 /**
  * Interface/Base class for geolocation providers.
@@ -46,7 +45,7 @@ class GeolocationProvider {
 	 *   { enableHighAccuracy: true, timeout: 5000 }
 	 * );
 	 */
-	getCurrentPosition(successCallback, errorCallback, options) {
+	getCurrentPosition(_successCallback, _errorCallback, _options) {
 		throw new Error('GeolocationProvider.getCurrentPosition() must be implemented by subclass');
 	}
 
@@ -66,7 +65,7 @@ class GeolocationProvider {
 	 *   { enableHighAccuracy: true }
 	 * );
 	 */
-	watchPosition(successCallback, errorCallback, options) {
+	watchPosition(_successCallback, _errorCallback, _options) {
 		throw new Error('GeolocationProvider.watchPosition() must be implemented by subclass');
 	}
 
@@ -80,7 +79,7 @@ class GeolocationProvider {
 	 * @example
 	 * provider.clearWatch(watchId);
 	 */
-	clearWatch(watchId) {
+	clearWatch(_watchId) {
 		throw new Error('GeolocationProvider.clearWatch() must be implemented by subclass');
 	}
 

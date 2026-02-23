@@ -8,10 +8,9 @@
 
 import HomeViewController from './views/home.js';
 import { log, warn, error } from './utils/logger.js';
-import { VERSION, VERSION_STRING } from './config/version.js';
+import { VERSION_STRING } from './config/version.js';
 import { env } from './config/environment.js';
 import { 
-  hasRoute, 
   getConverterViewTemplate, 
   getNotFoundViewTemplate,
   getLoadingTemplate,

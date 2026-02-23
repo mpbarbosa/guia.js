@@ -1,5 +1,4 @@
 'use strict';
-import { log, warn, error } from '../utils/logger.js';
 
 /**
  * Address data extractor and standardizer — base class.

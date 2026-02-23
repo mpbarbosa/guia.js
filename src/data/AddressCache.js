@@ -22,7 +22,7 @@
 
 import ObserverSubject from '../core/ObserverSubject.js';
 import AddressExtractor from './AddressExtractor.js';
-import BrazilianStandardAddress from './BrazilianStandardAddress.js';
+import BrazilianStandardAddress from './BrazilianStandardAddress.js'; // eslint-disable-line no-unused-vars
 import LRUCache from './LRUCache.js';
 import { log } from '../utils/logger.js';
 import timerManager from '../utils/TimerManager.js';

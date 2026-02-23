@@ -33,7 +33,7 @@ const LOG_LEVELS = {
  * Current logging configuration.
  * @private
  */
-let logConfig = {
+const logConfig = {
 	level: LOG_LEVELS.log,
 	enabled: true,
 	timestamp: true
@@ -79,7 +79,7 @@ const _getConfiguredLevel = () => {
 		try {
 			const stored = localStorage.getItem('GUIA_LOG_LEVEL');
 			if (stored) return stored.toLowerCase();
-		} catch (e) {
+		} catch (_e) {
 			// localStorage not available or blocked, continue to default
 		}
 	}

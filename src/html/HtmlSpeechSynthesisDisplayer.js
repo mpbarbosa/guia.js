@@ -1,6 +1,5 @@
 'use strict';
-import { log, warn } from '../utils/logger.js';
-import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
+import { log } from '../utils/logger.js';
 
 /**
  * HTML-based speech synthesis controller with UI integration and address change notifications.

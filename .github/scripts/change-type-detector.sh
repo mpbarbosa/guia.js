@@ -64,7 +64,6 @@ BASE_REF="${1:-HEAD~1}"
 # Colors for output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-RED='\033[0;31m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
@@ -125,7 +124,8 @@ detect_type_from_pattern() {
     local message="$1"
     
     # Convert to lowercase for matching
-    local lower_message=$(echo "$message" | tr '[:upper:]' '[:lower:]')
+    local lower_message
+    lower_message=$(echo "$message" | tr '[:upper:]' '[:lower:]')
     
     # Feature patterns
     if echo "$lower_message" | grep -qE "^(add|implement|create|introduce)\s"; then
@@ -196,10 +196,14 @@ infer_type_from_files() {
     local changed_files="$1"
     
     # Count different file types
-    local code_count=$(echo "$changed_files" | grep -cE "\.(js|css|html)$" || echo "0")
-    local test_count=$(echo "$changed_files" | grep -cE "__tests__/.*\.js$|tests/.*\.py$" || echo "0")
-    local doc_count=$(echo "$changed_files" | grep -cE "\.md$|^docs/" || echo "0")
-    local config_count=$(echo "$changed_files" | grep -cE "package\.json|\.yml$|\.yaml$" || echo "0")
+    local code_count
+    code_count=$(echo "$changed_files" | grep -cE "\.(js|css|html)$" || echo "0")
+    local test_count
+    test_count=$(echo "$changed_files" | grep -cE "__tests__/.*\.js$|tests/.*\.py$" || echo "0")
+    local doc_count
+    doc_count=$(echo "$changed_files" | grep -cE "\.md$|^docs/" || echo "0")
+    local config_count
+    config_count=$(echo "$changed_files" | grep -cE "package\.json|\.yml$|\.yaml$" || echo "0")
     
     # Determine type based on file distribution
     if [ "$doc_count" -gt 0 ] && [ "$code_count" -eq 0 ] && [ "$test_count" -eq 0 ]; then
@@ -288,7 +292,8 @@ main() {
     print_info "Analyzing change type..."
     
     # Get commit messages
-    local commit_messages=$(get_commit_messages "$BASE_REF")
+    local commit_messages
+    commit_messages=$(get_commit_messages "$BASE_REF")
     
     if [ -z "$commit_messages" ]; then
         print_warning "No commit messages found"
@@ -296,7 +301,8 @@ main() {
     fi
     
     # Try to detect type from most recent commit
-    local latest_commit=$(echo "$commit_messages" | head -n 1)
+    local latest_commit
+    latest_commit=$(echo "$commit_messages" | head -n 1)
     print_info "Latest commit: $latest_commit"
     
     local detected_type=""
@@ -316,7 +322,8 @@ main() {
         else
             # 3. Infer from file changes
             print_info "Inferring type from file changes..."
-            local changed_files=$(git diff --name-only "$BASE_REF" 2>/dev/null || echo "")
+            local changed_files
+            changed_files=$(git diff --name-only "$BASE_REF" 2>/dev/null || echo "")
             detected_type=$(infer_type_from_files "$changed_files" || echo "")
             
             if [ -n "$detected_type" ]; then
@@ -333,7 +340,8 @@ main() {
     print_type "$detected_type" "($(get_test_strategy "$detected_type") testing)"
     
     # Print steps
-    local steps=$(get_steps_for_type "$detected_type")
+    local steps
+    steps=$(get_steps_for_type "$detected_type")
     print_info "Workflow steps: $steps"
     
     # Output machine-readable format
@@ -342,7 +350,9 @@ main() {
     # Export for use by other scripts
     export CHANGE_TYPE="$detected_type"
     export CHANGE_STEPS="$steps"
-    export TEST_STRATEGY=$(get_test_strategy "$detected_type")
+    local TEST_STRATEGY
+    TEST_STRATEGY=$(get_test_strategy "$detected_type")
+    export TEST_STRATEGY
     
     # Create cache file for other scripts
     if mkdir -p .github/cache 2>/dev/null; then

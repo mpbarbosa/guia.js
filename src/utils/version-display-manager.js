@@ -6,7 +6,7 @@
  * @since 0.11.0-alpha
  */
 
-import { VERSION, BUILD_DATE, VERSION_STRING, VERSION_WITH_DATE } from '../config/version.js';
+import { VERSION, BUILD_DATE, VERSION_WITH_DATE } from '../config/version.js';
 
 /**
  * VersionDisplayManager

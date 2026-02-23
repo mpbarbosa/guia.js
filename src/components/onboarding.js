@@ -177,7 +177,7 @@ class OnboardingManager {
     // Determine error type and messaging
     let errorTitle = 'Permissão de Localização Negada';
     let errorDescription = '';
-    let showConverterLink = true;
+    const showConverterLink = true; // eslint-disable-line no-unused-vars
     
     if (error) {
       switch (error.code) {

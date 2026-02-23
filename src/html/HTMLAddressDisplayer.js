@@ -1,5 +1,5 @@
 'use strict';
-import { log, warn, error } from '../utils/logger.js';
+import { log, warn } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
 
 import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';

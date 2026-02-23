@@ -63,11 +63,13 @@ for file in $MODIFIED; do
         rm -f "$file.bak"
     else
         # Add footer with date
-        echo "" >> "$file"
-        echo "---" >> "$file"
-        echo "" >> "$file"
-        echo "**Last Updated**: $TODAY  " >> "$file"
-        echo "**Status**: ✅ Active" >> "$file"
+        {
+            echo ""
+            echo "---"
+            echo ""
+            echo "**Last Updated**: $TODAY  "
+            echo "**Status**: ✅ Active"
+        } >> "$file"
         echo "✅ Added date to: $file"
         updated=$((updated + 1))
     fi

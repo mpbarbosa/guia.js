@@ -52,7 +52,7 @@ if [ ! -f "package.json" ]; then
 fi
 
 PACKAGE_VERSION=$(node -p "require('./package.json').version" 2>&1)
-if [ $? -ne 0 ]; then
+if ! PACKAGE_VERSION=$(node -p "require('./package.json').version" 2>&1); then
     echo -e "${RED}❌ Error: Failed to read package.json${NC}"
     echo "Details: $PACKAGE_VERSION"
     exit 1

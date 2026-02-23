@@ -20,7 +20,7 @@ NC='\033[0m' # No Color
 
 # Function to print status
 print_status() {
-    if [ $1 -eq 0 ]; then
+    if [ "$1" -eq 0 ]; then
         echo -e "${GREEN}✅ $2${NC}"
     else
         echo -e "${RED}❌ $2${NC}"
@@ -95,7 +95,7 @@ if [ -z "$CHANGED_FILES" ]; then
 else
     echo "Changed files:"
     echo "$CHANGED_FILES" | head -10
-    [ $(echo "$CHANGED_FILES" | wc -l) -gt 10 ] && echo "  ... and $(( $(echo "$CHANGED_FILES" | wc -l) - 10 )) more"
+    [ "$(echo "$CHANGED_FILES" | wc -l)" -gt 10 ] && echo "  ... and $(( $(echo "$CHANGED_FILES" | wc -l) - 10 )) more"
 fi
 echo ""
 
@@ -135,13 +135,11 @@ if should_run_step "security_audit"; then
     if npm audit --json > /tmp/audit-results.json 2>&1; then
         print_status 0 "Security audit (no vulnerabilities)"
     else
-        AUDIT_EXIT=$?
-        
         # Parse results
-        CRITICAL=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.critical // 0' 2>/dev/null || echo "0")
-        HIGH=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.high // 0' 2>/dev/null || echo "0")
-        MODERATE=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.moderate // 0' 2>/dev/null || echo "0")
-        LOW=$(cat /tmp/audit-results.json 2>/dev/null | jq -r '.metadata.vulnerabilities.low // 0' 2>/dev/null || echo "0")
+        CRITICAL=$(jq -r '.metadata.vulnerabilities.critical // 0' /tmp/audit-results.json 2>/dev/null || echo "0")
+        HIGH=$(jq -r '.metadata.vulnerabilities.high // 0' /tmp/audit-results.json 2>/dev/null || echo "0")
+        MODERATE=$(jq -r '.metadata.vulnerabilities.moderate // 0' /tmp/audit-results.json 2>/dev/null || echo "0")
+        LOW=$(jq -r '.metadata.vulnerabilities.low // 0' /tmp/audit-results.json 2>/dev/null || echo "0")
         echo ""
         echo "Vulnerabilities found:"
         echo "  🔴 Critical: $CRITICAL"

@@ -57,6 +57,7 @@ const AppState = {
  * @author Marcelo Pereira Barbosa
  */
 async function init() {
+  console.log('[GT] init() called'); // DEBUG
   log(`Initializing ${VERSION_STRING}...`);
   
   // Setup global error handlers
@@ -66,6 +67,7 @@ async function init() {
   
   // Hide app loading screen
   const appLoading = document.getElementById('app-loading');
+  console.log('[GT] app-loading element:', appLoading ? 'found' : 'NOT found'); // DEBUG
   if (appLoading) {
     // Add hidden class with fade out animation
     appLoading.classList.add('hidden');
@@ -76,6 +78,7 @@ async function init() {
   }
   
   // Wait for external dependencies to load (max 5 seconds)
+  console.log('[GT] window.dependenciesLoading:', window.dependenciesLoading, '| IbiraAPIFetchManager:', typeof window.IbiraAPIFetchManager); // DEBUG
   if (window.dependenciesLoading) {
     log('⏳ Waiting for dependencies to load...');
     try {
@@ -89,6 +92,7 @@ async function init() {
     }
   }
   
+  console.log('[GT] calling initRouter/initNavigation/handleRoute'); // DEBUG
   // Initialize router
   initRouter();
   
@@ -102,6 +106,7 @@ async function init() {
   window.addEventListener('hashchange', handleRoute);
   window.addEventListener('popstate', handleRoute);
   
+  console.log('[GT] init() complete'); // DEBUG
   log('✓ Application initialized successfully');
 }
 
@@ -187,6 +192,7 @@ async function handleRoute() {
   const hash = window.location.hash || '#/';
   const route = hash.substring(1); // Remove '#'
   
+  console.log('[GT] handleRoute() called, route:', route); // DEBUG
   log('Routing to:', route);
   
   // Update navigation
@@ -393,6 +399,7 @@ function showError(error) {
  * @author Marcelo Pereira Barbosa
  */
 async function initializeHomeView() {
+  console.log('[GT] initializeHomeView() called, homeController exists:', !!AppState.homeController); // DEBUG
   // Home view content is already in index.html
   // Initialize HomeViewController if not already done
   if (!AppState.homeController) {
@@ -403,9 +410,11 @@ async function initializeHomeView() {
     
     const boundary = AppState.errorBoundaries.home;
     const container = document.getElementById('app-content');
+    console.log('[GT] app-content container:', container ? 'found' : 'NOT found'); // DEBUG
     
     // Wrap initialization with error boundary
     const safeInit = boundary.wrap(async () => {
+      console.log('[GT] creating HomeViewController...'); // DEBUG
       // Create and initialize HomeViewController
       AppState.homeController = new HomeViewController(document, {
         locationResult: 'locationResult',
@@ -431,13 +440,16 @@ async function initializeHomeView() {
         autoStartTracking: true
       });
       
+      console.log('[GT] HomeViewController created, calling init()...'); // DEBUG
       await AppState.homeController.init();
+      console.log('[GT] HomeViewController.init() resolved'); // DEBUG
       log('Home view initialized successfully');
     }, container);
     
     try {
       await safeInit();
     } catch (err) {
+      console.error('[GT] Error initializing home view:', err); // DEBUG
       error('Error initializing home view:', err);
       showErrorToast('Erro', 'Falha ao inicializar página inicial');
     }

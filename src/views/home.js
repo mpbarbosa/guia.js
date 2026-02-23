@@ -129,6 +129,7 @@ class HomeViewController {
    * console.log('Home view ready');
    */
   async init() {
+    console.log('[GT] HomeViewController.init() called, initialized:', this.initialized); // DEBUG
     if (this.initialized) {
       warn('HomeViewController already initialized');
       return;
@@ -136,10 +137,14 @@ class HomeViewController {
     
     try {
       // 1. Create WebGeocodingManager
+      console.log('[GT] calling _initializeManager()...'); // DEBUG
       await this._initializeManager();
+      console.log('[GT] _initializeManager() done'); // DEBUG
       
       // 2. Initialize Chronometer
+      console.log('[GT] calling _initializeChronometer()...'); // DEBUG
       await this._initializeChronometer();
+      console.log('[GT] _initializeChronometer() done'); // DEBUG
       
       // 3. Set up event listeners (stub for Step 4)
       this._setupEventListeners();
@@ -149,10 +154,13 @@ class HomeViewController {
       
       // 4. Auto-start tracking if enabled
       if (this.autoStartTracking) {
+        console.log('[GT] calling startTracking()...'); // DEBUG
         this.startTracking();
+        console.log('[GT] startTracking() done'); // DEBUG
       }
       
       log('HomeViewController initialized successfully');
+      console.log('[GT] HomeViewController fully initialized'); // DEBUG
       
       // Emit initialized event
       this.document.dispatchEvent(new CustomEvent('homeview:initialized', {
@@ -258,6 +266,7 @@ class HomeViewController {
     }
     
     try {
+      console.log('[GT] _initializeManager: creating WebGeocodingManager...'); // DEBUG
       // WebGeocodingManager expects params object with locationResult property
       this.manager = new WebGeocodingManager(this.document, {
         locationResult: this.params.locationResult,
@@ -281,9 +290,11 @@ class HomeViewController {
           sidraDisplay: 'dadosSidra'
         }
       });
+      console.log('[GT] _initializeManager: WebGeocodingManager created OK'); // DEBUG
       
       log('HomeViewController: WebGeocodingManager initialized');
     } catch (err) {
+      console.error('[GT] _initializeManager FAILED:', err); // DEBUG
       error('HomeViewController: Failed to initialize WebGeocodingManager:', err);
       throw err;
     }

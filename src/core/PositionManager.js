@@ -61,52 +61,18 @@ import ObserverSubject from './ObserverSubject.js';
 import { calculateDistance } from '../utils/distance.js';
 import { log, warn } from '../utils/logger.js';
 import { withObserver } from '../utils/ObserverMixin.js';
+import { createDefaultConfig } from '../config/defaults.js';
+
+// Initialize with defaults
+let setupParams = createDefaultConfig();
 
 /**
- * Get configuration - use imported defaults and allow override
- * This makes the module testable and reduces coupling
- */
-let setupParams = null;
-
-/**
- * Initialize setupParams - called when module loads or can be overridden for testing.
- * 
- * Sets the configuration object for position tracking parameters. This function
- * allows runtime configuration override, which is particularly useful for testing
- * scenarios where different configurations need to be tested.
- * 
+ * Initialize setupParams - allows override for testing.
  * @param {Object} config - Configuration object with tracking parameters
- * @param {string[]} config.notAcceptedAccuracy - Array of unacceptable accuracy levels
- * @param {number} config.minimumDistanceChange - Minimum distance change in meters to trigger update
- * @param {number} config.trackingInterval - Tracking interval in milliseconds
- * @returns {void}
- * 
- * @example
- * // Initialize with custom configuration
- * initializeConfig({
- *   notAcceptedAccuracy: ['medium', 'bad'],
- *   minimumDistanceChange: 50,
- *   trackingInterval: 30000
- * });
- * 
  * @since 0.9.0-alpha
- * @author Marcelo Pereira Barbosa
  */
 export function initializeConfig(config) {
 	setupParams = config;
-}
-
-// Initialize with defaults if available
-try {
-	const { createDefaultConfig } = await import('../config/defaults.js');
-	setupParams = createDefaultConfig();
-} catch (err) {
-	// If config not available, use minimal defaults
-	setupParams = {
-		notAcceptedAccuracy: ['medium', 'bad', 'very bad'],
-		minimumDistanceChange: 20,
-		trackingInterval: 50000
-	};
 }
 
 /**

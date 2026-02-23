@@ -4,7 +4,7 @@
  * @version 0.9.0-alpha
  */
 
-const CACHE_NAME = 'guia-turistico-v0.9.0-alpha-20260223c';
+const CACHE_NAME = 'guia-turistico-v0.9.0-alpha-20260223d';
 const STATIC_ASSETS = [
   './',
   './index.html'

@@ -292,10 +292,13 @@ class IBGEDataFormatter {
     try {
       // Try to fetch from local cached data
       // Note: The dist/libs/ folder must be deployed to production
-      const response = await fetch('/libs/sidra/tab6579_municipios.json');
+      const response = await fetch('./libs/sidra/tab6579_municipios.json');
       if (!response.ok) return null;
 
       const data = await response.json();
+
+      // JSON must be an array of {municipio, uf, populacao, ano} objects
+      if (!Array.isArray(data)) return null;
 
       // Search for municipality (case-insensitive, normalized)
       const municipioNormalized = municipio.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');

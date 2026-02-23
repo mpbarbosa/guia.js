@@ -139,6 +139,12 @@ fi
 # Parse arguments
 DEPLOY_SOURCE="dist"
 
+# Compute absolute paths from the script's own location so the script works
+# regardless of the working directory from which it is invoked.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+GUIA_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+MPBARBOSA_SITE_ROOT="$(cd "$GUIA_ROOT/../mpbarbosa_site" && pwd)"
+
 while [[ $# -gt 0 ]]; do
     case $1 in
         --source)
@@ -163,11 +169,11 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-cd ..
+cd "$GUIA_ROOT"
 pwd
 if [[ "$DEPLOY_SOURCE" != "src" ]]; then
     npm run build
 fi
-cd ../mpbarbosa_site
+cd "$MPBARBOSA_SITE_ROOT"
 pwd
 ./shell_scripts/sync_to_staging.sh --step1

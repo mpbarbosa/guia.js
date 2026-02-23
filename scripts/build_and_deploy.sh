@@ -10,6 +10,8 @@
 #
 # Arguments:
 #   -h, --help      Show the detailed help message and exit.
+#   --source <dir>  Source folder to deploy: dist (default) or src.
+#                   When src is chosen, the npm build step is skipped.
 #   --dry-run       (NOT IMPLEMENTED) Show commands without executing.
 #   --skip-build    (NOT IMPLEMENTED) Skip the npm run build step.
 #
@@ -55,6 +57,8 @@ DESCRIPTION:
 
 OPTIONS:
     -h, --help          Show this help message
+    --source <dir>      Source folder to deploy: dist (default) or src.
+                        When src is chosen, the npm build step is skipped.
     --dry-run           Show commands without executing (NOT IMPLEMENTED)
     --skip-build        Skip npm build step (NOT IMPLEMENTED)
 
@@ -92,8 +96,14 @@ EXIT CODES:
     1    Error during build or deployment
 
 EXAMPLES:
-    # Deploy to staging (current implementation)
+    # Deploy built bundle to staging (default)
     ./scripts/build_and_deploy.sh
+
+    # Explicitly deploy from dist/ (same as default)
+    ./scripts/build_and_deploy.sh --source dist
+
+    # Deploy source files directly, skipping build step
+    ./scripts/build_and_deploy.sh --source src
 
     # Proposed: Dry run to preview
     ./scripts/build_and_deploy.sh --dry-run
@@ -126,9 +136,38 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     exit 0
 fi
 
+# Parse arguments
+DEPLOY_SOURCE="dist"
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --source)
+            if [[ -n "${2:-}" ]]; then
+                if [[ "$2" == "dist" || "$2" == "src" ]]; then
+                    DEPLOY_SOURCE="$2"
+                    shift 2
+                else
+                    echo "Error: --source requires 'dist' or 'src'" >&2
+                    exit 1
+                fi
+            else
+                echo "Error: --source requires a value: dist or src" >&2
+                exit 1
+            fi
+            ;;
+        *)
+            echo "Unknown option: $1" >&2
+            echo "Use --help for usage information" >&2
+            exit 1
+            ;;
+    esac
+done
+
 cd ..
 pwd
-npm run build
+if [[ "$DEPLOY_SOURCE" != "src" ]]; then
+    npm run build
+fi
 cd ../mpbarbosa_site
 pwd
 ./shell_scripts/sync_to_staging.sh --step1

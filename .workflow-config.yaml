@@ -141,6 +141,9 @@ change_patterns:
 version:
   config_files:
     - "src/config/version.js"
+  service_worker_files:
+    - "service-worker.js"
+    - "public/service-worker.js"
 
 # Change-Type Detection Configuration (Conventional Commits)
 change_detection:

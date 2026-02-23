@@ -3,6 +3,7 @@
 ---
 Last Updated: 2026-02-23
 Status: Active
+version: 0.11.1-alpha
 ---
 
 
@@ -264,6 +265,7 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 | `scripts/update-test-counts.sh` | Sync test count statistics across documentation after test runs | *(none)* | `README.md`, `docs/INDEX.md`, `.github/copilot-instructions.md` |
 | `scripts/deploy-preflight.sh` | Production deployment pre-flight checklist (build + file checks + live smoke test) | *(none)* | `dist/`, `libs/sidra/tab6579_municipios.json`, `vite.config.js` |
 | `scripts/build_and_deploy.sh` | Build production bundle and push to staging via sibling repo | `-h`, `--help` | `dist/`, `../mpbarbosa_site/shell_scripts/sync_to_staging.sh` |
+| `scripts/cleanup-ai-workflow.sh` | Remove old `.ai_workflow/` run artifact directories and local build/test caches | `--days N`, `--dry-run` | `.ai_workflow/`, `.jest-cache/`, `coverage/` |
 
 ```bash
 # Replace console.log/warn/error with centralized logger across src/
@@ -283,10 +285,17 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 
 # Build and push to staging (requires ../mpbarbosa_site sibling repo)
 ./scripts/build_and_deploy.sh
+
+# Preview what old .ai_workflow/ runs would be removed (safe, no deletions)
+./scripts/cleanup-ai-workflow.sh --dry-run
+
+# Remove workflow artifact directories older than 14 days
+./scripts/cleanup-ai-workflow.sh --days 14
 ```
 
 For full details on each script — including executable permissions, shebangs, environment variables, exit codes, workflow relationships, and CI/CD integration — see [`scripts/README.md`](./scripts/README.md).
 
+> **Integration tests**: `tests/integration/run_visual_hierarchy_tests.sh` starts a local HTTP server and runs Selenium-based visual hierarchy tests. See [`scripts/README.md`](./scripts/README.md) for full documentation.  
 > **CI/CD note**: These scripts are **local developer tools**. GitHub Actions workflows in `.github/workflows/` automate equivalent operations (badge updates, test-count sync, doc linting) on push/PR. For CI helper scripts used inside workflows, see [`.github/scripts/`](./.github/scripts/).  
 > **Permissions**: All scripts ship executable (`chmod +x`). If lost after cloning, restore with `chmod +x scripts/*.sh`.  
 > **Entry point**: Scripts use `#!/bin/bash` and must be invoked as `./scripts/<name>.sh` or `bash scripts/<name>.sh`, not `sh`.  
@@ -606,7 +615,7 @@ python3 -m http.server 9000
   - **Data Source**: IBGE SIDRA API with offline fallback (libs/sidra/tab6579_municipios.json)
 - `DisplayerFactory` - Factory pattern for display component creation (5 methods, v0.9.0-alpha) ✅
 
-#### Speech Synthesis Layer (Refactored v0.11.0-alpha) 🆕
+#### Speech Synthesis Layer (Refactored v0.11.1-alpha) 🆕
 - **`HtmlSpeechSynthesisDisplayer`** - **Facade pattern** composing 3 focused components (518 lines)
   - **Architecture**: Converted from monolithic 814-line class to lightweight facade
   - **Benefits**: 36% size reduction, better testability (140 tests), Single Responsibility Principle

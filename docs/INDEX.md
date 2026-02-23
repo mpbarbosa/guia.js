@@ -978,7 +978,7 @@ Major documentation update to formalize the project's commitment to functional p
 
 ## Project Information
 
-- **Version**: 0.9.0-alpha (active development)
+- **Version**: 0.11.1-alpha (active development)
 - **License**: ISC (see LICENSE file)
 - **Author**: Marcelo Pereira Barbosa
 - **Last Updated**: 2026-02-09

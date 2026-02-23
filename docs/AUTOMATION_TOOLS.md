@@ -692,7 +692,7 @@ Review changes with: git diff README.md
 
 Ensures consistent markdown formatting across all documentation.
 
-**Configuration**: `.markdownlint.json`
+**Configuration**: `.markdownlint.yaml`
 
 #### Rules Enforced
 - ✅ ATX-style headers (`#` instead of underlines)
@@ -835,7 +835,7 @@ on:
   pull_request:
     paths:
       - '**.md'
-      - '.markdownlint.json'
+      - '.markdownlint.yaml'
   push:
     branches:
       - main

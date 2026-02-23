@@ -1,0 +1,61 @@
+# markdownlint configuration for Guia Turístico
+# See: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+# Enable all rules by default; individual rules below override specific settings
+default: true
+
+# MD001 - Heading levels should only increment by one level at a time
+MD001: true
+
+# MD003 - Heading style: enforce ATX headings (# Heading) over Setext (===/---)
+MD003:
+  style: atx
+
+# MD004 - Unordered list style: enforce dash (-) over asterisk (*) or plus (+)
+MD004:
+  style: dash
+
+# MD007 - Unordered list indentation: 2 spaces per level
+MD007:
+  indent: 2
+
+# MD013 - Line length: allow up to 120 characters; exempt code blocks and tables
+#          (long URLs and generated content make strict limits impractical)
+MD013:
+  line_length: 120
+  code_blocks: false
+  tables: false
+
+# MD024 - Multiple headings with the same content: allow if they are not siblings
+MD024:
+  siblings_only: true
+
+# MD025 - Single title (H1) per document
+MD025: true
+
+# MD026 - Trailing punctuation in headings: disallow .,;:! at end of headings
+MD026:
+  punctuation: ".,;:!"
+
+# MD029 - Ordered list item prefix: enforce sequential numbering (1. 2. 3.)
+MD029:
+  style: ordered
+
+# MD033 - Inline HTML: allow a small set of semantic/layout elements used in docs
+MD033:
+  allowed_elements:
+    - details
+    - summary
+    - br
+    - sub
+    - sup
+
+# MD034 - Bare URLs: disabled — bare URLs are used intentionally in some docs
+MD034: false
+
+# MD041 - First line should be a top-level heading: disabled — some docs use badges or preamble
+MD041: false
+
+# MD046 - Code block style: enforce fenced blocks (``` ... ```) over indented blocks
+MD046:
+  style: fenced

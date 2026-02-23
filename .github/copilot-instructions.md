@@ -1,6 +1,6 @@
 # Guia Turístico - Tourist Guide Web Application
 
-Guia Turístico is a single-page web application (version 0.11.0-alpha) built on top of the **guia.js** geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
+Guia Turístico is a single-page web application (version 0.11.2-alpha) built on top of the **guia.js** geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
 **Project Relationship**:
 - **This Project**: Guia Turístico - Tourist guide web application (SPA)
@@ -183,7 +183,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `HTMLReferencePlaceDisplayer` (src/html/HTMLReferencePlaceDisplayer.js) - Reference place display
 - `HTMLSidraDisplayer` (src/html/HTMLSidraDisplayer.js) - IBGE SIDRA data display with observer pattern (v0.9.0+)
   - **Features**: Population statistics, Brazilian Portuguese localization, automatic updates
-- **`HtmlSpeechSynthesisDisplayer`** (src/html/HtmlSpeechSynthesisDisplayer.js) - **Facade pattern** (v0.11.0-alpha) 🆕
+- **`HtmlSpeechSynthesisDisplayer`** (src/html/HtmlSpeechSynthesisDisplayer.js) - **Facade pattern** (v0.11.2-alpha) 🆕
   - **Architecture**: Converted from monolithic 814-line class to 518-line facade (36% reduction)
   - **Composition**: Composes 3 focused components for Single Responsibility Principle
   - **Component 1: HtmlSpeechControls** (src/html/HtmlSpeechControls.js, 489 lines, 51 tests)

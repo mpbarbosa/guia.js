@@ -135,6 +135,13 @@ change_patterns:
     - ".github/**/*.yml"
     - ".workflow-config.yaml"
 
+# Version Configuration
+# config_files: JS files with `export const VERSION` and `export const BUILD_DATE` constants.
+# Step 16 will update both the version string and the build date (today's date) in these files.
+version:
+  config_files:
+    - "src/config/version.js"
+
 # Change-Type Detection Configuration (Conventional Commits)
 change_detection:
   enabled: true

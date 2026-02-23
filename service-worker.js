@@ -4,7 +4,7 @@
  * @version 0.9.0-alpha
  */
 
-const CACHE_NAME = 'guia-turistico-v0.9.0-alpha-20260223';
+const CACHE_NAME = 'guia-turistico-v0.9.0-alpha-20260223b';
 const STATIC_ASSETS = [
   './',
   './index.html'
@@ -81,11 +81,11 @@ self.addEventListener('fetch', event => {
         return fetch(request)
           .then(response => {
             // Don't cache non-success responses
-            if (!response || response.status !== 200 || response.type !== 'basic') {
+            if (!response || response.status !== 200) {
               return response;
             }
             
-            // Clone response for caching
+            // Clone response for caching (cache both 'basic' and 'cors' responses)
             const responseToCache = response.clone();
             
             caches.open(CACHE_NAME)
@@ -98,8 +98,14 @@ self.addEventListener('fetch', event => {
           .catch(error => {
             console.error('[SW] Fetch failed:', error);
             
-            // Return offline fallback page if available
-            return caches.match('./index.html');
+            // Only return HTML fallback for page navigation requests, not for JS/CSS assets.
+            // Returning index.html for a failed JS asset request would cause the browser
+            // to try parsing HTML as JavaScript, hanging the app.
+            if (request.mode === 'navigate') {
+              return caches.match('./index.html');
+            }
+            
+            return new Response('', { status: 503, statusText: 'Service Unavailable' });
           });
       })
   );

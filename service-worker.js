@@ -1,10 +1,10 @@
 /**
  * Service Worker for Guia Turístico
  * Provides offline support and caching for PWA functionality
- * @version 0.9.0-alpha
+ * @version 0.11.3-alpha
  */
 
-const CACHE_NAME = 'guia-turistico-v0.9.0-alpha-20260223d';
+const CACHE_NAME = 'guia-turistico-v0.11.3-alpha-20260223-1981f9e';
 const STATIC_ASSETS = [
   './',
   './index.html'
@@ -53,7 +53,7 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - smart caching strategy based on asset type
 self.addEventListener('fetch', event => {
   const { request } = event;
   
@@ -68,48 +68,78 @@ self.addEventListener('fetch', event => {
       request.url.includes('cdn.jsdelivr.net')) {
     return;
   }
-  
-  event.respondWith(
-    caches.match(request)
-      .then(cachedResponse => {
-        if (cachedResponse) {
-          console.log('[SW] Serving from cache:', request.url);
-          return cachedResponse;
-        }
-        
-        console.log('[SW] Fetching from network:', request.url);
-        return fetch(request)
-          .then(response => {
-            // Don't cache non-success responses
-            if (!response || response.status !== 200) {
-              return response;
-            }
-            
-            // Clone response for caching (cache both 'basic' and 'cors' responses)
-            const responseToCache = response.clone();
-            
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(request, responseToCache);
-              });
-            
-            return response;
-          })
-          .catch(error => {
-            console.error('[SW] Fetch failed:', error);
-            
-            // Only return HTML fallback for page navigation requests, not for JS/CSS assets.
-            // Returning index.html for a failed JS asset request would cause the browser
-            // to try parsing HTML as JavaScript, hanging the app.
-            if (request.mode === 'navigate') {
-              return caches.match('./index.html');
-            }
-            
-            return new Response('', { status: 503, statusText: 'Service Unavailable' });
-          });
-      })
-  );
+
+  // JS and CSS assets: network-first strategy
+  // Always tries to get the latest version from the network.
+  // Falls back to cache when offline, so the app still works.
+  // This ensures Android Chrome (no Ctrl+Shift+R) always receives updated code.
+  const isAppAsset = request.url.match(/\.(js|css)(\?.*)?$/) ||
+                     request.url.includes('/assets/');
+
+  if (isAppAsset) {
+    event.respondWith(networkFirstStrategy(request));
+  } else {
+    // HTML / navigation: cache-first strategy (fast offline shell)
+    event.respondWith(cacheFirstStrategy(request));
+  }
 });
+
+/**
+ * Network-first strategy: fetch from network, cache the result, fall back to cache on failure.
+ * Used for JS/CSS assets so mobile devices always receive the latest deployed code.
+ * @param {Request} request
+ * @returns {Promise<Response>}
+ */
+function networkFirstStrategy(request) {
+  return fetch(request)
+    .then(response => {
+      if (response && response.status === 200) {
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(request, responseToCache));
+      }
+      return response;
+    })
+    .catch(() => {
+      console.log('[SW] Network failed, serving from cache:', request.url);
+      return caches.match(request).then(cached => {
+        return cached || new Response('', { status: 503, statusText: 'Service Unavailable' });
+      });
+    });
+}
+
+/**
+ * Cache-first strategy: serve from cache if available, fetch from network otherwise.
+ * Used for HTML navigation so the PWA shell loads instantly and works offline.
+ * @param {Request} request
+ * @returns {Promise<Response>}
+ */
+function cacheFirstStrategy(request) {
+  return caches.match(request)
+    .then(cachedResponse => {
+      if (cachedResponse) {
+        console.log('[SW] Serving from cache:', request.url);
+        return cachedResponse;
+      }
+
+      console.log('[SW] Fetching from network:', request.url);
+      return fetch(request)
+        .then(response => {
+          if (!response || response.status !== 200) {
+            return response;
+          }
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, responseToCache));
+          return response;
+        })
+        .catch(error => {
+          console.error('[SW] Fetch failed:', error);
+          if (request.mode === 'navigate') {
+            return caches.match('./index.html');
+          }
+          return new Response('', { status: 503, statusText: 'Service Unavailable' });
+        });
+    });
+}
 
 // Message event - handle commands from app
 self.addEventListener('message', event => {

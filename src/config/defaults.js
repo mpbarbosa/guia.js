@@ -131,11 +131,27 @@ export const DESKTOP_ACCURACY_THRESHOLDS = Object.freeze([
 ]);
 
 // Browser Geolocation API Configuration
-/** Browser Geolocation API options */
+/** Browser Geolocation API options for desktop (WiFi/IP-based location, fast) */
 export const GEOLOCATION_OPTIONS = Object.freeze({
 	enableHighAccuracy: true,
 	timeout: 20000, // 20 seconds
 	maximumAge: 0 // Do not use a cached position
+});
+
+/**
+ * Browser Geolocation API options optimized for mobile devices.
+ * 
+ * Mobile GPS cold starts can take 30–60 seconds (vs near-instant WiFi/IP on desktop).
+ * A longer timeout prevents silent failures on Android Chrome.
+ * A non-zero maximumAge reduces GPS restarts when the user hasn't moved far.
+ * 
+ * @constant {Object}
+ * @since 0.11.3-alpha
+ */
+export const MOBILE_GEOLOCATION_OPTIONS = Object.freeze({
+	enableHighAccuracy: true,
+	timeout: 40000,   // 40 seconds — accommodates GPS cold start on Android
+	maximumAge: 60000 // Allow 1-minute cached position to reduce GPS restarts
 });
 
 // API Configuration

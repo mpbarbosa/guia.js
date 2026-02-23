@@ -1,0 +1,51 @@
+name: Bump SW Cache Name
+
+# Runs on every push to main AFTER the main validation workflow.
+# Updates CACHE_NAME in service-worker.js with current version + date + git SHA,
+# then commits and pushes the change back to main.
+#
+# The [skip ci] tag in the commit message prevents an infinite trigger loop.
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  bump-cache:
+    runs-on: ubuntu-latest
+
+    # Skip if the push was itself the cache bump commit (prevents loop)
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Use a token with write access to push back to main
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.0'
+
+      - name: Bump service worker cache name
+        run: |
+          chmod +x .github/scripts/bump-sw-cache.sh
+          ./.github/scripts/bump-sw-cache.sh
+
+      - name: Commit and push updated cache name
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Only commit if service-worker.js was actually changed
+          if git diff --quiet service-worker.js; then
+            echo "ℹ️ service-worker.js unchanged — skipping commit"
+          else
+            git add service-worker.js
+            git commit -m "chore: bump SW cache name for deployment [skip ci]"
+            git push
+            echo "✅ Updated CACHE_NAME committed and pushed"
+          fi

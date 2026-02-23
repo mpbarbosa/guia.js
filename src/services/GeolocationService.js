@@ -31,7 +31,8 @@
 
 import PositionManager from '../core/PositionManager.js';
 import { log, error } from '../utils/logger.js';
-import { GEOLOCATION_OPTIONS } from '../config/defaults.js';
+import { GEOLOCATION_OPTIONS, MOBILE_GEOLOCATION_OPTIONS } from '../config/defaults.js';
+import { isMobileDevice } from '../utils/device.js';
 import BrowserGeolocationProvider from './providers/BrowserGeolocationProvider.js';
 import { 
 	formatGeolocationError, 
@@ -148,7 +149,7 @@ class GeolocationService {
 		// accuracy requirements, timeout values, and cache age settings. These configurable
 		// options allow balancing between accuracy and performance based on use case requirements.
 		this.config = {
-			geolocationOptions: config.geolocationOptions || GEOLOCATION_OPTIONS
+			geolocationOptions: config.geolocationOptions || (isMobileDevice() ? MOBILE_GEOLOCATION_OPTIONS : GEOLOCATION_OPTIONS)
 		};
 
 		// DEPENDENCY INJECTION PATTERN - GEOLOCATION PROVIDER:

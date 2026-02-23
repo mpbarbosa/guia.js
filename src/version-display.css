@@ -254,3 +254,42 @@
     transform: none;
   }
 }
+
+/* ── LBS Provider Indicator ──────────────────────────────────────────────── */
+.lbs-provider-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 4px 12px;
+  font-size: 11px;
+  color: #6b7280;
+  background: transparent;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.lbs-provider-icon {
+  font-size: 12px;
+}
+
+.lbs-provider-name {
+  font-family: monospace;
+  letter-spacing: 0.02em;
+}
+
+/* Highlight when provider is known */
+.lbs-provider-indicator[data-provider="aws"] .lbs-provider-name {
+  color: #f59e0b; /* amber — AWS orange tone */
+}
+
+.lbs-provider-indicator[data-provider="nominatim"] .lbs-provider-name {
+  color: #10b981; /* green — OpenStreetMap green tone */
+}
+
+@media (prefers-color-scheme: dark) {
+  .lbs-provider-indicator {
+    color: #9ca3af;
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
+}

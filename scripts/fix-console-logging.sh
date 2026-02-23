@@ -1,5 +1,34 @@
 #!/bin/bash
-# Fix console logging violations by replacing with centralized logger
+#
+# fix-console-logging.sh
+# ----------------------
+# Purpose:      Replace direct console.log/warn/error calls with the project's
+#               centralized logger (src/utils/logger.js) across all source files.
+#
+# Usage:        ./scripts/fix-console-logging.sh
+#
+# Arguments:    (none)
+#
+# Prerequisites:
+#   - Run from anywhere; script resolves project root automatically via SCRIPT_DIR.
+#   - Source files must exist under src/. Missing files are silently skipped.
+#
+# What it does:
+#   1. Resolves project root from the script's own location (portable).
+#   2. For each file in the hardcoded list under src/:
+#      a. Adds "import { log, warn, error } from '…/utils/logger.js'" if not present.
+#      b. Replaces console.log( → log(, console.warn( → warn(, console.error( → error(.
+#   3. Does NOT touch test files, HTML files, or utils/logger.js itself.
+#
+# Output:       Prints each processed filename; final summary of file count.
+#
+# Exit codes:
+#   0  All replacements completed successfully.
+#   1  Unexpected error (set -e triggered).
+#
+# Related modules: src/utils/logger.js
+# See also:        scripts/README.md
+
 set -e
 
 # Portable path resolution - works across all environments

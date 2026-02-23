@@ -38,6 +38,8 @@ import PositionManager from '../core/PositionManager.js';
 import { log, warn, error } from '../utils/logger.js';
 import { ADDRESS_FETCHED_EVENT, GEOCODING_ERROR_EVENT } from '../config/defaults.js';
 import { withObserver } from '../utils/ObserverMixin.js';
+import { env } from '../config/environment.js';
+import AwsGeocoder from './AwsGeocoder.js';
 
 /**
  * Generates OpenStreetMap Nominatim API URL for reverse geocoding.
@@ -95,6 +97,7 @@ class ReverseGeocoder {
 	 * @param {string} [config.openstreetmapBaseUrl] - Base URL for OpenStreetMap API
 	 * @param {string|null} [config.corsProxy] - CORS proxy URL (null for direct access)
 	 * @param {boolean} [config.enableCorsFallback] - Auto-retry with CORS proxy on error
+	 * @param {AwsGeocoder} [config.awsGeocoder] - AWS geocoder instance (injected or auto-created)
 	 */
 	constructor(fetchManager, config = {}) {
 		// Store fetch manager for API operations (supports IbiraAPIFetchManager or fallback)
@@ -103,10 +106,14 @@ class ReverseGeocoder {
 		// Configure OpenStreetMap Nominatim API with fallback to default endpoint
 		this.config = {
 			openstreetmapBaseUrl: config.openstreetmapBaseUrl || 
-				'https://nominatim.openstreetmap.org/reverse?format=json',
+				`${env.nominatimApiUrl}/reverse?format=json`,
 			corsProxy: config.corsProxy || null,
 			enableCorsFallback: config.enableCorsFallback || false
 		};
+
+		// AWS geocoder: use injected instance, or auto-create when AWS is enabled
+		this._awsGeocoder = config.awsGeocoder ||
+			(env.awsLbsEnabled && env.awsLbsBaseUrl ? new AwsGeocoder() : null);
 		
 		// Track if CORS fallback has been used
 		this._corsRetryAttempted = false;
@@ -232,6 +239,30 @@ class ReverseGeocoder {
 	 * @since 0.9.0-alpha
 	 */
 	async fetchAddress() {
+		// ── Primary provider: AWS Location Based Service ──────────────────────
+		if (this._awsGeocoder && this.latitude && this.longitude) {
+			try {
+				const { rawData, enderecoPadronizado } = await this._awsGeocoder.reverseGeocode(
+					this.latitude, this.longitude
+				);
+				this.currentAddress = rawData;
+				this.enderecoPadronizado = enderecoPadronizado;
+				log('(ReverseGeocoder.fetchAddress) AWS provider succeeded');
+				this._dispatchProviderEvent('aws');
+				this.notifyObservers(
+					this.currentAddress,
+					this.enderecoPadronizado,
+					ADDRESS_FETCHED_EVENT,
+					false,
+					null
+				);
+				return rawData;
+			} catch (awsErr) {
+				warn('(ReverseGeocoder.fetchAddress) AWS provider failed, falling back to Nominatim:', awsErr.message);
+			}
+		}
+
+		// ── Fallback provider: OpenStreetMap Nominatim ────────────────────────
 		try {
 			const addressData = await this.reverseGeocode();
 			console.log('(ReverseGeocoder.fetchAddress) Reverse geocode result:', addressData);
@@ -264,6 +295,7 @@ class ReverseGeocoder {
 			);
 			
 			log('(ReverseGeocoder.fetchAddress) Observers notified successfully');
+			this._dispatchProviderEvent('nominatim');
 			
 			return addressData;
 		} catch (err) {
@@ -569,6 +601,18 @@ class ReverseGeocoder {
 			return `${this.constructor.name}: No coordinates set`;
 		}
 		return `${this.constructor.name}: ${this.latitude}, ${this.longitude}`;
+	}
+
+	/**
+	 * Dispatches a 'geocoder-provider-used' CustomEvent so the UI can reflect
+	 * which LBS handled the last geocoding request.
+	 *
+	 * @param {'aws'|'nominatim'} provider
+	 * @private
+	 */
+	_dispatchProviderEvent(provider) {
+		if (typeof window === 'undefined') return;
+		window.dispatchEvent(new CustomEvent('geocoder-provider-used', { detail: { provider } }));
 	}
 }
 

@@ -1,6 +1,39 @@
 #!/bin/bash
-# Production Deployment Pre-flight Checklist
-# Run this before deploying to production
+#
+# deploy-preflight.sh
+# -------------------
+# Purpose:      Run a production deployment pre-flight checklist to verify the
+#               build is complete and the dist/ folder is ready to deploy.
+#
+# Usage:        ./scripts/deploy-preflight.sh
+#
+# Arguments:    (none)
+#
+# Prerequisites:
+#   - Must be run from the project root.
+#   - Requires Node.js v18+, npm, and curl.
+#   - Port 9001 must be free (used for the smoke-test preview server).
+#
+# What it does:
+#   1. Checks Node.js version (warns if < v18).
+#   2. Runs "npm run build"; exits 1 if build fails.
+#   3. Verifies dist/index.html exists.
+#   4. Verifies dist/libs/sidra/tab6579_municipios.json exists (SIDRA offline data).
+#   5. Verifies dist/assets/ contains JS and CSS files.
+#   6. Starts "npm run preview" on port 9001 and smoke-tests:
+#        GET /                                    → HTTP 200
+#        GET /libs/sidra/tab6579_municipios.json  → HTTP 200
+#   7. Stops the preview server and prints a deployment-ready summary.
+#
+# Output:       Step-by-step checklist with ✅/❌ indicators; final pass/fail summary.
+#
+# Exit codes:
+#   0  All checks passed; dist/ is ready for production deployment.
+#   1  Any check failed (missing file, build error, or endpoint unreachable).
+#
+# Related modules: dist/, libs/sidra/tab6579_municipios.json, vite.config.js
+# See also:        docs/DEPLOYMENT.md, scripts/README.md
+# Production note: Deploy the ENTIRE dist/ folder including dist/libs/sidra/
 
 set -e
 

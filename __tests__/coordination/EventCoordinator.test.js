@@ -619,4 +619,87 @@ describe('EventCoordinator', () => {
             expect(toastModule.showInfo).not.toHaveBeenCalled();
         });
     });
+
+    // ─── Handler coverage: null coords and window delegation ─────────────────
+    describe('Handler branch coverage', () => {
+        function makeBtn() {
+            return { addEventListener: jest.fn(), removeEventListener: jest.fn() };
+        }
+
+        function makeSimpleUI(buttons) {
+            return { getElement: jest.fn((id) => buttons[id] || null) };
+        }
+
+        test('_handleFindRestaurants: no coords → showError', () => {
+            const restBtn = makeBtn();
+            const ui = makeSimpleUI({ findRestaurantsBtn: restBtn, cityStatsBtn: makeBtn() });
+            const state = { getCurrentCoordinates: jest.fn(() => null) };
+            const ec = new EventCoordinator(ui, state);
+            ec.initializeEventListeners();
+            const [[, handler]] = restBtn.addEventListener.mock.calls;
+            expect(() => handler()).not.toThrow();
+        });
+
+        test('_handleFindRestaurants: coords exist, no window fn → showInfo fallback', () => {
+            const restBtn = makeBtn();
+            const ui = makeSimpleUI({ findRestaurantsBtn: restBtn, cityStatsBtn: makeBtn() });
+            const state = { getCurrentCoordinates: jest.fn(() => ({ latitude: -23.55, longitude: -46.63 })) };
+            if (typeof global.window !== 'undefined') delete global.window.findNearbyRestaurants;
+            const ec = new EventCoordinator(ui, state);
+            ec.initializeEventListeners();
+            const [[, handler]] = restBtn.addEventListener.mock.calls;
+            expect(() => handler()).not.toThrow();
+        });
+
+        test('_handleFindRestaurants: coords exist, window fn exists → delegates', () => {
+            const restBtn = makeBtn();
+            const ui = makeSimpleUI({ findRestaurantsBtn: restBtn, cityStatsBtn: makeBtn() });
+            const state = { getCurrentCoordinates: jest.fn(() => ({ latitude: -23.55, longitude: -46.63 })) };
+            const windowFn = jest.fn();
+            if (typeof global.window === 'undefined') global.window = {};
+            global.window.findNearbyRestaurants = windowFn;
+            const ec = new EventCoordinator(ui, state);
+            ec.initializeEventListeners();
+            const [[, handler]] = restBtn.addEventListener.mock.calls;
+            handler();
+            expect(windowFn).toHaveBeenCalledWith(-23.55, -46.63);
+            delete global.window.findNearbyRestaurants;
+        });
+
+        test('_handleCityStats: no coords → showError', () => {
+            const statsBtn = makeBtn();
+            const ui = makeSimpleUI({ findRestaurantsBtn: makeBtn(), cityStatsBtn: statsBtn });
+            const state = { getCurrentCoordinates: jest.fn(() => null) };
+            const ec = new EventCoordinator(ui, state);
+            ec.initializeEventListeners();
+            const [[, handler]] = statsBtn.addEventListener.mock.calls;
+            expect(() => handler()).not.toThrow();
+        });
+
+        test('_handleCityStats: coords exist, no window fn → showInfo fallback', () => {
+            const statsBtn = makeBtn();
+            const ui = makeSimpleUI({ findRestaurantsBtn: makeBtn(), cityStatsBtn: statsBtn });
+            const state = { getCurrentCoordinates: jest.fn(() => ({ latitude: -23.55, longitude: -46.63 })) };
+            if (typeof global.window !== 'undefined') delete global.window.fetchCityStatistics;
+            const ec = new EventCoordinator(ui, state);
+            ec.initializeEventListeners();
+            const [[, handler]] = statsBtn.addEventListener.mock.calls;
+            expect(() => handler()).not.toThrow();
+        });
+
+        test('_handleCityStats: coords exist, window fn exists → delegates', () => {
+            const statsBtn = makeBtn();
+            const ui = makeSimpleUI({ findRestaurantsBtn: makeBtn(), cityStatsBtn: statsBtn });
+            const state = { getCurrentCoordinates: jest.fn(() => ({ latitude: -23.55, longitude: -46.63 })) };
+            const windowFn = jest.fn();
+            if (typeof global.window === 'undefined') global.window = {};
+            global.window.fetchCityStatistics = windowFn;
+            const ec = new EventCoordinator(ui, state);
+            ec.initializeEventListeners();
+            const [[, handler]] = statsBtn.addEventListener.mock.calls;
+            handler();
+            expect(windowFn).toHaveBeenCalledWith(-23.55, -46.63);
+            delete global.window.fetchCityStatistics;
+        });
+    });
 });

@@ -11,6 +11,7 @@
 import { log, warn, error } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
 import { extractDistrito, extractBairro, determineLocationType, formatLocationValue } from '../address-parser.js';
+import { env } from '../config/environment.js';
 
 /**
  * Converter view configuration object
@@ -379,10 +380,10 @@ export default {
     
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`,
+        `${env.nominatimApiUrl}/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`,
         {
           headers: {
-            'User-Agent': 'GuiaTuristico/0.3.0'
+            'User-Agent': env.nominatimUserAgent
           }
         }
       );

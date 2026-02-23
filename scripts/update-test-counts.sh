@@ -1,5 +1,36 @@
 #!/bin/bash
-# Update test counts in documentation after running tests
+#
+# update-test-counts.sh
+# ---------------------
+# Purpose:      Run the Jest test suite and synchronise passing/skipped/total
+#               test counts across project documentation files.
+#
+# Usage:        ./scripts/update-test-counts.sh
+#               npm run update:tests
+#
+# Arguments:    (none)
+#
+# Prerequisites:
+#   - Must be run from the project root.
+#   - Requires Node.js v18+ and npm (used to run tests and parse JSON output).
+#
+# What it does:
+#   1. Runs "npm test -- --json --outputFile=test-results.json --silent".
+#   2. Parses numPassedTests / numTotalTests / numFailedTests from JSON output.
+#   3. Updates "N passing" / "N skipped" / "N total" strings in:
+#        README.md
+#        .github/copilot-instructions.md
+#        docs/INDEX.md
+#   4. Removes the temporary test-results.json file on exit.
+#
+# Output:       Prints current counts; lists files changed by "git diff --name-only".
+#
+# Exit codes:
+#   0  Test counts updated successfully.
+#   1  test-results.json not produced (hard test-runner failure), or set -e error.
+#
+# Related modules: README.md, .github/copilot-instructions.md, docs/INDEX.md
+# See also:        docs/AUTOMATION_IMPLEMENTATION_SUMMARY.md, scripts/README.md
 
 set -e
 

@@ -20,6 +20,10 @@ const defaults = {
   NOMINATIM_API_URL: 'https://nominatim.openstreetmap.org',
   NOMINATIM_USER_AGENT: 'GuiaTuristico/0.11.0',
   IBGE_API_URL: 'https://servicodados.ibge.gov.br',
+
+  // AWS Location Based Service
+  AWS_LBS_BASE_URL: '',
+  AWS_LBS_ENABLED: false,
   
   // Rate Limiting (requests per minute)
   RATE_LIMIT_NOMINATIM: 60,
@@ -40,31 +44,51 @@ const defaults = {
 };
 
 /**
- * Get environment variable with fallback to default.
+ * Parse a string value into its appropriate type.
+ * Converts "true"/"false" strings to booleans and numeric strings to numbers.
  * 
- * @param {string} key - Environment variable key
+ * @param {string} value - Raw string value
+ * @returns {boolean|number|string} Parsed value
+ */
+function parseValue(value) {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  if (/^\d+$/.test(value)) return parseInt(value, 10);
+  return value;
+}
+
+/**
+ * Get environment variable with fallback to default.
+ * Resolution order:
+ *   1. import.meta.env.VITE_* – injected by Vite from .env at build/dev time
+ *   2. window.__ENV__          – runtime injection (legacy / server-side rendering)
+ *   3. process.env             – Node.js / Jest test environment
+ *   4. defaultValue            – hardcoded fallback
+ * 
+ * @param {string} key - Environment variable key (without VITE_ prefix)
  * @param {*} defaultValue - Default value if not found
  * @returns {*} Environment variable value or default
  */
 function getEnv(key, defaultValue) {
-  // Browser environment - check window.__ENV__
+  // 1. Vite build/dev environment – variables must be prefixed with VITE_
+  // import.meta.env is statically replaced by Vite; undefined in Node.js ESM.
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    const viteValue = import.meta.env[`VITE_${key}`];
+    if (viteValue !== undefined) return parseValue(viteValue);
+  }
+
+  // 2. Browser runtime injection via window.__ENV__ (e.g. from a server template)
   if (typeof window !== 'undefined' && window.__ENV__) {
-    return window.__ENV__[key] !== undefined ? window.__ENV__[key] : defaultValue;
+    const windowValue = window.__ENV__[key];
+    if (windowValue !== undefined) return parseValue(String(windowValue));
   }
-  
-  // Node.js environment - check process.env
+
+  // 3. Node.js / Jest – process.env (may also contain VITE_-prefixed vars from dotenv)
   if (typeof process !== 'undefined' && process.env) {
-    const value = process.env[key];
-    if (value !== undefined) {
-      // Convert string booleans to actual booleans
-      if (value === 'true') return true;
-      if (value === 'false') return false;
-      // Convert numeric strings to numbers
-      if (/^\d+$/.test(value)) return parseInt(value, 10);
-      return value;
-    }
+    const nodeValue = process.env[`VITE_${key}`] ?? process.env[key];
+    if (nodeValue !== undefined) return parseValue(nodeValue);
   }
-  
+
   return defaultValue;
 }
 
@@ -77,6 +101,10 @@ export const env = {
   nominatimApiUrl: getEnv('NOMINATIM_API_URL', defaults.NOMINATIM_API_URL),
   nominatimUserAgent: getEnv('NOMINATIM_USER_AGENT', defaults.NOMINATIM_USER_AGENT),
   ibgeApiUrl: getEnv('IBGE_API_URL', defaults.IBGE_API_URL),
+
+  // AWS Location Based Service
+  awsLbsBaseUrl: getEnv('AWS_LBS_BASE_URL', defaults.AWS_LBS_BASE_URL),
+  awsLbsEnabled: getEnv('AWS_LBS_ENABLED', defaults.AWS_LBS_ENABLED),
   
   // Rate Limiting
   rateLimitNominatim: getEnv('RATE_LIMIT_NOMINATIM', defaults.RATE_LIMIT_NOMINATIM),

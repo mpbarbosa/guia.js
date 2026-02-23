@@ -8,6 +8,7 @@ import {
   getCSPMetaContent, 
   getAllSecurityHeaders, 
   getCSPHeadersWithFrameAncestors,
+  getCSPHeaders,
   productionCSP, 
   developmentCSP,
   httpOnlyCSP 
@@ -187,6 +188,47 @@ describe('Content Security Policy (CSP)', () => {
       
       expect(headers['Content-Security-Policy']).toContain("frame-ancestors 'none'");
       expect(headers['X-Frame-Options']).toBe('DENY'); // Both for defense in depth
+    });
+  });
+
+  // ─── getCSPHeaders ────────────────────────────────────────────────────────
+
+  describe('getCSPHeaders()', () => {
+    test('returns object with Content-Security-Policy for production', () => {
+      const headers = getCSPHeaders(true);
+      expect(headers['Content-Security-Policy']).toBeDefined();
+      expect(typeof headers['Content-Security-Policy']).toBe('string');
+    });
+
+    test('returns development CSP when isProduction=false', () => {
+      const prodHeaders = getCSPHeaders(true);
+      const devHeaders = getCSPHeaders(false);
+      // Dev should differ from prod (allows unsafe-eval)
+      expect(devHeaders['Content-Security-Policy']).not.toBe(prodHeaders['Content-Security-Policy']);
+    });
+  });
+
+  // ─── development branch ───────────────────────────────────────────────────
+
+  describe('getCSPMetaContent() — development', () => {
+    test('returns development CSP content when isProduction=false', () => {
+      const csp = getCSPMetaContent(false);
+      expect(typeof csp).toBe('string');
+      expect(csp.length).toBeGreaterThan(0);
+    });
+  });
+
+  // ─── getAllSecurityHeaders development mode ────────────────────────────────
+
+  describe('getAllSecurityHeaders() development', () => {
+    test('returns CSP for development environment', () => {
+      const headers = getAllSecurityHeaders(false, false);
+      expect(headers['Content-Security-Policy']).toBeDefined();
+    });
+
+    test('returns development+frameAncestors for HTTP header use', () => {
+      const headers = getAllSecurityHeaders(false, true);
+      expect(headers['Content-Security-Policy']).toContain("frame-ancestors");
     });
   });
 });

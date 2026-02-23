@@ -12,7 +12,7 @@
     <title>Guia Turístico - Localização - Guia Turístico</title>
     
     <!-- PWA Manifest (inline to prevent 404) -->
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiR3VpYSBUdXLDrXN0aWNvIiwic2hvcnRfbmFtZSI6Ikd1aWEiLCJzdGFydF91cmwiOiIvIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2ZmZmZmZiIsInRoZW1lX2NvbG9yIjoiIzI1NjNlYiIsImljb25zIjpbXX0=">
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiR3VpYSBUdXLDrXN0aWNvIiwic2hvcnRfbmFtZSI6Ikd1aWEiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2ZmZmZmZiIsInRoZW1lX2NvbG9yIjoiIzI1NjNlYiIsImljb25zIjpbXX0=">
     <meta name="theme-color" content="#2563eb">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -738,6 +738,12 @@
       >
         <!-- Updated dynamically by version.js -->
       </div>
+
+      <!-- LBS Provider Indicator -->
+      <div id="lbs-provider-indicator" class="lbs-provider-indicator" role="status" aria-live="polite" aria-label="Serviço de localização utilizado">
+        <span class="lbs-provider-icon" aria-hidden="true">📡</span>
+        <span id="lbs-provider-name" class="lbs-provider-name">Aguardando localização...</span>
+      </div>
       
       <!-- Version Info Modal -->
       <div class="version-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="version-modal-title">
@@ -893,10 +899,10 @@
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       // Silently check if service-worker.js exists without logging errors
-      fetch('/service-worker.js', { method: 'HEAD' })
+      fetch('./service-worker.js', { method: 'HEAD' })
         .then(response => {
           if (response.ok) {
-            return navigator.serviceWorker.register('/service-worker.js');
+            return navigator.serviceWorker.register('./service-worker.js');
           }
           // File doesn't exist - silently skip (development mode)
           return null;

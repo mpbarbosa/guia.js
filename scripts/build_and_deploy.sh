@@ -1,7 +1,40 @@
 #!/bin/bash
-
-# Build and Deploy Script
-# Builds production bundle and deploys to staging environment
+#
+# build_and_deploy.sh
+# -------------------
+# Purpose:      Build the production bundle with Vite and deploy it to the
+#               staging environment via the mpbarbosa_site sibling repository.
+#
+# Usage:        ./scripts/build_and_deploy.sh [OPTIONS]
+#               ./scripts/build_and_deploy.sh --help
+#
+# Arguments:
+#   -h, --help      Show the detailed help message and exit.
+#   --dry-run       (NOT IMPLEMENTED) Show commands without executing.
+#   --skip-build    (NOT IMPLEMENTED) Skip the npm run build step.
+#
+# Prerequisites:
+#   - mpbarbosa_site repository cloned at ../mpbarbosa_site (sibling of this repo).
+#   - Sync script present: ../mpbarbosa_site/shell_scripts/sync_to_staging.sh
+#   - Node.js v18+ and npm installed.
+#   - Production build must succeed (npm run build).
+#   - Write permissions for the staging deployment target.
+#
+# What it does:
+#   1. Navigates to the parent directory.
+#   2. Runs "npm run build" to create dist/.
+#   3. Navigates to ../mpbarbosa_site.
+#   4. Executes "./shell_scripts/sync_to_staging.sh --step1".
+#
+# Output:       Working-directory echoes and output from the sync script.
+#
+# Exit codes:
+#   0  Deployment completed successfully.
+#   1  Build failed or sync script exited with an error (set -e).
+#
+# Related modules: dist/, vite.config.js, ../mpbarbosa_site/shell_scripts/sync_to_staging.sh
+# See also:        scripts/README.md, docs/DEPLOYMENT.md
+# Warning:         Staging only — not intended for production deployment.
 
 set -e
 

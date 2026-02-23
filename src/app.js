@@ -9,6 +9,7 @@
 import HomeViewController from './views/home.js';
 import { log, warn, error } from './utils/logger.js';
 import { VERSION, VERSION_STRING } from './config/version.js';
+import { env } from './config/environment.js';
 import { 
   hasRoute, 
   getConverterViewTemplate, 
@@ -507,7 +508,7 @@ function initializeConverterFeatures() {
       try {
         // Use Nominatim API to reverse geocode
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`
+          `${env.nominatimApiUrl}/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`
         );
         
         if (!response.ok) {
@@ -586,4 +587,20 @@ if (typeof window !== 'undefined') {
     navigateTo,
     getState: () => AppState
   };
+
+  // Update LBS provider indicator whenever a geocoding request completes
+  window.addEventListener('geocoder-provider-used', (event) => {
+    const indicator = document.getElementById('lbs-provider-indicator');
+    const nameEl = document.getElementById('lbs-provider-name');
+    if (!indicator || !nameEl) return;
+
+    const { provider } = event.detail;
+    indicator.dataset.provider = provider;
+
+    if (provider === 'aws') {
+      nameEl.textContent = 'AWS Location Service';
+    } else {
+      nameEl.textContent = 'OpenStreetMap Nominatim';
+    }
+  });
 }

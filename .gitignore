@@ -76,4 +76,6 @@ dist/
 .env
 .env.local
 .env.*.local
-public/
+public/*
+!public/icon-192.png
+!public/icon-512.png

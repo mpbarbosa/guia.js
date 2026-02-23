@@ -91,17 +91,17 @@ describe('ErrorBoundary.wrap – error path (with container)', () => {
     const b = makeBoundary();
     const container = document.createElement('div');
     const err = new Error('render me');
-    await b.wrap(async () => { throw err; }, container)();
+    await b.wrap(async () => { throw err; }, container)().catch(() => {});
     expect(container.innerHTML).toContain('Fallback: render me');
     expect(container.innerHTML).toContain('role="alert"');
   });
 
-  test('does not re-throw when container is provided', async () => {
+  test('always re-throws even when container is provided', async () => {
     const b = makeBoundary();
     const container = document.createElement('div');
     await expect(
       b.wrap(async () => { throw new Error('x'); }, container)()
-    ).resolves.toBeUndefined();
+    ).rejects.toThrow('x');
   });
 });
 

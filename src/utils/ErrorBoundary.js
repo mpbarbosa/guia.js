@@ -69,7 +69,8 @@ class ErrorBoundary {
         this.hasError = true;
         this.lastError = error;
         
-        // Log error
+        // Always display in browser console regardless of log level or container
+        console.error(`[ErrorBoundary] Error in ${this.componentName}:`, error);
         logError(`Error in ${this.componentName}:`, error);
         
         // Track error in monitoring service
@@ -85,6 +86,7 @@ class ErrorBoundary {
           try {
             await this.onError(error, this.componentName);
           } catch (handlerError) {
+            console.error('[ErrorBoundary] Error in custom error handler:', handlerError);
             logError('Error in custom error handler:', handlerError);
           }
         }
@@ -94,10 +96,8 @@ class ErrorBoundary {
           this.renderFallback(container, error);
         }
         
-        // Re-throw error if no container (let caller handle it)
-        if (!container) {
-          throw error;
-        }
+        // Always re-throw so the exception is never silently swallowed
+        throw error;
       }
     };
   }

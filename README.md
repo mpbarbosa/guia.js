@@ -1,16 +1,16 @@
 # Guia Turístico - Tourist Guide Web Application
 
 ---
-Last Updated: 2026-02-15
+Last Updated: 2026-02-23
 Status: Active
 ---
 
 
-[![Tests](https://img.shields.io/badge/tests-2668%20passing%20%2F%202867%20total-green)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-3074%20passing%20%2F%203242%20total-green)](https://github.com/mpbarbosa/guia_turistico)
 [![Version](https://img.shields.io/badge/version-0.11.0--alpha-blue)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
-> **Note on Test Status**: 2,668 tests pass successfully out of 2,867 total (198 skipped, 1 failing), with 101 of 114 test suites passing (7 skipped, 6 failing E2E). The test suite is stable with 99.96% pass rate. See [Testing Overview](#testing-overview) for details.
+> **Note on Test Status**: 3,074 tests pass successfully out of 3,242 total (168 skipped, 0 failing), with 122 of 127 test suites passing (5 skipped). The test suite is stable with 100% pass rate. See [Testing Overview](#testing-overview) for details.
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
@@ -154,7 +154,7 @@ npm install
 # Validate JavaScript syntax (<1 second)
 npm run validate
 
-# Run test suite (2,380 total tests, 2,214 passing, 146 skipped, ~30 seconds)
+# Run test suite (3,242 total tests, 3,074 passing, 168 skipped, ~65 seconds)
 npm test
 
 # Run tests with coverage (~30 seconds)
@@ -253,6 +253,45 @@ npm run test:visual          # Run Selenium visual hierarchy tests
 
 > **Tip**: Run `npm run ci:test-local` before pushing to catch issues early.
 
+#### Shell Scripts (`scripts/`)
+
+The `scripts/` directory contains standalone shell scripts for maintenance, deployment, and automation tasks:
+
+| Script | Purpose | Arguments | Related modules |
+|--------|---------|-----------|-----------------|
+| `scripts/fix-console-logging.sh` | Replace direct `console.*` calls with centralized logger | *(none)* | `src/utils/logger.js` |
+| `scripts/update-doc-dates.sh` | Update "Last Updated" dates in git-modified `.md` files | *(none)* | `docs/` |
+| `scripts/update-test-counts.sh` | Sync test count statistics across documentation after test runs | *(none)* | `README.md`, `docs/INDEX.md`, `.github/copilot-instructions.md` |
+| `scripts/deploy-preflight.sh` | Production deployment pre-flight checklist (build + file checks + live smoke test) | *(none)* | `dist/`, `libs/sidra/tab6579_municipios.json`, `vite.config.js` |
+| `scripts/build_and_deploy.sh` | Build production bundle and push to staging via sibling repo | `-h`, `--help` | `dist/`, `../mpbarbosa_site/shell_scripts/sync_to_staging.sh` |
+
+```bash
+# Replace console.log/warn/error with centralized logger across src/
+./scripts/fix-console-logging.sh
+
+# Update "Last Updated" dates in all currently git-modified .md files
+./scripts/update-doc-dates.sh
+
+# Run tests and update passing/total counts in README and docs
+./scripts/update-test-counts.sh
+
+# Verify build, dist/ contents, and SIDRA JSON before production deploy
+./scripts/deploy-preflight.sh
+
+# Show help for build/deploy script
+./scripts/build_and_deploy.sh --help
+
+# Build and push to staging (requires ../mpbarbosa_site sibling repo)
+./scripts/build_and_deploy.sh
+```
+
+For full details on each script — including executable permissions, shebangs, environment variables, exit codes, workflow relationships, and CI/CD integration — see [`scripts/README.md`](./scripts/README.md).
+
+> **CI/CD note**: These scripts are **local developer tools**. GitHub Actions workflows in `.github/workflows/` automate equivalent operations (badge updates, test-count sync, doc linting) on push/PR. For CI helper scripts used inside workflows, see [`.github/scripts/`](./.github/scripts/).  
+> **Permissions**: All scripts ship executable (`chmod +x`). If lost after cloning, restore with `chmod +x scripts/*.sh`.  
+> **Entry point**: Scripts use `#!/bin/bash` and must be invoked as `./scripts/<name>.sh` or `bash scripts/<name>.sh`, not `sh`.  
+> **Error handling**: All scripts use `set -e` — any failing command exits immediately with code 1. None require external environment variables.
+
 ## 📁 Project Structure
 
 This section provides a quick reference to the project's directory organization. For a complete directory tree and detailed file organization, see [PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md). For architectural details and design decisions, see [PROJECT_PURPOSE_AND_ARCHITECTURE.md](./docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md).
@@ -270,7 +309,7 @@ guia_turistico/
 │   ├── speech/                   # Speech synthesis functionality
 │   ├── views/                    # SPA view controllers (home, converter)
 │   └── utils/                    # Utility functions
-├── __tests__/                    # Test suites (101 suites, 2,214 passing)
+├── __tests__/                    # Test suites (127 suites, 3,074 passing)
 │   ├── unit/                     # Unit tests
 │   ├── integration/              # Integration tests
 │   ├── e2e/                      # End-to-end tests (Puppeteer)
@@ -336,12 +375,12 @@ See [examples/README.md](examples/README.md) for detailed documentation and expe
 
 ### Test Suite Overview
 
-- **Total Tests**: 2,380 total (2,214 passing, 146 skipped, 20 failing)
-- **Test Suites**: 101 total (90 passing, 4 skipped, 7 failing)
-- **Test Count**: 2,214 passing tests (2,380 total with 146 skipped and 20 failing)
-- **Execution Time**: ~30-45 seconds
-- **Code Coverage**: 84.7% overall (exceeds 65% threshold by 19.7%)
-  - Statements: 84.69%, Branches: 82.49%, Functions: 74.68%, Lines: 84.99%
+- **Total Tests**: 3,242 total (3,074 passing, 168 skipped, 0 failing)
+- **Test Suites**: 127 total (122 passing, 5 skipped, 0 failing)
+- **Test Count**: 3,074 passing tests (3,242 total with 168 skipped)
+- **Execution Time**: ~65 seconds
+- **Code Coverage**: 76% overall (exceeds 65% threshold by 11%)
+  - Statements: 76%, Branches: 74.2%, Functions: 70.7%, Lines: 76.5%
   - Critical modules at 100%: DisplayerFactory, HTMLAddressDisplayer, HTMLPositionDisplayer
   - guia_ibge.js: 100% coverage (perfect)
 
@@ -373,7 +412,7 @@ To ensure clear communication about testing concepts:
   
 - **Test**: Individual test case within a suite using `it()` or `test()`
   - Example: `it('should return singleton instance')`
-  - The project has 1,968 tests total (1,820 passing, 146 skipped)
+  - The project has 3,242 tests total (3,074 passing, 168 skipped)
 
 - **Test Category**: Organizational grouping of related test suites
   - **unit/**: Tests for individual classes and functions in isolation
@@ -394,10 +433,10 @@ To ensure clear communication about testing concepts:
 
 ### Testing Terminology
 
-- **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 78 passing suites
-- **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 1,968 tests (1,820 passing, 146 skipped)
+- **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 122 passing suites
+- **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 3,242 tests (3,074 passing, 168 skipped)
 - **Test Category**: Organizational grouping by functionality (unit, integration, features, external, managers)
-- **Code Coverage**: Percentage of source code executed during tests (84.7% overall, exceeds 65% threshold)
+- **Code Coverage**: Percentage of source code executed during tests (76% overall, exceeds 65% threshold)
 
 ## 📚 Documentation
 
@@ -1593,8 +1632,8 @@ python3 -m http.server 8000
 ## 📊 Project Statistics
 
 - **Lines of Code**: ~2300+ (main application)
-- **Test Coverage**: 84.7% (statements), 82.5% (branches)
-- **Test Count**: 2,380 tests total (2,214 passing, 146 skipped, 20 failing)
+- **Test Coverage**: 76% (statements), 74.2% (branches)
+- **Test Count**: 3,242 tests total (3,074 passing, 168 skipped, 0 failing)
 - **Dependencies**: 2 runtime, 2 dev dependencies
 - **Supported Node.js**: v18+
 - **ES Module Type**: ESM (ECMAScript Modules)
@@ -1638,4 +1677,4 @@ ISC License - See repository for details
 
 **Version**: 0.9.0-alpha (active development)  
 **Status**: Active Development  
-**Last Updated**: 2026-02-09
+**Last Updated**: 2026-02-23

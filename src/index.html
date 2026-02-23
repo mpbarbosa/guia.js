@@ -797,7 +797,10 @@
       window.dependenciesLoading = true;
       
       try {
-        const { IbiraAPIFetchManager } = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js');
+        const { IbiraAPIFetchManager } = await Promise.race([
+          import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js'),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('CDN timeout after 5s')), 5000))
+        ]);
         window.IbiraAPIFetchManager = IbiraAPIFetchManager;
         console.log('✓ IbiraAPIFetchManager loaded successfully from CDN');
       } catch (error) {
@@ -897,7 +900,19 @@
 <!-- Service Worker Registration (optional, graceful fallback) -->
 <script>
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
+    window.addEventListener('load', async () => {
+      // Unregister any stale service workers (e.g., old sw.js registered at root scope)
+      try {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const reg of registrations) {
+          const scriptURL = reg.active?.scriptURL || reg.installing?.scriptURL || reg.waiting?.scriptURL || '';
+          if (scriptURL && !scriptURL.endsWith('service-worker.js')) {
+            await reg.unregister();
+            console.log('[App] Unregistered stale service worker:', scriptURL);
+          }
+        }
+      } catch (_) { /* ignore cleanup errors */ }
+
       // Silently check if service-worker.js exists without logging errors
       fetch('./service-worker.js', { method: 'HEAD' })
         .then(response => {

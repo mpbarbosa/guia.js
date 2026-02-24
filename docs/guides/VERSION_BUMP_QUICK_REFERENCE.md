@@ -24,6 +24,7 @@
 ## 🚀 Next Step: Push to GitHub
 
 **Commands**:
+
 ```bash
 cd /home/mpb/Documents/GitHub/guia_turistico
 
@@ -35,6 +36,7 @@ git push origin v0.9.0-alpha
 ```
 
 **Expected Results**:
+
 - Commit cef4a71 pushed to main branch
 - Tag v0.9.0-alpha visible on GitHub
 - CDN URL available in 5-10 minutes
@@ -44,16 +46,19 @@ git push origin v0.9.0-alpha
 ## 📦 Released Features (v0.9.0-alpha)
 
 ### DisplayerFactory (v0.9.0-alpha)
+
 - ✅ 5 factory methods implemented
 - ✅ 100% test coverage
 - File: `src/html/DisplayerFactory.js` (247 lines)
 
 ### Município State Display (v0.9.0-alpha)
+
 - ✅ Format: "City, ST" (e.g., "Recife, PE")
 - ✅ 42 tests passing (all Brazilian states)
 - Method: `BrazilianStandardAddress.municipioCompleto()`
 
 ### Metropolitan Region Display (v0.9.0-alpha)
+
 - ✅ Displays "Região Metropolitana" information
 - ✅ 77 tests passing (73 unit + 4 E2E)
 - Visual: Reduced prominence (smaller font, lighter color)
@@ -63,16 +68,19 @@ git push origin v0.9.0-alpha
 ## 🔗 Quick Links
 
 **Documentation**:
+
 - Feature Verification: `docs/reports/FEATURE_VERIFICATION_REPORT_2026-01-28.md`
 - Version Bump Summary: `docs/reports/VERSION_BUMP_0.8.7_SUMMARY_2026-01-28.md`
 - CDN URLs: `cdn-urls.txt`
 
 **Primary CDN URL**:
+
 ```
 https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js
 ```
 
 **Commit-Specific URL** (available now):
+
 ```
 https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a71/src/guia.js
 ```

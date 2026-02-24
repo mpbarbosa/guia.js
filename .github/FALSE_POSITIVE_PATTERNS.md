@@ -24,6 +24,7 @@ This document catalogs patterns that are **NOT broken references** but may be in
 #### Examples from Documentation
 
 **File**: `docs/class-extraction/CLASS_EXTRACTION_PHASE_5.md`
+
 ```javascript
 class Chronometer {
     constructor(element) { /* ... */ }
@@ -34,16 +35,19 @@ class Chronometer {
 }
 ```
 
-**Purpose**: 
+**Purpose**:
+
 - Shows class structure without implementation details
 - Abbreviated code examples for clarity
 - Focuses reader on architecture, not implementation
 
 **Why flagged as broken**:
+
 - Contains forward slashes (`/`)
 - Pattern `/* ... */` might be interpreted as path reference by simple regex
 
 **Exclusion Rule for Automated Checkers**:
+
 ```regex
 # Exclude this pattern:
 /\*\s*\.\.\.\s*\*/
@@ -63,27 +67,32 @@ class Chronometer {
 #### Examples from Documentation
 
 **File**: `docs/TESTING_HTML_GENERATION.md` (lines 135-136)
+
 ```javascript
 const closingTags = (html.match(/<\/\w+>/g) || []).length;
 const selfClosingTags = (html.match(/<\w+[^>]*\/>/g) || []).length;
 ```
 
 **Purpose**:
+
 - Regex patterns for parsing HTML tags
 - Code examples showing tag matching logic
 - Valid JavaScript regex syntax
 
 **Why flagged as broken**:
+
 - Contains forward slashes in regex delimiters
 - Pattern `/<\w+>/g` looks like a path reference
 
 **Common Regex Patterns**:
+
 - `/<\w+/g` - Opening HTML tags
 - `/<\/\w+>/g` - Closing HTML tags  
 - `/<\w+[^>]*\/>/g` - Self-closing tags
 - `/pattern/flags` - General regex syntax
 
 **Exclusion Rule for Automated Checkers**:
+
 ```regex
 # Exclude regex patterns in code blocks:
 /\/[^\/]+\/[gimsuy]*
@@ -103,20 +112,24 @@ const selfClosingTags = (html.match(/<\w+[^>]*\/>/g) || []).length;
 #### Examples from Documentation
 
 **File**: `docs/INDEX.md` (line 32)
+
 ```markdown
 - Directory structure explanation (/src for library organization)
 ```
 
 **Purpose**:
+
 - Describing directory purpose in natural language
 - Parenthetical clarification
 - Not an actual file path reference
 
 **Why flagged as broken**:
+
 - Contains `/src` which looks like a path
 - In parentheses, suggesting it might be a reference
 
 **Characteristics of Descriptive Text**:
+
 - Appears in prose paragraphs, not as standalone link
 - Often in parentheses: `(text /with/slash)`
 - Has surrounding context words: "explanation", "for", "about"
@@ -124,6 +137,7 @@ const selfClosingTags = (html.match(/<\w+[^>]*\/>/g) || []).length;
 - Not in Markdown link syntax: `[text](path)`
 
 **Exclusion Rule for Automated Checkers**:
+
 ```regex
 # Exclude text in parentheses with explanatory words:
 \([^)]*(?:for|about|regarding|explaining)[^)]*\/[^)]*\)
@@ -144,6 +158,7 @@ const selfClosingTags = (html.match(/<\w+[^>]*\/>/g) || []).length;
 When scanning for broken references, use these checks:
 
 #### 1. **Context-Aware Detection**
+
 ```python
 # Good: Check if it's in a Markdown link
 if re.match(r'\[.*?\]\(([^)]+)\)', line):
@@ -155,6 +170,7 @@ if '/' in line:  # Too broad!
 ```
 
 #### 2. **Code Block Exclusion**
+
 ```python
 # Exclude patterns in code blocks
 in_code_block = False
@@ -166,6 +182,7 @@ for line in file:
 ```
 
 #### 3. **Pattern Whitelisting**
+
 ```python
 # Whitelist known valid patterns
 VALID_PATTERNS = [
@@ -180,6 +197,7 @@ for pattern in VALID_PATTERNS:
 ```
 
 #### 4. **File Extension Check**
+
 ```python
 # Only flag paths that end with actual file extensions
 VALID_EXTENSIONS = ['.md', '.js', '.html', '.css', '.json']
@@ -317,6 +335,7 @@ documentation_validation:
 
 **Quick Test**:
 Before flagging as broken reference, ask:
+
 - Is it in a code block? → Skip
 - Is it in markdown link syntax `[]()`? → Validate
 - Does it have a file extension? → Validate

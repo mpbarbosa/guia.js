@@ -44,6 +44,7 @@ Files with Potential Leaks:
 These run indefinitely until manually stopped.
 
 #### 1. Chronometer.js
+
 ```javascript
 // LINE 104: Display update timer
 this.intervalId = setInterval(() => {
@@ -65,6 +66,7 @@ stop() {
 **Impact**: Timer runs forever if `stop()` not called
 
 #### 2. SpeechSynthesisManager.js - Voice Retry Timer
+
 ```javascript
 // LINE 407: Voice retry mechanism
 this.voiceRetryTimer = setInterval(() => {
@@ -92,6 +94,7 @@ stopVoiceRetryTimer() {
 **Impact**: Voice retry timer may leak if conditions not met
 
 #### 3. SpeechSynthesisManager.js - Queue Timer
+
 ```javascript
 // LINE 817: Queue processing timer
 this.queueTimer = setInterval(() => {
@@ -113,6 +116,7 @@ stopQueueTimer() {
 **Impact**: Queue processing continues after tests end
 
 #### 4. AddressCache.js - Global Cleanup Timer
+
 ```javascript
 // LINE 1116: Automatic cache cleanup (GLOBAL!)
 AddressCache.cleanupInterval = setInterval(() => {
@@ -134,6 +138,7 @@ AddressCache.cleanupInterval = setInterval(() => {
 These fire once but can accumulate if many are created.
 
 #### 5. SpeechSynthesisManager.js - Queue Processing Delays
+
 ```javascript
 // Multiple setTimeout calls for queue processing:
 setTimeout(() => this.processQueue(), 10); // LINE 754
@@ -147,6 +152,7 @@ setTimeout(() => this.processQueue(), 10); // LINE 780
 **Impact**: Callbacks execute after test teardown
 
 #### 6. MockGeolocationProvider.js - Simulated Delays
+
 ```javascript
 // LINE 273: Simulate async geolocation
 setTimeout(fn, this.config.delay);
@@ -161,6 +167,7 @@ setTimeout(fn, 0);
 **Impact**: Async operations continue after tests
 
 #### 7. UI Animation Timers (error-recovery.js, geolocation-banner.js)
+
 ```javascript
 // error-recovery.js LINE 51:
 setTimeout(() => {
@@ -178,6 +185,7 @@ setTimeout(() => banner.remove(), 300);
 **Impact**: Timers fire in non-browser environments
 
 #### 8. Utility Timers
+
 ```javascript
 // distance.js LINE 77: Delay utility
 export const delay = (ms) => new Promise((res) => setTimeout(res, ms));
@@ -314,6 +322,7 @@ destroy() {
 ### Solution 1: Add Lifecycle Methods to All Timer Classes
 
 #### Chronometer.js
+
 ```javascript
 class Chronometer {
   // Existing methods...
@@ -343,6 +352,7 @@ class Chronometer {
 ```
 
 #### SpeechSynthesisManager.js
+
 ```javascript
 class SpeechSynthesisManager {
   // Existing methods...
@@ -386,6 +396,7 @@ class SpeechSynthesisManager {
 ```
 
 #### AddressCache.js
+
 ```javascript
 class AddressCache {
   constructor() {
@@ -428,6 +439,7 @@ class AddressCache {
 ### Solution 2: Fix Test Environment
 
 #### Update Test Setup/Teardown
+
 ```javascript
 // __tests__/unit/Chronometer.test.js
 describe('Chronometer', () => {
@@ -454,6 +466,7 @@ describe('Chronometer', () => {
 ```
 
 #### Jest Configuration
+
 ```javascript
 // jest.config.js or package.json
 {
@@ -468,6 +481,7 @@ describe('Chronometer', () => {
 ### Solution 3: Track Timers Explicitly
 
 #### Timer Registry Pattern
+
 ```javascript
 /**
  * Tracks and manages all application timers for cleanup.
@@ -553,6 +567,7 @@ afterEach(() => {
 ### Solution 4: Use Timer Wrappers
 
 #### AutoCleanupTimer Class
+
 ```javascript
 /**
  * Self-cleaning timer that automatically cleans up on destroy.
@@ -672,6 +687,7 @@ class Chronometer {
 ## Success Metrics
 
 ### Before
+
 ```
 Timer Cleanup Rate:       15% (3/20)
 Test Process Exits:       Forced (worker failures)
@@ -680,6 +696,7 @@ Timer Tracking:           None
 ```
 
 ### After
+
 ```
 Timer Cleanup Rate:       100% (20/20)
 Test Process Exits:       Graceful
@@ -688,6 +705,7 @@ Timer Tracking:           Automated
 ```
 
 ### Test Validation
+
 ```bash
 # Enable leak detection
 npm test -- --detectOpenHandles --detectLeaks

@@ -24,6 +24,7 @@ This guide provides step-by-step instructions and issue templates for creating t
 ## Issue #1: Configuration Object for Element IDs
 
 ### How to Create
+
 1. Go to: https://github.com/mpbarbosa/guia_turistico/issues/new/choose
 2. Select "Technical Debt" template
 3. Copy and paste the content below
@@ -106,6 +107,7 @@ _initializeChronometer() {
 ```
 
 **Benefits:**
+
 - Single source of truth for all element IDs
 - Easy to customize for different HTML structures
 - Improves testability by allowing mock element IDs
@@ -158,6 +160,7 @@ See comprehensive analysis in `docs/ISSUE_189_NEXT_STEPS.md` (Section 1).
 - [ ] **Medium** (1-3 days)
 - [ ] **Large** (1-2 weeks)
 - [ ] **Extra Large** (> 2 weeks)
+
 ```
 
 ---
@@ -218,6 +221,7 @@ _createDisplayers() {
 ```
 
 **Problems:**
+
 - Cannot swap services for different implementations
 - Hard to support multiple UI frameworks or display strategies
 - Cannot conditionally create displayers based on runtime configuration
@@ -309,6 +313,7 @@ See comprehensive analysis in `docs/ISSUE_189_NEXT_STEPS.md` (Section 2).
 - [x] **Medium** (1-3 days)
 - [ ] **Large** (1-2 weeks)
 - [ ] **Extra Large** (> 2 weeks)
+
 ```
 
 ---
@@ -360,6 +365,7 @@ setTimeout(() => {
 ```
 
 **Problems:**
+
 - Arbitrary 20-second setTimeout that does nothing
 - Comment admits purpose is unclear
 - No tests depend on this timeout
@@ -431,6 +437,7 @@ See comprehensive analysis in `docs/ISSUE_189_NEXT_STEPS.md` (Section 3).
 - [ ] **Medium** (1-3 days)
 - [ ] **Large** (1-2 weeks)
 - [ ] **Extra Large** (> 2 weeks)
+
 ```
 
 ---
@@ -494,6 +501,7 @@ this.setupMunicipioChangeDetection();
 ```
 
 **Problems:**
+
 - Single class doing too much
 - Cannot test change detection independently
 - Tight coupling between concerns
@@ -549,6 +557,7 @@ class WebGeocodingManager {
 ```
 
 **Benefits:**
+
 - Each class has single responsibility
 - Change detection can be tested independently
 - Clearer code organization and boundaries
@@ -560,6 +569,7 @@ class WebGeocodingManager {
 - BUT: Logic that determines IF change occurred can be pure
 - Separate pure change detection logic from side-effectful notifications
 - Example:
+
   ```javascript
   // Pure function
   function hasAddressComponentChanged(previous, current, component) {
@@ -617,6 +627,7 @@ See comprehensive analysis in `docs/ISSUE_189_NEXT_STEPS.md` (Section 4).
 - [ ] **Medium** (1-3 days)
 - [x] **Large** (1-2 weeks)
 - [ ] **Extra Large** (> 2 weeks)
+
 ```
 
 ---
@@ -672,6 +683,7 @@ this.reverseGeocoder = new ReverseGeocoder();
 ```
 
 **Problems:**
+
 - Cannot configure services before passing to manager
 - Cannot reuse service instances across multiple managers
 - No way to lazy-load or conditionally create services
@@ -792,6 +804,7 @@ See comprehensive analysis in `docs/ISSUE_189_NEXT_STEPS.md` (Section 5).
 - [ ] **Medium** (1-3 days)
 - [ ] **Large** (1-2 weeks)
 - [ ] **Extra Large** (> 2 weeks)
+
 ```
 
 ---

@@ -13,6 +13,7 @@
 AddressCache.js contains **53 static wrapper methods** (24 methods + 14 getters + 14 setters + getInstance) that simply forward calls to `getInstance()`. This pattern creates a **bloated API surface**, confuses new developers, and adds **~371 unnecessary lines** (32% of the 1,146-line file).
 
 **Impact Metrics**:
+
 - **53 static members** providing duplicate API access
 - **371 lines** of boilerplate wrapper code (~7 lines per wrapper)
 - **273 external usage locations** (mostly in tests and AddressDataExtractor)
@@ -74,6 +75,7 @@ class AddressCache {
 ```
 
 **AddressDataExtractor.js itself is a wrapper**:
+
 ```javascript
 class AddressDataExtractor {
     // Just forwards to AddressCache static methods
@@ -84,6 +86,7 @@ class AddressDataExtractor {
 ```
 
 This creates a **triple indirection chain**:
+
 ```
 External code → AddressDataExtractor.clearCache()
               → AddressCache.clearCache()  
@@ -107,6 +110,7 @@ External code → AddressDataExtractor.clearCache()
 ### Developer Experience Impact
 
 **Current confusion**:
+
 ```javascript
 // Which way should I use? Both work but one is deprecated
 const cache1 = AddressCache.clearCache();              // Static (deprecated)
@@ -114,6 +118,7 @@ const cache2 = AddressCache.getInstance().clearCache(); // Instance (preferred)
 ```
 
 **After cleanup**:
+
 ```javascript
 // Only one clear way
 const cache = AddressCache.getInstance();
@@ -156,6 +161,7 @@ cache.clearCache();
 ```
 
 **Problems**:
+
 - **Multiple indirection layers** slow down execution and debugging
 - **Two APIs** create cognitive load for developers
 - **371 lines** of pure boilerplate with no business logic
@@ -170,12 +176,14 @@ cache.clearCache();
 **Goal**: Document current usage and create migration guide
 
 **Tasks**:
+
 1. ✅ **Inventory all static wrapper usage** (Done: 273 call sites identified)
 2. ✅ **Document wrapper pattern** (This document)
 3. **Create migration script** for automated refactoring
 4. **Generate compatibility report** for external dependencies
 
 **Deliverables**:
+
 - Migration script (scripts/migrate-addresscache-static-api.js)
 - Compatibility matrix (docs/STATIC_API_MIGRATION_MATRIX.md)
 - Developer guide update (docs/MIGRATION_GUIDE.md)
@@ -187,6 +195,7 @@ cache.clearCache();
 **Goal**: Eliminate AddressDataExtractor wrapper entirely
 
 **Current state** (245 lines, 41 static calls):
+
 ```javascript
 class AddressDataExtractor {
     static clearCache() {
@@ -199,6 +208,7 @@ class AddressDataExtractor {
 **Target state**: Remove entire class, update callers directly
 
 **Migration strategy**:
+
 ```javascript
 // Before (triple indirection)
 import AddressDataExtractor from './data/AddressDataExtractor.js';
@@ -211,6 +221,7 @@ cache.clearCache();
 ```
 
 **Tasks**:
+
 1. **Run migration script** on all 273 external call sites
 2. **Update imports** to use AddressCache directly
 3. **Remove AddressDataExtractor.js** entirely
@@ -218,11 +229,13 @@ cache.clearCache();
 5. **Validate all tests pass** (1,282 tests must remain passing)
 
 **Files to modify**:
+
 - `src/data/AddressDataExtractor.js` → DELETE (245 lines removed)
 - ~20 test files in `__tests__/` → update static calls to instance calls
 - `src/guia.js` → update import if used
 
 **Expected impact**:
+
 - **-245 lines** from AddressDataExtractor.js removal
 - **-41 static wrapper calls** replaced with direct instance calls
 - **100% reduction** in triple indirection chains
@@ -234,6 +247,7 @@ cache.clearCache();
 **Goal**: Migrate all test files from static API to instance API
 
 **Current test pattern** (~230 static calls):
+
 ```javascript
 describe('AddressCache', () => {
     afterEach(() => {
@@ -248,6 +262,7 @@ describe('AddressCache', () => {
 ```
 
 **Target test pattern**:
+
 ```javascript
 describe('AddressCache', () => {
     let cache;
@@ -268,17 +283,20 @@ describe('AddressCache', () => {
 ```
 
 **Migration approach**:
+
 1. **Update test files incrementally** (1 file per commit for safety)
 2. **Run tests after each file** to catch regressions immediately
 3. **Use migration script** to automate pattern replacement
 4. **Manual review** for complex test cases
 
 **Estimated effort**:
+
 - **~20 test files** to migrate
 - **~230 static calls** to convert
 - **2-3 hours per day** over 2 weeks (8-12 work hours total)
 
 **Safety checks**:
+
 ```bash
 # After each test file migration
 npm test -- --testPathPattern=<modified-file>
@@ -332,6 +350,7 @@ class AddressCache {
 ```
 
 **Automated removal script**:
+
 ```javascript
 // scripts/remove-static-wrappers.js
 const content = fs.readFileSync('src/data/AddressCache.js', 'utf8');
@@ -363,6 +382,7 @@ fs.writeFileSync('src/data/AddressCache.js', result.join('\n'));
 ```
 
 **Tasks**:
+
 1. **Run automated removal script**
 2. **Manually verify getInstance() is preserved**
 3. **Run syntax validation**: `node -c src/data/AddressCache.js`
@@ -370,6 +390,7 @@ fs.writeFileSync('src/data/AddressCache.js', result.join('\n'));
 5. **Validate no static wrapper calls remain**: `grep -r "AddressCache\.\w" src/ __tests__/`
 
 **Expected outcome**:
+
 - **AddressCache.js**: 1,146 lines → ~775 lines (**-32% reduction**)
 - **API clarity**: 2 ways to call methods → 1 way (instance only)
 - **Deprecation warnings**: 52 → 0
@@ -384,6 +405,7 @@ fs.writeFileSync('src/data/AddressCache.js', result.join('\n'));
 **Documentation updates**:
 
 1. **CHANGELOG.md**:
+
 ```markdown
 ## [1.0.0] - 2026-02-XX
 
@@ -403,7 +425,8 @@ fs.writeFileSync('src/data/AddressCache.js', result.join('\n'));
 - Removed 52 deprecation warnings
 ```
 
-2. **README.md** - Update all code examples:
+1. **README.md** - Update all code examples:
+
 ```javascript
 // Update examples from:
 AddressCache.clearCache();
@@ -413,9 +436,10 @@ const cache = AddressCache.getInstance();
 cache.clearCache();
 ```
 
-3. **API_REFERENCE.md** - Remove static wrapper documentation
+1. **API_REFERENCE.md** - Remove static wrapper documentation
 
-4. **MIGRATION_GUIDE.md** - Comprehensive migration guide:
+2. **MIGRATION_GUIDE.md** - Comprehensive migration guide:
+
 ```markdown
 # Migrating from v0.x to v1.0.0
 
@@ -432,6 +456,7 @@ const size = AddressCache.getCacheSize();
 ```
 
 **After (v1.0.0)**:
+
 ```javascript
 // Instance API (preferred, only way in v1.0.0)
 const cache = AddressCache.getInstance();
@@ -443,12 +468,14 @@ const size = cache.getCacheSize();
 ### AddressDataExtractor Removal
 
 **Before (v0.x)**:
+
 ```javascript
 import AddressDataExtractor from './data/AddressDataExtractor.js';
 AddressDataExtractor.clearCache();
 ```
 
 **After (v1.0.0)**:
+
 ```javascript
 import AddressCache from './data/AddressCache.js';
 const cache = AddressCache.getInstance();
@@ -458,9 +485,11 @@ cache.clearCache();
 ### Automated Migration
 
 Use our migration script to update your codebase:
+
 ```bash
 node scripts/migrate-addresscache-static-api.js src/ __tests__/
 ```
+
 ```
 
 **Tasks**:
@@ -640,6 +669,7 @@ console.log('  4. Commit: git commit -am "refactor: migrate to AddressCache inst
 ```
 
 **Usage**:
+
 ```bash
 # Make script executable
 chmod +x scripts/migrate-addresscache-static-api.js
@@ -666,6 +696,7 @@ git commit -m "refactor: migrate AddressCache static API to instance API"
 #### Example 1: Basic Cache Operations
 
 **Before (Current - Dual API)**:
+
 ```javascript
 // Option 1: Static API (deprecated but still works)
 AddressCache.clearCache();
@@ -680,6 +711,7 @@ const size2 = cache.getCacheSize();
 ```
 
 **After (Target - Single API)**:
+
 ```javascript
 // Only one way (instance API)
 const cache = AddressCache.getInstance();
@@ -692,6 +724,7 @@ const size = cache.getCacheSize();
 #### Example 2: Change Callbacks
 
 **Before (Triple Indirection)**:
+
 ```javascript
 import AddressDataExtractor from './data/AddressDataExtractor.js';
 
@@ -702,6 +735,7 @@ AddressDataExtractor.setLogradouroChangeCallback(callback);
 ```
 
 **After (Direct Access)**:
+
 ```javascript
 import AddressCache from './data/AddressCache.js';
 
@@ -713,6 +747,7 @@ cache.setLogradouroChangeCallback(callback);
 #### Example 3: Property Access
 
 **Before (Static Properties)**:
+
 ```javascript
 // Static getters/setters (deprecated)
 const currentAddr = AddressCache.currentAddress;
@@ -722,6 +757,7 @@ AddressCache.maxCacheSize = 100;
 ```
 
 **After (Instance Properties)**:
+
 ```javascript
 const cache = AddressCache.getInstance();
 const currentAddr = cache.currentAddress;
@@ -733,6 +769,7 @@ cache.maxCacheSize = 100;
 #### Example 4: Test Setup/Teardown
 
 **Before**:
+
 ```javascript
 describe('Geolocation Service', () => {
     afterEach(() => {
@@ -747,6 +784,7 @@ describe('Geolocation Service', () => {
 ```
 
 **After**:
+
 ```javascript
 describe('Geolocation Service', () => {
     let cache;
@@ -773,6 +811,7 @@ describe('Geolocation Service', () => {
 ### Validation Checklist
 
 **Phase 2 - AddressDataExtractor Removal**:
+
 ```bash
 # 1. Run migration script
 node scripts/migrate-addresscache-static-api.js src/ __tests__/
@@ -796,6 +835,7 @@ grep -r "AddressCache\.\w" src/ __tests__/ | grep -v "AddressCache\.js:" | grep 
 ```
 
 **Phase 4 - Static Wrapper Removal**:
+
 ```bash
 # 1. Run removal script
 node scripts/remove-static-wrappers.js
@@ -851,6 +891,7 @@ npm run test:coverage
    - No instance pollution between tests
 
 **Test command sequence**:
+
 ```bash
 # Run specific test suites
 npm test -- --testPathPattern=AddressCache
@@ -876,6 +917,7 @@ npm test -- --verbose
 If issues arise during Phase 4 (static wrapper removal):
 
 **Step 1: Restore from git**
+
 ```bash
 # Restore AddressCache.js from last known good commit
 git checkout HEAD~1 src/data/AddressCache.js
@@ -885,12 +927,14 @@ git checkout <pre-phase2-commit> src/data/AddressDataExtractor.js
 ```
 
 **Step 2: Verify restoration**
+
 ```bash
 npm run validate
 npm test
 ```
 
 **Step 3: Revert phase-specific changes**
+
 ```bash
 # If Phase 2 completed (AddressDataExtractor removed)
 git revert <phase2-commit>
@@ -903,6 +947,7 @@ git revert <phase4-commit>
 ```
 
 **Step 4: Document issues**
+
 ```bash
 # Create rollback report
 echo "## Rollback Report - $(date)" >> ROLLBACK_REPORT.md
@@ -925,6 +970,7 @@ echo "### Test failures: <list tests>" >> ROLLBACK_REPORT.md
 | **Total** | **6 weeks** | **44 hours** | - | **-616 lines total** |
 
 **Key milestones**:
+
 - ✅ **Week 1**: Migration tooling ready
 - ✅ **Week 2**: Triple indirection eliminated
 - ✅ **Week 4**: All tests using instance API
@@ -950,6 +996,7 @@ echo "### Test failures: <list tests>" >> ROLLBACK_REPORT.md
 ### Developer Experience
 
 **Before**:
+
 ```javascript
 // Which import should I use?
 import AddressDataExtractor from './data/AddressDataExtractor.js'; // ???
@@ -964,6 +1011,7 @@ AddressDataExtractor.clearCache(); // Legacy wrapper ???
 ```
 
 **After**:
+
 ```javascript
 // Clear imports
 import AddressCache from './data/AddressCache.js';
@@ -987,6 +1035,7 @@ cache.clearCache();
 ### Performance Impact
 
 **Static wrapper overhead**:
+
 ```javascript
 // Before: 3 function calls
 AddressDataExtractor.clearCache()
@@ -998,6 +1047,7 @@ cache.clearCache()
 ```
 
 **Estimated performance gain**:
+
 - **-67% call stack depth** (3 calls → 1 call)
 - **-2 function call overhead** per operation
 - **Negligible absolute impact** (microseconds) but cleaner profiler traces
@@ -1031,6 +1081,7 @@ Week 26-30: Callback Modernization (unify with Observer)
 ```
 
 **Critical Path**:
+
 1. **God Object MUST complete first** - Creates focused classes that make static wrapper removal easier
 2. **Singleton Refactoring can proceed in parallel** - Doesn't conflict with static wrapper removal
 3. **Static Wrapper Elimination SHOULD precede Deprecated Code Cleanup** - Removes 52 of the 64 deprecated methods
@@ -1075,12 +1126,14 @@ Week 26-30: Callback Modernization (unify with Observer)
 ### Phase Completion Criteria
 
 **Phase 1: Preparation**
+
 - ✅ Migration script passes linting
 - ✅ Documentation reviewed and approved
 - ✅ Compatibility matrix generated
 - ✅ 273 call sites inventoried
 
 **Phase 2: AddressDataExtractor Cleanup**
+
 - ✅ AddressDataExtractor.js deleted
 - ✅ All 41 static calls migrated to instance calls
 - ✅ All imports updated
@@ -1088,6 +1141,7 @@ Week 26-30: Callback Modernization (unify with Observer)
 - ✅ No references to AddressDataExtractor remain
 
 **Phase 3: Test Migration**
+
 - ✅ All ~230 test static calls converted to instance calls
 - ✅ 1,282 tests still passing
 - ✅ No new test failures introduced
@@ -1095,6 +1149,7 @@ Week 26-30: Callback Modernization (unify with Observer)
 - ✅ No static API calls in test files (except getInstance)
 
 **Phase 4: Static Wrapper Removal**
+
 - ✅ 52 static wrappers removed (371 lines deleted)
 - ✅ getInstance() method preserved
 - ✅ AddressCache.js reduced to ~775 lines
@@ -1103,6 +1158,7 @@ Week 26-30: Callback Modernization (unify with Observer)
 - ✅ No deprecation warnings remain
 
 **Phase 5: Documentation and Release**
+
 - ✅ CHANGELOG.md updated
 - ✅ README.md examples updated
 - ✅ MIGRATION_GUIDE.md created
@@ -1141,6 +1197,7 @@ The **Static Wrapper Pattern Elimination** addresses a significant code quality 
 **Risk Level**: Medium (phased approach mitigates risks)
 
 **Next Steps**:
+
 1. ✅ Get approval for v1.0.0 breaking change release
 2. ✅ Complete God Object Refactoring (prerequisite)
 3. ✅ Implement Phase 1 (migration tooling)

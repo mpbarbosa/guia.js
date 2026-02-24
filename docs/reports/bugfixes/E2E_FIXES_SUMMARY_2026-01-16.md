@@ -18,6 +18,7 @@
 ## 📊 Test Results Comparison
 
 ### Before Fixes
+
 ```
 Test Suites: 4 skipped, 78 passed, 78 of 84 total
 Tests:       146 skipped, 1820 passed, 1973 total
@@ -26,6 +27,7 @@ Duration:    ~25-30 seconds
 ```
 
 ### After Fixes
+
 ```
 Test Suites: 4 skipped, 80 passed, 80 of 84 total
 Tests:       146 skipped, 1827 passed, 1973 total
@@ -34,6 +36,7 @@ Duration:    ~30 seconds
 ```
 
 **Improvements**:
+
 - ✅ +2 test suites passing (E2E tests fixed)
 - ✅ +7 tests passing
 - ✅ 0 test failures
@@ -44,6 +47,7 @@ Duration:    ~30 seconds
 ## 🔧 Changes Made
 
 ### 1. ServiceCoordinator Enhancement
+
 **File**: `src/coordination/ServiceCoordinator.js`  
 **Lines**: 156-166 (added)
 
@@ -62,9 +66,11 @@ get geolocationService() {
 ---
 
 ### 2. NeighborhoodChangeWhileDriving Test Fix
+
 **File**: `__tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js`
 
 #### Enhanced Location Simulation (lines 338-451)
+
 ```javascript
 async function simulateLocationUpdate(page, latitude, longitude, expectedBairro) {
     await page.setGeolocation({ latitude, longitude, accuracy: 10 });
@@ -98,6 +104,7 @@ async function simulateLocationUpdate(page, latitude, longitude, expectedBairro)
 ```
 
 #### Improved Cleanup (lines 321-345)
+
 ```javascript
 afterAll(async () => {
     if (browser) {
@@ -118,9 +125,11 @@ afterAll(async () => {
 ---
 
 ### 3. Municipio-Bairro Display Test Fix
+
 **File**: `__tests__/e2e/municipio-bairro-display.e2e.test.js`
 
 #### Manual Position Trigger in Setup (lines 140-188)
+
 ```javascript
 async function setupPageWithMocks(latitude, longitude, mockAddressData) {
     // ... existing geolocation setup ...
@@ -157,6 +166,7 @@ async function setupPageWithMocks(latitude, longitude, mockAddressData) {
 ```
 
 #### Improved Cleanup (lines 244-268)
+
 ```javascript
 afterAll(async () => {
     if (browser) {
@@ -179,9 +189,11 @@ afterAll(async () => {
 ## 🐛 Root Causes Identified
 
 ### Issue 1: ServiceCoordinator Architecture
+
 **Problem**: `geolocationService` stored as private `_geolocationService` without public getter
 
-**Impact**: 
+**Impact**:
+
 - `WebGeocodingManager` couldn't access geolocation service
 - E2E tests couldn't manually trigger position updates
 - Line 377 in WebGeocodingManager.js: `this.geolocationService = this.serviceCoordinator.geolocationService` returned `undefined`
@@ -191,18 +203,22 @@ afterAll(async () => {
 ---
 
 ### Issue 2: Position Update Validation
+
 **Problem**: PositionManager has strict validation that blocks test scenarios
 
 **Validation Checks** (src/core/PositionManager.js):
+
 1. **Time check** (line 425): Must wait >50 seconds since last update
 2. **Distance check** (line 408): Must move >20 meters from last position
 
 **Impact on Tests**:
+
 - Initial position in fresh page load gets blocked by time check
 - Subsequent moves get blocked if distance <20m
 - `page.setGeolocation()` doesn't trigger `watchPosition` callback automatically
 
 **Solution**: Bypass validation in tests:
+
 - Set `lastModified = 0` to disable time check
 - Create fake distant `lastPosition` to pass distance check
 - Manually call `positionManager.update()` with test coordinates
@@ -210,14 +226,17 @@ afterAll(async () => {
 ---
 
 ### Issue 3: Worker Process Cleanup
+
 **Problem**: Jest workers don't always exit cleanly with Puppeteer
 
 **Root Cause**:
+
 - Puppeteer's async cleanup (browser processes, WebSocket connections)
 - Jest's worker model (parallel test execution)
 - Race condition between Jest cleanup and Puppeteer cleanup
 
-**Solution**: 
+**Solution**:
+
 - Call `browser.disconnect()` to force process cleanup
 - Add cleanup delay (100ms) for synchronization
 - Increase `afterAll` timeout to 10 seconds
@@ -255,30 +274,35 @@ afterAll(async () => {
 ## 🎓 Lessons Learned
 
 ### 1. Puppeteer Geolocation Limitations
+
 - `page.setGeolocation()` sets browser coordinates but doesn't fire `watchPosition` callback
 - Must manually trigger position updates in E2E tests
 - Real-world scenario: User grants permission → `watchPosition` fires → geocoding happens
 - Test scenario: Must simulate this workflow explicitly
 
 ### 2. PositionManager Validation Impact
+
 - Production validation (time + distance checks) prevents rapid updates
 - Critical for battery life and API rate limiting in production
 - But blocks E2E test scenarios that need rapid position changes
 - Solution: Bypass validation temporarily in test context
 
 ### 3. Test Architecture Patterns
+
 - **Don't modify production code for tests** (bad practice)
 - **Do expose necessary APIs** (like geolocationService getter)
 - **Use test helpers** to work within production constraints
 - **Document workarounds** so future developers understand
 
 ### 4. E2E Test Timing Considerations
+
 - Geocoding API calls take 1-2 seconds (even mocked)
 - DOM updates are async (next tick)
 - Observer pattern notifications add delay
 - **Rule of thumb**: 2-4 second delays for geocoding workflows
 
 ### 5. Jest + Puppeteer Integration
+
 - Worker cleanup warnings are common and often harmless
 - Exit code 0 + passing tests = success (ignore cosmetic warnings)
 - Run E2E tests in isolation to verify no actual leaks
@@ -289,6 +313,7 @@ afterAll(async () => {
 ## 🔍 Testing Checklist
 
 ### E2E Test Validation
+
 - [x] Tests pass in isolation: `npm test -- __tests__/e2e/`
 - [x] Tests pass in full suite: `npm test`
 - [x] No resource leaks detected: `npm test -- --detectOpenHandles`
@@ -297,6 +322,7 @@ afterAll(async () => {
 - [x] API mocking works correctly
 
 ### Code Quality
+
 - [x] No production code modified unnecessarily
 - [x] Only added public getter (minimal change)
 - [x] Test helpers follow consistent patterns
@@ -304,6 +330,7 @@ afterAll(async () => {
 - [x] Documentation is comprehensive
 
 ### Regression Prevention
+
 - [x] All existing tests still pass
 - [x] No new ESLint warnings
 - [x] No console errors in test output
@@ -314,7 +341,9 @@ afterAll(async () => {
 ## 🚀 Future Improvements (Optional)
 
 ### 1. Test Mode Flag
+
 **Proposal**: Add `testMode` flag to PositionManager
+
 ```javascript
 // PositionManager.js
 if (this.testMode) {
@@ -327,6 +356,7 @@ if (this.testMode) {
 ```
 
 **Benefits**:
+
 - Cleaner test code (no validation bypassing)
 - Explicit test vs production paths
 - Easier to maintain
@@ -334,7 +364,9 @@ if (this.testMode) {
 ---
 
 ### 2. Reusable E2E Helpers
+
 **Proposal**: Extract common E2E patterns to shared module
+
 ```javascript
 // __tests__/e2e/helpers/geolocation.js
 export async function forcePositionUpdate(page, latitude, longitude) {
@@ -347,6 +379,7 @@ export async function waitForGeocoding(page, timeout = 4000) {
 ```
 
 **Benefits**:
+
 - DRY (Don't Repeat Yourself)
 - Consistent E2E test patterns
 - Easier to update if implementation changes
@@ -354,6 +387,7 @@ export async function waitForGeocoding(page, timeout = 4000) {
 ---
 
 ### 3. E2E Test Performance
+
 **Current**: E2E tests take 29s + 10s = 39s combined  
 **Opportunity**: Parallelize with separate workers
 
@@ -381,6 +415,7 @@ export default {
 ## ✅ Sign-Off
 
 **All objectives completed successfully**:
+
 - ✅ E2E tests fixed (2 test suites, 7 tests)
 - ✅ Architecture improved (ServiceCoordinator getter)
 - ✅ Cleanup enhanced (worker warnings reduced)
@@ -388,6 +423,7 @@ export default {
 - ✅ Zero test failures (1,827 passing)
 
 **Test Suite Health**:
+
 - 80/84 test suites passing (95.2%)
 - 1,827/1,973 tests passing (92.6%)
 - 4 suites skipped (intentional)
@@ -396,6 +432,7 @@ export default {
 - Exit code: 0 ✅
 
 **Ready for**:
+
 - ✅ Production deployment
 - ✅ CI/CD integration
 - ✅ Code review
@@ -406,13 +443,16 @@ export default {
 ## 🔗 Related Files
 
 ### Source Code Changes
+
 - `src/coordination/ServiceCoordinator.js` (+11 lines)
 
 ### Test File Changes
+
 - `__tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js` (+50 lines)
 - `__tests__/e2e/municipio-bairro-display.e2e.test.js` (+35 lines)
 
 ### Documentation
+
 - `docs/reports/bugfixes/E2E_BAIRRO_UPDATE_FIX_2026-01-16.md`
 - `docs/reports/bugfixes/E2E_MUNICIPIO_DISPLAY_FIX_2026-01-16.md`
 - `docs/reports/bugfixes/WORKER_PROCESS_WARNING_2026-01-16.md`

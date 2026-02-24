@@ -17,6 +17,7 @@ Location tracking is the **primary feature** of Guia Turístico. It provides rea
 **Use Case**: Check where you are right now
 
 **How it works**:
+
 1. Click "**Obter Localização**" button
 2. App requests your GPS coordinates once
 3. Address lookup occurs
@@ -24,6 +25,7 @@ Location tracking is the **primary feature** of Guia Turístico. It provides rea
 5. Done - no further updates
 
 **Perfect for**:
+
 - Quick location checks
 - Looking up where you currently are
 - Minimal battery usage
@@ -34,6 +36,7 @@ Location tracking is the **primary feature** of Guia Turístico. It provides rea
 **Use Case**: Real-time tracking while moving
 
 **How it works**:
+
 1. Enable "**Ativar modo contínuo**" checkbox
 2. Click "**Obter Localização**" to start
 3. App monitors your position continuously
@@ -41,6 +44,7 @@ Location tracking is the **primary feature** of Guia Turístico. It provides rea
 5. Click "**Parar Rastreamento**" to stop
 
 **Perfect for**:
+
 - Walking tours
 - Navigation assistance
 - Exploring new areas
@@ -51,11 +55,13 @@ Location tracking is the **primary feature** of Guia Turístico. It provides rea
 Location updates occur when **either** threshold is reached:
 
 ### Time Threshold: 30 seconds
+
 - Updates every 30 seconds if you're stationary
 - Ensures regular updates even without movement
 - Prevents missed updates due to GPS drift
 
 ### Distance Threshold: 20 meters
+
 - Updates immediately when you move 20m
 - Responsive to actual movement
 - Balances accuracy with API call efficiency

@@ -14,16 +14,19 @@ The speech synthesis system now properly announces the first address fetch as a 
 ## Business Justification
 
 ### User Experience
+
 - **Cold Start → Warm State**: First address represents fundamental application state change
 - **Location Awareness**: User needs immediate feedback when location is established
 - **Semantic Correctness**: Change from "no data" to "data" is as important as data-to-data changes
 
 ### Accessibility
+
 - **Screen Reader Users**: Benefit from immediate location awareness announcement
 - **WCAG 2.1 Compliance**: Provides status updates for dynamic content changes
 - **Priority Assignment**: High priority (2.5) ensures announcement isn't suppressed by other events
 
 ### Technical Correctness
+
 - **Change-Aware System**: Should recognize state transitions, not just data transitions
 - **Observer Pattern Completion**: Completes the semantic change detection architecture
 - **Consistent Behavior**: Aligns with existing change detection (municipio, bairro, logradouro)
@@ -33,36 +36,41 @@ The speech synthesis system now properly announces the first address fetch as a 
 ## Implementation Details
 
 ### File Modified
+
 `src/html/HtmlSpeechSynthesisDisplayer.js`
 
 ### Changes Made
 
 #### 1. State Tracking Flag (Lines 201-203)
+
 ```javascript
 // Configure first address announcement flag in speech manager
 // This allows mutation even after this displayer is frozen
 this.speechManager._firstAddressAnnouncedByDisplayer = false;
 ```
 
-**Rationale**: 
+**Rationale**:
+
 - HtmlSpeechSynthesisDisplayer is frozen for immutability (line 285)
 - Flag stored in SpeechSynthesisManager (not frozen) to allow state mutation
 - Follows existing architecture patterns
 
 #### 2. First Address Detection Logic (Lines 744-752)
+
 ```javascript
 // SPECIAL CASE: First address fetch is a change from "no address" to "some address"
 if (posEvent === ADDRESS_FETCHED_EVENT && !this.speechManager._firstAddressAnnouncedByDisplayer) {
-	if (typeof console !== 'undefined' && console.log) {
-		log("+++ (305) (HtmlSpeechSynthesisDisplayer) First address - announcing");
-	}
-	textToBeSpoken = this.buildTextToSpeech(enderecoPadronizadoOrEvent);
-	priority = 2.5; // High priority for first address (between bairro and municipio)
-	this.speechManager._firstAddressAnnouncedByDisplayer = true;
+ if (typeof console !== 'undefined' && console.log) {
+  log("+++ (305) (HtmlSpeechSynthesisDisplayer) First address - announcing");
+ }
+ textToBeSpoken = this.buildTextToSpeech(enderecoPadronizadoOrEvent);
+ priority = 2.5; // High priority for first address (between bairro and municipio)
+ this.speechManager._firstAddressAnnouncedByDisplayer = true;
 }
 ```
 
 **Behavior**:
+
 - Detects "Address fetched" event on first occurrence
 - Builds full address text using `buildTextToSpeech()`
 - Assigns priority 2.5 (between bairro [2] and municipio [3])
@@ -74,6 +82,7 @@ if (posEvent === ADDRESS_FETCHED_EVENT && !this.speechManager._firstAddressAnnou
 ## Priority System
 
 ### Speech Priority Hierarchy
+
 1. **Logradouro Change** - Priority 1 (street-level movement)
 2. **Bairro Change** - Priority 2 (neighborhood change)
 3. **First Address** - Priority 2.5 (NEW - initial location establishment) ⭐
@@ -81,6 +90,7 @@ if (posEvent === ADDRESS_FETCHED_EVENT && !this.speechManager._firstAddressAnnou
 5. **Periodic Update** - Priority 0 (background refresh every 50s)
 
 ### Why Priority 2.5?
+
 - More important than street changes (1) and neighborhood changes (2)
 - Less important than city changes (3)
 - Establishes baseline location context
@@ -91,43 +101,45 @@ if (posEvent === ADDRESS_FETCHED_EVENT && !this.speechManager._firstAddressAnnou
 ## Testing
 
 ### Test Added
+
 **File**: `__tests__/unit/HtmlSpeechSynthesisDisplayer.test.js`
 
 **Test Case**: `should announce first address fetch (change from no address to some address)`
 
 ```javascript
 test('should announce first address fetch (change from no address to some address)', () => {
-	const mockAddress = {
-		logradouro: 'Rua Elói Cerqueira',
-		numero: '73',
-		bairro: 'Belém',
-		municipio: 'São Paulo',
-		uf: 'SP'
-	};
+ const mockAddress = {
+  logradouro: 'Rua Elói Cerqueira',
+  numero: '73',
+  bairro: 'Belém',
+  municipio: 'São Paulo',
+  uf: 'SP'
+ };
 
-	const standardizedAddress = new MockBrazilianStandardAddress(mockAddress);
-	const speakSpy = jest.spyOn(displayer.speechManager, 'speak');
+ const standardizedAddress = new MockBrazilianStandardAddress(mockAddress);
+ const speakSpy = jest.spyOn(displayer.speechManager, 'speak');
 
-	// First address fetch should trigger speech
-	displayer.update(mockAddress, standardizedAddress, 'Address fetched', null, null);
+ // First address fetch should trigger speech
+ displayer.update(mockAddress, standardizedAddress, 'Address fetched', null, null);
 
-	expect(speakSpy).toHaveBeenCalledTimes(1);
-	expect(speakSpy).toHaveBeenCalledWith(
-		expect.stringContaining('Você está'),
-		2.5 // High priority for first address
-	);
+ expect(speakSpy).toHaveBeenCalledTimes(1);
+ expect(speakSpy).toHaveBeenCalledWith(
+  expect.stringContaining('Você está'),
+  2.5 // High priority for first address
+ );
 
-	// Second address fetch should NOT trigger speech (no longer first)
-	speakSpy.mockClear();
-	displayer.update(mockAddress, standardizedAddress, 'Address fetched', null, null);
+ // Second address fetch should NOT trigger speech (no longer first)
+ speakSpy.mockClear();
+ displayer.update(mockAddress, standardizedAddress, 'Address fetched', null, null);
 
-	expect(speakSpy).not.toHaveBeenCalled();
-	
-	speakSpy.mockRestore();
+ expect(speakSpy).not.toHaveBeenCalled();
+ 
+ speakSpy.mockRestore();
 });
 ```
 
 ### Test Results
+
 ```
 ✅ HtmlSpeechSynthesisDisplayer.test.js
    - 60/60 tests passing
@@ -145,6 +157,7 @@ test('should announce first address fetch (change from no address to some addres
 ## User Experience Flow
 
 ### Before Enhancement
+
 ```
 [App Start]
     ↓
@@ -158,6 +171,7 @@ test('should announce first address fetch (change from no address to some addres
 ```
 
 ### After Enhancement
+
 ```
 [App Start]
     ↓
@@ -175,18 +189,21 @@ test('should announce first address fetch (change from no address to some addres
 ## Real-World Scenarios
 
 ### Scenario 1: Walking Tour
+
 **User**: Tourist exploring Brazilian city  
 **Need**: Immediate location awareness after granting permission  
 **Before**: Silent until street changes  
 **After**: Announces starting location immediately ✅
 
 ### Scenario 2: Accessibility User
+
 **User**: Blind user with screen reader  
 **Need**: Audio feedback for location establishment  
 **Before**: Must manually check screen for address  
 **After**: Automatic audio announcement on location lock ✅
 
 ### Scenario 3: Public Transportation
+
 **User**: Commuter checking location at bus stop  
 **Need**: Quick confirmation of current location  
 **Before**: Must read screen visually  
@@ -197,17 +214,21 @@ test('should announce first address fetch (change from no address to some addres
 ## Implementation Notes
 
 ### Immutability Consideration
+
 **Challenge**: HtmlSpeechSynthesisDisplayer is frozen (Object.freeze) for immutability
 
 **Solution**: Store flag in `speechManager` (not frozen) instead of `this`
 
 **Alternative Approaches Rejected**:
+
 - WeakMap for external state ❌ (overcomplicated)
 - Unfreezing the object ❌ (violates architecture)
 - Static class variable ❌ (breaks multi-instance support)
 
 ### Event Filtering
+
 The feature only triggers on:
+
 - ✅ Event type is "Address fetched"
 - ✅ Flag `_firstAddressAnnouncedByDisplayer` is false
 - ❌ Ignores "Geocoding error" events
@@ -219,12 +240,14 @@ The feature only triggers on:
 ## Performance Impact
 
 ### Metrics
+
 - **Additional Code**: ~9 lines (negligible)
 - **Memory**: 1 boolean flag per HtmlSpeechSynthesisDisplayer instance
 - **CPU**: One-time check on every "Address fetched" event
 - **Network**: No additional API calls
 
 ### Optimization
+
 - Flag check is O(1) operation
 - No performance degradation measured
 - Zero impact on existing speech synthesis performance
@@ -234,12 +257,14 @@ The feature only triggers on:
 ## Backward Compatibility
 
 ### API Changes
+
 - ✅ No breaking changes to public API
 - ✅ Existing tests continue passing (59/59 before, 60/60 after)
 - ✅ Observer pattern contract unchanged
 - ✅ Event types unchanged
 
 ### Deployment
+
 - ✅ Safe to deploy without migration
 - ✅ No configuration changes required
 - ✅ Works with existing geocoding flow
@@ -249,12 +274,14 @@ The feature only triggers on:
 ## Future Enhancements
 
 ### Potential Improvements
+
 1. **Configurable Priority**: Allow users to customize first address priority
 2. **Custom Messages**: Allow customization of first address announcement text
 3. **Language Support**: Extend to other languages (currently pt-BR only)
 4. **Delayed Announcement**: Option to delay first announcement by N seconds
 
 ### Related Features
+
 - Integration with navigation mode (when implemented)
 - Connection with tutorial/onboarding flow
 - Coordination with other first-run experiences
@@ -264,6 +291,7 @@ The feature only triggers on:
 ## Conclusion
 
 The first address speech announcement feature:
+
 - ✅ Improves user experience with immediate location feedback
 - ✅ Enhances accessibility for screen reader users
 - ✅ Maintains code quality and architecture principles

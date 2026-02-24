@@ -21,18 +21,23 @@ CORS error / Failed to fetch
 The application has **automatic CORS fallback** enabled by default:
 
 ### Step 1: Direct Connection (First Attempt)
+
 ```
 Request → https://nominatim.openstreetmap.org/reverse
 ```
 
 ### Step 2: CORS Proxy Fallback (Automatic Retry)
+
 If Step 1 fails with a network/CORS error:
+
 ```
 Request → https://api.allorigins.win/raw?url=https%3A%2F%2Fnominatim.openstreetmap.org%2Freverse...
 ```
 
 ### Step 3: Error Notification
+
 If both attempts fail, the user sees:
+
 ```
 "Não foi possível acessar o serviço de geocodificação. 
 Verifique sua conexão ou consulte CORS_TROUBLESHOOTING.md"
@@ -72,12 +77,14 @@ export const CORS_PROXY = 'https://your-cors-proxy.com/?url=';
 Look for these messages in the browser console:
 
 **Success Pattern**:
+
 ```
 (ReverseGeocoder) Retrying with CORS proxy fallback...
 (ReverseGeocoder) CORS proxy fallback succeeded
 ```
 
 **Failure Pattern**:
+
 ```
 [ReverseGeocoder.fetchAddress] Failed: TypeError: Failed to fetch
 (ReverseGeocoder) CORS proxy fallback also failed: TypeError: Failed to fetch
@@ -107,6 +114,7 @@ curl -I "https://nominatim.openstreetmap.org/reverse?format=json&lat=-23.5505&lo
 ### 2. Check Firewall Rules
 
 If deployed behind a corporate firewall:
+
 - Whitelist `nominatim.openstreetmap.org`
 - Whitelist `api.allorigins.win` (fallback proxy)
 - Allow outbound HTTPS on port 443
@@ -114,6 +122,7 @@ If deployed behind a corporate firewall:
 ### 3. Rate Limiting
 
 Nominatim has usage limits:
+
 - **1 request per second** maximum
 - **User-Agent header** required
 
@@ -124,16 +133,19 @@ The application handles this automatically via `ibira.js` library rate limiting.
 If Nominatim is consistently unavailable, consider:
 
 **Option A: Self-hosted Nominatim**
+
 - Install Nominatim on your server
 - Update `openstreetmapBaseUrl` in `WebGeocodingManager`
 - No CORS issues (same-origin requests)
 
 **Option B: Commercial geocoding APIs**
+
 - Google Maps Geocoding API
 - Mapbox Geocoding API
 - HERE Geocoding API
 
 **Option C: Reverse Proxy**
+
 - Set up your own reverse proxy
 - Forward requests to Nominatim
 - Add CORS headers on your server
@@ -176,6 +188,7 @@ location /api/nominatim/ {
 ```
 
 Then update your application:
+
 ```javascript
 // src/config/defaults.js or pass via constructor
 const config = {
@@ -217,10 +230,12 @@ const config = {
 ## Performance Impact
 
 **Direct Connection**:
+
 - ~200-500ms average response time
 - No additional latency
 
 **CORS Proxy Fallback**:
+
 - ~500-1500ms average response time
 - Additional hop through proxy server
 - Still provides functional geocoding

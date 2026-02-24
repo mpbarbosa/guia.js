@@ -43,10 +43,12 @@ The logging system supports five levels in ascending order of verbosity:
 The logger automatically detects the environment:
 
 **Production Environment** (log level = 'error'):
+
 - `NODE_ENV === 'production'` (Node.js)
 - `hostname !== 'localhost'` and not `127.0.0.1` (Browser)
 
 **Development Environment** (log level = 'log'):
+
 - All other cases
 
 ### Manual Configuration
@@ -99,7 +101,9 @@ setLogLevel({ enabled: true });
 ### When to Use Each Level
 
 #### `error()` - Critical Issues
+
 Use for errors that require attention even in production:
+
 - API failures that affect core functionality
 - Invalid data that breaks application flow
 - Critical security issues
@@ -113,7 +117,9 @@ error('Failed to fetch location', {
 ```
 
 #### `warn()` - Non-Critical Issues
+
 Use for issues that should be visible in production but don't break functionality:
+
 - Deprecated API usage
 - Low accuracy readings
 - Fallback behavior triggered
@@ -124,7 +130,9 @@ warn('Using fallback voice, preferred voice not available');
 ```
 
 #### `log()` - General Information
+
 Use for development information (hidden in production by default):
+
 - State changes
 - API responses
 - Component initialization
@@ -137,7 +145,9 @@ log('Position manager initialized', {
 ```
 
 #### `debug()` - Verbose Debugging
+
 Use for detailed debugging (only when explicitly enabled):
+
 - Observer notifications
 - Internal state changes
 - Performance measurements
@@ -224,6 +234,7 @@ console.log(config);
 ### DO ✅
 
 1. **Use appropriate log levels**
+
    ```javascript
    error('Critical failure');  // For critical issues
    warn('Deprecated usage');   // For warnings
@@ -232,12 +243,14 @@ console.log(config);
    ```
 
 2. **Include context in messages**
+
    ```javascript
    log('Position updated', { lat, lon, accuracy });
    error('API call failed', { url, status, error });
    ```
 
 3. **Use the centralized logger**
+
    ```javascript
    import { log, warn, error } from './utils/logger.js';
    ```
@@ -245,6 +258,7 @@ console.log(config);
 ### DON'T ❌
 
 1. **Don't use direct console calls**
+
    ```javascript
    // ❌ BAD
    console.log('message');
@@ -253,12 +267,14 @@ console.log(config);
    ```
 
 2. **Don't log sensitive data**
+
    ```javascript
    // ❌ BAD
    log('User data', { password, creditCard });
    ```
 
 3. **Don't log in tight loops without guards**
+
    ```javascript
    // ❌ BAD
    array.forEach(item => {
@@ -294,6 +310,7 @@ afterAll(() => {
 ## Implementation Status
 
 ### ✅ Completed
+
 - Enhanced logger with environment detection
 - Log level configuration (5 levels)
 - Runtime configuration API
@@ -302,10 +319,12 @@ afterAll(() => {
 - Automatic production detection
 
 ### ⚠️ In Progress
+
 - Migration of direct console calls (29 files, 158 calls)
 - Integration with all modules
 
 ### 📋 Remaining Work
+
 - Add ESLint rule to prevent direct console usage
 - Create migration script for automated conversion
 - Add logging configuration to initialization flow
@@ -315,18 +334,21 @@ afterAll(() => {
 ### Logs Not Appearing
 
 **Check log level:**
+
 ```javascript
 import { getLogLevel } from './utils/logger.js';
 console.log(getLogLevel());
 ```
 
 **Verify environment:**
+
 ```bash
 echo $NODE_ENV
 echo $GUIA_LOG_LEVEL
 ```
 
 **Reset configuration:**
+
 ```javascript
 // Browser
 localStorage.removeItem('GUIA_LOG_LEVEL');
@@ -338,11 +360,13 @@ unset GUIA_LOG_LEVEL
 ### Too Much Logging
 
 **Set to error-only:**
+
 ```bash
 GUIA_LOG_LEVEL=error npm start
 ```
 
 **Or completely disable:**
+
 ```bash
 GUIA_LOG_LEVEL=none npm start
 ```

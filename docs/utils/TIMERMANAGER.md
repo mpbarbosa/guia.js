@@ -16,6 +16,7 @@
 ### Problem Solved
 
 Without centralized timer management:
+
 - Timers can be forgotten and continue running indefinitely
 - Memory leaks occur from uncleaned timers
 - Hard to track all active timers in an application
@@ -24,6 +25,7 @@ Without centralized timer management:
 ### Solution Provided
 
 `TimerManager` provides:
+
 - **Automatic tracking** of all created timers
 - **Named timers** for easy identification
 - **Bulk cleanup** via `clearAll()`
@@ -37,6 +39,7 @@ Without centralized timer management:
 Creates a tracked interval timer.
 
 **Parameters:**
+
 - `callback` (Function) - Function to execute repeatedly
 - `delay` (number) - Delay between executions in milliseconds
 - `id` (string) - Unique identifier for the timer
@@ -44,6 +47,7 @@ Creates a tracked interval timer.
 **Returns:** `string` - Timer ID
 
 **Example:**
+
 ```javascript
 import timerManager from './utils/TimerManager.js';
 
@@ -59,6 +63,7 @@ timerManager.setInterval(
 Creates a tracked timeout timer.
 
 **Parameters:**
+
 - `callback` (Function) - Function to execute once
 - `delay` (number) - Delay before execution in milliseconds
 - `id` (string) - Unique identifier for the timer
@@ -70,6 +75,7 @@ Creates a tracked timeout timer.
 Clears a specific timer by ID.
 
 **Parameters:**
+
 - `id` (string) - Timer identifier
 
 **Returns:** `boolean` - `true` if cleared
@@ -91,6 +97,7 @@ Gets the count of active timers.
 Checks if a timer exists.
 
 **Parameters:**
+
 - `id` (string) - Timer identifier
 
 **Returns:** `boolean`

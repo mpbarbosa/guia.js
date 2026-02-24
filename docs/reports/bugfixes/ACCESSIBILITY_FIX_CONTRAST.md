@@ -45,6 +45,7 @@ color: #ffffff;
 ```
 
 **Impact:**
+
 - 20-30% of users with low vision cannot read onboarding text
 - Violates legal accessibility requirements (Section 508, ADA)
 - Worst at gradient start (#667eea: only 3.66:1 contrast)
@@ -54,6 +55,7 @@ color: #ffffff;
 #### Secondary Concerns
 
 While other gradients met AA standards, they lacked:
+
 1. **Text shadow enhancement** for extra readability insurance
 2. **Solid background fallbacks** for older browsers
 3. **Documented contrast ratios** in CSS for maintenance
@@ -173,6 +175,7 @@ Document contrast ratios directly in CSS:
 | End (100%) | #764ba2 | 6.37:1 ✓ | #6a4291 | 7.50:1 ✓ | +18% |
 
 **Visual Impact:**
+
 - Slightly darker gradient (maintains purple-blue hue)
 - No significant change to brand identity
 - Improved readability for all users
@@ -182,6 +185,7 @@ Document contrast ratios directly in CSS:
 **Location:** `src/highlight-cards.css` (lines 12-24)
 
 **Status:** Already AAA-compliant (13.2:1), but enhanced with:
+
 - Solid background fallback (#dce1fb)
 - Text shadow on all text elements
 - Documented contrast ratios
@@ -236,6 +240,7 @@ Document contrast ratios directly in CSS:
 ```
 
 **Effective Contrast:**
+
 - Base: 6.85:1 to 6.87:1 (AA compliant)
 - With shadow: ~8:1+ (AAA level)
 
@@ -244,6 +249,7 @@ Document contrast ratios directly in CSS:
 **Location:** `src/ibge-data-styles.css` (lines 39-62)
 
 **Status:** Already AAA-compliant (7.22:1), but enhanced with:
+
 - Solid background fallback (#eee7f9)
 - Text shadow on classification label
 - Documented contrast ratios
@@ -302,12 +308,14 @@ Document contrast ratios directly in CSS:
 ### 1. `src/onboarding.css` (361 lines)
 
 **Changes:** 4 edits
+
 - Lines 7-27: Onboarding card gradient + fallback
 - Lines 44-50: Enhanced title text shadow
 - Lines 52-60: Added description text shadow
 - Lines 201-206: Dark mode gradient fix
 
 **LOC Impact:**
+
 - Before: 361 lines
 - After: 361 lines (0 change)
 - Comment density: +12 lines of accessibility documentation
@@ -315,22 +323,26 @@ Document contrast ratios directly in CSS:
 ### 2. `src/highlight-cards.css` (170+ lines)
 
 **Changes:** 4 edits
+
 - Lines 1-24: Card gradient documentation + fallback
 - Lines 79-87: Label text shadow
 - Lines 89-99: Value text shadow
 - Lines 101-116: Updated metropolitan region comments
 
 **LOC Impact:**
+
 - Before: 170 lines
 - After: 180 lines (+10 lines documentation)
 
 ### 3. `src/ibge-data-styles.css` (380+ lines)
 
 **Changes:** 2 edits
+
 - Lines 39-56: Classification badge gradient + fallback
 - Lines 56-62: Label text shadow
 
 **LOC Impact:**
+
 - Before: 380 lines
 - After: 388 lines (+8 lines documentation)
 
@@ -369,11 +381,13 @@ python3 /tmp/contrast_calculator.py
 ### Accessibility Audit Tools
 
 **WebAIM Contrast Checker:**
+
 - Onboarding: ✅ Pass AAA
 - Highlight cards: ✅ Pass AAA
 - IBGE data: ✅ Pass AAA
 
 **Browser DevTools Audits:**
+
 - Chrome Lighthouse: 100/100 Accessibility (up from 92)
 - Firefox Accessibility Inspector: No contrast violations
 
@@ -422,11 +436,13 @@ python3 /tmp/contrast_calculator.py
 ### For Users with Low Vision ✅
 
 **Before:**
+
 - Onboarding text barely readable at 3.66:1 contrast
 - Struggled to read purple/blue gradient start
 - Needed screen magnification or high contrast mode
 
 **After:**
+
 - All text meets AAA standard (7:1+)
 - Clear readability in all lighting conditions
 - No assistive technology required for reading
@@ -436,10 +452,12 @@ python3 /tmp/contrast_calculator.py
 ### For Users with Color Blindness ✅
 
 **Before:**
+
 - Insufficient contrast compounded by color perception differences
 - Protanopia/deuteranopia users struggled most
 
 **After:**
+
 - AAA contrast ensures readability regardless of color perception
 - Text shadows provide luminance separation
 
@@ -448,10 +466,12 @@ python3 /tmp/contrast_calculator.py
 ### For Older Adults ✅
 
 **Before:**
+
 - Age-related vision decline made gradient text difficult
 - Contrast sensitivity decreases with age
 
 **After:**
+
 - Higher contrast accommodates presbyopia
 - Text shadows enhance edge detection
 
@@ -460,10 +480,12 @@ python3 /tmp/contrast_calculator.py
 ### For All Users ✅
 
 **Before:**
+
 - Difficult to read in bright sunlight (mobile)
 - Glare reduced effective contrast
 
 **After:**
+
 - AAA contrast ensures outdoor readability
 - Mobile usage improved significantly
 
@@ -533,15 +555,18 @@ All gradient backgrounds must:
 ### Rendering Performance
 
 **Text Shadow Cost:**
+
 - GPU-accelerated on modern browsers
 - Negligible FPS impact (<1%)
 - No layout thrashing
 
 **Gradient Fallback Cost:**
+
 - Zero (browser ignores unsupported properties)
 - No polyfill required
 
 **Memory Impact:**
+
 - +18 lines of CSS documentation
 - +4 solid background declarations
 - Total: <1KB additional CSS
@@ -549,6 +574,7 @@ All gradient backgrounds must:
 ### User Experience
 
 **Perceived Performance:**
+
 - No change to page load time
 - No visual flicker or FOUC
 - Smooth gradient transitions maintained
@@ -649,4 +675,3 @@ Successfully resolved critical accessibility violation (onboarding gradient) and
 **Last Updated:** 2026-02-15  
 **Author:** GitHub Copilot CLI  
 **Reviewers:** Pending
-

@@ -26,6 +26,7 @@ The **SpeechSynthesisManager** is the main facade for managing Web Speech API in
 **Manager/Controller with Composition** (v0.9.0-alpha refactored)
 
 The class uses composition to delegate responsibilities:
+
 - **VoiceLoader**: Asynchronous voice loading with exponential backoff
 - **VoiceSelector**: Brazilian Portuguese voice prioritization
 - **SpeechConfiguration**: Rate/pitch parameter validation
@@ -625,12 +626,14 @@ See `__tests__/unit/speech/SpeechSynthesisManager.test.js` for comprehensive tes
 ## Changelog
 
 ### v0.9.0-alpha
+
 - ✅ Refactored to composition pattern
 - ✅ Extracted VoiceLoader, VoiceSelector, SpeechConfiguration
 - ✅ Added exponential backoff voice loading
 - ✅ Integrated TimerManager to prevent memory leaks
 
 ### v0.9.0-alpha
+
 - Initial stable release
 - Brazilian Portuguese voice prioritization
 - Priority-based speech queue

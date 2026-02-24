@@ -33,6 +33,7 @@ npm run validate
 ### Current Test Status
 
 **As of 2026-01-09**:
+
 - ✅ **1,282 passing tests** (1,419 total tests)
 - ✅ **63 passing test suites** (67 total suites)
 - ⚠️ **137 skipped tests** in 4 suites (integration/edge cases)
@@ -59,67 +60,67 @@ npm run validate
 
 ### Test Development
 
-3. **[TDD Guide](./.github/TDD_GUIDE.md)**
+1. **[TDD Guide](./.github/TDD_GUIDE.md)**
    - Test-Driven Development methodology
    - Red-Green-Refactor cycle
    - TDD best practices
    - Examples from the codebase
 
-4. **[Jest & Module Systems Guide](./.github/JEST_COMMONJS_ES6_GUIDE.md)** ⭐ **Essential Reading**
+2. **[Jest & Module Systems Guide](./.github/JEST_COMMONJS_ES6_GUIDE.md)** ⭐ **Essential Reading**
    - ES6 modules vs CommonJS in Jest
    - Node.js experimental VM modules
    - Configuration best practices
    - Troubleshooting module issues
    - **Must read for all contributors**
 
-5. **[Testing Module Systems](./.github/TESTING_MODULE_SYSTEMS.md)**
+3. **[Testing Module Systems](./.github/TESTING_MODULE_SYSTEMS.md)**
    - Module system compatibility
    - Import/export patterns
    - Jest configuration for ES6 modules
 
 ### Specialized Testing
 
-6. **[HTML Generation Testing](./HTML_GENERATION.md)**
+1. **[HTML Generation Testing](./HTML_GENERATION.md)**
    - Testing DOM manipulation without browser
    - JSDOM integration strategies
    - HTML element testing patterns
    - 1,224+ test examples
 
-7. **[E2E Testing Guide](./docs/testing/E2E_TESTING_GUIDE.md)**
+2. **[E2E Testing Guide](./docs/testing/E2E_TESTING_GUIDE.md)**
    - End-to-end testing strategies
    - Browser automation setup
    - Integration test patterns
 
-8. **[Performance Testing Guide](./docs/testing/PERFORMANCE_TESTING_GUIDE.md)**
+3. **[Performance Testing Guide](./docs/testing/PERFORMANCE_TESTING_GUIDE.md)**
    - Performance benchmarking
    - Load testing strategies
    - Optimization verification
 
-9. **[Visual Hierarchy Tests](./docs/testing/VISUAL_HIERARCHY_TESTS.md)**
+4. **[Visual Hierarchy Tests](./docs/testing/VISUAL_HIERARCHY_TESTS.md)**
    - UI component testing
    - Accessibility testing
    - Visual regression testing
 
 ### API & Integration Testing
 
-10. **[Nominatim JSON Tests](./docs/api-integration/NOMINATIM_JSON_TESTS.md)**
+1. **[Nominatim JSON Tests](./docs/api-integration/NOMINATIM_JSON_TESTS.md)**
     - OpenStreetMap Nominatim API testing
     - Mock API responses
     - Integration test patterns
 
-11. **[GitHub Integration Test Guide](./.github/GITHUB_INTEGRATION_TEST_GUIDE.md)**
+2. **[GitHub Integration Test Guide](./.github/GITHUB_INTEGRATION_TEST_GUIDE.md)**
     - CI/CD testing integration
     - GitHub Actions workflows
     - Automated testing pipelines
 
 ### Test Organization
 
-12. **[Test Directory Consolidation Plan](./docs/testing/TEST_DIRECTORY_CONSOLIDATION_PLAN.md)**
+1. **[Test Directory Consolidation Plan](./docs/testing/TEST_DIRECTORY_CONSOLIDATION_PLAN.md)**
     - Test file organization strategy
     - Directory structure best practices
     - Migration guides
 
-13. **[HTML Test Files Consolidation](./docs/testing/HTML_TEST_FILES_CONSOLIDATION_PLAN.md)**
+2. **[HTML Test Files Consolidation](./docs/testing/HTML_TEST_FILES_CONSOLIDATION_PLAN.md)**
     - Organizing HTML test fixtures
     - Test file management
     - Cleanup strategies
@@ -187,6 +188,7 @@ guia_turistico/
 The Guia Turístico project uses **two complementary testing systems** for different testing needs:
 
 #### 1. **Jest (JavaScript)** - Primary Test Framework
+
 - **Location**: `__tests__/` directory
 - **Purpose**: Unit and integration tests for JavaScript code
 - **Coverage**: 1,251+ passing tests across 67 suites
@@ -201,6 +203,7 @@ The Guia Turístico project uses **two complementary testing systems** for diffe
 **When to use**: Testing JavaScript logic, functions, classes, and data flow
 
 #### 2. **Selenium + pytest (Python)** - Browser Integration Tests
+
 - **Location**: `tests/integration/` directory
 - **Purpose**: Browser-based UI and visual testing
 - **Coverage**: 54+ test methods across 8 test files
@@ -229,6 +232,7 @@ The Guia Turístico project uses **two complementary testing systems** for diffe
 ### Python Testing Infrastructure
 
 #### Setup Requirements
+
 ```bash
 # Create Python virtual environment (optional)
 cd tests/integration
@@ -240,11 +244,13 @@ pip install selenium pytest
 ```
 
 #### Browser Driver Requirements
+
 - **Firefox**: geckodriver (recommended)
 - **Chrome**: chromedriver (fallback)
 - Selenium tests automatically try Firefox first, then Chrome
 
 #### Running Selenium Tests
+
 ```bash
 # Run all integration tests (requires browser drivers)
 cd tests/integration
@@ -297,12 +303,14 @@ HEADLESS=true pytest -v
 ### Why This Architecture?
 
 **✅ Justified Complexity**:
+
 - **Different testing needs**: Jest tests JavaScript logic; Selenium tests browser behavior
 - **Complementary coverage**: Jest covers code paths; Selenium validates user experience
 - **Development efficiency**: Fast Jest tests for TDD; Selenium tests for final validation
 - **CI/CD strategy**: Jest runs on every commit; Selenium runs manually/periodically
 
 **🎯 Best Practice**:
+
 - Run `npm test` frequently during development (fast feedback)
 - Run Selenium tests before releases (comprehensive validation)
 - Use Jest for debugging logic issues
@@ -324,17 +332,20 @@ HEADLESS=true pytest -v
 ### Test Development Workflow
 
 1. **Start with Jest** (TDD):
+
    ```bash
    npm run test:watch  # Continuous testing
    ```
 
 2. **Validate with Selenium** (before commit):
+
    ```bash
    cd tests/integration
    pytest -v
    ```
 
 3. **Pre-commit validation** (automated):
+
    ```bash
    npm run test:all  # Jest tests only
    ```
@@ -342,6 +353,7 @@ HEADLESS=true pytest -v
 ### CI/CD Integration
 
 **Current State**:
+
 - ✅ Jest tests run automatically in GitHub Actions
 - ⚠️ Selenium tests are **manual only** (no CI/CD integration yet)
 - 🔄 Python web server used for basic connectivity checks
@@ -412,24 +424,29 @@ npm run test:coverage
 ## 🎓 Testing Best Practices
 
 ### 1. Write Tests Before Code (TDD)
+
 See [TDD_GUIDE.md](./.github/TDD_GUIDE.md) for methodology.
 
 ### 2. Follow Immutability Principles
+
 - Use spread operator instead of `.push()`, `.splice()`
 - Use `.filter()`, `.map()` instead of mutating arrays
 - See [CONTRIBUTING.md](./.github/CONTRIBUTING.md) for immutability guidelines
 
 ### 3. Test Organization
+
 - One test file per source file
 - Group related tests with `describe()` blocks
 - Use descriptive test names with `it()` or `test()`
 
 ### 4. Mock External Dependencies
+
 - Mock API calls
 - Mock DOM when not needed
 - Mock timers and dates for consistency
 
 ### 5. Coverage Goals
+
 - Aim for 70%+ coverage on new code
 - 100% coverage on critical paths
 - Don't sacrifice test quality for coverage percentage
@@ -441,29 +458,37 @@ See [TDD_GUIDE.md](./.github/TDD_GUIDE.md) for methodology.
 ### Common Issues
 
 #### Module Import Errors
+
 ```
 Error: Cannot use import statement outside a module
 ```
+
 **Solution**: Ensure `"type": "module"` in package.json and use `--experimental-vm-modules` flag.
 See [JEST_COMMONJS_ES6_GUIDE.md](./.github/JEST_COMMONJS_ES6_GUIDE.md).
 
 #### DOM Not Available
+
 ```
 ReferenceError: document is not defined
 ```
+
 **Solution**: Set `global.document = undefined` in tests that don't need DOM, or use JSDOM.
 See [HTML_GENERATION.md](./HTML_GENERATION.md).
 
 #### Test Timeouts
+
 ```
 Timeout - Async callback was not invoked within the 5000 ms timeout
 ```
+
 **Solution**: Increase timeout with `jest.setTimeout(10000)` or fix slow async operations.
 
 #### Coverage Not Collected
+
 ```
 Coverage information was not collected
 ```
+
 **Solution**: Ensure `collectCoverageFrom` in jest config includes correct paths.
 
 ---
@@ -491,11 +516,13 @@ See [GITHUB_INTEGRATION_TEST_GUIDE.md](./.github/GITHUB_INTEGRATION_TEST_GUIDE.m
 ## 📖 Additional Resources
 
 ### External Documentation
+
 - [Jest Documentation](https://jestjs.io/docs/getting-started)
 - [Node.js ES Modules](https://nodejs.org/api/esm.html)
 - [Testing Best Practices](https://github.com/goldbergyoni/javascript-testing-best-practices)
 
 ### Project-Specific Docs
+
 - [Contributing Guide](./.github/CONTRIBUTING.md) - Includes testing requirements
 - [Architecture Documentation](./docs/architecture/) - Understanding code structure for better tests
 - [API Integration Docs](./docs/api-integration/) - Testing external APIs
@@ -527,6 +554,7 @@ See [GITHUB_INTEGRATION_TEST_GUIDE.md](./.github/GITHUB_INTEGRATION_TEST_GUIDE.m
 ## 📝 Summary
 
 **Quick Reference**:
+
 - 📂 **67 test suites**, 1,399 total tests
 - ✅ **1,251 passing tests** (~90% pass rate)
 - 📊 **~70% coverage** on core library (guia.js)
@@ -534,6 +562,7 @@ See [GITHUB_INTEGRATION_TEST_GUIDE.md](./.github/GITHUB_INTEGRATION_TEST_GUIDE.m
 - 🎯 **Goal**: 70%+ overall coverage
 
 **Priority Actions**:
+
 1. Increase app.js test coverage (currently 0%)
 2. Fix 3 failing tests
 3. Review and address 145 skipped tests
@@ -560,12 +589,14 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 ### Skipped Test Suites Breakdown
 
 #### 1. SpeechSynthesisManager.test.js - Cross-Environment Compatibility
+
 **Status**: Partially skipped (only nested "Cross-Environment Compatibility" suite)  
 **Skipped Tests**: ~12 tests  
 **Reason**: Edge case testing for exotic environments without `setTimeout`/`clearInterval`  
 **Coverage**: Main test suite passes with 100+ tests validating core functionality
 
 **Why skipped**:
+
 - Tests hypothetical scenarios (environments without timer functions)
 - Main SpeechSynthesisManager functionality fully tested elsewhere
 - Low priority - modern JavaScript runtimes always have timers
@@ -575,17 +606,20 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 ---
 
 #### 2. WebGeocodingManager.test.js
+
 **Status**: Entirely skipped  
 **Skipped Tests**: ~35 tests  
 **Reason**: API mismatch - tests expect different constructor/API than current implementation
 
 **Why skipped**:
+
 ```javascript
 // TODO: This test suite expects a different WebGeocodingManager API 
 // that doesn't match the current implementation. Skipping until refactoring is completed.
 ```
 
 **Alternative Coverage**:
+
 - ✅ 4 E2E test files with WebGeocodingManager scenarios
 - ✅ 2 integration test files (DisplayerFactory, SpeechItem)
 - ✅ Real-world usage patterns validated
@@ -595,6 +629,7 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 ---
 
 #### 3. MunicipioChangeText.test.js ✅ **FIXED**
+
 **Status**: ~~Entirely skipped~~ → **NOW ENABLED**  
 **Tests Enabled**: 8 tests for Issue #218 (municipality change announcements)  
 **Previous Issue**: Top-level `await import()` caused Jest to hang  
@@ -605,17 +640,20 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 ---
 
 #### 4. SpeechSynthesisManager.integration.test.js
+
 **Status**: Entirely skipped  
 **Skipped Tests**: ~40 integration tests  
 **Reason**: Async timing issues cause indefinite test hangs
 
 **Why skipped**:
+
 ```javascript
 // TODO: This test suite has async timing issues that cause tests to hang indefinitely
 // The timer mocking was causing infinite recursion, and removing it causes tests to wait forever
 ```
 
 **Alternative Coverage**:
+
 - ✅ Unit tests cover SpeechSynthesisManager logic (900+ lines, passing)
 - ✅ Selenium tests validate real browser speech synthesis
 - ✅ E2E tests cover integration scenarios
@@ -625,17 +663,20 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 ---
 
 #### 5. HtmlSpeechSynthesisDisplayer.integration.test.js
+
 **Status**: Entirely skipped  
 **Skipped Tests**: ~28 integration tests  
 **Reason**: jsdom/parse5 ES module compatibility issues
 
 **Why skipped**:
+
 ```javascript
 // TODO: Temporarily skipped due to jsdom/parse5 ES module compatibility issues
 // Re-enable when jsdom is updated or parse5 compatibility is resolved
 ```
 
 **Alternative Coverage**:
+
 - ✅ Selenium/browser tests validate HTML displayer functionality
 - ✅ Unit tests cover display logic independently
 - ✅ E2E tests validate real DOM interactions
@@ -645,11 +686,13 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 ---
 
 #### 6. WebGeocodingManager.integration.test.js
+
 **Status**: Entirely skipped  
 **Skipped Tests**: ~15 integration tests  
 **Reason**: Tests written for future refactored architecture (modular dependencies)
 
 **Why skipped**:
+
 ```javascript
 // TODO: This test suite is for a future refactoring where dependencies are extracted 
 // to separate modules. Currently these modules don't exist yet (Logger, LocationDisplayer, 
@@ -657,6 +700,7 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 ```
 
 **Alternative Coverage**:
+
 - ✅ E2E tests cover WebGeocodingManager real-world usage
 - ✅ Current architecture has different test coverage
 
@@ -675,6 +719,7 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 | **Skipped Impact** | ✅ Only 9.6% of tests (edge cases/integration) |
 
 **Conclusion**: The 137 skipped tests represent:
+
 - Edge cases for exotic environments (12 tests)
 - Future architecture planning (50 tests)
 - Integration tests superseded by Selenium (68 tests)
@@ -700,7 +745,6 @@ npm test
 **Last Reviewed**: 2026-01-09  
 **Next Review**: When planning major refactoring or architecture changes
 
-
 ---
 
 ## 🔍 Untested Browser Files (0% Coverage)
@@ -708,6 +752,7 @@ npm test
 ### Overview
 
 Three files have **0% Jest coverage** (865 lines total):
+
 - `src/app.js` (536 lines) - SPA router and application entry point
 - `src/error-recovery.js` (126 lines) - Global error handling
 - `src/geolocation-banner.js` (203 lines) - Permission UI component
@@ -719,19 +764,24 @@ Three files have **0% Jest coverage** (865 lines total):
 ### Why This Is Acceptable
 
 #### Industry Standard Approach
+
 Browser UI code is commonly tested through manual QA and E2E tests rather than unit tests:
+
 - ✅ **Unit tests** cover pure logic (69.66% coverage on testable code)
 - ✅ **Manual testing** validates browser features and UX
 - ✅ **Selenium tests** cover integration scenarios (`tests/integration/`)
 
 #### Technical Barriers
+
 These files cannot be unit tested in Jest's default Node.js environment:
+
 - Uses `window`, `document`, `navigator` APIs extensively
 - Auto-initialize on `DOMContentLoaded` (IIFE patterns)
 - Inline event handlers and DOM manipulation
 - Requires real browser context
 
 #### Risk Assessment: Low
+
 1. **Simple code patterns** - straightforward routing, error display, banner UI
 2. **No complex business logic** - presentation layer only
 3. **Visual bugs caught immediately** - during browser testing
@@ -742,6 +792,7 @@ These files cannot be unit tested in Jest's default Node.js environment:
 ### Manual Browser Testing Checklist
 
 **Prerequisites**:
+
 ```bash
 # Start web server
 python3 -m http.server 9000
@@ -751,6 +802,7 @@ http://localhost:9000/src/index.html
 ```
 
 #### Test app.js (SPA Router)
+
 - [ ] Click "Home" navigation link → Verify route changes to `#/`
 - [ ] Click "Conversor" navigation link → Verify route changes to `#/converter`
 - [ ] Use browser back button → Verify correct route navigation
@@ -762,6 +814,7 @@ http://localhost:9000/src/index.html
 - [ ] Check console → Verify "Routing to: /" messages
 
 #### Test error-recovery.js (Error Handler)
+
 - [ ] Open browser console
 - [ ] Trigger error: `throw new Error('test error')` → Verify toast notification
 - [ ] Verify toast has red error styling
@@ -773,6 +826,7 @@ http://localhost:9000/src/index.html
 - [ ] Verify ARIA attributes (`role="alert"`, `aria-live="assertive"`)
 
 #### Test geolocation-banner.js (Permission UI)
+
 - [ ] Fresh page load (no permission) → Verify banner appears
 - [ ] Banner shows "Permitir" (Allow) button
 - [ ] Banner shows "Agora não" (Not now) button  
@@ -785,6 +839,7 @@ http://localhost:9000/src/index.html
 - [ ] Check console → Verify no JavaScript errors
 
 #### Integration Testing
+
 - [ ] Navigate to home → Grant location → Verify coordinates display
 - [ ] Navigate to converter → Enter coordinates → Verify address lookup
 - [ ] Trigger error during geolocation → Verify error toast
@@ -800,6 +855,7 @@ http://localhost:9000/src/index.html
 **Adjusted coverage** (excluding browser files): ~85%
 
 **Why we don't exclude browser files from coverage**:
+
 - Maintains visibility of untested areas
 - Accurate representation of overall codebase
 - Prevents false sense of complete coverage
@@ -809,18 +865,21 @@ http://localhost:9000/src/index.html
 ### Future Options (Not Currently Needed)
 
 #### Option 1: jsdom Setup
+
 **Effort**: 2-3 hours  
 **Benefit**: Basic DOM testing in Jest  
 **Blocker**: Parse5/ES module compatibility issues (documented in skipped tests)  
 **Recommendation**: ⏸️ Wait for jsdom ecosystem to mature
 
 #### Option 2: Playwright/Cypress E2E
+
 **Effort**: 4-6 hours  
 **Benefit**: Comprehensive browser testing  
 **Trade-off**: Slow execution, complex setup  
 **Recommendation**: ⏸️ Consider if manual testing becomes insufficient
 
 #### Option 3: Extract Pure Functions
+
 **Effort**: 3-4 hours refactoring  
 **Benefit**: Testable logic separation  
 **Trade-off**: May reduce code clarity  
@@ -841,7 +900,6 @@ http://localhost:9000/src/index.html
 
 **Last Reviewed**: 2026-01-09  
 **Manual Testing**: Required before each release
-
 
 ---
 
@@ -872,12 +930,15 @@ This is considered **good coverage** for JavaScript projects. Industry standard 
 ### Why Some Files Have Lower Coverage
 
 #### 1. Browser-Only Files (0% coverage)
+
 **Files**: `app.js`, `error-recovery.js`, `geolocation-banner.js`  
 **Reason**: Cannot run in Jest/Node.js environment  
 **Mitigation**: Manual testing checklist (documented above)
 
 #### 2. Error Handling Paths
+
 Many untested branches are defensive programming:
+
 ```javascript
 // Fallback for unknown error codes (rarely occurs)
 return errorMap[errorCode] || { 
@@ -887,6 +948,7 @@ return errorMap[errorCode] || {
 ```
 
 **Examples**:
+
 - Unknown geolocation error codes (defensive fallbacks)
 - Network failure scenarios (external API dependency)
 - Browser API unavailability (old browser support)
@@ -894,9 +956,11 @@ return errorMap[errorCode] || {
 **Impact**: Low - these handle rare edge cases
 
 #### 3. Browser API Dependencies
+
 **Files**: `GeolocationService.js` (26% branch coverage)
 
 Untested branches require real browser:
+
 - `navigator.geolocation.getCurrentPosition()` callbacks
 - `navigator.permissions.query()` API
 - Geolocation error codes (permission denied, timeout)
@@ -906,9 +970,11 @@ Untested branches require real browser:
 **Current Approach**: Test core logic, manual test browser features
 
 #### 4. External API Error Paths
+
 **Files**: `ReverseGeocoder.js` (37% branch coverage)
 
 Untested branches for API failures:
+
 - HTTP error codes (404, 500, etc.)
 - Network timeouts
 - Invalid JSON responses
@@ -936,6 +1002,7 @@ Untested branches for API failures:
 ### What Gets Tested vs Not Tested
 
 #### ✅ Well Tested (High Coverage)
+
 - Core business logic (GeoPosition, PositionManager)
 - Data processing (Address extraction, validation)
 - HTML generation and display
@@ -944,6 +1011,7 @@ Untested branches for API failures:
 - Success path scenarios
 
 #### ⚠️ Partially Tested (Medium Coverage)
+
 - Service orchestration (WebGeocodingManager)
 - Browser API integration (GeolocationService)
 - External API calls (ReverseGeocoder)
@@ -951,6 +1019,7 @@ Untested branches for API failures:
 - Edge case scenarios
 
 #### ❌ Not Tested (Low/Zero Coverage)
+
 - Browser UI code (SPA router, error recovery, banners)
 - Rare error scenarios (unknown error codes)
 - Old browser fallbacks (navigator.permissions unavailable)
@@ -961,7 +1030,9 @@ Untested branches for API failures:
 ### Recommendations
 
 #### Current Approach: Maintain ✅ RECOMMENDED
+
 **Rationale**:
+
 - 74.39% is good for JavaScript projects
 - Critical paths are tested
 - Manual testing covers browser features
@@ -972,6 +1043,7 @@ Untested branches for API failures:
 #### Optional Improvements (Low Priority)
 
 **1. Add Error Path Tests** (4-6 hours effort)
+
 - Test all error codes (1, 2, 3, unknown)
 - Mock fetch failures for ReverseGeocoder
 - Test timeout scenarios
@@ -980,6 +1052,7 @@ Untested branches for API failures:
 **Value**: Low - tests defensive code rarely executed
 
 **2. Extract Testable Logic** (8-12 hours effort)
+
 - Split WebGeocodingManager (931 lines)
 - Extract pure functions from browser code
 - Better separation of concerns
@@ -992,6 +1065,7 @@ Untested branches for API failures:
 ### Coverage Goals
 
 #### Realistic Goals (Current Approach)
+
 | Metric | Current | Acceptable Range |
 |--------|---------|-----------------|
 | Branch | 74.39% | 70-80% ✅ |
@@ -1001,6 +1075,7 @@ Untested branches for API failures:
 **Status**: Within acceptable range
 
 #### Stretch Goals (With Refactoring)
+
 | Metric | Current | Target | Effort |
 |--------|---------|--------|--------|
 | Branch | 74.39% | 85-90% | 16-20 hours |
@@ -1025,7 +1100,6 @@ Untested branches for API failures:
 **Last Updated**: 2026-01-09  
 **Coverage Status**: ✅ Acceptable (74.39% branch, 69.66% statement)
 
-
 ---
 
 ## 📋 Coverage Policy
@@ -1035,6 +1109,7 @@ Untested branches for API failures:
 ### Quick Reference
 
 **Current Thresholds** (Enforced in CI):
+
 ```json
 {
   "statements": 68%,
@@ -1051,4 +1126,3 @@ Untested branches for API failures:
 **Exception**: Justified decreases (e.g., removing dead code) allowed with approval.
 
 **Review**: Quarterly evaluation of thresholds and coverage trends.
-

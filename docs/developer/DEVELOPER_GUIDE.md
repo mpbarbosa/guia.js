@@ -24,6 +24,7 @@
 ### Prerequisites
 
 **Required Tools**:
+
 - **Node.js**: v20.19.0+ (tested with v20.19.5 and v25.4.0)
 - **npm**: v10+ (tested with v10.5.0 and v11.8.0)
 - **Python**: 3.11+ (for development web server)
@@ -31,6 +32,7 @@
 - **Modern Browser**: Chrome 90+, Firefox 88+, or Safari 14+
 
 **Verify Installation**:
+
 ```bash
 node --version    # Should be v20.19.0+
 npm --version     # Should be v10.x.x+
@@ -39,6 +41,7 @@ git --version     # Should be git version 2.x+
 ```
 
 **Install Missing Tools**:
+
 ```bash
 # Ubuntu/Debian
 sudo apt update
@@ -77,6 +80,7 @@ python3 -m http.server 9000
 ```
 
 **Expected Output**:
+
 - ✅ Syntax validation passes
 - ✅ 2,214 tests passing (146 skipped, 20 failing - known issues)
 - ✅ Web server running on port 9000
@@ -89,11 +93,13 @@ python3 -m http.server 9000
 ### IDE Configuration
 
 **Recommended IDEs**:
+
 - **VS Code** (recommended): Excellent JavaScript support
 - **WebStorm**: Full-featured JavaScript IDE
 - **Sublime Text**: Lightweight alternative
 
 **VS Code Extensions** (recommended):
+
 ```json
 {
   "recommendations": [
@@ -121,13 +127,16 @@ npm run lint:fix
 ### Git Hooks (Husky)
 
 Pre-commit hooks automatically run:
+
 - **Syntax validation**: `node -c` on all JS files
 - **Unit tests**: Quick validation tests
 
 Pre-push hooks run:
+
 - **Full test suite**: All 2,380 tests
 
 **Setup Husky** (automatic on `npm install`):
+
 ```bash
 npm run prepare  # Initializes husky hooks
 ```
@@ -589,6 +598,7 @@ describe('E2E: Geolocation Flow', () => {
 **Current Coverage**: ~85% overall (84.7% actual)
 
 **Coverage Thresholds** (in `package.json`):
+
 ```json
 "coverageThreshold": {
   "global": {
@@ -601,6 +611,7 @@ describe('E2E: Geolocation Flow', () => {
 ```
 
 **Generate Coverage Report**:
+
 ```bash
 npm run test:coverage
 
@@ -615,6 +626,7 @@ open coverage/lcov-report/index.html
 ### Browser Debugging
 
 **1. Chrome DevTools**:
+
 ```javascript
 // Add debugger statement
 function updatePosition(position) {
@@ -624,6 +636,7 @@ function updatePosition(position) {
 ```
 
 **2. Console Logging**:
+
 ```javascript
 import { log } from './utils/logger.js';
 
@@ -632,6 +645,7 @@ log('Current position:', position.latitude, position.longitude);
 ```
 
 **3. Network Inspection**:
+
 - Open Chrome DevTools → Network tab
 - Filter by "Fetch/XHR"
 - Monitor Nominatim and IBGE API calls
@@ -810,6 +824,7 @@ export class NewAPIService extends ObserverSubject {
 ```
 
 **Types**:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -819,6 +834,7 @@ export class NewAPIService extends ObserverSubject {
 - `chore`: Build process, dependencies, tooling
 
 **Examples**:
+
 ```bash
 git commit -m "feat(core): add position accuracy filtering"
 git commit -m "fix(services): handle network timeout errors"
@@ -838,6 +854,7 @@ git commit -m "test(integration): add geocoding workflow tests"
 ### Code Review Guidelines
 
 See [`.github/CONTRIBUTING.md`](../../.github/CONTRIBUTING.md) for comprehensive guidelines including:
+
 - Immutability principles
 - Testing requirements
 - Documentation standards
@@ -850,6 +867,7 @@ See [`.github/CONTRIBUTING.md`](../../.github/CONTRIBUTING.md) for comprehensive
 ### Issue: Tests Fail with "Module not found"
 
 **Solution**: Ensure Node.js v20.19.0+ and ES6 modules enabled:
+
 ```bash
 node --version  # Check version
 npm install     # Reinstall dependencies
@@ -858,6 +876,7 @@ npm install     # Reinstall dependencies
 ### Issue: Web Server Port Conflict
 
 **Solution**: Use different port:
+
 ```bash
 python3 -m http.server 8000
 # Then navigate to http://localhost:8000/src/index.html
@@ -866,12 +885,14 @@ python3 -m http.server 8000
 ### Issue: Geolocation Permission Denied
 
 **Solution**: Reset browser permissions:
+
 - Chrome: Settings → Privacy → Site Settings → Location
 - Firefox: Preferences → Privacy & Security → Permissions → Location
 
 ### Issue: ESLint Errors
 
 **Solution**: Auto-fix with:
+
 ```bash
 npm run lint:fix
 ```
@@ -879,6 +900,7 @@ npm run lint:fix
 ### Issue: Jest Cache Issues
 
 **Solution**: Clear Jest cache:
+
 ```bash
 rm -rf .jest-cache
 npm test
@@ -887,6 +909,7 @@ npm test
 ### Issue: Husky Hooks Not Running
 
 **Solution**: Reinstall hooks:
+
 ```bash
 npm run prepare
 ```
@@ -913,6 +936,7 @@ npm run prepare
 ---
 
 **Next Steps**:
+
 1. ✅ Complete [Quick Start](#quick-start-5-minutes)
 2. 📖 Read [Architecture Guide](../architecture/COMPREHENSIVE_GUIDE.md)
 3. 🔍 Explore [API Reference](../api/README.md)

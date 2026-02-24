@@ -3,6 +3,7 @@
 Guia Turístico is a single-page web application (version 0.11.2-alpha) built on top of the **guia.js** geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
 **Project Relationship**:
+
 - **This Project**: Guia Turístico - Tourist guide web application (SPA)
 - **Dependency**: guia.js library (https://github.com/mpbarbosa/guia_js) - Core geolocation functionality
 - **Additional Dependency**: ibira.js library - Brazilian IBGE integration
@@ -12,6 +13,7 @@ Guia Turístico is a single-page web application (version 0.11.2-alpha) built on
 ## Working Effectively
 
 ### Bootstrap and Run the Application
+
 - **Node.js Testing**: `node src/app.js` - takes <1 second. Validates SPA initialization.
 - **Syntax Validation**: `node -c src/app.js && node -c src/guia.js` - takes <1 second each. ALWAYS run before commits.
 - **Development Server (Recommended)**: `npm run dev` - Vite dev server with HMR, starts in 3 seconds on port 9000
@@ -20,6 +22,7 @@ Guia Turístico is a single-page web application (version 0.11.2-alpha) built on
 - **Legacy Web Server**: `python3 -m http.server 9000` - Direct file serving, access at `http://localhost:9000/src/index.html`
 
 ### Build and Test Process
+
 - **NEVER CANCEL any long-running server processes** - they run indefinitely by design
 - **Install Dependencies**: `npm install` - takes 20 seconds. Downloads guia.js library, Vite, and other dependencies.
 - **Syntax Check**: Always run `node -c src/app.js && node -c src/guia.js` (timeout: 10 seconds) before making changes
@@ -31,6 +34,7 @@ Guia Turístico is a single-page web application (version 0.11.2-alpha) built on
 - **Production**: Use `npm run build` before deployment, verify with `npm run preview`
 
 ### Development Workflow
+
 - Always validate JavaScript syntax with `node -c` before committing changes
 - Test SPA functionality with `node src/app.js` to verify routing and initialization
 - Run automated tests with `npm run test:all` before commits to ensure 2,647+ tests pass
@@ -43,15 +47,18 @@ Guia Turístico is a single-page web application (version 0.11.2-alpha) built on
 ## Validation Scenarios
 
 ### Manual Testing Requirements
+
 After making any changes, ALWAYS run through these validation scenarios:
 
 1. **Basic Node.js Execution**:
+
    ```bash
    node src/app.js
    # Should output: Initializing Guia Turístico SPA...
    ```
 
 2. **Automated Test Suite**:
+
    ```bash
    npm run test:all
    # Should show: ✅ 2,235 tests passing (2,401 total), ✅ 92 suites passing (101 total), ~65 seconds execution
@@ -59,7 +66,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 
 3. **Web Application Functionality**:
    - Start web server: `python3 -m http.server 9000`
-   - Open `http://localhost:9000/src/index.html` 
+   - Open `http://localhost:9000/src/index.html`
    - Click "Obter Localização" button
    - Verify geolocation prompts appear (if supported)
    - Check console log output in browser developer tools
@@ -71,6 +78,7 @@ After making any changes, ALWAYS run through these validation scenarios:
    - Test DOM element binding (buttons, text areas, etc.)
 
 ### Required User Scenarios
+
 - **Geolocation Flow**: User grants location permission → coordinates display → address lookup occurs
 - **Restaurant Search**: User clicks restaurant button → coordinates are passed to search function
 - **Address Display**: Geographic data gets processed and formatted for Brazilian addresses
@@ -79,6 +87,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Repository Structure
 
 ### Key Files
+
 - `src/app.js` (543 lines) - **Main SPA entry point** with routing and application initialization
 - `src/index.html` (379 lines) - Main HTML page for the SPA
 - `src/guia.js` (520 lines) - guia.js library exports (imported from dependency)
@@ -107,11 +116,13 @@ After making any changes, ALWAYS run through these validation scenarios:
 **Primary Focus**: Real-time location tracking while navigating the city
 
 **Navigation Structure**:
+
 - **Main page** (`#/` or `#`): Location tracking interface with real-time updates
 - **Footer link**: Access to coordinate converter utility (`#/converter`)
 - **No primary navigation menu**: Simplified UI focusing on core tracking feature
 
 **Key UI Files**:
+
 - `src/index.html` - Main application page, footer with converter link
 - `src/navigation.css` - Footer styles (primary nav styles deprecated)
 - `src/highlight-cards.css` (109 lines) - Municipio and bairro highlight card styles (v0.9.0+)
@@ -121,10 +132,11 @@ After making any changes, ALWAYS run through these validation scenarios:
 ### Important Classes and Components
 
 #### View Controllers (src/views/) - v0.10.0-alpha 🆕
+
 - **`HomeViewController`** (src/views/home.js, 672 lines) - Home view controller for location tracking
   - **Purpose**: Manages the home view (/) with real-time location tracking workflows
   - **Features**: Single-position capture, continuous tracking toggle, button management, UI state updates
-  - **Tests**: 70 comprehensive unit tests with 100% coverage (__tests__/views/home.test.js)
+  - **Tests**: 70 comprehensive unit tests with 100% coverage (**tests**/views/home.test.js)
   - **Public API**:
     - `constructor(document, params)` - Initialize with document and configuration
     - `async init()` - Initialize WebGeocodingManager and Chronometer
@@ -146,6 +158,7 @@ After making any changes, ALWAYS run through these validation scenarios:
   - **Unchanged**: No changes in v0.10.0-alpha
 
 #### Core Architecture (src/core/, src/services/, src/coordination/)
+
 - `PositionManager` (src/core/PositionManager.js) - Singleton for current geolocation state
   - **Position Update Logic**: Updates trigger on distance (20m) OR time (30s) thresholds (v0.9.0+)
 - `GeoPosition` (src/core/GeoPosition.js) - Immutable position value object
@@ -158,6 +171,7 @@ After making any changes, ALWAYS run through these validation scenarios:
   - **Manages**: Position, Address, ReferencePlace, HighlightCards, SIDRA displayers (v0.9.0+)
 
 #### Data Processing (src/data/)
+
 - `BrazilianStandardAddress` (src/data/BrazilianStandardAddress.js) - Brazilian address standardization
   - **v0.9.0-alpha**: Added `regiaoMetropolitana` field and `regiaoMetropolitanaFormatada()` method
 - `AddressExtractor` (src/data/AddressExtractor.js) - Address data extraction
@@ -174,6 +188,7 @@ After making any changes, ALWAYS run through these validation scenarios:
   - **Supports**: place, shop, amenity, railway, building types (v0.9.0+)
 
 #### UI and Display (src/html/)
+
 - `HTMLPositionDisplayer` (src/html/HTMLPositionDisplayer.js) - Coordinate display and Google Maps integration
 - `HTMLAddressDisplayer` (src/html/HTMLAddressDisplayer.js) - Address formatting and presentation
 - `HTMLHighlightCardsDisplayer` (src/html/HTMLHighlightCardsDisplayer.js) - Municipio and bairro highlight cards
@@ -204,6 +219,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `HtmlText` (src/html/HtmlText.js) - Text display utilities
 
 #### Speech Synthesis (src/speech/)
+
 - **SpeechSynthesisManager** (src/speech/SpeechSynthesisManager.js) - Main orchestrator using composition pattern
   - **Architecture**: Manager/Controller with Composition (v0.9.0-alpha refactored)
   - **1148 lines** - Coordinates 4 focused components for speech synthesis
@@ -233,11 +249,13 @@ After making any changes, ALWAYS run through these validation scenarios:
 - `SpeechItem` (src/speech/SpeechItem.js) - Individual speech request items
 
 **Legacy Components** (deprecated in favor of above composition):
+
 - `SpeechController` (src/speech/SpeechController.js) - Core speech synthesis control
 - `SpeechQueueProcessor` (src/speech/SpeechQueueProcessor.js) - Queue processing
 - `VoiceManager` (src/speech/VoiceManager.js) - Voice selection (replaced by VoiceLoader + VoiceSelector)
 
 #### Performance Timing (src/timing/)
+
 - `Chronometer` (src/timing/Chronometer.js) - Performance timing and elapsed time tracking
   - **356 lines, 51 tests, 100% coverage**
   - Observer pattern for timing events
@@ -245,6 +263,7 @@ After making any changes, ALWAYS run through these validation scenarios:
   - Use for performance monitoring and user-facing time displays
 
 #### Utilities (src/utils/)
+
 - `TimerManager` (src/utils/TimerManager.js) - Centralized timer management singleton
   - **162 lines, prevents memory leaks**
   - Tracks setInterval/setTimeout calls with named IDs
@@ -264,12 +283,14 @@ After making any changes, ALWAYS run through these validation scenarios:
   - Example: `disableWithReason(button, "Aguardando localização para habilitar")`
 
 ### API Integrations
+
 - **OpenStreetMap Nominatim**: `https://nominatim.openstreetmap.org/reverse` for geocoding
 - **IBGE API**: `https://servicodados.ibge.gov.br/api/v1/localidades/estados/` for Brazilian location data
 - **SIDRA API**: `https://servicodados.ibge.gov.br/api/v3/agregados/6579/periodos/-6/variaveis/9324` for demographic statistics
 - **Google Maps**: Links for map viewing and Street View integration
 
 ### Data Libraries
+
 - **libs/sidra/**: IBGE SIDRA municipality data (v0.9.0+)
   - `tab6579_municipios.json` (190KB) - Population estimates for Brazilian municipalities
   - **Usage**: Offline fallback for IBGE demographic queries
@@ -277,6 +298,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 ## Testing Infrastructure
 
 ### Automated Test Coverage
+
 - **2,401 total tests** (2,235 passing, 146 skipped, 20 failing) across 101 test suites running in ~65 seconds
 - **~85% code coverage** overall (84.7% actual)
 - **100% coverage** of guia_ibge.js (full coverage)
@@ -289,6 +311,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 ### End-to-End Testing Infrastructure
 
 #### Jest E2E Tests (`__tests__/e2e/`)
+
 - **11 E2E test files** using Puppeteer for browser automation (headless Chrome)
 - **Real-world scenarios**: Complete workflows, address changes, speech synthesis, neighborhood tracking
 - **Key tests**:
@@ -305,6 +328,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 - **Documentation**: See `__tests__/e2e/NeighborhoodChangeWhileDriving.README.md` for detailed test documentation
 
 #### Python Playwright E2E Tests (`tests/e2e/`)
+
 - **Python-based** browser automation using Playwright
 - **Cross-browser testing**: Chromium, Firefox, WebKit
 - **Visual regression testing** capabilities
@@ -312,10 +336,12 @@ After making any changes, ALWAYS run through these validation scenarios:
 - **Use case**: CI/CD pipelines, cross-browser validation
 
 **Test Strategy Distinction**:
+
 - Use **Jest/Puppeteer** (`__tests__/e2e/`) for rapid development and debugging
 - Use **Python/Playwright** (`tests/e2e/`) for comprehensive cross-browser validation
 
 ### Test Execution Commands
+
 ```bash
 # Run all tests (~30 seconds)
 npm test
@@ -337,6 +363,7 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 ```
 
 ### Expected Test Results
+
 - ✅ 2,437 tests passing (2,639 total)
 - ✅ 202 tests skipped
 - ✅ 96 test suites passing (109 total)
@@ -346,6 +373,7 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 - ✅ 100% pass rate (0 failing tests)
 
 ### Expected Test Results
+
 - ✅ 2,235 tests passing (2,401 total, 146 skipped, 20 failing)
 - ✅ 90 test suites passing (101 total, 4 skipped, 7 failing)
 - ✅ ~85% code coverage overall (84.7% actual)
@@ -357,6 +385,7 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 ## Common Development Tasks
 
 ### Adding New Geolocation Features
+
 - Always extend appropriate base classes (APIFetcher for API calls, etc.)
 - Follow the MVC pattern: Extractor → Validator → Formatter → Displayer
 - Update both Node.js compatibility and DOM functionality
@@ -365,6 +394,7 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 - See `.github/CONTRIBUTING.md` for comprehensive immutability guidelines
 
 ### Debugging Geolocation Issues
+
 - Check browser console for JavaScript errors
 - Verify geolocation permissions in browser
 - Test API endpoints manually: `curl "https://nominatim.openstreetmap.org/reverse?format=json&lat=-23.550520&lon=-46.633309"`
@@ -372,6 +402,7 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 - Check the bottom textarea log area for application-specific logs
 
 ### Working with Brazilian Address Data
+
 - Use `BrazilianStandardAddress` class for address standardization
   - **v0.9.0-alpha**: Supports metropolitan region via `regiaoMetropolitana` field
   - **Methods**: `municipioCompleto()`, `regiaoMetropolitanaFormatada()`
@@ -384,9 +415,11 @@ npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
 ## Build System & Performance
 
 ### Vite Build Process
+
 The application uses **Vite v7.3.1** as the build tool:
 
 **Performance Benefits**:
+
 - ✅ 25% bundle size reduction (1.2M source → 900K dist)
 - ✅ Automatic code splitting into 7 logical chunks
 - ✅ Terser minification with source maps
@@ -394,6 +427,7 @@ The application uses **Vite v7.3.1** as the build tool:
 - ✅ Fast refresh without page reload
 
 **Build Configuration** (`vite.config.js`):
+
 ```javascript
 {
   target: 'es2022',        // Modern browsers with top-level await
@@ -414,6 +448,7 @@ The application uses **Vite v7.3.1** as the build tool:
 ```
 
 **Bundle Analysis**:
+
 ```
 dist/
 ├── assets/
@@ -431,11 +466,13 @@ Total: 900 KB (25% smaller than source)
 ```
 
 **Browser Requirements**:
+
 - ES2022 support (Chrome 94+, Firefox 93+, Safari 15+)
 - Top-level await support
 - ES modules support
 
 **Development Modes**:
+
 1. **Development**: `npm run dev` (HMR, fast refresh, port 9000)
 2. **Production Build**: `npm run build` (minified, optimized, dist/)
 3. **Production Preview**: `npm run preview` (test build, port 9001)
@@ -444,21 +481,25 @@ Total: 900 KB (25% smaller than source)
 ## Limitations and Known Issues
 
 ### Browser Dependencies
+
 - Full functionality requires modern browser with geolocation API support
 - Some features (speech synthesis, DOM manipulation) only work in web environment
 - Location permissions must be granted by user for geolocation features
 
 ### Known Limitations
+
 - `findNearbyRestaurants()` function exists as placeholder with alert notification - requires external service integration
 - `fetchCityStatistics()` function exists as placeholder with alert notification - requires backend implementation
 - Error handling for API failures could be enhanced
 
 ### Development Environment
+
 - ESLint v9 with flat configuration for linting
 - **Vite build process** with code splitting and minification
 - Jest test framework with jsdom for DOM testing
 
 ### Legacy Test Files
+
 - **legacy-tests/** - Archived historical test files (deprecated, see legacy-tests/README.md for context)
 - **demo-issue-218.js** - Moved to legacy-tests/ directory
 - **Deprecated**: Use `src/index.html` for main application testing
@@ -467,15 +508,19 @@ Total: 900 KB (25% smaller than source)
 ## CI/CD Integration
 
 ### GitHub Actions Workflow
+
 The repository includes `.github/workflows/copilot-coding-agent.yml` with automated validation:
+
 - **JavaScript Syntax Validation**: `node -c` on all JS files
-- **Basic Functionality Test**: `node src/guia.js` execution 
+- **Basic Functionality Test**: `node src/guia.js` execution
 - **Web Server Test**: Python HTTP server startup and connectivity
 - **Security Checks**: Basic credential and eval() usage scanning
 - **Code Style Checks**: Basic formatting validation
 
 ### Pre-commit Validation Commands
+
 Always run before committing changes:
+
 ```bash
 # Essential validation (5 seconds total)
 npm run test:all
@@ -485,17 +530,20 @@ curl -s http://localhost:9000/src/index.html | grep "Guia" # If web server runni
 ```
 
 ### Local Workflow Testing Script
+
 The repository includes `.github/scripts/test-workflow-locally.sh` for pre-push validation:
 
 **Purpose**: Simulate GitHub Actions workflow locally to catch issues before pushing
 
 **Usage**:
+
 ```bash
 # From project root
 ./.github/scripts/test-workflow-locally.sh
 ```
 
 **What it validates**:
+
 - ✅ JavaScript syntax validation (npm run validate)
 - ✅ Test suite execution (npm test)
 - ✅ Test coverage generation
@@ -503,23 +551,27 @@ The repository includes `.github/scripts/test-workflow-locally.sh` for pre-push 
 - ✅ Change detection (only runs relevant tests)
 
 **Prerequisites**:
+
 - Node.js v18+ and npm installed
 - npm dependencies installed (`npm install`)
 - git repository initialized
 - Standard Unix tools: grep, find, wc
 
 **Common Exit Scenarios**:
+
 - **Exit 0**: All checks passed, safe to push
 - **Exit 1**: Some checks failed, fix issues before pushing
 
 See `docs/WORKFLOW_SETUP.md` for detailed usage guide.
 
 ### CDN Delivery Script
+
 The repository includes `.github/scripts/cdn-delivery.sh` for generating CDN URLs:
 
 **Purpose**: Generate jsDelivr CDN URLs for the current version
 
 **Usage**:
+
 ```bash
 # From project root
 ./.github/scripts/cdn-delivery.sh
@@ -527,17 +579,20 @@ The repository includes `.github/scripts/cdn-delivery.sh` for generating CDN URL
 ```
 
 **When to run**:
+
 - After version bumps in package.json
 - Before releases to generate distribution URLs
 - After creating git tags
 - Manually anytime you need CDN URLs
 
 **Prerequisites**:
+
 - Node.js v18+ (for package.json parsing)
 - git (for commit hash extraction)
 - curl (optional, for CDN availability testing)
 
 **Integration Example**:
+
 ```bash
 npm version minor
 ./.github/scripts/cdn-delivery.sh
@@ -548,6 +603,7 @@ git push origin v0.9.0
 ```
 
 **Environment Variables** (optional):
+
 ```bash
 # Override defaults if needed
 export GITHUB_USER="your-username"
@@ -560,6 +616,7 @@ See README.md CDN Delivery section for troubleshooting guide.
 ## Quick Reference Commands
 
 ### Daily Development
+
 ```bash
 # Install dependencies (20 seconds, run once)
 npm install
@@ -581,6 +638,7 @@ curl -s http://localhost:9000/src/index.html | head -5
 ```
 
 ### Performance Expectations
+
 - **Syntax validation**: <1 second each file
 - **Basic Node.js test**: <1 second  
 - **Jest test suite**: ~45 seconds for 1,968 tests (1,820 passing, 146 skipped)
@@ -589,6 +647,7 @@ curl -s http://localhost:9000/src/index.html | head -5
 - **npm install**: ~20 seconds (299 packages)
 
 ### Validation Checklist
+
 - [ ] Node.js syntax validation passes (`node -c src/guia.js`)
 - [ ] Basic Node.js execution shows version output
 - [ ] All 2,235 automated tests pass (`npm test`)
@@ -601,6 +660,7 @@ curl -s http://localhost:9000/src/index.html | head -5
 ## Troubleshooting
 
 ### Common Issues
+
 1. **Tests fail with DOM dependencies**: Ensure `global.document = undefined` in test files
 2. **Web server port conflicts**: Change port with `python3 -m http.server 8000`
 3. **API connectivity issues**: External APIs may be blocked; use local testing scenarios
@@ -608,6 +668,7 @@ curl -s http://localhost:9000/src/index.html | head -5
 5. **Module not found errors**: Ensure Node.js modules are exported properly
 
 ### Environment Requirements
+
 - **Node.js**: v18+ (tested with v20.19.5)
 - **Python**: 3.11+ for web server
 - **npm**: 10+ for package management
@@ -615,6 +676,7 @@ curl -s http://localhost:9000/src/index.html | head -5
 - **Network**: Internet access for OpenStreetMap and IBGE APIs
 
 ### Debug Commands
+
 ```bash
 # Check Node.js and npm versions
 node --version && npm --version
@@ -636,12 +698,14 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 ```
 
 ### Known Limitations
+
 - External API calls may fail in restricted network environments
 - Geolocation requires HTTPS in production (localhost works for development)  
 - Speech synthesis availability varies by browser
 - Some tests generate verbose console output (this is expected behavior)
 
 ### Required User Scenarios
+
 - **Geolocation Flow**: User grants location permission → coordinates display → address lookup occurs
 - **Restaurant Search**: User clicks restaurant button → coordinates are passed to search function
 - **Address Display**: Geographic data gets processed and formatted for Brazilian addresses
@@ -650,6 +714,7 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 ## Repository Structure
 
 ### Key Files
+
 - `src/app.js` (550+ lines) - **Main SPA entry point** with routing and application initialization
 - `src/index.html` (336 lines) - Main HTML page for the SPA
 - `src/guia.js` (468 lines) - guia.js library exports (imported from dependency)
@@ -660,6 +725,7 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 ### Important Classes and Components
 
 #### Core Architecture (src/core/, src/services/, src/coordination/)
+
 - `PositionManager` (src/core/PositionManager.js) - Singleton for current geolocation state
 - `GeoPosition` (src/core/GeoPosition.js) - Immutable position value object
 - `SingletonStatusManager` (src/status/SingletonStatusManager.js) - Status management across components
@@ -668,6 +734,7 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 - `WebGeocodingManager` (src/coordination/WebGeocodingManager.js) - Main coordination class
 
 #### Data Processing (src/data/)
+
 - `BrazilianStandardAddress` (src/data/BrazilianStandardAddress.js) - Brazilian address standardization
 - `AddressExtractor` (src/data/AddressExtractor.js) - Address data extraction
 - `AddressCache` (src/data/AddressCache.js) - Address caching functionality
@@ -675,6 +742,7 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 - `ReferencePlace` (src/data/ReferencePlace.js) - Reference location handling
 
 #### UI and Display (src/html/)
+
 - `HTMLPositionDisplayer` (src/html/HTMLPositionDisplayer.js) - Coordinate display and Google Maps integration
 - `HTMLAddressDisplayer` (src/html/HTMLAddressDisplayer.js) - Address formatting and presentation
 - `HTMLHighlightCardsDisplayer` (src/html/HTMLHighlightCardsDisplayer.js) - Municipio and bairro highlight cards (v0.9.0+)
@@ -686,6 +754,7 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 - `HtmlText` (src/html/HtmlText.js) - Text display utilities
 
 #### Speech Synthesis (src/speech/)
+
 - **SpeechSynthesisManager** (src/speech/SpeechSynthesisManager.js) - Main orchestrator using composition pattern
   - **Architecture**: Manager/Controller with Composition (v0.9.0-alpha refactored)
   - **1148 lines** - Coordinates 4 focused components for speech synthesis
@@ -715,11 +784,13 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 - `SpeechItem` (src/speech/SpeechItem.js) - Individual speech request items
 
 **Legacy Components** (deprecated in favor of above composition):
+
 - `SpeechController` (src/speech/SpeechController.js) - Core speech synthesis control
 - `SpeechQueueProcessor` (src/speech/SpeechQueueProcessor.js) - Queue processing
 - `VoiceManager` (src/speech/VoiceManager.js) - Voice selection (replaced by VoiceLoader + VoiceSelector)
 
 ### API Integrations
+
 - **OpenStreetMap Nominatim**: `https://nominatim.openstreetmap.org/reverse` for geocoding
 - **IBGE API**: `https://servicodados.ibge.gov.br/api/v1/localidades/estados/` for Brazilian location data
 - **Google Maps**: Links for map viewing and Street View integration
@@ -727,17 +798,20 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 ## Common Development Tasks
 
 ### Adding New Geolocation Features
+
 - Always extend appropriate base classes (APIFetcher for API calls, etc.)
 - Follow the MVC pattern: Extractor → Validator → Formatter → Displayer
 - Update both Node.js compatibility and DOM functionality
 
 ### Debugging Geolocation Issues
+
 - Check browser console for JavaScript errors
 - Verify geolocation permissions in browser
 - Test API endpoints manually: `curl "https://nominatim.openstreetmap.org/reverse?format=json&lat=-23.550520&lon=-46.633309"`
 - Monitor network requests in browser developer tools
 
 ### Working with Brazilian Address Data
+
 - Use `BrazilianStandardAddress` class for address standardization
 - Reference `AddressDataExtractor` for data processing patterns
 - Test with Brazilian coordinate examples: São Paulo (-23.550520, -46.633309)
@@ -745,16 +819,19 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 ## Limitations and Known Issues
 
 ### Browser Dependencies
+
 - Full functionality requires modern browser with geolocation API support
 - Some features (speech synthesis, DOM manipulation) only work in web environment
 - Location permissions must be granted by user for geolocation features
 
 ### Known Limitations
+
 - `findNearbyRestaurants()` function exists as placeholder with alert notification - requires external service integration
 - `fetchCityStatistics()` function exists as placeholder with alert notification - requires backend implementation
 - Error handling for API failures could be enhanced
 
 ### Development Environment
+
 - No formal linting configuration - use `node -c` for syntax validation
 - No automated test suite - relies on manual browser testing
 - No build process - files are used directly
@@ -762,6 +839,7 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 ## File Contents Reference
 
 ### Repository Root Structure
+
 ```
 guia_turistico/
 ├── src/
@@ -777,6 +855,7 @@ guia_turistico/
 > **Note**: Legacy test files have been archived to `legacy-tests/` directory. Use `src/index.html` for the main application.
 
 ### guia.js Overview
+
 - **Lines 1-61**: Version info, utility functions (calculateDistance, log, warn)
 - **Lines 62-666**: Core classes (CurrentPosition, APIFetcher, GeolocationService, WebGeocodingManager)  
 - **Lines 667-999**: Chronometer and helper functions
@@ -784,6 +863,7 @@ guia_turistico/
 - **Lines 1531-2082**: Speech synthesis and text utilities
 
 ### Key Function Signatures
+
 ```javascript
 // Utility functions
 calculateDistance(lat1, lon1, lat2, lon2) // Returns distance in meters
@@ -799,6 +879,7 @@ new BrazilianStandardAddress() // Address standardization
 ## Quick Reference Commands
 
 ### Daily Development
+
 ```bash
 # Install dependencies (20 seconds, run once)
 npm install
@@ -829,6 +910,7 @@ curl -s http://localhost:9000/src/index.html | head -5
 ```
 
 ### Build System Commands
+
 ```bash
 # Development mode (HMR, fast refresh)
 npm run dev
@@ -844,6 +926,7 @@ npm run preview
 ```
 
 ### Utility Scripts
+
 ```bash
 # Check version consistency across all files
 npm run check:version
@@ -865,6 +948,7 @@ npm run ci:test-local
 ```
 
 ### Validation Checklist
+
 - [ ] Node.js syntax validation passes (`node -c src/app.js`)
 - [ ] Basic Node.js execution shows version output
 - [ ] Web server starts successfully (`python3 -m http.server 9000`)
@@ -873,6 +957,7 @@ npm run ci:test-local
 - [ ] Geolocation button triggers proper API calls
 - [ ] Address formatting works for Brazilian coordinates
 - [ ] Console logging appears in both Node.js and browser
+
 ---
 
 **Last Updated**: 2026-02-11  

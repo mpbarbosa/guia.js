@@ -46,6 +46,7 @@ Always use strict mode to catch common coding errors:
 ```
 
 **Why?** Strict mode:
+
 - Prevents accidental global variables
 - Throws errors for unsafe actions
 - Disables confusing features
@@ -165,6 +166,7 @@ const normalizeInput = compose(removeSpaces, lowercase, trim);
 ### 1. What Makes a Function Pure?
 
 A pure function must:
+
 1. Always return the same output for the same input
 2. Have no side effects
 
@@ -1281,22 +1283,26 @@ test('calculateDistance works', () => {
 ### External Resources
 
 #### JavaScript Best Practices
+
 - [MDN JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide)
 - [Clean Code JavaScript](https://github.com/ryanmcdermott/clean-code-javascript)
 - [JavaScript: The Good Parts](http://shop.oreilly.com/product/9780596517748.do)
 - [You Don't Know JS](https://github.com/getify/You-Dont-Know-JS)
 
 #### Functional Programming
+
 - [Professor Frisby's Mostly Adequate Guide](https://mostly-adequate.gitbook.io/)
 - [Functional-Light JavaScript](https://github.com/getify/Functional-Light-JS)
 - [Ramda.js - Functional Library](https://ramdajs.com/)
 
 #### ES6+ Features
+
 - [ES6 Features](http://es6-features.org/)
 - [Exploring ES6](https://exploringjs.com/es6/)
 - [2ality - JavaScript Blog](https://2ality.com/)
 
 #### Style Guides
+
 - [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
 - [Google JavaScript Style Guide](https://google.github.io/styleguide/jsguide.html)
 - [StandardJS](https://standardjs.com/)
@@ -1304,6 +1310,7 @@ test('calculateDistance works', () => {
 ---
 
 **Related Guidelines:**
+
 - For code review: [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)
 - For testing: [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md), [TDD_GUIDE.md](./TDD_GUIDE.md)
 - For functional programming: [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)

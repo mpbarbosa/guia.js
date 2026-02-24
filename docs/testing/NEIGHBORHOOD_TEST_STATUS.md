@@ -41,21 +41,25 @@ ws does not work in the browser. Browser clients must use the native WebSocket o
 ## Solutions Investigated
 
 ### Option 1: Fix Jest Environment Detection (Attempted)
+
 - Added `@jest-environment node` comment
 - Cleared Jest cache
 - **Result**: Failed - Jest still uses jsdom environment
 
 ### Option 2: Split Jest Configurations  
+
 - Create separate `jest.config.e2e.js` for Puppeteer tests  
 - Run E2E tests separately: `npm run test:e2e`
 - **Status**: Not implemented (requires package.json changes)
 
 ### Option 3: Use Python/Playwright Instead
+
 - Repository already has `tests/e2e/` with Python Playwright tests
 - These work cross-browser without Puppeteer/Jest conflicts
 - **Status**: Available alternative
 
 ### Option 4: Accept Current State
+
 - Tests were originally skipped for this exact reason
 - E2E helpers are valuable for future use
 - Focus on non-Puppeteer test improvements instead
@@ -64,12 +68,14 @@ ws does not work in the browser. Browser clients must use the native WebSocket o
 ## Recommendations
 
 ### Immediate (This PR)
+
 1. Keep `__tests__/utils/e2e-helpers.js` - valuable infrastructure
 2. Keep refactored test code - documents patterns
 3. Leave Puppeteer tests skipped (documented limitation)
 4. Focus Phase 2 on non-Puppeteer integration/unit tests
 
 ### Future (Separate PR)
+
 1. Create `jest.config.e2e.js` with Node environment default
 2. Add `npm run test:e2e` script to run Puppeteer tests separately
 3. Update CI/CD to run both test suites
@@ -81,6 +87,7 @@ ws does not work in the browser. Browser clients must use the native WebSocket o
 **Revised Plan**: Un-skip 30+ integration/unit tests (Phase 2)
 
 **New Success Metrics**:
+
 - Before: 2,665 passing, 202 skipped (92.9%)
 - Target: 2,695+ passing, ~170 skipped (94.0%)  
 - Still significant improvement without Puppeteer tests
@@ -88,6 +95,7 @@ ws does not work in the browser. Browser clients must use the native WebSocket o
 ## Files Created/Modified
 
 ### Created
+
 - `__tests__/utils/e2e-helpers.js` (17KB, 500+ lines)
   - `waitForElement()` - Wait for DOM elements
   - `waitForElementText()` - Wait for text content
@@ -100,6 +108,7 @@ ws does not work in the browser. Browser clients must use the native WebSocket o
   - Plus 4 additional helper functions
 
 ### Modified
+
 - `__tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js`
   - Imported e2e-helpers
   - Replaced `describe.skip` with `describe` (still won't run due to env)
@@ -110,7 +119,7 @@ ws does not work in the browser. Browser clients must use the native WebSocket o
 
 ## Conclusion
 
-While we cannot fix the Puppeteer E2E tests in this PR due to Jest environment limitations, we've created valuable test infrastructure (`e2e-helpers.js`) and documented the issue for future resolution. 
+While we cannot fix the Puppeteer E2E tests in this PR due to Jest environment limitations, we've created valuable test infrastructure (`e2e-helpers.js`) and documented the issue for future resolution.
 
 **Next Step**: Proceed with Phase 2 (cross-platform compatibility) to un-skip integration and unit tests that don't require Puppeteer.
 

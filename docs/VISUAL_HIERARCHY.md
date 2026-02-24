@@ -53,6 +53,7 @@ Created a new CSS module (`src/location-highlights.css`) that implements:
 ## Visual Hierarchy (Before vs After)
 
 ### Before
+
 ```
 ┌─────────────────────────────────────┐
 │ [PRIMARY BLUE BUTTON - Large]       │  ← Too prominent
@@ -67,6 +68,7 @@ Created a new CSS module (`src/location-highlights.css`) that implements:
 ```
 
 ### After
+
 ```
 ┌─────────────────────────────────────┐
 │ ╔═══════════════════════════════╗   │
@@ -162,7 +164,7 @@ This implementation follows Material Design 3 principles:
 - **Keyboard Navigation**: Full keyboard support maintained
 - **Focus Indicators**: Visible focus states for keyboard users
 - **Reduced Motion**: Respects `prefers-reduced-motion` media query
-- **Color Contrast**: 
+- **Color Contrast**:
   - White on blue gradient: 7:1 contrast ratio ✅
   - Gray buttons: 4.5:1 contrast ratio ✅
 
@@ -176,6 +178,7 @@ This implementation follows Material Design 3 principles:
 ## Browser Compatibility
 
 Tested and compatible with:
+
 - ✅ Chrome 90+
 - ✅ Firefox 88+
 - ✅ Safari 14+
@@ -183,6 +186,7 @@ Tested and compatible with:
 - ✅ Mobile browsers (iOS Safari, Chrome Mobile, Samsung Internet)
 
 **Fallbacks**:
+
 - CSS Grid → Flexbox fallback not needed (Grid support is universal)
 - CSS Custom Properties → Inline fallback values provided
 - CSS `contain` → Progressive enhancement (no fallback needed)

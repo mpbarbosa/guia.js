@@ -8,6 +8,7 @@
 ## Problem
 
 When users denied location permission or geolocation failed:
+
 - ❌ Generic error message with no recovery path
 - ❌ No guidance on how to fix browser permissions
 - ❌ No fallback option mentioned
@@ -20,6 +21,7 @@ When users denied location permission or geolocation failed:
 **Enhanced `showErrorRecovery(error)` method** to handle 3 error types:
 
 **PERMISSION_DENIED (code 1)**:
+
 - Title: "Permissão de Localização Negada"
 - Browser-specific permission instructions:
   - Chrome/Edge: 🔒 icon → Site permissions → Location → Allow
@@ -28,6 +30,7 @@ When users denied location permission or geolocation failed:
 - Fallback: "Use o Conversor de Coordenadas para inserir manualmente"
 
 **POSITION_UNAVAILABLE (code 2)**:
+
 - Title: "Localização Indisponível"
 - Possible causes:
   - GPS disabled on device
@@ -36,6 +39,7 @@ When users denied location permission or geolocation failed:
 - Solution: Manual coordinate entry via converter
 
 **TIMEOUT (code 3)**:
+
 - Title: "Tempo Esgotado"
 - Message: "A busca pela sua localização demorou muito"
 - Options: Try again or use converter
@@ -43,6 +47,7 @@ When users denied location permission or geolocation failed:
 ### 2. Converter Fallback Link
 
 **Dynamic button injection**:
+
 ```javascript
 const converterLink = document.createElement('a');
 converterLink.href = '#/converter';
@@ -51,6 +56,7 @@ converterLink.innerHTML = '📍 Usar Conversor de Coordenadas';
 ```
 
 **Features**:
+
 - Direct link to `#/converter` route
 - Visible as secondary action below "Try Again" button
 - Clear affordance with emoji icon
@@ -60,10 +66,12 @@ converterLink.innerHTML = '📍 Usar Conversor de Coordenadas';
 ### 3. "Try Again" Button
 
 **Updated button text**:
+
 - Before: "Habilitar Localização"
 - After (error state): "🔄 Tentar Novamente"
 
 **Behavior**:
+
 - Triggers location request again
 - Shows browser permission prompt (if previously denied)
 - Allows users to reconsider permission decision
@@ -71,6 +79,7 @@ converterLink.innerHTML = '📍 Usar Conversor de Coordenadas';
 ### 4. CSS Styling
 
 **Added `converter-fallback-link` styles**:
+
 ```css
 .converter-fallback-link {
   background: #ffffff;
@@ -90,6 +99,7 @@ converterLink.innerHTML = '📍 Usar Conversor de Coordenadas';
 ```
 
 **List styling for browser instructions**:
+
 ```css
 .onboarding-description ul {
   text-align: left;
@@ -157,11 +167,13 @@ converterLink.innerHTML = '📍 Usar Conversor de Coordenadas';
 ### API Changes
 
 **Before**:
+
 ```javascript
 showErrorRecovery() // No parameters, generic message
 ```
 
 **After**:
+
 ```javascript
 showErrorRecovery(error) // Optional GeolocationPositionError
 ```
@@ -173,6 +185,7 @@ showErrorRecovery(error) // Optional GeolocationPositionError
 ### Manual Test Scenarios
 
 **Test 1: Permission Denied**
+
 1. Open app in incognito/private browsing
 2. Click "Habilitar Localização"
 3. Click "Block" in browser prompt
@@ -185,6 +198,7 @@ showErrorRecovery(error) // Optional GeolocationPositionError
 6. Verify: Navigation to `/converter` route
 
 **Test 2: Position Unavailable**
+
 1. Disable GPS/location services on device
 2. Click "Habilitar Localização"
 3. Verify:
@@ -193,6 +207,7 @@ showErrorRecovery(error) // Optional GeolocationPositionError
    - Converter link visible
 
 **Test 3: Timeout**
+
 1. Use browser dev tools to throttle network/location
 2. Click "Habilitar Localização"
 3. Wait for timeout (30+ seconds)
@@ -201,6 +216,7 @@ showErrorRecovery(error) // Optional GeolocationPositionError
    - Converter link visible
 
 **Test 4: Try Again Flow**
+
 1. Block permission initially
 2. Click "🔄 Tentar Novamente"
 3. In browser settings, allow location
@@ -210,12 +226,14 @@ showErrorRecovery(error) // Optional GeolocationPositionError
 ## Impact
 
 ### Before
+
 - 20-30% user abandonment on permission denial
 - No recovery path
 - Frustration: "Now what?"
 - Lost potential users
 
 ### After
+
 - ✅ Clear recovery instructions (3 scenarios)
 - ✅ Fallback option (converter) always visible
 - ✅ Browser-specific guidance
@@ -224,6 +242,7 @@ showErrorRecovery(error) // Optional GeolocationPositionError
 - ✅ User empowerment ("I have options")
 
 ### Expected Outcomes
+
 - 50% reduction in abandonment rate (30% → 15%)
 - 15% converter tool adoption from denied users
 - Improved user satisfaction (clear guidance)
@@ -232,16 +251,19 @@ showErrorRecovery(error) // Optional GeolocationPositionError
 ## Accessibility
 
 **ARIA Enhancements**:
+
 - Converter link has `role="button"`
 - `aria-label="Abrir conversor de coordenadas para entrada manual"`
 - Focus styles meet WCAG 2.1 AA (3px outline, offset 2px)
 
 **Keyboard Navigation**:
+
 - Tab to "Try Again" button
 - Tab to converter link
 - Enter/Space activates links
 
 **Screen Reader Experience**:
+
 - Reads error title
 - Reads detailed instructions
 - Announces "Try Again" button
@@ -251,6 +273,7 @@ showErrorRecovery(error) // Optional GeolocationPositionError
 ## Analytics Tracking (Future)
 
 **Recommended events**:
+
 ```javascript
 // Track error types
 gtag('event', 'geolocation_error', {

@@ -12,22 +12,26 @@ The **Weekly Dependency Audit** workflow automatically monitors project dependen
 ## Features
 
 ### 1. Security Audit
+
 - Runs `npm audit --audit-level=moderate`
 - Detects vulnerabilities at moderate severity or higher
 - Generates detailed audit report
 
 ### 2. Outdated Package Detection
+
 - Runs `npm outdated` to identify packages with available updates
 - Includes current, wanted, and latest versions
 - Non-blocking (informational only)
 
 ### 3. Automated Issue Creation
+
 - Creates GitHub issue if vulnerabilities are detected
 - Labels: `security`, `dependencies`, `automated`
 - Includes full audit report and recommended actions
 - Attaches report artifact for 90 days
 
 ### 4. Follow-up Comments
+
 - Adds comments to existing open security issues
 - Tracks recurring vulnerabilities
 - Links to workflow run for details
@@ -35,6 +39,7 @@ The **Weekly Dependency Audit** workflow automatically monitors project dependen
 ## Workflow Triggers
 
 ### Scheduled Run (Weekly)
+
 ```yaml
 on:
   schedule:
@@ -42,6 +47,7 @@ on:
 ```
 
 ### Manual Trigger
+
 1. Go to **Actions** tab in GitHub
 2. Select **Weekly Dependency Audit** workflow
 3. Click **Run workflow** button
@@ -50,6 +56,7 @@ on:
 ## Artifacts
 
 The workflow uploads an audit report artifact:
+
 - **Name**: `dependency-audit-report-{run_number}`
 - **Retention**: 90 days
 - **Contents**: Security audit + outdated packages report
@@ -65,16 +72,19 @@ permissions:
 ## Local Testing
 
 ### Run Security Audit
+
 ```bash
 npm audit --audit-level=moderate
 ```
 
 ### Check Outdated Packages
+
 ```bash
 npm outdated
 ```
 
 ### Fix Vulnerabilities Automatically
+
 ```bash
 # Safe updates (semver-compatible)
 npm audit fix
@@ -88,10 +98,12 @@ npm audit fix --force
 When the workflow creates a security issue:
 
 ### 1. Review the Report
+
 - Check the audit report artifact
 - Identify affected packages and severity
 
 ### 2. Update Dependencies
+
 ```bash
 # Update specific package
 npm update <package-name>
@@ -101,6 +113,7 @@ npm audit fix
 ```
 
 ### 3. Test Changes
+
 ```bash
 # Run full test suite
 npm run test:all
@@ -110,6 +123,7 @@ npm run dev
 ```
 
 ### 4. Commit and Close Issue
+
 ```bash
 git add package.json package-lock.json
 git commit -m "fix(deps): resolve security vulnerabilities
@@ -126,12 +140,14 @@ Closes #<issue-number>"
 ## Workflow Outputs
 
 ### Success (No Vulnerabilities)
+
 ```
 ✅ Security Audit: Passed
 ✅ found 0 vulnerabilities
 ```
 
 ### Failure (Vulnerabilities Detected)
+
 ```
 ❌ Security Audit: Failed
 ❌ found X vulnerabilities (Y moderate, Z high)
@@ -141,16 +157,19 @@ Closes #<issue-number>"
 ## Monitoring Best Practices
 
 ### Weekly Review
+
 1. Check Monday notifications for security issues
 2. Prioritize high/critical vulnerabilities
 3. Update dependencies within 7 days
 
 ### Proactive Updates
+
 - Run `npm outdated` regularly
 - Update minor/patch versions monthly
 - Test major version updates in separate branch
 
 ### Security Severity Levels
+
 - **Critical**: Fix immediately (same day)
 - **High**: Fix within 3 days
 - **Moderate**: Fix within 1 week
@@ -159,16 +178,19 @@ Closes #<issue-number>"
 ## Troubleshooting
 
 ### Workflow Fails to Create Issue
+
 - Check workflow permissions in repository settings
 - Verify `issues: write` permission is enabled
 - Review GitHub Actions logs
 
 ### False Positives
+
 - Some vulnerabilities may not apply to development dependencies
 - Review CVE details before updating
 - Consider using `npm audit --production` for production-only audit
 
 ### Breaking Changes
+
 - Test updates in development branch first
 - Review package changelogs for breaking changes
 - Use `npm audit fix --dry-run` to preview changes

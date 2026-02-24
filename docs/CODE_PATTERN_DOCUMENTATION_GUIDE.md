@@ -21,6 +21,7 @@ This document explains code patterns and examples in the documentation that may 
 **Usage**: Standard JavaScript/documentation convention
 
 **Examples**:
+
 ```javascript
 // Valid code example showing placeholder
 this.notifyObservers(/* ... */);
@@ -29,6 +30,7 @@ const errorMap = { /* ... */ };
 ```
 
 **Files Using This Pattern**:
+
 - `docs/issue-189/CREATE_ISSUES_GUIDE.md` (line 572)
 - `docs/issue-189/ISSUE_189_NEXT_STEPS.md` (line 473)
 - `docs/architecture/GEOLOCATION_SERVICE_REFACTORING.md` (lines 142, 159, 197)
@@ -45,12 +47,14 @@ const errorMap = { /* ... */ };
 **Usage**: Code transformation scripts
 
 **Examples**:
+
 ```javascript
 // Valid regex to replace class references
 content = content.replace(/AddressDataExtractor\./g, 'AddressCache.getInstance().');
 ```
 
 **Files Using This Pattern**:
+
 - `docs/STATIC_WRAPPER_ELIMINATION.md` (line 590)
 
 **Why Valid**: This is actual JavaScript code showing how to perform mass refactoring with regex replacements.
@@ -64,6 +68,7 @@ content = content.replace(/AddressDataExtractor\./g, 'AddressCache.getInstance()
 **Usage**: Test validation for HTML generation
 
 **Examples**:
+
 ```javascript
 // Valid regex for HTML tag validation
 const openingTags = (html.match(/<\w+/g) || []).length;
@@ -71,6 +76,7 @@ const closingTags = (html.match(/<\/\w+>/g) || []).length;
 ```
 
 **Files Using This Pattern**:
+
 - `docs/testing/HTML_GENERATION.md` (lines 134-135)
 
 **Why Valid**: These are test assertions ensuring HTML output is well-formed with balanced tags.
@@ -84,12 +90,14 @@ const closingTags = (html.match(/<\/\w+>/g) || []).length;
 **Usage**: Automated validation tooling
 
 **Example**:
+
 ```javascript
 // Valid regex for pattern whitelisting
 if (matches(/\/\*\s*\.\.\.\s*\*\//)) skip();
 ```
 
 **Files Using This Pattern**:
+
 - `docs/misc/PROJECT_CLARIFICATION.md`
 
 **Why Valid**: This is documentation showing how to configure automated tools to ignore `/* ... */` patterns.
@@ -103,12 +111,14 @@ if (matches(/\/\*\s*\.\.\.\s*\*\//)) skip();
 **Usage**: Architecture documentation
 
 **Examples**:
+
 ```markdown
 Directory structure explanation (/src for library organization)
 Source Directory Details: Timing module (/src/timing/)
 ```
 
 **Files Using This Pattern**:
+
 - `docs/INDEX.md` (lines 82, 85)
 
 **Why Valid**: These are descriptive references to directory structure, not hyperlinks or code paths.
@@ -173,11 +183,13 @@ const VALIDATE_PATTERNS = [
 **Action Required**: ❌ None - patterns are correct  
 
 **Impact**:
+
 - ✅ Code examples remain clear and accurate
 - ✅ Documentation maintains standard conventions
 - ✅ Automated checks can be improved to exclude these patterns
 
 **Recommendation**:
+
 - Update automated validation scripts to whitelist code patterns
 - No changes needed to existing documentation
 - This guide serves as reference for future validation improvements

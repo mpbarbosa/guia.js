@@ -73,14 +73,14 @@ The consolidated report (`../DOCUMENTATION_CONSISTENCY_ANALYSIS_CONSOLIDATED.md`
 
 ## When to Use Archived Reports
 
-### Use Archived Reports When:
+### Use Archived Reports When
 
 1. **Historical Context Needed**: Understanding why a decision was made at a specific date
 2. **Detailed Analysis Required**: Original reports have more granular detail
 3. **Issue Timeline Verification**: Confirming when a specific issue was first identified
 4. **Audit Trail**: Compliance or review requiring original dated documents
 
-### Use Consolidated Report When:
+### Use Consolidated Report When
 
 1. **Current Status Needed**: What's the latest documentation health?
 2. **Quick Reference**: What standards have been established?
@@ -105,6 +105,7 @@ All archived files remain **unchanged** from their original state. Any correctio
 ### Verification
 
 Original file checksums (for integrity verification):
+
 ```bash
 # Generate checksums
 cd docs/reports/analysis/archive

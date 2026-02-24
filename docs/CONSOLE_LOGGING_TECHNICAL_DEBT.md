@@ -1,4 +1,5 @@
 # Console Logging Technical Debt
+
 **Date:** 2026-01-09  
 **Severity:** ⚠️ LOW (acceptable for alpha)  
 **Target:** v1.0.0 production release  
@@ -9,6 +10,7 @@
 ## 📊 Current State (v0.9.0-alpha)
 
 ### Console Usage Statistics
+
 ```bash
 Total console calls: 156
 ├─ console.log():   116 (74%)
@@ -19,12 +21,14 @@ Files affected: 29/35 (83%)
 ```
 
 ### Logger Utility Status
+
 - **Location:** `src/utils/logger.js`
 - **Design:** ✅ Well-designed with timestamps
 - **Adoption:** 7/35 files (20% - LOW)
 - **Functions:** `log()`, `warn()`, `error()`
 
 ### ESLint Configuration
+
 ```javascript
 // eslint.config.js
 rules: {
@@ -37,23 +41,27 @@ rules: {
 ## 🎯 Why This is Acceptable for Alpha
 
 ### 1. Development Stage
+
 - **v0.9.0-alpha** is pre-release software
 - Console logging aids rapid debugging
 - No production deployment yet
 - Focus on features, not infrastructure
 
 ### 2. Application Type
+
 - Tourist guide web application
 - Not a critical enterprise API
 - Not handling sensitive data logging
 - Browser-based (console visible to developers)
 
 ### 3. Existing Tooling
+
 - Logger utility exists (`src/utils/logger.js`)
 - Can be adopted incrementally
 - No architectural blocker
 
 ### 4. ESLint Approval
+
 - `no-console: 'off'` explicitly set
 - Intentional decision documented
 - Consistent with alpha development
@@ -63,6 +71,7 @@ rules: {
 ## 🎯 Roadmap for v1.0.0 Production
 
 ### Goals
+
 1. **Consistency:** All logging through logger utility
 2. **Levels:** DEBUG, INFO, WARN, ERROR support
 3. **Control:** Environment-based log level filtering
@@ -78,6 +87,7 @@ rules: {
 ### Tasks
 
 #### 1.1 Update ESLint Configuration (5 min)
+
 ```javascript
 // eslint.config.js
 rules: {
@@ -93,6 +103,7 @@ rules: {
 ```
 
 #### 1.2 Migrate Console Calls (2-3 hours)
+
 ```bash
 # Strategy: Automated find/replace with manual verification
 
@@ -109,6 +120,7 @@ import { log, warn, error } from './utils/logger.js';
 ```
 
 **Example Migration:**
+
 ```javascript
 // Before
 console.log('Position updated', position);
@@ -124,6 +136,7 @@ error('Geolocation failed', error);
 ```
 
 #### 1.3 Validation (30 min)
+
 ```bash
 # Verify no console usage remains
 npm run lint  # Should error on any console.*
@@ -137,6 +150,7 @@ python3 -m http.server 9000
 ```
 
 ### Success Criteria
+
 - [ ] ✅ ESLint enforces logger usage (no-console: 'error')
 - [ ] ✅ All 156 console calls migrated to logger
 - [ ] ✅ All tests passing (1,282 tests)
@@ -248,6 +262,7 @@ setLogLevel(LOG_LEVELS[env] || LogLevel.INFO);
 ```
 
 ### Success Criteria
+
 - [ ] ✅ LogLevel enum defined
 - [ ] ✅ setLogLevel() / getLogLevel() functions
 - [ ] ✅ debug(), log(), warn(), error() respect levels
@@ -264,12 +279,14 @@ setLogLevel(LOG_LEVELS[env] || LogLevel.INFO);
 ### Optional: Integration with Logging Service
 
 **Options:**
+
 1. **Sentry** - Error tracking and performance monitoring
 2. **LogRocket** - Session replay + logging
 3. **Datadog** - Full observability platform
 4. **Custom** - Own backend logging API
 
 **Example: Sentry Integration**
+
 ```javascript
 // src/utils/logger.js
 import * as Sentry from '@sentry/browser';
@@ -289,12 +306,14 @@ export const error = (message, ...params) => {
 ```
 
 ### Decision Factors
+
 - **Budget:** Most services have free tiers
 - **Privacy:** Tourist guide app (no PII typically)
 - **Requirements:** Do we need session replay? Error tracking? Analytics?
 - **Complexity:** Added dependency and configuration
 
 ### Success Criteria
+
 - [ ] ✅ Production logging service chosen
 - [ ] ✅ Integration implemented
 - [ ] ✅ Privacy policy updated (if needed)
@@ -306,6 +325,7 @@ export const error = (message, ...params) => {
 ## 📊 Impact Analysis
 
 ### Current State (v0.9.0-alpha)
+
 ```
 Console Calls: 156
 Logger Usage: 20%
@@ -314,6 +334,7 @@ Production Ready: No
 ```
 
 ### After Phase 1 (v0.9.0)
+
 ```
 Console Calls: 0
 Logger Usage: 100%
@@ -322,6 +343,7 @@ Production Ready: Yes (basic)
 ```
 
 ### After Phase 2 (v0.9.0)
+
 ```
 Console Calls: 0
 Logger Usage: 100%
@@ -331,6 +353,7 @@ Production Ready: Yes (good)
 ```
 
 ### After Phase 3 (v1.0.0)
+
 ```
 Console Calls: 0
 Logger Usage: 100%
@@ -345,13 +368,16 @@ Production Ready: Yes (excellent)
 ## 🎯 Prioritization
 
 ### Must Have (v1.0.0)
+
 - ✅ Phase 1: Enforce logger utility
 - ✅ Phase 2: Add logging levels
 
 ### Nice to Have (v1.0.0+)
+
 - 🔵 Phase 3: Production logging service
 
 ### Rationale
+
 - Phases 1 & 2 provide consistency and control
 - Phase 3 adds value but not critical for initial launch
 - Can add production logging post-launch based on needs
@@ -361,17 +387,20 @@ Production Ready: Yes (excellent)
 ## 🚀 Implementation Timeline
 
 ### v0.9.0 (Next Alpha)
+
 - **Focus:** Features and bug fixes
 - **Logging:** Accept current console usage
 - **Action:** None
 
 ### v0.9.0 (Beta)
+
 - **Focus:** Production readiness
 - **Logging:** Implement Phases 1 & 2
 - **Effort:** 3-5 hours
 - **Timeline:** 1 day (with testing)
 
 ### v1.0.0 (Production)
+
 - **Focus:** Launch preparation
 - **Logging:** Evaluate Phase 3 (optional)
 - **Decision:** Based on budget/requirements
@@ -419,11 +448,13 @@ Production Ready: Yes (excellent)
 ## 📚 References
 
 ### Internal
+
 - `src/utils/logger.js` - Current logger implementation
 - `eslint.config.js` - Linting configuration
 - `docs/TESTING.md` - Testing guidelines
 
 ### External
+
 - [RFC 5424 Syslog Severity Levels](https://datatracker.ietf.org/doc/html/rfc5424#section-6.2.1)
 - [Sentry Browser SDK](https://docs.sentry.io/platforms/javascript/)
 - [LogRocket Documentation](https://docs.logrocket.com/)
@@ -434,8 +465,10 @@ Production Ready: Yes (excellent)
 ## ✅ Decision Log
 
 ### 2026-01-09: Defer to v1.0.0
+
 **Decision:** Accept current console usage for v0.9.0-alpha  
 **Rationale:**
+
 - Alpha stage (pre-production)
 - Console logging aids development
 - Logger utility exists (20% adoption)

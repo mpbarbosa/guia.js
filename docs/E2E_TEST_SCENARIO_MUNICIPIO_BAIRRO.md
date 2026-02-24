@@ -11,6 +11,7 @@ This document describes the end-to-end test scenario created to verify the bug f
 **Root Cause**: `ReverseGeocoder.js` was only passing `posEvent` when notifying observers, but `HTMLHighlightCardsDisplayer` expects the full parameter signature: `(addressData, enderecoPadronizado, posEvent, loading, error)`.
 
 **Fix**: Updated `ReverseGeocoder.js` lines 290 and 298 to pass complete parameters:
+
 ```javascript
 // Success case
 this.notifyObservers(this.currentAddress, this.enderecoPadronizado, posEvent, false, null);
@@ -74,6 +75,7 @@ The E2E test verifies the complete user journey from geolocation request to disp
 ### Test Flow
 
 #### Setup Phase
+
 1. **Start HTTP Server** (port 9876/9877)
    - Serves application files from project root
    - Handles HTML, JS, CSS, JSON requests
@@ -85,11 +87,13 @@ The E2E test verifies the complete user journey from geolocation request to disp
 #### Test Execution Phase
 
 1. **Navigate to Application**
+
    ```javascript
    await page.goto(`http://localhost:${PORT}/src/index.html`);
    ```
 
 2. **Mock Geolocation API**
+
    ```javascript
    navigator.geolocation.getCurrentPosition = (success) => {
        success({
@@ -104,6 +108,7 @@ The E2E test verifies the complete user journey from geolocation request to disp
    ```
 
 3. **Mock Nominatim API**
+
    ```javascript
    window.fetch = function(url, ...args) {
        if (url.includes('nominatim.openstreetmap.org')) {
@@ -118,11 +123,13 @@ The E2E test verifies the complete user journey from geolocation request to disp
    ```
 
 4. **Trigger Geolocation**
+
    ```javascript
    window.AppState.manager.startTracking();
    ```
 
 5. **Wait for Updates**
+
    ```javascript
    await page.waitForFunction(() => {
        const el = document.getElementById('municipio-value');
@@ -131,6 +138,7 @@ The E2E test verifies the complete user journey from geolocation request to disp
    ```
 
 6. **Verify Results**
+
    ```javascript
    const municipio = await page.$eval('#municipio-value', el => el.textContent.trim());
    const bairro = await page.$eval('#bairro-value', el => el.textContent.trim());
@@ -140,12 +148,14 @@ The E2E test verifies the complete user journey from geolocation request to disp
    ```
 
 #### Teardown Phase
+
 - Close browser
 - Stop HTTP server
 
 ### Mock Data
 
 #### Nominatim API Response
+
 ```json
 {
     "place_id": 13943548,
@@ -168,9 +178,11 @@ The E2E test verifies the complete user journey from geolocation request to disp
 ## Test Cases
 
 ### Test Case 1: Primary Display Test
+
 **Purpose**: Verify municipio and bairro highlight cards are updated
 
 **Steps**:
+
 1. Load application with mocked APIs
 2. Trigger geolocation
 3. Wait for highlight cards to update
@@ -180,9 +192,11 @@ The E2E test verifies the complete user journey from geolocation request to disp
 **Expected Result**: ✅ Both cards display correct values
 
 ### Test Case 2: Complete Address Display
+
 **Purpose**: Verify standardized address display
 
 **Steps**:
+
 1. Load application with mocked APIs
 2. Trigger geolocation
 3. Wait for `endereco-padronizado-display` to update
@@ -191,18 +205,22 @@ The E2E test verifies the complete user journey from geolocation request to disp
 **Expected Result**: ✅ Complete address shown with all components
 
 ### Test Case 3: Initial State Verification
+
 **Purpose**: Verify placeholder display before geolocation
 
 **Steps**:
+
 1. Load application WITHOUT triggering geolocation
 2. Check `municipio-value` and `bairro-value`
 
 **Expected Result**: ✅ Both show placeholder "—"
 
 ### Test Case 4: Observer Notification Verification
+
 **Purpose**: Verify ReverseGeocoder passes correct parameters
 
 **Steps**:
+
 1. Capture console logs during geolocation
 2. Look for ObserverSubject notification logs
 3. Verify logs indicate proper parameter passing
@@ -210,9 +228,11 @@ The E2E test verifies the complete user journey from geolocation request to disp
 **Expected Result**: ✅ Logs show observer notifications with addressData
 
 ### Test Case 5: Synchronization Test
+
 **Purpose**: Verify both displays update with same data
 
 **Steps**:
+
 1. Load application with mocked APIs
 2. Trigger geolocation
 3. Wait for both displays to update
@@ -223,11 +243,13 @@ The E2E test verifies the complete user journey from geolocation request to disp
 ## Running the Tests
 
 ### Prerequisites
+
 ```bash
 npm install puppeteer@24.34.0
 ```
 
 ### Execute Tests
+
 ```bash
 # Run comprehensive E2E suite
 npx jest __tests__/e2e/municipio-bairro-display.e2e.test.js --runInBand
@@ -240,6 +262,7 @@ npx jest __tests__/e2e/*.e2e.test.js --runInBand --verbose
 ```
 
 ### Test Timing
+
 - **Setup**: ~5-10 seconds (browser launch + server start)
 - **Per Test**: ~5-15 seconds (page load + API mocking + geolocation + verification)
 - **Teardown**: ~2-3 seconds (browser close + server stop)
@@ -248,6 +271,7 @@ npx jest __tests__/e2e/*.e2e.test.js --runInBand --verbose
 ## Test Coverage
 
 ### Components Tested
+
 - ✅ `ReverseGeocoder` - Observer notification with complete parameters
 - ✅ `HTMLHighlightCardsDisplayer` - Highlight card updates
 - ✅ `HTMLAddressDisplayer` - Standardized address display
@@ -257,6 +281,7 @@ npx jest __tests__/e2e/*.e2e.test.js --runInBand --verbose
 - ✅ `ServiceCoordinator` - Observer wiring
 
 ### Integration Points Verified
+
 1. **Browser Geolocation API** → WebGeocodingManager
 2. **Nominatim API** → ReverseGeocoder
 3. **ReverseGeocoder** → HTMLHighlightCardsDisplayer (observer pattern)
@@ -267,13 +292,17 @@ npx jest __tests__/e2e/*.e2e.test.js --runInBand --verbose
 ## Known Limitations
 
 ### Current Test Status
+
 The E2E tests are currently experiencing issues with:
+
 1. **SPA Routing**: The application uses dynamic routing that may interfere with simple HTTP server
 2. **Module Loading**: ES6 module imports may not resolve correctly in test environment
 3. **AppState Initialization**: Timing issues with WebGeocodingManager initialization
 
 ### Recommended Approach
+
 For production testing, consider:
+
 1. **Use actual web server**: `python3 -m http.server 9000`
 2. **Manual E2E testing**: Follow test scenarios manually in browser
 3. **Integration tests**: Use existing Jest tests for component integration
@@ -284,11 +313,13 @@ For production testing, consider:
 To manually verify the fix:
 
 1. **Start Server**:
+
    ```bash
    python3 -m http.server 9000
    ```
 
 2. **Open Browser**:
+
    ```
    http://localhost:9000/src/index.html
    ```
@@ -301,6 +332,7 @@ To manually verify the fix:
    - Verify values match your current location
 
 5. **Test with Specific Coordinates** (using browser console):
+
    ```javascript
    // Simulate Arapiraca, AL coordinates
    AppState.manager.geolocationService.onPositionUpdate({
@@ -316,6 +348,7 @@ To manually verify the fix:
 ## Conclusion
 
 This E2E test scenario comprehensively verifies the municipio and bairro display fix by:
+
 - Testing the complete user journey from geolocation to display
 - Verifying observer pattern parameter passing
 - Ensuring data synchronization between multiple display components

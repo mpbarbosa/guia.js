@@ -8,11 +8,13 @@
 ## 📚 Documentation Files
 
 ### 1. Comprehensive Guide (Main Reference)
+
 **File:** [docs/JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md)  
 **Length:** 1,505 lines  
 **Audience:** All contributors, maintainers, GitHub Copilot  
 
 **Contents:**
+
 - Executive summary of the problem
 - Detailed module systems comparison (ES6 vs CommonJS)
 - Jest configuration for ES6 modules
@@ -23,7 +25,8 @@
 - Decision matrix for choosing approaches
 - Real examples from Guia.js
 
-**When to Read:** 
+**When to Read:**
+
 - Before starting Jest ESM migration
 - When encountering module system errors
 - When making architectural decisions about modules
@@ -32,11 +35,13 @@
 ---
 
 ### 2. Quick Reference (Maintainer Guide)
+
 **File:** [.github/TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md)  
 **Length:** 666 lines  
 **Audience:** Maintainers, contributors, GitHub Copilot  
 
 **Contents:**
+
 - TL;DR decision guide
 - Current Guia.js state analysis
 - Ranked solution strategies
@@ -47,6 +52,7 @@
 - GitHub Copilot instructions
 
 **When to Read:**
+
 - Quick reference during implementation
 - When reviewing PRs with module changes
 - When writing new test files
@@ -55,16 +61,19 @@
 ---
 
 ### 3. Module Splitting Guide (Updated)
+
 **File:** [docs/MODULE_SPLITTING_GUIDE.md](../docs/MODULE_SPLITTING_GUIDE.md)  
 **Updates:** Added Jest and ES6 modules section  
 
 **New Content:**
+
 - Jest configuration for ES6 modules
 - Common Jest pitfalls with ES6
 - Test file templates
 - Cross-references to Jest guides
 
 **When to Read:**
+
 - When splitting modules
 - When setting up new tests
 - For general module system understanding
@@ -72,16 +81,19 @@
 ---
 
 ### 4. Unit Test Guide (Updated)
+
 **File:** [.github/UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)  
 **Updates:** Added Jest ESM warning and quick setup  
 
 **New Content:**
+
 - Warning about ES6 module configuration
 - Quick setup instructions
 - Links to comprehensive guides
 - Common error fixes
 
 **When to Read:**
+
 - When writing new unit tests
 - When Jest tests fail mysteriously
 - For Jest matcher reference
@@ -89,16 +101,19 @@
 ---
 
 ### 5. Practical Example
+
 **File:** [examples/jest-esm-migration-example.js](../examples/jest-esm-migration-example.js)  
 **Length:** 400+ lines  
 **Type:** Runnable demonstration  
 
 **Run it:**
+
 ```bash
 node examples/jest-esm-migration-example.js
 ```
 
 **Contents:**
+
 - Visual comparison of problems
 - Migration steps
 - Common patterns
@@ -106,6 +121,7 @@ node examples/jest-esm-migration-example.js
 - Expected results
 
 **When to Use:**
+
 - To see migration overview
 - To share with team
 - As presentation material
@@ -151,11 +167,13 @@ node examples/jest-esm-migration-example.js
 ## 📊 Current Guia.js Status
 
 ### The Problem
+
 - **Source code:** Uses ES6 modules (`import/export`) ✅
 - **Test files:** Use CommonJS (`require/module.exports`) ❌
 - **Result:** 19 out of 40 test suites failing (47.5%)
 
 ### The Root Cause
+
 ```
 Source: import { helper } from './utils.js';  // ES6
 Test:   const { MyClass } = require('./src/guia.js');  // CommonJS
@@ -163,6 +181,7 @@ Error:  Cannot use import statement outside a module
 ```
 
 ### Recommended Solution
+
 **Migrate tests to ES6 modules** (Strategy 1 in comprehensive guide)
 
 **Estimated Effort:** 1-2 days  
@@ -173,6 +192,7 @@ Error:  Cannot use import statement outside a module
 ## 🔑 Key Concepts
 
 ### ES6 Modules
+
 ```javascript
 // Export
 export const myFunction = () => { };
@@ -183,12 +203,14 @@ import { myFunction, MyClass } from './module.js';
 ```
 
 **Characteristics:**
+
 - ✅ JavaScript standard
 - ✅ Static analysis
 - ✅ Tree-shaking
 - ⚠️ Jest needs configuration
 
 ### CommonJS
+
 ```javascript
 // Export
 module.exports = { myFunction, MyClass };
@@ -198,6 +220,7 @@ const { myFunction, MyClass } = require('./module');
 ```
 
 **Characteristics:**
+
 - ✅ Node.js standard
 - ✅ Jest default
 - ❌ No tree-shaking
@@ -219,6 +242,7 @@ const { myFunction } = require('../src/module.js');
 ```
 
 **Solutions:**
+
 1. Migrate tests to ES6 (recommended)
 2. Use Babel transpilation
 3. Use dual exports (not recommended)
@@ -269,17 +293,20 @@ describe('myFunction', () => {
 ## 📖 Reading Order
 
 ### For New Contributors
+
 1. **Quick Reference:** [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) (30 min)
 2. **Example:** Run `node examples/jest-esm-migration-example.js` (5 min)
 3. **Deep Dive:** [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) (2 hours)
 
 ### For Maintainers
+
 1. **Context:** [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) → The Guia.js Context (15 min)
 2. **Strategy:** Decision Matrix section (10 min)
 3. **Implementation:** Migration Guide section (30 min)
 4. **Reference:** Keep [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) open during work
 
 ### For Code Reviewers
+
 1. **Standards:** [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) → Best Practices (15 min)
 2. **Patterns:** Common Patterns section (10 min)
 3. **Reference:** [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) → Best Practices (30 min)

@@ -1,6 +1,7 @@
 # Functional Requirements: Firefox Console Log Capture Library
 
 ## Document Information
+
 - **Version**: 1.0.0
 - **Date**: 2026-01-04
 - **Python Version**: 3.13+
@@ -10,9 +11,11 @@
 ## 1. Overview
 
 ### 1.1 Purpose
+
 This library provides functionality to capture JavaScript console logs from Firefox browser during Selenium-based integration tests. It enables test developers to verify console output, detect JavaScript errors, and debug frontend issues programmatically.
 
 ### 1.2 Scope
+
 - Capture console logs from Firefox browser using Selenium WebDriver
 - Support multiple log levels (INFO, WARNING, ERROR, DEBUG)
 - Integration with pytest test framework
@@ -20,6 +23,7 @@ This library provides functionality to capture JavaScript console logs from Fire
 - Thread-safe implementation for parallel test execution
 
 ### 1.3 Target Users
+
 - QA Engineers running Selenium integration tests
 - Developers debugging frontend JavaScript issues
 - CI/CD pipelines validating console output
@@ -27,10 +31,12 @@ This library provides functionality to capture JavaScript console logs from Fire
 ## 2. Technical Requirements
 
 ### 2.1 Python Version
+
 - **Minimum**: Python 3.13.0
 - **Rationale**: Modern type hints, improved error messages, better performance
 
 ### 2.2 Dependencies
+
 ```python
 selenium >= 4.15.0  # Modern WebDriver API
 pytest >= 7.0.0     # Test framework integration
@@ -38,6 +44,7 @@ typing-extensions   # Additional type hints if needed
 ```
 
 ### 2.3 Browser Support
+
 - **Primary**: Firefox (latest stable)
 - **WebDriver**: GeckoDriver (compatible with Firefox version)
 
@@ -46,44 +53,53 @@ typing-extensions   # Additional type hints if needed
 ### 3.1 Core Functionality
 
 #### FR-1: Console Log Retrieval
+
 **Description**: The library shall retrieve JavaScript console logs from Firefox browser.
 
 **Acceptance Criteria**:
+
 - Capture logs using Firefox's browser log capabilities
 - Return logs as structured data (timestamp, level, message, source)
 - Handle multiple log entries in a single retrieval
 - Support real-time log capture during test execution
 
 **Python 3.13 Implementation Notes**:
+
 - Use modern type hints: `list[dict[str, str]]` instead of `List[Dict[str, str]]`
 - Utilize structural pattern matching for log parsing (match/case)
 - Leverage improved exception groups for error handling
 
 #### FR-2: Log Level Filtering
+
 **Description**: The library shall filter console logs by severity level.
 
 **Supported Log Levels**:
+
 - `SEVERE` / `ERROR`: JavaScript errors, uncaught exceptions
 - `WARNING`: JavaScript warnings
 - `INFO`: Informational messages
 - `DEBUG`: Debug-level messages
 
 **Acceptance Criteria**:
+
 - Filter logs by single level
 - Filter logs by multiple levels
 - Default behavior captures all levels
 - Return empty list if no logs match filter
 
 #### FR-3: Firefox WebDriver Configuration
+
 **Description**: The library shall configure Firefox WebDriver to enable console log capture.
 
 **Acceptance Criteria**:
+
 - Set appropriate Firefox preferences for logging
 - Configure log levels in browser capabilities
 - Preserve existing WebDriver options
 - Work with both local and remote WebDriver instances
 
 **Firefox Configuration Requirements**:
+
 ```python
 # Enable browser console logging
 firefox_options.set_preference("devtools.console.stdout.content", True)
@@ -91,18 +107,22 @@ firefox_options.log.level = "trace"  # Enable verbose logging
 ```
 
 #### FR-4: pytest Integration
+
 **Description**: The library shall integrate seamlessly with pytest framework.
 
 **Acceptance Criteria**:
+
 - Provide pytest fixtures for console log capture
 - Support parameterized tests
 - Compatible with pytest plugins
 - Enable console log assertions in tests
 
 #### FR-5: Error Handling
+
 **Description**: The library shall handle errors gracefully.
 
 **Error Scenarios**:
+
 - Browser not supporting log retrieval
 - WebDriver session closed
 - Invalid log level specified
@@ -110,6 +130,7 @@ firefox_options.log.level = "trace"  # Enable verbose logging
 - JSON parsing errors
 
 **Acceptance Criteria**:
+
 - Raise custom exceptions with descriptive messages
 - Log warnings for non-critical issues
 - Return empty results instead of crashing
@@ -118,6 +139,7 @@ firefox_options.log.level = "trace"  # Enable verbose logging
 ### 3.2 Data Structures
 
 #### Log Entry Structure
+
 ```python
 from typing import TypedDict
 
@@ -168,6 +190,7 @@ class ConsoleLogEntry(TypedDict):
 #### pytest Fixture: `console_capture`
 
 **Usage Example**:
+
 ```python
 @pytest.fixture
 def console_capture(firefox_driver):
@@ -210,22 +233,26 @@ class ConsoleConfig:
 ## 4. Non-Functional Requirements
 
 ### 4.1 Performance
+
 - Log retrieval should complete within 500ms for typical scenarios
 - Support capturing up to 10,000 log entries without performance degradation
 - Minimal memory overhead (<50MB for typical usage)
 
 ### 4.2 Reliability
+
 - Handle browser crashes gracefully
 - Recover from WebDriver session errors
 - Retry mechanism for transient failures (max 3 retries)
 
 ### 4.3 Maintainability
+
 - Type hints for all public APIs (Python 3.13 style)
 - Docstrings following Google style guide
 - Unit test coverage > 80%
 - Integration test coverage for key workflows
 
 ### 4.4 Compatibility
+
 - Compatible with existing integration tests (no breaking changes)
 - Support both synchronous and asynchronous test execution
 - Work with pytest-xdist for parallel testing
@@ -235,6 +262,7 @@ class ConsoleConfig:
 ### 5.1 Python 3.13 Specific Features
 
 #### Modern Type Hints
+
 ```python
 # Use built-in generics (no List, Dict imports needed)
 def get_logs(self) -> list[dict[str, str | int]]:
@@ -250,6 +278,7 @@ type Timestamp = int
 ```
 
 #### Structural Pattern Matching
+
 ```python
 def parse_log_level(level_str: str) -> LogLevel:
     match level_str.upper():
@@ -266,6 +295,7 @@ def parse_log_level(level_str: str) -> LogLevel:
 ```
 
 #### Exception Groups
+
 ```python
 try:
     logs = self._retrieve_logs()
@@ -280,12 +310,14 @@ except* JSONDecodeError as eg:
 ### 5.2 Selenium 4.x API Updates
 
 **Old API (Python 3.8, Selenium 3.x)**:
+
 ```python
 # Deprecated approach
 logs = driver.get_log('browser')
 ```
 
 **New API (Python 3.13, Selenium 4.15+)**:
+
 ```python
 # Modern approach using service logs
 from selenium.webdriver.firefox.service import Service as FirefoxService
@@ -298,6 +330,7 @@ logs = driver.get_log('browser')  # Still supported in Firefox
 ```
 
 **Firefox-Specific Considerations**:
+
 - Firefox uses GeckoDriver, not ChromeDriver
 - Browser logs may require enabling specific Firefox preferences
 - CDP support in Firefox is limited compared to Chrome
@@ -305,7 +338,7 @@ logs = driver.get_log('browser')  # Still supported in Firefox
 
 ### 5.3 Known Limitations (from Stack Overflow Reference)
 
-1. **Firefox Log Support**: 
+1. **Firefox Log Support**:
    - Firefox's log capture differs from Chrome
    - Some log types may not be available
    - Workaround: Use custom console listener injection
@@ -316,6 +349,7 @@ logs = driver.get_log('browser')  # Still supported in Firefox
    - Store logs in browser storage for retrieval
 
 **Workaround Implementation**:
+
 ```python
 def inject_console_listener(driver: webdriver.Firefox) -> None:
     """Inject JavaScript to capture console logs."""
@@ -344,6 +378,7 @@ def retrieve_captured_logs(driver: webdriver.Firefox) -> list[dict]:
 ## 6. Testing Requirements
 
 ### 6.1 Unit Tests
+
 - Test log parsing logic
 - Test log filtering by level
 - Test error handling
@@ -351,6 +386,7 @@ def retrieve_captured_logs(driver: webdriver.Firefox) -> list[dict]:
 - Mock WebDriver interactions
 
 ### 6.2 Integration Tests
+
 - Test with real Firefox browser
 - Test console.log(), console.error(), console.warn()
 - Test with multiple log entries
@@ -359,6 +395,7 @@ def retrieve_captured_logs(driver: webdriver.Firefox) -> list[dict]:
 - Test parallel test execution
 
 ### 6.3 Test Coverage Goals
+
 - Unit tests: > 90% code coverage
 - Integration tests: Cover all public API methods
 - Edge cases: Browser crashes, network issues, invalid inputs
@@ -366,12 +403,14 @@ def retrieve_captured_logs(driver: webdriver.Firefox) -> list[dict]:
 ## 7. Documentation Requirements
 
 ### 7.1 User Documentation
+
 - README with quick start guide
 - API reference with examples
 - Common troubleshooting scenarios
 - Migration guide from old implementations
 
 ### 7.2 Code Documentation
+
 - Type hints on all public methods
 - Docstrings following Google style guide
 - Inline comments for complex logic
@@ -380,6 +419,7 @@ def retrieve_captured_logs(driver: webdriver.Firefox) -> list[dict]:
 ## 8. Success Criteria
 
 ### 8.1 Functional Acceptance
+
 - [ ] Successfully capture console logs from Firefox
 - [ ] Filter logs by level accurately
 - [ ] pytest integration works without issues
@@ -387,6 +427,7 @@ def retrieve_captured_logs(driver: webdriver.Firefox) -> list[dict]:
 - [ ] Error handling covers all edge cases
 
 ### 8.2 Quality Metrics
+
 - [ ] 90%+ unit test coverage
 - [ ] All integration tests pass
 - [ ] No critical security vulnerabilities
@@ -394,6 +435,7 @@ def retrieve_captured_logs(driver: webdriver.Firefox) -> list[dict]:
 - [ ] Documentation complete and accurate
 
 ### 8.3 Python 3.13 Compliance
+
 - [ ] Uses modern type hints (no typing module imports for basic types)
 - [ ] No deprecated APIs used
 - [ ] Passes mypy strict mode
@@ -439,4 +481,5 @@ def retrieve_captured_logs(driver: webdriver.Firefox) -> list[dict]:
 ---
 
 **Document Version History**:
+
 - v1.0.0 (2026-01-04): Initial functional requirements document

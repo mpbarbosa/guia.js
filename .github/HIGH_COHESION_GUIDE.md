@@ -35,11 +35,13 @@ Each workflow should have one primary responsibility and do it well.
 #### Example: copilot-coding-agent.yml
 
 This workflow focuses exclusively on validation and security:
+
 - JavaScript syntax validation
 - Security scanning
 - Basic code quality checks
 
 **Benefits**:
+
 - Clear purpose: "Validate code quality"
 - Easy to debug when validation fails
 - Can be triggered independently
@@ -48,17 +50,20 @@ This workflow focuses exclusively on validation and security:
 #### Example: modified-files.yml
 
 This workflow focuses on test execution and documentation:
+
 - Running tests for modified files
 - Updating documentation timestamps
 - Generating coverage reports
 
 **Benefits**:
+
 - Clear purpose: "Test and document changes"
 - Separated from validation concerns
 - Can be optimized for test performance
 - Documentation updates are automatic
 
 **Anti-pattern to Avoid**:
+
 ```yaml
 # DON'T: Mixed responsibilities
 name: Everything Workflow
@@ -93,12 +98,14 @@ Each action should perform one specific, well-defined task.
 ```
 
 **What it does**:
+
 - Takes JavaScript file paths as input
 - Runs Node.js syntax validation
 - Reports syntax errors
 - Returns success/failure status
 
 **What it doesn't do**:
+
 - Run tests (that's a different concern)
 - Check security (separate action)
 - Format code (different responsibility)
@@ -116,12 +123,14 @@ Each action should perform one specific, well-defined task.
 ```
 
 **What it does**:
+
 - Scans JavaScript files for security issues
 - Checks for common vulnerabilities
 - Reports findings
 - Fails on critical issues
 
 **What it doesn't do**:
+
 - Validate syntax (validate-js does that)
 - Run functional tests (test workflow does that)
 - Deploy code (deployment action does that)
@@ -137,6 +146,7 @@ Each template is specialized for a specific type of issue, with sections tailore
 **Purpose**: Track code quality and refactoring needs
 
 **Focused Sections**:
+
 - Code location and type of debt
 - Impact on maintainability
 - Refactoring considerations
@@ -149,6 +159,7 @@ Each template is specialized for a specific type of issue, with sections tailore
 **Purpose**: Propose new functionality
 
 **Focused Sections**:
+
 - Feature description and use case
 - Implementation considerations
 - Success criteria
@@ -161,6 +172,7 @@ Each template is specialized for a specific type of issue, with sections tailore
 **Purpose**: Address infrastructure and workflow issues
 
 **Focused Sections**:
+
 - Configuration issue type (workflow, action, CI/CD)
 - Environment details
 - Implementation considerations
@@ -177,6 +189,7 @@ Documentation files are organized by topic with clear, focused content.
 #### CLASS_DIAGRAM.md
 
 **Single Focus**: Architecture and class relationships
+
 - Class structure and responsibilities
 - Design patterns used
 - Refactoring history
@@ -186,6 +199,7 @@ Documentation files are organized by topic with clear, focused content.
 #### TESTING.md
 
 **Single Focus**: Test suite and testing practices
+
 - Test organization
 - Running tests
 - Coverage information
@@ -210,6 +224,7 @@ class AddressDataExtractor {
 ```
 
 **Problems**:
+
 - Too many responsibilities in one class
 - Hard to understand what it does
 - Difficult to test independently
@@ -235,6 +250,7 @@ class AddressCache {
 ```
 
 **Benefits Achieved**:
+
 1. **Improved Cohesion**: Each class has a single, well-defined responsibility
 2. **Better Maintainability**: Clear separation makes code easier to understand
 3. **Enhanced Testability**: Each concern can be tested independently (34 tests passing)
@@ -250,6 +266,7 @@ class AddressCache {
 4. **Name descriptively**: The name should reflect the single purpose
 
 **Good Example**:
+
 ```yaml
 name: Test Modified Files
 jobs:
@@ -264,6 +281,7 @@ jobs:
 All steps relate to testing - high cohesion.
 
 **Poor Example**:
+
 ```yaml
 name: Mixed Workflow
 jobs:
@@ -286,6 +304,7 @@ Unrelated concerns mixed together - low cohesion.
 4. **No hidden responsibilities**: Don't mix unrelated functionality
 
 **High Cohesion Action**:
+
 ```yaml
 name: 'Validate JavaScript Syntax'
 description: 'Validates JavaScript files for syntax errors'
@@ -305,6 +324,7 @@ runs:
 4. **Clear purpose**: Users should know immediately which template to use
 
 **Template Cohesion Checklist**:
+
 - [ ] Template name clearly indicates purpose
 - [ ] All sections relate to the issue type
 - [ ] No sections borrowed from unrelated templates
@@ -323,21 +343,25 @@ runs:
 ### Signs of High Cohesion
 
 ✅ **Can describe the component in one sentence**
+
 - "This workflow validates JavaScript syntax"
 - "This template reports technical debt"
 - "This action runs security scans"
 
 ✅ **Changes are localized**
+
 - Security changes only affect security-check action
 - Test changes only affect test-related workflows
 - Template changes don't affect workflows
 
 ✅ **Easy to name**
+
 - Names clearly indicate purpose
 - No need for "and" or "or" in names
 - Names are specific, not generic
 
 ✅ **Independent testing**
+
 - Each component can be tested alone
 - Tests don't require unrelated setup
 - Failures are easy to diagnose
@@ -345,20 +369,24 @@ runs:
 ### Signs of Low Cohesion
 
 ❌ **Hard to describe simply**
+
 - "This workflow does validation and testing and deployment..."
 - "This action handles multiple different things"
 
 ❌ **Changes cascade**
+
 - Changing one thing breaks unrelated functionality
 - Updates require touching many files
 - Side effects are unpredictable
 
 ❌ **Generic or compound names**
+
 - "Utility workflow"
 - "Helper action"
 - "General template"
 
 ❌ **Tangled testing**
+
 - Tests require complex setup
 - Failures are hard to diagnose
 - Can't test parts independently
@@ -555,6 +583,7 @@ test-runner (high cohesion)
 ```
 
 Each action:
+
 - ✅ **High cohesion**: Does one thing well
 - ✅ **Low coupling**: Minimal dependencies
 - ✅ **Clear interface**: Simple inputs/outputs
@@ -619,6 +648,7 @@ describe('AddressCache', () => {
 - [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md) - Testing focused units
 
 ### Architecture Examples
+
 - [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) - Architecture showing cohesive classes
 - [WEBGEOCODINGMANAGER_REFACTORING.md](../docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - PR #189 cohesion improvements
 - [WEB_GEOCODING_MANAGER.md](../docs/architecture/WEB_GEOCODING_MANAGER.md) - Coordinator with focused responsibilities
@@ -658,30 +688,35 @@ If you have questions about applying high cohesion principles or need help refac
 Use this checklist when creating or reviewing `.github` components:
 
 ### Workflow Cohesion
+
 - [ ] Workflow has a single, clear purpose
 - [ ] All jobs relate to the main purpose
 - [ ] Unrelated concerns are in separate workflows
 - [ ] Name clearly indicates responsibility
 
 ### Action Cohesion
+
 - [ ] Action performs one specific task
 - [ ] All inputs relate to the main task
 - [ ] No hidden or unrelated functionality
 - [ ] Can describe purpose in one sentence
 
 ### Template Cohesion
+
 - [ ] Template addresses one type of issue
 - [ ] All sections relate to that issue type
 - [ ] No borrowed sections from unrelated templates
 - [ ] Purpose is immediately clear to users
 
 ### Documentation Cohesion
+
 - [ ] Document covers one topic area
 - [ ] All content relates to the main topic
 - [ ] Cross-references instead of duplicating
 - [ ] Easy to find information
 
 ### Overall Cohesion
+
 - [ ] Component does one thing well
 - [ ] Easy to understand and describe
 - [ ] Changes are localized

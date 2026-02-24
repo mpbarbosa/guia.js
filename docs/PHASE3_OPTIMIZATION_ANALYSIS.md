@@ -1,4 +1,5 @@
 # Phase 3: Dependency Optimization Analysis
+
 **Date:** 2026-01-09  
 **Project:** Guia Turístico v0.9.0-alpha  
 **Status:** 📋 ANALYSIS & RECOMMENDATIONS
@@ -8,12 +9,14 @@
 ## 📊 Executive Summary
 
 ### Current State ✅
+
 - **jsdom:** Already moved to devDependencies (Phase 2) ✅
 - **Production bundle:** Optimized (-7MB from Phase 2)
 - **Active usage:** Zero (all imports commented out)
 - **Test coverage:** Unaffected (jsdom tests skipped)
 
 ### Key Finding
+
 **jsdom is NOT actively used** - all imports are commented out due to ES module compatibility issues with parse5.
 
 ---
@@ -23,32 +26,40 @@
 ### Current Usage in Codebase
 
 #### Production Code (src/)
+
 ```bash
 grep -r "jsdom" src/
 # Result: No matches
 ```
+
 **Finding:** ✅ Zero production usage (correct classification as devDependency)
 
-#### Test Files (__tests__/)
+#### Test Files (**tests**/)
+
 ```bash
 grep -r "jsdom" __tests__/
 ```
 
 **Results:**
+
 1. **`__tests__/integration/HtmlSpeechSynthesisDisplayer.integration.test.js`**
+
    ```javascript
    // Temporarily disabled due to jsdom/parse5 ES module compatibility issues
    // import { JSDOM } from 'jsdom';
    ```
+
    - Status: ❌ Commented out
    - Reason: ES module compatibility issues
    - Tests: Skipped (documented)
 
 2. **`__tests__/integration/WebGeocodingManager.integration.test.js`**
+
    ```javascript
    // TODO: Mock browser environment - jsdom not yet installed
    // import { JSDOM } from 'jsdom';
    ```
+
    - Status: ❌ Commented out
    - Reason: Not yet implemented
    - Tests: Skipped (documented)
@@ -60,11 +71,13 @@ grep -r "jsdom" __tests__/
 ## 📦 2. Dependency Tree Analysis
 
 ### Current Installation
+
 ```bash
 npm list jsdom
 ```
 
 **Result:**
+
 ```
 guia_turistico@0.9.0-alpha
 ├─┬ guia.js (git dependency)
@@ -73,6 +86,7 @@ guia_turistico@0.9.0-alpha
 ```
 
 ### Key Insights
+
 1. **Direct dependency:** jsdom@27.4.0 in devDependencies ✅
 2. **Transitive dependency:** guia.js library also depends on jsdom
 3. **Deduped:** npm correctly shares single installation
@@ -94,36 +108,43 @@ guia_turistico@0.9.0-alpha
 ### jsdom vs Alternatives
 
 #### Current: jsdom@27.4.0
+
 ```bash
 npx bundlephobia jsdom@27.4.0
 ```
 
 **Estimated Results:**
+
 - **Package size:** ~2.5MB (compressed)
 - **Install size:** ~7.4MB (uncompressed)
 - **Dependencies:** 50+ packages
 - **Notable deps:** parse5, whatwg-url, cssom, webidl-conversions
 
 #### Alternative 1: happy-dom@14.0.0
+
 ```bash
 npx bundlephobia happy-dom@14.0.0
 ```
 
 **Estimated Results:**
+
 - **Package size:** ~400KB (compressed) - **84% smaller** 🎯
 - **Install size:** ~1.2MB (uncompressed) - **84% smaller** 🎯
 - **Dependencies:** 3 packages - **94% fewer** 🎯
 - **Performance:** ~2-10x faster (per benchmarks)
 
 #### Alternative 2: No DOM Testing Library
+
 **Approach:** Manual browser testing only
 
 **Benefits:**
+
 - Zero install size
 - Zero maintenance burden
 - Simpler test setup
 
 **Tradeoffs:**
+
 - Manual testing required
 - Slower feedback loop
 - Less automation
@@ -135,6 +156,7 @@ npx bundlephobia happy-dom@14.0.0
 ### Option A: Remove jsdom Entirely ✅ RECOMMENDED
 
 **Rationale:**
+
 - ✅ Currently unused (all imports commented out)
 - ✅ Tests work without it (1,282 passing)
 - ✅ Saves ~7.4MB devDependency size
@@ -142,6 +164,7 @@ npx bundlephobia happy-dom@14.0.0
 - ✅ Less maintenance burden
 
 **Implementation:**
+
 ```bash
 # 1. Remove jsdom from package.json
 npm uninstall jsdom
@@ -154,11 +177,13 @@ npm test  # Should still pass (1,282 tests)
 ```
 
 **Risks:** ⚠️ LOW
+
 - guia.js library still has jsdom as transitive dependency (unaffected)
 - Can always reinstall if needed in future
 - No active usage means zero breakage risk
 
 **Impact:**
+
 - ✅ -7.4MB devDependency size
 - ✅ -3 to 5 seconds npm install time
 - ✅ -1 devDependency to maintain
@@ -169,12 +194,14 @@ npm test  # Should still pass (1,282 tests)
 ### Option B: Replace with happy-dom 🟡 FUTURE CONSIDERATION
 
 **Rationale:**
+
 - 🎯 84% smaller (1.2MB vs 7.4MB)
 - 🎯 94% fewer dependencies (3 vs 50+)
 - 🎯 2-10x faster performance
 - 🎯 Better ES module support (avoids parse5 issues)
 
 **Implementation:**
+
 ```bash
 # 1. Remove jsdom
 npm uninstall jsdom
@@ -191,17 +218,20 @@ npm install --save-dev happy-dom@14.0.0
 ```
 
 **When to Consider:**
+
 - ✅ When re-enabling DOM integration tests
 - ✅ When ES module issues with jsdom persist
 - ✅ When bundle size optimization is priority
 - ✅ When faster test execution is needed
 
 **Risks:** ⚠️ MODERATE
+
 - API differences from jsdom (requires test refactoring)
 - Less mature (jsdom has 13+ years, happy-dom 3+ years)
 - Fewer features (97% compatible, some edge cases differ)
 
 **Effort:** 2-4 hours
+
 - Update 2 test files
 - Refactor JSDOM → Window API
 - Validate compatibility
@@ -212,22 +242,26 @@ npm install --save-dev happy-dom@14.0.0
 ### Option C: Keep jsdom as-is ⏸️ STATUS QUO
 
 **Rationale:**
+
 - Already in devDependencies (correct classification) ✅
 - guia.js library depends on it (transitive anyway)
 - May be needed if DOM tests re-enabled
 - ~7MB is acceptable for dev environment
 
 **When to Choose:**
+
 - ✅ Planning to re-enable DOM tests soon
 - ✅ Don't want to risk breaking guia.js dependency
 - ✅ Team prefers well-established libraries
 - ✅ Bundle size is not a concern (dev-only)
 
 **Risks:** ✅ ZERO
+
 - No changes, no risk
 - Works today, will work tomorrow
 
 **Impact:**
+
 - Status quo maintained
 - No optimization gains
 - No effort required
@@ -237,15 +271,18 @@ npm install --save-dev happy-dom@14.0.0
 ## 📋 5. Dependency Audit Results
 
 ### Production Dependencies ✅
+
 ```json
 "dependencies": {
   "guia.js": "github:mpbarbosa/guia_js",  // ✅ Used (core library)
   "ibira.js": "github:mpbarbosa/ibira.js" // ✅ Used (IBGE integration)
 }
 ```
+
 **Status:** ✅ All necessary, correctly classified
 
 ### Development Dependencies ⚠️
+
 ```json
 "devDependencies": {
   "eslint": "^9.39.2",  // ✅ Used (linting)
@@ -253,6 +290,7 @@ npm install --save-dev happy-dom@14.0.0
   "jsdom": "^27.3.0"    // ⚠️ Installed but unused (commented imports)
 }
 ```
+
 **Status:** ⚠️ jsdom is unused (candidate for removal)
 
 ### Audit Summary
@@ -274,6 +312,7 @@ npm install --save-dev happy-dom@14.0.0
 **Action:** Remove jsdom entirely
 
 **Justification:**
+
 1. Not actively used (all imports commented out)
 2. Tests pass without it (1,282 passing)
 3. Saves 7.4MB + ~5 seconds install time
@@ -281,6 +320,7 @@ npm install --save-dev happy-dom@14.0.0
 5. guia.js library has it as transitive dep (still available)
 
 **Steps:**
+
 ```bash
 # 1. Remove jsdom
 npm uninstall jsdom
@@ -359,6 +399,7 @@ Refs: docs/PHASE3_OPTIMIZATION_ANALYSIS.md"
 ### If jsdom is Removed ✅
 
 **Benefits:**
+
 | Metric | Before | After | Improvement |
 |--------|--------|-------|-------------|
 | **DevDep Size** | 7.4MB | 0MB | -7.4MB (100%) |
@@ -374,6 +415,7 @@ Refs: docs/PHASE3_OPTIMIZATION_ANALYSIS.md"
 ### If Replaced with happy-dom 🎯
 
 **Benefits:**
+
 | Metric | jsdom | happy-dom | Improvement |
 |--------|-------|-----------|-------------|
 | **Size** | 7.4MB | 1.2MB | -6.2MB (84%) |
@@ -383,6 +425,7 @@ Refs: docs/PHASE3_OPTIMIZATION_ANALYSIS.md"
 | **ES Modules** | ⚠️ Issues | ✅ Native | Better compat |
 
 **Risks:** ⚠️ MODERATE
+
 - API migration effort (2-4 hours)
 - Less mature ecosystem
 - 97% compatibility (some edge cases differ)
@@ -392,21 +435,25 @@ Refs: docs/PHASE3_OPTIMIZATION_ANALYSIS.md"
 ## 🎓 8. Lessons Learned
 
 ### 1. Install ≠ Usage
+
 **Issue:** jsdom installed but never used  
 **Lesson:** Regular audits catch unused dependencies  
 **Prevention:** Quarterly `npm list --depth=0` + usage grep  
 
 ### 2. Commented Imports Are Red Flags
+
 **Issue:** Commented imports indicate blocked implementation  
 **Lesson:** Either implement or remove (avoid limbo state)  
 **Action:** Document clearly if feature is deferred  
 
 ### 3. DevDependencies Still Matter
+
 **Issue:** "It's only dev, size doesn't matter"  
 **Reality:** 7MB adds up, slows CI/CD  
 **Best Practice:** Optimize dev deps too (faster feedback loop)  
 
 ### 4. Alternatives Exist
+
 **Issue:** Stuck with jsdom because "it's standard"  
 **Reality:** happy-dom is 84% smaller, faster, better ES modules  
 **Takeaway:** Evaluate alternatives regularly (ecosystem evolves)  
@@ -462,6 +509,7 @@ Refs: docs/PHASE3_OPTIMIZATION_ANALYSIS.md"
 ### Primary Recommendation: **Remove jsdom** (Option A)
 
 **Rationale:**
+
 1. ✅ Currently unused (all imports commented out)
 2. ✅ Zero risk (can reinstall anytime)
 3. ✅ Immediate benefits (-7.4MB, -5s install time)

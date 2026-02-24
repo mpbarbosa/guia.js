@@ -154,6 +154,7 @@ test('should connect to correct API endpoint', async () => {
 Focus on actual user workflows and system interactions:
 
 ✅ **Good:**
+
 ```javascript
 describe('Address Lookup Integration', () => {
     test('should geocode Brazilian address and cache result', async () => {
@@ -173,6 +174,7 @@ describe('Address Lookup Integration', () => {
 ```
 
 ❌ **Avoid:**
+
 ```javascript
 test('test everything', async () => {
     // Too broad and unclear what's being tested
@@ -186,6 +188,7 @@ test('test everything', async () => {
 Use data that reflects actual usage:
 
 ✅ **Good:**
+
 ```javascript
 const testAddresses = [
     'Avenida Paulista, 1578, São Paulo, SP',
@@ -195,6 +198,7 @@ const testAddresses = [
 ```
 
 ❌ **Avoid:**
+
 ```javascript
 const testAddresses = ['test', '123', 'foo bar'];
 ```
@@ -485,6 +489,7 @@ afterAll(async () => {
 Use descriptive names that explain the integration scenario:
 
 ✅ **Good:**
+
 ```javascript
 test('should geocode address using Nominatim API and cache result', async () => {});
 test('workflow should run tests when JavaScript files change', async () => {});
@@ -493,6 +498,7 @@ test('should handle API rate limit and use cached data', async () => {});
 ```
 
 ❌ **Avoid:**
+
 ```javascript
 test('geocoding', async () => {});
 test('test workflow', async () => {});
@@ -681,6 +687,7 @@ describe('Workflow Trigger Integration', () => {
 Balance between real and mocked dependencies:
 
 ✅ **Good:**
+
 ```javascript
 describe('Geocoding Service Integration', () => {
     // Use real API for critical paths
@@ -1445,6 +1452,7 @@ module.exports = async () => {
 ## Quick Reference Card
 
 ### Integration Test Commands
+
 ```bash
 npm test                              # Run all tests
 npm test -- --selectProjects=integration  # Run only integration tests
@@ -1453,6 +1461,7 @@ npm test -- --coverage                # Integration tests with coverage
 ```
 
 ### Integration Test Structure
+
 ```javascript
 describe('Component Integration', () => {
     beforeAll(async () => {
@@ -1486,6 +1495,7 @@ describe('Component Integration', () => {
 ```
 
 ### Integration Testing Principles
+
 - ✅ Test realistic scenarios and workflows
 - ✅ Use real dependencies selectively
 - ✅ Test component interactions
@@ -1496,6 +1506,7 @@ describe('Component Integration', () => {
 - ✅ Monitor performance
 
 ### GitHub Workflow Testing
+
 - ✅ Validate workflow YAML syntax
 - ✅ Test job dependencies
 - ✅ Verify trigger conditions
@@ -1505,6 +1516,7 @@ describe('Component Integration', () => {
 - ✅ Verify permissions and secrets
 
 ### When to Use Integration Tests
+
 - ✅ Testing API + cache integration
 - ✅ Testing GitHub Actions workflows
 - ✅ Testing multi-component flows

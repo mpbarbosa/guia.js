@@ -19,6 +19,7 @@ Guia.js relies on modern browser APIs (Geolocation, ES6 modules, Speech Synthesi
 
 **Primary Target**: Modern browsers released in last 2 years  
 **Minimum Requirements**:
+
 - ES6 module support
 - Geolocation API
 - Promises/async-await
@@ -64,6 +65,7 @@ Guia.js relies on modern browser APIs (Geolocation, ES6 modules, Speech Synthesi
 #### 1. Geolocation API
 
 **Test Across**:
+
 - ✅ Chrome Desktop (location services enabled)
 - ✅ Firefox Desktop (location services enabled)
 - ✅ Safari Desktop (HTTPS required)
@@ -71,6 +73,7 @@ Guia.js relies on modern browser APIs (Geolocation, ES6 modules, Speech Synthesi
 - ✅ Safari iOS (permission prompt)
 
 **Test Cases**:
+
 ```javascript
 // Permission granted
 navigator.geolocation.getCurrentPosition(
@@ -92,6 +95,7 @@ navigator.geolocation.getCurrentPosition(
 #### 2. ES6 Module Loading
 
 **Test Script Tags**:
+
 ```html
 <!-- Modern browsers -->
 <script type="module" src="src/guia.js"></script>
@@ -103,6 +107,7 @@ navigator.geolocation.getCurrentPosition(
 ```
 
 **Test Dynamic Imports**:
+
 ```javascript
 // Test in each browser
 try {
@@ -116,6 +121,7 @@ try {
 #### 3. Speech Synthesis
 
 **Browser Differences**:
+
 ```javascript
 // Chrome: Excellent support, many voices
 // Firefox: Good support, fewer voices

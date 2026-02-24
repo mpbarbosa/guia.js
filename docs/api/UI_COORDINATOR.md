@@ -13,6 +13,7 @@ UICoordinator manages UI element initialization and DOM manipulation for the Gui
 **Single Responsibility**: UI/DOM concerns only
 
 ### Key Features
+
 - ✅ DOM element caching for performance
 - ✅ Element initialization with validation
 - ✅ Timestamp display updates
@@ -28,12 +29,14 @@ new UICoordinator(document, elementIds)
 ```
 
 ### Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `document` | `Document` | ✅ | Document object for DOM queries |
 | `elementIds` | `Object` | ❌ | Element ID configuration (optional) |
 
 ### Example
+
 ```javascript
 const coordinator = new UICoordinator(document, {
   chronometer: 'chronometer',
@@ -48,6 +51,7 @@ const coordinator = new UICoordinator(document, {
 ## Methods
 
 ### initializeElements()
+
 Initializes all UI elements by querying the DOM.
 
 ```javascript
@@ -55,6 +59,7 @@ coordinator.initializeElements()
 ```
 
 ### getElement(name)
+
 Gets a cached DOM element by name.
 
 ```javascript
@@ -62,6 +67,7 @@ const button = coordinator.getElement('findRestaurantsBtn');
 ```
 
 ### updateTimestamp(timestamp)
+
 Updates the timestamp display element.
 
 ```javascript

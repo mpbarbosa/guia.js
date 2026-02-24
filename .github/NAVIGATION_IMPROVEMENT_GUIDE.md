@@ -15,6 +15,7 @@ This guide provides standards and templates for improving documentation navigati
 ## 1. Breadcrumb Navigation
 
 ### Purpose
+
 Help users understand their location in the documentation hierarchy and easily navigate back to parent sections.
 
 ### Standard Format
@@ -24,12 +25,14 @@ Help users understand their location in the documentation hierarchy and easily n
 ```
 
 ### Placement
+
 - **Location**: Top of file, immediately after title
 - **Separator**: Use `---` horizontal rule after navigation
 
 ### Examples by Location
 
 #### Root README.md
+
 ```markdown
 # Guia Turístico - Tourist Guide Web Application
 
@@ -39,6 +42,7 @@ Help users understand their location in the documentation hierarchy and easily n
 ```
 
 #### docs/INDEX.md
+
 ```markdown
 # Documentation Index
 
@@ -48,6 +52,7 @@ Help users understand their location in the documentation hierarchy and easily n
 ```
 
 #### docs/architecture/CLASS_DIAGRAM.md
+
 ```markdown
 # Class Diagram
 
@@ -57,6 +62,7 @@ Help users understand their location in the documentation hierarchy and easily n
 ```
 
 #### docs/api-integration/NOMINATIM_API_FORMAT.md
+
 ```markdown
 # Nominatim API Format
 
@@ -66,6 +72,7 @@ Help users understand their location in the documentation hierarchy and easily n
 ```
 
 #### .github/CONTRIBUTING.md
+
 ```markdown
 # Contributing Guide
 
@@ -96,6 +103,7 @@ Use consistent emojis for better visual navigation:
 ## 2. Quick Start Paths
 
 ### Purpose
+
 Provide curated learning paths for different user roles and goals.
 
 ### Implementation in docs/INDEX.md
@@ -133,6 +141,7 @@ Choose your path based on your role or goal:
 ### Path Templates
 
 **New Feature Development**:
+
 ```markdown
 ### 🔨 Adding New Features
 1. Start: [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Workflow
@@ -144,6 +153,7 @@ Choose your path based on your role or goal:
 ```
 
 **Bug Fixing**:
+
 ```markdown
 ### 🐛 Fixing Bugs
 1. Start: [GitHub Issues](https://github.com/mpbarbosa/guia_turistico/issues)
@@ -159,6 +169,7 @@ Choose your path based on your role or goal:
 ## 3. Related Documentation Sections
 
 ### Purpose
+
 Help users discover related content and continue learning on related topics.
 
 ### Standard Format
@@ -234,6 +245,7 @@ Continue your testing journey:
 ## 4. File Structure Indicators
 
 ### Purpose
+
 Show users the documentation hierarchy and help them understand organization.
 
 ### Implementation
@@ -244,6 +256,7 @@ Add a "file tree" visual at the top of major index files:
 ## Documentation Structure
 
 ```
+
 docs/
 ├── INDEX.md (📍 You are here)
 ├── architecture/
@@ -260,6 +273,7 @@ docs/
 └── guides/
     ├── QUICK_REFERENCE_CARD.md
     └── ...
+
 ```
 ```
 
@@ -430,6 +444,7 @@ if __name__ == '__main__':
 ### A/B Testing
 
 Test different navigation styles:
+
 - Style A: Breadcrumbs only
 - Style B: Breadcrumbs + Related Documentation
 - Style C: Full navigation (breadcrumbs + quick paths + related docs)

@@ -50,6 +50,7 @@ assignees: ''
 <!-- See .github/REFERENTIAL_TRANSPARENCY.md for guidance -->
 
 **Refactoring Guidelines:**
+
 - Referential transparency: [REFERENTIAL_TRANSPARENCY.md](../REFERENTIAL_TRANSPARENCY.md)
 - Code review checklist: [CODE_REVIEW_GUIDE.md](../CODE_REVIEW_GUIDE.md)
 - Testing improvements: [TDD_GUIDE.md](../TDD_GUIDE.md), [UNIT_TEST_GUIDE.md](../UNIT_TEST_GUIDE.md)

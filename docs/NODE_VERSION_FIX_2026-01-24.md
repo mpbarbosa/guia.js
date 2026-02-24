@@ -9,6 +9,7 @@
 ### Version Mismatch Detected
 
 **System State**:
+
 - **Actual Node.js**: v25.4.0
 - **package.json Constraint**: `"node": ">=20.19.0 <21.0.0"`
 - **Actual npm**: v11.8.0
@@ -19,12 +20,14 @@
 ### Impact Analysis
 
 #### Why It Was Working ✅
+
 - Node.js maintains backward compatibility
 - jsdom 25.0.1 supports Node.js >=20.19.0
 - All tests passing (1,904/2,050)
 - Application runs successfully
 
 #### Potential Risks ⚠️
+
 1. **CI/CD Failures**: Strict version enforcement in pipelines
 2. **Contributor Confusion**: Different local Node versions
 3. **Dependency Conflicts**: Future packages may require Node 22+
@@ -39,6 +42,7 @@
 **File Modified**: `package.json`
 
 **Before**:
+
 ```json
 "engines": {
   "node": ">=20.19.0 <21.0.0",
@@ -47,6 +51,7 @@
 ```
 
 **After**:
+
 ```json
 "engines": {
   "node": ">=20.19.0",
@@ -55,6 +60,7 @@
 ```
 
 **Rationale**:
+
 - Removed upper bound to support Node.js 21+, 22+, 23+, 24+, 25+
 - Keeps minimum requirement at 20.19.0 (LTS)
 - Aligns with jsdom 25.0.1 requirements
@@ -113,10 +119,12 @@ npm --version
 **Minimum Version**: Node.js v20.19.0
 
 **Recommended Versions**:
+
 - **Production**: Node.js v22.x (Current LTS)
 - **Development**: Node.js v25.x (Latest stable)
 
 **Check Your Version**:
+
 ```bash
 node --version
 # Should be >=20.19.0
@@ -125,6 +133,7 @@ node --version
 ### For CI/CD
 
 **Recommended Matrix Testing**:
+
 ```yaml
 # .github/workflows/test.yml
 strategy:
@@ -154,10 +163,12 @@ FROM node:22-alpine
 ### Dependency Updates
 
 **jsdom**: Currently at 25.0.1
+
 - May require Node.js 26+ in future versions
 - Monitor jsdom releases for breaking changes
 
 **Jest**: Currently at 30.1.3
+
 - May add features requiring newer Node.js
 - Review release notes on updates
 
@@ -176,17 +187,20 @@ FROM node:22-alpine
 ## Testing Checklist
 
 ### Local Development ✅
+
 - [x] Tests pass on Node.js v25.4.0
 - [x] Application runs successfully
 - [x] No version warnings
 - [x] Coverage generation works
 
 ### CI/CD ✅
+
 - [x] package.json constraint updated
 - [x] No upper bound restriction
 - [x] Compatible with current dependencies
 
 ### Documentation ✅
+
 - [x] Version requirements documented
 - [x] Contributing.md updated (if exists)
 - [x] README.md reflects current state
@@ -238,6 +252,7 @@ npm install 2>&1 | grep -i "engine\|version"
 **Status**: ✅ **RESOLVED**
 
 The Node.js version constraint has been updated from `>=20.19.0 <21.0.0` to `>=20.19.0` to:
+
 1. Support current Node.js v25.4.0
 2. Allow future Node.js versions
 3. Eliminate CI/CD version conflicts

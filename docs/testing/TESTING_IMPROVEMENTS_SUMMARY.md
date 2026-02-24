@@ -7,11 +7,13 @@ Implemented Phase 1 (E2E stabilization infrastructure) and Phase 2 setup (cross-
 ## Test Status
 
 ### Before
+
 - **2,665 passing** / 2,867 total (92.9% pass rate)
 - **202 skipped** (7.1%)
 - 0 failing
 
 ### After  
+
 - **2,665 passing** / 2,867 total (92.9% pass rate)  
 - **202 skipped** (7.1%)
 - 0 failing
@@ -30,6 +32,7 @@ Implemented Phase 1 (E2E stabilization infrastructure) and Phase 2 setup (cross-
 Comprehensive E2E testing utilities with retry-based polling:
 
 **Waithelpers** (replace fixed delays):
+
 - `waitForElement()` - Poll for DOM elements with timeout
 - `waitForElementText()` - Wait for text content with exact/partial/regex matching
 - `waitForElementVisible()` - Wait for visibility (display, opacity checks)
@@ -40,11 +43,13 @@ Comprehensive E2E testing utilities with retry-based polling:
 - `waitForAttribute()` - Attribute value polling
 
 **Utility Helpers**:
+
 - `retryWithBackoff()` - Exponential backoff retries
 - `getElementText()` - Non-polling text extraction
 - `elementExists()` - Non-polling existence check
 
 **Configuration**:
+
 - Configurable timeouts (default: 10s)
 - Configurable poll intervals (default: 100ms)
 - Optional error throwing
@@ -53,6 +58,7 @@ Comprehensive E2E testing utilities with retry-based polling:
 #### ✅ Refactored: `NeighborhoodChangeWhileDriving.e2e.test.js`
 
 **Changes**:
+
 - Imported e2e-helpers
 - Replaced 4 `setTimeout()` calls with `waitForElementText()`/`waitForNetworkIdle()`
 - Replaced 6 `page.waitForFunction()` calls with semantic helpers
@@ -60,6 +66,7 @@ Comprehensive E2E testing utilities with retry-based polling:
 - Tests 1-4 fully refactored (still skipped due to Puppeteer issue)
 
 **Before**:
+
 ```javascript
 await new Promise(resolve => setTimeout(resolve, 4000));
 await page.waitForFunction(() => {
@@ -69,6 +76,7 @@ await page.waitForFunction(() => {
 ```
 
 **After**:
+
 ```javascript
 await waitForNetworkIdle(page, { timeout: 5000, idleTime: 300 });
 await waitForElementText(
@@ -86,6 +94,7 @@ await waitForElementText(
 **Root Cause**: Jest loads `ws/browser.js` instead of Node.js version despite `@jest-environment node`.
 
 **Affected Tests** (all using Puppeteer):
+
 1. `NeighborhoodChangeWhileDriving.e2e.test.js`
 2. `ChangeDetectionCoordinator.e2e.test.js`
 3. `complete-address-validation.e2e.test.js`
@@ -106,6 +115,7 @@ await waitForElementText(
 Environment detection and conditional test execution utilities:
 
 **Detection Functions**:
+
 - `isNodeEnvironment()` - Running in pure Node.js
 - `isBrowserEnvironment()` - Window object available
 - `isJsdomEnvironment()` - Running in jsdom specifically
@@ -118,6 +128,7 @@ Environment detection and conditional test execution utilities:
 - `getCapabilities()` - Complete capability summary object
 
 **Conditional Test Helpers**:
+
 - `describeIf(condition, name, fn)` - Conditional test suite
 - `describeIfBrowser(name, fn)` - Browser-only tests
 - `describeIfNode(name, fn)` - Node.js-only tests
@@ -128,6 +139,7 @@ Environment detection and conditional test execution utilities:
 - `testIf(condition, name, fn)` - Conditional single test
 
 **Usage Example**:
+
 ```javascript
 import { describeIfBrowser, hasSpeechAPI } from '../helpers/test-environment-lib.js';
 
@@ -151,6 +163,7 @@ if (hasSpeechAPI()) {
 **Modified**: `package.json` - Added `__tests__/helpers/` to `testPathIgnorePatterns`
 
 **Before**:
+
 ```json
 "testPathIgnorePatterns": [
   "/node_modules/",
@@ -159,6 +172,7 @@ if (hasSpeechAPI()) {
 ```
 
 **After**:
+
 ```json
 "testPathIgnorePatterns": [
   "/node_modules/",

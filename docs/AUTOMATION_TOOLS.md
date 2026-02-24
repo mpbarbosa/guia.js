@@ -31,7 +31,9 @@ ls -la .git/hooks/pre-commit
 #### Checks Performed
 
 ##### Check 1: Version Consistency ✅
+
 Verifies version number (`0.9.0-alpha`) appears in all key files:
+
 - `package.json`
 - `README.md`
 - `docs/INDEX.md`
@@ -42,7 +44,9 @@ Verifies version number (`0.9.0-alpha`) appears in all key files:
 **Action**: Update all files to match `package.json`
 
 ##### Check 2: Test Count Synchronization ✅
+
 Verifies test count (`1224 tests`) is documented in:
+
 - `README.md`
 - `.github/copilot-instructions.md`
 
@@ -50,23 +54,28 @@ Verifies test count (`1224 tests`) is documented in:
 **Action**: Run `npm test` and update documented counts
 
 ##### Check 3: Last Updated Dates 🔄 (Auto-fix)
+
 Automatically updates "Last Updated" dates in modified `.md` files.
 
 **Behavior**:
+
 - Detects staged `.md` files with "Last Updated:" field
 - Updates date to current date (YYYY-MM-DD format)
 - Re-stages file automatically
 
 **Example**:
+
 ```
 Before: **Last Updated**: 2025-12-15
 After:  **Last Updated**: 2026-01-01
 ```
 
 ##### Check 4: Broken Markdown Links ✅
+
 Detects broken links to `.md` files within documentation.
 
 **Checks**:
+
 - Relative links: `[Text](../path/file.md)`
 - Same-directory links: `[Text](./file.md)`
 - Resolves `../` navigation
@@ -75,9 +84,11 @@ Detects broken links to `.md` files within documentation.
 **Action**: Fix or remove broken links
 
 ##### Check 5: File Reference Verification ✅
+
 Verifies references to source files exist.
 
 **Checks**:
+
 - Pattern: `src/path/to/File.js`
 - Verifies file exists in repository
 
@@ -529,6 +540,7 @@ git commit -am "docs: monthly health check fixes"
 **Problem**: Pre-commit hook doesn't execute
 
 **Solution**:
+
 ```bash
 # Verify installation
 ls -la .git/hooks/pre-commit
@@ -545,6 +557,7 @@ chmod +x .git/hooks/pre-commit
 **Problem**: Hook reports errors incorrectly
 
 **Solution**:
+
 ```bash
 # Review the specific check
 # Edit .github/hooks/pre-commit
@@ -559,6 +572,7 @@ git commit --no-verify
 **Problem**: GitHub Actions check fails
 
 **Solution**:
+
 ```bash
 # Run checks locally
 ./.github/scripts/check-docs.sh
@@ -575,16 +589,19 @@ git push
 ## Maintenance
 
 ### Monthly Tasks
+
 - Run `.github/scripts/check-docs.sh`
 - Review and update stale documentation
 - Update test counts if changed significantly
 
 ### Quarterly Tasks
+
 - Review automation scripts for improvements
 - Update hook patterns if new files added
 - Audit "Last Updated" dates across all docs
 
 ### Per-Release Tasks
+
 - Run `.github/scripts/bump-version.sh <version>`
 - Update CHANGELOG.md
 - Verify all checks pass before tagging
@@ -594,6 +611,7 @@ git push
 ## Future Enhancements
 
 ### Planned Features
+
 1. **Spell checker integration** - Catch typos before commit
 2. **Diagram validation** - Verify Mermaid syntax
 3. **External link checker** - Test HTTP links
@@ -601,6 +619,7 @@ git push
 5. **Changelog generator** - Generate CHANGELOG from commits
 
 ### Community Contributions Welcome
+
 - Improve pattern matching
 - Add new consistency checks
 - Create IDE integrations
@@ -631,6 +650,7 @@ Automatically updates README badges with actual test results and coverage.
 **Location**: `.github/scripts/update-badges.sh`
 
 #### Features
+
 - ✅ Extracts test count from `npm test` output
 - ✅ Extracts coverage percentage from `npm run test:coverage`
 - ✅ Updates test badge: `tests-1224%20passing-brightgreen`
@@ -695,6 +715,7 @@ Ensures consistent markdown formatting across all documentation.
 **Configuration**: `.markdownlint.yaml`
 
 #### Rules Enforced
+
 - ✅ ATX-style headers (`#` instead of underlines)
 - ✅ Dash-style lists (`-` instead of `*`)
 - ✅ 120 character line length (except code/tables)
@@ -735,6 +756,7 @@ Validates all internal and external links in documentation.
 **Configuration**: `.github/markdown-link-check-config.json`
 
 #### Features
+
 - ✅ Checks internal relative links
 - ✅ Validates external HTTPS links
 - ✅ Ignores CDN and API endpoints (allowed to be offline)
@@ -743,6 +765,7 @@ Validates all internal and external links in documentation.
 - ✅ Only checks modified files in PRs
 
 #### Ignored Patterns
+
 - `https://cdn.jsdelivr.net` (CDN may be temporarily unavailable)
 - `https://nominatim.openstreetmap.org` (API endpoint)
 - `https://servicodados.ibge.gov.br` (API endpoint)
@@ -763,6 +786,7 @@ Prevents adding outdated line number references to documentation.
 **Integration**: `.github/workflows/documentation-lint.yml`
 
 #### What It Checks
+
 - ❌ Patterns like: `"lines 62-666"`
 - ❌ Patterns like: `"line 123"`
 - ✅ Suggests using file paths instead
@@ -804,26 +828,31 @@ Comprehensive CI/CD pipeline for documentation quality.
 #### Jobs
 
 ##### 1. Markdown Linting
+
 - Runs: `markdownlint-cli2`
 - Checks: Formatting consistency
 - Fails: On formatting violations
 
 ##### 2. Link Validation
+
 - Runs: `markdown-link-check`
 - Checks: Internal and external links
 - Fails: On broken links
 
 ##### 3. Line Number Check
+
 - Runs: Custom grep script
 - Checks: Deprecated line references
 - Fails: If line numbers found
 
 ##### 4. Badge Synchronization
+
 - Runs: Test suite
 - Checks: Badge accuracy
 - Warns: If badges out of date (doesn't fail)
 
 ##### 5. Version Consistency
+
 - Runs: Version extraction
 - Checks: All files match package.json
 - Fails: On version mismatches
@@ -894,15 +923,18 @@ Developer Commits
 Before installing automation tools, ensure you have:
 
 **Required**:
+
 - **Bash shell** (Linux/macOS default, Windows WSL/Git Bash)
 - **Git** - For hooks and version control
 - **Node.js v18+** - For npm scripts and markdownlint
 - **npm v10+** - For package management
 
 **Optional**:
+
 - **Python 3.11+** - For web server testing (already required for Guia.js)
 
 **Verify Environment**:
+
 ```bash
 # Check bash
 bash --version
@@ -945,6 +977,7 @@ markdownlint-cli2 "**/*.md"
 ### CI/CD Setup (Already Configured)
 
 ✅ Workflows are ready to use:
+
 - Push to main → Full validation
 - Open PR → Validation on changed files
 - No additional setup required

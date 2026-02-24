@@ -25,6 +25,7 @@ When splitting JavaScript modules, developers face a critical choice between **E
 > 📚 **Practical Implementation**: For hands-on ES6 module best practices, patterns, and real-world examples, see **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](./ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - a comprehensive guide based on the guia.js modularization experience.
 
 **Guia.js Current State:**
+
 - ✅ Source code uses ES6 modules (`import/export`)
 - ✅ `package.json` has `"type": "module"`
 - ❌ 19 test suites fail using `require()` with ES6 modules
@@ -49,6 +50,7 @@ When splitting JavaScript modules, developers face a critical choice between **E
 The conflict arises from fundamental differences in how module systems work:
 
 #### ES6 Modules (Static)
+
 ```javascript
 // Static - analyzed at parse time, before code execution
 import { calculateDistance } from './utils/distance.js';
@@ -59,6 +61,7 @@ import { calculateDistance } from './utils/distance.js';
 ```
 
 #### CommonJS (Dynamic)
+
 ```javascript
 // Dynamic - executed at runtime
 const { calculateDistance } = require('./utils/distance.js');
@@ -95,6 +98,7 @@ export class MyClass { }
 ### Real Example from Guia.js
 
 **Current failing test:**
+
 ```javascript
 // __tests__/features/LocationChangeImmediateSpeech.test.js
 const { BrazilianStandardAddress } = require('../../src/guia.js');
@@ -102,6 +106,7 @@ const { BrazilianStandardAddress } = require('../../src/guia.js');
 ```
 
 **Source file:**
+
 ```javascript
 // src/guia.js
 import { calculateDistance, delay } from './utils/distance.js';
@@ -109,6 +114,7 @@ import { calculateDistance, delay } from './utils/distance.js';
 ```
 
 **Error:**
+
 ```
 SyntaxError: Cannot use import statement outside a module
 ```
@@ -122,6 +128,7 @@ SyntaxError: Cannot use import statement outside a module
 ### ES6 Modules (ESM)
 
 **Characteristics:**
+
 - **Standard:** ECMAScript 2015 (ES6) official specification
 - **Loading:** Asynchronous, static analysis
 - **Environment:** Modern browsers, Node.js 12+
@@ -129,6 +136,7 @@ SyntaxError: Cannot use import statement outside a module
 - **File extension:** `.js` (with `"type": "module"`), `.mjs`
 
 **Advantages:**
+
 - ✅ Official JavaScript standard
 - ✅ Static analysis enables tree-shaking
 - ✅ Better IDE/tooling support
@@ -138,12 +146,14 @@ SyntaxError: Cannot use import statement outside a module
 - ✅ Top-level `await` support
 
 **Disadvantages:**
+
 - ❌ Requires Node.js 12+ or transpilation
 - ❌ Some legacy tools don't support it
 - ❌ Can't conditionally import
 - ❌ Jest support requires configuration
 
 **Example:**
+
 ```javascript
 // Named exports
 export const add = (a, b) => a + b;
@@ -161,6 +171,7 @@ import Calculator, { add, subtract } from './calculator.js';
 ### CommonJS (CJS)
 
 **Characteristics:**
+
 - **Standard:** De facto Node.js standard (pre-ES6)
 - **Loading:** Synchronous, dynamic
 - **Environment:** Node.js (all versions), requires bundler for browsers
@@ -168,6 +179,7 @@ import Calculator, { add, subtract } from './calculator.js';
 - **File extension:** `.js` (default), `.cjs`
 
 **Advantages:**
+
 - ✅ Works in all Node.js versions
 - ✅ Simpler mental model (just functions)
 - ✅ Dynamic, can conditionally require
@@ -175,6 +187,7 @@ import Calculator, { add, subtract } from './calculator.js';
 - ✅ Huge ecosystem support
 
 **Disadvantages:**
+
 - ❌ Not a JavaScript standard (Node.js specific)
 - ❌ No tree-shaking capability
 - ❌ No static analysis
@@ -182,6 +195,7 @@ import Calculator, { add, subtract } from './calculator.js';
 - ❌ Less modern, being phased out
 
 **Example:**
+
 ```javascript
 // Exports
 const add = (a, b) => a + b;
@@ -222,6 +236,7 @@ const { add, subtract } = require('./calculator');
 ### Jest's Default Behavior
 
 **Out of the box:**
+
 - ✅ Supports CommonJS perfectly
 - ❌ Doesn't support ES6 modules
 - Uses Node.js's `require()` system
@@ -234,6 +249,7 @@ const { add, subtract } = require('./calculator');
 #### Approach 1: Experimental ESM Support (Recommended)
 
 **Setup:**
+
 ```json
 // package.json
 {
@@ -249,6 +265,7 @@ const { add, subtract } = require('./calculator');
 ```
 
 **Test file:**
+
 ```javascript
 // __tests__/myModule.test.js
 import { describe, test, expect } from '@jest/globals';
@@ -263,12 +280,14 @@ describe('MyClass', () => {
 ```
 
 **Pros:**
+
 - ✅ Uses real ES6 modules
 - ✅ No transpilation
 - ✅ Consistent with source code
 - ✅ Future-proof
 
 **Cons:**
+
 - ⚠️ Experimental (may have bugs)
 - ⚠️ Slower than CommonJS
 - ⚠️ Some Jest features may not work
@@ -276,6 +295,7 @@ describe('MyClass', () => {
 #### Approach 2: Babel Transpilation
 
 **Setup:**
+
 ```bash
 npm install --save-dev @babel/preset-env babel-jest
 ```
@@ -304,6 +324,7 @@ npm install --save-dev @babel/preset-env babel-jest
 ```
 
 **Test file:**
+
 ```javascript
 // Still use ES6 imports - Babel will transpile
 import { MyClass } from '../src/myModule.js';
@@ -314,12 +335,14 @@ test('works with Babel', () => {
 ```
 
 **Pros:**
+
 - ✅ Mature, well-tested
 - ✅ Fast execution
 - ✅ Can use latest JS features
 - ✅ Full Jest compatibility
 
 **Cons:**
+
 - ❌ Requires build step
 - ❌ Tests run transpiled code (not source)
 - ❌ Extra dependency
@@ -327,6 +350,7 @@ test('works with Babel', () => {
 #### Approach 3: Dual Package (Hybrid)
 
 **Setup:**
+
 ```json
 // package.json
 {
@@ -341,12 +365,14 @@ test('works with Babel', () => {
 ```
 
 **Build step creates CommonJS version:**
+
 ```bash
 # Build CommonJS version for tests
 babel src --out-dir dist --out-file-extension .cjs
 ```
 
 **Test file:**
+
 ```javascript
 // Use CommonJS in tests
 const { MyClass } = require('../dist/index.cjs');
@@ -357,11 +383,13 @@ test('works with CommonJS build', () => {
 ```
 
 **Pros:**
+
 - ✅ Jest works perfectly
 - ✅ Source uses ES6
 - ✅ No experimental features
 
 **Cons:**
+
 - ❌ Requires build step
 - ❌ Complexity of dual package
 - ❌ Tests run different code than source
@@ -373,6 +401,7 @@ test('works with CommonJS build', () => {
 ### Current State Analysis
 
 **File Structure:**
+
 ```
 src/
 ├── guia.js (ES6 module with imports)
@@ -391,6 +420,7 @@ __tests__/
 ```
 
 **package.json:**
+
 ```json
 {
   "type": "module",  // ← Tells Node.js all .js files are ES6
@@ -404,6 +434,7 @@ __tests__/
 ### Why Tests Fail
 
 **Failed Pattern #1: Direct require() of ES6 module**
+
 ```javascript
 // ❌ FAILS
 const { MyClass } = require('../../src/guia.js');
@@ -411,6 +442,7 @@ const { MyClass } = require('../../src/guia.js');
 ```
 
 **Failed Pattern #2: eval() with ES6 module**
+
 ```javascript
 // ❌ FAILS
 const fs = require('fs');
@@ -420,6 +452,7 @@ eval(guiaContent);
 ```
 
 **Why `eval()` fails:**
+
 - ES6 `import` can only be used at top-level of module
 - `eval()` executes code in current scope, not as module
 - No way to `eval()` ES6 module syntax
@@ -427,6 +460,7 @@ eval(guiaContent);
 ### Test Failure Breakdown
 
 **Statistics:**
+
 - Total test suites: 40
 - Passing: 21 (52.5%)
 - Failing: 19 (47.5%)
@@ -435,12 +469,13 @@ eval(guiaContent);
 - Failing: 25 (6.1%)
 
 **Root causes:**
+
 1. **CommonJS require() pattern** (15 suites)
    - Tests using `require('../../src/guia.js')`
-   
+
 2. **eval() pattern** (4 suites)
    - Tests using `fs.readFileSync() + eval()`
-   
+
 All failures are **test infrastructure issues**, not actual functionality bugs.
 
 ### Current Workarounds
@@ -448,6 +483,7 @@ All failures are **test infrastructure issues**, not actual functionality bugs.
 Some tests already work because they:
 
 1. **Don't import guia.js:**
+
    ```javascript
    // These tests work - test pure logic without imports
    test('pure function test', () => {
@@ -456,12 +492,14 @@ Some tests already work because they:
    ```
 
 2. **Mock everything:**
+
    ```javascript
    // These tests work - don't actually import
    jest.mock('../../src/guia.js');
    ```
 
 3. **Test configuration:**
+
    ```javascript
    // These tests work - test config data
    test('config values', () => {
@@ -480,6 +518,7 @@ Some tests already work because they:
 **Implementation:**
 
 1. **Update Jest configuration:**
+
 ```json
 // package.json
 {
@@ -494,7 +533,8 @@ Some tests already work because they:
 }
 ```
 
-2. **Convert test files to ES6:**
+1. **Convert test files to ES6:**
+
 ```javascript
 // Before (CommonJS)
 const { BrazilianStandardAddress } = require('../../src/guia.js');
@@ -516,7 +556,8 @@ describe('Test', () => {
 });
 ```
 
-3. **Handle dynamic imports (if needed):**
+1. **Handle dynamic imports (if needed):**
+
 ```javascript
 // For conditional loading
 describe('Dynamic tests', () => {
@@ -528,12 +569,14 @@ describe('Dynamic tests', () => {
 ```
 
 **Pros:**
+
 - ✅ Consistent with source code (ES6 everywhere)
 - ✅ No build step needed
 - ✅ Tests real module code
 - ✅ Future-proof solution
 
 **Cons:**
+
 - ⚠️ Experimental flag needed
 - ⚠️ Potential Jest incompatibilities
 - ⚠️ Requires updating all test files
@@ -549,11 +592,13 @@ describe('Dynamic tests', () => {
 **Implementation:**
 
 1. **Install dependencies:**
+
 ```bash
 npm install --save-dev @babel/core @babel/preset-env babel-jest
 ```
 
-2. **Create Babel config:**
+1. **Create Babel config:**
+
 ```javascript
 // babel.config.js
 module.exports = {
@@ -565,7 +610,8 @@ module.exports = {
 };
 ```
 
-3. **Update Jest config:**
+1. **Update Jest config:**
+
 ```json
 // package.json
 {
@@ -581,7 +627,8 @@ module.exports = {
 }
 ```
 
-4. **Test files use ES6 imports:**
+1. **Test files use ES6 imports:**
+
 ```javascript
 // Tests can use ES6 - Babel transpiles automatically
 import { BrazilianStandardAddress } from '../../src/guia.js';
@@ -594,12 +641,14 @@ describe('Test', () => {
 ```
 
 **Pros:**
+
 - ✅ Stable, production-ready
 - ✅ Full Jest compatibility
 - ✅ Can use latest JS features
 - ✅ Well-documented, lots of examples
 
 **Cons:**
+
 - ❌ Build step overhead
 - ❌ Tests run transpiled code
 - ❌ Additional dependency
@@ -616,6 +665,7 @@ describe('Test', () => {
 **Implementation:**
 
 1. **Update source files with dual exports:**
+
 ```javascript
 // src/guia.js
 
@@ -630,7 +680,8 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 ```
 
-2. **Tests use CommonJS:**
+1. **Tests use CommonJS:**
+
 ```javascript
 // __tests__/example.test.js
 const { BrazilianStandardAddress } = require('../../src/guia.js');
@@ -641,12 +692,14 @@ test('works', () => {
 ```
 
 **Pros:**
+
 - ✅ Works with both systems
 - ✅ No Jest configuration needed
 - ✅ Backward compatible
 - ✅ Minimal changes to tests
 
 **Cons:**
+
 - ❌ Pollutes source with dual exports
 - ❌ Can't use `import` in source
 - ❌ Not truly ES6 modules
@@ -663,6 +716,7 @@ test('works', () => {
 **Implementation:**
 
 1. **Create build script:**
+
 ```javascript
 // scripts/build-for-tests.js
 import { build } from 'esbuild';
@@ -676,7 +730,8 @@ build({
 });
 ```
 
-2. **Update package.json:**
+1. **Update package.json:**
+
 ```json
 {
   "scripts": {
@@ -687,17 +742,20 @@ build({
 }
 ```
 
-3. **Tests import from dist:**
+1. **Tests import from dist:**
+
 ```javascript
 const { BrazilianStandardAddress } = require('../../dist/test/guia.js');
 ```
 
 **Pros:**
+
 - ✅ Source stays pure ES6
 - ✅ Tests work with Jest
 - ✅ No experimental features
 
 **Cons:**
+
 - ❌ Complex build process
 - ❌ Tests run different code
 - ❌ Slower test runs
@@ -715,17 +773,20 @@ This is the **recommended approach** for Guia.js.
 #### Phase 1: Preparation (15 minutes)
 
 1. **Verify Node.js version:**
+
 ```bash
 node --version  # Should be v18+ (current: v20.19.5)
 ```
 
-2. **Backup current tests:**
+1. **Backup current tests:**
+
 ```bash
 git checkout -b jest-esm-migration
 git commit -am "Checkpoint before Jest ESM migration"
 ```
 
-3. **Document failing tests:**
+1. **Document failing tests:**
+
 ```bash
 npm test 2>&1 | tee test-results-before.txt
 ```
@@ -733,6 +794,7 @@ npm test 2>&1 | tee test-results-before.txt
 #### Phase 2: Update Jest Configuration (5 minutes)
 
 1. **Update package.json:**
+
 ```json
 {
   "type": "module",
@@ -752,7 +814,8 @@ npm test 2>&1 | tee test-results-before.txt
 }
 ```
 
-2. **Test the configuration:**
+1. **Test the configuration:**
+
 ```bash
 npm test
 # May still fail, but errors should be different
@@ -786,11 +849,13 @@ describe('MyClass', () => {
 **Convert each test file:**
 
 1. **Add Jest globals import:**
+
    ```javascript
    import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globals';
    ```
 
 2. **Replace require() with import:**
+
    ```javascript
    // Before
    const { Class1, Class2 } = require('../../src/guia.js');
@@ -800,6 +865,7 @@ describe('MyClass', () => {
    ```
 
 3. **Handle eval() pattern:**
+
    ```javascript
    // ❌ BEFORE - Cannot work with ES6
    const fs = require('fs');
@@ -812,6 +878,7 @@ describe('MyClass', () => {
    ```
 
 4. **Update mocks:**
+
    ```javascript
    // Before
    jest.mock('../../src/module.js');
@@ -860,21 +927,25 @@ import { MyClass } from './MyClass.js';
 #### Phase 5: Verification (15 minutes)
 
 1. **Run all tests:**
+
 ```bash
 npm test
 ```
 
-2. **Check coverage:**
+1. **Check coverage:**
+
 ```bash
 npm run test:coverage
 ```
 
-3. **Run tests in watch mode:**
+1. **Run tests in watch mode:**
+
 ```bash
 npm run test:watch
 ```
 
-4. **Verify web functionality:**
+1. **Verify web functionality:**
+
 ```bash
 python3 -m http.server 9000
 # Open http://localhost:9000/test.html
@@ -891,6 +962,7 @@ python3 -m http.server 9000
    - Document `--experimental-vm-modules` flag
 
 3. **Commit changes:**
+
 ```bash
 git add .
 git commit -m "feat: migrate tests to ES6 modules with Jest experimental ESM support"
@@ -899,11 +971,13 @@ git commit -m "feat: migrate tests to ES6 modules with Jest experimental ESM sup
 ### Expected Results
 
 **Before:**
+
 - 19 test suites failing
 - 25 tests failing
 - 93.9% pass rate
 
 **After:**
+
 - 0-2 test suites failing (edge cases)
 - 0-5 tests failing
 - 98-100% pass rate
@@ -937,6 +1011,7 @@ module.exports = {
 ```
 
 **Why?**
+
 - ES6 is the JavaScript standard
 - Better tooling support
 - Enables tree-shaking
@@ -953,6 +1028,7 @@ import { helper } from './utils/helper';
 ```
 
 **Why?**
+
 - Required by ES6 spec
 - Works in browsers without bundler
 - Explicit is better than implicit
@@ -973,6 +1049,7 @@ export const subtract = (a, b) => a - b;
 ```
 
 **Why?**
+
 - Named exports enable better tree-shaking
 - Better IDE autocomplete
 - Prevents naming conflicts
@@ -1049,6 +1126,7 @@ const module = await import('./module.js');
 ```
 
 **Why?**
+
 - `eval()` incompatible with ES6 modules
 - Security risk
 - Poor performance
@@ -1125,11 +1203,13 @@ This project uses **ES6 modules** (not CommonJS).
 #### Error 1: "Cannot use import statement outside a module"
 
 **Symptom:**
+
 ```
 SyntaxError: Cannot use import statement outside a module
 ```
 
 **Causes:**
+
 1. Missing `"type": "module"` in package.json
 2. Using `.js` file without module flag
 3. Jest not configured for ESM
@@ -1156,6 +1236,7 @@ SyntaxError: Cannot use import statement outside a module
 #### Error 2: "ReferenceError: describe is not defined"
 
 **Symptom:**
+
 ```
 ReferenceError: describe is not defined
 ```
@@ -1164,6 +1245,7 @@ ReferenceError: describe is not defined
 Jest globals not available in ESM mode
 
 **Solution:**
+
 ```javascript
 // Add this to every test file
 import { describe, test, expect, jest } from '@jest/globals';
@@ -1172,6 +1254,7 @@ import { describe, test, expect, jest } from '@jest/globals';
 #### Error 3: "Module not found"
 
 **Symptom:**
+
 ```
 Cannot find module './utils/helper'
 ```
@@ -1180,6 +1263,7 @@ Cannot find module './utils/helper'
 Missing `.js` extension (required in ES6)
 
 **Solution:**
+
 ```javascript
 // ❌ Missing extension
 import { helper } from './utils/helper';
@@ -1191,6 +1275,7 @@ import { helper } from './utils/helper.js';
 #### Error 4: "require() of ES Module not supported"
 
 **Symptom:**
+
 ```
 Error [ERR_REQUIRE_ESM]: require() of ES Module not supported
 ```
@@ -1218,6 +1303,7 @@ const { module } = await import('./module.js');
 #### Error 5: "Jest encountered an unexpected token"
 
 **Symptom:**
+
 ```
 Jest encountered an unexpected token
 ```
@@ -1248,6 +1334,7 @@ Jest trying to parse ES6 syntax without proper configuration
 #### Error 6: "Top-level await is not available"
 
 **Symptom:**
+
 ```
 SyntaxError: await is only valid in async functions
 ```
@@ -1289,6 +1376,7 @@ When tests fail after module migration:
 **Symptom:** Tests run slowly with ESM
 
 **Causes:**
+
 - Experimental ESM has overhead
 - Module resolution is slower
 - No caching of modules
@@ -1336,6 +1424,7 @@ describe('module tests', () => {
 ### When to Use ES6 Modules
 
 **Use ES6 when:**
+
 - ✅ Starting new project
 - ✅ Modern browser target (ES6+)
 - ✅ Node.js 18+ environment
@@ -1344,6 +1433,7 @@ describe('module tests', () => {
 - ✅ Building for long-term maintenance
 
 **Example projects:**
+
 - Modern web applications
 - Node.js APIs (v18+)
 - React/Vue/Angular apps
@@ -1352,6 +1442,7 @@ describe('module tests', () => {
 ### When to Use CommonJS
 
 **Use CommonJS when:**
+
 - ✅ Legacy Node.js support needed (< v12)
 - ✅ Simple scripts without bundler
 - ✅ Jest tests (easiest path)
@@ -1359,6 +1450,7 @@ describe('module tests', () => {
 - ✅ Maximum compatibility needed
 
 **Example projects:**
+
 - Node.js tools for CI/CD
 - Build scripts
 - Legacy applications
@@ -1387,6 +1479,7 @@ Do you control the codebase?
 **Recommended approach:** **ES6 Modules with Jest Experimental ESM**
 
 **Reasoning:**
+
 1. ✅ Source already uses ES6 (`import/export`)
 2. ✅ `package.json` already has `"type": "module"`
 3. ✅ Modern Node.js v20 environment
@@ -1396,11 +1489,13 @@ Do you control the codebase?
 7. ⚠️ Only 6% test failure (easy to fix)
 
 **Alternative (if stability critical):** Babel transpilation
+
 - More stable than experimental flag
 - Still allows ES6 everywhere
 - Slightly more complex setup
 
-**Not recommended:** 
+**Not recommended:**
+
 - ❌ Reverting to CommonJS (backwards step)
 - ❌ Dual export (complexity not worth it)
 - ❌ Keeping current broken state
@@ -1504,6 +1599,7 @@ node --experimental-vm-modules node_modules/jest/bin/jest.js --watch
 **Target Audience:** Contributors, Maintainers, GitHub Copilot
 
 **Related Issues:**
+
 - Test failures with ES6 module migration
 - 19 test suites using incompatible patterns
 - Need clear guidance on module system choice

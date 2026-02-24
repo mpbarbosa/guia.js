@@ -9,16 +9,19 @@
 ## Problem Statement
 
 ### Issue Description
+
 **Location:** `src/typography.css`, various CSS files
 
 While Material Design 3 typescale tokens were defined (lines 3-17 in typography.css), they were not consistently applied across the codebase. Many components used hardcoded pixel values (e.g., `font-size: 32px`, `font-size: 1rem`) instead of design tokens, creating inconsistent typography hierarchy.
 
 **Audit Results:**
+
 - **16 CSS files** scanned
 - **117 violations** identified (hardcoded font-size declarations)
 - **10 files** require migration
 
 **User Impact:**
+
 - Inconsistent visual hierarchy across components
 - Difficult to maintain typographic consistency
 - Manual effort required for responsive scaling
@@ -26,6 +29,7 @@ While Material Design 3 typescale tokens were defined (lines 3-17 in typography.
 - Material Design 3 compliance incomplete
 
 **Severity Rationale:**
+
 - Affects visual consistency across 100% of UI components
 - Reduces maintainability (duplicate font-size values)
 - Hinders responsive design (manual breakpoints needed)
@@ -34,6 +38,7 @@ While Material Design 3 typescale tokens were defined (lines 3-17 in typography.
 ## Solution Implemented
 
 ### Overview
+
 Enhanced the typography system with comprehensive design tokens, utility classes, and responsive scaling. Created a complete Material Design 3 typography implementation that's easy to apply and maintain.
 
 ### Architecture
@@ -41,16 +46,19 @@ Enhanced the typography system with comprehensive design tokens, utility classes
 **1. Enhanced Design Token System** (`src/typography.css`, 70 → 370 lines)
 
 **Token Structure:**
+
 ```
 --md-sys-typescale-{category}-{size}[-{property}]
 ```
 
 **15 Complete Typescales:**
+
 - **5 categories:** display, headline, title, body, label
 - **3 sizes per category:** large, medium, small
 - **4 properties per typescale:** base size, weight, line-height, tracking (labels only)
 
 **Example Token Set:**
+
 ```css
 :root {
   /* Headline Large */
@@ -63,6 +71,7 @@ Enhanced the typography system with comprehensive design tokens, utility classes
 **2. Utility Class System**
 
 **15 Utility Classes:**
+
 ```css
 .text-display-large, .text-display-medium, .text-display-small
 .text-headline-large, .text-headline-medium, .text-headline-small
@@ -72,6 +81,7 @@ Enhanced the typography system with comprehensive design tokens, utility classes
 ```
 
 **Each class includes:**
+
 - Font size token
 - Font weight token
 - Line height token
@@ -80,6 +90,7 @@ Enhanced the typography system with comprehensive design tokens, utility classes
 **3. Responsive Scaling**
 
 **Mobile (≤768px):**
+
 ```css
 @media (max-width: 768px) {
   :root {
@@ -93,6 +104,7 @@ Enhanced the typography system with comprehensive design tokens, utility classes
 ```
 
 **Small Mobile (≤480px):**
+
 ```css
 @media (max-width: 480px) {
   :root {
@@ -108,6 +120,7 @@ Enhanced the typography system with comprehensive design tokens, utility classes
 **4. Semantic HTML Integration**
 
 **Automatic Token Application:**
+
 ```css
 h1 { font-size: var(--md-sys-typescale-headline-large); }
 h2 { font-size: var(--md-sys-typescale-headline-medium); }
@@ -119,6 +132,7 @@ p  { font-size: var(--md-sys-typescale-body-medium); }
 ```
 
 **Benefits:**
+
 - No classes needed for semantic HTML
 - Better SEO and accessibility
 - Screen reader hierarchy preservation
@@ -126,6 +140,7 @@ p  { font-size: var(--md-sys-typescale-body-medium); }
 ## Typography Scale Reference
 
 ### Display Scale (57px - 36px)
+
 **Use for:** Hero sections, splash screens, large promotional text
 
 | Level | Desktop | Mobile | Small | Use Case |
@@ -135,11 +150,13 @@ p  { font-size: var(--md-sys-typescale-body-medium); }
 | Small | 36px | 32px | 28px | Large callouts |
 
 **Example:**
+
 ```html
 <h1 class="text-display-large">12.3 milhões</h1>
 ```
 
 ### Headline Scale (32px - 24px)
+
 **Use for:** Page titles, prominent section headers
 
 | Level | Desktop | Mobile | Small | Use Case |
@@ -149,11 +166,13 @@ p  { font-size: var(--md-sys-typescale-body-medium); }
 | Small | 24px | 24px | 24px | Subsection headers (h3) |
 
 **Example:**
+
 ```html
 <h2 class="text-headline-medium">Endereço Completo</h2>
 ```
 
 ### Title Scale (22px - 14px)
+
 **Use for:** Subsection headers, card titles, list item headers
 
 | Level | Size | Weight | Use Case |
@@ -163,11 +182,13 @@ p  { font-size: var(--md-sys-typescale-body-medium); }
 | Small | 14px | 500 | Tertiary headers (h6) |
 
 **Example:**
+
 ```html
 <h4 class="text-title-large">População Estimada</h4>
 ```
 
 ### Body Scale (16px - 12px)
+
 **Use for:** Paragraphs, content text, descriptions
 
 | Level | Size | Weight | Use Case |
@@ -177,11 +198,13 @@ p  { font-size: var(--md-sys-typescale-body-medium); }
 | Small | 12px | 400 | Captions, metadata |
 
 **Example:**
+
 ```html
 <p class="text-body-large">População: <strong>12.3 milhões</strong></p>
 ```
 
 ### Label Scale (14px - 11px)
+
 **Use for:** Buttons, badges, tags, form labels
 
 | Level | Size | Weight | Tracking | Use Case |
@@ -191,6 +214,7 @@ p  { font-size: var(--md-sys-typescale-body-medium); }
 | Small | 11px | 500 | 0.5px | Tags, footnotes |
 
 **Example:**
+
 ```html
 <button class="primary-button">
   <span class="text-label-large">Obter Localização</span>
@@ -210,6 +234,7 @@ p  { font-size: var(--md-sys-typescale-body-medium); }
 ```
 
 **Benefits:**
+
 - Zero classes needed
 - Better SEO
 - Improved accessibility
@@ -224,6 +249,7 @@ p  { font-size: var(--md-sys-typescale-body-medium); }
 ```
 
 **Benefits:**
+
 - Flexible for non-semantic layouts
 - Quick prototyping
 - Visual consistency
@@ -239,6 +265,7 @@ p  { font-size: var(--md-sys-typescale-body-medium); }
 ```
 
 **Benefits:**
+
 - Component-specific control
 - Token updates propagate
 - Easy theme customization
@@ -248,6 +275,7 @@ p  { font-size: var(--md-sys-typescale-body-medium); }
 ### Step 1: Identify Violations
 
 **Audit command:**
+
 ```bash
 grep -rn "font-size:" src/*.css | grep -v "typography.css" | grep -E "[0-9]+px|[0-9]+rem"
 ```
@@ -272,6 +300,7 @@ grep -rn "font-size:" src/*.css | grep -v "typography.css" | grep -E "[0-9]+px|[
 ### Step 3: Replace with Tokens
 
 **Before:**
+
 ```css
 .card-title {
   font-size: 22px;
@@ -281,6 +310,7 @@ grep -rn "font-size:" src/*.css | grep -v "typography.css" | grep -E "[0-9]+px|[
 ```
 
 **After:**
+
 ```css
 .card-title {
   font-size: var(--md-sys-typescale-title-large);
@@ -292,11 +322,13 @@ grep -rn "font-size:" src/*.css | grep -v "typography.css" | grep -E "[0-9]+px|[
 ### Step 4: Use Utility Classes (Optional)
 
 **HTML before:**
+
 ```html
 <div class="card-title">Título</div>
 ```
 
 **HTML after:**
+
 ```html
 <h4 class="card-title text-title-large">Título</h4>
 ```
@@ -326,24 +358,28 @@ grep -rn "font-size:" src/*.css | grep -v "typography.css" | grep -E "[0-9]+px|[
 ### Migration Phases
 
 **Phase 1 (This PR): Foundation** ✅
+
 - [x] Enhanced typography.css with complete token system
 - [x] Added 15 utility classes
 - [x] Implemented responsive scaling
 - [x] Created comprehensive documentation (docs/TYPOGRAPHY_GUIDE.md)
 
 **Phase 2 (Next PR): High Priority Files** 🔄
+
 - [ ] Migrate ibge-data-styles.css (20 violations)
 - [ ] Migrate highlight-cards.css (15 violations)
 - [ ] Migrate maps-actions.css (12 violations)
 - [ ] Migrate version-display.css (10 violations)
 
 **Phase 3 (Follow-up): Remaining Files** ⏳
+
 - [ ] Migrate error-styles.css (8)
 - [ ] Migrate geolocation-banner.css (6)
 - [ ] Migrate navigation.css (5)
 - [ ] Migrate remaining files (15)
 
 **Phase 4 (Future): Automation** 🔮
+
 - [ ] Add stylelint rule to prevent new violations
 - [ ] Create automated migration script
 - [ ] Add visual regression tests
@@ -354,6 +390,7 @@ grep -rn "font-size:" src/*.css | grep -v "typography.css" | grep -E "[0-9]+px|[
 ### Example 1: Before & After (IBGE Data Card)
 
 **Before (20 violations):**
+
 ```css
 .ibge-primary {
   font-size: 16px;  /* Violation */
@@ -382,6 +419,7 @@ grep -rn "font-size:" src/*.css | grep -v "typography.css" | grep -E "[0-9]+px|[
 ```
 
 **After (using tokens):**
+
 ```css
 .ibge-primary {
   font-size: var(--md-sys-typescale-body-large);
@@ -416,6 +454,7 @@ grep -rn "font-size:" src/*.css | grep -v "typography.css" | grep -E "[0-9]+px|[
 ### Example 2: Highlight Cards
 
 **Before (15 violations):**
+
 ```css
 .highlight-card-title {
   font-size: 1rem;  /* 16px, Violation */
@@ -431,6 +470,7 @@ grep -rn "font-size:" src/*.css | grep -v "typography.css" | grep -E "[0-9]+px|[
 ```
 
 **After (using tokens):**
+
 ```css
 .highlight-card-title {
   font-size: var(--md-sys-typescale-title-medium);
@@ -608,16 +648,19 @@ describe('Typography System', () => {
 ## Future Enhancements
 
 ### Phase 2: File Migration
+
 1. Migrate high-priority files (65 violations)
 2. Update components to use utility classes
 3. Test visual consistency
 
 ### Phase 3: Automation
+
 1. Add stylelint rule to prevent new violations
 2. Create automated migration script (find/replace)
 3. Add pre-commit hook for typography linting
 
 ### Phase 4: Advanced Features
+
 1. Dark mode typography variants
 2. Custom theme builder
 3. Visual regression testing
@@ -628,6 +671,7 @@ describe('Typography System', () => {
 The typography system enhancement establishes a solid foundation for consistent, maintainable typography across Guia Turístico. With 15 complete typescales, utility classes, and responsive scaling, developers can now apply Material Design 3 typography patterns easily and confidently.
 
 **Key Achievements:**
+
 - 100% token system completeness (size, weight, line-height)
 - 15 utility classes for rapid development
 - Automatic responsive scaling (mobile, small mobile)
@@ -636,6 +680,7 @@ The typography system enhancement establishes a solid foundation for consistent,
 - 117 violations identified with migration path
 
 **Next Steps:**
+
 1. **Phase 2 Migration:** High-priority files (65 violations)
 2. **Testing:** Visual inspection and responsive validation
 3. **Documentation:** Update README with typography section

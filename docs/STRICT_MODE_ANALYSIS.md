@@ -1,4 +1,5 @@
 # Strict Mode Analysis
+
 **Date:** 2026-01-09  
 **Issue:** No explicit `'use strict'` declarations  
 **Severity:** ℹ️ INFORMATIONAL (not a bug)  
@@ -9,6 +10,7 @@
 ## 📊 Current State
 
 ### ES Module Configuration
+
 ```json
 // package.json
 {
@@ -17,6 +19,7 @@
 ```
 
 ### Strict Mode Status
+
 - **Explicit `'use strict'`:** 0 files
 - **Implicit strict mode:** 100% of files (ES6 modules)
 - **Actual strict mode:** ✅ ENABLED (all files)
@@ -31,6 +34,7 @@
 > "The code of a Module is always strict mode code."
 
 **What this means:**
+
 - Any file with `import` or `export` statements runs in strict mode automatically
 - ES6 modules (`"type": "module"`) are always strict
 - No `'use strict'` declaration needed
@@ -39,12 +43,14 @@
 ### Verification
 
 **Test 1: Check for ES6 module usage**
+
 ```bash
 $ grep -r "^import\|^export" src/ | wc -l
 350+  # ← All files use import/export
 ```
 
 **Test 2: Strict mode features work**
+
 ```javascript
 // These would fail in non-strict mode:
 - Octal literals (010 = syntax error) ✅
@@ -60,12 +66,14 @@ $ grep -r "^import\|^export" src/ | wc -l
 ### Option A: Do Nothing ✅ RECOMMENDED
 
 **Rationale:**
+
 - Already in strict mode (ES6 modules)
 - Adding `'use strict'` is redundant
 - Modern JavaScript best practice: rely on ES6 modules
 - Less noise in code
 
 **Evidence:**
+
 - Google JavaScript Style Guide: No `'use strict'` in modules
 - Airbnb Style Guide: No `'use strict'` in modules
 - MDN: "Modules are automatically in strict mode"
@@ -73,6 +81,7 @@ $ grep -r "^import\|^export" src/ | wc -l
 ### Option B: Add Clarifying Comment
 
 **If team wants explicit documentation:**
+
 ```javascript
 /**
  * PositionManager.js
@@ -89,10 +98,12 @@ export class PositionManager {
 ```
 
 **Pros:**
+
 - ✅ Educational for developers unfamiliar with ES6
 - ✅ Clear documentation
 
 **Cons:**
+
 - ⚠️ Adds boilerplate to every file
 - ⚠️ States the obvious for experienced developers
 - ⚠️ Maintenance burden (keep comments updated)
@@ -100,6 +111,7 @@ export class PositionManager {
 ### Option C: Add Redundant `'use strict'`
 
 **What it looks like:**
+
 ```javascript
 'use strict';  // ← Redundant but explicit
 
@@ -109,9 +121,11 @@ export class PositionManager {
 ```
 
 **Pros:**
+
 - ✅ Explicit declaration visible
 
 **Cons:**
+
 - ❌ Redundant (ES6 modules already strict)
 - ❌ Outdated pattern (pre-ES6)
 - ❌ Violates modern style guides
@@ -122,12 +136,15 @@ export class PositionManager {
 ## 📚 Style Guide Consensus
 
 ### Google JavaScript Style Guide
+>
 > "Do not use 'use strict' in modules. Modules are automatically in strict mode."
 
 ### Airbnb JavaScript Style Guide
+>
 > "Modules are automatically in strict mode, so there is no need for 'use strict'."
 
 ### ESLint Recommendation
+
 ```javascript
 // eslint rule: strict
 {
@@ -138,6 +155,7 @@ export class PositionManager {
 ```
 
 ### MDN Web Docs
+>
 > "Modules are automatically in strict mode with no statement needed to initiate it."
 
 ---
@@ -165,6 +183,7 @@ export class PositionManager {
 ### If Team Insists on Clarity
 
 **Option:** Update file header template
+
 ```javascript
 /**
  * @fileoverview [Description]
@@ -180,6 +199,7 @@ But honestly, this is unnecessary for experienced developers.
 ## 🔬 Proof: Already in Strict Mode
 
 ### Test Case 1: Octal Literals (Strict Mode Feature)
+
 ```javascript
 // This would work in non-strict mode:
 // const x = 010;  // = 8 in non-strict
@@ -189,6 +209,7 @@ But honestly, this is unnecessary for experienced developers.
 ```
 
 ### Test Case 2: Undefined Variable Assignment
+
 ```javascript
 // Non-strict: Creates global variable
 // Strict: Throws ReferenceError
@@ -198,6 +219,7 @@ But honestly, this is unnecessary for experienced developers.
 ```
 
 ### Test Case 3: ESLint Validation
+
 ```bash
 # If not in strict mode, ESLint would report issues with:
 # - Implicit globals
@@ -227,6 +249,7 @@ $ npm run lint
 For developers learning JavaScript:
 
 **Old Way (Pre-ES6):**
+
 ```javascript
 'use strict';  // ← Required in old CommonJS/script files
 
@@ -236,6 +259,7 @@ function oldCode() {
 ```
 
 **Modern Way (ES6+):**
+
 ```javascript
 // No 'use strict' needed - automatic in modules
 
@@ -245,6 +269,7 @@ export function modernCode() {
 ```
 
 **Rule of Thumb:**
+
 - Script files (no imports): Need `'use strict'`
 - ES6 modules (has import/export): Automatic strict mode
 - Our project: 100% ES6 modules → Already strict

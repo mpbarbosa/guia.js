@@ -12,6 +12,7 @@
 Ran `markdownlint` across **all repository markdown files** using existing `.markdownlint.json` configuration. Found **5,565 linting errors** across the entire repository.
 
 **Breakdown by Directory**:
+
 - `docs/` - **2,822 errors** in 59 of 95 files (62% failing)
 - `.github/` - **271 errors** (audits, guides, templates)
 - `__tests__/` and `examples/` - **29 errors**
@@ -51,16 +52,19 @@ Ran `markdownlint` across **all repository markdown files** using existing `.mar
 ### 1. Spacing Issues (2,159 errors - 77%)
 
 **MD032 - Lists need blank lines** (900 errors)
+
 - **Impact**: Medium - Affects readability
 - **Example**: Missing blank line before/after list
 - **Fix**: Add blank lines around all lists
 
 **MD022 - Headings need blank lines** (874 errors)  
+
 - **Impact**: Medium - Affects document structure
 - **Example**: Heading immediately followed by content
 - **Fix**: Add blank line after each heading
 
 **MD031 - Code blocks need blank lines** (385 errors)
+
 - **Impact**: Medium - Affects code readability
 - **Example**: Code fence without blank lines before/after
 - **Fix**: Add blank lines around fenced code blocks
@@ -70,11 +74,13 @@ Ran `markdownlint` across **all repository markdown files** using existing `.mar
 ### 2. Table Formatting (292 errors - 10%)
 
 **MD060 - Table column style** (292 errors)
+
 - **Impact**: Low - Aesthetic only
 - **Example**: `|Column1|Column2|` should be `| Column1 | Column2 |`
 - **Fix**: Add spaces around pipe separators
 
 **MD058 - Tables need blank lines** (3 errors)
+
 - **Impact**: Low - Consistency
 - **Fix**: Add blank lines before/after tables
 
@@ -83,6 +89,7 @@ Ran `markdownlint` across **all repository markdown files** using existing `.mar
 ### 3. Line Length (168 errors - 6%)
 
 **MD013 - Line too long** (168 errors)
+
 - **Impact**: Low - Preference-based
 - **Limit**: 120 characters (configured in .markdownlint.json)
 - **Exclusions**: Code blocks and tables already excluded
@@ -93,11 +100,13 @@ Ran `markdownlint` across **all repository markdown files** using existing `.mar
 ### 4. Code Blocks Missing Language (84 errors - 3%)
 
 **MD040 - No language specified** (84 errors)
+
 - **Impact**: Medium - Affects syntax highlighting
 - **Example**: ` ``` ` should be ` ```bash ` or ` ```javascript `
 - **Fix**: Add language identifier to all code fences
 
 **Common Missing Languages**:
+
 - Shell commands → `bash`
 - API responses → `json`
 - Code examples → `javascript`
@@ -106,27 +115,34 @@ Ran `markdownlint` across **all repository markdown files** using existing `.mar
 ### 5. Other Issues (117 errors - 4%)
 
 **MD024 - Duplicate heading content** (24 errors)
+
 - Usually intentional (e.g., multiple "Usage" sections)
 - Config already set to `siblings_only: true`
 
 **MD036 - Emphasis as heading** (23 errors)
+
 - Using `**Bold Text**` instead of `## Heading`
 - Fix: Convert to proper heading level
 
 **MD050 - Strong style inconsistency** (22 errors)
+
 - Mix of `**bold**` and `__bold__`
 - Fix: Standardize on `**bold**`
 
 **MD047 - File should end with newline** (15 errors)
+
 - Fix: Ensure file has newline at end
 
 **MD029 - Ordered list prefix** (15 errors)
+
 - Fix: Use `1.` `2.` `3.` not `1.` `1.` `1.`
 
 **MD009 - Trailing spaces** (12 errors)
+
 - Fix: Remove spaces at end of lines
 
 **MD026 - Heading punctuation** (5 errors)
+
 - Fix: Remove trailing punctuation from headings
 
 ---
@@ -134,23 +150,28 @@ Ran `markdownlint` across **all repository markdown files** using existing `.mar
 ## Breakdown by Directory
 
 ### docs/ Directory
+
 - **Files scanned**: 95
 - **Files with errors**: 59 (62%)
 - **Total errors**: 2,822
 - **Average errors per file**: 47.8
 
 **Most Problematic Files** (estimated):
+
 - `docs/api-integration/OSM_ADDRESS_TRANSLATION.md` - Multiple table and spacing issues
 - `docs/architecture/CLASS_DIAGRAM.md` - Many heading spacing issues
 - `docs/architecture/ARCHITECTURE_DECISION_RECORD.md` - Table and list spacing
 
 ### .github/ Directory
+
 **Status**: Not yet scanned in detail (estimated ~500 errors)
 
 ### Root Files (README.md, TESTING.md)
+
 **Status**: Not yet scanned in detail (estimated ~50 errors)
 
-### __tests__/ and examples/
+### **tests**/ and examples/
+
 **Status**: Not yet scanned in detail (estimated ~100 errors)
 
 ---
@@ -203,7 +224,8 @@ prettier --write "docs/**/*.md" --prose-wrap always --print-width 120
 markdownlint --fix docs/**/*.md --config .markdownlint.json
 ```
 
-**Expected Impact**: 
+**Expected Impact**:
+
 - Fixes MD032, MD022, MD031 automatically (~2,159 errors = 77%)
 - Fixes MD009, MD047 automatically (~27 errors)
 - Total: **~2,186 errors auto-fixed**
@@ -215,6 +237,7 @@ markdownlint --fix docs/**/*.md --config .markdownlint.json
 Fix table formatting (MD060):
 
 **Current**:
+
 ```markdown
 |Column1|Column2|Column3|
 |---|---|---|
@@ -222,6 +245,7 @@ Fix table formatting (MD060):
 ```
 
 **Fixed**:
+
 ```markdown
 | Column1 | Column2 | Column3 |
 |---------|---------|---------|
@@ -236,6 +260,7 @@ Fix table formatting (MD060):
 Fix MD040 - Add language identifiers:
 
 **Current**:
+
 ````markdown
 ```
 npm install
@@ -243,6 +268,7 @@ npm install
 ````
 
 **Fixed**:
+
 ````markdown
 ```bash
 npm install
@@ -257,6 +283,7 @@ npm install
 Review MD013 - Line length violations:
 
 **Options**:
+
 1. **Keep as-is**: Most long lines are URLs or detailed descriptions
 2. **Reformat**: Break long lines into multiple lines
 3. **Ignore**: Add `<!-- markdownlint-disable MD013 -->` comments
@@ -270,11 +297,13 @@ Review MD013 - Line length violations:
 Fix MD036 - Emphasis used as heading:
 
 **Current**:
+
 ```markdown
 **Important Section**
 ```
 
 **Fixed**:
+
 ```markdown
 ### Important Section
 ```
@@ -286,6 +315,7 @@ Fix MD036 - Emphasis used as heading:
 
 1. **Re-run linter** to verify fixes
 2. **Add to package.json**:
+
    ```json
    "scripts": {
      "lint:md": "markdownlint docs/**/*.md .github/**/*.md README.md TESTING.md --config .markdownlint.json",
@@ -294,6 +324,7 @@ Fix MD036 - Emphasis used as heading:
    ```
 
 3. **Add to CI/CD** (`.github/workflows/lint.yml`):
+
    ```yaml
    - name: Lint Markdown
      run: npm run lint:md
@@ -320,16 +351,19 @@ Fix MD036 - Emphasis used as heading:
 ## Success Metrics
 
 ### Before
+
 - ❌ 2,822 linting errors
 - ❌ 59 of 95 files failing (62%)
 - ❌ No automated linting in workflow
 
 ### After Phase 1 (30 min)
+
 - ✅ ~636 errors remaining (77% reduction)
 - ✅ ~20 files failing (65% improvement)
 - ✅ Automated spacing fixed
 
 ### After All Phases (3.5 hours)
+
 - ✅ <100 errors remaining (96% reduction)
 - ✅ <10 files failing (85% improvement)
 - ✅ Linting in CI/CD pipeline
@@ -381,17 +415,20 @@ npm run lint:md:fix    # Auto-fix safe errors
 After implementation:
 
 **Phase 1 - Automated Fixes**:
+
 - [ ] Run `markdownlint --fix` on docs/
 - [ ] Verify error count reduced by ~77%
 - [ ] Spot check 5-10 files for correct formatting
 - [ ] Git diff review before committing
 
 **Phase 2 - Manual Fixes**:
+
 - [ ] Fix table formatting in identified files
 - [ ] Add code block language identifiers
 - [ ] Convert emphasis to headings where appropriate
 
 **Phase 3 - CI/CD Integration**:
+
 - [ ] Add scripts to package.json
 - [ ] Test `npm run lint:md` locally
 - [ ] Add markdown linting to GitHub Actions workflow
@@ -422,6 +459,7 @@ After implementation:
 ### Safe to Auto-Fix
 
 These rules are safe for automated fixing:
+
 - ✅ MD032 (list spacing)
 - ✅ MD022 (heading spacing)
 - ✅ MD031 (code block spacing)
@@ -431,6 +469,7 @@ These rules are safe for automated fixing:
 ### Requires Manual Review
 
 These rules need human judgment:
+
 - ⚠️ MD060 (table formatting) - Ensure alignment doesn't break tables
 - ⚠️ MD040 (code language) - Need to identify correct language
 - ⚠️ MD013 (line length) - Some lines are intentionally long
@@ -439,6 +478,7 @@ These rules need human judgment:
 ### .markdownlint.json is Well Configured
 
 The existing config is sensible:
+
 - ✅ Allows bare URLs (MD034: false)
 - ✅ First line doesn't need H1 (MD041: false)
 - ✅ Duplicate headings OK in different sections (MD024: siblings_only)
@@ -467,7 +507,8 @@ markdownlint --fix docs/**/*.md --config .markdownlint.json
 
 ---
 
-**Next Steps**: 
+**Next Steps**:
+
 1. Run Phase 1 automated fixes (30 min)
 2. Verify with `git diff` before committing
 3. Add npm scripts for future use

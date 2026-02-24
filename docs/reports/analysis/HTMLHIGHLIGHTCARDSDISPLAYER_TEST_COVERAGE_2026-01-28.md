@@ -14,6 +14,7 @@
 **Test Status**: ⚠️ **GOOD BUT INCOMPLETE**
 
 **Key Findings**:
+
 - ✅ 42 tests passing, comprehensive feature coverage
 - ✅ 100% function coverage (all methods tested)
 - ⚠️ 75% statement coverage (missing error paths)
@@ -29,6 +30,7 @@
 ### 1. Constructor Validation ⚠️ PARTIALLY MISSING
 
 **Requirements**:
+
 - ❌ Should throw TypeError when document is missing
 - ✅ Should find and store DOM elements (implicitly tested)
 - ❌ Should be immutable (Object.freeze) - NOT TESTED
@@ -36,6 +38,7 @@
 **Current Implementation**: NO DEDICATED CONSTRUCTOR TESTS
 
 **Missing Coverage**:
+
 ```javascript
 // Line 28: Missing validation test
 if (!document) {
@@ -55,6 +58,7 @@ Object.freeze(this);
 ### 2. Update Method ✅ COMPREHENSIVE
 
 **Requirements**:
+
 - ✅ Should update municipio element with valid data (42 tests)
 - ✅ Should update bairro element with valid data (2 tests)
 - ✅ Should use fallback '—' for missing data (3 tests)
@@ -64,6 +68,7 @@ Object.freeze(this);
 **Current Implementation**: EXCELLENT
 
 **Test Coverage**:
+
 - 42 tests for município display across all 26 Brazilian states
 - 2 tests for bairro display
 - 3 tests for null/missing data handling
@@ -71,6 +76,7 @@ Object.freeze(this);
 - 5 tests for edge cases (special characters, long names, hyphens)
 
 **Missing Coverage**:
+
 ```javascript
 // Lines 61-63: Metropolitan region element missing (warning logged)
 if (!this._regiaoMetropolitanaElement) {
@@ -97,12 +103,14 @@ if (!this._bairroElement) {
 ### 3. Integration with ServiceCoordinator ❌ MISSING
 
 **Requirements**:
+
 - ❌ Should be subscribable to ReverseGeocoder
 - ❌ Should receive updates from observer pattern
 
 **Current Implementation**: NO INTEGRATION TESTS
 
 **Missing Tests**:
+
 - Observer pattern subscription
 - Update notifications from ReverseGeocoder
 - ServiceCoordinator lifecycle integration
@@ -122,6 +130,7 @@ if (!this._bairroElement) {
 **Uncovered**: 25% (error paths, edge cases)
 
 **Uncovered Lines**:
+
 - Line 28: `throw new TypeError('HTMLHighlightCardsDisplayer: document is required')`
 - Lines 61-63: Metropolitan region element missing warning
 - Line 74: Municipio element missing warning
@@ -138,6 +147,7 @@ if (!this._bairroElement) {
 **Gap**: -9 percentage points
 
 **Uncovered Branches**:
+
 1. Constructor validation: `if (!document)` - false branch
 2. Metropolitan region element check: `if (this._regiaoMetropolitanaElement)` - false branch
 3. Municipio element check: `if (this._municipioElement)` - false branch
@@ -150,6 +160,7 @@ if (!this._bairroElement) {
 ### Function Coverage: 100% ✅
 
 **Covered Functions**:
+
 - ✅ `constructor(document)` - called in all tests
 - ✅ `update(addressData, enderecoPadronizado)` - extensively tested (42 tests)
 
@@ -160,6 +171,7 @@ if (!this._bairroElement) {
 ### Current Tests (42 total)
 
 **Feature: Município with State Abbreviation** (8 tests):
+
 - Display município with state (SP, PE, AL)
 - Display without state
 - Placeholder handling
@@ -167,18 +179,22 @@ if (!this._bairroElement) {
 - Edge cases (empty, whitespace)
 
 **All Brazilian States Coverage** (26 tests):
+
 - One test per state (AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO)
 
 **Backwards Compatibility** (3 tests):
+
 - Null enderecoPadronizado handling
 - No element updates on null
 - Legacy objects without municipioCompleto()
 
 **Bairro Display** (2 tests):
+
 - Correct display
 - Placeholder for null
 
 **Edge Cases** (3 tests):
+
 - Special characters
 - Long names
 - Hyphens
@@ -369,16 +385,18 @@ describe('HTMLHighlightCardsDisplayer Integration', () => {
 **Expected Coverage Gain**: +13% statements, +75% branches
 
 **Tasks**:
+
 1. Add constructor validation tests (30 min)
    - TypeError on null/undefined document
    - Immutability verification
-   
+
 2. Add missing DOM element tests (30 min)
    - Missing municipio element
    - Missing bairro element
    - Missing metropolitan region element
 
 **Files to Create/Modify**:
+
 - Modify `__tests__/html/HTMLHighlightCardsDisplayer.test.js`
 - Add new `describe` blocks
 
@@ -390,12 +408,14 @@ describe('HTMLHighlightCardsDisplayer Integration', () => {
 **Expected Coverage Gain**: Validates integration, no direct coverage gain
 
 **Tasks**:
+
 1. Create integration test file (1 hour)
    - Observer pattern subscription
    - ServiceCoordinator integration
    - Multiple update handling
 
 **Files to Create**:
+
 - `__tests__/integration/HTMLHighlightCardsDisplayer.integration.test.js`
 
 ---
@@ -406,6 +426,7 @@ describe('HTMLHighlightCardsDisplayer Integration', () => {
 **Expected Coverage Gain**: Robustness, minimal coverage gain
 
 **Tasks**:
+
 1. Concurrent updates
 2. Memory leak prevention
 3. Performance benchmarks
@@ -477,6 +498,7 @@ describe('HTMLHighlightCardsDisplayer Integration', () => {
 ### Immediate (Next 1 hour)
 
 1. **Add Constructor Tests** (30 min)
+
    ```bash
    # Location: __tests__/html/HTMLHighlightCardsDisplayer.test.js
    # Add: describe('Constructor Validation', ...)
@@ -485,6 +507,7 @@ describe('HTMLHighlightCardsDisplayer Integration', () => {
    ```
 
 2. **Add Missing DOM Element Tests** (30 min)
+
    ```bash
    # Location: Same file
    # Add: describe('Missing DOM Elements', ...)
@@ -494,7 +517,8 @@ describe('HTMLHighlightCardsDisplayer Integration', () => {
 
 ### Short-Term (Next 1-2 hours)
 
-3. **Create Integration Tests** (1-2 hours)
+1. **Create Integration Tests** (1-2 hours)
+
    ```bash
    # Create: __tests__/integration/HTMLHighlightCardsDisplayer.integration.test.js
    # Tests: 3-5 integration scenarios
@@ -549,11 +573,13 @@ The HTMLHighlightCardsDisplayer has **excellent feature coverage** with 42 passi
 - ❌ No integration tests (observer pattern, coordination)
 
 **Immediate Action Required**: Add 6 tests (2 phases, 1-2 hours total effort) to:
+
 1. Cover constructor validation (3 tests)
 2. Cover missing DOM elements (3 tests)
 3. Achieve 85%+ branch coverage (exceeding 73% threshold)
 
-**Expected Outcome**: 
+**Expected Outcome**:
+
 - ✅ 88% statement coverage (+13%)
 - ✅ 85% branch coverage (+25%)
 - ✅ 100% function coverage (maintained)

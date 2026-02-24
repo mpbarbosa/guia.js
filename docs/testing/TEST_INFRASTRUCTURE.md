@@ -27,6 +27,7 @@ Guia Turístico uses **two separate test infrastructures** for different testing
 ## Directory Structure
 
 ### Jest/Puppeteer: `__tests__/`
+
 ```
 __tests__/
 ├── unit/              # Unit tests (pure JavaScript)
@@ -41,11 +42,13 @@ __tests__/
 ```
 
 ### Recent E2E Tests (v0.9.0+)
+
 - `complete-address-validation.e2e.test.js` - Complete address data validation workflow
 - `milho-verde-locationResult.e2e.test.js` - Location result integration testing
 - `HTMLSidraDisplayer.test.js` - IBGE SIDRA data displayer unit tests
 
 ### Python/Playwright: `tests/`
+
 ```
 tests/
 └── e2e/             # Cross-browser E2E tests
@@ -56,14 +59,16 @@ tests/
 
 ## When to Use Each Infrastructure
 
-### Use Jest/Puppeteer (`__tests__/`) for:
+### Use Jest/Puppeteer (`__tests__/`) for
+
 ✅ **Daily development** - Fast feedback loop  
 ✅ **Unit and integration tests** - Component isolation  
 ✅ **CI/CD pipeline** - Primary automated testing  
 ✅ **Code coverage** - Jest coverage reports  
 ✅ **Debugging** - Node.js debugging tools  
 
-### Use Python/Playwright (`tests/`) for:
+### Use Python/Playwright (`tests/`) for
+
 ✅ **Cross-browser testing** - Chrome, Firefox, Safari  
 ✅ **Visual regression** - Screenshot comparisons  
 ✅ **CI/CD validation** - Pre-release browser checks  
@@ -73,6 +78,7 @@ tests/
 ## Execution Commands
 
 ### Jest/Puppeteer Tests
+
 ```bash
 # Run all tests (~45 seconds)
 npm test
@@ -88,6 +94,7 @@ npm run test:watch
 ```
 
 ### Python/Playwright Tests
+
 ```bash
 # Install dependencies (first time)
 pip install -r tests/requirements.txt
@@ -109,14 +116,17 @@ pytest tests/e2e/ --html=report.html
 ## Test Strategy by Project Phase
 
 ### Development Phase (Current: v0.9.0-alpha)
+
 - **Primary**: Jest/Puppeteer for rapid iteration
 - **Secondary**: Manual Python/Playwright spot checks
 
 ### Pre-Release Phase (v0.9.0+)
+
 - **Primary**: Jest/Puppeteer for regression testing
 - **Secondary**: Full Python/Playwright cross-browser suite
 
 ### Production Release (v1.0.0)
+
 - **Primary**: Both test suites must pass
 - **Secondary**: Visual regression tests
 - **Required**: Cross-browser compatibility verification
@@ -124,6 +134,7 @@ pytest tests/e2e/ --html=report.html
 ## CI/CD Integration
 
 ### Current GitHub Actions Workflow
+
 ```yaml
 # .github/workflows/copilot-coding-agent.yml
 - Jest/Puppeteer: Runs on every push ✅
@@ -131,6 +142,7 @@ pytest tests/e2e/ --html=report.html
 ```
 
 ### Recommended CI/CD Strategy
+
 1. **Pull Request**: Jest/Puppeteer (fast feedback)
 2. **Merge to main**: Jest + Python/Playwright (full validation)
 3. **Release tags**: Jest + Python/Playwright + Visual regression
@@ -138,17 +150,20 @@ pytest tests/e2e/ --html=report.html
 ## Test File Naming Conventions
 
 ### Jest/Puppeteer
+
 - Unit tests: `*.test.js` (e.g., `CurrentPosition.test.js`)
 - E2E tests: `*.e2e.test.js` (e.g., `CompleteGeolocationWorkflow.e2e.test.js`)
 - Integration: `*.integration.test.js`
 
 ### Python/Playwright
+
 - E2E tests: `test_*.py` (e.g., `test_geolocation.py`)
 - Fixtures: `conftest.py`
 
 ## Dependencies
 
 ### Jest/Puppeteer Dependencies
+
 ```json
 {
   "jest": "^30.1.3",
@@ -158,6 +173,7 @@ pytest tests/e2e/ --html=report.html
 ```
 
 ### Python/Playwright Dependencies
+
 ```txt
 pytest>=7.4.0
 playwright>=1.40.0
@@ -167,6 +183,7 @@ pytest-html>=3.2.0
 ## Troubleshooting
 
 ### Jest/Puppeteer Issues
+
 ```bash
 # Clear Jest cache
 npm test -- --clearCache
@@ -179,6 +196,7 @@ node --inspect-brk node_modules/.bin/jest __tests__/e2e/test.e2e.test.js
 ```
 
 ### Python/Playwright Issues
+
 ```bash
 # Reinstall browsers
 playwright install --force
@@ -193,6 +211,7 @@ pytest tests/e2e/ -s --headed
 ## Future Enhancements
 
 **Planned Improvements**:
+
 1. Unified test reporting dashboard
 2. Automated visual regression testing
 3. Performance testing integration

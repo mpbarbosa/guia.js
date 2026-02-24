@@ -22,6 +22,7 @@ When a function is referentially transparent, you can safely replace any functio
 ### Mathematical Foundation
 
 In mathematics, a function is referentially transparent by default:
+
 ```
 f(x) = x + 2
 ```
@@ -31,6 +32,7 @@ If `x = 3`, then `f(3) = 5` always, and you can replace `f(3)` with `5` anywhere
 ### Programming Context
 
 In JavaScript, referential transparency means functions behave like mathematical functions:
+
 ```javascript
 // Referentially transparent
 function add(a, b) {
@@ -141,6 +143,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 ### Pure Functions (Referentially Transparent)
 
 Pure functions satisfy two conditions:
+
 1. **Deterministic**: Same input always produces same output
 2. **No side effects**: Don't modify external state or perform I/O
 
@@ -668,6 +671,7 @@ The Guia Turístico project demonstrates referential transparency in several are
 - **Observer Management**: `ObserverSubject` uses immutable array patterns (spread operator, filter) for subscribe/unsubscribe operations
 
 For architecture examples:
+
 - [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) - Overall architecture showing pure functions
 - [GEO_POSITION.md](../docs/architecture/GEO_POSITION.md) - Example of immutable data classes
 - [REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md) - Frozen objects for immutability
@@ -682,6 +686,7 @@ For architecture examples:
 ## Related Documentation
 
 ### Core Guides
+
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines with FP principles
 - **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Review checklist with FP focus
 - **[JAVASCRIPT_BEST_PRACTICES.md](./JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript standards
@@ -689,11 +694,13 @@ For architecture examples:
 - **[UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)** - Unit testing guide
 
 ### Architecture Examples
+
 - **[docs/architecture/GEO_POSITION.md](../docs/architecture/GEO_POSITION.md)** - Immutable data classes
 - **[docs/architecture/REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md)** - Frozen objects
 - **[docs/architecture/POSITION_MANAGER.md](../docs/architecture/POSITION_MANAGER.md)** - Observer pattern with immutability
 
 ### Complete Guide Index
+
 - **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
 
 ---

@@ -82,16 +82,19 @@ The test simulates a user moving through different locations:
 ### 1. Change Detection Setup and Lifecycle
 
 **Test**: Initialize ChangeDetectionCoordinator with all callbacks
+
 - Validates that coordinator has AddressDataExtractor reference
 - Checks that callbacks are registered (implementation-dependent)
 
 **Test**: Remove all callbacks on cleanup
+
 - Calls `removeAllChangeDetection()`
 - Verifies all callbacks are cleared/nulled
 
 ### 2. Logradouro Change Detection
 
 **Test**: Detect logradouro change when moving to different street
+
 - Sets up change event tracking
 - Moves from República to Rua 7 de Abril
 - Verifies `LogradouroChanged` event is fired
@@ -100,12 +103,14 @@ The test simulates a user moving through different locations:
 ### 3. Bairro Change Detection
 
 **Test**: Detect bairro change when crossing neighborhood boundary
+
 - Tracks bairro change events
 - Moves from República to Jardim Paulista
 - Verifies `BairroChanged` event is fired
 - Validates previous and current bairro values
 
 **Test**: Update bairro card in UI when bairro changes
+
 - Checks initial bairro value in UI
 - Moves to different bairro
 - Verifies UI element updates with new bairro name
@@ -113,12 +118,14 @@ The test simulates a user moving through different locations:
 ### 4. Municipio Change Detection
 
 **Test**: Detect municipio change when crossing city boundary
+
 - Tracks municipio change events
 - Moves from São Paulo to Campinas
 - Verifies `MunicipioChanged` event is fired
 - Validates previous and current municipio values
 
 **Test**: Update municipio card in UI when city changes
+
 - Checks initial municipio value in UI
 - Moves to different city
 - Verifies UI element updates with new municipio name
@@ -126,11 +133,13 @@ The test simulates a user moving through different locations:
 ### 5. Observer Notification
 
 **Test**: Notify all registered observers of changes
+
 - Registers two observers
 - Triggers location change
 - Verifies both observers receive notifications
 
 **Test**: Handle observer errors without breaking notification chain
+
 - Registers observer that throws error
 - Registers normal observer after error-throwing observer
 - Verifies normal observer still gets called despite error
@@ -138,6 +147,7 @@ The test simulates a user moving through different locations:
 ### 6. changeDetails Structure
 
 **Test**: Provide correct changeDetails structure to observers
+
 - Captures changeDetails from observer callback
 - Validates structure: `hasChanged`, `previous`, `current`
 - Verifies previous and current values are different

@@ -14,6 +14,7 @@ Successfully completed **comprehensive documentation** for **all 20+ utility scr
 ### 🎯 All Issues Resolved
 
 **Phase 1** (Critical Priority - Commit 3957141):
+
 - ✅ Issue #1: change-type-detector.sh (308 lines)
 - ✅ Issue #1: workflow-condition-evaluator.sh (225 lines)
 - ✅ Issue #2: test-change-type-detection.sh (237 lines)
@@ -21,6 +22,7 @@ Successfully completed **comprehensive documentation** for **all 20+ utility scr
 - ✅ Issue #3: fix-console-logging.sh portability fix
 
 **Phase 2** (Medium Priority - Commit 03adc15):
+
 - ✅ Issue #4: validate-cross-references.sh (78 lines)
 - ✅ Issue #5: build_and_deploy.sh (7 lines)
 - ✅ Issue #6: validate-jsdom-update.sh (120+ lines)
@@ -44,6 +46,7 @@ Successfully completed **comprehensive documentation** for **all 20+ utility scr
 ### Documentation Quality
 
 **Before**:
+
 - ❌ 4 critical workflow scripts undocumented (973 lines)
 - ❌ No --help flags for quick reference
 - ❌ Hardcoded paths breaking portability
@@ -51,6 +54,7 @@ Successfully completed **comprehensive documentation** for **all 20+ utility scr
 - ❌ Deployment script completely undocumented
 
 **After**:
+
 - ✅ 20/20 scripts fully documented
 - ✅ 2 scripts with comprehensive --help flags
 - ✅ All scripts portable across environments
@@ -67,6 +71,7 @@ Successfully completed **comprehensive documentation** for **all 20+ utility scr
 ### change-type-detector.sh Documentation
 
 **Added** (+53 lines for --help):
+
 - Complete usage guide with parameters
 - All 9 Conventional Commits types explained
 - 4 practical examples (last commit, specific commit, PR branch, conditional logic)
@@ -75,6 +80,7 @@ Successfully completed **comprehensive documentation** for **all 20+ utility scr
 - Testing reference
 
 **Key Features**:
+
 ```bash
 ./change-type-detector.sh --help
 # Returns: 53-line comprehensive help guide
@@ -83,6 +89,7 @@ Successfully completed **comprehensive documentation** for **all 20+ utility scr
 ### workflow-condition-evaluator.sh Documentation
 
 **Added** (+78 lines for --help):
+
 - Complete usage guide with 2 parameters (step_name, base_ref)
 - Configuration file structure (.workflow-config.yaml)
 - File pattern rules (glob syntax: *, **, ?, {a,b})
@@ -92,6 +99,7 @@ Successfully completed **comprehensive documentation** for **all 20+ utility scr
 - Dependencies documented
 
 **Key Features**:
+
 ```bash
 ./workflow-condition-evaluator.sh --help
 # Returns: 78-line detailed guide with config examples
@@ -100,12 +108,14 @@ Successfully completed **comprehensive documentation** for **all 20+ utility scr
 ### Test Scripts Documentation
 
 **test-change-type-detection.sh**:
+
 - Test coverage: 20+ test cases
 - Expected output format with pass/fail indicators
 - When to run (before script modifications)
 - Execution time: ~5 seconds
 
 **test-conditional-execution.sh**:
+
 - Test coverage: 15+ scenarios
 - Expected output format
 - When to run (before config changes)
@@ -115,6 +125,7 @@ Successfully completed **comprehensive documentation** for **all 20+ utility scr
 ### Portability Fix
 
 **fix-console-logging.sh** - Replaced hardcoded path:
+
 ```bash
 # Before (hardcoded):
 cd /home/mpb/Documents/GitHub/guia_turistico/src
@@ -126,6 +137,7 @@ cd "$PROJECT_ROOT/src"
 ```
 
 **Benefits**:
+
 - ✅ Works from any directory
 - ✅ CI/CD compatible
 - ✅ Docker-friendly
@@ -138,6 +150,7 @@ cd "$PROJECT_ROOT/src"
 ### validate-cross-references.sh Documentation
 
 **Added** (+304 lines total in .github/scripts/README.md):
+
 - Complete usage guide with link pattern examples
 - Exit codes: 0 (all valid), 1 (broken links)
 - Output format: source file, target link, line number
@@ -147,6 +160,7 @@ cd "$PROJECT_ROOT/src"
 - Integration: CI/CD workflow examples
 
 **Key Information**:
+
 ```bash
 # Link patterns validated:
 [text](./relative/path.md)           # Relative to current
@@ -158,6 +172,7 @@ cd "$PROJECT_ROOT/src"
 ### validate-jsdom-update.sh Documentation
 
 **Added**:
+
 - 6-step update validation process
 - Version parameter support (default 27.4.0, supports `latest`)
 - Rollback procedures (automatic on failure)
@@ -166,6 +181,7 @@ cd "$PROJECT_ROOT/src"
 - Exit codes: 0 (safe), 1 (breaking changes)
 
 **Process**:
+
 1. Check current jsdom version
 2. Create backup (git stash)
 3. Update jsdom to target version
@@ -176,6 +192,7 @@ cd "$PROJECT_ROOT/src"
 ### build_and_deploy.sh Documentation
 
 **Added** (+99 lines total in scripts/README.md):
+
 - Complete prerequisite checklist (5 items)
 - Directory structure diagram
 - 4 known issues documented
@@ -184,6 +201,7 @@ cd "$PROJECT_ROOT/src"
 - Usage notes and warnings
 
 **Prerequisites Documented**:
+
 - ✅ mpbarbosa_site repository at ../mpbarbosa_site
 - ✅ Valid staging environment configuration
 - ✅ Sync script: mpbarbosa_site/shell_scripts/sync_to_staging.sh
@@ -191,6 +209,7 @@ cd "$PROJECT_ROOT/src"
 - ✅ Write permissions
 
 **Known Issues**:
+
 - ❌ No error handling for missing directories
 - ❌ No build success validation
 - ❌ No rollback mechanism
@@ -199,6 +218,7 @@ cd "$PROJECT_ROOT/src"
 ### Python vs Shell Script Comparison
 
 **Added**:
+
 - Feature comparison table (3 scripts)
 - When to use each version guidance
 - Python advantages: regex, false positive filtering, structured output
@@ -228,6 +248,7 @@ cd "$PROJECT_ROOT/src"
 ## 🎯 Script Inventory - Complete
 
 ### Workflow Scripts (4 total)
+
 | Script | Lines | Documentation | --help | Status |
 |--------|-------|---------------|--------|--------|
 | change-type-detector.sh | 308 | ✅ README + --help | ✅ Yes | ✅ Complete |
@@ -236,6 +257,7 @@ cd "$PROJECT_ROOT/src"
 | workflow-condition-evaluator.sh | 225 | ✅ README + --help | ✅ Yes | ✅ Complete |
 
 ### Validation Scripts (6 total)
+
 | Script | Lines | Documentation | Status |
 |--------|-------|---------------|--------|
 | validate-cross-references.sh | 78 | ✅ README | ✅ Complete |
@@ -246,6 +268,7 @@ cd "$PROJECT_ROOT/src"
 | test-workflow-locally.sh | 318 | ✅ README | ✅ Complete |
 
 ### Maintenance Scripts (4 total)
+
 | Script | Lines | Documentation | Status |
 |--------|-------|---------------|--------|
 | fix-console-logging.sh | 150 | ✅ README | ✅ Portable |
@@ -254,6 +277,7 @@ cd "$PROJECT_ROOT/src"
 | build_and_deploy.sh | 7 | ✅ README | ✅ Complete |
 
 ### Python Utilities (3 total)
+
 | Script | Documentation | Comparison | Status |
 |--------|---------------|------------|--------|
 | check-references.py | ✅ README + comparison | ✅ vs Shell | ✅ Complete |
@@ -261,6 +285,7 @@ cd "$PROJECT_ROOT/src"
 | check-links.py | ✅ README | ✅ Python-only | ✅ Complete |
 
 ### Other Scripts (3 total)
+
 | Script | Documentation | Status |
 |--------|---------------|--------|
 | cdn-delivery.sh | ✅ README | ✅ Complete |
@@ -276,6 +301,7 @@ cd "$PROJECT_ROOT/src"
 ### Developer Experience
 
 **Before**:
+
 - ❌ 14/20 scripts undocumented or incomplete
 - ❌ No --help flags for quick reference
 - ❌ Script failures in non-local environments
@@ -283,6 +309,7 @@ cd "$PROJECT_ROOT/src"
 - ❌ No deployment script documentation
 
 **After**:
+
 - ✅ 20/20 scripts fully documented
 - ✅ 2 critical scripts with --help flags
 - ✅ All scripts portable across environments
@@ -292,6 +319,7 @@ cd "$PROJECT_ROOT/src"
 ### CI/CD Reliability
 
 **Improvements**:
+
 - ✅ Workflow scripts work in GitHub Actions
 - ✅ Scripts validated in Docker containers
 - ✅ No environment-specific failures
@@ -301,6 +329,7 @@ cd "$PROJECT_ROOT/src"
 ### Documentation Completeness
 
 **Coverage**:
+
 - ✅ Usage examples (100% of scripts)
 - ✅ Exit codes documented (100% applicable)
 - ✅ Prerequisites listed (deployment scripts)
@@ -313,7 +342,9 @@ cd "$PROJECT_ROOT/src"
 ## 📝 Commits Summary
 
 ### Commit 3957141 - Critical Scripts
+
 **Files**: 5 modified
+
 - .github/scripts/README.md: +230 lines
 - .github/scripts/change-type-detector.sh: +53 lines (--help)
 - .github/scripts/workflow-condition-evaluator.sh: +78 lines (--help)
@@ -323,13 +354,17 @@ cd "$PROJECT_ROOT/src"
 **Impact**: Critical workflow scripts documented
 
 ### Commit 5034e40 - Completion Report
+
 **Files**: 1 created
+
 - docs/WORKFLOW_SCRIPTS_DOCUMENTATION_COMPLETE.md: 8.6 KB
 
 **Impact**: Phase 1 completion tracking
 
 ### Commit 03adc15 - Remaining Scripts
+
 **Files**: 2 modified
+
 - .github/scripts/README.md: +304 lines
 - scripts/README.md: +99 lines
 
@@ -340,6 +375,7 @@ cd "$PROJECT_ROOT/src"
 ## 🎉 Achievements
 
 ### Quantitative
+
 - ✅ **7 issues** resolved (3 critical, 4 medium priority)
 - ✅ **973 lines of code** documented
 - ✅ **+498 lines** of documentation added (+103% increase)
@@ -349,6 +385,7 @@ cd "$PROJECT_ROOT/src"
 - ✅ **3 Python scripts** comparison documented
 
 ### Qualitative
+
 - ✅ Developer onboarding simplified
 - ✅ CI/CD reliability improved
 - ✅ Script maintenance easier
@@ -363,6 +400,7 @@ cd "$PROJECT_ROOT/src"
 ### Documentation Quality Checklist
 
 **All scripts now have**:
+
 - ✅ Purpose statement
 - ✅ Usage syntax
 - ✅ Parameter descriptions (if applicable)
@@ -374,6 +412,7 @@ cd "$PROJECT_ROOT/src"
 - ✅ Integration patterns (CI/CD)
 
 ### Testing Validation
+
 ```bash
 ✅ Syntax validation passed for all scripts
 ✅ --help flags tested and working
@@ -387,6 +426,7 @@ cd "$PROJECT_ROOT/src"
 ## 📚 Documentation Locations
 
 ### Primary References
+
 - **`.github/scripts/README.md`** (771 lines)
   - Complete inventory of 17 scripts
   - Usage patterns and CI/CD integration
@@ -398,12 +438,14 @@ cd "$PROJECT_ROOT/src"
   - Running scripts locally
 
 ### Help Flags
+
 ```bash
 ./.github/scripts/change-type-detector.sh --help        # 53 lines
 ./.github/scripts/workflow-condition-evaluator.sh --help # 78 lines
 ```
 
 ### Completion Reports
+
 - **`docs/WORKFLOW_SCRIPTS_DOCUMENTATION_COMPLETE.md`** (8.6 KB)
   - Phase 1 completion metrics
   - Critical issues resolution
@@ -414,18 +456,21 @@ cd "$PROJECT_ROOT/src"
 ## 🎯 Recommendations for Future
 
 ### Short-term (Next Sprint)
+
 - [ ] Add --help flags to remaining scripts (test scripts)
 - [ ] Create .workflow-config.yaml template with examples
 - [ ] Test all scripts in GitHub Actions environment
 - [ ] Add npm script aliases where missing
 
 ### Medium-term (Next Quarter)
+
 - [ ] Migrate build_and_deploy.sh to GitHub Actions workflow
 - [ ] Create automated link checking in CI/CD (check-links.py)
 - [ ] Add --dry-run flags to destructive operations
 - [ ] Standardize error handling across all scripts
 
 ### Long-term (Next 6 Months)
+
 - [ ] Create interactive script runner (TUI)
 - [ ] Generate man pages for all scripts
 - [ ] Add autocomplete support (bash/zsh)

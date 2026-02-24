@@ -5,6 +5,7 @@
 This document provides comprehensive documentation for the Nominatim API integration and OSM address translation in the Guia Turístico project (version 0.9.0-alpha). Nominatim is the geocoding service provided by OpenStreetMap that powers the reverse geocoding functionality, translating geographic coordinates into Brazilian standard addresses.
 
 **Key Features:**
+
 - Complete Nominatim JSON format specification
 - OSM address tag translation to Brazilian format
 - Backward compatibility with both OSM tags and Nominatim fields
@@ -136,11 +137,13 @@ When both OSM tags and Nominatim fields are present, the system follows this pri
 The `uf` and `siglaUF` fields follow strict rules for consistency:
 
 **`uf` field** - Contains ONLY full state names:
+
 - Source: `addr:state` or `state` fields only
 - Examples: "São Paulo", "Rio de Janeiro", "Minas Gerais"
 - Will be `null` if only abbreviations are available (e.g., only `state_code` or `ISO3166-2-lvl4`)
 
 **`siglaUF` field** - Contains ONLY two-letter state abbreviations:
+
 - Priority: `state_code` > extracted from `ISO3166-2-lvl4`
 - Examples: "SP", "RJ", "MG"
 - If `uf` contains a two-letter code (edge case), `siglaUF` will use it
@@ -188,6 +191,7 @@ The `boundingbox` field is an array of four string values representing the geogr
 **Format:** `[min_lat, max_lat, min_lon, max_lon]`
 
 **Usage:**
+
 - Defines rectangular area covering the location
 - Used for map viewport sizing
 - Useful for determining location precision
@@ -583,12 +587,15 @@ Guia Turístico implements caching via `AddressCache` to minimize API calls.
 ### Data Completeness
 
 Fields that are commonly **available**:
+
 - `road`, `city`, `state`, `country`, `country_code`
 
 Fields that are **sometimes missing**:
+
 - `house_number`, `postcode`, `neighbourhood`
 
 Fields that are **often missing**:
+
 - `building`, `quarter`, `municipality`, `state_district`
 
 ### Localization
@@ -643,6 +650,7 @@ Comprehensive test coverage is provided in:
 **File**: `__tests__/OSMAddressTranslation.test.js`
 
 **Test Categories**:
+
 - FR-1: Identify and Extract OSM Address Tags (4 tests)
 - FR-2: Map to Brazilian Address Fields (3 tests)
 - FR-3: Format and Output Brazilian Address (5 tests)

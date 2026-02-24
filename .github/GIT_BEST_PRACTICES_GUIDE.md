@@ -12,6 +12,7 @@ This guide establishes Git best practices specifically for the Guia Turístico p
 ## Critical Rule: Always Use Git Commands for File Operations
 
 ### ❌ NEVER USE: System commands for tracked files
+
 ```bash
 mv file.md new-location/     # Breaks git history
 rm old-file.md              # Loses history tracking
@@ -19,6 +20,7 @@ cp file.md backup.md        # Creates untracked duplicates
 ```
 
 ### ✅ ALWAYS USE: Git commands for file operations
+
 ```bash
 git mv file.md new-location/        # Preserves history
 git rm old-file.md                  # Proper deletion tracking
@@ -28,6 +30,7 @@ git mv file.md backup.md            # Tracked copying through move
 ## File Reorganization Workflow
 
 ### 1. Planning Phase
+
 ```bash
 # Check current status
 git status
@@ -38,6 +41,7 @@ git log --oneline -5
 ```
 
 ### 2. Execution Phase
+
 ```bash
 # Move files with git mv (REQUIRED)
 git mv docs/javascript-guide.md .github/JAVASCRIPT_GUIDE.md
@@ -51,6 +55,7 @@ git add docs/INDEX.md
 ```
 
 ### 3. Commit Phase
+
 ```bash
 # Commit with descriptive message
 git commit -m "docs: Reorganize documentation structure
@@ -62,6 +67,7 @@ git commit -m "docs: Reorganize documentation structure
 ```
 
 ### 4. Push Phase
+
 ```bash
 # Push to remote
 git push origin main
@@ -101,18 +107,21 @@ git push origin main
 ## File Organization Standards for Guia.js
 
 ### docs/ Directory (Project Documentation)
+
 - Architecture documentation
 - API integration guides
 - Technical specifications
 - User-facing documentation
 
 ### .github/ Directory (Contributor Guidelines)
+
 - Coding standards and best practices
 - Testing methodology guides
 - Contribution workflows
 - GitHub-specific configuration
 
 ### Example Reorganization
+
 ```bash
 # Moving coding standards from docs/ to .github/
 git mv docs/JAVASCRIPT_BEST_PRACTICES.md .github/
@@ -148,11 +157,13 @@ Before committing file reorganizations:
 ## Integration with Existing Workflows
 
 ### GitHub Actions Compatibility
+
 - Our automated workflows detect file changes correctly when using `git mv`
 - Documentation updates trigger appropriate test suites
 - Link validation works with proper git tracking
 
 ### Code Review Process
+
 - File moves using `git mv` show clearly in pull requests
 - History is preserved for reviewers
 - Rationale for reorganization is clear in commit messages
@@ -179,6 +190,7 @@ Note: Used system mv instead of git mv, file history may be incomplete"
 **Always use `git mv` and `git rm` for file operations in version-controlled projects.**
 
 This ensures:
+
 - Clean git history
 - Professional development standards
 - Easier collaboration and code review

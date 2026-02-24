@@ -7,11 +7,13 @@ This document describes the refactoring of the literal string `'Address fetched'
 ## Motivation
 
 **Before**: The string `'Address fetched'` was hardcoded in multiple files:
+
 - `src/services/ReverseGeocoder.js` (line 261)
 - `src/html/HTMLAddressDisplayer.js` (line 209)
 - Documentation files (CRITICAL_FIX_FETCHADDRESS_OBSERVERS.md, CONSOLE_LOG_ANALYSIS.md)
 
 **Problems with hardcoded strings**:
+
 - ❌ Typo errors difficult to detect (e.g., 'Address fetched' vs 'Address Fetched')
 - ❌ Difficult to maintain consistency across files
 - ❌ No IDE autocomplete support
@@ -29,6 +31,7 @@ export const ADDRESS_FETCHED_EVENT = "Address fetched";
 ```
 
 **Benefits**:
+
 - ✅ Single source of truth for event name
 - ✅ IDE autocomplete and type checking support
 - ✅ Compile-time validation (import errors if constant doesn't exist)
@@ -41,6 +44,7 @@ export const ADDRESS_FETCHED_EVENT = "Address fetched";
 ### Source Code Changes
 
 1. **src/config/defaults.js** (NEW constant)
+
    ```javascript
    /** Event name for address fetch completion */
    export const ADDRESS_FETCHED_EVENT = "Address fetched";
@@ -56,20 +60,21 @@ export const ADDRESS_FETCHED_EVENT = "Address fetched";
 
 ### Documentation Updates
 
-4. **docs/CRITICAL_FIX_FETCHADDRESS_OBSERVERS.md**
+1. **docs/CRITICAL_FIX_FETCHADDRESS_OBSERVERS.md**
    - Updated code examples to reference `ADDRESS_FETCHED_EVENT`
    - Added note about constant usage (v0.9.0+)
    - Updated console output examples
 
-5. **docs/CONSOLE_LOG_ANALYSIS.md**
+2. **docs/CONSOLE_LOG_ANALYSIS.md**
    - Added reference to `src/config/defaults.js` in "Related Files" section
 
-6. **docs/REFACTOR_ADDRESS_FETCHED_CONSTANT.md** (NEW)
+3. **docs/REFACTOR_ADDRESS_FETCHED_CONSTANT.md** (NEW)
    - This document explaining the refactoring
 
 ## Testing
 
 ### Syntax Validation
+
 ```bash
 node -c src/config/defaults.js
 node -c src/services/ReverseGeocoder.js
@@ -79,12 +84,15 @@ node -c src/html/HTMLAddressDisplayer.js
 All syntax checks pass ✅
 
 ### Test Suite
+
 The existing test suite covers the functionality:
+
 - `__tests__/unit/ReverseGeocoder.test.js` - Unit tests for ReverseGeocoder
 - `__tests__/coordination/ServiceCoordinator.test.js` - Integration tests
 - E2E tests for complete workflows
 
 No test changes required because:
+
 - The constant value remains the same: `"Address fetched"`
 - Only the source of the string changed (literal → constant)
 - Behavior is identical from external perspective
@@ -92,6 +100,7 @@ No test changes required because:
 ### Runtime Behavior
 
 **No changes to runtime behavior**:
+
 - Event name is still `"Address fetched"`
 - Observer notifications work identically
 - Console logs show same output
@@ -104,6 +113,7 @@ No test changes required because:
 If you were using the literal string `'Address fetched'` in your code:
 
 **Before**:
+
 ```javascript
 if (posEvent === 'Address fetched') {
     // Handle address fetch event
@@ -111,6 +121,7 @@ if (posEvent === 'Address fetched') {
 ```
 
 **After**:
+
 ```javascript
 import { ADDRESS_FETCHED_EVENT } from './config/defaults.js';
 
@@ -124,11 +135,13 @@ if (posEvent === ADDRESS_FETCHED_EVENT) {
 When documenting observer notifications:
 
 **Before**:
+
 ```javascript
 notifyObservers(addressData, enderecoPadronizado, 'Address fetched', false, null);
 ```
 
 **After**:
+
 ```javascript
 import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 
@@ -150,6 +163,7 @@ This refactoring follows the project's established patterns:
 Potential enhancements:
 
 1. **Event Type Enumeration**: Create a comprehensive event types object
+
    ```javascript
    export const EVENT_TYPES = Object.freeze({
        ADDRESS_FETCHED: "Address fetched",
@@ -160,6 +174,7 @@ Potential enhancements:
    ```
 
 2. **TypeScript Migration**: Use string literal types for compile-time validation
+
    ```typescript
    type EventType = "Address fetched" | "Position updated" | ...;
    ```
@@ -169,7 +184,7 @@ Potential enhancements:
 ## References
 
 - Original Issue: String literal refactoring request (2026-01-20)
-- Related Documentation: 
+- Related Documentation:
   - `docs/CRITICAL_FIX_FETCHADDRESS_OBSERVERS.md`
   - `docs/CONSOLE_LOG_ANALYSIS.md`
 - Configuration File: `src/config/defaults.js`

@@ -16,12 +16,14 @@ The SIDRA (Sistema IBGE de Recuperação Automática) integration provides popul
 ## Architecture
 
 ### Components
+
 - **HTMLSidraDisplayer** (`src/html/HTMLSidraDisplayer.js`) - Display component
 - **DisplayerFactory** - Factory method for SIDRA displayer creation
 - **ServiceCoordinator** - Lifecycle management and observer subscriptions
 - **Offline Data** (`libs/sidra/tab6579_municipios.json`) - 190KB fallback dataset
 
 ### Data Flow
+
 1. User location changes
 2. ReverseGeocoder fetches address with municipality info
 3. ReverseGeocoder notifies observers with ADDRESS_FETCHED_EVENT

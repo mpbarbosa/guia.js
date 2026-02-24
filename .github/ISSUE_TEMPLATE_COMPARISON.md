@@ -25,6 +25,7 @@ ISSUE TEMPLATE COMPARISON
 All nine templates share these structural elements:
 
 ✅ **YAML Frontmatter** - Each template includes structured metadata:
+
 - `name`: Template display name
 - `about`: Brief description of the template's purpose
 - `title`: Prefix for issues created with this template
@@ -38,6 +39,7 @@ All nine templates share these structural elements:
 ✅ **Additional Context Section** - Space for supplementary information like links, screenshots, or references
 
 ✅ **Referential Transparency Considerations** - All templates include guidance on functional programming principles:
+
 - Pure functions (same input → same output, no side effects)
 - Explicit dependencies vs. global state
 - Isolation of side effects
@@ -50,6 +52,7 @@ All nine templates share these structural elements:
 **Purpose:** Report technical debt issues affecting code quality, maintainability, or performance
 
 **Unique Sections:**
+
 - **Technical Debt Summary** - Brief description of the debt
 - **Impact on Codebase** - How it affects maintainability, performance, readability, testing, security, scalability
 - **Current Issues** - Specific problems being caused or anticipated
@@ -59,6 +62,7 @@ All nine templates share these structural elements:
 - **Effort Estimation** - Small (< 1 day) to Extra Large (> 2 weeks)
 
 **Special Considerations:**
+
 - Emphasis on making functions referentially transparent
 - Focus on isolating side effects to boundary functions
 - Code testability improvements
@@ -68,6 +72,7 @@ All nine templates share these structural elements:
 **Purpose:** Propose new features or enhancements for the project
 
 **Unique Sections:**
+
 - **Feature Summary** - Brief description of the proposed feature
 - **Motivation** - Why the feature is needed, what problem it solves
 - **Use Cases** - Real-world scenarios demonstrating value
@@ -76,6 +81,7 @@ All nine templates share these structural elements:
 - **Alternatives Considered** - Other approaches and reasoning for the proposal
 
 **Special Considerations:**
+
 - Design features with core logic as pure functions
 - Separate business logic from I/O and mutations
 - Ensure implementations are easy to test in isolation
@@ -86,6 +92,7 @@ All nine templates share these structural elements:
 **Purpose:** Report problems or request features related to GitHub Copilot
 
 **Unique Sections:**
+
 - **Problem Description** - What was expected vs. what happened
 - **Steps to Reproduce** - Numbered steps to reproduce the issue
 - **Copilot Version** - Version information and environment details
@@ -94,6 +101,7 @@ All nine templates share these structural elements:
 - **Referential Transparency Guidelines** - How solutions should use pure functions and explicit dependencies
 
 **Special Considerations:**
+
 - Specific to GitHub Copilot integration issues
 - References both REFERENTIAL_TRANSPARENCY.md and CODE_REVIEW_GUIDE.md
 - Focus on deterministic, testable solutions
@@ -103,6 +111,7 @@ All nine templates share these structural elements:
 **Purpose:** Document and track systematic testing of GitHub Copilot features, code suggestions, and generation quality
 
 **Unique Sections:**
+
 - **Test Summary** - Brief description of what aspect of Copilot is being tested
 - **Test Type** - Multi-select checkboxes for:
   - Code Completion
@@ -137,6 +146,7 @@ All nine templates share these structural elements:
 - **Follow-up Actions** - Update documentation, improve instructions, create issues, etc.
 
 **Special Considerations:**
+
 - Distinct from copilot_issue.md (which reports bugs) - this tracks systematic testing
 - Evaluates quality of Copilot suggestions against project standards
 - Documents reproducible test scenarios for consistent evaluation
@@ -149,6 +159,7 @@ All nine templates share these structural elements:
 **Purpose:** Create actionable Agile tickets for implementing user stories, features, and functional specifications using GitHub's YAML form syntax
 
 **Unique Sections:**
+
 - **Ticket Type** - Dropdown: User Story, Feature Implementation, Technical Task, Bug Fix, Refactoring, Documentation, Research/Spike
 - **User Story** - Structured format: "As a [role], I want [feature], so that [benefit]"
 - **Background / Context** - Link to functional specifications, related issues, and project context
@@ -171,6 +182,7 @@ All nine templates share these structural elements:
 - **Additional Context** - Links, diagrams, and supplementary information
 
 **Special Considerations:**
+
 - **First YML template** - Uses GitHub's modern YAML form syntax (not markdown)
 - Designed to bridge functional specifications and implementation work
 - Supports both large features (broken down from specs) and small standalone features
@@ -186,6 +198,7 @@ All nine templates share these structural elements:
 **Purpose:** Report documentation issues or request documentation improvements
 
 **Unique Sections:**
+
 - **Documentation Issue Summary** - What's missing, unclear, outdated, or incorrect
 - **Type of Documentation Issue** - 7 categories (Missing, Incorrect, Unclear, Enhancement, Code Examples, API Documentation, Tutorial/Guide)
 - **Affected Documentation** - Specific files and sections
@@ -210,6 +223,7 @@ All nine templates share these structural elements:
 - **Effort Estimation** - Specific to documentation work (< 2 hours to > 2 days)
 
 **Special Considerations:**
+
 - Detailed template with 147 lines
 - Specific effort estimates for documentation tasks
 - Comprehensive quality checklist
@@ -221,6 +235,7 @@ All nine templates share these structural elements:
 **Purpose:** Create codeless functional specifications for features, components, or modules suitable for AI-supported development
 
 **Unique Sections:**
+
 - **Specification Overview** - Brief summary of the component/feature
 - **Document Information** - Version, status, target audience, implementation language
 - **Output Deliverables** - 🆕 Defines output type (Programming Code or Class Documentation)
@@ -255,6 +270,7 @@ All nine templates share these structural elements:
 - **Contact** - Author, reviewers, subject matter experts
 
 **Special Considerations:**
+
 - Largest and most comprehensive template at 379 lines
 - **Completely codeless** - focuses on WHAT not HOW
 - Language-agnostic design for cross-platform implementation
@@ -269,6 +285,7 @@ All nine templates share these structural elements:
 **Purpose:** Report issues or request changes to .github configuration (workflows, actions, issue templates, CI/CD)
 
 **Unique Sections:**
+
 - **Configuration Issue Summary** - Brief description of the configuration issue
 - **Type of Configuration Issue** - Multi-select checkboxes for:
   - Workflow Issue
@@ -296,6 +313,7 @@ All nine templates share these structural elements:
 - **Acceptance Criteria** - Definition of "done" with testing and documentation requirements
 
 **Special Considerations:**
+
 - Focused on DevOps/infrastructure concerns
 - Addresses GitHub Actions workflows, custom actions, and CI/CD pipelines
 - References WORKFLOW_SETUP.md for workflow guidance
@@ -308,6 +326,7 @@ All nine templates share these structural elements:
 **Purpose:** Report user experience problems or make usability suggestions
 
 **Unique Sections:**
+
 - **Summary** - Brief description of the UX issue or suggestion
 - **Steps to Reproduce** - Numbered steps to encounter the problem or observe the UX concern
 - **Expected Behavior** - What should happen from a user perspective
@@ -321,6 +340,7 @@ All nine templates share these structural elements:
 - **Additional Context** - Other details or suggestions
 
 **Special Considerations:**
+
 - Focused on user-facing aspects rather than code quality
 - No referential transparency section (UX-specific, not implementation-focused)
 - Simpler structure compared to other templates
@@ -333,6 +353,7 @@ All nine templates share these structural elements:
 All templates are well-integrated into the project:
 
 ✅ **Referenced in docs/INDEX.md** - Each template is listed with description
+
 - Technical Debt: "Report technical debt" - Now includes referential transparency considerations 🆕
 - Feature Request: "Propose new features" - Now includes implementation considerations for pure functions 🆕
 - Copilot Issue: "Report Copilot-related issues" - Now includes referential transparency guidelines 🆕
@@ -352,6 +373,7 @@ All templates are well-integrated into the project:
 ## Comparison Summary
 
 ### Complexity Scale
+
 1. **Feature Request** (40 lines) - Simplest, focused on proposing new functionality
 2. **Copilot Issue** (45 lines) - Straightforward bug/feature reporting for Copilot
 3. **UX Issue** (46 lines) - Simple user experience reporting 🆕
@@ -363,6 +385,7 @@ All templates are well-integrated into the project:
 9. **Functional Specification** (379 lines) - Most comprehensive, codeless specification format
 
 ### Common Label Strategy
+
 - Most templates use **"triage"** for initial categorization
 - Exception: **UX Issue** uses "UX" and "enhancement" without "triage" 🆕
 - Each has a specific domain label (technical-debt, enhancement, copilot, documentation, functional-spec, infrastructure, testing, UX)
@@ -372,7 +395,9 @@ All templates are well-integrated into the project:
 - GitHub Copilot Test uses both **"copilot"** and **"testing"** labels 🆕
 
 ### Functional Programming Focus
+
 Most templates include referential transparency guidance, showing the project's commitment to:
+
 - Pure functions and deterministic behavior
 - Explicit dependency management
 - Side effect isolation
@@ -381,6 +406,7 @@ Most templates include referential transparency guidance, showing the project's 
 Note: UX Issue template focuses on user-facing concerns rather than implementation, so it doesn't include referential transparency sections.
 
 ### Target Use Cases
+
 - **Technical Debt**: Internal code quality improvements
 - **Feature Request**: New capabilities and enhancements
 - **Copilot Issue**: GitHub Copilot integration problems and feature requests
@@ -396,6 +422,7 @@ Note: UX Issue template focuses on user-facing concerns rather than implementati
 According to docs/INDEX.md "Recent Updates" section (October 2024):
 
 All templates were enhanced as part of the **Referential Transparency Documentation** initiative:
+
 - ✅ Created comprehensive referential transparency guide
 - ✅ Added code review checklist with FP focus
 - ✅ Updated contributing guidelines

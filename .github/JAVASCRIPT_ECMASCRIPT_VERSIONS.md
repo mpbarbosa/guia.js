@@ -17,6 +17,7 @@
 This document provides a comprehensive summary of main features introduced in each JavaScript and ECMAScript version. It serves as a quick reference for developers and is optimized for GitHub Copilot understanding.
 
 **Key Points:**
+
 - **JavaScript** is the programming language
 - **ECMAScript** is the specification that JavaScript implements
 - **TC39** is the committee that develops ECMAScript
@@ -50,12 +51,14 @@ This document provides a comprehensive summary of main features introduced in ea
 ### ES3 (1999) - Regular Expressions and Error Handling
 
 **Major Features:**
+
 - Regular expressions
 - try/catch/finally exception handling
 - switch statement
 - do-while loops
 
 **Example:**
+
 ```javascript
 // Regular expressions
 const pattern = /\d{3}-\d{4}/;
@@ -74,6 +77,7 @@ try {
 ### ES5 (2009) - Strict Mode and Array Methods
 
 **Major Features:**
+
 - Strict mode (\`"use strict"\`)
 - JSON support (parse, stringify)
 - Array methods: forEach, map, filter, reduce
@@ -82,6 +86,7 @@ try {
 - Function.bind()
 
 **Examples:**
+
 ```javascript
 "use strict";
 
@@ -107,6 +112,7 @@ const immutable = Object.freeze({ x: 1 });
 ### ES6/ES2015 (2015) - Modern JavaScript Begins
 
 **Major Features:**
+
 - Arrow functions (\`=>\`)
 - Classes
 - Modules (import/export)
@@ -123,6 +129,7 @@ const immutable = Object.freeze({ x: 1 });
 **Examples:**
 
 **Arrow Functions:**
+
 ```javascript
 // Concise syntax
 const add = (a, b) => a + b;
@@ -138,6 +145,7 @@ class Timer {
 ```
 
 **Classes:**
+
 ```javascript
 class Person {
   constructor(name) {
@@ -157,6 +165,7 @@ class Developer extends Person {
 ```
 
 **Modules:**
+
 ```javascript
 // math.js
 export const PI = 3.14159;
@@ -167,6 +176,7 @@ import { PI, add } from './math.js';
 ```
 
 **Template Literals:**
+
 ```javascript
 const name = "Alice";
 const age = 30;
@@ -174,6 +184,7 @@ const message = \`Hello, \${name}! You are \${age} years old.\`;
 ```
 
 **Destructuring:**
+
 ```javascript
 // Array destructuring
 const [first, second, ...rest] = [1, 2, 3, 4, 5];
@@ -188,6 +199,7 @@ function greet({ name, age }) {
 ```
 
 **Spread Operator:**
+
 ```javascript
 // Array spread
 const arr1 = [1, 2, 3];
@@ -199,6 +211,7 @@ const employee = { ...person, role: "Developer" };
 ```
 
 **Promises:**
+
 ```javascript
 const fetchData = () => {
   return new Promise((resolve, reject) => {
@@ -212,6 +225,7 @@ fetchData()
 ```
 
 **Map and Set:**
+
 ```javascript
 // Map
 const map = new Map();
@@ -228,10 +242,12 @@ console.log([...set]); // [1, 2, 3]
 ### ES2016 (ES7) - Small Improvements
 
 **Major Features:**
+
 - Exponentiation operator (\`**\`)
 - Array.includes()
 
 **Examples:**
+
 ```javascript
 // Exponentiation
 console.log(2 ** 3); // 8
@@ -247,6 +263,7 @@ console.log(arr.includes(NaN)); // true (unlike indexOf)
 ### ES2017 (ES8) - Async/Await
 
 **Major Features:**
+
 - async/await
 - Object.values(), Object.entries()
 - String.padStart(), padEnd()
@@ -256,6 +273,7 @@ console.log(arr.includes(NaN)); // true (unlike indexOf)
 **Examples:**
 
 **Async/Await:**
+
 ```javascript
 // Clean async code
 async function fetchUserData() {
@@ -276,6 +294,7 @@ async function fetchData() {
 ```
 
 **Object Methods:**
+
 ```javascript
 const person = { name: 'Alice', age: 30 };
 
@@ -293,6 +312,7 @@ for (const [key, value] of Object.entries(person)) {
 ```
 
 **String Padding:**
+
 ```javascript
 const str = "5";
 console.log(str.padStart(3, "0")); // "005"
@@ -304,6 +324,7 @@ console.log("Loading".padEnd(10, ".")); // "Loading..."
 ### ES2018 (ES9) - Object Spread and Async Iteration
 
 **Major Features:**
+
 - Rest/spread for objects
 - Async iteration (for await...of)
 - Promise.finally()
@@ -312,6 +333,7 @@ console.log("Loading".padEnd(10, ".")); // "Loading..."
 **Examples:**
 
 **Object Spread:**
+
 ```javascript
 // Spread operator
 const person = { name: 'Alice', age: 30 };
@@ -325,6 +347,7 @@ const updated = { ...person, age: 31 };
 ```
 
 **Async Iteration:**
+
 ```javascript
 async function* asyncGenerator() {
   yield await Promise.resolve(1);
@@ -339,6 +362,7 @@ async function process() {
 ```
 
 **Promise.finally():**
+
 ```javascript
 fetch('/api/data')
   .then(r => r.json())
@@ -351,6 +375,7 @@ fetch('/api/data')
 ### ES2019 (ES10) - Array Flat and Object.fromEntries
 
 **Major Features:**
+
 - Array.flat(), flatMap()
 - Object.fromEntries()
 - String.trimStart(), trimEnd()
@@ -359,6 +384,7 @@ fetch('/api/data')
 **Examples:**
 
 **Array.flat():**
+
 ```javascript
 const nested = [1, [2, 3], [4, [5, 6]]];
 console.log(nested.flat()); // [1, 2, 3, 4, [5, 6]]
@@ -370,6 +396,7 @@ console.log(arr.flatMap(x => [x, x * 2])); // [1, 2, 2, 4, 3, 6]
 ```
 
 **Object.fromEntries():**
+
 ```javascript
 const entries = [['name', 'Alice'], ['age', 30]];
 const obj = Object.fromEntries(entries);
@@ -386,6 +413,7 @@ const discounted = Object.fromEntries(
 ### ES2020 (ES11) - Optional Chaining and Nullish Coalescing
 
 **Major Features:**
+
 - Optional chaining (\`?.\`)
 - Nullish coalescing (\`??\`)
 - BigInt
@@ -396,6 +424,7 @@ const discounted = Object.fromEntries(
 **Examples:**
 
 **Optional Chaining:**
+
 ```javascript
 const user = { address: { city: 'NYC' } };
 
@@ -409,6 +438,7 @@ const city = user?.address?.city ?? 'Unknown';
 ```
 
 **Nullish Coalescing:**
+
 ```javascript
 // ?? only for null/undefined (not 0, '', false)
 const value1 = 0 ?? 'default'; // 0
@@ -422,6 +452,7 @@ const timeout = userConfig?.timeout ?? 5000;
 ```
 
 **BigInt:**
+
 ```javascript
 const big = 9007199254740991n;
 console.log(big + 1n); // 9007199254740992n
@@ -431,6 +462,7 @@ const power = 2n ** 100n;
 ```
 
 **Promise.allSettled():**
+
 ```javascript
 // Waits for all promises (doesn't fail fast)
 const results = await Promise.allSettled([
@@ -453,6 +485,7 @@ results.forEach(result => {
 ### ES2021 (ES12) - Logical Assignment
 
 **Major Features:**
+
 - Logical assignment (\`||=\`, \`&&=\`, \`??=\`)
 - Numeric separators
 - String.replaceAll()
@@ -462,6 +495,7 @@ results.forEach(result => {
 **Examples:**
 
 **Logical Assignment:**
+
 ```javascript
 // ||= (OR assignment)
 let x = 0;
@@ -477,6 +511,7 @@ config.timeout ??= 5000; // Assigns only if null/undefined
 ```
 
 **Numeric Separators:**
+
 ```javascript
 const billion = 1_000_000_000;
 const bytes = 0xFF_FF_FF_FF;
@@ -484,6 +519,7 @@ const price = 1_999.99;
 ```
 
 **String.replaceAll():**
+
 ```javascript
 const str = "Hello World, Hello Universe";
 const result = str.replaceAll('Hello', 'Hi');
@@ -491,6 +527,7 @@ const result = str.replaceAll('Hello', 'Hi');
 ```
 
 **Promise.any():**
+
 ```javascript
 // First fulfilled promise wins
 const fastest = await Promise.any([
@@ -505,6 +542,7 @@ const fastest = await Promise.any([
 ### ES2022 (ES13) - Top-Level Await and Class Fields
 
 **Major Features:**
+
 - Top-level await
 - Class fields (public/private)
 - Private methods (\`#private\`)
@@ -516,6 +554,7 @@ const fastest = await Promise.any([
 **Examples:**
 
 **Top-Level Await:**
+
 ```javascript
 // In ES modules
 const response = await fetch('/api/config');
@@ -524,6 +563,7 @@ export const appConfig = config;
 ```
 
 **Class Fields:**
+
 ```javascript
 class Counter {
   count = 0; // Public field
@@ -551,6 +591,7 @@ class Database {
 ```
 
 **.at() Method:**
+
 ```javascript
 const arr = [10, 20, 30, 40, 50];
 console.log(arr.at(-1)); // 50 (last element)
@@ -561,6 +602,7 @@ console.log("Hello".at(-1)); // 'o'
 ```
 
 **Object.hasOwn():**
+
 ```javascript
 const obj = { x: 1 };
 console.log(Object.hasOwn(obj, 'x')); // true (safer than hasOwnProperty)
@@ -571,6 +613,7 @@ console.log(Object.hasOwn(obj, 'x')); // true (safer than hasOwnProperty)
 ### ES2023 (ES14) - Immutable Array Methods
 
 **Major Features:**
+
 - Array: findLast(), findLastIndex()
 - Immutable methods: toSorted(), toReversed(), toSpliced(), with()
 - Symbols as WeakMap keys
@@ -578,6 +621,7 @@ console.log(Object.hasOwn(obj, 'x')); // true (safer than hasOwnProperty)
 **Examples:**
 
 **findLast():**
+
 ```javascript
 const numbers = [1, 2, 3, 4, 5, 4, 3];
 console.log(numbers.findLast(n => n > 3)); // 4 (last match)
@@ -585,6 +629,7 @@ console.log(numbers.findLastIndex(n => n > 3)); // 5
 ```
 
 **Immutable Array Methods:**
+
 ```javascript
 const original = [3, 1, 4, 1, 5];
 
@@ -610,6 +655,7 @@ const updated = original.with(2, 99);
 ### ES2024 (ES15) - Promise.withResolvers and groupBy
 
 **Major Features:**
+
 - Promise.withResolvers()
 - Object.groupBy(), Map.groupBy()
 - ArrayBuffer transfer
@@ -619,6 +665,7 @@ const updated = original.with(2, 99);
 **Examples:**
 
 **Promise.withResolvers():**
+
 ```javascript
 // Easier deferred promises
 const { promise, resolve, reject } = Promise.withResolvers();
@@ -634,6 +681,7 @@ class EventManager {
 ```
 
 **groupBy():**
+
 ```javascript
 const products = [
   { name: 'Apple', category: 'fruit' },
@@ -651,6 +699,7 @@ const map = Map.groupBy(products, p => p.category);
 ```
 
 **String.isWellFormed():**
+
 ```javascript
 const str = "Hello 👋";
 console.log(str.isWellFormed()); // true
@@ -723,12 +772,14 @@ const fixed = badString.toWellFormed();
 ## Related Documentation
 
 ### Project Documentation
+
 - [JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md)
 - [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)
 - [MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)
 - [CONTRIBUTING.md](../.github/CONTRIBUTING.md)
 
 ### External Resources
+
 - [ECMAScript Specifications](https://tc39.es/ecma262/)
 - [MDN JavaScript Reference](https://developer.mozilla.org/docs/Web/JavaScript)
 - [Can I Use](https://caniuse.com/) - Browser compatibility
@@ -749,6 +800,7 @@ const fixed = badString.toWellFormed();
 ### For Guia Turístico Project
 
 This project uses:
+
 - ✅ ES6 modules (import/export)
 - ✅ Arrow functions and const/let
 - ✅ Promises and async/await
@@ -760,6 +812,7 @@ This project uses:
 ---
 
 **Contributors:**
+
 - Marcelo Pereira Barbosa (Original Author)
 - GitHub Copilot (Documentation)
 

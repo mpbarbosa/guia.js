@@ -7,6 +7,7 @@ The `PositionManager` class is the central singleton for managing the current ge
 ## Motivation
 
 Managing device location in a geolocation application involves coordinating several challenges:
+
 - Ensuring only one source of truth for current position
 - Filtering out inaccurate or insignificant position updates
 - Preventing excessive processing from minor GPS fluctuations
@@ -15,6 +16,7 @@ Managing device location in a geolocation application involves coordinating seve
 - Handling position validation and accuracy requirements
 
 The `PositionManager` class addresses these challenges by:
+
 - **Centralizing position state**: Single source of truth via singleton pattern
 - **Implementing validation rules**: Filters positions by accuracy, time, and distance thresholds
 - **Managing subscriptions**: Observer pattern for decoupled position notifications
@@ -57,12 +59,15 @@ PositionManager (Singleton)
 ### Design Patterns Applied
 
 #### 1. Singleton Pattern
+
 Ensures only one PositionManager instance exists per application, preventing multiple conflicting position states.
 
 #### 2. Observer Pattern
+
 Allows multiple components to subscribe to position updates without tight coupling to the PositionManager.
 
 #### 3. Strategy Pattern (Validation)
+
 Position validation uses configurable rules (accuracy thresholds, time intervals, distance thresholds) that can be adjusted via setupParams.
 
 ## Usage
@@ -362,6 +367,7 @@ Gets or creates the singleton PositionManager instance.
 Implements the singleton pattern ensuring only one PositionManager instance exists throughout the application lifecycle. If a position is provided when an instance already exists, it will attempt to update the existing instance.
 
 **Parameters:**
+
 - `position` (GeolocationPosition, optional): HTML5 Geolocation API Position object
   - `coords` (GeolocationCoordinates): Coordinate information
     - `latitude` (number): Latitude in decimal degrees
@@ -408,6 +414,7 @@ Creates a new PositionManager instance.
 Initializes the position manager with empty observer list and optional initial position data.
 
 **Parameters:**
+
 - `position` (GeolocationPosition, optional): Initial position data
   - `coords` (GeolocationCoordinates): Coordinate information
   - `timestamp` (number): Timestamp when position was acquired
@@ -446,6 +453,7 @@ Subscribes an observer to position change notifications.
 Implements the observer pattern by adding observers that will be notified when position updates occur. Observers must implement an `update()` method that accepts `(positionManager, eventType)` parameters.
 
 **Parameters:**
+
 - `observer` (Object): Observer object to subscribe
   - `update` (Function): Method called on position changes
     - Parameters: `(positionManager, eventType)`
@@ -474,6 +482,7 @@ Unsubscribes an observer from position change notifications.
 Removes the specified observer from the notification list so it will no longer receive position update events.
 
 **Parameters:**
+
 - `observer` (Object): Observer object to unsubscribe
 
 **Returns:** `void`
@@ -499,6 +508,7 @@ Notifies all subscribed observers about position change events.
 Called internally when position updates occur or are rejected. All subscribed observers receive the event notification via their update() method.
 
 **Parameters:**
+
 - `posEvent` (string): Event type (strCurrPosUpdate, strCurrPosNotUpdate, or strImmediateAddressUpdate)
 
 **Returns:** `void`
@@ -516,6 +526,7 @@ Updates the position with validation and filtering rules.
 This is the core method that processes new position data with multiple validation layers to ensure only meaningful position updates are accepted.
 
 **Validation Rules:**
+
 1. **Position validity**: Must have valid position object with timestamp
 2. **Accuracy requirement**: Rejects medium/bad/very bad accuracy positions (configurable by device type)
 3. **Distance threshold**: Must move at least 20 meters (setupParams.minimumDistanceChange)
@@ -524,6 +535,7 @@ This is the core method that processes new position data with multiple validatio
 When validation passes, updates all position properties and notifies observers. When validation fails, notifies observers with the rejection reason.
 
 **Parameters:**
+
 - `position` (GeolocationPosition): New position data from Geolocation API
   - `coords` (GeolocationCoordinates): Coordinate information
     - `latitude` (number): Latitude in decimal degrees
@@ -538,6 +550,7 @@ When validation passes, updates all position properties and notifies observers. 
 **Returns:** `void`
 
 **Fires:**
+
 - `PositionManager#strCurrPosUpdate` - When position successfully updated (after time threshold)
 - `PositionManager#strCurrPosNotUpdate` - When position rejected by validation
 - `PositionManager#strImmediateAddressUpdate` - When position updated within time threshold
@@ -571,6 +584,7 @@ navigator.geolocation.getCurrentPosition((position) => {
 ```
 
 **See Also:**
+
 - [MDN GeolocationPosition](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition)
 
 **Since:** 0.9.0-alpha
@@ -637,6 +651,7 @@ desktopNotAcceptedAccuracy: ["bad", "very bad"],
 **Purpose:** Reject positions with insufficient GPS accuracy
 
 **Quality Levels:**
+
 - **excellent**: ≤ 10 meters - Always accepted
 - **good**: 11-30 meters - Always accepted
 - **medium**: 31-100 meters - Rejected on mobile, accepted on desktop
@@ -655,6 +670,7 @@ minimumDistanceChange: 20, // meters
 **Purpose:** Ignore minor GPS fluctuations
 
 **How it works:**
+
 1. Calculate distance from previous position
 2. If distance < 20 meters, reject update
 3. If distance ≥ 20 meters, accept update
@@ -671,11 +687,13 @@ trackingInterval: 50000, // milliseconds (50 seconds)
 **Purpose:** Control update frequency
 
 **How it works:**
+
 1. Check time since last successful update
 2. If < 50 seconds, accept but fire `strImmediateAddressUpdate` event
 3. If ≥ 50 seconds, accept and fire `strCurrPosUpdate` event
 
 **Why:** The time filter doesn't reject updates, but distinguishes between:
+
 - **Regular updates** (≥50s): Normal processing, trigger full address resolution
 - **Immediate updates** (<50s): Faster-than-normal movement, process immediately
 
@@ -733,6 +751,7 @@ npm test -- __tests__/unit/PositionManager.test.js
 ### Test Coverage
 
 Test suites cover:
+
 - ✅ Singleton pattern implementation (3 tests)
 - ✅ Position data management (3 tests)
 - ✅ Observer pattern implementation (4 tests)
@@ -820,6 +839,7 @@ The PositionManager uses the singleton pattern because:
 4. **Memory efficiency**: Avoids duplicate position objects
 
 **Trade-offs:**
+
 - ✅ Ensures consistency across application
 - ✅ Simplifies state management
 - ⚠️ Global state can be harder to test (mitigated by resetting instance in tests)
@@ -855,6 +875,7 @@ class ObserverSubject {
 ```
 
 This design choice provides:
+
 - **Predictable state transitions**: Each operation creates a new observer list
 - **No direct mutations**: Original arrays remain unchanged
 - **Testability**: Easy to verify immutability in tests
@@ -865,12 +886,14 @@ This design choice provides:
 The multi-layer validation approach:
 
 **Advantages:**
+
 - Prevents excessive processing from GPS noise
 - Saves battery by ignoring insignificant changes
 - Adapts to device capabilities (mobile vs desktop)
 - Provides explicit rejection reasons
 
 **Configuration:**
+
 ```javascript
 setupParams = {
   trackingInterval: 50000,        // 50 seconds
@@ -891,6 +914,7 @@ The PositionManager maintains **mutable state** for position data by design:
 3. **Browser API integration**: GeolocationPosition is inherently mutable
 
 However, immutability principles are applied where appropriate:
+
 - **Observer management**: ObserverSubject uses immutable array patterns (spread operator for subscribe/unsubscribe)
 - **GeoPosition objects**: Wrap position data with consistent interfaces
 - **Validation logic**: Uses pure functions where possible
@@ -1008,6 +1032,7 @@ manager.subscribe(navigationSystem);
 ## Referential Transparency Considerations
 
 The PositionManager class is **not referentially transparent** because it:
+
 - Maintains mutable state (current position)
 - Performs side effects (notifying observers)
 - Interacts with browser APIs (GeolocationPosition objects)
@@ -1065,6 +1090,7 @@ if (!isSignificantDistance(this.lastPosition, position, setupParams.minimumDista
 ### Explicit Side Effects
 
 Side effects are:
+
 - **Clearly documented**: Methods that perform I/O or mutations are marked
 - **Centralized**: State changes only through update() method
 - **Predictable**: Observer notification follows consistent patterns
@@ -1072,6 +1098,7 @@ Side effects are:
 ### Testing Strategy
 
 Singleton pattern is tested by:
+
 - Resetting instance before each test
 - Mocking observers to verify notifications
 - Testing validation rules in isolation
@@ -1086,6 +1113,7 @@ beforeEach(() => {
 ### Side Effect Boundaries
 
 Side effects are isolated:
+
 - **GeolocationService**: Handles browser Geolocation API
 - **PositionManager**: Manages position state and notifications
 - **Observers**: Handle their own side effects (UI updates, API calls, etc.)
@@ -1097,6 +1125,7 @@ This architecture makes it clear where side effects occur and enables testing co
 **Implementation Status**: ✅ Stable and Production-Ready
 
 The `PositionManager` class has been stable since version 0.9.0-alpha with incremental enhancements through version 0.9.0-alpha (current). The singleton pattern and observer-based architecture have proven reliable with:
+
 - ✅ 17+ comprehensive tests covering all functionality
 - ✅ 100% JSDoc coverage
 - ✅ Robust multi-layer validation (accuracy, distance, time thresholds)
@@ -1124,6 +1153,7 @@ The `PositionManager` class has been stable since version 0.9.0-alpha with incre
 ```
 
 ### 0.9.0-alpha (January 11, 2026) - Current Version
+
 - **Status**: Stable, no breaking changes
 - Documentation improvements and cross-references enhanced
 - JSDoc coverage verified at 100%
@@ -1131,6 +1161,7 @@ The `PositionManager` class has been stable since version 0.9.0-alpha with incre
 - Maintained full compatibility with 0.9.0-alpha API
 
 ### 0.9.0-alpha (January 3, 2026)
+
 - **Status**: Stable
 - Refined validation logic for position filtering
 - Enhanced distance threshold calculations
@@ -1138,6 +1169,7 @@ The `PositionManager` class has been stable since version 0.9.0-alpha with incre
 - Maintained full backward compatibility
 
 ### 0.9.0-alpha (October 2025) - Initial Implementation
+
 - **Initial release**: Singleton pattern implementation
 - Observer pattern for subscriptions (subscribe/unsubscribe)
 - Multi-layer position validation
@@ -1148,6 +1180,7 @@ The `PositionManager` class has been stable since version 0.9.0-alpha with incre
 - Integration with GeolocationService
 
 ### 0.8.x-alpha (Planned Future Enhancements)
+
 - ObserverSubject delegation for improved observer management
 - Enhanced testing coverage
 - Advanced validation rules
@@ -1160,23 +1193,27 @@ Marcelo Pereira Barbosa
 ## See Also
 
 ### Related Architecture Documentation
+
 - **[CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md)** - Complete class architecture and relationships
 - **[GEO_POSITION.md](./GEO_POSITION.md)** - Geographic position data wrapper documentation
 - **[WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md)** - Main geocoding coordinator that observes PositionManager
 - **[observer-pattern-sequence.md](./observer-pattern-sequence.md)** - Observer pattern execution flow diagrams
 
 ### Testing and Quality
+
 - **[TESTING.md](../../TESTING.md)** - Testing documentation and coverage
 - **[TDD_GUIDE.md](../../.github/TDD_GUIDE.md)** - Test-driven development approach
 - **[UNIT_TEST_GUIDE.md](../../.github/UNIT_TEST_GUIDE.md)** - Unit testing best practices
 
 ### Development Guidelines
+
 - **[REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md)** - Functional programming guidelines
 - **[CODE_REVIEW_GUIDE.md](../../.github/CODE_REVIEW_GUIDE.md)** - Code review standards
 - **[HIGH_COHESION_GUIDE.md](../../.github/HIGH_COHESION_GUIDE.md)** - Single responsibility and cohesion
 - **[LOW_COUPLING_GUIDE.md](../../.github/LOW_COUPLING_GUIDE.md)** - Dependency management
 
 ### External Documentation
+
 - [MDN Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
 - [MDN GeolocationPosition](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition)
 - [Singleton Pattern](https://refactoring.guru/design-patterns/singleton)

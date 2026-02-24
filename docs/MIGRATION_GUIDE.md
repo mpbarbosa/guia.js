@@ -37,6 +37,7 @@ This guide helps you migrate your Guia Turístico application between major and 
 ### Breaking Changes
 
 #### 1. Metropolitan Region Support (New Field)
+
 **Impact**: Low - Additive change
 
 `BrazilianStandardAddress` now includes `regiaoMetropolitana` field:
@@ -58,11 +59,13 @@ address.regiaoMetropolitana = 'Região Metropolitana do Recife';  // NEW
 **Action Required**: None - backward compatible
 
 **New Method**:
+
 ```javascript
 address.regiaoMetropolitanaFormatada()  // Returns formatted region name or null
 ```
 
 #### 2. HTMLHighlightCardsDisplayer DOM Updates
+
 **Impact**: Low - Only if customizing DOM structure
 
 New DOM element required for metropolitan region display:
@@ -72,13 +75,15 @@ New DOM element required for metropolitan region display:
 <div id="regiao-metropolitana-value" class="metropolitan-region-value"></div>
 ```
 
-**Action Required**: 
+**Action Required**:
+
 - If using custom HTML, add the new element between municipality label and value
 - See `src/index.html` for reference
 
 ### New Features
 
 #### 1. IBGE SIDRA Integration
+
 New demographic statistics display:
 
 ```javascript
@@ -89,11 +94,13 @@ const displayer = new HTMLSidraDisplayer(document);
 ```
 
 **Features**:
+
 - Offline fallback with bundled data (`libs/sidra/tab6579_municipios.json`)
 - Observer pattern integration
 - Brazilian Portuguese formatting
 
 #### 2. Enhanced Button Status Messages
+
 Improved UX with contextual button status:
 
 ```javascript
@@ -105,11 +112,13 @@ disableWithReason(button, "Aguardando localização para habilitar");
 ```
 
 **Features**:
+
 - WCAG 2.1 AA accessible
 - Color-coded status types (info, warning, success, error)
 - ARIA attributes support
 
 #### 3. TimerManager Centralization
+
 All application timers now managed centrally:
 
 ```javascript
@@ -125,6 +134,7 @@ timerManager.clearTimer('my-timer-id');
 ```
 
 **Benefits**:
+
 - Automatic cleanup on app shutdown
 - Prevents memory leaks
 - Better debugging with named IDs
@@ -132,6 +142,7 @@ timerManager.clearTimer('my-timer-id');
 ### Migration Steps
 
 #### Step 1: Update Dependencies
+
 ```bash
 npm update guia.js
 npm update ibira.js
@@ -139,6 +150,7 @@ npm install
 ```
 
 #### Step 2: Update HTML (if custom)
+
 Add metropolitan region display element:
 
 ```html
@@ -151,6 +163,7 @@ Add metropolitan region display element:
 ```
 
 #### Step 3: Update CSS (if custom)
+
 Add styles for new element:
 
 ```css
@@ -162,12 +175,14 @@ Add styles for new element:
 ```
 
 #### Step 4: Test Application
+
 ```bash
 npm run test:all
 npm run dev
 ```
 
 Verify:
+
 - ✅ Metropolitan region displays for metro municipalities
 - ✅ No console errors
 - ✅ All tests passing
@@ -182,6 +197,7 @@ Verify:
 ### Breaking Changes
 
 #### 1. AddressCache Refactoring
+
 **Impact**: High - Internal architecture change
 
 AddressCache now uses composition with 3 focused classes:
@@ -199,11 +215,13 @@ cache.onAddressChange('municipio', callback);  // Still works!
 **Action Required**: None - 100% backward compatible API
 
 **New Internal Classes** (if extending):
+
 - `AddressChangeDetector` - Field change detection
 - `CallbackRegistry` - Callback management
 - `AddressDataStore` - Data storage
 
 #### 2. SpeechSynthesisManager Composition
+
 **Impact**: Medium - If using internal methods
 
 Refactored to use composition pattern:
@@ -219,18 +237,21 @@ const manager = new SpeechSynthesisManager();
 ```
 
 **New Components**:
+
 - `VoiceLoader` - Voice loading with exponential backoff
 - `VoiceSelector` - Brazilian Portuguese voice selection
 - `SpeechConfiguration` - Rate/pitch management
 - `SpeechQueue` - Priority queue
 
-**Action Required**: 
+**Action Required**:
+
 - If using internal methods, update to new component APIs
 - Public API unchanged
 
 ### New Features
 
 #### 1. Chronometer Performance Timing
+
 ```javascript
 import Chronometer from './src/timing/Chronometer.js';
 
@@ -242,6 +263,7 @@ console.log(timer.getElapsedTimeFormatted());  // "2.5s"
 ```
 
 #### 2. Enhanced Position Update Logic
+
 Position updates now trigger on distance (20m) OR time (30s) thresholds:
 
 ```javascript
@@ -253,11 +275,13 @@ export const MINIMUM_TIME_CHANGE = 30;      // seconds
 ### Migration Steps
 
 #### Step 1: Update Dependencies
+
 ```bash
 npm update
 ```
 
 #### Step 2: Review Custom Extensions
+
 If you extended `AddressCache` or `SpeechSynthesisManager`:
 
 ```javascript
@@ -266,6 +290,7 @@ If you extended `AddressCache` or `SpeechSynthesisManager`:
 ```
 
 #### Step 3: Update Position Threshold Config (Optional)
+
 ```javascript
 // src/config/defaults.js
 export const MINIMUM_DISTANCE_CHANGE = 30;  // Adjust as needed
@@ -273,6 +298,7 @@ export const MINIMUM_TIME_CHANGE = 45;
 ```
 
 #### Step 4: Test
+
 ```bash
 npm run test:all
 ```
@@ -287,6 +313,7 @@ npm run test:all
 ### Breaking Changes
 
 #### 1. Observer Pattern Migration
+
 **Impact**: Critical - Core architecture change
 
 Event system migrated from custom events to Observer pattern:
@@ -303,6 +330,7 @@ positionManager.addObserver(ADDRESS_FETCHED_EVENT, handler);
 **Action Required**: Update all event listeners
 
 #### 2. Immutability Requirements
+
 **Impact**: High - Code style change
 
 All collections now use immutable operations:
@@ -320,6 +348,7 @@ array = [...array].sort();
 **Action Required**: Review all array/object mutations
 
 #### 3. Singleton Pattern Enforcement
+
 **Impact**: Medium - Architectural change
 
 Key classes now enforce singleton pattern:
@@ -339,6 +368,7 @@ const manager2 = PositionManager.getInstance();  // Returns same instance
 ### Migration Steps
 
 #### Step 1: Update Event System
+
 ```javascript
 // Find all custom event listeners
 // Replace with Observer pattern
@@ -354,12 +384,14 @@ positionManager.addObserver(ADDRESS_FETCHED_EVENT, handleAddress);
 ```
 
 #### Step 2: Fix Mutating Operations
+
 ```bash
 # Use ESLint to find mutations
 npm run lint
 ```
 
 Common patterns to fix:
+
 ```javascript
 // Array mutations
 array.push(item)        → array = [...array, item]
@@ -373,6 +405,7 @@ delete obj.prop         → const { prop, ...rest } = obj; obj = rest
 ```
 
 #### Step 3: Update Singleton Usage
+
 ```javascript
 // Find all singleton instantiations
 // Replace with getInstance()
@@ -382,12 +415,14 @@ const manager = PositionManager.getInstance();
 ```
 
 #### Step 4: Comprehensive Testing
+
 ```bash
 npm run test:all
 npm run dev  # Manual testing
 ```
 
 Verify:
+
 - ✅ No console errors
 - ✅ Events firing correctly
 - ✅ No mutations in collections
@@ -398,14 +433,17 @@ Verify:
 ## Breaking Changes Summary
 
 ### Version 0.9.0
+
 - ✅ **Low Impact**: Metropolitan region field (additive)
 - ✅ **Low Impact**: New DOM element (optional until using feature)
 
 ### Version 0.8.0
+
 - ⚠️ **Medium Impact**: Internal architecture (backward compatible API)
 - ✅ **Low Impact**: New composition components
 
 ### Version 0.7.0
+
 - ❌ **High Impact**: Observer pattern migration
 - ❌ **High Impact**: Immutability requirements
 - ⚠️ **Medium Impact**: Singleton enforcement
@@ -417,6 +455,7 @@ Verify:
 ### Currently Deprecated (Removal in 1.0.0)
 
 #### 1. Custom Event System
+
 **Deprecated**: 0.7.0  
 **Removal**: 1.0.0  
 **Alternative**: Observer pattern
@@ -431,6 +470,7 @@ positionManager.addObserver(ADDRESS_FETCHED_EVENT, handler);
 ```
 
 #### 2. Direct Singleton Instantiation
+
 **Deprecated**: 0.7.0  
 **Removal**: 1.0.0  
 **Alternative**: `getInstance()` method
@@ -444,6 +484,7 @@ const manager = PositionManager.getInstance();
 ```
 
 #### 3. VoiceManager Class
+
 **Deprecated**: 0.9.0  
 **Removal**: 1.0.0  
 **Alternative**: VoiceLoader + VoiceSelector
@@ -467,6 +508,7 @@ const voice = selector.selectVoice(loader.getVoices());
 These patterns are discouraged but will continue working:
 
 #### 1. Mutating Operations
+
 ```javascript
 // DISCOURAGED (but works)
 array.push(item);
@@ -476,6 +518,7 @@ array = [...array, item];
 ```
 
 #### 2. Hardcoded Strings
+
 ```javascript
 // DISCOURAGED
 positionManager.addObserver('addressFetched', handler);
@@ -514,19 +557,25 @@ npm run preview
 ### Common Migration Issues
 
 #### Issue: "Observer not firing"
+
 **Solution**: Check event constant import
+
 ```javascript
 import { ADDRESS_FETCHED_EVENT } from './src/config/defaults.js';
 ```
 
 #### Issue: "Singleton returns different instances"
+
 **Solution**: Ensure using `getInstance()`
+
 ```javascript
 const manager = PositionManager.getInstance();
 ```
 
 #### Issue: "Tests failing after mutation fixes"
+
 **Solution**: Update test expectations
+
 ```javascript
 // Tests may need to check new array reference
 expect(result).not.toBe(original);  // Different reference now
@@ -539,6 +588,7 @@ expect(result).not.toBe(original);  // Different reference now
 If migration issues occur, rollback safely:
 
 ### Step 1: Revert Dependencies
+
 ```bash
 # From package-lock.json
 git checkout HEAD~1 package-lock.json
@@ -546,16 +596,19 @@ npm ci
 ```
 
 ### Step 2: Revert Code Changes
+
 ```bash
 git checkout HEAD~1 src/
 ```
 
 ### Step 3: Test Rollback
+
 ```bash
 npm test
 ```
 
 ### Step 4: Report Issue
+
 Create issue with migration details for support.
 
 ---
@@ -567,6 +620,7 @@ Create issue with migration details for support.
 - **Older Versions** (≤0.7.x): Unsupported - upgrade recommended
 
 **Upgrade Timeline Recommendation**:
+
 - Major version releases: Upgrade within 6 months
 - Minor version releases: Upgrade within 3 months
 - Patch version releases: Upgrade within 1 month

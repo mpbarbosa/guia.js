@@ -70,6 +70,7 @@ classDiagram
 ### Key Features
 
 #### 1. **Brazilian Portuguese Voice Prioritization**
+
 ```javascript
 // Voice selection priority order:
 // 1. Brazilian Portuguese (pt-BR) voices
@@ -86,6 +87,7 @@ if (brazilianVoices.length > 0) {
 ```
 
 #### 2. **Priority-Based Queue Management**
+
 ```javascript
 // Speech items are queued with priority levels
 speak(text, priority = 0) {
@@ -97,6 +99,7 @@ speak(text, priority = 0) {
 ```
 
 #### 3. **Voice Retry Mechanism**
+
 ```javascript
 // Automatic retry for Brazilian Portuguese voice detection
 startVoiceRetryTimer() {
@@ -115,6 +118,7 @@ startVoiceRetryTimer() {
 ```
 
 #### 4. **Cross-Environment Safety**
+
 ```javascript
 // Safe console logging with fallback
 const safeLog = (message) => {
@@ -127,6 +131,7 @@ const safeLog = (message) => {
 ### Brazilian Portuguese Tourism Integration
 
 #### **Tourist Information Speech Synthesis**
+
 The SpeechSynthesisManager is specifically designed for Brazilian travel guide scenarios:
 
 ```javascript
@@ -145,6 +150,7 @@ await speechManager.speak('O bondinho opera das 8h às 19h.', 0);
 ```
 
 #### **Voice Configuration for Tourism**
+
 ```javascript
 // Optimized for tourist accessibility
 speechManager.setRate(0.8);  // Slower for non-native speakers
@@ -154,6 +160,7 @@ speechManager.setPitch(1.1); // Clearer pronunciation
 ### Technical Implementation Details
 
 #### **Module Structure**
+
 ```
 src/speech/SpeechSynthesisManager.js
 ├── Class Definition
@@ -170,11 +177,13 @@ src/speech/SpeechSynthesisManager.js
 ```
 
 #### **Dependencies**
+
 1. **SpeechQueue**: Priority-based queue for speech items
 2. **Web Speech API**: Browser native speech synthesis
 3. **Safe Logging**: Cross-environment console operations
 
 #### **Configuration Constants**
+
 ```javascript
 const SPEECH_CONFIG = {
     DEFAULT_RATE: 1.0,
@@ -192,9 +201,11 @@ const SPEECH_CONFIG = {
 ### API Reference
 
 #### **Constructor**
+
 ```javascript
 new SpeechSynthesisManager()
 ```
+
 Initializes the speech synthesis manager with Web Speech API validation and Brazilian Portuguese voice prioritization.
 
 **Throws**: Error if Web Speech API is not available
@@ -202,47 +213,60 @@ Initializes the speech synthesis manager with Web Speech API validation and Braz
 #### **Core Methods**
 
 ##### `speak(text, priority = 0)`
+
 Enqueues text for speech synthesis with specified priority.
 
 **Parameters**:
+
 - `text` (string): Text to synthesize (required, non-empty)
 - `priority` (number): Priority level (default: 0, higher = more urgent)
 
 **Throws**: Error for invalid text or priority
 
 ##### `pause()`
+
 Pauses current speech synthesis if speaking.
 
 ##### `resume()`
+
 Resumes paused speech synthesis.
 
 ##### `stop()`
+
 Stops current speech, clears queue, and resets state.
 
 #### **Configuration Methods**
 
 ##### `setRate(rate)`
+
 Sets speech synthesis rate with validation and clamping.
 
 **Parameters**:
+
 - `rate` (number): Speech rate (0.1 - 10.0)
 
 ##### `setPitch(pitch)`
+
 Sets speech synthesis pitch with validation and clamping.
 
 **Parameters**:
+
 - `pitch` (number): Speech pitch (0.0 - 2.0)
 
 ##### `setVoice(voice)`
+
 Sets speech synthesis voice.
 
 **Parameters**:
+
 - `voice` (SpeechSynthesisVoice|null): Voice to use
 
 #### **Information Methods**
 
 ##### `getStatus()`
+
 Returns comprehensive status object:
+
 ```javascript
 {
     voice: { name: string, lang: string } | null,
@@ -257,11 +281,13 @@ Returns comprehensive status object:
 ```
 
 ##### `toString()`
+
 Returns string representation of current state.
 
 ### Testing Coverage
 
 #### **Unit Tests** (33 test cases)
+
 - Constructor and initialization validation
 - Voice loading and Brazilian Portuguese prioritization
 - Voice retry mechanism testing
@@ -271,6 +297,7 @@ Returns string representation of current state.
 - Cross-environment compatibility
 
 #### **Integration Tests** (25 test cases)
+
 - End-to-end speech synthesis workflows
 - Web Speech API integration scenarios
 - Brazilian Portuguese travel guide integration
@@ -282,6 +309,7 @@ Returns string representation of current state.
 ### Usage Examples
 
 #### **Basic Usage**
+
 ```javascript
 import SpeechSynthesisManager from './speech/SpeechSynthesisManager.js';
 
@@ -296,6 +324,7 @@ await speechManager.speak('Emergência: Saída mais próxima!', 10);
 ```
 
 #### **Tourist Guide Implementation**
+
 ```javascript
 class TouristGuide {
     constructor() {
@@ -319,6 +348,7 @@ class TouristGuide {
 ```
 
 #### **Accessibility Integration**
+
 ```javascript
 class AccessibilityManager {
     constructor() {
@@ -345,11 +375,13 @@ class AccessibilityManager {
 ### Performance Considerations
 
 #### **Memory Management**
+
 - Automatic cleanup of timers and resources
 - Queue size monitoring and management
 - Voice caching to prevent repeated API calls
 
 #### **Optimization Strategies**
+
 ```javascript
 // Voice caching
 let cachedVoices = null;
@@ -370,6 +402,7 @@ const processQueue = () => {
 ```
 
 #### **Performance Metrics**
+
 - Queue processing: ~100ms intervals
 - Voice retry: 1-second intervals, max 10 attempts
 - Memory footprint: Minimal (queue-based architecture)
@@ -378,12 +411,14 @@ const processQueue = () => {
 ### Browser Compatibility
 
 #### **Supported Environments**
+
 - Chrome 33+ (full support)
 - Firefox 49+ (full support)
 - Safari 7+ (partial support)
 - Edge 14+ (full support)
 
 #### **Fallback Strategies**
+
 ```javascript
 // Environment detection
 const hasWebSpeechAPI = () => {
@@ -402,6 +437,7 @@ if (!hasWebSpeechAPI()) {
 ### Migration Guide
 
 #### **From Embedded Class**
+
 ```javascript
 // Before (in guia.js)
 const guia = new GuiaJS();
@@ -414,7 +450,9 @@ speechManager.speak('Olá!');
 ```
 
 #### **Backward Compatibility**
+
 The module maintains backward compatibility through proper exports:
+
 ```javascript
 // ES6 export
 export default SpeechSynthesisManager;
@@ -428,12 +466,14 @@ if (typeof window !== 'undefined') {
 ### Quality Assurance
 
 #### **Code Quality Metrics**
+
 - **Complexity**: Moderate (well-structured class with clear responsibilities)
 - **Maintainability**: High (modular design with comprehensive documentation)
 - **Test Coverage**: 95%+ (unit and integration tests)
 - **Performance**: Optimized for real-time speech synthesis
 
 #### **Security Considerations**
+
 - Input validation for all public methods
 - Safe handling of user-provided text
 - Cross-site scripting (XSS) prevention in speech content
@@ -442,6 +482,7 @@ if (typeof window !== 'undefined') {
 ### Future Enhancements
 
 #### **Planned Features**
+
 1. **Advanced Voice Selection**
    - Gender preference settings
    - Regional accent preferences

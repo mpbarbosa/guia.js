@@ -53,8 +53,9 @@ Now let me check the actual E2E test count and examine what changed:
    "window.webGeocodingManager"
     └ 2 lines...
 Now I have a clear picture. The changes are:
-1. **New E2E test file**: `ChangeDetectionCoordinator.e2e.test.js` was added (test count went from 11 to 12)
-2. **src/views/home.js**: Already had `window.webGeocodingManager` exposure (commit 67e37e1), so this is not new
+
+1. __New E2E test file__: `ChangeDetectionCoordinator.e2e.test.js` was added (test count went from 11 to 12)
+2. __src/views/home.js__: Already had `window.webGeocodingManager` exposure (commit 67e37e1), so this is not new
 Let me verify the documentation needs updating:
 ✓ Check E2E count in copilot instructions
    $ cd /home/mpb/Documents/GitHub/guia_turistico && grep -n "11 E2E test files"
@@ -65,25 +66,34 @@ Let me verify the documentation needs updating:
    __tests__/e2e/ChangeDetectionCoordinator.e2e.test.js | head -10
     └ 11 lines...
 Perfect! Now I have all the information. The main documentation updates needed are:
-1. **Update E2E test count from 11 to 12**
-2. **Add ChangeDetectionCoordinator.e2e.test.js to the list of key tests**
+3. __Update E2E test count from 11 to 12__
+4. __Add ChangeDetectionCoordinator.e2e.test.js to the list of key tests__
 Let me provide the specific documentation updates:
+
 ## Documentation Updates Required
+
 Based on the code changes, I need to update the E2E test count and add the new test to the documentation.
-### Changes Detected:
-1. **New E2E test**: `ChangeDetectionCoordinator.e2e.test.js` added (788 lines)
-2. **src/views/home.js**: Window exposure already documented (no new changes to document)
+
+### Changes Detected
+
+1. __New E2E test__: `ChangeDetectionCoordinator.e2e.test.js` added (788 lines)
+2. __src/views/home.js__: Window exposure already documented (no new changes to document)
+
 ---
+
 ## Required Documentation Updates
+
 ### 1. `.github/copilot-instructions.md`
-**Line 198** - Update E2E test count:
+__Line 198__ - Update E2E test count:
+
 ```markdown
 # BEFORE:
 - **11 E2E test files** using Puppeteer for browser automation (headless Chrome)
 # AFTER:
 - **12 E2E test files** using Puppeteer for browser automation (headless Chrome)
 ```
-**Lines 200-207** - Add ChangeDetectionCoordinator test to the key tests list:
+__Lines 200-207__ - Add ChangeDetectionCoordinator test to the key tests list:
+
 ```markdown
 # BEFORE:
 - **Key tests**:
@@ -105,20 +115,24 @@ Based on the code changes, I need to update the E2E test count and add the new t
   - `complete-address-validation.e2e.test.js` - Complete address data validation (v0.9.0+)
   - `milho-verde-locationResult.e2e.test.js` - Location result integration test (v0.9.0+)
 ```
-**Line 211** - Update documentation reference:
+__Line 211__ - Update documentation reference:
+
 ```markdown
 # BEFORE:
 - **Documentation**: See `__tests__/e2e/NeighborhoodChangeWhileDriving.README.md` for detailed test documentation
 # AFTER:
 - **Documentation**: See `__tests__/e2e/NeighborhoodChangeWhileDriving.README.md` and `__tests__/e2e/ChangeDetectionCoordinator.README.md` for detailed test documentation
 ```
+
 ---
+
 ### Summary
-**No updates needed for**:
+__No updates needed for__:
+
 - README.md (no E2E test count mentioned in main sections)
 - src/views/home.js documentation (window exposure already documented)
 - Other documentation files (no ChangeDetectionCoordinator references needed)
-**Required updates**:
+__Required updates__:
 - `.github/copilot-instructions.md` only (3 specific changes)
 The changes are surgical and focused on updating the E2E test infrastructure documentation to reflect the new test file.
 Total usage est:        1 Premium request

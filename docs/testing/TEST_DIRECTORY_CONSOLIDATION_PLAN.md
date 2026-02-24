@@ -10,6 +10,7 @@
 ## 📋 Current Situation
 
 ### Directory Structure
+
 ```
 guia_js/
 ├── __tests__/           # Primary test directory (57 test suites)
@@ -24,21 +25,25 @@ guia_js/
 ```
 
 ### Files in `tests/` Directory
+
 1. **WebGeocodingManager.test.js** (656 lines, 23KB)
    - Unit tests for WebGeocodingManager class
    - Import path: `../src/coordination/WebGeocodingManager.js`
-   
+
 2. **WebGeocodingManager.integration.test.js** (669 lines, 26KB)
    - Integration tests for WebGeocodingManager class
    - Import path: `../src/coordination/WebGeocodingManager.js`
 
 ### Duplication Issue
+
 **WebGeocodingManager tests exist in BOTH locations**:
+
 - ✅ `__tests__/managers/WebGeocodingManager.test.js` (exists)
 - ✅ `tests/WebGeocodingManager.test.js` (duplicate)
 - ❓ Potential content differences need verification
 
 ### Configuration References
+
 ```javascript
 // package.json
 "lint": "eslint src/**/*.js __tests__/**/*.js tests/**/*.js"
@@ -53,16 +58,19 @@ files: ['**/__tests__/**/*.js', '**/*.test.js', '**/tests/**/*.js']
 ## ⚠️ Problems with Current Structure
 
 ### 1. **Violates Single Location Principle**
+
 - Contributors confused about where to add new tests
-- Two different conventions (tests/ vs __tests__/)
+- Two different conventions (tests/ vs **tests**/)
 - Jest scans both directories, increasing test run time
 
 ### 2. **Potential Test Duplication**
+
 - WebGeocodingManager tests appear in both locations
 - Risk of maintaining duplicate or conflicting test logic
 - Unclear which version is authoritative
 
 ### 3. **Import Path Inconsistency**
+
 ```javascript
 // In tests/
 import WebGeocodingManager from '../src/coordination/WebGeocodingManager.js';
@@ -72,6 +80,7 @@ import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
 ```
 
 ### 4. **Configuration Overhead**
+
 - ESLint must check both directories
 - npm scripts reference both locations
 - CI/CD workflows may have confusion
@@ -87,6 +96,7 @@ import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
 **Steps**:
 
 1. **Compare test files to identify duplicates**
+
    ```bash
    # Check if __tests__/managers/WebGeocodingManager.test.js differs
    diff tests/WebGeocodingManager.test.js \
@@ -94,6 +104,7 @@ import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
    ```
 
 2. **Move integration test to correct location**
+
    ```bash
    git mv tests/WebGeocodingManager.integration.test.js \
           __tests__/integration/WebGeocodingManager.integration.test.js
@@ -105,6 +116,7 @@ import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
    - **If newer**: Replace `__tests__/managers/` version
 
 4. **Update import paths** (if necessary):
+
    ```javascript
    // Change from:
    import WebGeocodingManager from '../src/coordination/WebGeocodingManager.js';
@@ -114,6 +126,7 @@ import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
    ```
 
 5. **Remove tests/ directory**:
+
    ```bash
    # After moving all files
    rmdir tests/
@@ -121,6 +134,7 @@ import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
    ```
 
 6. **Update configuration files**:
+
    ```javascript
    // package.json
    "lint": "eslint src/**/*.js __tests__/**/*.js",
@@ -137,6 +151,7 @@ import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
    - `CONTRIBUTING.md`
 
 **Benefits**:
+
 - ✅ Single, clear location for all tests
 - ✅ Consistent import paths
 - ✅ Follows Jest best practices (`__tests__/` convention)
@@ -144,6 +159,7 @@ import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
 - ✅ Cleaner repository structure
 
 **Risks**:
+
 - ⚠️ Low risk: Requires running full test suite to verify no regressions
 - ⚠️ Import path changes may need adjustment
 
@@ -152,12 +168,14 @@ import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
 ### Option 2: Keep Separate (NOT RECOMMENDED)
 
 **Rationale for tests/ directory**:
+
 - Could represent "legacy integration tests"
 - Could represent "end-to-end tests" (but not currently structured that way)
 
 **Why Not Recommended**:
+
 - Only 2 files in tests/ (not a significant category)
-- No clear distinction from __tests__/integration/
+- No clear distinction from **tests**/integration/
 - Violates convention and clarity
 
 ---
@@ -180,6 +198,7 @@ less webgeocodingmanager-diff.txt
 ```
 
 **Decision Matrix**:
+
 | Scenario | Action |
 |----------|--------|
 | Files identical | Delete `tests/` version, keep `__tests__/` |
@@ -208,6 +227,7 @@ ls -lh __tests__/integration/WebGeocodingManager.integration.test.js
 ### Step 3: Update Import Paths
 
 **Search and replace in moved file**:
+
 ```bash
 # In __tests__/integration/WebGeocodingManager.integration.test.js
 # Change relative paths from ../src/ to ../../src/
@@ -217,6 +237,7 @@ sed -i "s|from '../src/|from '../../src/|g" \
 ```
 
 **Verify imports**:
+
 ```bash
 grep "from '.*src/" __tests__/integration/WebGeocodingManager.integration.test.js
 ```
@@ -237,6 +258,7 @@ npm run test:coverage
 ```
 
 **Expected Results**:
+
 - ✅ All 1224+ tests still passing
 - ✅ No new test failures
 - ✅ Coverage remains ~70%
@@ -247,6 +269,7 @@ npm run test:coverage
 ### Step 5: Clean Up Configuration
 
 **package.json**:
+
 ```json
 {
   "scripts": {
@@ -258,6 +281,7 @@ npm run test:coverage
 ```
 
 **eslint.config.js**:
+
 ```javascript
 export default [
   {
@@ -268,6 +292,7 @@ export default [
 ```
 
 **jest.config.js** (if exists):
+
 ```javascript
 export default {
   testMatch: [
@@ -301,6 +326,7 @@ git status  # Verify deletion is staged
 **Files to update**:
 
 1. **README.md**:
+
    ```markdown
    ## Testing
    
@@ -311,6 +337,7 @@ git status  # Verify deletion is staged
    ```
 
 2. **.github/copilot-instructions.md**:
+
    ```markdown
    ### Repository Structure
    
@@ -321,6 +348,7 @@ git status  # Verify deletion is staged
    ```
 
 3. **CONTRIBUTING.md** (if exists):
+
    ```markdown
    ## Test Organization
    
@@ -376,6 +404,7 @@ After consolidation, verify:
 ## 📊 Impact Assessment
 
 ### Before Consolidation
+
 ```
 Repository Structure:
 ├── __tests__/ (57 test suites, 1200+ tests)
@@ -393,6 +422,7 @@ Contributor Confusion:
 ```
 
 ### After Consolidation
+
 ```
 Repository Structure:
 └── __tests__/ (59 test suites, 1224+ tests)
@@ -455,14 +485,17 @@ npm test
 ## 📚 References
 
 ### Jest Documentation
+
 - [Jest Configuration](https://jestjs.io/docs/configuration)
 - [Test Location](https://jestjs.io/docs/getting-started#running-from-command-line)
 - Jest default: Looks for `__tests__/` folders
 
 ### ESLint Configuration
+
 - [ESLint File Patterns](https://eslint.org/docs/latest/use/configure/configuration-files)
 
 ### Best Practices
+
 - **Single source of truth**: One location for all tests
 - **Convention over configuration**: Follow framework defaults
 - **Clarity for contributors**: Obvious where tests belong
@@ -474,6 +507,7 @@ npm test
 **Proceed with Option 1: Full Consolidation**
 
 **Rationale**:
+
 1. Low risk (only 2 files to move)
 2. High value (eliminates confusion)
 3. Follows Jest conventions
@@ -481,6 +515,7 @@ npm test
 5. Minimal time investment (30-45 minutes)
 
 **Next Steps**:
+
 1. Create feature branch: `git checkout -b refactor/consolidate-test-directories`
 2. Follow steps 1-8 above
 3. Run full test suite validation
@@ -492,6 +527,7 @@ npm test
 ## 🎯 Success Criteria
 
 Consolidation is successful when:
+
 - ✅ `tests/` directory no longer exists
 - ✅ All WebGeocodingManager tests in `__tests__/`
 - ✅ All 1224+ tests passing

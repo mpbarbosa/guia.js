@@ -13,6 +13,7 @@ SpeechCoordinator manages text-to-speech functionality coordination for the Guia
 **Single Responsibility**: Speech synthesis coordination
 
 ### Key Features
+
 - ✅ Address announcement coordination
 - ✅ Location update speech integration
 - ✅ Speech queue management coordination
@@ -28,6 +29,7 @@ new SpeechCoordinator(speechSynthesisManager)
 ```
 
 ### Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `speechSynthesisManager` | `SpeechSynthesisManager` | ✅ | Speech synthesis manager instance |
@@ -37,6 +39,7 @@ new SpeechCoordinator(speechSynthesisManager)
 ## Methods
 
 ### announceAddress(address)
+
 Announces a formatted Brazilian address via speech synthesis.
 
 ```javascript
@@ -49,6 +52,7 @@ coordinator.announceAddress({
 ```
 
 ### announceLocationUpdate(positionData)
+
 Announces a location update with coordinates.
 
 ```javascript
@@ -59,6 +63,7 @@ coordinator.announceLocationUpdate({
 ```
 
 ### cleanup()
+
 Cleans up speech synthesis resources.
 
 ```javascript

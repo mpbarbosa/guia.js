@@ -24,22 +24,26 @@ WebGeocodingManager has hardcoded DOM element IDs scattered throughout private i
 ### Impact on Codebase
 
 **Maintainability Concerns:**
+
 - Hardcoded element IDs ("chronometer", "find-restaurants-btn", "city-stats-btn", "tsPosCapture") are scattered across multiple private methods
 - Changing HTML structure requires modifying multiple locations in the code
 - No single source of truth for element ID configuration
 
 **Testing Difficulties:**
+
 - Tests must create DOM elements with specific hardcoded IDs
 - Cannot easily test with alternative element configurations
 - Makes component reuse in different HTML contexts difficult
 
 **Code Readability:**
+
 - Element IDs appear as magic strings without context
 - Not immediately clear what elements are required vs optional
 
 ### Current Issues
 
 **Located in these methods:**
+
 - `_initializeChronometer()` (line 3614): `getElementById("chronometer")`
 - `_initializeFindRestaurantsButton()` (line 3637): `getElementById("find-restaurants-btn")`
 - `_initializeCityStatsButton()` (line 3667): `getElementById("city-stats-btn")`
@@ -80,6 +84,7 @@ _initializeChronometer() {
 ```
 
 **Benefits:**
+
 - Single source of truth for all element IDs
 - Easy to customize for different HTML structures
 - Improves testability by allowing mock element IDs
@@ -136,22 +141,26 @@ The `_createDisplayers()` method directly instantiates three displayer classes (
 ### Impact on Codebase
 
 **Maintainability Concerns:**
+
 - Tight coupling to specific displayer implementations
 - Adding new displayer types requires modifying WebGeocodingManager
 - Cannot easily swap displayers for testing or alternative UI implementations
 
 **Testing Difficulties:**
+
 - Cannot inject mock displayers for isolated testing
 - Difficult to test WebGeocodingManager without full displayer implementations
 - Integration testing becomes mandatory even for unit-level concerns
 
 **Code Extensibility:**
+
 - Hard to support multiple UI frameworks or display strategies
 - Cannot conditionally create displayers based on runtime configuration
 
 ### Current Issues
 
 **Located in `_createDisplayers()` method (lines 3557-3566):**
+
 ```javascript
 _createDisplayers() {
     this.positionDisplayer = new HTMLPositionDisplayer(this.locationResult);
@@ -208,6 +217,7 @@ _createDisplayers() {
 ```
 
 **Alternative: Direct Dependency Injection:**
+
 ```javascript
 // Even simpler - inject displayers directly
 constructor(document, params) {
@@ -273,12 +283,14 @@ The `startTracking()` method contains a placeholder `setTimeout` with an empty b
 ### Impact on Codebase
 
 **Maintainability Concerns:**
+
 - Dead code that serves no purpose
 - Creates confusion for developers reading the code
 - Comment suggests uncertainty about its purpose
 - Adds 20-second delay to application startup for no reason
 
 **Code Readability:**
+
 - Developers must waste time understanding why it exists
 - TODO comment indicates technical debt
 - Reduces confidence in codebase quality
@@ -286,6 +298,7 @@ The `startTracking()` method contains a placeholder `setTimeout` with an empty b
 ### Current Issues
 
 **Located in `startTracking()` method (lines 4027-4029):**
+
 ```javascript
 // Legacy timeout - kept for backward compatibility
 // TODO: Evaluate if this timeout is still necessary
@@ -297,12 +310,14 @@ setTimeout(() => {
 ### Proposed Solution
 
 **Remove the Timeout:**
+
 1. Review git history to understand original purpose
 2. Check if any tests or functionality depend on this 20-second delay
 3. Remove the setTimeout block if no dependencies found
 4. If dependencies exist, document them clearly or refactor
 
 **Investigation Steps:**
+
 ```bash
 # Check git history for this timeout
 git log -p --all -S "Legacy timeout" src/guia.js
@@ -362,17 +377,20 @@ WebGeocodingManager handles both geocoding coordination AND address component ch
 ### Impact on Codebase
 
 **Maintainability Concerns:**
+
 - WebGeocodingManager has too many responsibilities
 - Change detection logic is mixed with coordination logic
 - Three separate change detection methods with similar patterns
 - Difficult to understand class boundaries and responsibilities
 
 **Testing Difficulties:**
+
 - Cannot test change detection in isolation from geocoding
 - Large class with many dependencies makes unit testing complex
 - Setup complexity grows with each added responsibility
 
 **Code Complexity:**
+
 - Class exceeds 700 lines (coordinator + change detection + observers)
 - Multiple notification methods for different change types
 - Duplication across change detection methods
@@ -380,6 +398,7 @@ WebGeocodingManager handles both geocoding coordination AND address component ch
 ### Current Issues
 
 **Change Detection Methods in WebGeocodingManager:**
+
 - `setupLogradouroChangeDetection()` - Street change detection
 - `setupBairroChangeDetection()` - Neighborhood change detection  
 - `setupMunicipioChangeDetection()` - Municipality change detection
@@ -388,6 +407,7 @@ WebGeocodingManager handles both geocoding coordination AND address component ch
 - `notifyMunicipioChangeObservers()` - Notify municipality changes
 
 **All called from `startTracking()` (lines 4035-4037):**
+
 ```javascript
 this.setupLogradouroChangeDetection();
 this.setupBairroChangeDetection();
@@ -450,6 +470,7 @@ class WebGeocodingManager {
 ```
 
 **Benefits:**
+
 - Each class has single responsibility
 - Change detection can be tested independently
 - Clearer code organization and boundaries
@@ -461,6 +482,7 @@ class WebGeocodingManager {
 - BUT: Logic that determines IF change occurred can be pure
 - Separate pure change detection logic from side-effectful notifications
 - Example:
+
   ```javascript
   // Pure function
   function hasAddressComponentChanged(previous, current, component) {
@@ -523,18 +545,21 @@ WebGeocodingManager directly instantiates GeolocationService and ReverseGeocoder
 ### Impact on Codebase
 
 **Maintainability Concerns:**
+
 - Cannot swap services for different implementations
 - Hard to support multiple geocoding providers (Google Maps, Mapbox, etc.)
 - Services cannot be configured independently
 - Tight coupling to specific service implementations
 
 **Testing Difficulties:**
+
 - Cannot inject mock services for unit testing
 - Tests must deal with real service initialization
 - Cannot test WebGeocodingManager in isolation
 - Difficult to test error handling scenarios
 
 **Code Flexibility:**
+
 - Cannot configure services before passing to manager
 - Cannot reuse service instances across multiple managers
 - No way to lazy-load or conditionally create services
@@ -542,6 +567,7 @@ WebGeocodingManager directly instantiates GeolocationService and ReverseGeocoder
 ### Current Issues
 
 **Located in constructor (lines 3540-3541):**
+
 ```javascript
 // Create services (lazy instantiation could be considered for better testability)
 this.geolocationService = new GeolocationService(this.locationResult);
@@ -693,6 +719,7 @@ const manager = new WebGeocodingManager(document, {
 ## Labels for Issues
 
 Each issue should be tagged with:
+
 - `technical-debt`
 - `maintenance`
 - `refactoring`

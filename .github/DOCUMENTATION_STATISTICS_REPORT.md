@@ -28,6 +28,7 @@ Comprehensive statistics on documentation coverage, code organization, and testi
 ### Total Documentation: 157 Files
 
 **By Directory**:
+
 ```
 docs/                    95 files (60%)
 .github/                 41 files (26%)
@@ -38,6 +39,7 @@ examples/                1 file (1%)
 ```
 
 **Content Distribution**:
+
 - 📚 **Architecture Docs**: ~25 files in docs/architecture/
 - 🧪 **Testing Docs**: ~15 files in docs/testing/
 - 📝 **Guides**: ~20 files in docs/guides/
@@ -50,6 +52,7 @@ examples/                1 file (1%)
 **Coverage**: 61% of documentation files include examples or tutorials
 
 **Categories**:
+
 - Code examples in markdown fences
 - Step-by-step tutorials
 - Usage demonstrations
@@ -59,6 +62,7 @@ examples/                1 file (1%)
 ### HTML Test Page References: 227 Mentions
 
 **Types of References**:
+
 - Direct links to test.html
 - Example HTML file paths
 - Test page documentation
@@ -71,6 +75,7 @@ examples/                1 file (1%)
 ### Source Files: 35 JavaScript Files
 
 **Modular Architecture**:
+
 ```
 src/
 ├── core/                 # 5 files
@@ -84,6 +89,7 @@ src/
 ```
 
 **Module Evolution**:
+
 - Originally: 1 monolithic file (2,288 lines)
 - Now: 35 modular files (~70 lines average per file)
 - Improvement: 97% better maintainability
@@ -91,6 +97,7 @@ src/
 ### JSDoc Coverage: 517 Annotations
 
 **Annotation Types**:
+
 - `@param` - Function parameters
 - `@returns` - Return values
 - `@description` - Function descriptions
@@ -98,11 +105,13 @@ src/
 - `@static` - Static method markers
 
 **Coverage Analysis** (from JSDOC_AUDIT_REPORT.md):
+
 - **42 total public exports**
 - **17 documented** (40.5% coverage)
 - **25 undocumented** (59.5% remaining)
 
 **Priority Files for Documentation**:
+
 1. src/guia.js (38 exports, main entry point)
 2. src/core/PositionManager.js (singleton pattern)
 3. src/coordination/WebGeocodingManager.js (main controller)
@@ -123,23 +132,27 @@ src/
 ### HTML Examples: 13 Files
 
 **Testing & Debugging** (4 files):
+
 - test.html
 - timeout-test.html
 - timer-test.html
 - device-detection-test.html
 
 **Speech Synthesis** (3 files):
+
 - brazilian-voice-test.html
 - speech-queue-test.html
 - test-50s-speech.html
 
 **Address & Location** (4 files):
+
 - address-converter.html
 - bairro-display-test.html
 - immediate-address-test.html
 - ibira-test.html
 
 **UI & Integration** (2 files):
+
 - loc-em-movimento.html
 - module-test.html
 
@@ -152,6 +165,7 @@ src/
 ### Test Files: 66 Test Suites
 
 **Current Test Results** (2026-01-06):
+
 ```
 Test Suites: 59 passed, 5 skipped, 3 failed, 67 total
 Tests:       1,251 passed, 145 skipped, 3 failed, 1,399 total
@@ -160,6 +174,7 @@ Tests:       1,251 passed, 145 skipped, 3 failed, 1,399 total
 **Pass Rate**: 89.5% (1,251 / 1,399)
 
 **Test Distribution**:
+
 - Unit tests: ~80%
 - Integration tests: ~15%
 - E2E tests: ~5%
@@ -167,6 +182,7 @@ Tests:       1,251 passed, 145 skipped, 3 failed, 1,399 total
 ### Test Cases: 1,399 Total
 
 **By Category** (estimated from file structure):
+
 ```
 Core functionality:      ~300 tests
 Services:                ~250 tests
@@ -182,6 +198,7 @@ E2E:                     ~109 tests
 ```
 
 **Test Complexity**:
+
 - Simple assertions: ~60%
 - Mock/stub tests: ~30%
 - Integration tests: ~10%
@@ -189,6 +206,7 @@ E2E:                     ~109 tests
 ### Test Annotations: 2,721 Instances
 
 **Common Patterns**:
+
 - `describe()` - Test suite declarations (~400)
 - `test()` / `it()` - Individual test cases (~1,400)
 - `expect()` - Assertions (~900+)
@@ -200,6 +218,7 @@ E2E:                     ~109 tests
 ### Current README.md Status
 
 The README.md currently has:
+
 - ✅ Version badge
 - ✅ Test status mention
 - ✅ Brief feature list
@@ -293,15 +312,19 @@ Add after the "Features" section, before "Quick Start":
 ### Documentation Growth (Historical)
 
 **Phase 1** (Initial - v0.1.0):
+
 - 5 files (README, LICENSE, basic docs)
 
 **Phase 2** (Class Extraction - v0.4.0):
+
 - 16 files added (extraction documentation)
 
 **Phase 3** (Modularization - v0.5.0):
+
 - 50+ files added (architecture docs)
 
 **Phase 4** (Current - v0.9.0-alpha):
+
 - 157 files total (comprehensive coverage)
 
 **Growth Rate**: 3,040% increase from v0.1.0 to v0.9.0
@@ -309,12 +332,15 @@ Add after the "Features" section, before "Quick Start":
 ### Test Growth
 
 **Phase 1** (Initial):
+
 - 10 basic tests
 
 **Phase 2** (Modularization):
+
 - 200+ tests (20x growth)
 
 **Phase 3** (Current):
+
 - 1,399 tests (140x growth from initial)
 
 **Test Velocity**: Adding ~350 tests per major version
@@ -476,16 +502,19 @@ grep -r "@param\|@returns\|@description" --include="*.js" src/ | wc -l
 ### Discrepancies in Counts
 
 **User mentioned "93 documentation files"**:
+
 - Likely counted docs/ directory only (95 files)
 - Or counted without .github/ (would be ~99)
-- Our count: 157 (includes .github/, root, __tests__, examples/)
+- Our count: 157 (includes .github/, root, **tests**, examples/)
 
 **User mentioned "60 files with examples/tutorials"**:
+
 - Close to our count of 96 files
 - Difference may be in search terms used
 - Our method: grep for "example|tutorial|demo"
 
 **HTML test page references "24"**:
+
 - Our count: 227 references
 - User may have counted unique HTML files (17 exist)
 - Our method: Count all mentions in markdown files
@@ -493,6 +522,7 @@ grep -r "@param\|@returns\|@description" --include="*.js" src/ | wc -l
 ### Update Frequency
 
 Recommend updating statistics:
+
 - **Minor versions**: Update test counts, file counts
 - **Major versions**: Full statistics regeneration
 - **Quarterly**: Verify accuracy of all metrics
@@ -504,22 +534,26 @@ Recommend updating statistics:
 To add statistics to README.md:
 
 **Phase 1: Basic Statistics** (15 min)
+
 - [ ] Add "## 📊 Project Statistics" section after Features
 - [ ] Include documentation count (157 files)
 - [ ] Include test statistics (1,399 total, 1,251 passing)
 - [ ] Include code organization (35 modules)
 
 **Phase 2: Detailed Tables** (15 min)
+
 - [ ] Add documentation breakdown table
 - [ ] Add code complexity table
 - [ ] Add test coverage table
 
 **Phase 3: Visual Enhancements** (10 min)
+
 - [ ] Add badges for key metrics
 - [ ] Add emoji icons for categories
 - [ ] Add progressive disclosure (collapsible sections)
 
 **Phase 4: Automation** (20 min)
+
 - [ ] Create scripts/generate-stats.sh
 - [ ] Add npm scripts for statistics
 - [ ] Document usage in CONTRIBUTING.md

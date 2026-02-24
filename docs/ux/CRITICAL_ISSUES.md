@@ -14,18 +14,22 @@
 **Impact**: Breaks accessibility, violates HTML spec, confuses screen readers
 
 ### Problem
+
 Multiple views use the same IDs causing DOM conflicts:
+
 - `#position-display` appears in both home and converter views
 - `#municipio-value` duplicated across components
 - `#bairro-value` shared between views
 
 ### Why It's Critical
+
 - Screen readers read wrong content
 - JavaScript selectors return unexpected elements
 - Violates WCAG 2.1 4.1.1 (Parsing)
 - Browser behavior undefined with duplicate IDs
 
 ### Fix
+
 ```javascript
 // Before (home.js)
 <div id="position-display">
@@ -41,12 +45,14 @@ Multiple views use the same IDs causing DOM conflicts:
 ```
 
 ### Files to Update
+
 - `src/views/home.js` (lines 150-200)
 - `src/views/converter.js` (lines 120-170)
 - `src/html/HTMLPositionDisplayer.js`
 - `src/html/HTMLHighlightCardsDisplayer.js`
 
 ### Testing
+
 ```javascript
 // Validate no duplicate IDs
 const ids = new Set();
@@ -68,19 +74,23 @@ document.querySelectorAll('[id]').forEach(el => {
 **Impact**: Wasted API calls, poor error handling, confusing UX
 
 ### Problem
+
 Coordinate converter accepts invalid input:
+
 - Latitude accepts values > 90 or < -90
 - Longitude accepts values > 180 or < -180
 - No client-side validation before API call
 - User sees error only after submission
 
 ### Why It's Critical
+
 - Unnecessary Nominatim API calls (rate limiting risk)
 - Poor user experience (delayed feedback)
 - No input sanitization (potential XSS vector)
 - Confusing error messages
 
 ### Fix
+
 ```javascript
 // Add to converter view
 function validateCoordinates(lat, lon) {
@@ -107,11 +117,13 @@ function validateCoordinates(lat, lon) {
 ```
 
 ### Files to Update
+
 - `src/views/converter.js` (add validation function)
 - `src/index.html` (update input attributes)
 - Add real-time validation on input event
 
 ### Testing
+
 ```javascript
 // Test validation
 expect(validateCoordinates(91, 0)).toContain('between -90 and 90');
@@ -131,7 +143,9 @@ expect(validateCoordinates(45, 90)).toHaveLength(0);
 **Impact**: Users think app is broken, confusion during API calls
 
 ### Problem
+
 No visual feedback during:
+
 - Geolocation API calls (can take 5-30 seconds)
 - Nominatim reverse geocoding (1-3 seconds)
 - SIDRA demographic data fetch (2-5 seconds)
@@ -139,12 +153,14 @@ No visual feedback during:
 User sees no indication of progress.
 
 ### Why It's Critical
+
 - 47% of users abandon after 3 seconds without feedback
 - Users think app crashed or is unresponsive
 - Multiple clicks trigger duplicate API calls
 - No way to cancel or know what's happening
 
 ### Fix
+
 ```javascript
 // Add loading state management
 class LoadingStateManager {
@@ -173,12 +189,14 @@ class LoadingStateManager {
 ```
 
 ### UI Components Needed
+
 - Loading overlay with spinner
 - Contextual loading messages
 - Progress indicator for long operations
 - Skeleton screens for data fetching
 
 ### Files to Update
+
 - Create `src/managers/LoadingStateManager.js`
 - Update `src/services/GeolocationService.js`
 - Update `src/services/ReverseGeocoder.js`
@@ -186,6 +204,7 @@ class LoadingStateManager {
 - Add CSS for loading states
 
 ### Testing
+
 ```javascript
 // Verify loading states appear
 await user.click(getLocationButton);
@@ -205,19 +224,23 @@ await waitFor(() => expect(loadingOverlay).not.toBeVisible());
 **Impact**: Confusing first-time user experience
 
 ### Problem
+
 Empty content areas show nothing:
+
 - Blank municipio/bairro cards on page load
 - Empty address section with no explanation
 - No call-to-action for first-time users
 - Confusing what user should do first
 
 ### Why It's Critical
+
 - First impression determines user retention
 - Users don't know what app does
 - No guidance on how to start
 - Professional apps always have empty states
 
 ### Fix
+
 ```javascript
 // Empty state component
 function renderEmptyState(type) {
@@ -254,6 +277,7 @@ function renderEmptyState(type) {
 ```
 
 ### Files to Update
+
 - Create `src/components/EmptyState.js`
 - Update `src/html/HTMLPositionDisplayer.js`
 - Update `src/html/HTMLAddressDisplayer.js`
@@ -261,6 +285,7 @@ function renderEmptyState(type) {
 - Add empty state CSS
 
 ### Testing
+
 ```javascript
 // Verify empty states on load
 const municipioCard = screen.getByTestId('municipio-card');
@@ -280,18 +305,22 @@ expect(municipioCard.querySelector('.empty-state-icon')).toBeInTheDocument();
 **Impact**: Buttons difficult to tap on mobile devices
 
 ### Problem
+
 Button sizes below WCAG 2.1 minimum (44x44px):
+
 - Navigation buttons: 36x36px
 - Icon buttons: 32x32px
 - Card action buttons: 38x40px
 
 ### Why It's Critical
+
 - WCAG 2.1 Level AAA requires 44x44px minimum
 - Users with motor impairments struggle
 - Accidental taps common
 - Poor mobile experience
 
 ### Fix
+
 ```css
 /* Ensure all interactive elements meet minimum size */
 button,
@@ -319,11 +348,13 @@ a[role="button"],
 ```
 
 ### Files to Update
+
 - `src/button-styles.css`
 - `src/navigation.css`
 - `src/highlight-cards.css`
 
 ### Testing
+
 ```javascript
 // Verify touch target sizes
 const buttons = document.querySelectorAll('button');
@@ -346,18 +377,22 @@ buttons.forEach(btn => {
 **Impact**: Text unreadable for users with low vision
 
 ### Problem
+
 Multiple gradient backgrounds fail WCAG AA (4.5:1):
+
 - Home gradient: 3.2:1 contrast ratio
 - Card headers: 3.8:1 contrast ratio
 - Button text on gradients: 2.9:1
 
 ### Why It's Critical
+
 - WCAG 2.1 Level AA required for most compliance
 - Legal risk for accessibility lawsuits
 - 1 in 12 men have color vision deficiency
 - Poor readability for everyone in sunlight
 
 ### Fix
+
 ```css
 /* Before - fails contrast */
 .header-gradient {
@@ -383,12 +418,15 @@ body {
 ```
 
 ### Files to Update
+
 - `src/gradients.css`
 - `src/highlight-cards.css`
 - `src/styles.css`
 
 ### Testing
+
 Use Chrome DevTools Lighthouse:
+
 ```javascript
 // Run accessibility audit
 const report = await lighthouse(url, { onlyCategories: ['accessibility'] });
@@ -407,17 +445,20 @@ expect(report.lhr.categories.accessibility.score).toBeGreaterThan(0.9);
 **Impact**: Users can't tell when buttons are disabled
 
 ### Problem
+
 - No visual feedback for disabled state
 - Users click non-functional buttons repeatedly
 - Inconsistent disabled styling across buttons
 - Some buttons show disabled, others don't
 
 ### Why It's Critical
+
 - User frustration and confusion
 - Looks unpolished and unprofessional
 - Users think app is broken
 
 ### Fix
+
 ```css
 button:disabled,
 button[aria-disabled="true"] {
@@ -454,10 +495,12 @@ button.loading::after {
 ```
 
 ### Files to Update
+
 - `src/button-styles.css`
 - Update all button usage in views
 
 ### Testing
+
 ```javascript
 // Verify disabled state
 const button = screen.getByRole('button', { name: 'Obter Localização' });
@@ -478,18 +521,21 @@ expect(button).toHaveClass('loading');
 **Impact**: Complete failure in poor network conditions
 
 ### Problem
+
 - App shows blank screen when offline
 - No cached data displayed
 - No indication why app isn't working
 - Users in subway/poor areas can't use app
 
 ### Why It's Critical
+
 - Mobile users frequently have poor connectivity
 - Brazil has inconsistent mobile coverage
 - Competitors offer offline support
 - Users expect basic offline functionality
 
 ### Fix (Phase 1 - Basic)
+
 ```javascript
 // Service Worker for offline support
 self.addEventListener('install', event => {
@@ -518,12 +564,14 @@ window.addEventListener('online', () => {
 ```
 
 ### Files to Create/Update
+
 - Create `public/service-worker.js`
 - Create `src/managers/OfflineManager.js`
 - Add offline banner to `src/index.html`
 - Update manifest.json for PWA
 
 ### Testing
+
 ```javascript
 // Test offline behavior
 await page.setOfflineMode(true);
@@ -543,6 +591,7 @@ expect(await page.textContent('#last-known-location')).toBeTruthy();
 **Impact**: Violates WCAG audio control requirement
 
 ### Problem
+
 - Speech starts automatically without user control
 - No pause/stop button
 - No volume control
@@ -550,12 +599,14 @@ expect(await page.textContent('#last-known-location')).toBeTruthy();
 - Violates WCAG 2.1 1.4.2 (Audio Control)
 
 ### Why It's Critical
+
 - Legal compliance issue
 - Annoying for users in public spaces
 - Can't be disabled once started
 - Interferes with screen readers
 
 ### Fix
+
 ```javascript
 // Add speech controls component
 class SpeechControls {
@@ -589,12 +640,14 @@ class SpeechControls {
 ```
 
 ### Files to Update
+
 - Update `src/speech/SpeechSynthesisManager.js`
 - Create `src/components/SpeechControls.js`
 - Add controls to `src/index.html`
 - Save preferences to localStorage
 
 ### Testing
+
 ```javascript
 // Test speech controls
 const muteButton = screen.getByLabelText('Desativar síntese de voz');
@@ -615,6 +668,7 @@ expect(localStorage.getItem('speech-enabled')).toBe('false');
 **Impact**: Unusable on screens < 375px width
 
 ### Problem
+
 - Layout breaks on small screens (iPhone SE, older Android)
 - Horizontal scrolling required
 - Buttons cut off screen
@@ -622,12 +676,14 @@ expect(localStorage.getItem('speech-enabled')).toBe('false');
 - Cards too wide for viewport
 
 ### Why It's Critical
+
 - 15% of Brazilian mobile users have small screens
 - Professional apps must support 320px minimum
 - Layout breaks harm credibility
 - Users can't complete tasks
 
 ### Fix
+
 ```css
 /* Mobile-first approach */
 :root {
@@ -675,12 +731,14 @@ expect(localStorage.getItem('speech-enabled')).toBe('false');
 ```
 
 ### Files to Update
+
 - `src/styles.css` (mobile breakpoints)
 - `src/highlight-cards.css`
 - `src/button-styles.css`
 - Test on Chrome DevTools mobile emulation
 
 ### Testing
+
 ```javascript
 // Test at various viewport sizes
 const sizes = [320, 360, 375, 414];
@@ -705,6 +763,7 @@ for (const width of sizes) {
 | **TOTAL** | **10** | **12h 15m** |
 
 ### Recommended Fix Order
+
 1. ✅ Duplicate IDs (45m) - Breaks everything
 2. ✅ Form Validation (1h) - Data integrity
 3. ✅ Loading States (2h) - User confusion

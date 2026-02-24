@@ -12,6 +12,7 @@
 This action plan addresses critical test coverage gaps identified in the codebase, prioritizing high-impact modules with the lowest coverage. The plan is divided into 3 phases with clear time estimates and success metrics.
 
 **Key Focus Areas**:
+
 1. WebGeocodingManager.js - 500+ uncovered lines (CRITICAL)
 2. Integration test gaps for geocoding workflows
 3. DOM manipulation and browser-specific code
@@ -31,12 +32,14 @@ This action plan addresses critical test coverage gaps identified in the codebas
 #### Gap Analysis
 
 **Lines 387-422: Error Handling Paths** (35 lines uncovered)
+
 - Geolocation error scenarios
 - API failure handling
 - Permission denial flows
 - Network timeout cases
 
 **Lines 472-971: DOM Manipulation** (499 lines, many uncovered)
+
 - Button click handlers
 - Element initialization
 - Dynamic UI updates
@@ -156,11 +159,13 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 **Estimated Effort**: 3 hours
 
 **Action Items**:
+
 1. Test observer subscription scenarios (1 hour)
 2. Test tracking start/stop lifecycle (1 hour)
 3. Test error propagation through coordinators (1 hour)
 
 **Tests to Create**:
+
 - `__tests__/coordination/ServiceCoordinator.lifecycle.test.js`
 - `__tests__/coordination/ServiceCoordinator.observers.test.js`
 
@@ -173,11 +178,13 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 **Estimated Effort**: 2 hours
 
 **Action Items**:
+
 1. Test Nominatim API failure scenarios (1 hour)
 2. Test coordinate validation edge cases (30 min)
 3. Test observer notification with complex data (30 min)
 
 **Tests to Create**:
+
 - `__tests__/services/ReverseGeocoder.errors.test.js`
 
 **Coverage Gain**: +5%
@@ -189,11 +196,13 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 **Estimated Effort**: 2 hours
 
 **Action Items**:
+
 1. Test address formatting edge cases (1 hour)
 2. Test DOM updates with complex addresses (30 min)
 3. Test error handling for invalid data (30 min)
 
 **Tests to Create**:
+
 - `__tests__/html/HTMLAddressDisplayer.edge-cases.test.js`
 
 **Coverage Gain**: +6%
@@ -207,6 +216,7 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 ### Priority 5: Browser-Specific Code
 
 **Files**:
+
 - `src/html/HTMLHighlightCardsDisplayer.js`
 - `src/html/HTMLPositionDisplayer.js`
 - `src/ui/ErrorRecovery.js`
@@ -216,6 +226,7 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 **Estimated Effort**: 8 hours
 
 **Tests to Create**:
+
 - `__tests__/e2e/ErrorRecovery.e2e.test.js` (2 hours)
 - `__tests__/e2e/DisplayUpdates.e2e.test.js` (3 hours)
 - `__tests__/e2e/UserInteractions.e2e.test.js` (3 hours)
@@ -229,6 +240,7 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 **Estimated Effort**: 6 hours
 
 **Action Items**:
+
 1. Run coverage report with branch details (30 min)
 2. Identify uncovered if/else branches (1 hour)
 3. Create targeted tests for each branch (4.5 hours)
@@ -252,6 +264,7 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 | ErrorRecovery.js | ~40% | — | — | 60% |
 
 **Overall Project Target**:
+
 - Current: ~70%
 - After Phase 1: ~75%
 - After Phase 2: ~80%
@@ -262,6 +275,7 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 ## Implementation Timeline
 
 ### Day 1-2 (Phase 1 Start)
+
 - ⏰ **Hours 1-4**: WebGeocodingManager integration tests
   - Create test file structure
   - Implement geocoding workflow tests
@@ -275,6 +289,7 @@ describe('WebGeocodingManager DOM Manipulation', () => {
   - **Deliverable**: 472-650 lines covered
 
 ### Day 3 (Phase 1 Complete)
+
 - ⏰ **Hours 1-4**: WebGeocodingManager DOM tests (part 2)
   - Test display updates
   - Test element manipulation
@@ -288,6 +303,7 @@ describe('WebGeocodingManager DOM Manipulation', () => {
   - **Milestone**: Phase 1 COMPLETE ✅
 
 ### Day 4-6 (Phase 2)
+
 - ServiceCoordinator tests (Day 4, 3 hours)
 - ReverseGeocoder error tests (Day 5, 2 hours)
 - HTMLAddressDisplayer edge cases (Day 5, 2 hours)
@@ -295,6 +311,7 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 - **Milestone**: Phase 2 COMPLETE ✅
 
 ### Week 2 (Phase 3)
+
 - E2E tests for browser-specific code (Days 1-2, 8 hours)
 - Edge case and branch coverage (Days 3-4, 6 hours)
 - Final validation and documentation (Day 5, 2 hours)
@@ -337,18 +354,21 @@ __tests__/
 ### Coverage Metrics
 
 **Phase 1 Success Criteria**:
+
 - ✅ WebGeocodingManager.js: 50% → 70% (+20%)
 - ✅ Overall project: 70% → 75% (+5%)
 - ✅ Lines 387-422 fully covered (error handling)
 - ✅ Lines 472-971 at 85%+ coverage (DOM code)
 
 **Phase 2 Success Criteria**:
+
 - ✅ ServiceCoordinator.js: 65% → 73% (+8%)
 - ✅ ReverseGeocoder.js: 75% → 80% (+5%)
 - ✅ HTMLAddressDisplayer.js: 60% → 66% (+6%)
 - ✅ Overall project: 75% → 80% (+5%)
 
 **Phase 3 Success Criteria**:
+
 - ✅ Browser-specific files: Average 70%+ coverage
 - ✅ Branch coverage: 75%+
 - ✅ Overall project: 80% → 85% (+5%)
@@ -356,12 +376,14 @@ __tests__/
 ### Quality Metrics
 
 **Test Quality**:
+
 - All new tests pass consistently
 - No flaky tests (run 10x each, 100% pass rate)
 - E2E tests complete in <30 seconds each
 - Unit tests complete in <1 second each
 
 **Code Quality**:
+
 - No new ESLint warnings introduced
 - All tests follow project patterns
 - Clear test descriptions and comments
@@ -372,25 +394,31 @@ __tests__/
 ## Risk Mitigation
 
 ### Risk 1: DOM Mocking Complexity
+
 **Probability**: High  
 **Impact**: Medium  
 **Mitigation**:
+
 - Use JSDOM for complex DOM operations
 - Fallback to E2E tests for browser-specific features
 - Document mock limitations
 
 ### Risk 2: Test Flakiness
+
 **Probability**: Medium  
 **Impact**: High  
 **Mitigation**:
+
 - Implement proper waits in E2E tests
 - Use deterministic mocks
 - Add retry logic for network-dependent tests
 
 ### Risk 3: Time Overruns
+
 **Probability**: Medium  
 **Impact**: Medium  
 **Mitigation**:
+
 - Buffer 20% extra time per phase
 - Prioritize P0 tests if time constrained
 - Document deferred tests for future sprints
@@ -402,6 +430,7 @@ __tests__/
 ### Daily Standup Reports
 
 **Template**:
+
 ```
 Coverage Update - Day X
 
@@ -423,6 +452,7 @@ Coverage Update - Day X
 ### Weekly Summary Reports
 
 **Template**:
+
 ```
 Week X Coverage Summary
 
@@ -451,12 +481,14 @@ Week X Coverage Summary
 ### Immediate Next Steps (Today)
 
 **Step 1**: Create integration test file (30 min)
+
 ```bash
 mkdir -p __tests__/integration
 touch __tests__/integration/WebGeocodingManager.integration.test.js
 ```
 
 **Step 2**: Setup test infrastructure (30 min)
+
 ```javascript
 // Copy structure from existing integration tests
 // Setup mocks for document, geolocation, fetch
@@ -464,6 +496,7 @@ touch __tests__/integration/WebGeocodingManager.integration.test.js
 ```
 
 **Step 3**: Implement first test (1 hour)
+
 ```javascript
 test('should complete full geocoding cycle', async () => {
     // Arrange: Setup mocks
@@ -473,6 +506,7 @@ test('should complete full geocoding cycle', async () => {
 ```
 
 **Step 4**: Run and validate (30 min)
+
 ```bash
 npm test -- WebGeocodingManager.integration.test.js
 npm run test:coverage -- --collectCoverageFrom='src/coordination/WebGeocodingManager.js'
@@ -485,6 +519,7 @@ npm run test:coverage -- --collectCoverageFrom='src/coordination/WebGeocodingMan
 ## Tools and Resources
 
 ### Required Tools
+
 - ✅ Jest (already installed)
 - ✅ Puppeteer (already installed for E2E)
 - ✅ JSDOM (via Jest environment)
@@ -510,6 +545,7 @@ npm run test:coverage -- --collectCoverageFrom='src/coordination/**/*.js' --test
 ```
 
 ### Documentation References
+
 - Jest Coverage Docs: https://jestjs.io/docs/cli#--coverageboolean
 - Puppeteer Testing Guide: https://pptr.dev/guides/
 - JSDOM Setup: https://github.com/jsdom/jsdom
@@ -521,6 +557,7 @@ npm run test:coverage -- --collectCoverageFrom='src/coordination/**/*.js' --test
 This action plan provides a systematic approach to improving test coverage from 70% to 85% over 2-3 weeks. **Phase 1 is the highest priority** and should yield immediate results (20% coverage gain for WebGeocodingManager.js) in just 2-3 days.
 
 **Key Success Factors**:
+
 1. Focus on high-impact files first (WebGeocodingManager)
 2. Use appropriate test types (unit for logic, E2E for DOM)
 3. Monitor progress daily with coverage reports

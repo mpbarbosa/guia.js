@@ -7,6 +7,7 @@ This directory contains comprehensive end-to-end (E2E) tests for the Guia.js app
 **Total E2E Tests: 76 tests across 5 test files**
 
 The E2E test suite covers:
+
 - Complete application workflows from initialization to user output
 - Multi-component integration and coordination
 - Error handling and recovery scenarios
@@ -21,6 +22,7 @@ The E2E test suite covers:
 Tests the complete geolocation workflow from start to finish:
 
 **What it tests:**
+
 - Application initialization
 - Geolocation position acquisition
 - Reverse geocoding (coordinates → address)
@@ -31,6 +33,7 @@ Tests the complete geolocation workflow from start to finish:
 - Performance characteristics
 
 **Key scenarios:**
+
 - Full workflow: Startup → Position → Geocode → Display
 - Position updates triggering change detection
 - Integration of Manager → Position → Geocoder → Address
@@ -39,6 +42,7 @@ Tests the complete geolocation workflow from start to finish:
 - Workflow completion time validation
 
 **Example test:**
+
 ```javascript
 test('should execute complete workflow from geolocation to display', async () => {
     // 1. Initialize position
@@ -60,6 +64,7 @@ test('should execute complete workflow from geolocation to display', async () =>
 Tests address change detection and speech synthesis integration:
 
 **What it tests:**
+
 - Position change detection
 - Address component comparison (município, bairro, logradouro)
 - Change event generation
@@ -69,6 +74,7 @@ Tests address change detection and speech synthesis integration:
 - Immediate speech for critical changes
 
 **Key scenarios:**
+
 - Municipality change → high-priority speech
 - Neighborhood (bairro) change → normal-priority speech
 - Street change → low-priority speech
@@ -78,6 +84,7 @@ Tests address change detection and speech synthesis integration:
 - Immediate speech processing
 
 **Example test:**
+
 ```javascript
 test('should detect municipality change and trigger high-priority speech', async () => {
     // 1. Create addresses
@@ -98,6 +105,7 @@ test('should detect municipality change and trigger high-priority speech', async
 Tests the Brazilian address processing pipeline:
 
 **What it tests:**
+
 - OpenStreetMap/Nominatim data retrieval
 - Address translation (OSM → Brazilian format)
 - Brazilian address component extraction
@@ -108,6 +116,7 @@ Tests the Brazilian address processing pipeline:
 - Street type prefixes (Rua, Avenida, Travessa, etc.)
 
 **Key scenarios:**
+
 - São Paulo address processing
 - Rio de Janeiro address with Portuguese street types
 - Brasília address with capital naming
@@ -118,6 +127,7 @@ Tests the Brazilian address processing pipeline:
 - CEP formatting
 
 **Example test:**
+
 ```javascript
 test('should process complete São Paulo address from OSM to Brazilian format', async () => {
     // 1. Mock OSM response
@@ -147,6 +157,7 @@ test('should process complete São Paulo address from OSM to Brazilian format', 
 Tests error handling and recovery mechanisms:
 
 **What it tests:**
+
 - Invalid coordinate handling
 - Network failures and timeouts
 - API errors (404, 500)
@@ -157,6 +168,7 @@ Tests error handling and recovery mechanisms:
 - Edge cases
 
 **Key scenarios:**
+
 - Null/invalid coordinates
 - Poor accuracy rejection
 - Out-of-bounds coordinates
@@ -170,6 +182,7 @@ Tests error handling and recovery mechanisms:
 - Position at poles
 
 **Example test:**
+
 ```javascript
 test('should handle network timeout gracefully', async () => {
     // Mock timeout
@@ -192,6 +205,7 @@ test('should handle network timeout gracefully', async () => {
 Tests complex multi-component interactions:
 
 **What it tests:**
+
 - WebGeocodingManager orchestration
 - PositionManager coordination
 - ReverseGeocoder + AddressDataExtractor pipeline
@@ -203,6 +217,7 @@ Tests complex multi-component interactions:
 - Complete navigation sessions
 
 **Key scenarios:**
+
 - Manager → Position → Geocoder → Display workflow
 - Observer pattern notifications
 - Geocoder + Extractor integration
@@ -217,6 +232,7 @@ Tests complex multi-component interactions:
 - Component lifecycle management
 
 **Example test:**
+
 ```javascript
 test('should handle complete navigation session', async () => {
     const route = [
@@ -290,6 +306,7 @@ All E2E tests follow a consistent structure:
 The E2E tests cover:
 
 ### Components Tested
+
 - ✅ GeoPosition
 - ✅ PositionManager
 - ✅ ReverseGeocoder
@@ -304,6 +321,7 @@ The E2E tests cover:
 - ✅ SingletonStatusManager
 
 ### Workflows Tested
+
 - ✅ Complete geolocation workflow
 - ✅ Address change detection
 - ✅ Speech synthesis integration
@@ -313,6 +331,7 @@ The E2E tests cover:
 - ✅ Real-world navigation scenarios
 
 ### Scenarios Covered
+
 - ✅ Normal operation
 - ✅ Error conditions
 - ✅ Edge cases
@@ -385,6 +404,7 @@ describe('E2E: [Feature Name]', () => {
 ## Performance
 
 E2E tests are designed to run quickly:
+
 - **Average execution time**: ~1 second for all 76 tests
 - **Parallelization**: Tests run in parallel where possible
 - **Mock efficiency**: External APIs are mocked to avoid network delays
@@ -393,6 +413,7 @@ E2E tests are designed to run quickly:
 ## Continuous Integration
 
 These E2E tests are part of the CI pipeline:
+
 - Run automatically on every commit
 - Must pass before merging to main branch
 - Provide confidence in application functionality
@@ -414,6 +435,7 @@ Last Updated: 2024
 ## Contributing
 
 When contributing E2E tests:
+
 1. Follow the existing patterns and conventions
 2. Write clear, descriptive test names
 3. Include comprehensive JSDoc comments

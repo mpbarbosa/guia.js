@@ -239,8 +239,13 @@ class ReverseGeocoder {
 	 * @since 0.9.0-alpha
 	 */
 	async fetchAddress() {
-		// ── Primary provider: AWS Location Based Service ──────────────────────
-		if (this._awsGeocoder && this.latitude && this.longitude) {
+		// Determine provider order from configuration.
+		// 'aws' (default) → AWS primary, Nominatim fallback.
+		// 'nominatim'     → Nominatim primary, AWS fallback.
+		const primaryIsAws = !env.geocodingPrimaryProvider || env.geocodingPrimaryProvider !== 'nominatim';
+
+		// ── Primary provider: AWS Location Based Service (when configured as primary) ──
+		if (primaryIsAws && this._awsGeocoder && this.latitude && this.longitude) {
 			try {
 				const { rawData, enderecoPadronizado } = await this._awsGeocoder.reverseGeocode(
 					this.latitude, this.longitude
@@ -262,7 +267,7 @@ class ReverseGeocoder {
 			}
 		}
 
-		// ── Fallback provider: OpenStreetMap Nominatim ────────────────────────
+		// ── Primary/Fallback provider: OpenStreetMap Nominatim ───────────────
 		try {
 			const addressData = await this.reverseGeocode();
 			console.log('(ReverseGeocoder.fetchAddress) Reverse geocode result:', addressData);
@@ -299,6 +304,29 @@ class ReverseGeocoder {
 			
 			return addressData;
 		} catch (err) {
+			// ── Fallback: AWS Location Based Service (when Nominatim is primary) ─
+			if (!primaryIsAws && this._awsGeocoder && this.latitude && this.longitude) {
+				try {
+					const { rawData, enderecoPadronizado } = await this._awsGeocoder.reverseGeocode(
+						this.latitude, this.longitude
+					);
+					this.currentAddress = rawData;
+					this.enderecoPadronizado = enderecoPadronizado;
+					log('(ReverseGeocoder.fetchAddress) AWS fallback succeeded');
+					this._dispatchProviderEvent('aws');
+					this.notifyObservers(
+						this.currentAddress,
+						this.enderecoPadronizado,
+						ADDRESS_FETCHED_EVENT,
+						false,
+						null
+					);
+					return rawData;
+				} catch (awsErr) {
+					warn('(ReverseGeocoder.fetchAddress) AWS fallback also failed:', awsErr.message);
+				}
+			}
+
 			// Enhanced error handling with user-friendly messages
 			let errorMessage = 'Falha ao buscar endereço';
 			let shouldNotifyUser = false;

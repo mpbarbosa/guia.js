@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.11.0-alpha] - 2026-02-15
 
 ### Refactored
+
 - **HtmlSpeechSynthesisDisplayer** (814 → 518 lines, **-36% reduction**): Converted from monolithic class to facade pattern
   - **Architecture**: Facade pattern composing 3 focused components for Single Responsibility Principle compliance
   - **Component 1: HtmlSpeechControls** (`src/html/HtmlSpeechControls.js`, 489 lines, 51 tests)
@@ -36,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `destroy()` method for proper cleanup (NEW, prevents memory leaks)
 
 ### Changed
+
 - **Improved Maintainability**: Monolithic 814-line class split into 3 focused components
   - Better testability: 140 total tests vs original 60 tests (133% more coverage)
   - Cleaner separation of concerns: UI, Observer logic, Text formatting
@@ -43,13 +45,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Better composition: Components can be used independently if needed
 
 ### Fixed
+
 - **Memory Leak Prevention**: Added `destroy()` method for proper event listener cleanup
 - **Logging Consistency**: Facade layer now handles logging for backward compatibility
 
 ### Migration Guide
+
 **NO CHANGES REQUIRED** - 100% backward compatible!
 
 The facade maintains the exact same API as the original monolithic class:
+
 ```javascript
 // Existing code continues to work without changes
 const displayer = new HtmlSpeechSynthesisDisplayer(document, {
@@ -69,6 +74,7 @@ displayer.destroy(); // Call when component unmounts
 ```
 
 **Benefits**:
+
 - Same constructor signature
 - Same public methods
 - Same property access
@@ -76,6 +82,7 @@ displayer.destroy(); // Call when component unmounts
 - Zero breaking changes
 
 **What Changed Internally**:
+
 - UI operations → delegated to HtmlSpeechControls
 - Address notifications → delegated to AddressSpeechObserver
 - Text formatting → delegated to SpeechTextBuilder
@@ -84,6 +91,7 @@ displayer.destroy(); // Call when component unmounts
 ## [0.10.0-alpha] - 2026-02-15
 
 ### Added
+
 - **HomeViewController** (`src/views/home.js`, 672 lines): New view controller for home view location tracking
   - Manages single-position capture and continuous tracking workflows
   - Event listener management with memory leak prevention
@@ -94,6 +102,7 @@ displayer.destroy(); // Call when component unmounts
   - **Documentation**: Complete JSDoc with examples and error handling
 
 ### Changed
+
 - **`app.js`** (664 → 645 lines, -2.9%): Refactored to use HomeViewController
   - Replaced inline WebGeocodingManager instantiation with HomeViewController
   - Removed inline Chronometer initialization (now handled by HomeViewController)
@@ -102,6 +111,7 @@ displayer.destroy(); // Call when component unmounts
   - Cleaner separation of concerns and consistent view controller pattern
 
 ### Deprecated
+
 - **WebGeocodingManager tracking methods** (will be removed in v1.0.0):
   - `getSingleLocationUpdate()` → Use `HomeViewController.getSingleLocationUpdate()`
   - `startTracking()` → Use `HomeViewController.startTracking()`
@@ -112,11 +122,13 @@ displayer.destroy(); // Call when component unmounts
   - Documentation added to tests explaining deprecation strategy
 
 ### Fixed
+
 - **Code organization**: Extracted 300+ lines of view-specific logic from WebGeocodingManager
 - **Architecture**: Established consistent view controller pattern (HomeViewController + ConverterViewController)
 - **Testing**: Improved test organization with separate test suites for view controllers
 
 ### Migration Guide
+
 ```javascript
 // OLD (deprecated)
 const manager = new WebGeocodingManager(document, { locationResult: 'location-result' });
@@ -133,10 +145,10 @@ controller.startTracking();
 **Breaking Changes**: None (deprecation warnings only)  
 **Removal Timeline**: Deprecated methods will be fully removed in v1.0.0
 
-
 ## [0.9.0-alpha] - 2026-01-28
 
 ### Added
+
 - **Metropolitan Region Display (v0.9.0-alpha)**: Municipality highlight card now displays "Região Metropolitana" information for municipalities in metropolitan areas
   - Displays between município label and municipality name with reduced visual prominence
   - Visual hierarchy: smaller font size (0.875rem) and lighter color (70% opacity)
@@ -168,6 +180,7 @@ controller.startTracking();
 - Code quality improvement plan documentation
 
 ### Changed
+
 - **`BrazilianStandardAddress` (v0.9.0-alpha)**: Added `regiaoMetropolitana` property and `regiaoMetropolitanaFormatada()` method
   - Stores metropolitan region information from Nominatim API
   - Returns formatted region name or empty string
@@ -209,10 +222,12 @@ controller.startTracking();
 - Updated `src/app.js`: Modified `updateActiveNavLink()` to support footer navigation
 
 ### Fixed
+
 - Memory leak prevention infrastructure (TimerManager)
 - Test coverage increased to 83.97%
 
 ### Documentation
+
 - Added `docs/REFACTOR_ADDRESS_FETCHED_CONSTANT.md`: Documents constant extraction refactoring
 - Updated test infrastructure documentation with SIDRA test coverage
 - Updated README.md to reflect focus on location tracking as primary feature
@@ -225,11 +240,13 @@ controller.startTracking();
 ## [0.9.0-alpha] - 2026-01-11
 
 ### Added
+
 - Municipio/bairro display fix
 - HTMLHighlightCardsDisplayer component
 - ServiceCoordinator integration for address updates
 
 ### Fixed
+
 - Bairro card not updating when changing neighborhoods
 
 ## [0.9.0-alpha] - 2025-12-XX
@@ -237,6 +254,7 @@ controller.startTracking();
 Initial release with guia.js integration.
 
 ### Added
+
 - Single-page application structure
 - Client-side routing
 - Geolocation services
@@ -248,8 +266,6 @@ Initial release with guia.js integration.
 ---
 
 [Unreleased]: https://github.com/mpbarbosa/guia_turistico/compare/v0.9.0-alpha...HEAD
-[0.9.0-alpha]: https://github.com/mpbarbosa/guia_turistico/compare/v0.6.0-alpha...v0.9.0-alpha
-[0.9.0-alpha]: https://github.com/mpbarbosa/guia_turistico/compare/v0.9.0-alpha...v0.9.0-alpha
 [0.9.0-alpha]: https://github.com/mpbarbosa/guia_turistico/compare/v0.6.0-alpha...v0.9.0-alpha
 
 ---

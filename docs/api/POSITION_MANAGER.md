@@ -55,9 +55,11 @@ import { log, warn } from '../utils/logger.js';
 Creates a new PositionManager instance (private - use `getInstance()` instead).
 
 **Parameters:**
+
 - `position` (GeolocationPosition, optional): Initial position data
 
 **Example:**
+
 ```javascript
 // Typically used internally by getInstance()
 const manager = new PositionManager(geolocationPosition);
@@ -72,6 +74,7 @@ const manager = new PositionManager(geolocationPosition);
 Gets or creates the singleton PositionManager instance.
 
 **Parameters:**
+
 - `position` (GeolocationPosition, optional): HTML5 Geolocation API Position object
   - `position.coords` (GeolocationCoordinates): Coordinate information
     - `latitude` (number): Latitude in decimal degrees
@@ -82,6 +85,7 @@ Gets or creates the singleton PositionManager instance.
 **Returns:** `PositionManager` - The singleton instance
 
 **Example:**
+
 ```javascript
 // Create initial instance
 const manager = PositionManager.getInstance();
@@ -117,12 +121,14 @@ PositionManager.strImmediateAddressUpdate = "Immediate address update"
 Subscribes an observer to position change notifications.
 
 **Parameters:**
+
 - `observer` (Object): Observer object to subscribe
   - `observer.update` (Function): Method called on position changes `(positionManager, eventType) => void`
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 const myObserver = {
   update: (positionManager, event) => {
@@ -141,11 +147,13 @@ PositionManager.getInstance().subscribe(myObserver);
 Unsubscribes an observer from position change notifications.
 
 **Parameters:**
+
 - `observer` (Object): Observer object to unsubscribe
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 PositionManager.getInstance().unsubscribe(myObserver);
 ```
@@ -159,6 +167,7 @@ PositionManager.getInstance().unsubscribe(myObserver);
 Updates the position with validation and filtering rules.
 
 **Parameters:**
+
 - `position` (GeolocationPosition): New position data from Geolocation API
   - `position.coords` (GeolocationCoordinates): Coordinate information
     - `latitude` (number): Latitude in decimal degrees
@@ -173,17 +182,20 @@ Updates the position with validation and filtering rules.
 **Returns:** `void`
 
 **Fires:**
+
 - `strCurrPosUpdate` - When position successfully updated
 - `strCurrPosNotUpdate` - When position rejected by validation
 - `strImmediateAddressUpdate` - When update is immediate (< 50s)
 
 **Validation Rules:**
+
 1. Position validity: Must have valid position object with timestamp
 2. Time constraint: Must wait at least 50 seconds between updates
 3. Accuracy requirement: Rejects medium/bad/very bad accuracy positions
 4. Distance threshold: Must move at least 20 meters
 
 **Example:**
+
 ```javascript
 // Update with new position (typically from Geolocation API)
 navigator.geolocation.getCurrentPosition((position) => {
@@ -203,6 +215,7 @@ Returns a string representation of the current position.
 **Returns:** `string` - Formatted string with position details
 
 **Example:**
+
 ```javascript
 const manager = PositionManager.getInstance(position);
 console.log(manager.toString());
@@ -225,6 +238,7 @@ All properties are read-only and proxied from the underlying `lastPosition` GeoP
 - `timestamp` (number): Timestamp when position was acquired
 
 **Example:**
+
 ```javascript
 const manager = PositionManager.getInstance();
 console.log(`Current position: ${manager.latitude}, ${manager.longitude}`);
@@ -238,6 +252,7 @@ console.log(`Accuracy: ${manager.accuracy}m (${manager.accuracyQuality})`);
 Initialize setupParams - called when module loads or can be overridden for testing.
 
 **Parameters:**
+
 - `config` (Object): Configuration object with tracking parameters
   - `notAcceptedAccuracy` (string[]): Array of unacceptable accuracy levels
   - `minimumDistanceChange` (number): Minimum distance change in meters to trigger update
@@ -246,6 +261,7 @@ Initialize setupParams - called when module loads or can be overridden for testi
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 // Initialize with custom configuration
 initializeConfig({

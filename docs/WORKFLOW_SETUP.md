@@ -7,6 +7,7 @@ This document provides a complete overview of the new automated workflow infrast
 ### Summary
 
 A comprehensive GitHub Actions workflow system that automatically:
+
 - **Detects file changes** and runs appropriate tests
 - **Updates documentation** with timestamps and statistics
 - **Validates code and documentation** quality
@@ -18,12 +19,14 @@ A comprehensive GitHub Actions workflow system that automatically:
 ## 📁 Files Created
 
 ### Main Workflow
+
 - **`.github/workflows/modified-files.yml`** (11KB)
   - 6 jobs for comprehensive automation
   - Smart change detection
   - Parallel job execution for performance
 
 ### Custom Composite Actions
+
 - **`.github/actions/detect-affected-tests/action.yml`**
   - Maps source files to test files
   - Determines if all tests should run
@@ -40,6 +43,7 @@ A comprehensive GitHub Actions workflow system that automatically:
   - Adds automation timestamp
 
 ### Documentation
+
 - **`.github/workflows/README.md`** (7.6KB)
   - Technical documentation for workflows
   - Action specifications
@@ -51,12 +55,14 @@ A comprehensive GitHub Actions workflow system that automatically:
   - FAQ and best practices
 
 ### Helper Scripts
+
 - **`.github/scripts/test-workflow-locally.sh`** (6.2KB)
   - Simulates CI workflow locally
   - Validates before pushing
   - Provides detailed feedback
 
 ### Updated Files
+
 - **`docs/INDEX.md`**
   - Added references to new automation documentation
   - New "Automation & CI/CD" section
@@ -68,6 +74,7 @@ A comprehensive GitHub Actions workflow system that automatically:
 ### Workflow Triggers
 
 The workflow runs automatically on:
+
 - **Push** to `main` or `develop` branches
 - **Pull Requests** to `main` or `develop` branches
 
@@ -112,6 +119,7 @@ The workflow runs automatically on:
 ## 🎨 Features
 
 ### Smart Test Detection
+
 - Maps source files to their test files
 - Runs only affected tests when safe
 - Falls back to full test suite for core changes
@@ -119,7 +127,9 @@ The workflow runs automatically on:
 ### Automatic Documentation Updates
 
 #### TESTING.md
+
 When test files change:
+
 ```markdown
 ---
 
@@ -127,7 +137,9 @@ _Last updated automatically by GitHub Actions: 2025-01-08 12:34:56 UTC_
 ```
 
 #### docs/INDEX.md
+
 When documentation changes:
+
 ```markdown
 ---
 
@@ -136,18 +148,22 @@ _Total documentation files: 3 root, 10 in docs/, 8 in .github/_
 ```
 
 ### Markdown Validation
+
 - Checks for Windows line endings
 - Validates internal links exist
 - Reports potential broken references
 - Verifies documentation index is current
 
 ### Test Coverage Reporting
+
 - Generates coverage report on source/test changes
 - Prepares statistics for PR comments
 - Ready for badge integration
 
 ### Workflow Summary
+
 Generates a clear summary showing:
+
 - Types of changes detected
 - Jobs that ran
 - Overall status
@@ -162,11 +178,13 @@ Generates a clear summary showing:
 #### Before Pushing Changes
 
 Run the local test script:
+
 ```bash
 ./.github/scripts/test-workflow-locally.sh
 ```
 
 This simulates what will happen in CI and provides feedback:
+
 - ✅ What checks passed
 - ❌ What needs fixing
 - ℹ️ What will happen when you push
@@ -182,11 +200,13 @@ This simulates what will happen in CI and provides feedback:
 #### If Auto-Commits Appear
 
 When test or documentation files change, you'll see automatic commits:
+
 - **Author**: `github-actions[bot]`
 - **Message**: `docs: auto-update TESTING.md [skip ci]` or similar
 - **Content**: Only timestamp and statistics updates
 
 To get these changes locally:
+
 ```bash
 git pull
 ```
@@ -208,12 +228,14 @@ esac
 #### Customizing Documentation Updates
 
 Edit the action files:
+
 - `update-test-docs/action.yml` - For TESTING.md updates
 - `update-doc-index/action.yml` - For docs/INDEX.md updates
 
 #### Skipping Workflow
 
 Add `[skip ci]` to commit messages:
+
 ```bash
 git commit -m "docs: fix typo [skip ci]"
 ```
@@ -225,23 +247,29 @@ Use sparingly - only for trivial changes.
 ## 📊 What Gets Updated Automatically
 
 ### TESTING.md
+
 - **When**: Test files change
 - **What**: Timestamp at bottom of file
 - **Format**: `_Last updated automatically by GitHub Actions: YYYY-MM-DD HH:MM:SS UTC_`
 - **Commit**: Automatic with `[skip ci]`
 
 ### docs/INDEX.md
+
 - **When**: Documentation files change
 - **What**: Timestamp and file count statistics
-- **Format**: 
+- **Format**:
+
   ```
   _Index automatically updated by GitHub Actions: YYYY-MM-DD HH:MM:SS UTC_
   _Total documentation files: X root, Y in docs/, Z in .github/_
   ```
+
 - **Commit**: Automatic with `[skip ci]`
 
 ### Nothing Else
+
 The workflow **never** modifies:
+
 - Source code (`src/*.js`)
 - Test code (`__tests__/*.test.js`)
 - HTML files
@@ -257,9 +285,11 @@ Only documentation timestamps and statistics are updated automatically.
 ### Common Issues
 
 #### 1. Workflow Not Running
+
 **Symptoms**: Push doesn't trigger workflow
 
 **Check**:
+
 - Are you pushing to `main` or `develop`?
 - Is commit message using `[skip ci]`?
 - Check repository Actions settings
@@ -267,14 +297,17 @@ Only documentation timestamps and statistics are updated automatically.
 **Solution**: Verify branch and check `.github/workflows/modified-files.yml` triggers
 
 #### 2. Tests Fail in CI but Pass Locally
+
 **Symptoms**: Green locally, red in CI
 
 **Common causes**:
+
 - Different Node.js version (CI uses v18)
 - npm install vs npm ci differences
 - Missing dependencies
 
 **Solution**:
+
 ```bash
 nvm use 18
 rm -rf node_modules package-lock.json
@@ -284,9 +317,11 @@ npm run test:all
 ```
 
 #### 3. Auto-Commits Not Appearing
+
 **Symptoms**: Expected documentation updates don't happen
 
 **Check**:
+
 1. Did workflow complete successfully?
 2. Check Actions tab for errors
 3. Verify files (TESTING.md, docs/INDEX.md) exist
@@ -295,11 +330,13 @@ npm run test:all
 **Solution**: Review workflow logs in Actions tab
 
 #### 4. Too Many Auto-Commits
+
 **Symptoms**: Every push creates auto-commits
 
 **Why**: Test or doc files changing triggers updates
 
 **Solution**:
+
 - Combine related changes in one commit
 - Use `[skip ci]` for trivial documentation changes
 - Update docs before pushing (so workflow has nothing to update)
@@ -307,7 +344,7 @@ npm run test:all
 ### Getting Help
 
 1. **Review the logs**: Actions tab → Workflow run → Job logs
-2. **Check documentation**: 
+2. **Check documentation**:
    - `docs/github/GITHUB_ACTIONS_GUIDE.md` - User guide
    - `.github/workflows/README.md` - Technical details
 3. **Test locally**: Run `.github/scripts/test-workflow-locally.sh`
@@ -318,17 +355,20 @@ npm run test:all
 ## 📈 Performance
 
 ### Workflow Duration
+
 - **Fast path** (no changes): ~30 seconds
 - **Test execution**: ~2 minutes
 - **Full workflow**: ~3-4 minutes
 
 ### Optimizations Implemented
+
 - ✅ npm dependency caching
 - ✅ Parallel job execution
 - ✅ Conditional job execution
 - ✅ continue-on-error for non-critical steps
 
 ### Future Optimizations
+
 - Selective test execution (only affected tests)
 - Test result caching
 - Coverage badge generation
@@ -339,18 +379,23 @@ npm run test:all
 ## 🔐 Security
 
 ### Permissions
+
 The workflow requires:
+
 - **contents: write** - To commit documentation updates
 - **pull-requests: write** - To post PR comments (future)
 
 ### What It Cannot Do
+
 - Cannot modify source code
 - Cannot push to protected branches (if configured)
 - Cannot access secrets (none required)
 - Cannot interact with external services
 
 ### Security Checks
+
 The workflow includes:
+
 - JavaScript syntax validation
 - No arbitrary code execution
 - All actions are composite (bash scripts visible)
@@ -387,20 +432,26 @@ The workflow includes:
 ## 🔄 Integration with Existing Workflows
 
 ### copilot-coding-agent.yml
+
 **Remains unchanged** - Continues to provide:
+
 - Basic validation
 - Security scanning
 - Quick syntax checks
 
 ### modified-files.yml (New)
+
 **Complements with**:
+
 - Full test execution
 - Documentation updates
 - Coverage reporting
 - Automated commits
 
 ### Both Run Together
+
 When you push, both workflows run:
+
 1. `copilot-coding-agent.yml` - Quick validation
 2. `modified-files.yml` - Comprehensive testing
 
@@ -415,6 +466,7 @@ This provides defense in depth - multiple layers of quality checks.
 The project includes custom git hooks for local validation **before** commits are created. This provides instant feedback and prevents common errors from being committed.
 
 **Custom Hooks Location**: `.github/hooks/`
+
 - **`pre-commit`** - Comprehensive validation before commits
   - JavaScript syntax checking
   - Documentation consistency
@@ -422,6 +474,7 @@ The project includes custom git hooks for local validation **before** commits ar
   - Timestamp updates
 
 **Benefits**:
+
 - 🚀 Instant feedback (no CI/CD wait time)
 - 🛡️ Prevents bad commits
 - ⚡ Faster development cycle
@@ -430,6 +483,7 @@ The project includes custom git hooks for local validation **before** commits ar
 ### Pre-commit Hook
 
 #### What It Checks
+
 1. **Version Consistency**: Ensures version numbers match across key files
 2. **Test Counts**: Validates test count references are current
 3. **Timestamps**: Auto-updates "Last Updated" dates in modified files
@@ -498,15 +552,18 @@ Use sparingly - bypassing checks can introduce inconsistencies.
 #### Troubleshooting
 
 **Hook doesn't run**:
+
 - Check installation: `ls -l .git/hooks/pre-commit`
 - Verify executable: `chmod +x .git/hooks/pre-commit`
 
 **Hook fails on valid changes**:
+
 - Review error messages carefully
 - Check if version/test counts need updating in hook file
 - Temporarily bypass with `--no-verify` if certain issue is false positive
 
 **Timestamp not updating**:
+
 - Ensure file contains "Last Updated:" marker
 - Check sed compatibility (GNU sed vs BSD sed)
 
@@ -599,6 +656,7 @@ git push
 ## 🎉 Benefits
 
 ### For Developers
+
 - ✅ Automatic test execution
 - ✅ Instant feedback on changes
 - ✅ Documentation stays current
@@ -606,6 +664,7 @@ git push
 - ✅ Clear workflow summaries
 
 ### For Maintainers
+
 - ✅ Reduced manual work
 - ✅ Consistent documentation updates
 - ✅ Better code quality
@@ -613,6 +672,7 @@ git push
 - ✅ Easy to customize
 
 ### For the Project
+
 - ✅ Higher code quality
 - ✅ Better test coverage
 - ✅ Up-to-date documentation
@@ -624,16 +684,19 @@ git push
 ## 📞 Support
 
 **Questions?** Check the documentation:
+
 1. [GITHUB_ACTIONS_GUIDE.md](docs/github/GITHUB_ACTIONS_GUIDE.md) - User guide
 2. [.github/workflows/README.md](.github/workflows/README.md) - Technical reference
 3. [TDD_GUIDE.md](.github/TDD_GUIDE.md) - Test Driven Development guide
 
-**Issues?** 
+**Issues?**
+
 1. Run `.github/scripts/test-workflow-locally.sh`
 2. Check Actions tab for workflow logs
 3. Review troubleshooting section above
 
 **Need help?** Open an issue with:
+
 - What you were trying to do
 - What happened instead
 - Relevant workflow logs

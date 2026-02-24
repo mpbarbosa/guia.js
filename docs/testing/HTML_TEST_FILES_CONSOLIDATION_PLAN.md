@@ -12,6 +12,7 @@
 The guia_js repository has **11 HTML test files** (2,269 total lines, 88KB) scattered in the root directory, causing clutter and poor organization. These files should be consolidated into a structured directory for better maintainability and clarity.
 
 ### Current State
+
 ```
 guia_js/                            ❌ CLUTTERED ROOT
 ├── bairro-display-test.html        (5.6KB, 177 lines)
@@ -34,29 +35,34 @@ Total: 11 files, 2,269 lines, ~88KB
 ## 🎯 Problems with Current Structure
 
 ### 1. **Root Directory Clutter**
+
 - 11 HTML files make root directory difficult to navigate
 - Harder to find configuration files (package.json, README.md)
 - Violates clean repository structure principles
 - New contributors confused about file organization
 
 ### 2. **No Clear Organization**
+
 - Test files mixed with configuration files
 - No indication which test is for what feature
 - No README explaining test purposes
 - Difficult to know which test to run for specific features
 
 ### 3. **Inconsistent Naming**
+
 - Some use `-test.html` suffix (bairro-display-test.html)
 - Some use `test-` prefix (test-50s-speech.html)
 - Some use generic names (test.html)
 - No consistent pattern
 
 ### 4. **Poor Discoverability**
+
 - No central index of test files
 - No documentation about what each test does
 - Contributors must read HTML titles to understand purpose
 
 ### 5. **CI/CD References**
+
 - GitHub workflows reference `test.html` directly
 - Moving files requires updating workflow configurations
 - Documentation references need updates
@@ -84,12 +90,14 @@ Total: 11 files, 2,269 lines, ~88KB
 ### Import Pattern Analysis
 
 **ES Module imports** (`type="module"`): 4 files
+
 - test.html ⭐
 - module-test.html
 - speech-queue-test.html
 - ibira-test.html
 
 **Classic script imports** (`<script src>`): 7 files
+
 - All others
 
 ### Feature Coverage
@@ -137,6 +145,7 @@ guia_js/
 ```
 
 **Rationale**:
+
 - **examples/** - User-facing demos (documentation, learning)
 - **tests/manual/** - Developer testing (validation, debugging)
 - Clear separation of public vs internal content
@@ -167,6 +176,7 @@ guia_js/
 ```
 
 **Rationale**:
+
 - Simpler structure (one location)
 - All tests easy to find
 - Less decision-making about categorization
@@ -185,6 +195,7 @@ guia_js/
 ```
 
 **Why Not Recommended**:
+
 - Mixes user-facing examples with internal tests
 - No clear distinction between demo and validation
 - Examples should be polished, not raw tests
@@ -217,12 +228,14 @@ touch tests/manual/README.md
 #### Public Examples (examples/)
 
 **Basic Examples** (examples/basic/):
+
 ```bash
 # Primary geolocation demo
 git mv test.html examples/basic/geolocation.html
 ```
 
 **Speech Examples** (examples/speech/):
+
 ```bash
 git mv brazilian-voice-test.html examples/speech/brazilian-voice.html
 git mv speech-queue-test.html examples/speech/speech-queue.html
@@ -230,6 +243,7 @@ git mv test-50s-speech.html examples/speech/periodic-speech.html
 ```
 
 **Advanced Examples** (examples/advanced/):
+
 ```bash
 git mv module-test.html examples/advanced/module-loading.html
 git mv ibira-test.html examples/advanced/integration.html
@@ -238,22 +252,26 @@ git mv ibira-test.html examples/advanced/integration.html
 #### Internal Tests (tests/manual/)
 
 **Display Tests** (tests/manual/display/):
+
 ```bash
 git mv bairro-display-test.html tests/manual/display/bairro-display.html
 git mv immediate-address-test.html tests/manual/display/immediate-address.html
 ```
 
 **Speech Tests** (tests/manual/speech/):
+
 ```bash
 git mv timeout-test.html tests/manual/speech/timeout-test.html
 ```
 
 **Timing Tests** (tests/manual/timing/):
+
 ```bash
 git mv timer-test.html tests/manual/timing/timer-test.html
 ```
 
 **Device Tests** (tests/manual/device/):
+
 ```bash
 git mv device-detection-test.html tests/manual/device/device-detection.html
 ```
@@ -265,32 +283,38 @@ git mv device-detection-test.html tests/manual/device/device-detection.html
 All HTML files import `src/guia.js` with relative paths. After moving, paths must change:
 
 **From root** (current):
+
 ```html
 <script type="module" src="src/guia.js"></script>
 <script src="src/guia.js"></script>
 ```
 
 **From examples/basic/**:
+
 ```html
 <script type="module" src="../../src/guia.js"></script>
 ```
 
 **From examples/speech/**:
+
 ```html
 <script type="module" src="../../src/guia.js"></script>
 ```
 
 **From examples/advanced/**:
+
 ```html
 <script type="module" src="../../src/guia.js"></script>
 ```
 
 **From tests/manual/display/**:
+
 ```html
 <script type="module" src="../../../src/guia.js"></script>
 ```
 
 **Automated fix**:
+
 ```bash
 # For files in examples/
 find examples -name "*.html" -exec sed -i 's|src="src/guia\.js"|src="../../src/guia.js"|g' {} \;
@@ -317,7 +341,7 @@ Interactive examples demonstrating Guia.js geolocation functionality.
    python3 -m http.server 9000
    ```
 
-2. Open examples in browser:
+1. Open examples in browser:
    - Basic: http://localhost:9000/examples/basic/geolocation.html
    - Speech: http://localhost:9000/examples/speech/
    - Advanced: http://localhost:9000/examples/advanced/
@@ -325,6 +349,7 @@ Interactive examples demonstrating Guia.js geolocation functionality.
 ## Example Categories
 
 ### Basic Examples (examples/basic/)
+
 - **geolocation.html** - Primary geolocation demo
   - Get current location
   - Display coordinates
@@ -332,6 +357,7 @@ Interactive examples demonstrating Guia.js geolocation functionality.
   - Address formatting
 
 ### Speech Examples (examples/speech/)
+
 - **brazilian-voice.html** - Portuguese voice synthesis
   - Brazilian Portuguese TTS
   - Voice selection
@@ -348,6 +374,7 @@ Interactive examples demonstrating Guia.js geolocation functionality.
   - Audio notifications
 
 ### Advanced Examples (examples/advanced/)
+
 - **module-loading.html** - ES Module integration
   - Dynamic imports
   - Module exports
@@ -376,16 +403,19 @@ Interactive examples demonstrating Guia.js geolocation functionality.
 ## Troubleshooting
 
 **Geolocation not working**:
+
 - Ensure HTTPS or localhost
 - Grant location permissions
 - Check browser console for errors
 
 **Speech not working**:
+
 - Check browser speech synthesis support
 - Verify audio output is enabled
 - See browser console for voice list
 
 **Import errors**:
+
 - Verify web server is running
 - Check browser console for 404 errors
 - Ensure correct relative paths
@@ -393,6 +423,7 @@ Interactive examples demonstrating Guia.js geolocation functionality.
 ## Contributing
 
 To add a new example:
+
 1. Create HTML file in appropriate category
 2. Follow existing example structure
 3. Use relative imports: `../../src/guia.js`
@@ -404,6 +435,7 @@ To add a new example:
 - [Main README](../README.md)
 - [API Documentation](../docs/)
 - [Contributing Guide](../.github/CONTRIBUTING.md)
+
 ```
 
 #### tests/manual/README.md
@@ -424,7 +456,7 @@ These tests are for **developer use** to validate specific functionality during 
    python3 -m http.server 9000
    ```
 
-2. Open tests in browser:
+1. Open tests in browser:
    - Display: http://localhost:9000/tests/manual/display/
    - Speech: http://localhost:9000/tests/manual/speech/
    - Timing: http://localhost:9000/tests/manual/timing/
@@ -433,21 +465,26 @@ These tests are for **developer use** to validate specific functionality during 
 ## Test Categories
 
 ### Display Tests (tests/manual/display/)
+
 - **bairro-display.html** - Neighborhood display formatting
 - **immediate-address.html** - Immediate address flow validation
 
 ### Speech Tests (tests/manual/speech/)
+
 - **timeout-test.html** - Speech queue timeout (5 seconds)
 
 ### Timing Tests (tests/manual/timing/)
+
 - **timer-test.html** - Independent timer functionality
 
 ### Device Tests (tests/manual/device/)
+
 - **device-detection.html** - Browser/device detection
 
 ## Test Expectations
 
 Each test should:
+
 - Load without JavaScript errors
 - Display test controls clearly
 - Show pass/fail indicators
@@ -476,6 +513,7 @@ Each test should:
 - [Test Coverage](../testing/HTML_GENERATION.md)
 - [CI/CD Workflows](../../.github/workflows/)
 - [Contributing Guide](../../.github/CONTRIBUTING.md)
+
 ```
 
 ---
@@ -489,18 +527,21 @@ Each test should:
 sed -i 's|http://localhost:9000/test\.html|http://localhost:9000/examples/basic/geolocation.html|g' README.md
 ```
 
-2. **.github/copilot-instructions.md**:
+1. **.github/copilot-instructions.md**:
+
 ```bash
 sed -i 's|test\.html|examples/basic/geolocation.html|g' .github/copilot-instructions.md
 sed -i 's|device-detection-test\.html|tests/manual/device/device-detection.html|g' .github/copilot-instructions.md
 ```
 
-3. **docs/WORKFLOW_SETUP.md**:
+1. **docs/WORKFLOW_SETUP.md**:
+
 ```bash
 sed -i 's|brazilian-voice-test\.html|examples/speech/brazilian-voice.html|g' docs/WORKFLOW_SETUP.md
 ```
 
-4. **.github/workflows/copilot-coding-agent.yml**:
+1. **.github/workflows/copilot-coding-agent.yml**:
+
 ```yaml
 # Before:
 if curl -s http://localhost:9000/test.html | grep -q "Guia.js"; then
@@ -604,6 +645,7 @@ Tests: All tests passing, web server validated"
 ## 📊 Before and After Comparison
 
 ### Before (Current State)
+
 ```
 Repository Root:
 ├── bairro-display-test.html            ❌ Cluttered
@@ -629,6 +671,7 @@ Issues:
 ```
 
 ### After (Proposed State)
+
 ```
 Repository Root:
 ├── examples/                           ✅ Organized
@@ -666,29 +709,37 @@ Benefits:
 ## ⚠️ Risks and Mitigation
 
 ### Risk 1: Breaking Web Server URLs
+
 **Risk**: External links to test.html will break  
 **Mitigation**:
+
 - Create redirect in web server config
 - Update all documentation
 - Add deprecation notice if needed
 
 ### Risk 2: Import Path Errors
+
 **Risk**: Relative imports may break  
 **Mitigation**:
+
 - Automated sed replacement
 - Validation step before commit
 - Test with web server
 
 ### Risk 3: GitHub Workflow Failures
+
 **Risk**: CI/CD references to test.html will fail  
 **Mitigation**:
+
 - Update all workflow YAML files
 - Test workflows locally first
 - Run CI/CD validation before merge
 
 ### Risk 4: Lost History
+
 **Risk**: File history lost with rename  
 **Mitigation**:
+
 - Use `git mv` (preserves history)
 - Avoid `mv` + `git add`
 
@@ -738,12 +789,14 @@ After consolidation:
 ## 📚 References
 
 ### Similar Open Source Projects
+
 - **React** - examples/ directory for demos
 - **Vue.js** - examples/ and tests/manual/
 - **Express.js** - examples/ for API demos
 - **Leaflet** - examples/ with categorized demos
 
 ### Best Practices
+
 - [GitHub Repository Structure Best Practices](https://github.com/github/repository-structure)
 - [Open Source Directory Structure](https://opensource.guide/)
 
@@ -754,6 +807,7 @@ After consolidation:
 **Proceed with Option 1: Two-Tier Structure**
 
 **Next Steps**:
+
 1. Create feature branch: `git checkout -b refactor/consolidate-html-tests`
 2. Follow phases 1-8 above
 3. Run full validation

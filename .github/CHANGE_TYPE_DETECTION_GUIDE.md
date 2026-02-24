@@ -65,6 +65,7 @@ build      │    ✅    │   ✅   │     ❌    │  ✅   │    ❌    │
 ### Commit Message Format
 
 **Conventional Commits:**
+
 ```bash
 <type>(<scope>): <description>
 
@@ -74,6 +75,7 @@ build      │    ✅    │   ✅   │     ❌    │  ✅   │    ❌    │
 ```
 
 **Examples:**
+
 ```bash
 feat: add geolocation tracking
 feat(ui): implement location display component
@@ -95,6 +97,7 @@ build: configure rollup for bundling
 ### 1. Conventional Commits (Primary)
 
 Directly parses type from commit message:
+
 ```
 feat(scope): description  →  Type: feat
 ```
@@ -102,6 +105,7 @@ feat(scope): description  →  Type: feat
 ### 2. Pattern Matching (Fallback)
 
 Uses regex patterns to match common verbs:
+
 ```
 "add new feature"      →  Type: feat
 "fix coordinate bug"   →  Type: fix
@@ -112,6 +116,7 @@ Uses regex patterns to match common verbs:
 ### 3. File Analysis (Last Resort)
 
 Infers type from changed files:
+
 ```
 Only *.md changed      →  Type: docs
 Only __tests__/ changed →  Type: test
@@ -143,6 +148,7 @@ If all detection fails, defaults to `fix` with comprehensive testing.
 ### Real-World Examples
 
 **Documentation update:**
+
 ```bash
 # Commit: "docs: update API documentation"
 # Steps: syntax_validation (5s), doc_validation (10s)
@@ -150,6 +156,7 @@ If all detection fails, defaults to `fix` with comprehensive testing.
 ```
 
 **Bug fix:**
+
 ```bash
 # Commit: "fix: correct geocoding calculation"
 # Steps: security_audit (15s), syntax_validation (5s), 
@@ -158,6 +165,7 @@ If all detection fails, defaults to `fix` with comprehensive testing.
 ```
 
 **Test addition:**
+
 ```bash
 # Commit: "test: add ReverseGeocoder tests"
 # Steps: syntax_validation (5s), test_execution (25s)
@@ -188,9 +196,10 @@ change_detection:
       description: "Custom routing logic"
 ```
 
-2. **Update detector script:**
+1. **Update detector script:**
 
 Add pattern matching in `change-type-detector.sh`:
+
 ```bash
 detect_type_from_pattern() {
     # ... existing patterns ...
@@ -262,6 +271,7 @@ fi
 **Location:** `.github/cache/change_type.cache`
 
 **Contents:**
+
 ```bash
 CHANGE_TYPE=feat
 CHANGE_STEPS=security_audit syntax_validation test_execution coverage_report
@@ -291,6 +301,7 @@ Cache is recreated on each detection run. No manual invalidation needed.
 **Symptom:** Always defaults to `fix` type
 
 **Solution:**
+
 ```bash
 # Check commit message format
 git log -1 --format="%s"
@@ -308,6 +319,7 @@ git commit -m "feat: your description"
 **Symptom:** Unexpected steps execute
 
 **Debug:**
+
 ```bash
 # Check detected type
 ./.github/scripts/change-type-detector.sh
@@ -324,6 +336,7 @@ cat .github/cache/change_type.cache
 **Symptom:** All steps show as skipped
 
 **Solution:**
+
 ```bash
 # Verify detector is executable
 chmod +x .github/scripts/change-type-detector.sh
@@ -338,6 +351,7 @@ echo $? # Should be 0
 ### 1. Use Conventional Commits
 
 Always use conventional commit format for accurate detection:
+
 ```bash
 ✅ Good: "feat(ui): add button component"
 ✅ Good: "fix: resolve memory leak"
@@ -348,6 +362,7 @@ Always use conventional commit format for accurate detection:
 ### 2. Be Specific with Scope
 
 Include scope for better context:
+
 ```bash
 "feat(api): add endpoint"  # Clear what area changed
 "feat: add stuff"          # Less clear
@@ -356,6 +371,7 @@ Include scope for better context:
 ### 3. Match Type to Impact
 
 Choose types that reflect the actual impact:
+
 - Breaking changes → `feat` or `refactor`
 - Bug fixes → `fix`
 - Documentation → `docs`
@@ -364,6 +380,7 @@ Choose types that reflect the actual impact:
 ### 4. Review Step Routing
 
 Periodically review if routing makes sense for your workflow:
+
 ```bash
 # Check current routing
 grep -A 50 "routing:" .workflow-config.yaml
@@ -372,6 +389,7 @@ grep -A 50 "routing:" .workflow-config.yaml
 ### 5. Monitor Performance
 
 Track actual time savings:
+
 ```bash
 # Before change-type detection
 time ./.github/scripts/test-workflow-locally.sh
@@ -383,30 +401,35 @@ time ./.github/scripts/test-workflow-locally.sh
 ## Pattern Examples
 
 ### Feature Patterns
+
 ```
 add, implement, create, introduce, build
 → Type: feat
 ```
 
 ### Fix Patterns
+
 ```
 fix, repair, correct, resolve, patch, address
 → Type: fix
 ```
 
 ### Documentation Patterns
+
 ```
 doc, document, readme, update.*doc, improve.*doc
 → Type: docs
 ```
 
 ### Refactor Patterns
+
 ```
 refactor, restructure, reorganize, rewrite, simplify
 → Type: refactor
 ```
 
 ### Test Patterns
+
 ```
 test, spec, add.*test, improve.*test, update.*test
 → Type: test

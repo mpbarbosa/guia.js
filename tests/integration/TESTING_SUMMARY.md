@@ -3,22 +3,26 @@
 ## Test Infrastructure
 
 ### Unit Tests (Jest)
+
 - Location: `__tests__/`
 - Runner: Jest with ES modules support
 - Coverage: ~70% (1,301 passing tests)
 
 ### Integration Tests (Selenium/Puppeteer)
+
 - Location: `tests/integration/`
 - Browsers: Firefox (Selenium), Chrome (Puppeteer)
 
 ## Recent Test Suite Additions
 
 ### 1. HTMLPositionDisplayer Unit Tests ✅
+
 **File**: `__tests__/html/HTMLPositionDisplayer.simple.test.js`
 
 **Status**: **33/33 tests passing**
 
 **Coverage**:
+
 - Constructor and immutability (3 tests)
 - Accuracy quality formatting (6 tests)
 - HTML rendering with various data (11 tests)
@@ -27,22 +31,26 @@
 - Edge cases (3 tests)
 
 **Run Tests**:
+
 ```bash
 npm test -- __tests__/html/HTMLPositionDisplayer.simple.test.js
 ```
 
 **Key Findings**:
+
 - ✅ Class logic is correct
 - ✅ Immutability working
 - ✅ Localization working
 - ⚠️  Integration issue: Element not being updated in real DOM
 
 ### 2. Puppeteer Chrome Geolocation Test
+
 **File**: `tests/integration/test_chrome_geolocation.js`
 
 **Status**: Geolocation working, DOM update failing
 
 **Run Test**:
+
 ```bash
 npm run test:chrome
 # or
@@ -50,6 +58,7 @@ node tests/integration/test_chrome_geolocation.js
 ```
 
 **Current Issue**:
+
 - Geolocation API receives coordinates ✅
 - App processes position updates ✅
 - Coordinates don't appear in DOM ❌
@@ -79,11 +88,13 @@ python3 -m pytest test_milho_verde_geolocation.py
 ## Test Files
 
 ### Unit Tests
+
 - `__tests__/html/HTMLPositionDisplayer.simple.test.js` - 33 tests
 - `__tests__/html/HTMLPositionDisplayer.test.js` - Full suite (JSDOM issues)
 - `__tests__/*.test.js` - 68 test suites total
 
 ### Integration Tests
+
 - `tests/integration/test_chrome_geolocation.js` - Puppeteer Chrome test
 - `tests/integration/test_milho_verde_geolocation.py` - Selenium Firefox tests
 

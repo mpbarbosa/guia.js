@@ -1,4 +1,5 @@
 # Flaky Test Analysis
+
 **Date**: 2026-01-09  
 **Test Runs**: 5 consecutive executions
 
@@ -7,6 +8,7 @@
 **Flaky Test Detection**: ✅ **NO FLAKES FOUND**
 
 **Test Stability**:
+
 - **5 consecutive runs**: All passed consistently
 - **Test count**: 1,282 passing (100% consistent)
 - **Execution time**: 5.9-6.3 seconds (±3.5% variance)
@@ -49,6 +51,7 @@
 **Claim**: "Tests depend on global `navigator` object state"
 
 **Reality**:
+
 - ✅ BrowserGeolocationProvider tests pass consistently (5/5 runs)
 - ✅ No intermittent failures related to global state
 - ✅ Previous fix (arguments.length check) resolved the issue
@@ -64,11 +67,13 @@
 **Claim**: "Network-dependent test execution, non-deterministic timeouts"
 
 **Reality**:
+
 - ✅ All 5 runs pass without network-related failures
 - ✅ CDN loading (guia.js:101-145) has proper fallbacks
 - ✅ Tests mock external dependencies, no real network calls
 
-**Evidence**: 
+**Evidence**:
+
 - DeviceDetection tests pass consistently (includes ibira.js loading)
 - No timeout errors in 5 runs
 - Worker warnings are cosmetic, not failures
@@ -82,14 +87,17 @@
 **Claim**: "Random test suite failures in CI, especially under load"
 
 **Reality**:
+
 - ✅ Worker warning appears consistently (not random)
 - ✅ All tests pass in all 5 runs despite warning
 - ✅ No "4 child process exceptions" observed
 
 **Evidence**:
+
 ```
 A worker process has failed to exit gracefully...
 ```
+
 This warning appears in EVERY run consistently, indicating it's a **cosmetic issue**, not instability.
 
 **Status**: Not a flake - consistent behavior (tests always pass)
@@ -101,6 +109,7 @@ This warning appears in EVERY run consistently, indicating it's a **cosmetic iss
 ### 1. Test Isolation ✅
 
 **Evidence**:
+
 - 1,282 tests run in random order across workers
 - 100% consistency across 5 runs
 - No shared state causing failures
@@ -110,6 +119,7 @@ This warning appears in EVERY run consistently, indicating it's a **cosmetic iss
 ### 2. Deterministic Mocking ✅
 
 **Evidence**:
+
 - Speech synthesis mocks work consistently
 - Geolocation provider mocks never fail
 - No race conditions in async tests
@@ -119,6 +129,7 @@ This warning appears in EVERY run consistently, indicating it's a **cosmetic iss
 ### 3. Cleanup Hygiene ✅
 
 **Evidence**:
+
 - `afterEach` hooks properly clear state
 - No test pollution affecting subsequent tests
 - 100% pass rate maintained
@@ -132,11 +143,13 @@ This warning appears in EVERY run consistently, indicating it's a **cosmetic iss
 ### Real Issue: Worker Exit Warning ⚠️ COSMETIC
 
 **What it is**:
+
 - Consistent warning about timer not being cleared
 - Appears in 100% of runs
 - Does NOT cause test failures
 
 **What it's NOT**:
+
 - Not a flaky test
 - Not a performance issue
 - Not a reliability problem
@@ -190,6 +203,7 @@ This warning appears in EVERY run consistently, indicating it's a **cosmetic iss
 ### DO NOT Implement These ❌
 
 #### 1. Global State Reset (Proposed)
+
 ```javascript
 beforeEach(() => {
     global.navigator = undefined;
@@ -197,7 +211,8 @@ beforeEach(() => {
 });
 ```
 
-**Reason**: 
+**Reason**:
+
 - No global state issues detected
 - Would break existing tests
 - Solves non-existent problem
@@ -205,6 +220,7 @@ beforeEach(() => {
 **Verdict**: Don't implement
 
 #### 2. Dynamic Import Mocking (Proposed)
+
 ```javascript
 jest.unstable_mockModule('../../src/guia.js', () => ({
     // Static mock
@@ -212,6 +228,7 @@ jest.unstable_mockModule('../../src/guia.js', () => ({
 ```
 
 **Reason**:
+
 - Current dynamic imports work reliably
 - `unstable_mockModule` is experimental
 - No race conditions detected
@@ -219,6 +236,7 @@ jest.unstable_mockModule('../../src/guia.js', () => ({
 **Verdict**: Don't implement
 
 #### 3. Worker Reduction (Proposed)
+
 ```json
 {
   "maxWorkers": 2,
@@ -228,6 +246,7 @@ jest.unstable_mockModule('../../src/guia.js', () => ({
 ```
 
 **Reason**:
+
 - Would slow down tests significantly
 - No worker instability detected
 - Tests already consistent
@@ -241,6 +260,7 @@ jest.unstable_mockModule('../../src/guia.js', () => ({
 #### 1. Monitor Flakiness Over Time
 
 **Implementation**:
+
 ```bash
 # Add to CI/CD pipeline
 npm test -- --json --outputFile=test-results.json
@@ -258,6 +278,7 @@ git commit -m "test: Track test results"
 #### 2. Document Worker Warning
 
 **Implementation**: Add to TESTING.md
+
 ```markdown
 ## Known Warnings
 
@@ -306,6 +327,7 @@ flaky.forEach(([test, statuses]) => {
 ```
 
 **Usage**:
+
 ```bash
 # Run 10 times
 for i in {1..10}; do
@@ -321,19 +343,25 @@ node analyze-flakes.js results-*.json
 ## Summary
 
 ### Question: Are there flaky tests?
+
 **Answer**: No. 5/5 runs pass with identical results.
 
 ### Question: What about the claimed "flaky patterns"?
-**Answer**: 
+
+**Answer**:
+
 - Global state: Fixed, not flaky
 - Dynamic imports: Work reliably, not flaky
 - Worker instability: Consistent warning, not instability
 
 ### Question: Should we implement the proposed fixes?
+
 **Answer**: No. They solve non-existent problems and would hurt performance/reliability.
 
 ### Question: What should we do?
+
 **Answer**:
+
 1. ✅ Document worker warning (5 min)
 2. ✅ Monitor for future flakiness (optional)
 3. ✅ Focus on features (tests are solid)

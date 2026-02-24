@@ -18,6 +18,7 @@ Active timers can also cause this, ensure that .unref() was called on them.
 ```
 
 **Important**: This is **NOT a test failure**:
+
 - ✅ All 1,827 tests pass
 - ✅ Exit code is 0
 - ✅ No test failures or timeouts
@@ -30,31 +31,39 @@ Active timers can also cause this, ensure that .unref() was called on them.
 ### Investigation Steps
 
 1. **Run with `--detectOpenHandles`**:
+
    ```bash
    npm test -- --detectOpenHandles __tests__/e2e/
    ```
+
    **Result**: No open handles detected when running E2E tests in isolation
 
 2. **Run full test suite**:
+
    ```bash
    npm test
    ```
+
    **Result**: Warning appears only when ALL 84 test suites run together
 
 3. **Isolate E2E tests**:
+
    ```bash
    npm test -- __tests__/e2e/
    ```
+
    **Result**: ✅ No warning when E2E tests run alone
 
 ### Conclusion
 
 This is a **known Jest/Puppeteer interaction issue** that occurs when:
+
 - Multiple test suites run in parallel workers
 - Some workers use Puppeteer (heavy browser instances)
 - Jest's worker cleanup races with Puppeteer's async cleanup
 
 **Evidence**:
+
 - ✅ No open handles detected by Jest
 - ✅ No resource leaks in E2E tests alone
 - ✅ Warning only appears in full suite runs
@@ -69,6 +78,7 @@ This is a **known Jest/Puppeteer interaction issue** that occurs when:
 Enhanced `afterAll()` hooks in both E2E test files:
 
 **File**: `__tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js`
+
 ```javascript
 afterAll(async () => {
     // Close browser with all its processes
@@ -97,6 +107,7 @@ afterAll(async () => {
 ```
 
 **File**: `__tests__/e2e/municipio-bairro-display.e2e.test.js`
+
 - Applied same cleanup pattern
 
 ### Key Improvements
@@ -111,6 +122,7 @@ afterAll(async () => {
 ## 📊 Test Results
 
 ### Before Fixes
+
 ```
 Test Suites: 4 skipped, 78 passed, 78 of 84 total (2 E2E failing)
 Tests:       146 skipped, 1820 passed, 1966 total
@@ -118,6 +130,7 @@ Worker warning: ⚠️ Present
 ```
 
 ### After Fixes
+
 ```
 Test Suites: 4 skipped, 80 passed, 80 of 84 total
 Tests:       146 skipped, 1827 passed, 1973 total
@@ -125,6 +138,7 @@ Worker warning: ⚠️ Still appears occasionally
 ```
 
 **Improvement**:
+
 - ✅ +7 tests passing (E2E tests fixed)
 - ✅ 0 test failures
 - ✅ Exit code 0 (successful)
@@ -151,6 +165,7 @@ Worker warning: ⚠️ Still appears occasionally
 ## 🔧 Alternative Solutions (Not Implemented)
 
 ### Option 1: Separate E2E Test Process
+
 ```json
 // package.json
 "scripts": {
@@ -159,10 +174,12 @@ Worker warning: ⚠️ Still appears occasionally
   "test": "npm run test:unit && npm run test:e2e"
 }
 ```
+
 **Pros**: Eliminates warning, isolates E2E tests  
 **Cons**: Slower test execution (sequential), more complex CI config
 
 ### Option 2: Run E2E Tests Serially
+
 ```json
 // jest.config.js
 export default {
@@ -170,10 +187,12 @@ export default {
   maxWorkers: 1  // Run E2E tests one at a time
 };
 ```
+
 **Pros**: Reduces resource contention  
 **Cons**: Much slower E2E test execution
 
 ### Option 3: Increase Worker Timeout
+
 ```json
 // jest.config.js
 export default {
@@ -181,6 +200,7 @@ export default {
   workerIdleMemoryLimit: '1GB'
 };
 ```
+
 **Pros**: Gives workers more time to clean up  
 **Cons**: Masks underlying issues, doesn't solve root cause
 
@@ -197,6 +217,7 @@ export default {
 5. ✅ Improved cleanup reduces warning frequency
 
 **Monitor going forward**:
+
 - If warning becomes consistent (appears every run)
 - If tests start failing or hanging
 - If CI/CD builds start timing out

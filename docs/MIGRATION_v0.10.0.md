@@ -25,14 +25,14 @@ Version 0.10.0-alpha introduces the **HomeViewController** to manage home view l
 
 ## Who Needs to Migrate?
 
-### ✅ You Should Migrate If:
+### ✅ You Should Migrate If
 
 - You instantiate `WebGeocodingManager` directly for location tracking
 - You call `getSingleLocationUpdate()`, `startTracking()`, or `stopTracking()` on WebGeocodingManager
 - You're building a new feature that requires location tracking
 - You want to follow current best practices
 
-### ❌ Migration Not Required If:
+### ❌ Migration Not Required If
 
 - You only use the converter view (`src/views/converter.js`)
 - You don't directly interact with WebGeocodingManager
@@ -45,12 +45,14 @@ Version 0.10.0-alpha introduces the **HomeViewController** to manage home view l
 ### Step 1: Update Imports
 
 **Before (v0.9.0)**:
+
 ```javascript
 import { WebGeocodingManager } from './coordination/WebGeocodingManager.js';
 import { Chronometer } from './timing/Chronometer.js';
 ```
 
 **After (v0.10.0)**:
+
 ```javascript
 import { HomeViewController } from './views/home.js';
 // WebGeocodingManager and Chronometer now initialized by HomeViewController
@@ -59,6 +61,7 @@ import { HomeViewController } from './views/home.js';
 ### Step 2: Update Initialization
 
 **Before (v0.9.0)** - Manual setup in app.js:
+
 ```javascript
 // Create WebGeocodingManager
 const manager = new WebGeocodingManager(document, {
@@ -81,6 +84,7 @@ manager.startTracking();
 ```
 
 **After (v0.10.0)** - HomeViewController handles everything:
+
 ```javascript
 // Create HomeViewController
 const homeController = new HomeViewController(document, {
@@ -100,6 +104,7 @@ await homeController.init();
 ### Step 3: Update Method Calls
 
 **Before (v0.9.0)**:
+
 ```javascript
 // Single position update
 await manager.getSingleLocationUpdate();
@@ -115,6 +120,7 @@ manager.initSpeechSynthesis();
 ```
 
 **After (v0.10.0)**:
+
 ```javascript
 // Single position update
 await homeController.getSingleLocationUpdate();
@@ -135,6 +141,7 @@ homeController.toggleTracking();
 ### Step 4: Update State References
 
 **Before (v0.9.0)**:
+
 ```javascript
 AppState.manager = manager;
 if (AppState.manager) {
@@ -143,6 +150,7 @@ if (AppState.manager) {
 ```
 
 **After (v0.10.0)**:
+
 ```javascript
 AppState.homeController = homeController;
 if (AppState.homeController) {
@@ -153,6 +161,7 @@ if (AppState.homeController) {
 ### Step 5: Update Cleanup Code
 
 **Before (v0.9.0)**:
+
 ```javascript
 // Manual cleanup
 if (manager) {
@@ -162,6 +171,7 @@ if (manager) {
 ```
 
 **After (v0.10.0)**:
+
 ```javascript
 // Proper lifecycle management
 if (homeController) {
@@ -180,6 +190,7 @@ constructor(document, params = {})
 ```
 
 **Parameters**:
+
 - `document` (Document, required): DOM document object
 - `params.locationResult` (string|Element, required): Location result container ID or element
 - `params.positionDisplay` (string|Element, optional): Position display container
@@ -191,12 +202,14 @@ constructor(document, params = {})
 - `params.chronometer` (Chronometer, optional): Dependency injection for testing
 
 **Throws**:
+
 - `Error` if `document` is missing
 - `Error` if `params.locationResult` is missing
 
 ### HomeViewController Methods
 
 #### `async init()`
+
 Initialize the controller (creates WebGeocodingManager and Chronometer).
 
 **Returns**: `Promise<void>`  
@@ -207,6 +220,7 @@ await homeController.init();
 ```
 
 #### `async getSingleLocationUpdate()`
+
 Capture a single position update.
 
 **Returns**: `Promise<GeoPosition>`  
@@ -218,6 +232,7 @@ console.log(position.latitude, position.longitude);
 ```
 
 #### `startTracking()`
+
 Start continuous location tracking.
 
 **Returns**: `void`  
@@ -228,6 +243,7 @@ homeController.startTracking();
 ```
 
 #### `stopTracking()`
+
 Stop continuous location tracking.
 
 **Returns**: `void`  
@@ -238,6 +254,7 @@ homeController.stopTracking();
 ```
 
 #### `toggleTracking()`
+
 Toggle tracking on/off (convenience method).
 
 **Returns**: `void`  
@@ -249,6 +266,7 @@ homeController.toggleTracking();
 ```
 
 #### `destroy()`
+
 Clean up resources (stops tracking, removes event listeners).
 
 **Returns**: `void`
@@ -258,6 +276,7 @@ homeController.destroy();
 ```
 
 #### `isTracking()`
+
 Check if currently tracking.
 
 **Returns**: `boolean`
@@ -269,6 +288,7 @@ if (homeController.isTracking()) {
 ```
 
 #### `toString()`
+
 Get string representation.
 
 **Returns**: `string`
@@ -281,6 +301,7 @@ console.log(homeController.toString());
 ### Static Factory Method
 
 #### `static async create(document, params = {})`
+
 Create and initialize a HomeViewController in one step.
 
 **Returns**: `Promise<HomeViewController>`
@@ -472,6 +493,7 @@ describe('Home View Integration', () => {
 **Problem**: Missing document parameter in constructor.
 
 **Solution**:
+
 ```javascript
 // ❌ Wrong
 const controller = new HomeViewController({ locationResult: 'location-result' });
@@ -485,6 +507,7 @@ const controller = new HomeViewController(document, { locationResult: 'location-
 **Problem**: Missing locationResult parameter.
 
 **Solution**:
+
 ```javascript
 // ❌ Wrong
 const controller = new HomeViewController(document);
@@ -498,6 +521,7 @@ const controller = new HomeViewController(document, { locationResult: 'location-
 **Problem**: Calling methods before `init()`.
 
 **Solution**:
+
 ```javascript
 // ❌ Wrong
 const controller = new HomeViewController(document, { locationResult: 'location-result' });
@@ -532,7 +556,7 @@ controller.startTracking();  // Now works
 - **Documentation**: See [HomeViewController JSDoc](../src/views/home.js)
 - **Examples**: See [examples/](../examples/)
 - **Issues**: Report bugs at [GitHub Issues](https://github.com/mpbarbosa/guia_turistico/issues)
-- **Tests**: Reference [__tests__/views/home.test.js](../__tests__/views/home.test.js)
+- **Tests**: Reference [**tests**/views/home.test.js](../__tests__/views/home.test.js)
 
 ---
 

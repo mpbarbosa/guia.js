@@ -22,26 +22,31 @@ The `.ai_workflow/` directory contains AI-assisted development workflow artifact
 ## Component Descriptions
 
 ### 1. backlog/ (42 subdirectories)
+
 **Purpose**: Track pending tasks, features, and technical debt
 
 **Usage**: Organize pending work items by category
 
 ### 2. logs/ (33 subdirectories)
+
 **Purpose**: Record development session activities and decisions
 
 **Usage**: Track session timestamps, commands executed, and decisions made
 
 ### 3. metrics/
+
 **Purpose**: Track project health and quality metrics
 
 **Usage**: Store test coverage, code quality, and performance data
 
 ### 4. prompts/ (13 subdirectories)
+
 **Purpose**: Store reusable AI prompts and templates
 
 **Usage**: Maintain templates for code generation, refactoring, and documentation
 
 ### 5. summaries/ (47 subdirectories)
+
 **Purpose**: High-level summaries of work sessions and milestones
 
 **Usage**: Document daily progress, feature completions, and architecture decisions

@@ -39,12 +39,14 @@ The AddressCache class currently handles **4 distinct responsibilities**:
 #### 1. **Caching Responsibility** (~200 lines)
 
 **What it does**:
+
 - Stores address data in Map
 - Implements LRU (Least Recently Used) eviction
 - Time-based cache expiration (5 minutes)
 - Cache key generation
 
 **Methods**:
+
 ```javascript
 - generateCacheKey(data)
 - evictLeastRecentlyUsedIfNeeded()
@@ -54,6 +56,7 @@ The AddressCache class currently handles **4 distinct responsibilities**:
 ```
 
 **State**:
+
 ```javascript
 - cache: Map<string, CacheEntry>
 - maxCacheSize: 50
@@ -63,6 +66,7 @@ The AddressCache class currently handles **4 distinct responsibilities**:
 #### 2. **Change Detection Responsibility** (~300 lines)
 
 **What it does**:
+
 - Detects changes in logradouro (street)
 - Detects changes in bairro (neighborhood)
 - Detects changes in municipio (city/municipality)
@@ -70,6 +74,7 @@ The AddressCache class currently handles **4 distinct responsibilities**:
 - Provides change details with before/after comparison
 
 **Methods**:
+
 ```javascript
 // Logradouro (street) change detection
 - hasLogradouroChanged()
@@ -95,6 +100,7 @@ The AddressCache class currently handles **4 distinct responsibilities**:
 ```
 
 **State**:
+
 ```javascript
 - lastNotifiedChangeSignature: string|null
 - lastNotifiedBairroChangeSignature: string|null
@@ -111,11 +117,13 @@ The AddressCache class currently handles **4 distinct responsibilities**:
 #### 3. **Observer Pattern Responsibility** (~150 lines)
 
 **What it does**:
+
 - Manages observer subscriptions
 - Notifies observers of address changes
 - Delegates to ObserverSubject
 
 **Methods**:
+
 ```javascript
 - subscribe(observer)
 - unsubscribe(observer)
@@ -123,6 +131,7 @@ The AddressCache class currently handles **4 distinct responsibilities**:
 ```
 
 **State**:
+
 ```javascript
 - observerSubject: ObserverSubject
 ```
@@ -132,17 +141,20 @@ The AddressCache class currently handles **4 distinct responsibilities**:
 #### 4. **Address Processing Responsibility** (~100 lines)
 
 **What it does**:
+
 - Extracts address from raw geocoding data
 - Creates BrazilianStandardAddress objects
 - Coordinates with AddressExtractor
 
 **Methods**:
+
 ```javascript
 - getBrazilianStandardAddress(data)
 - Uses AddressExtractor internally
 ```
 
 **State**:
+
 ```javascript
 - currentAddress: BrazilianStandardAddress|null
 - previousAddress: BrazilianStandardAddress|null
@@ -178,6 +190,7 @@ class AddressCache {
 ```
 
 **Impact**:
+
 - Hard to understand class purpose
 - Difficult to modify without breaking something
 - Changes for one responsibility affect others
@@ -198,6 +211,7 @@ class AddressCache {
 ```
 
 **Impact**:
+
 - Risky changes (ripple effects)
 - Hard to test in isolation
 - Difficult to reuse components
@@ -225,6 +239,7 @@ describe('AddressCache', () => {
 ```
 
 **Impact**:
+
 - Complex test setup
 - Slow tests (full object initialization)
 - Hard to mock dependencies
@@ -243,6 +258,7 @@ cache.getBrazilianStandardAddress(); // Address processing
 ```
 
 **Impact**:
+
 - Confusing API
 - Hard to navigate code
 - Difficult for new developers
@@ -263,6 +279,7 @@ cache.getBrazilianStandardAddress(); // Address processing
 ```
 
 **Metrics**:
+
 - Lines: 1,146 (way too big)
 - Methods: ~116 (cognitive overload)
 - Responsibilities: 4+ (should be 1)
@@ -326,6 +343,7 @@ AFTER: Separated Concerns
 **Goal**: Create a focused cache class with only caching responsibility.
 
 **New AddressCache.js** (~200 lines):
+
 ```javascript
 /**
  * Pure cache implementation with LRU eviction and expiration.
@@ -417,6 +435,7 @@ export default AddressCache;
 ```
 
 **Benefits**:
+
 - ✅ Single responsibility (caching only)
 - ✅ Easy to test in isolation
 - ✅ Can swap cache implementations
@@ -428,6 +447,7 @@ export default AddressCache;
 **Goal**: Separate change detection into its own class.
 
 **New AddressChangeDetector.js** (~300 lines):
+
 ```javascript
 /**
  * Detects changes in Brazilian address components.
@@ -530,6 +550,7 @@ export default AddressChangeDetector;
 ```
 
 **Benefits**:
+
 - ✅ Focused on change detection only
 - ✅ Clear 3-level change hierarchy
 - ✅ Easy to test change logic
@@ -541,6 +562,7 @@ export default AddressChangeDetector;
 **Goal**: Clean observer pattern implementation.
 
 **New AddressObservable.js** (~150 lines):
+
 ```javascript
 import ObserverSubject from '../core/ObserverSubject.js';
 
@@ -595,6 +617,7 @@ export default AddressObservable;
 ```
 
 **Benefits**:
+
 - ✅ Clean observer interface
 - ✅ Delegates to ObserverSubject properly
 - ✅ Easy to test notifications
@@ -606,6 +629,7 @@ export default AddressObservable;
 **Goal**: Coordinate address extraction and processing.
 
 **New AddressProcessor.js** (~100 lines):
+
 ```javascript
 import AddressExtractor from './AddressExtractor.js';
 import BrazilianStandardAddress from './BrazilianStandardAddress.js';
@@ -653,6 +677,7 @@ export default AddressProcessor;
 ```
 
 **Benefits**:
+
 - ✅ Single purpose (address processing)
 - ✅ Easy to add validation
 - ✅ Can swap extractors
@@ -664,6 +689,7 @@ export default AddressProcessor;
 **Goal**: Provide unified interface without God Object.
 
 **New AddressCacheCoordinator.js** (~150 lines):
+
 ```javascript
 import AddressCache from './AddressCache.js';
 import AddressChangeDetector from './AddressChangeDetector.js';
@@ -733,6 +759,7 @@ export default AddressCacheCoordinator;
 ```
 
 **Benefits**:
+
 - ✅ Clean facade interface
 - ✅ Delegates to focused components
 - ✅ Easy to test coordination
@@ -744,6 +771,7 @@ export default AddressCacheCoordinator;
 ### Phase 1: Create New Classes (No Breaking Changes)
 
 **Week 1**:
+
 - Create AddressCache.js (pure caching)
 - Create AddressChangeDetector.js
 - Create AddressObservable.js
@@ -754,6 +782,7 @@ export default AddressCacheCoordinator;
 ### Phase 2: Create Coordinator (Backward Compatible)
 
 **Week 2**:
+
 - Create AddressCacheCoordinator.js
 - Implement same API as old AddressCache
 - Add integration tests
@@ -763,6 +792,7 @@ export default AddressCacheCoordinator;
 ### Phase 3: Gradual Migration (Internal First)
 
 **Week 3-4**:
+
 - Update AddressDataExtractor to use coordinator
 - Update WebGeocodingManager
 - Update tests
@@ -772,6 +802,7 @@ export default AddressCacheCoordinator;
 ### Phase 4: Deprecate Old Class
 
 **Week 5**:
+
 - Mark old AddressCache as deprecated
 - Add runtime warnings
 - Update documentation
@@ -780,6 +811,7 @@ export default AddressCacheCoordinator;
 ### Phase 5: Remove Old Class (v1.0.0)
 
 **v1.0.0 Release**:
+
 - Remove old AddressCache.js
 - Rename AddressCacheCoordinator to AddressCache (or keep separate)
 - Update all imports
@@ -790,6 +822,7 @@ export default AddressCacheCoordinator;
 ### Code Organization
 
 **Before**:
+
 ```
 1 file: AddressCache.js (1,146 lines)
   - Everything in one place
@@ -798,6 +831,7 @@ export default AddressCacheCoordinator;
 ```
 
 **After**:
+
 ```
 5 files: ~750 lines total (removing 400 deprecated lines)
   - AddressCache.js (~200 lines) - Pure caching
@@ -810,6 +844,7 @@ export default AddressCacheCoordinator;
 ### Testability
 
 **Before**:
+
 ```javascript
 // Must test everything together
 describe('AddressCache', () => {
@@ -822,6 +857,7 @@ describe('AddressCache', () => {
 ```
 
 **After**:
+
 ```javascript
 // Test each responsibility separately
 describe('AddressCache', () => {
@@ -845,6 +881,7 @@ describe('AddressChangeDetector', () => {
 ### Reusability
 
 **Before**:
+
 ```javascript
 // Can't reuse cache without change detection
 // Can't reuse change detection without cache
@@ -852,6 +889,7 @@ describe('AddressChangeDetector', () => {
 ```
 
 **After**:
+
 ```javascript
 // Reuse cache anywhere
 const cache = new AddressCache({ maxSize: 100 });
@@ -866,6 +904,7 @@ const observable = new AddressObservable();
 ### Maintainability
 
 **Before**:
+
 ```
 - 1 file with 1,146 lines
 - 4 responsibilities mixed together
@@ -874,6 +913,7 @@ const observable = new AddressObservable();
 ```
 
 **After**:
+
 ```
 - 5 files with clear purposes
 - Each class has 1 responsibility
@@ -905,24 +945,28 @@ const observable = new AddressObservable();
 ## Success Metrics
 
 ### Code Quality
+
 - ✅ Single Responsibility Principle followed
 - ✅ Each class < 300 lines
 - ✅ Clear, focused APIs
 - ✅ High cohesion, low coupling
 
 ### Testing
+
 - ✅ Each class has isolated tests
 - ✅ Test coverage maintained or improved
 - ✅ Faster test execution
 - ✅ Easier to mock dependencies
 
 ### Maintainability
+
 - ✅ Easier to understand code
 - ✅ Safer to make changes
 - ✅ Better code navigation
 - ✅ Clearer documentation
 
 ### Performance
+
 - ✅ No performance regression
 - ✅ Memory usage similar or better
 - ✅ Cache performance maintained

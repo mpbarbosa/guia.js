@@ -1,6 +1,7 @@
 # Terminology Guide - Guia Turístico
 
 ---
+
 Last Updated: 2026-01-28
 Status: Active
 Category: Guide
@@ -15,18 +16,21 @@ Category: Guide
 ### Application & Architecture
 
 **SPA (Single-Page Application)**
+
 - ✅ **Use**: "SPA" after first definition
 - ✅ **First mention**: "Single-Page Application (SPA)"
 - ❌ **Avoid**: "single page app", "spa" (lowercase as noun)
 - **Context**: Refers to the web application architecture
 
 **guia.js**
+
 - ✅ **Use**: Always lowercase "guia.js"
 - ❌ **Avoid**: "Guia.js", "GUIA.js", "Guia.JS"
 - **Context**: The core geolocation library dependency
 - **Exception**: Capitalize at sentence start: "Guia.js is..."
 
 **ibira.js**
+
 - ✅ **Use**: Always lowercase "ibira.js"
 - ❌ **Avoid**: "Ibira.js", "IBIRA.js"
 - **Context**: Brazilian IBGE integration library
@@ -35,18 +39,21 @@ Category: Guide
 ### Geographic & Brazilian Terms
 
 **município** (plural: municípios)
+
 - ✅ **Use**: Portuguese accented form "município"
 - ❌ **Avoid**: "municipio" (unaccented)
 - **Context**: Brazilian municipality (city-level administrative division)
 - **Rationale**: Preserves Portuguese linguistic accuracy
 
 **bairro** (plural: bairros)
+
 - ✅ **Use**: Portuguese "bairro"
 - ❌ **Avoid**: "neighborhood" in Brazilian context
 - **Context**: Brazilian neighborhood/district
 - **Note**: Use "neighborhood" only for non-Brazilian contexts
 
 **Região Metropolitana**
+
 - ✅ **Use**: Capitalized "Região Metropolitana"
 - ✅ **Abbreviation**: "RM" (after first use)
 - ❌ **Avoid**: "região metropolitana", "metropolitan region" in code/UI
@@ -56,23 +63,27 @@ Category: Guide
 ### Testing Terminology
 
 **E2E (End-to-End)**
+
 - ✅ **Use**: "E2E" after first definition
 - ✅ **First mention**: "End-to-End (E2E)"
 - ❌ **Avoid**: "end to end", "e2e" (lowercase as acronym)
 - **Context**: Integration tests simulating real user workflows
 
 **Unit Test**
+
 - ✅ **Use**: "unit test" (lowercase)
 - ✅ **Plural**: "unit tests"
 - ❌ **Avoid**: "Unit Test" (capitalized outside titles)
 - **Context**: Tests for individual functions/methods
 
 **Test Suite**
+
 - ✅ **Use**: "test suite" (singular), "test suites" (plural)
 - ✅ **Context**: Collection of related tests
 - **Note**: Grammatical variations acceptable (suite/suites)
 
 **Mock** vs **Stub** vs **Spy**
+
 - **Mock**: Object with expectations (verify behavior)
 - **Stub**: Object with canned responses (control test inputs)
 - **Spy**: Wrapper recording calls (observe interactions)
@@ -81,18 +92,21 @@ Category: Guide
 ### API & Integration
 
 **Nominatim**
+
 - ✅ **Use**: "Nominatim" (proper noun)
 - ✅ **Context**: "OpenStreetMap Nominatim API"
 - ❌ **Avoid**: "nominatim", "NOMINATIM"
 - **Note**: OpenStreetMap's geocoding service
 
 **IBGE (Instituto Brasileiro de Geografia e Estatística)**
+
 - ✅ **Use**: "IBGE" as acronym
 - ✅ **Full name**: Use on first mention in major documents
 - ❌ **Avoid**: "Ibge", "ibge"
 - **Context**: Brazilian statistics and geography institute
 
 **SIDRA (Sistema IBGE de Recuperação Automática)**
+
 - ✅ **Use**: "SIDRA" as acronym
 - ✅ **Context**: "IBGE SIDRA API"
 - ❌ **Avoid**: "Sidra", "sidra"
@@ -101,27 +115,32 @@ Category: Guide
 ### Development & Tooling
 
 **Node.js**
+
 - ✅ **Use**: "Node.js" (capital N, lowercase js)
 - ❌ **Avoid**: "NodeJS", "node.js", "node"
 - **Context**: JavaScript runtime environment
 
 **npm**
+
 - ✅ **Use**: "npm" (all lowercase)
 - ❌ **Avoid**: "NPM", "Npm"
 - **Context**: Node package manager
 - **Exception**: Capitalize at sentence start: "Npm install..."
 
 **Jest**
+
 - ✅ **Use**: "Jest" (capitalized)
 - ❌ **Avoid**: "JEST", "jest" (except in code)
 - **Context**: JavaScript testing framework
 
 **Puppeteer**
+
 - ✅ **Use**: "Puppeteer" (capitalized)
 - ❌ **Avoid**: "puppeteer", "PUPPETEER" (except in code)
 - **Context**: Browser automation library
 
 **jsdom**
+
 - ✅ **Use**: "jsdom" (all lowercase)
 - ❌ **Avoid**: "JSDOM", "JSDom", "jsDom"
 - **Context**: JavaScript DOM implementation
@@ -149,6 +168,7 @@ Some terms have different conventions in code vs. documentation:
 ## 📝 Capitalization Rules
 
 ### Proper Nouns (Always Capitalize)
+
 - Nominatim
 - OpenStreetMap
 - IBGE
@@ -159,6 +179,7 @@ Some terms have different conventions in code vs. documentation:
 - GitHub
 
 ### Common Nouns (Lowercase in Prose)
+
 - web server
 - unit test
 - test suite
@@ -167,6 +188,7 @@ Some terms have different conventions in code vs. documentation:
 - commit message
 
 ### Acronyms (All Caps After Definition)
+
 - SPA (Single-Page Application)
 - E2E (End-to-End)
 - API (Application Programming Interface)
@@ -177,14 +199,17 @@ Some terms have different conventions in code vs. documentation:
 ### Special Cases
 
 **npm**: Always lowercase (even at sentence start in informal contexts)
+
 - Formal: "The npm package manager..."
 - Acceptable: "npm is used for..."
 
 **jsdom**: Always lowercase (library name convention)
+
 - Formal: "The jsdom library..."
 - Code: `import { jsdom } from 'jsdom'`
 
 **guia.js / ibira.js**: Always lowercase except sentence start
+
 - Normal: "The guia.js library provides..."
 - Sentence start: "Guia.js is a geolocation library."
 
@@ -195,12 +220,14 @@ Some terms have different conventions in code vs. documentation:
 ### When to Use Portuguese
 
 **Use Portuguese terms when:**
+
 - Referring to Brazilian administrative divisions (município, bairro)
 - Displaying in UI for Brazilian users
 - Naming classes/variables for Brazilian-specific features
 - Documenting Brazilian data structures
 
 **Examples**:
+
 - ✅ "The município of São Paulo..."
 - ✅ "Display the bairro name in the card"
 - ✅ "BrazilianStandardAddress class"
@@ -209,12 +236,14 @@ Some terms have different conventions in code vs. documentation:
 ### When to Use English
 
 **Use English terms when:**
+
 - Writing general documentation
 - Describing architectural patterns
 - Explaining technical concepts
 - Targeting international audience
 
 **Examples**:
+
 - ✅ "The address extraction module..."
 - ✅ "Singleton pattern implementation"
 - ✅ "REST API endpoint"
@@ -225,6 +254,7 @@ Some terms have different conventions in code vs. documentation:
 **Format**: English explanation with Portuguese term in context
 
 **Examples**:
+
 - "Brazilian municipality (município)"
 - "The neighborhood (bairro) display component"
 - "Metropolitan region (Região Metropolitana) data"
@@ -248,11 +278,13 @@ Some terms have different conventions in code vs. documentation:
 ### When to Define Acronyms
 
 **Always define**:
+
 - Less common acronyms (SIDRA, RM, OSM)
 - Technical project-specific terms
 - First use in major documents
 
 **No need to define** (widely known):
+
 - API, UI, DOM, HTML, CSS, JS
 - HTTP, HTTPS, URL
 - IBGE (in Brazilian context)
@@ -301,6 +333,7 @@ grep -r "end-to-end tests" docs/ --include="*.md"  # Should be E2E
 ### Manual Review Checklist
 
 Before committing documentation:
+
 - [ ] Check Portuguese terms have proper accents
 - [ ] Verify library names use correct case (guia.js, ibira.js)
 - [ ] Confirm acronyms defined on first use
@@ -337,6 +370,7 @@ Before committing documentation:
 ### Proposing New Terms
 
 When adding new terminology:
+
 1. Check existing usage in codebase
 2. Research standard industry usage
 3. Consider internationalization needs
@@ -361,6 +395,7 @@ When adding new terminology:
 **Current Status**: ✅ Good consistency maintained
 
 **Key Metrics**:
+
 - Portuguese terms: Consistently accented ✅
 - Library names: Correctly cased ✅
 - Acronyms: Defined and consistent ✅
@@ -372,6 +407,7 @@ When adding new terminology:
 ---
 
 **Quick Links**:
+
 - [Documentation Hub](../README.md)
 - [Contributing](../../.github/CONTRIBUTING.md)
 - [Code Review Guide](../../.github/CODE_REVIEW_GUIDE.md)

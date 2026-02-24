@@ -78,12 +78,14 @@ Guia Turístico is a **Single-Page Application (SPA)** built on a **layered arch
 **Purpose**: Fundamental data structures and state management
 
 **Key Components**:
+
 - **PositionManager** (Singleton): Single source of truth for current position
 - **GeoPosition**: Immutable position value object with convenience methods
 - **GeocodingState**: State machine for geocoding operations
 - **ObserverSubject**: Base class for observer pattern implementation
 
 **Responsibilities**:
+
 - Manage application-wide state (position, geocoding status)
 - Provide immutable data structures
 - Implement observer pattern for event distribution
@@ -98,17 +100,20 @@ Guia Turístico is a **Single-Page Application (SPA)** built on a **layered arch
 **Purpose**: External integrations and browser API wrappers
 
 **Key Components**:
+
 - **GeolocationService**: Wrapper for browser Geolocation API
 - **ReverseGeocoder**: OpenStreetMap Nominatim integration
 - **ChangeDetectionCoordinator**: Detects significant location changes
 
 **Responsibilities**:
+
 - Abstract external APIs (browser, OpenStreetMap, IBGE, SIDRA)
 - Handle network requests and responses
 - Transform external data into internal formats
 - Manage API rate limiting and error handling
 
 **Integration Points**:
+
 ```javascript
 // GeolocationService → Browser Geolocation API
 navigator.geolocation.getCurrentPosition()
@@ -127,6 +132,7 @@ fetch('https://servicodados.ibge.gov.br/api/v1/localidades/...')
 **Purpose**: Data extraction, transformation, validation, and caching
 
 **Key Components**:
+
 - **BrazilianStandardAddress**: Standardized Brazilian address structure
 - **AddressExtractor**: Extract address data from Nominatim responses
 - **AddressDataExtractor**: Complete address processing pipeline
@@ -135,12 +141,14 @@ fetch('https://servicodados.ibge.gov.br/api/v1/localidades/...')
 - **LRUCache**: Generic LRU cache implementation
 
 **Responsibilities**:
+
 - Parse and validate external API responses
 - Standardize address data for Brazilian context
 - Cache frequently accessed data
 - Extract and categorize reference places
 
 **Data Flow Example**:
+
 ```
 Nominatim API Response
   ↓
@@ -160,6 +168,7 @@ Display Layer (render to UI)
 **Purpose**: Orchestrate multiple services and components
 
 **Key Components**:
+
 - **WebGeocodingManager**: Main application coordinator
 - **ServiceCoordinator**: Service lifecycle management
 - **EventCoordinator**: Event-based coordination
@@ -167,12 +176,14 @@ Display Layer (render to UI)
 - **UICoordinator**: UI component coordination
 
 **Responsibilities**:
+
 - Coordinate interactions between layers
 - Manage component lifecycle (initialization, cleanup)
 - Distribute events to appropriate handlers
 - Orchestrate complex workflows (position update → geocoding → display)
 
 **Workflow Example**:
+
 ```javascript
 // User clicks "Get Location" button
 UICoordinator.handleLocationRequest()
@@ -201,6 +212,7 @@ HTMLAddressDisplayer.display()
 **Purpose**: Render geographic data in the browser
 
 **Key Components**:
+
 - **HTMLPositionDisplayer**: Coordinate display and Google Maps links
 - **HTMLAddressDisplayer**: Address formatting and display
 - **HTMLHighlightCardsDisplayer**: Municipality and neighborhood cards (v0.9.0: metro region support)
@@ -210,12 +222,14 @@ HTMLAddressDisplayer.display()
 - **HtmlText**: Text display utilities
 
 **Responsibilities**:
+
 - Update DOM elements with geographic data
 - Format data for user-friendly display
 - Generate dynamic links (Google Maps, IBGE)
 - Handle accessibility (ARIA attributes, screen reader support)
 
 **Display Components Pattern**:
+
 ```javascript
 class HTMLAddressDisplayer {
   constructor(document, elementId) {
@@ -234,17 +248,20 @@ class HTMLAddressDisplayer {
 **Purpose**: Display IBGE SIDRA demographic data (population statistics) for Brazilian municipalities
 
 **Key Features**:
+
 - Population estimates with Brazilian Portuguese formatting (e.g., "123.456 habitantes")
 - Observer pattern integration (listens to ADDRESS_FETCHED_EVENT)
 - Offline fallback: `libs/sidra/tab6579_municipios.json` (190KB local data)
 - Automatic updates on address changes
 - Error handling with user-friendly messages
 
-**API Integration**: 
+**API Integration**:
+
 - **Primary**: `https://servicodados.ibge.gov.br/api/v3/agregados/6579/periodos/-6/variaveis/9324`
 - **Fallback**: Local JSON file with pre-cached municipality data
 
 **Usage Example**:
+
 ```javascript
 // Initialize with DOM container
 const sidraDisplayer = new HTMLSidraDisplayer(
@@ -263,11 +280,13 @@ manager.subscribeFunction((position, address, enderecoPadronizado) => {
 });
 ```
 
-**Test Coverage**: 
+**Test Coverage**:
+
 - `__tests__/unit/HTMLSidraDisplayer.test.js` - Comprehensive test suite
 - Integration with E2E tests (address validation workflows)
 
 **Data Format**:
+
 ```javascript
 {
   "codigoMunicipio": "2611606",  // IBGE 7-digit code
@@ -283,16 +302,19 @@ manager.subscribeFunction((position, address, enderecoPadronizado) => {
 **Purpose**: SPA route handlers and view-specific logic
 
 **Key Components**:
+
 - **HomeView** (`home.js`): Main location tracking interface (595 lines)
 - **ConverterView** (`converter.js`): Coordinate converter utility (521 lines)
 
 **Responsibilities**:
+
 - Handle route-specific initialization and cleanup
 - Bind UI components to application logic
 - Manage view-specific state
 - Coordinate services for each view
 
 **Routing Structure**:
+
 ```javascript
 // app.js router
 const routes = {
@@ -308,6 +330,7 @@ const routes = {
 **Purpose**: Text-to-speech functionality with queue management
 
 **Key Components**:
+
 - **SpeechSynthesisManager** (Facade): Main API for speech synthesis
 - **SpeechController**: Core control logic
 - **SpeechQueueProcessor**: Queue processing
@@ -317,6 +340,7 @@ const routes = {
 - **SpeechItem**: Individual speech item
 
 **Responsibilities**:
+
 - Manage speech synthesis queue
 - Handle voice selection (Portuguese Brazilian voices)
 - Coordinate speech playback
@@ -331,10 +355,12 @@ const routes = {
 **Purpose**: Performance monitoring and timer management
 
 **Key Components**:
+
 - **Chronometer**: Performance timing with observer pattern (356 lines)
 - **TimerManager**: Centralized timer management preventing leaks (147 lines)
 
 **Responsibilities**:
+
 - Track elapsed time for user-facing displays
 - Monitor performance metrics
 - Prevent timer memory leaks
@@ -347,9 +373,11 @@ const routes = {
 **Purpose**: Application-wide status tracking
 
 **Key Components**:
+
 - **SingletonStatusManager**: Singleton for status across components
 
 **Responsibilities**:
+
 - Track application state (loading, ready, error)
 - Provide centralized status access
 - Notify components of status changes
@@ -361,6 +389,7 @@ const routes = {
 **Purpose**: Reusable helper functions
 
 **Key Components**:
+
 - **distance.js**: Haversine formula distance calculations
 - **logger.js**: Logging with DOM and console output
 - **device.js**: Device detection (mobile/desktop)
@@ -374,6 +403,7 @@ const routes = {
 **Purpose**: Application configuration and constants
 
 **Key Components**:
+
 - **defaults.js** (130+ lines): Application constants
   - Event names: `ADDRESS_FETCHED_EVENT`, `POSITION_UPDATE_EVENT`
   - Thresholds: `MINIMUM_TIME_CHANGE = 30s`, `MINIMUM_DISTANCE_CHANGE = 20m`
@@ -381,6 +411,7 @@ const routes = {
 - **version.js**: Version information
 
 **Usage Pattern**:
+
 ```javascript
 import { ADDRESS_FETCHED_EVENT, MINIMUM_DISTANCE_CHANGE } from './config/defaults.js';
 
@@ -412,6 +443,7 @@ class PositionManager {
 ```
 
 **Benefits**:
+
 - Single point of access for position data
 - Prevents conflicting state across application
 - Simplifies testing (reset singleton between tests)
@@ -440,11 +472,13 @@ class ObserverSubject {
 ```
 
 **Benefits**:
+
 - Decoupled communication between layers
 - Easy to add new observers without modifying subjects
 - Supports multiple observers per event
 
 **Example Flow**:
+
 ```
 PositionManager.update()
   → notifyObservers('positionUpdate')
@@ -476,6 +510,7 @@ class DisplayerFactory {
 ```
 
 **Benefits**:
+
 - Encapsulate display component creation
 - Easy to swap implementations
 - Consistent initialization across application
@@ -592,6 +627,7 @@ if (distance >= distanceThreshold || timeElapsed >= timeThreshold) {
 ```
 
 **Accuracy Quality Filter** (mobile devices only):
+
 ```javascript
 // Reject positions with poor accuracy on mobile
 if (isMobileDevice() && ['medium', 'bad', 'very bad'].includes(accuracyQuality)) {
@@ -658,6 +694,7 @@ if (isMobileDevice() && ['medium', 'bad', 'very bad'].includes(accuracyQuality))
 **Purpose**: Core geolocation functionality
 
 **Integration**:
+
 ```javascript
 // package.json
 "dependencies": {
@@ -687,6 +724,7 @@ if (isMobileDevice() && ['medium', 'bad', 'very bad'].includes(accuracyQuality))
 ### 4. IBGE APIs
 
 **Endpoints**:
+
 - Location data: `https://servicodados.ibge.gov.br/api/v1/localidades/`
 - SIDRA demographics: `https://servicodados.ibge.gov.br/api/v3/agregados/6579/`
 
@@ -722,6 +760,7 @@ if (distance >= MINIMUM_DISTANCE_CHANGE) {
 ```
 
 **Benefits**:
+
 - Single source of truth for configuration
 - Easy to modify thresholds
 - Type-safe constant names
@@ -760,6 +799,7 @@ if (distance >= MINIMUM_DISTANCE_CHANGE) {
 ### State Updates
 
 **Immutable Updates**:
+
 ```javascript
 // GOOD: Create new object
 const newPosition = new GeoPosition(browserPosition);

@@ -39,6 +39,7 @@ This guide explains the fundamental principle of separating HTML (structure), CS
 > "Each technology should be used for what it does best, and concerns should not overlap."
 
 When these technologies are properly separated:
+
 - HTML remains semantic and accessible
 - CSS is reusable and maintainable
 - JavaScript is testable and focused on logic
@@ -50,6 +51,7 @@ When these technologies are properly separated:
 **Responsibility**: Define the structure and meaning of content.
 
 **Characteristics**:
+
 - Semantic markup (use appropriate tags: `<header>`, `<nav>`, `<article>`, etc.)
 - Accessibility (ARIA attributes when needed)
 - Content hierarchy
@@ -57,6 +59,7 @@ When these technologies are properly separated:
 - No behavior (no inline `onclick` handlers)
 
 **Example**:
+
 ```html
 <!-- ✅ Good: Semantic, accessible structure -->
 <article class="post">
@@ -78,6 +81,7 @@ When these technologies are properly separated:
 **Responsibility**: Define how content should be visually presented.
 
 **Characteristics**:
+
 - Visual appearance (colors, fonts, spacing)
 - Layout and positioning
 - Responsive design (media queries)
@@ -86,6 +90,7 @@ When these technologies are properly separated:
 - No behavioral logic
 
 **Example**:
+
 ```css
 /* ✅ Good: Focused on presentation */
 .post {
@@ -123,6 +128,7 @@ When these technologies are properly separated:
 **Responsibility**: Define how the application responds to user interactions and manages dynamic content.
 
 **Characteristics**:
+
 - Event handling
 - Data manipulation
 - API communication
@@ -132,6 +138,7 @@ When these technologies are properly separated:
 - No structural markup (avoid excessive DOM creation)
 
 **Example**:
+
 ```javascript
 // ✅ Good: Focused on behavior and logic
 document.addEventListener('DOMContentLoaded', () => {
@@ -176,6 +183,7 @@ function showNotification(message) {
 ### 1. Maintainability
 
 **Without Separation**:
+
 ```html
 <!-- ❌ Bad: Everything mixed together -->
 <div style="color: red; padding: 10px;" onclick="alert('Clicked!')">
@@ -186,6 +194,7 @@ function showNotification(message) {
 **Problem**: To change the color, you must edit HTML. To change the behavior, you must edit HTML. Everything is coupled.
 
 **With Separation**:
+
 ```html
 <!-- ✅ Good: Separated concerns -->
 <div class="alert-box">Click me</div>
@@ -245,11 +254,13 @@ Separated code is easier to read and understand:
 **Caching**: Browsers can cache CSS and JavaScript files separately from HTML.
 
 **Minification**: Each file type can be optimized independently:
+
 - CSS can be minified and combined
 - JavaScript can be minified, combined, and tree-shaken
 - HTML can be compressed
 
 **Loading**: Scripts can be loaded asynchronously without blocking HTML rendering:
+
 ```html
 <script src="app.js" defer></script>
 ```
@@ -435,6 +446,7 @@ project/
 ### Example 1: Basic Form
 
 #### HTML (Structure)
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -474,6 +486,7 @@ project/
 ```
 
 #### CSS (Presentation)
+
 ```css
 /* styles.css */
 * {
@@ -551,6 +564,7 @@ body {
 ```
 
 #### JavaScript (Behavior)
+
 ```javascript
 // script.js
 document.addEventListener('DOMContentLoaded', () => {
@@ -604,6 +618,7 @@ function sendFormData(data) {
 This example shows how Guia.js applies separation of concerns:
 
 #### HTML (test.html)
+
 ```html
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -639,6 +654,7 @@ This example shows how Guia.js applies separation of concerns:
 ```
 
 #### CSS (styles/test.css)
+
 ```css
 /* Base styles */
 body {
@@ -712,6 +728,7 @@ body {
 ```
 
 #### JavaScript (scripts/test-app.js)
+
 ```javascript
 // Application initialization
 document.addEventListener('DOMContentLoaded', () => {
@@ -817,6 +834,7 @@ function handleCityStats() {
 ```
 
 **Why it's bad**:
+
 - Not reusable
 - Hard to maintain
 - Can't leverage CSS features (media queries, pseudo-classes)
@@ -845,6 +863,7 @@ function handleCityStats() {
 ```
 
 **Why it's bad**:
+
 - Mixes concerns (HTML + JavaScript)
 - Not reusable
 - Hard to test
@@ -873,6 +892,7 @@ element.style.margin = '5px';
 ```
 
 **Why it's bad**:
+
 - Mixes concerns (JavaScript + CSS)
 - Hard to maintain
 - Can't leverage CSS features
@@ -911,6 +931,7 @@ container.innerHTML = html;
 ```
 
 **Why it's bad**:
+
 - Mixes concerns (JavaScript + HTML)
 - Hard to maintain markup
 - No syntax highlighting
@@ -958,6 +979,7 @@ function createCard(title, content) {
 ```
 
 **Why it's bad**:
+
 - Not reusable across pages
 - Can cause FOUC (Flash of Unstyled Content)
 - Hard to manage and maintain

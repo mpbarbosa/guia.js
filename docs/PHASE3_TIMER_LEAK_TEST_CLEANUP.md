@@ -35,6 +35,7 @@ Before Phase 3, several test files instantiated timer-based components but didn'
 ### Root Cause Discovery
 
 Investigation revealed **WebGeocodingManager** as the primary leak source:
+
 - Creates `Chronometer` instance (line 445)
 - No `destroy()` method existed
 - E2E tests created managers without cleanup
@@ -51,6 +52,7 @@ Investigation revealed **WebGeocodingManager** as the primary leak source:
 **Location**: Added before `toString()` method (line 924)
 
 **Implementation**:
+
 ```javascript
 /**
  * Destroys the manager and cleans up all resources.
@@ -88,6 +90,7 @@ destroy() {
 ```
 
 **Why This Was Needed**:
+
 - WebGeocodingManager creates Chronometer (persistent `setInterval` timer)
 - No cleanup path existed for E2E tests
 - Coordinator pattern means it owns multiple components that need cleanup
@@ -101,6 +104,7 @@ destroy() {
 **Changes**: Updated `afterEach` to use `destroy()` instead of manual cleanup
 
 **Before**:
+
 ```javascript
 afterEach(async () => {
     if (speechManager) {
@@ -117,6 +121,7 @@ afterEach(async () => {
 ```
 
 **After**:
+
 ```javascript
 afterEach(async () => {
     if (speechManager) {
@@ -141,6 +146,7 @@ afterEach(async () => {
 **Changes**: Added describe-level `mockProvider` variable and `afterEach` cleanup
 
 **Added**:
+
 ```javascript
 describe('GeolocationService - Provider Pattern Integration', () => {
     let mockProvider = null;
@@ -160,6 +166,7 @@ describe('GeolocationService - Provider Pattern Integration', () => {
 ```
 
 **Updated** (4 locations):
+
 ```javascript
 // Changed from:
 const mockProvider = new MockGeolocationProvider({...});
@@ -177,6 +184,7 @@ mockProvider = new MockGeolocationProvider({...});
 **Changes**: Added `cacheInstance` tracking and `destroy()` call
 
 **Added**:
+
 ```javascript
 describe('AddressCache - Immutable Operations', () => {
     let cacheInstance = null;
@@ -207,6 +215,7 @@ describe('AddressCache - Immutable Operations', () => {
 **Changes**: Added describe-level `manager` variable and `afterEach` cleanup
 
 **Added**:
+
 ```javascript
 describe('E2E: Complete Geolocation Workflow', () => {
     let manager = null;
@@ -227,6 +236,7 @@ describe('E2E: Complete Geolocation Workflow', () => {
 ```
 
 **Updated**:
+
 ```javascript
 // Changed from:
 const manager = new WebGeocodingManager(mockDocument, mockElement);
@@ -271,7 +281,8 @@ Time:        6.875 s
 A worker process has failed to exit gracefully...
 ```
 
-**Analysis**: 
+**Analysis**:
+
 - ✅ All 1,301 tests still passing (no regressions)
 - ✅ Execution time unchanged (~7 seconds)
 - ⚠️ Worker warning persists (see section below)
@@ -299,6 +310,7 @@ if (typeof this.cleanupInterval.unref === 'function') {
 ### Expected Behavior
 
 **This is expected Jest behavior**:
+
 1. `unref()` allows Node.js to exit even with active timers
 2. Jest's worker detection happens **before** the timer can naturally exit
 3. Jest force-exits the worker, triggering the warning
@@ -314,6 +326,7 @@ if (typeof this.cleanupInterval.unref === 'function') {
 ### Solutions (Not Implemented)
 
 **Option A**: Enable `forceExit` in Jest config (suppresses warning)
+
 ```javascript
 // package.json
 "jest": {
@@ -322,11 +335,13 @@ if (typeof this.cleanupInterval.unref === 'function') {
 ```
 
 **Option B**: Disable singleton pattern (major refactoring)
+
 - Remove `getInstance()` pattern
 - Require explicit instantiation everywhere
 - Breaking change for v1.0.0
 
 **Option C**: Accept as expected behavior
+
 - Document in README
 - Explain in test output
 - **CHOSEN**: This is the pragmatic approach
@@ -344,30 +359,30 @@ if (typeof this.cleanupInterval.unref === 'function') {
 
 ### Test Files (5 files)
 
-1. **__tests__/integration/SpeechSynthesisManager.integration.test.js** (~4 lines changed)
+1. ****tests**/integration/SpeechSynthesisManager.integration.test.js** (~4 lines changed)
    - Updated `afterEach` to call `speechManager.destroy()`
    - Added `speechManager = null` assignment
    - Lines 286-308
 
-2. **__tests__/services/GeolocationService.providerPattern.test.js** (+13 lines, ~8 lines changed)
+2. ****tests**/services/GeolocationService.providerPattern.test.js** (+13 lines, ~8 lines changed)
    - Added describe-level `mockProvider` variable
    - Added `afterEach` with `mockProvider.destroy()`
    - Changed 4 `const mockProvider` to `mockProvider` assignments
    - Lines 56-70, 90, 128, 171, 224
 
-3. **__tests__/patterns/Immutability.test.js** (+7 lines, ~5 lines changed)
+3. ****tests**/patterns/Immutability.test.js** (+7 lines, ~5 lines changed)
    - Added `cacheInstance` tracking
    - Added `afterEach` with `cacheInstance.destroy()`
    - Added `AddressCache.instance = null` reset
    - Lines 174-190
 
-4. **__tests__/e2e/CompleteGeolocationWorkflow.e2e.test.js** (+14 lines, ~2 lines changed)
+4. ****tests**/e2e/CompleteGeolocationWorkflow.e2e.test.js** (+14 lines, ~2 lines changed)
    - Added describe-level `manager` variable
    - Added `afterEach` with `manager.destroy()`
    - Changed `const manager` to `manager` assignment
    - Lines 95-113, 264
 
-5. **__tests__/e2e/MultiComponentIntegration.e2e.test.js** (+14 lines, ~2 lines changed)
+5. ****tests**/e2e/MultiComponentIntegration.e2e.test.js** (+14 lines, ~2 lines changed)
    - Added describe-level `manager` variable
    - Added `afterEach` with `manager.destroy()`
    - Changed `const manager` to `manager` assignment
@@ -436,6 +451,7 @@ $ npm test __tests__/e2e/MultiComponentIntegration.e2e.test.js
 **Solution**: Declare variables at `describe` level: `let manager = null;`
 
 **Pattern**:
+
 ```javascript
 describe('My Test Suite', () => {
     let componentWithTimer = null;
@@ -472,6 +488,7 @@ describe('My Test Suite', () => {
 ### 4. Manual Cleanup < destroy() Method
 
 **Before**: SpeechSynthesisManager tests manually called:
+
 ```javascript
 speechManager.stop();
 speechManager.stopQueueTimer();
@@ -479,11 +496,13 @@ speechManager.stopVoiceRetryTimer();
 ```
 
 **After**: Single call:
+
 ```javascript
 speechManager.destroy();
 ```
 
-**Benefit**: 
+**Benefit**:
+
 - Less maintenance
 - Guaranteed complete cleanup
 - Single source of truth for cleanup logic
@@ -497,6 +516,7 @@ speechManager.destroy();
 **Goal**: Suppress worker warnings or enable better leak detection
 
 **Options**:
+
 ```javascript
 // package.json - Option A: Suppress warning
 "jest": {
@@ -517,6 +537,7 @@ speechManager.destroy();
 ### 2. Documentation Updates
 
 **Tasks**:
+
 - [ ] Update TIMER_LEAK_CLEANUP.md master plan with Phase 3 completion
 - [ ] Update README.md with worker warning explanation
 - [ ] Update CONTRIBUTING.md with test cleanup patterns
@@ -581,6 +602,7 @@ Cleanup Coverage:           100%
 Phase 3 successfully completes the Timer Leak Cleanup initiative by adding comprehensive test cleanup infrastructure. All 6 test files that instantiate timer-based components now properly call `destroy()` methods in `afterEach` blocks.
 
 **Key Achievements**:
+
 - ✅ 100% timer cleanup coverage (20/20 sources)
 - ✅ All 1,301 tests passing (no regressions)
 - ✅ WebGeocodingManager now has proper cleanup

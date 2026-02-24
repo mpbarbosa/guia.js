@@ -9,6 +9,7 @@
 ## Priority Recommendations
 
 ### Phase 1: Immediate (✅ COMPLETED)
+
 **Timeline**: Today  
 **Risk**: 🟢 MINIMAL
 
@@ -22,14 +23,17 @@
 ---
 
 ### Phase 2: Short-term (Recommended)
+
 **Timeline**: Next sprint (1-2 weeks)  
 **Risk**: 🟡 MODERATE
 
 #### ESLint v10 Migration
+
 **Current**: 9.39.2  
 **Available**: 10.0.0 (major version)
 
 **Pre-migration Checklist**:
+
 ```bash
 # 1. Review ESLint v10 breaking changes
 npm show eslint@10.0.0
@@ -53,11 +57,13 @@ npm run validate
 ```
 
 **Potential Issues**:
+
 - Configuration format changes (eslint.config.js compatibility)
 - Plugin version compatibility updates needed
 - New linting rules may flag code
 
 **If Issues Arise**:
+
 1. Defer to after v1.0.0 release
 2. Continue using eslint 9.x (still supported)
 3. No security risk in waiting (v9 is stable)
@@ -65,16 +71,19 @@ npm run validate
 ---
 
 ### Phase 3: Medium-term (Scheduled)
+
 **Timeline**: End of sprint or next milestone  
 **Risk**: 🟡 MODERATE
 
 #### jsdom v28 Update (Dependent on ESLint v10)
+
 **Current**: 25.0.1  
 **Available**: 28.0.0 (major version - 3 major versions behind)
 
 **Important Note**: jsdom updates can be sensitive for test suites!
 
 **Pre-migration Analysis**:
+
 ```bash
 # 1. Check jest compatibility
 npm show jest@30.1.3 peerDependencies
@@ -106,6 +115,7 @@ npm run test:debug --detectOpenHandles
 ```
 
 **Migration Strategy**:
+
 ```
 Option A (Recommended): Update both simultaneously
 - npm install --save-dev jsdom@28.0.0 jest@31.0.0
@@ -119,6 +129,7 @@ Option B (Conservative): Update jsdom only
 ```
 
 **Verification Checklist**:
+
 - [ ] All 2,400+ tests pass
 - [ ] E2E tests stable (no flakiness)
 - [ ] Coverage metrics maintained
@@ -126,6 +137,7 @@ Option B (Conservative): Update jsdom only
 - [ ] Performance benchmarks OK
 
 **If Issues Arise**:
+
 1. Revert to jsdom v25
 2. Wait for jest v31 stable release
 3. Try jsdom v26 (intermediate step)
@@ -136,18 +148,23 @@ Option B (Conservative): Update jsdom only
 ---
 
 ### Phase 4: Long-term (Before v1.0.0)
+
 **Timeline**: Pre-release preparation  
 **Risk**: 🟢 MINIMAL (planning only)
 
 #### Production Dependency Stabilization
+
 **Current Status**:
+
 - guia.js: v0.6.0-alpha
 - ibira.js: v0.2.1-alpha
 
 **Action Items**:
+
 1. Work with upstream projects (mpbarbosa org)
 2. Promote alpha versions to stable (v1.0.0)
 3. Update package.json:
+
    ```json
    {
      "dependencies": {
@@ -156,6 +173,7 @@ Option B (Conservative): Update jsdom only
      }
    }
    ```
+
 4. Final integration testing
 5. Release v1.0.0 of Guia Turístico
 
@@ -164,6 +182,7 @@ Option B (Conservative): Update jsdom only
 ## Dependency Health Metrics
 
 ### Current Scorecard
+
 ```
 Security Vulnerabilities:    0/1       ✅ 0% (was 1 low)
 Outdated Packages:           2/13      ✅ 85% up-to-date
@@ -173,6 +192,7 @@ Production Ready:            ✅ YES (after Phase 1)
 ```
 
 ### Target Scorecard (Before v1.0.0)
+
 ```
 Security Vulnerabilities:    0/1       ✅ 0%
 Outdated Packages:           0/13      ✅ 100%
@@ -186,6 +206,7 @@ Production Ready:            ✅ YES
 ## Monthly Maintenance Schedule
 
 ### Week 1: Audit & Review
+
 ```bash
 # Tuesday morning
 npm audit --json > audit-$(date +%Y%m%d).json
@@ -196,6 +217,7 @@ npm outdated --json > outdated-$(date +%Y%m%d).json
 ```
 
 ### Week 2: Security Response
+
 ```bash
 # If critical vulnerabilities found:
 npm audit fix
@@ -207,6 +229,7 @@ git commit -m "chore: apply security updates"
 ```
 
 ### Week 3: Planned Updates
+
 ```bash
 # For non-critical outdated packages:
 # Create feature branch for each major update
@@ -215,6 +238,7 @@ git commit -m "chore: apply security updates"
 ```
 
 ### Week 4: Documentation
+
 ```bash
 # Update MAINTENANCE.md with findings
 # Plan next month's focus areas
@@ -226,6 +250,7 @@ git commit -m "chore: apply security updates"
 ## Dependency Categories & Policies
 
 ### Security Policy
+
 - **Critical**: Fix within 24 hours
 - **High**: Fix within 1 week
 - **Moderate**: Fix within 2 weeks
@@ -247,6 +272,7 @@ Current: 0 vulnerabilities ✅
 ## Tools & Commands Reference
 
 ### Regular Maintenance
+
 ```bash
 # Daily (CI/CD)
 npm test:all
@@ -266,6 +292,7 @@ npx npm-check-updates
 ```
 
 ### Emergency Procedures
+
 ```bash
 # Critical vulnerability discovered
 npm audit fix --force
@@ -281,6 +308,7 @@ npm audit fix --force     # Override if necessary
 ```
 
 ### Documentation
+
 ```bash
 # Generate dependency tree
 npm list > dependencies-tree.txt
@@ -300,27 +328,33 @@ npm list --size
 ## Known Risks & Mitigations
 
 ### Risk: jsdom Breaking Changes
+
 **Likelihood**: Medium  
 **Impact**: High (affects 100+ tests)  
 **Mitigation**:
+
 - Test in isolation first
 - Run full suite with --detectOpenHandles
 - Have rollback plan (revert commit)
 - Document any DOM API changes needed
 
 ### Risk: ESLint Configuration Incompatibility
+
 **Likelihood**: Low  
 **Impact**: Medium (build failures)  
 **Mitigation**:
+
 - Review eslint.config.js before update
 - Test on feature branch first
 - Have eslint v9 as fallback
 - Configuration compatibility guide in CONTRIBUTING.md
 
 ### Risk: Transitive Dependency Conflicts
+
 **Likelihood**: Low  
 **Impact**: Medium (subtle bugs)  
 **Mitigation**:
+
 - Always run `npm audit` after updates
 - Use `npm ci` for reproducible installs
 - Pin critical transitive dependencies if needed
@@ -355,6 +389,7 @@ npm list --size
 ## Reporting & Communication
 
 ### Team Standup Format
+
 ```
 Dependency Health Update:
 - Security: 0 vulnerabilities (✅ HEALTHY)
@@ -365,6 +400,7 @@ Dependency Health Update:
 ```
 
 ### Monthly Report Template
+
 ```markdown
 ## Dependency Health Report - [MONTH]
 - Start: X vulnerabilities, Y outdated
@@ -380,24 +416,28 @@ Dependency Health Update:
 ## Success Criteria
 
 ✅ **Phase 1 Complete** (Today)
+
 - [x] 0 security vulnerabilities
 - [x] Puppeteer updated to 24.37.2
 - [x] All tests passing (2,430+)
 - [x] No code changes needed
 
 🟡 **Phase 2 Target** (Next Sprint)
+
 - [ ] ESLint v10 compatibility verified
 - [ ] Configuration updates documented
 - [ ] Full test suite passing with v10
 - [ ] Team trained on new linting rules
 
 🟡 **Phase 3 Target** (End of Sprint)
+
 - [ ] jsdom v28 compatibility verified
 - [ ] Jest/jsdom compatibility confirmed
 - [ ] Full test suite passing with v28
 - [ ] E2E test stability verified
 
 🟢 **Phase 4 Target** (Before v1.0.0)
+
 - [ ] All production deps stable (v1.0.0+)
 - [ ] All dev deps up-to-date
 - [ ] 0 security vulnerabilities
@@ -410,4 +450,3 @@ Dependency Health Update:
 The project is now in a healthy state post security-update. Follow the phased approach above for further improvements while maintaining stability through v1.0.0 release.
 
 **Next immediate action**: Monitor for 48 hours, then schedule Phase 2 ESLint evaluation for next sprint planning.
-

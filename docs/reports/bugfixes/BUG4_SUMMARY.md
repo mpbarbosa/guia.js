@@ -9,6 +9,7 @@
 ## Problem
 
 When user moved streets (Rua Elói Cerqueira → Rua Engenheiro Dagoberto Gasgow):
+
 - ✅ AddressCache **detected** the change
 - ✅ Callback was **invoked**
 - ❌ ChangeDetectionCoordinator **crashed** with `TypeError: Cannot read properties of undefined`
@@ -19,6 +20,7 @@ When user moved streets (Rua Elói Cerqueira → Rua Engenheiro Dagoberto Gasgow
 ## Root Cause
 
 **Structure mismatch** between:
+
 1. **AddressChangeDetector output**: Uses `{ to, from, field, currentAddress, previousAddress }`
 2. **ChangeDetectionCoordinator expectations**: Expected `{ current: { field }, previous: { field } }`
 
@@ -76,6 +78,7 @@ changeDetails.to  // ✅ Uses AddressChangeDetector structure
 ## Production Validation
 
 **Real browser console** (Position #6):
+
 - Before: `TypeError: Cannot read properties of undefined`
 - After: Change detected and observers notified successfully ✅
 

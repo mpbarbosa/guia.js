@@ -110,11 +110,13 @@ The application is organized into **7 distinct layers**, each with specific resp
 **Responsibility**: Application initialization, routing, and view management
 
 **Components**:
+
 - `app.js` (543 lines) - SPA entry point with router
 - `views/home.js` (495 lines) - Home view controller
 - `views/converter.js` (521 lines) - Converter view controller
 
 **Key Functions**:
+
 - Route handling (`#/` → home, `#/converter` → converter)
 - DOM initialization
 - View lifecycle management
@@ -136,6 +138,7 @@ router.resolve();
 **Responsibility**: Orchestrates services, manages component lifecycle, coordinates events
 
 **Components**:
+
 - `WebGeocodingManager.js` - Main orchestrator
 - `ServiceCoordinator.js` - Service lifecycle manager
 - `EventCoordinator.js` - Event bus
@@ -143,6 +146,7 @@ router.resolve();
 - `SpeechCoordinator.js` - Speech synthesis coordination
 
 **Key Functions**:
+
 - Service initialization and cleanup
 - Cross-component communication
 - State synchronization
@@ -163,11 +167,13 @@ serviceCoordinator.cleanupAll();
 **Responsibility**: External API integration, geolocation services
 
 **Components**:
+
 - `GeolocationService.js` - Browser Geolocation API wrapper
 - `ReverseGeocoder.js` - OpenStreetMap Nominatim client
 - Observer pattern for event notifications
 
 **Key Functions**:
+
 - Browser geolocation access
 - Reverse geocoding (coordinates → address)
 - API error handling
@@ -189,10 +195,12 @@ service.getCurrentPosition({ enableHighAccuracy: true })
 **Responsibility**: Foundational data structures and state management
 
 **Components**:
+
 - `PositionManager.js` - Singleton position state manager
 - `GeoPosition.js` - Immutable position value object
 
 **Key Functions**:
+
 - Global position state
 - Position change detection (20m distance OR 30s time)
 - Observer notifications
@@ -214,6 +222,7 @@ manager.setCurrentPosition(geoPosition);
 **Responsibility**: Data extraction, transformation, caching, and validation
 
 **Components**:
+
 - `BrazilianStandardAddress.js` - Address standardization
 - `AddressExtractor.js` - Nominatim data extraction
 - `AddressCache.js` - LRU cache with change detection (refactored v0.9.0-alpha)
@@ -225,6 +234,7 @@ manager.setCurrentPosition(geoPosition);
 - `LRUCache.js` - Generic LRU cache implementation
 
 **Key Functions**:
+
 - Brazilian address normalization
 - Field extraction from Nominatim responses
 - Address change detection (municipio, bairro, uf, regiaoMetropolitana)
@@ -249,6 +259,7 @@ cache.set('current', addressData);
 **Responsibility**: UI rendering, DOM manipulation, data display
 
 **Components**:
+
 - `HTMLPositionDisplayer.js` - Coordinate display + Google Maps links
 - `HTMLAddressDisplayer.js` - Address formatting and display
 - `HTMLHighlightCardsDisplayer.js` - Municipality/neighborhood cards (v0.9.0+)
@@ -259,6 +270,7 @@ cache.set('current', addressData);
 - `HtmlSpeechSynthesisDisplayer.js` - Speech synthesis UI
 
 **Key Functions**:
+
 - HTML generation (safe, sanitized)
 - DOM element updates
 - Google Maps integration
@@ -282,6 +294,7 @@ const sidraDisplayer = factory.createSidraDisplayer(document, 'stats-id');
 **Responsibility**: Text-to-speech synthesis with Brazilian Portuguese optimization
 
 **Components** (v0.9.0-alpha Composition Refactor):
+
 - `SpeechSynthesisManager.js` - Main orchestrator (1148 lines)
   - Coordinates 4 focused components via composition
 - `VoiceLoader.js` - Asynchronous voice loading with exponential backoff
@@ -291,9 +304,11 @@ const sidraDisplayer = factory.createSidraDisplayer(document, 'stats-id');
 - `SpeechItem.js` - Individual speech request items
 
 **Legacy Components** (deprecated):
+
 - `SpeechController.js`, `SpeechQueueProcessor.js`, `VoiceManager.js`
 
 **Key Functions**:
+
 - Priority-based speech queue (high, normal, low)
 - Brazilian Portuguese voice optimization
 - Exponential backoff retry for voice loading
@@ -313,6 +328,7 @@ speechManager.speak('Bem-vindo ao Guia Turístico', 'high');
 ```
 
 **Voice Loading Strategy** (v0.9.0-alpha):
+
 - Retry delays: 100ms → 200ms → 400ms → 800ms → 1600ms → 3200ms → 5000ms
 - Max 10 attempts
 - Concurrent load protection
@@ -552,6 +568,7 @@ class PositionManager {
 ```
 
 **Benefits**:
+
 - Global state consistency
 - Prevents state duplication
 - Centralized access point
@@ -581,6 +598,7 @@ class PositionManager {
 ```
 
 **Benefits**:
+
 - Loose coupling between components
 - Reactive updates
 - Easy to add/remove listeners
@@ -615,6 +633,7 @@ class GeoPosition {
 ```
 
 **Benefits**:
+
 - Immutability prevents bugs
 - Clear data contracts
 - Easy to test
@@ -652,6 +671,7 @@ class SpeechSynthesisManager {
 ```
 
 **Benefits**:
+
 - Single Responsibility Principle
 - Easier testing (test each component independently)
 - Better code organization
@@ -681,6 +701,7 @@ class DisplayerFactory {
 ```
 
 **Benefits**:
+
 - Centralized creation logic
 - Easy to swap implementations
 - Dependency injection ready
@@ -705,6 +726,7 @@ class GeolocationService {
 ```
 
 **Benefits**:
+
 - Consistent async interface
 - Easy to mock for testing
 - Browser API abstraction
@@ -735,6 +757,7 @@ class WebGeocodingManager {
 ```
 
 **Benefits**:
+
 - Simplified client interface
 - Hides complexity
 - Centralized coordination
@@ -766,6 +789,7 @@ class VoiceSelector {
 ```
 
 **Benefits**:
+
 - Flexible algorithms
 - Easy to extend
 - Clear fallback logic
@@ -787,11 +811,13 @@ class VoiceSelector {
 **Rate Limit**: 1 request/second
 
 **Request Example**:
+
 ```http
 GET /reverse?format=json&lat=-23.5505&lon=-46.6333&addressdetails=1
 ```
 
 **Response Structure**:
+
 ```json
 {
   "display_name": "Av. Paulista, São Paulo, SP, Brazil",
@@ -832,6 +858,7 @@ GET /reverse?format=json&lat=-23.5505&lon=-46.6333&addressdetails=1
 **Offline Fallback**: `libs/sidra/tab6579_municipios.json` (190KB)
 
 **Response Example**:
+
 ```json
 {
   "id": "6579",
@@ -880,6 +907,7 @@ GET /reverse?format=json&lat=-23.5505&lon=-46.6333&addressdetails=1
 **Permissions**: User must grant location access
 
 **Methods Used**:
+
 - `navigator.geolocation.getCurrentPosition()`
 - `navigator.geolocation.watchPosition()`
 
@@ -894,6 +922,7 @@ GET /reverse?format=json&lat=-23.5505&lon=-46.6333&addressdetails=1
 **Availability**: Optional (graceful degradation if unavailable)
 
 **Methods Used**:
+
 - `window.speechSynthesis.speak()`
 - `window.speechSynthesis.getVoices()`
 

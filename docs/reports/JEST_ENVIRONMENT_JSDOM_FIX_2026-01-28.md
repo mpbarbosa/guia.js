@@ -9,6 +9,7 @@
 ## Problem
 
 Test file `__tests__/unit/HTMLHighlightCardsDisplayer-MetropolitanRegion.test.js` failed with:
+
 ```
 Test environment jest-environment-jsdom cannot be found.
 As of Jest 28 "jest-environment-jsdom" is no longer shipped by default,
@@ -28,6 +29,7 @@ make sure to install it separately.
 ## Solution
 
 ### 1. Installed jest-environment-jsdom
+
 ```bash
 npm install --save-dev jest-environment-jsdom
 ```
@@ -35,9 +37,11 @@ npm install --save-dev jest-environment-jsdom
 **Result**: Added 6 packages, 507 total packages
 
 ### 2. Fixed test file configuration
+
 **File**: `__tests__/unit/HTMLHighlightCardsDisplayer-MetropolitanRegion.test.js`
 
 **Changed**:
+
 ```diff
 - * @jest-environment jsdom
 + * @jest-environment node
@@ -57,16 +61,19 @@ npm install --save-dev jest-environment-jsdom
 ## Test Results
 
 ### Before Fix
+
 - ❌ Test suite failed to run
 - 0 tests executed
 - Blocked 21 metropolitan region tests
 
 ### After Fix
+
 - ✅ Test suite passes
 - ✅ **21 tests passing** (all metropolitan region tests)
 - ✅ Execution time: 0.415 seconds
 
 ### Full Test Suite Impact
+
 - **Before**: 2,213 tests passing
 - **After**: 2,234 tests passing (+21 tests)
 - **Test suites**: 91 passing (+1 suite fixed)
@@ -78,7 +85,7 @@ npm install --save-dev jest-environment-jsdom
 1. **package.json** (dependency added via npm install)
    - Added `jest-environment-jsdom` to devDependencies
 
-2. **__tests__/unit/HTMLHighlightCardsDisplayer-MetropolitanRegion.test.js**
+2. ****tests**/unit/HTMLHighlightCardsDisplayer-MetropolitanRegion.test.js**
    - Changed `@jest-environment jsdom` → `@jest-environment node`
    - Added TextEncoder/TextDecoder polyfills
 
@@ -87,6 +94,7 @@ npm install --save-dev jest-environment-jsdom
 ## Tests Now Passing (21 tests)
 
 ### Metropolitan Region Display Feature
+
 1. ✅ Display "Região Metropolitana do Recife"
 2. ✅ Display "Região Metropolitana de São Paulo"
 3. ✅ Display Olinda in Recife metropolitan region
@@ -111,6 +119,7 @@ npm install --save-dev jest-environment-jsdom
 **Two approaches**:
 
 1. **jsdom environment** (auto-provides DOM):
+
    ```javascript
    /**
     * @jest-environment jsdom
@@ -119,6 +128,7 @@ npm install --save-dev jest-environment-jsdom
    ```
 
 2. **Node environment with manual JSDOM** (used here):
+
    ```javascript
    /**
     * @jest-environment node
@@ -134,6 +144,7 @@ npm install --save-dev jest-environment-jsdom
    ```
 
 **Why node + manual JSDOM**:
+
 - Gives more control over DOM setup
 - Can reset DOM between tests (beforeEach)
 - Explicit about test dependencies
@@ -144,11 +155,13 @@ npm install --save-dev jest-environment-jsdom
 ## Verification
 
 ### Run specific test file
+
 ```bash
 npm test -- __tests__/unit/HTMLHighlightCardsDisplayer-MetropolitanRegion.test.js
 ```
 
 **Expected**:
+
 ```
 Test Suites: 1 passed, 1 total
 Tests:       21 passed, 21 total
@@ -156,11 +169,13 @@ Time:        ~0.4 seconds
 ```
 
 ### Run full test suite
+
 ```bash
 npm test
 ```
 
 **Expected**:
+
 ```
 Test Suites: 91 passed (includes metropolitan region tests)
 Tests:       2,234 passed
@@ -173,6 +188,7 @@ Tests:       2,234 passed
 ### For new test files using jsdom
 
 **Option A - Auto jsdom environment** (simpler):
+
 ```javascript
 /**
  * @jest-environment jsdom
@@ -182,6 +198,7 @@ Tests:       2,234 passed
 ```
 
 **Option B - Manual jsdom setup** (more control):
+
 ```javascript
 /**
  * @jest-environment node

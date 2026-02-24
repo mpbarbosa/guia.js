@@ -19,12 +19,14 @@ This document describes the security and dependency monitoring infrastructure fo
 **Purpose**: Review dependency changes for security vulnerabilities
 
 **Features**:
+
 - ✅ Fails on moderate or higher severity vulnerabilities
 - ✅ Checks for license compliance
 - ✅ Scoped to runtime dependencies
 - ✅ Automatic PR comments with results
 
 **Configuration**:
+
 ```yaml
 fail-on-severity: moderate
 fail-on-scopes: runtime
@@ -32,6 +34,7 @@ allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC
 ```
 
 **Allowed Licenses**:
+
 - MIT
 - Apache-2.0
 - BSD-2-Clause / BSD-3-Clause
@@ -46,18 +49,21 @@ allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC
 **Purpose**: Automated npm security audits
 
 **Features**:
+
 - ✅ Runs on every CI/CD build
 - ✅ Detailed vulnerability breakdown
 - ✅ GitHub step summary with counts
 - ✅ JSON results for analysis
 
 **Severity Levels Tracked**:
+
 - 🔴 Critical
 - 🟠 High
 - 🟡 Moderate
 - 🔵 Low
 
 **Example Output**:
+
 ```
 ## 🔒 Security Audit Results
 
@@ -82,12 +88,14 @@ allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC
 **Features**:
 
 #### npm Dependencies
+
 - **Schedule**: Weekly (Mondays at 09:00 Brazil time)
 - **PR Limit**: 5 concurrent PRs
 - **Auto-assign**: @mpbarbosa
 - **Labels**: dependencies, automated
 
-#### Grouped Updates:
+#### Grouped Updates
+
 1. **Security Updates** (Highest Priority)
    - Immediate review required
    - All security patches grouped together
@@ -101,11 +109,13 @@ allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC
    - Lower priority
 
 #### GitHub Actions
+
 - **Schedule**: Monthly
 - **PR Limit**: 2 concurrent PRs
 - **Auto-assign**: @mpbarbosa
 
-#### Ignored Updates:
+#### Ignored Updates
+
 - ❌ Major version updates (require manual review)
 - ⚠️ Breaking changes need evaluation
 
@@ -116,6 +126,7 @@ allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC
 ### Custom Dependencies from GitHub
 
 **Production Dependencies**:
+
 ```json
 {
   "guia.js": "github:mpbarbosa/guia_js#commit-f41713a",
@@ -127,15 +138,17 @@ allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC
 
 **Action Required**: Enable GitHub notifications for releases
 
-#### Setup Instructions:
+#### Setup Instructions
 
 1. **For guia.js repository**:
+
    ```
    Navigate to: https://github.com/mpbarbosa/guia_js
    Click: Watch → Custom → Releases
    ```
 
 2. **For ibira.js repository**:
+
    ```
    Navigate to: https://github.com/mpbarbosa/ibira.js
    Click: Watch → Custom → Releases
@@ -147,6 +160,7 @@ allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC
    - Check "Releases" option
 
 **Manual Update Process**:
+
 ```bash
 # Update guia.js to latest
 npm install github:mpbarbosa/guia_js
@@ -177,6 +191,7 @@ git commit -m "chore(deps): update GitHub packages"
 #### 1. npm Audit Commands
 
 **Local Security Audit**:
+
 ```bash
 # Full audit
 npm audit
@@ -197,6 +212,7 @@ npm audit fix --force
 #### 2. Dependency Health Check
 
 **Check for Outdated Packages**:
+
 ```bash
 # List outdated packages
 npm outdated
@@ -234,6 +250,7 @@ npm-audit-resolver
 ### Automated (Dependabot)
 
 **Weekly Process**:
+
 1. Monday 09:00 BRT: Dependabot scans for updates
 2. Creates grouped PRs (security, minor/patch, dev)
 3. Assigns to @mpbarbosa
@@ -241,6 +258,7 @@ npm-audit-resolver
 5. Review and merge if tests pass
 
 **Priority Order**:
+
 1. 🚨 Security updates (immediate)
 2. 🟢 Minor/patch updates (weekly)
 3. 🔵 Dev dependencies (weekly)
@@ -249,12 +267,14 @@ npm-audit-resolver
 ### Manual Updates
 
 **When to Manually Update**:
+
 - Major version releases
 - GitHub package updates (guia.js, ibira.js)
 - Breaking changes requiring code updates
 - Performance improvements
 
 **Manual Update Process**:
+
 ```bash
 # 1. Check what's outdated
 npm outdated
@@ -286,6 +306,7 @@ git push
 ### Vulnerability Detected
 
 **1. Critical/High Severity**:
+
 ```bash
 # Immediate action required
 npm audit --audit-level=high
@@ -304,17 +325,20 @@ npm update package-name
 ```
 
 **2. Moderate Severity**:
+
 - Review within 24 hours
 - Schedule update in next sprint
 - Document mitigation if update breaks compatibility
 
 **3. Low Severity**:
+
 - Monitor for updates
 - Include in next weekly update cycle
 
 ### Dependabot Security Alert
 
 **GitHub Security Alerts**:
+
 1. Receive email notification
 2. Check PR from Dependabot
 3. Review CI/CD test results
@@ -322,6 +346,7 @@ npm update package-name
 5. Deploy updated version
 
 **Response Time SLA**:
+
 - Critical: Within 4 hours
 - High: Within 24 hours
 - Moderate: Within 1 week
@@ -336,6 +361,7 @@ npm update package-name
 **Access**: `https://github.com/mpbarbosa/guia_turistico/security`
 
 **Available Views**:
+
 - 🔒 Dependabot alerts
 - 🔍 Code scanning alerts
 - 🛡️ Secret scanning alerts
@@ -344,6 +370,7 @@ npm update package-name
 ### npm Audit Dashboard
 
 **Local Command**:
+
 ```bash
 npm audit
 
@@ -361,12 +388,14 @@ Check GitHub Actions → test.yml → Security Audit step
 ### Weekly Security Report
 
 **Automated Metrics** (from CI/CD):
+
 - Total vulnerabilities: X
 - By severity: Critical (0), High (0), Moderate (0), Low (0)
 - Dependencies up to date: Y/Z packages
 - Last security audit: [timestamp]
 
 **Manual Review** (Monthly):
+
 - GitHub package updates pending
 - Major version updates available
 - Breaking changes to evaluate
@@ -393,6 +422,7 @@ Check GitHub Actions → test.yml → Security Audit step
 ### Verify Setup
 
 **1. Dependency Review**:
+
 ```bash
 # Create test PR with dependency change
 git checkout -b test/dependency-update
@@ -405,6 +435,7 @@ git push
 ```
 
 **2. Security Audit**:
+
 ```bash
 # Run locally
 npm audit
@@ -415,6 +446,7 @@ git push origin main
 ```
 
 **3. Dependabot**:
+
 ```bash
 # Check Dependabot status
 gh browse /network/updates
@@ -430,6 +462,7 @@ gh browse /network/updates
 ### Common Issues
 
 **1. Audit Fails with Many Vulnerabilities**:
+
 ```bash
 # Check if dev dependencies are affected
 npm audit --production
@@ -441,12 +474,14 @@ npm test  # Verify no breaking changes
 ```
 
 **2. Dependabot PRs Failing Tests**:
+
 - Review CI/CD logs
 - Check breaking changes in changelog
 - Update code if needed
 - Close PR if update causes issues
 
 **3. False Positives**:
+
 ```bash
 # Use npm-audit-resolver
 npm install -g npm-audit-resolver
@@ -461,6 +496,7 @@ npm-audit-resolver
 **Security Status**: ✅ **EXCELLENT**
 
 **Implemented Measures**:
+
 - ✅ Automated dependency review on PRs
 - ✅ Security audit in CI/CD pipeline
 - ✅ Dependabot with excellent configuration
@@ -468,6 +504,7 @@ npm-audit-resolver
 - ✅ Grouped security updates
 
 **Recommendations**:
+
 1. ✅ Enable GitHub notifications for guia.js releases
 2. ✅ Enable GitHub notifications for ibira.js releases
 3. ✅ Review security alerts weekly

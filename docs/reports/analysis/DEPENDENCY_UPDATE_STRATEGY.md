@@ -16,6 +16,7 @@
 | jsdom | 25.0.1 | 27.4.0 | minor | Medium | ⏳ NEXT |
 
 **Total Dependencies**: 523 packages
+
 - Production: 48 packages
 - Development: 476 packages  
 - Outdated: 2 packages (0.4%)
@@ -29,12 +30,14 @@
 **Goal**: Update low-risk patch versions
 
 **Actions**:
+
 ```bash
 npm install puppeteer@24.35.0 --save-dev
 npm run test:all
 ```
 
 **Results**:
+
 ```
 ✅ Puppeteer updated: 24.34.0 → 24.35.0
 ✅ Tests: 1,794 passing / 1,942 total (same as before)
@@ -52,6 +55,7 @@ npm run test:all
 **Goal**: Update jsdom with careful validation
 
 **Actions**:
+
 ```bash
 # 1. Update jsdom
 npm install jsdom@27.4.0 --save-dev
@@ -66,11 +70,13 @@ python3 -m http.server 9000
 ```
 
 **Risk Assessment**: 🟡 MEDIUM
+
 - jsdom 25.0.1 → 27.4.0 (2 major versions)
 - Potential DOM API changes
 - CSSOM query changes possible
 
 **Breaking Change Checklist**:
+
 - [ ] HTMLPositionDisplayer tests pass
 - [ ] HTMLAddressDisplayer tests pass
 - [ ] DisplayerFactory tests pass
@@ -81,6 +87,7 @@ python3 -m http.server 9000
 - [ ] Coverage remains ≥ 80%
 
 **Rollback Plan**:
+
 ```bash
 # If tests fail:
 npm install jsdom@25.0.1 --save-dev
@@ -99,6 +106,7 @@ npm install
 **Actions**:
 
 #### **1. Add Node/NPM Version Constraints**
+
 ```json
 {
   "engines": {
@@ -111,6 +119,7 @@ npm install
 **Note**: Already exists in package.json, verify accuracy
 
 #### **2. Review GitHub-Sourced Dependencies**
+
 ```json
 {
   "dependencies": {
@@ -121,6 +130,7 @@ npm install
 ```
 
 **Action Items**:
+
 - [ ] Check if semver tags exist
 - [ ] Consider publishing to npm registry
 - [ ] Document update process
@@ -128,6 +138,7 @@ npm install
 #### **3. Major Version Updates Review**
 
 **Candidates** (check quarterly):
+
 ```bash
 # Check for major updates
 npm outdated --long
@@ -189,6 +200,7 @@ git commit -am "chore(deps): update <package> to <version>"
 ```
 
 **Validation Checklist**:
+
 - [ ] All tests pass
 - [ ] Coverage unchanged or improved
 - [ ] No new deprecation warnings
@@ -238,6 +250,7 @@ git push origin update/<package>-v<version>
 ```
 
 **Validation Checklist**:
+
 - [ ] All tests pass
 - [ ] Coverage maintained or improved
 - [ ] Breaking changes documented
@@ -254,11 +267,13 @@ git push origin update/<package>-v<version>
 ### **Dependency Security Scanning**
 
 **Tools**:
+
 1. ✅ **Dependabot** - Automated security updates
 2. ✅ **npm audit** - CLI security scanner (integrated in CI)
 3. ⚠️ **Snyk** (optional) - Advanced vulnerability scanning
 
 **Process**:
+
 ```bash
 # Before any update:
 npm audit
@@ -290,6 +305,7 @@ cat audit-results.json | jq '.vulnerabilities'
 ### **Dependency Health Metrics**
 
 **Monthly Review**:
+
 ```bash
 # Check outdated packages
 npm outdated
@@ -305,6 +321,7 @@ npm-check-updates -u
 ```
 
 **Target Metrics**:
+
 - ✅ 0 critical vulnerabilities
 - ✅ 0 high vulnerabilities
 - ✅ < 5 moderate vulnerabilities
@@ -312,6 +329,7 @@ npm-check-updates -u
 - ✅ No deprecated dependencies
 
 **Current Metrics** (2026-01-15):
+
 ```
 Vulnerabilities: 0 critical, 0 high, 0 moderate, 0 low ✅
 Outdated: 2 packages (0.4%) ✅
@@ -336,6 +354,7 @@ Deprecated: 0 packages ✅
 ### **Before jsdom Update**
 
 **Pre-Update Tasks**:
+
 - [x] Review jsdom 27.x changelog
 - [x] Identify breaking changes
 - [x] Create backup branch
@@ -344,12 +363,14 @@ Deprecated: 0 packages ✅
 
 **jsdom 25.0.1 → 27.4.0 Breaking Changes**:
 Based on changelog review:
+
 - ⚠️ DOM API updates (HTML parsing)
 - ⚠️ CSSOM query changes
 - ⚠️ Event handling modifications
 - ⚠️ Node compatibility requirements
 
 **Affected Code Areas**:
+
 1. `src/html/HTMLPositionDisplayer.js` - DOM manipulation
 2. `src/html/HTMLAddressDisplayer.js` - DOM manipulation
 3. `src/html/DisplayerFactory.js` - Document fragments
@@ -419,6 +440,7 @@ echo "Ready to commit"
 ### **Required Updates After Phase 2**
 
 If jsdom update succeeds:
+
 - [ ] Update `package.json` lock file
 - [ ] Update `docs/TESTING.md` (if test patterns change)
 - [ ] Update `.github/copilot-instructions.md` (if environment changes)
@@ -432,6 +454,7 @@ If jsdom update succeeds:
 **Status**: ✅ SUCCESS
 
 **Changes**:
+
 - Updated puppeteer: 24.34.0 → 24.35.0
 - Test results: 1,794 passing / 1,942 total
 - No regressions detected
@@ -444,4 +467,3 @@ If jsdom update succeeds:
 **Maintained by**: GitHub Copilot CLI  
 **Last Updated**: 2026-01-15  
 **Next Review**: 2026-02-01 (Phase 2)
-

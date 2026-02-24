@@ -53,12 +53,14 @@ Try these first before detailed troubleshooting:
 ### "Location permission denied"
 
 **Symptoms**:
+
 - Button remains disabled
 - Status message: "Aguardando permissão de localização"
 - No coordinates displayed
 - Browser shows blocked location icon
 
 **Causes**:
+
 1. User clicked "Block" on permission prompt
 2. Site blocked in browser settings
 3. System-wide location disabled
@@ -67,6 +69,7 @@ Try these first before detailed troubleshooting:
 **Solutions**:
 
 #### Method 1: Reset Site Permissions (Chrome/Edge)
+
 ```
 1. Click lock icon in address bar
 2. Click "Site settings"
@@ -77,6 +80,7 @@ Try these first before detailed troubleshooting:
 ```
 
 #### Method 2: Browser Settings (Chrome)
+
 ```
 1. Chrome menu (⋮) > Settings
 2. Privacy and security > Site settings
@@ -87,6 +91,7 @@ Try these first before detailed troubleshooting:
 ```
 
 #### Method 3: Firefox Settings
+
 ```
 1. Click lock icon
 2. "Connection secure" or similar
@@ -98,6 +103,7 @@ Try these first before detailed troubleshooting:
 #### Method 4: System Settings (if all else fails)
 
 **Windows**:
+
 ```
 Settings > Privacy > Location
 - Turn on "Location services"
@@ -105,6 +111,7 @@ Settings > Privacy > Location
 ```
 
 **macOS**:
+
 ```
 System Preferences > Security & Privacy > Privacy
 - Select "Location Services"
@@ -112,12 +119,14 @@ System Preferences > Security & Privacy > Privacy
 ```
 
 **Android**:
+
 ```
 Settings > Apps > [Browser] > Permissions > Location
 - Select "Allow all the time" or "Allow only while using the app"
 ```
 
 **iOS**:
+
 ```
 Settings > Privacy > Location Services
 - Enable Location Services
@@ -127,17 +136,20 @@ Settings > Privacy > Location Services
 ### "Permission prompt not appearing"
 
 **Symptoms**:
+
 - Click button, nothing happens
 - No permission dialog shown
 - Console shows no errors
 
 **Causes**:
+
 1. Permission already denied previously
 2. Browser auto-denied due to security
 3. Third-party extension blocking
 4. Corporate firewall/policy
 
 **Solutions**:
+
 1. **Check current permission**: Look for blocked icon in address bar
 2. **Reset permissions**: See "Method 1" above
 3. **Disable extensions**: Try incognito mode (extensions disabled)
@@ -150,12 +162,14 @@ Settings > Privacy > Location Services
 ### "Fetching address information timed out"
 
 **Symptoms**:
+
 - Coordinates displayed successfully
 - Address section shows error
 - Timeout after 10-15 seconds
 - Network error in console
 
 **Causes**:
+
 1. OpenStreetMap/Nominatim API down
 2. Slow internet connection
 3. Firewall blocking API requests
@@ -164,6 +178,7 @@ Settings > Privacy > Location Services
 **Solutions**:
 
 #### Step 1: Verify Internet Connection
+
 ```bash
 # Check if OpenStreetMap is accessible
 Visit: https://nominatim.openstreetmap.org/status
@@ -172,6 +187,7 @@ Visit: https://nominatim.openstreetmap.org/status
 ```
 
 #### Step 2: Check Browser Console
+
 ```
 1. Press F12 (Developer Tools)
 2. Go to "Network" tab
@@ -181,12 +197,14 @@ Visit: https://nominatim.openstreetmap.org/status
 ```
 
 Common errors:
+
 - `ERR_NAME_NOT_RESOLVED` - DNS issue (check internet)
 - `ERR_CONNECTION_TIMED_OUT` - Slow connection (wait longer)
 - `429 Too Many Requests` - Rate limited (wait 5 minutes)
 - `CORS error` - API configuration issue (report bug)
 
 #### Step 3: Try Alternative Network
+
 ```
 1. Switch from WiFi to mobile data (or vice versa)
 2. Try different WiFi network
@@ -195,6 +213,7 @@ Common errors:
 ```
 
 #### Step 4: Wait and Retry
+
 ```
 If rate limited:
 1. Wait 5 minutes
@@ -206,11 +225,13 @@ If rate limited:
 ### "IBGE statistics not loading"
 
 **Symptoms**:
+
 - Address displayed successfully
 - Population section missing or showing error
 - "Carregando estatísticas..." stays indefinitely
 
 **Causes**:
+
 1. IBGE SIDRA API down
 2. Municipality not in database
 3. Offline fallback failed
@@ -219,6 +240,7 @@ If rate limited:
 **Solutions**:
 
 1. **Check IBGE API status**:
+
    ```
    Visit: https://servicodados.ibge.gov.br/api/v3/agregados/6579
    Should return JSON data
@@ -229,6 +251,7 @@ If rate limited:
    - Non-Brazilian locations won't have statistics
 
 3. **Check offline fallback**:
+
    ```javascript
    // In browser console:
    fetch('/libs/sidra/tab6579_municipios.json')
@@ -250,12 +273,14 @@ If rate limited:
 ### "GPS signal not available"
 
 **Symptoms**:
+
 - "Obtendo localização..." stays indefinitely
 - No coordinates displayed
 - Timeout after 30-60 seconds
 - Error: "User denied geolocation"
 
 **Causes**:
+
 1. Indoor location (GPS needs sky view)
 2. Device GPS disabled
 3. No GPS hardware (desktop computers)
@@ -263,7 +288,8 @@ If rate limited:
 
 **Solutions**:
 
-#### For Mobile Devices:
+#### For Mobile Devices
+
 ```
 1. Move outdoors or near window
 2. Wait 30-60 seconds for GPS fix
@@ -272,7 +298,8 @@ If rate limited:
 5. Restart device if GPS not working
 ```
 
-#### For Desktop/Laptop:
+#### For Desktop/Laptop
+
 ```
 1. Desktop computers don't have GPS
 2. Location uses WiFi-based approximation
@@ -281,7 +308,8 @@ If rate limited:
 5. Accuracy will be lower (50-500m instead of 5-10m)
 ```
 
-#### Improving GPS Accuracy:
+#### Improving GPS Accuracy
+
 ```
 ✅ Outdoors, clear sky view
 ✅ Wait for initial GPS acquisition
@@ -298,12 +326,14 @@ If rate limited:
 ### "Location updates too slow"
 
 **Symptoms**:
+
 - Continuous mode enabled
 - Not updating as you move
 - Updates only every few minutes
 - Walking but display not changing
 
 **Causes**:
+
 1. Update thresholds not met (30s time, 20m distance)
 2. GPS accuracy too low (position change not detected)
 3. Timer not running (bug)
@@ -311,7 +341,8 @@ If rate limited:
 
 **Solutions**:
 
-#### Verify Update Thresholds:
+#### Verify Update Thresholds
+
 ```
 Location updates ONLY when:
 - ⏱️ 30 seconds since last update, OR
@@ -320,7 +351,8 @@ Location updates ONLY when:
 This is by design to prevent excessive API calls.
 ```
 
-#### Check Current Status:
+#### Check Current Status
+
 ```
 In browser console:
 1. Press F12
@@ -331,7 +363,8 @@ In browser console:
    - "(PositionManager) Time: XXs"
 ```
 
-#### Improve Update Frequency:
+#### Improve Update Frequency
+
 ```
 1. Walk faster or farther (trigger 20m threshold)
 2. Wait longer (trigger 30s threshold)
@@ -343,11 +376,13 @@ In browser console:
 ### "Wrong location displayed"
 
 **Symptoms**:
+
 - Coordinates shown are incorrect
 - Address is for wrong city/country
 - Location is far from actual position
 
 **Causes**:
+
 1. Low GPS accuracy (WiFi-based location)
 2. Outdated cached position
 3. VPN or proxy location
@@ -378,11 +413,13 @@ In browser console:
 ### "Buttons are disabled"
 
 **Symptoms**:
+
 - "Obter Localização" button is grayed out
 - Button shows status message
 - Can't click to get location
 
 **Causes**:
+
 1. Waiting for prerequisites (by design)
 2. Previous operation still in progress
 3. Permission not granted
@@ -390,7 +427,8 @@ In browser console:
 
 **Solutions**:
 
-#### Check Status Message (v0.9.0-alpha):
+#### Check Status Message (v0.9.0-alpha)
+
 ```
 Button shows reason:
 - "Aguardando localização para habilitar"
@@ -402,7 +440,8 @@ Button shows reason:
   → If not, report bug
 ```
 
-#### Troubleshoot:
+#### Troubleshoot
+
 ```
 1. Read the status message (tells you why)
 2. Wait 5-10 seconds
@@ -413,11 +452,13 @@ Button shows reason:
 ### "Information not displaying"
 
 **Symptoms**:
+
 - Coordinates show but no address
 - Address shows but no municipality card
 - Some sections empty or missing
 
 **Causes**:
+
 1. API returned incomplete data
 2. Display component failed to render
 3. Network timeout
@@ -432,12 +473,14 @@ Button shows reason:
    - **No statistics**: Non-Brazilian location or API down
 
 2. **View browser console**:
+
    ```
    F12 > Console tab
    Look for errors in red
    ```
 
 3. **Check network tab**:
+
    ```
    F12 > Network tab
    Look for failed requests (red)
@@ -451,11 +494,13 @@ Button shows reason:
 ### "Application is slow"
 
 **Symptoms**:
+
 - Buttons take long to respond
 - Updates lag
 - Interface feels sluggish
 
 **Causes**:
+
 1. Slow internet connection
 2. Low-powered device
 3. Many browser tabs open
@@ -473,11 +518,13 @@ Button shows reason:
 ### "High memory usage"
 
 **Symptoms**:
+
 - Browser uses lots of RAM
 - Computer slows down
 - Fan runs loudly
 
 **Causes**:
+
 1. Continuous mode running for hours
 2. Timer leak (bug - should be fixed)
 3. Many browser tabs
@@ -501,12 +548,14 @@ Button shows reason:
 ### "Application doesn't work in my browser"
 
 **Symptoms**:
+
 - Blank page
 - JavaScript errors
 - Features missing
 - Console shows syntax errors
 
 **Causes**:
+
 1. Outdated browser
 2. JavaScript disabled
 3. ES6 modules not supported
@@ -514,7 +563,8 @@ Button shows reason:
 
 **Solutions**:
 
-#### Check Browser Version:
+#### Check Browser Version
+
 ```
 Minimum required:
 - Chrome 90+
@@ -529,7 +579,8 @@ How to check:
 - Edge: edge://version
 ```
 
-#### Update Browser:
+#### Update Browser
+
 ```
 Chrome/Edge:
 - Menu (⋮) > Help > About Chrome/Edge
@@ -544,7 +595,8 @@ Safari:
 - Check: System Preferences > Software Update
 ```
 
-#### Enable JavaScript:
+#### Enable JavaScript
+
 ```
 Chrome:
 1. Settings > Privacy and security
@@ -568,11 +620,13 @@ Safari:
 ### "No voice announcements"
 
 **Symptoms**:
+
 - Address changes but no speech
 - Silent when neighborhood changes
 - No audio output
 
 **Causes**:
+
 1. Browser doesn't support speech synthesis
 2. No Brazilian Portuguese voice installed
 3. System audio muted
@@ -580,7 +634,8 @@ Safari:
 
 **Solutions**:
 
-#### Check Browser Support:
+#### Check Browser Support
+
 ```javascript
 // In browser console:
 'speechSynthesis' in window
@@ -589,7 +644,8 @@ Safari:
 // If false: Browser doesn't support speech
 ```
 
-#### Check Available Voices:
+#### Check Available Voices
+
 ```javascript
 // In browser console:
 speechSynthesis.getVoices().filter(v => v.lang.startsWith('pt'))
@@ -598,9 +654,10 @@ speechSynthesis.getVoices().filter(v => v.lang.startsWith('pt'))
 // If empty: No Portuguese voices installed
 ```
 
-#### Install Portuguese Voice:
+#### Install Portuguese Voice
 
 **Windows**:
+
 ```
 1. Settings > Time & Language > Language
 2. Add "Portuguese (Brazil)" if not present
@@ -610,6 +667,7 @@ speechSynthesis.getVoices().filter(v => v.lang.startsWith('pt'))
 ```
 
 **macOS**:
+
 ```
 1. System Preferences > Accessibility
 2. Spoken Content
@@ -618,12 +676,14 @@ speechSynthesis.getVoices().filter(v => v.lang.startsWith('pt'))
 ```
 
 **Android/iOS**:
+
 - System voices usually pre-installed
 - Check Settings > Language for voice packs
 
 ### "Speech is too fast/slow"
 
 **Symptoms**:
+
 - Voice speaks too quickly
 - Voice speaks too slowly
 - Hard to understand
@@ -631,6 +691,7 @@ speechSynthesis.getVoices().filter(v => v.lang.startsWith('pt'))
 **Solutions**:
 
 Currently not user-configurable. Default settings:
+
 - Rate: 1.0 (normal speed)
 - Pitch: 1.0 (normal pitch)
 
@@ -643,6 +704,7 @@ Future versions may add user controls.
 ### "Not working on mobile"
 
 **Symptoms**:
+
 - Features don't work on phone
 - Buttons not responsive
 - Layout broken
@@ -664,6 +726,7 @@ Future versions may add user controls.
 ### "GPS not working on phone"
 
 **Solutions**:
+
 - Enable "High Accuracy" location mode
 - Grant "While Using App" permission, not "Always"
 - Disable battery optimization for browser
@@ -708,6 +771,7 @@ Future versions may add user controls.
 ### Information to Include
 
 When reporting bugs, provide:
+
 - **Browser and version** (e.g., Chrome 120.0.6099.199)
 - **Operating system** (e.g., Windows 11, macOS 14.2)
 - **Device type** (desktop, mobile)

@@ -31,6 +31,7 @@ python3 -m http.server 9000
 ## 🔧 Essential Commands
 
 ### Testing
+
 ```bash
 npm test                    # Run all tests (~7 seconds)
 npm run test:coverage       # Tests with coverage (~7 seconds)
@@ -40,6 +41,7 @@ npm run validate            # Syntax check only (<1 second)
 ```
 
 ### Development
+
 ```bash
 node src/guia.js            # Basic functionality test
 node -c src/guia.js         # Syntax validation
@@ -47,19 +49,24 @@ python3 -m http.server 9000 # Start web server
 ```
 
 ### Pre-Push Validation
+
 ```bash
 ./.github/scripts/test-workflow-locally.sh
 ```
+
 Simulates GitHub Actions workflow locally. Validates:
+
 - JavaScript syntax
 - Test suite execution
 - Coverage generation
 - Documentation format
 
 ### CDN URL Generation
+
 ```bash
 ./.github/scripts/cdn-delivery.sh
 ```
+
 Generates jsDelivr CDN URLs for current version. Output saved to `cdn-urls.txt`.
 
 ## 📁 Key Directories
@@ -90,39 +97,46 @@ guia_js/
 ## 📚 Documentation Quick Links
 
 ### Core Guides
+
 - [README.md](README.md) - Main project documentation
 - [CONTRIBUTING.md](.github/CONTRIBUTING.md) - Contribution guidelines
 - [WORKFLOW_SETUP.md](docs/WORKFLOW_SETUP.md) - CI/CD setup
 
 ### Architecture
+
 - [POSITION_MANAGER.md](docs/architecture/POSITION_MANAGER.md)
 - [WEB_GEOCODING_MANAGER.md](docs/architecture/WEB_GEOCODING_MANAGER.md)
 - [GEOLOCATION_SERVICE_REFACTORING.md](docs/architecture/GEOLOCATION_SERVICE_REFACTORING.md)
 
 ### Testing Guides
+
 - [TDD_GUIDE.md](.github/TDD_GUIDE.md)
 - [UNIT_TEST_GUIDE.md](.github/UNIT_TEST_GUIDE.md)
 - [JEST_COMMONJS_ES6_GUIDE.md](.github/JEST_COMMONJS_ES6_GUIDE.md)
 
 ### API Integration
+
 - [NOMINATIM_INTEGRATION.md](docs/api-integration/NOMINATIM_INTEGRATION.md)
 - [IBIRA_INTEGRATION.md](docs/IBIRA_INTEGRATION.md)
 
 ## 🐛 Troubleshooting
 
 ### Tests Failing?
+
 ```bash
 npm test                    # Run to see specific failures
 node -c src/guia.js         # Check syntax errors
 ```
 
 ### Syntax Errors?
+
 ```bash
 npm run validate            # Validate all JS files
 node -c src/filename.js     # Check specific file
 ```
 
 ### Web Server Issues?
+
 ```bash
 # Change port if 9000 is in use
 python3 -m http.server 8000
@@ -132,6 +146,7 @@ curl -I http://localhost:9000/test.html
 ```
 
 ### CDN Script Errors?
+
 ```bash
 # Verify prerequisites
 node --version              # Should be v18+
@@ -146,6 +161,7 @@ cd /path/to/guia_js
 ## 🎯 Common Workflows
 
 ### Making Changes
+
 1. Create feature branch: `git checkout -b feature/my-feature`
 2. Make changes to code
 3. Run validation: `npm run test:all`
@@ -155,6 +171,7 @@ cd /path/to/guia_js
 7. Push: `git push origin feature/my-feature`
 
 ### Releasing New Version
+
 1. Update version: `npm version minor` (or major/patch)
 2. Generate CDN URLs: `./.github/scripts/cdn-delivery.sh`
 3. Commit changes: `git add . && git commit -m "chore: bump version"`
@@ -163,6 +180,7 @@ cd /path/to/guia_js
 6. Wait 5-10 minutes for CDN sync
 
 ### Adding New Tests
+
 1. Create test file in `__tests__/` following structure
 2. Import module: `import { MyClass } from '../src/path/to/MyClass.js';`
 3. Write tests using Jest
@@ -188,16 +206,19 @@ cd /path/to/guia_js
 ## 🎓 Key Concepts
 
 ### Immutability
+
 - Use spread operator instead of push/splice
 - Use map/filter instead of direct array manipulation
 - See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for patterns
 
 ### Functional Programming
+
 - Pure functions preferred
 - Avoid side effects
 - Referential transparency
 
 ### Testing Philosophy
+
 - Test-driven development (TDD)
 - Unit tests for individual components
 - Integration tests for workflows

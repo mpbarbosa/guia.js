@@ -13,6 +13,7 @@ DisplayerFactory provides centralized creation of all HTML displayer components 
 **Single Responsibility**: Displayer object creation
 
 ### Key Features
+
 - ✅ Centralized displayer creation
 - ✅ Dependency injection support
 - ✅ Pure functions with no side effects
@@ -24,6 +25,7 @@ DisplayerFactory provides centralized creation of all HTML displayer components 
 ## Static Methods
 
 ### createPositionDisplayer(element)
+
 Creates a position displayer for coordinate display.
 
 ```javascript
@@ -33,6 +35,7 @@ const displayer = DisplayerFactory.createPositionDisplayer(element);
 **Returns**: `HTMLPositionDisplayer` (frozen)
 
 ### createAddressDisplayer(element)
+
 Creates an address displayer for Brazilian address rendering.
 
 ```javascript
@@ -42,6 +45,7 @@ const displayer = DisplayerFactory.createAddressDisplayer(element);
 **Returns**: `HTMLAddressDisplayer` (frozen)
 
 ### createReferencePlaceDisplayer(element)
+
 Creates a reference place displayer.
 
 ```javascript
@@ -51,6 +55,7 @@ const displayer = DisplayerFactory.createReferencePlaceDisplayer(element);
 **Returns**: `HTMLReferencePlaceDisplayer` (frozen)
 
 ### createHighlightCardsDisplayer(element)
+
 Creates a municipality/neighborhood highlight cards displayer.
 
 ```javascript
@@ -60,6 +65,7 @@ const displayer = DisplayerFactory.createHighlightCardsDisplayer(element);
 **Returns**: `HTMLHighlightCardsDisplayer` (frozen)
 
 ### createSidraDisplayer(element)
+
 Creates an IBGE SIDRA demographic data displayer.
 
 ```javascript

@@ -28,17 +28,20 @@ Phase 3 successfully created SpeechCoordinator to extract speech synthesis logic
 ## Phase 3 Objectives
 
 ### Primary Goals
+
 1. ✅ Extract speech synthesis logic to SpeechCoordinator
 2. ✅ Maintain 100% backward compatibility
 3. ✅ Ensure zero test regressions
 4. ✅ Improve separation of concerns
 
 ### Secondary Goals (Deferred)
+
 1. ⏸️ Remove deprecated change detection methods (still in use internally)
 2. ⏸️ Further reduce WebGeocodingManager below 900 lines
 3. ⏸️ Simplify observer pattern delegation
 
 ### Achievements
+
 - ✅ Created SpeechCoordinator (258 lines)
 - ✅ Refactored `initSpeechSynthesis()` to delegate to SpeechCoordinator
 - ✅ Added backward-compatible getter for `htmlSpeechSynthesisDisplayer`
@@ -56,6 +59,7 @@ Phase 3 successfully created SpeechCoordinator to extract speech synthesis logic
 **Responsibility**: Speech synthesis coordination only
 
 **Key Features**:
+
 - Lazy initialization (only initializes when `initializeSpeechSynthesis()` is called)
 - Manages HtmlSpeechSynthesisDisplayer lifecycle
 - Subscribes speech displayer to reverseGeocoder and observerSubject
@@ -64,11 +68,13 @@ Phase 3 successfully created SpeechCoordinator to extract speech synthesis logic
 - Idempotent initialization (safe to call multiple times)
 
 **Constructor Signature**:
+
 ```javascript
 new SpeechCoordinator(document, elementIds, reverseGeocoder, observerSubject)
 ```
 
 **Public API**:
+
 - `initializeSpeechSynthesis()` - Initialize speech synthesis UI
 - `getSpeechDisplayer()` - Get speech displayer instance
 - `isInitialized()` - Check if initialized
@@ -78,6 +84,7 @@ new SpeechCoordinator(document, elementIds, reverseGeocoder, observerSubject)
 ### WebGeocodingManager Integration
 
 **Before (Phase 2)**:
+
 ```javascript
 initSpeechSynthesis() {
     this.htmlSpeechSynthesisDisplayer = new HtmlSpeechSynthesisDisplayer(
@@ -91,6 +98,7 @@ initSpeechSynthesis() {
 ```
 
 **After (Phase 3)**:
+
 ```javascript
 constructor(document, params) {
     // ... other initialization ...
@@ -118,6 +126,7 @@ get htmlSpeechSynthesisDisplayer() {
 ## Code Changes Summary
 
 ### Files Created (1 file, 258 lines)
+
 1. `src/coordination/SpeechCoordinator.js` (258 lines)
    - Complete speech synthesis coordination
    - Full JSDoc documentation
@@ -125,6 +134,7 @@ get htmlSpeechSynthesisDisplayer() {
    - Resource cleanup support
 
 ### Files Modified (1 file)
+
 1. `src/coordination/WebGeocodingManager.js`
    - Added SpeechCoordinator import
    - Added SpeechCoordinator instantiation in constructor
@@ -134,6 +144,7 @@ get htmlSpeechSynthesisDisplayer() {
    - Updated log message to reflect Phase 3
 
 ### Lines Changed
+
 - **Removed**: 8 lines from `initSpeechSynthesis()`
 - **Added**: 27 lines (imports, constructor, getter, destroy cleanup)
 - **Net Change**: +19 lines in WebGeocodingManager
@@ -149,6 +160,7 @@ get htmlSpeechSynthesisDisplayer() {
 **Solution**: Defer unit tests for SpeechCoordinator and rely on integration testing through existing WebGeocodingManager tests.
 
 **Rationale**:
+
 1. **Integration Testing**: WebGeocodingManager tests validate speech synthesis initialization flow
 2. **Side Effect Isolation**: Avoid complex mock setup for guia.js side effects
 3. **Backward Compatibility**: Existing tests prove speech synthesis still works
@@ -164,6 +176,7 @@ Time:        5.994 s
 ```
 
 **Key Validations**:
+
 - ✅ All 1,516 tests passing (zero regressions)
 - ✅ WebGeocodingManager integration tests passing
 - ✅ DisplayerFactory integration tests passing
@@ -179,10 +192,12 @@ Time:        5.994 s
 All existing public methods and properties remain functional:
 
 #### Speech Synthesis Methods
+
 - ✅ `initSpeechSynthesis()` - Still works, delegates to SpeechCoordinator
 - ✅ `htmlSpeechSynthesisDisplayer` (getter) - Returns displayer via coordinator
 
 #### Example Usage
+
 ```javascript
 // Old code (still works)
 const manager = new WebGeocodingManager(document, { locationResult: 'result' });
@@ -208,6 +223,7 @@ console.log(manager.speechCoordinator.isInitialized()); // true
 **Problem**: HtmlSpeechSynthesisDisplayer imports from guia.js which executes side effects during module load (ibira.js loading, DOM checks).
 
 **Attempted Solutions**:
+
 1. Mock HtmlSpeechSynthesisDisplayer before import ❌ (still loads guia.js)
 2. Mock guia.js logger functions ❌ (side effects still execute)
 3. Use jsdom environment ❌ (guia.js DOM checks fail)
@@ -221,11 +237,13 @@ console.log(manager.speechCoordinator.isInitialized()); // true
 **Problem**: Adding SpeechCoordinator increased WebGeocodingManager from 909 → 928 lines (Phase 2→3).
 
 **Analysis**:
+
 - Extracted logic: 8 lines (old `initSpeechSynthesis()`)
 - Added code: 27 lines (imports, constructor, getter, destroy)
 - Net change: +19 lines
 
 **Explanation**:
+
 - Constructor instantiation requires proper parameter passing (6 lines)
 - Backward-compatible getter adds 4 lines
 - Destroy cleanup adds 4 lines
@@ -250,6 +268,7 @@ console.log(manager.speechCoordinator.isInitialized()); // true
 ### Responsibilities Breakdown
 
 **Phase 1** (7 responsibilities):
+
 1. DOM manipulation and UI initialization
 2. Event handling and button clicks
 3. Service coordination and lifecycle
@@ -259,12 +278,14 @@ console.log(manager.speechCoordinator.isInitialized()); // true
 7. Change detection coordination
 
 **Phase 2** (4 responsibilities):
+
 1. Coordinator orchestration (delegates to 4 coordinators)
 2. Observer pattern facade (delegates to ObserverSubject)
 3. Speech synthesis control ← **Extracted in Phase 3**
 4. Change detection facade (delegates to ChangeDetectionCoordinator)
 
 **Phase 3** (3 responsibilities):
+
 1. Coordinator orchestration (delegates to 5 coordinators)
 2. Observer pattern facade (delegates to ObserverSubject)
 3. Change detection facade (delegates to ChangeDetectionCoordinator)
@@ -274,16 +295,19 @@ console.log(manager.speechCoordinator.isInitialized()); // true
 ## Benefits of Phase 3
 
 ### 1. Improved Separation of Concerns
+
 - Speech synthesis logic isolated in dedicated coordinator
 - WebGeocodingManager no longer depends on HtmlSpeechSynthesisDisplayer directly
 - Easier to test speech synthesis in isolation (once test infrastructure improved)
 
 ### 2. Enhanced Maintainability
+
 - Speech synthesis can evolve independently
 - Changes to speech synthesis don't require modifying WebGeocodingManager
 - Clear ownership of speech synthesis functionality
 
 ### 3. Consistent Architecture
+
 - All major subsystems now have dedicated coordinators:
   - State: GeocodingState
   - UI: UICoordinator
@@ -292,6 +316,7 @@ console.log(manager.speechCoordinator.isInitialized()); // true
   - Speech: SpeechCoordinator ← **New**
 
 ### 4. Future-Proof Design
+
 - Easy to add alternative speech synthesis implementations
 - Simple to add speech synthesis configuration options
 - Straightforward to add speech synthesis events/callbacks
@@ -301,18 +326,21 @@ console.log(manager.speechCoordinator.isInitialized()); // true
 ## Remaining Technical Debt
 
 ### 1. SpeechCoordinator Unit Tests
+
 **Status**: Deferred  
 **Reason**: guia.js side effects complicate test setup  
 **Mitigation**: Covered by integration tests  
 **Future Work**: Refactor guia.js to eliminate side effects
 
 ### 2. Deprecated Change Detection Methods
+
 **Status**: Still present in WebGeocodingManager  
 **Reason**: Used internally by ChangeDetectionCoordinator  
 **Impact**: ~100 lines could be removed if consumers migrated  
 **Future Work**: Provide migration path and remove in next major version
 
 ### 3. Observer Pattern Delegation
+
 **Status**: Multiple subscribe/unsubscribe methods  
 **Reason**: Backward compatibility with multiple observer types  
 **Impact**: ~30 lines of delegation code  
@@ -323,18 +351,21 @@ console.log(manager.speechCoordinator.isInitialized()); // true
 ## Lessons Learned
 
 ### What Went Well
+
 1. **Incremental Approach**: Phase-by-phase refactoring enabled safe changes
 2. **Backward Compatibility**: Zero breaking changes maintained adoption path
 3. **Integration Testing**: Existing tests validated refactoring correctness
 4. **Coordinator Pattern**: Consistent architecture across all subsystems
 
 ### What Could Be Improved
+
 1. **Test Infrastructure**: Need better support for testing classes with side effects
 2. **Line Count Focus**: Separation of concerns > raw line count reduction
 3. **Documentation**: Could document architectural decisions earlier
 4. **Test Coverage**: Should add unit tests for SpeechCoordinator (future)
 
 ### Best Practices Confirmed
+
 1. **Test Coverage**: 1,516 tests prevented regressions
 2. **Backward Compatibility**: Getters/setters enable refactoring without breaking changes
 3. **Separation of Concerns**: Isolated classes easier to understand and maintain
@@ -369,6 +400,7 @@ Phase 3 successfully extracted speech synthesis logic to SpeechCoordinator, impr
 ### Next Steps
 
 **Optional Phase 4** (Documentation & Cleanup):
+
 - Update architecture documentation
 - Create migration guide for advanced use cases
 - Document coordinator extension patterns

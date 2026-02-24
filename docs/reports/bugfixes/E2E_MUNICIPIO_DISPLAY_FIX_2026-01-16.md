@@ -16,6 +16,7 @@ await page.waitForFunction(...) // Waiting for municipio to update from "—"
 ```
 
 **Symptom**:
+
 - Test setup mocked geolocation and Nominatim API responses
 - Page loaded successfully
 - BUT municipio and bairro values remained at placeholder "—"
@@ -28,11 +29,13 @@ await page.waitForFunction(...) // Waiting for municipio to update from "—"
 **Same issue as NeighborhoodChangeWhileDriving test**:
 
 The test setup:
+
 1. Set Puppeteer geolocation BEFORE page load
 2. Loaded page with mocked Nominatim responses  
 3. Expected `watchPosition` to fire automatically
 
 **Problem**: Even though `page.setGeolocation()` was called, the browser's `watchPosition` callback wasn't firing, OR the PositionManager was rejecting the update due to:
+
 - **Time check**: Must wait > 50 seconds since last update
 - **Distance check**: Must move > 20 meters from last position
 
@@ -92,6 +95,7 @@ await new Promise(resolve => setTimeout(resolve, 2000));
 ## 📊 Test Results
 
 ### Before Fix
+
 ```
 FAIL __tests__/e2e/municipio-bairro-display.e2e.test.js
   ✕ should display municipio and bairro in highlight cards (15s timeout)
@@ -99,6 +103,7 @@ FAIL __tests__/e2e/municipio-bairro-display.e2e.test.js
 ```
 
 ### After Fix
+
 ```
 PASS __tests__/e2e/municipio-bairro-display.e2e.test.js (10.0s)
   ✓ should display municipio and bairro in highlight cards (3.9s)
@@ -107,6 +112,7 @@ PASS __tests__/e2e/municipio-bairro-display.e2e.test.js (10.0s)
 ```
 
 ### Full Test Suite
+
 ```
 Test Suites: 80 passed, 80 of 84 total (4 skipped)
 Tests:       1,827 passing, 146 skipped, 1,973 total
@@ -118,6 +124,7 @@ Time:        30.244s
 ## 🔧 Files Modified
 
 **`__tests__/e2e/municipio-bairro-display.e2e.test.js`** (+48 lines)
+
 - Added manual position trigger in `setupPageWithMocks()`
 - Waits for app initialization before triggering
 - Bypasses PositionManager timing check with `lastModified = 0`
@@ -150,6 +157,7 @@ Time:        30.244s
 ## 📝 Related Fixes
 
 This fix follows the same pattern as:
+
 - **NeighborhoodChangeWhileDriving.e2e.test.js** (fixed 2026-01-16)
   - Added `ServiceCoordinator.geolocationService` getter
   - Enhanced `simulateLocationUpdate()` helper

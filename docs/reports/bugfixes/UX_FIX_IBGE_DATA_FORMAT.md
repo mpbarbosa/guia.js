@@ -9,6 +9,7 @@
 ## Problem Statement
 
 ### Issue Description
+
 **Location:** `src/index.html` (line 614), `HTMLSidraDisplayer` (200+ lines)
 
 The IBGE demographic data display was excessively technical, showing raw data dumps that were not user-friendly. Example:
@@ -18,6 +19,7 @@ Dados IBGE: População estimada [2021]: 12325232
 ```
 
 **User Impact:**
+
 - High cognitive load processing numbers without separators
 - Technical jargon alienates casual users (non-developers)
 - Valuable demographic data underutilized
@@ -25,6 +27,7 @@ Dados IBGE: População estimada [2021]: 12325232
 - Zero visual hierarchy or scannable formatting
 
 **Severity Rationale:**
+
 - Affects 100% of users viewing IBGE data
 - Reduces comprehension by ~60% for non-technical users
 - Wastes 190KB of cached data (libs/sidra/) with poor presentation
@@ -32,11 +35,13 @@ Dados IBGE: População estimada [2021]: 12325232
 ## Solution Implemented
 
 ### Overview
+
 Created a comprehensive IBGE data formatting system that transforms technical data dumps into natural language with contextual insights, visual formatting, and progressive disclosure.
 
 ### Architecture
 
 **1. IBGEDataFormatter Singleton** (`src/utils/ibge-data-formatter.js`, 417 lines)
+
 ```javascript
 class IBGEDataFormatter {
   // Natural language formatting
@@ -55,6 +60,7 @@ class IBGEDataFormatter {
 ```
 
 **2. Enhanced CSS** (`src/ibge-data-styles.css`, 380+ lines)
+
 - Material Design 3 card styling
 - Gradient backgrounds for classification badges
 - Progressive disclosure details element
@@ -62,6 +68,7 @@ class IBGEDataFormatter {
 - Dark mode and high contrast support
 
 **3. HTMLSidraDisplayer Integration** (updated 45 lines)
+
 - Import IBGEDataFormatter at top
 - Replace `window.displaySidraDadosParams()` with `ibgeDataFormatter.interceptAndFormat()`
 - Add fallback to original SIDRA function if formatter fails
@@ -81,6 +88,7 @@ class IBGEDataFormatter {
 | 6 | <20K | Cidade Pequena | Pequena comunidade | 🌾 |
 
 **Example Classification:**
+
 ```javascript
 classifyCity(12325232)
 // Returns:
@@ -95,6 +103,7 @@ classifyCity(12325232)
 ### Natural Language Formatting
 
 **Population Formatting:**
+
 ```javascript
 // Technical input: 12325232
 formatPopulation(12325232)        // "12.325.232"
@@ -109,6 +118,7 @@ formatPopulationNaturalLanguage(12325232)  // "12.3 milhões"
 ```
 
 **Thousand Separators:**
+
 - Brazilian Portuguese standard: `.` (period) for thousands
 - Comma reserved for decimals: `12.325.232,50`
 - Implemented via `toLocaleString('pt-BR')`
@@ -116,6 +126,7 @@ formatPopulationNaturalLanguage(12325232)  // "12.3 milhões"
 ### HTML Output Structure
 
 **Before (Technical)**:
+
 ```html
 <div id="ibge-data">
   Dados IBGE: População estimada [2021]: 12325232
@@ -123,6 +134,7 @@ formatPopulationNaturalLanguage(12325232)  // "12.3 milhões"
 ```
 
 **After (User-Friendly)**:
+
 ```html
 <div id="ibge-data" class="ibge-data-formatted">
   <!-- Primary Display -->
@@ -177,6 +189,7 @@ formatPopulationNaturalLanguage(12325232)  // "12.3 milhões"
 ### Data Sources
 
 **Primary Source: Local Cache**
+
 ```
 libs/sidra/tab6579_municipios.json (190KB)
 ```
@@ -186,6 +199,7 @@ libs/sidra/tab6579_municipios.json (190KB)
 - Offline-first approach (no API calls required)
 
 **Fallback: SIDRA Library**
+
 ```javascript
 window.displaySidraDadosParams(element, dataType, params)
 ```
@@ -194,6 +208,7 @@ window.displaySidraDadosParams(element, dataType, params)
 - Used if local data unavailable or parsing fails
 
 **Data Structure:**
+
 ```json
 [
   {
@@ -222,6 +237,7 @@ window.displaySidraDadosParams(element, dataType, params)
      - Data source link
 
 **Benefits:**
+
 - Reduces initial visual complexity by 70%
 - Preserves detailed data for power users
 - Saves ~80px vertical space on mobile
@@ -255,6 +271,7 @@ window.displaySidraDadosParams(element, dataType, params)
 ### Responsive Design
 
 **Desktop (>768px):**
+
 ```css
 .ibge-data-formatted { padding: 12px; }
 .ibge-primary { font-size: 16px; }
@@ -262,6 +279,7 @@ window.displaySidraDadosParams(element, dataType, params)
 ```
 
 **Tablet (768px):**
+
 ```css
 .ibge-data-formatted { padding: 10px; }
 .ibge-primary { font-size: 15px; }
@@ -269,6 +287,7 @@ window.displaySidraDadosParams(element, dataType, params)
 ```
 
 **Mobile (<480px):**
+
 ```css
 .ibge-classification {
   flex-direction: column;
@@ -285,6 +304,7 @@ window.displaySidraDadosParams(element, dataType, params)
 **State Messages:**
 
 1. **Loading State:**
+
    ```html
    <div class="ibge-loading">
      <span class="icon">⏳</span>
@@ -293,6 +313,7 @@ window.displaySidraDadosParams(element, dataType, params)
    ```
 
 2. **No Data State:**
+
    ```html
    <div class="ibge-no-data">
      <span class="icon">ℹ️</span>
@@ -301,6 +322,7 @@ window.displaySidraDadosParams(element, dataType, params)
    ```
 
 3. **Error State:**
+
    ```html
    <div class="ibge-error">
      <span class="icon">⚠️</span>
@@ -309,6 +331,7 @@ window.displaySidraDadosParams(element, dataType, params)
    ```
 
 **Fallback Hierarchy:**
+
 1. Use local JSON cache (190KB, instant)
 2. Parse SIDRA library output (if available)
 3. Call original `window.displaySidraDadosParams()` (network)
@@ -337,6 +360,7 @@ window.displaySidraDadosParams(element, dataType, params)
    - Fallback to SIDRA library
 
 **Automated Tests (To Add):**
+
 ```javascript
 // __tests__/utils/IBGEDataFormatter.test.js
 describe('IBGEDataFormatter', () => {
@@ -390,11 +414,13 @@ describe('IBGEDataFormatter', () => {
 ### Integration Points
 
 **Initialization (None Required):**
+
 - IBGEDataFormatter is a singleton, initialized on first use
 - No manual initialization in app.js needed
 - Automatically intercepts SIDRA calls
 
 **Event Flow:**
+
 ```
 User moves → Position updated → Address fetched →
 HTMLSidraDisplayer.update() →
@@ -440,6 +466,7 @@ Element innerHTML updated with formatted HTML
 ### User Experience Improvements
 
 **Before:**
+
 ```
 👎 "What does 12325232 mean?"
 👎 "Is that a lot of people?"
@@ -448,6 +475,7 @@ Element innerHTML updated with formatted HTML
 ```
 
 **After:**
+
 ```
 ✅ "12.3 million inhabitants - clear!"
 ✅ "Metrópole - major city, got it"
@@ -564,12 +592,14 @@ _updateSidraData(enderecoPadronizado) {
 | toLocaleString | 24+ | 29+ | 10+ | 12+ |
 
 **Minimum Requirements:**
+
 - Chrome 57+, Firefox 52+, Safari 10.1+, Edge 16+
 - 95%+ browser coverage (caniuse.com)
 
 ## Future Enhancements
 
 ### Phase 2 (v0.12.0)
+
 1. **Additional Demographics:**
    - Area (km²)
    - Population density (hab/km²)
@@ -585,6 +615,7 @@ _updateSidraData(enderecoPadronizado) {
    - Trend analysis ("crescendo +2%/ano")
 
 ### Phase 3 (v0.13.0)
+
 1. **Visualizations:**
    - Population bar chart
    - City size comparison
@@ -648,11 +679,13 @@ ls -lh dist/assets/data-*.js
 ## Dependencies
 
 **Runtime:**
+
 - None (pure JavaScript, no external libraries)
 - Uses `fetch()` for local JSON (built-in)
 - Uses `toLocaleString('pt-BR')` (built-in)
 
 **Development:**
+
 - Jest (testing framework) - existing
 - jsdom (DOM testing) - existing
 - No new dependencies added
@@ -740,6 +773,7 @@ ls -lh dist/assets/data-*.js
 **Status:** 🟡 Ready for Testing
 
 **Before Production:**
+
 1. Complete manual testing checklist (10 scenarios)
 2. Add automated tests (15+ tests)
 3. Update all documentation files (README, instructions)
@@ -750,6 +784,7 @@ ls -lh dist/assets/data-*.js
 The IBGE data formatting enhancement successfully transforms technical demographic data into user-friendly, contextual information with natural language and visual hierarchy. The implementation follows Material Design 3 guidelines, meets WCAG 2.1 AA accessibility standards, and provides a scalable foundation for future demographic visualizations.
 
 **Key Achievements:**
+
 - 137% improvement in user comprehension
 - 70% reduction in cognitive load
 - 300% increase in visual hierarchy
@@ -757,6 +792,7 @@ The IBGE data formatting enhancement successfully transforms technical demograph
 - Offline-first with 190KB local cache
 
 **Next Steps:**
+
 1. Complete manual testing with various Brazilian cities
 2. Add comprehensive automated test suite
 3. Document in README and copilot-instructions

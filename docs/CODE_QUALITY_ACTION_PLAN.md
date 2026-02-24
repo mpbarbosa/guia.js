@@ -8,6 +8,7 @@
 ## Executive Summary
 
 The codebase is **production-ready** with solid architecture and excellent documentation. Primary focus areas:
+
 - 🔴 Large file decomposition (3 files >1000 lines)
 - ⚠️ Remove deprecated API surface (40+ methods)
 - ✅ Improve test coverage (70% → 80%+)
@@ -17,6 +18,7 @@ The codebase is **production-ready** with solid architecture and excellent docum
 ## Immediate Actions (Week 1) ✅
 
 ### 1. Fix ESLint Warnings (2-4 hours)
+
 **Status**: Ready to execute  
 **Impact**: Code quality + CI/CD compliance
 
@@ -33,12 +35,14 @@ git commit -m "style: fix ESLint warnings (26 → 0)"
 ```
 
 **Expected Fixes**:
+
 - Remove 9 unused imports
 - Remove 8 unused variables
 - Convert 4 `let` to `const`
 - Remove 5 useless constructors
 
 ### 2. Add ESLint to CI/CD (30 minutes)
+
 **File**: `.github/workflows/copilot-coding-agent.yml`
 
 ```yaml
@@ -48,7 +52,9 @@ git commit -m "style: fix ESLint warnings (26 → 0)"
 ```
 
 ### 3. Document Technical Debt (1 hour)
+
 Create GitHub issues:
+
 - [ ] Issue: Decompose AddressCache.js (1,172 lines)
 - [ ] Issue: Decompose SpeechSynthesisManager.js (1,108 lines)
 - [ ] Issue: Remove deprecated static wrappers (40+ methods)
@@ -59,10 +65,12 @@ Create GitHub issues:
 ## Short-term Actions (Month 1) 🔴
 
 ### Priority 1: Decompose AddressCache.js (3-5 days)
+
 **Current**: 1,172 lines (CRITICAL size violation)  
 **Target**: 4 files averaging 200-300 lines each
 
 **Decomposition Plan**:
+
 ```
 src/data/AddressCache.js (1,172 lines)
 ↓
@@ -74,12 +82,14 @@ src/data/
 ```
 
 **Benefits**:
+
 - ✅ Each class under 300 lines
 - ✅ Single Responsibility Principle
 - ✅ Easier testing (isolated concerns)
 - ✅ Remove 40+ deprecated static wrappers
 
 **Implementation Steps**:
+
 1. Create `AddressChangeDetector` class
 2. Create `AddressComparator` class
 3. Create `AddressCacheNotifier` class
@@ -89,10 +99,12 @@ src/data/
 7. Remove deprecated static methods
 
 ### Priority 2: Decompose SpeechSynthesisManager.js (2-4 days)
+
 **Current**: 1,108 lines (CRITICAL size violation)  
 **Target**: 4 files averaging 200-300 lines each
 
 **Decomposition Plan**:
+
 ```
 src/speech/SpeechSynthesisManager.js (1,108 lines)
 ↓
@@ -104,21 +116,25 @@ src/speech/
 ```
 
 **Key Improvements**:
+
 - ✅ 105-line constructor → 20-line constructor
 - ✅ Voice loading logic isolated
 - ✅ Queue processing separated
 - ✅ Configuration management cleaner
 
 ### Priority 3: Improve Test Coverage (2-3 days)
+
 **Current**: ~70% overall  
 **Target**: 80%+ overall
 
 **Focus Areas**:
+
 - Services layer (currently 18-20% coverage)
 - Coordinator initialization paths
 - Error handling branches
 
 **Execution**:
+
 ```bash
 # Identify low coverage areas
 npm run test:coverage -- --verbose
@@ -135,16 +151,19 @@ npm run test:coverage
 ## Medium-term Actions (Months 2-3) 🟡
 
 ### Priority 4: Further Decompose WebGeocodingManager.js (3-5 days)
+
 **Current**: 980 lines  
 **Target**: 400-500 lines
 
 **Already Extracted** ✅:
+
 - UICoordinator
 - EventCoordinator
 - ServiceCoordinator
 - SpeechCoordinator
 
 **Remaining Extraction**:
+
 ```
 src/coordination/
 ├── WebGeocodingManager.js (400 lines)       # Core coordination
@@ -153,6 +172,7 @@ src/coordination/
 ```
 
 ### Priority 5: Implement Circuit Breaker Pattern (1-2 days)
+
 **Target**: External API reliability
 
 ```javascript
@@ -170,15 +190,19 @@ class CircuitBreaker {
 ```
 
 **Apply to**:
+
 - Nominatim API (OpenStreetMap)
 - IBGE API
 
 ### Priority 6: Extract Constructor Initialization (1-2 days)
+
 **Target Files**:
+
 - SpeechSynthesisManager (105-line constructor)
 - WebGeocodingManager (complex initialization)
 
 **Pattern**:
+
 ```javascript
 constructor(config) {
   this._validateConfig(config);
@@ -193,16 +217,20 @@ constructor(config) {
 ## Long-term Actions (Months 4-6) 🟢
 
 ### Priority 7: Remove Deprecated Static Wrappers (v1.0.0)
+
 **Target**: AddressCache static methods (40+ methods)
 
 **Migration Steps**:
+
 1. Document deprecation in CHANGELOG
 2. Create migration guide
 3. Update all internal usage
 4. Remove in v1.0.0 release
 
 ### Priority 8: Enhance Error Handling Consistency (1-2 days)
+
 **Standardize pattern**:
+
 ```javascript
 class Service {
   async operation() {
@@ -222,6 +250,7 @@ class Service {
 ```
 
 ### Priority 9: Performance Optimization
+
 - Bundle size optimization
 - Code splitting
 - Tree-shaking improvements
@@ -244,6 +273,7 @@ class Service {
    - Create GitHub issues
 
 4. **Add Coverage Thresholds to CI** (30 minutes)
+
    ```json
    {
      "coverageThreshold": {
@@ -262,6 +292,7 @@ class Service {
 ## Success Metrics
 
 ### Target Metrics (6 months)
+
 | Metric | Current | Target | Status |
 |--------|---------|--------|--------|
 | Overall Grade | B+ (85/100) | A (90/100) | In Progress |
@@ -271,6 +302,7 @@ class Service {
 | Technical Debt Days | 15-21 days | <10 days | Not Started |
 
 ### Monthly Checkpoints
+
 - **Month 1**: ESLint clean, AddressCache decomposed, coverage 75%
 - **Month 2**: SpeechSynthesisManager decomposed, CircuitBreaker implemented
 - **Month 3**: WebGeocodingManager optimized, coverage 80%+
@@ -283,11 +315,13 @@ class Service {
 ### Current Risk Level: LOW-MEDIUM ✅
 
 **Why Low Risk**:
+
 - No security vulnerabilities
 - Production-ready functionality
 - Issues are maintainability concerns, not bugs
 
 **Monitored Risks**:
+
 - Large files increase merge conflict probability
 - Deprecated API surface causes confusion
 - Test coverage gaps may hide edge case bugs
@@ -297,13 +331,16 @@ class Service {
 ## Implementation Strategy
 
 ### Approach: Incremental Refactoring
+
 - ✅ No "big bang" rewrites
 - ✅ One class at a time
 - ✅ Maintain backward compatibility during transition
 - ✅ Test coverage maintained/improved at each step
 
 ### Backward Compatibility
+
 During refactoring:
+
 1. Keep old API working
 2. Add deprecation warnings
 3. Provide migration guide

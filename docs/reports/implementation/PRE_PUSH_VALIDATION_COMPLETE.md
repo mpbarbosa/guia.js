@@ -16,6 +16,7 @@ The **pre-push validation tool** (`.github/scripts/test-workflow-locally.sh`) is
 ## Problem Analysis
 
 ### Before
+
 - ✅ Tool exists: `.github/scripts/test-workflow-locally.sh` (6.1KB)
 - ✅ Well documented in `docs/WORKFLOW_SETUP.md`
 - ❌ **NOT mentioned in main README.md**
@@ -23,11 +24,13 @@ The **pre-push validation tool** (`.github/scripts/test-workflow-locally.sh`) is
 - ❌ Missing from contributing workflow
 
 **Impact**: Contributors push code without local validation, leading to:
+
 - Failed CI/CD builds
 - Wasted time waiting for remote results
 - More commits to fix simple issues
 
 ### After
+
 - ✅ Tool exists and is executable
 - ✅ Documented in `docs/WORKFLOW_SETUP.md` (5 references)
 - ✅ **NOW documented in main README.md**
@@ -59,6 +62,7 @@ Test locally before pushing to catch issues early:
 ```
 
 **What it validates**:
+
 - ✅ JavaScript syntax validation (`npm run validate`)
 - ✅ Test suite execution (`npm test`)
 - ✅ Coverage generation (`npm run test:coverage`)
@@ -66,12 +70,14 @@ Test locally before pushing to catch issues early:
 - ✅ Shows exactly what will trigger in CI/CD
 
 **Benefits**:
+
 - Catch failures before pushing
 - Faster feedback loop (local vs remote)
 - Saves CI/CD minutes
 - Preview GitHub Actions results
 
 **Output Example**:
+
 ```
 🔍 Running JavaScript Syntax Validation...
 ✅ Syntax validation passed
@@ -84,6 +90,7 @@ Test locally before pushing to catch issues early:
 
 ✅ All checks passed! Safe to push.
 ```
+
 ```
 
 ### Updated Development Workflow
@@ -121,30 +128,38 @@ Test locally before pushing to catch issues early:
 ### Validation Steps
 
 1. **Detect Changed Files**
+
    ```bash
    git diff --name-only HEAD
    ```
+
    - Finds modified JavaScript files
    - Checks only what will be pushed
 
 2. **JavaScript Syntax Validation**
+
    ```bash
    npm run validate  # node -c *.js
    ```
+
    - Validates all JS files
    - Catches syntax errors instantly
 
 3. **Test Suite Execution**
+
    ```bash
    npm test
    ```
+
    - Runs all 1224 tests
    - Shows pass/fail status
 
 4. **Coverage Generation**
+
    ```bash
    npm run test:coverage
    ```
+
    - Generates coverage report
    - Shows percentage achieved
 
@@ -155,11 +170,13 @@ Test locally before pushing to catch issues early:
 ### Output Format
 
 **Colors Used**:
+
 - 🟢 **Green**: Success (`✅`)
 - 🟡 **Yellow**: Info (`ℹ️`)
 - 🔴 **Red**: Error (`❌`)
 
 **Example Success**:
+
 ```
 ========================================
 Testing GitHub Actions Workflow Locally
@@ -187,6 +204,7 @@ Coverage: 69.82%
 ```
 
 **Example Failure**:
+
 ```
 🔍 Running JavaScript Syntax Validation...
 src/guia.js:123
@@ -205,6 +223,7 @@ SyntaxError: Unexpected end of input
 ## Usage Examples
 
 ### Basic Usage
+
 ```bash
 # From project root
 ./.github/scripts/test-workflow-locally.sh
@@ -214,6 +233,7 @@ SyntaxError: Unexpected end of input
 ```
 
 ### Integrate with Git Hook
+
 ```bash
 # .git/hooks/pre-push
 #!/bin/bash
@@ -229,6 +249,7 @@ echo "✅ Validation passed. Continuing push..."
 ```
 
 ### CI/CD Preview
+
 ```bash
 # See exactly what GitHub Actions will do
 ./.github/scripts/test-workflow-locally.sh
@@ -237,6 +258,7 @@ echo "✅ Validation passed. Continuing push..."
 ```
 
 ### Quick Check Before Commit
+
 ```bash
 # Check before even committing
 ./.github/scripts/test-workflow-locally.sh && git commit -m "feat: add feature"
@@ -249,6 +271,7 @@ echo "✅ Validation passed. Continuing push..."
 ### Time Savings
 
 **Without local validation**:
+
 1. Write code (5 min)
 2. Commit (1 min)
 3. Push (1 min)
@@ -261,6 +284,7 @@ echo "✅ Validation passed. Continuing push..."
 **Total**: 16 minutes
 
 **With local validation**:
+
 1. Write code (5 min)
 2. Run local validation (2 min)
 3. Fix issues immediately (2 min)
@@ -272,6 +296,7 @@ echo "✅ Validation passed. Continuing push..."
 **Total**: 16 minutes (same)
 
 **But**:
+
 - ✅ Only 1 push instead of 2
 - ✅ Immediate feedback (no waiting)
 - ✅ Cleaner git history
@@ -280,12 +305,14 @@ echo "✅ Validation passed. Continuing push..."
 ### Developer Experience
 
 **Before**:
+
 - ❌ Push → Wait → Fail → Fix → Push → Wait
 - ❌ Slow feedback loop
 - ❌ Context switching while waiting
 - ❌ Frustration with remote failures
 
 **After**:
+
 - ✅ Validate → Fix → Validate → Push → Success
 - ✅ Fast feedback loop
 - ✅ Stay in flow state
@@ -294,11 +321,13 @@ echo "✅ Validation passed. Continuing push..."
 ### CI/CD Impact
 
 **Saves**:
+
 - CI/CD compute minutes (free tier has limits)
 - GitHub Actions queue time
 - Repository commit noise
 
 **Example**:
+
 ```
 Without local validation:
 - 10 developers × 5 pushes/day × 3 min = 150 CI minutes/day
@@ -314,6 +343,7 @@ Savings: 60 CI minutes/day = 1800 minutes/month
 ## Documentation Coverage
 
 ### README.md (Main)
+
 - ✅ **New section**: "Pre-Push Validation"
 - ✅ **Command**: `./.github/scripts/test-workflow-locally.sh`
 - ✅ **Validation list**: 5 items
@@ -326,6 +356,7 @@ Savings: 60 CI minutes/day = 1800 minutes/month
 **Visibility**: HIGH
 
 ### docs/WORKFLOW_SETUP.md (Existing)
+
 - ✅ Script creation instructions
 - ✅ Usage examples (5 references)
 - ✅ Integration guide
@@ -334,6 +365,7 @@ Savings: 60 CI minutes/day = 1800 minutes/month
 **Status**: Already complete (no changes needed)
 
 ### Script Self-Documentation
+
 - ✅ Header comments explain purpose
 - ✅ Colored output for clarity
 - ✅ Error messages show fixes
@@ -344,6 +376,7 @@ Savings: 60 CI minutes/day = 1800 minutes/month
 ## Testing
 
 ### Test 1: Script Exists and Executable
+
 ```bash
 $ ls -lh .github/scripts/test-workflow-locally.sh
 -rwxrwxr-x 1 mpb mpb 6.1K Dec 15 10:54 .github/scripts/test-workflow-locally.sh
@@ -352,6 +385,7 @@ $ ls -lh .github/scripts/test-workflow-locally.sh
 ```
 
 ### Test 2: Script Runs Successfully
+
 ```bash
 $ ./.github/scripts/test-workflow-locally.sh
 ========================================
@@ -364,6 +398,7 @@ Testing GitHub Actions Workflow Locally
 ```
 
 ### Test 3: README Contains Section
+
 ```bash
 $ grep -n "Pre-Push Validation" README.md
 1058:### Pre-Push Validation
@@ -372,6 +407,7 @@ $ grep -n "Pre-Push Validation" README.md
 ```
 
 ### Test 4: Workflow Integration
+
 ```bash
 $ grep -A 2 "Pre-push check" README.md
 7. **Pre-push check**: `./.github/scripts/test-workflow-locally.sh`
@@ -381,6 +417,7 @@ $ grep -A 2 "Pre-push check" README.md
 ```
 
 ### Test 5: Documentation Complete
+
 ```bash
 $ grep "test-workflow-locally.sh" README.md | wc -l
 3
@@ -395,6 +432,7 @@ $ grep "test-workflow-locally.sh" README.md | wc -l
 ### Discovery Paths
 
 **Before**: Contributors had to:
+
 1. Read CONTRIBUTING.md
 2. Navigate to docs/
 3. Find WORKFLOW_SETUP.md
@@ -403,6 +441,7 @@ $ grep "test-workflow-locally.sh" README.md | wc -l
 **Discovery Rate**: ~10% of contributors
 
 **After**: Contributors see:
+
 1. README.md → Contributing section
 2. "Pre-Push Validation" prominent heading
 3. Clear command with explanation
@@ -413,6 +452,7 @@ $ grep "test-workflow-locally.sh" README.md | wc -l
 ### Adoption Metrics
 
 **Predicted Impact**:
+
 - 📈 **Local validation usage**: 10% → 70%
 - 📉 **Failed CI builds**: 30% → 10%
 - 📉 **Commits per PR**: 5 → 3 (fewer fix commits)
@@ -425,10 +465,12 @@ $ grep "test-workflow-locally.sh" README.md | wc -l
 ### Cross-References
 
 **README.md**:
+
 - Line 1058: Pre-Push Validation section
 - Line 1064: Integration in workflow (step 7)
 
 **docs/WORKFLOW_SETUP.md**:
+
 - Line 54: Script file reference
 - Line 166: Usage example
 - Line 313: Testing instructions
@@ -436,6 +478,7 @@ $ grep "test-workflow-locally.sh" README.md | wc -l
 - Line 421: Integration example
 
 **.github/scripts/test-workflow-locally.sh**:
+
 - Complete implementation
 - Self-documented with comments
 - Error handling included
@@ -445,6 +488,7 @@ $ grep "test-workflow-locally.sh" README.md | wc -l
 ## Future Enhancements
 
 ### Phase 1: Make it Easier to Find
+
 ```markdown
 # Add to README.md quick start
 ## Quick Start
@@ -453,6 +497,7 @@ Before contributing, test locally:
 ```bash
 ./.github/scripts/test-workflow-locally.sh
 ```
+
 ```
 
 ### Phase 2: Git Hook Auto-Setup
@@ -464,6 +509,7 @@ echo "✅ Pre-push validation hook installed"
 ```
 
 ### Phase 3: Interactive Mode
+
 ```bash
 # test-workflow-locally.sh --interactive
 What would you like to validate?
@@ -479,7 +525,9 @@ Choice:
 ## Comparison: Before vs After
 
 ### Before
+
 **README.md Contributing Section**:
+
 ```markdown
 ### Development Workflow
 
@@ -495,12 +543,15 @@ Choice:
 ```
 
 **Issues**:
+
 - ❌ No mention of local CI simulation
 - ❌ Validation step runs tests but doesn't simulate CI
 - ❌ Contributors push without knowing CI will fail
 
 ### After
+
 **README.md Contributing Section**:
+
 ```markdown
 ### Pre-Push Validation
 
@@ -526,6 +577,7 @@ Test locally before pushing to catch issues early:
 8. Commit changes
 9. Push to your fork
 10. Create a Pull Request
+
 ```
 
 **Improvements**:

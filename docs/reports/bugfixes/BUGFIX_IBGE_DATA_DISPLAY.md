@@ -12,6 +12,7 @@
 ## Problem Statement
 
 The "Dados IBGE" section in the Guia Turístico application was not displaying population statistics despite having:
+
 - ✅ HTML element `#dadosSidra` present
 - ✅ HTMLSidraDisplayer initialized and subscribed
 - ✅ Local IBGE data file (`libs/sidra/tab6579_municipios.json`) available
@@ -24,17 +25,20 @@ The "Dados IBGE" section in the Guia Turístico application was not displaying p
 ## Root Cause Analysis
 
 ### Incorrect Path
+
 ```javascript
 // ❌ BROKEN: Relative path from utils/ directory
 const response = await fetch('../libs/sidra/tab6579_municipios.json');
 ```
 
 **Why it failed**:
+
 - File location: `src/utils/ibge-data-formatter.js`
 - Attempted path: `src/libs/sidra/tab6579_municipios.json` (doesn't exist)
 - Actual path: `libs/sidra/tab6579_municipios.json` (root level)
 
-**Result**: 
+**Result**:
+
 - Fetch returned 404 Not Found
 - Local data unavailable
 - Fallback to sidra.js CDN also failed (data not formatted)
@@ -45,12 +49,14 @@ const response = await fetch('../libs/sidra/tab6579_municipios.json');
 ## Solution
 
 ### Fixed Path
+
 ```javascript
 // ✅ FIXED: Absolute path from webserver root
 const response = await fetch('/libs/sidra/tab6579_municipios.json');
 ```
 
 **Why it works**:
+
 - `/libs/` = absolute path from web server root
 - Works regardless of current script location
 - Independent of module import depth
@@ -65,6 +71,7 @@ const response = await fetch('/libs/sidra/tab6579_municipios.json');
 **src/utils/ibge-data-formatter.js** (line 294)
 
 **Before**:
+
 ```javascript
 async _fetchLocalPopulationData(municipio, uf) {
   try {
@@ -74,6 +81,7 @@ async _fetchLocalPopulationData(municipio, uf) {
 ```
 
 **After**:
+
 ```javascript
 async _fetchLocalPopulationData(municipio, uf) {
   try {
@@ -113,6 +121,7 @@ async _fetchLocalPopulationData(municipio, uf) {
 ## Expected Behavior
 
 **After Fix**:
+
 ```
 Dados IBGE:
   População: 1.5 milhões de habitantes
@@ -124,6 +133,7 @@ Dados IBGE:
 ```
 
 **Data Flow**:
+
 1. User location acquired → coordinates
 2. ReverseGeocoder → municipality + state (e.g., "Recife, PE")
 3. HTMLSidraDisplayer → IBGEDataFormatter.interceptAndFormat()
@@ -137,6 +147,7 @@ Dados IBGE:
 ## Technical Details
 
 ### Data File Structure
+
 ```json
 // libs/sidra/tab6579_municipios.json
 [
@@ -157,18 +168,21 @@ Dados IBGE:
 ### Path Resolution
 
 **Development Server** (npm run dev, port 9000):
+
 ```
 http://localhost:9000/libs/sidra/tab6579_municipios.json
 → /home/mpb/Documents/GitHub/guia_turistico/libs/sidra/tab6579_municipios.json
 ```
 
 **Production Build** (npm run build):
+
 ```
 http://your-domain.com/libs/sidra/tab6579_municipios.json
 → dist/libs/sidra/tab6579_municipios.json
 ```
 
 **Why Absolute Paths Work**:
+
 - Browser resolves `/libs/` relative to server root
 - Independent of current page URL
 - Works with SPA routing (`#/`, `#/converter`)
@@ -179,15 +193,18 @@ http://your-domain.com/libs/sidra/tab6579_municipios.json
 ## Related Files
 
 **Data Fetching**:
+
 - `src/utils/ibge-data-formatter.js` - Data formatter (FIXED)
 - `libs/sidra/tab6579_municipios.json` - Population data (190KB)
 
 **Display Logic**:
+
 - `src/html/HTMLSidraDisplayer.js` - IBGE data displayer
 - `src/coordination/ServiceCoordinator.js` - Wires displayer to ReverseGeocoder
 - `src/index.html` - HTML element `<span id="dadosSidra">`
 
 **Styling**:
+
 - `src/ibge-data-styles.css` - Formatted IBGE display styles
 
 ---
@@ -195,12 +212,14 @@ http://your-domain.com/libs/sidra/tab6579_municipios.json
 ## Impact
 
 **User Impact**:
+
 - ✅ **Fixed**: Population data now displays correctly
 - ✅ **Enhanced**: User-friendly formatting (millions, thousands)
 - ✅ **Context**: City classification (Metrópole, Cidade Grande, etc.)
 - ✅ **Local-first**: Fast load from cached JSON (no external API)
 
 **Developer Impact**:
+
 - ✅ **Simple fix**: One-line path change
 - ✅ **No refactoring**: Existing architecture unchanged
 - ✅ **Future-proof**: Absolute paths work in all environments
@@ -212,6 +231,7 @@ http://your-domain.com/libs/sidra/tab6579_municipios.json
 **Best Practices for Future**:
 
 1. **Use Absolute Paths for Static Assets**:
+
    ```javascript
    // ✅ Good: Absolute path
    fetch('/libs/data.json')
@@ -221,6 +241,7 @@ http://your-domain.com/libs/sidra/tab6579_municipios.json
    ```
 
 2. **Base URL Configuration**:
+
    ```javascript
    // Optional: Define base URL in config
    const BASE_URL = import.meta.env.BASE_URL || '/';
@@ -233,6 +254,7 @@ http://your-domain.com/libs/sidra/tab6579_municipios.json
    - Check Network tab in DevTools
 
 4. **Error Logging**:
+
    ```javascript
    // Already implemented in ibge-data-formatter.js
    if (!response.ok) {
@@ -248,6 +270,7 @@ http://your-domain.com/libs/sidra/tab6579_municipios.json
 ### v0.11.0-alpha (2026-02-15)
 
 **IBGE Data Display Fix**:
+
 - ✅ Fixed incorrect relative path in ibge-data-formatter.js
 - ✅ Changed `../libs/` → `/libs/` (relative → absolute)
 - ✅ IBGE population data now displays correctly
@@ -255,9 +278,11 @@ http://your-domain.com/libs/sidra/tab6579_municipios.json
 - ✅ User-friendly formatting working as designed
 
 **Files Modified**:
+
 - `src/utils/ibge-data-formatter.js` (1 line, path fix)
 
 **Impact**:
+
 - Critical bug fixed
 - Zero breaking changes
 - Immediate user value restoration

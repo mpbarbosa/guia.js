@@ -26,11 +26,13 @@ Related: [Link to related docs] (optional)
 ### Required Fields
 
 **Last Updated**
+
 - Format: `YYYY-MM-DD`
 - When to update: Any significant content change
 - Use script: `.github/scripts/update-doc-metadata.sh`
 
 **Status**
+
 - `Active` - Current, maintained documentation
 - `Draft` - Work in progress, not yet finalized
 - `Deprecated` - Outdated but kept for reference
@@ -39,11 +41,13 @@ Related: [Link to related docs] (optional)
 ### Optional Fields
 
 **Version**
+
 - Format: Semantic versioning (e.g., `0.9.0-alpha`)
 - Use when: Documentation is version-specific
 - Sync with: `package.json` version
 
 **Category**
+
 - `Architecture` - System design and component structure
 - `Testing` - Test strategy, infrastructure, guides
 - `API` - API integration and external services
@@ -54,11 +58,13 @@ Related: [Link to related docs] (optional)
 - `Refactoring` - Refactoring plans and implementations
 
 **Maintainer**
+
 - Format: `@github-username` or `Team Name`
 - Use when: Specific person/team responsible for doc
 - Helps: Contributors know who to contact
 
 **Related**
+
 - Format: `[Link text](relative/path/to/doc.md)`
 - Use when: Document references other important docs
 - Helps: Navigation and cross-referencing
@@ -156,6 +162,7 @@ Use the metadata updater script for batch updates:
 ### Last Updated Field
 
 Update when:
+
 - ✅ Significant content changes (new sections, major edits)
 - ✅ Code examples updated
 - ✅ API/integration details changed
@@ -163,6 +170,7 @@ Update when:
 - ✅ Links updated or corrected
 
 Don't update for:
+
 - ❌ Typo fixes
 - ❌ Minor wording improvements
 - ❌ Formatting adjustments
@@ -171,6 +179,7 @@ Don't update for:
 ### Status Field
 
 Update when:
+
 - ✅ Document moves from Draft → Active
 - ✅ Content becomes outdated (Active → Deprecated)
 - ✅ Document archived for reference (Deprecated → Archived)
@@ -178,6 +187,7 @@ Update when:
 ### Version Field
 
 Update when:
+
 - ✅ Package version bumps and doc reflects new version
 - ✅ Breaking changes require version-specific docs
 - ✅ Feature additions tied to specific release
@@ -196,19 +206,23 @@ Update when:
 These documents should be updated regularly:
 
 ### Version-Specific
+
 - `CHANGELOG.md` - Every release
 - `README.md` - Major feature additions
 - `package.json` - Version bumps
 
 ### Test-Related
+
 - `docs/testing/TEST_STRATEGY.md` - Test infrastructure changes
 - `docs/testing/TEST_INFRASTRUCTURE.md` - Coverage updates
 
 ### Architecture
+
 - `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md` - Major refactorings
 - `docs/architecture/CLASS_DIAGRAM.md` - Component additions
 
 ### Reports
+
 - `docs/reports/` - After audits or analysis
 - `docs/CODE_QUALITY_ACTION_PLAN.md` - Progress updates
 

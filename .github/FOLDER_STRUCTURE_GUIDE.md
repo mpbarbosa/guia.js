@@ -217,11 +217,13 @@ music-in-numbers/
 **Purpose:** Static assets that are copied directly to the build output without processing.
 
 **Contains:**
+
 - `index.html` - Main HTML template with root div for SPA mounting
 - `favicon.ico`, `robots.txt`, `sitemap.xml` - SEO and browser files
 - Static images that don't need optimization
 
 **Best Practices:**
+
 - Keep this minimal - most assets should be in `/src/assets`
 - Files here are publicly accessible at root URL
 - Use absolute paths: `/favicon.ico`, not `./favicon.ico`
@@ -235,16 +237,19 @@ music-in-numbers/
 **Purpose:** Dynamic assets imported in JavaScript or CSS.
 
 **When to use:**
+
 - Images referenced in React/Vue components
 - Fonts imported via `@font-face`
 - Icons used programmatically
 
 **Benefits:**
+
 - Build tools can optimize (compress, resize)
 - Cache busting via hashed filenames
 - Tree-shaking removes unused assets
 
 **Example:**
+
 ```javascript
 import logo from '@/assets/images/logo.png';
 import '@/assets/fonts/Montserrat/font.css';
@@ -255,6 +260,7 @@ import '@/assets/fonts/Montserrat/font.css';
 **Purpose:** Reusable UI components used across multiple pages.
 
 **Organization:**
+
 ```
 components/
 ├── Button/
@@ -265,12 +271,14 @@ components/
 ```
 
 **Best Practices:**
+
 - One component per folder
 - Co-locate styles, tests, and logic
 - Use `index.js` for clean imports: `import { Button } from '@/components/Button'`
 - Keep components small and focused (Single Responsibility Principle)
 
 **Examples for Music in Numbers:**
+
 - `Sidebar` - Navigation sidebar
 - `MusicPlayer` - Bottom music player bar
 - `Card` - Album/playlist card
@@ -282,11 +290,13 @@ components/
 **Purpose:** Page-level components that represent distinct routes/views.
 
 **Difference from components:**
+
 - Pages compose multiple components
 - Pages are route endpoints
 - Pages handle data fetching and state management
 
 **Examples for Music in Numbers:**
+
 - `Home` - Main landing page
 - `Artist` - Artist details page
 - `Auth` - OAuth authentication page
@@ -298,6 +308,7 @@ components/
 **Purpose:** Business logic and API integrations.
 
 **Organization:**
+
 ```
 services/
 ├── spotify/
@@ -310,12 +321,14 @@ services/
 ```
 
 **Best Practices:**
+
 - Separate concerns (auth vs data fetching)
 - Return promises for async operations
 - Handle errors consistently
 - Export a clean public API
 
 **Example for Spotify Auth:**
+
 ```javascript
 // services/spotify/auth.js
 export async function initiateAuth(clientId, redirectUri) {
@@ -336,17 +349,20 @@ export async function exchangeToken(code, clientId, redirectUri) {
 **Purpose:** Pure utility functions with no side effects.
 
 **What belongs here:**
+
 - Data transformation functions
 - Validation helpers
 - Format/parse utilities
 - Constants and enums
 
 **What doesn't belong here:**
+
 - API calls (use `/services`)
 - Component logic (use `/components`)
 - Business logic (use `/services`)
 
 **Examples:**
+
 ```javascript
 // utils/crypto.js
 export function generateCodeVerifier() { ... }
@@ -369,6 +385,7 @@ export const STORAGE_KEYS = {
 **Purpose:** Global stylesheets and theme definitions.
 
 **Organization:**
+
 ```
 styles/
 ├── base/
@@ -382,7 +399,9 @@ styles/
 ```
 
 **Best Practices:**
+
 - Use CSS custom properties for theming:
+
   ```css
   :root {
     --color-primary: #1DB954;
@@ -390,6 +409,7 @@ styles/
     --color-text: #ffffff;
   }
   ```
+
 - Component-specific styles stay with components
 - Global styles only for truly global patterns
 
@@ -398,6 +418,7 @@ styles/
 **Purpose:** Configuration objects and environment-specific settings.
 
 **Examples:**
+
 ```javascript
 // config/spotify.config.js
 export const spotifyConfig = {
@@ -421,6 +442,7 @@ export const appConfig = {
 **Purpose:** Build output directory (always git-ignored).
 
 **Contains:**
+
 - Bundled JavaScript
 - Compiled CSS
 - Optimized images
@@ -433,11 +455,13 @@ export const appConfig = {
 **Purpose:** All test files organized by test type.
 
 **Organization:**
+
 - `unit/` - Individual function/component tests
 - `integration/` - Multi-component interaction tests
 - `e2e/` - Full user journey tests
 
 **Naming Convention:**
+
 - `*.test.js` or `*.spec.js`
 - Mirror source structure: `src/services/spotify/auth.js` → `tests/unit/services/spotify/auth.test.js`
 
@@ -446,6 +470,7 @@ export const appConfig = {
 **Purpose:** Project documentation beyond README.
 
 **Organization:**
+
 ```
 docs/
 ├── api/                    # API documentation
@@ -455,6 +480,7 @@ docs/
 ```
 
 **Best Practices:**
+
 - Use Markdown for easy version control
 - Keep README focused, put deep dives in `/docs`
 - Link between documents liberally
@@ -466,6 +492,7 @@ docs/
 **Purpose:** Define dependencies, scripts, and project metadata.
 
 **Essential scripts:**
+
 ```json
 {
   "scripts": {
@@ -484,6 +511,7 @@ docs/
 **Purpose:** Environment variables (API keys, feature flags).
 
 **.env.example** (committed):
+
 ```bash
 VITE_SPOTIFY_CLIENT_ID=your_client_id_here
 VITE_API_BASE_URL=https://api.spotify.com/v1
@@ -491,12 +519,14 @@ VITE_ENABLE_MOCK_AUTH=false
 ```
 
 **.env** (git-ignored):
+
 ```bash
 VITE_SPOTIFY_CLIENT_ID=1bf67e8b04c64eba96f58e338afb2bf8
 VITE_ENABLE_MOCK_AUTH=true
 ```
 
 **Best Practices:**
+
 - Never commit `.env` (add to `.gitignore`)
 - Always commit `.env.example` as a template
 - Use build tool's env variable prefix (e.g., `VITE_` for Vite)
@@ -504,6 +534,7 @@ VITE_ENABLE_MOCK_AUTH=true
 #### `.gitignore`
 
 **Essential entries:**
+
 ```
 # Dependencies
 node_modules/
@@ -536,6 +567,7 @@ npm-debug.log*
 ### Vite (Recommended for Modern Projects)
 
 **Why Vite:**
+
 - ⚡ Lightning fast dev server (no bundling in dev)
 - 🔥 Hot Module Replacement (HMR)
 - 📦 Optimized production builds
@@ -543,12 +575,14 @@ npm-debug.log*
 - 🌐 Native ES modules
 
 **Installation:**
+
 ```bash
 npm create vite@latest music-in-numbers -- --template vanilla
 # or for TypeScript: --template vanilla-ts
 ```
 
 **vite.config.js:**
+
 ```javascript
 import { defineConfig } from 'vite';
 import path from 'path';
@@ -578,18 +612,21 @@ export default defineConfig({
 ### Webpack
 
 **Why Webpack:**
+
 - 🔧 Highly configurable
 - 🎨 Rich plugin ecosystem
 - 📊 Advanced code splitting
 - 🌍 Industry standard
 
 **Installation:**
+
 ```bash
 npm install --save-dev webpack webpack-cli webpack-dev-server
 npm install --save-dev html-webpack-plugin css-loader style-loader
 ```
 
 **webpack.config.js:**
+
 ```javascript
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -634,17 +671,20 @@ module.exports = {
 ### Parcel
 
 **Why Parcel:**
+
 - 🎁 Zero configuration
 - 🚀 Fast builds
 - 🔄 Built-in hot reloading
 - 📦 Automatic dependency resolution
 
 **Installation:**
+
 ```bash
 npm install --save-dev parcel
 ```
 
 **Usage (no config file needed):**
+
 ```json
 {
   "scripts": {
@@ -700,6 +740,7 @@ src/
 ```
 
 **When to use:**
+
 - Large applications with distinct features
 - Multiple team members working on different features
 - Features that might become separate packages
@@ -777,16 +818,19 @@ music-in-numbers/
 ### Phase 1: Setup Build Tools (1-2 hours)
 
 1. **Initialize npm project:**
+
    ```bash
    npm init -y
    ```
 
 2. **Install Vite:**
+
    ```bash
    npm install --save-dev vite
    ```
 
 3. **Create basic structure:**
+
    ```bash
    mkdir -p public src/components src/services src/utils src/styles
    ```
@@ -797,6 +841,7 @@ music-in-numbers/
    - Create `src/main.js` as entry point
 
 5. **Update package.json scripts:**
+
    ```json
    {
      "scripts": {
@@ -816,6 +861,7 @@ music-in-numbers/
    - Search bar
 
 2. **Create component files:**
+
    ```javascript
    // src/components/Sidebar/Sidebar.js
    export function Sidebar() {
@@ -830,6 +876,7 @@ music-in-numbers/
 3. **Extract inline CSS to component CSS files**
 
 4. **Import and render in main.js:**
+
    ```javascript
    import { Sidebar } from './components/Sidebar';
    import { MusicPlayer } from './components/MusicPlayer';
@@ -843,6 +890,7 @@ music-in-numbers/
 ### Phase 3: Refactor Services (1-2 hours)
 
 1. **Extract OAuth logic:**
+
    ```javascript
    // src/services/spotify/auth.js
    export async function initiateAuth(clientId) { ... }
@@ -850,6 +898,7 @@ music-in-numbers/
    ```
 
 2. **Extract API calls:**
+
    ```javascript
    // src/services/spotify/api.js
    export async function getUserProfile(accessToken) { ... }
@@ -857,6 +906,7 @@ music-in-numbers/
    ```
 
 3. **Extract utilities:**
+
    ```javascript
    // src/utils/crypto.js
    export function generateCodeVerifier() { ... }
@@ -866,11 +916,13 @@ music-in-numbers/
 ### Phase 4: Environment Variables (30 min)
 
 1. **Create `.env.example`:**
+
    ```bash
    VITE_SPOTIFY_CLIENT_ID=your_client_id_here
    ```
 
 2. **Update code to use environment variables:**
+
    ```javascript
    const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
    ```
@@ -880,11 +932,13 @@ music-in-numbers/
 ### Phase 5: Testing & Optimization (2-4 hours)
 
 1. **Test development server:**
+
    ```bash
    npm run dev
    ```
 
 2. **Test production build:**
+
    ```bash
    npm run build
    npm run preview
@@ -904,6 +958,7 @@ music-in-numbers/
 ### 1. Separation of Concerns
 
 **Good:**
+
 ```javascript
 // services/spotify/auth.js - handles OAuth
 export async function initiateAuth(clientId) { ... }
@@ -917,6 +972,7 @@ import { LoginButton } from '@/components/LoginButton';
 ```
 
 **Bad:**
+
 ```javascript
 // Everything in one file
 function LoginButton() {
@@ -934,6 +990,7 @@ function LoginButton() {
 **Current issue:** `index.html` and `music_in_numbers.html` are identical duplicates.
 
 **Solution:** Single source of truth with build tools
+
 ```javascript
 // Single HTML template in public/index.html
 // Different entry points via routing or multiple builds
@@ -942,12 +999,14 @@ function LoginButton() {
 ### 3. Naming Conventions
 
 **Files:**
+
 - Components: `PascalCase.js` (e.g., `MusicPlayer.js`)
 - Utilities: `camelCase.js` (e.g., `generateToken.js`)
 - Constants: `UPPER_SNAKE_CASE.js` (e.g., `API_CONSTANTS.js`)
 - Styles: `kebab-case.css` (e.g., `music-player.css`)
 
 **Folders:**
+
 - `kebab-case` for multi-word (e.g., `music-player/`)
 - `PascalCase` for components (e.g., `MusicPlayer/`)
 
@@ -975,6 +1034,7 @@ import logo from './logo.png';
 ### 5. Configuration Over Code
 
 **Good:**
+
 ```javascript
 // config/spotify.config.js
 export const SPOTIFY_CONFIG = {
@@ -987,6 +1047,7 @@ import { SPOTIFY_CONFIG } from '@/config/spotify.config';
 ```
 
 **Bad:**
+
 ```javascript
 // Hardcoded values scattered throughout code
 const scopes = 'user-read-private user-read-email'; // Repeated in multiple files
@@ -995,6 +1056,7 @@ const scopes = 'user-read-private user-read-email'; // Repeated in multiple file
 ### 6. Git Hygiene
 
 **.gitignore essentials:**
+
 ```
 # Dependencies
 node_modules/
@@ -1023,6 +1085,7 @@ Thumbs.db
 ```
 
 **Commit messages:**
+
 ```bash
 # Good
 git commit -m "feat: add Spotify OAuth PKCE flow"
@@ -1037,6 +1100,7 @@ git commit -m "fixed stuff"
 ### 7. Documentation
 
 **Component documentation:**
+
 ```javascript
 /**
  * MusicPlayer - Displays currently playing track with playback controls
@@ -1061,6 +1125,7 @@ export function MusicPlayer({ trackName, artistName, onPlay }) {
 ### 8. Error Handling
 
 **Centralized error handling:**
+
 ```javascript
 // services/spotify/api.js
 class SpotifyAPIError extends Error {
@@ -1101,6 +1166,7 @@ export async function fetchUserProfile(accessToken) {
 **Task:** Add a "Recently Played" page
 
 1. **Create page structure:**
+
    ```bash
    mkdir -p src/pages/RecentlyPlayed
    touch src/pages/RecentlyPlayed/RecentlyPlayed.js
@@ -1109,6 +1175,7 @@ export async function fetchUserProfile(accessToken) {
    ```
 
 2. **Create component:**
+
    ```javascript
    // src/pages/RecentlyPlayed/RecentlyPlayed.js
    import { getRecentlyPlayed } from '@/services/spotify/api';
@@ -1128,6 +1195,7 @@ export async function fetchUserProfile(accessToken) {
    ```
 
 3. **Add service method:**
+
    ```javascript
    // src/services/spotify/api.js
    export async function getRecentlyPlayed() {
@@ -1147,6 +1215,7 @@ export async function fetchUserProfile(accessToken) {
 **Task:** Create a reusable Badge component
 
 1. **Create component:**
+
    ```bash
    mkdir -p src/components/Badge
    touch src/components/Badge/Badge.js
@@ -1155,6 +1224,7 @@ export async function fetchUserProfile(accessToken) {
    ```
 
 2. **Implement component:**
+
    ```javascript
    // src/components/Badge/Badge.js
    import './Badge.css';
@@ -1199,12 +1269,14 @@ export async function fetchUserProfile(accessToken) {
    ```
 
 3. **Export from index:**
+
    ```javascript
    // src/components/Badge/index.js
    export { Badge } from './Badge';
    ```
 
 4. **Use in components:**
+
    ```javascript
    import { Badge } from '@/components/Badge';
    
@@ -1219,6 +1291,7 @@ export async function fetchUserProfile(accessToken) {
 ### Example 3: Environment-Specific Configuration
 
 **Development:**
+
 ```javascript
 // .env.development
 VITE_SPOTIFY_CLIENT_ID=dev_client_id
@@ -1228,6 +1301,7 @@ VITE_LOG_LEVEL=debug
 ```
 
 **Production:**
+
 ```javascript
 // .env.production
 VITE_SPOTIFY_CLIENT_ID=prod_client_id
@@ -1237,6 +1311,7 @@ VITE_LOG_LEVEL=error
 ```
 
 **Usage:**
+
 ```javascript
 // src/config/app.config.js
 export const appConfig = {
@@ -1254,12 +1329,14 @@ export const appConfig = {
 ### Principle 1: Separation of Concerns
 
 Each folder has a single, clear purpose:
+
 - `/components` - UI only
 - `/services` - Business logic and APIs
 - `/utils` - Pure functions
 - `/styles` - Global styling
 
 **Benefits:**
+
 - Easier to find files
 - Reduced merge conflicts
 - Better code reuse
@@ -1268,6 +1345,7 @@ Each folder has a single, clear purpose:
 ### Principle 2: Scalability
 
 The structure supports growth:
+
 - Start small (few components)
 - Add features incrementally
 - Reorganize when needed (e.g., feature-based)
@@ -1276,12 +1354,14 @@ The structure supports growth:
 ### Principle 3: Developer Experience
 
 **Fast development:**
+
 - Hot Module Replacement (instant updates)
 - Fast builds with modern tools
 - Autocomplete with proper imports
 - Easier debugging with source maps
 
 **Team collaboration:**
+
 - Clear file ownership
 - Consistent patterns
 - Self-documenting structure
@@ -1290,6 +1370,7 @@ The structure supports growth:
 ### Principle 4: Build Optimization
 
 Modern build tools provide:
+
 - **Tree-shaking** - Remove unused code
 - **Code-splitting** - Load only what's needed
 - **Minification** - Smaller file sizes
@@ -1299,6 +1380,7 @@ Modern build tools provide:
 ### Principle 5: Maintainability
 
 **Easy to maintain because:**
+
 - Single source of truth (no duplicates)
 - Clear dependencies
 - Isolated changes
@@ -1354,6 +1436,7 @@ This folder structure provides a solid foundation for scaling web projects from 
 5. **Iterate** - Adjust the structure as your project evolves
 
 The current Music in Numbers implementation works great for its scope. Use this guide when you need to:
+
 - Add multiple developers to the project
 - Implement complex features (routing, state management)
 - Prepare for production deployment

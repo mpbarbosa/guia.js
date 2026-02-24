@@ -10,6 +10,7 @@ This document provides actionable recommendations to further improve Guia.js doc
 ## 1. "Last Updated" Dates - Prevent Documentation Staleness
 
 ### Current Status
+
 - ✅ **24 of 59** markdown files have "Last Updated" dates (41% coverage)
 - ✅ Key files updated: README.md, CONTRIBUTING.md, INDEX.md, new testing guides
 - ⚠️ **35 files** still lack timestamps
@@ -30,6 +31,7 @@ Create a standard footer template for all documentation files:
 ### Priority Files Needing Timestamps
 
 **High Priority** (Core Documentation):
+
 ```bash
 # Add timestamps to these first
 docs/MODULES.md
@@ -43,6 +45,7 @@ docs/architecture/WEB_GEOCODING_MANAGER.md
 ```
 
 **Medium Priority** (Feature Documentation):
+
 ```bash
 docs/DEVICE_DETECTION.md
 docs/VOICE_SELECTION.md
@@ -51,6 +54,7 @@ docs/api-integration/NOMINATIM_INTEGRATION.md
 ```
 
 **Low Priority** (Historical/Archive):
+
 ```bash
 docs/class-extraction/*.md (already mostly dated)
 docs/issue-189/*.md (already dated)
@@ -75,6 +79,7 @@ done
 ```
 
 ### Benefits
+
 - ✅ Easy to identify stale documentation
 - ✅ Prioritize review of old documents
 - ✅ Build trust with contributors (shows maintenance)
@@ -85,6 +90,7 @@ done
 ## 2. Migration Guides for Breaking Changes
 
 ### Current Status
+
 - ✅ **CLASS_LOCATION_GUIDE.md** created (addresses modularization navigation)
 - ⚠️ Missing: Step-by-step migration guides for actual code changes
 
@@ -108,6 +114,7 @@ done
 ```
 
 **After (1.0.0)**:
+
 ```html
 <script type="module">
   import { WebGeocodingManager } from './src/guia.js';
@@ -123,7 +130,8 @@ done
 ### 3. Import Paths
 
 **Before**: All classes in one file  
-**After**: 
+**After**:
+
 ```javascript
 import { GeoPosition } from './src/core/GeoPosition.js';
 import { PositionManager } from './src/core/PositionManager.js';
@@ -133,18 +141,23 @@ import { GeolocationService } from './src/services/GeolocationService.js';
 ## Migration Steps
 
 ### Step 1: Update HTML Script Tags
+
 Add `type="module"` to all script tags loading Guia.js
 
 ### Step 2: Update Import Paths
+
 Change all `guia.js` references to `src/guia.js`
 
 ### Step 3: Update CDN URLs
+
 Use new modular CDN structure:
+
 ```
 https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@1.0.0-alpha/src/guia.js
 ```
 
 ### Step 4: Test Thoroughly
+
 Run full test suite: `npm run test:all`
 
 ## Compatibility
@@ -155,9 +168,11 @@ Run full test suite: `npm run test:all`
 ## Rollback Plan
 
 If issues arise, pin to previous version:
+
 ```html
 <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@1.0.0/guia.js"></script>
 ```
+
 ```
 
 #### B. MIGRATION_GUIDE_API_CHANGES.md
@@ -190,6 +205,7 @@ Document any API changes between versions:
 #### C. MIGRATION_GUIDE_TESTING.md
 
 Help developers migrate tests:
+
 ```markdown
 # Migrating Tests to ES6 Modules
 
@@ -203,6 +219,7 @@ Help developers migrate tests:
 ```
 
 **After (1.0.0)**:
+
 ```json
 {
   "testEnvironment": "node",
@@ -213,11 +230,13 @@ Help developers migrate tests:
 ## Import Changes
 
 **Before**:
+
 ```javascript
 const { GeoPosition } = require('./guia.js');
 ```
 
 **After**:
+
 ```javascript
 import { GeoPosition } from '../src/core/GeoPosition.js';
 ```
@@ -226,6 +245,7 @@ import { GeoPosition } from '../src/core/GeoPosition.js';
 
 **Before**: `npm test`  
 **After**: `node --experimental-vm-modules node_modules/jest/bin/jest.js`
+
 ```
 
 ### Implementation Plan
@@ -499,6 +519,7 @@ graph LR
     style guia fill:#90caf9
     style wgm fill:#e1f5ff
 ```
+
 ```
 
 #### B. Class Relationship Diagram
@@ -594,6 +615,7 @@ classDiagram
     WebGeocodingManager --> GeolocationService : uses
     WebGeocodingManager --> DisplayerFactory : uses
 ```
+
 ```
 
 #### C. Data Flow Diagrams
@@ -658,6 +680,7 @@ flowchart LR
     style Speak fill:#90caf9
     style Done fill:#a5d6a7
 ```
+
 ```
 
 ### Implementation Steps

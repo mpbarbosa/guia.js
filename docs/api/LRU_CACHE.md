@@ -45,12 +45,14 @@ const cache = new LRUCache(maxSize, expirationMs);
 Creates a new LRU cache instance.
 
 **Parameters:**
+
 - `maxSize` (`number`, optional) - Maximum number of entries before eviction. Default: `50`
 - `expirationMs` (`number`, optional) - Time in milliseconds before entries expire. Default: `300000` (5 minutes)
 
 **Returns:** `LRUCache` instance
 
 **Example:**
+
 ```javascript
 // Default configuration (50 entries, 5 minutes)
 const cache1 = new LRUCache();
@@ -72,6 +74,7 @@ const cache3 = new LRUCache(10, 60000);
 **Access:** Private (accessed internally)
 
 Internal JavaScript `Map` storing cache entries. Each entry contains:
+
 ```javascript
 {
   value: any,           // The cached value
@@ -88,6 +91,7 @@ Internal JavaScript `Map` storing cache entries. Each entry contains:
 Maximum number of entries allowed in cache before LRU eviction occurs.
 
 **Example:**
+
 ```javascript
 const cache = new LRUCache(50);
 console.log(cache.maxSize);  // 50
@@ -103,6 +107,7 @@ cache.maxSize = 100;  // Increase capacity
 Time in milliseconds before cache entries expire.
 
 **Example:**
+
 ```javascript
 const cache = new LRUCache(50, 300000);
 console.log(cache.expirationMs);  // 300000 (5 minutes)
@@ -119,6 +124,7 @@ cache.expirationMs = 600000;  // Change to 10 minutes
 Retrieves a value from the cache by key. Updates access time for LRU tracking if entry is valid.
 
 **Parameters:**
+
 - `key` (`string`) - Cache key to retrieve
 
 **Returns:** `any | null` - The cached value, or `null` if not found or expired
@@ -126,6 +132,7 @@ Retrieves a value from the cache by key. Updates access time for LRU tracking if
 **Complexity:** O(1) for retrieval, O(1) for LRU update
 
 **Behavior:**
+
 1. Look up key in cache
 2. If not found, return `null`
 3. Check if entry has expired
@@ -135,6 +142,7 @@ Retrieves a value from the cache by key. Updates access time for LRU tracking if
 7. Return cached value
 
 **Example:**
+
 ```javascript
 const cache = new LRUCache();
 
@@ -154,6 +162,7 @@ setTimeout(() => {
 ```
 
 **LRU Tracking:**
+
 ```javascript
 const cache = new LRUCache(3);  // Max 3 entries
 
@@ -179,6 +188,7 @@ console.log(cache.get('a'));  // 1 (still present)
 Stores a value in the cache. Automatically evicts LRU entry if cache is at maximum capacity.
 
 **Parameters:**
+
 - `key` (`string`) - Cache key
 - `value` (`any`) - Value to store
 
@@ -187,12 +197,14 @@ Stores a value in the cache. Automatically evicts LRU entry if cache is at maxim
 **Complexity:** O(1) average case, O(n) worst case when eviction needed
 
 **Behavior:**
+
 1. Check if cache is at max capacity
 2. If at capacity, evict least recently used entry
 3. Store new entry with current timestamp
 4. Set both `timestamp` (creation) and `lastAccessed` (for LRU)
 
 **Example:**
+
 ```javascript
 const cache = new LRUCache();
 
@@ -208,6 +220,7 @@ console.log(cache.get('count:total'));  // 42
 ```
 
 **LRU Eviction Example:**
+
 ```javascript
 const cache = new LRUCache(3);  // Max 3 entries
 
@@ -237,12 +250,14 @@ Removes all expired entries from the cache based on expiration time.
 **Complexity:** O(n) where n is the number of cache entries
 
 **Behavior:**
+
 1. Iterate through all cache entries
 2. Check if entry timestamp exceeds expiration time
 3. Delete expired entries
 4. Count and return number of removed entries
 
 **Example:**
+
 ```javascript
 const cache = new LRUCache(50, 5000);  // 5 second expiration
 
@@ -261,6 +276,7 @@ setTimeout(() => {
 ```
 
 **Periodic Cleanup Pattern:**
+
 ```javascript
 const cache = new LRUCache();
 
@@ -286,6 +302,7 @@ Removes all entries from the cache.
 **Complexity:** O(1)
 
 **Example:**
+
 ```javascript
 const cache = new LRUCache();
 
@@ -304,6 +321,7 @@ console.log(cache.size);  // 0
 Checks if a key exists in the cache without updating access time or checking expiration.
 
 **Parameters:**
+
 - `key` (`string`) - Key to check
 
 **Returns:** `boolean` - True if key exists, false otherwise
@@ -311,11 +329,13 @@ Checks if a key exists in the cache without updating access time or checking exp
 **Complexity:** O(1)
 
 **Note:** Unlike `get()`, this method:
+
 - Does NOT update LRU tracking
 - Does NOT check expiration
 - Use only for existence checks without affecting cache behavior
 
 **Example:**
+
 ```javascript
 const cache = new LRUCache();
 
@@ -342,6 +362,7 @@ Returns a string representation of the cache state.
 **Format:** `"LRUCache: size=<current>/<max>, expiration=<ms>ms"`
 
 **Example:**
+
 ```javascript
 const cache = new LRUCache(50, 300000);
 
@@ -365,6 +386,7 @@ Gets the current number of entries in the cache.
 **Access:** Read-only
 
 **Example:**
+
 ```javascript
 const cache = new LRUCache();
 
@@ -389,12 +411,14 @@ Evicts the least recently used entry if cache is at maximum capacity. Called aut
 **Complexity:** O(1) - removes first entry from Map
 
 **Algorithm:**
+
 1. Check if cache size >= maxSize
 2. Get first key from Map (least recently accessed)
 3. Delete first entry
 4. Map maintains insertion order, so first entry is LRU
 
 **Implementation:**
+
 ```javascript
 evictIfNeeded() {
     if (this.cache.size >= this.maxSize) {
@@ -620,11 +644,13 @@ process.on('SIGTERM', () => {
 ### Memory Management
 
 **Automatic Eviction:**
+
 - Keeps memory usage bounded to `maxSize` entries
 - Eviction happens automatically on `set()`
 - No manual cleanup required for LRU
 
 **Time-Based Expiration:**
+
 - Expired entries removed on access (`get()`)
 - Periodic cleanup recommended (`cleanExpired()`)
 - Prevents memory growth from stale entries
@@ -736,12 +762,14 @@ describe('LRUCache', () => {
 ### vs. Simple Object Cache
 
 **LRUCache Advantages:**
+
 - Automatic eviction (prevents unbounded growth)
 - Time-based expiration
 - LRU ordering (keeps frequently used data)
 - O(1) operations
 
 **Simple Object Disadvantages:**
+
 - No automatic eviction (memory leak risk)
 - No expiration (stale data)
 - Manual cleanup required
@@ -749,12 +777,14 @@ describe('LRUCache', () => {
 ### vs. Third-Party Libraries
 
 **Advantages of This Implementation:**
+
 - No external dependencies
 - Lightweight (243 lines)
 - Tailored to application needs
 - Easy to understand and maintain
 
 **Third-Party Alternatives:**
+
 - `lru-cache` (npm) - More features but heavier
 - `quick-lru` (npm) - Similar, but adds dependency
 

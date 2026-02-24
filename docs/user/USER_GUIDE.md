@@ -57,11 +57,13 @@ The **main feature** is **real-time location tracking** while you're moving arou
 ### Step 1: Access the Application
 
 Open your web browser and navigate to:
+
 ```
 https://[your-deployment-url]/
 ```
 
 Or for local development:
+
 ```
 http://localhost:9000/
 ```
@@ -75,16 +77,19 @@ When you first click **"Obter Localização"**, your browser will ask for permis
 #### Browser-Specific Instructions
 
 **Chrome/Edge**:
+
 1. Click the location icon in the address bar
 2. Select "Always allow [site] to access your location"
 3. Click "Done"
 
 **Firefox**:
+
 1. Click the location icon in the address bar
 2. Select "Allow"
 3. Optionally check "Remember this decision"
 
 **Safari**:
+
 1. Safari → Preferences → Websites → Location Services
 2. Find the website in the list
 3. Select "Allow"
@@ -100,18 +105,21 @@ Click the **"Obter Localização"** button to begin tracking your position.
 ### Supported Browsers
 
 ✅ **Recommended** (Full feature support):
+
 - **Chrome** 90+ (Windows, macOS, Linux, Android)
 - **Edge** 90+ (Windows, macOS)
 - **Firefox** 88+ (Windows, macOS, Linux)
 - **Safari** 14+ (macOS, iOS)
 
 ⚠️ **Limited Support**:
+
 - Older browser versions may lack speech synthesis or geolocation
 - Private/Incognito mode may have restricted permissions
 
 ### Required Features
 
 Your browser must support:
+
 - ✅ **JavaScript** (required - enable in browser settings)
 - ✅ **Geolocation API** (required for location tracking)
 - ✅ **ES6 Modules** (required for app functionality)
@@ -121,6 +129,7 @@ Your browser must support:
 ### Mobile Browsers
 
 The application is **mobile-first** and works best on:
+
 - Android Chrome 90+
 - iOS Safari 14+
 - Android Firefox 88+
@@ -168,11 +177,13 @@ The application continuously monitors your location as you move around the city.
 #### Continuous vs. Single Position
 
 **Single Position Mode** (default):
+
 - Click once to get current location
 - No automatic updates
 - Lower battery usage
 
 **Continuous Tracking Mode**:
+
 - Toggle "Rastreamento Contínuo" button
 - Automatic updates as you move
 - Higher battery usage
@@ -195,6 +206,7 @@ The application continuously monitors your location as you move around the city.
 ```
 
 **Features**:
+
 - Automatic municipality detection
 - State abbreviation (all 26 Brazilian states + DF)
 - Metropolitan region context (9 major regions)
@@ -219,6 +231,7 @@ The application continuously monitors your location as you move around the city.
 **Nearby landmarks and points of interest**
 
 The application automatically detects nearby:
+
 - 🏛️ **Cultural sites**: Museums, theaters
 - 🏪 **Shops**: Stores, shopping centers
 - 🍽️ **Restaurants**: Cafés, restaurants
@@ -272,24 +285,28 @@ The application updates your location when:
 The **"Obter Localização"** button shows contextual status:
 
 **Before location obtained**:
+
 ```
 🔵 "Aguardando localização para habilitar"
 (Waiting for location to enable)
 ```
 
 **After location obtained**:
+
 ```
 🟢 "Pronto para usar"
 (Ready to use)
 ```
 
 **During processing**:
+
 ```
 🟠 "Processando..."
 (Processing...)
 ```
 
 **Error state**:
+
 ```
 🔴 "Erro ao obter localização"
 (Error obtaining location)
@@ -354,6 +371,7 @@ The display is organized by importance:
 ### Color Coding
 
 The application uses colors for visual clarity:
+
 - 🟢 **Green**: Success states, active tracking
 - 🔵 **Blue**: Information, default states
 - 🟠 **Orange**: Warnings, attention needed
@@ -391,6 +409,7 @@ Guia Turístico is designed to be accessible to all users.
 - ✅ **Text Alternatives**: Alt text for icons and images
 
 The application meets **WCAG 2.1 Level AA** standards:
+
 - ✅ **Perceivable**: Content is presented clearly
 - ✅ **Operable**: All functions work with keyboard
 - ✅ **Understandable**: Clear language and behavior
@@ -399,6 +418,7 @@ The application meets **WCAG 2.1 Level AA** standards:
 ### Screen Reader Support
 
 The application is fully accessible with:
+
 - ✅ **ARIA landmarks** for navigation
 - ✅ **ARIA live regions** for dynamic updates
 - ✅ **Semantic HTML** for proper structure
@@ -406,6 +426,7 @@ The application is fully accessible with:
 - ✅ **Status announcements** for state changes
 
 **Tested with**:
+
 - NVDA (Windows)
 - JAWS (Windows)
 - VoiceOver (macOS, iOS)
@@ -415,16 +436,19 @@ The application is fully accessible with:
 **Optional voice announcements for location updates**
 
 **Enable Speech**:
+
 1. Look for speaker icon (🔊) near buttons
 2. Click to enable/disable voice announcements
 3. Voice announces: Address, municipality, neighborhood
 
 **Voice Settings**:
+
 - Automatically selects Brazilian Portuguese voice
 - Adjustable rate and pitch (developer settings)
 - Queue-based processing prevents overlapping speech
 
 **Configuration**:
+
 - Speaks in **Brazilian Portuguese** (pt-BR)
 - Queue-based processing (won't interrupt ongoing announcements)
 
@@ -453,6 +477,7 @@ The application is fully accessible with:
 **Problem**: "Unable to get location" error
 
 **Solutions**:
+
 1. **Check browser permissions**:
    - Click the location icon in address bar
    - Ensure location access is allowed
@@ -475,6 +500,7 @@ The application is fully accessible with:
 **Problem**: Coordinates show, but address stays blank
 
 **Solutions**:
+
 1. **Check internet connection**:
    - Address lookup requires network access
    - Test: Open google.com in another tab
@@ -496,6 +522,7 @@ The application is fully accessible with:
 **Problem**: Google Maps button does nothing
 
 **Solutions**:
+
 1. **Allow pop-ups**: Browser may be blocking pop-ups
 2. **Check coordinates**: Invalid coordinates won't generate links
 3. **Try manual link**: Right-click → "Open in new tab"
@@ -505,6 +532,7 @@ The application is fully accessible with:
 **Problem**: Application feels sluggish
 
 **Solutions**:
+
 1. **Close other tabs**: Free up browser memory
 2. **Disable continuous tracking**: Use single position mode
 3. **Clear browser cache**: Settings → Clear browsing data
@@ -515,6 +543,7 @@ The application is fully accessible with:
 **Problem**: Device can't determine location
 
 **Solutions**:
+
 1. **Move outdoors** - GPS works poorly indoors
 2. **Wait** 30-60 seconds for GPS to acquire satellites
 3. **Check device GPS** is enabled (Settings > Location)
@@ -525,6 +554,7 @@ The application is fully accessible with:
 **Problem**: No voice announcements
 
 **Solutions**:
+
 1. **Check browser support** - Some browsers don't support speech synthesis
 2. **Enable system audio** - Ensure device isn't muted
 3. **Check language** - Browser needs Brazilian Portuguese voice
@@ -546,6 +576,7 @@ The application is fully accessible with:
 ### What Data We Access
 
 The application accesses:
+
 - ✅ **Your GPS coordinates** (latitude, longitude)
 - ✅ **Your approximate address** (via reverse geocoding)
 - ✅ **Public map data** (from OpenStreetMap)
@@ -561,16 +592,19 @@ The application accesses:
 ### What Data Is Shared?
 
 **With OpenStreetMap Nominatim**:
+
 - Your coordinates (latitude, longitude)
 - Used solely for address lookup
 - Subject to OpenStreetMap's privacy policy
 
 **With IBGE**:
+
 - Municipality code (not your exact location)
 - Used for population statistics
 - Public data from Brazilian government
 
 **With Google Maps** (optional):
+
 - Coordinates when you click "View on Map"
 - Only when you explicitly click map links
 - Subject to Google's privacy policy
@@ -578,6 +612,7 @@ The application accesses:
 ### Data Usage
 
 Your location data is used **only** to:
+
 1. Display your current position on screen
 2. Look up address information via OpenStreetMap API
 3. Show nearby reference places
@@ -590,26 +625,31 @@ Your location data is used **only** to:
 To revoke location permission:
 
 **Chrome/Edge**:
+
 1. Click the lock icon in address bar
 2. Select "Location"
 3. Choose "Block"
 
 **Firefox**:
+
 1. Click the lock icon
 2. Select "Clear permissions"
 3. Refresh the page
 
 **Safari**:
+
 1. Safari menu > Preferences
 2. Websites tab > Location
 3. Change setting for the site
 
 **To stop location tracking**:
+
 1. Click browser's location icon in address bar
 2. Select "Block" or "Remove permission"
 3. Refresh the page
 
 **To clear all data**:
+
 1. Browser Settings → Privacy → Clear browsing data
 2. Select "Cookies and site data"
 3. Click "Clear data"
@@ -663,6 +703,7 @@ To revoke location permission:
 ### Q: How accurate is the location?
 
 **A**: Accuracy depends on your device:
+
 - **GPS (outdoor)**: ±5-10 meters
 - **Wi-Fi**: ±20-50 meters
 - **Cell towers**: ±100-1000 meters
@@ -680,13 +721,16 @@ To revoke location permission:
 ## Getting Help
 
 **Found a bug?**
+
 - Report at: https://github.com/mpbarbosa/guia_turistico/issues
 
 **Have a question?**
+
 - Check documentation: `docs/` directory
 - Ask in GitHub Discussions
 
 **Want to contribute?**
+
 - See: [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md)
 
 ### Documentation

@@ -417,7 +417,8 @@ def test_mock_provider_direct(self):
 
 ## Advantages Over navigator.geolocation Override
 
-### Old Approach (Current):
+### Old Approach (Current)
+
 ```javascript
 // Overrides browser API
 navigator.geolocation.getCurrentPosition = function(success, error) {
@@ -426,12 +427,14 @@ navigator.geolocation.getCurrentPosition = function(success, error) {
 ```
 
 **Problems:**
+
 - May not work consistently across browsers
 - Doesn't integrate with guia.js architecture
 - Can conflict with page initialization
 - Hard to debug when issues occur
 
-### New Approach (MockGeolocationProvider):
+### New Approach (MockGeolocationProvider)
+
 ```javascript
 // Uses guia.js provider pattern
 const mockProvider = new MockGeolocationProvider({ defaultPosition });
@@ -439,6 +442,7 @@ const service = new GeolocationService(element, mockProvider);
 ```
 
 **Benefits:**
+
 - Works with guia.js's dependency injection
 - Type-safe and well-documented
 - Easy to configure and debug
@@ -447,6 +451,7 @@ const service = new GeolocationService(element, mockProvider);
 ## Debugging Tips
 
 ### 1. Verify Library Loading
+
 ```python
 is_loaded = self.driver.execute_script("""
     return {
@@ -459,6 +464,7 @@ print(f"Library loaded: {is_loaded}")
 ```
 
 ### 2. Check Mock Configuration
+
 ```python
 config = self.driver.execute_script("""
     if (!window.TEST_MOCK_PROVIDER) return null;
@@ -472,7 +478,9 @@ print(f"Mock config: {config}")
 ```
 
 ### 3. Monitor Console Logs
+
 Use the existing `FirefoxConsoleCapture` to see mock initialization:
+
 ```python
 console = FirefoxConsoleCapture(self.driver)
 self._setup_guia_mock_geolocation()
@@ -483,6 +491,7 @@ print(f"Console logs: {logs}")
 ## Summary
 
 Using `MockGeolocationProvider` provides:
+
 1. ✅ Integration with guia.js architecture
 2. ✅ Predictable, deterministic behavior
 3. ✅ No browser permission prompts

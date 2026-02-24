@@ -9,11 +9,13 @@ This guide documents the implementation of security recommendations including en
 ### Setup
 
 1. **Copy the example file:**
+
    ```bash
    cp .env.example .env
    ```
 
 2. **Edit .env with your values:**
+
    ```bash
    # .env file (DO NOT commit to version control)
    NOMINATIM_API_URL=https://nominatim.openstreetmap.org
@@ -66,9 +68,10 @@ For browser environments, inject environment variables at build time:
 
 ### Important: Meta Tag Limitations
 
-⚠️ **The `frame-ancestors` CSP directive is NOT supported in `<meta>` tags.** It only works when delivered via HTTP headers. 
+⚠️ **The `frame-ancestors` CSP directive is NOT supported in `<meta>` tags.** It only works when delivered via HTTP headers.
 
 For clickjacking protection when using meta tags, the application uses:
+
 - **X-Frame-Options: DENY** header (fallback for meta tag deployments)
 - **frame-ancestors** directive only in HTTP headers (when available)
 
@@ -101,6 +104,7 @@ document.head.appendChild(meta);
 When you control the server and can set HTTP headers, use the full CSP with `frame-ancestors`:
 
 #### Express.js
+
 ```javascript
 import { getAllSecurityHeaders } from './config/csp.js';
 
@@ -115,6 +119,7 @@ app.use((req, res, next) => {
 ```
 
 #### Nginx
+
 ```nginx
 location / {
   add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; frame-ancestors 'none';";
@@ -125,6 +130,7 @@ location / {
 ```
 
 #### Apache
+
 ```apache
 Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; frame-ancestors 'none';"
 Header set X-Content-Type-Options "nosniff"
@@ -234,12 +240,14 @@ Before deploying to production:
 ## 5. Development vs Production
 
 ### Development Mode
+
 - Relaxed CSP (allows `unsafe-eval` for hot reload)
 - Higher log verbosity
 - Rate limiting statistics visible
 - Debug mode enabled
 
 ### Production Mode
+
 - Strict CSP (minimal `unsafe-inline` only where necessary)
 - Error logging only
 - Rate limiting enforced
@@ -248,7 +256,9 @@ Before deploying to production:
 ## 6. Troubleshooting
 
 ### CSP Violations
+
 Check browser console for CSP violation reports:
+
 ```
 Refused to load the script 'https://example.com/script.js' 
 because it violates the following Content Security Policy directive: "script-src 'self'"
@@ -257,6 +267,7 @@ because it violates the following Content Security Policy directive: "script-src
 **Solution**: Add the domain to the appropriate CSP directive in `src/config/csp.js`.
 
 ### Rate Limiting Errors
+
 ```
 Error: Rate limiter queue full for Nominatim (max: 100)
 ```
@@ -264,6 +275,7 @@ Error: Rate limiter queue full for Nominatim (max: 100)
 **Solution**: Increase `maxQueueSize` or reduce request frequency.
 
 ### Environment Variables Not Loading
+
 - Browser: Ensure `window.__ENV__` is set before app initialization
 - Node.js: Check `.env` file exists and is readable
 

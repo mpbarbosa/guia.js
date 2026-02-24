@@ -27,6 +27,7 @@ Nominatim API Response → AddressExtractor → BrazilianStandardAddress (frozen
 ```
 
 **Consumers:**
+
 - `AddressCache` - Caches extracted addresses
 - `AddressDataExtractor` - Legacy facade (delegates to this class)
 - `WebGeocodingManager` - Coordinates geocoding workflow
@@ -51,6 +52,7 @@ const address = extractor.enderecoPadronizado;  // BrazilianStandardAddress
 Creates a new AddressExtractor instance, extracts address data, and freezes the instance.
 
 **Parameters:**
+
 - `data` (`Object`) - Raw address data from geocoding API (Nominatim format)
   - `data.address` (`Object`) - Address component object
   - `data.class` (`string`, optional) - OSM feature class (e.g., "shop", "amenity")
@@ -62,6 +64,7 @@ Creates a new AddressExtractor instance, extracts address data, and freezes the 
 **Immutability:** The instance is frozen using `Object.freeze(this)` after creation
 
 **Example:**
+
 ```javascript
 const nominatimResponse = {
   address: {
@@ -104,6 +107,7 @@ Raw geocoding data passed to constructor.
 The extracted and standardized Brazilian address object.
 
 **Example:**
+
 ```javascript
 const extractor = new AddressExtractor(geocodingData);
 const address = extractor.enderecoPadronizado;
@@ -122,6 +126,7 @@ console.log(address.siglaUF);        // "SP"
 Extracts the state abbreviation (siglaUF) from ISO3166-2-lvl4 field.
 
 **Parameters:**
+
 - `iso3166Code` (`string`) - The ISO3166-2-lvl4 code (e.g., "BR-RJ", "BR-SP")
 
 **Returns:** `string | null` - The state abbreviation (e.g., "RJ", "SP") or null if invalid
@@ -129,6 +134,7 @@ Extracts the state abbreviation (siglaUF) from ISO3166-2-lvl4 field.
 **Since:** 0.9.0-alpha
 
 **Example:**
+
 ```javascript
 const sigla1 = AddressExtractor.extractSiglaUF("BR-RJ");
 console.log(sigla1);  // "RJ"
@@ -144,6 +150,7 @@ console.log(sigla4);  // null
 ```
 
 **Implementation:**
+
 ```javascript
 static extractSiglaUF(iso3166Code) {
     if (!iso3166Code || typeof iso3166Code !== 'string') {
@@ -157,6 +164,7 @@ static extractSiglaUF(iso3166Code) {
 ```
 
 **Use Cases:**
+
 - Extract state abbreviation from Nominatim `ISO3166-2-lvl4` field
 - Fallback when `state_code` is not available
 - Handle international address formats
@@ -172,6 +180,7 @@ Returns a string representation of the extractor.
 **Returns:** `string` - String representation with complete address
 
 **Example:**
+
 ```javascript
 const extractor = new AddressExtractor(geocodingData);
 console.log(extractor.toString());
@@ -189,6 +198,7 @@ Standardizes the address data into Brazilian format. This method is automaticall
 **Field Mapping Logic:**
 
 #### 1. Street Name (`logradouro`)
+
 ```javascript
 this.enderecoPadronizado.logradouro = 
     address['addr:street'] ||    // OSM tag (highest priority)
@@ -201,6 +211,7 @@ this.enderecoPadronizado.logradouro =
 **Supported Fields:** `addr:street`, `road`, `street`, `pedestrian`
 
 #### 2. Street Number (`numero`)
+
 ```javascript
 this.enderecoPadronizado.numero = 
     address['addr:housenumber'] || // OSM tag
@@ -211,6 +222,7 @@ this.enderecoPadronizado.numero =
 **Supported Fields:** `addr:housenumber`, `house_number`
 
 #### 3. Neighborhood (`bairro`)
+
 ```javascript
 this.enderecoPadronizado.bairro = 
     address['addr:neighbourhood'] || // OSM tag
@@ -223,6 +235,7 @@ this.enderecoPadronizado.bairro =
 **Supported Fields:** `addr:neighbourhood`, `neighbourhood`, `suburb`, `quarter`
 
 #### 4. Municipality (`municipio`)
+
 ```javascript
 this.enderecoPadronizado.municipio = 
     address['addr:city'] ||  // OSM tag
@@ -238,6 +251,7 @@ this.enderecoPadronizado.municipio =
 **Note:** `hamlet` is intentionally NOT included - hamlets are subdivisions within municipalities, not municipalities themselves.
 
 #### 5. Metropolitan Region (`regiaoMetropolitana`) - *v0.9.0-alpha*
+
 ```javascript
 this.enderecoPadronizado.regiaoMetropolitana = address.county || null;
 ```
@@ -245,11 +259,13 @@ this.enderecoPadronizado.regiaoMetropolitana = address.county || null;
 **Extraction Source:** Nominatim stores metropolitan regions in the `county` field for Brazilian addresses
 
 **Examples:**
+
 - "Região Metropolitana do Recife"
 - "Região Metropolitana de São Paulo"
 - "Região Metropolitana do Rio de Janeiro"
 
 #### 6. State Full Name (`uf`)
+
 ```javascript
 this.enderecoPadronizado.uf = 
     address['addr:state'] ||  // OSM tag (priority)
@@ -262,6 +278,7 @@ this.enderecoPadronizado.uf =
 **Supported Fields:** `addr:state`, `state`
 
 #### 7. State Abbreviation (`siglaUF`)
+
 ```javascript
 this.enderecoPadronizado.siglaUF = 
     address.state_code ||                              // Direct code
@@ -277,11 +294,13 @@ if (this.enderecoPadronizado.uf && /^[A-Z]{2}$/.test(this.enderecoPadronizado.uf
 **Rule:** Contains ONLY two-letter state abbreviations (e.g., "SP", "RJ")
 
 **Priority:**
+
 1. `state_code` - Direct state abbreviation
 2. `ISO3166-2-lvl4` - Extract from ISO code using `extractSiglaUF()`
 3. `uf` field - If it's already a 2-letter code (backward compatibility)
 
 #### 8. Postal Code (`cep`)
+
 ```javascript
 this.enderecoPadronizado.cep = 
     address['addr:postcode'] || // OSM tag
@@ -292,6 +311,7 @@ this.enderecoPadronizado.cep =
 **Supported Fields:** `addr:postcode`, `postcode`
 
 #### 9. Country (`pais`)
+
 ```javascript
 this.enderecoPadronizado.pais = 
     address.country === 'Brasil' || address.country === 'Brazil' 
@@ -303,6 +323,7 @@ this.enderecoPadronizado.pais =
 **Normalization:** Both "Brasil" and "Brazil" are normalized to "Brasil"
 
 #### 10. Reference Place
+
 ```javascript
 this.enderecoPadronizado.referencePlace = new ReferencePlace(this.data);
 ```
@@ -330,6 +351,7 @@ Creates a `ReferencePlace` instance from the geocoding data (includes `class`, `
 ### Fallback Hierarchy Example
 
 For **Municipality** (`municipio`):
+
 ```
 1. address['addr:city']      // OSM tag (highest priority)
 2. address.city              // Nominatim: major cities
@@ -487,6 +509,7 @@ console.log(address.municipioCompleto());  // "Recife, PE"
 The `AddressExtractor` instance is **frozen** after creation using `Object.freeze(this)`. This prevents any modification of the extractor or its properties after construction.
 
 **Example:**
+
 ```javascript
 const extractor = new AddressExtractor(geocodingData);
 
@@ -499,6 +522,7 @@ console.log(Object.isFrozen(extractor));  // true
 ```
 
 **Rationale:**
+
 - Follows MP Barbosa immutability standards (see `.github/CONTRIBUTING.md`)
 - Prevents accidental modification of extracted data
 - Ensures referential transparency for caching
@@ -509,16 +533,19 @@ console.log(Object.isFrozen(extractor));  // true
 ## Version History
 
 ### v0.9.0-alpha (Current)
+
 - **Added**: Metropolitan region extraction from `county` field
 - **Enhancement**: `regiaoMetropolitana` support in `BrazilianStandardAddress`
 - **Integration**: Used by `HTMLHighlightCardsDisplayer` for metro region display
 
 ### v0.9.0-alpha
+
 - **Added**: `extractSiglaUF()` static method for ISO3166-2-lvl4 parsing
 - **Enhancement**: Improved state abbreviation extraction logic
 - **Documentation**: Added comprehensive field mapping documentation
 
 ### v0.9.0-alpha (Initial)
+
 - Initial implementation with full field mapping
 - Support for both Nominatim format and OSM address tags
 - Immutable pattern with `Object.freeze()`
@@ -529,11 +556,13 @@ console.log(Object.isFrozen(extractor));  // true
 ## Testing
 
 Comprehensive test coverage in:
+
 - `__tests__/unit/data/AddressExtractor.test.js`
 - `__tests__/integration/address-extraction.test.js`
 - `__tests__/e2e/complete-address-validation.e2e.test.js`
 
 **Example Test:**
+
 ```javascript
 describe('AddressExtractor', () => {
   test('extracts complete Brazilian address', () => {

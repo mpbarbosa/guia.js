@@ -29,7 +29,7 @@ assignees: ''
 
 <!-- List the specific .github files or components affected -->
 
-- File/Component: 
+- File/Component:
 - Location: `.github/`
 
 ## Current Behavior
@@ -53,9 +53,9 @@ assignees: ''
 
 <!-- For bugs or workflow failures, provide steps to reproduce: -->
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## Proposed Solution
 
@@ -77,6 +77,7 @@ assignees: ''
 <!-- See WORKFLOW_SETUP.md for guidance on workflows and actions -->
 
 **Configuration and Workflow Guidelines:**
+
 - Workflow setup: [WORKFLOW_SETUP.md](../../WORKFLOW_SETUP.md)
 - GitHub Actions guide: [GITHUB_ACTIONS_GUIDE.md](../../docs/github/GITHUB_ACTIONS_GUIDE.md)
 - Issue template design: [ISSUE_TEMPLATE_COMPARISON.md](../../docs/github/ISSUE_TEMPLATE_COMPARISON.md)

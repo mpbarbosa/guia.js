@@ -16,6 +16,7 @@ await page.waitForFunction(...) // Waiting for bairro to change
 ```
 
 **Symptoms**:
+
 - Initial neighborhood (República) displayed correctly
 - When simulating movement to Jardins, bairro card remained "República"
 - Only ONE Nominatim API request made (for initial position)
@@ -30,11 +31,13 @@ await page.waitForFunction(...) // Waiting for bairro to change
 **File**: `src/coordination/ServiceCoordinator.js`
 
 **Problem**:
+
 - ServiceCoordinator stored geolocationService as private field: `this._geolocationService`
 - WebGeocodingManager tried to expose it: `this.geolocationService = this.serviceCoordinator.geolocationService`
 - But `serviceCoordinator.geolocationService` was `undefined` (no public accessor)
 
 **Evidence**:
+
 ```javascript
 // Test debug output:
 {
@@ -45,6 +48,7 @@ await page.waitForFunction(...) // Waiting for bairro to change
 ```
 
 **Fix**:
+
 ```javascript
 // Added getter in ServiceCoordinator.js (line 156)
 get geolocationService() {
@@ -59,12 +63,14 @@ get geolocationService() {
 **File**: `src/core/PositionManager.js`
 
 **Problem**:
+
 - PositionManager has validation checks before accepting position updates:
   1. **Distance check**: Must move > 20 meters from last position (line 408)
   2. **Time check**: Must wait > 50 seconds since last update (line 425)
 - Test was calling `positionManager.update()` but position was rejected
 
 **Evidence**:
+
 ```javascript
 // Console output:
 PAGE [WARN]: (PositionManager) Movement not significant enough: 0
@@ -73,6 +79,7 @@ PAGE [WARN]: (PositionManager) Movement not significant enough: 0
 The distance was calculated as **0 meters** because lastPosition wasn't properly reset.
 
 **Fix**:
+
 ```javascript
 // In simulateLocationUpdate() helper:
 // 1. Reset lastModified to bypass time check
@@ -96,10 +103,12 @@ posManager.update(position);
 ### Issue #3: Test Coordinates Wrong 🗺️
 
 **Initial Problem**:
+
 - When modifying lastPosition incorrectly: `lastPosition.coords.latitude = lat + 1`
 - This MUTATED the position object, causing subsequent update to use wrong coords
 
 **Evidence**:
+
 ```javascript
 [REQUEST INTERCEPT] Nominatim request for: -22.565209,-45.66485
 //                                          ^^^ Should be -23
@@ -107,6 +116,7 @@ posManager.update(position);
 ```
 
 **Fix**:
+
 - Create NEW position object instead of mutating existing one
 - Ensures `update()` receives correct coordinates
 
@@ -142,6 +152,7 @@ get geolocationService() {
 **Function**: `simulateLocationUpdate()`
 
 **Changes**:
+
 1. Update Puppeteer's geolocation with `page.setGeolocation()`
 2. Access positionManager through: `manager.geolocationService.positionManager`
 3. Bypass validation checks by:
@@ -151,6 +162,7 @@ get geolocationService() {
 5. Wait 4 seconds for geocoding + DOM update
 
 **Result**:
+
 - ✅ Nominatim request made for new coordinates
 - ✅ Bairro card updates correctly
 - ✅ Test completes in ~7 seconds (was timing out at 30s)
@@ -160,6 +172,7 @@ get geolocationService() {
 ## 📊 Test Results
 
 ### Before Fix
+
 ```
 FAIL __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js (70.7s)
   ✓ should display initial neighborhood (República) on app load
@@ -171,6 +184,7 @@ Tests: 2 failed, 2 passed
 ```
 
 ### After Fix
+
 ```
 PASS __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js (28.7s)
   ✓ should display initial neighborhood (República) on app load (2.8s)
@@ -182,6 +196,7 @@ Tests: 4 passed
 ```
 
 ### Full Test Suite
+
 ```
 Test Suites: 80 passed, 80 of 84 total (4 skipped)
 Tests:       1,827 passing, 146 skipped, 1,973 total
@@ -212,6 +227,7 @@ Time:        30.444s
 **Problem**: Using `this._privateField` pattern without getters breaks external access.
 
 **Solution**: Always provide getters for fields that need external access:
+
 ```javascript
 get fieldName() {
     return this._fieldName;
@@ -225,6 +241,7 @@ get fieldName() {
 **Problem**: Production validation (distance/time checks) prevented test scenarios.
 
 **Solution Options**:
+
 - **A. Bypass in tests** (chosen): Temporarily modify state to pass validation
 - **B. Dependency injection**: Pass validation config to allow test overrides
 - **C. Test-specific code paths**: `if (process.env.NODE_ENV === 'test')` (not ideal)
@@ -236,6 +253,7 @@ get fieldName() {
 ### 3. Object Mutation vs. Creation
 
 **Problem**: Mutating objects can have unexpected side effects:
+
 ```javascript
 // BAD: Mutates existing object
 lastPosition.coords.latitude = newValue;
@@ -253,6 +271,7 @@ lastPosition = { coords: { latitude: newValue, ... } };
 ### Recommended Improvements
 
 1. **Add Position Manager Test Mode**:
+
    ```javascript
    // In PositionManager constructor:
    this.testMode = options.testMode || false;
@@ -264,6 +283,7 @@ lastPosition = { coords: { latitude: newValue, ... } };
    ```
 
 2. **Expose Test Helpers**:
+
    ```javascript
    // In WebGeocodingManager:
    forcePositionUpdate(lat, lon) {

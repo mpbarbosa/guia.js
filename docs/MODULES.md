@@ -5,6 +5,7 @@ This document describes the modular architecture of Guia.js after the module spl
 ## Overview
 
 The Guia.js codebase has been split into focused, maintainable modules following the principles outlined in `/docs/MODULE_SPLITTING_GUIDE.md`. This improves:
+
 - **Maintainability**: Smaller, focused files are easier to understand and modify
 - **Testability**: Individual modules can be tested in isolation
 - **Reusability**: Utilities and configurations can be reused across the project
@@ -31,6 +32,7 @@ src/
 **Purpose**: Centralized configuration and constants
 
 **Exports**:
+
 - `GUIA_VERSION` - Version information object
 - `GUIA_NAME` - Application name
 - `GUIA_AUTHOR` - Author name
@@ -46,6 +48,7 @@ src/
 - `createDefaultConfig()` - Factory function for complete configuration object
 
 **Usage**:
+
 ```javascript
 import { GUIA_VERSION, createDefaultConfig } from './config/defaults.js';
 
@@ -58,11 +61,13 @@ const config = createDefaultConfig();
 **Purpose**: Geographic distance calculation utilities
 
 **Exports**:
+
 - `EARTH_RADIUS_METERS` - Earth's radius constant (6,371,000m)
 - `calculateDistance(lat1, lon1, lat2, lon2)` - Haversine distance calculation
 - `delay(ms)` - Promise-based delay utility
 
 **Usage**:
+
 ```javascript
 import { calculateDistance } from './utils/distance.js';
 
@@ -76,9 +81,11 @@ console.log(distance); // ~357,710 meters
 **Purpose**: Device type detection
 
 **Exports**:
+
 - `isMobileDevice(options)` - Detects if current device is mobile/tablet
 
 **Usage**:
+
 ```javascript
 import { isMobileDevice } from './utils/device.js';
 
@@ -94,11 +101,13 @@ if (isMobileDevice()) {
 **Purpose**: Logging utilities with timestamp formatting
 
 **Exports**:
+
 - `formatTimestamp()` - Returns ISO 8601 timestamp
 - `log(message, ...params)` - Logs info message with timestamp
 - `warn(message, ...params)` - Logs warning message with timestamp
 
 **Usage**:
+
 ```javascript
 import { log, warn } from './utils/logger.js';
 
@@ -112,6 +121,7 @@ warn('Low accuracy detected', { accuracy: 500 });
 ## Migration Status
 
 ### Completed ✅
+
 - Extracted utility modules (logger, distance, device)
 - Extracted configuration module (defaults)
 - Enabled ES6 module system in package.json
@@ -119,10 +129,12 @@ warn('Low accuracy detected', { accuracy: 500 });
 - Reduced guia.js from 6,106 to 5,949 lines (157 lines extracted)
 
 ### In Progress 🔄
+
 - Updating test files to work with ES6 modules (20/39 suites passing)
 - Test files using `eval()` approach need migration to proper imports
 
 ### Future Work 📋
+
 - Extract model classes (GeoPosition, ReferencePlace, etc.)
 - Extract service classes (ReverseGeocoder, GeolocationService, etc.)
 - Extract manager classes (PositionManager, WebGeocodingManager, etc.)

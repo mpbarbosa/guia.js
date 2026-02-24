@@ -9,6 +9,7 @@
 ## Problem
 
 The codebase had **14 direct timer calls** bypassing the centralized `TimerManager` singleton:
+
 - Memory leak risk in views (home.js)
 - Memory leak risk in data layer (AddressCache.js)
 - No centralized cleanup mechanism
@@ -48,10 +49,12 @@ timerManager.clearTimer('cache-display');
 ### 1. src/views/home.js
 
 **Timers Fixed**:
+
 - Cache display interval (5 seconds)
 - Speech queue display interval (500ms)
 
 **Before** (2 memory leak risks):
+
 ```javascript
 this.cacheInterval = setInterval(updateCacheDisplay, 5000);
 this.speechQueueInterval = setInterval(() => {...}, 500);
@@ -62,6 +65,7 @@ clearInterval(this.speechQueueInterval);
 ```
 
 **After** (centralized management):
+
 ```javascript
 timerManager.setInterval(updateCacheDisplay, 5000, 'home-cache-display');
 timerManager.setInterval(() => {...}, 500, 'home-speech-queue-display');
@@ -74,9 +78,11 @@ timerManager.clearTimer('home-speech-queue-display');
 ### 2. src/data/AddressCache.js
 
 **Timer Fixed**:
+
 - Expired entries cleanup (60 seconds)
 
 **Before** (1 memory leak risk):
+
 ```javascript
 this.cleanupInterval = setInterval(() => {
   this.cleanExpiredEntries();
@@ -87,6 +93,7 @@ clearInterval(this.cleanupInterval);
 ```
 
 **After** (centralized management):
+
 ```javascript
 timerManager.setInterval(() => {
   this.cleanExpiredEntries();
@@ -101,21 +108,25 @@ timerManager.clearTimer('address-cache-cleanup');
 ## Benefits
 
 ### 1. Memory Leak Prevention
+
 - All timers tracked in central registry
 - Automatic cleanup on app shutdown
 - No orphaned timers
 
 ### 2. Simplified Cleanup
+
 - One-line timer clearing
 - No manual interval tracking needed
 - Consistent cleanup pattern
 
 ### 3. Better Debugging
+
 - All active timers visible in TimerManager
 - Named timers for easy identification
 - Centralized logging
 
 ### 4. Process Safety (Node.js)
+
 - Timers automatically unref'd
 - Won't block Node.js exit
 - Test-friendly cleanup
@@ -127,11 +138,13 @@ timerManager.clearTimer('address-cache-cleanup');
 ### Acceptable Cases
 
 These timers don't need TimerManager because they're:
+
 - In documentation/examples (comments)
 - Part of component's internal lifecycle (with proper cleanup)
 - Utility functions (one-off operations)
 
 **List**:
+
 1. `Chronometer.js` - Has own timer lifecycle management
 2. `SpeechQueueProcessor.js` - Component manages own cleanup
 3. `SpeechSynthesisManager.js` - Component manages own cleanup
@@ -144,11 +157,13 @@ These timers don't need TimerManager because they're:
 ## Verification
 
 ### Tests
+
 ✅ All 2,001 tests passing (146 skipped)  
 ✅ No breaking changes  
 ✅ Memory cleanup verified
 
 ### Code Quality
+
 ✅ Consistent timer management pattern  
 ✅ Reduced memory leak risks  
 ✅ Improved maintainability
@@ -160,6 +175,7 @@ These timers don't need TimerManager because they're:
 ### When to Use TimerManager
 
 ✅ **YES - Use TimerManager for**:
+
 - View lifecycle timers
 - Data layer polling
 - UI update intervals
@@ -167,6 +183,7 @@ These timers don't need TimerManager because they're:
 - Any long-lived intervals
 
 ❌ **NO - Don't use TimerManager for**:
+
 - One-off timeouts in utilities
 - Component-internal timers (if component has destroy())
 - Test mocks/stubs

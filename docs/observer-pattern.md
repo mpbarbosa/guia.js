@@ -1,4 +1,5 @@
 # ObserverSubject Pattern Documentation - Guia Turístico
+
 **Version:** 0.9.0-alpha  
 **Date:** 2026-02-11  
 **Author:** Comprehensive analysis of Observer pattern implementation
@@ -6,6 +7,7 @@
 ---
 
 ## Table of Contents
+
 1. [Overview](#overview)
 2. [Core Implementation](#core-implementation)
 3. [Subject Classes](#subject-classes)
@@ -46,6 +48,7 @@ The Guia Turístico project implements the Observer pattern using **composition*
 ## Core Implementation
 
 ### ObserverSubject Class
+
 **File:** `src/core/ObserverSubject.js` (198 lines)
 
 #### Class Definition
@@ -328,6 +331,7 @@ update(positionManager, posEvent, loading, error) {
 | Address Fetched | `ADDRESS_FETCHED_EVENT` | After successful reverse geocoding | Notifies all address displayers with new data |
 
 **Constant Definition** (`src/config/defaults.js`):
+
 ```javascript
 export const ADDRESS_FETCHED_EVENT = 'address-fetched';
 ```
@@ -645,10 +649,12 @@ update(positionManager, posEvent, loading, error) {
 ```
 
 **Events Handled:**
+
 - `PositionManager.strCurrPosUpdate`
 - `PositionManager.strImmediateAddressUpdate`
 
 **Display Elements:**
+
 - Latitude/longitude coordinates
 - Accuracy information
 - Google Maps link
@@ -726,6 +732,7 @@ update(positionManager, eventType, data, error) {
 ```
 
 **Features:**
+
 - Timer reset on position updates
 - Elapsed time tracking
 - Observer pattern for timer events
@@ -796,6 +803,7 @@ update(addressData, enderecoPadronizado, posEvent, loading, error) {
 ```
 
 **Display Components:**
+
 - Full display name (from Nominatim)
 - Standardized Brazilian address format
 - Detailed attribute breakdown (HTML5 details/summary)
@@ -842,6 +850,7 @@ update(addressData, enderecoPadronizado) {
 ```
 
 **Display Cards:**
+
 - **Município**: City with state abbreviation (e.g., "São Paulo, SP")
 - **Região Metropolitana**: Metropolitan region (e.g., "Região Metropolitana de Recife")
 - **Bairro**: Neighborhood name
@@ -904,6 +913,7 @@ _extractReferencePlace(addressData) {
 ```
 
 **Reference Place Types:**
+
 - Shopping centers
 - Parks and recreational areas
 - Railway stations
@@ -967,6 +977,7 @@ update(addressData, enderecoPadronizado, posEvent, loading, error) {
 ```
 
 **SIDRA Data Displayed:**
+
 - Population estimates (most recent)
 - Municipality code (IBGE)
 - Data source and reference year
@@ -1046,11 +1057,13 @@ _generateSpeechText(fieldName, value) {
 ```
 
 **Speech Priorities:**
+
 1. **Priority 3**: Municipality changes (highest)
 2. **Priority 2**: Neighborhood changes (medium)
 3. **Priority 1**: Street changes (lower)
 
 **Integration:**
+
 - Subscribes to ReverseGeocoder for initial address
 - Subscribes to AddressCache for field changes
 - Enqueues speech to SpeechQueue with priorities
@@ -1715,12 +1728,14 @@ update(addressData, standard, eventType, loading, error) {
 **Problem**: Observer subscribed but update() not called.
 
 **Checklist**:
+
 - ✓ Observer has `update()` method
 - ✓ Observer subscribed: `subject.subscribe(observer)`
 - ✓ Subject notifying: `subject.notifyObservers(...)`
 - ✓ No errors in console
 
 **Debug**:
+
 ```javascript
 // Add logging to subject
 notifyObservers(...args) {
@@ -1741,6 +1756,7 @@ update(...args) {
 **Cause**: Observer subscribed multiple times.
 
 **Solution**:
+
 ```javascript
 // Check before subscribing
 subscribe(observer) {
@@ -1759,6 +1775,7 @@ subscribe(observer) {
 **Cause**: Missing unsubscribe on component destruction.
 
 **Solution**:
+
 ```javascript
 class MyComponent {
     constructor() {

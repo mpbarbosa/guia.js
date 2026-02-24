@@ -40,11 +40,13 @@ export const CORS_PROXY = null;  // Uses allorigins.win automatically
 ```
 
 **Pros**:
+
 - ✅ Tries direct access first (faster when it works)
 - ✅ Automatically falls back on error
 - ✅ No manual proxy configuration needed
 
 **Cons**:
+
 - ⚠️ First request will fail (CORS error logged)
 - ⚠️ Depends on third-party proxy service
 
@@ -59,10 +61,12 @@ export const ENABLE_CORS_FALLBACK = false;  // Not needed, always using proxy
 ```
 
 **Pros**:
+
 - ✅ No CORS errors ever
 - ✅ Consistent behavior
 
 **Cons**:
+
 - ⚠️ All requests go through proxy (slower)
 - ⚠️ Depends on third-party service
 
@@ -77,11 +81,13 @@ export const ENABLE_CORS_FALLBACK = false;
 ```
 
 **Pros**:
+
 - ✅ Full control over proxy
 - ✅ Better for team development
 - ✅ Can add custom headers, caching, rate limiting
 
 **Cons**:
+
 - ⚠️ Requires running your own proxy server
 
 See `CORS_TROUBLESHOOTING.md` for proxy server code.
@@ -130,6 +136,7 @@ After enabling CORS fallback:
 4. Watch console:
 
 **Expected output**:
+
 ```
 [ErrorRecovery] CORS error detected
 [ReverseGeocoder] Retrying with CORS proxy fallback...
@@ -151,6 +158,7 @@ export const CORS_PROXY = null;
 ```
 
 Why?
+
 - Nominatim allows CORS from HTTPS origins
 - No proxy needed in production
 - Faster and more reliable
@@ -184,11 +192,13 @@ Run your own proxy server. See `CORS_TROUBLESHOOTING.md` for complete setup inst
 **Quick fix**: Set `ENABLE_CORS_FALLBACK = true` in `src/config/defaults.js`
 
 **Best practices**:
+
 - ✅ Use fallback for local development
 - ✅ Use direct access (no proxy) in production with HTTPS
 - ✅ Consider running own proxy for team development
 
 **Files to modify**:
+
 - `src/config/defaults.js` - Enable/disable fallback and set proxy URL
 
 That's it! Your CORS issues should be resolved.

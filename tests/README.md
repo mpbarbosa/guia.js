@@ -21,6 +21,7 @@ The Guia Turístico project uses **dual testing frameworks**:
 | **Selenium (Python)** | `tests/` | Real browser UI/UX validation | 🐢 Slow (browser) |
 
 **Selenium tests validate**:
+
 - Real browser geolocation APIs
 - Visual hierarchy and accessibility
 - Console log capture during execution
@@ -58,11 +59,13 @@ tests/
 ### Prerequisites
 
 **Required**:
+
 - Python 3.11+ (`python3 --version`)
 - Firefox browser (geckodriver recommended)
 - OR Chrome browser (chromedriver as fallback)
 
 **Verify Installation**:
+
 ```bash
 # Check Python version
 python3 --version  # Should show 3.11+
@@ -95,6 +98,7 @@ pip list | grep -E "selenium|pytest"
 ```
 
 **Expected Output**:
+
 ```
 pytest       9.0.2
 selenium     4.39.0
@@ -161,6 +165,7 @@ integration/test_milho_verde_geolocation.py ... [100%]
 
 **Purpose**: Validate Material Design 3 visual prominence  
 **What it tests**:
+
 - Location cards are larger than action buttons
 - Cards have proper elevation and shadows
 - Color contrast meets accessibility standards
@@ -168,6 +173,7 @@ integration/test_milho_verde_geolocation.py ... [100%]
 - Hover states work correctly
 
 **Running**:
+
 ```bash
 pytest integration/test_visual_hierarchy.py -v
 ```
@@ -176,12 +182,14 @@ pytest integration/test_visual_hierarchy.py -v
 
 **Purpose**: Test Firefox console log capture library  
 **What it tests**:
+
 - Console listener injection
 - Log level filtering (error, warn, info)
 - Automatic log collection
 - pytest fixture integration
 
 **Running**:
+
 ```bash
 pytest integration/test_console_logging.py -v
 ```
@@ -190,12 +198,14 @@ pytest integration/test_console_logging.py -v
 
 **Purpose**: End-to-end geolocation testing  
 **What it tests**:
+
 - Mock geolocation provider integration
 - Coordinate display and formatting
 - Address resolution via OpenStreetMap
 - Brazilian address format validation
 
 **Running**:
+
 ```bash
 pytest integration/test_milho_verde_geolocation.py -v
 ```
@@ -209,6 +219,7 @@ pytest integration/test_milho_verde_geolocation.py -v
 Shared fixtures for all tests:
 
 **`firefox_driver`**: Firefox WebDriver instance with console logging enabled
+
 ```python
 def test_example(firefox_driver):
     firefox_driver.get("http://localhost:9000/src/index.html")
@@ -216,6 +227,7 @@ def test_example(firefox_driver):
 ```
 
 **`console_capture`**: Console log capture instance
+
 ```python
 def test_console(firefox_driver, console_capture):
     firefox_driver.get("http://localhost:9000/src/index.html")
@@ -223,6 +235,7 @@ def test_console(firefox_driver, console_capture):
 ```
 
 **`base_url`**: Base URL for application (file:// protocol)
+
 ```python
 def test_page(firefox_driver, base_url):
     firefox_driver.get(f"{base_url}/index.html")
@@ -251,6 +264,7 @@ driver = webdriver.Chrome(options=options)
 ### Installing geckodriver (Firefox)
 
 **Linux**:
+
 ```bash
 # Download latest geckodriver
 wget https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux64.tar.gz
@@ -259,11 +273,13 @@ sudo mv geckodriver /usr/local/bin/
 ```
 
 **macOS**:
+
 ```bash
 brew install geckodriver
 ```
 
 **Verify**:
+
 ```bash
 geckodriver --version
 ```
@@ -271,17 +287,20 @@ geckodriver --version
 ### Installing chromedriver (Chrome)
 
 **Linux**:
+
 ```bash
 # Install via package manager
 sudo apt install chromium-chromedriver
 ```
 
 **macOS**:
+
 ```bash
 brew install chromedriver
 ```
 
 **Verify**:
+
 ```bash
 chromedriver --version
 ```
@@ -293,6 +312,7 @@ chromedriver --version
 ### Console Output
 
 Standard pytest output shows:
+
 - Test file and function names
 - Pass/fail status with ✓/✗
 - Execution time
@@ -301,6 +321,7 @@ Standard pytest output shows:
 ### XML Reports (CI/CD)
 
 Generate XML reports for CI/CD integration:
+
 ```bash
 pytest integration/ --junitxml=test-results.xml
 ```
@@ -308,6 +329,7 @@ pytest integration/ --junitxml=test-results.xml
 ### HTML Reports (Optional)
 
 Install and use pytest-html:
+
 ```bash
 pip install pytest-html
 pytest integration/ --html=report.html --self-contained-html
@@ -337,11 +359,13 @@ pytest integration/ --html=report.html --self-contained-html
 ### Debug Mode
 
 Run tests with maximum verbosity:
+
 ```bash
 pytest integration/ -vvv --tb=long --capture=no
 ```
 
 This shows:
+
 - Full test output (no capture)
 - Complete tracebacks
 - All print statements
@@ -363,12 +387,14 @@ This shows:
 ### When to Use Each
 
 **Use Jest** (JavaScript):
+
 - Testing business logic
 - Testing data transformations
 - Fast TDD workflow
 - CI/CD automation (runs on every commit)
 
 **Use Selenium** (Python):
+
 - Testing UI rendering
 - Testing real browser APIs (geolocation, console)
 - Visual hierarchy validation

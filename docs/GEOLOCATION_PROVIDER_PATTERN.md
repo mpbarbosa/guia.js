@@ -48,6 +48,7 @@ provider.getCurrentPosition(
 ```
 
 **Features**:
+
 - Wraps navigator.geolocation API
 - Supports dependency injection
 - Validates geolocation support
@@ -69,6 +70,7 @@ const mockProvider = new MockGeolocationProvider({
 ```
 
 **Features**:
+
 - Predefined positions/errors
 - Dynamic position changes
 - Simulated delays
@@ -369,6 +371,7 @@ const mockProvider = new MockGeolocationProvider({
 Gets current position once.
 
 **Parameters**:
+
 - `successCallback: Function` - Called with position on success
 - `errorCallback: Function` - Called with error on failure  
 - `options: Object` - Geolocation options (enableHighAccuracy, timeout, maximumAge)
@@ -387,6 +390,7 @@ Starts continuous position monitoring.
 Stops position monitoring.
 
 **Parameters**:
+
 - `watchId: number` - Watch ID from watchPosition
 
 **Returns**: `void`

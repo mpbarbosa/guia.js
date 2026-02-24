@@ -12,12 +12,14 @@
 ### Documentation & Consistency (5 scripts)
 
 #### 1. check-version-consistency.sh (243 lines)
+
 **Purpose**: Validates version consistency across project files  
 **Usage**: `./.github/scripts/check-version-consistency.sh`  
 **npm script**: `npm run check:version`  
 **Documentation**: README.md (line 829)  
 
 **Checks**:
+
 - package.json version matches copilot-instructions.md
 - README.md has correct version badge
 - All documentation uses consistent version strings
@@ -25,12 +27,14 @@
 ---
 
 #### 2. check-references.sh
+
 **Purpose**: Validates internal documentation links  
 **Usage**: `./.github/scripts/check-references.sh`  
 **npm script**: `npm run check:references`  
 **Documentation**: README.md
 
 **What it does**:
+
 - Scans markdown files for broken internal links
 - Checks file path references
 - Reports missing documentation targets
@@ -38,11 +42,13 @@
 ---
 
 #### 3. check-terminology.sh
+
 **Purpose**: Enforces consistent terminology across documentation  
 **Usage**: `./.github/scripts/check-terminology.sh`  
 **npm script**: `npm run check:terminology`  
 
 **What it does**:
+
 - Validates terminology consistency
 - Checks for deprecated terms
 - Reports inconsistent naming
@@ -50,10 +56,12 @@
 ---
 
 #### 4. update-doc-metadata.sh (453 lines)
+
 **Purpose**: Updates metadata in documentation files  
 **Usage**: `./.github/scripts/update-doc-metadata.sh [options]`  
 
 **Options**:
+
 - `--help` - Show usage
 - `--date` - Update dates only
 - `--all` - Update all metadata fields
@@ -66,6 +74,7 @@
 ---
 
 #### 5. validate-cross-references.sh (78 lines)
+
 **Purpose**: Validates cross-references between documentation files  
 **Usage**: `./.github/scripts/validate-cross-references.sh [OPTIONS]`  
 **npm script**: Consider adding `npm run check:cross-refs`  
@@ -73,6 +82,7 @@
 **--help flag**: ✅ **YES**
 
 **What it does**:
+
 - Checks internal documentation links (markdown)
 - Validates relative path references (`./`, `../`)
 - Reports broken or circular references with file and line numbers
@@ -80,6 +90,7 @@
 - Excludes external URLs (http/https) and anchor-only links (#)
 
 **Output**:
+
 - Success: `✓ All N references valid` (green)
 - Failure: List of broken references with:
   - Source file path
@@ -88,10 +99,12 @@
   - Error type (file not found, invalid path, etc.)
 
 **Exit codes**:
+
 - `0`: All references valid, no broken links
 - `1`: Broken references found
 
 **Examples**:
+
 ```bash
 # Validate all cross-references
 ./.github/scripts/validate-cross-references.sh
@@ -105,6 +118,7 @@ npm run check:references && ./.github/scripts/validate-cross-references.sh
 ```
 
 **Link Patterns Checked**:
+
 ```markdown
 [text](./relative/path.md)           # Relative to current file
 [text](../parent/doc.md)             # Parent directory
@@ -113,11 +127,13 @@ npm run check:references && ./.github/scripts/validate-cross-references.sh
 ```
 
 **Exclusions**:
+
 - External links: `[text](https://example.com)`
 - Anchor-only: `[text](#section)`
 - node_modules/, .git/, venv/ directories
 
 **Related Tools**:
+
 - `check-references.sh` - File reference validation
 - `check-references.py` - Enhanced reference checking with false positive filtering
 - `check-links.py` - External link validation
@@ -130,6 +146,7 @@ Used in documentation validation workflows to ensure all internal links remain v
 ### CDN & Distribution (1 script)
 
 #### 6. cdn-delivery.sh (229 lines)
+
 **Purpose**: Generates jsDelivr CDN URLs for the current version  
 **Usage**: `./.github/scripts/cdn-delivery.sh`  
 **npm script**: `npm run cdn:generate`  
@@ -138,11 +155,13 @@ Used in documentation validation workflows to ensure all internal links remain v
 **Output**: `cdn-urls.txt` with distribution URLs
 
 **Features**:
+
 - Generates versioned CDN URLs
 - Supports commit-specific URLs
 - Tests CDN availability (optional)
 
 **Environment Variables**:
+
 - `GITHUB_USER` - Repository owner
 - `GITHUB_REPO` - Repository name
 
@@ -151,12 +170,14 @@ Used in documentation validation workflows to ensure all internal links remain v
 ### Testing & CI/CD (5 scripts)
 
 #### 7. test-workflow-locally.sh (318 lines)
+
 **Purpose**: Simulates GitHub Actions workflow locally before pushing  
 **Usage**: `./.github/scripts/test-workflow-locally.sh`  
 **npm script**: `npm run ci:test-local`  
 **Documentation**: README.md, docs/WORKFLOW_SETUP.md
 
 **What it validates**:
+
 - JavaScript syntax (npm run validate)
 - Test suite execution (npm test)
 - Test coverage generation
@@ -164,17 +185,20 @@ Used in documentation validation workflows to ensure all internal links remain v
 - Change detection
 
 **Exit codes**:
+
 - 0: All checks passed
 - 1: Some checks failed
 
 ---
 
 #### 8. validate-jsdom-update.sh (120+ lines)
+
 **Purpose**: Validates jsdom dependency updates for DOM API compatibility  
 **Usage**: `./.github/scripts/validate-jsdom-update.sh [version]`  
 **Documentation**: ✅ **COMPLETE**
 
 **What it does**:
+
 - Backs up current state with git stash
 - Updates jsdom to specified version (or 27.4.0 default)
 - Runs full test suite (syntax validation + all tests)
@@ -183,10 +207,12 @@ Used in documentation validation workflows to ensure all internal links remain v
 - Provides rollback instructions if update fails
 
 **Parameters**:
+
 - `version` (optional): Specific jsdom version to test (default: 27.4.0)
   - Examples: `27.4.0`, `28.0.0`, `latest`
 
 **Process Steps**:
+
 1. Check current jsdom version (`npm list jsdom`)
 2. Create backup (`git stash`)
 3. Update jsdom to target version
@@ -195,6 +221,7 @@ Used in documentation validation workflows to ensure all internal links remain v
 6. Report results and recommendations
 
 **Output**:
+
 - ✓ Success indicators for each step (green)
 - ✗ Failure indicators with error details (red)
 - Test results summary
@@ -202,10 +229,12 @@ Used in documentation validation workflows to ensure all internal links remain v
 - Recommendation: proceed or rollback
 
 **Exit codes**:
+
 - `0`: Update safe - all tests pass, no breaking changes
 - `1`: Breaking changes detected - rollback recommended
 
 **Examples**:
+
 ```bash
 # Test default jsdom version (27.4.0)
 ./.github/scripts/validate-jsdom-update.sh
@@ -218,6 +247,7 @@ Used in documentation validation workflows to ensure all internal links remain v
 ```
 
 **When to use**:
+
 - Before upgrading jsdom in package.json
 - After jsdom releases new major version
 - When DOM API tests fail unexpectedly
@@ -225,6 +255,7 @@ Used in documentation validation workflows to ensure all internal links remain v
 - Before major releases (pre-release validation)
 
 **Rollback Procedure** (if update fails):
+
 ```bash
 # Script automatically restores backup on failure
 git stash pop  # Restore pre-update state
@@ -232,41 +263,49 @@ npm install    # Reinstall original dependencies
 ```
 
 **Known Issues**:
+
 - jsdom 28.0.0+ has ES module compatibility issues (see Issue #114)
 - Some versions may have CORS-related test failures
 - Puppeteer tests may timeout with newer jsdom versions
 
 **Related Documentation**:
+
 - copilot-instructions.md (line 101) - jsdom upgrade validation process
 - Issue #114 - jsdom ES module compatibility resolution
 
 ---
 
 #### 9. change-type-detector.sh (308 lines)
+
 **Purpose**: Detects change type from Conventional Commits messages  
 **Usage**: `./.github/scripts/change-type-detector.sh [base_ref]`  
 **Used by**: `.github/workflows/modified-files.yml`  
 **Documentation**: ✅ **COMPLETE**
 
 **What it does**:
+
 - Analyzes commit messages since `base_ref` (default: HEAD~1)
 - Parses Conventional Commits format (feat, fix, docs, test, etc.)
 - Outputs change type for conditional workflow execution
 - Supports all standard Conventional Commits types
 
 **Parameters**:
+
 - `base_ref` (optional): Git reference to compare against (default: HEAD~1)
   - Examples: `HEAD~1`, `abc123`, `origin/main`, `v0.9.0`
 
-**Output**: 
+**Output**:
+
 - Change type string to stdout: `feat`|`fix`|`docs`|`test`|`refactor`|`chore`|`ci`|`perf`|`style`
 - Diagnostic messages to stderr (colored)
 
 **Exit codes**:
+
 - `0`: Success, change type detected and output
 - `1`: Error (invalid git ref, parsing failure, unknown change type)
 
 **Examples**:
+
 ```bash
 # Detect changes since last commit
 ./.github/scripts/change-type-detector.sh
@@ -286,6 +325,7 @@ fi
 ```
 
 **Conventional Commits Types Supported**:
+
 - `feat:` - New features (triggers version bump)
 - `fix:` - Bug fixes (triggers version bump)
 - `docs:` - Documentation changes only
@@ -298,6 +338,7 @@ fi
 
 **Workflow Integration**:
 Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
+
 ```yaml
 - name: Detect change type
   id: change-type
@@ -315,18 +356,21 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 ---
 
 #### 10. test-change-type-detection.sh (237 lines)
+
 **Purpose**: Test suite for change-type-detector.sh  
 **Usage**: `./.github/scripts/test-change-type-detection.sh [OPTIONS]`  
 **Documentation**: ✅ **COMPLETE**  
 **--help flag**: ✅ **YES**
 
 **What it does**:
+
 - Runs 20+ test cases for change type detection
 - Validates Conventional Commits parsing accuracy
 - Tests edge cases (empty commits, invalid formats, multiple types)
 - Reports pass/fail status for each test scenario
 
 **Test Coverage**:
+
 - All Conventional Commits types (feat, fix, docs, test, etc.)
 - Scoped commits: `feat(api):`, `fix(ui):`
 - Breaking changes: `feat!:`, `fix(api)!:`
@@ -335,6 +379,7 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 - Empty commit ranges
 
 **Expected Output**:
+
 ```
 🧪 Testing change-type-detector.sh
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -347,6 +392,7 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 ```
 
 **Run before**:
+
 - Modifying `change-type-detector.sh`
 - Adding new commit type patterns
 - Updating Conventional Commits parsing logic
@@ -357,24 +403,28 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 ---
 
 #### 11. test-conditional-execution.sh (203 lines)
+
 **Purpose**: Test suite for workflow-condition-evaluator.sh  
 **Usage**: `./.github/scripts/test-conditional-execution.sh [OPTIONS]`  
 **Documentation**: ✅ **COMPLETE**  
 **--help flag**: ✅ **YES**
 
 **What it does**:
+
 - Tests workflow condition evaluation logic (15+ scenarios)
 - Validates file pattern matching accuracy
 - Checks `.workflow-config.yaml` rule parsing
 - Ensures conditional execution works correctly
 
 **Test Coverage**:
+
 - File pattern matching (`src/**/*.js`, `__tests__/**`, etc.)
 - Change type conditions (docs-only, test-only, etc.)
 - Combined conditions (file patterns + change types)
 - Edge cases (no changes, all files changed, invalid patterns)
 
 **Expected Output**:
+
 ```
 🧪 Testing workflow-condition-evaluator.sh
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -387,12 +437,14 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 ```
 
 **Run before**:
+
 - Modifying `workflow-condition-evaluator.sh`
 - Changing `.workflow-config.yaml` rules
 - Updating workflow logic in modified-files.yml
 - Adding new file pattern conditions
 
 **Dependencies**:
+
 - Requires `.workflow-config.yaml` in project root
 - Uses `git diff` for file detection
 
@@ -401,30 +453,36 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 ---
 
 #### 12. workflow-condition-evaluator.sh (225 lines)
+
 **Purpose**: Evaluates conditional workflow execution rules from .workflow-config.yaml  
 **Usage**: `./.github/scripts/workflow-condition-evaluator.sh <step_name> [base_ref]`  
 **Used by**: `.github/workflows/modified-files.yml`  
 **Documentation**: ✅ **COMPLETE**
 
 **What it does**:
+
 - Reads workflow rules from `.workflow-config.yaml`
 - Detects changed files since `base_ref` using `git diff`
 - Determines if specified step should run based on file patterns and change types
 - Outputs "run" or "skip" for workflow conditional execution
 
 **Parameters**:
+
 - `step_name` (required): Name of workflow step to evaluate (must match `.workflow-config.yaml` key)
 - `base_ref` (optional): Git reference for comparison (default: HEAD~1)
 
-**Output**: 
+**Output**:
+
 - `"run"` or `"skip"` to stdout
 - Diagnostic messages to stderr (colored)
 
 **Exit codes**:
+
 - `0`: Success (step should run or skip as determined)
 - `1`: Error (invalid step name, missing config, git failure)
 
 **Examples**:
+
 ```bash
 # Check if tests should run
 ./.github/scripts/workflow-condition-evaluator.sh test-suite
@@ -442,6 +500,7 @@ fi
 ```
 
 **Configuration File** (`.workflow-config.yaml`):
+
 ```yaml
 steps:
   test-suite:
@@ -460,17 +519,20 @@ steps:
 ```
 
 **File Pattern Rules**:
+
 - Glob patterns supported: `*`, `**`, `?`, `{a,b}`
 - Multiple patterns: ANY match triggers "run"
 - Negation not supported (use separate steps)
 
 **Change Type Rules**:
+
 - Detected via `change-type-detector.sh`
 - Multiple types: ANY match triggers "run"
 - Combines with file patterns (OR logic)
 
 **Workflow Integration**:
 Used in `.github/workflows/modified-files.yml`:
+
 ```yaml
 - name: Check if tests should run
   id: check-tests
@@ -486,6 +548,7 @@ Used in `.github/workflows/modified-files.yml`:
 **Testing**: See `test-conditional-execution.sh` for test suite
 
 **Dependencies**:
+
 - `git` (for diff detection)
 - `.workflow-config.yaml` (configuration file)
 - `change-type-detector.sh` (for change type detection)
@@ -495,12 +558,14 @@ Used in `.github/workflows/modified-files.yml`:
 ### Badge Management (1 script)
 
 #### 13. update-badges.sh
+
 **Purpose**: Updates README badges (test counts, coverage, etc.)  
 **Usage**: `./.github/scripts/update-badges.sh`  
 **npm script**: `npm run update:badges`  
 **Documentation**: README.md, multiple docs files
 
 **What it does**:
+
 - Updates test count badges
 - Updates coverage percentage badges
 - Updates version badges
@@ -522,24 +587,28 @@ Some validation checks have both Python and shell implementations. Understanding
 | **check-links** | ✅ External link validation | ❌ Not available | Python only (HTTP requests) |
 
 **Key Differences**:
+
 - **Python scripts**: Better regex support, structured output, false positive filtering
 - **Shell scripts**: Faster for simple checks, no Python dependency, easier to debug
 
 ---
 
 #### 14. check-references.py
+
 **Purpose**: Enhanced reference checker with false positive filtering  
 **Usage**: `python3 .github/scripts/check-references.py`  
 **Shell wrapper**: `check-references.sh` (basic version)  
 **Version**: 1.0.0 (2026-01-28)
 
 **What it does**:
+
 - Scans all markdown files for file references
 - Validates file paths exist and are accessible
 - Filters out false positives (code examples, regex patterns)
 - Provides structured error reporting with line numbers
 
 **Advantages over shell version**:
+
 - Advanced regex pattern matching
 - False positive exclusion patterns:
   - JavaScript regex: `/pattern/g`, `/pattern/gi`
@@ -549,6 +618,7 @@ Some validation checks have both Python and shell implementations. Understanding
 - Structured JSON-like output option
 
 **Exclusion Patterns**:
+
 ```python
 EXCLUDE_REGEX_PATTERNS = [
     r'/.*?/g[im]*',              # JavaScript regex
@@ -559,12 +629,14 @@ EXCLUDE_REGEX_PATTERNS = [
 ```
 
 **When to use**:
+
 - ✅ CI/CD workflows (better accuracy, fewer false positives)
 - ✅ When code comments cause false positives
 - ✅ Detailed reference auditing with structured output
 - ✅ Large codebases with mixed content (code + docs)
 
 **When to use shell version instead**:
+
 - ✅ Quick local checks (faster startup)
 - ✅ Environments without Python 3
 - ✅ Simple validation without regex patterns
@@ -572,18 +644,21 @@ EXCLUDE_REGEX_PATTERNS = [
 ---
 
 #### 15. check-terminology.py
+
 **Purpose**: Terminology consistency validator with context awareness  
 **Usage**: `python3 .github/scripts/check-terminology.py`  
 **Shell wrapper**: `check-terminology.sh` (basic version)  
 **Version**: 1.0.0 (2026-01-28)
 
 **What it does**:
+
 - Validates documentation against terminology guide standards
 - Context-aware checking (code vs. documentation)
 - Brazilian Portuguese accent validation
 - Consistent capitalization enforcement
 
 **Terminology Checks**:
+
 1. **Brazilian Portuguese accents**:
    - ❌ `municipio` (code context: allowed)
    - ✅ `município` (documentation: required)
@@ -600,23 +675,27 @@ EXCLUDE_REGEX_PATTERNS = [
    - API endpoint formatting
 
 **Context Awareness**:
+
 ```python
 'exclude_pattern': r'var\s+municipio|const\s+municipio|\.municipio'  # Exclude code
 ```
 
 **Output**:
+
 - Color-coded findings (yellow warnings, red errors)
 - File path, line number, and column position
 - Suggested corrections
 - Summary statistics (errors vs. warnings)
 
 **When to use**:
+
 - ✅ Before documentation commits (pre-commit hook)
 - ✅ CI/CD workflows for terminology enforcement
 - ✅ Documentation audits and style guide compliance
 - ✅ Quarterly consistency reviews
 
 **When to use shell version instead**:
+
 - ✅ Quick local checks without detailed output
 - ✅ Simple string replacement validation
 - ✅ Environments without Python 3
@@ -624,11 +703,13 @@ EXCLUDE_REGEX_PATTERNS = [
 ---
 
 #### 16. check-links.py
+
 **Purpose**: External link checker with timeout handling and status validation  
 **Usage**: `python3 .github/scripts/check-links.py`  
 **No shell equivalent** (requires HTTP client)
 
 **What it checks**:
+
 - HTTP/HTTPS external links in markdown files
 - Response status codes (200 OK, 301 Moved, 404 Not Found, etc.)
 - Timeout handling for slow/unresponsive sites (30s default)
@@ -636,6 +717,7 @@ EXCLUDE_REGEX_PATTERNS = [
 - Redirect chains (301 → 302 → 200)
 
 **Exclusions** (rate limiting / always-available):
+
 ```python
 EXCLUDE_DOMAINS = [
     'shields.io',           # Badge CDN (rate-limited)
@@ -646,16 +728,19 @@ EXCLUDE_DOMAINS = [
 ```
 
 **Output**:
+
 - ✓ Valid links (200, 301, 302) with response time
 - ✗ Broken links (404, 500, timeout) with error details
 - ⚠ Redirected links (301, 302) with final destination
 - Summary statistics (total, valid, broken, excluded)
 
 **Exit codes**:
+
 - `0`: All links valid or excluded
 - `1`: Broken links found
 
 **Examples**:
+
 ```bash
 # Check all external links
 python3 .github/scripts/check-links.py
@@ -668,6 +753,7 @@ python3 .github/scripts/check-links.py --verbose
 ```
 
 **When to use**:
+
 - ✅ Monthly documentation audits (external links decay)
 - ✅ Before major releases (ensure all references valid)
 - ✅ After restructuring documentation
@@ -675,11 +761,13 @@ python3 .github/scripts/check-links.py --verbose
 - ❌ Not in CI/CD (external sites unreliable, rate limiting)
 
 **Performance**:
+
 - Timeout: 30 seconds per link
 - Concurrent requests: 5 (configurable)
 - Execution time: ~2-5 minutes for 100 links
 
 **Related Tools**:
+
 - `validate-cross-references.sh` - Internal markdown links
 - `check-references.py` - File path references
 
@@ -688,6 +776,7 @@ python3 .github/scripts/check-links.py --verbose
 ### JavaScript Utilities (1 script)
 
 #### 17. generate_api_docs.js
+
 **Purpose**: Generates API documentation from JSDoc comments  
 **Usage**: `node .github/scripts/generate_api_docs.js`
 
@@ -696,6 +785,7 @@ python3 .github/scripts/check-links.py --verbose
 ## Usage Patterns
 
 ### In CI/CD Workflows
+
 ```yaml
 - name: Check version consistency
   run: ./.github/scripts/check-version-consistency.sh
@@ -705,6 +795,7 @@ python3 .github/scripts/check-links.py --verbose
 ```
 
 ### Via npm Scripts
+
 ```bash
 npm run check:version          # Version consistency
 npm run check:references       # Link validation
@@ -714,6 +805,7 @@ npm run ci:test-local         # Test workflow locally
 ```
 
 ### Direct Execution
+
 ```bash
 # From project root
 ./.github/scripts/cdn-delivery.sh
@@ -740,17 +832,20 @@ npm run ci:test-local         # Test workflow locally
 ### Migration Opportunities (High Priority)
 
 **1. version-consistency.yml** → `check-version-consistency.sh`
+
 - Benefit: More comprehensive version checks
 - Effort: 10 minutes
 - Impact: HIGH - Catch more version inconsistencies
 
 **2. modified-files.yml** → `change-type-detector.sh` + `workflow-condition-evaluator.sh`
+
 - Benefit: Standardized Conventional Commits parsing
 - Effort: 30 minutes
 - Impact: HIGH - Better conditional execution logic
 - Requires: `.workflow-config.yaml` configuration
 
 **3. link-checker.yml** → `check-links.py`
+
 - Benefit: Better error handling, timeout support
 - Effort: 10 minutes
 - Impact: MEDIUM - More reliable link validation
@@ -783,6 +878,7 @@ npm run ci:test-local         # Test workflow locally
 ## Script Development Guidelines
 
 ### Requirements
+
 - **Shebang**: `#!/bin/bash` or `#!/usr/bin/env python3`
 - **Error handling**: Use `set -e` for bash
 - **Help option**: Always include `--help`
@@ -790,12 +886,14 @@ npm run ci:test-local         # Test workflow locally
 - **Exit codes**: 0 = success, 1 = failure
 
 ### Testing
+
 - Test in clean environment
 - Run from project root
 - Test with missing dependencies
 - Validate error messages
 
 ### Documentation
+
 - Add entry to this README
 - Document in `docs/AUTOMATION_TOOLS.md`
 - Add npm script alias if user-facing
@@ -806,20 +904,24 @@ npm run ci:test-local         # Test workflow locally
 ## Relationship to Other Directories
 
 ### `.github/scripts/` vs `scripts/`
+
 - **`.github/scripts/`**: CI/CD automation, git hooks, GitHub-specific
 - **`scripts/`**: Project maintenance, manual utilities, developer tools
 
 ### `.github/scripts/` vs `.github/actions/`
+
 - **Scripts**: Shell scripts, direct execution, workflow steps
 - **Actions**: Reusable workflow components, GitHub Actions format
 
 ### `.github/scripts/` vs `.github/workflows/`
+
 - **Scripts**: Implementation logic
 - **Workflows**: Orchestration, triggers, step definitions
 
 ---
 
 ## Related Documentation
+
 - `scripts/` - Project maintenance scripts
 - `docs/AUTOMATION_TOOLS.md` - Comprehensive automation guide
 - `docs/WORKFLOW_SETUP.md` - CI/CD workflow documentation

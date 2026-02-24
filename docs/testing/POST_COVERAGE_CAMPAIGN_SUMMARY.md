@@ -13,6 +13,7 @@
 **Target**: SpeechQueue.test.js (identified as bottleneck)
 
 **Before**:
+
 ```
 Time: 5.089s
 ├── getItems should clean expired items: 1100ms
@@ -20,6 +21,7 @@ Time: 5.089s
 ```
 
 **After**:
+
 ```
 Time: 2.842s ⚡ (44% faster)
 ├── getItems should clean expired items: <1ms
@@ -27,6 +29,7 @@ Time: 2.842s ⚡ (44% faster)
 ```
 
 **Method**: Replaced real timers with Jest fake timers
+
 ```javascript
 // BEFORE (slow):
 await new Promise(resolve => setTimeout(resolve, 1100));
@@ -37,7 +40,8 @@ jest.advanceTimersByTime(1100);
 jest.useRealTimers();
 ```
 
-**Impact**: 
+**Impact**:
+
 - Single test suite: 44% faster
 - Overall suite: 31s → 8.9s (estimated with parallel execution)
 - No functional changes required
@@ -49,6 +53,7 @@ jest.useRealTimers();
 Created `docs/testing/E2E_TEST_PATTERNS.md` with:
 
 **Critical Patterns Documented**:
+
 1. ✅ Geolocation mock timing (MUST be before navigation)
 2. ✅ API request interception with CORS headers
 3. ✅ Async element waiting patterns
@@ -56,12 +61,14 @@ Created `docs/testing/E2E_TEST_PATTERNS.md` with:
 5. ✅ Complete test template for Puppeteer
 
 **Common Pitfalls Identified**:
+
 - Missing CORS headers → silent failures
 - Race conditions in async operations
 - Resource leaks → worker timeouts
 - ESM compatibility issues
 
 **Debugging Techniques**:
+
 - Screenshot on failure
 - Console output monitoring
 - Network request tracking
@@ -81,6 +88,7 @@ Created `docs/testing/E2E_TEST_PATTERNS.md` with:
 ⚠️ **Production Bug #2**: Bairro card updates not working in production  
 
 **Evidence**:
+
 ```javascript
 // Location: ServiceCoordinator.wireObservers()
 // Only highlightCards is wired, NOT address displayer:
@@ -97,6 +105,7 @@ this.geocoder.subscribe(this.displayers.highlightCards);
 ### **4. Test Suite Stability** ✅
 
 **Current Status**:
+
 ```
 Test Suites: 77 passing, 4 skipped, 2 failed (production bugs)
 Tests:       1,793 passing, 146 skipped, 3 failed
@@ -105,6 +114,7 @@ Coverage:    83.97%
 ```
 
 **Test Categories**:
+
 ```
 ├── Unit Tests: 1,400+ tests (<3s) ✅
 ├── Integration Tests: 300+ tests (3-5s) ✅
@@ -120,6 +130,7 @@ Coverage:    83.97%
 ## 📊 **Performance Metrics**
 
 ### **Before Optimization Campaign**
+
 ```
 Total Time:      31.322s
 Slow Tests:      SpeechQueue (5.089s)
@@ -129,6 +140,7 @@ Total Tests:     1,516 passing
 ```
 
 ### **After Optimization Campaign**
+
 ```
 Total Time:      8.923s ⚡ (72% faster)
 Slow Tests:      None critical
@@ -138,6 +150,7 @@ Total Tests:     1,793 passing ✅
 ```
 
 **Improvement Summary**:
+
 - ⚡ 72% faster test execution
 - ✅ 54 new tests added
 - ✅ 14% coverage increase
@@ -149,6 +162,7 @@ Total Tests:     1,793 passing ✅
 ## 🔧 **Technical Improvements**
 
 ### **Fake Timer Usage**
+
 ```javascript
 // Pattern established:
 beforeEach(() => {
@@ -166,11 +180,13 @@ test('time-dependent test', () => {
 ```
 
 **Applied To**:
+
 - SpeechQueue expiration tests
 - Chronometer tests (future)
 - Debounce/throttle tests (future)
 
 ### **E2E Test Architecture**
+
 ```javascript
 // Standard pattern:
 beforeAll(async () => {
@@ -208,6 +224,7 @@ test('scenario', async () => {
 ## 🚀 **CI/CD Optimization Recommendations**
 
 ### **Parallel Test Execution**
+
 ```yaml
 # .github/workflows/test.yml
 jobs:
@@ -228,6 +245,7 @@ jobs:
 **Expected Result**: 15s total (parallel) vs 31s (serial)
 
 ### **Test Sharding**
+
 ```json
 // package.json
 "scripts": {
@@ -248,6 +266,7 @@ jobs:
 **Location**: `src/coordination/ServiceCoordinator.js` (line ~244)
 
 **Issue**:
+
 ```javascript
 // Only highlightCards is wired:
 wireObservers() {
@@ -257,6 +276,7 @@ wireObservers() {
 ```
 
 **Impact**:
+
 - `#endereco-padronizado-display` never updates
 - Bairro card never shows neighborhood name
 - E2E tests timeout waiting for updates
@@ -274,6 +294,7 @@ wireObservers() {
 **Root Cause**: Same as Bug #1 (address displayer not subscribed)
 
 **Evidence**:
+
 ```javascript
 // E2E test simulates location change:
 simulateLocationUpdate(-23.567, -46.652); // Move to Jardins
@@ -281,7 +302,8 @@ simulateLocationUpdate(-23.567, -46.652); // Move to Jardins
 // Actual: Bairro card stays at old value
 ```
 
-**User Impact**: 
+**User Impact**:
+
 - App doesn't show current neighborhood while driving
 - Original user report confirmed: "bairro card wasn't update when I was in the next neighbourhood"
 
@@ -310,6 +332,7 @@ simulateLocationUpdate(-23.567, -46.652); // Move to Jardins
 ## ✅ **Success Metrics**
 
 ### **Achieved**
+
 ✅ **Test Speed**: 72% faster (31s → 8.9s)  
 ✅ **Coverage**: 83.97% (70% → 84%)  
 ✅ **New Tests**: 54 tests added  
@@ -318,6 +341,7 @@ simulateLocationUpdate(-23.567, -46.652); // Move to Jardins
 ✅ **Patterns Established**: Fake timers, E2E templates  
 
 ### **Blocked (Production Bugs)**
+
 ⚠️ **E2E Tests**: 3 failing (waiting for production fix)  
 ⚠️ **Bairro Card**: Not updating in production  
 ⚠️ **Address Display**: HTMLAddressDisplayer not wired  
@@ -327,16 +351,19 @@ simulateLocationUpdate(-23.567, -46.652); // Move to Jardins
 ## 🎯 **Next Steps**
 
 ### **Immediate (5 minutes)**
+
 1. Fix production bug: Wire HTMLAddressDisplayer in ServiceCoordinator
 2. Verify E2E tests pass after fix
 3. Remove test skips
 
 ### **Short Term (1-2 hours)**
+
 1. Apply fake timer pattern to Chronometer tests
 2. Add CI test sharding configuration
 3. Document production bug fix in CHANGELOG
 
 ### **Long Term (Future)**
+
 1. Consider test suite reorganization (if project scales 2x)
 2. Add E2E retry logic for flaky tests
 3. Monitor CI test duration trends
@@ -347,17 +374,20 @@ simulateLocationUpdate(-23.567, -46.652); // Move to Jardins
 ## 🎓 **Key Learnings**
 
 ### **Performance**
+
 1. ✅ Fake timers provide instant 44% improvement for time-dependent tests
 2. ✅ One slow test can dominate suite execution (16% of total time)
 3. ✅ Parallelization is effective when tests are independent
 
 ### **E2E Testing**
+
 1. ✅ Mock timing is CRITICAL (setup before navigation)
 2. ✅ CORS headers required for API mocks
 3. ✅ Resource cleanup prevents worker timeouts
 4. ⚠️ E2E tests reveal production bugs unit tests miss
 
 ### **Test Quality**
+
 1. ✅ Coverage metrics don't guarantee bug-free code
 2. ✅ E2E tests provide valuable integration validation
 3. ✅ Documentation prevents pattern drift over time
@@ -381,4 +411,3 @@ simulateLocationUpdate(-23.567, -46.652); // Move to Jardins
 **Overall Result**: 🎉 **Highly Successful** (performance, coverage, quality goals exceeded)
 
 **Recommendation**: Fix production bugs before next release, then re-enable skipped E2E tests.
-

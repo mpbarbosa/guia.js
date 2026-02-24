@@ -10,6 +10,7 @@
 ## Overview
 
 These 6 quick wins address the most impactful UX issues with the least implementation time. They improve:
+
 - ✅ Accessibility (WCAG compliance)
 - ✅ Professional appearance  
 - ✅ User confidence
@@ -53,6 +54,7 @@ console.assert(duplicates.length === 0, 'Duplicate IDs found:', duplicates);
 ```
 
 ### Validation
+
 ```bash
 npm test -- __tests__/unit/ids.test.js
 ```
@@ -143,6 +145,7 @@ locationButton.setAttribute('aria-busy', 'false');
 ```
 
 ### Test
+
 1. Click "Obter Localização" button
 2. ✓ Button becomes semi-transparent
 3. ✓ Spinner appears
@@ -298,6 +301,7 @@ update(data) {
 ```
 
 ### Test
+
 1. Load app without clicking anything
 2. ✓ See empty state with icon and description
 3. ✓ Cards show helpful message
@@ -491,6 +495,7 @@ toast.show('Permissão de localização necessária', 'warning');
 ```
 
 ### Test
+
 1. Click "Obter Localização"
 2. ✓ Toast appears from right
 3. ✓ Shows success message
@@ -569,6 +574,7 @@ this.bairroIcon = accessibleEmoji('🏘️', 'Ícone de bairro');
 ```
 
 ### Test
+
 1. Use screen reader (NVDA/JAWS/VoiceOver)
 2. ✓ Emojis are announced with labels
 3. ✓ No "unknown character" announcements
@@ -713,6 +719,7 @@ municipioCard.innerHTML = renderMunicipioCard(data);
 ```
 
 ### Test
+
 1. Throttle network in DevTools (Slow 3G)
 2. ✓ See animated skeletons while loading
 3. ✓ Smooth transition to real content
@@ -723,11 +730,13 @@ municipioCard.innerHTML = renderMunicipioCard(data);
 ## Implementation Checklist
 
 ### Before Starting
+
 - [ ] Create new branch: `git checkout -b fix/ux-quick-wins`
 - [ ] Backup current work: `git stash`
 - [ ] Set timer for 2.5 hours
 
 ### Implementation Order
+
 1. [ ] **Fix Duplicate IDs** (15 min) - Start here, most critical
 2. [ ] **Button Disabled Styles** (20 min) - CSS only, easy
 3. [ ] **Empty States** (30 min) - Visible improvement
@@ -736,6 +745,7 @@ municipioCard.innerHTML = renderMunicipioCard(data);
 6. [ ] **Loading Skeletons** (30 min) - Polish
 
 ### After Completion
+
 - [ ] Run tests: `npm test`
 - [ ] Manual testing on Chrome/Firefox/Safari
 - [ ] Test on mobile (Chrome DevTools)
@@ -748,12 +758,14 @@ municipioCard.innerHTML = renderMunicipioCard(data);
 ## Expected Results
 
 ### Metrics
+
 - **Accessibility Score**: 85 → 92 (+7 points)
 - **First Impression**: 6/10 → 8/10
 - **User Confidence**: Low → Medium
 - **Professional Appearance**: 7/10 → 9/10
 
 ### User Impact
+
 - ✅ No more confusion about duplicate IDs
 - ✅ Clear feedback when buttons are disabled
 - ✅ Welcoming empty states (not blank screens)
@@ -762,6 +774,7 @@ municipioCard.innerHTML = renderMunicipioCard(data);
 - ✅ Smooth loading experience
 
 ### Technical Debt Reduced
+
 - Fixes 3/10 critical issues
 - Addresses 40% of accessibility violations
 - Improves perceived performance by 30%

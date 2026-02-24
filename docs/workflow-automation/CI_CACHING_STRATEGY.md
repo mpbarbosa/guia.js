@@ -24,12 +24,14 @@ key: ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-${{ hashFi
 ```
 
 **Components**:
+
 1. `runner.os` - OS-specific cache (linux, windows, macos)
 2. `deps-jest` - Cache type identifier
 3. `hashFiles('package-lock.json')` - Dependencies version
 4. `hashFiles('**/*.js')` - Source code hash (Jest cache invalidation)
 
 **Restore Keys** (fallback hierarchy):
+
 ```yaml
 restore-keys: |
   ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}-
@@ -42,6 +44,7 @@ restore-keys: |
 ## 📊 **Performance Impact**
 
 ### **Before Caching Optimization**
+
 ```
 ├── Install dependencies: 60s (download all packages)
 ├── Run tests: 45s (cold Jest cache)
@@ -49,6 +52,7 @@ restore-keys: |
 ```
 
 ### **After Caching Optimization**
+
 ```
 ├── Restore cache: 5s (download from GitHub cache)
 ├── Install dependencies: 10s (verify only, no download)
@@ -76,11 +80,13 @@ restore-keys: |
 ```
 
 **Benefits**:
+
 - Reuses transformed modules between runs
 - Speeds up test discovery
 - Reduces memory usage
 
 **Cache Contents**:
+
 - Haste map (file dependency graph)
 - Transformed modules (Babel/TypeScript output)
 - Performance data
@@ -90,6 +96,7 @@ restore-keys: |
 ### **2. NPM Cache Configuration**
 
 **Automatic via `actions/setup-node@v4`**:
+
 ```yaml
 - name: Setup Node.js
   uses: actions/setup-node@v4
@@ -99,6 +106,7 @@ restore-keys: |
 ```
 
 **What it caches**:
+
 - `~/.npm` directory (package metadata, tarballs)
 - Significantly faster `npm ci` runs
 
@@ -107,6 +115,7 @@ restore-keys: |
 ### **3. Node Modules Cache**
 
 **Manual cache for node_modules directory**:
+
 ```yaml
 - name: Cache dependencies and Jest cache
   uses: actions/cache@v3
@@ -119,6 +128,7 @@ restore-keys: |
 ```
 
 **Why cache node_modules?**:
+
 - Skips installation entirely if unchanged
 - Faster than `npm ci --prefer-offline`
 - Reduces GitHub Actions API calls
@@ -128,6 +138,7 @@ restore-keys: |
 ## 📈 **Cache Hit Scenarios**
 
 ### **Scenario 1: Perfect Cache Hit** ✅
+
 ```
 Trigger: No package.json or source code changes
 Cache: Full hit (dependencies + Jest cache)
@@ -135,6 +146,7 @@ Time: 5s restore + 2s validation = 7s
 ```
 
 ### **Scenario 2: Partial Cache Hit** ⚡
+
 ```
 Trigger: Source code changed, dependencies unchanged
 Cache: Partial hit (dependencies full, Jest cache invalidated)
@@ -142,6 +154,7 @@ Time: 5s restore + 8s test = 13s
 ```
 
 ### **Scenario 3: Dependency Cache Miss** ⚠️
+
 ```
 Trigger: package-lock.json changed
 Cache: Miss (new dependencies)
@@ -150,6 +163,7 @@ Fallback: Restores previous dependencies cache, then updates
 ```
 
 ### **Scenario 4: Complete Cache Miss** ❌
+
 ```
 Trigger: First run or cache eviction (7 days)
 Cache: Miss (cold start)
@@ -167,11 +181,13 @@ ${{ hashFiles('**/*.js') }}
 ```
 
 **Reason**: Jest cache should invalidate when source code changes
+
 - Prevents stale test results
 - Ensures tests run against latest code
 - Small overhead (hashing is fast)
 
 **Alternative Considered**:
+
 ```yaml
 # Simpler but less safe:
 key: ${{ runner.os }}-deps-jest-${{ hashFiles('package-lock.json') }}
@@ -191,12 +207,14 @@ restore-keys: |
 ```
 
 **Cascade Strategy**:
+
 1. **Try exact match**: Same dependencies + same code
 2. **Try dependency match**: Same dependencies, different code
 3. **Try OS match**: Different dependencies, same OS
 4. **Try any cache**: Better than nothing
 
 **Example**:
+
 ```
 Run #1: Key = linux-deps-jest-abc123-def456
         → Cache miss, creates new cache
@@ -215,6 +233,7 @@ Run #2: Key = linux-deps-jest-abc123-def789
 **Problem**: All jobs share same cache key, leading to conflicts
 
 **Solution**: Job-specific cache keys
+
 ```yaml
 # Unit tests job:
 key: ${{ runner.os }}-unit-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.js') }}
@@ -232,6 +251,7 @@ key: ${{ runner.os }}-integration-${{ hashFiles('package-lock.json') }}-${{ hash
 ### **2. Coverage Cache**
 
 **Add to coverage-gate job**:
+
 ```yaml
 - name: Cache coverage reports
   uses: actions/cache@v3
@@ -249,6 +269,7 @@ key: ${{ runner.os }}-integration-${{ hashFiles('package-lock.json') }}-${{ hash
 ### **3. E2E Browser Cache**
 
 **For Puppeteer/Playwright**:
+
 ```yaml
 - name: Cache browser binaries
   uses: actions/cache@v3
@@ -340,6 +361,7 @@ key: ${{ runner.os }}-integration-${{ hashFiles('package-lock.json') }}-${{ hash
 ### **Check Cache Restore**
 
 Look for this in Actions logs:
+
 ```
 Cache restored successfully
 Key: linux-deps-jest-abc123-def456
@@ -347,6 +369,7 @@ Size: 412 MB
 ```
 
 Or:
+
 ```
 Cache not found for input keys: ...
 Falling back to restore-keys: ...
@@ -357,12 +380,14 @@ Falling back to restore-keys: ...
 ### **Force Cache Refresh**
 
 **Method 1**: Change cache key in workflow
+
 ```yaml
 # Add version suffix:
 key: ${{ runner.os }}-deps-jest-v2-${{ hashFiles('package-lock.json') }}
 ```
 
 **Method 2**: Delete cache via GitHub UI
+
 ```
 Settings → Actions → Caches → Delete
 ```
@@ -374,6 +399,7 @@ Settings → Actions → Caches → Delete
 ### **Validate Cache Contents**
 
 **Local testing**:
+
 ```bash
 # Run tests with cache
 npm test
@@ -386,6 +412,7 @@ npm test
 ```
 
 **Expected behavior**:
+
 - First run: Cold cache, slower
 - Second run: Warm cache, faster
 
@@ -405,6 +432,7 @@ npm test
 ## 🎯 **Success Metrics**
 
 ### **Pre-Optimization**
+
 ```
 Average CI run time: 3-5 minutes
 Cache hit rate: ~60% (npm only)
@@ -412,6 +440,7 @@ Dependencies install: 60s per job
 ```
 
 ### **Post-Optimization (Expected)**
+
 ```
 Average CI run time: 1-2 minutes ⚡
 Cache hit rate: ~80% (npm + node_modules + Jest)
@@ -419,6 +448,7 @@ Dependencies install: 10s per job ⚡
 ```
 
 **Projected Savings**:
+
 - 30-60s per CI run
 - Reduced API calls to npm registry
 - Lower carbon footprint (less compute)
@@ -428,17 +458,20 @@ Dependencies install: 10s per job ⚡
 ## 🚀 **Next Steps**
 
 ### **Immediate (Done)**
+
 ✅ Enable Jest cache in package.json  
 ✅ Update all workflow cache configs  
 ✅ Add .jest-cache to .gitignore  
 ✅ Document caching strategy  
 
 ### **Monitoring (Ongoing)**
+
 - [ ] Track cache hit rates in Actions logs
 - [ ] Monitor CI run time trends
 - [ ] Adjust cache keys if needed
 
 ### **Future Enhancements**
+
 - [ ] Add browser binary caching for E2E tests
 - [ ] Consider separate caches per job type
 - [ ] Evaluate dependency caching for Python E2E tests
@@ -456,4 +489,3 @@ Dependencies install: 10s per job ⚡
 **Status**: ✅ **Caching Strategy Implemented**  
 **Expected Impact**: 30-60s faster CI runs, 78% time reduction  
 **Next**: Monitor cache effectiveness in production CI runs
-

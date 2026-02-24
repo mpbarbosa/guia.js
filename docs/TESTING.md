@@ -1,6 +1,7 @@
 # Guia Turístico - Automated Testing
 
 ---
+
 Last Updated: 2026-01-28
 Status: Active
 Category: Testing
@@ -63,6 +64,7 @@ npm run test:all
 ### Resultados Esperados
 
 Todos os testes devem passar:
+
 - ✅ 1251 testes passando (1399 total)
   - 91 testes E2E (workflows completos)
   - ~800 testes de integração
@@ -76,12 +78,14 @@ Todos os testes devem passar:
 ## Funcionalidades Testadas
 
 ### 1. Utilitários Básicos (`utils.test.js`)
+
 - **guiaVersion**: Verifica estrutura da versão e formato de string
 - **calculateDistance**: Testa cálculo de distância Haversine entre coordenadas
 - **getAddressType**: Testa classificação de tipos de endereço
 - **delay**: Testa função de delay assíncrona
 
 ### 2. Classe CurrentPosition (`CurrentPosition.test.js`)
+
 - **Padrão Singleton**: Verifica que apenas uma instância é criada
 - **Gerenciamento de Posição**: Testa inicialização com dados de posição
 - **Padrão Observer**: Testa inscrição/desinscrição de observadores
@@ -89,15 +93,18 @@ Todos os testes devem passar:
 - **Qualidade de Precisão**: Testa classificação de precisão GPS
 
 ### 3. Gerenciador de Status (`SingletonStatusManager.test.js`)
+
 - **Padrão Singleton**: Verifica implementação singleton
 - **Gerenciamento de Estado**: Testa controle de status de localização
 - **Persistência de Estado**: Verifica que o estado é mantido entre instâncias
 
 ### 4. Módulo IBGE (`guia_ibge.test.js`)
+
 - **renderUrlUFNome**: Testa geração de URLs para API do IBGE
 - **Tratamento de Dados**: Verifica comportamento com diferentes entradas
 
 ### 5. Testes End-to-End (E2E) (`__tests__/e2e/*.e2e.test.js`)
+
 - **Workflows Completos**: Testa fluxos de ponta a ponta da aplicação (inicialização → geolocalização → geocodificação → exibição)
 - **Integração Multi-componente**: Verifica coordenação entre WebGeocodingManager, PositionManager, ReverseGeocoder, e outros
 - **Processamento de Endereços**: Pipeline completo de geocodificação reversa e extração de endereços brasileiros
@@ -113,6 +120,7 @@ Todos os testes devem passar:
 O projeto possui dois tipos de testes E2E com propósitos distintos:
 
 **JavaScript E2E** (`__tests__/e2e/`)
+
 - **Framework**: Jest (JavaScript)
 - **Ambiente**: Node.js com mocks
 - **Propósito**: Testa lógica de integração entre componentes
@@ -121,6 +129,7 @@ O projeto possui dois tipos de testes E2E com propósitos distintos:
 - **Documentação**: [E2E README](../__tests__/e2e/README.md)
 
 **Python E2E** (`tests/e2e/`)
+
 - **Framework**: Jest (para teste específico de Milho Verde)
 - **Ambiente**: Node.js
 - **Propósito**: Testa casos reais com dados do OpenStreetMap
@@ -131,6 +140,7 @@ O projeto possui dois tipos de testes E2E com propósitos distintos:
 **Nota**: Para testes de browser real com Selenium, veja `tests/integration/` (Python + pytest).
 
 ### 6. Padrões de Imutabilidade (`Immutability.test.js`)
+
 - **ObserverSubject**: Verifica que operações de subscribe/unsubscribe não mutam arrays
 - **BrazilianStandardAddress**: Testa construção imutável de arrays com filter(Boolean)
 - **AddressCache**: Verifica operações de cache sem mutação de estado
@@ -139,10 +149,12 @@ O projeto possui dois tipos de testes E2E com propósitos distintos:
 ## Cobertura de Código
 
 A cobertura atual inclui:
+
 - **guia.js**: ~12% (focado em funcionalidades core)
 - **guia_ibge.js**: 100% (função única testada completamente)
 
 ### Exemplos de Áreas Testadas
+
 - Cálculos matemáticos (distância Haversine)
 - Padrões de design (Singleton, Observer)
 - Validação de dados de entrada
@@ -154,6 +166,7 @@ A cobertura atual inclui:
 Para testar a funcionalidade completa da aplicação web:
 
 1. **Iniciar servidor web**:
+
    ```bash
    python3 -m http.server 9000
    ```
@@ -177,14 +190,17 @@ Para testar a funcionalidade completa da aplicação web:
 Para suportar testes, foram feitas modificações mínimas:
 
 ### guia.js
+
 - Adicionada seção de exports no final do arquivo para Node.js
 - Mantém compatibilidade total com uso no navegador
 
 ### guia_ibge.js  
+
 - Adicionada seção de exports para Node.js
 - Mantém funcionalidade original
 
 ### Novos Arquivos
+
 - `package.json`: Configuração do projeto Node.js e Jest
 - `.gitignore`: Ignora node_modules e arquivos temporários
 - `__tests__/*.test.js`: Arquivos de teste
@@ -203,7 +219,7 @@ Ao adicionar novas funcionalidades:
 
 ### Problemas Comuns
 
-1. **Testes falham por dependências de DOM**: 
+1. **Testes falham por dependências de DOM**:
    - Verifique se `global.document = undefined` está no início dos testes
 
 2. **Funções não encontradas**:
@@ -268,11 +284,13 @@ The visual hierarchy test script:
 ### Manual Testing
 
 For manual verification, see detailed checklist in:
+
 - [Visual Hierarchy Tests Guide](./testing/VISUAL_HIERARCHY_TESTS.md)
 
 ### Test Output
 
 Successful test output:
+
 ```
 ========================================
 Visual Hierarchy Integration Tests
@@ -292,20 +310,23 @@ Cleaning up...
 ## Related Documentation
 
 ### Testing Resources
+
 - [Test Strategy](./testing/TEST_STRATEGY.md) - Overall testing philosophy and approach
 - [Test Infrastructure](./testing/TEST_INFRASTRUCTURE.md) - Test execution and coverage details
 - [Testing HTML Generation](./testing/HTML_GENERATION.md) - HTML display component testing
 - [Visual Hierarchy Tests](./testing/VISUAL_HIERARCHY_TESTS.md) - Manual and automated visual hierarchy testing
 
 ### Development Guides
+
 - [Contributing Guidelines](../.github/CONTRIBUTING.md) - How to contribute with tests
 - [TDD Guide](../.github/TDD_GUIDE.md) - Test-Driven Development practices
 - [Unit Test Guide](../.github/UNIT_TEST_GUIDE.md) - Writing effective unit tests
 
 ### Documentation Hub
+
 - [Documentation Index](./INDEX.md) - Complete documentation catalog
 - [Documentation Hub](./README.md) - Quick navigation to all docs
 
 ---
 
-_Last updated: 2026-01-28_ 
+_Last updated: 2026-01-28_

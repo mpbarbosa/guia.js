@@ -125,17 +125,17 @@ assignees: ''
 
 <!-- Steps to reproduce this test -->
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## Related Tests
 
 <!-- Link to related test issues or test suites -->
 
-- Related Test Issue: 
-- Test Suite: 
-- Previous Tests: 
+- Related Test Issue:
+- Test Suite:
+- Previous Tests:
 
 ## Recommendations
 

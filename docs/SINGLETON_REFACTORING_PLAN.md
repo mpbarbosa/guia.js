@@ -50,6 +50,7 @@ class AddressDataExtractor {
 ```
 
 **Impact**:
+
 - Hard to understand class dependencies
 - Difficult to track data flow
 - Impossible to substitute implementations
@@ -76,6 +77,7 @@ describe('AddressDataExtractor', () => {
 ```
 
 **Impact**:
+
 - Test isolation violations
 - Unpredictable test results
 - Complex test setup/teardown
@@ -97,6 +99,7 @@ class WebGeocodingManager {
 ```
 
 **Impact**:
+
 - Cannot swap implementations
 - Hard to test in isolation
 - Difficult to extend functionality
@@ -119,6 +122,7 @@ const value = AddressCache.getInstance().get('key'); // Which value?
 ```
 
 **Impact**:
+
 - Race conditions in async code
 - Difficult to reason about state changes
 - Hard to debug state-related issues
@@ -131,12 +135,14 @@ const value = AddressCache.getInstance().get('key'); // Which value?
 **Goal**: Prepare dependency injection infrastructure without breaking changes.
 
 **Actions**:
+
 1. ✅ Create factory/container pattern for instance management
 2. ✅ Add optional constructor injection to singleton classes
 3. ✅ Maintain backward compatibility with `.getInstance()`
 4. ✅ Update tests to use constructor injection
 
 **Example**:
+
 ```javascript
 // NEW - Supports both patterns
 class AddressCache {
@@ -168,12 +174,14 @@ const cache2 = new AddressCache({ maxCacheSize: 100 }); // NEW way
 **Goal**: Gradually convert consumers to dependency injection.
 
 **Priority Order** (by coupling severity):
+
 1. **AddressDataExtractor** (22 calls) - High impact
 2. **PositionManager** (6 calls) - Core component
 3. **WebGeocodingManager** (4 calls) - Coordination layer
 4. **Others** (2 calls) - Low impact
 
 **Example Migration**:
+
 ```javascript
 // BEFORE - Singleton dependency
 class AddressDataExtractor {
@@ -205,12 +213,14 @@ const extractor = new AddressDataExtractor(cache);
 **Goal**: Centralized dependency management.
 
 **Actions**:
+
 1. Create dependency injection container
 2. Register all services in container
 3. Update application initialization to use container
 4. Deprecate `.getInstance()` methods
 
 **Example Container**:
+
 ```javascript
 class ServiceContainer {
   constructor() {
@@ -254,6 +264,7 @@ const manager = container.get('webGeocodingManager');
 **Goal**: Remove singleton pattern entirely.
 
 **Actions**:
+
 1. Remove all `.getInstance()` methods
 2. Convert all remaining singleton calls to injection
 3. Update all documentation
@@ -314,22 +325,26 @@ class WebGeocodingManager {
 ## Implementation Timeline
 
 ### Immediate (Week 1)
+
 - ✅ Document current singleton usage
 - ✅ Create refactoring plan
 - ✅ Write test cases for singleton behavior
 
 ### Short-term (Weeks 2-3)
+
 - ⚠️ Add constructor injection support to AddressCache
 - ⚠️ Add constructor injection support to SingletonStatusManager
 - ⚠️ Update tests to use constructor injection
 
 ### Medium-term (Weeks 4-6)
+
 - 📋 Migrate AddressDataExtractor to dependency injection
 - 📋 Migrate PositionManager consumers
 - 📋 Migrate WebGeocodingManager
 - 📋 Update documentation
 
 ### Long-term (Weeks 7-8)
+
 - 📋 Create ServiceContainer implementation
 - 📋 Update application initialization
 - 📋 Deprecate .getInstance() methods
@@ -338,16 +353,19 @@ class WebGeocodingManager {
 ## Testing Strategy
 
 ### Before Refactoring
+
 - Document existing behavior with integration tests
 - Capture current API contracts
 - Benchmark performance baseline
 
 ### During Refactoring
+
 - Maintain backward compatibility tests
 - Add new constructor injection tests
 - Test both old and new patterns
 
 ### After Refactoring
+
 - Validate all tests pass with new pattern
 - Confirm performance characteristics maintained
 - Remove deprecated singleton tests
@@ -395,14 +413,17 @@ class AddressCache {
 ## Alternative Approaches Considered
 
 ### 1. Keep Singletons (Rejected)
+
 **Pros**: No refactoring needed  
 **Cons**: Technical debt accumulates, testing remains difficult
 
 ### 2. Big-Bang Refactor (Rejected)
+
 **Pros**: Complete solution immediately  
 **Cons**: Too risky, high chance of regressions
 
 ### 3. Gradual Migration (SELECTED)
+
 **Pros**: Lower risk, maintains stability, testable increments  
 **Cons**: Takes longer, requires discipline
 

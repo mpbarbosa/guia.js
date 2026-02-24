@@ -1,4 +1,5 @@
 # Documentation Issues Report
+
 **Generated:** 2026-01-06  
 **Standard:** JSDoc 3 with MDN Web Docs style  
 **Scope:** Complete codebase analysis (35 files, 446 definitions)
@@ -8,6 +9,7 @@
 **Total Issues Found:** 425 documentation issues across 35 JavaScript files
 
 **Issue Distribution:**
+
 - ❌ **Missing JSDoc blocks:** 189 (44.5%)
 - ❌ **Missing @returns tags:** 182 (42.8%)
 - ⚠️ **Missing @param tags:** 48 (11.3%)
@@ -25,9 +27,10 @@ Functions, methods, and classes without any documentation header.
 
 **Priority: HIGH** - These require immediate attention
 
-#### Examples:
+#### Examples
 
 **src/speech/SpeechSynthesisManager.js** (46 issues)
+
 ```javascript
 // Line 410: Missing JSDoc
 const voices = this.synth.getVoices();
@@ -42,6 +45,7 @@ const voices = this.synth.getVoices();
 ```
 
 **src/services/ReverseGeocoder.js** (27 issues)
+
 ```javascript
 // Line 211: Missing JSDoc
 const normalizedLat = typeof this.latitude === 'number' ? this.latitude : parseFloat(this.latitude);
@@ -56,6 +60,7 @@ const normalizedLat = typeof this.latitude === 'number' ? this.latitude : parseF
 ```
 
 **src/html/HTMLPositionDisplayer.js** (21 issues)
+
 ```javascript
 // Line 167: Missing JSDoc
 const lat = this.position.latitude;
@@ -70,6 +75,7 @@ const lat = this.position.latitude;
 ```
 
 **src/html/HTMLAddressDisplayer.js** (15 issues)
+
 ```javascript
 // Line 209: Missing JSDoc
 const city = parts[0];
@@ -91,9 +97,10 @@ Functions that return values but lack @returns documentation.
 
 **Priority: HIGH** - Essential for API understanding
 
-#### Examples:
+#### Examples
 
 **src/speech/SpeechSynthesisManager.js**
+
 ```javascript
 // Line 216: Missing @returns
 enableLogs() {
@@ -111,6 +118,7 @@ enableLogs() {
 ```
 
 **src/utils/logger.js**
+
 ```javascript
 // Line 25: Missing @returns
 export const log = (message, ...params) => {
@@ -134,6 +142,7 @@ export const log = (message, ...params) => {
 ```
 
 **src/utils/distance.js**
+
 ```javascript
 // Line 18: Missing @returns (partial)
 /**
@@ -173,9 +182,10 @@ Functions with parameters that lack proper @param documentation.
 
 **Priority: MEDIUM** - Important for function signatures
 
-#### Examples:
+#### Examples
 
 **src/utils/distance.js**
+
 ```javascript
 // Missing comprehensive @param for all parameters
 export function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -192,6 +202,7 @@ export function calculateDistance(lat1, lon1, lat2, lon2) {
 ```
 
 **src/utils/device.js**
+
 ```javascript
 // Line 37: Missing @param details
 export function isMobileDevice(options = {}) {
@@ -219,9 +230,10 @@ Async functions that may throw errors but lack @throws documentation.
 
 **Priority: MEDIUM** - Critical for error handling
 
-#### Examples:
+#### Examples
 
 **src/services/ReverseGeocoder.js**
+
 ```javascript
 /**
  * Fetches address data from Nominatim API
@@ -379,24 +391,28 @@ async function asyncFunction(param) {
 ## Action Items
 
 ### Phase 1: Critical Files (Week 1)
+
 - [ ] Document `src/speech/SpeechSynthesisManager.js` (46 issues)
 - [ ] Document `src/html/HTMLAddressDisplayer.js` (36 issues)
 - [ ] Document `src/services/ReverseGeocoder.js` (33 issues)
 - [ ] Document `src/html/HTMLPositionDisplayer.js` (26 issues)
 
 ### Phase 2: High Priority Files (Week 2)
+
 - [ ] Document `src/data/AddressDataExtractor.js` (24 issues)
 - [ ] Document `src/data/BrazilianStandardAddress.js` (22 issues)
 - [ ] Document `src/html/HtmlSpeechSynthesisDisplayer.js` (22 issues)
 - [ ] Document `src/core/PositionManager.js` (20 issues)
 
 ### Phase 3: Medium Priority Files (Week 3)
+
 - [ ] Document remaining 27 files with lower issue counts
 - [ ] Add @example tags to all public API functions
 - [ ] Add @since tags for version tracking
 - [ ] Add @see tags for related functions
 
 ### Phase 4: Validation (Week 4)
+
 - [ ] Run ESLint with JSDoc plugin
 - [ ] Generate API documentation with JSDoc tool
 - [ ] Review generated documentation for completeness
@@ -409,6 +425,7 @@ async function asyncFunction(param) {
 ### ESLint JSDoc Plugin
 
 Add to `eslint.config.js`:
+
 ```javascript
 import jsdoc from 'eslint-plugin-jsdoc';
 
@@ -439,6 +456,7 @@ export default [
 ### JSDoc Generation
 
 Add to `package.json`:
+
 ```json
 {
   "scripts": {
@@ -455,6 +473,7 @@ Add to `package.json`:
 ### Pre-commit Hook
 
 Add to `.husky/pre-commit`:
+
 ```bash
 #!/bin/sh
 npm run docs:validate
@@ -467,6 +486,7 @@ npm run docs:validate
 Consider adding TypeScript definitions for better IDE support:
 
 **types/guia.d.ts**
+
 ```typescript
 declare module 'guia.js' {
     export interface GeoPosition {
@@ -495,16 +515,19 @@ declare module 'guia.js' {
 ## Metrics and Goals
 
 ### Current State
+
 - **Documentation Coverage:** 57% (257/446 definitions documented)
 - **Quality Score:** Low (many incomplete JSDoc blocks)
 - **Maintainability:** Medium (partial documentation)
 
 ### Target State (4 weeks)
+
 - **Documentation Coverage:** 95% (425/446 definitions documented)
 - **Quality Score:** High (complete JSDoc with examples)
 - **Maintainability:** High (comprehensive API docs)
 
 ### Success Criteria
+
 1. ✅ All public APIs have complete JSDoc
 2. ✅ All async functions document @throws
 3. ✅ All functions have @example tags

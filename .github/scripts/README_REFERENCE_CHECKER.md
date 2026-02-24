@@ -5,6 +5,7 @@ A context-aware tool for validating file references in documentation with intell
 ## Overview
 
 This reference checker scans markdown files for file path references and validates they exist, while automatically excluding common false positive patterns like:
+
 - JavaScript regex patterns (e.g., `/pattern/g`)
 - Code comment placeholders (e.g., `/* ... */`)
 - Path descriptions (e.g., "/src for library organization")
@@ -44,12 +45,14 @@ chmod +x .github/scripts/check-references.sh
 ## Output
 
 The checker provides:
+
 - **Total references found**: Count of all potential file references
 - **Valid references**: References to existing files
 - **Excluded patterns**: False positives filtered out
 - **Broken references**: Actual broken file references (requires fixing)
 
 Example output:
+
 ```
 ==========================================
 Enhanced Reference Checker
@@ -143,6 +146,7 @@ EXCLUDE_REGEX_PATTERNS=(
 ### Pre-commit Hook
 
 Add to `.husky/pre-commit`:
+
 ```bash
 #!/bin/bash
 python3 .github/scripts/check-references.py || exit 1
@@ -151,6 +155,7 @@ python3 .github/scripts/check-references.py || exit 1
 ### GitHub Actions
 
 Add to `.github/workflows/*.yml`:
+
 ```yaml
 - name: Check Documentation References
   run: python3 .github/scripts/check-references.py
@@ -159,6 +164,7 @@ Add to `.github/workflows/*.yml`:
 ### Manual Validation
 
 Run before commits:
+
 ```bash
 # Quick check
 python3 .github/scripts/check-references.py
@@ -172,6 +178,7 @@ python3 .github/scripts/check-references.py > reference-check-report.txt 2>&1
 ### False Positives Not Excluded
 
 If legitimate references are incorrectly excluded:
+
 1. Check the context (is it in a code block?)
 2. Review exclusion patterns in `reference-checker.config`
 3. Adjust patterns or add exceptions
@@ -179,6 +186,7 @@ If legitimate references are incorrectly excluded:
 ### Legitimate References Marked as Broken
 
 If valid references show as broken:
+
 1. Verify the file actually exists at that path
 2. Check for typos in the reference
 3. Ensure relative path is correct from source file location
@@ -186,6 +194,7 @@ If valid references show as broken:
 ### High Number of Broken References
 
 If many broken references found:
+
 1. Review first 10-20 to identify patterns
 2. Check if files were moved/renamed
 3. Consider batch fixing with search/replace
@@ -215,6 +224,7 @@ If many broken references found:
 ## Future Enhancements
 
 Potential improvements:
+
 - [ ] Validate anchor links within files
 - [ ] Check external URL availability (optional)
 - [ ] Support additional file formats (JSDoc, TypeScript)

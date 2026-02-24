@@ -13,6 +13,7 @@ Guia.js is a geolocation web application (**version 0.9.0-alpha**, current) that
 The application is organized into the following architectural layers:
 
 ### 1. Core Domain Layer
+
 **Purpose**: Fundamental data structures and position management
 
 - **[GeoPosition](./GEO_POSITION.md)**: Represents a geographic position with coordinates
@@ -20,6 +21,7 @@ The application is organized into the following architectural layers:
 - **SingletonStatusManager**: Application-wide status management
 
 ### 2. Service Layer
+
 **Purpose**: External API integrations and geocoding services
 
 - **APIFetcher**: Base class for all API communications
@@ -29,6 +31,7 @@ The application is organized into the following architectural layers:
 - **WebGeocodingManager**: Main coordination class for geocoding workflow
 
 ### 3. Data Processing Layer
+
 **Purpose**: Address data extraction, validation, and caching
 
 This layer underwent significant refactoring in PR #121 to improve cohesion and maintainability.
@@ -108,6 +111,7 @@ classDiagram
 #### 3.2 Responsibilities
 
 **AddressExtractor** (New in PR #121)
+
 - **Single Responsibility**: Extract and standardize address data from geocoding API responses
 - Parses raw geocoding API response data (OpenStreetMap/Nominatim format)
 - Maps API fields to Brazilian address standard fields (logradouro, bairro, municipio, uf, siglaUF, cep)
@@ -117,6 +121,7 @@ classDiagram
 - **No caching or change detection logic**
 
 **AddressCache** (New in PR #121, Refactored to Singleton in PR #TBD)
+
 - **Single Responsibility**: Manage caching of standardized addresses with LRU eviction and change detection
 - **Singleton Pattern**: Ensures only one cache instance exists per application (refactored from static-only class)
 - Access via `AddressCache.getInstance()` for instance methods
@@ -130,6 +135,7 @@ classDiagram
 - **No extraction logic**
 
 **AddressDataExtractor** (Legacy Facade)
+
 - **Single Responsibility**: Maintain backward compatibility
 - Delegates all operations to `AddressExtractor` and `AddressCache`
 - Preserves original API surface for existing code
@@ -137,6 +143,7 @@ classDiagram
 - **Deprecated**: New code should use `AddressCache.getBrazilianStandardAddress()` directly
 
 **BrazilianStandardAddress**
+
 - Immutable data structure representing standardized Brazilian address
 - Provides formatted output via `enderecoCompleto()` method
 - Fields: logradouro, numero, bairro, municipio, uf, siglaUF, cep, pais
@@ -145,6 +152,7 @@ classDiagram
 #### 3.3 Change Detection Coordinator (Extracted from WebGeocodingManager)
 
 **ChangeDetectionCoordinator** (New - Refactoring to follow Single Responsibility Principle)
+
 - **Single Responsibility**: Coordinate address component change detection
 - Extracted from `WebGeocodingManager` to separate change detection from geocoding coordination
 - Monitors changes in logradouro (street), bairro (neighborhood), and município (city) components
@@ -160,12 +168,14 @@ classDiagram
   - Reduced `WebGeocodingManager` complexity (from ~827 to ~545 lines)
 
 **Relationship with WebGeocodingManager**:
+
 - `WebGeocodingManager` creates and owns `ChangeDetectionCoordinator` instance
 - `WebGeocodingManager` delegates all change detection operations to coordinator
 - Backward compatibility maintained: original methods now delegate to coordinator
 - Shares `ObserverSubject` and `ReverseGeocoder` instances
 
 ### 4. Presentation Layer
+
 **Purpose**: HTML rendering and user interface
 
 - **HTMLPositionDisplayer**: Coordinate display and Google Maps integration
@@ -369,18 +379,22 @@ classDiagram
 ## Design Patterns Used
 
 ### Singleton Pattern
+
 - **PositionManager**: Ensures single source of truth for current position
 - **SingletonStatusManager**: Centralized application status management
 
 ### Observer Pattern
+
 - **PositionManager**: Notifies subscribers of position updates
 - Enables loose coupling between position updates and dependent components
 
 ### Facade Pattern
+
 - **AddressDataExtractor**: Legacy facade maintaining backward compatibility
 - **WebGeocodingManager**: Simplifies complex geocoding workflow
 
 ### Delegation Pattern
+
 - **WebGeocodingManager → ChangeDetectionCoordinator**: Delegates change detection responsibilities
   - Reduces complexity and follows Single Responsibility Principle
   - Maintains backward compatibility through delegation methods
@@ -388,20 +402,25 @@ classDiagram
 - **AddressDataExtractor → AddressCache/AddressExtractor**: Delegates all operations for backward compatibility
 
 ### Strategy Pattern
+
 - **APIFetcher**: Base class allowing different API implementations
 - **ReverseGeocoder**: Concrete strategy for OpenStreetMap/Nominatim
 
 ## Refactoring Summary (PR #121)
 
 ### Problem Addressed
+
 The original `AddressDataExtractor` class suffered from low cohesion, mixing two distinct responsibilities:
+
 1. Extracting and standardizing address data from API responses
 2. Managing cache with LRU eviction, expiration, and change detection
 
 ### Solution Implemented
+
 Split into two specialized classes with single, clear responsibilities:
 
 **Before (0.9.0-alpha)**:
+
 ```
 AddressDataExtractor (554 lines)
 ├── Extraction logic
@@ -412,6 +431,7 @@ AddressDataExtractor (554 lines)
 ```
 
 **After (0.9.0-alpha)**:
+
 ```
 AddressExtractor (91 lines)
 └── Extraction & standardization only
@@ -437,6 +457,7 @@ AddressDataExtractor (176 lines)
 6. **No Breaking Changes**: Legacy facade maintains full backward compatibility
 
 ### Test Results
+
 - ✅ AddressDataExtractor.test.js: 9/9
 - ✅ BairroChangeDetection.test.js: 11/11
 - ✅ MunicipioChangeDetection.test.js: 10/10
@@ -446,16 +467,19 @@ AddressDataExtractor (176 lines)
 ## API Integration Points
 
 ### OpenStreetMap Nominatim
+
 - **Endpoint**: `https://nominatim.openstreetmap.org/reverse`
 - **Purpose**: Reverse geocoding (coordinates → address)
 - **Handler**: `ReverseGeocoder` class
 
 ### IBGE API
+
 - **Endpoint**: `https://servicodados.ibge.gov.br/api/v1/localidades/estados/`
 - **Purpose**: Brazilian state/municipality data
 - **Handler**: `guia_ibge.js` module
 
 ### Google Maps
+
 - **Purpose**: Map viewing and Street View integration
 - **Handler**: `HTMLPositionDisplayer` class
 
@@ -508,6 +532,7 @@ AddressDataExtractor.setBairroChangeCallback(callback);
 ## Best Practices
 
 ### For New Development
+
 1. Access AddressCache via `AddressCache.getInstance()` for instance methods (preferred)
 2. Static wrappers like `AddressCache.getBrazilianStandardAddress()` available for convenience
 3. Use `AddressExtractor` directly only when caching is not needed
@@ -515,6 +540,7 @@ AddressDataExtractor.setBairroChangeCallback(callback);
 5. Avoid using `AddressDataExtractor` (legacy facade) in new code
 
 ### For Maintenance
+
 1. `AddressCache` uses singleton pattern - only one instance exists per application
 2. All static properties on `AddressDataExtractor` are synchronized with `AddressCache` singleton
 3. Change detection uses signature tracking to prevent notification loops
@@ -523,6 +549,7 @@ AddressDataExtractor.setBairroChangeCallback(callback);
 6. Static methods/properties delegate to singleton instance for backward compatibility
 
 ### For Testing
+
 1. Use `AddressCache.clearCache()` to reset state between tests (works on singleton)
 2. Test extraction and caching concerns independently
 3. Mock raw geocoding data with realistic OpenStreetMap format
@@ -570,6 +597,7 @@ guia_js/
 ## See Also
 
 ### Related Documentation
+
 - [GEO_POSITION.md](./GEO_POSITION.md) - GeoPosition class documentation
 - [REFERENCE_PLACE.md](./REFERENCE_PLACE.md) - ReferencePlace class documentation
 - [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - WebGeocodingManager coordination layer
@@ -577,6 +605,7 @@ guia_js/
 - [GEO_POSITION_FUNC_SPEC.md](./GEO_POSITION_FUNC_SPEC.md) - Functional specification for GeoPosition
 
 ### Development Guidelines
+
 - [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md) - Pure functions and immutability
 - [CODE_REVIEW_GUIDE.md](../../.github/CODE_REVIEW_GUIDE.md) - Code review checklist
 - [TDD_GUIDE.md](../../.github/TDD_GUIDE.md) - Test-driven development
@@ -585,6 +614,7 @@ guia_js/
 - [HIGH_COHESION_GUIDE.md](../../.github/HIGH_COHESION_GUIDE.md) - Single responsibility principle
 
 ### Testing
+
 - [TESTING.md](../TESTING.md) - Test suite overview and running tests
 
 ## Author

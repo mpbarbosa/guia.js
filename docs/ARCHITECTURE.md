@@ -1,6 +1,7 @@
 # Architecture Guide - Guia Turístico
 
 ---
+
 **Last Updated**: 2026-02-17  
 **Version**: 0.11.0-alpha  
 **Status**: Active  
@@ -72,6 +73,7 @@ The application follows a **layered architecture** with clear separation of conc
 ### Layer Responsibilities
 
 #### 1. **Core Layer** (`src/core/`)
+
 **Purpose**: Foundation classes and state management
 
 - **GeoPosition**: Immutable value object for geographic coordinates
@@ -82,6 +84,7 @@ The application follows a **layered architecture** with clear separation of conc
 **Key Principle**: Immutability and state isolation
 
 #### 2. **Data Layer** (`src/data/`)
+
 **Purpose**: Data models, parsing, and caching
 
 - **BrazilianStandardAddress**: Address standardization for Brazilian locations
@@ -92,6 +95,7 @@ The application follows a **layered architecture** with clear separation of conc
 **Key Principle**: Data transformation and validation
 
 #### 3. **Service Layer** (`src/services/`)
+
 **Purpose**: External API integration and business logic
 
 - **GeolocationService**: Browser Geolocation API wrapper
@@ -101,6 +105,7 @@ The application follows a **layered architecture** with clear separation of conc
 **Key Principle**: API abstraction and error handling
 
 #### 4. **Coordination Layer** (`src/coordination/`)
+
 **Purpose**: Orchestrate services and manage workflows
 
 - **WebGeocodingManager**: Main application coordinator
@@ -112,6 +117,7 @@ The application follows a **layered architecture** with clear separation of conc
 **Key Principle**: Workflow orchestration and service integration
 
 #### 5. **Presentation Layer** (`src/html/`, `src/views/`)
+
 **Purpose**: UI rendering and user interaction
 
 - **View Controllers** (`HomeViewController`, `ConverterViewController`): SPA views
@@ -136,10 +142,12 @@ GeoPosition (immutable)
 ```
 
 #### GeoPosition
+
 **File**: `src/core/GeoPosition.js`  
 **Purpose**: Immutable geographic coordinate container
 
 **Key Methods**:
+
 - `constructor(latitude, longitude, accuracy, timestamp)` - Create position
 - `toJSON()` - Serialize to JSON
 - `equals(otherPosition)` - Value equality check
@@ -147,16 +155,19 @@ GeoPosition (immutable)
 **Design**: Value object pattern, immutable state
 
 #### PositionManager
+
 **File**: `src/core/PositionManager.js`  
 **Purpose**: Centralized position state management
 
 **Key Methods**:
+
 - `static getInstance()` - Get singleton instance
 - `getCurrentPosition()` - Retrieve current position
 - `updatePosition(geoPosition)` - Update position with thresholds
 - `hasPosition()` - Check if position exists
 
 **Update Thresholds**:
+
 - **Distance**: 20 meters minimum change
 - **Time**: 30 seconds minimum interval
 
@@ -172,28 +183,34 @@ Nominatim API Response
 ```
 
 #### BrazilianStandardAddress
+
 **File**: `src/data/BrazilianStandardAddress.js`  
 **Purpose**: Brazilian address standardization
 
 **Key Properties**:
+
 - `municipio`, `bairro`, `logradouro` - Address components
 - `estado`, `regiaoMetropolitana` - Administrative divisions
 - `cep`, `numero` - Postal code and street number
 
 **Key Methods**:
+
 - `municipioCompleto()` - Municipality with state (e.g., "Recife, PE")
 - `regiaoMetropolitanaFormatada()` - Formatted metropolitan region
 
 #### AddressCache
+
 **File**: `src/data/AddressCache.js`  
 **Purpose**: Address caching with change detection
 
 **Architecture**: Composition pattern with 3 components:
+
 - `AddressDataStore` - Data storage with history
 - `AddressChangeDetector` - Change detection by field
 - `CallbackRegistry` - Callback management with error handling
 
 **Key Methods**:
+
 - `setCurrentAddress(address)` - Update current address
 - `getCurrentAddress()` - Retrieve current address
 - `registerCallback(fieldName, callback, priority)` - Subscribe to changes
@@ -210,16 +227,19 @@ WebGeocodingManager (main coordinator)
 ```
 
 #### WebGeocodingManager
+
 **File**: `src/coordination/WebGeocodingManager.js`  
 **Purpose**: Main application coordinator
 
 **Key Responsibilities**:
+
 - Initialize all services and displayers
 - Coordinate geolocation workflows
 - Manage event subscriptions
 - Handle errors and state transitions
 
 **Key Methods**:
+
 - `async init()` - Initialize all coordinators
 - `getSingleLocationUpdate()` - One-time position capture
 - `startTracking()` - Continuous tracking
@@ -237,16 +257,19 @@ SpeechSynthesisManager (main orchestrator)
 ```
 
 #### SpeechSynthesisManager
+
 **File**: `src/speech/SpeechSynthesisManager.js`  
 **Purpose**: Speech synthesis orchestration using composition
 
 **Composition Pattern**: 4 focused components
+
 - **VoiceLoader**: Exponential backoff retry for voice loading
 - **VoiceSelector**: Brazilian Portuguese voice prioritization
 - **SpeechConfiguration**: Parameter validation (rate, pitch)
 - **SpeechQueue**: Priority-based request queuing
 
 **Priority Levels**:
+
 1. Municipality change (priority 3)
 2. Neighborhood change (priority 2)
 3. Street change (priority 1)
@@ -324,11 +347,13 @@ sequenceDiagram
 ## Design Patterns
 
 ### 1. **Observer Pattern**
+
 **Used in**: AddressCache, PositionManager, EventCoordinator
 
 **Purpose**: Decoupled event notification
 
 **Example**:
+
 ```javascript
 // AddressCache notifies observers of address changes
 addressCache.registerCallback('municipio', (newValue) => {
@@ -337,48 +362,57 @@ addressCache.registerCallback('municipio', (newValue) => {
 ```
 
 **Benefits**:
+
 - Loose coupling between components
 - Multiple subscribers per event
 - Priority-based execution
 
 ### 2. **Singleton Pattern**
+
 **Used in**: PositionManager, SingletonStatusManager, TimerManager
 
 **Purpose**: Single instance for global state
 
 **Example**:
+
 ```javascript
 const positionManager = PositionManager.getInstance();
 const currentPosition = positionManager.getCurrentPosition();
 ```
 
 **Benefits**:
+
 - Centralized state management
 - Consistent state across application
 - Controlled access point
 
 ### 3. **Factory Pattern**
+
 **Used in**: DisplayerFactory
 
 **Purpose**: Centralized object creation
 
 **Example**:
+
 ```javascript
 const displayer = DisplayerFactory.createPositionDisplayer(document);
 displayer.displayPosition(geoPosition);
 ```
 
 **Benefits**:
+
 - Encapsulated instantiation logic
 - Consistent object creation
 - Easy to extend with new types
 
 ### 4. **Composition Pattern**
+
 **Used in**: SpeechSynthesisManager, AddressCache, HtmlSpeechSynthesisDisplayer
 
 **Purpose**: Build complex objects from simpler components
 
 **Example**:
+
 ```javascript
 class SpeechSynthesisManager {
   constructor() {
@@ -391,32 +425,38 @@ class SpeechSynthesisManager {
 ```
 
 **Benefits**:
+
 - Single Responsibility Principle
 - Better testability
 - Flexible component reuse
 
 ### 5. **Value Object Pattern**
+
 **Used in**: GeoPosition, BrazilianStandardAddress
 
 **Purpose**: Immutable data containers
 
 **Example**:
+
 ```javascript
 const position = new GeoPosition(lat, lon, accuracy, timestamp);
 // position is immutable - cannot be modified after creation
 ```
 
 **Benefits**:
+
 - Predictable state
 - Thread-safe (in concurrent scenarios)
 - Easier to reason about
 
 ### 6. **Facade Pattern**
+
 **Used in**: HtmlSpeechSynthesisDisplayer (v0.11.0-alpha)
 
 **Purpose**: Simplified interface to complex subsystems
 
 **Example**:
+
 ```javascript
 class HtmlSpeechSynthesisDisplayer {
   constructor() {
@@ -434,6 +474,7 @@ class HtmlSpeechSynthesisDisplayer {
 ```
 
 **Benefits**:
+
 - Reduced complexity for clients
 - Backward compatibility (100% API preserved)
 - Easier maintenance
@@ -447,6 +488,7 @@ class HtmlSpeechSynthesisDisplayer {
 **Location**: `src/views/`
 
 **Template**:
+
 ```javascript
 export class MyViewController {
   constructor(document, params = {}) {
@@ -471,6 +513,7 @@ export class MyViewController {
 ```
 
 **Register in Router** (`src/app.js`):
+
 ```javascript
 routes['/my-route'] = async () => {
   const controller = await MyViewController.create(document, params);
@@ -483,6 +526,7 @@ routes['/my-route'] = async () => {
 **Location**: `src/html/`
 
 **Template**:
+
 ```javascript
 export class HTMLMyDataDisplayer {
   constructor(document) {
@@ -507,6 +551,7 @@ export class HTMLMyDataDisplayer {
 ```
 
 **Register in DisplayerFactory**:
+
 ```javascript
 static createMyDataDisplayer(document) {
   const displayer = new HTMLMyDataDisplayer(document);
@@ -520,6 +565,7 @@ static createMyDataDisplayer(document) {
 **Location**: `src/services/`
 
 **Template**:
+
 ```javascript
 export class MyService {
   constructor() {
@@ -546,6 +592,7 @@ export class MyService {
 **Location**: `src/coordination/`
 
 **Template**:
+
 ```javascript
 export class MyCoordinator {
   constructor(dependencies) {
@@ -573,12 +620,14 @@ export class MyCoordinator {
 ## Technology Stack
 
 ### Frontend
+
 - **JavaScript**: ES2022 with ES modules
 - **Build Tool**: Vite 7.3.1 (development server, HMR, code splitting)
 - **Routing**: Hash-based SPA routing (`#/`, `#/converter`)
 - **Styling**: Modular CSS (15 files: accessibility, typography, navigation, etc.)
 
 ### APIs & Data Sources
+
 - **Geolocation**: Browser Geolocation API
 - **Geocoding**: OpenStreetMap Nominatim (`nominatim.openstreetmap.org`)
 - **Brazilian Data**: IBGE API (`servicodados.ibge.gov.br`)
@@ -586,18 +635,21 @@ export class MyCoordinator {
 - **Maps**: Google Maps (view-only links, Street View)
 
 ### Testing
+
 - **Test Framework**: Jest 30.1.3 with jsdom 25.0.1
 - **E2E Testing**: Puppeteer 24.35.0 (headless Chrome)
 - **Coverage**: ~85% overall (84.7% actual)
 - **Test Suites**: 101 suites, 2,401 tests (2,235 passing)
 
 ### Development Tools
+
 - **Version Control**: Git with Husky hooks (pre-commit, pre-push)
 - **Linting**: ESLint 9 with flat configuration
 - **Documentation**: JSDoc for API docs
 - **CI/CD**: GitHub Actions (syntax validation, tests, security checks)
 
 ### Build & Deployment
+
 - **Bundle Size**: 900 KB (25% reduction from 1.2M source)
 - **Code Splitting**: 7 chunks (vendor, speech, core, services, data, html, coordination)
 - **Minification**: Terser with source maps
@@ -605,6 +657,7 @@ export class MyCoordinator {
 - **CDN**: jsDelivr for NPM package distribution
 
 ### Performance Optimizations
+
 - **LRU Caching**: Address data caching with automatic eviction
 - **Lazy Loading**: Code split by feature (speech, services, etc.)
 - **Timer Management**: Centralized with leak prevention

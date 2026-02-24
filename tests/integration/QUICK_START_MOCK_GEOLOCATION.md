@@ -7,11 +7,13 @@
 ## 3 Steps to Get Started
 
 ### Step 1: Import Helper
+
 ```python
 from mock_geolocation_helper import setup_mock_geolocation
 ```
 
 ### Step 2: Setup Mock in Your Test
+
 ```python
 def test_my_location_feature(self):
     self.driver.get(f"{self.base_url}/index.html")
@@ -27,6 +29,7 @@ def test_my_location_feature(self):
 ```
 
 ### Step 3: Click and Verify
+
 ```python
     # Trigger geolocation
     get_location_btn = self.driver.find_element(By.ID, "getLocationBtn")
@@ -51,16 +54,19 @@ def test_my_location_feature(self):
 ## Key Functions
 
 ### setup_mock_geolocation(driver, latitude, longitude)
+
 Sets up MockGeolocationProvider with specified coordinates.
 
 **Returns:** `{'success': True/False, 'coordinates': {...}}`
 
 ### verify_mock_configuration(driver)
+
 Verifies that the mock is properly configured.
 
 **Returns:** `{'configured': True/False, 'position': {...}}`
 
 ### test_mock_provider_directly(driver)
+
 Tests the mock provider in isolation (useful for debugging).
 
 **Returns:** `{'success': True/False, 'latitude': ..., 'longitude': ...}`
@@ -110,7 +116,9 @@ python3 example_mock_geolocation_test.py
 ## Common Issues
 
 ### Issue: "MockGeolocationProvider is not defined"
+
 **Solution:** Wait for guia.js to load first:
+
 ```python
 self.wait.until(
     lambda d: d.execute_script(
@@ -120,7 +128,9 @@ self.wait.until(
 ```
 
 ### Issue: Mock not being used
+
 **Solution:** Setup mock BEFORE clicking the location button:
+
 ```python
 # ✅ Correct order
 setup_mock_geolocation(driver, lat, lon)
@@ -132,7 +142,9 @@ setup_mock_geolocation(driver, lat, lon)  # Too late!
 ```
 
 ### Issue: Coordinates not showing
+
 **Solution:** Check console logs and verify mock:
+
 ```python
 from firefox_console_capture import FirefoxConsoleCapture
 console = FirefoxConsoleCapture(driver)
@@ -158,6 +170,7 @@ print(logs)
 ## Summary
 
 MockGeolocationProvider is:
+
 - ✅ Built into guia.js
 - ✅ Ready to use
 - ✅ Well documented

@@ -34,11 +34,13 @@ Add the `[[ENGLISH-FEEDBACK]]` keyword at the beginning of your prompt:
 ### Example
 
 **Your prompt:**
+
 ```
 [[ENGLISH-FEEDBACK]] I need to fix the documentation what have many outdated version references
 ```
 
 **Copilot will:**
+
 1. Provide detailed English feedback
 2. Show corrected version
 3. Then execute your request
@@ -86,6 +88,7 @@ POLISHED VERSION:
 ### 1. Grammar Analysis
 
 **What's checked:**
+
 - Subject-verb agreement
 - Verb tenses (past, present, future)
 - Pronoun usage
@@ -96,6 +99,7 @@ POLISHED VERSION:
 - Word order
 
 **Example:**
+
 ```
 ❌ "The documentation what have errors"
 ✅ "The documentation that has errors"
@@ -110,6 +114,7 @@ Error:
 ### 2. Vocabulary Enhancement
 
 **What's checked:**
+
 - Word choice appropriateness
 - Formal vs casual language
 - Technical vocabulary accuracy
@@ -118,6 +123,7 @@ Error:
 - Precision of meaning
 
 **Example:**
+
 ```
 Original: "fix the problem"
 Better: "resolve the issue" or "address the problem"
@@ -133,6 +139,7 @@ Reason: More precise and formal
 ### 3. Clarity Improvements
 
 **What's checked:**
+
 - Sentence structure
 - Logical flow
 - Ambiguous phrasing
@@ -142,6 +149,7 @@ Reason: More precise and formal
 - Parallel structure
 
 **Example:**
+
 ```
 Original: "I want to that we update the docs and then we can make it better"
 Improved: "I want us to update the documentation and improve it"
@@ -153,6 +161,7 @@ Improvement: Removed redundancy, clarified subject, smoother flow
 ### 4. Style Recommendations
 
 **What's checked:**
+
 - Formality level
 - Professional tone
 - Technical writing conventions
@@ -161,6 +170,7 @@ Improvement: Removed redundancy, clarified subject, smoother flow
 - Politeness markers
 
 **Example:**
+
 ```
 Casual: "Can you help me fix this?"
 Professional: "Could you assist with resolving this issue?"
@@ -178,19 +188,24 @@ Professional: "The code contains errors" or "The code is not functioning as expe
 When you encounter the `[[ENGLISH-FEEDBACK]]` keyword in a user prompt:
 
 #### Step 1: Detection
+
 - Parse the user's message for `[[ENGLISH-FEEDBACK]]` keyword
 - Extract the actual prompt (text after the keyword)
 - Flag the session for feedback mode
 
 #### Step 2: Analysis
+
 Analyze the prompt for:
+
 1. **Grammar errors** (syntax, agreement, tenses)
 2. **Vocabulary issues** (word choice, formality level)
 3. **Clarity problems** (structure, ambiguity)
 4. **Style concerns** (tone, professionalism)
 
 #### Step 3: Provide Feedback
+
 Format feedback following the template:
+
 - Show original text
 - List grammar issues with corrections
 - Suggest vocabulary improvements
@@ -199,7 +214,9 @@ Format feedback following the template:
 - Provide polished final version
 
 #### Step 4: Execute Request
+
 After providing feedback:
+
 - Proceed with the user's original request
 - Use the improved/corrected prompt if clarification was needed
 - Continue normal operation
@@ -211,11 +228,13 @@ After providing feedback:
 ### Example 1: Simple Grammar Correction
 
 **User prompt:**
+
 ```
 [[ENGLISH-FEEDBACK]] I need to update the tests what is failing
 ```
 
 **Copilot response:**
+
 ```
 📝 ENGLISH FEEDBACK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -241,11 +260,13 @@ POLISHED VERSION:
 ### Example 2: Complex Technical Prompt
 
 **User prompt:**
+
 ```
 [[ENGLISH-FEEDBACK]] We should to refactor the code for make it more better and less complex because the new developers are having difficulty to understand the architecture
 ```
 
 **Copilot response:**
+
 ```
 📝 ENGLISH FEEDBACK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -294,11 +315,13 @@ as new developers are having difficulty with the current architecture"
 ### Example 3: Casual to Professional
 
 **User prompt:**
+
 ```
 [[ENGLISH-FEEDBACK]] Can you check out the bug in the login page? It's kinda broken and users are getting mad
 ```
 
 **Copilot response:**
+
 ```
 📝 ENGLISH FEEDBACK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -359,6 +382,7 @@ OR (more concise):
 | Suportar | Support | Endure, tolerate |
 
 **Examples:**
+
 ```
 ❌ "Actually, I am working on this feature"
 ✅ "Currently, I am working on this feature"
@@ -386,6 +410,7 @@ OR (more concise):
 | Think | Pensar em | Think about |
 
 **Examples:**
+
 ```
 ❌ "I arrived in the office"
 ✅ "I arrived at the office"
@@ -433,15 +458,18 @@ Portuguese uses articles more liberally than English.
 In Portuguese, you can use infinitive after many verbs. English is more strict.
 
 **Use GERUND (-ing) after:**
+
 - enjoy, finish, stop, avoid, consider, mind, suggest
 - prepositions (after, before, without, for, about)
 - "have trouble/difficulty"
 
 **Use INFINITIVE (to + verb) after:**
+
 - want, need, plan, decide, hope, expect, agree
 - would like, would prefer
 
 **Examples:**
+
 ```
 ❌ "I enjoy to code"
 ✅ "I enjoy coding"
@@ -463,6 +491,7 @@ In Portuguese, you can use infinitive after many verbs. English is more strict.
 Portuguese allows dropping subject pronouns. English requires explicit subjects.
 
 **Examples:**
+
 ```
 ❌ "Is important to test" (missing subject)
 ✅ "It is important to test"
@@ -521,6 +550,7 @@ English: adjective + noun
 | really good | excellent, effective, robust |
 
 **Examples in context:**
+
 ```
 Casual: "Let's fix the broken code"
 Professional: "Let's address the malfunctioning code"
@@ -539,6 +569,7 @@ Professional: "This solution is highly effective"
 ### 1. When to Request Feedback
 
 **Good times:**
+
 - Writing documentation
 - Creating pull request descriptions
 - Drafting technical proposals
@@ -546,6 +577,7 @@ Professional: "This solution is highly effective"
 - Learning new technical vocabulary
 
 **Less useful:**
+
 - Quick commands ("run tests")
 - Simple file operations
 - When speed is critical
@@ -555,6 +587,7 @@ Professional: "This solution is highly effective"
 ### 2. Learning Strategy
 
 **Progressive approach:**
+
 1. **First week**: Use `[[ENGLISH-FEEDBACK]]` on all prompts to identify patterns
 2. **Second week**: Focus on your most common errors
 3. **Third week**: Request feedback only for complex prompts
@@ -613,6 +646,7 @@ Potential additions in future versions:
 ### If Feedback Seems Wrong
 
 English has many exceptions and contextual rules. If feedback seems incorrect:
+
 1. Research the specific grammar rule
 2. Consider the context (formal vs casual, technical vs general)
 3. Ask for clarification: "Can you explain why [X] is incorrect?"
@@ -636,6 +670,7 @@ You can ask for focused analysis:
 ### For Portuguese Speakers Learning English
 
 **Recommended resources:**
+
 - **Grammar**: "English Grammar in Use" by Raymond Murphy
 - **Vocabulary**: "Word Power Made Easy" by Norman Lewis
 - **Technical English**: IEEE Technical Writing Guide

@@ -7,6 +7,7 @@
 ## Problem
 
 While the application supports geolocation and displays coordinates, there was **no visible way** for users to open their location in mapping services:
+
 - **Hidden value**: Maps integration mentioned in docs but not in UI
 - **Manual workflow**: Users copy-paste coordinates to use Maps
 - **Competitive disadvantage**: Native apps have "Open in Maps" buttons
@@ -16,24 +17,28 @@ While the application supports geolocation and displays coordinates, there was *
 ### User Frustration Scenarios
 
 **Scenario 1**: Tourist Navigation
+
 - User gets coordinates: "-23.550520, -46.633309"
 - Wants to navigate to nearby restaurant
 - **Current flow**: Copy coords → Open Maps → Paste → Search
 - **6 manual steps**, high friction, error-prone
 
 **Scenario 2**: Street View Exploration
+
 - User wants to see what location looks like before going
 - No visible Street View button
 - Doesn't know feature exists
 - Misses valuable context about destination
 
 **Scenario 3**: Alternative Map Preference
+
 - User prefers Waze for navigation (traffic updates)
 - OR: User prefers OpenStreetMap (privacy-focused)
 - Only Google Maps mentioned in docs
 - No UI to choose preferred service
 
 **Scenario 4**: Mobile Deep Linking
+
 - User on iPhone/Android
 - Coordinates displayed in browser
 - Wants to open native Maps app
@@ -46,12 +51,14 @@ While the application supports geolocation and displays coordinates, there was *
 **Location**: Directly below coordinates display in secondary information section
 
 **4 Action Buttons** (responsive layout):
+
 1. **🗺️ Google Maps** (Primary) - Open current location
 2. **👁️ Street View** (Secondary) - View street-level imagery
 3. **�� OpenStreetMap** (Secondary) - Privacy-focused alternative
 4. **🚗 Waze** (Secondary) - Navigation with traffic
 
 **Button States**:
+
 - Hidden when no coordinates available
 - Appear automatically when coordinates update
 - Full keyboard accessibility (Tab + Enter)
@@ -60,10 +67,12 @@ While the application supports geolocation and displays coordinates, there was *
 ### 2. Deep Linking Support
 
 **Mobile Detection**:
+
 - iOS/Android: Uses `geo:` URI scheme (opens native Maps app)
 - Desktop: Uses HTTPS URLs (opens web Maps)
 
 **Example URLs**:
+
 ```javascript
 // Mobile (native app)
 geo:-23.550520,-46.633309?q=-23.550520,-46.633309
@@ -75,12 +84,14 @@ https://www.google.com/maps/search/?api=1&query=-23.550520,-46.633309
 ### 3. Multiple Map Providers
 
 **Provider URLs**:
+
 1. **Google Maps**: `https://www.google.com/maps/search/?api=1&query=LAT,LNG`
 2. **Street View**: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=LAT,LNG`
 3. **OpenStreetMap**: `https://www.openstreetmap.org/?mlat=LAT&mlon=LNG#map=16/LAT/LNG`
 4. **Waze**: `https://www.waze.com/ul?ll=LAT,LNG&navigate=yes`
 
 **Why Multiple Providers**:
+
 - User choice (not locked to Google)
 - Privacy options (OpenStreetMap)
 - Best-in-class navigation (Waze traffic data)
@@ -89,11 +100,13 @@ https://www.google.com/maps/search/?api=1&query=-23.550520,-46.633309
 ### 4. Responsive Layout
 
 **Desktop (≥769px)**: 4-column grid
+
 ```
 [Google Maps] [Street View] [OpenStreetMap] [Waze]
 ```
 
 **Tablet (481px - 768px)**: 2-column grid
+
 ```
 [     Google Maps      ]
 [Street View] [OpenStreetMap]
@@ -101,6 +114,7 @@ https://www.google.com/maps/search/?api=1&query=-23.550520,-46.633309
 ```
 
 **Mobile (<480px)**: Stacked layout
+
 ```
 [Google Maps]
 [Street View]
@@ -111,16 +125,19 @@ https://www.google.com/maps/search/?api=1&query=-23.550520,-46.633309
 ### 5. Error Handling
 
 **Popup Blocked**:
+
 - Detects if popup blocked by browser
 - Shows toast with direct link
 - User clicks link → Opens map successfully
 
 **No Coordinates**:
+
 - Buttons hidden until coordinates available
 - Shows "Aguardando coordenadas..." placeholder
 - Prevents clicks with no data
 
 **Toast Notifications**:
+
 - Success: "Abrindo Google Maps..." (3 seconds)
 - Blocked: "Popup bloqueado... [Link]" (8 seconds)
 
@@ -129,6 +146,7 @@ https://www.google.com/maps/search/?api=1&query=-23.550520,-46.633309
 ### File Structure
 
 **New Files (2)**:
+
 1. `src/utils/maps-integration.js` (372 lines)
    - MapsIntegration singleton class
    - URL generation for 4 providers
@@ -144,6 +162,7 @@ https://www.google.com/maps/search/?api=1&query=-23.550520,-46.633309
    - Print/dark mode support
 
 **Modified Files (1)**:
+
 1. `src/index.html`
    - Line 51: Import maps-actions.css
    - Lines 810-819: Import and initialize maps-integration.js
@@ -151,6 +170,7 @@ https://www.google.com/maps/search/?api=1&query=-23.550520,-46.633309
 ### JavaScript Architecture
 
 **MapsIntegration Class** (Singleton):
+
 ```javascript
 class MapsIntegration {
   constructor() { /* Singleton pattern */ }
@@ -183,6 +203,7 @@ class MapsIntegration {
 ```
 
 **Coordinate Observer**:
+
 - Uses MutationObserver on `#lat-long-display`
 - Watches for text content changes
 - Parses "lat, lng" format
@@ -192,6 +213,7 @@ class MapsIntegration {
 ### CSS Architecture
 
 **Button Styles** (Material Design 3):
+
 ```css
 .maps-action-btn {
   display: inline-flex;
@@ -216,6 +238,7 @@ class MapsIntegration {
 ```
 
 **Responsive Grid**:
+
 ```css
 /* Desktop */
 @media (min-width: 769px) {
@@ -251,6 +274,7 @@ class MapsIntegration {
 ### Deep Linking Implementation
 
 **Mobile Detection**:
+
 ```javascript
 _getGoogleMapsUrl(lat, lng) {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -266,6 +290,7 @@ _getGoogleMapsUrl(lat, lng) {
 ```
 
 **Why `geo:` URI Scheme**:
+
 - Universal support (iOS + Android)
 - Opens default Maps app (Google Maps, Apple Maps, etc.)
 - Query parameter shows pin on map
@@ -274,6 +299,7 @@ _getGoogleMapsUrl(lat, lng) {
 ### Popup Blocking Detection
 
 **Detection Logic**:
+
 ```javascript
 _openUrl(url, action) {
   const opened = window.open(url, '_blank', 'noopener,noreferrer');
@@ -289,6 +315,7 @@ _openUrl(url, action) {
 ```
 
 **Fallback UI**:
+
 ```javascript
 _showPopupBlockedMessage(url, action) {
   const message = `
@@ -358,6 +385,7 @@ _showPopupBlockedMessage(url, action) {
 ## Impact
 
 ### Before (Hidden Integration)
+
 - ❌ No visible Maps buttons
 - ❌ Users copy-paste coordinates manually
 - ❌ 6+ steps to navigate
@@ -367,6 +395,7 @@ _showPopupBlockedMessage(url, action) {
 - ❌ Poor discoverability
 
 ### After (Discoverable Actions)
+
 - ✅ 4 visible action buttons
 - ✅ 1-click navigation
 - ✅ 1 step (83% reduction)
@@ -378,42 +407,50 @@ _showPopupBlockedMessage(url, action) {
 ### Key Metrics
 
 **Discoverability**:
+
 - Feature awareness: 0% → 100% (buttons always visible)
 - Map provider knowledge: 25% → 100% (4 options shown)
 
 **User Effort**:
+
 - Navigation steps: 6+ → 1 (83% reduction)
 - Time to navigate: 30s → 5s (83% faster)
 - Error rate: High (copy-paste) → Near-zero (one click)
 
 **Mobile Experience**:
+
 - Native app opening: No → Yes (geo: URI)
 - Deep linking: No → Yes (iOS + Android)
 - Touch targets: N/A → Adequate (44x44px+)
 
 **User Choice**:
+
 - Map providers: 1 (implied) → 4 (explicit)
 - Privacy options: 0 → 1 (OpenStreetMap)
 - Navigation apps: 0 → 1 (Waze integration)
 
 **Error Recovery**:
+
 - Popup blocking: Failed → Graceful (direct link fallback)
 - No coordinates: N/A → Handled (buttons hidden)
 
 ## Accessibility Features
 
 **WCAG 2.1 Compliance**:
+
 - ✓ 2.1.1 Keyboard (Level A) - All buttons keyboard accessible
 - ✓ 2.4.7 Focus Visible (Level AA) - Focus indicators on all buttons
 - ✓ 2.5.5 Target Size (Level AAA) - Mobile: 44x44px+ touch targets
 - ✓ 4.1.2 Name, Role, Value (Level A) - ARIA labels on all buttons
 
 **Keyboard Support**:
+
 - Tab to navigate between buttons
 - Enter/Space to activate button
 - Logical tab order (primary first)
 
 **Screen Reader Support**:
+
 ```html
 <button 
   aria-label="Abrir localização atual no Google Maps"
@@ -425,12 +462,14 @@ _showPopupBlockedMessage(url, action) {
 ```
 
 **Visual Accessibility**:
+
 - Focus indicators: 2px solid outline
 - Color contrast: 7:1+ on all text (WCAG AAA)
 - Icon + text labels (not icon-only)
 - Hover states: Clear visual feedback
 
 **Reduced Motion**:
+
 ```css
 @media (prefers-reduced-motion: reduce) {
   .maps-action-btn {
@@ -443,6 +482,7 @@ _showPopupBlockedMessage(url, action) {
 ```
 
 **High Contrast Mode**:
+
 ```css
 @media (prefers-contrast: high) {
   .maps-action-btn {
@@ -454,17 +494,20 @@ _showPopupBlockedMessage(url, action) {
 ## Browser Compatibility
 
 **Minimum Requirements**:
+
 - Chrome 94+ (ES2022, MutationObserver, geo: URI)
 - Firefox 93+ (ES2022, geo: URI)
 - Safari 15+ (ES2022, iOS deep linking)
 
 **Feature Support**:
+
 - MutationObserver: 99.5% global support
 - `window.open()`: Universal support
 - `geo:` URI scheme: iOS/Android native support
 - CSS Grid: 97.8% support
 
 **Graceful Degradation**:
+
 - Old browsers: Buttons don't appear (no errors)
 - No JavaScript: Coordinates still displayed (copy-paste fallback)
 - Popup blocked: Direct link fallback
@@ -472,17 +515,20 @@ _showPopupBlockedMessage(url, action) {
 ## Performance Impact
 
 **Bundle Size**:
+
 - JavaScript: +372 lines (MapsIntegration)
 - CSS: +230 lines (button styles)
 - **Total**: +5 KB uncompressed, +2 KB gzipped
 
 **Runtime Performance**:
+
 - MutationObserver: <1ms per coordinate update
 - Button generation: <5ms (DOM manipulation)
 - URL opening: <10ms (window.open)
 - Toast notifications: <20ms (existing system)
 
 **Load Time Impact**:
+
 - No impact on initial page load (lazy initialization)
 - No additional HTTP requests
 - No external dependencies
@@ -492,6 +538,7 @@ _showPopupBlockedMessage(url, action) {
 ### Manual Test Scenarios
 
 **Test 1: Button Appearance**
+
 1. Open app, grant location
 2. Wait for coordinates to appear
 3. Verify:
@@ -501,6 +548,7 @@ _showPopupBlockedMessage(url, action) {
    - ✅ Primary button (Google Maps) visually distinct
 
 **Test 2: Google Maps (Desktop)**
+
 1. Click "🗺️ Google Maps" button
 2. Verify:
    - ✅ New tab opens
@@ -509,6 +557,7 @@ _showPopupBlockedMessage(url, action) {
    - ✅ Toast shows: "Abrindo Google Maps..."
 
 **Test 3: Google Maps (Mobile)**
+
 1. Open on iPhone/Android
 2. Click "🗺️ Google Maps" button
 3. Verify:
@@ -517,6 +566,7 @@ _showPopupBlockedMessage(url, action) {
    - ✅ Prompt to navigate appears
 
 **Test 4: Street View**
+
 1. Click "👁️ Street View" button
 2. Verify:
    - ✅ New tab opens
@@ -525,6 +575,7 @@ _showPopupBlockedMessage(url, action) {
    - ✅ Falls back to satellite if no Street View
 
 **Test 5: OpenStreetMap**
+
 1. Click "🌍 OpenStreetMap" button
 2. Verify:
    - ✅ OSM website opens
@@ -533,6 +584,7 @@ _showPopupBlockedMessage(url, action) {
    - ✅ Crosshair marker at location
 
 **Test 6: Waze**
+
 1. Click "🚗 Waze" button
 2. Verify:
    - ✅ Waze opens (app on mobile, web on desktop)
@@ -540,6 +592,7 @@ _showPopupBlockedMessage(url, action) {
    - ✅ Traffic data loads
 
 **Test 7: Popup Blocking**
+
 1. Enable popup blocker in browser
 2. Click any Maps button
 3. Verify:
@@ -550,6 +603,7 @@ _showPopupBlockedMessage(url, action) {
    - ✅ Map opens successfully
 
 **Test 8: No Coordinates**
+
 1. Open app without granting location
 2. Verify:
    - ✅ Maps actions container hidden
@@ -559,6 +613,7 @@ _showPopupBlockedMessage(url, action) {
    - ✅ Buttons appear automatically
 
 **Test 9: Keyboard Navigation**
+
 1. Tab to Google Maps button
 2. Verify:
    - ✅ Focus indicator visible (outline)
@@ -571,6 +626,7 @@ _showPopupBlockedMessage(url, action) {
    - ✅ Tab order logical (primary → secondary)
 
 **Test 10: Screen Reader (NVDA/VoiceOver)**
+
 1. Navigate to Maps buttons with screen reader
 2. Verify each button announces:
    - ✅ "Abrir localização atual no Google Maps, button"
@@ -582,6 +638,7 @@ _showPopupBlockedMessage(url, action) {
    - ✅ Map opens successfully
 
 **Test 11: Responsive Layout**
+
 1. Test on desktop (1920px)
 2. Verify:
    - ✅ 4-column grid layout
@@ -596,6 +653,7 @@ _showPopupBlockedMessage(url, action) {
    - ✅ Full-width buttons
 
 **Test 12: Coordinate Updates**
+
 1. Insert test position (advanced options)
 2. Verify:
    - ✅ Buttons update with new coordinates
@@ -607,6 +665,7 @@ _showPopupBlockedMessage(url, action) {
 ## Files Modified
 
 **New Files (2)**:
+
 1. `src/utils/maps-integration.js` (372 lines)
    - MapsIntegration singleton class
    - 4 map provider URL generators
@@ -621,6 +680,7 @@ _showPopupBlockedMessage(url, action) {
    - Print/dark mode support
 
 **Modified Files (1)**:
+
 1. `src/index.html`
    - Line 51: Import maps-actions.css
    - Lines 810-819: Import and initialize maps-integration.js
@@ -639,11 +699,13 @@ _showPopupBlockedMessage(url, action) {
 ## Future Enhancements (Not Critical)
 
 **Short-term**:
+
 1. **Share Location**: Copy coordinates to clipboard (one click)
 2. **Directions From**: Add "Directions from current location" option
 3. **Save Favorites**: Bookmark frequently visited locations
 
 **Long-term**:
+
 1. **Apple Maps**: Add Apple Maps button (iOS priority)
 2. **Uber/Lyft**: "Request ride to this location" integration
 3. **Weather**: Show current weather at coordinates

@@ -9,6 +9,7 @@
 ## 🎯 **E2E Test Architecture**
 
 ### **Test Infrastructure**
+
 ```
 __tests__/e2e/               # Jest + Puppeteer E2E tests
 ├── municipio-bairro-*.js    # Municipio/Bairro display tests
@@ -23,6 +24,7 @@ tests/e2e/                   # Python + Playwright E2E tests
 ```
 
 **Dual Toolchain Rationale**:
+
 - **Jest + Puppeteer**: Fast, integrated with unit tests, Node.js ecosystem
 - **Python + Playwright**: Better cross-browser support, Python toolchain
 
@@ -33,6 +35,7 @@ tests/e2e/                   # Python + Playwright E2E tests
 ### **Pattern #1: Geolocation Mock Timing (CRITICAL)**
 
 ❌ **WRONG** (will fail silently):
+
 ```javascript
 test('should get location', async () => {
     const page = await browser.newPage();
@@ -45,6 +48,7 @@ test('should get location', async () => {
 ```
 
 ✅ **CORRECT** (MUST be before navigation):
+
 ```javascript
 test('should get location', async () => {
     const page = await browser.newPage();
@@ -65,6 +69,7 @@ test('should get location', async () => {
 ### **Pattern #2: API Request Interception**
 
 ✅ **Complete API Mock Template**:
+
 ```javascript
 async function setupPageWithMocks(browser, coords) {
     const page = await browser.newPage();
@@ -123,6 +128,7 @@ async function setupPageWithMocks(browser, coords) {
 ```
 
 **Critical Details**:
+
 - ✅ `setRequestInterception(true)` MUST come first
 - ✅ CORS headers required or fetch fails silently
 - ✅ `Content-Type` header prevents parse errors
@@ -133,6 +139,7 @@ async function setupPageWithMocks(browser, coords) {
 ### **Pattern #3: Async Element Waiting**
 
 ❌ **WRONG** (race condition):
+
 ```javascript
 await page.click('#location-button');
 const text = await page.$eval('#location-display', el => el.textContent);
@@ -140,6 +147,7 @@ const text = await page.$eval('#location-display', el => el.textContent);
 ```
 
 ✅ **CORRECT** (wait for condition):
+
 ```javascript
 await page.click('#location-button');
 
@@ -157,6 +165,7 @@ const text = await page.$eval('#bairro-display', el => el.textContent);
 ```
 
 **Alternatives**:
+
 ```javascript
 // Option 1: waitForFunction with predicate
 await page.waitForFunction(
@@ -278,6 +287,7 @@ describe('E2E: Feature Name', () => {
 ## ⚠️ **Common Pitfalls**
 
 ### **1. Missing CORS Headers**
+
 ```javascript
 // ❌ WRONG - will fail silently
 request.respond({
@@ -297,6 +307,7 @@ request.respond({
 ```
 
 ### **2. Race Conditions**
+
 ```javascript
 // ❌ WRONG
 await page.click('#button');
@@ -311,6 +322,7 @@ const text = await page.$eval('#result', el => el.textContent);
 ```
 
 ### **3. Resource Leaks**
+
 ```javascript
 // ❌ WRONG - will cause worker timeout
 afterAll(async () => {
@@ -328,6 +340,7 @@ afterAll(async () => {
 ```
 
 ### **4. ESM Compatibility**
+
 ```javascript
 // ❌ WRONG (CommonJS in ESM project)
 const puppeteer = require('puppeteer');
@@ -343,6 +356,7 @@ import puppeteer from 'puppeteer';
 ## 🔍 **Debugging E2E Tests**
 
 ### **Enable Verbose Logging**
+
 ```javascript
 beforeAll(async () => {
     browser = await puppeteer.launch({
@@ -354,6 +368,7 @@ beforeAll(async () => {
 ```
 
 ### **Screenshot on Failure**
+
 ```javascript
 test('should work', async () => {
     try {
@@ -366,6 +381,7 @@ test('should work', async () => {
 ```
 
 ### **Console Output**
+
 ```javascript
 page.on('console', msg => {
     console.log('PAGE LOG:', msg.text());
@@ -377,6 +393,7 @@ page.on('pageerror', error => {
 ```
 
 ### **Network Monitoring**
+
 ```javascript
 page.on('request', req => {
     console.log('→', req.method(), req.url());
@@ -406,6 +423,7 @@ Before writing E2E tests:
 ## 🎓 **Lessons Learned**
 
 ### **From municipio-bairro E2E Tests**
+
 1. ✅ Puppeteer permissions MUST be set before navigation
 2. ✅ API mocks MUST include CORS headers
 3. ✅ Use `waitForFunction()` for dynamic content
@@ -413,10 +431,11 @@ Before writing E2E tests:
 5. ⚠️ Some tests revealed production bugs (HTMLAddressDisplayer wiring)
 
 ### **From Coverage Campaign**
+
 6. ✅ E2E tests catch integration issues unit tests miss
-7. ✅ Mock timing is critical (race conditions are common)
-8. ✅ Proper cleanup prevents worker timeout warnings
-9. ⚠️ E2E tests are 10-100x slower than unit tests
+2. ✅ Mock timing is critical (race conditions are common)
+3. ✅ Proper cleanup prevents worker timeout warnings
+4. ⚠️ E2E tests are 10-100x slower than unit tests
 
 ---
 
@@ -430,4 +449,3 @@ Before writing E2E tests:
 
 **Status**: ✅ **Patterns Documented**  
 **Next**: Apply patterns to remaining E2E tests
-

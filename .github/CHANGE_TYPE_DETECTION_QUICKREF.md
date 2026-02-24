@@ -66,11 +66,13 @@ build: configure webpack
 ## 🔍 Detection Methods
 
 ### 1. Conventional Commits (Best)
+
 ```bash
 feat(ui): description  →  Type: feat ✅
 ```
 
 ### 2. Pattern Matching
+
 ```bash
 add new feature  →  Type: feat
 fix bug         →  Type: fix
@@ -78,6 +80,7 @@ update docs     →  Type: docs
 ```
 
 ### 3. File Analysis
+
 ```bash
 Only *.md       →  Type: docs
 Only tests/     →  Type: test
@@ -103,6 +106,7 @@ CHANGE_TYPE=feat ./.github/scripts/test-workflow-locally.sh
 ## 📋 Step Routing
 
 ### feat (Full Testing)
+
 ```
 ✅ security_audit
 ✅ syntax_validation
@@ -114,6 +118,7 @@ CHANGE_TYPE=feat ./.github/scripts/test-workflow-locally.sh
 ```
 
 ### fix (Focus on Tests)
+
 ```
 ✅ security_audit
 ✅ syntax_validation
@@ -122,12 +127,14 @@ CHANGE_TYPE=feat ./.github/scripts/test-workflow-locally.sh
 ```
 
 ### docs (Minimal)
+
 ```
 ✅ syntax_validation
 ✅ doc_validation
 ```
 
 ### test (Tests Only)
+
 ```
 ✅ syntax_validation
 ✅ test_execution
@@ -136,6 +143,7 @@ CHANGE_TYPE=feat ./.github/scripts/test-workflow-locally.sh
 ## 🐛 Troubleshooting
 
 ### Always defaults to 'fix'
+
 ```bash
 # Check commit message
 git log -1 --format="%s"
@@ -145,6 +153,7 @@ git commit -m "feat: description"
 ```
 
 ### Wrong steps running
+
 ```bash
 # Debug detection
 ./.github/scripts/change-type-detector.sh
@@ -154,6 +163,7 @@ cat .github/cache/change_type.cache
 ```
 
 ### Steps always skip
+
 ```bash
 # Fix permissions
 chmod +x .github/scripts/change-type-detector.sh
@@ -172,42 +182,50 @@ chmod +x .github/scripts/change-type-detector.sh
 
 ## 🎨 Type Selection Guide
 
-### Choose `feat` when:
+### Choose `feat` when
+
 - Adding new functionality
 - Introducing new components
 - Building new features
 
-### Choose `fix` when:
+### Choose `fix` when
+
 - Fixing bugs
 - Correcting errors
 - Patching issues
 
-### Choose `docs` when:
+### Choose `docs` when
+
 - Only documentation changes
 - README updates
 - Comment improvements
 
-### Choose `refactor` when:
+### Choose `refactor` when
+
 - Code restructuring
 - No functional changes
 - Improving code quality
 
-### Choose `test` when:
+### Choose `test` when
+
 - Only test changes
 - Adding test coverage
 - Improving test quality
 
-### Choose `style` when:
+### Choose `style` when
+
 - Formatting changes
 - Linting fixes
 - Whitespace changes
 
-### Choose `perf` when:
+### Choose `perf` when
+
 - Performance optimizations
 - Speed improvements
 - Resource usage reduction
 
-### Choose `chore` when:
+### Choose `chore` when
+
 - Dependency updates
 - Config changes
 - Maintenance tasks
@@ -215,12 +233,14 @@ chmod +x .github/scripts/change-type-detector.sh
 ## 📊 Expected Time Savings
 
 **Weekly Development:**
+
 - 10 docs commits: Save 12 minutes
 - 5 test commits: Save 5 minutes
 - 3 style commits: Save 3.5 minutes
 - **Total: ~20 minutes/week per developer**
 
 **Monthly:**
+
 - **~80 minutes saved per developer**
 - **Team of 5: ~400 minutes = 6.7 hours**
 

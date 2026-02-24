@@ -1,4 +1,5 @@
 # Branch Coverage Analysis
+
 **Date**: 2026-01-09  
 **Overall Branch Coverage**: 74.39% ✅
 
@@ -27,6 +28,7 @@ The perception of "low" coverage (14.28%) appears to be from looking at specific
 ## Files with Low Branch Coverage
 
 ### 1. Browser-Only Files (0% coverage) - ACCEPTABLE
+
 **865 lines, 0% branch coverage**
 
 - `src/app.js` (536 lines) - SPA router
@@ -39,11 +41,13 @@ The perception of "low" coverage (14.28%) appears to be from looking at specific
 ---
 
 ### 2. GeolocationService.js - PARTIAL COVERAGE
+
 **645 lines, 26.31% branch coverage**
 
 #### Uncovered Branches (Lines 53-69, 83-90, 113-120, 141-144, 178, 193, 299-301, 351-591, 611)
 
 **Error Handling Paths** (53-120):
+
 ```javascript
 // Lines 53-69: Error code mappings
 const errorMap = {
@@ -63,12 +67,14 @@ return errorMessages[errorCode] || "Erro desconhecido"; // Fallback not tested
 ```
 
 **Why Not Tested**:
+
 - ❌ Requires triggering specific geolocation error codes (1, 2, 3)
 - ❌ Difficult to simulate browser permission denied
 - ❌ Timeout errors require waiting or timer mocking
 - ❌ Fallback branches for "unknown error codes" are defensive (rarely occur)
 
 **Browser-Dependent Code** (351-591):
+
 ```javascript
 // Lines 351-591: Browser API integration
 async checkPermissions() {
@@ -85,11 +91,13 @@ async getSingleLocationUpdate() {
 ```
 
 **Why Not Tested**:
+
 - ❌ Requires real browser environment with `navigator.permissions` API
 - ❌ Geolocation API callbacks difficult to mock comprehensively
 - ❌ Position watching (watchPosition) requires real device/GPS
 
 #### What IS Tested ✅
+
 - ✅ Constructor and initialization
 - ✅ Configuration management
 - ✅ Provider pattern integration
@@ -97,6 +105,7 @@ async getSingleLocationUpdate() {
 - ✅ Basic success paths
 
 **Current Tests**: 6 test files with 100+ tests
+
 - `GeolocationService.injection.test.js`
 - `GeolocationService.helpers.test.js`
 - `GeolocationService.providerPattern.test.js`
@@ -105,34 +114,40 @@ async getSingleLocationUpdate() {
 ---
 
 ### 3. WebGeocodingManager.js - PARTIAL COVERAGE
+
 **931 lines, 39.43% branch coverage**
 
 #### Uncovered Branches (Lines 204-210, 275, 278, 338-350, 457, 469-481, 493, 505-517, 543-926)
 
 **Complex Orchestration Logic**:
+
 - Multiple conditional initialization paths
 - Error recovery branches
 - State management edge cases
 - Observer notification branches
 
 **Why Low Coverage**:
+
 - ❌ Large class with many responsibilities (931 lines)
 - ❌ Orchestrates multiple services (geolocation, speech, display)
 - ❌ Many conditional paths based on runtime state
 - ❌ Integration test suite skipped (documented earlier)
 
 **What IS Tested**:
+
 - ✅ E2E test files cover real-world usage
 - ✅ Integration tests exist (some skipped due to jsdom issues)
 
 ---
 
 ### 4. ReverseGeocoder.js - PARTIAL COVERAGE
+
 **426 lines, 36.66% branch coverage**
 
 #### Uncovered Branches (Lines 100-102, 129-139, 156, 216-384)
 
 **API Integration Code**:
+
 ```javascript
 // Lines 216-384: OpenStreetMap Nominatim API integration
 async fetchAddressData() {
@@ -149,12 +164,14 @@ async fetchAddressData() {
 ```
 
 **Why Not Tested**:
+
 - ❌ External API calls difficult to test without mocking
 - ❌ Network error scenarios require extensive mock setup
 - ❌ HTTP error codes (404, 500) require mock fetch
 - ❌ Timeout and retry logic not comprehensively tested
 
 **What IS Tested**:
+
 - ✅ Address parsing logic
 - ✅ Data extraction and validation
 - ✅ Success path scenarios
@@ -180,7 +197,9 @@ async fetchAddressData() {
 ## Why 74.39% Is Acceptable
 
 ### 1. Error Paths Are Defensive
+
 Many untested branches are defensive programming:
+
 ```javascript
 // Fallback for unknown error codes (rarely occurs in practice)
 return errorMap[errorCode] || { name: "UnknownError", ... };
@@ -192,7 +211,9 @@ if (!navigator.permissions) { return 'prompt'; }
 **Impact**: Low - these branches handle rare edge cases
 
 ### 2. Browser API Dependencies
+
 Significant untested code requires real browser:
+
 - Geolocation API (`navigator.geolocation`)
 - Permissions API (`navigator.permissions`)
 - DOM manipulation and event handling
@@ -200,7 +221,9 @@ Significant untested code requires real browser:
 **Mitigation**: ✅ Manual testing checklist + Selenium tests
 
 ### 3. External API Error Paths
+
 OpenStreetMap Nominatim integration has many error branches:
+
 - Network failures
 - HTTP error codes
 - Invalid responses
@@ -218,6 +241,7 @@ OpenStreetMap Nominatim integration has many error branches:
 **Action**: Add branch coverage context to TESTING.md
 
 **Rationale**:
+
 - 74.39% is good for JavaScript projects
 - Error paths and browser code explain gaps
 - Manual testing covers untested branches
@@ -225,10 +249,12 @@ OpenStreetMap Nominatim integration has many error branches:
 ### Medium Term: Add Error Path Tests (Optional)
 
 **Target Files**:
+
 1. `GeolocationService.js` - Add error code tests (2-3 hours)
 2. `ReverseGeocoder.js` - Mock fetch for error scenarios (2-3 hours)
 
 **Example Test**:
+
 ```javascript
 describe('Error Handling', () => {
   test('should handle PermissionDeniedError (code 1)', () => {
@@ -254,6 +280,7 @@ describe('Error Handling', () => {
 **Target**: WebGeocodingManager.js (931 lines, 39% branch coverage)
 
 **Strategy**: Extract responsibilities into smaller classes
+
 - Router/navigation logic
 - State management
 - Service orchestration
@@ -267,6 +294,7 @@ describe('Error Handling', () => {
 ## Coverage Goals
 
 ### Current State ✅
+
 - **74.39% branch coverage** - GOOD
 - **69.66% statement coverage** - GOOD
 - **58.09% function coverage** - FAIR
@@ -298,19 +326,25 @@ describe('Error Handling', () => {
 ## Summary
 
 ### Question: Is 74.39% branch coverage bad?
+
 **Answer**: No, it's **good** for JavaScript projects. Industry standard.
 
 ### Question: Should we improve it?
+
 **Answer**: Optional. Current coverage provides confidence. Improvements would be marginal gains.
 
 ### Question: What are the main gaps?
-**Answer**: 
+
+**Answer**:
+
 1. Error handling paths (defensive code)
 2. Browser API integration (requires real browser)
 3. External API error scenarios (complex mocking)
 
 ### Question: What should we do?
-**Answer**: 
+
+**Answer**:
+
 1. ✅ Document current coverage as acceptable
 2. ⏸️ Consider error path tests if time permits
 3. 💡 Plan refactoring for future architecture improvements

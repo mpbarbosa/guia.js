@@ -5,9 +5,11 @@
 ## What Was Done
 
 1. **Installed Puppeteer**
+
    ```bash
    npm install --save-dev puppeteer
    ```
+
    - Version installed: Latest (53 packages added)
    - Location: `node_modules/puppeteer`
 
@@ -31,24 +33,28 @@
 
 **Geolocation IS working** but coordinates are NOT displaying in the DOM:
 
-### Evidence Geolocation Works:
+### Evidence Geolocation Works
+
 ```
 PAGE: ServiceCoordinator: Single location update received
 PAGE: PositionManager: Movement not significant enough: 0
 PAGE: +++ (100) (ObserverSubject) Notifying observers
 ```
 
-### But DOM Shows:
+### But DOM Shows
+
 ```html
 <span id="lat-long-display">Aguardando localização...</span>
 ```
 
 Instead of actual coordinates like:
+
 ```html
 <span id="lat-long-display">-18.4696091, -43.4953982</span>
 ```
 
-### Error Messages:
+### Error Messages
+
 ```
 PAGE: HTMLPositionDisplayer: Cannot update - element is null or undefined
 PAGE: ServiceCoordinator: Failed to fetch address JSHandle@error
@@ -57,11 +63,13 @@ PAGE: ServiceCoordinator: Failed to fetch address JSHandle@error
 ## Root Cause Analysis
 
 The issue appears to be in the **HTMLPositionDisplayer** class:
+
 - It receives position updates (Observer pattern working)
 - But cannot update the DOM element
 - The element `#lat-long-display` exists but isn't being updated
 
 Possible causes:
+
 1. HTMLPositionDisplayer may be looking for a different element
 2. The display format may have changed but displayer wasn't updated
 3. There may be an error in the update() method that silently fails
@@ -69,6 +77,7 @@ Possible causes:
 ## Next Steps to Fix
 
 ### Option 1: Debug the HTMLPositionDisplayer
+
 ```javascript
 // In src/html/HTMLPositionDisplayer.js
 // Add logging to see what element it's trying to update
@@ -77,6 +86,7 @@ console.log('[HTMLPositionDisplayer] Element ID:', this.element?.id);
 ```
 
 ### Option 2: Bypass the displayer in tests
+
 ```javascript
 // Manually inject coordinates into DOM after position update
 await page.evaluate((lat, lon) => {
@@ -85,7 +95,9 @@ await page.evaluate((lat, lon) => {
 ```
 
 ### Option 3: Check WebGeocodingManager initialization
+
 The manager is initialized with:
+
 ```javascript
 new WebGeocodingManager(document, { locationResult: 'locationResult' })
 ```
@@ -152,6 +164,7 @@ node test_final.js
 ```
 
 Expected output:
+
 - ❌ Currently fails (coordinates not displayed)
 - ✅ Should pass once HTMLPositionDisplayer is fixed
 

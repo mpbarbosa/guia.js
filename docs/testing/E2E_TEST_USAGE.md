@@ -5,6 +5,7 @@
 **DO NOT** run E2E tests with `npm test` - they will fail!
 
 **Correct Commands**:
+
 ```bash
 # Run E2E tests only (Node environment)
 npm run test:e2e
@@ -26,6 +27,7 @@ These environments are **incompatible** and cannot run together.
 ## Test Statistics
 
 **Unit/Integration Tests** (`npm run test:unit`):
+
 - 2,574 passing
 - 168 skipped
 - 0 failing
@@ -33,6 +35,7 @@ These environments are **incompatible** and cannot run together.
 - ~31 seconds
 
 **E2E Tests** (`npm run test:e2e`):
+
 - 94 passing
 - 1 failing (timing-dependent)
 - 30 skipped
@@ -40,6 +43,7 @@ These environments are **incompatible** and cannot run together.
 - ~42 seconds
 
 **Combined** (`npm run test:all-suites`):
+
 - 2,668 passing
 - 1 failing
 - 198 skipped
@@ -49,6 +53,7 @@ These environments are **incompatible** and cannot run together.
 ## CI/CD Integration
 
 In GitHub Actions, run:
+
 ```yaml
 - run: npm run test:all-suites
 ```
@@ -58,10 +63,12 @@ This ensures both unit and E2E tests execute properly.
 ## Troubleshooting
 
 **Error**: "ws does not work in the browser"
+
 - **Cause**: Running E2E test with `npm test` (uses jsdom)
 - **Fix**: Use `npm run test:e2e` instead
 
 **Error**: "Your test suite must contain at least one test"
+
 - **Cause**: Helper files matched by test pattern
 - **Fix**: Helpers moved to `__tests__/helpers/` (excluded)
 

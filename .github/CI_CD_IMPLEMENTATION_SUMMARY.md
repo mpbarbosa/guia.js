@@ -9,9 +9,11 @@
 ## 🎯 What Was Implemented
 
 ### 1. Pre-commit Hooks (Husky)
+
 **Location**: `.husky/pre-commit`
 
 **What it does**:
+
 - ✅ Validates JavaScript syntax (`npm run validate`)
 - ✅ Runs tests only for changed files (`npm run test:changed`)
 - ✅ Executes automatically on `git commit`
@@ -19,11 +21,13 @@
 **Performance**: ~1-2 seconds per commit
 
 **Installation**:
+
 ```bash
 npm install  # Husky installed as devDependency
 ```
 
 **Manual test**:
+
 ```bash
 .husky/pre-commit  # Run hook manually
 ```
@@ -31,6 +35,7 @@ npm install  # Husky installed as devDependency
 ---
 
 ### 2. Test Splitting (package.json)
+
 **New npm scripts added**:
 
 ```json
@@ -44,6 +49,7 @@ npm install  # Husky installed as devDependency
 ```
 
 **Test counts by category**:
+
 - **Unit**: 657 tests (~6s)
 - **Integration**: 277 tests (~5s)
 - **Features**: ~100 tests (~2s)
@@ -51,6 +57,7 @@ npm install  # Husky installed as devDependency
 - **Total**: 1,558 passing tests
 
 **Usage**:
+
 ```bash
 npm run test:unit         # Run only unit tests
 npm run test:integration  # Run only integration tests
@@ -60,9 +67,11 @@ npm run test:changed      # Run tests for changed files (fast!)
 ---
 
 ### 3. Coverage Threshold Adjustments
+
 **Location**: `package.json` → `jest.coverageThreshold`
 
 **Before** (failing):
+
 ```json
 {
   "statements": 68,
@@ -73,6 +82,7 @@ npm run test:changed      # Run tests for changed files (fast!)
 ```
 
 **After** (passing):
+
 ```json
 {
   "global": {
@@ -89,11 +99,13 @@ npm run test:changed      # Run tests for changed files (fast!)
 ```
 
 **Rationale**:
+
 - Set thresholds **below current coverage** to allow CI to pass
 - Add **per-module relaxed thresholds** for services (harder to test)
 - Plan to **gradually increase** as coverage improves
 
 **Current actual coverage**:
+
 - Statements: 67.09%
 - Branches: 69.51%
 - Functions: 57.16%
@@ -102,6 +114,7 @@ npm run test:changed      # Run tests for changed files (fast!)
 ---
 
 ### 4. Enhanced GitHub Actions Workflow
+
 **Location**: `.github/workflows/test.yml`
 
 **Architecture**: 5-stage pipeline with parallel execution
@@ -124,11 +137,13 @@ graph LR
 **Stages breakdown**:
 
 #### Stage 1: Lint & Validate (~5s)
+
 - JavaScript syntax validation
 - ESLint checks
 - Fast failure on obvious errors
 
 #### Stage 2-3: Parallel Test Execution (~4s max)
+
 - 4 jobs running simultaneously:
   - Unit tests (4s)
   - Integration tests (3s)
@@ -136,12 +151,14 @@ graph LR
   - Service tests (1s)
 
 #### Stage 4: Coverage Gate (~7s)
+
 - Full test suite with coverage
 - Enforces thresholds
 - Uploads coverage reports
 - Posts summary to GitHub Actions UI
 
 #### Stage 5: PR Optimization (~1-2s)
+
 - Only runs on pull requests
 - Tests only changed files
 - Posts comment to PR with results
@@ -149,9 +166,11 @@ graph LR
 ---
 
 ### 5. Caching Configuration
+
 **Location**: `.github/workflows/test.yml`
 
 **What's cached**:
+
 ```yaml
 - uses: actions/cache@v3
   with:
@@ -163,6 +182,7 @@ graph LR
 ```
 
 **Benefits**:
+
 - ✅ Reduces `npm ci` time from 20s → 5s
 - ✅ Saves 10-15s per CI run
 - ✅ Automatically invalidates when dependencies change
@@ -170,11 +190,14 @@ graph LR
 ---
 
 ### 6. Documentation
+
 **Created files**:
+
 - `.github/CI_CD_GUIDE.md` - Comprehensive CI/CD documentation
 - `.github/CI_CD_IMPLEMENTATION_SUMMARY.md` - This file
 
 **Updated files**:
+
 - `package.json` - Scripts and coverage thresholds
 - `.github/workflows/test.yml` - New pipeline
 - `.husky/pre-commit` - Pre-commit hook
@@ -184,6 +207,7 @@ graph LR
 ## 📊 Performance Benchmarks
 
 ### Local Development
+
 | Command | Time | Tests Run |
 |---------|------|-----------|
 | `npm run validate` | <1s | N/A |
@@ -197,6 +221,7 @@ graph LR
 | **Pre-commit hook** | **~1-2s** | **Changed files** |
 
 ### GitHub Actions (Cloud Runners)
+
 | Stage | Time | Parallel Jobs |
 |-------|------|---------------|
 | Lint & Validate | ~5s | 1 job |
@@ -211,6 +236,7 @@ graph LR
 ## ✅ Validation Results
 
 ### 1. Syntax Validation
+
 ```bash
 $ npm run validate
 > node -c src/guia.js && node -c src/guia_ibge.js
@@ -218,6 +244,7 @@ $ npm run validate
 ```
 
 ### 2. Test Splitting
+
 ```bash
 $ npm run test:unit
 Test Suites: 21 passed, 21 total
@@ -239,6 +266,7 @@ Time: 0.803 s
 ```
 
 ### 3. Coverage Gate
+
 ```bash
 $ npm run test:coverage
 =============================== Coverage summary ===============================
@@ -251,12 +279,14 @@ Lines        : 67.29% ( 1502/2232 ) ✅ Threshold: ≥65%
 ```
 
 ### 4. Workflow Syntax
+
 ```bash
 $ python3 -c "import yaml; yaml.safe_load(open('.github/workflows/test.yml'))"
 ✅ Workflow YAML is valid
 ```
 
 ### 5. Pre-commit Hook
+
 ```bash
 $ .husky/pre-commit
 🔍 Running pre-commit validation...
@@ -271,7 +301,8 @@ $ .husky/pre-commit
 
 ### For Developers
 
-#### Daily workflow:
+#### Daily workflow
+
 ```bash
 # Make changes to code
 git add .
@@ -279,14 +310,16 @@ git commit -m "feature: add new functionality"
 # ⏱️ Pre-commit hook runs automatically (1-2s)
 ```
 
-#### Manual testing:
+#### Manual testing
+
 ```bash
 npm run test:changed      # Test only changed files (fast!)
 npm run test:unit         # Test specific category
 npm run test:all          # Full validation before push
 ```
 
-#### Bypass hook (emergency only):
+#### Bypass hook (emergency only)
+
 ```bash
 git commit --no-verify -m "hotfix: emergency fix"
 # ⚠️ Use sparingly - CI will still run on push
@@ -294,14 +327,16 @@ git commit --no-verify -m "hotfix: emergency fix"
 
 ### For CI/CD Pipeline
 
-#### On every push:
+#### On every push
+
 - ✅ Lint & validate (5s)
 - ✅ Run all test categories in parallel (4s)
 - ✅ Generate coverage report (7s)
 - ✅ Upload artifacts
 - ✅ Post summary to GitHub Actions UI
 
-#### On pull requests (additional):
+#### On pull requests (additional)
+
 - ✅ Test only changed files (1-2s)
 - ✅ Post test results as PR comment
 
@@ -310,6 +345,7 @@ git commit --no-verify -m "hotfix: emergency fix"
 ## 📈 Expected Improvements
 
 ### Before Implementation
+
 - No pre-commit validation
 - Sequential test execution (~19s)
 - No test splitting
@@ -317,6 +353,7 @@ git commit --no-verify -m "hotfix: emergency fix"
 - No caching (20s npm install every run)
 
 ### After Implementation
+
 - ✅ Pre-commit validation (1-2s)
 - ✅ Parallel test execution (~16s, saves 3s)
 - ✅ Test splitting by category
@@ -354,12 +391,14 @@ As coverage improves, update `package.json`:
 ### Monitor CI Performance
 
 Check workflow timings monthly:
+
 ```bash
 gh run list --workflow=test.yml --limit 10
 gh run view <run-id> --log
 ```
 
 Look for:
+
 - Stage duration increases (indicates slow tests)
 - Cache miss rates (indicates cache issues)
 - Flaky test patterns (indicates test instability)
@@ -367,6 +406,7 @@ Look for:
 ### Update Dependencies
 
 Husky and GitHub Actions should be updated regularly:
+
 ```bash
 npm run deps:check       # Check for updates
 npm run deps:update      # Update dependencies
@@ -378,32 +418,40 @@ npm run test:all         # Verify after update
 ## 🆘 Troubleshooting
 
 ### "Pre-commit hook too slow"
+
 **Symptom**: Hook takes >5s
-**Solution**: 
+**Solution**:
+
 ```bash
 npm run test:changed  # Should only test changed files
 # If still slow, check which files are being tested
 ```
 
 ### "Coverage threshold not met"
+
 **Symptom**: CI fails on coverage gate
 **Solution**:
+
 ```bash
 npm run test:coverage  # Check actual coverage
 # Add tests or lower threshold temporarily
 ```
 
 ### "Workflow syntax error"
+
 **Symptom**: GitHub Actions fails immediately
 **Solution**:
+
 ```bash
 python3 -c "import yaml; yaml.safe_load(open('.github/workflows/test.yml'))"
 # Fix YAML syntax errors
 ```
 
 ### "Cache not working"
+
 **Symptom**: npm install takes 20s every time
 **Solution**:
+
 ```yaml
 # Check cache key in workflow
 key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
@@ -424,6 +472,7 @@ key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 ## 🎉 Success Metrics
 
 ### Achieved Goals
+
 - ✅ Pre-commit validation implemented (1-2s)
 - ✅ Test splitting by category (4 categories)
 - ✅ Coverage thresholds passing (65-69%)
@@ -434,6 +483,7 @@ key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 - ✅ Comprehensive documentation
 
 ### Metrics
+
 - **CI Time**: 16s (was ~34s without caching/parallelization)
 - **Pre-commit**: 1-2s (instant feedback)
 - **Test Count**: 1,558 passing tests
@@ -443,6 +493,7 @@ key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 ---
 
 **Next Steps**:
+
 1. Monitor CI performance for 1-2 weeks
 2. Adjust coverage thresholds quarterly (increase by 1-3%)
 3. Add more tests to increase coverage

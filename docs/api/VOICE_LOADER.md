@@ -22,6 +22,7 @@ The **VoiceLoader** handles asynchronous voice loading for the Web Speech API wi
 ### Architecture
 
 **Single Responsibility**: Voice Loading Only
+
 - ❌ Does NOT handle voice selection (see VoiceSelector)
 - ❌ Does NOT manage speech synthesis (see SpeechSynthesisManager)
 - ✅ Focused solely on detecting when voices become available
@@ -409,6 +410,7 @@ const voices = await loader.loadVoices();
 ### Common Issues
 
 **Issue**: `speechSynthesis is not defined`
+
 ```javascript
 // Solution: Check environment
 if (typeof window !== 'undefined' && window.speechSynthesis) {
@@ -420,6 +422,7 @@ if (typeof window !== 'undefined' && window.speechSynthesis) {
 ```
 
 **Issue**: No voices loaded after max retries
+
 ```javascript
 const loader = new VoiceLoader();
 const voices = await loader.loadVoices();
@@ -430,6 +433,7 @@ if (voices.length === 0) {
 ```
 
 **Issue**: Voices changed after initial load
+
 ```javascript
 // Listen for voice changes
 speechSynthesis.addEventListener('voiceschanged', async () => {
@@ -513,6 +517,7 @@ See `__tests__/unit/speech/VoiceLoader.test.js` for comprehensive test coverage.
 ## Changelog
 
 ### v0.9.0-alpha
+
 - ✅ Initial release
 - ✅ Exponential backoff retry algorithm
 - ✅ Promise-based API

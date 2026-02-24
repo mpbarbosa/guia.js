@@ -11,6 +11,7 @@ ChangeDetectionCoordinator manages callbacks for detecting and notifying observe
 ### Purpose and Responsibility
 
 The coordinator handles:
+
 - Registration of change detection callbacks with AddressDataExtractor
 - Detection of logradouro (street), bairro (neighborhood), and municipio (municipality) changes
 - Observer notifications when address components change
@@ -37,6 +38,7 @@ import { log, warn, error } from '../utils/logger.js';
 ### External Dependencies
 
 The class expects these to be injected or set externally:
+
 - `AddressDataExtractor` (set via `setAddressDataExtractor()`)
 - `currentPosition` (updated via `setCurrentPosition()`)
 
@@ -47,6 +49,7 @@ The class expects these to be injected or set externally:
 The coordinator replaces timer-based polling with event-driven callbacks:
 
 **Old Approach (v0.9.0 and earlier):**
+
 ```javascript
 // Timer-based polling (inefficient)
 setInterval(() => {
@@ -57,6 +60,7 @@ setInterval(() => {
 ```
 
 **New Approach (v0.9.0-alpha):**
+
 ```javascript
 // Callback-based (efficient)
 AddressDataExtractor.setLogradouroChangeCallback((changeDetails) => {
@@ -111,14 +115,17 @@ const coordinator = new ChangeDetectionCoordinator({
 Sets the AddressDataExtractor reference to avoid circular dependencies during module loading.
 
 **Signature:**
+
 ```javascript
 setAddressDataExtractor(addressDataExtractor: Object): void
 ```
 
 **Parameters:**
+
 - `addressDataExtractor` (Object): AddressDataExtractor class or instance
 
 **Example:**
+
 ```javascript
 import AddressDataExtractor from '../data/AddressDataExtractor.js';
 
@@ -127,6 +134,7 @@ coordinator.setAddressDataExtractor(AddressDataExtractor);
 
 **Why Needed:**
 This method breaks circular dependencies:
+
 - `ChangeDetectionCoordinator` needs `AddressDataExtractor` for callbacks
 - `AddressDataExtractor` might import services that use `ChangeDetectionCoordinator`
 - Solution: Inject `AddressDataExtractor` after module loading completes
@@ -138,14 +146,17 @@ This method breaks circular dependencies:
 Sets the current position. Called by WebGeocodingManager when position updates.
 
 **Signature:**
+
 ```javascript
 setCurrentPosition(position: Object): void
 ```
 
 **Parameters:**
+
 - `position` (Object): Current position object from GeolocationService
 
 **Example:**
+
 ```javascript
 // Called automatically by WebGeocodingManager
 positionManager.subscribe({
@@ -156,6 +167,7 @@ positionManager.subscribe({
 ```
 
 **Position Object Structure:**
+
 ```javascript
 {
   coords: {
@@ -175,11 +187,13 @@ positionManager.subscribe({
 Sets up change detection callbacks for all address components (logradouro, bairro, municipio).
 
 **Signature:**
+
 ```javascript
 setupChangeDetection(): void
 ```
 
 **Example:**
+
 ```javascript
 // Called during initialization
 coordinator.setAddressDataExtractor(AddressDataExtractor);
@@ -187,11 +201,13 @@ coordinator.setupChangeDetection();
 ```
 
 **What It Does:**
+
 1. Registers logradouro change callback
 2. Registers bairro change callback
 3. Registers municipio change callback
 
 **Equivalent To:**
+
 ```javascript
 coordinator.setupLogradouroChangeDetection();
 coordinator.setupBairroChangeDetection();
@@ -205,11 +221,13 @@ coordinator.setupMunicipioChangeDetection();
 Removes all change detection callbacks. Use during cleanup or when stopping change detection.
 
 **Signature:**
+
 ```javascript
 removeAllChangeDetection(): void
 ```
 
 **Example:**
+
 ```javascript
 // Cleanup on component unmount
 window.addEventListener('beforeunload', () => {
@@ -218,11 +236,13 @@ window.addEventListener('beforeunload', () => {
 ```
 
 **What It Does:**
+
 1. Clears logradouro change callback
 2. Clears bairro change callback
 3. Clears municipio change callback
 
 **Equivalent To:**
+
 ```javascript
 coordinator.removeLogradouroChangeDetection();
 coordinator.removeBairroChangeDetection();
@@ -236,16 +256,19 @@ coordinator.removeMunicipioChangeDetection();
 Sets up logradouro (street) change detection using callback mechanism.
 
 **Signature:**
+
 ```javascript
 setupLogradouroChangeDetection(): void
 ```
 
 **Example:**
+
 ```javascript
 coordinator.setupLogradouroChangeDetection();
 ```
 
 **Callback Signature:**
+
 ```javascript
 (changeDetails: Object) => {
   // changeDetails structure:
@@ -264,11 +287,13 @@ coordinator.setupLogradouroChangeDetection();
 Removes the logradouro change detection callback.
 
 **Signature:**
+
 ```javascript
 removeLogradouroChangeDetection(): void
 ```
 
 **Example:**
+
 ```javascript
 coordinator.removeLogradouroChangeDetection();
 ```
@@ -280,16 +305,19 @@ coordinator.removeLogradouroChangeDetection();
 Sets up bairro (neighborhood) change detection using callback mechanism.
 
 **Signature:**
+
 ```javascript
 setupBairroChangeDetection(): void
 ```
 
 **Example:**
+
 ```javascript
 coordinator.setupBairroChangeDetection();
 ```
 
 **Callback Signature:**
+
 ```javascript
 (changeDetails: Object) => {
   // changeDetails structure:
@@ -308,11 +336,13 @@ coordinator.setupBairroChangeDetection();
 Removes the bairro change detection callback.
 
 **Signature:**
+
 ```javascript
 removeBairroChangeDetection(): void
 ```
 
 **Example:**
+
 ```javascript
 coordinator.removeBairroChangeDetection();
 ```
@@ -324,16 +354,19 @@ coordinator.removeBairroChangeDetection();
 Sets up municipio (municipality/city) change detection using callback mechanism.
 
 **Signature:**
+
 ```javascript
 setupMunicipioChangeDetection(): void
 ```
 
 **Example:**
+
 ```javascript
 coordinator.setupMunicipioChangeDetection();
 ```
 
 **Callback Signature:**
+
 ```javascript
 (changeDetails: Object) => {
   // changeDetails structure:
@@ -352,11 +385,13 @@ coordinator.setupMunicipioChangeDetection();
 Removes the municipio change detection callback.
 
 **Signature:**
+
 ```javascript
 removeMunicipioChangeDetection(): void
 ```
 
 **Example:**
+
 ```javascript
 coordinator.removeMunicipioChangeDetection();
 ```
@@ -368,16 +403,19 @@ coordinator.removeMunicipioChangeDetection();
 Handles logradouro change events and notifies observers. Called automatically when a logradouro change is detected.
 
 **Signature:**
+
 ```javascript
 handleLogradouroChange(changeDetails: Object): void
 ```
 
 **Parameters:**
+
 - `changeDetails.previous` (Object): Previous address component values
 - `changeDetails.current` (Object): Current address component values
 - `changeDetails.hasChanged` (boolean): Whether change actually occurred
 
 **Example:**
+
 ```javascript
 // Called automatically by AddressDataExtractor
 const changeDetails = {
@@ -390,6 +428,7 @@ coordinator.handleLogradouroChange(changeDetails);
 
 **Error Handling:**
 Wraps notification in try-catch to prevent cascading failures:
+
 ```javascript
 try {
   this.notifyLogradouroChangeObservers(changeDetails);
@@ -405,16 +444,19 @@ try {
 Handles bairro change events and notifies observers. Called automatically when a bairro change is detected.
 
 **Signature:**
+
 ```javascript
 handleBairroChange(changeDetails: Object): void
 ```
 
 **Parameters:**
+
 - `changeDetails.previous` (Object): Previous address component values
 - `changeDetails.current` (Object): Current address component values  
 - `changeDetails.hasChanged` (boolean): Whether change actually occurred
 
 **Example:**
+
 ```javascript
 const changeDetails = {
   previous: { bairro: "Centro" },
@@ -425,6 +467,7 @@ coordinator.handleBairroChange(changeDetails);
 ```
 
 **Log Output:**
+
 ```
 (ChangeDetectionCoordinator) Notificando os observadores da mudança de bairro.
 ```
@@ -436,16 +479,19 @@ coordinator.handleBairroChange(changeDetails);
 Handles municipio change events and notifies observers. Called automatically when a municipio change is detected.
 
 **Signature:**
+
 ```javascript
 handleMunicipioChange(changeDetails: Object): void
 ```
 
 **Parameters:**
+
 - `changeDetails.previous` (Object): Previous address component values
 - `changeDetails.current` (Object): Current address component values
 - `changeDetails.hasChanged` (boolean): Whether change actually occurred
 
 **Example:**
+
 ```javascript
 const changeDetails = {
   previous: { municipio: "São Paulo", siglaUF: "SP" },
@@ -456,6 +502,7 @@ coordinator.handleMunicipioChange(changeDetails);
 ```
 
 **Log Output:**
+
 ```
 (ChangeDetectionCoordinator) Notificando os observadores da mudança de município.
 ```
@@ -469,17 +516,20 @@ The coordinator notifies two types of observers:
 #### 1. Regular Observers (with `update()` method)
 
 **Signature:**
+
 ```javascript
 observer.update(changeData, changeType, null, changeDetails)
 ```
 
 **Parameters:**
+
 - `changeData`: Specific data for the change (e.g., new logradouro value)
 - `changeType`: "LogradouroChanged", "BairroChanged", or "MunicipioChanged"
 - `null`: Reserved parameter
 - `changeDetails`: Full change details with previous/current values
 
 **Example Observer:**
+
 ```javascript
 const myObserver = {
   update(changeData, changeType, _, changeDetails) {
@@ -497,17 +547,20 @@ coordinator.observerSubject.subscribe(myObserver);
 #### 2. Function Observers
 
 **Signature:**
+
 ```javascript
 functionObserver(currentPosition, currentAddress, enderecoPadronizado, changeDetails)
 ```
 
 **Parameters:**
+
 - `currentPosition`: Current GeolocationPosition object
 - `currentAddress`: Raw Nominatim address data
 - `enderecoPadronizado`: Brazilian standardized address
 - `changeDetails`: Full change details with previous/current values
 
 **Example Function Observer:**
+
 ```javascript
 const myFunctionObserver = (position, address, brazilianAddress, changeDetails) => {
   console.log('Position:', position.coords);
@@ -654,6 +707,7 @@ for (const fn of this.observerSubject.functionObservers) {
 ```
 
 **Benefits:**
+
 - One observer's error doesn't block others
 - Errors are logged with context
 - System remains stable during failures
@@ -674,12 +728,14 @@ if (!this.AddressDataExtractor) {
 ### Callback vs. Polling
 
 **Old Approach (Timer-based):**
+
 - ❌ CPU overhead from constant polling
 - ❌ Delayed change detection (polling interval)
 - ❌ Multiple timers consuming resources
 - ❌ Memory leaks if timers not cleared
 
 **New Approach (Callback-based):**
+
 - ✅ Zero overhead when no changes
 - ✅ Immediate change detection
 - ✅ Single callback per component
@@ -696,6 +752,7 @@ observerSubject.unsubscribeAll();       // Clears observers
 ### Observer Count
 
 Monitor observer count to prevent performance degradation:
+
 ```javascript
 console.log('Observer count:', coordinator.observerSubject.observers.length);
 console.log('Function observers:', coordinator.observerSubject.functionObservers.length);
@@ -843,6 +900,7 @@ const analyticsObserver = {
 ## Change Log
 
 ### v0.9.0-alpha
+
 - Initial extraction from `guia.js` in Phase 2 modularization
 - Replaced timer-based polling with callback mechanism
 - Introduced `setupChangeDetection()` and `removeAllChangeDetection()` methods
@@ -854,12 +912,14 @@ const analyticsObserver = {
 ### Design Evolution
 
 **Previous Approach (v0.9.0):**
+
 - Timer-based polling every second
 - High CPU overhead
 - Delayed change detection
 - Scattered timer management
 
 **Current Approach (v0.9.0-alpha):**
+
 - Callback-based change detection
 - Zero overhead when idle
 - Immediate change notifications

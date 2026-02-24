@@ -18,6 +18,7 @@
 ### Priority Level: **MEDIUM-HIGH**
 
 While 80% success rate indicates most documentation is well-linked, the 120 broken links create:
+
 - Confusion for developers trying to navigate documentation
 - Broken documentation trails for onboarding
 - Poor user experience when exploring related topics
@@ -32,6 +33,7 @@ While 80% success rate indicates most documentation is well-linked, the 120 brok
 These files are referenced but don't exist:
 
 #### Missing in docs/
+
 - `docs/ES6_IMPORT_EXPORT_BEST_PRACTICES.md`
 - `docs/JEST_COMMONJS_ES6_GUIDE.md`
 - `docs/README.md`
@@ -40,23 +42,28 @@ These files are referenced but don't exist:
 - `docs/issues/150-osm-translation-spec.md`
 
 #### Missing in docs/architecture/
+
 - `docs/architecture/ADDRESS_CACHE.md`
 - `docs/architecture/GEOLOCATION_SERVICE_REFACTORING.md`
 
 #### Missing in docs/class-extraction/
+
 - `docs/class-extraction/DOCUMENTATION_UPDATE_INDEX.md`
 
-#### Missing in __tests__/
+#### Missing in **tests**/
+
 - `__tests__/README.md`
 
 #### Missing in src/
+
 - `src/README.md`
 
-###Category 2: Incorrect Relative Paths
+### Category 2: Incorrect Relative Paths
 
 Many links use incorrect relative paths (missing `../` levels or using absolute paths from wrong context):
 
 **Pattern 1: docs/ referenced from docs/guides/**
+
 ```
 Source: docs/guides/QUICK_REFERENCE_CARD.md
 Bad: docs/architecture/POSITION_MANAGER.md
@@ -64,6 +71,7 @@ Should be: ../architecture/POSITION_MANAGER.md
 ```
 
 **Pattern 2: .github/ referenced from docs/**
+
 ```
 Source: docs/guides/QUICK_REFERENCE_CARD.md
 Bad: .github/CONTRIBUTING.md
@@ -71,6 +79,7 @@ Should be: ../../.github/CONTRIBUTING.md
 ```
 
 **Pattern 3: README.md confusion**
+
 ```
 Source: docs/guides/DEPLOYMENT_GUIDE.md
 Bad: README.md
@@ -94,15 +103,18 @@ Should be: ../../README.md
 ### High-Impact Files (10+ broken links)
 
 #### docs/guides/QUICK_REFERENCE_CARD.md (17 broken links)
+
 - Uses incorrect relative paths for .github/ and docs/ files
 - References README.md ambiguously
 - **Action**: Rewrite all link paths from docs/guides/ perspective
 
 #### docs/api-integration/NOMINATIM_API_FORMAT.md (30+ broken links)
+
 - Many references to architecture docs
 - **Action**: Review and update all architecture cross-references
 
 #### docs/class-extraction/CLASS_EXTRACTION_PHASE_4.md (7 broken links)
+
 - Overly deep relative paths (../../../../)
 - References to missing .github/ guides
 - **Action**: Simplify paths and verify referenced files exist
@@ -138,12 +150,14 @@ touch __tests__/README.md
 ### Fix 2: Fix Relative Paths in QUICK_REFERENCE_CARD.md
 
 **Current broken links**:
+
 ```markdown
 [CONTRIBUTING.md](.github/CONTRIBUTING.md)  # From docs/guides/
 [POSITION_MANAGER.md](docs/architecture/POSITION_MANAGER.md)
 ```
 
 **Fixed links**:
+
 ```markdown
 [CONTRIBUTING.md](../../.github/CONTRIBUTING.md)
 [POSITION_MANAGER.md](../architecture/POSITION_MANAGER.md)
@@ -152,11 +166,13 @@ touch __tests__/README.md
 ### Fix 3: Simplify Deep Relative Paths
 
 **Current**:
+
 ```markdown
 [README](../../../../../README.md)  # From docs/class-extraction/
 ```
 
 **Fixed**:
+
 ```markdown
 [README](../../README.md)
 ```
@@ -346,21 +362,25 @@ if __name__ == '__main__':
 ## Progress Tracking
 
 ### Week 1
+
 - [ ] Create missing core files (docs/README.md, etc.)
 - [ ] Fix QUICK_REFERENCE_CARD.md (17 links)
 - [ ] Fix CLASS_EXTRACTION_PHASE_4.md (7 links)
 
 ### Week 2
+
 - [ ] Fix NOMINATIM_API_FORMAT.md architecture links
 - [ ] Fix testing documentation cross-references
 - [ ] Fix guides section paths
 
 ### Week 3
+
 - [ ] Fix remaining broken links
 - [ ] Add CI/CD link checker
 - [ ] Verify 100% link validity
 
 ### Goal
+
 - 🎯 **Target**: 100% valid links (0 broken)
 - 📅 **Timeline**: 3 weeks
 - ⏱️ **Effort**: ~6 hours total
@@ -397,6 +417,7 @@ if __name__ == '__main__':
 **Responsible**: Documentation Team
 
 **Action Summary**:
+
 - 🔴 120 broken links require fixing
 - 🟡 6 missing core files need creation
 - 🟢 482 links already valid (80.1%)

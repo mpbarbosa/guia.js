@@ -109,6 +109,7 @@ fi
 ### Pattern Matching
 
 Glob patterns are converted to regex for matching:
+
 - `**/*.js` matches any JS file in any subdirectory
 - `src/**/*.js` matches JS files under src/
 - `__tests__/**/*.test.js` matches test files
@@ -120,9 +121,11 @@ Glob patterns are converted to regex for matching:
 **Purpose:** Validate JavaScript syntax using `npm run validate`
 
 **Skip Conditions:**
+
 - No JavaScript files changed
 
 **Run Conditions:**
+
 - Any `.js` file modified
 
 **Performance Impact:** Saves ~1-2 seconds when skipped
@@ -132,9 +135,11 @@ Glob patterns are converted to regex for matching:
 **Purpose:** Scan and cache directory structure
 
 **Skip Conditions:**
+
 - No new files added AND cache is valid (<24h old)
 
 **Run Conditions:**
+
 - New files added OR cache expired
 
 **Performance Impact:** Saves ~2-3 seconds when using cache
@@ -146,10 +151,12 @@ Glob patterns are converted to regex for matching:
 **Purpose:** Generate test coverage report
 
 **Skip Conditions:**
+
 - Only documentation changed
 - Only test files changed (no source code modifications)
 
 **Run Conditions:**
+
 - Source code files (`src/**/*.js`) changed
 
 **Performance Impact:** Saves ~30-45 seconds when skipped
@@ -159,10 +166,12 @@ Glob patterns are converted to regex for matching:
 **Purpose:** Run full test suite
 
 **Skip Conditions:**
+
 - No code changes detected
 - Only documentation files changed
 
 **Run Conditions:**
+
 - Source code files changed
 - Test files changed
 
@@ -171,11 +180,13 @@ Glob patterns are converted to regex for matching:
 ## Performance Metrics
 
 ### Before Optimization
+
 - Documentation-only change: ~90 seconds
 - Test-only change: ~90 seconds
 - Full code change: ~90 seconds
 
 ### After Optimization
+
 - Documentation-only change: ~35 seconds (**61% faster**)
 - Test-only change: ~50 seconds (**44% faster**)
 - Full code change: ~90 seconds (no change)
@@ -189,10 +200,12 @@ Glob patterns are converted to regex for matching:
 **Duration:** 24 hours (86400 seconds)
 
 **Invalidation:**
+
 - Cache file older than 24 hours
 - New files detected
 
 **Benefits:**
+
 - Faster subsequent runs
 - Reduced filesystem I/O
 
@@ -216,6 +229,7 @@ cat .github/cache/directory_structure.cache
 **Symptom:** Steps always run regardless of changes
 
 **Solution:**
+
 ```bash
 # Ensure script is executable
 chmod +x .github/scripts/workflow-condition-evaluator.sh
@@ -230,6 +244,7 @@ echo $? # Should be 0 (run) or 1 (skip)
 **Symptom:** Steps skipped when they should run
 
 **Debug:**
+
 ```bash
 # Run with verbose output
 CHANGED_FILES=$(git diff --name-only HEAD~1)
@@ -244,6 +259,7 @@ echo "$CHANGED_FILES" | grep -E "src/.*\.js"
 **Symptom:** Directory structure scan runs every time
 
 **Debug:**
+
 ```bash
 # Check cache directory exists
 ls -la .github/cache/
@@ -260,6 +276,7 @@ mkdir -p .github/cache
 ### Adding New Conditions
 
 1. **Update `.workflow-config.yaml`:**
+
 ```yaml
 conditionals:
   step_new_custom_step:
@@ -270,7 +287,8 @@ conditionals:
     description: "Your description here"
 ```
 
-2. **Update `workflow-condition-evaluator.sh`:**
+1. **Update `workflow-condition-evaluator.sh`:**
+
 ```bash
 case "$step" in
     step_new_custom_step)
@@ -283,7 +301,8 @@ case "$step" in
         ;;
 ```
 
-3. **Integrate in workflow script:**
+1. **Integrate in workflow script:**
+
 ```bash
 if ./.github/scripts/workflow-condition-evaluator.sh step_new_custom_step; then
     # Your step logic here
@@ -293,6 +312,7 @@ fi
 ### Adding New Change Patterns
 
 Update `.workflow-config.yaml`:
+
 ```yaml
 change_patterns:
   new_pattern:

@@ -96,12 +96,14 @@ src/
 ## Finding Classes by Functionality
 
 ### Geolocation Features
+
 - **Get current position**: `GeolocationService` → `src/services/GeolocationService.js`
 - **Store position**: `PositionManager` → `src/core/PositionManager.js`
 - **Position value object**: `GeoPosition` → `src/core/GeoPosition.js`
 - **Detect changes**: `ChangeDetectionCoordinator` → `src/services/ChangeDetectionCoordinator.js`
 
 ### Address Processing
+
 - **Reverse geocoding**: `ReverseGeocoder` → `src/services/ReverseGeocoder.js`
 - **Brazilian addresses**: `BrazilianStandardAddress` → `src/data/BrazilianStandardAddress.js`
 - **Extract address data**: `AddressExtractor` → `src/data/AddressExtractor.js`
@@ -109,12 +111,14 @@ src/
 - **Complete extraction**: `AddressDataExtractor` → `src/data/AddressDataExtractor.js`
 
 ### Display Components
+
 - **Show coordinates**: `HTMLPositionDisplayer` → `src/html/HTMLPositionDisplayer.js`
 - **Show address**: `HTMLAddressDisplayer` → `src/html/HTMLAddressDisplayer.js`
 - **Show reference place**: `HTMLReferencePlaceDisplayer` → `src/html/HTMLReferencePlaceDisplayer.js`
 - **Create displayers**: `DisplayerFactory` → `src/html/DisplayerFactory.js`
 
 ### Speech Synthesis
+
 - **Main facade**: `SpeechSynthesisManager` → `src/speech/SpeechSynthesisManager.js`
 - **Speech control**: `SpeechController` → `src/speech/SpeechController.js`
 - **Queue processor**: `SpeechQueueProcessor` → `src/speech/SpeechQueueProcessor.js`
@@ -124,12 +128,14 @@ src/
 - **Speech items**: `SpeechItem` → `src/speech/SpeechItem.js`
 
 ### Coordination
+
 - **Main coordinator**: `WebGeocodingManager` → `src/coordination/WebGeocodingManager.js`
 - **Status management**: `SingletonStatusManager` → `src/status/SingletonStatusManager.js`
 
 ## Import Examples
 
 ### Before Modularization (all from guia.js)
+
 ```javascript
 // Everything was in one file
 const position = new GeoPosition(coords);
@@ -138,6 +144,7 @@ const service = new GeolocationService(navigator.geolocation);
 ```
 
 ### After Modularization (ES6 imports)
+
 ```javascript
 // Import specific modules
 import { GeoPosition } from './src/core/GeoPosition.js';
@@ -150,6 +157,7 @@ const service = new GeolocationService(navigator.geolocation);
 ```
 
 ### Browser Usage (via guia.js exports)
+
 ```html
 <script type="module" src="src/guia.js"></script>
 <script type="module">
@@ -183,6 +191,7 @@ __tests__/
 ## Documentation References
 
 ### Phase Documentation
+
 - [Phase 2](CLASS_EXTRACTION_PHASE_2.md) - Chronometer, SingletonStatusManager
 - [Phase 3](CLASS_EXTRACTION_PHASE_3.md) - GeoPosition
 - [Phase 4](CLASS_EXTRACTION_PHASE_4.md) - PositionManager
@@ -200,6 +209,7 @@ __tests__/
 - [Phase 16](CLASS_EXTRACTION_PHASE_16.md) - WebGeocodingManager
 
 ### Summary Documents
+
 - [Class Extraction Summary](CLASS_EXTRACTION_SUMMARY.md) - Overview of all phases
 - [Module Splitting Summary](MODULE_SPLITTING_SUMMARY.md) - Technical implementation details
 

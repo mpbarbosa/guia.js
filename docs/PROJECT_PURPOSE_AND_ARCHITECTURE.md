@@ -1,6 +1,7 @@
 # Guia Turístico - Project Purpose and Architecture Documentation
 
 ---
+
 Last Updated: 2026-01-28
 Status: Active
 Category: Architecture
@@ -224,6 +225,7 @@ Category: Architecture
 ```
 
 **Why this works**:
+
 - ✅ Designed for library distribution
 - ✅ Global CDN with 750+ locations
 - ✅ Version pinning and SemVer support
@@ -246,6 +248,7 @@ import { WebGeocodingManager } from 'guia_js';
 ```
 
 **Why this works**:
+
 - ✅ Standard JavaScript package distribution
 - ✅ Version management through npm
 - ✅ Dependency tracking
@@ -264,6 +267,7 @@ git clone https://github.com/mpbarbosa/guia_js.git
 ```
 
 **Why this works**:
+
 - ✅ Development and testing
 - ✅ Contribution workflow
 - ✅ Local customization
@@ -284,6 +288,7 @@ guia_js-docs/
 ```
 
 **Why this works**:
+
 - ✅ Separates library code from documentation site
 - ✅ GitHub Pages for documentation (appropriate use)
 - ✅ Library remains on CDN
@@ -569,6 +574,7 @@ geocode(-23.550520, -46.633309);
 - **Not suitable for**: Public deployment or end-user access
 
 **Correct mental model**:
+
 ```
 test.html is like a Jest test, but manual
 ↓
@@ -586,6 +592,7 @@ Not deployed to production
 - **Guia.js has**: Library use only
 
 **Analogy**:
+
 ```
 jQuery has test.html files too
 → But jQuery is a library, not a website
@@ -603,6 +610,7 @@ jQuery has test.html files too
 - **No need for**: Separate documentation website
 
 **If documentation website is desired** (future enhancement):
+
 ```
 Create separate repository: guia_js-docs
 ↓
@@ -694,6 +702,7 @@ Guia.js:
 **Both are libraries, not websites**.
 
 If jQuery tried to deploy to GitHub Pages, it would be equally inappropriate:
+
 - ❌ No website to deploy
 - ❌ Library code, not HTML pages
 - ❌ CDN already handles distribution
@@ -708,41 +717,49 @@ If jQuery tried to deploy to GitHub Pages, it would be equally inappropriate:
 ### Appropriate Enhancements
 
 1. **NPM Package Distribution** ✅ Appropriate
+
    ```bash
    npm publish guia_js
    npm install guia_js
    ```
+
    - Adds another distribution method
    - Complements CDN delivery
    - Standard for JavaScript libraries
 
 2. **Separate Documentation Website** ✅ Appropriate (as separate project)
+
    ```
    Create: guia_js-docs repository
    Deploy: THAT repository to GitHub Pages
    Result: Documentation site + library code separate
    ```
+
    - Clear separation of concerns
    - Documentation on Pages, library on CDN
    - Best of both worlds
 
 3. **Interactive Playground** ✅ Appropriate (as separate project)
+
    ```
    Create: guia_js-playground repository
    Purpose: Try Guia.js APIs in browser
    Deploy: GitHub Pages or Vercel
    ```
+
    - Demonstrates library capabilities
    - Separate from library code
    - Clear purpose and audience
 
 4. **npm Scripts Enhancement** ✅ Appropriate
+
    ```json
    "scripts": {
      "build": "Bundle library for npm distribution",
      "prepare": "Pre-publish validation"
    }
    ```
+
    - Prepares library for npm
    - Adds distribution option
    - Does not change core purpose
@@ -784,6 +801,7 @@ If jQuery tried to deploy to GitHub Pages, it would be equally inappropriate:
 ### Recommended Actions
 
 ✅ **CONTINUE**:
+
 - CDN distribution via jsDelivr
 - Repository-based documentation (Markdown in `/docs`)
 - Test-driven development with comprehensive test suite
@@ -791,12 +809,14 @@ If jQuery tried to deploy to GitHub Pages, it would be equally inappropriate:
 - Functional programming principles
 
 ✅ **CONSIDER**:
+
 - Publishing to npm registry (additional distribution)
 - Creating separate documentation website (new repository)
 - Interactive playground (separate project)
 - Enhanced code examples in repository
 
 ❌ **AVOID**:
+
 - Deploying to GitHub Pages (library, not website)
 - Creating index.html in repository (misleading)
 - Building for website deployment (wrong architecture)
@@ -818,12 +838,14 @@ If jQuery (a JavaScript library similar to Guia.js) wouldn't do it, Guia.js shou
 ## 🔗 References
 
 ### Internal Documentation
+
 - [README.md](../README.md) - Project overview
 - [Architecture Documentation](architecture/) - Technical architecture details
 - [Contributing Guide](../.github/CONTRIBUTING.md) - Development guidelines
 - [CDN Delivery Script](../.github/scripts/cdn-delivery.sh) - Distribution automation
 
 ### External Resources
+
 - [jsDelivr Documentation](https://www.jsdelivr.com/docs) - CDN service docs
 - [GitHub Pages Documentation](https://docs.github.com/pages) - Why it's for websites, not libraries
 - [npm Publishing Guide](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry) - Future enhancement reference

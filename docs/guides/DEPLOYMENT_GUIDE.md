@@ -89,16 +89,19 @@ git push origin vX.Y.Z
 **`test.html` is a development tool**, not a deployment target.
 
 **Purpose**:
+
 - Manual testing during development
 - Validates library works in browser
 - Local testing on `http://localhost:9000`
 
 **NOT for**:
+
 - Production deployment
 - End-user access
 - GitHub Pages hosting
 
 **Usage**:
+
 ```bash
 # Start local test server
 python3 -m http.server 9000
@@ -146,6 +149,7 @@ python3 -m http.server 9000
 **When**: Ready to publish to npm registry
 
 **How**:
+
 ```bash
 # Publish to npm
 npm publish
@@ -164,6 +168,7 @@ import { WebGeocodingManager } from 'guia_js';
 **When**: Want a dedicated documentation site
 
 **How**:
+
 ```bash
 # Create NEW repository
 guia_js-docs/
@@ -182,6 +187,7 @@ guia_js-docs/
 **When**: Want developers to try APIs in browser
 
 **How**:
+
 ```bash
 # Create NEW repository
 guia_js-playground/
@@ -226,15 +232,18 @@ If all checks pass, proceed. Otherwise, reconsider.
 ## Getting Help
 
 **Questions about distribution**:
+
 - Read: [docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md](docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md)
 - Check: [ARCHITECTURE_DECISION_RECORD.md](ARCHITECTURE_DECISION_RECORD.md)
 
 **Questions about CDN**:
+
 - Script: `./.github/scripts/cdn-delivery.sh`
 - Output: `cdn-urls.txt`
 - Docs: [README.md](README.md) - CDN Delivery section
 
 **Questions about integration**:
+
 - Examples: `/examples` directory
 - Tests: `test.html` (local development)
 - Docs: [docs/](docs/)

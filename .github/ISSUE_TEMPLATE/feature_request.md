@@ -33,6 +33,7 @@ assignees: ''
 <!-- See .github/REFERENTIAL_TRANSPARENCY.md for best practices -->
 
 **Development Guidelines:**
+
 - Referential transparency: [REFERENTIAL_TRANSPARENCY.md](../REFERENTIAL_TRANSPARENCY.md)
 - Code review standards: [CODE_REVIEW_GUIDE.md](../CODE_REVIEW_GUIDE.md)
 - Testing approach: [TDD_GUIDE.md](../TDD_GUIDE.md), [UNIT_TEST_GUIDE.md](../UNIT_TEST_GUIDE.md)

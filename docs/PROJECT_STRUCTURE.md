@@ -68,11 +68,13 @@ guia_turistico/
 > **Note**: For complete project identity and purpose, see the [README.md](../README.md) and [PROJECT_PURPOSE_AND_ARCHITECTURE.md](./PROJECT_PURPOSE_AND_ARCHITECTURE.md). This section focuses on the structural purpose of this repository.
 
 ### Primary Purpose
+
 - **Reusable library component** for Brazilian address geolocation
 - Integrated into mpbarbosa.com personal website
 - Provides geolocation, geocoding, and address standardization features
 
 ### NOT Intended For
+
 - ❌ Standalone GitHub Pages deployment
 - ❌ Independent website hosting
 - ❌ Direct end-user application
@@ -80,6 +82,7 @@ guia_turistico/
 ## Source Organization
 
 ### `/src` Directory
+
 The `/src` directory contains the **modularized source code** for the library:
 
 - **Purpose**: Organize source files for library distribution
@@ -88,6 +91,7 @@ The `/src` directory contains the **modularized source code** for the library:
 - **Standard Practice**: Common pattern for JavaScript libraries
 
 ### Root Directory Test Files
+
 Test HTML files in root directory are for **development and validation**:
 
 - `test.html` - Primary manual testing interface
@@ -101,14 +105,17 @@ All test files reference source modules from `/src` directory.
 ## Historical Context
 
 ### Directory Restructuring (July 2025)
+
 **Commit:** `bf63e15` - "estruturando os diretorios. /src para o github pages"
 
 **What Actually Happened:**
+
 - Moved `index.html` from root to `/src/index.html`
 - Created standard library directory structure with `/src`
 - Organized modularized source files
 
 **Misleading Commit Message:**
+
 - Message mentioned "GitHub pages" but this was **incorrect**
 - Actual purpose: Standard library source organization
 - `/src` structure is for **library distribution**, not GitHub Pages
@@ -169,12 +176,14 @@ SPA view components implementing application pages.
 #### Components
 
 **`home.js`** (495 lines, 24KB)
+
 - **Purpose**: Main location tracking interface (landing page)
 - **Route**: `#/` or `#` (default route)
 - **Version**: Since 0.9.0-alpha
 - **Test Coverage**: E2E tests in `__tests__/e2e/`
 
 **Key Features**:
+
 - Single location capture (one-time positioning)
 - Continuous location tracking (loop mode)
 - Toggle between tracking modes with checkbox
@@ -183,6 +192,7 @@ SPA view components implementing application pages.
 - Integration with WebGeocodingManager
 
 **Public API**:
+
 ```javascript
 export default {
     title: 'Guia Turístico - Localização',
@@ -193,12 +203,14 @@ export default {
 ```
 
 **`converter.js`** (521 lines, 20KB)
+
 - **Purpose**: Coordinate-to-address converter utility
 - **Route**: `#/converter`
 - **Version**: Since 0.9.0-alpha
 - **Test Coverage**: Unit tests for address parsing
 
 **Key Features**:
+
 - Bidirectional coordinate/address conversion
 - Geographic coordinate input (lat/lon)
 - Address parsing and standardization
@@ -206,6 +218,7 @@ export default {
 - Location type determination (urban, rural, etc.)
 
 **Public API**:
+
 ```javascript
 export default {
     title: 'Conversor de Coordenadas',
@@ -216,6 +229,7 @@ export default {
 ```
 
 **Router Integration**:
+
 ```javascript
 // In src/app.js
 import homeView from './views/home.js';
@@ -228,6 +242,7 @@ const routes = {
 ```
 
 **Design Patterns**:
+
 - **View Object Pattern**: Each view exports title, styles, render, and mount
 - **Separation of Concerns**: Views handle UI, WebGeocodingManager handles logic
 - **Progressive Enhancement**: Works with or without JavaScript (noscript fallback)
@@ -239,12 +254,14 @@ The timing module provides performance and elapsed time tracking utilities for t
 #### Components
 
 **`Chronometer.js`** (305 lines, 9.7KB)
+
 - **Purpose**: Tracks and displays elapsed time since last position update
 - **Pattern**: Observer pattern implementation
 - **Version**: Since 0.9.0-alpha
 - **Test Coverage**: 51 tests in `__tests__/unit/Chronometer.test.js`
 
 **Key Features**:
+
 - Start/stop/reset timer functionality
 - HH:MM:SS time formatting
 - Automatic display updates (1-second interval)
@@ -253,6 +270,7 @@ The timing module provides performance and elapsed time tracking utilities for t
 - Configurable event names for flexibility
 
 **Public Methods**:
+
 ```javascript
 start()        // Starts the chronometer
 stop()         // Stops timing and interval updates
@@ -264,6 +282,7 @@ toString()     // Debug representation
 ```
 
 **Usage Example**:
+
 ```javascript
 import Chronometer from './timing/Chronometer.js';
 
@@ -281,6 +300,7 @@ chronometer.reset();  // Reset to 00:00:00
 ```
 
 **Observer Pattern Integration**:
+
 ```javascript
 // Chronometer responds to position events:
 // - 'strCurrPosUpdate': Position successfully updated → reset & restart
@@ -291,6 +311,7 @@ chronometer.reset();  // Reset to 00:00:00
 ```
 
 **Custom Event Configuration**:
+
 ```javascript
 // Configure custom event names
 const chronometer = new Chronometer(element, {
@@ -301,11 +322,13 @@ const chronometer = new Chronometer(element, {
 ```
 
 **Integration Points**:
+
 - Used by `WebGeocodingManager` for timing display
 - Exported in `src/guia.js` main entry point
 - Tested in `__tests__/unit/Chronometer.test.js`
 
 **Design Decisions**:
+
 - **Observer Pattern**: Decouples timing from position management
 - **Immutable Time**: Uses timestamps, not mutable counters
 - **DOM Optional**: Works with or without element (headless mode)

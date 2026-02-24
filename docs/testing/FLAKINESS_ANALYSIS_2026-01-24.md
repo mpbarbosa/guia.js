@@ -25,6 +25,7 @@
 ## Evidence of Low Flakiness
 
 ### 1. Consistent Pass Rate ✅
+
 - **1,904 passing** across multiple runs
 - **Same 146 tests** consistently skipped
 - **No intermittent failures** observed
@@ -33,6 +34,7 @@
 ### 2. Proper Wait Strategies ✅
 
 **E2E Tests** (11 files, 5,346 lines):
+
 ```javascript
 // Good: Explicit wait for conditions
 await page.waitForFunction(
@@ -49,6 +51,7 @@ await new Promise(resolve => setTimeout(resolve, 1000));
 ### 3. Deterministic Timing ✅
 
 **Fake Timers** widely used:
+
 ```javascript
 beforeEach(() => {
     jest.useFakeTimers();
@@ -61,11 +64,13 @@ afterEach(() => {
 ```
 
 **Benefits**:
+
 - No real-time dependencies
 - Instant timer resolution
 - Predictable test execution
 
 ### 4. No Random Data Generation ❌
+
 - No `Math.random()` in test files
 - All test data is hardcoded or from fixtures
 - Deterministic test inputs
@@ -82,6 +87,7 @@ Despite low overall risk, some tests have higher flakiness potential:
 **Count**: ~11 E2E test files
 
 **Example**:
+
 ```javascript
 // __tests__/e2e/complete-address-validation.e2e.test.js
 test('should display all address elements', async () => {
@@ -93,11 +99,13 @@ test('should display all address elements', async () => {
 ```
 
 **Current Mitigation**:
+
 - ✅ Uses `page.waitForFunction()`
 - ✅ Conditional waits for elements
 - ✅ 10s timeout configured
 
 **Recommended Improvement**:
+
 ```javascript
 // Add retry logic for page loads
 const loadPageWithRetry = async (url, retries = 3) => {
@@ -119,6 +127,7 @@ const loadPageWithRetry = async (url, retries = 3) => {
 **Count**: ~50 tests
 
 **Example**:
+
 ```javascript
 test('should coordinate multiple updates', async () => {
     // Risk: Race conditions between async operations
@@ -129,11 +138,13 @@ test('should coordinate multiple updates', async () => {
 ```
 
 **Current Mitigation**:
+
 - ✅ Uses `Promise.all()` for coordination
 - ✅ Proper async/await usage
 - ✅ No unhandled promise rejections
 
 **Recommended Improvement**:
+
 ```javascript
 // Add timeout to Promise.all
 const withTimeout = (promise, ms) => {
@@ -157,6 +168,7 @@ await withTimeout(
 **Count**: ~200 tests
 
 **Current Implementation**:
+
 ```javascript
 // Excellent: Fake timers eliminate flakiness
 jest.useFakeTimers();
@@ -183,6 +195,7 @@ jest.runAllTimers(); // Instant, no waiting
 #### 1. Test Retry Logic (HIGH PRIORITY)
 
 **Configuration Addition** (`jest.config.js`):
+
 ```javascript
 {
   // Retry failed tests automatically
@@ -205,6 +218,7 @@ jest.runAllTimers(); // Instant, no waiting
 ```
 
 **Benefits**:
+
 - Automatic retry of flaky E2E tests
 - No manual intervention required
 - Separates genuine failures from transient issues
@@ -217,6 +231,7 @@ jest.runAllTimers(); // Instant, no waiting
 #### 2. Enhanced Wait Utilities (MEDIUM PRIORITY)
 
 **Create**: `__tests__/utils/wait-helpers.js`
+
 ```javascript
 export const waitForCondition = async (condition, timeout = 10000) => {
     const startTime = Date.now();
@@ -251,6 +266,7 @@ export const retryAsync = async (fn, retries = 3, delay = 1000) => {
 ```
 
 **Usage**:
+
 ```javascript
 import { waitForElement, retryAsync } from '../utils/wait-helpers';
 
@@ -270,6 +286,7 @@ test('should handle flaky operations', async () => {
 **Issue**: Shared state between tests can cause flakiness
 
 **Solution**: Ensure proper cleanup
+
 ```javascript
 // Global teardown
 afterEach(async () => {
@@ -300,6 +317,7 @@ afterEach(async () => {
 #### 4. Flakiness Detection CI/CD (MEDIUM PRIORITY)
 
 **GitHub Actions Workflow**:
+
 ```yaml
 name: Flakiness Detection
 
@@ -329,6 +347,7 @@ jobs:
 ```
 
 **Benefits**:
+
 - Detects intermittent failures
 - Runs during off-hours
 - No impact on development workflow
@@ -357,18 +376,21 @@ jobs:
 ### Tests with Highest Flakiness Potential
 
 **1. NeighborhoodChangeWhileDriving.e2e.test.js**
+
 - **Risk**: HIGH (multiple async operations + page interactions)
 - **Current**: Uses `waitForFunction()` and timeouts
 - **Status**: ✅ No failures observed
 - **Recommendation**: Add test retries
 
 **2. complete-address-validation.e2e.test.js**
+
 - **Risk**: MEDIUM (page load + DOM inspection)
 - **Current**: 1s fixed delay + `waitForFunction()`
 - **Status**: ✅ Passing consistently
 - **Recommendation**: Replace fixed delays with conditional waits
 
 **3. municipio-bairro-display.e2e.test.js**
+
 - **Risk**: MEDIUM (multiple state changes)
 - **Current**: Multiple `waitForFunction()` calls
 - **Status**: ✅ Good wait strategies
@@ -379,19 +401,22 @@ jobs:
 ## Implementation Priority
 
 ### Phase 1: Quick Wins (1-2 hours)
+
 1. ✅ Add `testRetries: 2` to jest.config.js (15 min)
 2. ✅ Create wait utility helpers (1 hour)
 3. ✅ Replace fixed delays with conditional waits (30 min)
 
 ### Phase 2: Monitoring (1-2 hours)
+
 4. ⚡ Set up flakiness detection CI/CD (1 hour)
-5. ⚡ Add test duration tracking (30 min)
-6. ⚡ Document retry patterns (30 min)
+2. ⚡ Add test duration tracking (30 min)
+3. ⚡ Document retry patterns (30 min)
 
 ### Phase 3: Long-term (Optional)
+
 7. 🔄 Review E2E tests quarterly
-8. 🔄 Monitor failure patterns in CI/CD
-9. 🔄 Update wait strategies as needed
+2. 🔄 Monitor failure patterns in CI/CD
+3. 🔄 Update wait strategies as needed
 
 ---
 
@@ -400,12 +425,14 @@ jobs:
 ### Metrics to Track
 
 **1. Test Pass Rate Over Time**:
+
 ```bash
 # Track daily
 npm test 2>&1 | grep "Tests:" | tee -a test-history.log
 ```
 
 **2. Flakiness Detection**:
+
 ```bash
 # Run tests 5 times and check for inconsistency
 for i in {1..5}; do npm test --silent; done | grep "Tests:" | sort -u
@@ -413,6 +440,7 @@ for i in {1..5}; do npm test --silent; done | grep "Tests:" | sort -u
 ```
 
 **3. Slowest Tests**:
+
 ```bash
 npm test -- --verbose 2>&1 | grep -E "[0-9]{3,}ms" | sort -rn | head -10
 ```
@@ -430,12 +458,14 @@ npm test -- --verbose 2>&1 | grep -E "[0-9]{3,}ms" | sort -rn | head -10
 **Flakiness Status**: 🟢 **LOW RISK**
 
 **Key Findings**:
+
 - ✅ No flaky patterns detected in current test runs
 - ✅ Good use of wait strategies and fake timers
 - ✅ Deterministic test data and execution
 - 🟡 E2E tests have medium risk (inherent to browser automation)
 
 **Recommendations**:
+
 1. **Immediate**: Add `testRetries: 2` for E2E tests (15 min)
 2. **Short-term**: Create wait utility helpers (1 hour)
 3. **Long-term**: Set up flakiness detection CI/CD (1 hour)
@@ -445,6 +475,7 @@ npm test -- --verbose 2>&1 | grep -E "[0-9]{3,}ms" | sort -rn | head -10
 **Risk Assessment**: ZERO - Current tests are stable, improvements are preventive
 
 **Next Steps**:
+
 1. Implement test retries (highest ROI)
 2. Monitor test stability over time
 3. Review E2E tests quarterly for improvements

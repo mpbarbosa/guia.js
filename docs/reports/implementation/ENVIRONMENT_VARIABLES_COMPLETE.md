@@ -51,6 +51,7 @@ echo ""
 ## Usage Examples
 
 ### 1. Use Defaults (Original Repository)
+
 ```bash
 $ ./.github/scripts/cdn-delivery.sh
 
@@ -62,6 +63,7 @@ $ ./.github/scripts/cdn-delivery.sh
 ```
 
 ### 2. Generate URLs for Fork
+
 ```bash
 $ GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./.github/scripts/cdn-delivery.sh
 
@@ -75,6 +77,7 @@ $ GITHUB_USER="yourname" GITHUB_REPO="yourrepo" ./.github/scripts/cdn-delivery.s
 ```
 
 ### 3. Custom Main File
+
 ```bash
 $ MAIN_FILE="dist/guia.min.js" ./.github/scripts/cdn-delivery.sh
 
@@ -88,6 +91,7 @@ $ MAIN_FILE="dist/guia.min.js" ./.github/scripts/cdn-delivery.sh
 ```
 
 ### 4. Custom Output File
+
 ```bash
 $ OUTPUT_FILE="production-urls.txt" ./.github/scripts/cdn-delivery.sh
 
@@ -101,6 +105,7 @@ $ OUTPUT_FILE="production-urls.txt" ./.github/scripts/cdn-delivery.sh
 ```
 
 ### 5. Multiple Overrides
+
 ```bash
 $ GITHUB_USER="yourname" \
   GITHUB_REPO="yourrepo" \
@@ -115,6 +120,7 @@ $ GITHUB_USER="yourname" \
 ```
 
 ### 6. Session-Wide Configuration
+
 ```bash
 # Set for entire shell session
 $ export GITHUB_USER="yourname"
@@ -137,6 +143,7 @@ $ ./.github/scripts/cdn-delivery.sh  # Still uses yourname/yourrepo
 ### 1. Script Header (Lines 1-39)
 
 **Enhanced with**:
+
 - Environment variables section
 - Usage examples for each variable
 - Fork customization examples
@@ -164,12 +171,14 @@ $ ./.github/scripts/cdn-delivery.sh  # Still uses yourname/yourrepo
 **New Section**: "Environment & Configuration"
 
 **Added**:
+
 - Environment variables table
 - Usage examples (6 scenarios)
 - Configuration display example
 - Permanent configuration guide
 
 **Content**:
+
 ```markdown
 #### Environment & Configuration
 
@@ -190,9 +199,11 @@ $ ./.github/scripts/cdn-delivery.sh  # Still uses yourname/yourrepo
 ## Use Cases
 
 ### Use Case 1: Fork Maintainer
+
 **Scenario**: You forked guia_js to "myrepo" under username "myuser"
 
 **Solution**:
+
 ```bash
 # Generate URLs for your fork
 GITHUB_USER="myuser" GITHUB_REPO="myrepo" ./.github/scripts/cdn-delivery.sh
@@ -202,9 +213,11 @@ GITHUB_USER="myuser" GITHUB_REPO="myrepo" ./.github/scripts/cdn-delivery.sh
 ```
 
 ### Use Case 2: Multiple Configurations
+
 **Scenario**: Need URLs for development and production with different files
 
 **Solution**:
+
 ```bash
 # Development URLs (unminified)
 MAIN_FILE="src/guia.js" OUTPUT_FILE="dev-urls.txt" ./.github/scripts/cdn-delivery.sh
@@ -218,9 +231,11 @@ MAIN_FILE="dist/guia.min.js" OUTPUT_FILE="prod-urls.txt" ./.github/scripts/cdn-d
 ```
 
 ### Use Case 3: CI/CD Integration
+
 **Scenario**: Automated URL generation in GitHub Actions
 
 **Solution**:
+
 ```yaml
 # .github/workflows/cdn-urls.yml
 - name: Generate CDN URLs
@@ -235,9 +250,11 @@ MAIN_FILE="dist/guia.min.js" OUTPUT_FILE="prod-urls.txt" ./.github/scripts/cdn-d
 ```
 
 ### Use Case 4: Multi-Repository Project
+
 **Scenario**: Generate URLs for multiple related repositories
 
 **Solution**:
+
 ```bash
 # Generate URLs for each repo
 for repo in guia_js guia_extras guia_plugins; do
@@ -255,6 +272,7 @@ done
 ## Testing
 
 ### Test 1: Default Values
+
 ```bash
 $ ./.github/scripts/cdn-delivery.sh | grep "Configuration:" -A 4
 
@@ -268,6 +286,7 @@ $ ./.github/scripts/cdn-delivery.sh | grep "Configuration:" -A 4
 ```
 
 ### Test 2: Override GITHUB_USER
+
 ```bash
 $ GITHUB_USER="testuser" ./.github/scripts/cdn-delivery.sh | grep "Configuration:" -A 4
 
@@ -281,6 +300,7 @@ $ GITHUB_USER="testuser" ./.github/scripts/cdn-delivery.sh | grep "Configuration
 ```
 
 ### Test 3: Override Multiple Variables
+
 ```bash
 $ GITHUB_USER="test" GITHUB_REPO="testrepo" OUTPUT_FILE="test.txt" \
   ./.github/scripts/cdn-delivery.sh | grep "Configuration:" -A 4
@@ -295,6 +315,7 @@ $ GITHUB_USER="test" GITHUB_REPO="testrepo" OUTPUT_FILE="test.txt" \
 ```
 
 ### Test 4: Custom Output File Created
+
 ```bash
 $ OUTPUT_FILE="custom.txt" ./.github/scripts/cdn-delivery.sh > /dev/null
 $ ls -l custom.txt
@@ -305,6 +326,7 @@ $ ls -l custom.txt
 ```
 
 ### Test 5: Invalid Main File
+
 ```bash
 $ MAIN_FILE="nonexistent.js" ./.github/scripts/cdn-delivery.sh
 
@@ -325,26 +347,31 @@ The project structure may have changed
 ## Benefits
 
 ### 1. Fork-Friendly
+
 - No need to edit script for forks
 - Easy URL generation for custom repos
 - Supports multiple repositories
 
 ### 2. Flexible Output
+
 - Multiple output files in one session
 - CI/CD friendly naming
 - No conflicts with default file
 
 ### 3. Development Workflow
+
 - Test with different file paths
 - Compare dev vs prod URLs
 - Temporary configurations
 
 ### 4. Transparent
+
 - Configuration always displayed
 - Easy to verify values
 - Clear what URLs will be generated
 
 ### 5. Backward Compatible
+
 - Default values match original behavior
 - Existing workflows unaffected
 - No breaking changes
@@ -354,6 +381,7 @@ The project structure may have changed
 ## Comparison: Before vs After
 
 ### Before (Hardcoded)
+
 ```bash
 # .github/scripts/cdn-delivery.sh (old)
 GITHUB_USER="mpbarbosa"
@@ -366,6 +394,7 @@ OUTPUT_FILE="cdn-urls.txt"
 ```
 
 ### After (Configurable)
+
 ```bash
 # .github/scripts/cdn-delivery.sh (new)
 GITHUB_USER="${GITHUB_USER:-mpbarbosa}"
@@ -388,6 +417,7 @@ OUTPUT_FILE="prod.txt" ./.github/scripts/cdn-delivery.sh
 ```
 
 **Improvements**:
+
 - ✅ No script editing required
 - ✅ Fork-friendly
 - ✅ Multiple configurations easy
@@ -399,12 +429,14 @@ OUTPUT_FILE="prod.txt" ./.github/scripts/cdn-delivery.sh
 ## Documentation Coverage
 
 ### Script Header
+
 - ✅ Environment variables listed
 - ✅ Defaults documented
 - ✅ Usage examples (3)
 - ✅ Fork example
 
 ### README.md
+
 - ✅ Environment variables table
 - ✅ Usage examples (6)
 - ✅ Configuration display example
@@ -412,6 +444,7 @@ OUTPUT_FILE="prod.txt" ./.github/scripts/cdn-delivery.sh
 - ✅ CI/CD integration example
 
 ### Configuration Display
+
 - ✅ Shows all 4 variables
 - ✅ Visual section header
 - ✅ Clear formatting
@@ -422,6 +455,7 @@ OUTPUT_FILE="prod.txt" ./.github/scripts/cdn-delivery.sh
 ## Statistics
 
 **Lines Added**: ~50 total
+
 - Script header: +20 lines (documentation)
 - Script configuration: +10 lines (implementation)
 - README.md: +60 lines (documentation)
@@ -437,6 +471,7 @@ OUTPUT_FILE="prod.txt" ./.github/scripts/cdn-delivery.sh
 ## Future Enhancements (Optional)
 
 ### Phase 1: Additional Variables
+
 ```bash
 # CDN provider selection
 CDN_PROVIDER="${CDN_PROVIDER:-jsdelivr}"  # jsdelivr, unpkg, etc.
@@ -449,6 +484,7 @@ QUIET="${QUIET:-false}"
 ```
 
 ### Phase 2: Configuration File
+
 ```bash
 # .cdn-delivery.conf
 GITHUB_USER=yourname

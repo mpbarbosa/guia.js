@@ -13,6 +13,7 @@ Modified `test_milho_verde_geolocation.py` to implement **separate browser-speci
 **Rationale**: Each test class should be focused on a single browser. The original Firefox-specific setup was restored since it's the primary browser for this test suite.
 
 **Key Configuration**:
+
 - ✅ Mock geolocation server on port 9876
 - ✅ Firefox `geo.wifi.uri` preference pointing to mock server
 - ✅ Disabled network location provider fallbacks
@@ -27,12 +28,14 @@ Modified `test_milho_verde_geolocation.py` to implement **separate browser-speci
 **Purpose**: Test coordinate display using Chrome WebDriver with CDP geolocation mocking
 
 **Key Features**:
+
 - Detects if Chrome WebDriver is available using `execute_cdp_cmd("Browser.getVersion")`
 - Skips test if Chrome is not available
 - Uses Chrome DevTools Protocol (CDP) to set geolocation **before** loading page
 - Sets mock coordinates via `Emulation.setGeolocationOverride`
 
 **Chrome-Specific Approach**:
+
 ```python
 # Detect Chrome
 self.driver.execute_cdp_cmd("Browser.getVersion", {})
@@ -46,6 +49,7 @@ self.driver.execute_cdp_cmd("Emulation.setGeolocationOverride", {
 ```
 
 **Behavior**:
+
 - ✅ Runs when Chrome WebDriver is initialized
 - ✅ Skips when Firefox WebDriver is initialized
 - ✅ Clear console output: "This test requires Chrome WebDriver - skipping"
@@ -57,12 +61,14 @@ self.driver.execute_cdp_cmd("Emulation.setGeolocationOverride", {
 **Purpose**: Test coordinate display using Firefox WebDriver with mock geolocation server
 
 **Key Features**:
+
 - Detects if Firefox WebDriver is available by checking capabilities
 - Skips test if Firefox is not available
 - Uses Firefox `geo.wifi.uri` preference (configured in `setUpClass()`)
 - Full geolocation flow testing with debug monitoring
 
 **Firefox-Specific Approach**:
+
 ```python
 # Detect Firefox
 capabilities = self.driver.capabilities
@@ -74,6 +80,7 @@ if 'moz:geckodriverVersion' not in capabilities:
 ```
 
 **Behavior**:
+
 - ✅ Runs when Firefox WebDriver is initialized
 - ✅ Skips when Chrome WebDriver is initialized (if implemented)
 - ✅ Comprehensive geolocation monitoring and debugging
@@ -101,6 +108,7 @@ $ pytest test_milho_verde_geolocation.py::TestMilhoVerdeGeolocation::test_03_fir
 ### Browser Detection Logic
 
 **Chrome Detection**:
+
 ```python
 try:
     self.driver.execute_cdp_cmd("Browser.getVersion", {})
@@ -110,6 +118,7 @@ except Exception:
 ```
 
 **Firefox Detection**:
+
 ```python
 capabilities = self.driver.capabilities
 if 'moz:geckodriverVersion' not in capabilities:
@@ -119,26 +128,31 @@ if 'moz:geckodriverVersion' not in capabilities:
 ## Benefits of This Approach
 
 ### 1. **Cleaner Separation of Concerns**
+
 - Each test method is browser-specific
 - No conditional logic within test execution
 - Easier to understand and maintain
 
 ### 2. **Explicit Browser Requirements**
+
 - Test names clearly indicate browser: `test_03_chrome_...` vs `test_03_firefox_...`
 - Skip messages explicitly state browser requirement
 - No ambiguity about which browser is needed
 
 ### 3. **Independent Browser Configurations**
+
 - Chrome uses CDP for geolocation override
 - Firefox uses mock geolocation server via preferences
 - No need to compromise on optimal configuration for each browser
 
 ### 4. **Better Test Discovery**
+
 - `pytest -k chrome` runs only Chrome tests
 - `pytest -k firefox` runs only Firefox tests
 - `pytest -k test_03` runs both coordinate display tests
 
 ### 5. **Flexibility for CI/CD**
+
 - Can install only required browser in CI environment
 - Tests automatically skip if browser unavailable
 - No test failures due to missing browsers
@@ -146,26 +160,31 @@ if 'moz:geckodriverVersion' not in capabilities:
 ## Usage Examples
 
 ### Run All Tests (Both Browsers)
+
 ```bash
 cd tests/integration
 python3 -m pytest test_milho_verde_geolocation.py::TestMilhoVerdeGeolocation -v
 ```
 
 **Output**:
+
 - Chrome test: SKIPPED (not available)
 - Firefox test: PASSED
 
 ### Run Only Chrome Test
+
 ```bash
 python3 -m pytest test_milho_verde_geolocation.py::TestMilhoVerdeGeolocation::test_03_chrome_coordinates_display_correctly -v
 ```
 
 ### Run Only Firefox Test
+
 ```bash
 python3 -m pytest test_milho_verde_geolocation.py::TestMilhoVerdeGeolocation::test_03_firefox_coordinates_display_correctly -v
 ```
 
 ### Run Tests with Keyword Filter
+
 ```bash
 # Run all coordinate display tests
 pytest -k "coordinates_display_correctly"
@@ -191,6 +210,7 @@ pytest -k "firefox"
 ## Future Enhancements
 
 1. **Create Separate Test Classes**:
+
    ```python
    class TestMilhoVerdeGeolocationChrome(unittest.TestCase):
        # Chrome-specific setup and tests
@@ -204,6 +224,7 @@ pytest -k "firefox"
    - `test_03_safari_coordinates_display_correctly()`
 
 3. **Parameterized Tests** (if pytest):
+
    ```python
    @pytest.mark.parametrize("browser", ["chrome", "firefox", "edge"])
    def test_coordinates_display(browser):
@@ -211,6 +232,7 @@ pytest -k "firefox"
    ```
 
 4. **Environment Variable Control**:
+
    ```bash
    BROWSER=chrome pytest test_milho_verde_geolocation.py
    ```
@@ -225,6 +247,7 @@ python3 test_driver_summary.py
 ```
 
 **Output**:
+
 ```
 Testing Chrome WebDriver...
 ✗ Chrome WebDriver unavailable: [error details]
@@ -249,11 +272,13 @@ Fallback: Firefox WebDriver will be used
 ## Migration Notes
 
 **From Original Approach** (single test with fallback):
+
 - ❌ Complex conditional logic in single test
 - ❌ Compromised configurations to support both browsers
 - ❌ Harder to debug browser-specific issues
 
 **To Current Approach** (separate browser-specific tests):
+
 - ✅ Simple, focused test methods
 - ✅ Optimal configuration for each browser
 - ✅ Easy to debug and maintain

@@ -9,6 +9,7 @@
 **Purpose**: Updates municipio and bairro highlight cards on address changes
 
 #### ✅ Strengths
+
 - Good JSDoc documentation
 - Immutability with Object.freeze()
 - Constructor validation (throws TypeError for missing document)
@@ -18,6 +19,7 @@
 #### 🔴 Critical Issues
 
 **Issue #1: Console.log Usage (6 instances)**
+
 ```javascript
 Line 44: console.log('(HTMLHighlightCardsDisplayer) update called...')
 Line 52: console.warn('(HTMLHighlightCardsDisplayer) No enderecoPadronizado...')
@@ -31,6 +33,7 @@ Line 71: console.warn('(HTMLHighlightCardsDisplayer) bairroElement not found')
 **Fix**: Replace with `import { log, warn } from '../utils/logger.js'`
 
 **Issue #2: Missing Tests (0% coverage)**
+
 - No test file exists for this component
 - Critical functionality untested
 - Observer pattern integration untested
@@ -46,6 +49,7 @@ Line 71: console.warn('(HTMLHighlightCardsDisplayer) bairroElement not found')
 **Changes**: 28 insertions (lines 236-244)
 
 #### ✅ What Was Added
+
 ```javascript
 // Subscribe highlight cards displayer to address updates
 if (this._displayers.highlightCards) {
@@ -61,6 +65,7 @@ if (this._displayers.highlightCards) {
 #### 🟡 Issues Found
 
 **Issue #1: Mixed Console Usage**
+
 - Lines 238, 241: `console.log()` used
 - Line 240: `log()` from logger used
 - Line 243: `console.warn()` used
@@ -69,6 +74,7 @@ if (this._displayers.highlightCards) {
 **Fix**: Use logger consistently
 
 **Issue #2: Missing Integration Tests**
+
 - No test validates highlightCards wiring
 - Observer subscription not tested
 
@@ -79,9 +85,11 @@ if (this._displayers.highlightCards) {
 ### Priority 🔴 CRITICAL
 
 #### Action 1: Add Comprehensive Tests for HTMLHighlightCardsDisplayer
+
 **File**: `__tests__/html/HTMLHighlightCardsDisplayer.test.js` (NEW)
 
 **Test Cases Required**:
+
 1. Constructor validation
    - Should throw TypeError when document is missing
    - Should find and store DOM elements
@@ -104,11 +112,14 @@ if (this._displayers.highlightCards) {
 ---
 
 #### Action 2: Fix Console Usage in Both Files
-**Files**: 
+
+**Files**:
+
 - `src/html/HTMLHighlightCardsDisplayer.js` (6 instances)
 - `src/coordination/ServiceCoordinator.js` (3 instances)
 
 **Changes Required**:
+
 ```javascript
 // BEFORE (HTMLHighlightCardsDisplayer.js)
 console.log('(HTMLHighlightCardsDisplayer) update called...');
@@ -140,9 +151,11 @@ warn('ServiceCoordinator: highlightCards displayer is null');
 ### Priority 🟡 MEDIUM
 
 #### Action 3: Add Integration Tests for ServiceCoordinator Changes
+
 **File**: `__tests__/coordination/ServiceCoordinator.test.js` (EXISTING)
 
 **New Test Cases**:
+
 1. Should wire highlightCards displayer to ReverseGeocoder
 2. Should subscribe highlightCards to address updates
 3. Should handle missing highlightCards displayer gracefully
@@ -154,7 +167,9 @@ warn('ServiceCoordinator: highlightCards displayer is null');
 ---
 
 #### Action 4: Manual UI/UX Validation in Browser
+
 **Steps**:
+
 1. Start web server: `python3 -m http.server 9000`
 2. Open `http://localhost:9000/src/index.html`
 3. Click "Obter Localização" button
@@ -176,7 +191,7 @@ warn('ServiceCoordinator: highlightCards displayer is null');
 
 ## 🧪 Test Implementation
 
-### Test File: __tests__/html/HTMLHighlightCardsDisplayer.test.js
+### Test File: **tests**/html/HTMLHighlightCardsDisplayer.test.js
 
 ```javascript
 'use strict';
@@ -362,6 +377,7 @@ describe('HTMLHighlightCardsDisplayer', () => {
 ```
 
 **Expected Output**:
+
 - 19 tests passing
 - 100% coverage of HTMLHighlightCardsDisplayer.js
 - All edge cases validated
@@ -371,6 +387,7 @@ describe('HTMLHighlightCardsDisplayer', () => {
 ## 🌐 Manual UI/UX Validation Checklist
 
 ### Setup
+
 ```bash
 python3 -m http.server 9000
 # Open http://localhost:9000/src/index.html
@@ -379,6 +396,7 @@ python3 -m http.server 9000
 ### Test Scenarios
 
 #### Scenario 1: Happy Path
+
 - [ ] Click "Obter Localização"
 - [ ] Grant geolocation permission
 - [ ] Verify municipio card shows correct city name
@@ -386,28 +404,33 @@ python3 -m http.server 9000
 - [ ] Check browser console for errors (should be none)
 
 #### Scenario 2: Missing Data
+
 - [ ] Mock location with no bairro in geocoding response
 - [ ] Verify bairro card shows '—' fallback
 - [ ] Verify municipio card still shows correct value
 
 #### Scenario 3: Element Missing
+
 - [ ] Temporarily remove `<span id="municipio-value">` from HTML
 - [ ] Click "Obter Localização"
 - [ ] Verify no JavaScript errors (graceful degradation)
 - [ ] Check console for warning message
 
 #### Scenario 4: Rapid Updates
+
 - [ ] Click "Obter Localização" multiple times quickly
 - [ ] Verify cards update correctly on each location change
 - [ ] Verify no race conditions or flickering
 
 #### Scenario 5: Observer Pattern
+
 - [ ] Open browser DevTools console
 - [ ] Enable verbose logging
 - [ ] Verify "Subscribing HTMLHighlightCardsDisplayer" message
 - [ ] Verify update messages appear when location changes
 
 ### Expected Console Output
+
 ```
 ServiceCoordinator: Highlight cards displayer wired
 HTMLHighlightCardsDisplayer: update called with: {...}
@@ -420,6 +443,7 @@ HTMLHighlightCardsDisplayer: Updated bairro-value to: Pinheiros
 ## 📊 Impact Assessment
 
 ### Test Coverage Impact
+
 ```
 BEFORE:
 - HTMLHighlightCardsDisplayer: 0% (new file, no tests)
@@ -433,6 +457,7 @@ AFTER (with fixes):
 ```
 
 ### Code Quality Impact
+
 ```
 Console Usage:
 - BEFORE: +9 new console calls (6 in new file, 3 in ServiceCoordinator)
@@ -461,12 +486,14 @@ Code Standards Compliance:
 ## ✅ Acceptance Criteria
 
 ### Code Quality
+
 - [x] HTMLHighlightCardsDisplayer follows project conventions
 - [ ] All console usage migrated to logger
 - [ ] 100% test coverage for new component
 - [ ] Integration tests for ServiceCoordinator changes
 
 ### Functionality
+
 - [ ] Municipio card updates correctly
 - [ ] Bairro card updates correctly
 - [ ] Fallback values work ('—')
@@ -474,6 +501,7 @@ Code Standards Compliance:
 - [ ] Observer pattern works correctly
 
 ### Testing
+
 - [ ] 19+ new tests passing
 - [ ] Zero test failures
 - [ ] Coverage maintained or improved
@@ -484,6 +512,7 @@ Code Standards Compliance:
 ## 🚀 Recommended Action Plan
 
 ### Immediate (Today)
+
 1. **Create comprehensive test suite** (1-2 hours)
    - Implement `__tests__/html/HTMLHighlightCardsDisplayer.test.js`
    - Run tests: `npm test -- __tests__/html/HTMLHighlightCardsDisplayer.test.js`
@@ -495,18 +524,21 @@ Code Standards Compliance:
    - Run syntax check: `npm run validate`
 
 ### Short-term (This Week)
+
 3. **Add integration tests** (30 minutes)
    - Update ServiceCoordinator.test.js
    - Test highlightCards wiring
    - Run full test suite: `npm test`
 
-4. **Manual validation** (15-20 minutes)
+2. **Manual validation** (15-20 minutes)
    - Follow UI/UX checklist
    - Document any issues found
    - Create screenshots for reference
 
 ### Quality Gate
+
 **DO NOT MERGE** until:
+
 - ✅ All tests passing (1,820+ tests)
 - ✅ Console usage fixed (0 new console calls)
 - ✅ Coverage ≥ 85%
@@ -517,6 +549,7 @@ Code Standards Compliance:
 ## 📝 Conclusion
 
 The new `HTMLHighlightCardsDisplayer` component is **well-designed** but has **critical gaps**:
+
 - ❌ **Zero test coverage** (most critical)
 - ❌ **Console usage** instead of logger
 - ❌ **No integration tests** for ServiceCoordinator changes

@@ -1,6 +1,7 @@
 # API Documentation Generation
 
 ---
+
 Last Updated: 2026-02-09
 Status: Active
 Category: Guide
@@ -19,6 +20,7 @@ npm run docs:generate
 ```
 
 This will:
+
 - Parse JSDoc comments in `src/` directory
 - Generate HTML documentation to `docs/api-generated/`
 - Include source code links and type information
@@ -76,6 +78,7 @@ The generated API docs complement the existing documentation:
 ### When to Regenerate
 
 Run `npm run docs:generate` after:
+
 - Adding new classes or functions
 - Updating JSDoc comments
 - Making API changes
@@ -98,6 +101,7 @@ Consider adding to CI/CD:
 To publish API docs to GitHub Pages:
 
 1. **Create gh-pages branch**:
+
    ```bash
    git checkout --orphan gh-pages
    git rm -rf .
@@ -114,6 +118,7 @@ To publish API docs to GitHub Pages:
    - URL: `https://mpbarbosa.github.io/guia_turistico/api/`
 
 3. **Automated Updates** (GitHub Actions):
+
    ```yaml
    - name: Deploy API Docs
      uses: peaceiris/actions-gh-pages@v3
@@ -133,6 +138,7 @@ npm install --save-dev docdash
 ```
 
 Update `jsdoc.json`:
+
 ```json
 {
   "opts": {
@@ -142,6 +148,7 @@ Update `jsdoc.json`:
 ```
 
 Popular templates:
+
 - `docdash` - Clean, modern theme
 - `minami` - Minimalist design
 - `better-docs` - Enhanced features
@@ -149,6 +156,7 @@ Popular templates:
 ### Custom Plugins
 
 Add plugins to `jsdoc.json`:
+
 ```json
 {
   "plugins": [
@@ -163,6 +171,7 @@ Add plugins to `jsdoc.json`:
 ### No Output Generated
 
 Check:
+
 - JSDoc comments exist in source files
 - `src/` directory has `.js` files
 - No syntax errors in JSDoc comments
@@ -170,6 +179,7 @@ Check:
 ### Missing Classes
 
 Ensure classes are properly exported:
+
 ```javascript
 export class MyClass { }  // ✅ Will be documented
 class MyClass { }          // ❌ Won't appear
@@ -178,6 +188,7 @@ class MyClass { }          // ❌ Won't appear
 ### Broken Links
 
 Run validation:
+
 ```bash
 npm run docs:generate 2>&1 | grep -i "error"
 ```

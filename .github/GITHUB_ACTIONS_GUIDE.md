@@ -53,6 +53,7 @@ When you modify documentation:
 **What it does**: Analyzes which files changed in your commit/PR
 
 **Output**:
+
 - JavaScript files changed: true/false
 - Test files changed: true/false
 - Documentation files changed: true/false
@@ -65,6 +66,7 @@ When you modify documentation:
 **Triggers**: When JavaScript or test files change
 
 **Steps**:
+
 1. Sets up Node.js v18
 2. Installs dependencies with `npm ci`
 3. Runs all tests with `npm test`
@@ -80,6 +82,7 @@ When you modify documentation:
 **Triggers**: When test files change
 
 **Steps**:
+
 1. Counts total test suites
 2. Updates TESTING.md with current date/time
 3. Commits changes as `github-actions[bot]`
@@ -93,12 +96,14 @@ When you modify documentation:
 **Triggers**: When markdown files change
 
 **Steps**:
+
 1. Lists all changed documentation files
 2. Checks for Windows line endings
 3. Validates internal links exist
 4. Reports potential issues
 
 **What it catches**:
+
 - Broken relative links
 - Missing referenced files
 - Format inconsistencies
@@ -108,6 +113,7 @@ When you modify documentation:
 **Triggers**: When source or test files change
 
 **Steps**:
+
 1. Runs full test suite with coverage
 2. Extracts coverage percentages
 3. Prepares coverage report
@@ -119,6 +125,7 @@ When you modify documentation:
 **Always runs**: Even if other jobs fail
 
 **Purpose**: Generates a clean summary showing:
+
 - What changed
 - Which jobs ran
 - Overall status
@@ -132,6 +139,7 @@ When you modify documentation:
 **Purpose**: Smart test detection based on changed files
 
 **How it works**:
+
 ```
 src/guia.js → Runs: CurrentPosition.test.js
                     utils.test.js
@@ -149,6 +157,7 @@ package.json → Runs: ALL TESTS
 **Purpose**: Keep TESTING.md current
 
 **What it updates**:
+
 - Adds timestamp: "_Last updated automatically by GitHub Actions: 2025-01-08 12:34:56 UTC_"
 - Counts test suites
 - Only commits if changes exist
@@ -160,11 +169,13 @@ package.json → Runs: ALL TESTS
 **Purpose**: Keep docs/INDEX.md current with file counts
 
 **What it updates**:
+
 - Timestamp
 - Total markdown files
 - Files by location (root, docs/, .github/)
 
 **Example output**:
+
 ```
 _Index automatically updated by GitHub Actions: 2025-01-08 12:34:56 UTC_
 _Total documentation files: 3 root, 10 in docs/, 8 in .github/_
@@ -209,11 +220,13 @@ Each workflow run creates a summary:
 ### Tests Failing in CI but Not Locally
 
 **Possible causes**:
+
 1. Different Node.js version
 2. Missing dependencies in package.json
 3. Environment-specific issues
 
 **Solutions**:
+
 ```bash
 # Use exact Node version from CI
 nvm use 18
@@ -232,12 +245,14 @@ npm run test:coverage
 ### Auto-commits Not Appearing
 
 **Check**:
+
 1. Workflow has `contents: write` permission ✅ (it does)
 2. Branch is not protected against bot commits
 3. Workflow completed successfully
 4. Check Actions tab for errors
 
 **Expected behavior**:
+
 - Commit author: `github-actions[bot]`
 - Commit message: Includes `[skip ci]`
 - Shows in git history after workflow completes
@@ -252,6 +267,7 @@ npm run test:coverage
 4. **Wrong branch**: Workflow only runs on `main` and `develop`
 
 **Manual check**:
+
 ```bash
 # Check if files exist
 ls -la TESTING.md docs/INDEX.md
@@ -266,11 +282,13 @@ grep "automatically updated" docs/INDEX.md
 **What they mean**: Documentation references a file that doesn't exist
 
 **Example warning**:
+
 ```
 ⚠️ Potential broken link: ../missing-file.md
 ```
 
 **How to fix**:
+
 1. Check if file exists at that path
 2. Update the link in your documentation
 3. Or create the missing file
@@ -309,11 +327,13 @@ git commit -m "docs: minor typo fix [skip ci]"
 ```
 
 **When to use**:
+
 - Trivial documentation typos
 - README formatting
 - Non-functional changes
 
 **When NOT to use**:
+
 - Code changes
 - Test changes
 - Anything that affects functionality
@@ -323,12 +343,14 @@ git commit -m "docs: minor typo fix [skip ci]"
 ### Workflow is Slow
 
 **Current optimizations**:
+
 - Uses `npm ci` instead of `npm install` (faster, more reliable)
 - Caches npm dependencies with `cache: 'npm'`
 - Runs jobs in parallel when possible
 - Uses `continue-on-error` for non-critical steps
 
 **If still slow**:
+
 - Consider reducing test suite size
 - Split tests into unit/integration
 - Use test filtering for specific changes
@@ -336,6 +358,7 @@ git commit -m "docs: minor typo fix [skip ci]"
 ### Too Many Auto-commits
 
 **Solutions**:
+
 1. Combine related changes in one commit
 2. Use `[skip ci]` for doc-only changes
 3. Update docs before pushing (so workflow has nothing to update)
@@ -387,11 +410,13 @@ esac
 **Relationship**: Complementary workflows
 
 **copilot-coding-agent.yml** focuses on:
+
 - Basic validation
 - Syntax checking
 - Security scanning
 
 **modified-files.yml** focuses on:
+
 - Test execution
 - Documentation updates
 - Coverage reporting
@@ -426,16 +451,19 @@ A: Yes, edit the actions files. Current format: `2025-01-08 12:34:56 UTC`
 ## Getting Help
 
 **Workflow issues**:
+
 1. Check Actions tab for detailed logs
 2. Look for error messages in job outputs
 3. Review this guide for common solutions
 
 **Test issues**:
+
 1. Run tests locally first
 2. Check TESTING.md for test documentation
 3. Review test output for specific failures
 
 **Documentation issues**:
+
 1. Validate markdown syntax
 2. Check file paths and links
 3. Review docs/INDEX.md for structure

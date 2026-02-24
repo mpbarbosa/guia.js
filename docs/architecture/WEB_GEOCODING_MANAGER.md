@@ -7,6 +7,7 @@ The `WebGeocodingManager` class is the main coordination layer for the geocoding
 ## Motivation
 
 Managing geolocation and geocoding in a web application involves coordinating multiple concerns:
+
 - Obtaining GPS coordinates from the browser
 - Converting coordinates to human-readable addresses
 - Detecting and notifying about address changes
@@ -15,6 +16,7 @@ Managing geolocation and geocoding in a web application involves coordinating mu
 - Handling DOM element initialization and events
 
 The `WebGeocodingManager` class addresses these challenges by:
+
 - **Centralizing coordination**: Single entry point for all geocoding operations
 - **Managing dependencies**: Services and displayers are injected or created with defaults
 - **Providing observer pattern**: Clean subscription mechanism for state changes
@@ -60,15 +62,19 @@ WebGeocodingManager
 ### Design Patterns Applied
 
 #### 1. Coordinator/Mediator Pattern
+
 The class acts as a central coordinator that manages interactions between services and displayers, preventing direct coupling between components.
 
 #### 2. Observer Pattern
+
 Implements a subject/observer mechanism allowing external components to subscribe to position and address changes without tight coupling.
 
 #### 3. Dependency Injection
+
 Services, factories, and configuration can be injected via constructor, enabling testability and flexibility.
 
 #### 4. Factory Pattern
+
 Uses DisplayerFactory to create UI displayer instances, allowing alternative implementations for testing or different UI frameworks.
 
 ## Usage
@@ -296,10 +302,12 @@ new WebGeocodingManager(document, params)
   - `reverseGeocoder` (ReverseGeocoder, optional): Custom reverse geocoder instance
 
 **Throws:**
+
 - `TypeError` - If document is null or undefined
 - `TypeError` - If params.locationResult is not provided
 
 **Initialization Steps:**
+
 1. Store document reference and configuration
 2. Initialize observer subject for external subscribers
 3. Initialize DOM elements and event handlers
@@ -349,6 +357,7 @@ new WebGeocodingManager(document, params)
 Starts continuous location tracking and initializes all monitoring systems.
 
 This is the main entry point for starting the geocoding workflow. It:
+
 1. Initializes speech synthesis UI
 2. Gets initial location update
 3. Starts continuous position watching
@@ -357,6 +366,7 @@ This is the main entry point for starting the geocoding workflow. It:
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 const manager = new WebGeocodingManager(document, {
   locationResult: 'location-result'
@@ -375,12 +385,14 @@ Subscribes an observer object to receive notifications about position and addres
 Observers must implement an `update(position, currentAddress, enderecoPadronizado)` method to receive notifications. Null observers are rejected with a warning.
 
 **Parameters:**
+
 - `observer` (Object): Observer object with update() method
   - `update` (Function): Method called when notifications occur
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 const myObserver = {
   update: (pos, addr, endPad) => {
@@ -399,11 +411,13 @@ manager.subscribe(myObserver);
 Unsubscribes an observer object from receiving notifications.
 
 **Parameters:**
+
 - `observer` (Object): Observer object to unsubscribe
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 manager.unsubscribe(myObserver);
 ```
@@ -419,12 +433,14 @@ Subscribes a function to receive notifications about position and address change
 Function observers receive `(position, currentAddress, enderecoPadronizado, changeDetails)` as parameters. This provides an alternative to the observer object pattern with additional change detail information.
 
 **Parameters:**
+
 - `observerFunction` (Function): Function to call on notifications
   - Receives: position, currentAddress, enderecoPadronizado, changeDetails
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 manager.subscribeFunction((pos, addr, endPad, details) => {
   console.log('Address changed:', endPad.enderecoCompleto());
@@ -443,11 +459,13 @@ manager.subscribeFunction((pos, addr, endPad, details) => {
 Unsubscribes a function observer from receiving notifications.
 
 **Parameters:**
+
 - `observerFunction` (Function): Function observer to unsubscribe
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 manager.unsubscribeFunction(myFunction);
 ```
@@ -465,6 +483,7 @@ Sends current position, raw address, and standardized address to all observers t
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 // Force notification of all observers
 manager.notifyObservers();
@@ -483,6 +502,7 @@ Calls each subscribed function observer with current position, address, and stan
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 // Force notification of all function observers
 manager.notifyFunctionObservers();
@@ -501,6 +521,7 @@ Returns the standardized address object from the reverse geocoder, which contain
 **Returns:** `BrazilianStandardAddress|null` - Standardized address or null if not yet geocoded
 
 **Example:**
+
 ```javascript
 const address = manager.getBrazilianStandardAddress();
 if (address) {
@@ -520,6 +541,7 @@ Gets a single location update from the geolocation service.
 Requests current position from the GeolocationService, performs reverse geocoding on the coordinates, and notifies observers. This is typically used for initial position acquisition or manual position refresh.
 
 **Workflow:**
+
 1. Request single location update from GeolocationService
 2. If successful, store position and trigger reverse geocoding
 3. Process geocoding results and standardize address
@@ -528,10 +550,12 @@ Requests current position from the GeolocationService, performs reverse geocodin
 **Returns:** `void`
 
 **Fires:**
+
 - `ReverseGeocoder#notifyObservers` - When geocoding completes
 - `WebGeocodingManager#notifyFunctionObservers` - After geocoding completes
 
 **Example:**
+
 ```javascript
 // Get one-time location update
 manager.getSingleLocationUpdate();
@@ -552,6 +576,7 @@ This method should be called after the relevant DOM elements are available. Elem
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 // Called automatically by startTracking()
 // Can be called manually if needed
@@ -571,6 +596,7 @@ Provides a human-readable representation showing the class name and current coor
 **Returns:** `string` - String representation with coordinates or "N/A"
 
 **Example:**
+
 ```javascript
 console.log(manager.toString());
 // Output: "WebGeocodingManager: -23.5505, -46.6333"
@@ -651,6 +677,7 @@ npm test -- __tests__/WebGeocodingManager.test.js
 ### Test Coverage
 
 Test suites cover:
+
 - ✅ Constructor and initialization (5 tests)
 - ✅ Observer pattern implementation (6 tests)
 - ✅ Public API methods (3 tests)
@@ -704,6 +731,7 @@ it('should notify observers on position change', () => {
 ### Coordinator Pattern
 
 The class serves as a central coordinator (Mediator pattern) that:
+
 - **Prevents tight coupling**: Components don't know about each other directly
 - **Centralizes wiring**: Observer relationships are established in one place
 - **Simplifies testing**: Mock one coordinator instead of multiple components
@@ -712,6 +740,7 @@ The class serves as a central coordinator (Mediator pattern) that:
 ### Dependency Injection Benefits
 
 The constructor accepts optional service instances:
+
 1. **Testability**: Inject mocks to avoid real geolocation/network calls
 2. **Flexibility**: Use custom service implementations
 3. **Configuration**: Pre-configure services before injection
@@ -722,6 +751,7 @@ The constructor accepts optional service instances:
 Two subscription mechanisms are provided:
 
 **Object Observers** (Classic pattern):
+
 ```javascript
 const observer = {
   update: (pos, addr, endPad) => { /* ... */ }
@@ -730,6 +760,7 @@ manager.subscribe(observer);
 ```
 
 **Function Observers** (Simplified):
+
 ```javascript
 manager.subscribeFunction((pos, addr, endPad, details) => {
   // Additional changeDetails parameter
@@ -747,6 +778,7 @@ Function observers receive additional change details, making them more suitable 
 ### Why Not Fully Immutable?
 
 The class maintains mutable state for:
+
 1. **Position updates**: GPS positions change continuously in real-time
 2. **Observer management**: Dynamic subscription/unsubscription is necessary
 3. **DOM integration**: Browser APIs require mutable references
@@ -849,6 +881,7 @@ manager.subscribe(robustObserver);
 ## Referential Transparency Considerations
 
 The WebGeocodingManager class is **not referentially transparent** because it:
+
 - Performs I/O operations (geolocation, network requests)
 - Mutates internal state (position, observers)
 - Manages side effects (DOM updates, notifications)
@@ -875,6 +908,7 @@ if (shouldNotifyChange(prevBairro, currentBairro)) {
 ### Explicit Side Effects
 
 Side effects are:
+
 - **Clearly identified**: Methods that perform I/O are documented
 - **Centralized**: Coordination logic is separated from business logic
 - **Testable**: Dependency injection allows mocking I/O operations
@@ -902,6 +936,7 @@ expect(mockGeocoder.subscribe).toHaveBeenCalledTimes(2);
 ### Side Effect Boundaries
 
 Side effects are isolated at boundaries:
+
 - **GeolocationService**: Handles browser geolocation API
 - **ReverseGeocoder**: Handles network requests
 - **Displayers**: Handle DOM updates
@@ -914,6 +949,7 @@ This architecture makes it clear where side effects occur and enables testing co
 **Implementation Status**: ✅ Stable and Production-Ready
 
 The `WebGeocodingManager` class has evolved significantly from its initial implementation in version 0.9.0-alpha. Through version 0.9.0-alpha (current), it has maintained stability with:
+
 - ✅ 23 comprehensive unit tests with 100% backward compatibility
 - ✅ 100% JSDoc coverage (200+ lines of documentation)
 - ✅ Dependency injection pattern for testability
@@ -946,6 +982,7 @@ The `WebGeocodingManager` class has evolved significantly from its initial imple
 ```
 
 ### 0.9.0-alpha (January 11, 2026) - Current Version
+
 - **Status**: Stable, preparing for major refactoring in PR #189
 - Documentation improvements and cross-references enhanced
 - JSDoc coverage verified at 100%
@@ -953,6 +990,7 @@ The `WebGeocodingManager` class has evolved significantly from its initial imple
 - Maintained full compatibility with 0.9.0-alpha API
 
 ### 0.9.0-alpha (January 3, 2026)
+
 - **Status**: Stable
 - Planning phase for major architectural refactoring
 - Enhanced observer pattern integration
@@ -960,6 +998,7 @@ The `WebGeocodingManager` class has evolved significantly from its initial imple
 - Maintained full backward compatibility
 
 ### 0.9.0-alpha (October 2025) - Initial Implementation
+
 - **Initial release**: Main coordinator for geocoding workflow
 - Constructor with automatic service creation (GeolocationService, ReverseGeocoder)
 - Observer pattern for position and address changes
@@ -970,6 +1009,7 @@ The `WebGeocodingManager` class has evolved significantly from its initial imple
 - Speech synthesis integration
 
 ### 0.8.x-alpha (Planned: PR #189 Refactoring)
+
 - **Breaking improvements** (with backward compatibility maintained):
   - Dependency injection for services (GeolocationService, ReverseGeocoder)
   - High cohesion improvements (focused, single-purpose methods)
@@ -988,6 +1028,7 @@ Marcelo Pereira Barbosa
 ## See Also
 
 ### Related Architecture Documentation
+
 - **[CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md)** - Complete class architecture and relationships
 - **[WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md)** - Detailed refactoring analysis (PR #189)
 - **[GEO_POSITION.md](./GEO_POSITION.md)** - Geographic position data documentation
@@ -995,17 +1036,20 @@ Marcelo Pereira Barbosa
 - **[observer-pattern-sequence.md](./observer-pattern-sequence.md)** - Observer pattern execution flow diagrams
 
 ### Testing and Quality
+
 - **[TESTING.md](../TESTING.md)** - Testing documentation and coverage
 - **[TDD_GUIDE.md](../../.github/TDD_GUIDE.md)** - Test-driven development approach
 - **[UNIT_TEST_GUIDE.md](../../.github/UNIT_TEST_GUIDE.md)** - Unit testing best practices
 
 ### Development Guidelines
+
 - **[REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md)** - Functional programming guidelines
 - **[CODE_REVIEW_GUIDE.md](../../.github/CODE_REVIEW_GUIDE.md)** - Code review standards
 - **[HIGH_COHESION_GUIDE.md](../../.github/HIGH_COHESION_GUIDE.md)** - Single responsibility and cohesion
 - **[LOW_COUPLING_GUIDE.md](../../.github/LOW_COUPLING_GUIDE.md)** - Dependency management
 
 ### Related Issues and Technical Debt
+
 - **[ISSUE_189_NEXT_STEPS.md](../issue-189/ISSUE_189_NEXT_STEPS.md)** - Follow-up technical debt items
 
 ## External Documentation

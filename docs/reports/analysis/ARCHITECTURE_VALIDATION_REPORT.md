@@ -60,7 +60,8 @@ The Guia Turístico project demonstrates **strong architectural organization** w
    - **Documentation Exists:** Mentioned in CLASS_EXTRACTION_PHASE_5.md but not in main docs
    - **Recommendation:** Add to docs/INDEX.md and docs/architecture/CLASS_DIAGRAM.md
    - **Impact:** Developers may not discover timing functionality
-   - **Remediation:** 
+   - **Remediation:**
+
      ```markdown
      # In docs/INDEX.md, add under "Core Architecture":
      - **[Chronometer](./src/timing/Chronometer.js)** - Elapsed time tracking and display
@@ -76,6 +77,7 @@ The Guia Turístico project demonstrates **strong architectural organization** w
    - **Recommendation:** Document in TESTING.md under test categories
    - **Impact:** Contributors may not understand e2e test purpose vs integration tests
    - **Remediation:**
+
      ```markdown
      # In TESTING.md, add:
      ### End-to-End Tests (`__tests__/e2e/`)
@@ -86,7 +88,7 @@ The Guia Turístico project demonstrates **strong architectural organization** w
      ```
 
 3. **`tests/e2e/`** - Python-based E2E tests
-   - **Purpose:** Browser automation tests (duplicate structure with __tests__/e2e/)
+   - **Purpose:** Browser automation tests (duplicate structure with **tests**/e2e/)
    - **Size:** 1 JavaScript file + README
    - **Issue:** Overlaps with `__tests__/e2e/` - see "Dual Test Structure" issue
    - **Recommendation:** Consolidate or clearly differentiate purpose
@@ -94,14 +96,14 @@ The Guia Turístico project demonstrates **strong architectural organization** w
 
 #### **Priority: MEDIUM**
 
-4. **`tests/integration/`** - Python integration tests
+1. **`tests/integration/`** - Python integration tests
    - **Purpose:** Python-based test infrastructure
-   - **Size:** Multiple subdirectories (test_reports, __pycache__, venv)
+   - **Size:** Multiple subdirectories (test_reports, **pycache**, venv)
    - **Contains:** Python virtual environment and test reports
    - **Recommendation:** Document in TESTING.md if actively used, or archive if legacy
    - **Impact:** Unknown whether this is active or deprecated infrastructure
 
-5. **`docs/reports/`** - Analysis and implementation reports
+2. **`docs/reports/`** - Analysis and implementation reports
    - **Purpose:** Project work logs and analysis documents
    - **Structure:**
      - `analysis/` - Analysis documents (7 files)
@@ -110,6 +112,7 @@ The Guia Turístico project demonstrates **strong architectural organization** w
    - **Recommendation:** Add to docs/INDEX.md under "Project Reports" section
    - **Impact:** Hidden project history and decision rationale
    - **Remediation:**
+
      ```markdown
      # In docs/INDEX.md, add new section:
      ### Project Reports (`docs/reports/`)
@@ -118,14 +121,14 @@ The Guia Turístico project demonstrates **strong architectural organization** w
      - Historical documentation of project decisions and changes
      ```
 
-6. **`docs/misc/`** - Miscellaneous documentation
+3. **`docs/misc/`** - Miscellaneous documentation
    - **Purpose:** Uncategorized documentation files
    - **Content:** 7 files (CDN delivery, DevOps, prerequisites, etc.)
    - **Issue:** "Misc" is an anti-pattern - content should be categorized
    - **Recommendation:** Reorganize into appropriate categories or document purpose
    - **Impact:** Discoverable content becomes hidden
 
-7. **`docs/workflow-automation/`** - Workflow automation guides
+4. **`docs/workflow-automation/`** - Workflow automation guides
    - **Purpose:** CI/CD and automation documentation
    - **Content:** 3 files (automation summaries, terminology)
    - **Recommendation:** Add to docs/INDEX.md under "Configuration & Tools"
@@ -133,28 +136,28 @@ The Guia Turístico project demonstrates **strong architectural organization** w
 
 #### **Priority: LOW** (Tool-Generated, Should Be Ignored)
 
-8. **`.gradle/`** - Gradle configuration cache (8KB)
+1. **`.gradle/`** - Gradle configuration cache (8KB)
    - **Issue:** IDE/build tool artifact - should not be tracked
    - **Recommendation:** Add to .gitignore: `.gradle/`
    - **Impact:** Clutters repository with tool-specific files
 
-9. **`.idea/`** - IntelliJ IDEA project files (56KB)
+2. **`.idea/`** - IntelliJ IDEA project files (56KB)
    - **Issue:** IDE-specific configuration - should not be tracked
    - **Recommendation:** Add to .gitignore: `.idea/` (already listed but not working)
    - **Current .gitignore:** Already has `.idea/` but directory still exists
    - **Action:** Verify .gitignore syntax and remove from git: `git rm -r --cached .idea/`
 
-10. **`.idea/caches/`** - IntelliJ IDEA cache directory
+3. **`.idea/caches/`** - IntelliJ IDEA cache directory
     - **Parent Issue:** Same as `.idea/` above
 
-11. **`venv/`** - Python virtual environment (111MB)
+4. **`venv/`** - Python virtual environment (111MB)
     - **Issue:** CRITICAL SIZE ISSUE - Largest directory in project
     - **Recommendation:** Add to .gitignore: `venv/` (already listed but being tracked)
     - **Current State:** Directory exists despite .gitignore entry
     - **Action:** Remove from tracking: `git rm -r --cached venv/`
     - **Impact:** 111MB of unnecessary repository bloat
 
-12. **`tests/.pytest_cache/`** - Pytest cache directory (32KB)
+5. **`tests/.pytest_cache/`** - Pytest cache directory (32KB)
     - **Issue:** Test framework cache - should not be tracked
     - **Recommendation:** Already in .gitignore as `coverage/`, add explicit `**/.pytest_cache/`
     - **Action:** `git rm -r --cached tests/.pytest_cache/`
@@ -169,7 +172,7 @@ The Guia Turístico project demonstrates **strong architectural organization** w
     - **Purpose:** AI-assisted development workflow tracking
     - **Recommendation:** No action needed - properly ignored
 
-17. **`.github/hooks/`** - Git hooks directory
+1. **`.github/hooks/`** - Git hooks directory
     - **Purpose:** Custom git hooks (contains pre-commit hook)
     - **Size:** 1 file (3.1KB - pre-commit script)
     - **Status:** Legitimate directory, not mentioned in main docs
@@ -246,6 +249,7 @@ __tests__/
    - Less clear purpose and organization
 
 **Confusion Points:**
+
 - Both have `e2e/` subdirectories with different content
 - `tests/integration/` has Python files, but `__tests__/integration/` has JavaScript
 - Not clear which directory is authoritative for new tests
@@ -253,12 +257,14 @@ __tests__/
 **Recommendation:**
 
 **Option A: Consolidate** (Recommended)
+
 - Move active tests from `tests/` to `__tests__/`
 - Archive or remove duplicate structure
 - Document migration in commit message
 - Update TESTING.md with single test location
 
 **Option B: Clarify Purpose** (If both are needed)
+
 - Document clear distinction in TESTING.md:
   - `__tests__/` - Unit, integration, and JavaScript-based E2E tests
   - `tests/` - Browser automation and Python-based integration tests
@@ -266,6 +272,7 @@ __tests__/
 - Cross-reference between the two
 
 **Impact if not fixed:**
+
 - **Priority: HIGH**
 - Contributors confused about where to add tests
 - Risk of duplicate test coverage
@@ -277,21 +284,26 @@ __tests__/
 The source code follows **modular architecture** with clear boundaries:
 
 **Layer 1: Core Domain** (Stateless, Pure Logic)
+
 - `src/core/` - GeoPosition, PositionManager (state management)
 - `src/data/` - Data transformations, validators, extractors
 
 **Layer 2: Services** (External Integration)
+
 - `src/services/` - API clients (ReverseGeocoder, GeolocationService)
 - `src/services/providers/` - Provider implementations
 
 **Layer 3: Coordination** (Workflow Orchestration)
+
 - `src/coordination/` - WebGeocodingManager (main coordinator)
 
 **Layer 4: Presentation** (UI/Output)
+
 - `src/html/` - Display components, formatters
 - `src/speech/` - Speech synthesis output
 
 **Layer 5: Utilities** (Cross-cutting)
+
 - `src/utils/` - Shared utilities
 - `src/timing/` - Time tracking utilities
 
@@ -346,12 +358,14 @@ The source code follows **modular architecture** with clear boundaries:
 **Problem:** `docs/misc/` directory uses generic "miscellaneous" naming
 
 **Why it's problematic:**
+
 - "Misc" is a catch-all that discourages proper categorization
 - Content becomes difficult to discover
 - Violates "self-documenting" naming principle
 - Often indicates poor information architecture
 
 **Current Content in `docs/misc/`:**
+
 - CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md (should be in `docs/devops/` or `docs/deployment/`)
 - DEVOPS_INTEGRATION_ASSESSMENT.md (should be in `docs/devops/`)
 - DOCUMENTATION_IMPROVEMENTS_2026-01-01.md (should be in `docs/reports/`)
@@ -362,6 +376,7 @@ The source code follows **modular architecture** with clear boundaries:
 **Recommendation:**
 
 **Option A: Eliminate "misc"** (Recommended)
+
 ```bash
 # Reorganize into proper categories
 docs/
@@ -376,10 +391,12 @@ docs/
 ```
 
 **Option B: Rename with Clear Purpose**
+
 - Rename to `docs/project-reports/` or `docs/meta/` with clear README
 - Document what belongs there (temporary, work-in-progress, meta-documentation)
 
 **Impact:**
+
 - **Priority: MEDIUM**
 - Affects documentation discoverability
 - Sets precedent for future organization
@@ -445,6 +462,7 @@ docs/
 #### ✅ Excellent: Build Artifact Coverage in .gitignore
 
 **Currently Ignored (Correct):**
+
 ```gitignore
 .ai_workflow/          # ✅ AI tooling
 node_modules/          # ✅ Dependencies
@@ -458,6 +476,7 @@ coverage/              # ✅ Test coverage
 **Not Ignored (Should Be):**
 
 1. **`.gradle/`** (8KB) - Gradle build tool cache
+
    ```gitignore
    # Add to .gitignore:
    .gradle/
@@ -465,6 +484,7 @@ coverage/              # ✅ Test coverage
    ```
 
 2. **`.idea/`** (56KB) - IntelliJ IDEA project files
+
    ```gitignore
    # Already listed but not working - verify it's present:
    .idea/
@@ -474,6 +494,7 @@ coverage/              # ✅ Test coverage
    ```
 
 3. **`venv/`** (111MB) ⚠️ CRITICAL SIZE ISSUE
+
    ```gitignore
    # Already listed but directory is tracked:
    venv/
@@ -483,6 +504,7 @@ coverage/              # ✅ Test coverage
    ```
 
 4. **`tests/.pytest_cache/`** (32KB) - Pytest cache
+
    ```gitignore
    # Add more comprehensive pattern:
    **/.pytest_cache/
@@ -493,6 +515,7 @@ coverage/              # ✅ Test coverage
 **Total Bloat:** ~111.1 MB of unnecessary tracked files
 
 **Recommendation:** Run cleanup command:
+
 ```bash
 # Remove tracked but gitignored directories
 git rm -r --cached .gradle/ .idea/ venv/ tests/.pytest_cache/
@@ -521,6 +544,7 @@ grep -E "^\.idea/$|^\.gradle/$|^venv/$|pytest_cache" .gitignore
 ### ✅ Excellent: Directory Depth
 
 **Maximum Depth Analysis:**
+
 ```
 Depth 1: 15 directories (root level)
 Depth 2: 23 directories (src/*, docs/*, __tests__/*)
@@ -576,6 +600,7 @@ Maximum Depth: 4 levels
 | Coordination ⟷ All | Coordinator orchestrates all layers | ✅ Facade pattern |
 
 **Dependency Flow:**
+
 ```
 Utils ⟵ Core ⟵ Data ⟵ Services ⟵ Coordination ⟵ HTML
   ↑                                              ↑
@@ -628,18 +653,21 @@ Utils ⟵ Core ⟵ Data ⟵ Services ⟵ Coordination ⟵ HTML
 **Issue: Tracked IDE/Tool Artifacts (111MB total)**
 
 **Problem:** Large binary/cache files tracked in git
+
 - `venv/` (111MB) - Python virtual environment
 - `.idea/` (56KB) - IntelliJ IDEA files
 - `.gradle/` (8KB) - Gradle cache
 - `tests/.pytest_cache/` (32KB) - Pytest cache
 
 **Impact:**
+
 - Repository bloat (especially venv at 111MB)
 - Merge conflicts on IDE settings
 - Unnecessary CI/CD download time
 - Privacy concerns (IDE configs may contain paths)
 
 **Migration Steps:**
+
 ```bash
 # 1. Verify .gitignore has entries (should already exist)
 grep -E "^\.idea/$|^\.gradle/$|^venv/$" .gitignore
@@ -689,6 +717,7 @@ git push origin main
 ```
 
 **Expected Benefits:**
+
 - ✅ 111MB smaller repository size
 - ✅ Faster clone/pull operations
 - ✅ No IDE setting conflicts
@@ -703,6 +732,7 @@ git push origin main
 **Option A: Consolidate (Recommended)**
 
 **Migration Plan:**
+
 ```bash
 # 1. Audit active tests in tests/ directory
 find tests/ -name "*.test.js" -o -name "*.spec.js"
@@ -743,6 +773,7 @@ Refs: Architecture Validation Report Section 2"
 **Option B: Clarify (If both needed)**
 
 **Migration Plan:**
+
 ```bash
 # 1. Create README in each test directory
 cat > __tests__/README.md << 'EOF'
@@ -798,6 +829,7 @@ git commit -m "docs: clarify dual test structure purpose"
 ```
 
 **Expected Benefits:**
+
 - ✅ Clear test location policy
 - ✅ Reduced contributor confusion
 - ✅ Single source of truth
@@ -807,6 +839,7 @@ git commit -m "docs: clarify dual test structure purpose"
 **Issue: docs/misc/ Anti-Pattern**
 
 **Migration Plan:**
+
 ```bash
 # 1. Create proper categories
 mkdir -p docs/devops docs/meta
@@ -846,6 +879,7 @@ Refs: Architecture Validation Report Section 3"
 ```
 
 **Expected Benefits:**
+
 - ✅ Improved content discoverability
 - ✅ Better documentation organization
 - ✅ Sets precedent for future organization
@@ -855,6 +889,7 @@ Refs: Architecture Validation Report Section 3"
 **Issue: Undocumented Directories**
 
 **For `src/timing/`:**
+
 ```bash
 # Edit docs/architecture/CLASS_DIAGRAM.md
 # Add section:
@@ -874,6 +909,7 @@ git commit -m "docs: add Chronometer (src/timing/) to documentation"
 ```
 
 **For `__tests__/e2e/`:**
+
 ```bash
 # Edit TESTING.md
 # Add section:
@@ -894,6 +930,7 @@ git commit -m "docs: document __tests__/e2e/ directory in TESTING.md"
 ```
 
 **For `docs/reports/`:**
+
 ```bash
 # Edit docs/INDEX.md
 # Add new section after "Configuration & Tools":
@@ -919,6 +956,7 @@ git commit -m "docs: add docs/reports/ to documentation index"
 ```
 
 **For `.github/hooks/`:**
+
 ```bash
 # Edit .github/CONTRIBUTING.md
 # Add section under "Pre-Push Validation":
@@ -945,6 +983,7 @@ git commit -m "docs: document .github/hooks/ in contributing guide"
 ```
 
 **Expected Benefits:**
+
 - ✅ Complete documentation coverage
 - ✅ New contributors find all project features
 - ✅ Historical context preserved
@@ -963,13 +1002,13 @@ git commit -m "docs: document .github/hooks/ in contributing guide"
 
 ### High Priority (Complete Within 1 Week)
 
-2. **Consolidate dual test structure**
+1. **Consolidate dual test structure**
    - Priority: HIGH
    - Effort: 1-2 hours
    - Impact: Contributor confusion, maintenance burden
    - Options provided in Priority 2 section above
 
-3. **Eliminate docs/misc/ directory**
+2. **Eliminate docs/misc/ directory**
    - Priority: MEDIUM-HIGH
    - Effort: 30 minutes
    - Impact: Documentation discoverability, organizational precedent
@@ -977,7 +1016,7 @@ git commit -m "docs: document .github/hooks/ in contributing guide"
 
 ### Medium Priority (Complete Within 2 Weeks)
 
-4. **Document undocumented directories**
+1. **Document undocumented directories**
    - Priority: MEDIUM
    - Effort: 1-2 hours
    - Impact: Feature discoverability, onboarding experience
@@ -985,7 +1024,7 @@ git commit -m "docs: document .github/hooks/ in contributing guide"
 
 ### Low Priority (Nice to Have)
 
-5. **Consider Python test infrastructure**
+1. **Consider Python test infrastructure**
    - Priority: LOW
    - Effort: Variable
    - Impact: Test strategy clarity
@@ -998,6 +1037,7 @@ git commit -m "docs: document .github/hooks/ in contributing guide"
 ### Overall Architecture Grade: **A- (8.5/10)**
 
 **Strengths:**
+
 - ✅ Exceptional modular design with clear separation of concerns
 - ✅ Best-in-class test organization mirroring source structure
 - ✅ Comprehensive documentation with excellent navigation
@@ -1006,6 +1046,7 @@ git commit -m "docs: document .github/hooks/ in contributing guide"
 - ✅ Consistent naming conventions throughout
 
 **Improvement Areas:**
+
 - ⚠️ 111MB of tracked tool artifacts (CRITICAL - easy fix)
 - ⚠️ Dual test structure causing potential confusion
 - ⚠️ 16 directories lack documentation

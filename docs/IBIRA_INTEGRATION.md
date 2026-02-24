@@ -15,11 +15,13 @@ The integration uses a **three-tier fallback approach**:
 ## CDN Configuration
 
 ### Production URL (Recommended)
+
 ```javascript
 https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js
 ```
 
 **Benefits:**
+
 - ✅ Specific version pinning (0.2.2-alpha)
 - ✅ Global CDN with 750+ locations
 - ✅ Automatic compression (Brotli/Gzip)
@@ -27,6 +29,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js
 - ✅ No npm installation required for browser usage
 
 ### HTML Usage (Optional)
+
 If you want to preload ibira.js before guia.js loads:
 
 ```html
@@ -40,11 +43,13 @@ If you want to preload ibira.js before guia.js loads:
 ## Local Module Fallback
 
 ### Installation
+
 ```bash
 npm install mpbarbosa/ibira.js
 ```
 
 ### When It's Used
+
 - Node.js environments (no CDN support)
 - CDN fails to load (network issues, timeout, etc.)
 - Browser with CDN blocked
@@ -75,6 +80,7 @@ const ibiraLoadingPromise = (async () => {
 ```
 
 ### Timeout Configuration
+
 - **CDN timeout:** 5 seconds
 - If CDN doesn't respond within 5s, automatically falls back to local module
 
@@ -105,6 +111,7 @@ The following are available globally after guia.js loads:
 ## API Usage Examples
 
 ### Basic Fetch
+
 ```javascript
 const manager = new IbiraAPIFetchManager();
 const data = await manager.fetch('https://api.example.com/data');
@@ -112,6 +119,7 @@ console.log(data);
 ```
 
 ### With Caching
+
 ```javascript
 const manager = new IbiraAPIFetchManager({
     cacheTimeout: 300000 // Cache for 5 minutes
@@ -125,6 +133,7 @@ const data2 = await manager.fetch('https://api.example.com/data');
 ```
 
 ### With Observer Pattern
+
 ```javascript
 const observer = {
     update: (data) => {
@@ -146,30 +155,37 @@ manager.subscribe(observer);
 ## Troubleshooting
 
 ### CDN Not Loading
+
 **Symptoms:** Console warning "CDN load failed"
 
 **Solution:** The system automatically falls back to local module. Ensure ibira.js is installed:
+
 ```bash
 npm install mpbarbosa/ibira.js
 ```
 
 ### Local Module Not Found
+
 **Symptoms:** Console warning "Local module load failed"
 
 **Solution:** Install the package:
+
 ```bash
 npm install mpbarbosa/ibira.js
 ```
 
 ### Fallback Implementation Active
+
 **Symptoms:** Console warning "Using fallback - ibira.js not available"
 
 **Solution:** This means both CDN and local module failed. Check:
+
 1. Internet connectivity (for CDN)
 2. npm dependencies are installed
 3. Node modules are not corrupted
 
 ### Checking Load Status
+
 ```javascript
 window.ibiraLoadingPromise.then(result => {
     console.log('Load result:', result);
@@ -180,14 +196,18 @@ window.ibiraLoadingPromise.then(result => {
 ## Testing
 
 ### Test CDN Loading
+
 Open browser console on any HTML page:
+
 ```javascript
 await window.ibiraLoadingPromise;
 console.log('Ibira loaded successfully');
 ```
 
 ### Test Local Module
+
 Run in Node.js:
+
 ```bash
 node -e "import('ibira.js').then(m => console.log('Loaded:', m.IbiraAPIFetchManager))"
 ```
@@ -197,12 +217,14 @@ node -e "import('ibira.js').then(m => console.log('Loaded:', m.IbiraAPIFetchMana
 If you need to upgrade to a newer version:
 
 1. Update CDN URL in `src/guia.js`:
+
    ```javascript
    // Change @0.2.2-alpha to new version
    import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@NEW_VERSION/src/index.js')
    ```
 
 2. Update npm package:
+
    ```bash
    npm install mpbarbosa/ibira.js@NEW_VERSION
    ```
@@ -219,13 +241,16 @@ If you need to upgrade to a newer version:
 ## Security Notes
 
 ### CDN Security
+
 - jsDelivr uses HTTPS with valid SSL certificates
 - Consider adding SRI (Subresource Integrity) for production:
+
   ```html
   <script src="CDN_URL" integrity="sha384-HASH" crossorigin="anonymous"></script>
   ```
 
 ### Generate SRI Hash
+
 ```bash
 curl -s CDN_URL | openssl dgst -sha384 -binary | openssl base64 -A
 ```

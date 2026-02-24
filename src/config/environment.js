@@ -24,6 +24,9 @@ const defaults = {
   // AWS Location Based Service
   AWS_LBS_BASE_URL: '',
   AWS_LBS_ENABLED: false,
+
+  // Geocoding provider order: 'aws' (default) or 'nominatim'
+  GEOCODING_PRIMARY_PROVIDER: 'aws',
   
   // Rate Limiting (requests per minute)
   RATE_LIMIT_NOMINATIM: 60,
@@ -79,8 +82,9 @@ const VITE_STATIC_ENV = typeof import.meta !== 'undefined' && import.meta.env
       NOMINATIM_API_URL:      import.meta.env.VITE_NOMINATIM_API_URL,
       NOMINATIM_USER_AGENT:   import.meta.env.VITE_NOMINATIM_USER_AGENT,
       IBGE_API_URL:           import.meta.env.VITE_IBGE_API_URL,
-      AWS_LBS_BASE_URL:       import.meta.env.VITE_AWS_LBS_BASE_URL,
-      AWS_LBS_ENABLED:        import.meta.env.VITE_AWS_LBS_ENABLED,
+      AWS_LBS_BASE_URL:             import.meta.env.VITE_AWS_LBS_BASE_URL,
+      AWS_LBS_ENABLED:              import.meta.env.VITE_AWS_LBS_ENABLED,
+      GEOCODING_PRIMARY_PROVIDER:   import.meta.env.VITE_GEOCODING_PRIMARY_PROVIDER,
       RATE_LIMIT_NOMINATIM:   import.meta.env.VITE_RATE_LIMIT_NOMINATIM,
       RATE_LIMIT_IBGE:        import.meta.env.VITE_RATE_LIMIT_IBGE,
       ENABLE_SPEECH_SYNTHESIS:import.meta.env.VITE_ENABLE_SPEECH_SYNTHESIS,
@@ -126,6 +130,7 @@ export const env = {
   // AWS Location Based Service
   awsLbsBaseUrl: getEnv('AWS_LBS_BASE_URL', defaults.AWS_LBS_BASE_URL),
   awsLbsEnabled: getEnv('AWS_LBS_ENABLED', defaults.AWS_LBS_ENABLED),
+  geocodingPrimaryProvider: getEnv('GEOCODING_PRIMARY_PROVIDER', defaults.GEOCODING_PRIMARY_PROVIDER),
   
   // Rate Limiting
   rateLimitNominatim: getEnv('RATE_LIMIT_NOMINATIM', defaults.RATE_LIMIT_NOMINATIM),

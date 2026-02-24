@@ -1,4 +1,5 @@
 # Documentation Consistency Analysis Report
+
 **Project**: Guia Turístico (nodejs_library)  
 **Language**: JavaScript  
 **Date**: 2026-01-14  
@@ -14,6 +15,7 @@ The Guia Turístico project demonstrates **strong documentation practices** with
 **Overall Quality Score**: 7.5/10
 
 **Key Findings**:
+
 - ✅ Excellent JSDoc coverage (100% of 41 files)
 - ⚠️ **CRITICAL**: Version inconsistency (0.9.0 in source, 0.9.0-alpha in package.json)
 - ⚠️ **CRITICAL**: Project identity confusion (Guia.js vs Guia Turístico terminology)
@@ -26,31 +28,35 @@ The Guia Turístico project demonstrates **strong documentation practices** with
 ## Critical Issues (Must Fix Immediately)
 
 ### 1. Version Number Inconsistency
+
 **Priority**: CRITICAL  
 **Impact**: Build failures, confusion, broken CDN links  
 **Affected Files**: 2 core files + 30+ documentation files
 
 **Problem**:
+
 - `package.json`: `"version": "0.9.0-alpha"` ✅ (correct)
 - `src/config/defaults.js` lines 15-23: Version object shows `0.9.0-alpha` ❌ (outdated)
 - `.github/copilot-instructions.md` line 3: References `version 0.9.0-alpha` ❌ (outdated)
 - Multiple docs reference `0.9.0-alpha` instead of `0.9.0-alpha`
 
 **Recommended Fixes**:
+
 ```javascript
 // src/config/defaults.js (lines 15-23)
 export const GUIA_VERSION = {
-	major: 0,
-	minor: 7,  // Change from 6 to 7
-	patch: 1,  // Change from 0 to 1
-	prerelease: "alpha",
-	toString: function () {
-		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
-	},
+ major: 0,
+ minor: 7,  // Change from 6 to 7
+ patch: 1,  // Change from 0 to 1
+ prerelease: "alpha",
+ toString: function () {
+  return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
+ },
 };
 ```
 
 **Files Requiring Updates**:
+
 1. `src/config/defaults.js` (line 16-18) - **SOURCE CODE CHANGE REQUIRED**
 2. `.github/copilot-instructions.md` (line 3) - Update to `version 0.9.0-alpha`
 3. `docs/misc/PROJECT_CLARIFICATION.md` (line 19) - Update to `0.9.0-alpha`
@@ -58,6 +64,7 @@ export const GUIA_VERSION = {
 5. All 30+ docs with version references (run: `npm run update:dates`)
 
 **Validation Command**:
+
 ```bash
 grep -r "0\.7\.1-alpha\|0\.6\.0" src/config/defaults.js package.json .github/copilot-instructions.md
 ```
@@ -65,6 +72,7 @@ grep -r "0\.7\.1-alpha\|0\.6\.0" src/config/defaults.js package.json .github/cop
 ---
 
 ### 2. Project Identity Confusion (Guia.js vs Guia Turístico)
+
 **Priority**: CRITICAL  
 **Impact**: Developer confusion, incorrect contribution workflows, architectural mistakes  
 **Affected Files**: 5+ critical documentation files
@@ -73,22 +81,25 @@ grep -r "0\.7\.1-alpha\|0\.6\.0" src/config/defaults.js package.json .github/cop
 The project has TWO identities causing confusion:
 
 **Current Reality** (from package.json):
-- **Project Name**: `guia_turistico` 
+
+- **Project Name**: `guia_turistico`
 - **Project Description**: "Tourist guide web application built on top of guia.js library"
 - **Dependency**: `guia.js` from `github:mpbarbosa/guia_js`
 
 **Documentation Confusion**:
+
 - `.github/CONTRIBUTING.md` line 1: "Contributing to **Guia.js**" ❌ (wrong project)
 - `.github/CONTRIBUTING.md` line 776: "Thank you for contributing to **Guia Turístico**!" ✅ (correct)
 - `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md` title: "**Guia.js** - Project Purpose..." ❌ (wrong project)
 - `docs/misc/PROJECT_CLARIFICATION.md`: Correctly explains relationship but needs prominence
 
-**Root Cause**: 
+**Root Cause**:
 This project IS `guia_turistico` (the application) which USES `guia.js` (the library). Documentation incorrectly refers to this project as "Guia.js" throughout.
 
 **Recommended Fixes**:
 
 **File**: `.github/CONTRIBUTING.md`
+
 ```markdown
 # Contributing to Guia Turístico
 
@@ -100,6 +111,7 @@ provides guidelines for contributing to this tourist guide web application.
 ```
 
 **File**: `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md`
+
 ```markdown
 # Guia Turístico - Project Purpose and Architecture
 
@@ -117,6 +129,7 @@ For library documentation, see the [guia.js repository](https://github.com/mpbar
 ```
 
 **Validation Commands**:
+
 ```bash
 # Find all incorrect "Guia.js" references in this repo
 grep -rn "Contributing to Guia.js\|Guia.js - Project\|Guia.js provides" .github/ docs/ --include="*.md"
@@ -128,16 +141,19 @@ grep "guia_turistico" package.json README.md
 ---
 
 ### 3. Outdated Test Count References
+
 **Priority**: HIGH  
 **Impact**: Misleading quality metrics, incorrect CI/CD expectations  
 **Affected Files**: 15+ documentation files
 
 **Problem**:
+
 - **Documentation Claims**: "1516 passing tests / 1653 total" (outdated)
 - **README.md Line 3**: Badge shows `1516 passing / 1653 total` ❌
 - **Actual Test Results** (verified 2026-01-14): `1739 passed, 137 skipped, 1876 total` ✅
 
 **Evidence**:
+
 ```bash
 $ npm test 2>&1 | grep "Tests:"
 Tests:       137 skipped, 1739 passed, 1876 total
@@ -146,16 +162,19 @@ Tests:       137 skipped, 1739 passed, 1876 total
 **Recommended Fixes**:
 
 **File**: `README.md` (line 3)
+
 ```markdown
 [![Tests](https://img.shields.io/badge/tests-1739%20passing%20%2F%201876%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
 ```
 
 **File**: `.github/copilot-instructions.md` (multiple locations)
+
 ```markdown
 - **Automated Tests**: `npm test` - takes ~6 seconds. Runs 1,876 tests (1,739 passing, 137 skipped) in 68 suites.
 ```
 
 **Files Requiring Updates**:
+
 1. `README.md` (line 3) - Test badge
 2. `.github/copilot-instructions.md` (lines mentioning test counts)
 3. `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md` - Search for "1224\|1516\|1653"
@@ -164,6 +183,7 @@ Tests:       137 skipped, 1739 passed, 1876 total
 
 **Automation Solution**:
 The project has `npm run update:tests` script - **USE IT**:
+
 ```bash
 ./scripts/update-test-counts.sh
 ```
@@ -173,44 +193,49 @@ The project has `npm run update:tests` script - **USE IT**:
 ## High Priority Recommendations
 
 ### 4. Version Number in Source Code Misalignment
+
 **Priority**: HIGH  
 **File**: `src/config/defaults.js`  
 **Lines**: 15-23  
 **Impact**: Runtime version mismatch, debugging confusion
 
 **Current Code**:
+
 ```javascript
 export const GUIA_VERSION = {
-	major: 0,
-	minor: 6,  // ❌ Should be 7
-	patch: 0,  // ❌ Should be 1
-	prerelease: "alpha",
-	toString: function () {
-		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
-	},
+ major: 0,
+ minor: 6,  // ❌ Should be 7
+ patch: 0,  // ❌ Should be 1
+ prerelease: "alpha",
+ toString: function () {
+  return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
+ },
 };
 ```
 
 **Correct Code**:
+
 ```javascript
 export const GUIA_VERSION = {
-	major: 0,
-	minor: 7,  // ✅ Matches package.json
-	patch: 1,  // ✅ Matches package.json
-	prerelease: "alpha",
-	toString: function () {
-		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
-	},
+ major: 0,
+ minor: 7,  // ✅ Matches package.json
+ patch: 1,  // ✅ Matches package.json
+ prerelease: "alpha",
+ toString: function () {
+  return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
+ },
 };
 ```
 
 **Why Critical**:
 This is the ONLY source code file requiring changes. The version object is exported and used throughout the application. Misalignment causes:
+
 - Runtime version reporting shows `0.9.0-alpha` instead of `0.9.0-alpha`
 - CDN script generates wrong URLs
 - Developer confusion when debugging
 
 **Validation Test**:
+
 ```bash
 node -e "import('./src/config/defaults.js').then(m => console.log(m.GUIA_VERSION.toString()))"
 # Should output: 0.9.0-alpha
@@ -219,23 +244,27 @@ node -e "import('./src/config/defaults.js').then(m => console.log(m.GUIA_VERSION
 ---
 
 ### 5. Copilot Instructions Version Reference
+
 **Priority**: HIGH  
 **File**: `.github/copilot-instructions.md`  
 **Line**: 3  
 **Impact**: AI assistant provides outdated information
 
 **Current**:
+
 ```markdown
 Guia Turístico is a single-page web application (version 0.9.0-alpha) built on top of...
 ```
 
 **Correct**:
+
 ```markdown
 Guia Turístico is a single-page web application (version 0.9.0-alpha) built on top of...
 ```
 
 **Additional Copilot Instructions Updates Required**:
 Search for all occurrences of test counts and update:
+
 ```bash
 grep -n "1516\|1653\|1,653\|1,516" .github/copilot-instructions.md
 ```
@@ -245,16 +274,19 @@ Replace with current counts: `1739 passing, 137 skipped, 1876 total`
 ---
 
 ### 6. Missing @throws Documentation
+
 **Priority**: HIGH  
 **Impact**: Developer experience, error handling clarity  
 **Affected**: 19 throw statements lack JSDoc @throws tags
 
 **Evidence** (from audit):
+
 - Total throw statements: 52 (verified: `grep -r "throw new" src/ | wc -l`)
 - Documented with @throws: 3 (verified: `grep -r "@throws" src/ | wc -l`)
 - **Gap**: 49 undocumented throws (94% missing documentation)
 
 **Files with Most Gaps**:
+
 1. `src/coordination/ServiceCoordinator.js` - 8 undocumented throws
 2. `src/services/ReverseGeocoder.js` - 3 undocumented throws
 3. `src/speech/SpeechQueue.js` - 2 undocumented throws
@@ -262,6 +294,7 @@ Replace with current counts: `1739 passing, 137 skipped, 1876 total`
 5. `src/coordination/UICoordinator.js` - 1 undocumented throw
 
 **Example Fix Pattern**:
+
 ```javascript
 /**
  * Initializes speech synthesis manager.
@@ -283,15 +316,18 @@ initializeSpeechSynthesis(params) {
 ---
 
 ### 7. Async Function Documentation Gaps
+
 **Priority**: HIGH  
 **Impact**: Promise chain understanding, error handling  
 **Affected**: 6 async functions
 
 **Evidence**:
+
 - Total async functions: 6 (verified: `grep -r "async function" src/ | wc -l`)
 - JSDoc async tags: 22 (over-documented, includes tests)
 
 **Pattern to Follow**:
+
 ```javascript
 /**
  * Fetches reverse geocoding data from Nominatim API.
@@ -313,6 +349,7 @@ async fetch(latitude, longitude) {
 ```
 
 **Files Needing Review**:
+
 - `src/services/ReverseGeocoder.js` - Async API methods
 - `src/coordination/WebGeocodingManager.js` - Async initialization
 
@@ -321,6 +358,7 @@ async fetch(latitude, longitude) {
 ## Medium Priority Suggestions
 
 ### 8. "Broken References" Are Valid Code Patterns
+
 **Priority**: MEDIUM  
 **Impact**: False positive noise in analysis tools  
 **Affected**: 19 flagged patterns
@@ -328,29 +366,34 @@ async fetch(latitude, longitude) {
 **Analysis**: The automated check flagged these as "broken references":
 
 **Pattern 1: Comment Placeholders `/* ... */`**
+
 - **Flagged**: 15 occurrences
 - **Status**: ✅ **VALID** - Standard documentation convention
 - **Files**: `docs/issue-189/CREATE_ISSUES_GUIDE.md`, `docs/architecture/GEOLOCATION_SERVICE_REFACTORING.md`
 - **Usage**: Indicates omitted code in examples
 
 **Pattern 2: Regex Patterns `/pattern/g`**
+
 - **Flagged**: 6 occurrences  
 - **Status**: ✅ **VALID** - JavaScript regex for refactoring scripts
 - **Example**: `/AddressDataExtractor\./g, 'AddressCache.getInstance()'`
 - **Files**: `docs/STATIC_WRAPPER_ELIMINATION.md`, `docs/CODE_PATTERN_DOCUMENTATION_GUIDE.md`
 
 **Pattern 3: HTML Tag Detection `/<\w+/g`**
+
 - **Flagged**: 4 occurrences
 - **Status**: ✅ **VALID** - Testing patterns for HTML generation
 - **Files**: `docs/TESTING_HTML_GENERATION.md`
 
 **Pattern 4: Path References `/src for library organization`**
+
 - **Flagged**: 3 occurrences
 - **Status**: ⚠️ **MISLEADING** - Needs clarification
 - **Issue**: Text reads oddly, should be reworded
 - **Files**: `docs/INDEX.md` line 83, `docs/CODE_PATTERN_DOCUMENTATION_GUIDE.md`
 
 **Recommended Fix for Pattern 4**:
+
 ```markdown
 # Before (line 83 in docs/INDEX.md)
 - Directory structure explanation (/src for library organization)
@@ -361,17 +404,20 @@ async fetch(latitude, longitude) {
 
 **Documentation Enhancement**:
 The project already has `docs/CODE_PATTERN_DOCUMENTATION_GUIDE.md` explaining these patterns. Consider:
-1. Adding section to `.github/FALSE_POSITIVE_PATTERNS.md` 
+
+1. Adding section to `.github/FALSE_POSITIVE_PATTERNS.md`
 2. Updating analysis tools to ignore these patterns
 
 ---
 
 ### 9. Project Structure Documentation Outdated
+
 **Priority**: MEDIUM  
 **File**: `.github/copilot-instructions.md`  
 **Impact**: AI assistant provides incorrect file information
 
 **Current** (lines 120-125):
+
 ```markdown
 ### Key Files
 - `src/app.js` (550+ lines) - **Main SPA entry point**
@@ -380,6 +426,7 @@ The project already has `docs/CODE_PATTERN_DOCUMENTATION_GUIDE.md` explaining th
 ```
 
 **Verification**:
+
 ```bash
 wc -l src/app.js src/index.html src/guia.js
 #  551 src/app.js      ✅ (matches)
@@ -387,17 +434,19 @@ wc -l src/app.js src/index.html src/guia.js
 #  468 src/guia.js     ✅ (matches)
 ```
 
-**Recommendation**: 
+**Recommendation**:
 Update line counts quarterly or add note "(approximate)". Line count precision is not critical for AI instructions.
 
 ---
 
 ### 10. CDN Delivery Documentation Needs Enhancement
+
 **Priority**: MEDIUM  
 **File**: `README.md`, `.github/copilot-instructions.md`  
 **Impact**: Users may use unstable CDN URLs
 
 **Current State**:
+
 - `.github/scripts/cdn-delivery.sh` script exists and works correctly ✅
 - README warns about version-specific vs branch-based URLs ✅
 - Copilot instructions mention script but lack usage examples
@@ -424,8 +473,10 @@ git tag v$(node -p "require('./package.json').version")
 ```
 
 **CDN URL Stability**:
+
 - ✅ **USE**: `@0.9.0-alpha` (version-specific, stable, cacheable)
 - ❌ **AVOID**: `@main` (branch-based, auto-updates, breaks unexpectedly)
+
 ```
 
 ---
@@ -459,10 +510,12 @@ npm run automation:test  # Runs all automation checks
 ```
 
 **When to run**:
+
 - Before commits (`update:tests` if test suite changed)
 - After version bumps (`check:version` to validate)
 - After documentation changes (`update:dates` for timestamps)
 - Before pushing (`automation:test` pre-push hook)
+
 ```
 
 ---
@@ -568,6 +621,7 @@ npm run automation:test
 ## Summary of Required Actions
 
 ### Immediate (Next Commit)
+
 1. ✅ **Update** `src/config/defaults.js` version to `0.9.0-alpha` (lines 16-18)
 2. ✅ **Update** `.github/copilot-instructions.md` version references
 3. ✅ **Update** `.github/CONTRIBUTING.md` project name references
@@ -575,22 +629,25 @@ npm run automation:test
 5. ✅ **Validate** with `npm run test:all && npm run automation:test`
 
 ### Short-Term (This Week)
+
 6. ⚠️ **Update** `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md` title and content
-7. ⚠️ **Update** `docs/misc/PROJECT_CLARIFICATION.md` version references
-8. ⚠️ **Add** @throws documentation to 19 throw statements (create issue)
-9. ⚠️ **Review** async function JSDoc completeness
-10. ⚠️ **Update** README.md test count badge
+2. ⚠️ **Update** `docs/misc/PROJECT_CLARIFICATION.md` version references
+3. ⚠️ **Add** @throws documentation to 19 throw statements (create issue)
+4. ⚠️ **Review** async function JSDoc completeness
+5. ⚠️ **Update** README.md test count badge
 
 ### Medium-Term (Next Sprint)
+
 11. 📝 **Enhance** CDN delivery documentation in copilot instructions
-12. 📝 **Add** automation scripts section to CONTRIBUTING.md
-13. 📝 **Create** GitHub issue for systematic @throws documentation
-14. 📝 **Update** project structure line counts (or mark approximate)
+2. 📝 **Add** automation scripts section to CONTRIBUTING.md
+3. 📝 **Create** GitHub issue for systematic @throws documentation
+4. 📝 **Update** project structure line counts (or mark approximate)
 
 ### Optional (Backlog)
+
 15. 💡 **Consider** archiving pre-2025 documentation
-16. 💡 **Update** analysis tools to ignore valid code patterns
-17. 💡 **Add** project identity note to all major documentation files
+2. 💡 **Update** analysis tools to ignore valid code patterns
+3. 💡 **Add** project identity note to all major documentation files
 
 ---
 
@@ -598,7 +655,8 @@ npm run automation:test
 
 The Guia Turístico project maintains **excellent technical documentation** with industry-leading JSDoc coverage. The critical issues identified are straightforward to fix:
 
-**Primary Fix Required**: 
+**Primary Fix Required**:
+
 - Update source code version in `src/config/defaults.js` from `0.9.0` to `0.9.0-alpha`
 - Align all documentation references to use consistent version and project identity
 

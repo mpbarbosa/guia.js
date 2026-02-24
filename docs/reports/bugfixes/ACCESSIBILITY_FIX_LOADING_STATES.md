@@ -7,6 +7,7 @@
 ## Problem
 
 Loading states were visually clear but lacked semantic attributes:
+
 - No `aria-busy` during geocoding operations
 - No screen reader announcements when content updates
 - Users with screen readers had no loading feedback
@@ -17,6 +18,7 @@ Loading states were visually clear but lacked semantic attributes:
 ### 1. Added `aria-busy` Management
 
 **HTMLHighlightCardsDisplayer.js**:
+
 ```javascript
 _setLoadingState(isLoading) {
   cards.forEach(card => {
@@ -32,12 +34,14 @@ _setLoadingState(isLoading) {
 ```
 
 **Public API**:
+
 - `showLoading()` - Call before geocoding starts
 - `hideLoading()` - Called automatically by `update()`
 
 ### 2. Added `aria-live` Regions
 
 **index.html** - Updated value elements:
+
 ```html
 <div id="municipio-value" class="highlight-card-value" aria-live="polite">—</div>
 <div id="bairro-value" class="highlight-card-value" aria-live="polite">—</div>
@@ -45,6 +49,7 @@ _setLoadingState(isLoading) {
 ```
 
 **Behavior**:
+
 - Screen readers announce updates automatically
 - Uses `polite` (non-interrupting) for location changes
 - Works with both initial load and subsequent updates
@@ -52,6 +57,7 @@ _setLoadingState(isLoading) {
 ### 3. Skeleton Loading Visual Feedback
 
 **Preserved existing CSS** (`loading-states.css`):
+
 ```css
 .highlight-card.skeleton-loading {
   background: linear-gradient(
@@ -69,12 +75,14 @@ _setLoadingState(isLoading) {
 ### Screen Reader Tests
 
 **NVDA** (Windows):
+
 1. Navigate to page with location tracking
 2. Click "Obter Localização"
 3. **Expected**: "Município, carregando" → "Município, São Paulo, SP"
 4. **Expected**: "Bairro, carregando" → "Bairro, Consolação"
 
 **VoiceOver** (macOS):
+
 1. Same steps as NVDA
 2. Announces "busy" state during loading
 3. Announces updated values when complete
@@ -96,12 +104,14 @@ _setLoadingState(isLoading) {
 ## Impact
 
 ### Before
+
 - ❌ Screen reader users: No feedback during 2-5 second delays
 - ❌ Anxiety: "Is it working? Did it freeze?"
 - ❌ No progress indication
 - ❌ Silent updates (users didn't know content changed)
 
 ### After
+
 - ✅ Screen readers announce "busy" during loading
 - ✅ Screen readers announce new values on update
 - ✅ Visual skeleton loading for sighted users
@@ -137,6 +147,7 @@ highlightCardsDisplayer.update(addressData, enderecoPadronizado);
 > "In content implemented using markup languages, status messages can be programmatically determined through role or properties such that they can be presented to the user by assistive technologies without receiving focus."
 
 ✅ **Compliant**:
+
 - `aria-busy` indicates ongoing operation
 - `aria-live="polite"` announces completion
 - No focus stealing during updates
@@ -145,6 +156,7 @@ highlightCardsDisplayer.update(addressData, enderecoPadronizado);
 ## Future Enhancements
 
 **Potential additions** (not critical, nice-to-have):
+
 1. Progress percentage for long operations
 2. Estimated time remaining (if >3 seconds)
 3. "Loading..." text in card during skeleton state

@@ -11,12 +11,14 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 ### Key Metrics
 
 **Before**:
+
 - 2 WCAG AAA violations (contrast, touch targets)
 - 2 WCAG AA gaps (loading states, empty states)
 - 3 UX pain points (error guidance, information overload, context clarity)
 - Mobile: 3-4 screens scrolling, 20-30% abandonment on permission denial
 
 **After**:
+
 - ✅ 100% WCAG AAA compliant
 - ✅ 100% WCAG AA compliant
 - ✅ Mobile: 60% reduction in scrolling (1-2 screens)
@@ -41,11 +43,13 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 **File**: `src/highlight-cards.css` (line 92-93)
 
 **Solution**:
+
 - Changed color: `#5f5b66` → `#4a4952` (darker)
 - Added text-shadow: `0 0 2px rgba(255, 255, 255, 0.8)`
 - **New contrast ratios**: 8.5:1 to 9.2:1 (WCAG AAA)
 
 **Impact**:
+
 - ✅ WCAG AAA compliant (exceeds AA requirement)
 - ✅ Readable across entire gradient
 - ✅ Low-vision users can read metropolitan region
@@ -58,17 +62,20 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 
 **Issue**: Skeleton loaders lack screen reader communication  
 **Priority**: Critical - Accessibility  
-**Files**: 
+**Files**:
+
 - `src/html/HTMLHighlightCardsDisplayer.js` (enhanced)
 - `src/index.html` (aria-live attributes)
 
 **Solution**:
+
 - Added `aria-busy="true"` during loading
 - Added `aria-live="polite"` to value elements
 - Created `showLoading()` and `hideLoading()` public API
 - Automatic cleanup in `update()` method
 
 **Impact**:
+
 - ✅ WCAG 2.1 Level AA compliant (4.1.3 Status Messages)
 - ✅ Screen readers announce loading/completion
 - ✅ Reduced anxiety during long operations
@@ -83,16 +90,19 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 **Issue**: Dead-end UX when permission denied (20-30% of users)  
 **Priority**: Critical - Usability  
 **Files**:
+
 - `src/components/onboarding.js` (enhanced)
 - `src/onboarding.css` (styles added)
 
 **Solution**:
+
 - Enhanced `showErrorRecovery(error)` with 3 error types
 - Browser-specific permission instructions (Chrome/Firefox/Safari)
 - Dynamic converter fallback link injection
 - Clear recovery paths for all error scenarios
 
 **Impact**:
+
 - ✅ 50% reduction in expected abandonment
 - ✅ Clear recovery path for denied permissions
 - ✅ Educational content about browser settings
@@ -109,12 +119,14 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 **File**: `src/index.html` (lines 364-395)
 
 **Solution**:
+
 - Increased size: `min-width: 44px; min-height: 44px`
 - Added padding: `10px` (actual target: 64x64px)
 - Reduced icon: 24px → 20px (centered)
 - Added `:active` state with scale(0.95)
 
 **Impact**:
+
 - ✅ WCAG AAA compliant (46% above minimum)
 - ✅ Easier to tap on mobile
 - ✅ Exceeds Apple HIG (44px) and Material Design (48px)
@@ -129,10 +141,12 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 **Issue**: 3-4 screens vertical scrolling, primary info lost  
 **Priority**: High - Usability  
 **Files**:
+
 - `src/index.html` (details element, sticky cards)
 - `src/utils/progressive-disclosure.js` (136 lines, new)
 
 **Solution**:
+
 - Wrapped 5 secondary sections in `<details>` element
 - Made highlight cards sticky on mobile (<768px)
 - Created `ProgressiveDisclosureManager` for state persistence
@@ -140,6 +154,7 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 - Mobile: Collapsed by default, saves preference
 
 **Impact**:
+
 - ✅ 60% reduction in scrolling (3-4 → 1-2 screens)
 - ✅ Primary info always visible (sticky cards)
 - ✅ User preference remembered (localStorage)
@@ -157,6 +172,7 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 **File**: `src/html/HTMLReferencePlaceDisplayer.js` (lines 96-138)
 
 **Solution**:
+
 - Added 3 contextual empty states:
   - 📍 No data available (waiting)
   - 🗺️ No references found (normal for rural areas)
@@ -165,6 +181,7 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 - Professional styling with icons
 
 **Impact**:
+
 - ✅ 90% reduction in expected user confusion
 - ✅ Educational value (explains feature)
 - ✅ Professional appearance (not broken)
@@ -181,6 +198,7 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 **File**: `src/index.html` (moved to advanced controls)
 
 **Solution**:
+
 - Moved to "Opções Avançadas" details element
 - Updated label: "Tempo de rastreamento" (contextual)
 - Added info icon (ℹ️) with tooltip
@@ -189,6 +207,7 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 - Semantic HTML: `role="timer"`, `aria-live="off"`
 
 **Impact**:
+
 - ✅ 3% screen space saved (mobile)
 - ✅ Cleaner main interface
 - ✅ Feature available when needed (advanced users)
@@ -203,11 +222,13 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 ### WCAG Compliance Achieved
 
 **Level AA (Minimum)**:
+
 - ✓ 1.4.3 Contrast (Minimum) - 4.5:1 text, 3:1 UI
 - ✓ 2.4.7 Focus Visible - All interactive elements
 - ✓ 4.1.3 Status Messages - Loading states
 
 **Level AAA (Enhanced)**:
+
 - ✓ 1.4.6 Contrast (Enhanced) - 7:1 text, 4.5:1 UI
 - ✓ 2.5.5 Target Size - 44x44px minimum
 
@@ -254,11 +275,13 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 ### Testing Status
 
 **Unit Tests**:
+
 - ✅ HTMLHighlightCardsDisplayer: 48/48 passing
 - ✅ All existing tests unaffected
 - ✅ No new failing tests introduced
 
 **Manual Testing Required**:
+
 - Visual/manual: Progressive disclosure on mobile devices
 - Visual/manual: Touch target size on real phones
 - Visual/manual: Browser-specific permission instructions
@@ -266,6 +289,7 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 - Visual/manual: Chronometer in advanced controls
 
 **E2E Tests**:
+
 - No E2E tests exist for these features yet
 - Future enhancement opportunity
 
@@ -287,11 +311,13 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 ## Browser Compatibility
 
 **Minimum Requirements**:
+
 - Chrome 94+ (ES2022, position: sticky, details element)
 - Firefox 93+ (ES2022, aria-live, focus-visible)
 - Safari 15+ (ES2022, sticky positioning, details)
 
 **Feature Support**:
+
 - `<details>` element: 98.4% global support
 - `position: sticky`: 97.8% support
 - `aria-live` regions: Universal screen reader support
@@ -299,6 +325,7 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 - localStorage: 99.5% support
 
 **Graceful Degradation**:
+
 - No JavaScript: All content still accessible (HTML details)
 - Old browsers: Content visible but not collapsible
 - Screen readers: Full semantic support
@@ -308,17 +335,20 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 ## Performance Impact
 
 **Bundle Size**:
+
 - +136 lines JavaScript (ProgressiveDisclosureManager)
 - +450 lines CSS (progressive disclosure + chronometer)
 - **Total**: +3 KB uncompressed, +1 KB gzipped (negligible)
 
 **Runtime Performance**:
+
 - CSS `position: sticky`: Hardware-accelerated, 60fps
 - No JavaScript scroll listeners (performance benefit)
 - localStorage: Async, <1ms overhead
 - CSS animations: GPU-accelerated with `transform`
 
 **Load Time**:
+
 - No impact on initial load (CSS inline)
 - No additional HTTP requests
 - No external dependencies
@@ -369,12 +399,14 @@ Comprehensive accessibility and usability improvements addressing 7 critical and
 ## Validation
 
 ### Syntax Validation
+
 ```bash
 npm run validate
 # ✅ All files pass syntax check
 ```
 
 ### Test Suite
+
 ```bash
 npm test
 # ✅ 2,668 passing / 2,867 total
@@ -385,6 +417,7 @@ npm test
 ### Manual Testing Checklist
 
 **Accessibility**:
+
 - [ ] Screen reader announces loading states
 - [ ] Touch targets ≥44x44px (actual: 64x64px)
 - [ ] Color contrast ≥7:1 (actual: 8.5-9.2:1)
@@ -392,6 +425,7 @@ npm test
 - [ ] Focus indicators visible
 
 **Mobile UX**:
+
 - [ ] Progressive disclosure works (<768px)
 - [ ] Sticky cards stay visible while scrolling
 - [ ] State persists across page reloads
@@ -399,17 +433,20 @@ npm test
 - [ ] Scrolling reduced (1-2 screens vs 3-4)
 
 **Error Recovery**:
+
 - [ ] Permission denied shows recovery steps
 - [ ] Browser-specific instructions correct
 - [ ] Converter fallback link works
 - [ ] "Try Again" button functions
 
 **Empty States**:
+
 - [ ] Reference places show appropriate empty state
 - [ ] Icons and text display correctly
 - [ ] Educational content helpful
 
 **Chronometer**:
+
 - [ ] Hidden in main view (clutter removed)
 - [ ] Visible in advanced controls
 - [ ] Label and description clear

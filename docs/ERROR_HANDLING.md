@@ -10,6 +10,7 @@
 ## Usage
 
 See source files for implementation details:
+
 - `src/utils/ErrorBoundary.js`
 - `src/utils/error-tracking.js`
 - `src/utils/error-notifications.js`

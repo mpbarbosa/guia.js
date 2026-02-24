@@ -1,4 +1,5 @@
 # Dependency Health & Security Analysis Report
+
 **Date**: 2026-02-13  
 **Project**: Guia Turístico v0.9.0-alpha  
 **Node.js**: v25.6.1 | **npm**: 11.10.0
@@ -22,6 +23,7 @@
 ### Critical Finding: qs Dependency Vulnerability
 
 **Vulnerability Details:**
+
 ```
 Package: qs (indirect dependency)
 Severity: LOW
@@ -30,17 +32,19 @@ CWE: CWE-20 (Improper Input Validation)
 ```
 
 **Issue**: "qs's arrayLimit bypass in comma parsing allows denial of service"
+
 - **Affected Range**: qs >=6.7.0 <=6.14.1
 - **Advisory**: GHSA-w7fw-mjwx-w883
 - **Impact**: DoS potential via crafted query strings, limited practical risk
 - **Fix Available**: Yes, via `npm audit fix`
 
 **Root Cause Analysis:**
+
 - `qs` is an indirect dependency (not directly in package.json)
 - Likely pulled in by: `http-server` (dev dependency)
 - Development-only risk (not in production)
 
-**Recommendation**: 
+**Recommendation**:
 ✅ **Run immediately**: `npm audit fix` - Quick, safe, automated fix
 
 ---
@@ -48,6 +52,7 @@ CWE: CWE-20 (Improper Input Validation)
 ## 📦 Outdated Packages Analysis
 
 ### Overview
+
 3 packages have available updates. Severity varies by impact:
 
 | Package | Current | Wanted | Latest | Type | Priority | Notes |
@@ -59,6 +64,7 @@ CWE: CWE-20 (Improper Input Validation)
 ### Detailed Analysis
 
 #### 1. **puppeteer (24.36.1 → 24.37.2)** - PATCH UPDATE
+
 - **Recommendation**: ✅ **Update immediately** (lowest risk)
 - **Change Type**: Patch release (bug fixes)
 - **Breaking Changes**: None expected
@@ -66,6 +72,7 @@ CWE: CWE-20 (Improper Input Validation)
 - **Action**: `npm install puppeteer@24.37.2` or let npm update automatically
 
 #### 2. **eslint (9.39.2 → 10.0.0)** - MAJOR UPDATE
+
 - **Recommendation**: 🟡 **Update with caution**
 - **Change Type**: Major version (potential breaking changes)
 - **Key Changes** (based on ESLint v10 release):
@@ -80,6 +87,7 @@ CWE: CWE-20 (Improper Input Validation)
 - **Action**: Defer to next maintenance window unless critical fixes needed
 
 #### 3. **jsdom (25.0.1 → 28.0.0)** - MAJOR UPDATE
+
 - **Recommendation**: 🟡 **Update with caution** OR **defer**
 - **Change Type**: Major version (likely breaking changes)
 - **Impact Assessment**:
@@ -103,6 +111,7 @@ CWE: CWE-20 (Improper Input Validation)
 ## 🔍 Dependency Structure Analysis
 
 ### Production Dependencies (2 packages)
+
 ```
 guia.js@github:mpbarbosa/guia_js#v0.6.0-alpha
   └─ Type: GitHub repository reference (alpha)
@@ -115,12 +124,14 @@ ibira.js@github:mpbarbosa/ibira.js#v0.2.1-alpha
   └─ Recommendation: ⚠️ Monitor for updates
 ```
 
-**Assessment**: 
+**Assessment**:
+
 - Both are internal projects (mpbarbosa org) used for Brazilian geolocation
 - Alpha versions appropriate for active development
 - Consider promoting to stable versions (v1.0.0) before production release
 
 ### Development Dependencies (11 packages)
+
 ```
 Build Tools (4):
   ├─ vite@^7.3.1 (module bundler, ES2022 target)
@@ -141,6 +152,7 @@ DevOps & Git (1):
 ```
 
 **Health Indicators**:
+
 - ✅ All dev dependencies actively maintained (2024+ releases)
 - ✅ Ecosystem well-supported (Vite, Jest, Puppeteer are industry standard)
 - ✅ No deprecated packages detected
@@ -151,6 +163,7 @@ DevOps & Git (1):
 ## 📊 Transitive Dependencies
 
 ### Total Dependency Tree
+
 ```
 Direct Dependencies:     13 (2 prod + 11 dev)
 Transitive Dependencies: 727
@@ -160,13 +173,15 @@ Transitive Dependencies: 727
 ```
 
 ### Major Transitive Contributors
+
 1. **puppeteer** → ~150 packages (Chromium & browser automation)
 2. **jest** → ~200 packages (testing framework ecosystem)
 3. **vite** → ~100 packages (build tool ecosystem)
 4. **jsdom** → ~50 packages (DOM implementation)
 5. **eslint** → ~80 packages (linting ecosystem)
 
-**Assessment**: 
+**Assessment**:
+
 - ✅ Normal for modern JavaScript projects
 - ✅ No bloat detected
 - ✅ All major tools are stable and well-maintained
@@ -178,12 +193,14 @@ Transitive Dependencies: 727
 ### None Detected ✅
 
 Current setup has:
+
 - ✅ Verified Node.js v25.6.1 compatibility
 - ✅ npm v11.10.0 compatibility
 - ✅ No conflicting peer dependency requirements
 - ✅ All tools support modern ES modules (package.json `"type": "module"`)
 
 ### Potential Future Issues
+
 1. **Python E2E tests** (`tests/e2e/`) require Python 3.11+
    - Separate ecosystem, not managed by npm
    - May need: `pip install -r requirements.txt`
@@ -193,6 +210,7 @@ Current setup has:
 ## 🚀 Update Recommendations
 
 ### Immediate Actions (Today)
+
 ```bash
 # 1. Fix security vulnerability
 npm audit fix
@@ -208,6 +226,7 @@ npm run test:all
 **Risk Level**: 🟢 MINIMAL
 
 ### Short-term Actions (Next Sprint)
+
 ```bash
 # 4. Research ESLint v10 compatibility
 npm outdated eslint
@@ -223,6 +242,7 @@ npm run test:all
 **Risk Level**: 🟡 MODERATE (may need config updates)
 
 ### Medium-term Actions (Before v1.0.0)
+
 ```bash
 # 6. Plan jsdom v28 update
 # - Verify jest v30.1.3 official support
@@ -239,6 +259,7 @@ npm run test:all
 ## 📋 Best Practices Implementation
 
 ### Current State ✅
+
 - [x] `package-lock.json` committed (reproducible installs)
 - [x] Semantic versioning used throughout (^, ~)
 - [x] npm audit configured and passing
@@ -249,6 +270,7 @@ npm run test:all
 ### Recommendations
 
 #### 1. **Dependency Monitoring**
+
 ```bash
 # Add to CI/CD or run weekly
 npm audit --audit-level=moderate
@@ -256,6 +278,7 @@ npm outdated
 ```
 
 #### 2. **Version Pinning Strategy**
+
 ```json
 {
   "devDependencies": {
@@ -267,13 +290,16 @@ npm outdated
 ```
 
 #### 3. **Update Process**
+
 1. **Weekly**: `npm audit` (security scanning)
 2. **Monthly**: `npm outdated` (version review)
 3. **Per-sprint**: Planned updates with testing
 4. **Pre-release**: Full regression test suite
 
 #### 4. **Documentation**
+
 Add to CONTRIBUTING.md:
+
 ```markdown
 ## Dependency Management
 - Update patches immediately (security fixes)
@@ -299,8 +325,8 @@ Add to CONTRIBUTING.md:
 ---
 
 **Next Steps**:
+
 1. ✅ Run `npm audit fix` → `npm install puppeteer@24.37.2`
 2. ✅ Run `npm test:all` to verify no regressions
 3. 🔄 Schedule eslint v10 evaluation for next sprint
 4. 🔄 Plan jsdom v28 update with full regression testing
-

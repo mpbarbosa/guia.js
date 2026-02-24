@@ -11,6 +11,7 @@ ServiceCoordinator was calling `ReverseGeocoder.fetchAddress()` instead of relyi
 ### The Two Code Paths
 
 #### Path 1: Observer Pattern (✅ Works - but not used)
+
 ```javascript
 // PositionManager notifies observers
 PositionManager.update(position)
@@ -22,6 +23,7 @@ PositionManager.update(position)
 ```
 
 #### Path 2: Direct Call (❌ Broken - currently used)
+
 ```javascript
 // ServiceCoordinator directly calls fetchAddress
 ServiceCoordinator.getSingleLocationUpdate()
@@ -49,6 +51,7 @@ Updated `ReverseGeocoder.fetchAddress()` to match the behavior of `update()` by:
 **Lines**: 218-267
 
 **Before**:
+
 ```javascript
 async fetchAddress() {
     return this.reverseGeocode();  // ❌ No observer notification
@@ -56,6 +59,7 @@ async fetchAddress() {
 ```
 
 **After**:
+
 ```javascript
 async fetchAddress() {
     try {
@@ -117,6 +121,7 @@ The `fetchAddress()` method was originally just a thin wrapper around `reverseGe
 ## Impact
 
 ### Before Fix
+
 - ❌ Município highlight card shows "—"
 - ❌ Bairro highlight card shows "—"
 - ❌ No address information displayed
@@ -125,6 +130,7 @@ The `fetchAddress()` method was originally just a thin wrapper around `reverseGe
 - ❌ Address data never reaches display components
 
 ### After Fix
+
 - ✅ Município highlight card shows actual city name
 - ✅ Bairro highlight card shows actual neighborhood
 - ✅ Complete address information displayed
@@ -150,6 +156,7 @@ When implementing the **Observer Pattern**, ensure ALL code paths that produce d
 ### Recommendation
 
 Consider refactoring to use only the observer pattern:
+
 ```javascript
 // Instead of:
 reverseGeocoder.fetchAddress()  // Direct call
@@ -159,6 +166,7 @@ positionManager.update(position)  // Let observers handle it
 ```
 
 Or ensure both paths are consistent:
+
 ```javascript
 // Both should notify observers:
 update() → reverseGeocode() → notifyObservers() ✅

@@ -1,4 +1,5 @@
 # Documentation Consistency Analysis Report
+
 **Generated**: 2026-02-12 01:24:00 UTC  
 **Project**: Guia Turístico (v0.9.0-alpha)  
 **Analysis Scope**: Full documentation consistency audit
@@ -10,6 +11,7 @@
 The documentation is **functionally consistent** but shows signs of historical accumulation and outdated version references. The project maintains v0.9.0-alpha as the current version, but 48 documentation files still reference the previous v0.9.0-alpha version. Additionally, 9 broken internal references in `docs/INDEX.md` point to root-level files that should be in the `docs/` subdirectory.
 
 **Key Findings**:
+
 - ✅ Version clearly identified in package.json (0.9.0-alpha)
 - ✅ README.md badge correctly shows 0.9.0-alpha
 - ✅ API/architecture documentation comprehensive
@@ -30,12 +32,14 @@ The documentation is **functionally consistent** but shows signs of historical a
 **Status**: ✅ **RESOLVED**  
 **Resolution Report**: [VERSION_REFERENCES_UPDATE_2026-02-13.md](../implementation/VERSION_REFERENCES_UPDATE_2026-02-13.md)
 
-**Original State**: 
+**Original State**:
+
 - v0.8.x references: 469 occurrences (52% of refs)
 - v0.7.x references: 374 occurrences (41%)
 - v0.9.0-alpha references: 57 occurrences (6% of refs)
 
 **Resolution Summary**:
+
 - ✅ Created automated script: `.github/scripts/update-version-references.sh`
 - ✅ **235 files updated** with correct version references
 - ✅ **387 total replacements** across the codebase
@@ -45,6 +49,7 @@ The documentation is **functionally consistent** but shows signs of historical a
 - ✅ Added npm script: `npm run update:version-refs`
 
 **Verification**:
+
 ```bash
 # After update:
 # Documentation v0.9.0-alpha references: 151+ occurrences ✅
@@ -64,10 +69,12 @@ The documentation is **functionally consistent** but shows signs of historical a
 **Original Issue**: 4 unique broken navigation links referencing non-existent root-level files
 
 **Investigation Results**:
+
 - ✅ **26 "broken references" confirmed as false positives** (valid code examples)
 - 🔴 **4 actual broken links found** in INDEX.md (now fixed)
 
 **Resolution Summary**:
+
 - ✅ Fixed 4 broken navigation links to TESTING.md and WORKFLOW_SETUP.md
 - ✅ Updated paths: `../TESTING.md` → `./testing/TESTING.md`
 - ✅ Updated paths: `../WORKFLOW_SETUP.md` → `./WORKFLOW_SETUP.md`
@@ -75,6 +82,7 @@ The documentation is **functionally consistent** but shows signs of historical a
 - ✅ Confirmed 26 code examples are valid (documented in CODE_PATTERN_DOCUMENTATION_GUIDE.md)
 
 **Verification**:
+
 ```bash
 # After fix:
 # Broken links: 0 ✅
@@ -83,6 +91,7 @@ The documentation is **functionally consistent** but shows signs of historical a
 ```
 
 **False Positive Patterns** (Already documented as valid):
+
 - `/* ... */` - JavaScript comment placeholders (26 files)
 - `/pattern/g` - Regex examples (8 files)  
 - `/<\w+/g` - HTML tag detection (1 file)
@@ -96,6 +105,7 @@ The documentation is **functionally consistent** but shows signs of historical a
 **Severity**: HIGH  
 **Scope**: docs/ directory  
 **Current Structure**:
+
 ```
 268 total .md files:
 ├── 63 report files (mostly in reports/)
@@ -109,6 +119,7 @@ The documentation is **functionally consistent** but shows signs of historical a
 ```
 
 **Problems**:
+
 - Unclear which docs are "active" vs "historical"
 - Users cannot quickly find current information
 - Search results cluttered with 90+ archived/historical documents
@@ -116,7 +127,9 @@ The documentation is **functionally consistent** but shows signs of historical a
 - Difficult to maintain consistency across such volume
 
 **Recommended Fix**:
+
 1. **Create directory structure**:
+
    ```
    docs/
    ├── README.md (with status guide and navigation)
@@ -135,6 +148,7 @@ The documentation is **functionally consistent** but shows signs of historical a
    ```
 
 2. **Add status metadata to each file**:
+
    ```markdown
    ---
    Status: Active | Deprecated | Archived
@@ -162,12 +176,14 @@ The documentation is **functionally consistent** but shows signs of historical a
 **Files Affected**: README.md, docs/QUICK_START.md, docs/architecture/SYSTEM_OVERVIEW.md, .github/copilot-instructions.md
 
 **Issue**: Test metrics vary in representation
+
 - README.md: "2235 passing / 4.0.01 total" (malformed badge)
 - docs/QUICK_START.md: "✅ 2,235 tests passing (2,401 total)"
 - docs/architecture/SYSTEM_OVERVIEW.md: "~85% (2,401 tests, 2,235 passing)"
 - .github/copilot-instructions.md: "2,235 passing, 146 skipped, 20 failing"
 
-**Current Correct Metrics**: 
+**Current Correct Metrics**:
+
 - 2,235 tests passing
 - 146 tests skipped
 - 20 tests failing
@@ -175,16 +191,20 @@ The documentation is **functionally consistent** but shows signs of historical a
 - Coverage: ~85%
 
 **Malformed Reference**:
+
 - README.md badge shows "4.0.01 total" (should be "2,401 total")
 
 **Recommended Fix**:
+
 1. **Fix README.md badge**:
+
    ```markdown
    OLD: [![Tests](https://img.shields.io/badge/tests-2235%20passing%20%2F%4.0.01%20total-yellow)]
    NEW: [![Tests](https://img.shields.io/badge/tests-2235%20passing%20%2F%202401%20total-yellow)]
    ```
 
 2. **Standardize format across all files**:
+
    ```markdown
    **Standard Format**: 2,235 passing / 2,401 total (146 skipped, 20 failing) | ~85% coverage
    ```
@@ -208,18 +228,22 @@ The documentation is **functionally consistent** but shows signs of historical a
 **Issue**: Regex patterns and code placeholders flagged as broken references
 
 **Examples of False Positives**:
+
 - `/* ... */` in JavaScript code blocks (49 occurrences)
 - `/<\w+/g` HTML regex patterns
 - `/\.\.\./` in code examples
 - `AddressDataExtractor.` in code examples
 
 **These are NOT broken references** - they are:
+
 1. Code example placeholders
 2. Regular expression documentation
 3. Pseudo-code illustrations
 
 **Recommended Fix**:
+
 1. **Clarify in docs/guides/CODE_PATTERN_DOCUMENTATION_GUIDE.md**:
+
    ```markdown
    ## Common Pattern Placeholders
    
@@ -250,12 +274,14 @@ The documentation is **functionally consistent** but shows signs of historical a
 **Severity**: MEDIUM  
 **Issue**: v0.9.0-alpha features not fully documented  
 **Recommendation**:
+
 - Create `docs/CHANGELOG_v0.9.0.md` with detailed changes
 - Document upgrade path from v0.9.0 → v0.9.0
 - Add new features documentation
 - Create backwards compatibility guide
 
 **Files to Create**:
+
 - docs/CHANGELOG_v0.9.0.md
 - docs/MIGRATION_v0.9.0_to_v0.9.0.md
 - docs/FEATURES_v0.9.0.md
@@ -269,11 +295,13 @@ The documentation is **functionally consistent** but shows signs of historical a
 
 **Severity**: MEDIUM  
 **Current Issues**:
+
 - No breadcrumb navigation in documentation
 - Missing "Related topics" sections
 - Inconsistent link formatting
 
 **Recommended Pattern**:
+
 ```markdown
 **Navigation**: [Home](../../README.md) > [Docs](../README.md) > [Architecture](./SYSTEM_OVERVIEW.md)
 
@@ -291,6 +319,7 @@ The documentation is **functionally consistent** but shows signs of historical a
 
 **Severity**: MEDIUM  
 **Recommendation**: Add YAML frontmatter to all docs:
+
 ```markdown
 ---
 Status: Active
@@ -303,6 +332,7 @@ Related Issues: #189, #220
 ```
 
 **Benefits**:
+
 - Quick status identification
 - Automated audits possible
 - Clear version compatibility
@@ -316,6 +346,7 @@ Related Issues: #189, #220
 ## 💡 Low Priority Notes
 
 ### 1. Terminology Standardization
+
 - Inconsistent use of "routing" vs "views"
 - "WebGeocodingManager" sometimes called "Geocoding Service"
 - "Speech synthesis" vs "Text-to-speech"
@@ -323,10 +354,12 @@ Related Issues: #189, #220
 **Recommendation**: Create `docs/guides/TERMINOLOGY_GUIDE.md`
 
 ### 2. Code Examples Currency
+
 - Some examples in docs may reference older patterns
 - Recommend quarterly audit of code examples
 
 ### 3. Cross-Document References
+
 - Many docs could benefit from "See Also" sections
 - Would improve navigation between related topics
 
@@ -351,6 +384,7 @@ Related Issues: #189, #220
 ## 🎯 Recommended Action Plan
 
 ### Phase 1: Quick Wins (1-2 hours) ⚡
+
 ```
 □ Fix 9 broken links in docs/INDEX.md (30 min)
 □ Fix README.md badge malformed test metric (10 min)
@@ -359,6 +393,7 @@ Related Issues: #189, #220
 ```
 
 ### Phase 2: Organization (3-4 hours) 🔨
+
 ```
 □ Create docs/active/ and docs/archive/ directories (30 min)
 □ Move 21 class-extraction phase files to archive/ (30 min)
@@ -369,6 +404,7 @@ Related Issues: #189, #220
 ```
 
 ### Phase 3: Version Update (2-3 hours) 📝
+
 ```
 □ Create CHANGELOG_v0.9.0.md (45 min)
 □ Update 48 files from 0.9.0-alpha → 0.9.0-alpha (1-2 hrs)
@@ -376,6 +412,7 @@ Related Issues: #189, #220
 ```
 
 ### Phase 4: Long-term (Ongoing) 🔄
+
 ```
 □ Implement quarterly documentation audit process
 □ Add automated link validation to CI/CD
@@ -404,6 +441,7 @@ After implementing fixes, verify:
 ## Related Issues & Context
 
 **Associated Documentation Files**:
+
 - `.github/copilot-instructions.md` - Contains version 0.9.0-alpha (PRIMARY SOURCE)
 - `package.json` - Version 0.9.0-alpha (SOURCE OF TRUTH)
 - `README.md` - Badge shows 0.9.0-alpha (NEEDS BADGE FIX)
@@ -411,6 +449,7 @@ After implementing fixes, verify:
 - `docs/INDEX.md` - Navigation hub (NEEDS LINK FIXES)
 
 **Related Files**:
+
 - 48 files with v0.9.0-alpha references (NEED VERSION UPDATE)
 - 90+ archived files (NEED ORGANIZATION)
 - docs/TESTING.md (NEEDS CREATION/UPDATE)

@@ -33,6 +33,7 @@ pip install selenium>=4.15.0 pytest>=7.0.0
 ### Setup
 
 1. Install GeckoDriver (Firefox WebDriver):
+
 ```bash
 # Ubuntu/Debian
 sudo apt install firefox-geckodriver
@@ -43,7 +44,8 @@ brew install geckodriver
 # Or download from: https://github.com/mozilla/geckodriver/releases
 ```
 
-2. Copy library files to your test directory:
+1. Copy library files to your test directory:
+
 ```bash
 cp firefox_console_capture.py your_project/tests/integration/
 cp conftest.py your_project/tests/integration/  # For pytest fixtures
@@ -116,10 +118,12 @@ FirefoxConsoleCapture(
 ```
 
 **Parameters:**
+
 - `driver`: Firefox WebDriver instance
 - `config`: Optional configuration (default: `ConsoleConfig()`)
 
 **Raises:**
+
 - `TypeError`: If driver is not a Firefox WebDriver
 
 #### Methods
@@ -359,6 +363,7 @@ def test_with_custom_config(firefox_driver):
 ### Capturing Unhandled JavaScript Errors
 
 The library automatically captures:
+
 - Unhandled exceptions (`window.onerror`)
 - Unhandled promise rejections (`window.onunhandledrejection`)
 
@@ -435,6 +440,7 @@ The library uses JavaScript injection to intercept console methods:
 **Issue**: `get_logs()` returns empty list
 
 **Solution:**
+
 1. Ensure page has fully loaded before retrieving logs
 2. Add `time.sleep(0.2)` after logging actions
 3. Check that JavaScript is enabled in browser
@@ -445,6 +451,7 @@ The library uses JavaScript injection to intercept console methods:
 **Issue**: `selenium.common.exceptions.WebDriverException: 'geckodriver' executable needs to be in PATH`
 
 **Solution:**
+
 ```bash
 # Install geckodriver
 # Ubuntu/Debian
@@ -461,6 +468,7 @@ sudo mv geckodriver /usr/local/bin/
 **Issue**: `TypeError: 'type' object is not subscriptable`
 
 **Solution**: This library requires Python 3.13+. Upgrade Python or modify type hints:
+
 ```python
 # Python 3.13+ (current code)
 def get_logs(self) -> list[ConsoleLogEntry]:
@@ -475,8 +483,10 @@ def get_logs(self) -> List[ConsoleLogEntry]:
 **Issue**: Logs retrieved once don't appear in subsequent calls
 
 **Solution:**
+
 1. Don't use `auto_clear=True` if you need to access logs multiple times
 2. Store logs in variable before clearing:
+
 ```python
 all_logs = console.get_logs()
 # Work with all_logs instead of calling get_logs() again
@@ -538,6 +548,7 @@ This library is part of the Guia Turístico project. See main project LICENSE fi
 ## Support
 
 For issues, questions, or contributions:
+
 - Open an issue in the Guia Turístico repository
 - See main project documentation
 - Check functional requirements: `CONSOLE_LOG_CAPTURE_REQUIREMENTS.md`

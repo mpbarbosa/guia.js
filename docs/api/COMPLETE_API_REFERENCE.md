@@ -40,9 +40,11 @@ const geoPosition = new GeoPosition(position);
 ```
 
 **Parameters:**
+
 - `position` (Position): Browser Geolocation API Position object
 
 **Throws:**
+
 - `TypeError`: If position is null or undefined
 - `TypeError`: If position.coords is missing
 
@@ -71,6 +73,7 @@ const quality = GeoPosition.getAccuracyQuality(15); // "excellent"
 ```
 
 **Parameters:**
+
 - `accuracy` (Number): Accuracy in meters
 
 **Returns:** String - One of: "excellent" (0-20m), "good" (20-50m), "fair" (50-100m), "poor" (>100m)
@@ -94,11 +97,13 @@ const distance = position1.distanceTo(position2); // meters
 ```
 
 **Parameters:**
+
 - `otherPosition` (GeoPosition): Target position
 
 **Returns:** Number - Distance in meters
 
 **Throws:**
+
 - `TypeError`: If otherPosition is not a GeoPosition instance
 
 ##### `toString()`
@@ -150,9 +155,11 @@ positionManager.update(newPosition);
 ```
 
 **Parameters:**
+
 - `position` (Position): New browser Position object
 
 **Fires:**
+
 - `POSITION_UPDATE` event to all observers
 - `ADDRESS_FETCHED_EVENT` after geocoding
 
@@ -171,6 +178,7 @@ positionManager.subscribe(observer);
 ```
 
 **Parameters:**
+
 - `observer` (Object): Object with `update(posManager, event, data, error)` method
 
 ##### `unsubscribe(observer)`
@@ -182,6 +190,7 @@ positionManager.unsubscribe(observer);
 ```
 
 **Parameters:**
+
 - `observer` (Object): Previously subscribed observer
 
 ---
@@ -211,6 +220,7 @@ subject.subscribe({
 ```
 
 **Parameters:**
+
 - `observer` (Object): Object with `update()` method
 
 ##### `subscribeFunction(fn)`
@@ -222,6 +232,7 @@ subject.subscribeFunction((data) => console.log('Data:', data));
 ```
 
 **Parameters:**
+
 - `fn` (Function): Callback function
 
 **Returns:** Function - The subscribed function for unsubscribing
@@ -235,6 +246,7 @@ subject.notifyObservers('event', {data: 'value'});
 ```
 
 **Parameters:**
+
 - `...args` (any): Arguments passed to observer `update()` methods
 
 ##### `notifyFunctionObservers(...args)`
@@ -246,6 +258,7 @@ subject.notifyFunctionObservers({status: 'success'});
 ```
 
 **Parameters:**
+
 - `...args` (any): Arguments passed to function observers
 
 ##### `clearAllObservers()`
@@ -281,6 +294,7 @@ state.setPosition(geoPosition);
 ```
 
 **Parameters:**
+
 - `position` (GeoPosition): New position
 
 **Fires:** Calls all subscribed callbacks with new position
@@ -329,6 +343,7 @@ state.subscribe((position) => {
 ```
 
 **Parameters:**
+
 - `callback` (Function): Function called with new position
 
 ##### `unsubscribe(callback)`
@@ -340,6 +355,7 @@ state.unsubscribe(callback);
 ```
 
 **Parameters:**
+
 - `callback` (Function): Previously subscribed callback
 
 ---
@@ -361,6 +377,7 @@ const geoService = new GeolocationService(positionManager);
 ```
 
 **Parameters:**
+
 - `positionManager` (PositionManager): Singleton position manager instance
 
 #### Methods
@@ -401,6 +418,7 @@ const watchId = geoService.watchCurrentLocation();
 **Returns:** Number - Watch ID for stopping
 
 **Side Effects:**
+
 - Updates PositionManager on each position update
 - Stores watch ID internally
 
@@ -413,6 +431,7 @@ geoService.stopWatching();
 ```
 
 **Side Effects:**
+
 - Clears watch ID
 - Stops position updates
 
@@ -471,6 +490,7 @@ const geocoder = new ReverseGeocoder(latitude, longitude);
 ```
 
 **Parameters:**
+
 - `latitude` (Number): Geographic latitude
 - `longitude` (Number): Geographic longitude
 
@@ -485,6 +505,7 @@ geocoder.setCoordinates(-23.5505, -46.6333);
 ```
 
 **Parameters:**
+
 - `lat` (Number): Latitude
 - `lon` (Number): Longitude
 
@@ -514,6 +535,7 @@ const addressData = await geocoder.fetchAddress();
 **API Endpoint:** `https://nominatim.openstreetmap.org/reverse`
 
 **Query Parameters:**
+
 - `format=json`
 - `lat`, `lon`
 - `zoom=18`
@@ -539,12 +561,14 @@ geocoder.update(positionManager, 'POSITION_UPDATE', false, null);
 ```
 
 **Parameters:**
+
 - `positionManager` (PositionManager): Position manager instance
 - `posEvent` (String): Event type
 - `loading` (Boolean): Loading state
 - `error` (Error|null): Error if any
 
 **Side Effects:**
+
 - Fetches address on position update
 - Notifies observers with ADDRESS_FETCHED_EVENT
 
@@ -573,6 +597,7 @@ coordinator.setAddressDataExtractor(addressDataExtractor);
 ```
 
 **Parameters:**
+
 - `extractor` (AddressDataExtractor): Address extraction instance
 
 ##### `setCurrentPosition(position)`
@@ -584,6 +609,7 @@ coordinator.setCurrentPosition(geoPosition);
 ```
 
 **Parameters:**
+
 - `position` (GeoPosition): Current position
 
 ##### `setupChangeDetection()`
@@ -595,6 +621,7 @@ coordinator.setupChangeDetection();
 ```
 
 **Side Effects:**
+
 - Subscribes to logradouro changes
 - Subscribes to bairro changes
 - Subscribes to municipio changes
@@ -644,6 +671,7 @@ coordinator.notifyLogradouroChangeObservers({
 ```
 
 **Parameters:**
+
 - `details` (Object): Change details with `oldValue`, `newValue`, `position`
 
 ---
@@ -746,11 +774,13 @@ const address = extractor.extractAddress(nominatimData);
 ```
 
 **Parameters:**
+
 - `raw` (Object): Nominatim API response
 
 **Returns:** BrazilianStandardAddress - Extracted address object
 
 **Extraction Logic:**
+
 - `logradouro`: From `road` field
 - `numero`: From `house_number` field
 - `bairro`: From `suburb`, `neighbourhood`, or `city_district`
@@ -768,11 +798,13 @@ const refPlace = extractor.extractReferencePlace(nominatimData);
 ```
 
 **Parameters:**
+
 - `raw` (Object): Nominatim API response
 
 **Returns:** ReferencePlace - Extracted reference place
 
 **Extracts:**
+
 - OSM place type
 - Amenity classification
 - Historic designation
@@ -798,6 +830,7 @@ const cache = new AddressCache({
 ```
 
 **Parameters (Options Object):**
+
 - `maxSize` (Number): Maximum cache entries (default: 100)
 - `onLogradouroChange` (Function): Street name change callback
 - `onBairroChange` (Function): Neighborhood change callback
@@ -814,11 +847,13 @@ cache.updateAddress(key, brazilianAddress, rawNominatim);
 ```
 
 **Parameters:**
+
 - `cacheKey` (String): Cache key
 - `address` (BrazilianStandardAddress): Extracted address
 - `raw` (Object): Raw Nominatim data
 
 **Side Effects:**
+
 - Updates cache
 - Triggers change callbacks if components changed
 - Evicts oldest entry if maxSize exceeded
@@ -899,6 +934,7 @@ const category = refPlace.calculateCategory();
 **Returns:** String|null - Calculated category
 
 **Supported Types:**
+
 - `amenity`: cafe, restaurant, bank, hospital, school, etc.
 - `shop`: supermarket, bakery, clothing, etc.
 - `place`: city, town, village, suburb
@@ -930,6 +966,7 @@ const sidraDisplayer = DisplayerFactory.create('sidra');
 ```
 
 **Parameters:**
+
 - `type` (String): Displayer type - 'position', 'address', 'referencePlace', 'highlightCards', 'sidra'
 
 **Returns:** Object - Displayer instance
@@ -961,14 +998,17 @@ displayer.display(geoPosition, document.getElementById('coords'));
 ```
 
 **Parameters:**
+
 - `position` (GeoPosition): Position to display
 - `element` (HTMLElement): Target DOM element
 
 **Side Effects:**
+
 - Updates element innerHTML with formatted coordinates
 - Adds Google Maps link
 
 **Format:**
+
 ```
 📍 Latitude: -23.5505°
 📍 Longitude: -46.6333°
@@ -1001,13 +1041,16 @@ displayer.display(brazilianAddress, document.getElementById('address'));
 ```
 
 **Parameters:**
+
 - `address` (BrazilianStandardAddress): Address to display
 - `element` (HTMLElement): Target DOM element
 
 **Side Effects:**
+
 - Updates element innerHTML with formatted address
 
 **Format:**
+
 ```
 📫 Av. Paulista, 1578
 🏘️ Bairro: Bela Vista
@@ -1040,10 +1083,12 @@ displayer.displayMunicipioCard(address, cardElement);
 ```
 
 **Parameters:**
+
 - `address` (BrazilianStandardAddress): Address with municipality data
 - `element` (HTMLElement): Target card element
 
 **Card Content (v0.9.0+):**
+
 ```
 ┌─────────────────────────────────┐
 │ 🏛️ Município                    │
@@ -1061,10 +1106,12 @@ displayer.displayBairroCard(address, cardElement);
 ```
 
 **Parameters:**
+
 - `address` (BrazilianStandardAddress): Address with neighborhood data
 - `element` (HTMLElement): Target card element
 
 **Card Content:**
+
 ```
 ┌──────────────────┐
 │ 🏘️ Bairro        │
@@ -1097,9 +1144,11 @@ displayer.displayLoading(sidraElement);
 ```
 
 **Parameters:**
+
 - `element` (HTMLElement): Target element
 
 **Loading UI:**
+
 ```
 ⏳ Carregando dados do IBGE...
 ```
@@ -1113,6 +1162,7 @@ displayer.displayError(new Error('API error'), sidraElement);
 ```
 
 **Parameters:**
+
 - `error` (Error): Error object
 - `element` (HTMLElement): Target element
 
@@ -1129,10 +1179,12 @@ displayer.display({
 ```
 
 **Parameters:**
+
 - `data` (Object): SIDRA data with `municipality`, `population`, `year`
 - `element` (HTMLElement): Target element
 
 **Display Format:**
+
 ```
 📊 População (IBGE SIDRA)
 🏙️ Município: Recife
@@ -1176,6 +1228,7 @@ manager.speak('Olá, bem-vindo!', {
 ```
 
 **Parameters:**
+
 - `text` (String): Text to speak
 - `options` (Object): Configuration object
   - `rate` (Number): Speech rate 0.1-10.0 (default: 1.0)
@@ -1186,6 +1239,7 @@ manager.speak('Olá, bem-vindo!', {
   - `onError` (Function): Error callback
 
 **Side Effects:**
+
 - Enqueues speech item
 - Starts queue processing if not running
 
@@ -1214,6 +1268,7 @@ manager.stop();
 ```
 
 **Side Effects:**
+
 - Cancels current speech
 - Clears queue
 - Resets state
@@ -1237,11 +1292,13 @@ const voice = await manager.selectBestVoice('pt-BR');
 ```
 
 **Parameters:**
+
 - `lang` (String): Language code
 
 **Returns:** Promise<SpeechSynthesisVoice|null>
 
 **Selection Priority:**
+
 1. Exact language match (pt-BR)
 2. Language prefix match (pt-*)
 3. First available voice
@@ -1274,6 +1331,7 @@ const voices = await loader.loadVoices();
 **Returns:** Promise<Array<SpeechSynthesisVoice>>
 
 **Retry Strategy:**
+
 - Initial delay: 100ms
 - Exponential backoff: 100ms → 200ms → 400ms → 800ms → 1600ms → 3200ms
 - Max delay: 5000ms
@@ -1327,6 +1385,7 @@ const selector = new VoiceSelector(availableVoices);
 ```
 
 **Parameters:**
+
 - `voices` (Array<SpeechSynthesisVoice>): Available voices
 
 #### Methods
@@ -1340,11 +1399,13 @@ const voice = selector.selectVoice('pt-BR');
 ```
 
 **Parameters:**
+
 - `language` (String): Target language code
 
 **Returns:** SpeechSynthesisVoice|null
 
 **Selection Strategy:**
+
 1. Exact match (pt-BR): +20 points
 2. Prefix match (pt-*): +10 points
 3. Local voice: +10 points
@@ -1359,6 +1420,7 @@ const ptVoices = selector.filterByLanguage('pt-BR');
 ```
 
 **Parameters:**
+
 - `language` (String): Language code
 
 **Returns:** Array<SpeechSynthesisVoice> - Matching voices
@@ -1372,12 +1434,14 @@ const score = selector.scoreVoice(voice, 'pt-BR');
 ```
 
 **Parameters:**
+
 - `voice` (SpeechSynthesisVoice): Voice to score
 - `language` (String): Target language
 
 **Returns:** Number - Quality score
 
 **Scoring:**
+
 - Exact language match: +20
 - Prefix match: +10
 - Local voice: +10
@@ -1393,6 +1457,7 @@ const info = selector.getVoiceInfo(voice);
 ```
 
 **Parameters:**
+
 - `voice` (SpeechSynthesisVoice): Voice
 
 **Returns:** Object - Voice metadata
@@ -1422,9 +1487,11 @@ config.setRate(1.5);
 ```
 
 **Parameters:**
+
 - `rate` (Number): Speech rate 0.1-10.0
 
 **Side Effects:**
+
 - Clamps value to valid range
 - Logs warning if clamped
 
@@ -1437,9 +1504,11 @@ config.setPitch(1.2);
 ```
 
 **Parameters:**
+
 - `pitch` (Number): Voice pitch 0.0-2.0
 
 **Side Effects:**
+
 - Clamps value to valid range
 - Logs warning if clamped
 
@@ -1472,6 +1541,7 @@ config.reset();
 ```
 
 **Side Effects:**
+
 - Sets rate to 1.0
 - Sets pitch to 1.0
 
@@ -1504,6 +1574,7 @@ chrono.start();
 ```
 
 **Side Effects:**
+
 - Records start time
 - Sets state to 'running'
 - Notifies observers
@@ -1519,6 +1590,7 @@ const elapsed = chrono.stop();
 **Returns:** Number - Elapsed milliseconds
 
 **Side Effects:**
+
 - Records stop time
 - Sets state to 'stopped'
 - Notifies observers
@@ -1532,6 +1604,7 @@ chrono.pause();
 ```
 
 **Side Effects:**
+
 - Records pause time
 - Sets state to 'paused'
 - Preserves elapsed time
@@ -1545,6 +1618,7 @@ chrono.resume();
 ```
 
 **Side Effects:**
+
 - Adjusts start time
 - Sets state to 'running'
 - Continues from paused time
@@ -1568,6 +1642,7 @@ chrono.reset();
 ```
 
 **Side Effects:**
+
 - Clears all times
 - Sets state to 'idle'
 - Notifies observers
@@ -1585,9 +1660,11 @@ chrono.subscribe({
 ```
 
 **Parameters:**
+
 - `observer` (Object): Observer with `update(event, data)` method
 
 **Events:**
+
 - `'started'`: Timing started
 - `'stopped'`: Timing stopped
 - `'paused'`: Timing paused
@@ -1617,10 +1694,12 @@ log('User clicked button', { buttonId: 'submit' });
 ```
 
 **Parameters:**
+
 - `message` (String): Log message
 - `...params` (any): Additional parameters
 
 **Side Effects:**
+
 - Writes to console.log
 - Writes to DOM if textarea#log exists
 
@@ -1635,10 +1714,12 @@ warn('Geolocation permission denied');
 ```
 
 **Parameters:**
+
 - `message` (String): Warning message
 - `...params` (any): Additional parameters
 
 **Side Effects:**
+
 - Writes to console.warn
 - Writes to DOM with ⚠️ prefix
 
@@ -1653,10 +1734,12 @@ error('API request failed', err);
 ```
 
 **Parameters:**
+
 - `message` (String): Error message
 - `...params` (any): Additional parameters
 
 **Side Effects:**
+
 - Writes to console.error
 - Writes to DOM with ❌ prefix
 
@@ -1671,10 +1754,12 @@ debug('Cache hit', { key: 'address-123' });
 ```
 
 **Parameters:**
+
 - `message` (String): Debug message
 - `...params` (any): Additional parameters
 
 **Side Effects:**
+
 - Only logs if log level includes 'debug'
 - Writes to console.log with 🐛 prefix
 
@@ -1692,6 +1777,7 @@ setLogLevel('error'); // Show error only
 ```
 
 **Parameters:**
+
 - `level` (String): Log level - 'debug', 'info', 'warn', 'error'
 
 ---
@@ -1719,6 +1805,7 @@ const timerId = timerManager.setInterval(() => {
 ```
 
 **Parameters:**
+
 - `callback` (Function): Callback function
 - `delay` (Number): Delay in milliseconds
 - `id` (String): Unique timer identifier
@@ -1726,6 +1813,7 @@ const timerId = timerManager.setInterval(() => {
 **Returns:** String - Timer ID (same as input `id`)
 
 **Side Effects:**
+
 - Registers timer for cleanup
 - Starts interval
 
@@ -1740,6 +1828,7 @@ const timerId = timerManager.setTimeout(() => {
 ```
 
 **Parameters:**
+
 - `callback` (Function): Callback function
 - `delay` (Number): Delay in milliseconds
 - `id` (String): Unique timer identifier
@@ -1747,6 +1836,7 @@ const timerId = timerManager.setTimeout(() => {
 **Returns:** String - Timer ID (same as input `id`)
 
 **Side Effects:**
+
 - Registers timer for cleanup
 - Starts timeout
 
@@ -1759,9 +1849,11 @@ timerManager.clearTimer('my-interval');
 ```
 
 **Parameters:**
+
 - `id` (String): Timer identifier
 
 **Side Effects:**
+
 - Stops timer
 - Removes from registry
 
@@ -1774,6 +1866,7 @@ timerManager.clearAllTimers();
 ```
 
 **Side Effects:**
+
 - Stops all registered timers
 - Clears timer registry
 - Called automatically on app shutdown
@@ -1811,6 +1904,7 @@ const distance = calculateDistance(
 ```
 
 **Parameters:**
+
 - `lat1` (Number): First latitude
 - `lon1` (Number): First longitude
 - `lat2` (Number): Second latitude
@@ -1840,11 +1934,13 @@ const safe = escapeHtml('<script>alert("XSS")</script>');
 ```
 
 **Parameters:**
+
 - `text` (String): Text to escape
 
 **Returns:** String - Escaped text
 
 **Escapes:**
+
 - `&` → `&amp;`
 - `<` → `&lt;`
 - `>` → `&gt;`
@@ -1861,6 +1957,7 @@ const safe = escapeHtmlTruncate('<b>Long text...</b>', 10);
 ```
 
 **Parameters:**
+
 - `text` (String): Text to escape and truncate
 - `maxLength` (Number): Maximum length
 
@@ -1886,6 +1983,7 @@ const html = accessibleEmoji('🗺️', 'Map icon');
 ```
 
 **Parameters:**
+
 - `emoji` (String): Emoji character(s)
 - `label` (String): Screen reader label
 
@@ -1900,6 +1998,7 @@ const element = createAccessibleEmoji('📍', 'Location pin');
 ```
 
 **Parameters:**
+
 - `emoji` (String): Emoji character(s)
 - `label` (String): Screen reader label
 
@@ -1914,9 +2013,11 @@ makeEmojisAccessible(document.getElementById('content'));
 ```
 
 **Parameters:**
+
 - `container` (HTMLElement): Container element
 
 **Side Effects:**
+
 - Finds all text nodes with emojis
 - Wraps them in accessible spans
 - Uses `ACCESSIBLE_EMOJIS` map for labels
@@ -1934,6 +2035,7 @@ console.log(ACCESSIBLE_EMOJIS.get('🗺️')); // "Map icon"
 ```
 
 **Includes:**
+
 - 🗺️: "Map icon"
 - 📍: "Location pin"
 - 🏘️: "Neighborhood icon"
@@ -1963,16 +2065,19 @@ disableWithReason(
 ```
 
 **Parameters:**
+
 - `button` (HTMLElement): Button element
 - `reason` (String): Reason for disabled state
 
 **Side Effects:**
+
 - Disables button
 - Adds status message below button
 - Sets ARIA attributes
 - Adds `aria-describedby` linking to status
 
 **Accessibility:**
+
 - `role="status"`
 - `aria-live="polite"`
 - `aria-atomic="true"`
@@ -1992,10 +2097,12 @@ enableWithMessage(
 ```
 
 **Parameters:**
+
 - `button` (HTMLElement): Button element
 - `message` (String): Success/ready message
 
 **Side Effects:**
+
 - Enables button
 - Updates status message
 - Announces change to screen readers
@@ -2009,15 +2116,18 @@ addButtonStatus(button, 'Processing...', 'info');
 ```
 
 **Parameters:**
+
 - `button` (HTMLElement): Button element
 - `message` (String): Status message
 - `type` (String): Status type - 'info', 'warning', 'success', 'error'
 
 **Side Effects:**
+
 - Creates/updates status element
 - Applies color-coded styling
 
 **Status Colors:**
+
 - `info`: Blue (#2196F3)
 - `warning`: Orange (#FF9800)
 - `success`: Green (#4CAF50)
@@ -2032,9 +2142,11 @@ removeButtonStatus(button);
 ```
 
 **Parameters:**
+
 - `button` (HTMLElement): Button element
 
 **Side Effects:**
+
 - Removes status element
 - Removes ARIA attributes
 
@@ -2047,11 +2159,13 @@ updateButtonStatus(button, 'Almost done...', 'warning');
 ```
 
 **Parameters:**
+
 - `button` (HTMLElement): Button element
 - `message` (String): New message
 - `type` (String): New type
 
 **Side Effects:**
+
 - Updates message text
 - Updates status type styling
 - Announces to screen readers
@@ -2070,6 +2184,7 @@ console.log(BUTTON_STATUS_MESSAGES.AWAITING_LOCATION);
 ```
 
 **Available Messages:**
+
 - `AWAITING_LOCATION`: "Aguardando localização para habilitar"
 - `READY_TO_USE`: "Pronto para usar"
 - `LOCATION_TRACKING_ACTIVE`: "Rastreamento ativo"
@@ -2096,6 +2211,7 @@ showToast('Address updated successfully', 'success', 3000);
 ```
 
 **Parameters:**
+
 - `message` (String): Notification message
 - `type` (String): Toast type - 'success', 'error', 'info', 'warning'
 - `duration` (Number): Display duration in milliseconds (default: 3000)
@@ -2103,6 +2219,7 @@ showToast('Address updated successfully', 'success', 3000);
 **Returns:** String - Toast ID for dismissal
 
 **Side Effects:**
+
 - Creates toast element
 - Animates into view
 - Auto-dismisses after duration
@@ -2116,6 +2233,7 @@ showSuccess('Location updated', 2000);
 ```
 
 **Parameters:**
+
 - `message` (String): Success message
 - `duration` (Number): Duration (default: 3000)
 
@@ -2130,6 +2248,7 @@ showError('Failed to fetch address', 5000);
 ```
 
 **Parameters:**
+
 - `message` (String): Error message
 - `duration` (Number): Duration (default: 5000)
 
@@ -2144,6 +2263,7 @@ showInfo('Geolocation permission required', 4000);
 ```
 
 **Parameters:**
+
 - `message` (String): Info message
 - `duration` (Number): Duration (default: 3000)
 
@@ -2158,6 +2278,7 @@ showWarning('Low accuracy detected', 4000);
 ```
 
 **Parameters:**
+
 - `message` (String): Warning message
 - `duration` (Number): Duration (default: 4000)
 
@@ -2173,9 +2294,11 @@ dismissToast(id);
 ```
 
 **Parameters:**
+
 - `toastId` (String): Toast identifier
 
 **Side Effects:**
+
 - Animates toast out
 - Removes from DOM
 
@@ -2188,6 +2311,7 @@ dismissAllToasts();
 ```
 
 **Side Effects:**
+
 - Dismisses all active toasts
 - Clears toast queue
 
@@ -2217,6 +2341,7 @@ if (isMobileDevice({ includeTablets: false })) {
 ```
 
 **Parameters:**
+
 - `options` (Object): Detection options
   - `includeTablets` (Boolean): Include tablets as mobile (default: true)
   - `checkTouch` (Boolean): Check for touch support (default: true)
@@ -2224,6 +2349,7 @@ if (isMobileDevice({ includeTablets: false })) {
 **Returns:** Boolean - True if mobile device
 
 **Detection Methods:**
+
 1. User agent matching (phone/tablet keywords)
 2. Screen width (< 768px)
 3. Touch support (if `checkTouch: true`)
@@ -2248,10 +2374,12 @@ const manager = new WebGeocodingManager(document, 'root-element-id');
 ```
 
 **Parameters:**
+
 - `document` (Document): Browser document object
 - `elementId` (String): Root element ID
 
 **Side Effects:**
+
 - Initializes PositionManager
 - Creates ServiceCoordinator
 - Sets up all displayers
@@ -2269,6 +2397,7 @@ manager.startTracking();
 ```
 
 **Side Effects:**
+
 - Starts GeolocationService watch
 - Begins position updates
 - Activates geocoding pipeline
@@ -2282,6 +2411,7 @@ manager.stopTracking();
 ```
 
 **Side Effects:**
+
 - Stops GeolocationService watch
 - Pauses geocoding
 - Clears pending requests
@@ -2305,6 +2435,7 @@ manager.cleanup();
 ```
 
 **Side Effects:**
+
 - Stops tracking
 - Clears all timers
 - Unsubscribes all observers
@@ -2325,6 +2456,7 @@ const coordinator = new ServiceCoordinator(positionManager, document);
 ```
 
 **Parameters:**
+
 - `positionManager` (PositionManager): Singleton position manager
 - `document` (Document): Browser document object
 
@@ -2339,6 +2471,7 @@ const displayers = coordinator.createDisplayers();
 ```
 
 **Returns:** Object - Map of displayer instances
+
 - `position`: HTMLPositionDisplayer
 - `address`: HTMLAddressDisplayer
 - `referencePlace`: HTMLReferencePlaceDisplayer
@@ -2354,6 +2487,7 @@ coordinator.wireObservers();
 ```
 
 **Side Effects:**
+
 - Connects PositionManager → ReverseGeocoder
 - Connects ReverseGeocoder → Displayers
 - Connects AddressCache → ChangeDetection
@@ -2368,6 +2502,7 @@ coordinator.startTracking();
 ```
 
 **Side Effects:**
+
 - Delegates to GeolocationService
 - Activates all observers
 
@@ -2380,6 +2515,7 @@ coordinator.stopTracking();
 ```
 
 **Side Effects:**
+
 - Delegates to GeolocationService
 - Deactivates observers
 
@@ -2451,6 +2587,7 @@ statusManager.setStatus('geolocation', 'tracking');
 ```
 
 **Parameters:**
+
 - `key` (String): Status key
 - `value` (any): Status value
 
@@ -2463,6 +2600,7 @@ const status = statusManager.getStatus('geolocation');
 ```
 
 **Parameters:**
+
 - `key` (String): Status key
 
 **Returns:** any - Status value or undefined
@@ -2476,6 +2614,7 @@ statusManager.clearStatus('geolocation');
 ```
 
 **Parameters:**
+
 - `key` (String): Status key to clear
 
 ##### `clearAllStatuses()`
@@ -2529,6 +2668,7 @@ document.body.appendChild(skeleton);
 ```
 
 **Parameters:**
+
 - `config` (Object): Skeleton configuration
   - `type` (String): 'text', 'circle', 'rect', 'card'
   - `lines` (Number): Number of lines (for text type)
@@ -2549,14 +2689,17 @@ showSkeletons(document.getElementById('address'), 'address');
 ```
 
 **Parameters:**
+
 - `container` (HTMLElement): Target container
 - `preset` (String): Preset name - 'address', 'position', 'card', 'list'
 
 **Side Effects:**
+
 - Clears container
 - Adds skeleton elements
 
 **Presets:**
+
 - `'address'`: 4-line address skeleton
 - `'position'`: 2-line coordinates skeleton
 - `'card'`: Card with title + content skeleton
@@ -2571,9 +2714,11 @@ hideSkeletons(container);
 ```
 
 **Parameters:**
+
 - `container` (HTMLElement): Container with skeletons
 
 **Side Effects:**
+
 - Removes all skeleton elements
 
 ---
@@ -2603,6 +2748,7 @@ const emptyState = createEmptyState({
 ```
 
 **Parameters:**
+
 - `config` (Object): Empty state configuration
   - `icon` (String): Emoji icon
   - `title` (String): Title text
@@ -2626,6 +2772,7 @@ const locationEmptyState = EMPTY_STATES.LOCATION;
 ```
 
 **Available Presets:**
+
 - `LOCATION`: No location available
 - `ADDRESS`: No address data
 - `RESULTS`: No search results
@@ -2824,11 +2971,13 @@ window.addEventListener('beforeunload', () => {
 Browser geolocation errors.
 
 **Error Codes:**
+
 - `1` (PERMISSION_DENIED): User denied permission
 - `2` (POSITION_UNAVAILABLE): Location unavailable
 - `3` (TIMEOUT): Request timed out
 
 **Handling:**
+
 ```javascript
 try {
   const position = await geoService.getSingleLocationUpdate();
@@ -2852,11 +3001,13 @@ try {
 Nominatim API errors.
 
 **Common Issues:**
+
 - Rate limiting (HTTP 429)
 - Network errors
 - Invalid coordinates
 
 **Handling:**
+
 ```javascript
 try {
   const address = await geocoder.fetchAddress();
@@ -2877,6 +3028,7 @@ try {
 ### Observer Pattern
 
 1. **Always unsubscribe** to prevent memory leaks:
+
 ```javascript
 const observer = {update: () => {}};
 subject.subscribe(observer);
@@ -2884,7 +3036,8 @@ subject.subscribe(observer);
 subject.unsubscribe(observer);
 ```
 
-2. **Use function observers** for simple callbacks:
+1. **Use function observers** for simple callbacks:
+
 ```javascript
 const unsubscribe = subject.subscribeFunction((data) => {
   console.log(data);
@@ -2896,6 +3049,7 @@ unsubscribe();
 ### Timer Management
 
 1. **Always use TimerManager** for timers:
+
 ```javascript
 // ✅ Good
 timerManager.setInterval(fn, 1000, 'my-timer');
@@ -2904,7 +3058,8 @@ timerManager.setInterval(fn, 1000, 'my-timer');
 setInterval(fn, 1000);
 ```
 
-2. **Clear timers on cleanup**:
+1. **Clear timers on cleanup**:
+
 ```javascript
 window.addEventListener('beforeunload', () => {
   timerManager.clearAllTimers();
@@ -2914,16 +3069,18 @@ window.addEventListener('beforeunload', () => {
 ### Accessibility
 
 1. **Make emojis accessible**:
+
 ```javascript
 const html = accessibleEmoji('🗺️', 'Map icon');
 ```
 
-2. **Use button status messages**:
+1. **Use button status messages**:
+
 ```javascript
 disableWithReason(button, 'Aguardando localização');
 ```
 
-3. **Test with screen readers**: Ensure ARIA attributes are present
+1. **Test with screen readers**: Ensure ARIA attributes are present
 
 ### Performance
 
@@ -2939,14 +3096,17 @@ disableWithReason(button, 'Aguardando localização');
 ### From v0.9.0 to v0.9.0-alpha
 
 **New Features:**
+
 - Metropolitan region display support
 - Button status messages utility
 - Enhanced accessibility
 
 **Breaking Changes:**
+
 - None (backward compatible)
 
 **New APIs:**
+
 ```javascript
 // Button status messages
 import { disableWithReason, enableWithMessage } from './utils/button-status.js';
@@ -2956,6 +3116,7 @@ address.regiaoMetropolitanaFormatada(); // New method
 ```
 
 **Migration Steps:**
+
 1. Update imports for new utilities
 2. Replace manual button state management with button-status utilities
 3. Update UI to display metropolitan region if desired

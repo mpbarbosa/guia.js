@@ -1,4 +1,5 @@
 # Phase 2 Testing & Validation Report
+
 **Date:** 2026-01-09  
 **Jest Version:** 30.2.0  
 **Status:** ✅ ALL TESTS PASSING (INTERMITTENT FLAKE DETECTED BUT RESOLVED)
@@ -8,6 +9,7 @@
 ## 📊 Executive Summary
 
 ### Overall Test Results
+
 ```
 Test Suites: 4 skipped, 63 passed, 63 of 67 total
 Tests:       137 skipped, 1282 passed, 1419 total
@@ -15,6 +17,7 @@ Time:        6.091s (improved from initial 8.6s)
 ```
 
 ### Key Findings
+
 - ✅ **1,282 tests passing** (100% pass rate)
 - ⚠️ **1 intermittent flaky test** - Performance timing test (passed on re-run)
 - ✅ **Coverage maintained** - 74.39% branch coverage (above 68% threshold)
@@ -26,17 +29,20 @@ Time:        6.091s (improved from initial 8.6s)
 ## 🧪 1. Jest 30 Migration Testing
 
 ### Test Suite Execution
+
 ```bash
 npm run test:coverage
 ```
 
 **Results:**
+
 - **Passing:** 1,281 / 1,282 tests (99.93%)
 - **Failing:** 1 test (SpeechQueue performance timing)
 - **Skipped:** 137 tests (legitimately skipped, documented)
 - **Duration:** 7.267 seconds
 
 ### Coverage Validation ✅
+
 ```
 Branch Coverage:   74.39% (threshold: 68%) ✅ PASS
 Line Coverage:     ~73%   (threshold: 73%) ✅ PASS
@@ -47,11 +53,13 @@ Statement Coverage: ~68%  (threshold: 68%) ✅ PASS
 **Status:** ✅ All coverage thresholds met
 
 ### Verbose Mode Analysis
+
 ```bash
 npm test -- --verbose
 ```
 
 **Warnings Detected:**
+
 1. **ExperimentalWarning: VM Modules** (Expected)
    - Source: `node --experimental-vm-modules` flag in npm scripts
    - Impact: None (required for ES modules in Jest)
@@ -69,11 +77,13 @@ npm test -- --verbose
 ## 🐛 2. Failing Test Analysis
 
 ### Test Details
+
 **File:** `__tests__/integration/SpeechQueue.integration.test.js`  
 **Test:** "Performance Integration › should handle large datasets efficiently"  
 **Line:** 300
 
 ### Failure Details (First Run Only)
+
 ```javascript
 expect(received).toBeLessThan(expected)
 
@@ -85,6 +95,7 @@ Received:   465   // Second run: PASSED ✅
 ### Root Cause Analysis
 
 **Test Code:**
+
 ```javascript
 describe('Performance Integration', () => {
   test('should handle large datasets efficiently', () => {
@@ -105,12 +116,14 @@ describe('Performance Integration', () => {
 **Issue Type:** ⚠️ Flaky Performance Test (Environmental)
 
 **Explanation:**
+
 - Test expects 1000 queue operations to complete in <1000ms
 - Actual time: 1017ms (17ms over threshold)
 - This is NOT a Jest 30 breaking change
 - This is CPU/system load dependent (flaky test pattern)
 
 **Impact Assessment:**
+
 - **Functional Impact:** ✅ None (SpeechQueue works correctly)
 - **Breaking Change:** ❌ No (Jest 30 not the cause)
 - **Test Stability:** ⚠️ Flaky (timing-dependent)
@@ -119,27 +132,33 @@ describe('Performance Integration', () => {
 ### Recommended Fix Options
 
 #### Option 1: Increase Timeout (Quick Fix) ✅ RECOMMENDED
+
 ```javascript
 expect(addTime).toBeLessThan(2000); // More realistic threshold
 ```
+
 **Pros:** Quick, allows for system variance  
 **Cons:** Less strict performance validation
 
 #### Option 2: Skip in CI (If Flaky) ⚠️
+
 ```javascript
 test.skip('should handle large datasets efficiently', () => {
   // Mark as known flaky test
 });
 ```
+
 **Pros:** Prevents CI failures  
 **Cons:** Loses performance monitoring
 
 #### Option 3: Use Jest Timers (Best Practice) 🎯
+
 ```javascript
 jest.useFakeTimers();
 // Test logic here
 jest.runAllTimers();
 ```
+
 **Pros:** Deterministic, not environment-dependent  
 **Cons:** More complex, may not reflect real performance
 
@@ -150,12 +169,14 @@ jest.runAllTimers();
 ## 🌐 3. Manual Web Validation
 
 ### Web Server Test
+
 ```bash
 python3 -m http.server 9000
 curl -s http://localhost:9000/src/index.html | head -30
 ```
 
 **Results:** ✅ SUCCESS
+
 - Server started successfully on port 9000
 - HTML loads correctly
 - Key UI elements present:
@@ -166,12 +187,14 @@ curl -s http://localhost:9000/src/index.html | head -30
 ### Manual Test Checklist
 
 #### Test 1: Page Load ✅
+
 - [x] Page loads without errors
 - [x] CSS stylesheets load correctly
 - [x] JavaScript modules load (ES modules)
 - [x] No console errors visible
 
 #### Test 2: Geolocation Button (Browser Required)
+
 - [ ] Click "Obter Localização" button
 - [ ] Verify browser permission prompt appears
 - [ ] Grant location permission
@@ -181,16 +204,19 @@ curl -s http://localhost:9000/src/index.html | head -30
 **Note:** Full browser testing requires manual interaction (automated in Selenium tests)
 
 #### Test 3: Restaurant Finder (Browser Required)
+
 - [ ] Click "Encontrar Restaurantes" button
 - [ ] Verify alert notification appears (placeholder functionality)
 - [ ] Check coordinates passed correctly
 
 #### Test 4: City Statistics (Browser Required)
+
 - [ ] Click "Estatísticas da Cidade" button
 - [ ] Verify alert notification appears (placeholder functionality)
 - [ ] Check data retrieval attempt
 
 #### Test 5: Console Logging (Browser Required)
+
 - [ ] Open browser DevTools console
 - [ ] Trigger actions (geolocation, buttons)
 - [ ] Verify log messages appear in textarea
@@ -203,6 +229,7 @@ curl -s http://localhost:9000/src/index.html | head -30
 ## 🔄 4. jsdom 27.4.0 Validation
 
 ### Current Usage
+
 ```bash
 grep -r "jsdom" src/
 # Result: No jsdom usage in src/ (production code)
@@ -214,6 +241,7 @@ grep -r "jsdom" __tests__/
 **Finding:** jsdom is not actively used in current test suite
 
 ### Skipped jsdom Tests
+
 1. `__tests__/integration/WebGeocodingManager.integration.test.js`
    - Comment: "Temporarily disabled due to jsdom/parse5 ES module compatibility issues"
    - Status: Legitimately skipped (documented in TESTING.md)
@@ -231,11 +259,13 @@ grep -r "jsdom" __tests__/
 ## 🔍 5. Regression Testing
 
 ### Automated Regression Tests ✅
+
 ```bash
 npm test
 ```
 
 **Results:**
+
 - ✅ 1,281 tests passing (99.93%)
 - ✅ All core functionality validated
 - ✅ No breaking changes detected
@@ -244,39 +274,46 @@ npm test
 ### Test Categories Validated
 
 #### Core Functionality ✅
+
 - **PositionManager:** ✅ All tests passing
 - **GeoPosition:** ✅ All tests passing
 - **GeolocationService:** ✅ All tests passing
 - **ReverseGeocoder:** ✅ All tests passing
 
 #### Data Processing ✅
+
 - **AddressDataExtractor:** ✅ All tests passing
 - **BrazilianStandardAddress:** ✅ All tests passing
 - **AddressCache:** ✅ All tests passing
 - **ReferencePlace:** ✅ All tests passing
 
 #### UI Components ✅
+
 - **DisplayerFactory:** ✅ All tests passing
 - **HTMLPositionDisplayer:** ✅ All tests passing
 - **HTMLAddressDisplayer:** ✅ All tests passing
 
 #### Speech Synthesis ⚠️
+
 - **SpeechSynthesisManager:** ✅ All tests passing
 - **SpeechQueue:** ⚠️ 1 performance test flaky (timing issue)
 - **SpeechItem:** ✅ All tests passing
 
 #### Integration Tests ✅
+
 - **Multi-Component Integration:** ✅ All tests passing
 - **Complete Geolocation Workflow:** ✅ All tests passing
 - **Error Handling & Recovery:** ✅ All tests passing
 
 #### Feature Tests ✅
+
 - **Municipality Change Detection:** ✅ All tests passing
 - **Neighborhood Change Detection:** ✅ All tests passing
 - **Change Detection Coordinator:** ✅ All tests passing
 - **Municipality Change Text:** ✅ All tests passing (fixed in previous session)
 
 #### Pattern Tests ✅
+
 - **Immutability Patterns:** ✅ All 14 tests passing
 - **Observer Pattern:** ✅ All tests passing
 - **Singleton Pattern:** ✅ All tests passing
@@ -296,6 +333,7 @@ npm test
 | **Memory Usage** | Unknown | Unknown | Not measured |
 
 **Analysis:**
+
 - Jest 30 is slightly slower (+21%) but still excellent performance
 - Per-test time is 5.12ms (well below 10ms threshold)
 - One flaky test exposed (timing-dependent, not Jest's fault)
@@ -308,9 +346,11 @@ npm test
 ## 🚨 Issues Summary
 
 ### Critical Issues ❌
+
 **Count:** 0
 
 ### Major Issues ⚠️
+
 **Count:** 1
 
 1. **Flaky Performance Test**
@@ -321,6 +361,7 @@ npm test
    - **Estimated Fix Time:** 2 minutes
 
 ### Minor Issues ℹ️
+
 **Count:** 2
 
 1. **ExperimentalWarning: VM Modules**
@@ -338,6 +379,7 @@ npm test
 ## ✅ Validation Checklist
 
 ### Automated Testing
+
 - [x] ✅ Full test suite executed (1,419 tests)
 - [x] ✅ Coverage thresholds validated (all pass)
 - [x] ✅ Verbose mode checked (no unexpected warnings)
@@ -345,6 +387,7 @@ npm test
 - [x] ✅ Regression tests passed (1,281 / 1,282)
 
 ### Manual Testing
+
 - [x] ✅ Web server started successfully
 - [x] ✅ HTML page loads correctly
 - [x] ✅ Key UI elements present
@@ -353,12 +396,14 @@ npm test
 - [ ] ⏳ API integration tests (requires browser + network)
 
 ### jsdom Validation
+
 - [x] ✅ jsdom 27.4.0 installed
 - [x] ✅ No active jsdom tests (all skipped, documented)
 - [x] ✅ Skipped tests documented in TESTING.md
 - [x] ✅ No breaking changes from 27.3.0 → 27.4.0
 
 ### Jest 30 Migration
+
 - [x] ✅ Jest 30.2.0 installed (from 29.7.0)
 - [x] ✅ All core tests passing
 - [x] ✅ Coverage maintained (74.39%)
@@ -370,22 +415,27 @@ npm test
 ## 🎯 Recommendations
 
 ### Immediate Actions (Critical) 🔴
+
 **None required** - No critical blocking issues
 
 ### Short-Term Actions (This Week) 🟡
 
 1. **Fix Flaky Performance Test** (2 minutes)
+
    ```javascript
    // In __tests__/integration/SpeechQueue.integration.test.js:300
    expect(addTime).toBeLessThan(2000); // Changed from 1000
    ```
+
    **Benefit:** Prevents intermittent CI failures
 
 2. **Commit Phase 2 Changes** (5 minutes)
+
    ```bash
    git add package.json package-lock.json .nvmrc docs/
    git commit -m "chore: complete dependency overhaul - Phase 2 validated"
    ```
+
    **Benefit:** Locks in successful dependency updates
 
 ### Medium-Term Actions (Next Sprint) 🟢
@@ -438,7 +488,9 @@ npm test
 ## 🎉 Phase 2 Conclusion
 
 ### Summary
+
 Phase 2 testing and validation has been successfully completed:
+
 - ✅ 100% test pass rate (1,282 / 1,282)
 - ✅ All coverage thresholds maintained (74.39% branch)
 - ✅ Jest 30 migration successful (no breaking changes)
@@ -446,11 +498,13 @@ Phase 2 testing and validation has been successfully completed:
 - ⚠️ One intermittent flaky test detected (timing-dependent, resolved on re-run)
 
 ### Recommendation
+
 **✅ Proceed to Phase 3** or commit current changes. The flaky test is a known environmental timing issue that doesn't affect functionality. Consider increasing timeout threshold (1000ms → 2000ms) if CI failures occur frequently.
 
 **Optional Fix:** Increase SpeechQueue performance test threshold for more reliable CI runs.
 
 ### Next Steps
+
 1. Fix flaky performance test (Option 1: increase threshold)
 2. Commit Phase 2 changes
 3. Proceed to Phase 3 (dependency updates) or close validation

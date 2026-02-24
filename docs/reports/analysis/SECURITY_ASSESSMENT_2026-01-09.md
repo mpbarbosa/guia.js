@@ -1,4 +1,5 @@
 # Security Vulnerability Assessment
+
 **Date**: 2026-01-09  
 **Audit Tool**: npm audit
 
@@ -17,6 +18,7 @@
 ### Vulnerability #1: glob Command Injection
 
 **npm audit reports**:
+
 ```
 glob  10.2.0 - 10.4.5
 Severity: high
@@ -25,6 +27,7 @@ CWE-78: OS Command Injection
 ```
 
 **Actual Reality**:
+
 ```bash
 $ cat node_modules/glob/package.json | grep version
 "version": "7.2.3"
@@ -33,12 +36,14 @@ $ cat node_modules/glob/package.json | grep version
 **Status**: ✅ **FALSE POSITIVE**
 
 **Explanation**:
+
 - npm audit claims glob 10.2.0-10.4.5 is installed
 - **Actually installed**: glob@7.2.3
 - glob@7.2.3 is **NOT vulnerable** (vulnerability is in 10.x only)
 - glob@7.2.3 predates the vulnerability by years
 
-**Why False Positive**: 
+**Why False Positive**:
+
 - Lockfile drift causing npm audit confusion
 - npm audit reads lockfile, which may reference newer versions
 - Actual node_modules has safe version
@@ -48,6 +53,7 @@ $ cat node_modules/glob/package.json | grep version
 ### Vulnerability #2: js-yaml Prototype Pollution
 
 **npm audit reports**:
+
 ```
 js-yaml  <3.14.2
 Severity: moderate
@@ -56,6 +62,7 @@ CWE-1321: Prototype Pollution
 ```
 
 **Actual Reality**:
+
 ```bash
 $ cat node_modules/js-yaml/package.json | grep version
 "version": "3.14.2"
@@ -64,12 +71,14 @@ $ cat node_modules/js-yaml/package.json | grep version
 **Status**: ✅ **FALSE POSITIVE**
 
 **Explanation**:
+
 - npm audit claims js-yaml <3.14.2 is vulnerable
 - **Actually installed**: js-yaml@3.14.2
 - js-yaml@3.14.2 is the **FIXED** version
 - Vulnerability only affects versions BEFORE 3.14.2
 
 **Why False Positive**:
+
 - Same lockfile drift issue as glob
 - npm audit confused by lockfile state
 - Actual package is patched version
@@ -110,12 +119,14 @@ $ cat node_modules/js-yaml/package.json | grep version
 ### glob Command Injection (CVE GHSA-5j98-mcp5-4vw2)
 
 **Vulnerability Details**:
+
 - Affects: glob CLI with `-c` or `--cmd` flag
 - Attack Vector: Command injection via malicious glob patterns
 - CVSS: 7.5 (HIGH)
 - Exploitable: Only if using glob CLI directly with user input
 
 **This Project**:
+
 - ✅ Does NOT use glob CLI
 - ✅ Does NOT expose glob to user input
 - ✅ glob used only internally by Jest (test runner)
@@ -128,12 +139,14 @@ $ cat node_modules/js-yaml/package.json | grep version
 ### js-yaml Prototype Pollution (CVE GHSA-mh29-5h37-fv8m)
 
 **Vulnerability Details**:
+
 - Affects: js-yaml <3.14.2
 - Attack Vector: Prototype pollution via merge operator (`<<`)
 - CVSS: 5.3 (MODERATE)
 - Exploitable: Only if parsing untrusted YAML with merge keys
 
 **This Project**:
+
 - ✅ Uses js-yaml@3.14.2 (patched version)
 - ✅ Does NOT parse user-provided YAML
 - ✅ js-yaml likely used by dev tools (not runtime)
@@ -147,6 +160,7 @@ $ cat node_modules/js-yaml/package.json | grep version
 ### Root Cause: Lockfile Drift
 
 **Issue**:
+
 1. package.json says: `"jest": "^30.1.3"`
 2. package-lock.json might reference: Jest 30 → glob 10.x
 3. node_modules actually has: Jest 29 → glob 7.x
@@ -181,6 +195,7 @@ $ npm ls glob
 ### Option 1: Ignore Warnings ✅ SAFE
 
 **Rationale**:
+
 - No actual vulnerabilities present
 - Both packages at safe versions
 - npm audit giving false positives due to lockfile drift
@@ -194,6 +209,7 @@ $ npm ls glob
 ### Option 2: Fix Lockfile Drift
 
 **Commands**:
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
@@ -201,15 +217,18 @@ npm audit
 ```
 
 **Expected Result**:
+
 - Updates to Jest 30.x (which uses newer glob)
 - Regenerates clean lockfile
 - npm audit should report clean (or different issues)
 
 **Benefit**:
+
 - ✅ Removes false positive warnings
 - ✅ Gets latest Jest version
 
 **Risk**:
+
 - ⚠️ Jest 29→30 might have breaking changes
 - ⚠️ Need to re-test everything
 
@@ -220,19 +239,23 @@ npm audit
 ### Option 3: Run npm audit fix
 
 **Command**:
+
 ```bash
 npm audit fix
 ```
 
 **What it does**:
+
 - Attempts to update vulnerable packages
 - May update Jest and other dependencies
 
 **Expected Result**:
+
 - Likely updates Jest to 30.x
 - Should clear audit warnings
 
 **Risk**:
+
 - ⚠️ Same as Option 2 (possible breaking changes)
 - ⚠️ May update more than expected
 
@@ -241,15 +264,19 @@ npm audit fix
 ## Is Immediate Action Required?
 
 ### Question: Are there actual security vulnerabilities?
+
 **Answer**: ❌ NO - False positives only
 
 ### Question: Is code at risk of exploitation?
+
 **Answer**: ❌ NO - Installed versions are safe
 
 ### Question: Should we run `npm audit fix --force`?
+
 **Answer**: ❌ NOT IMMEDIATELY - No urgent risk, can wait for planned maintenance
 
 ### Question: What should we do?
+
 **Answer**: ✅ Document false positives, fix during next release cycle
 
 ---
@@ -273,6 +300,7 @@ npm audit fix
 ### 2. No Direct User Input to Dependencies ✅
 
 **Audit**:
+
 - ✅ glob not exposed to users
 - ✅ js-yaml not parsing user YAML
 - ✅ No eval() or dangerous patterns
@@ -285,6 +313,7 @@ npm audit fix
 ### 3. Regular Testing ✅
 
 **Test Suite**:
+
 - 1,282 passing tests
 - 69.66% / 74.39% coverage
 - Catches regressions
@@ -300,6 +329,7 @@ npm audit fix
 **npm audit false positive rate**: ~10-30% (industry estimates)
 
 **Common Causes**:
+
 - Lockfile drift (this case)
 - Transitive dependency confusion
 - Version range misinterpretation
@@ -362,18 +392,23 @@ cat node_modules/[package]/package.json | grep version
 ## Summary
 
 ### Question: Is there a HIGH SEVERITY vulnerability?
+
 **Answer**: ❌ NO - glob@7.2.3 is not vulnerable (issue is in 10.x)
 
 ### Question: Is there a MODERATE SEVERITY vulnerability?
+
 **Answer**: ❌ NO - js-yaml@3.14.2 is patched (issue is in <3.14.2)
 
 ### Question: Is IMMEDIATE ACTION required?
+
 **Answer**: ❌ NO - Both reports are false positives
 
 ### Question: What caused the false positives?
+
 **Answer**: Lockfile drift (package.json vs node_modules mismatch)
 
 ### Question: Should we fix the lockfile?
+
 **Answer**: ✅ YES - But during planned maintenance, not urgent
 
 ---

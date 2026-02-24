@@ -327,7 +327,7 @@ grep -rn "padding:\s*[0-9].*px" src/*.css
 grep -rn "gap:\s*[0-9].*px" src/*.css
 ```
 
-2. **Map to Tokens**
+1. **Map to Tokens**
 
 | Hardcoded | Token | Utility Class |
 |-----------|-------|---------------|
@@ -340,6 +340,7 @@ grep -rn "gap:\s*[0-9].*px" src/*.css
 | `64px` | `--spacing-3xl` | `.m-3xl`, `.p-3xl` |
 
 **Non-standard values:**
+
 - `12px` → `var(--spacing-sm) + var(--spacing-xs)` or keep as `0.75rem`
 - `20px` → `calc(var(--spacing-md) + var(--spacing-xs))`
 - `6px` → Keep as `0.375rem` (not on grid)
@@ -552,18 +553,22 @@ grep -rn "gap:\s*[0-9].*px" src/*.css
 ### Common Issues
 
 **Issue 1: Spacing looks inconsistent**
+
 - **Cause:** Mixing hardcoded values with tokens
 - **Fix:** Audit for hardcoded px values, migrate to tokens
 
 **Issue 2: Too much/too little spacing**
+
 - **Cause:** Wrong token size selected
 - **Fix:** Refer to usage guidelines table, choose appropriate token
 
 **Issue 3: Non-grid spacing needed (12px, 20px)**
+
 - **Cause:** Design requires off-grid value
 - **Fix:** Use `calc()` or keep hardcoded with comment
 
 **Issue 4: Responsive spacing not working**
+
 - **Cause:** Token not wrapped in media query
 - **Fix:** Apply tokens inside `@media` blocks
 

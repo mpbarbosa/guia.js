@@ -1,6 +1,7 @@
 # Documentation Hub - Guia Turístico
 
 ---
+
 Last Updated: 2026-01-28
 Status: Active
 Category: Guide
@@ -13,23 +14,27 @@ Category: Guide
 ## 📖 Quick Links
 
 ### Essential Reading
+
 - **[Project Overview](../README.md)** - What is Guia Turístico?
 - **[Installation Guide](../README.md#installation)** - Get started quickly
 - **[Contributing Guidelines](../.github/CONTRIBUTING.md)** - How to contribute
 - **[Testing Guide](./testing/TEST_STRATEGY.md)** - Testing philosophy and practices
 
 ### Architecture & Design
+
 - **[Project Architecture](./PROJECT_PURPOSE_AND_ARCHITECTURE.md)** - System design overview
 - **[Views Layer](./architecture/VIEWS_LAYER.md)** - SPA view controllers
 - **[Class Extraction Guide](./class-extraction/README.md)** - Component organization
 - **[Directory Organization](./DIRECTORY_ORGANIZATION.md)** - Documentation structure
 
 ### API & Integration
+
 - **[IBGE Integration](./IBIRA_INTEGRATION.md)** - Brazilian statistics API
 - **[SIDRA Integration](./SIDRA_INTEGRATION.md)** - Population data integration
 - **[Nominatim API](./api-integration/NOMINATIM_INTEGRATION.md)** - OpenStreetMap geocoding
 
 ### Development Workflow
+
 - **[Workflow Setup](./WORKFLOW_SETUP.md)** - Local development environment
 - **[Testing Infrastructure](./testing/TEST_INFRASTRUCTURE.md)** - Test execution and coverage
 - **[Code Quality Plan](./CODE_QUALITY_ACTION_PLAN.md)** - Quality standards
@@ -40,57 +45,81 @@ Category: Guide
 ## 🗂️ Documentation Categories
 
 ### 📐 Architecture
+
 Explore the system design and component structure:
+
 - [architecture/](./architecture/) - Architecture diagrams and component docs
 - [class-extraction/](./class-extraction/) - Class extraction and refactoring guides
 
 ### 🧪 Testing
+
 Testing strategy, infrastructure, and best practices:
+
 - [testing/](./testing/) - Test organization, infrastructure, and E2E scenarios
 - [TESTING.md](../TESTING.md) - Main testing documentation
 
 ### 🔌 API Integration
+
 External API integrations and data sources:
+
 - [api-integration/](./api-integration/) - Nominatim, IBGE, and other APIs
 
 ### 🛠️ Refactoring
+
 Refactoring plans and implementation guides:
+
 - [refactoring/](./refactoring/) - God object elimination, singleton patterns, etc.
 
 ### 🚀 Features
+
 Feature documentation and implementation guides:
+
 - [FEATURE_METROPOLITAN_REGION_DISPLAY.md](./FEATURE_METROPOLITAN_REGION_DISPLAY.md)
 - [FEATURE_MUNICIPIO_STATE_DISPLAY.md](./FEATURE_MUNICIPIO_STATE_DISPLAY.md)
 
 ### 📊 Reports
+
 Analysis reports, implementation summaries, and audits:
+
 - [reports/](./reports/) - Analysis, implementation, and validation reports
 
 ### 🔧 Utilities
+
 Utility documentation and helper guides:
+
 - [utils/](./utils/) - Timer management, logging, and other utilities
 
 ### 🎯 Workflow & Automation
+
 CI/CD, scripts, and automation documentation:
+
 - [workflow-automation/](./workflow-automation/) - GitHub Actions and automation scripts
 
 ### 📝 Guides
+
 General purpose guides and how-tos:
+
 - [guides/](./guides/) - Various development and contribution guides
 
 ### 📚 Developer Resources
+
 Developer-specific documentation and references:
+
 - [developer/](./developer/) - Developer guides, patterns, and best practices
 - [reference/](./reference/) - Technical references and specifications
 - [prompts/](./prompts/) - AI assistant prompts and templates
 
 ### 🔍 Generated & Auto-Generated
+
 Auto-generated documentation (should not be manually edited):
+
 - [api-generated/](./api-generated/) - JSDoc-generated API docs (ignored in git)
 - [api/](./api/) - API documentation (may include generated content)
 
 ### 🗃️ Miscellaneous & Temporary
+
 Uncategorized and work-in-progress documentation:
+
 - [misc/](./misc/) - Temporary docs, scratch notes, uncategorized content
 - [issue-189/](./issue-189/) - Issue-specific documentation (temporary)
 
@@ -101,26 +130,31 @@ Uncategorized and work-in-progress documentation:
 ### By Topic
 
 **Geolocation & Location Services**
+
 - [GeolocationService Implementation](./GEOLOCATION_SERVICE_IMPLEMENTATION.md)
 - [Position Management](./architecture/POSITION_MANAGER.md)
 - [Address Extraction](./architecture/ADDRESS_EXTRACTOR.md)
 
 **Brazilian Address Handling**
+
 - [Brazilian Address Standard](./architecture/BRAZILIAN_ADDRESS.md)
 - [IBGE Integration](./IBIRA_INTEGRATION.md)
 - [SIDRA Data](./SIDRA_INTEGRATION.md)
 
 **UI & Display**
+
 - [HTML Generation Testing](./testing/HTML_GENERATION.md)
 - [Highlight Cards Display](./architecture/HTML_HIGHLIGHT_CARDS_DISPLAYER.md)
 - [Views Layer](./architecture/VIEWS_LAYER.md)
 
 **Testing & Quality**
+
 - [Test Strategy](./testing/TEST_STRATEGY.md)
 - [Test Infrastructure](./testing/TEST_INFRASTRUCTURE.md)
 - [E2E Test Scenarios](./E2E_TEST_SCENARIO_MUNICIPIO_BAIRRO.md)
 
 **Development Tools**
+
 - [Automation Tools](./AUTOMATION_TOOLS.md)
 - [Reference Checker](../.github/scripts/README_REFERENCE_CHECKER.md)
 - [Version Consistency](../.github/scripts/check-version-consistency.sh)
@@ -128,6 +162,7 @@ Uncategorized and work-in-progress documentation:
 ### By Status
 
 **✅ Production-Ready**
+
 - Core geolocation services
 - Brazilian address standardization
 - IBGE/SIDRA integration
@@ -135,11 +170,13 @@ Uncategorized and work-in-progress documentation:
 - Timer management utilities
 
 **🚧 In Progress**
+
 - Documentation improvements
 - Test coverage expansion
 - Performance optimization
 
 **📋 Planned**
+
 - Enhanced error handling
 - Additional API integrations
 - Mobile responsiveness improvements
@@ -149,6 +186,7 @@ Uncategorized and work-in-progress documentation:
 ## 📚 Complete Documentation Index
 
 For a comprehensive, categorized list of all documentation files, see:
+
 - **[INDEX.md](./INDEX.md)** - Full documentation index with descriptions
 
 ---

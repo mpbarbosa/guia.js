@@ -24,6 +24,7 @@ Raw API Data → AddressExtractor → BrazilianStandardAddress → Display Compo
 ```
 
 The class serves as a data model consumed by:
+
 - `HTMLAddressDisplayer` - Address UI rendering
 - `AddressCache` - Cached address storage
 - `AddressExtractor` - Address standardization pipeline
@@ -50,6 +51,7 @@ Creates a new BrazilianStandardAddress instance with all fields initialized to `
 **Parameters:** None
 
 **Example:**
+
 ```javascript
 const address = new BrazilianStandardAddress();
 console.log(address.pais); // "Brasil"
@@ -78,24 +80,29 @@ All properties are public and can be directly accessed and modified:
 ### Property Details
 
 **`logradouro` (Street Name)**
+
 - Contains the street, avenue, road, or pathway name
 - Examples: "Rua Augusta", "Avenida Paulista", "Travessa do Comércio"
 
 **`bairro` (Neighborhood)**
+
 - Brazilian neighborhood or district
 - Examples: "Copacabana", "Ipanema", "Centro"
 
 **`municipio` (Municipality)**
+
 - City or municipality name
 - Examples: "São Paulo", "Rio de Janeiro", "Recife"
 
 **`regiaoMetropolitana` (Metropolitan Region)** - *New in v0.9.0-alpha*
+
 - Metropolitan region name for cities in metro areas
 - Extracted from Nominatim `county` field
 - Examples: "Região Metropolitana do Recife", "Região Metropolitana de São Paulo"
 - Used by `HTMLHighlightCardsDisplayer` for context information
 
 **`uf` and `siglaUF` (State)**
+
 - `uf`: Full state name (e.g., "Pernambuco", "São Paulo")
 - `siglaUF`: Two-letter state code (e.g., "PE", "SP")
 - These are kept separate to support both full and abbreviated displays
@@ -111,6 +118,7 @@ Returns the complete formatted street address (street name + number).
 **Returns:** `string` - Formatted street address or just street name
 
 **Example:**
+
 ```javascript
 const address = new BrazilianStandardAddress();
 address.logradouro = "Avenida Paulista";
@@ -126,6 +134,7 @@ console.log(address.logradouroCompleto());
 ```
 
 **Implementation:**
+
 ```javascript
 logradouroCompleto() {
     if (!this.logradouro) return "";
@@ -145,6 +154,7 @@ Returns the complete formatted neighborhood information.
 **Returns:** `string` - Formatted neighborhood name
 
 **Example:**
+
 ```javascript
 const address = new BrazilianStandardAddress();
 address.bairro = "Copacabana";
@@ -154,6 +164,7 @@ console.log(address.bairroCompleto());
 ```
 
 **Implementation:**
+
 ```javascript
 bairroCompleto() {
     return this.bairro || "";
@@ -169,6 +180,7 @@ Returns the complete formatted city and state information (município + state ab
 **Returns:** `string` - Formatted city and state
 
 **Example:**
+
 ```javascript
 const address = new BrazilianStandardAddress();
 address.municipio = "Recife";
@@ -184,6 +196,7 @@ console.log(address.municipioCompleto());
 ```
 
 **Implementation:**
+
 ```javascript
 municipioCompleto() {
     if (!this.municipio) return "";
@@ -203,6 +216,7 @@ Returns the formatted metropolitan region name.
 **Returns:** `string` - Metropolitan region name or empty string
 
 **Example:**
+
 ```javascript
 const address = new BrazilianStandardAddress();
 address.regiaoMetropolitana = "Região Metropolitana do Recife";
@@ -217,11 +231,13 @@ console.log(address.regiaoMetropolitanaFormatada());
 ```
 
 **Use Case:**
+
 - Display metropolitan region context in highlight cards
 - Provide additional geographic context for addresses
 - Used by `HTMLHighlightCardsDisplayer` for metro region display
 
 **Implementation:**
+
 ```javascript
 regiaoMetropolitanaFormatada() {
     return this.regiaoMetropolitana || "";
@@ -239,6 +255,7 @@ Returns a complete formatted address string combining all address components.
 **Immutability Pattern:** Uses `filter()` and `join()` for immutable array operations
 
 **Example:**
+
 ```javascript
 const address = new BrazilianStandardAddress();
 address.logradouro = "Avenida Paulista";
@@ -253,6 +270,7 @@ console.log(address.enderecoCompleto());
 ```
 
 **Implementation:**
+
 ```javascript
 enderecoCompleto() {
     return [
@@ -275,6 +293,7 @@ Returns a string representation of the address object.
 **Returns:** `string` - String representation
 
 **Example:**
+
 ```javascript
 const address = new BrazilianStandardAddress();
 address.logradouro = "Avenida Paulista";
@@ -326,6 +345,7 @@ console.log(empty.toString());
 ```
 
 **Converted to BrazilianStandardAddress:**
+
 ```javascript
 {
   logradouro: "Avenida Paulista",
@@ -424,12 +444,14 @@ displayer.display();
 ## Version History
 
 ### v0.9.0-alpha (Current)
+
 - **Added**: `regiaoMetropolitana` property for metropolitan region support
 - **Added**: `regiaoMetropolitanaFormatada()` method
 - **Enhancement**: Support for displaying metropolitan region context in highlight cards
 - **Integration**: Used by `HTMLHighlightCardsDisplayer` for metro region display
 
 ### v0.9.0-alpha (Initial)
+
 - Initial implementation with all core properties
 - Immutable data manipulation patterns using `filter()` and `join()`
 - Complete formatting methods for address display
@@ -442,6 +464,7 @@ displayer.display();
 The class follows immutability principles recommended in `.github/CONTRIBUTING.md`:
 
 **✅ Uses immutable array operations:**
+
 ```javascript
 // Good: filter() and join() (immutable)
 return [
@@ -455,6 +478,7 @@ return [
 ```
 
 **❌ Avoids mutating operations:**
+
 ```javascript
 // Bad: push() and sort() (mutating)
 const parts = [];
@@ -468,11 +492,13 @@ return parts.join(", ");
 ## Testing
 
 The class has comprehensive test coverage in:
+
 - `__tests__/unit/data/BrazilianStandardAddress.test.js`
 - `__tests__/integration/address-extraction.test.js`
 - `__tests__/e2e/complete-address-validation.e2e.test.js`
 
 **Example Test:**
+
 ```javascript
 describe('BrazilianStandardAddress', () => {
   test('formats complete address correctly', () => {

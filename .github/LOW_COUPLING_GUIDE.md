@@ -13,6 +13,7 @@ Low coupling in the `.github` folder means minimizing dependencies between confi
 **File**: `.github/config.yml`
 
 This file centralizes common settings used across workflows and templates:
+
 - Common labels
 - Default assignees
 - Project file paths
@@ -20,6 +21,7 @@ This file centralizes common settings used across workflows and templates:
 - Code quality thresholds
 
 **Benefits**:
+
 - Single source of truth for configuration
 - Changes to labels or paths only need to be updated in one place
 - Easy to understand project standards at a glance
@@ -34,6 +36,7 @@ When you need to add a new label, update it once in `config.yml` rather than in 
 We've created modular, reusable actions:
 
 #### validate-js
+
 Validates JavaScript syntax for specified files.
 
 ```yaml
@@ -44,12 +47,14 @@ Validates JavaScript syntax for specified files.
 ```
 
 **Benefits**:
+
 - Validation logic defined once
 - Reusable across multiple workflows
 - Easy to update validation behavior centrally
 - Can be tested independently
 
 #### security-check
+
 Performs security scanning on JavaScript files.
 
 ```yaml
@@ -60,6 +65,7 @@ Performs security scanning on JavaScript files.
 ```
 
 **Benefits**:
+
 - Security rules defined in one place
 - Consistent security checks across all workflows
 - Easy to add new security rules
@@ -70,17 +76,20 @@ Performs security scanning on JavaScript files.
 **Location**: `.github/ISSUE_TEMPLATE/`
 
 Issue templates are now:
+
 - **Self-contained**: Each template has its own purpose
 - **Consistent**: Common sections use similar wording but are not duplicated
 - **Configurable**: Template configuration is in `config.yml`
 
 **Templates**:
+
 1. `copilot_issue.md` - For Copilot-related issues
 2. `feature_request.md` - For new feature proposals
 3. `technical_debt.md` - For technical debt tracking
 4. `config.yml` - Template configuration and contact links
 
 **Benefits**:
+
 - Each template can be modified independently
 - No repeated logic between templates
 - Contact links centralized in config.yml
@@ -88,6 +97,7 @@ Issue templates are now:
 ### 4. Removed Duplication
 
 **Changes Made**:
+
 - ❌ Removed duplicate `.github/copilot-coding-agent.yml` (kept only in `workflows/`)
 - ✅ Extracted validation logic to reusable actions
 - ✅ Standardized "Additional Context" sections in templates
@@ -103,6 +113,7 @@ Issue templates are now:
 4. Keep workflow jobs focused and independent
 
 Example:
+
 ```yaml
 jobs:
   validate:
@@ -129,6 +140,7 @@ jobs:
 ### Regular Reviews
 
 Periodically review for:
+
 - [ ] Duplicated logic across workflows
 - [ ] Hardcoded values that could be centralized
 - [ ] Actions that could be generalized and reused
@@ -137,6 +149,7 @@ Periodically review for:
 ### Testing Changes
 
 When modifying:
+
 - **Workflows**: Test on a feature branch first
 - **Actions**: Validate inputs/outputs match usage
 - **Templates**: Create test issues to verify rendering
@@ -145,6 +158,7 @@ When modifying:
 ### Documentation
 
 When making changes:
+
 - Update this guide if coupling principles change
 - Document new reusable actions in this file
 - Note breaking changes in commit messages
@@ -212,6 +226,7 @@ node-version: '18'
 ## Related Documentation
 
 ### Project Guidelines
+
 - [HIGH_COHESION_GUIDE.md](./HIGH_COHESION_GUIDE.md) - Complementary principle for cohesive components
 - [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) - Pure functions reduce coupling
 - [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md) - Review checklist including coupling concerns
@@ -219,11 +234,13 @@ node-version: '18'
 - [REFACTORING_SUMMARY.md](./REFACTORING_SUMMARY.md) - Major refactoring examples
 
 ### Architecture Examples
+
 - [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) - Overall architecture showing low coupling
 - [WEBGEOCODINGMANAGER_REFACTORING.md](../docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - Reducing coupling example
 - [WEB_GEOCODING_MANAGER.md](../docs/architecture/WEB_GEOCODING_MANAGER.md) - Dependency injection pattern
 
 ### External References
+
 - [GitHub Actions: Reusing workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows)
 - [Creating composite actions](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)
 - [Issue templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository)

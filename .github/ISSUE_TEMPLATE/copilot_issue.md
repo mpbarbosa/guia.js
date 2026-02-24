@@ -15,9 +15,9 @@ assignees: ''
 
 <!-- List the steps needed to reproduce the issue, if applicable. -->
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## Copilot Version
 

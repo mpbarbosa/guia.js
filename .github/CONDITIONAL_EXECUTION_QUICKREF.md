@@ -22,12 +22,14 @@
 ## 🔍 Change Detection
 
 ### Automatically Detected
+
 - **Code changes**: `src/**/*.js`, `src/**/*.css`, `src/**/*.html`
 - **Test changes**: `__tests__/**/*.js`, `tests/**/*.py`
 - **Doc changes**: `**/*.md`, `docs/**/*`
 - **Config changes**: `package.json`, `.github/**/*.yml`
 
 ### Change Type Flags
+
 - `no_code_changes` - No code files modified
 - `only_docs_changed` - Only documentation modified
 - `no_js_changes` - No JavaScript files modified
@@ -52,18 +54,21 @@ stat -c %Y .github/cache/directory_structure.cache
 ## ⚡ Performance Examples
 
 ### Documentation-only change
+
 ```bash
 # Before: ~90s
 # After: ~35s (61% faster)
 ```
 
 ### Test-only change
+
 ```bash
 # Before: ~90s
 # After: ~50s (44% faster)
 ```
 
 ### Full code change
+
 ```bash
 # Before: ~90s
 # After: ~90s (no change - runs all tests)
@@ -103,6 +108,7 @@ conditionals:
 ## 🐛 Troubleshooting
 
 ### Steps always run
+
 ```bash
 # Check script permissions
 chmod +x .github/scripts/workflow-condition-evaluator.sh
@@ -112,6 +118,7 @@ chmod +x .github/scripts/workflow-condition-evaluator.sh
 ```
 
 ### Steps always skip
+
 ```bash
 # Check for changes
 git diff --name-only HEAD~1
@@ -121,6 +128,7 @@ echo "$CHANGED_FILES" | grep -E "src/.*\.js"
 ```
 
 ### Cache not working
+
 ```bash
 # Recreate cache directory
 mkdir -p .github/cache

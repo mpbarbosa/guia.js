@@ -23,6 +23,7 @@ The test simulates a user driving through São Paulo, Brazil, visiting four diff
 ## What Is Being Tested
 
 ### Core Functionality
+
 - ✅ Bairro card displays initial neighborhood on app load
 - ✅ Bairro card updates when position changes to new neighborhood
 - ✅ Multiple sequential neighborhood changes work correctly
@@ -31,6 +32,7 @@ The test simulates a user driving through São Paulo, Brazil, visiting four diff
 - ✅ Updates persist across rapid position changes
 
 ### Technical Components
+
 - **HTMLHighlightCardsDisplayer** receives addressData updates
 - **Observer Pattern** propagates address changes correctly
 - **ReverseGeocoder** passes complete parameters to observers
@@ -40,6 +42,7 @@ The test simulates a user driving through São Paulo, Brazil, visiting four diff
 ## Test Implementation
 
 ### Infrastructure
+
 - **Puppeteer** - Headless browser automation
 - **Local HTTP Server** - Serves application on port 9877
 - **Mock Nominatim API** - Intercepts and mocks geocoding responses
@@ -97,6 +100,7 @@ npm test -- __tests__/e2e/
 ## Expected Results
 
 All 8 tests should pass:
+
 ```
 ✓ should display initial neighborhood (República) on app load (30s)
 ✓ should update bairro card when driving to Jardins (30s)
@@ -111,21 +115,25 @@ All 8 tests should pass:
 ## Common Issues
 
 ### Test Timeouts
+
 - **Cause**: Puppeteer takes time to launch browser
 - **Solution**: `beforeAll` has 30 second timeout
 - **Individual tests**: Have appropriate timeouts (15s-45s)
 
 ### Port Conflicts
+
 - **Port**: Test uses port 9877
 - **Check**: `lsof -i :9877` to find conflicts
 - **Solution**: Kill conflicting process or change PORT constant
 
 ### Headless Browser Issues
+
 - **Args**: Uses `--no-sandbox`, `--disable-setuid-sandbox`, `--disable-dev-shm-usage`
 - **Puppeteer version**: v24.34.0
 - **Mode**: `headless: 'new'` (new headless mode)
 
 ### Mock API Not Intercepting
+
 - **Setup**: `page.setRequestInterception(true)` before navigation
 - **Pattern**: Matches `nominatim.openstreetmap.org/reverse`
 - **Validation**: Check console logs for request interception
@@ -133,14 +141,18 @@ All 8 tests should pass:
 ## Bug Context
 
 ### Production Issue
+
 In production, when driving through São Paulo:
+
 - Initial bairro loaded correctly
 - Position updates occurred (coordinates changed)
 - Geocoding completed successfully
 - **BUT**: Bairro card didn't update with new neighborhood name
 
 ### Root Cause Investigation
+
 This test helps identify if the issue is:
+
 1. ❌ ReverseGeocoder not passing addressData to observers?
 2. ❌ HTMLHighlightCardsDisplayer not receiving updates?
 3. ❌ Observer pattern not triggering on position change?
@@ -148,7 +160,9 @@ This test helps identify if the issue is:
 5. ❌ Change detection not working for bairro field?
 
 ### Fix Validation
+
 Once the bug is fixed, this test suite will:
+
 - ✅ Prevent regression of the fix
 - ✅ Document expected behavior
 - ✅ Validate all neighborhood transitions work
@@ -165,6 +179,7 @@ Once the bug is fixed, this test suite will:
 ## Integration With CI/CD
 
 This test is part of the E2E test suite:
+
 - Runs during `npm test` (all tests)
 - Can be run individually for debugging
 - Part of pre-commit validation (if enabled)
@@ -173,6 +188,7 @@ This test is part of the E2E test suite:
 ## Future Enhancements
 
 Potential improvements:
+
 1. Add tests for more cities (Rio, Brasília, Belo Horizonte)
 2. Test edge cases (undefined bairro, rural areas)
 3. Add performance metrics (update latency)

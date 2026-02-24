@@ -9,6 +9,7 @@
 This guide documents the Material Design 3 elevation system implemented in Guia Turístico. The elevation system provides standardized shadow/depth tokens for consistent visual hierarchy across all card and surface components.
 
 **Key Benefits**:
+
 - ✅ **WCAG 2.1 AAA Compliant** - All shadows meet accessibility standards
 - ✅ **Material Design 3 Spec** - Based on official MD3 elevation tokens
 - ✅ **Semantic Levels** - 6 elevation levels (0-5) with clear usage guidelines
@@ -71,76 +72,93 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 ### Token Definitions
 
 #### Level 0: No Elevation
+
 ```css
 --md-sys-elevation-level0: none;
 ```
+
 **Use for**: Disabled states, flat buttons, inactive components
 
 #### Level 1: Resting Cards (1dp)
+
 ```css
 --md-sys-elevation-level1: 
   0 1px 2px 0 rgba(0, 0, 0, 0.3),
   0 1px 3px 1px rgba(0, 0, 0, 0.15);
 ```
+
 **Use for**: Standard cards, list items, containers at rest
 
 **Components**:
+
 - Highlight cards (município, bairro)
 - IBGE data cards
 - Reference place cards
 - Onboarding card
 
 #### Level 2: Raised Cards (3dp)
+
 ```css
 --md-sys-elevation-level2: 
   0 1px 2px 0 rgba(0, 0, 0, 0.3),
   0 2px 6px 2px rgba(0, 0, 0, 0.15);
 ```
+
 **Use for**: Hover states, search bars, raised content
 
 **Components**:
+
 - Card hover states
 - Maps action buttons (hover)
 - Search inputs
 - Active buttons
 
 #### Level 3: Menus & Dialogs (6dp)
+
 ```css
 --md-sys-elevation-level3: 
   0 1px 3px 0 rgba(0, 0, 0, 0.3),
   0 4px 8px 3px rgba(0, 0, 0, 0.15);
 ```
+
 **Use for**: Dropdown menus, popovers, small dialogs
 
 **Components**:
+
 - Version modal dialog
 - Dropdown menus
 - Context menus
 - Tooltips (large)
 
 #### Level 4: Modals & Navigation (8dp)
+
 ```css
 --md-sys-elevation-level4: 
   0 2px 3px 0 rgba(0, 0, 0, 0.3),
   0 6px 10px 4px rgba(0, 0, 0, 0.15);
 ```
+
 **Use for**: Modal dialogs, navigation drawers, sheets
 
 **Components**:
+
 - Modal backgrounds
 - Side navigation panels
 - Bottom sheets
 - FABs (Floating Action Buttons)
 
 #### Level 5: Overlays & Notifications (12dp)
+
 ```css
 --md-sys-elevation-level5: 
   0 4px 4px 0 rgba(0, 0, 0, 0.3),
   0 8px 12px 6px rgba(0, 0, 0, 0.15);
 ```
+
 **Use for**: Toast notifications, app bars, overlays
 
 **Components**:
+
 - Toast notifications
 - Error banners
 - Success messages
@@ -164,6 +182,7 @@ Apply fixed elevation to elements:
 ```
 
 **Example**:
+
 ```html
 <div class="elevation-2">
   This card has fixed Level 2 elevation
@@ -181,11 +200,13 @@ Automatically elevate elements on hover:
 ```
 
 **Features**:
+
 - ✅ Smooth 200ms transition (var(--transition-base))
 - ✅ Automatic state management
 - ✅ Keyboard navigation support
 
 **Example**:
+
 ```html
 <!-- Card elevates on hover/focus -->
 <article class="elevation-1-hover" tabindex="0">
@@ -215,6 +236,7 @@ Automatically elevate elements on hover:
 ```
 
 Or use utility class:
+
 ```html
 <div class="elevation-1-hover card">
   <!-- Content -->
@@ -313,7 +335,8 @@ Is the component interactive (clickable)?
 
 ### Step 3: Replace Hardcoded Values
 
-#### Before (hardcoded):
+#### Before (hardcoded)
+
 ```css
 .highlight-card {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -324,7 +347,8 @@ Is the component interactive (clickable)?
 }
 ```
 
-#### After (elevation tokens):
+#### After (elevation tokens)
+
 ```css
 .highlight-card {
   box-shadow: var(--md-sys-elevation-level1);
@@ -336,7 +360,8 @@ Is the component interactive (clickable)?
 }
 ```
 
-#### Or (utility class):
+#### Or (utility class)
+
 ```html
 <div class="highlight-card elevation-1-hover">
   <!-- Content -->
@@ -375,6 +400,7 @@ for level, color in shadows:
 **Total violations found**: 27 hardcoded box-shadow declarations
 
 **By file** (top 5):
+
 1. `onboarding.css` - 5 violations
 2. `transitions.css` - 5 violations  
 3. `maps-actions.css` - 5 violations
@@ -388,6 +414,7 @@ for level, color in shadows:
 - ⏳ **Phase 3: Complete** - All 9 files (27 violations) - NOT STARTED
 
 **Estimated Migration Time**:
+
 - Phase 2: 30-40 minutes (high-priority cards and modals)
 - Phase 3: 45-60 minutes (all remaining files)
 
@@ -509,6 +536,7 @@ If you need custom elevation beyond Level 5:
 ```
 
 **Guidelines**:
+
 - Key shadow: Offset Y = elevation × 0.5dp, Blur = elevation × 1dp
 - Ambient shadow: Offset Y = elevation × 1.5dp, Blur = elevation × 2dp
 - Opacity: Key 30%, Ambient 15%
@@ -564,11 +592,13 @@ When reviewing elevation changes:
 ## Related Resources
 
 ### Internal Documentation
+
 - [Typography Guide](./TYPOGRAPHY_GUIDE.md) - Material Design 3 typescale system
 - [Spacing Guide](./SPACING_GUIDE.md) - 8px grid spacing utilities
 - [Design Tokens](../src/design-tokens.css) - Complete token reference
 
 ### External References
+
 - [Material Design 3 Elevation](https://m3.material.io/styles/elevation/overview)
 - [MD3 Elevation Tokens](https://m3.material.io/styles/elevation/tokens)
 - [WCAG 2.1 Shadow Contrast](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html)
@@ -578,6 +608,7 @@ When reviewing elevation changes:
 ## Changelog
 
 ### v0.11.0-alpha (2026-02-15)
+
 - ✅ Created Material Design 3 elevation token system (6 levels)
 - ✅ Added 10 utility classes (static + hover states)
 - ✅ Documented all elevation levels with usage guidelines

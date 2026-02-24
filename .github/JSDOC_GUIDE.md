@@ -432,6 +432,7 @@ Maintain consistent tag ordering for readability:
 ## Related Documentation
 
 ### Core Guides
+
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - General contribution guidelines
 - **[JAVASCRIPT_BEST_PRACTICES.md](JAVASCRIPT_BEST_PRACTICES.md)** - Coding standards
 - **[REFERENTIAL_TRANSPARENCY.md](REFERENTIAL_TRANSPARENCY.md)** - Functional programming principles
@@ -439,6 +440,7 @@ Maintain consistent tag ordering for readability:
 - **[UNIT_TEST_GUIDE.md](UNIT_TEST_GUIDE.md)** - Unit testing guide
 
 ### Complete Guide Index
+
 - **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
 
 ---

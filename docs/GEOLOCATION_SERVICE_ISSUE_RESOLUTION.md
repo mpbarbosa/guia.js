@@ -46,6 +46,7 @@ Two critical issues needed to be addressed:
 ### 1. Race Condition Protection
 
 **Implementation:**
+
 ```javascript
 // Added to constructor
 this.isPendingRequest = false;
@@ -64,6 +65,7 @@ this.isPendingRequest = false; // Reset on success or failure
 ```
 
 **New Method:**
+
 ```javascript
 hasPendingRequest() {
     return this.isPendingRequest;
@@ -71,12 +73,14 @@ hasPendingRequest() {
 ```
 
 **Benefits:**
+
 - Prevents overlapping geolocation API calls
 - Ensures predictable state management
 - Clear error messages for developers
 - No impact on continuous tracking with `watchPosition`
 
 **Usage Example:**
+
 ```javascript
 // Check before making request
 if (!service.hasPendingRequest()) {
@@ -91,12 +95,14 @@ if (!service.hasPendingRequest()) {
 **Error Logging Changes:**
 
 Before:
+
 ```javascript
 console.error("(GeolocationService) Error:", error);
 // Could log full error object with coordinates
 ```
 
 After:
+
 ```javascript
 console.error("(GeolocationService) Error:", error.message || error);
 // Only logs message, not full object
@@ -105,12 +111,14 @@ console.error("(GeolocationService) Error:", error.message || error);
 **Documentation Warnings:**
 
 Added comprehensive privacy notices to:
+
 - Class-level JSDoc
 - `getSingleLocationUpdate()` method documentation
 - `watchCurrentLocation()` method documentation
 - Constructor documentation
 
 **Key Privacy Principles:**
+
 - Only request location when necessary
 - Ensure user consent and understanding
 - Stop tracking when not needed (`stopWatching()`)
@@ -152,6 +160,7 @@ Created `__tests__/services/GeolocationService.raceCondition.test.js` with 9 com
 ## Verification
 
 All changes verified:
+
 - ✅ Code validates without errors (`npm run validate`)
 - ✅ All 46 GeolocationService tests pass
 - ✅ No new test failures introduced (627/632 total passing)
@@ -191,6 +200,7 @@ Based on the original issue description:
 ## Best Practices for Usage
 
 ### Checking Permissions Before Use
+
 ```javascript
 const permission = await service.checkPermissions();
 if (permission === 'granted') {
@@ -199,6 +209,7 @@ if (permission === 'granted') {
 ```
 
 ### Preventing Race Conditions
+
 ```javascript
 if (!service.hasPendingRequest()) {
     const position = await service.getSingleLocationUpdate();
@@ -206,6 +217,7 @@ if (!service.hasPendingRequest()) {
 ```
 
 ### Stopping Tracking When Done
+
 ```javascript
 const watchId = service.watchCurrentLocation();
 // ... use location updates
@@ -213,6 +225,7 @@ service.stopWatching(); // Important for battery and privacy
 ```
 
 ### Error Handling
+
 ```javascript
 try {
     const position = await service.getSingleLocationUpdate();
@@ -245,6 +258,7 @@ All changes maintain 100% backward compatibility while significantly improving t
 ---
 
 **Files Changed:**
+
 - `src/guia.js` (code changes)
 - `__tests__/services/GeolocationService.raceCondition.test.js` (new test suite)
 - `docs/architecture/GEOLOCATION_SERVICE_REFACTORING.md` (documentation update)

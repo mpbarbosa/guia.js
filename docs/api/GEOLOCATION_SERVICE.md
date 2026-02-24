@@ -11,6 +11,7 @@ GeolocationService is a sophisticated wrapper around the browser's native HTML5 
 ### Purpose and Responsibility
 
 The service handles:
+
 - Single location requests via `getCurrentPosition()`
 - Continuous position monitoring via `watchPosition()`
 - Centralized position state management through PositionManager
@@ -96,14 +97,17 @@ const service = new GeolocationService(null, mockNavigator);
 Checks the current geolocation permission status using the modern Permissions API.
 
 **Signature:**
+
 ```javascript
 async checkPermissions(): Promise<string>
 ```
 
 **Returns:**
+
 - `Promise<string>`: Resolves to permission state: `'granted'`, `'denied'`, or `'prompt'`
 
 **Example:**
+
 ```javascript
 const permission = await service.checkPermissions();
 if (permission === 'granted') {
@@ -115,6 +119,7 @@ if (permission === 'granted') {
 ```
 
 **Browser Compatibility:**
+
 - Falls back to `'prompt'` for browsers without Permissions API support
 
 ---
@@ -124,19 +129,23 @@ if (permission === 'granted') {
 Requests the user's current position once with high accuracy settings.
 
 **Signature:**
+
 ```javascript
 async getSingleLocationUpdate(): Promise<GeolocationPosition>
 ```
 
 **Returns:**
+
 - `Promise<GeolocationPosition>`: Native Geolocation API position object
 
 **Throws:**
+
 - `GeolocationPositionError`: Permission denied, position unavailable, or timeout
 - `Error`: If a request is already pending (race condition prevention)
 - `Error`: If geolocation is not supported by the browser
 
 **GeolocationPosition Structure:**
+
 ```javascript
 {
   coords: {
@@ -153,6 +162,7 @@ async getSingleLocationUpdate(): Promise<GeolocationPosition>
 ```
 
 **Examples:**
+
 ```javascript
 // Basic usage
 try {
@@ -189,6 +199,7 @@ If a request is already pending, this method will reject immediately to prevent 
 Coordinates are not logged in error messages to protect user privacy. Full position data is only passed to authorized components.
 
 **Side Effects:**
+
 - Updates `PositionManager` with new position
 - Updates display element if provided
 - Sets `lastKnownPosition` internal state
@@ -200,15 +211,18 @@ Coordinates are not logged in error messages to protect user privacy. Full posit
 Starts continuous position monitoring using the Geolocation API's watchPosition method.
 
 **Signature:**
+
 ```javascript
 watchCurrentLocation(): number|null
 ```
 
 **Returns:**
+
 - `number`: Watch ID for stopping the position watching
 - `null`: If geolocation is not supported or already watching
 
 **Example:**
+
 ```javascript
 // Start watching
 const watchId = service.watchCurrentLocation();
@@ -226,6 +240,7 @@ if (service.isCurrentlyWatching()) {
 Continuous tracking involves sensitive location data. Ensure users have consented to location tracking and understand how their data will be used. Stop tracking when no longer needed to preserve battery and privacy.
 
 **Side Effects:**
+
 - Sets `isWatching` flag to `true`
 - Stores watch ID internally
 - Updates `PositionManager` on each position update
@@ -238,17 +253,20 @@ Continuous tracking involves sensitive location data. Ensure users have consente
 Stops the continuous position monitoring that was started with `watchCurrentLocation()`.
 
 **Signature:**
+
 ```javascript
 stopWatching(): void
 ```
 
 **Example:**
+
 ```javascript
 service.stopWatching(); // Stops position monitoring
 ```
 
 **Importance:**
 Stopping position watching is crucial for:
+
 - Battery life conservation
 - Performance optimization
 - Privacy protection
@@ -261,14 +279,17 @@ Stopping position watching is crucial for:
 Retrieves the last known position without making a new API request.
 
 **Signature:**
+
 ```javascript
 getLastKnownPosition(): GeolocationPosition|null
 ```
 
 **Returns:**
+
 - `GeolocationPosition|null`: Last known position or `null` if none available
 
 **Example:**
+
 ```javascript
 const lastPos = service.getLastKnownPosition();
 if (lastPos) {
@@ -285,14 +306,17 @@ if (lastPos) {
 Checks if the service is currently watching position.
 
 **Signature:**
+
 ```javascript
 isCurrentlyWatching(): boolean
 ```
 
 **Returns:**
+
 - `boolean`: `true` if position watching is active, `false` otherwise
 
 **Example:**
+
 ```javascript
 if (service.isCurrentlyWatching()) {
   console.log('Tracking is active');
@@ -308,14 +332,17 @@ if (service.isCurrentlyWatching()) {
 Gets the current watch ID.
 
 **Signature:**
+
 ```javascript
 getCurrentWatchId(): number|null
 ```
 
 **Returns:**
+
 - `number|null`: Watch ID or `null` if not watching
 
 **Example:**
+
 ```javascript
 const watchId = service.getCurrentWatchId();
 if (watchId !== null) {
@@ -330,14 +357,17 @@ if (watchId !== null) {
 Checks if a geolocation request is currently pending.
 
 **Signature:**
+
 ```javascript
 hasPendingRequest(): boolean
 ```
 
 **Returns:**
+
 - `boolean`: `true` if a request is pending, `false` otherwise
 
 **Example:**
+
 ```javascript
 if (!service.hasPendingRequest()) {
   const position = await service.getSingleLocationUpdate();
@@ -413,6 +443,7 @@ if (!this.provider.isSupported()) {
 ```
 
 **Supported Browsers:**
+
 - Chrome 5+
 - Firefox 3.5+
 - Safari 5+
@@ -431,6 +462,7 @@ const permission = await service.checkPermissions();
 ```
 
 **Permissions API Support:**
+
 - Chrome 43+
 - Firefox 46+
 - Opera 30+
@@ -440,6 +472,7 @@ const permission = await service.checkPermissions();
 ### HTTPS Requirement
 
 **Important:** Geolocation requires HTTPS in production environments:
+
 - ✅ `https://` - Allowed
 - ✅ `http://localhost` - Allowed (development only)
 - ❌ `http://` - Blocked (security risk)
@@ -465,6 +498,7 @@ if (this.isPendingRequest && this.pendingPromise) {
 ### Battery Optimization
 
 For continuous tracking:
+
 - Stop watching when no longer needed: `service.stopWatching()`
 - Consider less frequent updates: adjust `geolocationOptions`
 - Monitor battery level and adjust tracking accordingly
@@ -567,6 +601,7 @@ const mockPosition = {
 ## Change Log
 
 ### v0.9.0-alpha
+
 - Extracted from `guia.js` in Phase 2 modularization
 - Added provider abstraction pattern with `BrowserGeolocationProvider`
 - Enhanced dependency injection support
@@ -574,6 +609,7 @@ const mockPosition = {
 - Improved documentation and type annotations
 
 ### v0.9.0-alpha
+
 - Enhanced PositionManager integration
 - Added permission checking via Permissions API
 - Improved error handling and localization

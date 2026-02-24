@@ -15,6 +15,7 @@ This document describes comprehensive strategies for testing JavaScript code tha
 ## 🎯 Key Testing Strategies
 
 ### 1. **String-Based HTML Testing** (Primary Approach)
+
 Test HTML generation by validating the string output without requiring a real DOM.
 
 #### Example: HTMLAddressDisplayer
@@ -45,12 +46,14 @@ test('should render complete São Paulo address with all attributes', () => {
 ```
 
 **Advantages**:
+
 - ✅ Fast execution (no DOM manipulation)
 - ✅ No browser/JSDOM dependency
 - ✅ Easy to test specific HTML patterns
 - ✅ Works in Node.js test environment
 
 **Use Cases**:
+
 - Testing HTML string generation methods
 - Validating template rendering
 - Checking HTML structure and CSS classes
@@ -59,6 +62,7 @@ test('should render complete São Paulo address with all attributes', () => {
 ---
 
 ### 2. **Mock DOM Elements**
+
 Use lightweight JavaScript objects that mimic DOM elements without full DOM implementation.
 
 #### Example: HTMLAddressDisplayer with Mock Elements
@@ -94,12 +98,14 @@ test('should update element on position update event', () => {
 ```
 
 **Advantages**:
+
 - ✅ Lightweight and fast
 - ✅ Tests DOM interaction patterns
 - ✅ No external dependencies
 - ✅ Easy to inspect state changes
 
 **Use Cases**:
+
 - Testing observer pattern implementations
 - Validating DOM updates
 - Checking innerHTML/textContent manipulation
@@ -108,6 +114,7 @@ test('should update element on position update event', () => {
 ---
 
 ### 3. **HTML Structure Validation**
+
 Validate the semantic correctness of generated HTML.
 
 #### Example: Structural Tests
@@ -141,12 +148,14 @@ test('should close all HTML tags properly', () => {
 ```
 
 **Advantages**:
+
 - ✅ Validates HTML correctness
 - ✅ Catches malformed HTML early
 - ✅ Ensures semantic structure
 - ✅ Language-agnostic validation
 
 **Use Cases**:
+
 - Validating tag balancing
 - Checking HTML5 semantic elements
 - Verifying CSS class names
@@ -155,6 +164,7 @@ test('should close all HTML tags properly', () => {
 ---
 
 ### 4. **CSS Class and Attribute Testing**
+
 Ensure generated HTML includes correct styling hooks and semantic attributes.
 
 #### Example: Class and Attribute Validation
@@ -184,6 +194,7 @@ test('should include loading state classes', () => {
 ```
 
 **Advantages**:
+
 - ✅ Ensures correct CSS targeting
 - ✅ Validates state classes
 - ✅ Tests accessibility attributes
@@ -192,6 +203,7 @@ test('should include loading state classes', () => {
 ---
 
 ### 5. **Content Escaping and Security**
+
 Test that HTML generation properly handles special characters and prevents injection.
 
 #### Example: Security Tests
@@ -234,6 +246,7 @@ test('should handle null and undefined values safely', () => {
 ---
 
 ### 6. **Edge Case and Error State Testing**
+
 Validate behavior with unusual or missing data.
 
 #### Example: Edge Cases
@@ -277,6 +290,7 @@ test('should handle empty objects gracefully', () => {
 ---
 
 ### 7. **Localization Testing**
+
 Verify correct language-specific content and formatting.
 
 #### Example: Portuguese Localization
@@ -314,6 +328,7 @@ test('should handle Portuguese special characters', () => {
 ---
 
 ### 8. **Performance and Memory Testing**
+
 Ensure HTML generation performs well under load.
 
 #### Example: Performance Tests
@@ -356,6 +371,7 @@ test('should handle large address data objects efficiently', () => {
 ---
 
 ### 9. **Factory Pattern Testing**
+
 Test HTML displayer creation through factory methods.
 
 #### Example: DisplayerFactory Tests
@@ -392,6 +408,7 @@ test('should produce consistent results across multiple calls', () => {
 ---
 
 ### 10. **Integration Testing**
+
 Test HTML generation in context with other modules.
 
 #### Example: Integration Tests
@@ -436,12 +453,14 @@ test('should work alongside other HTML display modules', async () => {
 ## 📊 Test Coverage Statistics
 
 ### Current Coverage (guia_js)
+
 - **Total Tests**: 1224+ tests
 - **Test Suites**: 57 suites
 - **Overall Coverage**: ~70%
 - **HTML Generation Coverage**: High (dedicated test files)
 
 ### Test Distribution
+
 ```
 Unit Tests:
 - HTMLAddressDisplayer.test.js       (~553 assertions)
@@ -511,6 +530,7 @@ renderAddressHtml(addressData) {
 ```
 
 **Testing Strategy**:
+
 ```javascript
 test('should use progressive disclosure structure', () => {
     const html = displayer.renderAddressHtml(addressData);
@@ -543,6 +563,7 @@ renderAddressHtml(addressData) {
 ```
 
 **Testing Strategy**:
+
 ```javascript
 test('should return error for null data', () => {
     const html = displayer.renderAddressHtml(null);
@@ -571,6 +592,7 @@ for (const key in addressData) {
 ```
 
 **Testing Strategy**:
+
 ```javascript
 test('should format nested objects with JSON pretty-printing', () => {
     const addressData = {
@@ -592,6 +614,7 @@ test('should format nested objects with JSON pretty-printing', () => {
 ### ✅ DO
 
 1. **Test Pure Functions Separately**
+
    ```javascript
    // Good: Separate rendering logic
    renderAddressHtml(data) { return html; }
@@ -599,18 +622,21 @@ test('should format nested objects with JSON pretty-printing', () => {
    ```
 
 2. **Use Mock Elements for DOM Interaction**
+
    ```javascript
    const mockElement = { innerHTML: '', id: 'test' };
    const displayer = new HTMLAddressDisplayer(mockElement);
    ```
 
 3. **Validate HTML Structure, Not Exact Strings**
+
    ```javascript
    expect(html).toContain('<details');
    expect(html).toContain('address-details');
    ```
 
 4. **Test Edge Cases and Error States**
+
    ```javascript
    test('null data', () => { ... });
    test('empty data', () => { ... });
@@ -618,12 +644,14 @@ test('should format nested objects with JSON pretty-printing', () => {
    ```
 
 5. **Use String Pattern Matching**
+
    ```javascript
    expect(html).toMatch(/<details[^>]*>/);
    expect(html).toContain('class="error"');
    ```
 
 6. **Test Localization**
+
    ```javascript
    expect(html).toContain('Endereço Atual');
    expect(errorHtml).toContain('não disponíveis');
@@ -634,6 +662,7 @@ test('should format nested objects with JSON pretty-printing', () => {
 ### ❌ DON'T
 
 1. **Don't Test Exact HTML Strings**
+
    ```javascript
    // Bad: Brittle to formatting changes
    expect(html).toBe('<div class="address"><p>...</p></div>');
@@ -644,6 +673,7 @@ test('should format nested objects with JSON pretty-printing', () => {
    ```
 
 2. **Don't Rely on Full DOM Implementation**
+
    ```javascript
    // Bad: Requires full browser/JSDOM
    const element = document.createElement('div');
@@ -653,6 +683,7 @@ test('should format nested objects with JSON pretty-printing', () => {
    ```
 
 3. **Don't Mix Unit and Integration Tests**
+
    ```javascript
    // Bad: Testing renderAddressHtml() AND update() together
    
@@ -662,6 +693,7 @@ test('should format nested objects with JSON pretty-printing', () => {
    ```
 
 4. **Don't Ignore Performance**
+
    ```javascript
    // Good: Test with realistic data volumes
    test('handles 1000 updates without issues', () => {
@@ -779,12 +811,14 @@ When testing HTML generation code, ensure you cover:
 ## 📖 Additional Resources
 
 ### Related Files
+
 - `src/html/HTMLAddressDisplayer.js` - Implementation
 - `src/html/DisplayerFactory.js` - Factory pattern
 - `__tests__/unit/HTMLAddressDisplayer.test.js` - Unit tests
 - `__tests__/integration/HTMLAddressDisplayer.integration.test.js` - Integration tests
 
 ### Documentation
+
 - `.github/CONTRIBUTING.md` - Contribution guidelines
 - `docs/WORKFLOW_SETUP.md` - Development workflow
 - `README.md` - Project overview

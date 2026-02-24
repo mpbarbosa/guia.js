@@ -10,6 +10,7 @@
 A Fase 11 da extração de classes concluiu com sucesso a modularização do `SpeechItem`, estabelecendo um padrão de Value Object robusto para itens de fila de síntese de voz. Esta extração implementa validação rigorosa de parâmetros, lógica de expiração automática, e suporte completo ao contexto brasileiro, seguindo os padrões MP Barbosa de desenvolvimento.
 
 ### Métricas da Extração
+
 - **Código Extraído:** 175 linhas do módulo SpeechItem
 - **Código Removido de guia.js:** ~40 linhas da definição da classe
 - **Testes Criados:** 750+ linhas (85+ casos de teste)
@@ -20,6 +21,7 @@ A Fase 11 da extração de classes concluiu com sucesso a modularização do `Sp
 ## Arquitetura do Módulo
 
 ### Estrutura da Classe
+
 ```javascript
 export default class SpeechItem {
     constructor(text, priority = 0, timestamp = Date.now())
@@ -31,18 +33,21 @@ export default class SpeechItem {
 ### Características Principais
 
 #### 1. Padrão Value Object
+
 - **Imutabilidade Rigorosa:** Object.freeze aplicado após construção
 - **Validação de Parâmetros:** Type checking para todos os argumentos
 - **Comportamento Funcional:** Métodos sem efeitos colaterais
 - **Representação String:** Formato padronizado para debugging
 
 #### 2. Sistema de Prioridades para Contexto de Viagem
+
 - **Prioridade 3:** Emergências e mudanças de município
 - **Prioridade 2:** Mudanças de bairro e notificações importantes
 - **Prioridade 1:** Mudanças de logradouro e atualizações regulares
 - **Prioridade 0:** Informações de background e curiosidades
 
 #### 3. Gerenciamento de Expiração Automática
+
 - **Timestamp Tracking:** Controle automático da idade dos itens
 - **Expiração Configurável:** Tempo personalizável (padrão 30 segundos)
 - **Prevenção de Memory Leak:** Limpeza automática de itens antigos
@@ -51,6 +56,7 @@ export default class SpeechItem {
 ## Implementação Técnica
 
 ### Construtor com Validação Rigorosa
+
 ```javascript
 constructor(text, priority = 0, timestamp = Date.now()) {
     // Validate input parameters
@@ -75,6 +81,7 @@ constructor(text, priority = 0, timestamp = Date.now()) {
 ```
 
 ### Lógica de Expiração Inteligente
+
 ```javascript
 isExpired(expirationMs = 30000) { // 30 seconds default
     return Date.now() - this.timestamp > expirationMs;
@@ -82,6 +89,7 @@ isExpired(expirationMs = 30000) { // 30 seconds default
 ```
 
 ### Representação String com Truncamento
+
 ```javascript
 toString() {
     const displayText = this.text.length > 50 
@@ -94,6 +102,7 @@ toString() {
 ## Integração com Sistema de Fala
 
 ### Uso em SpeechQueue
+
 ```javascript
 // SpeechQueue agora trabalha com SpeechItems
 const item = new SpeechItem('Localização atualizada', 2);
@@ -106,6 +115,7 @@ if (!item.isExpired()) {
 ```
 
 ### Integração com WebGeocodingManager
+
 ```javascript
 // Criação de itens para diferentes tipos de mudança de localização
 const municipioChange = new SpeechItem('Você entrou em São Paulo', 3);
@@ -116,6 +126,7 @@ const logradouroChange = new SpeechItem('Rua: Harmonia, 123', 1);
 ## Testes e Cobertura
 
 ### Suite de Testes Unitários (45+ Casos)
+
 - **Constructor and Initialization:** 4 testes de criação e inicialização
 - **Parameter Validation:** 4 testes de validação rigorosa de parâmetros
 - **Brazilian Portuguese Content Support:** 3 testes de conteúdo português brasileiro
@@ -126,6 +137,7 @@ const logradouroChange = new SpeechItem('Rua: Harmonia, 123', 1);
 - **Travel Guide Context Integration:** 2 testes de contexto turístico
 
 ### Testes de Integração (40+ Cenários)
+
 - **Module Import/Export:** Verificação de importação ES6
 - **Backward Compatibility:** Compatibilidade com guia.js
 - **Speech System Integration:** Integração com sistema de fala
@@ -138,15 +150,18 @@ const logradouroChange = new SpeechItem('Rua: Harmonia, 123', 1);
 ## Decisões de Design
 
 ### 1. Value Object vs Entity Pattern
+
 **Decisão:** Implementar como Value Object imutável sem identidade própria.
 
 **Justificativa:**
+
 - SpeechItem representa dados, não comportamento complexo
 - Imutabilidade facilita uso em filas e operações concorrentes
 - Value Objects são ideais para representar conteúdo de fala
 - Reduz complexidade de gerenciamento de estado
 
 **Implementação:**
+
 ```javascript
 // Imutabilidade garantida com Object.freeze
 this.text = text;
@@ -156,15 +171,18 @@ Object.freeze(this); // MP Barbosa standards
 ```
 
 ### 2. Validação de Parâmetros Rigorosa
+
 **Decisão:** Implementar type checking explícito para todos os parâmetros.
 
 **Justificativa:**
+
 - Previne erros de runtime em sistema crítico de navegação
 - Melhora developer experience com mensagens claras de erro
 - Garante qualidade dos dados em toda a cadeia de processamento
 - Facilita debugging e manutenção
 
 **Implementação:**
+
 ```javascript
 if (typeof text !== 'string') {
     throw new TypeError('Text must be a string');
@@ -178,15 +196,18 @@ if (typeof timestamp !== 'number') {
 ```
 
 ### 3. Sistema de Expiração Configurável
+
 **Decisão:** Implementar expiração baseada em timestamp com tempo configurável.
 
 **Justificativa:**
+
 - Previne acúmulo de itens antigos em filas de longa duração
 - Garante que apenas informações atuais sejam anunciadas
 - Flexibilidade para diferentes contextos de uso
 - Melhora performance evitando processamento de itens obsoletos
 
 **Implementação:**
+
 ```javascript
 isExpired(expirationMs = 30000) { // 30 seconds default
     return Date.now() - this.timestamp > expirationMs;
@@ -197,15 +218,18 @@ const validItems = queue.filter(item => !item.isExpired());
 ```
 
 ### 4. Truncamento Inteligente de Texto
+
 **Decisão:** Implementar truncamento automático na representação string.
 
 **Justificativa:**
+
 - Melhora legibilidade em logs e debugging
 - Evita poluição visual com textos muito longos
 - Mantém informações essenciais (priority) sempre visíveis
 - Padrão consistente em toda a aplicação
 
 **Implementação:**
+
 ```javascript
 toString() {
     const displayText = this.text.length > 50 
@@ -218,6 +242,7 @@ toString() {
 ## Integração com Sistema Existente
 
 ### Compatibilidade com guia.js
+
 ```javascript
 // guia.js - Re-exportação para compatibilidade
 import SpeechItem from './speech/SpeechItem.js';
@@ -225,6 +250,7 @@ export { SpeechItem };
 ```
 
 ### Integração com SpeechQueue
+
 ```javascript
 // SpeechQueue continua funcionando normalmente
 const queue = new SpeechQueue();
@@ -233,6 +259,7 @@ queue.enqueue(item.text, item.priority);
 ```
 
 ### Suporte para Testing Avançado
+
 ```javascript
 // Testes podem criar itens com timestamps customizados
 const expiredItem = new SpeechItem('Texto antigo', 1, Date.now() - 60000);
@@ -245,6 +272,7 @@ expect(freshItem.isExpired()).toBe(false);
 ## Padrões de Contexto Brasileiro
 
 ### Suporte a Português Brasileiro
+
 ```javascript
 // Frases típicas do guia turístico brasileiro
 const items = [
@@ -256,6 +284,7 @@ const items = [
 ```
 
 ### Hierarquia de Localização Brasileira
+
 ```javascript
 // Prioridades baseadas na hierarquia administrativa brasileira
 const locationItems = [
@@ -270,6 +299,7 @@ const locationItems = [
 ## Resultados da Extração
 
 ### Benefícios Alcançados
+
 1. **Representação de Dados Clara:** Value Object pattern com responsabilidade bem definida
 2. **Validação Robusta:** Type checking previne erros de runtime
 3. **Gerenciamento de Expiração:** Sistema automático de limpeza de itens antigos
@@ -277,6 +307,7 @@ const locationItems = [
 5. **Testing Abrangente:** 85+ casos de teste cobrindo todos os cenários
 
 ### Métricas de Qualidade
+
 - **Cobertura de Testes:** 100% das funções públicas e cenários edge case
 - **Documentação:** JSDoc completo para todas as funções e padrões
 - **Compatibilidade:** Zero breaking changes para código existente
@@ -286,23 +317,28 @@ const locationItems = [
 ## Lições Aprendidas
 
 ### 1. Value Object vs Entity em JavaScript
+
 A implementação de Value Objects em JavaScript requer uso cuidadoso de Object.freeze() e validação explícita, mas resulta em código mais previsível e fácil de testar.
 
 ### 2. Validação de Parâmetros Early
+
 Implementar validação rigorosa no construtor previne cascatas de erros difíceis de debuggar em sistemas complexos de síntese de voz.
 
 ### 3. Expiração Automática em Filas
+
 Sistema de expiração baseado em timestamp é essencial para manter qualidade em aplicações de navegação em tempo real.
 
 ## Próximos Passos
 
 ### Melhorias Futuras Identificadas
+
 1. **Internationalization:** Suporte a outros idiomas além do português brasileiro
 2. **Priority Enums:** Definir constantes para níveis de prioridade
 3. **Content Validation:** Validação de conteúdo para otimização de síntese de voz
 4. **Metadata Support:** Adicionar suporte a metadados como velocidade de fala
 
 ### Integração com Outras Fases
+
 - **Fase 12:** Extração de SpeechQueue para completar modularização da camada de fala
 - **Fase 13:** Extração de SpeechSynthesisManager para arquitetura completa
 - **Speech Ecosystem:** Criação de ecossistema completo de síntese de voz modular
@@ -310,6 +346,7 @@ Sistema de expiração baseado em timestamp é essencial para manter qualidade e
 ## Padrões de Uso Recomendados
 
 ### Criação de Itens de Fala
+
 ```javascript
 // Padrão recomendado para diferentes tipos de conteúdo
 const emergencyItem = new SpeechItem('Emergência: Procure ajuda!', 3);
@@ -319,6 +356,7 @@ const trivia = new SpeechItem('Este edifício tem 100 anos', 0);
 ```
 
 ### Gerenciamento de Fila com Expiração
+
 ```javascript
 // Limpeza automática de itens expirados
 const cleanQueue = (queue, expirationMs = 30000) => {
@@ -334,6 +372,7 @@ const processByPriority = (items) => {
 ```
 
 ### Debugging e Monitoramento
+
 ```javascript
 // Uso da representação string para logs
 const logSpeechQueue = (queue) => {

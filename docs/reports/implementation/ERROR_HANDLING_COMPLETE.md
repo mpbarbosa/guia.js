@@ -35,6 +35,7 @@
 **Section**: "Exit Codes & Error Handling" (Lines 420-540)
 
 **Coverage**:
+
 - ✅ Exit code meanings (0 = success, 1 = error)
 - ✅ 6 common errors documented
 - ✅ Each error includes:
@@ -51,6 +52,7 @@
 ### 1. Script Error Checks (.github/scripts/cdn-delivery.sh)
 
 #### Pre-execution Validation
+
 ```bash
 # Lines 35-70: Comprehensive checks before any processing
 
@@ -83,6 +85,7 @@ fi
 ```
 
 #### Runtime Validation
+
 ```bash
 # Line 77-82: Parse package.json safely
 PACKAGE_VERSION=$(node -p "require('./package.json').version" 2>&1)
@@ -100,6 +103,7 @@ fi
 ```
 
 #### Post-execution Testing
+
 ```bash
 # Lines 275-308: Test CDN availability
 if curl -s -f -o /dev/null "$TEST_URL"; then
@@ -113,6 +117,7 @@ fi
 ### 2. Documentation Error Handling (README.md)
 
 #### Structure
+
 ```markdown
 ### Exit Codes & Error Handling
 
@@ -126,10 +131,13 @@ fi
 ```bash
 [Error message example]
 ```
+
 **Solution**: [Step-by-step fix]
+
 ```bash
 [Commands to fix]
 ```
+
 ```
 
 #### Complete Error List
@@ -174,15 +182,18 @@ fi
 $ ./.github/scripts/cdn-delivery.sh
 /cdn-delivery.sh: line 21: node: command not found
 ```
+
 **Issues**: Cryptic, no solution, exits immediately
 
 ### After Enhancement
+
 ```bash
 $ ./.github/scripts/cdn-delivery.sh
 Error: Node.js not found
 This script requires Node.js v18+ to parse package.json
 Install: https://nodejs.org/ or run 'brew install node' (macOS)
 ```
+
 **Improvements**: Clear, explains why, provides solution
 
 ---
@@ -192,6 +203,7 @@ Install: https://nodejs.org/ or run 'brew install node' (macOS)
 ### Scenario 1: Missing Node.js
 
 **Before**:
+
 ```bash
 $ ./.github/scripts/cdn-delivery.sh
 node: command not found
@@ -199,6 +211,7 @@ node: command not found
 ```
 
 **After**:
+
 ```bash
 $ ./.github/scripts/cdn-delivery.sh
 Error: Node.js not found
@@ -213,6 +226,7 @@ $ ./.github/scripts/cdn-delivery.sh
 ### Scenario 2: Wrong Directory
 
 **Before**:
+
 ```bash
 $ cd /tmp
 $ ~/guia_j./.github/scripts/cdn-delivery.sh
@@ -221,6 +235,7 @@ Cannot find module './package.json'
 ```
 
 **After**:
+
 ```bash
 $ cd /tmp
 $ ~/guia_j./.github/scripts/cdn-delivery.sh
@@ -237,6 +252,7 @@ $ ./.github/scripts/cdn-delivery.sh
 ### Scenario 3: CDN Not Available ⭐ NEW
 
 **Before**:
+
 ```bash
 $ ./.github/scripts/cdn-delivery.sh
 # URLs generated, but when user tries to use them:
@@ -246,6 +262,7 @@ $ curl https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js
 ```
 
 **After**:
+
 ```bash
 $ ./.github/scripts/cdn-delivery.sh
 ...
@@ -282,18 +299,21 @@ https://www.jsdelivr.com/package/gh/mpbarbosa/guia_js
 ## Coverage Statistics
 
 ### Error Detection
+
 - **Pre-execution checks**: 5 (Node.js, package.json, Git, repo, main file)
 - **Runtime checks**: 1 (JSON parsing)
 - **Post-execution checks**: 1 (CDN availability)
 - **Total**: 7 error scenarios covered
 
 ### Documentation Completeness
+
 - **Exit codes**: 100% documented
 - **Common errors**: 6 documented with solutions
 - **CDN-specific**: Complete with timing and alternatives
 - **Platform-specific help**: Ubuntu, macOS, Windows
 
 ### User Guidance
+
 - **Error messages**: Clear and actionable
 - **Solutions**: Step-by-step with commands
 - **Verification**: Commands to verify fixes
@@ -330,6 +350,7 @@ https://www.jsdelivr.com/package/gh/mpbarbosa/guia_js
 ### Testing Scenarios
 
 #### Test 1: Node.js Missing
+
 ```bash
 # Remove Node.js from PATH
 export PATH=$(echo $PATH | sed 's|:/usr/local/bin||')
@@ -346,6 +367,7 @@ Install: https://nodejs.org/ or run 'brew install node' (macOS)
 ```
 
 #### Test 2: Wrong Directory
+
 ```bash
 cd /tmp
 ~/guia_j./.github/scripts/cdn-delivery.sh
@@ -360,6 +382,7 @@ Fix: cd /path/to/guia_js && ./.github/scripts/cdn-delivery.sh
 ```
 
 #### Test 3: CDN Not Available
+
 ```bash
 # Before pushing tag
 ./.github/scripts/cdn-delivery.sh
@@ -376,12 +399,14 @@ Fix: cd /path/to/guia_js && ./.github/scripts/cdn-delivery.sh
 ## Future Enhancements
 
 ### Phase 1: Additional Checks (Optional)
+
 1. Network connectivity check
 2. GitHub API rate limit check
 3. jsDelivr service status check
 4. Disk space check for output file
 
 ### Phase 2: Interactive Mode (Future)
+
 ```bash
 ./.github/scripts/cdn-delivery.sh --interactive
 

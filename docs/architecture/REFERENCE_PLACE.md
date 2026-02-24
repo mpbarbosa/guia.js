@@ -11,6 +11,7 @@ The `ReferencePlace` class was **introduced in version 0.9.0-alpha** to encapsul
 ## Motivation
 
 When users navigate around a city, it's helpful to know not just the street address but also any notable reference places they might be near or at. For example:
+
 - "You are at Shopping Center Morumbi"
 - "You are near Subway Station Sé"
 - "You are at Café Girondino"
@@ -93,6 +94,7 @@ Additional mappings can be configured in `setupParams.referencePlaceMap`.
 ## Valid Reference Place Classes
 
 The following classes are considered valid for reference places (configurable in `setupParams.validRefPlaceClasses`):
+
 - `place`
 - `shop`
 - `amenity`
@@ -172,6 +174,7 @@ new ReferencePlace(data)
 ```
 
 **Parameters:**
+
 - `data` (Object): Raw address data from geocoding API
   - `class` (string, optional): The class category (e.g., 'shop', 'amenity', 'railway')
   - `type` (string, optional): The specific type within the class (e.g., 'mall', 'cafe', 'subway')
@@ -193,6 +196,7 @@ Returns a string representation of the reference place.
 **Returns:** `string`
 
 **Example:**
+
 ```javascript
 const refPlace = new ReferencePlace({ class: 'shop', type: 'mall', name: 'Shopping Morumbi' });
 console.log(refPlace.toString());
@@ -208,6 +212,7 @@ npm test -- __tests__/ReferencePlace.test.js
 ```
 
 Test results:
+
 - ✅ 23 tests covering all functionality
 - ✅ Constructor validation
 - ✅ Description calculation
@@ -232,21 +237,25 @@ Marcelo Pereira Barbosa
 ## See Also
 
 ### Related Architecture Documentation
+
 - [Class Diagram](./CLASS_DIAGRAM.md) - Overall system architecture and class relationships
 - [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - Geocoding coordination layer
 - [GEO_POSITION.md](./GEO_POSITION.md) - GeoPosition class documentation
 
 ### Testing and Quality
+
 - [Testing Documentation](../TESTING.md) - Test suite and coverage information
 - [TDD_GUIDE.md](../../.github/TDD_GUIDE.md) - Test-driven development approach
 - [UNIT_TEST_GUIDE.md](../../.github/UNIT_TEST_GUIDE.md) - Unit testing best practices
 
 ### Development Guidelines
+
 - [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md) - Pure functions and immutable objects
 - [CODE_REVIEW_GUIDE.md](../../.github/CODE_REVIEW_GUIDE.md) - Code review standards
 - [HIGH_COHESION_GUIDE.md](../../.github/HIGH_COHESION_GUIDE.md) - Single responsibility principle
 
 ### Related Issues
+
 - Issue: [Feature] Implement class ReferencePlace
 
 ---

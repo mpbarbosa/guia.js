@@ -25,21 +25,25 @@ npm test -- __tests__/unit/SpeechController.test.js
 ## Completed Phases
 
 ### ✅ Phase 1: VoiceManager (Complete)
+
 - **File**: `src/speech/VoiceManager.js` (280 lines)
 - **Tests**: 20+ unit tests
 - **Extracted**: Voice loading, Brazilian Portuguese prioritization, async retry
 
 ### ✅ Phase 2: SpeechConfiguration (Complete)
+
 - **File**: `src/speech/SpeechConfiguration.js` (227 lines)
 - **Tests**: 26 unit tests
 - **Extracted**: Rate/pitch validation and clamping, configuration state
 
 ### ✅ Phase 3: SpeechQueueProcessor (Complete)
+
 - **File**: `src/speech/SpeechQueueProcessor.js` (~200 lines)
 - **Tests**: 18+ unit tests
 - **Extracted**: Queue management with priority support, timer-based processing
 
-### ✅ Phase 4: SpeechController (Complete) ← NEW!
+### ✅ Phase 4: SpeechController (Complete) ← NEW
+
 - **File**: `src/speech/SpeechController.js` (390 lines)
 - **Tests**: `__tests__/unit/SpeechController.test.js` (39 tests)
 - **Commit**: [pending]
@@ -57,6 +61,7 @@ npm test -- __tests__/unit/SpeechController.test.js
 ### What Was Extracted
 
 **SpeechController** is responsible for:
+
 1. Creating `SpeechSynthesisUtterance` objects
 2. Configuring utterances (voice, rate, pitch)
 3. Attaching event handlers (onend, onerror, onstart, onboundary)
@@ -67,6 +72,7 @@ npm test -- __tests__/unit/SpeechController.test.js
 ### Implementation Highlights
 
 **Key Methods**:
+
 ```javascript
 speak(text, config, callbacks)  // Main speech synthesis method
 pause()                          // Pause current speech
@@ -79,6 +85,7 @@ destroy()                        // Clean up resources
 ```
 
 **Configuration Object**:
+
 ```javascript
 {
   voice: SpeechSynthesisVoice | null,
@@ -88,6 +95,7 @@ destroy()                        // Clean up resources
 ```
 
 **Callbacks Object**:
+
 ```javascript
 {
   onStart: () => void,      // Called when speech starts
@@ -100,6 +108,7 @@ destroy()                        // Clean up resources
 ### Test Coverage
 
 **39 comprehensive tests** covering:
+
 - Constructor validation
 - Speech synthesis with configuration
 - Event handler attachment (onEnd, onError, onStart, onBoundary)
@@ -110,6 +119,7 @@ destroy()                        // Clean up resources
 - Resource cleanup (destroy)
 
 **Test Categories**:
+
 1. Constructor (3 tests)
 2. speak() method (13 tests)
 3. pause() method (4 tests)
@@ -137,9 +147,11 @@ destroy()                        // Clean up resources
 ### Integration Points
 
 **Used By** (Phase 5):
+
 - SpeechSynthesisManager facade (will use SpeechController internally)
 
 **Uses**:
+
 - Web Speech API (SpeechSynthesis, SpeechSynthesisUtterance)
 - Browser globals (window.speechSynthesis)
 
@@ -159,6 +171,7 @@ destroy()                        // Clean up resources
 ### Objective
 
 Complete the refactoring by:
+
 1. Extracting state tracking logic to `SpeechStateTracker`
 2. Converting `SpeechSynthesisManager` to a facade pattern
 3. Integrating all extracted components
@@ -281,18 +294,21 @@ Phase 5 [░░░░░░░░] StateTracker + Facade ⏳ TODO
 ## Key Learnings
 
 ### Architecture
+
 1. **Single Responsibility**: SpeechController handles ONLY speech synthesis operations
 2. **Event-Driven Design**: Callbacks provide clean integration points
 3. **Error Recovery**: Comprehensive error handling at synthesis level
 4. **State Management**: currentUtterance tracking for proper cleanup
 
 ### Testing
+
 1. **Mock Global Objects**: SpeechSynthesisUtterance needs mocking in Node
 2. **Callback Testing**: Verify event handlers are properly attached and called
 3. **Error Scenarios**: Test failure modes explicitly
 4. **State Verification**: Ensure proper cleanup after operations
 
 ### Process
+
 1. **Incremental Extraction**: Extract one responsibility at a time
 2. **Test First**: Comprehensive tests catch edge cases
 3. **Documentation**: Clear JSDoc helps with future maintenance
@@ -337,11 +353,13 @@ Refs: docs/refactoring/SESSION_SUMMARY_2026-01-24.md
 ## Files Changed
 
 ### New Files
+
 - `src/speech/SpeechController.js` (390 lines)
 - `__tests__/unit/SpeechController.test.js` (410 lines)
 - `docs/refactoring/PHASE_4_RESUME_GUIDE.md` (this file)
 
 ### Modified Files
+
 - None (Phase 4 is pure extraction with new files)
 
 ---
@@ -349,6 +367,7 @@ Refs: docs/refactoring/SESSION_SUMMARY_2026-01-24.md
 ## Next Session Preparation
 
 ### Pre-Session Checklist
+
 - [ ] Review Phase 4 completion
 - [ ] Read Phase 5 requirements
 - [ ] Analyze remaining SpeechSynthesisManager code
@@ -356,6 +375,7 @@ Refs: docs/refactoring/SESSION_SUMMARY_2026-01-24.md
 - [ ] Check for any dependency changes
 
 ### Recommended Approach for Phase 5
+
 1. Start with analysis of remaining state management logic
 2. Extract SpeechStateTracker class
 3. Write comprehensive tests for state transitions

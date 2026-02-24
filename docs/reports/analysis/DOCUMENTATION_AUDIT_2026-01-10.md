@@ -1,4 +1,5 @@
 # Documentation Audit Report - Guia Turístico v0.9.0-alpha
+
 **Date**: 2026-01-10  
 **Auditor**: GitHub Copilot CLI  
 **Standard**: JSDoc 3 with MDN Web Docs style  
@@ -12,12 +13,14 @@ The Guia Turístico codebase demonstrates **excellent documentation practices** 
 ### Overall Score: 8.5/10
 
 **Strengths**:
+
 - ✅ 100% file coverage with JSDoc comments
 - ✅ Rich module-level documentation with architectural context
 - ✅ Extensive use of @example blocks for practical guidance
 - ✅ Cross-references via @see tags linking related modules
 
 **Critical Gaps**:
+
 - ⚠️ 31% of error throws lack @throws documentation (19 missing)
 - ⚠️ Some async functions missing promise chain documentation
 - ⚠️ No TypeScript definition files (.d.ts) for external consumers
@@ -61,6 +64,7 @@ The Guia Turístico codebase demonstrates **excellent documentation practices** 
 #### Example Missing @throws
 
 **ServiceCoordinator.js** (Lines 71-85):
+
 ```javascript
 constructor(params) {
     if (!params) {
@@ -74,6 +78,7 @@ constructor(params) {
 ```
 
 **Current Documentation**:
+
 ```javascript
 /**
  * @throws {TypeError} If required parameters are missing
@@ -81,6 +86,7 @@ constructor(params) {
 ```
 
 **Recommended Enhancement**:
+
 ```javascript
 /**
  * @param {Object} params - Configuration parameters
@@ -103,6 +109,7 @@ constructor(params) {
 #### Well-Documented Examples
 
 **app.js** - `init()` function (Lines 48-65):
+
 ```javascript
 /**
  * Initialize the Guia Turístico single-page application.
@@ -133,6 +140,7 @@ async function init() { ... }
 ```
 
 **distance.js** - `delay()` function (Lines 66-77):
+
 ```javascript
 /**
  * Creates a promise that resolves after the specified delay.
@@ -160,6 +168,7 @@ export const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 **Status**: No formal TypeScript definitions
 
 #### Current State
+
 - 49 instances of `@typedef` and `@type` annotations
 - JSDoc types used throughout (e.g., `@param {string}`, `@returns {Promise<Object>}`)
 - No `.d.ts` files for TypeScript consumers
@@ -169,6 +178,7 @@ export const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 Create TypeScript definition files for public API surface:
 
 **Example: guia.d.ts**
+
 ```typescript
 /**
  * Main coordination class for geocoding workflow
@@ -205,6 +215,7 @@ export interface WebGeocodingManagerParams {
 **Status**: Using GitHub repository references
 
 #### Current package.json Dependencies
+
 ```json
 {
   "dependencies": {
@@ -215,11 +226,13 @@ export interface WebGeocodingManagerParams {
 ```
 
 #### Issues
+
 - No semantic version constraints
 - Could break on upstream changes
 - Hard to track which version is in use
 
 #### Recommendation
+
 ```json
 {
   "dependencies": {
@@ -238,6 +251,7 @@ Or publish to npm with proper semantic versioning.
 ### 1. Comprehensive Module Headers
 
 **Example: PositionManager.js** (Lines 3-55):
+
 ```javascript
 /**
  * Centralized singleton manager for device geographic position.
@@ -284,6 +298,7 @@ Or publish to npm with proper semantic versioning.
 ```
 
 **Strengths**:
+
 - Clear architectural context
 - Design pattern identification
 - Validation rules documented
@@ -295,6 +310,7 @@ Or publish to npm with proper semantic versioning.
 ### 2. Rich @example Blocks
 
 **Example: distance.js - calculateDistance()** (Lines 18-50):
+
 ```javascript
 /**
  * Calculates the great-circle distance between two geographic points using the Haversine formula.
@@ -328,6 +344,7 @@ Or publish to npm with proper semantic versioning.
 ```
 
 **Strengths**:
+
 - Mathematical formula clearly explained
 - Parameter ranges documented
 - Practical example with Brazilian cities
@@ -338,6 +355,7 @@ Or publish to npm with proper semantic versioning.
 ### 3. Architectural Context
 
 **Example: WebGeocodingManager.js** (Lines 3-63):
+
 ```javascript
 /**
  * WebGeocodingManager - Main coordination class for geocoding workflow
@@ -373,6 +391,7 @@ Or publish to npm with proper semantic versioning.
 ```
 
 **Strengths**:
+
 - Design pattern identification
 - Architectural role clearly stated
 - Evolution tracked via @since tags
@@ -385,6 +404,7 @@ Or publish to npm with proper semantic versioning.
 ### Priority 1: Document Missing @throws (HIGH PRIORITY)
 
 **Files to Update**:
+
 1. `src/coordination/ServiceCoordinator.js` - Add 8 missing @throws
 2. `src/services/ReverseGeocoder.js` - Add 3 missing @throws
 3. `src/speech/SpeechQueue.js` - Add 2 missing @throws
@@ -395,6 +415,7 @@ Or publish to npm with proper semantic versioning.
 **Estimated Effort**: 2-3 hours
 
 **Template**:
+
 ```javascript
 /**
  * @param {Object} params - Configuration object
@@ -410,6 +431,7 @@ Or publish to npm with proper semantic versioning.
 ### Priority 2: Create TypeScript Definitions (MEDIUM PRIORITY)
 
 **Action Items**:
+
 1. Create `types/` directory
 2. Generate `.d.ts` files for public API surface:
    - `WebGeocodingManager.d.ts`
@@ -422,6 +444,7 @@ Or publish to npm with proper semantic versioning.
 **Estimated Effort**: 4-6 hours
 
 **Benefits**:
+
 - IDE autocomplete for consumers
 - Type safety at compile time
 - Better developer experience
@@ -431,12 +454,14 @@ Or publish to npm with proper semantic versioning.
 ### Priority 3: Enhance Async Documentation (MEDIUM PRIORITY)
 
 **Action Items**:
+
 1. Document promise chain flows in complex async functions
 2. Add error propagation documentation
 3. Document cancellation/cleanup behavior where applicable
 4. Add timing expectations to async operations
 
 **Example Enhancement**:
+
 ```javascript
 /**
  * Fetches address data from geocoding API with retry logic.
@@ -475,11 +500,13 @@ async function fetchAddressWithRetry(latitude, longitude) { ... }
 ### Priority 4: Add Package Version Constraints (LOW PRIORITY)
 
 **Action Items**:
+
 1. Determine current versions of `guia.js` and `ibira.js`
 2. Update `package.json` with git tags or commit hashes
 3. Document version update process in CONTRIBUTING.md
 
 **Example**:
+
 ```json
 {
   "dependencies": {
@@ -570,6 +597,7 @@ Before submitting a PR, ensure:
 ### JSDoc 3 Standard ✅
 
 The codebase follows JSDoc 3 conventions:
+
 - ✅ Uses standard tags (@param, @returns, @throws, @example)
 - ✅ Type annotations in curly braces: `{string}`, `{Promise<Object>}`
 - ✅ Module-level documentation with @module
@@ -579,6 +607,7 @@ The codebase follows JSDoc 3 conventions:
 ### MDN Web Docs Style ✅
 
 The codebase follows MDN style guidelines:
+
 - ✅ Clear, concise descriptions
 - ✅ Practical examples for all public APIs
 - ✅ Parameter ranges documented (e.g., "(-90 to 90)")
@@ -588,6 +617,7 @@ The codebase follows MDN style guidelines:
 ### npm Package Best Practices ⚠️
 
 Partially compliant:
+
 - ✅ package.json includes description and keywords
 - ✅ Author information present
 - ⚠️ No semantic versioning on dependencies

@@ -7,6 +7,7 @@
 ## Setup Requirements
 
 For automated Selenium tests, you need:
+
 - Firefox with geckodriver OR Chrome with chromedriver
 - Selenium Python package: `pip install selenium`
 
@@ -17,12 +18,14 @@ For automated Selenium tests, you need:
 ### Test 1: Visual Size Comparison ✓
 
 **Steps**:
+
 1. Open http://localhost:8080 in a web browser
 2. Click "Obter Localização Atual" button
 3. Allow location permissions
 4. Observe the município and bairro cards vs action buttons
 
 **Expected Results**:
+
 - [✓] Município and Bairro cards are **significantly larger** than buttons
 - [✓] Cards should be at least 2x the height of buttons
 - [✓] Cards have **blue gradient background** with white text
@@ -31,10 +34,12 @@ For automated Selenium tests, you need:
 ### Test 2: Visual Prominence ✓
 
 **Steps**:
+
 1. Load the home page
 2. Observe the visual hierarchy
 
 **Expected Results**:
+
 - [✓] Location cards (município/bairro) are the **most visually prominent** elements
 - [✓] Cards have **elevation shadows** (box-shadow visible)
 - [✓] Cards have **rounded corners** (16px border-radius)
@@ -45,10 +50,12 @@ For automated Selenium tests, you need:
 ### Test 3: Color and Contrast ✓
 
 **Steps**:
+
 1. Inspect location cards
 2. Check color scheme
 
 **Expected Results**:
+
 - [✓] Cards have **gradient blue background** (primary color)
 - [✓] Card text is **white** (high contrast on blue)
 - [✓] Buttons have **gray background** (surface-variant color)
@@ -58,10 +65,12 @@ For automated Selenium tests, you need:
 ### Test 4: Typography Scale ✓
 
 **Steps**:
+
 1. Inspect text sizes
 2. Compare label vs value text
 
 **Expected Results**:
+
 - [✓] Card labels (MUNICÍPIO, BAIRRO) are **small and uppercase** (~14px)
 - [✓] Card values (city names) are **large** (28-32px depending on screen)
 - [✓] Card values are **much larger** than button text
@@ -70,10 +79,12 @@ For automated Selenium tests, you need:
 ### Test 5: Hover States ✓
 
 **Steps**:
+
 1. Hover mouse over município card
 2. Hover over action buttons
 
 **Expected Results**:
+
 - [✓] Cards have **increased elevation** on hover (shadow grows)
 - [✓] Cards **lift slightly** on hover (translateY animation)
 - [✓] Buttons have **subtle background change** on hover
@@ -82,10 +93,12 @@ For automated Selenium tests, you need:
 ### Test 6: Mobile Responsive (≤ 599px) ✓
 
 **Steps**:
+
 1. Resize browser to mobile width (375px)
 2. Verify layout
 
 **Expected Results**:
+
 - [✓] Cards stack **vertically** (single column)
 - [✓] Cards remain **larger** than buttons even on mobile
 - [✓] Card text size adjusts down but stays prominent (24px)
@@ -94,10 +107,12 @@ For automated Selenium tests, you need:
 ### Test 7: Tablet Responsive (600-899px) ✓
 
 **Steps**:
+
 1. Resize browser to tablet width (768px)
 2. Verify layout
 
 **Expected Results**:
+
 - [✓] Cards may appear **side by side** (2 columns)
 - [✓] Visual prominence maintained
 - [✓] Text size appropriate for tablet (28px)
@@ -105,10 +120,12 @@ For automated Selenium tests, you need:
 ### Test 8: Desktop Responsive (≥ 900px) ✓
 
 **Steps**:
+
 1. Resize browser to desktop width (1280px+)
 2. Verify layout
 
 **Expected Results**:
+
 - [✓] Cards use **auto-fit grid** (adapts to width)
 - [✓] Largest text size used (32px for values)
 - [✓] Generous padding (32px)
@@ -117,11 +134,13 @@ For automated Selenium tests, you need:
 ### Test 9: Accessibility ✓
 
 **Steps**:
+
 1. Use keyboard navigation (Tab key)
 2. Use screen reader (optional)
 3. Check ARIA attributes in DevTools
 
 **Expected Results**:
+
 - [✓] Section has `aria-label="Destaques de localização"`
 - [✓] Cards have `role="region"`
 - [✓] Values have `aria-live="polite"` for dynamic updates
@@ -131,10 +150,12 @@ For automated Selenium tests, you need:
 ### Test 10: Loading State ✓
 
 **Steps**:
+
 1. Observe cards before location is obtained
 2. Check default state
 
 **Expected Results**:
+
 - [✓] Cards show placeholder "—" before location loads
 - [✓] Cards maintain visual prominence even without data
 - [✓] Layout doesn't shift when data loads (CLS = 0)
@@ -142,12 +163,14 @@ For automated Selenium tests, you need:
 ### Test 11: CSS File Loaded ✓
 
 **Steps**:
+
 1. Open browser DevTools (F12)
 2. Go to Network tab
 3. Filter by CSS
 4. Reload page
 
 **Expected Results**:
+
 - [✓] `location-highlights.css` appears in network requests
 - [✓] File loads successfully (200 status)
 - [✓] File size is appropriate (~5KB)
@@ -155,11 +178,13 @@ For automated Selenium tests, you need:
 ### Test 12: Visual Order in DOM ✓
 
 **Steps**:
+
 1. Open browser DevTools
 2. Inspect HTML structure
 3. Verify semantic order
 
 **Expected Results**:
+
 - [✓] Location section exists with class `location-highlights`
 - [✓] Cards are within semantic `<section>` element
 - [✓] Buttons are within semantic `<nav>` element
@@ -167,7 +192,7 @@ For automated Selenium tests, you need:
 
 ## Quick Visual Verification
 
-### What You Should See:
+### What You Should See
 
 ```
 ┌─────────────────────────────────────┐
@@ -196,6 +221,7 @@ For automated Selenium tests, you need:
 ## Test Results Summary
 
 Mark each test as:
+
 - ✓ PASS
 - ✗ FAIL
 - ⚠ WARNING (partial pass)

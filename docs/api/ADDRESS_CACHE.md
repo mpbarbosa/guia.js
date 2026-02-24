@@ -51,6 +51,7 @@ Gets or creates the singleton AddressCache instance.
 **Returns:** `AddressCache` - The singleton instance
 
 **Example:**
+
 ```javascript
 import AddressCache from './data/AddressCache.js';
 
@@ -61,6 +62,7 @@ console.log(cache === cache2);  // true (same instance)
 ```
 
 **Implementation:**
+
 ```javascript
 static getInstance() {
     if (!AddressCache.instance) {
@@ -79,12 +81,14 @@ static getInstance() {
 Creates a new AddressCache instance. **This is called internally by `getInstance()`** to maintain the singleton pattern.
 
 **Initialization:**
+
 - Creates `LRUCache` instance (50 entries, 5-minute expiration)
 - Initializes change detection tracking
 - Sets up observer subject for reactive components
 - Starts automatic cleanup timer (60-second interval)
 
 **Example:**
+
 ```javascript
 // DO NOT call constructor directly
 // const cache = new AddressCache();  // ❌ Use getInstance() instead
@@ -94,6 +98,7 @@ const cache = AddressCache.getInstance();  // ✅
 ```
 
 **Internal Setup:**
+
 ```javascript
 constructor() {
     this.observerSubject = new ObserverSubject();
@@ -145,11 +150,13 @@ constructor() {
 **Main entry point** for retrieving standardized addresses. Coordinates cache retrieval, address extraction, and change detection.
 
 **Parameters:**
+
 - `data` (`Object`) - Raw address data from geocoding API
 
 **Returns:** `BrazilianStandardAddress` - Standardized address object
 
 **Workflow:**
+
 1. Generate cache key from data
 2. Check cache for existing entry
 3. If cache hit: return cached address
@@ -163,6 +170,7 @@ constructor() {
 5. Return standardized address
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -185,6 +193,7 @@ console.log(address === address2);  // false (different instances from cache str
 ```
 
 **Static Wrapper:**
+
 ```javascript
 // Static method for backward compatibility
 const address = AddressCache.getBrazilianStandardAddress(geocodingData);
@@ -199,11 +208,13 @@ const address = AddressCache.getBrazilianStandardAddress(geocodingData);
 Generates a unique cache key for address data to enable efficient caching and retrieval.
 
 **Parameters:**
+
 - `data` (`Object`) - Address data from geocoding API
 
 **Returns:** `string | null` - Cache key or null if data is invalid
 
 **Key Components:**
+
 - Street name (`road`, `street`)
 - House number
 - Neighborhood (`neighbourhood`, `suburb`)
@@ -214,6 +225,7 @@ Generates a unique cache key for address data to enable efficient caching and re
 **Format:** Components joined with `|` separator
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -234,6 +246,7 @@ console.log(key);
 ```
 
 **Static Wrapper:**
+
 ```javascript
 const key = AddressCache.generateCacheKey(data);
 ```
@@ -247,6 +260,7 @@ Clears all cache entries and resets change tracking. Primarily used for testing.
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 cache.clearCache();
@@ -257,6 +271,7 @@ console.log(cache.previousAddress); // null
 ```
 
 **Static Wrapper:**
+
 ```javascript
 AddressCache.clearCache();
 ```
@@ -270,6 +285,7 @@ Removes all expired entries from the cache based on timestamp. Called automatica
 **Returns:** `void` (logs count of removed entries)
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -281,6 +297,7 @@ cache.cleanExpiredEntries();
 ```
 
 **Static Wrapper:**
+
 ```javascript
 AddressCache.cleanExpiredEntries();
 ```
@@ -294,12 +311,14 @@ Gets the current number of entries in the cache.
 **Returns:** `number` - Number of cached entries
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 console.log(cache.getCacheSize());  // e.g., 15
 ```
 
 **Static Wrapper:**
+
 ```javascript
 const size = AddressCache.getCacheSize();
 ```
@@ -313,14 +332,17 @@ const size = AddressCache.getCacheSize();
 Sets the callback function to be called when logradouro (street) changes are detected.
 
 **Parameters:**
+
 - `callback` (`Function | null`) - Function to call on logradouro changes, or null to remove callback
 
 **Callback Parameters:**
+
 - `changeDetails` (`Object`) - Details about the logradouro change
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -336,6 +358,7 @@ cache.setLogradouroChangeCallback(null);
 ```
 
 **Static Wrapper:**
+
 ```javascript
 AddressCache.setLogradouroChangeCallback((details) => {
   console.log('Street changed:', details);
@@ -349,14 +372,17 @@ AddressCache.setLogradouroChangeCallback((details) => {
 Sets the callback function to be called when bairro (neighborhood) changes are detected.
 
 **Parameters:**
+
 - `callback` (`Function | null`) - Function to call on bairro changes
 
 **Callback Parameters:**
+
 - `changeDetails` (`Object`) - Details about the bairro change (includes `bairroCompleto`)
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -369,6 +395,7 @@ cache.setBairroChangeCallback((changeDetails) => {
 ```
 
 **Static Wrapper:**
+
 ```javascript
 AddressCache.setBairroChangeCallback((details) => {
   console.log('Neighborhood changed:', details);
@@ -382,14 +409,17 @@ AddressCache.setBairroChangeCallback((details) => {
 Sets the callback function to be called when municipio (municipality) changes are detected.
 
 **Parameters:**
+
 - `callback` (`Function | null`) - Function to call on municipio changes
 
 **Callback Parameters:**
+
 - `changeDetails` (`Object`) - Details about the municipio change (includes state)
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -402,6 +432,7 @@ cache.setMunicipioChangeCallback((changeDetails) => {
 ```
 
 **Static Wrapper:**
+
 ```javascript
 AddressCache.setMunicipioChangeCallback((details) => {
   console.log('City changed:', details);
@@ -431,6 +462,7 @@ Gets the currently registered municipio change callback.
 **Returns:** `Function | null`
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 const callback = cache.getLogradouroChangeCallback();
@@ -453,6 +485,7 @@ Checks if logradouro has changed compared to previous address. **Returns true on
 **Change Signature:** Uses `"previousValue=>currentValue"` format to track notifications
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -467,6 +500,7 @@ if (cache.hasLogradouroChanged()) {
 ```
 
 **Static Wrapper:**
+
 ```javascript
 if (AddressCache.hasLogradouroChanged()) {
   console.log('Street changed!');
@@ -482,6 +516,7 @@ Checks if bairro has changed compared to previous address. Returns true only onc
 **Returns:** `boolean`
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -491,6 +526,7 @@ if (cache.hasBairroChanged()) {
 ```
 
 **Static Wrapper:**
+
 ```javascript
 if (AddressCache.hasBairroChanged()) {
   console.log('Neighborhood changed!');
@@ -506,6 +542,7 @@ Checks if municipio has changed compared to previous address. Returns true only 
 **Returns:** `boolean`
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -515,6 +552,7 @@ if (cache.hasMunicipioChanged()) {
 ```
 
 **Static Wrapper:**
+
 ```javascript
 if (AddressCache.hasMunicipioChanged()) {
   console.log('City changed!');
@@ -532,6 +570,7 @@ Gets detailed information about logradouro change.
 **Returns:** `Object` - Change details
 
 **Return Structure:**
+
 ```javascript
 {
   hasChanged: boolean,
@@ -542,6 +581,7 @@ Gets detailed information about logradouro change.
 ```
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 const details = cache.getLogradouroChangeDetails();
@@ -556,6 +596,7 @@ console.log(details);
 ```
 
 **Static Wrapper:**
+
 ```javascript
 const details = AddressCache.getLogradouroChangeDetails();
 ```
@@ -569,6 +610,7 @@ Gets detailed information about bairro change including complete neighborhood st
 **Returns:** `Object` - Change details
 
 **Return Structure:**
+
 ```javascript
 {
   hasChanged: boolean,
@@ -585,6 +627,7 @@ Gets detailed information about bairro change including complete neighborhood st
 ```
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 const details = cache.getBairroChangeDetails();
@@ -605,6 +648,7 @@ console.log(details);
 ```
 
 **Static Wrapper:**
+
 ```javascript
 const details = AddressCache.getBairroChangeDetails();
 ```
@@ -618,6 +662,7 @@ Gets detailed information about municipio change including state information.
 **Returns:** `Object` - Change details
 
 **Return Structure:**
+
 ```javascript
 {
   hasChanged: boolean,
@@ -634,6 +679,7 @@ Gets detailed information about municipio change including state information.
 ```
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 const details = cache.getMunicipioChangeDetails();
@@ -648,6 +694,7 @@ console.log(details);
 ```
 
 **Static Wrapper:**
+
 ```javascript
 const details = AddressCache.getMunicipioChangeDetails();
 ```
@@ -661,11 +708,13 @@ const details = AddressCache.getMunicipioChangeDetails();
 Subscribes an observer object to cache events.
 
 **Parameters:**
+
 - `observer` (`Object`) - Observer with `update(event)` method
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -683,6 +732,7 @@ cache.subscribe(myObserver);
 ```
 
 **Static Wrapper:**
+
 ```javascript
 AddressCache.subscribe(myObserver);
 ```
@@ -694,17 +744,20 @@ AddressCache.subscribe(myObserver);
 Unsubscribes an observer object from cache events.
 
 **Parameters:**
+
 - `observer` (`Object`) - Observer to remove
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 cache.unsubscribe(myObserver);
 ```
 
 **Static Wrapper:**
+
 ```javascript
 AddressCache.unsubscribe(myObserver);
 ```
@@ -716,11 +769,13 @@ AddressCache.unsubscribe(myObserver);
 Subscribes a function to cache events.
 
 **Parameters:**
+
 - `fn` (`Function`) - Function to call on events
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -732,6 +787,7 @@ cache.subscribeFunction((event) => {
 ```
 
 **Static Wrapper:**
+
 ```javascript
 AddressCache.subscribeFunction((event) => {
   console.log('Event received:', event);
@@ -745,6 +801,7 @@ AddressCache.subscribeFunction((event) => {
 Unsubscribes a function from cache events.
 
 **Parameters:**
+
 - `fn` (`Function`) - Function to remove
 
 **Returns:** `void`
@@ -758,6 +815,7 @@ Unsubscribes a function from cache events.
 Destroys the cache and cleans up all resources. **Critical for preventing timer leaks** especially in test environments.
 
 **Operations:**
+
 1. Stops cleanup timer using `TimerManager`
 2. Clears all cached data
 3. Releases all references (observers, callbacks, addresses)
@@ -765,6 +823,7 @@ Destroys the cache and cleans up all resources. **Critical for preventing timer 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -775,6 +834,7 @@ cache.destroy();
 ```
 
 **Use in Tests:**
+
 ```javascript
 afterEach(() => {
   const cache = AddressCache.getInstance();
@@ -783,6 +843,7 @@ afterEach(() => {
 ```
 
 **Static Wrapper:**
+
 ```javascript
 AddressCache.destroy();
 ```
@@ -796,22 +857,26 @@ AddressCache.destroy();
 The cache uses `LRUCache` internally with the following strategy:
 
 **Configuration:**
+
 - **Max Size:** 50 entries
 - **Expiration:** 300,000 ms (5 minutes)
 - **Cleanup Interval:** 60 seconds (automatic)
 
 **Eviction Policy:**
+
 1. When cache reaches max size (50 entries)
 2. Evict the **least recently accessed** entry
 3. Most recently used entries are kept
 
 **Expiration Policy:**
+
 1. Each entry has a timestamp
 2. Entries older than 5 minutes are expired
 3. Expired entries are removed on access or during periodic cleanup
 4. Cleanup runs automatically every 60 seconds
 
 **Example:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 
@@ -835,6 +900,7 @@ setTimeout(() => {
 Cache keys are generated from essential address components:
 
 **Components Used:**
+
 1. Street name
 2. House number
 3. Neighborhood
@@ -843,6 +909,7 @@ Cache keys are generated from essential address components:
 6. Country code
 
 **Algorithm:**
+
 ```javascript
 const keyComponents = [
   address.road || address.street || '',
@@ -859,6 +926,7 @@ const cacheKey = keyComponents
 ```
 
 **Example Keys:**
+
 - `"Avenida Paulista|1578|Bela Vista|São Paulo|01310-100|BR"`
 - `"Rua Oscar Freire|379|Jardins|São Paulo|01426-001|BR"`
 - `"Avenida Boa Viagem|5000|Boa Viagem|Recife|51021-000|BR"`
@@ -1063,10 +1131,12 @@ console.log(AddressCache.logradouroChangeCallback);
 ## Testing
 
 Comprehensive test coverage in:
+
 - `__tests__/unit/data/AddressCache.test.js`
 - `__tests__/integration/address-caching.test.js`
 
 **Example Test:**
+
 ```javascript
 describe('AddressCache', () => {
   let cache;

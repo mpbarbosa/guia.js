@@ -17,6 +17,7 @@ Comprehensive guide for performance testing and optimization in Guia.js.
 Performance testing ensures Guia Turístico provides a responsive user experience across different devices and network conditions. This guide covers manual testing, automated benchmarks, and optimization techniques.
 
 **Key Performance Goals**:
+
 - Initial load: < 500ms
 - Geolocation response: < 2 seconds
 - Address processing: < 100ms
@@ -30,6 +31,7 @@ Performance testing ensures Guia Turístico provides a responsive user experienc
 Track these essential metrics for user experience:
 
 #### 1. Largest Contentful Paint (LCP)
+
 **Target**: < 2.5 seconds  
 **Measures**: Loading performance
 
@@ -43,6 +45,7 @@ new PerformanceObserver((list) => {
 ```
 
 #### 2. First Input Delay (FID)
+
 **Target**: < 100ms  
 **Measures**: Interactivity
 
@@ -56,6 +59,7 @@ new PerformanceObserver((list) => {
 ```
 
 #### 3. Cumulative Layout Shift (CLS)
+
 **Target**: < 0.1  
 **Measures**: Visual stability
 
@@ -208,6 +212,7 @@ class MemoryMonitor {
 ### Browser DevTools
 
 #### Performance Tab
+
 ```
 1. Open Chrome DevTools (F12)
 2. Go to Performance tab
@@ -218,12 +223,14 @@ class MemoryMonitor {
 ```
 
 **Look for**:
+
 - Long tasks (> 50ms)
 - Excessive layout recalculations
 - JavaScript execution time
 - Network requests
 
 #### Network Tab
+
 ```
 1. Open Network tab
 2. Set throttling (Fast 3G, Slow 3G)
@@ -235,6 +242,7 @@ class MemoryMonitor {
 ```
 
 #### Memory Tab
+
 ```
 1. Take heap snapshot before action
 2. Perform action (e.g., get location 10 times)
@@ -498,6 +506,7 @@ suite
 ```
 
 Run with:
+
 ```bash
 npm install benchmark
 node benchmark.js

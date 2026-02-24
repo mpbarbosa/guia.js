@@ -23,6 +23,7 @@ The `HtmlSpeechSynthesisDisplayer` class serves as an HTML UI controller for spe
 ### Key Features
 
 #### 1. HTML UI Controller Pattern
+
 ```javascript
 class HtmlSpeechSynthesisDisplayer {
     constructor(document, elementIds) {
@@ -39,6 +40,7 @@ class HtmlSpeechSynthesisDisplayer {
 ```
 
 #### 2. Observer Pattern Implementation
+
 ```javascript
 update(currentAddress, standardizedAddress, updateSource, changeDetails, caller) {
     // Priority-based speech synthesis:
@@ -62,6 +64,7 @@ update(currentAddress, standardizedAddress, updateSource, changeDetails, caller)
 ```
 
 #### 3. Brazilian Portuguese Speech Optimization
+
 ```javascript
 buildTextToSpeechMunicipio(address, changeDetails) {
     if (changeDetails?.previous?.municipio && changeDetails?.current?.municipio) {
@@ -76,6 +79,7 @@ buildTextToSpeechMunicipio(address, changeDetails) {
 ```
 
 #### 4. Voice Configuration and Prioritization
+
 ```javascript
 updateVoices() {
     const voices = this.speechManager.synth.getVoices();
@@ -94,11 +98,13 @@ updateVoices() {
 ### Technical Architecture
 
 #### Dependencies
+
 - **SpeechSynthesisManager**: Core speech synthesis functionality (from guia.js)
 - **PositionManager**: Position update constants and event types (from core)
 - **BrazilianStandardAddress**: Address data structure with Brazilian-specific methods
 
 #### Module Structure
+
 ```
 src/html/HtmlSpeechSynthesisDisplayer.js
 ├── Class Definition
@@ -112,6 +118,7 @@ src/html/HtmlSpeechSynthesisDisplayer.js
 ```
 
 #### Integration Points
+
 ```javascript
 // Import integration
 import { SpeechSynthesisManager } from '../guia.js';
@@ -129,6 +136,7 @@ if (typeof window !== 'undefined') {
 ### Speech Synthesis UI Architecture
 
 #### UI Element Configuration
+
 ```javascript
 const elementIds = {
     languageSelectId: 'language',
@@ -146,6 +154,7 @@ const elementIds = {
 ```
 
 #### Event Handler Architecture
+
 ```javascript
 setupEventHandlers() {
     // Voice selection
@@ -170,6 +179,7 @@ setupEventHandlers() {
 ```
 
 #### Priority-Based Speech Synthesis
+
 ```javascript
 updateTextAndSpeak(text, priority) {
     if (this.textInput) {
@@ -185,6 +195,7 @@ updateTextAndSpeak(text, priority) {
 ### Text Generation Patterns
 
 #### Municipality Change Announcements
+
 ```javascript
 // With change details
 "Você saiu de Santos e entrou em São Paulo"
@@ -197,6 +208,7 @@ updateTextAndSpeak(text, priority) {
 ```
 
 #### Neighborhood Change Announcements
+
 ```javascript
 // With neighborhood information
 "Você entrou no bairro Centro"
@@ -206,6 +218,7 @@ updateTextAndSpeak(text, priority) {
 ```
 
 #### Street Address Announcements
+
 ```javascript
 // Complete address
 "Você está agora em Rua das Flores, 123"
@@ -218,6 +231,7 @@ updateTextAndSpeak(text, priority) {
 ```
 
 #### Full Address Composition
+
 ```javascript
 // Complete address
 "Você está em Rua das Flores, 123, Centro, São Paulo"
@@ -235,6 +249,7 @@ updateTextAndSpeak(text, priority) {
 ### Testing Strategy
 
 #### Unit Tests (50+ test cases)
+
 - **Constructor Validation**: Parameter validation, immutability, error handling
 - **Observer Pattern**: Update method scenarios, priority handling, event types
 - **Text Generation**: All speech text methods with Brazilian Portuguese patterns
@@ -243,6 +258,7 @@ updateTextAndSpeak(text, priority) {
 - **Brazilian Portuguese Features**: Grammar patterns, prepositions, city names
 
 #### Integration Tests (Real-world scenarios)
+
 - **Module Integration**: SpeechSynthesisManager, PositionManager, DOM interaction
 - **Cross-browser Compatibility**: Missing APIs, voice loading, DOM variations
 - **Performance Testing**: Rapid updates, memory management, concurrent operations
@@ -252,6 +268,7 @@ updateTextAndSpeak(text, priority) {
 ### Usage Examples
 
 #### Basic Initialization
+
 ```javascript
 import HtmlSpeechSynthesisDisplayer from './src/html/HtmlSpeechSynthesisDisplayer.js';
 
@@ -266,6 +283,7 @@ const displayer = new HtmlSpeechSynthesisDisplayer(document, elementIds);
 ```
 
 #### Observer Registration
+
 ```javascript
 // Register with PositionManager or other observable
 positionManager.addObserver(displayer);
@@ -282,6 +300,7 @@ displayer.update(address, 'LogradouroChanged', 'strCurrPosUpdate');
 ```
 
 #### Voice Configuration
+
 ```javascript
 // Voices are automatically prioritized for Brazilian Portuguese
 // But can be manually configured
@@ -291,6 +310,7 @@ displayer.speechManager.setVoice(ptBRVoice);
 ```
 
 #### Custom Speech Rate and Pitch
+
 ```javascript
 // Configure speech parameters
 displayer.speechManager.setRate(1.2);  // Slightly faster
@@ -302,18 +322,21 @@ displayer.speechManager.setPitch(1.0); // Normal pitch
 ### Implementation Decisions
 
 #### Design Patterns
+
 1. **Observer Pattern**: Enables reactive updates to address changes
 2. **Controller Pattern**: Manages UI state and speech synthesis coordination
 3. **Immutability**: Constructor parameters are frozen for security
 4. **Priority Queue**: Speech synthesis uses priority-based queuing
 
 #### Brazilian Portuguese Optimization
+
 1. **Voice Prioritization**: Brazilian Portuguese voices are selected first
 2. **Natural Grammar**: Uses proper Portuguese prepositions and verb forms
 3. **Travel Context**: Speech patterns optimized for navigation and location awareness
 4. **Accessibility**: Compatible with Brazilian Portuguese screen readers
 
 #### Error Handling Strategy
+
 1. **Graceful Degradation**: Missing DOM elements don't crash the system
 2. **Input Validation**: All parameters are validated with meaningful error messages
 3. **Fallback Patterns**: Default text when address information is unavailable
@@ -322,16 +345,19 @@ displayer.speechManager.setPitch(1.0); // Normal pitch
 ### Performance Considerations
 
 #### Memory Management
+
 - Event listeners are properly bound to avoid memory leaks
 - Object freezing prevents accidental mutations
 - Text generation avoids unnecessary string concatenations
 
 #### Update Efficiency
+
 - Priority-based speech synthesis prevents announcement flooding
 - Immediate address updates are filtered to reduce noise
 - DOM updates are batched when possible
 
 #### Speech Synthesis Optimization
+
 - Voice loading is handled asynchronously
 - Speech queue management prevents overlapping announcements
 - Rate and pitch controls provide real-time feedback
@@ -339,6 +365,7 @@ displayer.speechManager.setPitch(1.0); // Normal pitch
 ### Migration Guide
 
 #### From Embedded Implementation
+
 ```javascript
 // Before: Embedded in guia.js
 const displayer = new HtmlSpeechSynthesisDisplayer(document, elementIds);
@@ -349,6 +376,7 @@ const displayer = new HtmlSpeechSynthesisDisplayer(document, elementIds);
 ```
 
 #### Backward Compatibility
+
 - Window object exposure maintained for legacy code
 - Constructor signature unchanged
 - Observer pattern interface preserved
@@ -357,6 +385,7 @@ const displayer = new HtmlSpeechSynthesisDisplayer(document, elementIds);
 ### Future Enhancements
 
 #### Planned Improvements
+
 1. **Multi-language Support**: Extend beyond Portuguese to support other languages
 2. **Voice Synthesis Customization**: User-configurable speech patterns
 3. **Advanced Priority Management**: Dynamic priority adjustment based on user preferences
@@ -364,6 +393,7 @@ const displayer = new HtmlSpeechSynthesisDisplayer(document, elementIds);
 5. **Speech Recognition Integration**: Two-way voice interaction capabilities
 
 #### Architectural Considerations
+
 - Modular design allows for easy extension
 - Observer pattern supports additional notification types
 - UI controller pattern can accommodate new interface elements

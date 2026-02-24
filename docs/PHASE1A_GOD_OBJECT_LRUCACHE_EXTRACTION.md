@@ -13,6 +13,7 @@
 Successfully extracted **LRUCache** as a standalone, reusable component from the AddressCache God Object. This is the first step in a multi-phase refactoring to break down the 1,197-line AddressCache into focused, single-responsibility classes.
 
 **Key Achievements**:
+
 - ✅ Created LRUCache.js (241 lines) - Pure caching logic with no business dependencies
 - ✅ Reduced AddressCache.js by 29 lines (1,197 → 1,168)
 - ✅ Written 19 comprehensive unit tests (100% passing)
@@ -118,20 +119,24 @@ class LRUCache {
 #### Design Decisions
 
 **1. Pure Data Structure**
+
 - No business logic dependencies
 - No imports (except built-in Map)
 - Can be reused for ANY caching needs
 
 **2. Automatic LRU Management**
+
 - `get()` automatically updates access time and moves to end
 - `set()` automatically evicts LRU entry when full
 - No manual intervention required
 
 **3. Expiration Handling**
+
 - `get()` checks expiration and auto-removes stale entries
 - `cleanExpired()` for batch cleanup (e.g., periodic timer)
 
 **4. Performance Optimized**
+
 - O(1) get/set operations using Map
 - O(1) LRU eviction (delete first entry)
 - O(n) expiration cleanup (unavoidable)
@@ -147,6 +152,7 @@ class LRUCache {
 #### Changes Made
 
 **Import LRUCache**:
+
 ```javascript
 import ObserverSubject from '../core/ObserverSubject.js';
 import AddressExtractor from './AddressExtractor.js';
@@ -156,6 +162,7 @@ import { log } from '../utils/logger.js';
 ```
 
 **Constructor Changes**:
+
 ```javascript
 // ❌ BEFORE: Direct Map with manual properties
 constructor() {
@@ -175,6 +182,7 @@ constructor() {
 ```
 
 **Method Delegation**:
+
 ```javascript
 // Simplified eviction (now automatic in LRUCache.set())
 evictLeastRecentlyUsedIfNeeded() {
@@ -239,6 +247,7 @@ getBrazilianStandardAddress(data) {
 ```
 
 **Static Property Updates**:
+
 ```javascript
 // Update static getters/setters to access LRUCache properties
 static get maxCacheSize() {
@@ -299,6 +308,7 @@ test('should update LRU order when accessing entries', () => {
 ```
 
 **Test Execution**:
+
 ```bash
 $ npm test __tests__/unit/LRUCache.test.js
 
@@ -349,6 +359,7 @@ Time:        0.24 s
 | **TOTAL** | - | 1,197 | 1,634 | +437 | ✅ Complete |
 
 **Net Result**:
+
 - **AddressCache**: -29 lines (complexity reduced)
 - **New Files**: +466 lines (reusable component + tests)
 - **Test Count**: +19 tests (1,282 → 1,301)
@@ -367,6 +378,7 @@ Time:        0.24 s
 | Overhead (imports, etc.) | ~47 | ~68 | +21 |
 
 **Cyclomatic Complexity**:
+
 - **AddressCache eviction logic**: Complex → Simple (now `evictIfNeeded()` is 5 lines)
 - **Cache access logic**: 15 lines → 3 lines (LRUCache handles expiration/LRU)
 
@@ -388,6 +400,7 @@ Time:        7.045 s
 ### Performance Impact
 
 **No performance degradation**:
+
 - LRUCache operations are O(1) same as before
 - Eviction is now more efficient (one entry vs 25% batch)
 - Expiration checking identical performance
@@ -504,12 +517,14 @@ $ npm test __tests__/integration/AddressDataExtractor-module.test.js
 ### Scope Creep Avoided ✅
 
 **What we did NOT do** (by design):
+
 - ❌ Extract all 4 responsibilities (would take 16-24 hours)
 - ❌ Remove deprecated wrappers (different plan)
 - ❌ Migrate to dependency injection (different plan)
 - ❌ Change AddressCache API (100% backward compatible)
 
 **Why?**
+
 - Keep Phase 1A small and safe (2-3 hours)
 - Validate extraction pattern works
 - No breaking changes
@@ -522,6 +537,7 @@ $ npm test __tests__/integration/AddressDataExtractor-module.test.js
 ### Immediate (Optional)
 
 1. **Export LRUCache** from guia.js for external use:
+
    ```javascript
    // src/guia.js
    export { default as LRUCache } from './data/LRUCache.js';
@@ -537,6 +553,7 @@ $ npm test __tests__/integration/AddressDataExtractor-module.test.js
 **Goal**: Extract change detection logic (~300 lines)
 
 **Plan**:
+
 1. Create `AddressChangeDetector.js` (300 lines)
 2. Extract logradouro/bairro/municipio change methods
 3. Update AddressCache to use ChangeDetector
@@ -550,6 +567,7 @@ $ npm test __tests__/integration/AddressDataExtractor-module.test.js
 **Goal**: Extract observer management (~150 lines)
 
 **Plan**:
+
 1. Create `AddressObservable.js` (150 lines)
 2. Extract subscribe/unsubscribe/notify methods
 3. Update AddressCache to use Observable
@@ -573,6 +591,7 @@ $ npm test __tests__/integration/AddressDataExtractor-module.test.js
 Phase 1A of the God Object refactoring has been successfully completed. We extracted **LRUCache** as a standalone, reusable component, reducing AddressCache complexity while maintaining 100% backward compatibility.
 
 **Key Achievements**:
+
 - ✅ LRUCache.js created (241 lines of reusable code)
 - ✅ AddressCache.js reduced by 29 lines
 - ✅ 19 new tests written (100% passing)
@@ -581,6 +600,7 @@ Phase 1A of the God Object refactoring has been successfully completed. We extra
 - ✅ Completed in ~2 hours
 
 **Impact**:
+
 - **Code Quality**: Improved separation of concerns
 - **Maintainability**: Easier to understand and modify
 - **Testability**: LRUCache tested in isolation
@@ -589,7 +609,8 @@ Phase 1A of the God Object refactoring has been successfully completed. We extra
 
 **Status**: ✅ **Ready for Code Review and Merge**
 
-**Recommended Next Step**: 
+**Recommended Next Step**:
+
 - Review and merge Phase 1A
 - Proceed with Phase 2 (Change Detector extraction) or
 - Continue with other high-priority work (Timer Leak Phase 2, Static Wrapper Elimination)
@@ -600,6 +621,7 @@ Phase 1A of the God Object refactoring has been successfully completed. We extra
 **Author**: GitHub Copilot CLI  
 **Date**: 2026-01-09  
 **Related Documents**:
+
 - docs/GOD_OBJECT_REFACTORING.md (Master Plan, 26 KB)
 - docs/PHASE1_TIMER_LEAK_IMPLEMENTATION.md (Phase 1 Timer Leaks, 21 KB)
 - docs/STATIC_WRAPPER_ELIMINATION.md (Related refactoring, 36 KB)

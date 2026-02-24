@@ -24,6 +24,7 @@ npm install
 ```
 
 **Expected output:**
+
 ```
 added 299 packages in 20s
 ```
@@ -39,6 +40,7 @@ npm test
 ```
 
 **Expected output:**
+
 ```
 ✅ Syntax validation passed
 ✅ 2,235 tests passing (2,401 total)
@@ -52,6 +54,7 @@ python3 -m http.server 9000
 ```
 
 **Expected output:**
+
 ```
 Serving HTTP on 0.0.0.0 port 9000 (http://0.0.0.0:9000/) ...
 ```
@@ -59,6 +62,7 @@ Serving HTTP on 0.0.0.0 port 9000 (http://0.0.0.0:9000/) ...
 ### Step 4: Open Application (10 seconds)
 
 Open your browser and navigate to:
+
 ```
 http://localhost:9000/src/index.html
 ```
@@ -260,6 +264,7 @@ displayer.display(position);
 ### Issue: `npm install` fails
 
 **Solution:**
+
 ```bash
 # Clear npm cache
 npm cache clean --force
@@ -274,6 +279,7 @@ npm install
 ### Issue: Tests fail with DOM errors
 
 **Solution:** Ensure you're using the correct Node.js version:
+
 ```bash
 node --version  # Should be v20.19.0+
 ```
@@ -281,6 +287,7 @@ node --version  # Should be v20.19.0+
 ### Issue: Geolocation not working
 
 **Solutions:**
+
 1. Use `https://` or `localhost` (required for geolocation API)
 2. Grant location permissions in browser
 3. Check browser console for error messages
@@ -288,6 +295,7 @@ node --version  # Should be v20.19.0+
 ### Issue: Web server port already in use
 
 **Solution:** Use a different port:
+
 ```bash
 python3 -m http.server 8000
 # Then open: http://localhost:8000/src/index.html
@@ -314,6 +322,7 @@ cat __tests__/integration/address/AddressCache.test.js
 ### 3. Try Modifying Components
 
 Start with simple changes:
+
 - Modify speech synthesis messages
 - Change display formatting
 - Add new address fields
@@ -329,6 +338,7 @@ npm test -- __tests__/e2e/CompleteGeolocationWorkflow.e2e.test.js
 ### 5. Contribute
 
 Read the [Contributing Guide](../.github/CONTRIBUTING.md) to learn about:
+
 - Code style conventions
 - Immutability principles
 - Pull request process
@@ -339,18 +349,21 @@ Read the [Contributing Guide](../.github/CONTRIBUTING.md) to learn about:
 ## Learning Path
 
 ### Beginner (Week 1)
+
 - ✅ Complete this Quick Start
 - 📖 Read API Reference basics
 - 🧪 Run and understand existing tests
 - 💻 Make your first code change
 
 ### Intermediate (Week 2-3)
+
 - 🏗️ Understand architecture patterns
 - 🔧 Implement a new display component
 - 🧩 Add a new field to BrazilianStandardAddress
 - 📝 Write your first test
 
 ### Advanced (Week 4+)
+
 - 🎯 Implement a new service integration
 - ⚡ Optimize performance bottlenecks
 - 🔍 Debug complex E2E test scenarios
@@ -378,6 +391,7 @@ grep -r "ReverseGeocoder" __tests__/
 ### Test as Documentation
 
 Tests serve as living documentation:
+
 ```bash
 # Find usage examples in tests
 cat __tests__/unit/core/PositionManager.test.js
@@ -416,10 +430,12 @@ git push origin feature/my-feature
 ### Pre-Commit Validation
 
 Git hooks automatically run:
+
 - **pre-commit:** Syntax validation + unit tests
 - **pre-push:** Full test suite
 
 To bypass (not recommended):
+
 ```bash
 git commit --no-verify
 ```
@@ -442,19 +458,23 @@ git commit --no-verify
 ## Configuration Files
 
 ### package.json
+
 - Dependencies and scripts
 - Jest configuration
 - Node.js engine requirements
 
 ### jsdoc.json
+
 - JSDoc generation settings
 - API documentation config
 
 ### eslint.config.js
+
 - JavaScript linting rules
 - Code style enforcement
 
 ### .husky/
+
 - Git hooks (pre-commit, pre-push)
 - Automated validation
 
@@ -463,12 +483,14 @@ git commit --no-verify
 ## Browser Compatibility
 
 ### Supported Browsers
+
 - ✅ Chrome 90+
 - ✅ Firefox 88+
 - ✅ Safari 14+
 - ✅ Edge 90+
 
 ### Required Features
+
 - Geolocation API
 - Web Speech API (optional, for speech synthesis)
 - ES6 Modules
@@ -481,6 +503,7 @@ git commit --no-verify
 For production deployment, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 Quick checklist:
+
 - [ ] Run full test suite
 - [ ] Build for production
 - [ ] Configure HTTPS
@@ -495,6 +518,7 @@ Quick checklist:
 Current version: **0.9.0-alpha**
 
 Check for updates:
+
 ```bash
 # Check outdated dependencies
 npm run deps:check
@@ -511,11 +535,13 @@ cat CHANGELOG.md
 ## Quick Reference: Important Patterns
 
 ### Singleton Pattern
+
 ```javascript
 const manager = PositionManager.getInstance();
 ```
 
 ### Observer Pattern
+
 ```javascript
 manager.addObserver({
   update(data) {
@@ -525,12 +551,14 @@ manager.addObserver({
 ```
 
 ### Factory Pattern
+
 ```javascript
 const factory = new DisplayerFactory();
 const displayer = factory.createPositionDisplayer(document, 'container');
 ```
 
 ### Composition Pattern
+
 ```javascript
 // SpeechSynthesisManager uses composition
 const manager = SpeechSynthesisManager.getInstance();
@@ -559,21 +587,25 @@ You've completed the Quick Start when you can:
 Choose your path:
 
 ### 🎨 Frontend Developer
+
 → Explore `src/html/` display components  
 → Read [USER_GUIDE.md](./user/USER_GUIDE.md)  
 → Modify CSS in `src/*.css`
 
 ### 🔧 Backend Developer
+
 → Explore `src/services/` API integrations  
 → Read [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md)  
 → Implement new service providers
 
 ### 🧪 QA Engineer
+
 → Explore `__tests__/` test suites  
 → Read [TESTING_GUIDE.md](./TESTING_GUIDE.md)  
 → Write new test scenarios
 
 ### 📚 Technical Writer
+
 → Explore `docs/` documentation  
 → Read existing guides  
 → Improve documentation clarity

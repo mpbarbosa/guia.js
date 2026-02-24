@@ -41,11 +41,13 @@ A device is classified as mobile if **at least 2 out of 3** detection methods in
 Different accuracy thresholds are applied based on device type:
 
 #### Mobile Devices (GPS-enabled)
+
 - **Rejected Accuracy Levels**: `medium`, `bad`, `very bad`
 - **Accepted Accuracy Levels**: `excellent` (≤10m), `good` (11-20m)
 - **Rationale**: Mobile devices have GPS hardware and should provide high accuracy
 
 #### Desktop Devices (WiFi/IP location)
+
 - **Rejected Accuracy Levels**: `bad`, `very bad`
 - **Accepted Accuracy Levels**: `excellent` (≤10m), `good` (11-20m), `medium` (21-100m)
 - **Rationale**: Desktop devices rely on WiFi/IP location, which typically provides 50-1000m accuracy
@@ -155,6 +157,7 @@ npm test -- __tests__/utils/DeviceDetection.test.js
 ```
 
 The test suite includes **20 comprehensive tests** covering:
+
 - Mobile device detection from user agent
 - Desktop device detection
 - Tablet device detection
@@ -169,6 +172,7 @@ The test suite includes **20 comprehensive tests** covering:
 ### Test Coverage
 
 **Edge Case Tests:**
+
 - Missing `navigator.userAgent` property
 - Missing `navigator.maxTouchPoints` property
 - `navigator.vendor` fallback handling
@@ -178,6 +182,7 @@ The test suite includes **20 comprehensive tests** covering:
 - Explicit `maxTouchPoints = 0`
 
 **Referential Transparency Tests:**
+
 - Dependency injection support
 - Deterministic output for same inputs
 - No side effects on input objects
@@ -195,6 +200,7 @@ http://localhost:9000/device-detection-test.html
 ```
 
 The test page displays:
+
 - Detected device type
 - Detection method details
 - Active accuracy configuration
@@ -204,6 +210,7 @@ The test page displays:
 ## Browser Compatibility
 
 The device detection feature works in all modern browsers:
+
 - ✅ Chrome/Edge (Chromium)
 - ✅ Firefox
 - ✅ Safari (iOS and macOS)
@@ -214,6 +221,7 @@ For non-browser environments (e.g., Node.js testing), the system defaults to mob
 ## Real-World Impact
 
 ### Mobile Device Scenario
+
 - User opens app on iPhone with GPS
 - System detects mobile device
 - GPS provides 15-meter accuracy → **Accepted** (good quality)
@@ -221,6 +229,7 @@ For non-browser environments (e.g., Node.js testing), the system defaults to mob
 - User sees: "Accuracy not good enough, waiting for better signal..."
 
 ### Desktop Device Scenario
+
 - User opens app on laptop with WiFi
 - System detects desktop device
 - WiFi provides 50-meter accuracy → **Accepted** (medium quality)
@@ -242,6 +251,7 @@ For non-browser environments (e.g., Node.js testing), the system defaults to mob
 Detects if the current device is a mobile or tablet device.
 
 **Parameters**:
+
 - `options` (Object, optional): Configuration options for dependency injection
   - `options.navigatorObj` (Object, optional): Navigator object to use (defaults to global `navigator`)
   - `options.windowObj` (Object, optional): Window object to use (defaults to global `window`)
@@ -249,6 +259,7 @@ Detects if the current device is a mobile or tablet device.
 **Returns**: `boolean` - `true` if mobile/tablet, `false` if desktop/laptop
 
 **Example (Default Usage)**:
+
 ```javascript
 if (isMobileDevice()) {
     console.log('Mobile device - expecting GPS accuracy');
@@ -258,6 +269,7 @@ if (isMobileDevice()) {
 ```
 
 **Example (Dependency Injection)**:
+
 ```javascript
 // For testing or advanced use cases
 const result = isMobileDevice({
@@ -267,6 +279,7 @@ const result = isMobileDevice({
 ```
 
 **Edge Cases**:
+
 - Returns `false` for non-browser environments (Node.js)
 - Handles missing `navigator.userAgent`, `navigator.vendor` gracefully
 - Screen width of exactly 768px is considered desktop
@@ -274,6 +287,7 @@ const result = isMobileDevice({
 - Empty or missing user agent strings default to empty string
 
 **Limitations**:
+
 - User agent strings can be spoofed
 - Touch-capable laptops may be misdetected as mobile
 - Tablets in landscape mode (width > 768) may be misdetected as desktop
@@ -305,11 +319,13 @@ Currently active accuracy rejection list (automatically set based on device type
 ### Issue: Desktop detected as mobile (or vice versa)
 
 **Possible Causes:**
+
 1. Touch-capable laptop detected as mobile
 2. Tablet in landscape mode detected as desktop
 3. Spoofed user agent
 
 **Solution**: The detection uses a scoring system. Check the detection details:
+
 ```javascript
 console.log('User Agent:', navigator.userAgent);
 console.log('Touch Points:', navigator.maxTouchPoints);
@@ -317,6 +333,7 @@ console.log('Screen Width:', window.innerWidth);
 ```
 
 Debug the scoring:
+
 ```javascript
 const ua = navigator.userAgent.toLowerCase();
 const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i.test(ua);
@@ -327,6 +344,7 @@ console.log(`Score: ${[isMobileUA, hasTouch, isSmall].filter(Boolean).length} ou
 ```
 
 If needed, manually override:
+
 ```javascript
 setupParams.notAcceptedAccuracy = setupParams.desktopNotAcceptedAccuracy;
 ```
@@ -335,7 +353,8 @@ setupParams.notAcceptedAccuracy = setupParams.desktopNotAcceptedAccuracy;
 
 **Cause**: Windows laptops with touch screens and small windows may score 2/3 on mobile detection.
 
-**Solution**: 
+**Solution**:
+
 1. Maximize browser window (width > 768px) to reduce score to 1/3
 2. Manually override accuracy settings if needed
 3. Consider custom detection logic for your specific use case
@@ -345,6 +364,7 @@ setupParams.notAcceptedAccuracy = setupParams.desktopNotAcceptedAccuracy;
 **Cause**: Tests may be accessing global `navigator`/`window` instead of mocked values.
 
 **Solution**: Use dependency injection in tests:
+
 ```javascript
 // ✅ Good: Referentially transparent testing
 const result = isMobileDevice({
@@ -365,6 +385,7 @@ const result = isMobileDevice(); // May not use the mock
 ### Issue: Want stricter accuracy on desktop
 
 **Solution**: Manually configure stricter settings:
+
 ```javascript
 setupParams.notAcceptedAccuracy = setupParams.mobileNotAcceptedAccuracy;
 ```
@@ -394,18 +415,21 @@ setupParams.notAcceptedAccuracy = setupParams.mobileNotAcceptedAccuracy;
 The `isMobileDevice()` function follows these design principles:
 
 ### Referential Transparency
+
 - **Pure Function Core**: When given explicit parameters via dependency injection, the function is pure and referentially transparent
 - **Deterministic**: Same inputs always produce same outputs
 - **No Side Effects**: Does not modify any external state
 - **Testable**: Easy to test without complex mocking
 
 ### Defensive Coding
+
 - **Graceful Fallbacks**: Handles missing properties with safe defaults
 - **Type Safety**: Validates property types before use
 - **Boundary Conditions**: Carefully handles edge cases (768px, missing properties)
 - **Non-Browser Safety**: Works correctly in Node.js environments
 
 ### Backward Compatibility
+
 - **Optional Parameters**: Default behavior unchanged for existing code
 - **Progressive Enhancement**: New features (dependency injection) are opt-in
 - **No Breaking Changes**: All existing usage patterns continue to work

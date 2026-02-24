@@ -1,4 +1,5 @@
 # Dependency Update Roadmap
+
 **Project:** Guia Turístico v0.9.0-alpha  
 **Created:** 2026-01-09  
 **Status:** Planning Phase
@@ -8,6 +9,7 @@
 ## 📊 Current Environment State
 
 ### ✅ Strengths
+
 - **Node.js v25.2.1:** Latest stable release with excellent ES module support
 - **npm v11.7.0:** Modern package manager with improved security
 - **ESM Configuration:** `"type": "module"` in package.json ✅
@@ -16,6 +18,7 @@
 - **jsdom Classification:** ✅ **FIXED** - Moved to devDependencies (2026-01-09)
 
 ### ⚠️ Known Issues
+
 1. **Jest Version Drift:** Specified ^30.1.3, installed 29.7.0 (tests work perfectly)
 2. **Lockfile Drift:** Causes false positive security warnings
 3. **Missing Version Specification:** No .nvmrc or engines field
@@ -26,6 +29,7 @@
 ## 🎯 Update Strategy Overview
 
 ### Philosophy
+
 - **Alpha stage (0.9.0-alpha):** Prioritize flexibility over absolute stability
 - **Minimal disruption:** Only fix actual issues, not cosmetic warnings
 - **Test-driven:** Every change must pass 1,282 tests + coverage thresholds
@@ -40,16 +44,19 @@
 ### Actions
 
 #### 1.1 Create .nvmrc
+
 ```bash
 echo "25.2.1" > .nvmrc
 ```
 
 **Benefits:**
+
 - Team members can use `nvm use` for instant version match
 - CI/CD can reference exact version
 - Documents minimum requirements
 
 #### 1.2 Add engines field to package.json
+
 ```json
 "engines": {
   "node": ">=18.0.0 <26.0.0",
@@ -58,11 +65,13 @@ echo "25.2.1" > .nvmrc
 ```
 
 **Rationale:**
+
 - **Node >=18:** Required for ES modules support (src/app.js uses `import`)
 - **Node <26:** Prevents future breaking changes during alpha
 - **npm >=10:** Modern lockfile format with security improvements
 
 #### 1.3 Optional: Enable engine enforcement
+
 ```bash
 echo "engine-strict=true" >> .npmrc
 ```
@@ -70,6 +79,7 @@ echo "engine-strict=true" >> .npmrc
 **Warning:** Only enable if all team members have Node 18+
 
 ### Testing
+
 ```bash
 # Verify engines field accepted
 npm install --dry-run
@@ -81,6 +91,7 @@ nvm use 25 && npm test
 ```
 
 ### Expected Outcome
+
 - ✅ .nvmrc created
 - ✅ engines field in package.json
 - ✅ All tests still pass (1,282 passing)
@@ -95,6 +106,7 @@ nvm use 25 && npm test
 **⚠️ CAUTION:** This will update all dependencies to latest versions matching package.json ranges
 
 ### Pre-flight Checklist
+
 - [ ] All current changes committed (`git status` clean)
 - [ ] Backup created (`git tag backup-before-lockfile-regen`)
 - [ ] Tests passing (1,282 passing baseline)
@@ -103,6 +115,7 @@ nvm use 25 && npm test
 ### Actions
 
 #### 2.1 Create safety snapshot
+
 ```bash
 git add -A
 git commit -m "chore: snapshot before lockfile regeneration"
@@ -110,6 +123,7 @@ git tag -a "v0.9.0-alpha-pre-lockfile-fix" -m "Backup before dependency updates"
 ```
 
 #### 2.2 Regenerate lockfile
+
 ```bash
 # Remove old state
 rm -rf node_modules package-lock.json
@@ -122,6 +136,7 @@ npm list --depth=0
 ```
 
 #### 2.3 Validate installation
+
 ```bash
 # Check Jest version (should now be 30.x)
 npm list jest
@@ -135,6 +150,7 @@ cat node_modules/js-yaml/package.json | grep '"version"'
 ```
 
 ### Expected Changes
+
 ```diff
 # package-lock.json
 - "jest": "29.7.0"
@@ -144,6 +160,7 @@ cat node_modules/js-yaml/package.json | grep '"version"'
 ```
 
 ### Testing Strategy
+
 ```bash
 # Full validation suite
 npm run test:all
@@ -162,6 +179,7 @@ python3 -m http.server 9000
 ```
 
 ### Rollback Plan (if tests fail)
+
 ```bash
 git reset --hard v0.9.0-alpha-pre-lockfile-fix
 git tag -d v0.9.0-alpha-pre-lockfile-fix
@@ -169,6 +187,7 @@ npm install
 ```
 
 ### Expected Outcome
+
 - ✅ Jest 30.x installed (matching package.json)
 - ✅ Lockfile consistent with package.json
 - ✅ npm audit clean (no false positives)
@@ -195,6 +214,7 @@ npm install
 | **ibira.js** | github HEAD | Latest commit | N/A (git dep) | Track upstream |
 
 ### Update Commands (for v0.9.0 cycle)
+
 ```bash
 # Check for updates
 npm outdated
@@ -211,6 +231,7 @@ npm run test:all
 ```
 
 ### Monitoring Strategy
+
 ```bash
 # Weekly check during alpha development
 npm outdated
@@ -234,6 +255,7 @@ npm audit
 ### Recommended Transition Plan
 
 #### Alpha/Beta Phases (0.9.0 → 0.9.0)
+
 ```json
 {
   "version": "0.9.0-alpha",
@@ -249,6 +271,7 @@ npm audit
 ```
 
 #### Release Candidate (1.0.0-rc.1)
+
 ```json
 {
   "version": "1.0.0-rc.1",
@@ -264,6 +287,7 @@ npm audit
 ```
 
 #### Production (1.0.0+)
+
 ```json
 {
   "version": "1.0.0",
@@ -283,20 +307,24 @@ npm audit
 ## 🎯 Recommended Execution Timeline
 
 ### Immediate (This Session)
+
 - [x] **jsdom moved to devDependencies** ✅ COMPLETED (2026-01-09)
 - [ ] **Phase 1:** Add .nvmrc and engines field (15 minutes, low risk)
 
 ### Next Development Session (Within 1 week)
+
 - [ ] **Phase 2:** Regenerate lockfile (30 minutes, moderate risk)
 - [ ] Verify Jest 30.x compatibility
 - [ ] Confirm npm audit clean
 
 ### Next Release Cycle (v0.9.0-alpha)
+
 - [ ] **Phase 3:** Update outdated dependencies
 - [ ] Run `npm outdated` and evaluate updates
 - [ ] Test comprehensively with updated dependencies
 
 ### Production Release (v1.0.0)
+
 - [ ] Pin dependency versions (exact, not ranges)
 - [ ] Enable Dependabot for security monitoring
 - [ ] Consider npm shrinkwrap for absolute reproducibility
@@ -306,6 +334,7 @@ npm audit
 ## 🧪 Testing Checklist (After Each Phase)
 
 ### Automated Tests
+
 ```bash
 ✅ npm run validate              # Syntax check (<1 second)
 ✅ npm test                      # 1,282 tests (6 seconds)
@@ -314,6 +343,7 @@ npm audit
 ```
 
 ### Manual Validation
+
 ```bash
 ✅ python3 -m http.server 9000
 ✅ Open http://localhost:9000/src/index.html
@@ -326,6 +356,7 @@ npm audit
 ```
 
 ### Coverage Verification
+
 ```bash
 ✅ Branch coverage >= 68%
 ✅ Line coverage >= 73%
@@ -338,24 +369,28 @@ npm audit
 ## 📝 Decision Log
 
 ### 2026-01-09: jsdom Classification
+
 **Decision:** Move jsdom from dependencies → devDependencies  
 **Rationale:** Not used in production code, only in (currently skipped) tests  
 **Impact:** ~7MB production bundle reduction  
 **Status:** ✅ COMPLETED  
 
 ### 2026-01-09: Jest Version Drift
+
 **Decision:** Defer to Phase 2 (lockfile regeneration)  
 **Rationale:** Tests work perfectly with Jest 29, no urgent need to update  
 **Impact:** Will naturally resolve when lockfile regenerated  
 **Status:** ⏳ PLANNED (Phase 2)  
 
 ### 2026-01-09: Security False Positives
+
 **Decision:** Defer to Phase 2 (lockfile regeneration)  
 **Rationale:** Actual code is secure (glob 7.2.3, js-yaml 3.14.2), npm audit confused by lockfile metadata  
 **Impact:** False warnings eliminated after fresh install  
 **Status:** ⏳ PLANNED (Phase 2)  
 
 ### 2026-01-09: Version Pinning Strategy
+
 **Decision:** Keep caret ranges (`^`) for alpha/beta phases  
 **Rationale:** Project is 0.9.0-alpha, needs flexibility for rapid development  
 **Impact:** Easier to stay current with security patches and bug fixes  
@@ -366,18 +401,21 @@ npm audit
 ## 🚨 Risk Assessment
 
 ### Phase 1 (Environment Specification) - LOW RISK ⚠️
+
 **Likelihood of breakage:** 1%  
 **Impact if breaks:** Low (just documentation, no code changes)  
 **Rollback complexity:** Trivial (delete .nvmrc, remove engines field)  
 **Recommended:** ✅ Execute immediately  
 
 ### Phase 2 (Lockfile Regeneration) - MODERATE RISK ⚠️⚠️
+
 **Likelihood of breakage:** 10-15%  
 **Impact if breaks:** Moderate (tests may fail, Jest 30 API changes)  
 **Rollback complexity:** Easy (git reset to backup tag)  
 **Recommended:** ✅ Execute with backup strategy  
 
 ### Phase 3 (Dependency Updates) - VARIABLE RISK ⚠️⚠️⚠️
+
 **Likelihood of breakage:** 20-30% (depends on specific updates)  
 **Impact if breaks:** High (may require code changes, API migrations)  
 **Rollback complexity:** Moderate (may need per-package rollback)  
@@ -398,18 +436,21 @@ npm audit
 ## 🎬 Next Steps
 
 ### Immediate Actions (Recommended)
+
 1. Review this roadmap with team (if applicable)
 2. Execute Phase 1 (15 minutes, low risk)
 3. Commit Phase 1 changes
 4. Schedule Phase 2 for next development session
 
 ### Before Executing Phase 2
+
 1. Ensure all current work committed
 2. Create backup tag: `git tag v0.9.0-alpha-pre-lockfile-fix`
 3. Allocate 30-45 minutes for testing
 4. Have rollback plan ready
 
 ### Questions to Resolve
+
 - [ ] Is there a team? (affects .npmrc engine-strict setting)
 - [ ] Target release date for v0.9.0-alpha? (affects Phase 3 timing)
 - [ ] Production timeline for v1.0.0? (affects version pinning strategy)

@@ -7,6 +7,7 @@
 ## Problem
 
 Mobile users faced excessive information overload:
+
 - **3-4 screens** of vertical scrolling to see all content
 - Highlight cards + address + coordinates + references + IBGE + chronometer all stacked
 - Primary information (município/bairro) lost in visual noise
@@ -16,6 +17,7 @@ Mobile users faced excessive information overload:
 ### User Pain Points
 
 **Before progressive disclosure**:
+
 1. Open app → See município/bairro cards
 2. Scroll down → Full address section
 3. Scroll down → Coordinates section  
@@ -30,6 +32,7 @@ Mobile users faced excessive information overload:
 ### 1. Collapsible Secondary Information
 
 **Wrapped 5 sections** in `<details>` element:
+
 - Endereço Padronizado (Full address)
 - Coordenadas (Lat/Long + altitude)
 - Local de Referência (Reference places)
@@ -37,24 +40,28 @@ Mobile users faced excessive information overload:
 - Tempo Decorrido (Chronometer)
 
 **Default State**:
+
 - **Mobile** (<768px): Collapsed by default (first visit)
 - **Desktop** (≥769px): Always expanded, summary hidden
 
 ### 2. Sticky Highlight Cards
 
 **Mobile** (<768px):
+
 - Highlight cards pinned to top while scrolling
 - Municipality/bairro/logradouro always visible
 - Reduced card size for compact sticky header
 - Box shadow for depth perception
 
 **Desktop** (≥769px):
+
 - Normal flow, not sticky
 - Original card sizing preserved
 
 ### 3. State Persistence
 
 **localStorage integration**:
+
 - Saves user's expand/collapse preference
 - Key: `guia-turistico-secondary-info-state`
 - Only on mobile (desktop always expanded)
@@ -66,16 +73,19 @@ Mobile users faced excessive information overload:
 ### 4. Accessibility Features
 
 **Screen reader support**:
+
 - `<details>` is native HTML, fully accessible
 - State changes announced via aria-live regions
 - "Informações adicionais expandidas/recolhidas"
 - Keyboard navigable (Tab + Enter/Space)
 
 **Focus management**:
+
 - 2px blue outline on summary focus
 - WCAG 2.1 AA compliant
 
 **Reduced motion**:
+
 - Respects `prefers-reduced-motion` media query
 - Disables slide-down animation
 - Instant expand/collapse for motion-sensitive users
@@ -109,6 +119,7 @@ Mobile users faced excessive information overload:
 ### CSS Responsive Behavior
 
 **Mobile** (<768px):
+
 ```css
 .location-highlights {
   position: sticky;
@@ -124,6 +135,7 @@ Mobile users faced excessive information overload:
 ```
 
 **Desktop** (≥769px):
+
 ```css
 .secondary-info-summary {
   display: none; /* Hide collapse UI */
@@ -143,6 +155,7 @@ Mobile users faced excessive information overload:
 ### JavaScript Manager
 
 **ProgressiveDisclosureManager**:
+
 ```javascript
 class ProgressiveDisclosureManager {
   init() {
@@ -204,6 +217,7 @@ class ProgressiveDisclosureManager {
 ### Manual Test Scenarios
 
 **Test 1: Mobile First Visit**
+
 1. Open app on mobile (clear localStorage first)
 2. Verify:
    - Highlight cards sticky at top
@@ -219,6 +233,7 @@ class ProgressiveDisclosureManager {
    - Secondary info still expanded (state restored)
 
 **Test 2: Mobile Collapse Preference**
+
 1. With secondary info expanded
 2. Tap header to collapse
 3. Verify:
@@ -229,6 +244,7 @@ class ProgressiveDisclosureManager {
    - Secondary info collapsed (preference saved)
 
 **Test 3: Desktop Behavior**
+
 1. Open app on desktop (>768px)
 2. Verify:
    - No collapse UI visible
@@ -241,6 +257,7 @@ class ProgressiveDisclosureManager {
    - State preserved (if previously set)
 
 **Test 4: Keyboard Navigation**
+
 1. Tab to "Informações Adicionais" summary
 2. Verify:
    - Blue focus outline appears (2px, WCAG AA)
@@ -250,6 +267,7 @@ class ProgressiveDisclosureManager {
    - Screen reader announces state change
 
 **Test 5: Screen Reader**
+
 1. VoiceOver/NVDA: Navigate to summary
 2. Announces: "Informações Adicionais, collapsed, button"
 3. Activate (Enter/Space)
@@ -259,6 +277,7 @@ class ProgressiveDisclosureManager {
 ## Impact
 
 ### Before (Information Overload)
+
 - ❌ 6 sections stacked vertically
 - ❌ 3-4 screens of scrolling
 - ❌ Primary info lost in noise
@@ -267,6 +286,7 @@ class ProgressiveDisclosureManager {
 - ❌ "Where do I find...?" confusion
 
 ### After (Progressive Disclosure)
+
 - ✅ 1-2 screens maximum scrolling
 - ✅ Primary info always visible (sticky cards)
 - ✅ Secondary info on-demand (collapsed)
@@ -277,20 +297,24 @@ class ProgressiveDisclosureManager {
 ### Metrics (Expected)
 
 **Screen Real Estate**:
+
 - Collapsed: ~1.5 screens (60% reduction)
 - Expanded: ~2.5 screens (40% reduction vs original)
 
 **User Engagement**:
+
 - 70% users: Stay with primary info (collapsed)
 - 30% users: Expand for details
 - 100% users: Benefit from sticky cards
 
 **Cognitive Load**:
+
 - 50% reduction in visual complexity
 - "Glance and go" for most users
 - "Dig deeper" available for power users
 
 **Accessibility**:
+
 - 100% keyboard navigable
 - 100% screen reader compatible
 - WCAG 2.1 AA compliant
@@ -298,6 +322,7 @@ class ProgressiveDisclosureManager {
 ## Browser Compatibility
 
 **`<details>` element support**:
+
 - Chrome 12+ ✅
 - Firefox 49+ ✅
 - Safari 6+ ✅
@@ -308,6 +333,7 @@ class ProgressiveDisclosureManager {
 **Coverage**: 98.4% of global browsers (Can I Use)
 
 **Fallback**: If `<details>` not supported (unlikely):
+
 - Content still accessible (details element degrades gracefully)
 - Shows expanded by default
 - No collapse functionality (acceptable degradation)
@@ -315,16 +341,19 @@ class ProgressiveDisclosureManager {
 ## Mobile Performance
 
 **Sticky Positioning**:
+
 - CSS `position: sticky` (hardware-accelerated)
 - No JavaScript scroll listeners needed
 - Smooth 60fps scrolling
 
 **localStorage Operations**:
+
 - Minimal overhead (~50 bytes stored)
 - Async read/write
 - No UI blocking
 
 **Animation Performance**:
+
 - CSS transitions (GPU-accelerated)
 - `transform: translateY()` (composite layer)
 - `prefers-reduced-motion` respected
@@ -332,6 +361,7 @@ class ProgressiveDisclosureManager {
 ## Files Created/Modified
 
 **Created**:
+
 1. `src/utils/progressive-disclosure.js` (136 lines)
    - ProgressiveDisclosureManager class
    - State persistence
@@ -339,15 +369,17 @@ class ProgressiveDisclosureManager {
 
 **Modified**:
 2. `src/index.html`:
-   - Wrapped secondary sections in `<details>` (lines 611-643)
-   - Added progressive disclosure CSS (150+ lines)
-   - Imported progressive-disclosure.js script
-   - Sticky cards media query
-   - Responsive sizing adjustments
+
+- Wrapped secondary sections in `<details>` (lines 611-643)
+- Added progressive disclosure CSS (150+ lines)
+- Imported progressive-disclosure.js script
+- Sticky cards media query
+- Responsive sizing adjustments
 
 ## Future Enhancements
 
 **Potential additions** (not critical):
+
 1. Swipe gestures to expand/collapse on mobile
 2. "Show more/less" button with icon animation
 3. Analytics tracking (% users who expand)

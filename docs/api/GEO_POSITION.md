@@ -37,6 +37,7 @@ import { log, warn, error } from '../utils/logger.js';
 Creates a new immutable GeoPosition instance.
 
 **Parameters:**
+
 - `position` (GeolocationPosition): Browser Geolocation API position object
   - `position.coords` (GeolocationCoordinates): Coordinate information
     - `latitude` (number): Latitude in decimal degrees
@@ -53,6 +54,7 @@ Creates a new immutable GeoPosition instance.
 **Immutability:** All instances are frozen with `Object.freeze(this)` after creation
 
 **Example:**
+
 ```javascript
 import GeoPosition from './core/GeoPosition.js';
 
@@ -75,11 +77,13 @@ navigator.geolocation.getCurrentPosition((browserPosition) => {
 Classifies GPS accuracy into quality levels based on accuracy value in meters.
 
 **Parameters:**
+
 - `accuracy` (number): GPS accuracy value in meters from GeolocationCoordinates
 
 **Returns:** `string` - Quality classification: 'excellent' | 'good' | 'medium' | 'bad' | 'very bad'
 
 **Quality Levels:**
+
 - **excellent**: ≤ 10 meters (high precision, suitable for all applications)
 - **good**: 11-30 meters (good precision, suitable for most applications)
 - **medium**: 31-100 meters (moderate precision, may be acceptable for some uses)
@@ -87,6 +91,7 @@ Classifies GPS accuracy into quality levels based on accuracy value in meters.
 - **very bad**: > 200 meters (very poor precision, should be rejected)
 
 **Example:**
+
 ```javascript
 // Classify different accuracy levels
 console.log(GeoPosition.getAccuracyQuality(5));    // 'excellent'
@@ -115,6 +120,7 @@ All properties are read-only due to `Object.freeze()`:
 - `timestamp` (number): Timestamp when position was acquired (milliseconds since Unix epoch)
 
 **Example:**
+
 ```javascript
 const position = new GeoPosition(browserPosition);
 
@@ -133,6 +139,7 @@ console.log(`Timestamp: ${new Date(position.timestamp).toISOString()}`);
 Calculates the distance between this position and another position using the Haversine formula.
 
 **Parameters:**
+
 - `otherPosition` (Object): Other position to calculate distance to
   - `latitude` (number): Latitude of other position in decimal degrees
   - `longitude` (number): Longitude of other position in decimal degrees
@@ -140,6 +147,7 @@ Calculates the distance between this position and another position using the Hav
 **Returns:** `number` - Distance in meters between the two positions
 
 **Example:**
+
 ```javascript
 const currentPosition = new GeoPosition(browserPosition);
 const restaurant = { latitude: -23.5489, longitude: -46.6388 };
@@ -148,6 +156,7 @@ console.log(`Restaurant is ${Math.round(distance)} meters away`);
 ```
 
 **Use Cases:**
+
 - Determine how far the device has moved
 - Calculate distance to points of interest
 - Implement proximity-based features
@@ -166,6 +175,7 @@ Calculates the accuracy quality for the current position.
 **Deprecation Notice:** ⚠️ **Deprecated** - Use the `accuracyQuality` property instead. This method has a bug (calls undefined `getAccuracyQuality` instead of `GeoPosition.getAccuracyQuality`).
 
 **Example:**
+
 ```javascript
 // Deprecated - do not use
 const quality = position.calculateAccuracyQuality(); // May throw error
@@ -187,6 +197,7 @@ Returns a string representation of the GeoPosition instance.
 **Format:** `"GeoPosition: lat, lon, quality, altitude, speed, heading, timestamp"`
 
 **Example:**
+
 ```javascript
 const position = new GeoPosition(browserPosition);
 console.log(position.toString());

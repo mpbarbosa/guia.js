@@ -1,11 +1,11 @@
 # Guia Turístico - Tourist Guide Web Application
 
 ---
+
 Last Updated: 2026-02-23
 Status: Active
 version: 0.11.1-alpha
 ---
-
 
 [![Tests](https://img.shields.io/badge/tests-3074%20passing%20%2F%203242%20total-green)](https://github.com/mpbarbosa/guia_turistico)
 [![Version](https://img.shields.io/badge/version-0.11.0--alpha-blue)](https://github.com/mpbarbosa/guia_turistico)
@@ -18,6 +18,7 @@ A single-page web application (SPA) for tourist guidance, built on top of the [g
 ## 🎯 Project Overview
 
 **Guia Turístico** is a web application that uses the **guia.js** library to provide:
+
 - Tourist location services
 - Address-based navigation
 - Brazilian location information
@@ -43,6 +44,7 @@ A single-page web application (SPA) for tourist guidance, built on top of the [g
 ### ✨ Latest Features (v0.9.0-alpha)
 
 #### 🔘 Contextual Button Status Messages
+
 Smart status messages for disabled buttons, reducing user confusion:
 
 ```javascript
@@ -54,12 +56,14 @@ Smart status messages for disabled buttons, reducing user confusion:
 ```
 
 **Benefits**:
+
 - Clear explanation for disabled buttons
 - WCAG 2.1 AA accessible with ARIA attributes
 - Color-coded status types (info, warning, success, error)
 - Automatic screen reader announcements
 
 **Implementation** (`src/utils/button-status.js`):
+
 ```javascript
 import { disableWithReason, enableWithMessage, BUTTON_STATUS_MESSAGES } from '../utils/button-status.js';
 
@@ -71,6 +75,7 @@ enableWithMessage(button, "Pronto para usar");
 ```
 
 #### 🌆 Metropolitan Region Display
+
 Automatically displays metropolitan region context for municipalities in metropolitan areas:
 
 ```
@@ -82,12 +87,14 @@ Automatically displays metropolitan region context for municipalities in metropo
 ```
 
 **Benefits**:
+
 - Better geographic context for users
 - Extracted from Nominatim `county` field
 - Supports 9 major Brazilian metropolitan regions
 - 77 comprehensive tests ensuring reliability
 
 #### 🗺️ State Abbreviation Display
+
 Enhanced geographic context with state codes:
 
 | Before | Now ✨ |
@@ -111,6 +118,7 @@ Enhanced geographic context with state codes:
 - **Modern browser** with Geolocation API support (Chrome 90+, Firefox 88+, Safari 14+)
 
 **Verify Your Environment**:
+
 ```bash
 # Check Node.js version
 node --version
@@ -130,6 +138,7 @@ git --version
 ```
 
 **Installation Help**:
+
 ```bash
 # Ubuntu/Debian
 sudo apt update
@@ -203,6 +212,7 @@ python3 -m http.server 9000
 ```
 
 **Development Workflow**:
+
 - Use `npm run dev` for active development (HMR, fast refresh)
 - Use `npm run build` before deployment to production
 - Use `npm run preview` to test production build locally
@@ -483,6 +493,7 @@ To ensure clear communication about testing concepts:
 The application uses **Vite** as the build tool to provide optimized production builds with:
 
 **Performance Benefits**:
+
 - ✅ **25% bundle size reduction** (1.2M → 900K) through minification
 - ✅ **Automatic code splitting** into logical chunks (core, speech, services, data, html, coordination)
 - ✅ **60-70% fewer HTTP requests** via bundling
@@ -490,6 +501,7 @@ The application uses **Vite** as the build tool to provide optimized production 
 - ✅ **Terser minification** with source maps for debugging
 
 **Build Configuration** (`vite.config.js`):
+
 ```javascript
 {
   target: 'es2022',           // Modern browsers with top-level await support
@@ -508,6 +520,7 @@ The application uses **Vite** as the build tool to provide optimized production 
 ```
 
 **Bundle Analysis**:
+
 ```bash
 # Production build creates optimized chunks:
 dist/
@@ -526,6 +539,7 @@ Total: 900 KB (25% reduction from source)
 ```
 
 **Browser Requirements**:
+
 - ES2022 support (Chrome 94+, Firefox 93+, Safari 15+)
 - Top-level await support
 - ES modules support
@@ -533,6 +547,7 @@ Total: 900 KB (25% reduction from source)
 ### Development Modes
 
 **1. Development Mode** (Recommended for active development):
+
 ```bash
 npm run dev
 # - Vite dev server with HMR (hot module replacement)
@@ -543,6 +558,7 @@ npm run dev
 ```
 
 **2. Production Build**:
+
 ```bash
 npm run build
 # - Minified and optimized bundle
@@ -552,6 +568,7 @@ npm run build
 ```
 
 **3. Production Preview**:
+
 ```bash
 npm run preview
 # - Preview production build locally
@@ -560,6 +577,7 @@ npm run preview
 ```
 
 **4. Legacy Mode** (Python server for source files):
+
 ```bash
 python3 -m http.server 9000
 # - Direct file serving without build
@@ -572,18 +590,20 @@ python3 -m http.server 9000
 ### Main Classes
 
 #### Core Layer (Singletons & Managers)
+
 - `PositionManager` - Centralized position state with observer pattern
 - `SingletonStatusManager` - Cross-component status management
 - `GeolocationService` - Browser geolocation API wrapper
 - `WebGeocodingManager` - Main coordination and workflow management
 
 #### View Controllers (v0.10.0-alpha) 🆕
+
 - **`HomeViewController`** - Home view controller for location tracking
   - **Purpose**: Manages the home view (/) with real-time location tracking
   - **Features**: Single-position capture, continuous tracking toggle, button management
   - **Lines**: 672 lines (src/views/home.js)
   - **Tests**: 70 comprehensive unit tests with 100% coverage
-  - **API**: 
+  - **API**:
     - `init()` - Initialize manager and chronometer
     - `getSingleLocationUpdate()` - Capture current position
     - `startTracking()` / `stopTracking()` - Control continuous tracking
@@ -592,6 +612,7 @@ python3 -m http.server 9000
 - `ConverterViewController` - Converter view for coordinate conversion (unchanged)
 
 #### Data Processing Layer
+
 - `GeoDataParser` - Parse geographic data from APIs
 - `GeoDataExtractor` - Extract structured data from raw responses
 - `GeoDataValidator` - Validate data integrity
@@ -599,11 +620,13 @@ python3 -m http.server 9000
 - `AddressDataExtractor` - Address data extraction with caching
 
 #### API Integration Layer
+
 - `APIFetcher` - Base class for API communications
 - `ReverseGeocoder` - OpenStreetMap/Nominatim integration
 - IBGE API integration for Brazilian location data
 
 #### Display Layer
+
 - `HTMLPositionDisplayer` - Coordinate display and Google Maps links
 - `HTMLAddressDisplayer` - Address formatting and presentation
 - `HTMLHighlightCardsDisplayer` - Municipio and bairro highlight cards (v0.9.0+)
@@ -616,6 +639,7 @@ python3 -m http.server 9000
 - `DisplayerFactory` - Factory pattern for display component creation (5 methods, v0.9.0-alpha) ✅
 
 #### Speech Synthesis Layer (Refactored v0.11.1-alpha) 🆕
+
 - **`HtmlSpeechSynthesisDisplayer`** - **Facade pattern** composing 3 focused components (518 lines)
   - **Architecture**: Converted from monolithic 814-line class to lightweight facade
   - **Benefits**: 36% size reduction, better testability (140 tests), Single Responsibility Principle
@@ -688,6 +712,7 @@ import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js'
 ```
 
 **Features**:
+
 - Automatic failover between CDN and local sources
 - Zero-configuration mock for testing environments
 - Full IBGE API compatibility through `IbiraAPIFetchManager`
@@ -699,11 +724,13 @@ import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js'
 Guia.js generates Google Maps links for enhanced location visualization and navigation:
 
 **Features**:
+
 - **Map View Links**: Opens location in Google Maps web interface
 - **Street View Integration**: Direct links to Street View when available
 - **Directions**: External routing to user's location
 
 **Generated Links** (created by HTMLPositionDisplayer):
+
 ```javascript
 // Map view URL format
 https://www.google.com/maps?q=<latitude>,<longitude>
@@ -729,13 +756,16 @@ Guia.js can be delivered via **jsDelivr CDN** for easy integration into web proj
 Before using the CDN delivery script, ensure you have:
 
 **Required**:
+
 - **Node.js v18+** - For package.json parsing
 - **Git** - For commit hash extraction and repository information
 
 **Optional**:
+
 - **curl** - For CDN availability testing (script works without it)
 
 **Verify Dependencies**:
+
 ```bash
 # Check Node.js version (must be v18+)
 node --version
@@ -748,6 +778,7 @@ curl --version
 ```
 
 If any required dependency is missing:
+
 ```bash
 # Install Node.js (Ubuntu/Debian)
 sudo apt update && sudo apt install nodejs
@@ -779,6 +810,7 @@ The `.github/scripts/cdn-delivery.sh` script automatically generates CDN URLs ba
 ```
 
 **Script Features**:
+
 - ✅ Automatic version detection from package.json
 - ✅ Current commit hash for immutable URLs
 - ✅ Multiple URL formats for different use cases
@@ -789,17 +821,21 @@ The `.github/scripts/cdn-delivery.sh` script automatically generates CDN URLs ba
 ### Exit Codes & Error Handling
 
 **Exit Codes**:
+
 - **0**: Success - URLs generated and saved to `cdn-urls.txt`
 - **1**: Error - Check error message for details
 
 **Common Errors and Solutions**:
 
 #### Error: Node.js not found
+
 ```bash
 Error: Node.js not found
 This script requires Node.js v18+ to parse package.json
 ```
+
 **Solution**: Install Node.js
+
 ```bash
 # Ubuntu/Debian
 sudo apt install nodejs
@@ -812,23 +848,29 @@ node --version  # Should be v18+
 ```
 
 #### Error: package.json not found
+
 ```bash
 Error: package.json not found
 This script must be run from the project root directory
 Current directory: /home/user/wrong/path
 ```
+
 **Solution**: Navigate to project root
+
 ```bash
 cd /path/to/guia_turistico
 ./.github/scripts/cdn-delivery.sh
 ```
 
 #### Error: Git not found
+
 ```bash
 Error: Git not found
 This script requires Git to extract commit information
 ```
+
 **Solution**: Install Git
+
 ```bash
 # Ubuntu/Debian
 sudo apt install git
@@ -841,11 +883,14 @@ git --version
 ```
 
 #### Error: Not a Git repository
+
 ```bash
 Error: Not a Git repository
 This script requires a Git repository to extract commit hash
 ```
+
 **Solution**: Ensure you're in a cloned repository
+
 ```bash
 # Clone if needed
 git clone https://github.com/mpbarbosa/guia_turistico.git
@@ -854,11 +899,14 @@ cd guia_turistico
 ```
 
 #### Error: Failed to read package.json
+
 ```bash
 Error: Failed to read package.json
 Details: SyntaxError: Unexpected token...
 ```
+
 **Solution**: Check package.json syntax
+
 ```bash
 # Validate JSON
 node -p "JSON.parse(require('fs').readFileSync('package.json', 'utf8'))"
@@ -868,12 +916,15 @@ node -p "JSON.parse(require('fs').readFileSync('package.json', 'utf8'))"
 ```
 
 #### Error: Package not yet available on CDN
+
 ```bash
 # When accessing CDN URL, you get:
 # 404 Not Found
 # Package not found
 ```
+
 **Solution**: Ensure Git tag is pushed and wait for CDN sync
+
 ```bash
 # 1. Check if tag exists locally
 git tag | grep v0.9.0-alpha
@@ -896,6 +947,7 @@ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/ap
 ```
 
 **Note**: CDN sync times:
+
 - **Tag-based URLs**: 5-10 minutes after pushing tag
 - **Commit-based URLs**: Available immediately after push
 - **Branch URLs**: Update within ~1 minute
@@ -934,6 +986,7 @@ Run `.github/scripts/cdn-delivery.sh` when you need CDN URLs:
 #### Release Workflow Integration
 
 **Scenario 1: Version Bump and Release**
+
 ```bash
 # 1. Bump version
 npm version patch  # or minor, major
@@ -958,6 +1011,7 @@ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/packag
 ```
 
 **Scenario 2: Documentation Update**
+
 ```bash
 # Need current CDN URLs for docs
 ./.github/scripts/cdn-delivery.sh
@@ -973,6 +1027,7 @@ git push
 ```
 
 **Scenario 3: Pre-release Testing**
+
 ```bash
 # Use commit-based URL before tagging
 ./.github/scripts/cdn-delivery.sh
@@ -987,6 +1042,7 @@ git push
 #### Environment & Configuration
 
 **No Configuration Required**: Script auto-detects:
+
 - Repository information from Git
 - Version from `package.json`
 - Current commit hash
@@ -1026,6 +1082,7 @@ export GITHUB_REPO="yourrepo"
 ```
 
 **Configuration Display**:
+
 ```bash
 $ ./.github/scripts/cdn-delivery.sh
 🔍 Checking prerequisites...
@@ -1045,6 +1102,7 @@ $ ./.github/scripts/cdn-delivery.sh
 ```
 
 **For Forks and Custom Setups**:
+
 ```bash
 # Permanent configuration (edit script directly)
 # Lines 87-90 in .github/scripts/cdn-delivery.sh:
@@ -1059,6 +1117,7 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 **Current**: Script takes no arguments (uses environment variables instead)
 
 **Future**: Planned options:
+
 ```bash
 ./.github/scripts/cdn-delivery.sh --help           # Show usage help
 ./.github/scripts/cdn-delivery.sh --test           # Test CDN availability only
@@ -1070,6 +1129,7 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 #### Output Files
 
 **cdn-urls.txt**:
+
 - Plain text format
 - All generated URLs
 - Timestamped
@@ -1079,6 +1139,7 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 **Location**: Project root directory
 
 **Format**:
+
 ```
 # Generated: 2026-02-11 23:45:00
 # Version: 7.1.0-alpha
@@ -1094,17 +1155,20 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js
 > **📌 Important**: Always use **version-specific CDN URLs** (e.g., `@0.9.0-alpha`) in production for stability and cache consistency. Avoid branch-based URLs (`@main`) which auto-update and can break applications unexpectedly.
 
 1. **Run after every version change**
+
    ```bash
    npm version patch && ./.github/scripts/cdn-delivery.sh
    ```
 
 2. **Commit cdn-urls.txt with version bumps**
+
    ```bash
    git add cdn-urls.txt package.json
    git commit -m "chore: version bump"
    ```
 
 3. **Use version-specific URLs in production**
+
    ```html
    <!-- ✅ Good: Pinned version -->
    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js"></script>
@@ -1114,6 +1178,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js
    ```
 
 4. **Test commit URLs before tagging**
+
    ```bash
    # Push code
    git push
@@ -1135,12 +1200,14 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js
 #### Troubleshooting
 
 **Script fails silently**:
+
 ```bash
 # Run with bash -x for debugging
 bash -x ./.github/scripts/cdn-delivery.sh
 ```
 
 **URLs not working**:
+
 ```bash
 # Verify tag was pushed
 git ls-remote --tags origin
@@ -1152,6 +1219,7 @@ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/packag
 ```
 
 **Wrong version shown**:
+
 ```bash
 # Check package.json
 cat package.json | grep version
@@ -1180,6 +1248,7 @@ Load a specific version for stability and cache consistency:
 ```
 
 **Benefits:**
+
 - ✅ Version pinning prevents breaking changes
 - ✅ Immutable URLs for reliable caching
 - ✅ Production-ready stability
@@ -1245,6 +1314,7 @@ Combine and minify multiple files in a single request:
 ```
 
 **Benefits:**
+
 - Reduces HTTP requests
 - Automatic minification
 - Combined caching
@@ -1427,6 +1497,7 @@ We welcome contributions! Please follow these guidelines:
 ```
 
 **What it validates**:
+
 - ✅ JavaScript syntax (npm run validate)
 - ✅ Test suite execution (npm test)
 - ✅ Coverage generation (npm run test:coverage)
@@ -1434,6 +1505,7 @@ We welcome contributions! Please follow these guidelines:
 - ✅ Change detection (shows what will trigger in CI)
 
 **Prerequisites**:
+
 - Node.js v18+ (for npm commands)
 - npm dependencies installed (`npm install`)
 - git (for change detection)
@@ -1442,11 +1514,13 @@ We welcome contributions! Please follow these guidelines:
 **Output Interpretation**:
 
 The script detects file changes and runs appropriate validations:
+
 - **JavaScript changes**: Runs syntax validation + tests
 - **Test file changes**: Runs full test suite + coverage
 - **Documentation changes**: Validates markdown format + updates index
 
 **Exit Codes**:
+
 - **0**: All checks passed - safe to push
 - **1**: Some checks failed - fix issues before pushing
 
@@ -1468,6 +1542,7 @@ The script detects file changes and runs appropriate validations:
    - Check markdown formatting
 
 **Integration with Git**:
+
 ```bash
 # Recommended workflow
 git add .
@@ -1477,11 +1552,13 @@ git push
 ```
 
 **What happens in CI**:
+
 - If tests changed: TESTING.md auto-updated by bot
 - If docs changed: docs/INDEX.md auto-updated by bot
 - Auto-commits appear from `github-actions[bot]`
 
 For comprehensive guidance, see:
+
 - [GitHub Actions Guide](docs/GITHUB_ACTIONS_GUIDE.md)
 - [Workflow Setup](docs/WORKFLOW_SETUP.md)
 - [Contributing Guidelines](.github/CONTRIBUTING.md)
@@ -1506,6 +1583,7 @@ Test locally before pushing to catch issues early:
 ```
 
 **What it validates**:
+
 - ✅ JavaScript syntax validation (`npm run validate`)
 - ✅ Test suite execution (`npm test`)
 - ✅ Coverage generation (`npm run test:coverage`)
@@ -1513,12 +1591,14 @@ Test locally before pushing to catch issues early:
 - ✅ Shows exactly what will trigger in CI/CD
 
 **Benefits**:
+
 - Catch failures before pushing
 - Faster feedback loop (local vs remote)
 - Saves CI/CD minutes
 - Preview GitHub Actions results
 
 **Output Example**:
+
 ```
 🔍 Running JavaScript Syntax Validation...
 ✅ Syntax validation passed
@@ -1595,16 +1675,19 @@ This project emphasizes functional programming principles:
 ## 🐛 Known Issues & Limitations
 
 ### Browser Dependencies
+
 - Full functionality requires modern browser with Geolocation API support
 - Location permissions must be granted by user
 - HTTPS required in production (localhost works for development)
 
 ### Missing Implementations
+
 - `findNearbyRestaurants()` function is stubbed but not implemented
 - City statistics functionality is partially implemented
 - Some API error handling could be enhanced
 
 ### Testing Warnings
+
 - Worker process warning about timer cleanup (expected, not blocking)
 - 5 test suites intentionally skipped (work in progress)
 - Verbose console output in tests (expected behavior for logging tests)
@@ -1614,6 +1697,7 @@ This project emphasizes functional programming principles:
 ### Common Issues
 
 **Tests fail with module errors:**
+
 ```bash
 # Clear npm cache and reinstall
 npm cache clean --force
@@ -1622,17 +1706,20 @@ npm install
 ```
 
 **Web server port conflicts:**
+
 ```bash
 # Use different port
 python3 -m http.server 8000
 ```
 
 **Geolocation not working:**
+
 - Ensure HTTPS or localhost (browsers require secure context)
 - Grant location permissions when prompted
 - Check browser console for errors
 
 **ESLint errors about "this" keyword:**
+
 ```bash
 # This is intentional - project enforces functional programming
 # Refactor code to use factory functions instead of classes
@@ -1662,6 +1749,7 @@ ISC License - See repository for details
 ## 🎯 Roadmap
 
 ### Upcoming Features
+
 - Complete restaurant search implementation
 - Enhanced city statistics functionality
 - Improved error handling for API failures
@@ -1669,6 +1757,7 @@ ISC License - See repository for details
 - Additional Brazilian data sources
 
 ### Technical Debt
+
 - Migrate remaining class-based code to functional patterns
 - Increase test coverage to 90%+
 - Complete API error recovery mechanisms

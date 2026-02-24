@@ -48,6 +48,7 @@ The original `WebGeocodingManager` class exhibited several architectural issues:
 #### A. Split Constructor Responsibilities
 
 **Before:**
+
 ```javascript
 constructor(document, params) {
     // 23 lines mixing multiple concerns
@@ -59,6 +60,7 @@ constructor(document, params) {
 ```
 
 **After:**
+
 ```javascript
 constructor(document, params) {
     // Store dependencies
@@ -73,6 +75,7 @@ constructor(document, params) {
 ```
 
 **Benefits:**
+
 - Each initialization phase is explicit and separated
 - Easier to test individual initialization steps
 - Clear flow of initialization
@@ -96,6 +99,7 @@ Each method has a single, well-defined responsibility.
 #### C. Consolidate Duplicated Notification Logic
 
 **Before:**
+
 ```javascript
 notifyBairroChangeObservers(changeDetails) {
     log('Notificando mudança de bairro');
@@ -117,6 +121,7 @@ notifyBairroChangeObservers(changeDetails) {
 ```
 
 **After:**
+
 ```javascript
 // Generalized notification method
 _notifyAddressChangeObservers(changeDetails, changeType, changeData, logMessage) {
@@ -141,6 +146,7 @@ notifyBairroChangeObservers(changeDetails) {
 ```
 
 **Benefits:**
+
 - DRY principle applied
 - Single source of truth for notification logic
 - Centralized error handling
@@ -174,6 +180,7 @@ This separation makes it clear what happens when and makes testing easier.
 #### C. Encapsulation
 
 Private methods (prefixed with `_`) hide implementation details:
+
 - `_initializeChronometer()` - internal implementation
 - `_notifyAddressChangeObservers()` - internal notification logic
 - `_notifyFunctionObserversWithError()` - internal error handling
@@ -217,6 +224,7 @@ Added 200+ lines of JSDoc documentation including:
 #### Method Documentation
 
 Every public method now has:
+
 - Purpose description
 - Parameter documentation with types
 - Return value documentation
@@ -224,6 +232,7 @@ Every public method now has:
 - Cross-references to related methods/classes
 
 Example:
+
 ```javascript
 /**
  * Subscribes an observer to receive notifications about position and address changes.
@@ -250,6 +259,7 @@ Example:
 Created `WebGeocodingManager.test.js` with 23 tests covering:
 
 #### Constructor and Initialization (5 tests)
+
 - Required parameters initialization
 - Observer subject creation
 - Service creation
@@ -257,30 +267,36 @@ Created `WebGeocodingManager.test.js` with 23 tests covering:
 - Initial state validation
 
 #### Observer Pattern Implementation (6 tests)
+
 - Object observer subscription/unsubscription
 - Function observer subscription/unsubscription
 - Null observer handling
 - Observer array access
 
 #### Public API Methods (3 tests)
+
 - getBrazilianStandardAddress()
 - toString() without coordinates
 - toString() with coordinates
 
 #### High Cohesion Validation (2 tests)
+
 - DOM element initialization delegation
 - Displayer creation separation
 
 #### Low Coupling Validation (2 tests)
+
 - Dependency injection verification
 - Configuration parameter object
 
 #### Backward Compatibility (3 tests)
+
 - Legacy initElements() method
 - observers getter
 - functionObservers getter
 
 #### Error Handling (2 tests)
+
 - Missing DOM elements handling
 - Null observer subscription handling
 
@@ -312,6 +328,7 @@ All 23 tests pass successfully.
 ### Backward Compatibility
 
 ✅ **Zero Breaking Changes**
+
 - All existing public methods preserved
 - Observer pattern API unchanged
 - `initElements()` maintained as legacy wrapper
@@ -322,6 +339,7 @@ All 23 tests pass successfully.
 ### 1. Coordinator/Mediator Pattern
 
 The class acts as a coordinator between:
+
 - GeolocationService
 - ReverseGeocoder
 - Multiple displayers (HTMLPositionDisplayer, HTMLAddressDisplayer, HTMLReferencePlaceDisplayer)
@@ -331,12 +349,14 @@ The class acts as a coordinator between:
 ### 2. Observer Pattern
 
 Implements both subject and observer roles:
+
 - **As Subject**: Manages its own observers via ObserverSubject
 - **As Observer**: Coordinates observers for PositionManager and ReverseGeocoder
 
 ### 3. Dependency Injection
 
 Constructor accepts all dependencies explicitly:
+
 - Document object
 - Configuration parameters
 - No hidden dependencies or global state access
@@ -344,6 +364,7 @@ Constructor accepts all dependencies explicitly:
 ### 4. Template Method (Implicit)
 
 The initialization follows a template:
+
 1. Store dependencies
 2. Initialize observer infrastructure
 3. Initialize UI elements
@@ -369,6 +390,7 @@ While WebGeocodingManager cannot be fully referentially transparent (it's a coor
 ### What Remains Impure (By Design)
 
 These are inherently side-effectful and cannot be made pure:
+
 - DOM element querying and manipulation
 - Event listener registration
 - Observer subscription/notification
@@ -410,11 +432,13 @@ The class now serves as a clear example of the Coordinator pattern with well-doc
 ## See Also
 
 ### Related Documentation
+
 - [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - Complete WebGeocodingManager class documentation
 - [CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md) - Overall architecture and class relationships
 - [GEO_POSITION.md](./GEO_POSITION.md) - GeoPosition class used by the geocoding manager
 
 ### Development Guidelines
+
 - [HIGH_COHESION_GUIDE.md](../../.github/HIGH_COHESION_GUIDE.md) - Single responsibility and focused components
 - [LOW_COUPLING_GUIDE.md](../../.github/LOW_COUPLING_GUIDE.md) - Dependency management and interfaces
 - [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md) - Pure functions and testability
@@ -422,6 +446,7 @@ The class now serves as a clear example of the Coordinator pattern with well-doc
 - [REFACTORING_SUMMARY.md](../../.github/REFACTORING_SUMMARY.md) - Major refactoring history
 
 ### Testing
+
 - [TESTING.md](../TESTING.md) - Test suite and coverage information
 - [TDD_GUIDE.md](../../.github/TDD_GUIDE.md) - Test-driven development approach
 - [UNIT_TEST_GUIDE.md](../../.github/UNIT_TEST_GUIDE.md) - Unit testing best practices

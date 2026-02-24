@@ -47,6 +47,7 @@ src/
 ### ES6 Module System
 
 All new modules use ES6 `export` syntax:
+
 ```javascript
 // src/utils/distance.js
 export const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -55,6 +56,7 @@ export const calculateDistance = (lat1, lon1, lat2, lon2) => {
 ```
 
 Main file imports from modules:
+
 ```javascript
 // src/guia.js
 import { calculateDistance, delay } from './utils/distance.js';
@@ -65,6 +67,7 @@ import { GUIA_VERSION, createDefaultConfig } from './config/defaults.js';
 ### Backward Compatibility
 
 Maintained dual export strategy:
+
 - **CommonJS** (`module.exports`) for Node.js tests
 - **Window object** for browser compatibility
 - **ES6 exports** in new modules for modern usage
@@ -72,6 +75,7 @@ Maintained dual export strategy:
 ### Referential Transparency
 
 All extracted modules follow pure function principles:
+
 - No hidden state or side effects
 - Same inputs always produce same outputs
 - Immutable configuration (Object.freeze)
@@ -80,6 +84,7 @@ All extracted modules follow pure function principles:
 ## Testing Results
 
 ### Automated Tests
+
 - **Before**: 399 tests
 - **After**: 374 passing (93.7% pass rate)
 - **Failing**: 25 tests (6.3%) - all in suites using `eval()` approach
@@ -87,7 +92,9 @@ All extracted modules follow pure function principles:
 - **Resolution**: Deferred to future work (see below)
 
 ### Manual Web Testing
+
 Created `module-test.html` to verify:
+
 - ✅ Version object loading
 - ✅ Distance calculations
 - ✅ Class availability (WebGeocodingManager)
@@ -99,6 +106,7 @@ All tests pass in browser environment.
 ## Benefits
 
 ### Maintainability
+
 - **Before**: Single 6,106-line file
 - **After**: Main file (5,949 lines) + 4 focused modules (329 lines)
 - Easier to navigate and understand
@@ -106,16 +114,19 @@ All tests pass in browser environment.
 - Clear module boundaries
 
 ### Testability
+
 - Utility functions can be tested in isolation
 - Pure functions are inherently testable
 - Example: `calculateDistance()` can be tested without loading entire app
 
 ### Reusability
+
 - Utilities available for import anywhere
 - Configuration centralized
 - Functions follow single responsibility principle
 
 ### Code Quality
+
 - Explicit dependencies via imports
 - No global variable pollution in modules
 - Type-safe interfaces via JSDoc
@@ -124,10 +135,12 @@ All tests pass in browser environment.
 ## Future Work
 
 ### Phase 2: Test Migration (High Priority)
+
 **Issue**: 19 test suites using `eval()` approach fail with ES6 imports
 **Solution**: Update tests to use dynamic `import()` or refactor to proper module imports
 **Estimated Effort**: 1-2 days
 **Example**:
+
 ```javascript
 // Before (breaks with ES6 modules)
 const guiaContent = fs.readFileSync('src/guia.js', 'utf8');
@@ -139,21 +152,25 @@ const { GeoPosition } = guia;
 ```
 
 ### Phase 3: Extract Model Classes (Medium Priority)
+
 - `src/models/GeoPosition.js`
 - `src/models/ReferencePlace.js`
 - Estimated: 200-300 lines extracted
 
 ### Phase 4: Extract Service Classes (Medium Priority)
+
 - `src/services/ReverseGeocoder.js`
 - `src/services/GeolocationService.js`
 - Estimated: 300-400 lines extracted
 
 ### Phase 5: Extract Manager Classes (Lower Priority)
+
 - `src/managers/PositionManager.js`
 - `src/managers/WebGeocodingManager.js`
 - Estimated: 500-700 lines extracted
 
 ### Phase 6: Extract Presenter Classes (Lower Priority)
+
 - `src/presenters/HTMLPositionDisplayer.js`
 - `src/presenters/HTMLAddressDisplayer.js`
 - `src/presenters/HTMLReferencePlaceDisplayer.js`
@@ -162,14 +179,17 @@ const { GeoPosition } = guia;
 ## Risks and Mitigations
 
 ### Risk 1: Browser Compatibility
+
 **Risk**: Older browsers may not support ES6 modules
 **Mitigation**: Application targets modern browsers; window exports maintain compatibility
 
 ### Risk 2: Test Failures
+
 **Risk**: Some tests fail due to ES6 module migration
 **Mitigation**: 93.7% pass rate maintained; failures isolated to `eval()` pattern
 
 ### Risk 3: Breaking Changes
+
 **Risk**: Module refactoring could break existing functionality
 **Mitigation**: Web functionality fully tested and verified working
 
@@ -199,6 +219,7 @@ const { GeoPosition } = guia;
 ## Conclusion
 
 The module splitting implementation successfully achieves its goals:
+
 1. **Reduced Technical Debt**: Monolithic file split into maintainable modules
 2. **Improved Code Quality**: Pure functions, referential transparency, immutable config
 3. **Maintained Stability**: 93.7% test compatibility, 100% web functionality

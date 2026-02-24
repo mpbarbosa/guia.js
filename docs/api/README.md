@@ -11,6 +11,7 @@ Guia Turístico provides a comprehensive set of APIs for building geolocation-aw
 ## API Organization
 
 ### Core APIs
+
 Foundation classes providing essential data structures and state management.
 
 - [**PositionManager**](./POSITION_MANAGER.md) - Singleton managing current geolocation state
@@ -19,6 +20,7 @@ Foundation classes providing essential data structures and state management.
 - [**ObserverSubject**](./OBSERVER_SUBJECT.md) - Observer pattern implementation
 
 ### Service APIs
+
 Services handling external integrations and browser APIs.
 
 - [**GeolocationService**](./GEOLOCATION_SERVICE.md) - Browser Geolocation API wrapper
@@ -26,6 +28,7 @@ Services handling external integrations and browser APIs.
 - [**ChangeDetectionCoordinator**](./CHANGE_DETECTION_COORDINATOR.md) - Detects significant location changes
 
 ### Coordination APIs
+
 Orchestration layer coordinating multiple services and components.
 
 - [**WebGeocodingManager**](./WEB_GEOCODING_MANAGER.md) - Main application coordinator
@@ -35,6 +38,7 @@ Orchestration layer coordinating multiple services and components.
 - [**UICoordinator**](./UI_COORDINATOR.md) - UI component coordination
 
 ### Data Processing APIs
+
 Classes for data extraction, transformation, and caching.
 
 - [**BrazilianStandardAddress**](./BRAZILIAN_STANDARD_ADDRESS.md) - Brazilian address standardization
@@ -45,6 +49,7 @@ Classes for data extraction, transformation, and caching.
 - [**LRUCache**](./LRU_CACHE.md) - Generic LRU cache implementation
 
 ### UI/Display APIs
+
 Components for rendering geographic data in the browser.
 
 - [**HTMLPositionDisplayer**](./HTML_POSITION_DISPLAYER.md) - Coordinate display and Google Maps integration
@@ -56,6 +61,7 @@ Components for rendering geographic data in the browser.
 - [**HtmlText**](./HTML_TEXT.md) - Text display utilities
 
 ### Speech Synthesis APIs
+
 Text-to-speech functionality with queue management.
 
 - [**SpeechSynthesisManager**](./SPEECH_SYNTHESIS_MANAGER.md) - Main facade for text-to-speech (Facade pattern)
@@ -67,17 +73,20 @@ Text-to-speech functionality with queue management.
 - [**SpeechItem**](./SPEECH_ITEM.md) - Individual speech item
 
 ### Performance & Timing APIs
+
 Performance monitoring and timer management.
 
 - [**Chronometer**](./CHRONOMETER.md) - Performance timing and elapsed time tracking (Observer pattern)
 - [**TimerManager**](./TIMER_MANAGER.md) - Centralized timer management preventing memory leaks
 
 ### Status Management APIs
+
 Application-wide status tracking.
 
 - [**SingletonStatusManager**](./SINGLETON_STATUS_MANAGER.md) - Singleton for status management across components
 
 ### Utility APIs
+
 Helper functions and utilities.
 
 - [**distance**](./DISTANCE.md) - Distance calculation utilities (Haversine formula)
@@ -87,12 +96,14 @@ Helper functions and utilities.
 - [**button-utils**](./BUTTON_UTILS.md) - Button state management
 
 ### Configuration APIs
+
 Application configuration and constants.
 
 - [**defaults**](./DEFAULTS.md) - Application configuration constants
 - [**version**](./VERSION.md) - Version information
 
 ### View Controllers
+
 SPA route handlers and view logic.
 
 - [**HomeView**](./HOME_VIEW.md) - Home view controller for location tracking (`src/views/home.js`)
@@ -192,6 +203,7 @@ timerManager.clearInterval(intervalId);
 ### Immutability
 
 The codebase follows immutability principles:
+
 - Use spread operator for arrays: `[...array]`
 - Use spread operator for objects: `{...object}`
 - Use `filter()`, `map()`, `reduce()` instead of mutation methods
@@ -215,6 +227,7 @@ See [`.github/CONTRIBUTING.md`](../../.github/CONTRIBUTING.md) for comprehensive
 ## Testing
 
 All APIs have comprehensive test coverage:
+
 - **Unit tests**: `__tests__/unit/`
 - **Integration tests**: `__tests__/integration/`
 - **E2E tests**: `__tests__/e2e/`

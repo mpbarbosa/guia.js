@@ -12,6 +12,7 @@ Phase 12 successfully extracts the `SpeechQueue` class from the monolithic `guia
 ## Extracted Module Details
 
 ### SpeechQueue Module
+
 - **File:** `src/speech/SpeechQueue.js`
 - **Export:** Default export
 - **Size:** 420+ lines of production code
@@ -21,6 +22,7 @@ Phase 12 successfully extracts the `SpeechQueue` class from the monolithic `guia
 ## Architecture Implementation
 
 ### Priority Queue System
+
 ```javascript
 // Priority-based insertion with automatic ordering
 enqueue(text, priority = 0) {
@@ -55,6 +57,7 @@ enqueue(text, priority = 0) {
 ```
 
 ### Observer Pattern Integration
+
 ```javascript
 // Dual observer pattern support (objects and functions)
 class SpeechQueue {
@@ -93,6 +96,7 @@ class SpeechQueue {
 ```
 
 ### Automatic Expiration Management
+
 ```javascript
 // Automatic cleanup of expired items
 cleanExpired() {
@@ -111,24 +115,28 @@ cleanExpired() {
 ## Key Features Implemented
 
 ### 1. Priority-Based Ordering
+
 - **Higher Priority First:** Items with higher priority values are processed before lower priority items
 - **Insertion Order Preservation:** Items with equal priority maintain their insertion order
 - **Dynamic Reordering:** New high-priority items automatically jump to the front of the queue
 - **Negative Priority Support:** Supports negative priorities for low-importance items
 
 ### 2. Automatic Expiration Cleanup
+
 - **Configurable Expiration:** Items expire after a configurable time period (default: 30 seconds)
 - **Automatic Cleanup:** Expired items are automatically removed during queue operations
 - **Memory Management:** Prevents memory leaks from accumulating old speech items
 - **Performance Optimization:** Cleanup occurs during normal operations to minimize impact
 
 ### 3. Observer Pattern Integration
+
 - **Dual Observer Types:** Supports both object observers and function observers
 - **Real-time Notifications:** Observers are notified immediately when queue state changes
 - **Error Handling:** Observer errors are caught and logged without stopping queue operations
 - **Backward Compatibility:** Maintains compatibility with existing observer patterns
 
 ### 4. Brazilian Portuguese Optimization
+
 - **Travel Guide Context:** Optimized for Brazilian Portuguese travel guide applications
 - **Unicode Support:** Full support for Portuguese accented characters (ã, ç, á, é, etc.)
 - **Cultural Context:** Priority system designed for Brazilian travel scenarios
@@ -137,6 +145,7 @@ cleanExpired() {
 ## Parameter Validation
 
 ### Constructor Validation
+
 ```javascript
 constructor(maxSize = 100, expirationMs = 30000) {
     // Comprehensive parameter validation
@@ -151,6 +160,7 @@ constructor(maxSize = 100, expirationMs = 30000) {
 ```
 
 ### Enqueue Validation
+
 ```javascript
 enqueue(text, priority = 0) {
     // Input validation with detailed error messages
@@ -171,12 +181,14 @@ enqueue(text, priority = 0) {
 ## Memory Management
 
 ### Size Limits
+
 - **Configurable Maximum:** Queue size is limited to prevent memory overflow (default: 100 items)
 - **Priority Preservation:** When size limit is exceeded, lowest priority items are removed first
 - **Efficient Insertion:** Uses splice for O(n) insertion while maintaining order
 - **Memory Optimization:** Automatic cleanup prevents indefinite growth
 
 ### Expiration Management
+
 - **Configurable Timeouts:** Items expire after configurable time period
 - **Automatic Cleanup:** Expired items are removed during normal operations
 - **Performance Optimization:** Cleanup is integrated into existing operations
@@ -185,6 +197,7 @@ enqueue(text, priority = 0) {
 ## Testing Coverage
 
 ### Unit Tests (50+ Test Cases)
+
 - **Constructor Validation:** Parameter validation and default values
 - **Observer Pattern:** Object and function observer subscription/unsubscription
 - **Priority Ordering:** Insertion order, equal priority handling, mixed priority scenarios
@@ -194,6 +207,7 @@ enqueue(text, priority = 0) {
 - **Error Handling:** Invalid inputs, observer errors, graceful degradation
 
 ### Integration Tests (40+ Test Cases)
+
 - **Module Compatibility:** ES6 imports, CommonJS compatibility, prototype chain
 - **SpeechItem Integration:** Instance creation, expiration logic, immutability
 - **Observer Integration:** ObserverSubject integration, notification patterns
@@ -205,6 +219,7 @@ enqueue(text, priority = 0) {
 ## Usage Examples
 
 ### Basic Queue Operations
+
 ```javascript
 import SpeechQueue from './speech/SpeechQueue.js';
 
@@ -225,6 +240,7 @@ while (!queue.isEmpty()) {
 ```
 
 ### Observer Pattern Usage
+
 ```javascript
 // Object observer
 const uiObserver = {
@@ -248,6 +264,7 @@ queue.enqueue("Test notification");
 ```
 
 ### Brazilian Portuguese Travel Guide
+
 ```javascript
 const travelQueue = new SpeechQueue(50, 60000); // 50 items, 60s expiration
 
@@ -265,6 +282,7 @@ travelQueue.enqueue("Previsão do tempo: Sol com temperatura de 25°C", 0);
 ```
 
 ### Custom Configuration
+
 ```javascript
 // Small queue for real-time applications
 const realtimeQueue = new SpeechQueue(10, 5000); // 10 items, 5s expiration
@@ -294,6 +312,7 @@ realtimeQueue.subscribeFunction(statusObserver);
 ### From Embedded Class to Module
 
 #### Before (Embedded in guia.js)
+
 ```javascript
 // Direct usage from guia.js
 const queue = new SpeechQueue();
@@ -301,6 +320,7 @@ queue.enqueue("Test message");
 ```
 
 #### After (Modular import)
+
 ```javascript
 // ES6 module import
 import SpeechQueue from './speech/SpeechQueue.js';
@@ -313,6 +333,7 @@ const SpeechQueue = require('./speech/SpeechQueue.js').default;
 ```
 
 ### Observer Pattern Migration
+
 ```javascript
 // Old pattern (still supported)
 const observer = {
@@ -329,6 +350,7 @@ queue.subscribeFunction((queue) => {
 ```
 
 ### Error Handling Updates
+
 ```javascript
 // Enhanced error handling with specific error types
 try {
@@ -347,6 +369,7 @@ try {
 ## Performance Characteristics
 
 ### Time Complexity
+
 - **Enqueue:** O(n) - Linear search for insertion point
 - **Dequeue:** O(1) - Constant time removal from front
 - **Size/IsEmpty:** O(k) - Where k is number of expired items
@@ -354,11 +377,13 @@ try {
 - **Observer Notification:** O(m) - Where m is number of observers
 
 ### Space Complexity
+
 - **Queue Storage:** O(n) - Linear with number of items
 - **Observer Storage:** O(m) - Linear with number of observers
 - **Memory Overhead:** Minimal - Efficient array-based storage
 
 ### Optimization Features
+
 - **Automatic Cleanup:** Prevents memory leaks
 - **Size Limits:** Prevents unbounded growth
 - **Efficient Insertion:** Splice-based insertion maintains order
@@ -367,6 +392,7 @@ try {
 ## Error Handling
 
 ### Constructor Errors
+
 ```javascript
 // Parameter validation with specific ranges
 new SpeechQueue(-1);        // RangeError: maxSize must be between 1 and 1000
@@ -375,6 +401,7 @@ new SpeechQueue("invalid"); // RangeError: maxSize must be an integer
 ```
 
 ### Operation Errors
+
 ```javascript
 // Enqueue validation
 queue.enqueue(null);         // TypeError: Text must be a string
@@ -388,6 +415,7 @@ queue.subscribeFunction("not a function"); // TypeError: Observer must be a func
 ```
 
 ### Observer Error Handling
+
 ```javascript
 // Observers that throw errors don't crash the queue
 const errorObserver = () => { throw new Error("Observer failed"); };
@@ -400,11 +428,13 @@ console.log(queue.size()); // Returns 1 - operation succeeded despite observer e
 ## API Reference
 
 ### Constructor
+
 ```javascript
 new SpeechQueue(maxSize = 100, expirationMs = 30000)
 ```
 
 ### Core Methods
+
 - `enqueue(text, priority = 0)` - Add item to queue
 - `dequeue()` - Remove and return highest priority item
 - `isEmpty()` - Check if queue is empty
@@ -412,22 +442,26 @@ new SpeechQueue(maxSize = 100, expirationMs = 30000)
 - `clear()` - Remove all items from queue
 
 ### Observer Methods
+
 - `subscribe(observer)` - Subscribe object observer
 - `unsubscribe(observer)` - Unsubscribe object observer
 - `subscribeFunction(fn)` - Subscribe function observer
 - `unsubscribeFunction(fn)` - Unsubscribe function observer
 
 ### Utility Methods
+
 - `toString()` - Get string representation
 - `getItems()` - Get read-only copy of items array
 
 ### Properties (Read-only)
+
 - `observers` - Array of subscribed object observers
 - `functionObservers` - Array of subscribed function observers
 
 ## Integration Points
 
 ### With SpeechItem Module
+
 ```javascript
 // SpeechQueue creates SpeechItem instances automatically
 queue.enqueue("Test", 5);
@@ -436,6 +470,7 @@ console.log(item instanceof SpeechItem); // true
 ```
 
 ### With ObserverSubject Module
+
 ```javascript
 // Uses ObserverSubject for notification management
 const queue = new SpeechQueue();
@@ -444,6 +479,7 @@ console.log(queue.functionObservers); // Delegated to ObserverSubject
 ```
 
 ### With Guia.js Main Module
+
 ```javascript
 // Backward compatibility maintained through exports
 import { SpeechQueue } from './guia.js';
@@ -457,24 +493,28 @@ if (typeof window !== 'undefined') {
 ## Benefits Achieved
 
 ### 1. **Modularity**
+
 - **Standalone Module:** Can be imported and used independently
 - **Clear Dependencies:** Explicit dependencies on SpeechItem and ObserverSubject
 - **Reusability:** Can be used in other projects without guia.js
 - **Maintainability:** Isolated functionality is easier to maintain and test
 
 ### 2. **Performance**
+
 - **Memory Management:** Automatic expiration prevents memory leaks
 - **Size Limits:** Prevents unbounded queue growth
 - **Efficient Operations:** Optimized for common speech queue operations
 - **Batch Processing:** Supports both real-time and batch processing scenarios
 
 ### 3. **Developer Experience**
+
 - **Type Safety:** Comprehensive parameter validation with clear error messages
 - **Documentation:** Extensive inline documentation and examples
 - **Testing:** 90+ test cases covering all functionality
 - **Debugging:** Clear error messages and logging for troubleshooting
 
 ### 4. **Brazilian Portuguese Support**
+
 - **Unicode Support:** Full support for Portuguese special characters
 - **Travel Context:** Optimized for Brazilian travel guide applications
 - **Cultural Awareness:** Priority system designed for local use cases
@@ -483,6 +523,7 @@ if (typeof window !== 'undefined') {
 ## Future Enhancements
 
 ### Potential Improvements
+
 1. **Persistence:** Add option to persist queue state to localStorage
 2. **Analytics:** Add metrics collection for queue performance monitoring
 3. **Advanced Prioritization:** Support for priority functions instead of numeric values
@@ -491,6 +532,7 @@ if (typeof window !== 'undefined') {
 6. **Internationalization:** Extend support for other Portuguese variants
 
 ### Optimization Opportunities
+
 1. **Binary Heap:** Replace linear array with binary heap for O(log n) insertion
 2. **Lazy Cleanup:** Defer expiration cleanup to background process
 3. **Memory Pooling:** Reuse SpeechItem instances to reduce garbage collection

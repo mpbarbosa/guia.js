@@ -9,10 +9,12 @@ This directory contains GitHub Actions workflows for automating various tasks in
 **Purpose**: Validates code quality and runs basic functionality tests.
 
 **Triggers**:
+
 - Push to `main` or `develop` branches
 - Pull requests to `main` branch
 
 **Jobs**:
+
 - **validate**: Validates JavaScript syntax and tests basic Node.js functionality
 - **lint-and-format**: Performs basic code style checks
 - **security-check**: Runs basic security scans
@@ -22,43 +24,56 @@ This directory contains GitHub Actions workflows for automating various tasks in
 **Purpose**: Automatically detects file changes and updates tests and documentation accordingly.
 
 **Triggers**:
+
 - Push to `main` or `develop` branches
 - Pull requests to `main` or `develop` branches
 
 **Jobs**:
 
 #### detect-changes
+
 Detects which types of files have been modified:
+
 - JavaScript source files
 - Test files
 - Documentation files
 
 #### run-affected-tests
+
 Runs tests when JavaScript or test files are modified:
+
 - Executes all tests with `npm test`
 - Generates coverage report with `npm run test:coverage`
 - Validates JavaScript syntax with `npm run validate`
 
 #### update-test-documentation
+
 Updates test documentation when test files are modified:
+
 - Counts test suites and generates statistics
 - Updates `TESTING.md` with automatic timestamp
 - Commits changes back to the repository
 
 #### validate-documentation
+
 Validates documentation when markdown files are modified:
+
 - Checks markdown syntax
 - Validates internal links
 - Verifies documentation index is up-to-date
 
 #### update-coverage-badge
+
 Updates test coverage statistics:
+
 - Generates coverage report
 - Extracts coverage percentages
 - Can post coverage report on pull requests
 
 #### summary
+
 Generates a workflow summary showing:
+
 - Types of changes detected
 - Jobs status
 - Overall workflow results
@@ -68,73 +83,90 @@ Generates a workflow summary showing:
 The workflows use custom composite actions located in `.github/actions/`:
 
 ### detect-affected-tests
+
 **Location**: `.github/actions/detect-affected-tests/`
 
 Analyzes changed files and determines which test files need to be run.
 
 **Inputs**:
+
 - `changed-files`: Comma-separated list of changed files
 
 **Outputs**:
+
 - `test-files`: Test files that should be run
 - `should-run-all`: Whether all tests should be run
 
 **Logic**:
+
 - If core files (`guia.js`, `guia_ibge.js`) change → run all tests
 - Maps specific source files to their corresponding test files
 - Returns list of affected test files
 
 ### update-test-docs
+
 **Location**: `.github/actions/update-test-docs/`
 
 Updates test documentation with current statistics.
 
 **Inputs**:
+
 - `test-results-file`: Path to test results JSON file (optional)
 
 **Outputs**:
+
 - `updated`: Whether documentation was updated
 
 **Actions**:
+
 - Counts test suites and test files
 - Adds/updates automation timestamp in `TESTING.md`
 - Only commits if changes were made
 
 ### update-doc-index
+
 **Location**: `.github/actions/update-doc-index/`
 
 Updates documentation index with current file structure.
 
 **Outputs**:
+
 - `updated`: Whether index was updated
 
 **Actions**:
+
 - Scans all markdown files in repository
 - Counts documentation by location (root, docs/, .github/)
 - Updates `docs/INDEX.md` with timestamp and statistics
 - Only commits if changes were made
 
 ### validate-js
+
 **Location**: `.github/actions/validate-js/`
 
 Validates JavaScript syntax for specified files.
 
 **Inputs**:
+
 - `files`: Space-separated list of JavaScript files to validate
 
 **Actions**:
+
 - Uses Node.js `-c` flag to check syntax
 - Reports validation status for each file
 
 ### security-check
+
 **Location**: `.github/actions/security-check/`
 
 Performs basic security checks on JavaScript files.
 
 **Inputs**:
+
 - `files`: Pattern for files to check (e.g., "*.js")
 
 **Checks**:
+
 - Hardcoded credentials (passwords, tokens, secrets)
 - Usage of `eval()` function
 - Non-HTTPS external URLs
@@ -142,6 +174,7 @@ Performs basic security checks on JavaScript files.
 ## Workflow Permissions
 
 The `modified-files.yml` workflow requires these permissions:
+
 - `contents: write` - To commit documentation updates
 - `pull-requests: write` - To post comments on PRs
 
@@ -198,6 +231,7 @@ npm run test:all
 Edit `.github/actions/detect-affected-tests/action.yml` to customize which tests run for specific file changes.
 
 Example mapping:
+
 ```yaml
 src/guia.js → __tests__/CurrentPosition.test.js
              __tests__/utils.test.js
@@ -221,6 +255,7 @@ git commit -m "Update documentation [skip ci]"
 **Issue**: Workflow doesn't run after pushing changes.
 
 **Solutions**:
+
 1. Check that changes are in the correct branches (`main` or `develop`)
 2. Verify workflow file syntax is valid YAML
 3. Check repository Actions settings are enabled
@@ -230,6 +265,7 @@ git commit -m "Update documentation [skip ci]"
 **Issue**: `TESTING.md` or `docs/INDEX.md` not updating automatically.
 
 **Solutions**:
+
 1. Check workflow logs for errors
 2. Verify files exist in repository
 3. Ensure workflow has `contents: write` permission
@@ -240,6 +276,7 @@ git commit -m "Update documentation [skip ci]"
 **Issue**: Tests fail in CI but pass locally.
 
 **Solutions**:
+
 1. Run `npm ci` instead of `npm install` locally
 2. Check Node.js version matches CI (v18)
 3. Review test logs in Actions tab

@@ -1,4 +1,5 @@
 # Coverage Policy
+
 **Date**: 2026-01-09  
 **Effective**: Immediately
 
@@ -35,12 +36,14 @@
 
 **Target**: Aim for ≥70% coverage on new code.
 
-**Not Required**: 
+**Not Required**:
+
 - Browser-specific UI code (`app.js`, `error-recovery.js`, `geolocation-banner.js`)
 - Defensive error fallbacks (unknown error codes)
 - External API failure scenarios (complex mocking)
 
 **Testing Strategy**:
+
 - Unit tests for business logic
 - Manual testing checklist for browser UI
 - Selenium tests for E2E scenarios
@@ -54,6 +57,7 @@
 **Target**: 75-80% over time (if beneficial)
 
 **Approach**: Incremental improvements through:
+
 1. Testing new features thoroughly
 2. Adding tests when fixing bugs
 3. Opportunistic test additions during refactoring
@@ -97,6 +101,7 @@
 ### Browser UI Code (Expected Low Coverage)
 
 **Files**:
+
 - `src/app.js` (0% - SPA router)
 - `src/error-recovery.js` (0% - error handling)
 - `src/geolocation-banner.js` (0% - permission UI)
@@ -110,6 +115,7 @@
 ### Error Handling Paths (Expected Low Coverage)
 
 **Examples**:
+
 - Unknown error codes (fallback branches)
 - Old browser fallbacks (rare scenarios)
 - Network failure edge cases
@@ -127,6 +133,7 @@
 **File**: `.github/workflows/copilot-coding-agent.yml`
 
 **Test Job**:
+
 ```yaml
 - run: npm ci
 - run: npm run test:coverage
@@ -134,6 +141,7 @@
 ```
 
 **Enforcement**:
+
 - ✅ Coverage thresholds checked automatically
 - ✅ CI fails if coverage drops below baseline
 - ✅ Coverage summary displayed in workflow
@@ -143,6 +151,7 @@
 ### Local Development
 
 **Check coverage before committing**:
+
 ```bash
 # Run tests with coverage
 npm run test:coverage
@@ -152,6 +161,7 @@ npm run test:coverage
 ```
 
 **Pre-commit hook** (`.github/hooks/pre-commit`):
+
 - Already runs tests
 - Coverage checked on commit
 
@@ -162,11 +172,13 @@ npm run test:coverage
 ### When to Update
 
 **Increase thresholds** when:
+
 - Coverage consistently exceeds current baseline by ≥2%
 - Major refactoring improves testability
 - New tests significantly increase coverage
 
 **Decrease thresholds** when:
+
 - Removing untestable code (browser files, etc.)
 - Refactoring reduces LOC without losing functionality
 - Justified in PR review
@@ -174,6 +186,7 @@ npm run test:coverage
 ### How to Update
 
 **1. Update package.json**:
+
 ```json
 "coverageThreshold": {
   "global": {
@@ -186,11 +199,13 @@ npm run test:coverage
 ```
 
 **2. Test locally**:
+
 ```bash
 npm run test:coverage
 ```
 
 **3. Commit with justification**:
+
 ```bash
 git commit -m "chore: Update coverage thresholds to 70/75/60/70
 
@@ -205,6 +220,7 @@ Raising baseline to prevent regression."
 ### Tracking Over Time
 
 **Tools**:
+
 - Codecov (optional) - Upload coverage reports to track trends
 - GitHub Actions summary - View coverage in each workflow run
 - Local reports - `coverage/lcov-report/index.html`
@@ -216,6 +232,7 @@ Raising baseline to prevent regression."
 ### Red Flags
 
 **Alert if**:
+
 - Coverage drops >5% in single PR
 - Coverage trend declining over time
 - Critical paths show <50% coverage

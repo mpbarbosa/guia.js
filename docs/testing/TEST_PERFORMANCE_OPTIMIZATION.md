@@ -9,7 +9,9 @@
 ## 🎯 **Optimization Applied**
 
 ### **Issue Identified**
+
 Two tests in `__tests__/unit/SpeechQueue.test.js` used real timers:
+
 ```javascript
 // BEFORE (SLOW):
 test('should clean expired items', async () => {
@@ -22,7 +24,9 @@ test('should clean expired items', async () => {
 **Problem**: Tests actually waited 1100ms in real time (2.2s total)
 
 ### **Solution Applied**
+
 Replaced real timers with Jest fake timers:
+
 ```javascript
 // AFTER (FAST):
 test('should clean expired items', () => {
@@ -43,6 +47,7 @@ test('should clean expired items', () => {
 ## 📊 **Performance Results**
 
 ### Before Optimization
+
 ```
 Test Suites: 1 passed
 Tests:       50 passed
@@ -52,6 +57,7 @@ Time:        5.089s
 ```
 
 ### After Optimization
+
 ```
 Test Suites: 1 passed
 Tests:       50 passed
@@ -69,12 +75,14 @@ Time:        2.842s ✅
 ### When to Use Fake Timers
 
 ✅ **Use fake timers when**:
+
 - Testing time-based expiration logic
 - Testing debounce/throttle behavior
 - Testing scheduled callbacks
 - Simulating delays without waiting
 
 ❌ **DON'T use fake timers when**:
+
 - Testing real async operations (API calls, file I/O)
 - Testing race conditions
 - Testing actual timing precision
@@ -120,6 +128,7 @@ describe('Timer-dependent behavior', () => {
 ## 🚀 **Additional Optimization Opportunities**
 
 ### 1. Other Slow Tests Identified
+
 - `SpeechSynthesisManager.test.js`: Check for real timer usage
 - `Chronometer.test.js`: May benefit from fake timers
 - Integration tests: Consider test splitting
@@ -129,6 +138,7 @@ describe('Timer-dependent behavior', () => {
 **Current**: All tests in one file (50 tests, 2.8s)
 
 **Recommended**:
+
 ```
 __tests__/unit/
 ├── SpeechQueue.core.test.js (40 tests, <1s)
@@ -161,6 +171,7 @@ jobs:
 ## 📈 **Overall Test Suite Performance**
 
 ### Current State
+
 ```
 Total Tests: 1,792 passing
 Total Time:  ~31s
@@ -175,6 +186,7 @@ Performance Distribution:
 ```
 
 ### Optimization Impact
+
 - **Before**: SpeechQueue consuming 16% of total test time (5s/31s)
 - **After**: SpeechQueue consuming 9% of total test time (2.8s/31s)
 - **Savings**: 7% reduction in overall suite time
@@ -188,6 +200,7 @@ Performance Distribution:
    - More reliable (no timing variance)
 
 2. **Measure before optimizing**
+
    ```bash
    npm test -- --verbose | grep "ms)"
    ```
@@ -205,11 +218,13 @@ Performance Distribution:
 ## 🎓 **Lessons Learned**
 
 ### What Worked
+
 ✅ Fake timers provided instant 44% improvement  
 ✅ No functional changes needed to tests  
 ✅ All 50 tests still passing  
 
 ### Watch Out For
+
 ⚠️ Fake timers can hide timing bugs in production code  
 ⚠️ Always restore real timers after test  
 ⚠️ Some APIs don't work with fake timers (e.g., Web Speech API)  
@@ -226,4 +241,3 @@ Performance Distribution:
 
 **Status**: ✅ **Optimization Complete**  
 **Next**: Monitor CI test duration, consider additional optimizations if needed
-

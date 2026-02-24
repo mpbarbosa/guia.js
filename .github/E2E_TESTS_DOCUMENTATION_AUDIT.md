@@ -48,6 +48,7 @@ Time:        0.535 s
 ### Documentation Quality
 
 #### Local README.md (Excellent ✅)
+
 - **Comprehensive coverage**: 427 lines documenting all test files
 - **Detailed test descriptions**: Each test file has purpose, scenarios, and examples
 - **Usage instructions**: Clear commands for running tests
@@ -57,6 +58,7 @@ Time:        0.535 s
 - **Related documentation**: Links to other test directories
 
 #### Main TESTING.md (Missing ❌)
+
 - **No E2E mention**: Zero references to "e2e", "E2E", or "end-to-end"
 - **Incomplete structure**: Only shows 4 test files in directory structure
 - **Missing from sections**: Not in "Functionalidades Testadas" or any workflow descriptions
@@ -69,9 +71,11 @@ Time:        0.535 s
 ### E2E Test Suite Coverage
 
 #### 1. CompleteGeolocationWorkflow.e2e.test.js (19 tests)
+
 **Purpose**: Tests complete geolocation workflow from initialization to display
 
 **Key Workflows**:
+
 - Application initialization → Position acquisition → Geocoding → Display
 - Position updates triggering change detection
 - Manager → Position → Geocoder → Address pipeline
@@ -79,6 +83,7 @@ Time:        0.535 s
 - Performance validation
 
 **Components Tested**:
+
 - GeoPosition
 - ReverseGeocoder
 - AddressDataExtractor
@@ -86,9 +91,11 @@ Time:        0.535 s
 - Display components
 
 #### 2. AddressChangeAndSpeech.e2e.test.js (21 tests)
+
 **Purpose**: Tests address change detection and speech synthesis integration
 
 **Key Workflows**:
+
 - Municipality change → high-priority speech
 - Neighborhood change → normal-priority speech
 - Street change → low-priority speech
@@ -97,15 +104,18 @@ Time:        0.535 s
 - Driving scenarios with multiple changes
 
 **Components Tested**:
+
 - ChangeDetectionCoordinator
 - SpeechQueue
 - SpeechSynthesisManager
 - SpeechItem
 
 #### 3. BrazilianAddressProcessing.e2e.test.js (20 tests)
+
 **Purpose**: Tests Brazilian address processing pipeline
 
 **Key Workflows**:
+
 - OpenStreetMap/Nominatim data retrieval
 - Address translation (OSM → Brazilian format)
 - Component extraction (logradouro, bairro, município, CEP)
@@ -114,15 +124,18 @@ Time:        0.535 s
 - Multiple city formats (São Paulo, Rio, Brasília)
 
 **Components Tested**:
+
 - ReverseGeocoder
 - AddressDataExtractor
 - BrazilianStandardAddress
 - Address formatting utilities
 
 #### 4. ErrorHandlingRecovery.e2e.test.js (20 tests)
+
 **Purpose**: Tests error handling and recovery mechanisms
 
 **Key Scenarios**:
+
 - Invalid coordinates (null, out-of-bounds, poor accuracy)
 - Network failures (timeout, disconnection)
 - API errors (404, 500, malformed responses)
@@ -131,15 +144,18 @@ Time:        0.535 s
 - Recovery and retry mechanisms
 
 **Components Tested**:
+
 - GeolocationService error handling
 - ReverseGeocoder resilience
 - API error handling
 - Validation logic
 
 #### 5. MultiComponentIntegration.e2e.test.js (16 tests)
+
 **Purpose**: Tests complex multi-component interactions
 
 **Key Workflows**:
+
 - WebGeocodingManager orchestration
 - PositionManager coordination
 - Complete navigation sessions (multiple waypoints)
@@ -148,12 +164,14 @@ Time:        0.535 s
 - Display synchronization (HTML + Speech)
 
 **Components Tested**:
+
 - WebGeocodingManager
 - PositionManager
 - Multiple coordinators working together
 - Lifecycle management
 
 #### 6. MilhoVerde-SerroMG.e2e.test.js (Real-world scenario)
+
 **Purpose**: Tests with actual Brazilian location (Milho Verde, Serro, MG)
 
 **Unique Value**: Real-world test case from production usage
@@ -161,9 +179,11 @@ Time:        0.535 s
 ### Test Count Discrepancy
 
 #### E2E README.md Claims
+
 - **"Total E2E Tests: 76 tests across 5 test files"** (line 7)
 
 #### Actual Count (as of 2026-01-06)
+
 - **91 tests across 6 test files**
 
 **Discrepancy**: +15 tests, +1 file (MilhoVerde-SerroMG.e2e.test.js added later)
@@ -178,19 +198,22 @@ Time:        0.535 s
 
 **Problem**: No mention of E2E tests in main testing documentation
 
-**Impact**: 
+**Impact**:
+
 - Developers may not discover E2E test suite
 - Incomplete understanding of test coverage
 - 91 tests "hidden" from main documentation
 - Missing from contribution workflow
 
 **Evidence**:
+
 ```bash
 $ grep -i "e2e\|end-to-end" docs/TESTING.md
 # No results
 ```
 
 **Current State**:
+
 ```markdown
 ## Estrutura dos Testes
 
@@ -208,10 +231,12 @@ __tests__/
 **Problem**: README claims 76 tests but suite has 91 tests
 
 **Lines to Update**:
+
 - Line 7: "Total E2E Tests: 76 tests across 5 test files"
 - Test file descriptions may need test count updates
 
 **Fix Required**:
+
 ```markdown
 # OLD
 Total E2E Tests: 76 tests across 5 test files
@@ -225,11 +250,13 @@ Total E2E Tests: 91 tests across 6 test files
 **Problem**: README references version 0.6.0-alpha
 
 **Line**: 411
+
 ```markdown
 Guia.js Version: **0.6.0-alpha**
 ```
 
 **Fix Required**:
+
 ```markdown
 Guia.js Version: **0.9.0-alpha**
 ```
@@ -241,6 +268,7 @@ Guia.js Version: **0.9.0-alpha**
 **Line**: 412
 
 **Fix Required**:
+
 ```markdown
 Last Updated: 2026-01-06
 ```
@@ -250,6 +278,7 @@ Last Updated: 2026-01-06
 **Problem**: Links assume different directory structure
 
 **Lines**: 403-406
+
 ```markdown
 - [Main Test README](../README.md)
 - [Integration Tests](../integration/README.md)
@@ -258,6 +287,7 @@ Last Updated: 2026-01-06
 ```
 
 **Actual Structure**:
+
 ```
 __tests__/
 ├── e2e/
@@ -283,13 +313,14 @@ docs/
 **Location**: After "Estrutura dos Testes" section (after line 17)
 
 **Content to Add**:
+
 ```markdown
 ### End-to-End (E2E) Tests
 
 The project includes comprehensive E2E tests covering complete application workflows:
 
 ```
-__tests__/e2e/
+**tests**/e2e/
 ├── README.md                                   # E2E test documentation
 ├── AddressChangeAndSpeech.e2e.test.js         # Address change + speech (21 tests)
 ├── BrazilianAddressProcessing.e2e.test.js     # Brazilian address pipeline (20 tests)
@@ -297,6 +328,7 @@ __tests__/e2e/
 ├── ErrorHandlingRecovery.e2e.test.js          # Error handling (20 tests)
 ├── MilhoVerde-SerroMG.e2e.test.js             # Real-world scenario
 └── MultiComponentIntegration.e2e.test.js      # Multi-component (16 tests)
+
 ```
 
 **Total**: 91 E2E tests covering:
@@ -320,6 +352,7 @@ npm run test:coverage -- __tests__/e2e
 ```
 
 **See**: [`__tests__/e2e/README.md`](../__tests__/e2e/README.md) for detailed E2E test documentation.
+
 ```
 
 #### Action 1.2: Update Test Count Breakdown
@@ -333,6 +366,7 @@ npm run test:coverage -- __tests__/e2e
 ```
 
 **Enhanced Version**:
+
 ```markdown
 - ✅ 1251 testes passando (1399 total)
   - 91 testes E2E (end-to-end workflows)
@@ -351,6 +385,7 @@ npm run test:coverage -- __tests__/e2e
 **Location**: After section 4 (line 79)
 
 **Content to Add**:
+
 ```markdown
 ### 5. Testes End-to-End (E2E) (`__tests__/e2e/*.e2e.test.js`)
 - **Workflows Completos**: Testa fluxos de ponta a ponta da aplicação
@@ -364,6 +399,7 @@ npm run test:coverage -- __tests__/e2e
 ### Phase 2: Medium Priority - Update E2E README (10 minutes)
 
 #### Action 2.1: Update Test Count
+
 **File**: `__tests__/e2e/README.md` line 7
 
 ```markdown
@@ -375,6 +411,7 @@ npm run test:coverage -- __tests__/e2e
 ```
 
 #### Action 2.2: Add MilhoVerde File to List
+
 **Location**: After line 189 in "Test Files" section
 
 ```markdown
@@ -395,6 +432,7 @@ Tests with actual Brazilian location data:
 ```
 
 #### Action 2.3: Update Version and Timestamp
+
 **File**: `__tests__/e2e/README.md` lines 411-412
 
 ```markdown
@@ -408,6 +446,7 @@ Last Updated: 2026-01-06
 ```
 
 #### Action 2.4: Fix Broken Relative Links
+
 **File**: `__tests__/e2e/README.md` lines 403-406
 
 ```markdown
@@ -433,6 +472,7 @@ Last Updated: 2026-01-06
 **File**: `.github/scripts/count-tests.js`
 
 **Implementation**:
+
 ```javascript
 #!/usr/bin/env node
 const { execSync } = require('child_process');
@@ -468,6 +508,7 @@ console.log(`  Total: ${Object.values(categories).reduce((a,b) => a+b, 0)}`);
 ```
 
 **Usage**:
+
 ```bash
 node .github/scripts/count-tests.js
 ```
@@ -477,6 +518,7 @@ node .github/scripts/count-tests.js
 **Location**: Near test badges in main README.md
 
 **Content**:
+
 ```markdown
 ![E2E Tests](https://img.shields.io/badge/E2E%20Tests-91%20passing-success)
 ```
@@ -488,6 +530,7 @@ node .github/scripts/count-tests.js
 **File**: `__tests__/e2e/COVERAGE.md`
 
 **Structure**:
+
 ```markdown
 # E2E Test Coverage Matrix
 
@@ -528,11 +571,13 @@ node .github/scripts/count-tests.js
 ### Current State Impact
 
 **Test Discovery**:
+
 - 91 E2E tests are "hidden" from main documentation
 - Developers reading TESTING.md won't know E2E suite exists
 - Only developers exploring `__tests__/` directories will find it
 
 **Documentation Quality**:
+
 - E2E README is excellent but disconnected
 - No unified view of test coverage
 - Incomplete test count breakdown
@@ -540,18 +585,21 @@ node .github/scripts/count-tests.js
 ### Post-Implementation Impact
 
 **After Phase 1** (Main TESTING.md integration):
+
 - ✅ All 1,399 tests documented in main guide
 - ✅ Clear test breakdown (E2E, integration, unit)
 - ✅ Developers discover E2E suite immediately
 - ✅ E2E workflows visible to contributors
 
 **After Phase 2** (Update E2E README):
+
 - ✅ Accurate test counts in E2E README
 - ✅ Current version numbers
 - ✅ Working relative links
 - ✅ Complete test file documentation
 
 **After Phase 3** (Optional enhancements):
+
 - ✅ Automated test statistics
 - ✅ Visual test coverage matrix
 - ✅ Test count badges in README
@@ -562,6 +610,7 @@ node .github/scripts/count-tests.js
 ## ✅ Implementation Checklist
 
 ### Phase 1: Main TESTING.md Integration (15 minutes)
+
 - [ ] Add E2E test section with directory structure
 - [ ] Add running E2E tests commands
 - [ ] Link to `__tests__/e2e/README.md`
@@ -570,6 +619,7 @@ node .github/scripts/count-tests.js
 - [ ] Test all relative links work
 
 ### Phase 2: Update E2E README (10 minutes)
+
 - [ ] Update test count: 76 → 91 tests
 - [ ] Update file count: 5 → 6 test files
 - [ ] Add MilhoVerde-SerroMG.e2e.test.js documentation
@@ -579,6 +629,7 @@ node .github/scripts/count-tests.js
 - [ ] Verify all links work
 
 ### Phase 3: Optional Enhancements (30 minutes)
+
 - [ ] Create `.github/scripts/count-tests.js`
 - [ ] Test script execution
 - [ ] Add test statistics to CI/CD
@@ -586,7 +637,8 @@ node .github/scripts/count-tests.js
 - [ ] Add E2E badge to main README.md
 - [ ] Document enhancement usage
 
-**Total Estimated Time**: 
+**Total Estimated Time**:
+
 - Phase 1 (Required): 15 minutes
 - Phase 2 (Recommended): 10 minutes  
 - Phase 3 (Optional): 30 minutes
@@ -597,12 +649,14 @@ node .github/scripts/count-tests.js
 ## 🔗 Files to Modify
 
 ### Required Changes
+
 1. **`docs/TESTING.md`**
    - Add E2E section after line 17
    - Update test count breakdown (lines 43-48)
    - Add E2E to tested functionalities (after line 79)
 
 ### Recommended Changes
+
 2. **`__tests__/e2e/README.md`**
    - Update test count (line 7)
    - Add MilhoVerde documentation (after line 189)
@@ -610,9 +664,10 @@ node .github/scripts/count-tests.js
    - Fix relative links (lines 403-406)
 
 ### Optional Changes
+
 3. **`.github/scripts/count-tests.js`** - Create new file
-4. **`__tests__/e2e/COVERAGE.md`** - Create new file
-5. **`README.md`** - Add E2E test badge
+2. **`__tests__/e2e/COVERAGE.md`** - Create new file
+3. **`README.md`** - Add E2E test badge
 
 ---
 

@@ -582,20 +582,24 @@ describe('SpeechAnnouncer', () => {
 ### Common Issues
 
 **Issue**: No voice output
+
 - **Solution**: Check browser supports Web Speech API
 - **Check**: `window.speechSynthesis` is defined
 - **Verify**: Volume is not muted
 
 **Issue**: Wrong language voice selected
+
 - **Solution**: Brazilian Portuguese voice may not be available
 - **Check**: Run `speechSynthesis.getVoices()` in console
 - **Install**: Additional voices from OS settings
 
 **Issue**: Announcements cut off
+
 - **Solution**: Check queue size limits
 - **Adjust**: Increase priority for important messages
 
 **Issue**: Memory leaks
+
 - **Solution**: Always call `cleanup()` before destroying
 - **Use**: `beforeunload` event listener
 
@@ -604,18 +608,21 @@ describe('SpeechAnnouncer', () => {
 ## Best Practices
 
 1. **Always Initialize Async**
+
    ```javascript
    const announcer = new SpeechAnnouncer();
    await announcer.ready; // Wait before using
    ```
 
 2. **Use Priority Appropriately**
+
    ```javascript
    // Don't overuse URGENT priority
    announcer.announceWithPriority(text, SpeechPriority.NORMAL);
    ```
 
 3. **Cleanup Resources**
+
    ```javascript
    window.addEventListener('beforeunload', () => {
      announcer.cleanup();
@@ -623,6 +630,7 @@ describe('SpeechAnnouncer', () => {
    ```
 
 4. **Handle Missing Voices Gracefully**
+
    ```javascript
    const voiceInfo = announcer.getVoiceInfo();
    if (!voiceInfo.available) {

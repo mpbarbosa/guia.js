@@ -13,6 +13,7 @@ EventCoordinator manages all DOM event handling and user interactions for the Gu
 **Single Responsibility**: Event handling only
 
 ### Key Features
+
 - ✅ Centralized event listener management
 - ✅ Automatic event handler cleanup
 - ✅ Support for external callback delegation (window functions)
@@ -21,6 +22,7 @@ EventCoordinator manages all DOM event handling and user interactions for the Gu
 - ✅ Memory leak prevention through handler tracking
 
 ### Design Principles
+
 - **Separation of Concerns**: Isolates event handling from business logic
 - **Dependency Injection**: Receives UICoordinator and GeocodingState
 - **Resource Management**: Tracks handlers for proper cleanup
@@ -41,6 +43,7 @@ class EventCoordinator {
 ## Constructor
 
 ### Syntax
+
 ```javascript
 new EventCoordinator(uiCoordinator, geocodingState)
 ```
@@ -53,10 +56,12 @@ new EventCoordinator(uiCoordinator, geocodingState)
 | `geocodingState` | `GeocodingState` | ✅ | State manager for position/coordinates |
 
 ### Throws
+
 - `TypeError` - If `uiCoordinator` is not provided
 - `TypeError` - If `geocodingState` is not provided
 
 ### Example
+
 ```javascript
 import EventCoordinator from './coordination/EventCoordinator.js';
 import UICoordinator from './coordination/UICoordinator.js';
@@ -80,15 +85,19 @@ const eventCoordinator = new EventCoordinator(
 Initializes all event listeners for interactive buttons.
 
 #### Syntax
+
 ```javascript
 eventCoordinator.initializeEventListeners()
 ```
 
 #### Returns
+
 `void`
 
 #### Description
+
 Sets up event listeners for:
+
 - **Geolocation button** - Triggers location tracking
 - **Restaurant search button** - Delegates to `window.findNearbyRestaurants()`
 - **City statistics button** - Delegates to `window.fetchCityStatistics()`
@@ -96,6 +105,7 @@ Sets up event listeners for:
 **Note**: This method is idempotent - calling it multiple times has no effect after the first call.
 
 #### Example
+
 ```javascript
 // Initialize once
 eventCoordinator.initializeEventListeners();
@@ -111,14 +121,17 @@ eventCoordinator.initializeEventListeners();
 Removes all registered event listeners and cleans up resources.
 
 #### Syntax
+
 ```javascript
 eventCoordinator.removeEventListeners()
 ```
 
 #### Returns
+
 `void`
 
 #### Description
+
 - Removes all tracked event listeners
 - Clears internal handler map
 - Resets initialization flag
@@ -127,6 +140,7 @@ eventCoordinator.removeEventListeners()
 **⚠️ Important**: Always call this before disposing of EventCoordinator.
 
 #### Example
+
 ```javascript
 // When shutting down
 eventCoordinator.removeEventListeners();
@@ -143,12 +157,14 @@ eventCoordinator.removeEventListeners();
 **Function**: Triggers geolocation tracking
 
 #### Behavior
+
 1. Checks if location is already being tracked
 2. Validates button state
 3. Shows info toast: "Obtendo sua localização..."
 4. Triggers geolocation via UICoordinator
 
 #### Example Setup
+
 ```html
 <button id="obter-localizacao-btn">Obter Localização</button>
 ```
@@ -167,12 +183,14 @@ eventCoordinator.initializeEventListeners();
 **Function**: Delegates to `window.findNearbyRestaurants(lat, lon)`
 
 #### Behavior
+
 1. Gets current coordinates from GeocodingState
 2. Validates coordinates exist
 3. Calls external function with lat/lon
 4. Shows error toast if coordinates unavailable
 
 #### External Function Contract
+
 ```javascript
 // Implement this in your application
 window.findNearbyRestaurants = (latitude, longitude) => {
@@ -182,6 +200,7 @@ window.findNearbyRestaurants = (latitude, longitude) => {
 ```
 
 #### Example
+
 ```html
 <button id="encontrar-restaurantes-btn">Encontrar Restaurantes</button>
 ```
@@ -207,12 +226,14 @@ eventCoordinator.initializeEventListeners();
 **Function**: Delegates to `window.fetchCityStatistics(lat, lon)`
 
 #### Behavior
+
 1. Gets current coordinates from GeocodingState
 2. Validates coordinates exist
 3. Calls external function with lat/lon
 4. Shows error toast if coordinates unavailable
 
 #### External Function Contract
+
 ```javascript
 // Implement this in your application
 window.fetchCityStatistics = (latitude, longitude) => {
@@ -222,6 +243,7 @@ window.fetchCityStatistics = (latitude, longitude) => {
 ```
 
 #### Example
+
 ```html
 <button id="estatisticas-cidade-btn">Estatísticas da Cidade</button>
 ```
@@ -243,7 +265,9 @@ eventCoordinator.initializeEventListeners();
 ## Architecture Integration
 
 ### Coordination Layer
+
 EventCoordinator is part of the coordination layer alongside:
+
 - **ServiceCoordinator** - Manages services and observers
 - **UICoordinator** - Manages UI state and elements
 - **SpeechCoordinator** - Coordinates text-to-speech
@@ -251,10 +275,12 @@ EventCoordinator is part of the coordination layer alongside:
 ### Dependencies
 
 **Required Components**:
+
 - `UICoordinator` - Provides access to DOM elements
 - `GeocodingState` - Provides current position/coordinates
 
 **Utilities**:
+
 - `logger` - Console and DOM logging
 - `toast` - User notification system
 
@@ -263,6 +289,7 @@ EventCoordinator is part of the coordination layer alongside:
 ## Usage Patterns
 
 ### Basic Setup
+
 ```javascript
 // 1. Create dependencies
 const document = window.document;
@@ -289,6 +316,7 @@ eventCoordinator.initializeEventListeners();
 ```
 
 ### Cleanup Pattern
+
 ```javascript
 // Always cleanup when navigating away
 window.addEventListener('beforeunload', () => {
@@ -307,6 +335,7 @@ function unmount() {
 ## Error Handling
 
 ### Constructor Errors
+
 ```javascript
 try {
   const coordinator = new EventCoordinator(null, geocodingState);
@@ -317,6 +346,7 @@ try {
 ```
 
 ### Missing Coordinates
+
 ```javascript
 // When restaurant button is clicked without location
 // Automatic error toast: "Localização não disponível. Obtenha sua localização primeiro."
@@ -326,6 +356,7 @@ try {
 ```
 
 ### Missing External Handlers
+
 ```javascript
 // If window.findNearbyRestaurants is not defined
 // Click handler gracefully handles undefined
@@ -339,17 +370,21 @@ try {
 EventCoordinator uses the toast utility for user feedback:
 
 ### Info Toast
+
 ```javascript
 showInfo('Obtendo sua localização...');
 ```
+
 - **Trigger**: Geolocation button clicked
 - **Duration**: 3 seconds
 - **Style**: Blue info banner
 
 ### Error Toast
+
 ```javascript
 showError('Localização não disponível. Obtenha sua localização primeiro.');
 ```
+
 - **Trigger**: Restaurant/Stats button clicked without location
 - **Duration**: 5 seconds
 - **Style**: Red error banner
@@ -359,12 +394,14 @@ showError('Localização não disponível. Obtenha sua localização primeiro.')
 ## Best Practices
 
 ### ✅ Do
+
 - Define external handlers before initializing listeners
 - Call `removeEventListeners()` during cleanup
 - Use toast notifications for user feedback
 - Validate state before external function calls
 
 ### ❌ Don't
+
 - Don't initialize listeners multiple times unnecessarily
 - Don't forget to cleanup before navigation
 - Don't rely on external handlers without validation
@@ -375,6 +412,7 @@ showError('Localização não disponível. Obtenha sua localização primeiro.')
 ## HTML Integration
 
 ### Required Button IDs
+
 ```html
 <!-- Geolocation trigger -->
 <button id="obter-localizacao-btn">Obter Localização</button>
@@ -387,6 +425,7 @@ showError('Localização não disponível. Obtenha sua localização primeiro.')
 ```
 
 ### Example HTML Template
+
 ```html
 <div class="controls">
   <button id="obter-localizacao-btn" class="btn btn-primary">
@@ -408,6 +447,7 @@ showError('Localização não disponível. Obtenha sua localização primeiro.')
 ## Memory Management
 
 ### Handler Tracking
+
 EventCoordinator tracks all event handlers internally:
 
 ```javascript
@@ -419,6 +459,7 @@ this._handlers = new Map([
 ```
 
 ### Cleanup Process
+
 ```javascript
 removeEventListeners() {
   // 1. Iterate through all tracked handlers

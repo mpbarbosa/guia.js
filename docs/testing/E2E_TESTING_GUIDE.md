@@ -51,6 +51,7 @@ __tests__/e2e/
 Tests the complete geolocation acquisition and processing workflow.
 
 **Scenarios Tested**:
+
 - User grants location permission
 - Browser geolocation API returns coordinates
 - Coordinates are processed and validated
@@ -59,6 +60,7 @@ Tests the complete geolocation acquisition and processing workflow.
 - Success callbacks are triggered
 
 **Test Flow**:
+
 ```javascript
 User Action → Geolocation Request → Position Acquired → 
 Validation → Storage → UI Update → Success Notification
@@ -71,6 +73,7 @@ Validation → Storage → UI Update → Success Notification
 Tests address processing specific to Brazilian location data.
 
 **Scenarios Tested**:
+
 - Address extraction from Nominatim API response
 - Brazilian address standardization
 - Municipality (município) and neighborhood (bairro) processing
@@ -78,6 +81,7 @@ Tests address processing specific to Brazilian location data.
 - Complete address formatting
 
 **Test Flow**:
+
 ```javascript
 Coordinates → Reverse Geocoding → Address Extraction → 
 Standardization → Brazilian Format → Cache Storage → Display
@@ -90,6 +94,7 @@ Standardization → Brazilian Format → Cache Storage → Display
 Tests change detection and speech synthesis integration.
 
 **Scenarios Tested**:
+
 - Location change detection (municipality, neighborhood)
 - Speech synthesis triggering on changes
 - Speech queue management
@@ -97,6 +102,7 @@ Tests change detection and speech synthesis integration.
 - Immediate vs. interval-based speech
 
 **Test Flow**:
+
 ```javascript
 Position Update → Change Detection → Speech Queue → 
 Priority Sorting → Speech Synthesis → Completion Callback
@@ -109,6 +115,7 @@ Priority Sorting → Speech Synthesis → Completion Callback
 Tests error scenarios and recovery mechanisms.
 
 **Scenarios Tested**:
+
 - Geolocation permission denied
 - Network errors during geocoding
 - Invalid position data handling
@@ -117,6 +124,7 @@ Tests error scenarios and recovery mechanisms.
 - Error notification to users
 
 **Test Flow**:
+
 ```javascript
 Error Trigger → Error Detection → Error Handler → 
 User Notification → Recovery Attempt → Fallback State
@@ -129,6 +137,7 @@ User Notification → Recovery Attempt → Fallback State
 Tests complex interactions between multiple components.
 
 **Scenarios Tested**:
+
 - WebGeocodingManager orchestrating multiple services
 - Observer pattern notifications across components
 - Display component synchronization
@@ -136,6 +145,7 @@ Tests complex interactions between multiple components.
 - Component lifecycle management
 
 **Test Flow**:
+
 ```javascript
 User Action → Manager Coordination → Service Calls → 
 State Updates → Observer Notifications → UI Synchronization
@@ -278,11 +288,13 @@ describe('Error Recovery', () => {
 E2E tests should mock only external dependencies:
 
 **✅ Mock These**:
+
 - Browser APIs (navigator.geolocation, window, document)
 - External API calls (Nominatim, IBGE)
 - Time-dependent functions (setTimeout, Date.now)
 
 **❌ Don't Mock These**:
+
 - Internal application components
 - Business logic
 - Data transformations

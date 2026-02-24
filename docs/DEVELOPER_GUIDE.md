@@ -110,13 +110,16 @@ npm run lint:fix
 #### Git Hooks (Husky)
 
 Pre-commit hooks automatically run:
+
 - Syntax validation (`node -c`)
 - Unit tests
 
 Pre-push hooks run:
+
 - Full test suite
 
 **Manual trigger**:
+
 ```bash
 .husky/pre-commit
 .husky/pre-push
@@ -632,11 +635,13 @@ timerManager.clearTimer('display-update-timer');
 ### Adding New Features
 
 1. **Create branch**:
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
 
 2. **Write tests first** (TDD):
+
    ```bash
    touch __tests__/unit/your-feature.test.js
    npm run test:watch
@@ -648,18 +653,21 @@ timerManager.clearTimer('display-update-timer');
    - Ensure immutability
 
 4. **Validate**:
+
    ```bash
    npm run test:all
    .github/scripts/test-workflow-locally.sh
    ```
 
 5. **Commit**:
+
    ```bash
    git add .
    git commit -m "feat: add your feature"
    ```
 
 6. **Push and create PR**:
+
    ```bash
    git push origin feature/your-feature-name
    ```

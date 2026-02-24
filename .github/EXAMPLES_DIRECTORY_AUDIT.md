@@ -21,11 +21,13 @@ The `examples/` directory contains **17 example files** but `examples/README.md`
 ## Current State
 
 ### Documented Examples (1)
+
 1. ✅ **geoposition-immutability-demo.js** - Full documentation with expected output
 
 ### Undocumented Examples (16)
 
 #### HTML Examples (12)
+
 1. 🔴 **address-converter.html** - No documentation
 2. 🔴 **bairro-display-test.html** - No documentation
 3. 🔴 **brazilian-voice-test.html** - No documentation
@@ -41,9 +43,10 @@ The `examples/` directory contains **17 example files** but `examples/README.md`
 13. 🔴 **timer-test.html** - No documentation
 
 #### JavaScript Examples (3)
+
 14. 🔴 **geolocation-service-demo.js** - Mentioned in main README.md but not in examples/README.md
-15. 🔴 **jest-esm-migration-example.js** - Mentioned in main README.md but not in examples/README.md
-16. 🔴 **provider-pattern-demo.js** - No documentation
+2. 🔴 **jest-esm-migration-example.js** - Mentioned in main README.md but not in examples/README.md
+3. 🔴 **provider-pattern-demo.js** - No documentation
 
 ---
 
@@ -71,6 +74,7 @@ The `examples/` directory contains **17 example files** but `examples/README.md`
 ## Recommended Action Plan
 
 ### Phase 1: Quick Wins (1 hour)
+
 **Goal**: Document the 3 examples already mentioned in main README.md
 
 1. **Add geolocation-service-demo.js documentation** (15 min)
@@ -94,66 +98,72 @@ The `examples/` directory contains **17 example files** but `examples/README.md`
    - Access URL: `http://localhost:9000/examples/`
 
 ### Phase 2: HTML Examples Documentation (2 hours)
+
 **Goal**: Document all 12 HTML examples with categorization
 
 #### Testing & Debugging Examples
+
 5. **test.html** (10 min)
    - Purpose: Basic functionality testing
    - How to access: `http://localhost:9000/examples/test.html`
    - What to test: Core geolocation features
 
-6. **timeout-test.html** (10 min)
+2. **timeout-test.html** (10 min)
    - Purpose: Geolocation timeout behavior testing
    - Expected behavior: Timeout after X seconds
 
-7. **timer-test.html** (10 min)
+3. **timer-test.html** (10 min)
    - Purpose: Timer/chronometer component testing
    - Expected behavior: Display elapsed time
 
-8. **device-detection-test.html** (10 min)
+4. **device-detection-test.html** (10 min)
    - Purpose: Device capability detection
    - Expected output: Browser/device info
 
 #### Speech Synthesis Examples
+
 9. **brazilian-voice-test.html** (10 min)
    - Purpose: Brazilian Portuguese voice testing
    - Expected behavior: Text-to-speech with PT-BR voice
 
-10. **speech-queue-test.html** (10 min)
+2. **speech-queue-test.html** (10 min)
     - Purpose: Speech queue management
     - Expected behavior: Queued speech playback
 
-11. **test-50s-speech.html** (10 min)
+3. **test-50s-speech.html** (10 min)
     - Purpose: Long speech handling
     - Expected behavior: 50-second speech test
 
 #### Address & Location Examples
+
 12. **address-converter.html** (10 min)
     - Purpose: Address format conversion
     - Expected behavior: Convert between address formats
 
-13. **bairro-display-test.html** (10 min)
+2. **bairro-display-test.html** (10 min)
     - Purpose: Neighborhood (bairro) display
     - Expected behavior: Show neighborhood information
 
-14. **immediate-address-test.html** (10 min)
+3. **immediate-address-test.html** (10 min)
     - Purpose: Immediate address lookup
     - Expected behavior: Fast geocoding response
 
-15. **ibira-test.html** (10 min)
+4. **ibira-test.html** (10 min)
     - Purpose: Ibirapuera Park integration test
     - Expected behavior: Load Ibirapuera location data
 
 #### UI & Integration Examples
+
 16. **loc-em-movimento.html** (10 min)
     - Purpose: Full application demo
     - Expected behavior: Complete geolocation UI
 
-17. **module-test.html** (10 min)
+2. **module-test.html** (10 min)
     - Purpose: ES6 module loading test
     - Expected behavior: Module import verification
 
 ### Phase 3: Architecture Cross-References (30 min)
+
 **Goal**: Link examples to relevant architecture documentation
 
 1. **Add cross-references to examples/README.md** (15 min)
@@ -168,9 +178,11 @@ The `examples/` directory contains **17 example files** but `examples/README.md`
    - Update IMMUTABILITY.md: "See examples/geoposition-immutability-demo.js"
 
 ### Phase 4: Enhanced Usability (30 min)
+
 **Goal**: Add "Quick Start" section and categorization
 
 1. **Add Quick Start section** (15 min)
+
    ```markdown
    ## Quick Start
    
@@ -279,18 +291,21 @@ http://localhost:9000/examples/test.html
 ## Success Metrics
 
 ### Before
+
 - 1 of 17 examples documented (6%)
 - 0 web server instructions
 - 0 architecture cross-references
 - No categorization
 
 ### After
+
 - 17 of 17 examples documented (100%)
 - Clear web server instructions
 - 8+ architecture cross-references
 - Examples categorized by feature and difficulty
 
 ### User Experience Improvement
+
 - **Discoverability**: ⬆️ 94% (16 examples now discoverable)
 - **Usability**: ⬆️ 100% (web server instructions added)
 - **Learning Path**: ⬆️ New (difficulty levels guide learning)

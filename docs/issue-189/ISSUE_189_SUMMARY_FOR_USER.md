@@ -66,6 +66,7 @@ While the original task requested creating GitHub issues for each identified ite
 5. Update `docs/ISSUE_189_TRACKING.md` with issue numbers
 
 **Benefits**:
+
 - You can review and adjust content as needed
 - You maintain full control over labels and assignees
 - Opportunity to add project-specific context
@@ -75,6 +76,7 @@ While the original task requested creating GitHub issues for each identified ite
 If you prefer automation, you could:
 
 1. Use GitHub CLI (`gh`):
+
    ```bash
    gh issue create --title "[Tech Debt] ..." --body-file issue1.md --label "technical-debt,priority:high"
    ```
@@ -87,30 +89,35 @@ I can help create a script if you prefer this approach.
 ## 📊 What Each Issue Accomplishes
 
 ### Issue #1: Configuration Object for Element IDs
+
 - **Impact**: High testability improvement
 - **Effort**: 1 day or less
 - **Why**: Makes WebGeocodingManager much easier to test and reuse
 - **Quick Win**: ✅ Yes
 
 ### Issue #2: Factory Pattern for Displayers
+
 - **Impact**: Improved extensibility
 - **Effort**: 1-3 days
 - **Why**: Enables mock displayers for testing, supports alternative implementations
 - **Quick Win**: ⚠️ No (medium effort)
 
 ### Issue #3: Remove Legacy Timeout
+
 - **Impact**: Code cleanliness
 - **Effort**: Less than 1 day (trivial)
 - **Why**: Removes dead code and confusion
 - **Quick Win**: ✅ Yes (can bundle with #1 or #5)
 
 ### Issue #4: Extract Change Detection to Coordinator
+
 - **Impact**: Major architectural improvement
 - **Effort**: 1-2 weeks
 - **Why**: Achieves Single Responsibility Principle, dramatically reduces complexity
 - **Quick Win**: ❌ No (requires careful refactoring)
 
 ### Issue #5: Dependency Injection for Services
+
 - **Impact**: Critical testability improvement
 - **Effort**: 1 day or less
 - **Why**: Foundation for all other improvements, enables mock testing
@@ -149,6 +156,7 @@ npm test
 ```
 
 The failing tests are unrelated to Issue #189 and should not block this work:
+
 - `SpeechQueue.test.js` - 3 failures (Portuguese text handling)
 - `SpeechSynthesisManager.test.js` - 4 failures (speech controls)
 - `BairroDisplay.test.js` - 1 failure (address formatting)
@@ -159,6 +167,7 @@ The failing tests are unrelated to Issue #189 and should not block this work:
 ## 📚 Documentation Quality
 
 All documentation follows the project's established patterns:
+
 - ✅ Referential transparency considerations included for each item
 - ✅ Uses Technical Debt template structure
 - ✅ Comprehensive code examples provided
@@ -179,6 +188,7 @@ All documentation follows the project's established patterns:
 ### Why Separate Issues?
 
 Each technical debt item is tracked separately because:
+
 1. They have different priorities and effort levels
 2. They can be implemented in parallel by different developers
 3. Each represents a distinct architectural concern
@@ -188,6 +198,7 @@ Each technical debt item is tracked separately because:
 ### Code Quality Standards
 
 All proposed solutions follow the project's core principles:
+
 - **Referential Transparency**: Pure functions where possible
 - **Immutability**: No data mutations
 - **Testability**: Code designed for easy testing
@@ -197,6 +208,7 @@ All proposed solutions follow the project's core principles:
 ### Backward Compatibility
 
 All proposed changes maintain **100% backward compatibility**:
+
 - Existing tests will continue to pass
 - Public APIs remain unchanged
 - Default behaviors preserved
@@ -205,6 +217,7 @@ All proposed changes maintain **100% backward compatibility**:
 ## ❓ Questions or Need Help?
 
 If you need:
+
 - Help creating the issues programmatically
 - Clarification on any technical debt item
 - Assistance with implementation

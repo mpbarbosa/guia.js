@@ -10,12 +10,14 @@
 ## Executive Summary
 
 Phase 5 aimed to complete the refactoring by converting SpeechSynthesisManager to a facade pattern that coordinates all extracted components. A working facade prototype was created (`SpeechSynthesisManager.facade-wip.js`) that successfully integrates:
+
 - ✅ VoiceManager
 - ✅ SpeechConfiguration  
 - ✅ SpeechQueueProcessor
 - ✅ SpeechController
 
 **Challenge**: The existing test suite (72 tests) heavily relies on testing internal implementation details rather than public API contracts. Converting to the facade pattern requires either:
+
 1. Updating 21+ tests to work with the new internal structure, OR
 2. Keeping both implementations and gradually migrating
 
@@ -30,6 +32,7 @@ Phase 5 aimed to complete the refactoring by converting SpeechSynthesisManager t
 **File**: `src/speech/SpeechSynthesisManager.facade-wip.js` (412 lines)
 
 The facade successfully:
+
 1. ✅ Integrates all 4 extracted components
 2. ✅ Provides backward-compatible public API
 3. ✅ Delegates to specialized components
@@ -37,6 +40,7 @@ The facade successfully:
 5. ✅ Implements proper cleanup in destroy()
 
 **Key Architecture**:
+
 ```javascript
 SpeechSynthesisManager (Facade)
 ├── VoiceManager (voice loading & selection)
@@ -50,6 +54,7 @@ SpeechSynthesisManager (Facade)
 **Test Results**: 48 passing, 21 failing (out of 72 tests)
 
 **Root Cause**: Tests check internal implementation details:
+
 - Direct access to `manager.isCurrentlySpeaking`
 - Direct access to `manager.voiceRetryTimer`
 - Direct access to `manager.queueTimer`
@@ -57,6 +62,7 @@ SpeechSynthesisManager (Facade)
 - Checking internal state transitions
 
 **Examples of Incompatible Tests**:
+
 ```javascript
 // Test expects internal property access
 expect(manager.voiceRetryTimer).toBeNull();
@@ -75,6 +81,7 @@ manager.isCurrentlySpeaking = true;
 ### Problem
 
 The current test suite violates the **"Test Public API, Not Implementation"** principle. Tests are tightly coupled to:
+
 1. Internal property names
 2. Internal method implementations  
 3. Internal state management
@@ -83,6 +90,7 @@ The current test suite violates the **"Test Public API, Not Implementation"** pr
 ### Impact
 
 Refactoring to better architecture patterns (like Facade) becomes difficult because:
+
 - Tests break even when public API remains unchanged
 - Internal improvements require test rewrites
 - Cannot easily swap implementations
@@ -90,18 +98,21 @@ Refactoring to better architecture patterns (like Facade) becomes difficult beca
 ### Solution Options
 
 **Option A: Update Tests (Recommended for future)**
+
 - Refactor tests to only test public API
 - Remove internal property access
 - Focus on behavior, not implementation
 - Estimated: 8-12 hours
 
 **Option B: Dual Implementation**
+
 - Keep original for tests
 - Use facade in production
 - Gradual migration
 - Estimated: 4-6 hours
 
 **Option C: Accept Current State**
+
 - Keep Phase 4 accomplishment (Controller extracted)
 - Document facade pattern for future
 - Focus on other priorities
@@ -114,6 +125,7 @@ Refactoring to better architecture patterns (like Facade) becomes difficult beca
 ### What Phase 4 Delivered (✅ COMPLETE)
 
 **SpeechController Extraction** - 390 lines, 39 tests
+
 - Core speech synthesis operations
 - SpeechSynthesisUtterance creation & configuration
 - Event handling (onstart, onend, onerror, onboundary)
@@ -121,6 +133,7 @@ Refactoring to better architecture patterns (like Facade) becomes difficult beca
 - Comprehensive error handling
 
 **Overall Refactoring Progress**:
+
 ```
 Original SpeechSynthesisManager: 1,108 lines (God Class)
 
@@ -135,6 +148,7 @@ Remaining: ~200 lines of coordination logic
 ```
 
 **Benefits Achieved**:
+
 1. ✅ **Single Responsibility**: Each class has one clear purpose
 2. ✅ **Testability**: 103 new focused unit tests
 3. ✅ **Maintainability**: Smaller, focused modules
@@ -225,12 +239,14 @@ class SpeechSynthesisManager {
 ### Short Term (Current Sprint)
 
 **Accept Phase 4 Completion**:
+
 - ✅ Commit Phase 4 results (SpeechController)
 - ✅ Document facade pattern for future
 - ✅ Keep original SpeechSynthesisManager
 - ✅ Add facade prototype to repository for reference
 
 **Benefits**:
+
 - 103 new tests passing
 - 4 components properly extracted
 - Significant code quality improvement
@@ -239,6 +255,7 @@ class SpeechSynthesisManager {
 ### Medium Term (Next Sprint)
 
 **Test Suite Refactoring**:
+
 1. Create new test file: `SpeechSynthesisManager.api.test.js`
 2. Test only public API contracts
 3. Remove internal implementation checks
@@ -246,6 +263,7 @@ class SpeechSynthesisManager {
 5. Estimated: 8-12 hours
 
 **Once Tests Refactored**:
+
 - Swap in facade implementation
 - All tests should pass without changes
 - Better architecture achieved
@@ -253,6 +271,7 @@ class SpeechSynthesisManager {
 ### Long Term (Future)
 
 **Continuous Improvement**:
+
 - Extract remaining classes if needed
 - Consider state management patterns
 - Evaluate performance optimizations
@@ -263,6 +282,7 @@ class SpeechSynthesisManager {
 ## Files in Repository
 
 ### Production Code
+
 - ✅ `src/speech/VoiceManager.js` (280 lines)
 - ✅ `src/speech/SpeechConfiguration.js` (227 lines)
 - ✅ `src/speech/SpeechQueueProcessor.js` (~200 lines)
@@ -271,6 +291,7 @@ class SpeechSynthesisManager {
 - 📋 `src/speech/SpeechSynthesisManager.facade-wip.js` (412 lines - prototype)
 
 ### Test Files
+
 - ✅ `__tests__/unit/VoiceManager.test.js` (20+ tests)
 - ✅ `__tests__/unit/SpeechConfiguration.test.js` (26 tests)
 - ✅ `__tests__/unit/SpeechQueueProcessor.test.js` (18+ tests)
@@ -278,6 +299,7 @@ class SpeechSynthesisManager {
 - ✅ `__tests__/unit/SpeechSynthesisManager.test.js` (72 tests - needs refactoring)
 
 ### Documentation
+
 - ✅ `docs/refactoring/PHASE_3_RESUME_GUIDE.md`
 - ✅ `docs/refactoring/PHASE_4_RESUME_GUIDE.md`
 - ✅ `docs/refactoring/PHASE_5_STATUS_REPORT.md` (this file)
@@ -289,16 +311,19 @@ class SpeechSynthesisManager {
 ### Code Quality Improvements
 
 **Lines of Code**:
+
 - Before: 1 file, 1,108 lines (God Class)
 - After: 5 files, ~1,500 lines total (well-structured)
 - Net Change: +392 lines (includes comprehensive docs & error handling)
 
 **Test Coverage**:
+
 - Before: 72 tests (mixed quality)
 - After: 175 tests (72 original + 103 new focused tests)
 - Improvement: +143% test coverage
 
 **Complexity Reduction**:
+
 - SpeechSynthesisManager: 1,108 → 412 lines (63% reduction in facade)
 - Average method length: Reduced by ~40%
 - Cyclomatic complexity: Reduced significantly per module
@@ -306,6 +331,7 @@ class SpeechSynthesisManager {
 ### Time Investment
 
 **Phases 1-4 (Completed)**:
+
 - Phase 1 (VoiceManager): ~4 hours
 - Phase 2 (SpeechConfiguration): ~3 hours
 - Phase 3 (SpeechQueueProcessor): ~3 hours
@@ -313,6 +339,7 @@ class SpeechSynthesisManager {
 - **Total**: ~14 hours
 
 **Phase 5 (Partial)**:
+
 - Facade prototype: ~2 hours
 - Test analysis: ~1 hour
 - Documentation: ~1 hour
@@ -321,6 +348,7 @@ class SpeechSynthesisManager {
 **Grand Total**: ~18 hours invested
 
 **Estimated to Complete**:
+
 - Test refactoring: 8-12 hours
 - Facade integration: 2-3 hours
 - **Total Remaining**: 10-15 hours

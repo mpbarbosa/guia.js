@@ -7,6 +7,7 @@
 ## Executive Summary
 
 Three low-priority documentation quality improvements were identified:
+
 1. **Issue #16**: Emoji usage inconsistency (186/195 files use emojis, but patterns vary)
 2. **Issue #17**: Code block language tag inconsistency (mix of `javascript` vs `js`)
 3. **Issue #18**: No automated external link checking (77+ external references)
@@ -22,10 +23,12 @@ Three low-priority documentation quality improvements were identified:
 ### Current State
 
 **Emoji Usage Statistics**:
+
 - Files with emojis: 186 out of 195 (95%)
 - Files without emojis: 9 (5%)
 
 **Common Emoji Patterns Found**:
+
 - ✅ Success/completion indicators
 - ❌ Failure/error markers
 - ⚠️ Warnings/cautions
@@ -40,12 +43,14 @@ Three low-priority documentation quality improvements were identified:
 ### Analysis
 
 **Pros of Current Emoji Usage**:
+
 - ✅ Improves visual scanning
 - ✅ Makes priorities immediately clear
 - ✅ Adds visual hierarchy to documents
 - ✅ Widely adopted (95% of files)
 
 **Cons**:
+
 - ⚠️ Inconsistent patterns (some docs use different emojis for same concept)
 - ⚠️ May not display correctly in all terminals/editors
 - ⚠️ Accessibility concerns (screen readers may not handle well)
@@ -62,6 +67,7 @@ Three low-priority documentation quality improvements were identified:
 **Proposed Emoji Standard**:
 
 #### Priority Indicators
+
 ```markdown
 🔴 CRITICAL - Urgent, blocking issues
 🟡 HIGH - Important, should address soon
@@ -70,6 +76,7 @@ Three low-priority documentation quality improvements were identified:
 ```
 
 #### Status Indicators
+
 ```markdown
 ✅ Complete/Success - Done, working, approved
 ❌ Failed/Error - Not working, rejected
@@ -82,6 +89,7 @@ Three low-priority documentation quality improvements were identified:
 ```
 
 #### Content Type Markers
+
 ```markdown
 📊 Statistics/Data - Numbers, metrics
 📝 Note/Documentation - Important information
@@ -94,6 +102,7 @@ Three low-priority documentation quality improvements were identified:
 ```
 
 #### Action Items
+
 ```markdown
 - [ ] Todo item (unchecked checkbox)
 - [x] Completed item (checked checkbox)
@@ -106,12 +115,14 @@ Three low-priority documentation quality improvements were identified:
 ### Current State
 
 **Code Block Language Tag Usage**:
+
 - Total fenced code blocks: 3,020
 - `javascript` tag: 1,370 instances (45%)
 - `js` tag: 68 instances (2%)
 - No language tag: ~1,582 instances (52%)
 
 **Other Languages Used**:
+
 - `bash`: 638 instances
 - `markdown`: 188 instances
 - `yaml`: 67 instances
@@ -122,11 +133,13 @@ Three low-priority documentation quality improvements were identified:
 ### Analysis
 
 **Issues**:
+
 - ⚠️ Inconsistent JavaScript tags (`javascript` vs `js`)
 - ⚠️ 52% of code blocks lack language tags (no syntax highlighting)
 - ⚠️ Some generic blocks could benefit from specific tags
 
 **Impact**:
+
 - Reduced syntax highlighting in some contexts
 - Inconsistent documentation appearance
 - Harder for automated tools to process
@@ -136,6 +149,7 @@ Three low-priority documentation quality improvements were identified:
 **Approach**: **Standardize to Full Language Names**
 
 **Rationale**:
+
 - Full names (`javascript`) are more explicit than abbreviations (`js`)
 - Better compatibility with various Markdown processors
 - Clearer for contributors
@@ -165,9 +179,11 @@ Three low-priority documentation quality improvements were identified:
 ```
 
 **Special Cases**:
+
 - Use \`\`\`text for output examples (terminal output, logs)
 - Use \`\`\` (no tag) for pseudo-code or language-agnostic examples
 - Use \`\`\`diff for showing changes
+
 ```
 
 ### Migration Script
@@ -208,6 +224,7 @@ done
 ```
 
 **Usage**:
+
 ```bash
 ./scripts/standardize-code-blocks.sh
 # Review changes
@@ -245,18 +262,21 @@ git commit -m "docs: standardize code block language tags"
 **Total External Links**: 77+ distinct references
 
 **Critical API Dependencies**:
+
 - **OpenStreetMap Nominatim** (18 refs) - Core geocoding functionality
 - **IBGE API** (6 refs) - Brazilian location data
 
 ### Analysis
 
 **Risks**:
+
 - ⚠️ Broken links hurt documentation quality
 - ⚠️ API endpoint changes could break examples
 - ⚠️ Deprecated URLs may mislead contributors
 - ⚠️ No way to detect link rot automatically
 
 **Link Categories**:
+
 1. **API Documentation** (Critical) - nominatim, IBGE, etc.
 2. **Third-party Docs** (High) - MDN, Jest, Node.js
 3. **Reference Material** (Medium) - GitHub, refactoring.guru
@@ -320,6 +340,7 @@ jobs:
 ```
 
 **Benefits**:
+
 - ✅ Automated weekly checks
 - ✅ Checks on PR (optional - can be lenient)
 - ✅ Creates issues for broken links
@@ -329,11 +350,13 @@ jobs:
 #### Option 2: npm Package (Alternative)
 
 **Install**:
+
 ```bash
 npm install --save-dev markdown-link-check
 ```
 
 **Add to package.json**:
+
 ```json
 {
   "scripts": {
@@ -344,6 +367,7 @@ npm install --save-dev markdown-link-check
 ```
 
 **Usage**:
+
 ```bash
 # Check all links
 npm run check-links
@@ -377,6 +401,7 @@ fi
 ```
 
 **Enable**:
+
 ```bash
 chmod +x .git/hooks/pre-commit
 ```
@@ -386,17 +411,20 @@ chmod +x .git/hooks/pre-commit
 **Priority**: Use GitHub Action (Option 1)
 
 **Schedule**:
+
 - Weekly automated checks (Mondays)
 - Manual trigger available
 - Optional PR checks (lenient mode)
 
 **Exclusions**:
+
 - GitHub issue/PR numbers (they're valid but may not be accessible)
 - Shields.io badges (CDN, always available)
 - Localhost URLs (development only)
 - Example/placeholder URLs
 
 **Alerting**:
+
 - Create GitHub issue for broken links
 - Label as `documentation` + `automated`
 - Include link report in issue body
@@ -413,6 +441,7 @@ chmod +x .git/hooks/pre-commit
 **File**: `docs/guides/DOCUMENTATION_STYLE_GUIDE.md`
 
 **Contents**:
+
 - Emoji usage standards
 - Code block language tags
 - External link policies
@@ -428,6 +457,7 @@ chmod +x .git/hooks/pre-commit
 **Implement Link Checker**
 
 **Steps**:
+
 1. Create `.github/workflows/link-checker.yml`
 2. Configure exclusions and schedule
 3. Test with manual trigger
@@ -443,6 +473,7 @@ chmod +x .git/hooks/pre-commit
 **Standardize Code Blocks**
 
 **Approach**:
+
 - Run `standardize-code-blocks.sh` script
 - Review changes (git diff)
 - Commit in batches (by directory)
@@ -495,43 +526,53 @@ Always include text equivalents:
 ## Code Block Formatting
 
 ### Language Tags
+
 Always use full language names:
+
 - ✅ ```javascript (preferred)
 - ❌ ```js (avoid)
 
 ### Syntax Highlighting
+
 - Use specific tags for better highlighting
 - Prefer ```text for plain output
 - Use ```bash for shell commands
 - Use ``` (no tag) only for pseudo-code
 
 ### Examples
+
 (Include examples from above)
 
 ## External Links
 
 ### Link Checking
+
 - All external links checked weekly via CI/CD
 - Broken links create automated issues
 - Critical API links monitored closely
 
 ### Link Format
+
 - Use full URLs (not shortened)
 - Include protocol (https://)
 - Link descriptive text, not raw URLs
 
 **Good**:
+
 ```markdown
 See the [Nominatim API Documentation](https://nominatim.org/release-docs/)
 ```
 
 **Avoid**:
+
 ```markdown
 See https://nominatim.org/release-docs/
 ```
 
 ### Critical Links
+
 Indicate when links are critical dependencies:
+
 ```markdown
 **Critical API**: [OpenStreetMap Nominatim](https://nominatim.openstreetmap.org/)
 ⚠️ This API is required for core geocoding functionality.
@@ -540,21 +581,25 @@ Indicate when links are critical dependencies:
 ## Formatting Conventions
 
 ### Headers
+
 - Use ATX-style headers (# ## ###)
 - One H1 per document
 - Skip header levels (H1 → H3) only for special cases
 
 ### Lists
+
 - Use `-` for unordered lists
 - Use `1.` for ordered lists (auto-numbered)
 - Indent nested lists with 2 spaces
 
 ### Tables
+
 - Use GitHub-flavored Markdown tables
 - Align columns for readability
 - Include header row
 
 ### Line Length
+
 - Soft limit: 100 characters
 - Hard limit: 120 characters
 - Break at natural boundaries (sentence, clause)
@@ -562,19 +607,23 @@ Indicate when links are critical dependencies:
 ## Best Practices
 
 ### Be Consistent
+
 - Follow existing patterns in document
 - Check recent files for current style
 - When in doubt, match README.md
 
 ### Be Accessible
+
 - Use descriptive link text
 - Provide alt text for images
 - Include text equivalents for emojis
 
 ### Be Maintainable
+
 - Date all documentation
 - Update when content changes
 - Remove outdated content
+
 ```
 
 ---
@@ -679,12 +728,14 @@ fi
 ### Manual Testing
 
 **Before implementing**:
+
 1. Review style guide with team
 2. Test link checker on sample files
 3. Validate automation scripts
 4. Check GitHub Action permissions
 
 **After implementing**:
+
 1. Monitor first automated link check
 2. Review any issues created
 3. Adjust exclusions if needed
@@ -693,12 +744,14 @@ fi
 ### Success Criteria
 
 **Style Guide**:
+
 - [ ] Document created and reviewed
 - [ ] Examples included for each guideline
 - [ ] Linked from CONTRIBUTING.md
 - [ ] Linked from docs/INDEX.md
 
 **Link Checker**:
+
 - [ ] GitHub Action configured
 - [ ] Weekly schedule set
 - [ ] Manual trigger tested
@@ -706,6 +759,7 @@ fi
 - [ ] Issue creation validated
 
 **Code Block Standards**:
+
 - [ ] Migration script created
 - [ ] Standards documented
 - [ ] CONTRIBUTING.md updated
@@ -718,15 +772,18 @@ fi
 ### Ongoing Tasks
 
 **Weekly** (Automated):
+
 - Link checker runs on schedule
 - Issues created for broken links
 
 **Monthly** (Manual):
+
 - Review link checker exclusions
 - Update style guide if patterns change
 - Check for new external domains
 
 **Quarterly** (Manual):
+
 - Full style consistency audit
 - Update automation scripts
 - Review and close stale link issues

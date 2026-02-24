@@ -40,9 +40,11 @@
 Comprehensive documentation for the speech synthesis subsystem:
 
 #### 1. SpeechSynthesisManager
+
 **File**: `docs/api/SPEECH_SYNTHESIS_MANAGER.md` (12,422 chars)
 
 Main facade for Web Speech API integration with:
+
 - Priority-based speech queue
 - Brazilian Portuguese voice optimization
 - Rate and pitch control
@@ -50,6 +52,7 @@ Main facade for Web Speech API integration with:
 - Timer management integration
 
 **Key Methods**:
+
 ```javascript
 speak(text, priority = 0)
 setRate(rate)
@@ -62,6 +65,7 @@ cleanup()
 ```
 
 **Example**:
+
 ```javascript
 const speechManager = new SpeechSynthesisManager();
 await speechManager.loadVoices();
@@ -71,15 +75,18 @@ speechManager.speak("Bem-vindo ao Guia Turístico!", 10);
 ---
 
 #### 2. VoiceLoader
+
 **File**: `docs/api/VOICE_LOADER.md` (11,096 chars)
 
 Handles asynchronous voice loading with exponential backoff:
+
 - Retry delays: 100ms → 200ms → 400ms → 800ms → ...
 - Promise-based API
 - Voice caching
 - Browser compatibility (Chrome, Firefox, Safari)
 
 **Key Methods**:
+
 ```javascript
 async loadVoices()
 getVoices()
@@ -88,6 +95,7 @@ clearCache()
 ```
 
 **Example**:
+
 ```javascript
 const loader = new VoiceLoader({ maxRetries: 10 });
 const voices = await loader.loadVoices();
@@ -99,9 +107,11 @@ console.log(`Loaded ${voices.length} voices`);
 ### Comprehensive Tutorials ✨ NEW
 
 #### Tutorial: Integrating Speech Synthesis
+
 **File**: `docs/guides/TUTORIAL_SPEECH_SYNTHESIS.md` (15,068 chars)
 
 Step-by-step guide covering:
+
 - Basic speech setup (5 minutes)
 - Voice configuration (10 minutes)
 - Priority-based announcements (10 minutes)
@@ -109,6 +119,7 @@ Step-by-step guide covering:
 - Advanced features (5 minutes)
 
 **Complete Example**:
+
 ```javascript
 import SpeechAnnouncer, { SpeechPriority } from './features/speech-announcer.js';
 
@@ -124,9 +135,11 @@ announcer.announceWithPriority('Mensagem urgente!', SpeechPriority.URGENT);
 ## Documentation Architecture
 
 ### Layer 1: Core APIs (15 documents)
+
 Foundation classes providing essential data structures and state management.
 
 **Key Documents**:
+
 - `POSITION_MANAGER.md` - Singleton managing geolocation state
 - `GEO_POSITION.md` - Immutable position value object
 - `GEOCODING_STATE.md` - State machine for geocoding
@@ -135,9 +148,11 @@ Foundation classes providing essential data structures and state management.
 ---
 
 ### Layer 2: Service APIs (6 documents)
+
 Services handling external integrations and browser APIs.
 
 **Key Documents**:
+
 - `GEOLOCATION_SERVICE.md` - Browser Geolocation API wrapper
 - `REVERSE_GEOCODER.md` - OpenStreetMap Nominatim integration
 - `CHANGE_DETECTION_COORDINATOR.md` - Detects location changes
@@ -145,18 +160,22 @@ Services handling external integrations and browser APIs.
 ---
 
 ### Layer 3: Coordination APIs (5 documents)
+
 Orchestration layer coordinating multiple services.
 
 **Key Documents**:
+
 - `WEB_GEOCODING_MANAGER.md` - Main application coordinator
 - `SERVICE_COORDINATOR.md` - Service lifecycle management
 
 ---
 
 ### Layer 4: Data Processing (8 documents)
+
 Classes for data extraction, transformation, and caching.
 
 **Key Documents**:
+
 - `BRAZILIAN_STANDARD_ADDRESS.md` - Brazilian address standardization
 - `ADDRESS_EXTRACTOR.md` - Address data extraction
 - `ADDRESS_CACHE.md` - LRU caching with change detection
@@ -165,9 +184,11 @@ Classes for data extraction, transformation, and caching.
 ---
 
 ### Layer 5: UI/Display (🚧 In Progress)
+
 Components for rendering geographic data.
 
 **Planned Documents**:
+
 - HTML_POSITION_DISPLAYER.md
 - HTML_ADDRESS_DISPLAYER.md
 - HTML_HIGHLIGHT_CARDS_DISPLAYER.md
@@ -179,13 +200,16 @@ Components for rendering geographic data.
 ---
 
 ### Layer 6: Speech Synthesis (🟡 33% Complete)
+
 Text-to-speech functionality with queue management.
 
 **Completed**:
+
 - ✅ SPEECH_SYNTHESIS_MANAGER.md
 - ✅ VOICE_LOADER.md
 
 **Planned**:
+
 - VOICE_SELECTOR.md
 - SPEECH_CONFIGURATION.md
 - SPEECH_CONTROLLER.md
@@ -196,9 +220,11 @@ Text-to-speech functionality with queue management.
 ---
 
 ### Layer 7: Performance & Utilities
+
 Performance monitoring and helper utilities.
 
 **Key Documents**:
+
 - `CHRONOMETER.md` - Performance timing with observer pattern
 - `TIMER_MANAGER.md` - Centralized timer management
 - `LOGGER.md` - Logging utilities
@@ -211,12 +237,14 @@ Performance monitoring and helper utilities.
 ### System Design (12 documents)
 
 **Key Documents**:
+
 - `COMPREHENSIVE_GUIDE.md` - Complete architecture overview
 - `CLASS_DIAGRAM.md` - UML class diagrams
 - `SYSTEM_OVERVIEW.md` - High-level system design
 - `VERSION_TIMELINE.md` - Version history and evolution
 
 **Design Patterns**:
+
 - **Singleton**: PositionManager, TimerManager, SingletonStatusManager
 - **Observer**: ObserverSubject, Chronometer, AddressCache
 - **Factory**: DisplayerFactory
@@ -232,6 +260,7 @@ Performance monitoring and helper utilities.
 ### Getting Started (8 documents)
 
 **Key Documents**:
+
 - `GETTING_STARTED.md` - 5-minute quick start
 - `DEVELOPER_GUIDE.md` - Comprehensive developer guide
 - `CONTRIBUTING.md` - Contribution guidelines
@@ -239,6 +268,7 @@ Performance monitoring and helper utilities.
 - `UNIT_TEST_GUIDE.md` - Writing unit tests
 
 **Quick Start**:
+
 ```bash
 # Clone and install
 git clone https://github.com/mpbarbosa/guia_turistico.git
@@ -259,11 +289,13 @@ npm run dev
 ### End-User Guides (6 documents)
 
 **Key Documents**:
+
 - `USER_GUIDE.md` - Complete user guide
 - `TROUBLESHOOTING.md` - Common issues and solutions
 - `FAQ.md` - Frequently asked questions
 
 **Features**:
+
 - Real-time location tracking
 - Brazilian address geocoding
 - IBGE demographic data
@@ -277,12 +309,14 @@ npm run dev
 ### Test Coverage (15 documents)
 
 **Key Documents**:
+
 - `TESTING.md` - Testing overview
 - `testing/HTML_GENERATION.md` - HTML testing strategies
 - `E2E_TEST_SUMMARY.md` - E2E test documentation
 - `JEST_COMMONJS_ES6_GUIDE.md` - Jest configuration
 
 **Test Statistics**:
+
 - **Total Tests**: 2,401
 - **Passing**: 2,235 (93.1%)
 - **Skipped**: 146 (6.1%)
@@ -296,24 +330,30 @@ npm run dev
 ### Third-Party Services
 
 **OpenStreetMap Nominatim**:
+
 ```
 https://nominatim.openstreetmap.org/reverse
 ```
+
 - Reverse geocoding
 - Brazilian address formatting
 - Rate limiting: 1 req/sec
 
 **IBGE API**:
+
 ```
 https://servicodados.ibge.gov.br/api/v1/
 ```
+
 - Brazilian state/municipality data
 - No authentication required
 
 **SIDRA API**:
+
 ```
 https://servicodados.ibge.gov.br/api/v3/agregados/
 ```
+
 - Population statistics
 - Demographic data
 - Offline fallback available
@@ -325,12 +365,14 @@ https://servicodados.ibge.gov.br/api/v3/agregados/
 ### Common Tasks
 
 **Task**: Get current position
+
 ```javascript
 const positionManager = PositionManager.getInstance();
 const position = positionManager.getPosition();
 ```
 
 **Task**: Reverse geocode coordinates
+
 ```javascript
 const geocoder = new ReverseGeocoder(-23.550520, -46.633309);
 geocoder.addObserver('fetchCompleted', (data) => {
@@ -340,6 +382,7 @@ await geocoder.fetchAddress();
 ```
 
 **Task**: Speak text
+
 ```javascript
 const speechManager = new SpeechSynthesisManager();
 await speechManager.loadVoices();
@@ -347,6 +390,7 @@ speechManager.speak("Olá, mundo!", 0);
 ```
 
 **Task**: Display address
+
 ```javascript
 const displayer = new HTMLAddressDisplayer(document, 'address-container');
 displayer.display(addressData);
@@ -359,6 +403,7 @@ displayer.display(addressData);
 ### Metadata Template
 
 All documentation includes:
+
 ```markdown
 **Version**: 0.9.0-alpha
 **Last Updated**: YYYY-MM-DD
@@ -369,6 +414,7 @@ All documentation includes:
 ### Cross-References
 
 Documents are extensively cross-referenced:
+
 - **Related APIs**: Links to related API docs
 - **Architecture**: Links to architectural guides
 - **Tutorials**: Links to practical tutorials
@@ -379,15 +425,18 @@ Documents are extensively cross-referenced:
 ## Future Documentation Roadmap
 
 ### Phase 1: Complete Critical Gaps (Week 1)
+
 - [ ] HTML Displayer APIs (8 documents)
 - [ ] Speech Synthesis APIs (6 remaining)
 
 ### Phase 2: Enhance Tutorials (Week 2)
+
 - [ ] Tutorial: Building a Location Tracker
 - [ ] Tutorial: Custom Address Display
 - [ ] Integration Guide for External Developers
 
 ### Phase 3: Advanced Topics (Week 3)
+
 - [ ] Performance Optimization Guide
 - [ ] Security Best Practices
 - [ ] Accessibility Deep Dive
@@ -424,12 +473,14 @@ Documents are extensively cross-referenced:
 ## How to Use This Documentation
 
 ### For New Developers
+
 1. Start with [README.md](../../README.md)
 2. Read [GETTING_STARTED.md](../GETTING_STARTED.md)
 3. Review [API README](./README.md)
 4. Explore [Architecture Guide](../architecture/COMPREHENSIVE_GUIDE.md)
 
 ### For API Users
+
 1. Check [API README](./README.md) for overview
 2. Find your API in the organized sections
 3. Read API-specific documentation
@@ -437,12 +488,14 @@ Documents are extensively cross-referenced:
 5. Check related APIs
 
 ### For Contributors
+
 1. Read [CONTRIBUTING.md](../../.github/CONTRIBUTING.md)
 2. Review [TDD_GUIDE.md](../../.github/TDD_GUIDE.md)
 3. Check [DEVELOPER_GUIDE.md](../developer/DEVELOPER_GUIDE.md)
 4. Follow [CODE_PATTERN_DOCUMENTATION_GUIDE.md](../CODE_PATTERN_DOCUMENTATION_GUIDE.md)
 
 ### For End Users
+
 1. Start with [USER_GUIDE.md](../user/USER_GUIDE.md)
 2. Check [TROUBLESHOOTING.md](../user/TROUBLESHOOTING.md)
 3. Review feature-specific guides in `docs/user/features/`
@@ -454,6 +507,7 @@ Documents are extensively cross-referenced:
 ### Adding Documentation
 
 When adding new documentation:
+
 1. Use the metadata template
 2. Include code examples
 3. Add cross-references
@@ -482,6 +536,7 @@ When adding new documentation:
 ### Reporting Documentation Issues
 
 Found an issue? Please report:
+
 - Document name and section
 - Issue description
 - Suggested fix (optional)
@@ -492,6 +547,7 @@ Found an issue? Please report:
 ## Acknowledgments
 
 This comprehensive documentation effort builds on:
+
 - **271+ existing documents** created over the project lifecycle
 - **Community feedback** from developers and users
 - **Best practices** from established open-source projects
@@ -500,6 +556,7 @@ This comprehensive documentation effort builds on:
 ---
 
 **Quick Links**:
+
 - [Main README](../../README.md)
 - [API Index](./README.md)
 - [Architecture Guide](../architecture/COMPREHENSIVE_GUIDE.md)

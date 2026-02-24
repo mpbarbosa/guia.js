@@ -1,9 +1,11 @@
 # Coverage Improvement Reality Check
+
 **Date**: 2026-01-09
 
 ## Proposed Plan Analysis
 
 ### Original Proposal
+
 **Goal**: Reach 80%+ coverage through 3 phases (~15 hours)
 
 **Phase 1**: Fix Jest config + test browser files (3.5 hours)  
@@ -17,6 +19,7 @@
 ### Issue 1: We're Already at Target ✅
 
 **Current Coverage**:
+
 - Statement: **69.66%** (already good)
 - Branch: **74.39%** (already exceeds "Phase 3" goal of 60%+)
 - Function: 58.09%
@@ -30,6 +33,7 @@
 **Claim**: "Fix Jest config to include all src/ files (5 minutes)"
 
 **Reality**: Config is already correct:
+
 ```json
 "collectCoverageFrom": ["src/**/*.js", ...]
 ```
@@ -52,6 +56,7 @@ navigator.permissions.query();
 ```
 
 **Options to Test**:
+
 1. **jsdom** (4-6 hours setup) - Has documented compatibility issues
 2. **Selenium/Playwright** (6-8 hours) - Better approach but not unit testing
 3. **Architecture refactor** (8-12 hours) - Extract testable logic
@@ -63,6 +68,7 @@ navigator.permissions.query();
 ### Issue 4: Error Paths Already Have Tests ✅
 
 **Investigation**: Checked existing tests:
+
 - `GeolocationService.helpers.test.js` - Tests error code 999 (unknown)
 - Error codes 1, 2, 3 tested in multiple files
 - Fallback branches already covered
@@ -77,10 +83,12 @@ navigator.permissions.query();
 ### Issue 5: Diminishing Returns
 
 **To Reach 80% from 69.66%**:
+
 - Need +10.34% coverage
 - Requires ~650 new covered lines (based on ~6,000 total lines)
 
 **Where are those 650 lines?**
+
 1. **Browser files**: 865 lines (requires jsdom/refactor)
 2. **Error paths**: ~100 lines (already have tests for critical ones)
 3. **External API failures**: ~150 lines (complex fetch mocking)
@@ -114,11 +122,13 @@ navigator.permissions.query();
 ### What Would Actually Improve Quality
 
 **High Value** (Not in original plan):
+
 1. **E2E Selenium tests** - Test real browser flows (6-8 hours)
 2. **Integration tests** - Test component interactions (4-6 hours)
 3. **Property-based testing** - Test invariants (4-6 hours)
 
 **Low Value** (In original plan):
+
 1. Testing browser files in Jest - Wrong tool for the job
 2. Testing defensive fallbacks - Rarely executed code
 3. 80% coverage goal - Arbitrary number without context
@@ -130,6 +140,7 @@ navigator.permissions.query();
 ### Option 1: Accept Current State ✅ RECOMMENDED
 
 **Rationale**:
+
 - 74.39% branch coverage is GOOD
 - All critical paths tested
 - Gaps are justified and documented
@@ -144,6 +155,7 @@ navigator.permissions.query();
 **If 80% coverage is a hard requirement**, here's the realistic path:
 
 #### Step 1: Extract Testable Logic (8-12 hours)
+
 ```javascript
 // Before (untestable)
 function handleRoute() {
@@ -169,6 +181,7 @@ function handleRoute() {
 **Effort**: 8-12 hours refactoring
 
 #### Step 2: jsdom Setup for Remaining UI (4-6 hours)
+
 - Resolve parse5 compatibility
 - Mock navigator APIs
 - Add browser-specific tests
@@ -177,6 +190,7 @@ function handleRoute() {
 **Effort**: 4-6 hours setup + maintenance burden
 
 #### Step 3: Comprehensive Error Mocking (4-6 hours)
+
 - Mock fetch failures
 - Test HTTP error codes
 - Test network timeouts
@@ -193,6 +207,7 @@ function handleRoute() {
 ### If No Hard Requirement: DON'T DO IT
 
 **Reasons**:
+
 1. Current coverage is industry-standard good
 2. Effort/value ratio is poor
 3. Better ways to improve quality exist

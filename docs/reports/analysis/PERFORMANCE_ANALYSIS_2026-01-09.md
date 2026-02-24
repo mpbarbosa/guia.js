@@ -1,16 +1,19 @@
 # Jest Performance Analysis
+
 **Date**: 2026-01-09  
 **Current Performance**: 6.006 seconds for 1,419 tests
 
 ## Executive Summary
 
 **Current Performance**: ✅ **EXCELLENT**
+
 - **6 seconds** for 1,419 tests
 - **4.23ms average per test**
 - **63 passing suites** (4 skipped)
 - **1,282 passing tests** (137 skipped)
 
 **Industry Benchmark**:
+
 - Target: <10ms per test = Good
 - This project: **4.23ms per test** = **Excellent** ⭐⭐⭐⭐⭐
 
@@ -23,12 +26,14 @@
 ### Issue #1: Worker Process Exit Warning ⚠️ LOW PRIORITY
 
 **Warning Message**:
+
 ```
 A worker process has failed to exit gracefully and has been force exited.
 This is likely caused by tests leaking due to improper teardown.
 ```
 
 **Root Cause** (Confirmed via `--detectOpenHandles`):
+
 ```javascript
 // SpeechSynthesisManager.js:815
 this.queueTimer = setInterval(() => {
@@ -37,11 +42,13 @@ this.queueTimer = setInterval(() => {
 ```
 
 **Analysis**:
+
 - ✅ Cleanup code EXISTS (`stopQueueTimer()`)
 - ✅ Tests DO call cleanup in `afterEach`
 - ⚠️ Issue: Some test paths may skip cleanup
 
 **Impact**:
+
 - **Test execution time**: NONE (tests still pass in 6s)
 - **CI reliability**: Minimal (warning only, tests pass)
 - **Developer experience**: Minor annoyance (warning message)
@@ -55,6 +62,7 @@ this.queueTimer = setInterval(() => {
 **Status**: Already analyzed and documented in previous session
 
 **Breakdown**:
+
 1. SpeechSynthesisManager (12 tests) - Edge cases only
 2. WebGeocodingManager (35 tests) - API mismatch, has E2E coverage
 3. MunicipioChangeText (**FIXED** - was 8 tests, now enabled)
@@ -69,11 +77,13 @@ this.queueTimer = setInterval(() => {
 **Observation**: 24+ "Initializing Chronometer" log messages
 
 **Impact Analysis**:
+
 - **Performance**: <50ms total (negligible)
 - **CI logs**: Moderate pollution
 - **Debugging**: Actually helpful (shows test execution flow)
 
 **Fix** (If needed):
+
 ```javascript
 // In test setup files
 global.console.log = jest.fn();
@@ -95,6 +105,7 @@ global.console.log = jest.fn();
 | **Tests per Second** | 236 | ✅ Very good |
 
 **Industry Comparison**:
+
 - Slow: >20ms per test
 - Average: 10-20ms per test
 - Fast: 5-10ms per test
@@ -125,6 +136,7 @@ global.console.log = jest.fn();
 **Proposal**: Add `--maxWorkers=4`
 
 **Analysis**:
+
 - Jest ALREADY runs tests in parallel by default
 - Current: Uses all CPU cores (default behavior)
 - Adding explicit worker limit would SLOW DOWN tests
@@ -138,6 +150,7 @@ global.console.log = jest.fn();
 **Proposal**: Split tests into 3-4 parallel CI jobs
 
 **Analysis**:
+
 - **Current CI time**: ~8-10 seconds (very fast)
 - **Overhead of splitting**: Job setup, artifact uploads (~20-30s per job)
 - **Net result**: SLOWER overall CI time
@@ -153,6 +166,7 @@ global.console.log = jest.fn();
 **Proposal**: Mock heavy imports
 
 **Analysis**:
+
 - **Current import time**: Already fast (6s total including all imports)
 - **Guia.js size**: 2,082 lines (not particularly heavy)
 - **Test execution**: 4.23ms average (import overhead is negligible)
@@ -168,6 +182,7 @@ global.console.log = jest.fn();
 **Reality**: Jest caching is **ON BY DEFAULT**
 
 **Evidence**:
+
 ```bash
 # Jest automatically uses .cache/ directory
 ls -la node_modules/.cache/jest-*
@@ -186,6 +201,7 @@ ls -la node_modules/.cache/jest-*
 **Fix Options**:
 
 #### Option 1: Add Global Cleanup Hook ✅ RECOMMENDED
+
 ```javascript
 // jest.setup.js or test file
 afterAll(async () => {
@@ -202,6 +218,7 @@ afterAll(async () => {
 **Risk**: None
 
 #### Option 2: Improve Test Isolation
+
 ```javascript
 // In SpeechSynthesisManager tests
 afterEach(() => {
@@ -230,6 +247,7 @@ afterEach(() => {
 **Value**: High (cleaner test output)
 
 **Implementation**:
+
 1. Add comprehensive cleanup in SpeechSynthesisManager.test.js `afterEach`
 2. Ensure both `queueTimer` and `voiceRetryTimer` are cleared
 3. Add 100ms async delay in `afterAll` for pending operations
@@ -266,6 +284,7 @@ afterEach(() => {
 ## Performance Optimization Roadmap
 
 ### Current State: ✅ EXCELLENT (No action needed)
+
 - **6 seconds** for 1,419 tests
 - **4.23ms per test** (industry-leading)
 - One cosmetic warning (fix in 10 min)
@@ -286,16 +305,21 @@ afterEach(() => {
 ## Summary
 
 ### Question: Should we optimize test performance?
+
 **Answer**: No. Current performance is **excellent** (4.23ms per test).
 
 ### Question: What about the worker process warning?
+
 **Answer**: Cosmetic issue. Fix in 10 minutes for cleaner output.
 
 ### Question: Will proposed optimizations help?
+
 **Answer**: No. Most would hurt performance or waste time.
 
 ### Question: What should we do?
-**Answer**: 
+
+**Answer**:
+
 1. Fix timer cleanup warning (10 min)
 2. Celebrate excellent test performance (0 min)
 3. Focus on feature development (remaining time)

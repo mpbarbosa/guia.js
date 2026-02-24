@@ -12,16 +12,19 @@
 ### 1. Enhanced .github/scripts/cdn-delivery.sh Script
 
 **Added** (Lines 1-85):
+
 - Comprehensive header with exit codes documentation
 - Prerequisite checks before execution
 - Helpful error messages with solutions
 - Validation of all requirements
 
 **Exit Codes Documented**:
+
 - `0` - Success: URLs generated successfully
 - `1` - Error: Check output for details
 
 **Prerequisite Checks Added**:
+
 ```bash
 # Check Node.js
 if ! command -v node &> /dev/null; then
@@ -53,12 +56,14 @@ fi
 ### 2. Added Error Handling Section to README.md
 
 **New Section** (Lines 420-501):
+
 - Exit codes explanation
 - Common errors with solutions
 - Step-by-step troubleshooting
 - Command examples for each error
 
 **Errors Documented**:
+
 1. Node.js not found
 2. package.json not found
 3. Git not found

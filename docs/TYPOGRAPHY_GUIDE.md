@@ -13,6 +13,7 @@ This guide establishes the **Material Design 3 Typography System** for Guia Tur�
 ### Token Structure
 
 All typography tokens follow this pattern:
+
 ```
 --md-sys-typescale-{category}-{size}[-{property}]
 ```
@@ -24,6 +25,7 @@ All typography tokens follow this pattern:
 ## Typography Scale
 
 ### Display (57px - 36px)
+
 **Use for:** Hero sections, splash screens, large promotional text
 
 | Token | Size | Weight | Line Height | Use Case |
@@ -33,11 +35,13 @@ All typography tokens follow this pattern:
 | `--md-sys-typescale-display-small` | 36px | 400 | 1.22 | Large callouts |
 
 **Utility Classes:**
+
 - `.text-display-large`
 - `.text-display-medium`
 - `.text-display-small`
 
 **Example:**
+
 ```html
 <h1 class="text-display-large">Bem-vindo ao Guia Turístico</h1>
 ```
@@ -54,6 +58,7 @@ All typography tokens follow this pattern:
 ---
 
 ### Headline (32px - 24px)
+
 **Use for:** Page titles, prominent section headers
 
 | Token | Size | Weight | Line Height | Use Case |
@@ -63,11 +68,13 @@ All typography tokens follow this pattern:
 | `--md-sys-typescale-headline-small` | 24px | 400 | 1.33 | Subsection headers (h3) |
 
 **Utility Classes:**
+
 - `.text-headline-large`
 - `.text-headline-medium`
 - `.text-headline-small`
 
 **Example:**
+
 ```html
 <h1 class="text-headline-large">Coordenadas</h1>
 <h2 class="text-headline-medium">Endereço Completo</h2>
@@ -79,6 +86,7 @@ All typography tokens follow this pattern:
 ---
 
 ### Title (22px - 14px)
+
 **Use for:** Subsection headers, card titles, list item headers
 
 | Token | Size | Weight | Line Height | Use Case |
@@ -88,12 +96,14 @@ All typography tokens follow this pattern:
 | `--md-sys-typescale-title-small` | 14px | 500 | 1.43 | Tertiary headers (h6) |
 
 **Utility Classes:**
+
 - `.text-title-large` (preferred)
 - `.text-title-medium`
 - `.text-title-small`
 - `.title-large` (deprecated alias)
 
 **Example:**
+
 ```html
 <!-- Card title -->
 <div class="card">
@@ -110,6 +120,7 @@ All typography tokens follow this pattern:
 ---
 
 ### Body (16px - 12px)
+
 **Use for:** Paragraphs, content text, descriptions
 
 | Token | Size | Weight | Line Height | Use Case |
@@ -119,12 +130,14 @@ All typography tokens follow this pattern:
 | `--md-sys-typescale-body-small` | 12px | 400 | 1.33 | Captions, metadata |
 
 **Utility Classes:**
+
 - `.text-body-large` (preferred)
 - `.text-body-medium`
 - `.text-body-small`
 - `.body-large` (deprecated alias)
 
 **Example:**
+
 ```html
 <p class="text-body-large">
   População: <strong>12.3 milhões</strong> de habitantes
@@ -142,6 +155,7 @@ All typography tokens follow this pattern:
 ---
 
 ### Label (14px - 11px)
+
 **Use for:** Buttons, badges, tags, form labels
 
 | Token | Size | Weight | Line Height | Tracking | Use Case |
@@ -151,12 +165,14 @@ All typography tokens follow this pattern:
 | `--md-sys-typescale-label-small` | 11px | 500 | 1.45 | 0.5px | Tags, footnotes |
 
 **Utility Classes:**
+
 - `.text-label-large` (preferred)
 - `.text-label-medium`
 - `.text-label-small`
 - `.label-large` (deprecated alias)
 
 **Example:**
+
 ```html
 <!-- Button -->
 <button class="primary-button">
@@ -205,6 +221,7 @@ Typography scales down on smaller screens for better readability.
 ### Identifying Violations
 
 **❌ BAD: Hardcoded pixel values**
+
 ```css
 .my-title {
   font-size: 24px;  /* Violation */
@@ -214,6 +231,7 @@ Typography scales down on smaller screens for better readability.
 ```
 
 **✅ GOOD: Design tokens**
+
 ```css
 .my-title {
   font-size: var(--md-sys-typescale-headline-small);
@@ -223,6 +241,7 @@ Typography scales down on smaller screens for better readability.
 ```
 
 **✅ BETTER: Utility class**
+
 ```html
 <h3 class="text-headline-small my-title">My Title</h3>
 ```
@@ -230,6 +249,7 @@ Typography scales down on smaller screens for better readability.
 ### Migration Steps
 
 1. **Identify custom font-size declarations**
+
    ```bash
    grep -rn "font-size:" src/*.css | grep -v "typography.css"
    ```
@@ -245,6 +265,7 @@ Typography scales down on smaller screens for better readability.
    - 32px → headline-large
 
 3. **Replace with token**
+
    ```css
    /* Before */
    .card-title { font-size: 22px; }
@@ -254,6 +275,7 @@ Typography scales down on smaller screens for better readability.
    ```
 
 4. **Or use utility class**
+
    ```html
    <!-- Before -->
    <div class="card-title">Título</div>
@@ -267,16 +289,19 @@ Typography scales down on smaller screens for better readability.
 **When to keep custom sizes:**
 
 1. **Icons/Emojis:** May need optical sizing
+
    ```css
    .icon { font-size: 20px; } /* OK if not text */
    ```
 
 2. **Third-party components:** May not support tokens
+
    ```css
    .external-widget { font-size: 15px; } /* OK if unavoidable */
    ```
 
 3. **Animations:** May need intermediate values
+
    ```css
    @keyframes grow {
      from { font-size: 14px; }
@@ -314,6 +339,7 @@ When reviewing typography changes:
 ```
 
 **Benefits:**
+
 - Automatic typescale application
 - Better SEO and accessibility
 - Screen reader hierarchy
@@ -328,6 +354,7 @@ When reviewing typography changes:
 ```
 
 **Benefits:**
+
 - Flexible non-semantic layouts
 - Quick prototyping
 - Consistent across components
@@ -343,6 +370,7 @@ When reviewing typography changes:
 ```
 
 **Benefits:**
+
 - Fine-grained control
 - Component-specific styling
 - Token updates propagate automatically
@@ -375,18 +403,21 @@ When reviewing typography changes:
 ### Migration Plan
 
 **Phase 1 (This PR):**
+
 - ✅ Enhanced typography.css with complete token system
 - ✅ Added 15 utility classes (.text-display-large, etc.)
 - ✅ Added responsive scaling (mobile/small mobile)
 - ✅ Created comprehensive documentation
 
 **Phase 2 (Next PR):**
+
 - [ ] Migrate ibge-data-styles.css (20 violations)
 - [ ] Migrate highlight-cards.css (15 violations)
 - [ ] Migrate maps-actions.css (12 violations)
 - [ ] Migrate version-display.css (10 violations)
 
 **Phase 3 (Follow-up):**
+
 - [ ] Migrate remaining 8 files (60 violations)
 - [ ] Add automated linting rule (stylelint)
 - [ ] Update code review checklist
@@ -398,6 +429,7 @@ When reviewing typography changes:
 ### Example 1: IBGE Data Card
 
 **Before:**
+
 ```css
 .ibge-primary {
   font-size: 16px;  /* Violation */
@@ -413,6 +445,7 @@ When reviewing typography changes:
 ```
 
 **After:**
+
 ```css
 .ibge-primary {
   font-size: var(--md-sys-typescale-body-large);
@@ -433,6 +466,7 @@ When reviewing typography changes:
 ### Example 2: Maps Action Buttons
 
 **Before:**
+
 ```css
 .maps-action-btn {
   font-size: 14px;  /* Violation */
@@ -445,6 +479,7 @@ When reviewing typography changes:
 ```
 
 **After:**
+
 ```css
 .maps-action-btn {
   font-size: var(--md-sys-typescale-label-large);
@@ -461,6 +496,7 @@ When reviewing typography changes:
 ### Example 3: Highlight Cards
 
 **Before:**
+
 ```css
 .highlight-card-title {
   font-size: 1rem;  /* 16px, Violation */
@@ -476,6 +512,7 @@ When reviewing typography changes:
 ```
 
 **After:**
+
 ```css
 .highlight-card-title {
   font-size: var(--md-sys-typescale-title-medium);
@@ -500,6 +537,7 @@ When reviewing typography changes:
 ### Visual Regression Testing
 
 **Test scenarios:**
+
 1. Desktop (1920px): Verify all typescales render correctly
 2. Tablet (768px): Verify display/headline scale down
 3. Mobile (480px): Verify further scale reduction
@@ -508,6 +546,7 @@ When reviewing typography changes:
 ### Accessibility Testing
 
 **Screen reader tests:**
+
 ```html
 <h1>Title</h1>  <!-- Announces "Heading level 1: Title" -->
 <p class="text-headline-large">Visual Title</p>  <!-- Announces "Visual Title" -->
@@ -518,6 +557,7 @@ When reviewing typography changes:
 ### Automated Testing
 
 **Stylelint rule (future):**
+
 ```json
 {
   "declaration-property-value-no-unknown": [true, {

@@ -43,6 +43,7 @@ All three phases of the dependency overhaul have been successfully completed wit
 **Goal:** Establish Node.js version requirements for team consistency
 
 #### Actions Taken
+
 ```bash
 # Created .nvmrc file
 echo "25.2.1" > .nvmrc
@@ -55,12 +56,14 @@ echo "25.2.1" > .nvmrc
 ```
 
 #### Results
+
 - ✅ Team members can now use `nvm use` for version consistency
 - ✅ npm will warn if using incompatible Node.js version
 - ✅ CI/CD can reference exact version from .nvmrc
 - ✅ Documents minimum Node.js 18 requirement (for ES modules)
 
 #### Testing
+
 ```bash
 npm install --dry-run  # ✅ Engines field accepted
 npm test               # ✅ 1,282 tests passing
@@ -74,6 +77,7 @@ npm test               # ✅ 1,282 tests passing
 **Goal:** Resolve dependency version drift and security warnings
 
 #### Actions Taken
+
 ```bash
 # Removed old state
 rm -rf node_modules package-lock.json
@@ -97,6 +101,7 @@ npm install
 #### Security Resolution
 
 **Before:**
+
 ```
 2 vulnerabilities (1 moderate, 1 high)
 - glob 10.2.0-10.4.5 (HIGH)
@@ -104,6 +109,7 @@ npm install
 ```
 
 **After:**
+
 ```
 found 0 vulnerabilities ✅
 ```
@@ -113,6 +119,7 @@ found 0 vulnerabilities ✅
 #### Testing Validation
 
 **Automated Tests:**
+
 ```bash
 ✅ npm test
    - 1,282 tests passing (137 legitimately skipped)
@@ -127,6 +134,7 @@ found 0 vulnerabilities ✅
 ```
 
 **Manual Validation:**
+
 ```bash
 ✅ npm run validate  # Syntax check passed
 ✅ node src/app.js   # SPA initialization successful
@@ -161,6 +169,7 @@ expect(addTime).toBeLessThan(2000); // Increased threshold by 100%
 **Rationale:** Performance tests should account for CI/system load variations. The 2000ms threshold provides adequate margin while still catching genuine performance regressions.
 
 #### Results
+
 - ✅ All 1,282 tests now stable (100% pass rate)
 - ✅ No intermittent failures detected
 - ✅ Coverage maintained at 74.39%
@@ -185,6 +194,7 @@ expect(addTime).toBeLessThan(2000); // Increased threshold by 100%
 ## Dependency State After Update
 
 ### Production Dependencies
+
 ```json
 "dependencies": {
   "guia.js": "github:mpbarbosa/guia_js",     // Core geolocation library
@@ -193,6 +203,7 @@ expect(addTime).toBeLessThan(2000); // Increased threshold by 100%
 ```
 
 ### Development Dependencies
+
 ```json
 "devDependencies": {
   "eslint": "9.39.2",    // Code linting
@@ -202,6 +213,7 @@ expect(addTime).toBeLessThan(2000); // Increased threshold by 100%
 ```
 
 ### Transitive Dependencies (Key Ones)
+
 - **glob:** 7.2.3 (safe, not vulnerable 10.x)
 - **js-yaml:** 3.14.2 (patched, not vulnerable <3.14.2)
 - **babel-jest:** 30.2.0 (Jest 30 ecosystem)
@@ -304,11 +316,13 @@ The codebase contains **64 deprecated method markers** across 5 files, with Addr
 #### AddressCache.js - Primary Offender (53 methods)
 
 The AddressCache class has a complete duplicate API:
+
 - **Instance methods:** 26 public methods (actual implementation)
 - **Static wrappers:** 53 deprecated static methods (delegates to instance)
 - **Pattern:** Every instance method has a static wrapper
 
 **Example Pattern:**
+
 ```javascript
 // Instance method (actual implementation)
 generateCacheKey(data) {
@@ -342,6 +356,7 @@ const key2 = AddressCache.getInstance().generateCacheKey(data); // Instance
 ```
 
 **Impact:**
+
 - Confusion for new developers
 - Inconsistent code patterns across files
 - Maintenance burden to keep both working
@@ -350,6 +365,7 @@ const key2 = AddressCache.getInstance().generateCacheKey(data); // Instance
 #### 2. Code Bloat (Medium Impact)
 
 **Metrics:**
+
 ```
 AddressCache.js total lines: ~800
 Deprecated wrapper code: ~160 lines (20%)
@@ -358,6 +374,7 @@ Total deprecated overhead: ~425 lines (53%)
 ```
 
 **Impact:**
+
 - File size inflated by 50%+
 - Harder to navigate source code
 - Cluttered API documentation
@@ -381,6 +398,7 @@ static method() { ... }
 ```
 
 **Impact:**
+
 - Technical debt accumulates
 - No clear path to removal
 - "Temporary" becomes permanent
@@ -389,12 +407,14 @@ static method() { ... }
 #### 4. False "Backward Compatibility" (High Impact)
 
 **Reality Check:**
+
 - This is v0.9.0-alpha (pre-release)
 - No public API guarantee in alpha versions
 - No external consumers identified
 - Breaking changes are expected in alpha
 
 **Impact:**
+
 - Unnecessary burden for no benefit
 - Premature optimization
 - Violates YAGNI principle
@@ -408,6 +428,7 @@ static method() { ... }
 **Goal:** Understand current usage and plan migration.
 
 **Tasks:**
+
 - ✅ Identify all deprecated methods (64 found)
 - ✅ Analyze usage patterns (28 static calls found)
 - ✅ Document migration paths
@@ -418,12 +439,14 @@ static method() { ... }
 **Goal:** Migrate all internal code to instance methods.
 
 **Tasks:**
+
 1. Find all uses of deprecated static methods
 2. Replace with getInstance() pattern
 3. Update tests
 4. Validate no breakage
 
 **Example Migration:**
+
 ```javascript
 // BEFORE - Using deprecated static method
 const key = AddressCache.generateCacheKey(data);
@@ -434,6 +457,7 @@ const key = cache.generateCacheKey(data);
 ```
 
 **Affected Areas:**
+
 - AddressDataExtractor.js (primary user)
 - WebGeocodingManager.js (4 calls)
 - Test files (unknown count)
@@ -443,6 +467,7 @@ const key = cache.generateCacheKey(data);
 **Goal:** Make deprecated usage visible during development.
 
 **Implementation:**
+
 ```javascript
 /**
  * @deprecated Use getInstance().generateCacheKey() instead - Will be removed in v1.0.0
@@ -459,6 +484,7 @@ static generateCacheKey(data) {
 ```
 
 **Benefits:**
+
 - Runtime warnings during development
 - Clear removal timeline (v1.0.0)
 - Helps catch remaining usage
@@ -469,6 +495,7 @@ static generateCacheKey(data) {
 **Goal:** Remove all deprecated code in major version.
 
 **Tasks:**
+
 1. Verify all internal usage migrated
 2. Create migration guide for any external users
 3. Bump to v1.0.0 (breaking change)
@@ -477,6 +504,7 @@ static generateCacheKey(data) {
 6. Run full test suite
 
 **Result:**
+
 ```javascript
 // AddressCache.js - Clean API
 class AddressCache {
@@ -499,6 +527,7 @@ class AddressCache {
 ### For Internal Developers
 
 #### Step 1: Find deprecated usage
+
 ```bash
 # Search for static calls to AddressCache
 grep -rn "AddressCache\.[a-z]" src/ --include="*.js" | grep -v "getInstance"
@@ -508,6 +537,7 @@ grep -rn "@deprecated" src/
 ```
 
 #### Step 2: Replace with instance calls
+
 ```javascript
 // Pattern: Static call → Instance call
 
@@ -524,6 +554,7 @@ const changed = cache.hasLogradouroChanged();
 ```
 
 #### Step 3: Update tests
+
 ```javascript
 // BEFORE
 describe('AddressCache', () => {
@@ -571,12 +602,14 @@ cache.clearCache();
 ### Dependency Management
 
 #### Regular Maintenance
+
 - **Quarterly lockfile regeneration** to prevent drift
 - **Monthly security audits** with `npm audit`
 - **Version pinning** for production releases
 - **Semantic versioning** compliance
 
 #### Version Updates
+
 ```bash
 # Check for outdated dependencies
 npm outdated
@@ -592,6 +625,7 @@ npm test && npm run test:coverage
 ```
 
 #### Node.js Version Management
+
 ```bash
 # Use project's Node.js version
 nvm use
@@ -606,6 +640,7 @@ npm install
 ### Deprecation Management
 
 #### When to Deprecate
+
 - ✅ Public API method renamed or removed
 - ✅ Functionality moved to different class
 - ✅ Better alternative available
@@ -613,6 +648,7 @@ npm install
 - ❌ Alpha/beta versions (no public API guarantee)
 
 #### How to Deprecate Properly
+
 ```javascript
 /**
  * @deprecated Since v0.X.0 - Use newMethod() instead. Will be removed in v1.0.0
@@ -625,6 +661,7 @@ oldMethod() {
 ```
 
 #### Removal Timeline
+
 1. **v0.X.0:** Add deprecation warning
 2. **v0.X+1.0 - v0.Y.0:** Grace period (2-3 releases)
 3. **v1.0.0:** Remove deprecated code (major version)
@@ -636,6 +673,7 @@ oldMethod() {
 ### Code Size Reduction
 
 **AddressCache.js:**
+
 ```
 Current: ~800 lines
 After removal: ~375 lines (53% reduction)
@@ -647,6 +685,7 @@ Breakdown:
 ```
 
 **Overall:**
+
 - 5 files cleaned
 - ~450 lines removed
 - ~5% reduction in src/ directory size
@@ -654,6 +693,7 @@ Breakdown:
 ### API Clarity
 
 **Before (confusing):**
+
 ```javascript
 // Two ways to do everything
 AddressCache.generateCacheKey(data);  // Static
@@ -661,6 +701,7 @@ AddressCache.getInstance().generateCacheKey(data);  // Instance
 ```
 
 **After (clear):**
+
 ```javascript
 // One clear way
 const cache = AddressCache.getInstance();
@@ -758,6 +799,7 @@ cache.generateCacheKey(data);
 ## References
 
 ### Documentation
+
 - `docs/DEPENDENCY_UPDATE_ROADMAP.md` - Original 3-phase plan
 - `docs/PHASE2_TESTING_VALIDATION_REPORT.md` - Testing analysis
 - `.github/copilot-instructions.md` - Updated with Jest 30 reference
@@ -765,6 +807,7 @@ cache.generateCacheKey(data);
 - `docs/COVERAGE_POLICY.md` - Comprehensive coverage guidelines
 
 ### External Resources
+
 - [npm package.json engines](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#engines)
 - [Jest 30 Migration Guide](https://jestjs.io/docs/upgrading-to-jest30)
 - [nvm (Node Version Manager)](https://github.com/nvm-sh/nvm)

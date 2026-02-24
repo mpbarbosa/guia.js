@@ -27,13 +27,15 @@ The test suite includes **12 comprehensive tests** across two test classes:
 
 ### TestMilhoVerdeAccessibility (Accessibility Test Class)
 
-11. **test_keyboard_navigation** - Tests keyboard accessibility of interactive elements
-12. **test_aria_labels_present** - Validates ARIA labels and accessible names
+1. **test_keyboard_navigation** - Tests keyboard accessibility of interactive elements
+2. **test_aria_labels_present** - Validates ARIA labels and accessible names
 
 ## Test Features
 
 ### Geolocation Mocking
+
 Uses JavaScript injection to mock geolocation:
+
 ```python
 def _mock_geolocation(self):
     geolocation_script = f"""
@@ -78,6 +80,7 @@ def _mock_geolocation(self):
 ## Prerequisites
 
 ### System Requirements
+
 ```bash
 # Firefox browser
 sudo apt-get install firefox
@@ -88,6 +91,7 @@ sudo apt-get install firefox
 ```
 
 ### Python Dependencies
+
 ```bash
 # Use root-level virtual environment
 source ../../venv/bin/activate
@@ -99,12 +103,14 @@ pip install selenium
 ## Running the Tests
 
 ### Run All Milho Verde Tests
+
 ```bash
 cd tests/integration
 python3 test_milho_verde_geolocation.py -v
 ```
 
 ### Run Specific Test Class
+
 ```bash
 # Main geolocation tests
 python3 test_milho_verde_geolocation.py TestMilhoVerdeGeolocation -v
@@ -114,17 +120,20 @@ python3 test_milho_verde_geolocation.py TestMilhoVerdeAccessibility -v
 ```
 
 ### Run Single Test
+
 ```bash
 python3 test_milho_verde_geolocation.py TestMilhoVerdeGeolocation.test_04_address_converter_with_milho_verde_coordinates -v
 ```
 
 ### Run with Test Discovery
+
 ```bash
 cd tests/integration
 python3 -m unittest discover -s . -p "test_milho_verde*.py" -v
 ```
 
 ### Run All Integration Tests
+
 ```bash
 cd tests/integration
 ./run_tests.sh
@@ -133,35 +142,43 @@ cd tests/integration
 ## Expected Test Results
 
 When Firefox and GeckoDriver are properly configured:
+
 - All 12 tests should pass or skip gracefully
 - Tests that depend on OpenStreetMap API may take 5-10 seconds
 - Total execution time: ~60-90 seconds
 
 If Firefox/GeckoDriver is not available:
+
 - Tests will skip with message: "Firefox WebDriver not available"
 - Exit code: 0 (success with skipped tests)
 
 ## Debugging
 
 ### Enable Visual Browser (Disable Headless)
+
 In the test file, the headless mode is already commented out for debugging:
+
 ```python
 # firefox_options.add_argument("--headless")  # Already commented
 ```
 
 ### Add Breakpoints
+
 ```python
 import pdb; pdb.set_trace()  # Add before failing test
 ```
 
 ### Increase Timeouts
+
 Adjust wait timeouts for slow connections:
+
 ```python
 cls.wait_timeout = 30  # Default: 20
 cls.long_wait_timeout = 60  # Default: 30
 ```
 
 ### Check Console Logs
+
 ```python
 # Get browser console logs
 logs = self.driver.get_log('browser')
@@ -173,11 +190,13 @@ print(logs)
 The test validates the following expected data:
 
 ### Coordinates
+
 - Latitude: -18.4696091
 - Longitude: -43.4953982
 - Region: Minas Gerais bounds (lat -14 to -23, lon -39 to -51)
 
 ### Address Components
+
 - Street: Rua Direita
 - Number: 172
 - District: Milho Verde
@@ -189,6 +208,7 @@ The test validates the following expected data:
 - Reference Place: Camping Nozinho (tourism, camp_site)
 
 ### API Integration
+
 - OpenStreetMap Nominatim API for reverse geocoding
 - Response time: 3-6 seconds typical
 - Fallback: Tests validate error handling if API fails
@@ -215,13 +235,17 @@ This Selenium test complements:
 ## Common Issues
 
 ### Issue: "no firefox binary at /usr/bin/firefox"
+
 **Solution**: Install Firefox or set `FIREFOX_BIN` environment variable
+
 ```bash
 export FIREFOX_BIN=/usr/bin/firefox-esr
 ```
 
 ### Issue: "geckodriver executable needs to be in PATH"
+
 **Solution**: Selenium automatically downloads GeckoDriver, or install manually
+
 ```bash
 # Selenium will auto-download, or install manually:
 wget https://github.com/mozilla/geckodriver/releases/latest/download/geckodriver-linux64.tar.gz
@@ -230,20 +254,26 @@ sudo mv geckodriver /usr/local/bin/
 ```
 
 ### Issue: "Message: unknown error: Firefox failed to start"
+
 **Solution**: Check Firefox is installed and permissions are correct
+
 ```bash
 firefox --version
 which firefox
 ```
 
 ### Issue: Tests timeout waiting for address
+
 **Solution**: Increase timeout or check network connectivity
+
 ```python
 self.long_wait_timeout = 60  # Increase from 30
 ```
 
 ### Issue: Geolocation permission denied
+
 **Solution**: Verify Firefox preferences are set correctly
+
 ```python
 firefox_options.set_preference("geo.prompt.testing", True)
 firefox_options.set_preference("geo.prompt.testing.allow", True)

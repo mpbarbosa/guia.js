@@ -31,6 +31,7 @@ npm test
 ## Completed Phases
 
 ### ✅ Phase 1: VoiceManager (Complete)
+
 - **File**: `src/speech/VoiceManager.js` (280 lines)
 - **Commit**: ec4b86b
 - **Extracted**:
@@ -40,6 +41,7 @@ npm test
   - Resource cleanup
 
 ### ✅ Phase 2: SpeechConfiguration (Complete)
+
 - **File**: `src/speech/SpeechConfiguration.js` (227 lines)
 - **Tests**: `__tests__/unit/SpeechConfiguration.test.js` (26 tests)
 - **Commit**: 848ce55
@@ -61,6 +63,7 @@ Extract queue management logic from SpeechSynthesisManager into focused class.
 **Source**: `src/speech/SpeechSynthesisManager.js`
 
 **Key Methods** (lines 600-800 approx):
+
 - `enqueue(text, priority)` - Add item to queue
 - `processQueue()` - Process next item
 - `startQueueTimer()` - Timer management
@@ -115,6 +118,7 @@ export class SpeechQueueProcessor {
 #### Step 2: Write Unit Tests (90 min)
 
 Test categories:
+
 1. Queue operations (enqueue, dequeue) - 4 tests
 2. Priority handling (high/normal) - 3 tests
 3. Timer management - 3 tests
@@ -151,12 +155,14 @@ git commit -m "refactor(speech): extract SpeechQueueProcessor (Phase 3)
 ### Code References
 
 **Priority Constants** (existing in SpeechSynthesisManager):
+
 ```javascript
 const PRIORITY_HIGH = 'high';
 const PRIORITY_NORMAL = 'normal';
 ```
 
 **Queue Item Structure**:
+
 ```javascript
 {
     text: string,
@@ -166,6 +172,7 @@ const PRIORITY_NORMAL = 'normal';
 ```
 
 **Timer Configuration**:
+
 ```javascript
 const QUEUE_INTERVAL = 100; // ms between queue checks
 ```
@@ -173,17 +180,21 @@ const QUEUE_INTERVAL = 100; // ms between queue checks
 ### Common Issues & Solutions
 
 #### Issue 1: Timer Leaks
+
 **Solution**: Always call `stopTimer()` in destroy method
 
 #### Issue 2: Priority Sorting
+
 **Solution**: High priority items go to front, normal to back
 
 #### Issue 3: Concurrent Processing
+
 **Solution**: Use `isProcessing` flag to prevent overlaps
 
 ### Testing Strategy
 
 **Unit Test Coverage**:
+
 - ✅ Queue operations (add, remove, clear)
 - ✅ Priority handling (high vs normal)
 - ✅ Timer lifecycle (start, stop, restart)
@@ -192,6 +203,7 @@ const QUEUE_INTERVAL = 100; // ms between queue checks
 - ✅ Timer cleanup on destroy
 
 **Integration Points**:
+
 - Will integrate with SpeechController (Phase 4)
 - Will use TimerManager for centralized cleanup
 - Will notify via callback when processing
@@ -220,10 +232,12 @@ const QUEUE_INTERVAL = 100; // ms between queue checks
 ### Next: Phase 4 - SpeechController (6-8 hours)
 
 **Files to Create**:
+
 - `src/speech/SpeechController.js` (~200 lines)
 - `__tests__/unit/SpeechController.test.js` (20 tests)
 
 **Extracts**:
+
 - Speech synthesis core
 - Utterance creation
 - Event handling (onend, onerror)
@@ -231,11 +245,13 @@ const QUEUE_INTERVAL = 100; // ms between queue checks
 ### Then: Phase 5 - StateTracker + Facade (6-8 hours)
 
 **Files to Create**:
+
 - `src/speech/SpeechStateTracker.js` (~150 lines)
 - `__tests__/unit/SpeechStateTracker.test.js` (12 tests)
 - `__tests__/integration/SpeechSynthesisManager.integration.test.js` (15 tests)
 
 **Refactors**:
+
 - SpeechSynthesisManager → Facade pattern (~100 lines)
 
 ---
@@ -243,6 +259,7 @@ const QUEUE_INTERVAL = 100; // ms between queue checks
 ## Emergency Commands
 
 ### If Tests Fail
+
 ```bash
 # Check what changed
 git status
@@ -256,6 +273,7 @@ git reset --soft HEAD~1
 ```
 
 ### If Need to Pause Mid-Phase
+
 ```bash
 # Stash work in progress
 git stash save "WIP: Phase 3 SpeechQueueProcessor"
@@ -265,6 +283,7 @@ git stash pop
 ```
 
 ### If Need to Switch Branches
+
 ```bash
 # Commit WIP state
 git add .

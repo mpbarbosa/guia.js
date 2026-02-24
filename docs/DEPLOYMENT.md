@@ -5,6 +5,7 @@
 ### Build Process
 
 1. **Run production build**:
+
    ```bash
    npm run build
    ```
@@ -20,6 +21,7 @@
 The following files **MUST** be deployed to production:
 
 #### IBGE SIDRA Data (Required for Offline Functionality)
+
 - **File**: `dist/libs/sidra/tab6579_municipios.json`
 - **Purpose**: Offline fallback for Brazilian municipality population data
 - **Size**: ~190KB
@@ -64,17 +66,20 @@ curl -I https://your-domain.com/libs/sidra/tab6579_municipios.json
 #### 404 Error for libs/sidra/tab6579_municipios.json
 
 **Symptoms**:
+
 ```
 GET https://your-domain.com/libs/sidra/tab6579_municipios.json 404 (Not Found)
 ```
 
 **Causes**:
+
 1. The `dist/libs/` folder was not uploaded to production
 2. Server configuration blocking access to `.json` files
 3. File permissions incorrect on server
 4. Deployment script excluding the `libs/` directory
 
 **Solution**:
+
 1. Ensure entire `dist/` folder is deployed, including subdirectories
 2. Check server configuration allows serving `.json` files
 3. Verify file permissions: `chmod 644 dist/libs/sidra/*.json`
@@ -84,7 +89,8 @@ GET https://your-domain.com/libs/sidra/tab6579_municipios.json 404 (Not Found)
 
 **Symptoms**: `dist/libs/` folder is empty or missing after build
 
-**Solution**: 
+**Solution**:
+
 1. Verify `public/libs/` folder exists in source
 2. Check `vite.config.js` has `publicDir: '../public'`
 3. Rebuild: `npm run build`
@@ -93,12 +99,14 @@ GET https://your-domain.com/libs/sidra/tab6579_municipios.json 404 (Not Found)
 #### CORS/Network Errors for Nominatim API
 
 **Symptoms**:
+
 ```
 TypeError: Failed to fetch
 GET https://nominatim.openstreetmap.org/reverse 404/CORS error
 ```
 
 **Causes**:
+
 1. OpenStreetMap Nominatim API blocked by CORS policy
 2. Network firewall blocking external API calls
 3. Rate limiting (HTTP 429) from excessive requests
@@ -106,6 +114,7 @@ GET https://nominatim.openstreetmap.org/reverse 404/CORS error
 
 **Solution**:
 The application has **automatic CORS fallback** enabled in production:
+
 1. First attempt: Direct connection to Nominatim API
 2. On failure: Automatic retry via CORS proxy (https://api.allorigins.win)
 3. User notification if both attempts fail
@@ -116,6 +125,7 @@ If hosting your own reverse geocoding service, ensure CORS headers allow access 
 ### Server Configuration
 
 #### Apache (.htaccess)
+
 ```apache
 # Allow JSON files
 <FilesMatch "\\.json$">
@@ -130,6 +140,7 @@ If hosting your own reverse geocoding service, ensure CORS headers allow access 
 ```
 
 #### Nginx
+
 ```nginx
 location /libs/ {
     add_header Access-Control-Allow-Origin *;
@@ -142,6 +153,7 @@ location /libs/ {
 ### Vite Build Configuration
 
 The build process (via `vite.config.js`) automatically:
+
 - Copies `public/libs/` to `dist/libs/`
 - Minifies JavaScript with Terser
 - Generates source maps
@@ -167,6 +179,7 @@ curl -I http://localhost:9001/libs/sidra/tab6579_municipios.json
 ### CDN Deployment (Optional)
 
 If using a CDN (e.g., jsDelivr, Cloudflare), ensure:
+
 1. The `libs/` folder is included in CDN distribution
 2. JSON files have correct MIME types
 3. CORS headers allow cross-origin requests
@@ -208,11 +221,13 @@ If these errors appear, the deployment is incomplete.
 ```
 
 If you see `"CORS proxy fallback also failed"`, check:
+
 1. Network connectivity from production server
 2. Firewall rules blocking external API calls
 3. SSL/TLS certificate issues
 
 **Performance Monitoring**:
+
 - Monitor CORS fallback frequency (should decrease over time)
 - Track geocoding success rate (should be >95%)
 - Watch for rate limiting errors (HTTP 429)

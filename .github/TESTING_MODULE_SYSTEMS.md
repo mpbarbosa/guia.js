@@ -43,6 +43,7 @@ import { MyClass } from '../../src/guia.js';
 ### What's Happening
 
 **Before module splitting:**
+
 ```javascript
 // guia.js - Single file, no imports
 class MyClass { }
@@ -53,6 +54,7 @@ const { MyClass } = require('./guia.js'); // ✅ Works
 ```
 
 **After module splitting:**
+
 ```javascript
 // guia.js - Now imports from other modules
 import { helper } from './utils/helper.js'; // ES6 import
@@ -84,17 +86,20 @@ const { MyClass } = require('./guia.js'); // ❌ Fails
 **Migrate tests to ES6 modules**
 
 **Pros:**
+
 - ✅ Matches source code (ES6 everywhere)
 - ✅ No transpilation needed
 - ✅ Future-proof
 - ✅ Tests real code
 
 **Cons:**
+
 - ⚠️ Requires `--experimental-vm-modules` flag
 - ⚠️ Slightly slower than CommonJS
 - ⚠️ Must update all test files
 
 **Implementation:**
+
 ```json
 // package.json
 {
@@ -127,17 +132,20 @@ describe('MyClass', () => {
 **Use Babel to transpile ES6 to CommonJS for tests**
 
 **Pros:**
+
 - ✅ Stable, production-ready
 - ✅ Full Jest compatibility
 - ✅ Fast execution
 - ✅ No experimental flags
 
 **Cons:**
+
 - ❌ Requires build step
 - ❌ Tests run transpiled code
 - ❌ Extra dependency
 
 **Implementation:**
+
 ```bash
 npm install --save-dev @babel/core @babel/preset-env babel-jest
 ```
@@ -168,17 +176,20 @@ npm install --save-dev @babel/core @babel/preset-env babel-jest
 **Source files export both ES6 and CommonJS**
 
 **Pros:**
+
 - ✅ Works with both systems
 - ✅ No Jest config changes
 - ✅ Backward compatible
 
 **Cons:**
+
 - ❌ Pollutes source code
 - ❌ Can't use `import` in source files
 - ❌ Not true ES6 modules
 - ❌ Maintenance burden
 
 **Implementation:**
+
 ```javascript
 // src/module.js
 export const myFunction = () => { };
@@ -205,9 +216,11 @@ if (typeof module !== 'undefined') {
 ### Phase 2: Configure Jest (5 min)
 
 - [ ] Update `package.json` test script:
+
   ```json
   "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   ```
+
 - [ ] Update other test scripts (watch, coverage)
 - [ ] Set `"transform": {}` in Jest config
 - [ ] Run tests to verify new errors
@@ -217,21 +230,28 @@ if (typeof module !== 'undefined') {
 For each test file:
 
 - [ ] Add Jest globals import:
+
   ```javascript
   import { describe, test, expect, jest } from '@jest/globals';
   ```
+
 - [ ] Replace `require()` with `import`:
+
   ```javascript
   // Before: const { MyClass } = require('../../src/guia.js');
   // After:  import { MyClass } from '../../src/guia.js';
   ```
+
 - [ ] Replace `eval()` patterns with `import`:
+
   ```javascript
   // Before: const code = fs.readFileSync(...); eval(code);
   // After:  import { MyClass } from '../../src/guia.js';
   ```
+
 - [ ] Add `.js` extensions to all imports
 - [ ] Handle async imports if needed:
+
   ```javascript
   const module = await import('../../src/guia.js');
   ```
@@ -330,6 +350,7 @@ global.myGlobal = config;
 **Cause:** Jest trying to `require()` an ES6 module
 
 **Fix:**
+
 ```json
 // package.json - Add experimental flag
 {
@@ -344,6 +365,7 @@ global.myGlobal = config;
 **Cause:** Jest globals not available in ESM mode
 
 **Fix:**
+
 ```javascript
 // Add to every test file
 import { describe, test, expect, jest } from '@jest/globals';
@@ -354,6 +376,7 @@ import { describe, test, expect, jest } from '@jest/globals';
 **Cause:** Missing `.js` extension
 
 **Fix:**
+
 ```javascript
 // ❌ import { helper } from './helper';
 // ✅ import { helper } from './helper.js';
@@ -364,6 +387,7 @@ import { describe, test, expect, jest } from '@jest/globals';
 **Cause:** Using `require()` on ES6 module
 
 **Fix:**
+
 ```javascript
 // Change from require to import
 // ❌ const module = require('./module.js');
@@ -545,18 +569,21 @@ Improvements:
 ### Benefits
 
 **Code Quality:**
+
 - ✅ Consistent module system (ES6 everywhere)
 - ✅ Modern JavaScript practices
 - ✅ Better static analysis
 - ✅ Future-proof codebase
 
 **Developer Experience:**
+
 - ✅ Clear import patterns
 - ✅ Better IDE support
 - ✅ Easier debugging
 - ✅ Less confusion
 
 **Testing:**
+
 - ✅ Tests match production code
 - ✅ True integration testing
 - ✅ No transpilation overhead
@@ -567,6 +594,7 @@ Improvements:
 ## Quick Commands
 
 ### Run Tests
+
 ```bash
 # All tests
 npm test
@@ -585,6 +613,7 @@ npm test -- --verbose
 ```
 
 ### Validate Syntax
+
 ```bash
 # Check source files
 node -c src/guia.js
@@ -595,6 +624,7 @@ find src -name "*.js" -exec node -c {} \;
 ```
 
 ### Debug Tests
+
 ```bash
 # Node inspector
 node --inspect --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand
@@ -608,6 +638,7 @@ node --inspect --experimental-vm-modules node_modules/jest/bin/jest.js --runInBa
 ## Related Documentation
 
 ### Guia.js Docs
+
 - [📖 JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) - Complete guide
 - [📖 MODULE_SPLITTING_GUIDE.md](../docs/MODULE_SPLITTING_GUIDE.md) - Module splitting
 - [📖 MODULE_SPLITTING_SUMMARY.md](../docs/MODULE_SPLITTING_SUMMARY.md) - Implementation summary
@@ -615,6 +646,7 @@ node --inspect --experimental-vm-modules node_modules/jest/bin/jest.js --runInBa
 - [📖 REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) - Pure functions
 
 ### External Resources
+
 - [Jest ESM Docs](https://jestjs.io/docs/ecmascript-modules)
 - [Node.js ESM Docs](https://nodejs.org/api/esm.html)
 - [MDN: JavaScript Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
@@ -636,18 +668,21 @@ node --inspect --experimental-vm-modules node_modules/jest/bin/jest.js --runInBa
 ### Action Items
 
 **For Maintainers:**
+
 1. Review this guide
 2. Approve migration strategy
 3. Allocate 1-2 days for migration
 4. Update CI/CD with new test command
 
 **For Contributors:**
+
 1. Use ES6 imports in new tests
 2. Don't use `require()` or `eval()`
 3. Include `.js` extensions
 4. Follow test template above
 
 **For GitHub Copilot:**
+
 1. Generate ES6 test files
 2. Use template from this guide
 3. Avoid CommonJS patterns
@@ -661,6 +696,7 @@ node --inspect --experimental-vm-modules node_modules/jest/bin/jest.js --runInBa
 **Status:** Active
 
 **Related Issues:**
+
 - Module system mismatch causing test failures
 - Need for clear testing guidelines
 - ES6 migration strategy

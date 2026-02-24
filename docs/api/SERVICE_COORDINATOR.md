@@ -13,6 +13,7 @@ ServiceCoordinator manages the lifecycle of services, observers, and displayers 
 **Single Responsibility**: Service coordination and lifecycle management
 
 ### Key Features
+
 - ✅ Service lifecycle management (start, stop, cleanup)
 - ✅ Observer pattern wiring and subscription management
 - ✅ Displayer creation and initialization
@@ -21,6 +22,7 @@ ServiceCoordinator manages the lifecycle of services, observers, and displayers 
 - ✅ Centralized logging and error handling
 
 ### Design Principles
+
 - **Separation of Concerns**: Isolates service coordination from UI and events
 - **Dependency Injection**: Receives all services via constructor
 - **Observer Pattern**: Manages observer subscriptions centrally
@@ -47,6 +49,7 @@ class ServiceCoordinator {
 ## Constructor
 
 ### Syntax
+
 ```javascript
 new ServiceCoordinator(params)
 ```
@@ -63,9 +66,11 @@ new ServiceCoordinator(params)
 | `params.displayerFactory` | `Object` | ✅ | Factory for creating displayers |
 
 ### Throws
+
 - `TypeError` - If any required parameter is missing
 
 ### Example
+
 ```javascript
 import ServiceCoordinator from './coordination/ServiceCoordinator.js';
 import GeolocationService from './services/GeolocationService.js';
@@ -92,11 +97,13 @@ const coordinator = new ServiceCoordinator({
 Creates and initializes all display components.
 
 #### Syntax
+
 ```javascript
 coordinator.createDisplayers(locationResult, addressDisplay, referenceDisplay, highlightCardsDisplay, sidraDisplay)
 ```
 
 #### Parameters
+
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `locationResult` | `HTMLElement` | ✅ | Container for position display |
@@ -106,9 +113,11 @@ coordinator.createDisplayers(locationResult, addressDisplay, referenceDisplay, h
 | `sidraDisplay` | `HTMLElement` | ✅ | Container for IBGE SIDRA demographic data |
 
 #### Returns
+
 `void`
 
 #### Example
+
 ```javascript
 const locationResult = document.getElementById('location-result');
 const addressDisplay = document.getElementById('address-display');
@@ -132,15 +141,19 @@ coordinator.createDisplayers(
 Wires up observer pattern subscriptions between services and displayers.
 
 #### Syntax
+
 ```javascript
 coordinator.wireObservers()
 ```
 
 #### Returns
+
 `void`
 
 #### Description
+
 Connects observers to subjects for:
+
 - Position updates → Position displayer
 - Address updates → Address displayer
 - Reference place updates → Reference place displayer
@@ -148,6 +161,7 @@ Connects observers to subjects for:
 - IBGE data updates → SIDRA displayer
 
 #### Example
+
 ```javascript
 // After creating displayers
 coordinator.wireObservers();
@@ -162,20 +176,24 @@ coordinator.wireObservers();
 Starts geolocation tracking with current position and continuous updates.
 
 #### Syntax
+
 ```javascript
 coordinator.startTracking()
 ```
 
 #### Returns
+
 `Promise<void>`
 
 #### Description
+
 1. Requests current position from GeolocationService
 2. Initiates continuous position watching
 3. Triggers reverse geocoding for address lookup
 4. Updates PositionManager with new positions
 
 #### Example
+
 ```javascript
 try {
   await coordinator.startTracking();
@@ -192,19 +210,23 @@ try {
 Stops all geolocation tracking and clears resources.
 
 #### Syntax
+
 ```javascript
 coordinator.stopTracking()
 ```
 
 #### Returns
+
 `void`
 
 #### Description
+
 - Stops geolocation watching
 - Clears any pending operations
 - Does not remove observers (use `cleanup()` for full teardown)
 
 #### Example
+
 ```javascript
 coordinator.stopTracking();
 console.log('Tracking stopped');
@@ -217,15 +239,19 @@ console.log('Tracking stopped');
 Performs complete cleanup of all services and observers.
 
 #### Syntax
+
 ```javascript
 coordinator.cleanup()
 ```
 
 #### Returns
+
 `void`
 
 #### Description
+
 Comprehensive cleanup including:
+
 - Stopping geolocation tracking
 - Clearing all observer subscriptions
 - Cleaning up displayers
@@ -234,6 +260,7 @@ Comprehensive cleanup including:
 **⚠️ Important**: Call this when disposing of the coordinator to prevent memory leaks.
 
 #### Example
+
 ```javascript
 // When shutting down the application
 coordinator.cleanup();
@@ -244,7 +271,9 @@ coordinator.cleanup();
 ## Architecture Integration
 
 ### Coordination Layer
+
 ServiceCoordinator is part of the coordination layer alongside:
+
 - **EventCoordinator** - Handles DOM events
 - **UICoordinator** - Manages UI state
 - **SpeechCoordinator** - Coordinates text-to-speech
@@ -252,15 +281,18 @@ ServiceCoordinator is part of the coordination layer alongside:
 ### Dependencies
 
 **Required Services**:
+
 - `GeolocationService` - Browser geolocation API wrapper
 - `ReverseGeocoder` - Address lookup via Nominatim API
 - `ChangeDetectionCoordinator` - Significant location change detection
 
 **Core Components**:
+
 - `PositionManager` - Singleton for current position state
 - `ObserverSubject` - Observer pattern implementation
 
 **Displayers** (via DisplayerFactory):
+
 - `HTMLPositionDisplayer` - Coordinate display
 - `HTMLAddressDisplayer` - Address rendering
 - `HTMLReferencePlaceDisplayer` - Reference location display
@@ -272,6 +304,7 @@ ServiceCoordinator is part of the coordination layer alongside:
 ## Usage Patterns
 
 ### Basic Setup
+
 ```javascript
 // 1. Create services
 const geolocationService = new GeolocationService();
@@ -311,6 +344,7 @@ await serviceCoordinator.startTracking();
 ```
 
 ### Cleanup Pattern
+
 ```javascript
 // Always cleanup when done
 window.addEventListener('beforeunload', () => {
@@ -329,6 +363,7 @@ function navigateAway() {
 ## Error Handling
 
 ### Constructor Errors
+
 ```javascript
 try {
   const coordinator = new ServiceCoordinator({
@@ -341,6 +376,7 @@ try {
 ```
 
 ### Tracking Errors
+
 ```javascript
 try {
   await coordinator.startTracking();
@@ -363,12 +399,14 @@ try {
 ## Best Practices
 
 ### ✅ Do
+
 - Always call `createDisplayers()` before `wireObservers()`
 - Call `cleanup()` when disposing of the coordinator
 - Handle tracking errors with try-catch
 - Use dependency injection for all services
 
 ### ❌ Don't
+
 - Don't create multiple ServiceCoordinator instances
 - Don't forget to cleanup before navigation
 - Don't start tracking without creating displayers first

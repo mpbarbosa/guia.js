@@ -11,6 +11,7 @@ ReverseGeocoder is a service layer component responsible for converting geograph
 ### Purpose and Responsibility
 
 The service handles:
+
 - Coordinate-to-address conversion via OpenStreetMap Nominatim API
 - Brazilian address standardization and formatting
 - Observer pattern notifications for reactive UI updates
@@ -40,6 +41,7 @@ import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 ### External Dependencies
 
 The class expects these to be injected or set externally:
+
 - `fetchManager` (IbiraAPIFetchManager or fallback fetch)
 - `AddressDataExtractor` (set via property assignment)
 
@@ -87,26 +89,31 @@ const geocoder = new ReverseGeocoder(mockFetchManager);
 Sets coordinates for reverse geocoding operations.
 
 **Signature:**
+
 ```javascript
 setCoordinates(latitude: number, longitude: number): void
 ```
 
 **Parameters:**
+
 - `latitude` (number): Latitude coordinate in decimal degrees
 - `longitude` (number): Longitude coordinate in decimal degrees
 
 **Example:**
+
 ```javascript
 geocoder.setCoordinates(-23.550520, -46.633309); // São Paulo, Brazil
 ```
 
 **Side Effects:**
+
 - Generates OpenStreetMap Nominatim API URL
 - Resets internal state (`data`, `error`, `loading`, `lastFetch`)
 - Stores coordinates for subsequent geocoding operations
 
 **Validation:**
 The method validates coordinates and ignores invalid values:
+
 ```javascript
 if (!latitude || !longitude) {
   return; // Silently ignore invalid coordinates
@@ -120,17 +127,21 @@ if (!latitude || !longitude) {
 Fetches address data using reverse geocoding and notifies observers.
 
 **Signature:**
+
 ```javascript
 async fetchAddress(): Promise<Object>
 ```
 
 **Returns:**
+
 - `Promise<Object>`: Nominatim address data object (see structure below)
 
 **Throws:**
+
 - `Error`: If coordinates are invalid or geocoding fails
 
 **Example:**
+
 ```javascript
 try {
   const addressData = await geocoder.fetchAddress();
@@ -143,6 +154,7 @@ try {
 ```
 
 **Nominatim Response Structure:**
+
 ```javascript
 {
   place_id: 12345,
@@ -169,6 +181,7 @@ try {
 
 **Observer Notifications:**
 After successful fetch, the method notifies all subscribed observers:
+
 ```javascript
 this.notifyObservers(
   this.currentAddress,        // Raw Nominatim data
@@ -186,18 +199,22 @@ this.notifyObservers(
 Performs reverse geocoding to convert coordinates into address.
 
 **Signature:**
+
 ```javascript
 async reverseGeocode(): Promise<Object>
 ```
 
 **Returns:**
+
 - `Promise<Object>`: Geocoded address data from OpenStreetMap
 
 **Throws:**
+
 - `Error`: "Invalid coordinates" if latitude or longitude are missing
 - `Error`: Network errors, HTTP errors, or JSON parsing errors from fetch
 
 **Example:**
+
 ```javascript
 // Basic reverse geocoding
 const geocoder = new ReverseGeocoder(fetchManager);
@@ -218,6 +235,7 @@ geocoder.reverseGeocode()
 
 **Fetch Manager Fallback:**
 If `fetchManager` is not available, the method falls back to browser's native `fetch()`:
+
 ```javascript
 if (!this.fetchManager) {
   const response = await fetch(this.url);
@@ -229,6 +247,7 @@ if (!this.fetchManager) {
 ```
 
 **Performance:**
+
 - Uses configured fetch manager with built-in caching
 - Generates cache key based on coordinates
 - Avoids redundant API calls for same locations
@@ -240,14 +259,17 @@ if (!this.fetchManager) {
 Generates unique cache key for geocoded results.
 
 **Signature:**
+
 ```javascript
 getCacheKey(): string
 ```
 
 **Returns:**
+
 - `string`: Unique cache key based on latitude and longitude
 
 **Example:**
+
 ```javascript
 geocoder.setCoordinates(-23.550520, -46.633309);
 const key = geocoder.getCacheKey();
@@ -256,6 +278,7 @@ console.log(key); // "-23.55052,-46.633309"
 
 **Use Case:**
 Used internally and by caching systems to identify unique coordinate pairs:
+
 ```javascript
 const cache = new Map();
 const key = geocoder.getCacheKey();
@@ -271,6 +294,7 @@ if (cache.has(key)) {
 Observer pattern update method for PositionManager notifications.
 
 **Signature:**
+
 ```javascript
 update(
   positionManager: PositionManager,
@@ -281,12 +305,14 @@ update(
 ```
 
 **Parameters:**
+
 - `positionManager` (PositionManager): PositionManager instance with current position
 - `posEvent` (string): Position event type (strCurrPosUpdate, strCurrPosNotUpdate, etc.)
 - `loading` (Object): Loading state information
 - `error` (Object): Error information if any
 
 **Example:**
+
 ```javascript
 // Automatic integration via PositionManager observer pattern
 const positionManager = PositionManager.getInstance();
@@ -300,6 +326,7 @@ positionManager.subscribe(geocoder);
 ```
 
 **Event-Driven Flow:**
+
 ```
 Position Update → PositionManager → ReverseGeocoder.update()
   → reverseGeocode() → notifyObservers() → UI Components
@@ -307,6 +334,7 @@ Position Update → PositionManager → ReverseGeocoder.update()
 
 **Brazilian Address Processing:**
 The method automatically converts raw Nominatim data to Brazilian standard format:
+
 ```javascript
 if (this.AddressDataExtractor) {
   this.enderecoPadronizado = this.AddressDataExtractor.getBrazilianStandardAddress(addressData);
@@ -323,14 +351,17 @@ if (this.AddressDataExtractor) {
 Subscribes an observer to address update notifications.
 
 **Signature:**
+
 ```javascript
 subscribe(observer: Object): void
 ```
 
 **Parameters:**
+
 - `observer` (Object): Observer with `update()` method
 
 **Example:**
+
 ```javascript
 const myObserver = {
   update(addressData, enderecoPadronizado, event, loading, error) {
@@ -349,11 +380,13 @@ geocoder.subscribe(myObserver);
 Unsubscribes an observer from address update notifications.
 
 **Signature:**
+
 ```javascript
 unsubscribe(observer: Object): void
 ```
 
 **Example:**
+
 ```javascript
 geocoder.unsubscribe(myObserver);
 ```
@@ -365,14 +398,17 @@ geocoder.unsubscribe(myObserver);
 Notifies all subscribed observers of address changes.
 
 **Signature:**
+
 ```javascript
 notifyObservers(...args): void
 ```
 
 **Parameters:**
+
 - `args` (Array): Arguments passed to observer `update()` methods
 
 **Standard Notification Signature:**
+
 ```javascript
 notifyObservers(
   currentAddress,        // Raw Nominatim data
@@ -384,6 +420,7 @@ notifyObservers(
 ```
 
 **Example:**
+
 ```javascript
 // Manual notification (normally done automatically)
 geocoder.notifyObservers(
@@ -402,14 +439,17 @@ geocoder.notifyObservers(
 Returns a string representation of the ReverseGeocoder instance.
 
 **Signature:**
+
 ```javascript
 toString(): string
 ```
 
 **Returns:**
+
 - `string`: Formatted string with class name and coordinates
 
 **Example:**
+
 ```javascript
 const geocoder = new ReverseGeocoder(fetchManager);
 geocoder.setCoordinates(-23.5505, -46.6333);
@@ -480,6 +520,7 @@ try {
 ### Observer Error Notifications
 
 When geocoding fails, observers are notified with error information:
+
 ```javascript
 this.notifyObservers(
   null,              // No address data
@@ -495,6 +536,7 @@ this.notifyObservers(
 ### API Endpoint
 
 Default endpoint:
+
 ```
 https://nominatim.openstreetmap.org/reverse?format=json
 ```
@@ -502,11 +544,13 @@ https://nominatim.openstreetmap.org/reverse?format=json
 ### API Request
 
 Generated URL format:
+
 ```
 https://nominatim.openstreetmap.org/reverse?format=json&lat={latitude}&lon={longitude}&zoom=18&addressdetails=1
 ```
 
 **Parameters:**
+
 - `format=json`: Response format
 - `lat={latitude}`: Latitude coordinate
 - `lon={longitude}`: Longitude coordinate  
@@ -541,6 +585,7 @@ https://nominatim.openstreetmap.org/reverse?format=json&lat={latitude}&lon={long
 ### Rate Limiting
 
 **Nominatim Usage Policy:**
+
 - Maximum 1 request per second
 - Must include valid User-Agent header
 - Implement caching to reduce requests
@@ -552,6 +597,7 @@ The `IbiraAPIFetchManager` handles rate limiting and caching automatically.
 ### Attribution
 
 OpenStreetMap data is © OpenStreetMap contributors, ODbL 1.0:
+
 - Must display attribution in your application
 - See: https://www.openstreetmap.org/copyright
 
@@ -590,6 +636,7 @@ console.log(geocoder.enderecoPadronizado);   // Brazilian format
 ### Portuguese Language Support
 
 The standardized format uses Portuguese terminology:
+
 - **logradouro**: Street name (road, avenue, etc.)
 - **bairro**: Neighborhood (suburb, district)
 - **município**: Municipality (city)
@@ -686,6 +733,7 @@ const key = geocoder.getCacheKey(); // "-23.55052,-46.633309"
 ### Coordinate Precision
 
 Optimize by rounding coordinates for cache hits:
+
 ```javascript
 const roundedLat = Math.round(lat * 10000) / 10000;  // 4 decimal places
 const roundedLon = Math.round(lon * 10000) / 10000;
@@ -697,6 +745,7 @@ geocoder.setCoordinates(roundedLat, roundedLon);
 ### Debouncing
 
 Prevent excessive geocoding during continuous position updates:
+
 ```javascript
 let geocodeTimeout;
 function debouncedGeocode(lat, lon) {
@@ -775,6 +824,7 @@ expect(testObserver.update).toHaveBeenCalledWith(
 ## Change Log
 
 ### v0.9.0-alpha
+
 - Extracted from `guia.js` in Phase 2 modularization
 - Enhanced observer pattern integration
 - Improved error handling and validation
@@ -783,6 +833,7 @@ expect(testObserver.update).toHaveBeenCalledWith(
 - Enhanced documentation with comprehensive examples
 
 ### v0.9.0-alpha
+
 - Initial version with OpenStreetMap Nominatim integration
 - Brazilian address standardization support
 - Observer pattern implementation for reactive updates

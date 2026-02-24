@@ -9,11 +9,13 @@
 ### Finding Documentation
 
 **Main Entry Points**:
+
 1. **`docs/README.md`** - Documentation hub with quick links (NEW ✨)
 2. **`docs/INDEX.md`** - Comprehensive categorized index
 3. **Project `README.md`** - Project overview and installation
 
 **Navigation Path**:
+
 ```
 Project Root (README.md)
   ├── docs/README.md (Documentation Hub) ← NEW!
@@ -47,6 +49,7 @@ Project Root (README.md)
 ## 📋 Metadata Format
 
 ### Standard Block
+
 ```markdown
 # Document Title
 
@@ -63,6 +66,7 @@ Content starts here...
 ### Quick Templates
 
 **Minimal** (Required only):
+
 ```markdown
 ---
 Last Updated: 2026-01-28
@@ -71,6 +75,7 @@ Status: Active
 ```
 
 **Complete** (All fields):
+
 ```markdown
 ---
 Last Updated: 2026-01-28
@@ -87,16 +92,19 @@ Related: [Link](./path.md)
 ### By Role
 
 **New Contributor**:
+
 ```
 README.md → docs/README.md → CONTRIBUTING.md → TDD_GUIDE.md
 ```
 
 **Developer**:
+
 ```
 docs/README.md → PROJECT_PURPOSE_AND_ARCHITECTURE.md → VIEWS_LAYER.md
 ```
 
 **Tester**:
+
 ```
 docs/README.md → testing/TEST_STRATEGY.md → TEST_INFRASTRUCTURE.md
 ```
@@ -114,33 +122,39 @@ docs/README.md → testing/TEST_STRATEGY.md → TEST_INFRASTRUCTURE.md
 ### By Status
 
 **Active Docs**: Current, maintained
+
 - Most docs in `docs/architecture/`
 - All guides in `docs/testing/`
 - Integration docs in `docs/api-integration/`
 
 **Draft Docs**: Work in progress
+
 - Check metadata: `Status: Draft`
 - Often in `docs/reports/` during analysis
 
 **Deprecated Docs**: Outdated but kept for reference
+
 - Check metadata: `Status: Deprecated`
 - Usually includes migration path
 
 ## 🛠️ Maintenance Tasks
 
 ### Daily
+
 ```bash
 # Before committing doc changes
 .github/scripts/update-doc-metadata.sh docs/YOUR_FILE.md
 ```
 
 ### Weekly
+
 ```bash
 # Check for broken references
 python3 .github/scripts/check-references.py
 ```
 
 ### Monthly
+
 ```bash
 # Update all recently modified docs
 find docs -name "*.md" -mtime -30 -exec \
@@ -148,6 +162,7 @@ find docs -name "*.md" -mtime -30 -exec \
 ```
 
 ### Before Release
+
 ```bash
 # Update all docs with new version
 .github/scripts/update-doc-metadata.sh --all --recursive
@@ -164,6 +179,7 @@ python3 .github/scripts/check-references.py
 **Location**: `docs/README.md` (bottom of file)
 
 Current stats:
+
 - Total files: 312+ markdown files
 - Categories: 12 subdirectories
 - Active docs: ~280
@@ -172,6 +188,7 @@ Current stats:
 ## 🔗 Related Tools
 
 ### Reference Checking
+
 ```bash
 # Check all references
 python3 .github/scripts/check-references.py
@@ -181,12 +198,14 @@ python3 .github/scripts/check-references.py docs/TESTING.md
 ```
 
 ### Version Consistency
+
 ```bash
 # Check version across files
 .github/scripts/check-version-consistency.sh
 ```
 
 ### Link Validation
+
 ```bash
 # Check markdown links
 python3 .github/scripts/check-links.py
@@ -197,6 +216,7 @@ python3 .github/scripts/check-links.py
 ### When to Update Metadata
 
 **Do Update**:
+
 - ✅ Significant content changes
 - ✅ New sections added
 - ✅ Code examples updated
@@ -204,6 +224,7 @@ python3 .github/scripts/check-links.py
 - ✅ Status changes (Draft → Active)
 
 **Don't Update For**:
+
 - ❌ Typo fixes
 - ❌ Minor wording
 - ❌ Formatting only
@@ -221,6 +242,7 @@ python3 .github/scripts/check-links.py
 ## 🎯 Common Workflows
 
 ### Creating New Doc
+
 1. Copy template from `docs/guides/DOCUMENTATION_METADATA_TEMPLATE.md`
 2. Add metadata block after title
 3. Write content
@@ -228,12 +250,14 @@ python3 .github/scripts/check-links.py
 5. Check references: `python3 .github/scripts/check-references.py`
 
 ### Updating Existing Doc
+
 1. Make content changes
 2. Update metadata: `.github/scripts/update-doc-metadata.sh YOUR_FILE.md`
 3. Verify references: `python3 .github/scripts/check-references.py`
 4. Commit with descriptive message
 
 ### Deprecating Doc
+
 1. Update Status: `Deprecated`
 2. Add deprecation notice at top
 3. Link to replacement doc
@@ -241,6 +265,7 @@ python3 .github/scripts/check-links.py
 5. Keep file for reference (don't delete)
 
 ### Archiving Doc
+
 1. Update Status: `Archived`
 2. Add archival notice
 3. Move to appropriate archive location (if needed)
@@ -256,6 +281,7 @@ python3 .github/scripts/check-links.py
 ---
 
 **Quick Links**:
+
 - [Documentation Hub](../README.md)
 - [Full Index](../INDEX.md)
 - [Metadata Template](./DOCUMENTATION_METADATA_TEMPLATE.md)

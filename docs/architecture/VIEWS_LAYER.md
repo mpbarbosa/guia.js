@@ -22,6 +22,7 @@ The views layer contains JavaScript modules that control individual pages (route
 **File Size**: ~24KB  
 
 **Responsibilities**:
+
 - Initialize geolocation tracking
 - Coordinate all display components (position, address, cards, SIDRA)
 - Handle "Get Location" button interactions
@@ -29,6 +30,7 @@ The views layer contains JavaScript modules that control individual pages (route
 - Speech synthesis for location changes
 
 **Key Components**:
+
 ```javascript
 import WebGeocodingManager from '../coordination/WebGeocodingManager.js';
 import ServiceCoordinator from '../coordination/ServiceCoordinator.js';
@@ -47,12 +49,14 @@ export function initHome() {
 **File Size**: ~19KB  
 
 **Responsibilities**:
+
 - Manual coordinate input form
 - One-time geocoding requests
 - Address display without tracking
 - Standalone utility interface
 
 **Key Components**:
+
 ```javascript
 import ReverseGeocoder from '../services/ReverseGeocoder.js';
 import HTMLAddressDisplayer from '../html/HTMLAddressDisplayer.js';

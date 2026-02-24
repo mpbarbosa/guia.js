@@ -11,6 +11,7 @@
 ### Added
 
 #### New CSS Module
+
 - **src/location-highlights.css** (5.1 KB, 206 lines)
   - Prominent blue gradient cards for município and bairro
   - Large headline typography (24-32px responsive)
@@ -20,6 +21,7 @@
   - Complete accessibility support
 
 #### New Test Suite
+
 - **tests/integration/test_visual_hierarchy.py** (17.9 KB, 12 test cases)
   - Visual size comparison tests
   - Color and prominence validation
@@ -31,6 +33,7 @@
   - Contrast ratio testing
 
 #### New Documentation
+
 - **docs/VISUAL_HIERARCHY.md** (8.0 KB)
   - Complete implementation guide
   - Before/after comparison diagrams
@@ -56,6 +59,7 @@
 ### Changed
 
 #### Files Modified
+
 - **src/views/home.js**
   - Added `location-highlights.css` to styles array
   - No breaking changes to HTML structure
@@ -72,6 +76,7 @@
 ### Visual Changes
 
 #### Location Cards (Before → After)
+
 ```
 BEFORE:
 ┌─────────────────────┐
@@ -90,6 +95,7 @@ AFTER:
 ```
 
 #### Action Buttons (Before → After)
+
 ```
 BEFORE:
 ┌─────────────────────┐
@@ -107,6 +113,7 @@ AFTER:
 ### Technical Details
 
 #### CSS Architecture
+
 - **Mobile-first responsive design**
   - Mobile (< 600px): Single column, 24px text
   - Tablet (600-899px): Two columns, 28px text
@@ -129,6 +136,7 @@ AFTER:
   - Reduced motion support
 
 #### Performance
+
 - **Load time**: < 10ms (async loaded after critical CSS)
 - **File size**: 5.1 KB unminified (estimated 3.2 KB minified)
 - **Layout stability**: CLS = 0 (no layout shifts)
@@ -136,6 +144,7 @@ AFTER:
 - **GPU acceleration**: Transform-based animations
 
 #### Browser Support
+
 - ✅ Chrome 90+
 - ✅ Firefox 88+
 - ✅ Safari 14+
@@ -145,6 +154,7 @@ AFTER:
 ### Testing
 
 #### Automated Tests
+
 - 12 Selenium test cases
 - Tests for size, color, typography, responsiveness
 - Accessibility validation
@@ -152,6 +162,7 @@ AFTER:
 - Cross-browser compatible (Firefox/Chrome)
 
 #### Manual Tests
+
 - 12-step manual verification checklist
 - Visual comparison guide
 - Accessibility audit
@@ -173,6 +184,7 @@ AFTER:
 ### Future Enhancements
 
 Potential improvements for future versions:
+
 - [ ] Reveal animation when location updates
 - [ ] Dark mode support
 - [ ] User-customizable accent colors

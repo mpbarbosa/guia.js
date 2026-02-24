@@ -9,6 +9,7 @@
 **Finding**: Documentation is **outdated**, not test runner malfunction. Test suite has grown, and there are currently **6 failing tests** that need attention.
 
 **Actual vs Documented**:
+
 - Tests: **1,558 passing** (actual) vs 1,516 (documented) = **+42 tests**
 - Total: **1,701 tests** (actual) vs 1,653 (documented) = **+48 tests**
 - Suites: **77 total** (actual) vs 68 (documented) = **+9 suites**
@@ -53,10 +54,12 @@ Time:        6.21 s
 ### 2. Test Suite Growth ✅
 
 **New tests added** (+48 tests across +9 suites):
+
 - Suite growth: 68 → 77 (+9 suites, +13% growth)
 - Test growth: 1,653 → 1,701 (+48 tests, +3% growth)
 
 **Likely additions**:
+
 - Integration tests
 - New feature coverage
 - Edge case testing
@@ -77,6 +80,7 @@ Time:        6.21 s
 **Failure Count**: 2 tests
 
 **Error 1** (Line 366):
+
 ```javascript
 expect(mockElement.innerHTML).toContain('-18.469609');
 // Expected substring: "-18.469609"
@@ -84,6 +88,7 @@ expect(mockElement.innerHTML).toContain('-18.469609');
 ```
 
 **Error 2** (Line 545):
+
 ```javascript
 expect(mockElement.innerHTML).toContain('5.00 km/h');
 // Expected substring: "5.00 km/h"
@@ -101,6 +106,7 @@ expect(mockElement.innerHTML).toContain('5.00 km/h');
 **File**: `__tests__/html/HTMLPositionDisplayer.test.js`
 
 **Error**:
+
 ```
 Must use import to load ES Module: /home/mpb/Documents/GitHub/guia_turistico/node_modules/@exodus/bytes/encoding-lite.js
 
@@ -113,7 +119,8 @@ at Object.<anonymous> (node_modules/jsdom/lib/api.js:6:27)
 
 **Impact**: All tests in HTMLPositionDisplayer test suite fail to run
 
-**Dependency Chain**: 
+**Dependency Chain**:
+
 - Test requires jsdom
 - jsdom requires html-encoding-sniffer
 - html-encoding-sniffer requires @exodus/bytes
@@ -126,6 +133,7 @@ at Object.<anonymous> (node_modules/jsdom/lib/api.js:6:27)
 **File**: `__tests__/coordination/ServiceCoordinator.test.js`
 
 **Error**:
+
 ```
 Jest worker encountered 4 child process exceptions, exceeding retry limit
 
@@ -186,6 +194,7 @@ at ChildProcessWorker.initialize (node_modules/jest-worker/build/index.js:805:21
 **Solution Options**:
 
 **A. Adjust test timing** (Recommended):
+
 ```javascript
 // Before update, wait for threshold
 jest.advanceTimersByTime(51000); // Exceed 50s threshold
@@ -193,6 +202,7 @@ positionManager.update(newPosition);
 ```
 
 **B. Mock timer functions**:
+
 ```javascript
 jest.useFakeTimers();
 // ... test logic ...
@@ -200,6 +210,7 @@ jest.useRealTimers();
 ```
 
 **C. Adjust threshold for tests**:
+
 ```javascript
 const setupParams = {
     trackingInterval: 1000, // Lower for testing
@@ -214,6 +225,7 @@ const setupParams = {
 #### Action 1.2: Fix ES Module Import Issues
 
 **Files**:
+
 - `__tests__/html/HTMLPositionDisplayer.test.js`
 - `__tests__/coordination/ServiceCoordinator.test.js`
 
@@ -224,6 +236,7 @@ const setupParams = {
 **A. Update Jest configuration** (Recommended):
 
 Add to `jest.config.js`:
+
 ```javascript
 module.exports = {
     // ... existing config ...
@@ -234,6 +247,7 @@ module.exports = {
 ```
 
 **B. Update package.json**:
+
 ```json
 {
     "jest": {
@@ -248,11 +262,13 @@ module.exports = {
 ```
 
 **C. Downgrade problematic dependency**:
+
 ```bash
 npm install @exodus/bytes@^1.0.0  # Try older CommonJS version
 ```
 
 **D. Mock jsdom entirely for these tests**:
+
 ```javascript
 jest.mock('jsdom', () => ({
     JSDOM: jest.fn()
@@ -268,6 +284,7 @@ jest.mock('jsdom', () => ({
 Update test counts in all documentation files:
 
 **Files to update**:
+
 1. README.md
 2. .github/copilot-instructions.md
 3. docs/INDEX.md
@@ -277,6 +294,7 @@ Update test counts in all documentation files:
 7. All recent issue resolution documents
 
 **New values**:
+
 - Passing: **1,558** (when all tests fixed)
 - Failed: **0** (after fixes)
 - Skipped: **137**
@@ -304,6 +322,7 @@ Update test counts in all documentation files:
 ### Failure Pattern 1: Timing Threshold Issues
 
 **Symptoms**:
+
 - "Position update too recent (threshold: 50000ms)"
 - "Movement is not significant enough"
 
@@ -319,6 +338,7 @@ const setupParams = {
 ```
 
 **Why it fails in tests**:
+
 - Tests create rapid position updates
 - Threshold prevents updates within 50s
 - Tests don't account for time passage
@@ -330,12 +350,14 @@ const setupParams = {
 ### Failure Pattern 2: ES Module Import
 
 **Symptoms**:
+
 - "Must use import to load ES Module"
 - "Jest worker encountered 4 child process exceptions"
 
 **Root Cause**: Dependency chain ES Module incompatibility
 
 **Dependency Chain**:
+
 ```
 Test → jsdom → html-encoding-sniffer → @exodus/bytes (ES Module)
                                                ↓
@@ -347,6 +369,7 @@ Test → jsdom → html-encoding-sniffer → @exodus/bytes (ES Module)
 ```
 
 **Why it fails**:
+
 - @exodus/bytes v2.x is pure ES Module
 - Jest uses CommonJS require() by default
 - transformIgnorePatterns doesn't include this package
@@ -386,7 +409,7 @@ npm test
 ### Phase 1: Fix Failing Tests (IMMEDIATE)
 
 - [ ] Fix PositionManager integration timing issues
-  - [ ] Add `jest.useFakeTimers()` 
+  - [ ] Add `jest.useFakeTimers()`
   - [ ] Adjust test setup parameters
   - [ ] Verify both failures resolved
 - [ ] Fix ES Module import issues
@@ -437,6 +460,7 @@ npm test
 ### Success Criteria
 
 **After implementation**:
+
 - ✅ All tests passing (0 failures)
 - ✅ Documentation matches actual counts
 - ✅ Automation preventing future drift
@@ -445,11 +469,13 @@ npm test
 ### Follow-up Actions
 
 **Weekly**:
+
 - Monitor test suite growth
 - Review any new failures
 - Validate automation working
 
 **Monthly**:
+
 - Audit test coverage
 - Review skipped tests (why 137 skipped?)
 - Consider increasing coverage
@@ -486,12 +512,14 @@ npm test
 **The "6/3 passed" anomaly was USER ERROR** (misreading logs or looking at incomplete output), not a test runner issue.
 
 **ACTUAL SITUATION**:
+
 - Test runner: ✅ Working correctly
 - Test suite: ✅ Growing (positive)
 - Documentation: ❌ Outdated (+42 tests behind)
 - Test failures: ❌ **6 tests failing** (needs fixing)
 
 **PRIORITY ACTIONS**:
+
 1. 🔴 **Fix 6 failing tests** (timing + ES Module issues)
 2. 🟡 **Update documentation** with actual counts
 3. 🟢 **Implement automation** to prevent drift

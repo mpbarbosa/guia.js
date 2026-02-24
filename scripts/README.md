@@ -7,6 +7,7 @@
 ## Available Scripts
 
 ### 1. fix-console-logging.sh
+
 **Path**: `scripts/fix-console-logging.sh`  
 **Purpose**: Automatically fixes direct console.* usage to use centralized logger  
 **Usage**: `./scripts/fix-console-logging.sh`  
@@ -15,6 +16,7 @@
 **Related modules**: `src/utils/logger.js`
 
 **What it does**:
+
 - Processes a hardcoded list of ~40 source files under `src/`
 - Adds `import { log, warn, error } from './utils/logger.js'` if not already present
 - Replaces `console.log(` → `log(`, `console.warn(` → `warn(`, `console.error(` → `error(`
@@ -22,10 +24,12 @@
 - Does **not** touch test files, HTML files, or `utils/logger.js` itself
 
 **Exit codes**:  
+
 - `0` — completed successfully  
 - `1` — `set -e` triggered by an unexpected error
 
 **Fixed Issues** (v0.9.0+):
+
 - ✅ Removed hardcoded absolute path
 - ✅ Added portable `SCRIPT_DIR` resolution
 - ✅ Works in any environment (local, CI/CD, Docker)
@@ -33,6 +37,7 @@
 ---
 
 ### 2. update-doc-dates.sh
+
 **Path**: `scripts/update-doc-dates.sh`  
 **Purpose**: Updates "Last Updated" dates in git-modified documentation files  
 **Usage**: `./scripts/update-doc-dates.sh`  
@@ -42,16 +47,19 @@
 **Cross-reference**: `docs/AUTOMATION_IMPLEMENTATION_SUMMARY.md`
 
 **What it does**:
+
 - Runs `git diff --name-only --diff-filter=M` to find currently modified `.md` files
 - For files that contain `**Last Updated**:`, replaces the date with today's (`YYYY-MM-DD`)
 - For files without a "Last Updated" field, appends a footer with the date and `**Status**: ✅ Active`
 - Exits `0` with no changes if there are no modified markdown files
 
 **Exit codes**:  
+
 - `0` — completed (updated files, or nothing to update)  
 - `1` — `set -e` triggered by an unexpected error
 
 **Prerequisites**:  
+
 - Must be run from the project root  
 - Requires `git` (used to detect modified files)  
 - Works on files already staged or unstaged (uses `git diff`, not `git diff --cached`)
@@ -59,6 +67,7 @@
 ---
 
 ### 3. update-test-counts.sh
+
 **Path**: `scripts/update-test-counts.sh`  
 **Purpose**: Updates test count statistics in documentation after running tests  
 **Usage**: `./scripts/update-test-counts.sh`  
@@ -68,6 +77,7 @@
 **Cross-reference**: `docs/AUTOMATION_IMPLEMENTATION_SUMMARY.md`
 
 **What it does**:
+
 - Runs `npm test -- --json --outputFile=test-results.json --silent` to capture test results
 - Parses `numPassedTests`, `numTotalTests`, `numFailedTests` from JSON output
 - Updates `passing` / `skipped` / `total` count strings in:
@@ -77,12 +87,14 @@
 - Cleans up `test-results.json` on exit
 
 **Exit codes**:  
+
 - `0` — test counts updated successfully  
 - `1` — `test-results.json` not produced (test runner failed hard), or `set -e` error
 
 ---
 
 ### 4. build_and_deploy.sh
+
 **Path**: `scripts/build_and_deploy.sh`  
 **Purpose**: Build production bundle and deploy to staging environment  
 **Usage**: `./scripts/build_and_deploy.sh [OPTIONS]`  
@@ -98,16 +110,19 @@
 | `--skip-build` | Skip the `npm run build` step | ❌ Not implemented |
 
 **Exit codes**:  
+
 - `0` — Deployment completed successfully  
 - `1` — Error during build or deployment (`set -e`)
 
 **Prerequisites**:  
+
 - `mpbarbosa_site` repository cloned at `../mpbarbosa_site`  
 - Valid staging configuration and sync script at `mpbarbosa_site/shell_scripts/sync_to_staging.sh`  
 - Production build completes without errors (`npm run build`)  
 - Write permissions for deployment target
 
 **Directory Structure Required**:
+
 ```
 parent-directory/
 ├── guia_turistico/           # This project
@@ -120,6 +135,7 @@ parent-directory/
 ```
 
 **Known Issues**:
+
 - ❌ No error handling for missing directories
 - ❌ No validation that build succeeded before deploying
 - ❌ No rollback mechanism if deployment fails
@@ -127,6 +143,7 @@ parent-directory/
 - ❌ External project dependency not documented in main README
 
 **Recommendations**:
+
 ```bash
 # Enhanced version with error handling (proposed)
 #!/bin/bash
@@ -157,6 +174,7 @@ echo "✓ Deployment complete"
 ```
 
 **Usage Notes**:
+
 - ⚠️ Run only when ready to deploy to staging
 - ⚠️ Ensure all tests pass before running
 - ⚠️ Coordinate with mpbarbosa_site repository owner
@@ -164,6 +182,7 @@ echo "✓ Deployment complete"
 
 **Alternative (CI/CD)**:
 Consider migrating to GitHub Actions workflow for automated deployment:
+
 ```yaml
 # .github/workflows/deploy-staging.yml (proposed)
 name: Deploy to Staging
@@ -184,6 +203,7 @@ jobs:
 ---
 
 ### 5. deploy-preflight.sh
+
 **Path**: `scripts/deploy-preflight.sh`  
 **Purpose**: Production deployment pre-flight checklist — verifies the build is ready before deploying  
 **Usage**: `./scripts/deploy-preflight.sh`  
@@ -192,6 +212,7 @@ jobs:
 **Cross-reference**: `docs/DEPLOYMENT.md`
 
 **What it does**:
+
 1. Checks Node.js version (warns if < v18)
 2. Runs `npm run build` and fails if the build errors
 3. Verifies that `dist/index.html` exists
@@ -201,10 +222,12 @@ jobs:
 7. Stops the preview server and prints a deployment-ready summary
 
 **Exit codes**:  
+
 - `0` — all checks passed; `dist/` is ready for deployment  
 - `1` — any check failed (missing file, build failure, or endpoint not reachable)
 
 **Prerequisites**:  
+
 - `npm install` has been run  
 - Port 9001 is free (used for smoke-testing the preview server)  
 - `curl` available (used for endpoint checks)
@@ -212,11 +235,13 @@ jobs:
 ---
 
 ### 6. cleanup-ai-workflow.sh
+
 **Path**: `scripts/cleanup-ai-workflow.sh`  
 **Purpose**: Removes old `.ai_workflow/` run artifact directories and local build/test caches  
 **Usage**: `./scripts/cleanup-ai-workflow.sh [--days N] [--dry-run]`  
 **npm script**: `npm run cleanup:ai-workflow`  
 **Arguments**:
+
 - `--days N` — delete workflow runs older than N days (default: `30`)
 - `--dry-run` — print what would be deleted without removing anything
 - `-h / --help` — show usage
@@ -224,16 +249,19 @@ jobs:
 **Related modules**: `.ai_workflow/logs/`, `.ai_workflow/prompts/`, `.ai_workflow/summaries/`, `.jest-cache/`, `.pytest_cache/`, `coverage/`
 
 **What it does**:
+
 - Deletes `workflow_*` subdirectories in `.ai_workflow/logs/`, `.ai_workflow/prompts/`, and `.ai_workflow/summaries/` that are older than `--days` (mtime-based)
 - Removes `.jest-cache/`, `.pytest_cache/`, and `coverage/` from the project root
 - Always preserves `.ai_workflow/backlog/`, `.ai_workflow/metrics/`, `.ai_workflow/commit_history.json`, and `.ai_workflow/model_definitions.json`
 - Prints a KB-freed summary when complete
 
 **Exit codes**:
+
 - `0` — completed (dry-run or actual cleanup)
 - `1` — not run from project root, or unknown argument
 
 **Example**:
+
 ```bash
 # Preview what would be removed (safe, no deletions)
 ./scripts/cleanup-ai-workflow.sh --dry-run
@@ -352,6 +380,7 @@ fi
 ## Script Maintenance
 
 ### Adding New Scripts
+
 1. Place script in `scripts/`
 2. Add `#!/bin/bash` as the first line
 3. Add `set -e` for fail-fast behaviour
@@ -361,6 +390,7 @@ fi
 7. Add npm script alias in `package.json` (if applicable)
 
 ### Best Practices
+
 - Use `#!/bin/bash`, never `#!/bin/sh` (scripts rely on bash-specific features)
 - Use `set -e` so failures are never silently swallowed
 - Resolve paths via `SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"` — never hardcode absolute paths
@@ -448,6 +478,7 @@ grep -rn "console\." src/ --include="*.js" | grep -v "logger.js" | grep -v "node
 These scripts live in `tests/integration/` and are documented here for completeness.
 
 ### run_visual_hierarchy_tests.sh
+
 **Path**: `tests/integration/run_visual_hierarchy_tests.sh`  
 **Purpose**: Runs Selenium-based visual hierarchy integration tests against a local HTTP server  
 **Usage**: `./tests/integration/run_visual_hierarchy_tests.sh`  
@@ -455,6 +486,7 @@ These scripts live in `tests/integration/` and are documented here for completen
 **Related modules**: `tests/integration/test_visual_hierarchy.py`, `src/index.html`
 
 **What it does**:
+
 1. Validates it is run from the project root (checks for `src/index.html`)
 2. Installs Selenium via `pip3` if not already present
 3. Starts a local HTTP server on port 8080 (`python3 -m http.server 8080 --directory src`)
@@ -462,16 +494,19 @@ These scripts live in `tests/integration/` and are documented here for completen
 5. Stops the HTTP server regardless of test outcome (cleanup always runs)
 
 **Exit codes**:
+
 - `0` — all visual hierarchy tests passed
 - `1` — one or more tests failed, or server failed to start, or a prerequisite is missing
 
 **Prerequisites**:
+
 - Must be run from the project root
 - Requires Python 3 (`python3` in `PATH`)
 - Requires Selenium (`pip3 install selenium`) — installed automatically if missing
 - Port 8080 must be free
 
 **Example**:
+
 ```bash
 # From project root
 ./tests/integration/run_visual_hierarchy_tests.sh
@@ -482,6 +517,7 @@ These scripts live in `tests/integration/` and are documented here for completen
 ## Common Use Cases
 
 ### "I just edited some docs and want to update timestamps"
+
 ```bash
 ./scripts/update-doc-dates.sh
 # Only .md files that git diff reports as modified are touched.
@@ -489,6 +525,7 @@ These scripts live in `tests/integration/` and are documented here for completen
 ```
 
 ### "Tests passed — I want the README badge to reflect that"
+
 ```bash
 npm test
 ./scripts/update-test-counts.sh
@@ -497,12 +534,14 @@ git commit -m "docs: sync test counts"
 ```
 
 ### "I want to deploy but need to check everything is ready first"
+
 ```bash
 ./scripts/deploy-preflight.sh
 # If exit 0 → proceed. If exit 1 → read the ❌ output and fix before deploying.
 ```
 
 ### "Is my production build serving the SIDRA data correctly?"
+
 ```bash
 # deploy-preflight.sh tests this automatically:
 ./scripts/deploy-preflight.sh
@@ -510,6 +549,7 @@ git commit -m "docs: sync test counts"
 ```
 
 ### "I pulled changes and now some files have console.log calls again"
+
 ```bash
 ./scripts/fix-console-logging.sh
 # Then confirm no regressions:
@@ -521,24 +561,30 @@ grep -rn "console\." src/ --include="*.js" | grep -v "logger.js"
 ## Troubleshooting
 
 ### `update-doc-dates.sh` reports "No modified markdown files found"
+
 **Cause**: The script uses `git diff --name-only --diff-filter=M` — it only sees files with *unstaged* modifications. Files already staged (`git add`-ed) are not included.  
 **Fix**: Either unstage first (`git restore --staged <file>`), or manually set the date:
+
 ```bash
 TODAY=$(date -I)
 sed -i "s/\*\*Last Updated\*\*: [0-9-]*/\*\*Last Updated\*\*: $TODAY/" docs/YOUR_FILE.md
 ```
 
 ### `update-test-counts.sh` exits with "No test results found"
+
 **Cause**: `npm test` exited with a non-zero code (a test suite failed hard) and did not write `test-results.json`.  
 **Fix**: Run `npm test` directly to see which suite failed, fix the failure, then re-run the script.
 
 ### `deploy-preflight.sh` fails with "SIDRA JSON file not accessible (404)"
+
 **Cause**: `vite.config.js` is not copying `libs/sidra/` into `dist/` as a static asset.  
 **Fix**: Verify `vite.config.js` has `libs/` in its `publicDir` or `assetsInclude` config, then re-run `npm run build` before the preflight check.
 
 ### `deploy-preflight.sh` fails with "Main page not accessible"
+
 **Cause**: Port 9001 is already in use, so the preview server cannot start.  
 **Fix**:
+
 ```bash
 # Find what is using port 9001
 lsof -i :9001
@@ -548,8 +594,10 @@ kill <PID>
 ```
 
 ### `build_and_deploy.sh` fails with "No such file or directory: ../mpbarbosa_site"
+
 **Cause**: The sibling repository is not cloned at the expected path.  
 **Fix**: Clone it:
+
 ```bash
 cd ..
 git clone <mpbarbosa_site-repo-url> mpbarbosa_site
@@ -558,14 +606,18 @@ cd guia_turistico
 ```
 
 ### `cleanup-ai-workflow.sh` — "No items deleted" but directories seem old
+
 **Cause**: The `find -mtime` check uses file modification time, not the timestamp in the directory name. A recently-touched workflow directory will be kept even if its name is old.  
 **Fix**: Use `--days 0` to remove all `workflow_*` entries regardless of mtime, or manually remove the specific directory:
+
 ```bash
 rm -rf .ai_workflow/logs/workflow_20260101_000000
 ```
 
-### `run_visual_hierarchy_tests.sh` fails with "Failed to start HTTP server"**Cause**: Port 8080 is already in use.  
+### `run_visual_hierarchy_tests.sh` fails with "Failed to start HTTP server"**Cause**: Port 8080 is already in use  
+
 **Fix**:
+
 ```bash
 lsof -i :8080
 kill <PID>
@@ -573,8 +625,10 @@ kill <PID>
 ```
 
 ### `run_visual_hierarchy_tests.sh` fails with "ModuleNotFoundError: No module named 'selenium'"
+
 **Cause**: The automatic `pip3 install selenium` step was skipped or failed (e.g., no internet access).  
 **Fix**: Install manually or use the project virtualenv:
+
 ```bash
 pip3 install selenium
 # or
@@ -583,11 +637,14 @@ source venv/bin/activate
 ```
 
 ### `run_visual_hierarchy_tests.sh` — tests fail but server is running
+
 **Cause**: A visual hierarchy assertion in `test_visual_hierarchy.py` failed (CSS/DOM regression).  
 **Fix**: Open `http://localhost:8080` in a browser while the server is running, inspect the failing element, and fix the relevant CSS or HTML in `src/`.
 
-### A script exits immediately with no output**Cause**: `set -e` caused silent exit because a command returned non-zero before any output was produced (e.g. `node` or `git` not found).  
+### A script exits immediately with no output**Cause**: `set -e` caused silent exit because a command returned non-zero before any output was produced (e.g. `node` or `git` not found)  
+
 **Fix**: Run with `bash -x` for step-by-step trace:
+
 ```bash
 bash -x ./scripts/update-test-counts.sh
 ```
@@ -672,6 +729,7 @@ container/orchestration tooling. Deployment is a file-sync operation handled by
 There are no infrastructure-as-code scripts to document.
 
 ## Related Documentation
+
 - `.github/scripts/` - CI/CD automation scripts
 - `docs/AUTOMATION_TOOLS.md` - Complete automation guide
 - `docs/AUTOMATION_IMPLEMENTATION_SUMMARY.md` - Implementation details

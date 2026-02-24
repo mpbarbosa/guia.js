@@ -10,6 +10,7 @@
 This document provides comprehensive automation recommendations for maintaining documentation quality, consistency, and accuracy across the Guia Turístico project. Includes ready-to-use GitHub Actions, maintenance scripts, and implementation guidelines.
 
 **Benefits**:
+
 - ✅ Automated version consistency checking
 - ✅ Self-updating test count badges
 - ✅ External link validation
@@ -147,10 +148,12 @@ jobs:
 ```
 
 **Triggers**:
+
 - Push to main/develop branches
 - Pull requests modifying version-related files
 
 **What it checks**:
+
 1. Version in `package.json` matches `src/app.js`
 2. Version in `src/index.html` matches
 3. Critical documentation contains current version
@@ -282,10 +285,12 @@ jobs:
 ```
 
 **Triggers**:
+
 - Push to main branch
 - Manual workflow dispatch
 
 **What it does**:
+
 1. Runs full test suite with JSON output
 2. Parses test results (passing, total, skipped)
 3. Updates test counts in README.md
@@ -294,6 +299,7 @@ jobs:
 6. Generates badge URLs
 
 **Benefits**:
+
 - ✅ Always accurate test counts
 - ✅ No manual updates needed
 - ✅ Runs after every main branch push
@@ -401,16 +407,19 @@ jobs:
 ```
 
 **Triggers**:
+
 - Weekly on Mondays at 9am UTC
 - Manual workflow dispatch
 - Pull requests modifying .md files
 
 **What it checks**:
+
 1. All external links in documentation
 2. Critical API endpoints (OpenStreetMap, IBGE)
 3. Documentation references (MDN, Jest, etc.)
 
 **On failure**:
+
 - PRs: Blocks merge
 - Scheduled: Creates GitHub issue
 
@@ -547,11 +556,13 @@ jobs:
 ```
 
 **Triggers**:
+
 - Push to main branch (src/**/*.js changes)
 - Pull requests (src/**/*.js changes)
 - Manual workflow dispatch
 
 **What it does**:
+
 1. Generates JSDoc HTML documentation
 2. Calculates coverage percentage
 3. Updates coverage badge
@@ -559,6 +570,7 @@ jobs:
 5. Updates JSDOC_COVERAGE_REPORT.md on main
 
 **Benefits**:
+
 - ✅ Tracks documentation quality
 - ✅ Visible coverage metrics
 - ✅ PR feedback on coverage changes
@@ -628,11 +640,13 @@ fi
 ```
 
 **Usage**:
+
 ```bash
 ./.github/scripts/check-version-consistency.sh
 ```
 
 **Exit codes**:
+
 - 0: All versions consistent
 - 1: Inconsistencies found
 
@@ -704,11 +718,13 @@ exit 0
 ```
 
 **Usage**:
+
 ```bash
 ./scripts/update-test-counts.sh
 ```
 
 **What it does**:
+
 1. Runs full test suite
 2. Parses JSON results
 3. Updates counts in README.md, copilot-instructions.md, INDEX.md
@@ -784,6 +800,7 @@ exit 0
 ```
 
 **Usage**:
+
 ```bash
 # Update dates in all modified files
 ./scripts/update-doc-dates.sh
@@ -815,6 +832,7 @@ git commit -m "docs: update Last Updated dates"
    - High visibility
 
 **Deliverables**:
+
 - `.github/workflows/version-consistency.yml`
 - `.github/workflows/test-badges.yml`
 - `.github/scripts/check-version-consistency.sh`
@@ -826,17 +844,18 @@ git commit -m "docs: update Last Updated dates"
 
 **Priority**: 🟡 MEDIUM
 
-3. **External Link Checker** (45 minutes)
+1. **External Link Checker** (45 minutes)
    - Prevents broken links
    - Monitors critical APIs
    - Good maintenance tool
 
-4. **Documentation Date Updater** (30 minutes)
+2. **Documentation Date Updater** (30 minutes)
    - Automates date maintenance
    - Supports Issue #13
    - Low friction
 
 **Deliverables**:
+
 - `.github/workflows/link-checker.yml`
 - `scripts/update-doc-dates.sh`
 
@@ -846,12 +865,13 @@ git commit -m "docs: update Last Updated dates"
 
 **Priority**: 🟢 LOW
 
-5. **JSDoc Coverage Report** (60 minutes)
+1. **JSDoc Coverage Report** (60 minutes)
    - Tracks documentation quality
    - PR feedback mechanism
    - Nice to have
 
 **Deliverables**:
+
 - `.github/workflows/jsdoc-coverage.yml`
 - Enhanced JSDOC_COVERAGE_REPORT.md
 
@@ -862,6 +882,7 @@ git commit -m "docs: update Last Updated dates"
 ### Before Implementation
 
 **Checklist**:
+
 - [ ] Review GitHub Actions permissions
 - [ ] Test scripts locally
 - [ ] Validate sed commands on backup files
@@ -873,6 +894,7 @@ git commit -m "docs: update Last Updated dates"
 **Validation Steps**:
 
 1. **Version Consistency Check**:
+
    ```bash
    # Trigger manually
    gh workflow run version-consistency.yml
@@ -882,6 +904,7 @@ git commit -m "docs: update Last Updated dates"
    ```
 
 2. **Test Badge Updater**:
+
    ```bash
    # Run locally
    ./scripts/update-test-counts.sh
@@ -891,6 +914,7 @@ git commit -m "docs: update Last Updated dates"
    ```
 
 3. **Link Checker**:
+
    ```bash
    # Trigger manually
    gh workflow run link-checker.yml
@@ -900,6 +924,7 @@ git commit -m "docs: update Last Updated dates"
    ```
 
 4. **JSDoc Coverage**:
+
    ```bash
    # Trigger manually
    gh workflow run jsdoc-coverage.yml
@@ -915,6 +940,7 @@ git commit -m "docs: update Last Updated dates"
 ### GitHub Actions Dashboard
 
 **Monitor**:
+
 - Workflow run success rate
 - Execution time trends
 - Failure patterns
@@ -924,11 +950,13 @@ git commit -m "docs: update Last Updated dates"
 ### Notification Setup
 
 **Configure**:
+
 1. Watch repository for Actions failures
 2. Enable email notifications
 3. Add Slack integration (optional)
 
 **Example Slack Webhook** (optional):
+
 ```yaml
 - name: Notify Slack on failure
   if: failure()
@@ -955,20 +983,24 @@ git commit -m "docs: update Last Updated dates"
 ## Maintenance Schedule
 
 ### Daily
+
 - ✅ Automated (no action needed)
 - Monitor workflow failures
 
 ### Weekly
+
 - Review link checker results
 - Check JSDoc coverage trends
 - Monitor test count stability
 
 ### Monthly
+
 - Audit automation effectiveness
 - Update workflow configurations
 - Review and close automated issues
 
 ### Quarterly
+
 - Evaluate ROI of each automation
 - Consider new automation opportunities
 - Update documentation
@@ -993,6 +1025,7 @@ git commit -m "docs: update Last Updated dates"
 **Free tier**: 2,000 minutes/month
 
 **Estimated usage**:
+
 - Version Check: ~2 min/run × 50 runs/month = 100 min
 - Test Badges: ~5 min/run × 20 runs/month = 100 min
 - Link Checker: ~3 min/run × 5 runs/month = 15 min
@@ -1012,6 +1045,7 @@ git commit -m "docs: update Last Updated dates"
 **Symptom**: PR blocked by version consistency check
 
 **Solution**:
+
 ```bash
 # Update version everywhere
 npm run update-version
@@ -1025,6 +1059,7 @@ npm run update-version
 **Symptom**: Git conflicts when pushing
 
 **Solution**:
+
 ```bash
 # Pull latest
 git pull --rebase
@@ -1041,6 +1076,7 @@ git commit --amend
 **Symptom**: Valid links reported as broken
 
 **Solution**:
+
 - Add to exclusion list in workflow
 - Check if API requires authentication
 - Increase timeout/retries
@@ -1050,6 +1086,7 @@ git commit --amend
 **Symptom**: Coverage percentage doesn't match expectations
 
 **Solution**:
+
 - Review JSDoc comment format
 - Check for template literal functions
 - Verify jsdoc.json configuration
@@ -1074,6 +1111,7 @@ git commit --amend
 ```
 
 **Usage**:
+
 ```bash
 # Check version consistency
 npm run check-version
@@ -1093,16 +1131,19 @@ npm run update-version
 ## Success Criteria
 
 ### Short-Term (1 Week)
+
 - [ ] Version consistency check implemented and passing
 - [ ] Test badge updater running automatically
 - [ ] Scripts executable and documented
 
 ### Medium-Term (1 Month)
+
 - [ ] Link checker catching broken links
 - [ ] Documentation dates consistently updated
 - [ ] Zero manual version updates needed
 
 ### Long-Term (3 Months)
+
 - [ ] JSDoc coverage tracked and improving
 - [ ] All automation running smoothly
 - [ ] Team confident in automation reliability

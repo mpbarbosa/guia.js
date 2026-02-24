@@ -3,6 +3,7 @@
 ## Problem
 
 The browser console was showing this warning:
+
 ```
 The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element.
 ```
@@ -42,6 +43,7 @@ The `frame-ancestors` CSP directive **cannot be used in HTML `<meta>` tags**. Ac
 ### API Changes
 
 **For Static Hosting (Meta Tags):**
+
 ```javascript
 import { getCSPMetaContent } from './config/csp.js';
 
@@ -50,6 +52,7 @@ const csp = getCSPMetaContent(true);
 ```
 
 **For HTTP Servers:**
+
 ```javascript
 import { getAllSecurityHeaders } from './config/csp.js';
 
@@ -76,11 +79,13 @@ This ensures protection regardless of deployment method.
 ## Testing
 
 All 23 CSP tests pass:
+
 ```bash
 npm test -- __tests__/config/csp.test.js
 ```
 
 Key tests:
+
 - ✅ Meta content excludes frame-ancestors
 - ✅ HTTP headers include frame-ancestors  
 - ✅ X-Frame-Options present for fallback
@@ -94,10 +99,12 @@ Key tests:
 
 ## Migration Guide
 
-### If you're using meta tags (current setup):
+### If you're using meta tags (current setup)
+
 ✅ **No action required** - The fix is automatic. X-Frame-Options provides protection.
 
-### If you're deploying to a server with HTTP header control:
+### If you're deploying to a server with HTTP header control
+
 Consider using `getAllSecurityHeaders(true, true)` to enable `frame-ancestors` for enhanced security:
 
 ```javascript

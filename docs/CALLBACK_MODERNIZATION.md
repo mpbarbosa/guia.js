@@ -76,6 +76,7 @@ setPaisChangeCallback()
 ```
 
 **Impact**:
+
 - API bloat
 - Maintenance burden
 - Poor extensibility
@@ -112,6 +113,7 @@ setMunicipioChangeCallback(callback) {
 ```
 
 **Impact**:
+
 - Code duplication
 - Harder to maintain
 - Inconsistent behavior risk
@@ -132,6 +134,7 @@ cache.setMunicipioChangeCallback(fn3);
 ```
 
 **Impact**:
+
 - Developer confusion
 - Incomplete setup
 - Hard to document
@@ -163,6 +166,7 @@ cache.subscribe(observer);
 ```
 
 **Impact**:
+
 - Architectural inconsistency
 - Redundant functionality
 - Maintenance of two systems
@@ -262,12 +266,14 @@ class AddressCache {
 ```
 
 **Benefits**:
+
 - ✅ 3 methods → 3 methods (setChange, getChange, clearChange)
 - ✅ Extensible (add new types without new methods)
 - ✅ Single API surface
 - ✅ Easier to use
 
 **Migration Path**:
+
 ```javascript
 // BEFORE: 3 separate callbacks
 cache.setLogradouroChangeCallback((details) => {
@@ -388,6 +394,7 @@ class AddressCache {
 ```
 
 **Benefits**:
+
 - ✅ Multiple callbacks per type
 - ✅ Type filtering
 - ✅ Wildcard support
@@ -395,6 +402,7 @@ class AddressCache {
 - ✅ Very flexible
 
 **Usage**:
+
 ```javascript
 // Multiple handlers for same type
 const unsubscribe1 = cache.onChangeType('logradouro', (type, details) => {
@@ -424,6 +432,7 @@ unsubscribe1();
 **Goal**: Deprecate callbacks entirely, use existing Observer pattern.
 
 **Rationale**:
+
 - Observer pattern already implemented (ObserverSubject)
 - More flexible than callbacks
 - Standard design pattern
@@ -490,6 +499,7 @@ class AddressCache {
 ```
 
 **Migration from callbacks to observers**:
+
 ```javascript
 // BEFORE: Callbacks
 cache.setLogradouroChangeCallback((details) => {
@@ -513,6 +523,7 @@ cache.subscribeToChangeType('logradouro', (details) => {
 ```
 
 **Helper method for functional style**:
+
 ```javascript
 /**
  * Convenience method for functional observers.
@@ -574,6 +585,7 @@ subscribeToChangeType(changeTypes, callback) {
 ### **Solution 3: Migrate to Observer Pattern** (RECOMMENDED)
 
 **Rationale**:
+
 1. Observer pattern already exists (ObserverSubject)
 2. Eliminates duplicate notification systems
 3. More flexible than callbacks
@@ -584,6 +596,7 @@ subscribeToChangeType(changeTypes, callback) {
 **Migration Strategy**:
 
 #### Phase 1: Add Helper Methods (Week 1)
+
 ```javascript
 // Add subscribeToChangeType helper
 // Maintain backward compatibility
@@ -591,6 +604,7 @@ subscribeToChangeType(changeTypes, callback) {
 ```
 
 #### Phase 2: Deprecate Callbacks (Week 2)
+
 ```javascript
 /**
  * @deprecated Use subscribeToChangeType('logradouro', callback) instead
@@ -607,6 +621,7 @@ _legacyCallbackAdapter(changeType, callback) {
 ```
 
 #### Phase 3: Remove Callbacks (v1.0.0)
+
 ```javascript
 // Remove all callback methods
 // Remove all callback properties
@@ -616,23 +631,27 @@ _legacyCallbackAdapter(changeType, callback) {
 ## Implementation Plan
 
 ### Week 1: Add Observer Helpers
+
 - Add `subscribeToChangeType()` helper method
 - Add tests for new method
 - Document observer pattern usage
 - No breaking changes
 
 ### Week 2: Deprecate Callbacks
+
 - Add deprecation warnings to callback methods
 - Create adapter for legacy callbacks
 - Update documentation with migration guide
 - Announce removal in v1.0.0
 
 ### Week 3: Update Internal Code
+
 - Migrate internal callback usage to observers
 - Update tests
 - Verify all functionality works
 
 ### v1.0.0: Remove Callbacks
+
 - Delete all callback methods and properties
 - Remove deprecated code
 - Clean observer-only API
@@ -640,6 +659,7 @@ _legacyCallbackAdapter(changeType, callback) {
 ## Expected Benefits
 
 ### Code Reduction
+
 ```
 Current:
   - 3 callback properties
@@ -657,6 +677,7 @@ Reduction: 12 methods, ~250 lines (83% reduction)
 ```
 
 ### API Simplicity
+
 ```
 Before:
   setLogradouroChangeCallback()
@@ -675,6 +696,7 @@ After:
 ```
 
 ### Extensibility
+
 ```javascript
 // Adding new change type:
 

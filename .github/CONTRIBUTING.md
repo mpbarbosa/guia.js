@@ -1,6 +1,7 @@
 # Contributing to Guia Turístico
 
 ---
+
 Last Updated: 2026-01-28
 Status: Active
 Version: 0.9.0-alpha
@@ -34,12 +35,14 @@ Use the **Agile Ticket** template to create actionable user stories and tasks. T
 - **Technical tasks** that support larger initiatives
 
 **When to use:**
+
 - You want to convert a functional specification into actionable development work
 - You're defining a new feature with specific user value
 - You need to create a technical task with clear deliverables
 - You're following Agile/Scrum methodology
 
 **Key sections:**
+
 - **User Story**: "As a [role], I want [feature], so that [benefit]"
 - **Acceptance Criteria**: Specific, measurable outcomes
 - **Engineering Principles**: Technical guidelines (referential transparency, immutability, etc.)
@@ -80,6 +83,7 @@ Use the **Agile Ticket** template to create actionable user stories and tasks. T
 ### Why It Matters for Contributors
 
 Writing referentially transparent code makes the Guia Turístico project more:
+
 - **Predictable**: Easier to understand and reason about
 - **Testable**: Simple to test without complex setup
 - **Maintainable**: Changes have localized effects
@@ -183,6 +187,7 @@ Before submitting your PR, verify your functions are referentially transparent:
 ### Learn More
 
 For a comprehensive guide with detailed examples, see:
+
 - **[REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)** - Full documentation
 - **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Review checklist
 
@@ -459,6 +464,7 @@ ls -la .husky/
 #### Available Hooks
 
 **Pre-commit Hook** (`.husky/pre-commit`)
+
 - **Trigger**: Before each commit
 - **Duration**: ~1-2 seconds
 - **Actions**:
@@ -468,6 +474,7 @@ ls -la .husky/
 - **Bypass** (use sparingly): `git commit --no-verify`
 
 **Legacy Documentation Hook** (`.github/hooks/pre-commit`)
+
 - **Purpose**: Documentation consistency validation
 - **Status**: Reference implementation (not auto-installed)
 - **Checks**:
@@ -477,6 +484,7 @@ ls -la .husky/
   - Broken link detection
   - Code example validity
 - **Manual Installation**:
+
   ```bash
   cp .github/hooks/pre-commit .git/hooks/pre-commit
   chmod +x .git/hooks/pre-commit
@@ -485,6 +493,7 @@ ls -la .husky/
 #### Troubleshooting Hooks
 
 **Hooks not running?**
+
 ```bash
 # Reinstall Husky
 rm -rf .husky
@@ -496,6 +505,7 @@ ls -la .husky/pre-commit
 ```
 
 **Hook failing unexpectedly?**
+
 ```bash
 # Run hook commands manually to see detailed errors
 npm run validate
@@ -506,6 +516,7 @@ node --version
 ```
 
 **Need to commit despite failing hooks?**
+
 ```bash
 # Bypass hooks (use only when necessary!)
 git commit --no-verify -m "your message"
@@ -574,6 +585,7 @@ npm run test:all
 ```
 
 **Expected Results** (as of version 0.9.0-alpha):
+
 - Test Suites: 78 passing, 6 skipped, 84 total
 - Tests: 1,982 passing, 146 skipped, 2,176 total
 - Coverage: ~70% overall (~70% of src/ files)
@@ -607,6 +619,7 @@ npm run validate
 ```
 
 **Expected Output**:
+
 ```
 > guia_turistico@0.9.0-alpha validate
 > node -c src/app.js && node -c src/guia.js
@@ -625,6 +638,7 @@ npm test
 ```
 
 **Expected Output**:
+
 ```
 Test Suites: 78 passed, 6 skipped, 84 total
 Tests:       1982 passed, 146 skipped, 2176 total
@@ -645,6 +659,7 @@ npm run test:coverage
 ```
 
 **Expected Output**:
+
 ```
 Test Suites: 78 passed, 6 skipped, 84 total
 Tests:       1982 passing, 146 skipped, 2176 total
@@ -662,6 +677,7 @@ npm run test:all
 ```
 
 **Expected Output**:
+
 ```
 ✓ Syntax validation passed
 ✓ 1982/2176 tests passed
@@ -675,12 +691,14 @@ npm run test:all
 #### 5. Verify Test Results
 
 **Expected Test Counts** (as of version 0.9.0-alpha):
+
 - **Total Tests**: 1,653
 - **Passing**: 1,516
 - **Skipped**: 137
 - **Failing**: 0 (all must pass)
 
 **If tests fail**:
+
 1. Read the error messages carefully
 2. Check if you introduced breaking changes
 3. Update tests if intentionally changing behavior
@@ -693,6 +711,7 @@ npm run test:all
 Before submitting your PR, ensure all items are checked:
 
 #### Code Quality
+
 - [ ] Code follows immutability principles (see [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md))
 - [ ] Functions are pure and referentially transparent where possible
 - [ ] No mutable array operations (push, splice, sort) - use spread operator, filter, map instead
@@ -700,6 +719,7 @@ Before submitting your PR, ensure all items are checked:
 - [ ] JSDoc comments added for all public APIs (see [JSDOC_GUIDE.md](./JSDOC_GUIDE.md))
 
 #### Testing
+
 - [ ] **All validation commands pass** (see [Pre-Submission Validation Commands](#pre-submission-validation-commands) above)
   - [ ] `npm run validate` - Syntax validation passes
   - [ ] `npm test` - All 1,982 tests pass, 146 skipped
@@ -712,6 +732,7 @@ Before submitting your PR, ensure all items are checked:
 - [ ] Test coverage maintained or improved (~70% minimum)
 
 #### Documentation
+
 - [ ] Documentation updated if needed
   - [ ] README.md updated if API changes
   - [ ] Architecture docs updated if design changes
@@ -720,6 +741,7 @@ Before submitting your PR, ensure all items are checked:
 - [ ] Version numbers updated if releasing (see [VERSION_TIMELINE.md](../docs/architecture/VERSION_TIMELINE.md))
 
 #### Code Hygiene
+
 - [ ] No `console.log` or debugging code left in source files
 - [ ] No commented-out code (remove or document why it's kept)
 - [ ] No TODO comments without issue references
@@ -727,6 +749,7 @@ Before submitting your PR, ensure all items are checked:
 - [ ] Commit messages are clear and descriptive
 
 #### Architecture & Design
+
 - [ ] Changes follow Single Responsibility Principle
 - [ ] No new God Objects or overly complex classes
 - [ ] Dependencies are minimal (low coupling - see [LOW_COUPLING_GUIDE.md](./LOW_COUPLING_GUIDE.md))
@@ -738,6 +761,7 @@ Before submitting your PR, ensure all items are checked:
 ### Troubleshooting Validation Failures
 
 #### Syntax Errors
+
 ```bash
 # If npm run validate fails:
 node -c src/app.js    # Check specific file
@@ -745,6 +769,7 @@ node -c src/guia.js   # Check specific file
 ```
 
 **Common causes**:
+
 - Missing semicolons or brackets
 - Typos in variable names
 - Invalid JavaScript syntax
@@ -755,6 +780,7 @@ node -c src/guia.js   # Check specific file
 ---
 
 #### Test Failures
+
 ```bash
 # Run tests in verbose mode to see details
 npm test -- --verbose
@@ -767,6 +793,7 @@ npm test -- --no-coverage
 ```
 
 **Common causes**:
+
 - Breaking changes to existing APIs
 - Missing imports or dependencies
 - Side effects in tests (not isolated)
@@ -781,9 +808,11 @@ npm test -- --no-coverage
 **If you see different test counts**:
 
 **Expected** (v0.9.0-alpha):
+
 - 1,982 passing / 2,176 total / 146 skipped
 
 **Your result** shows different numbers? This could mean:
+
 1. ✅ **You added new tests** (passing count increased) - Good! Document in PR description
 2. ⚠️ **Tests are failing** (passing count decreased) - Must fix before merging
 3. ⚠️ **Tests were deleted** (total count decreased) - Explain why in PR description
@@ -805,6 +834,7 @@ open coverage/lcov-report/index.html
 ```
 
 **Action**:
+
 1. Identify uncovered lines in report
 2. Add tests for new functionality
 3. Focus on critical paths and edge cases
@@ -825,6 +855,7 @@ python3 -m http.server 9000
 ```
 
 **Test the following**:
+
 1. **Geolocation Flow**
    - Click "Obter Localização" button
    - Grant location permissions
@@ -861,12 +892,14 @@ python3 -m http.server 9000
 ### Additional Resources
 
 **Having trouble with validation?**
+
 - 📚 Read [TDD_GUIDE.md](./TDD_GUIDE.md) for testing methodology
 - 📚 Read [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md) for test patterns
 - 📚 Check [docs/INDEX.md](../docs/INDEX.md) for complete documentation
 - 💬 Ask questions by opening an issue
 
 **Understanding the codebase?**
+
 - 📚 Read [VERSION_TIMELINE.md](../docs/architecture/VERSION_TIMELINE.md) for version history
 - 📚 Read [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) for architecture
 - 📚 Read [PROJECT_PURPOSE_AND_ARCHITECTURE.md](../docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md) for goals
@@ -874,18 +907,21 @@ python3 -m http.server 9000
 ## Related Documentation
 
 ### Essential Reading
+
 - **[REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)** - Core functional programming principles
 - **[JSDOC_GUIDE.md](./JSDOC_GUIDE.md)** - API documentation standards
 - **[TDD_GUIDE.md](./TDD_GUIDE.md)** - Test-driven development methodology
 - **[UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)** - Unit testing best practices
 
 ### Code Quality
+
 - **[JAVASCRIPT_BEST_PRACTICES.md](./JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript standards
 - **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Review checklist
 - **[HIGH_COHESION_GUIDE.md](./HIGH_COHESION_GUIDE.md)** - Component design
 - **[LOW_COUPLING_GUIDE.md](./LOW_COUPLING_GUIDE.md)** - Dependency management
 
 ### Complete Guide Index
+
 - **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
 
 ## Questions?

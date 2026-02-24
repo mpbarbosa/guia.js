@@ -10,6 +10,7 @@
 ## Current Status
 
 ### File Sizes
+
 - `src/views/home.js`: **580 lines** (down from 659)
 - `src/views/converter.js`: **526 lines** (down from 603)
 - **Total**: 1,106 lines
@@ -33,6 +34,7 @@ Views are doing too much (violating Single Responsibility Principle):
 ### Example Issues
 
 **home.js Mixed Responsibilities**:
+
 ```javascript
 // ❌ BAD - Business logic in view
 _determineLocationType(address) {
@@ -91,6 +93,7 @@ src/
 ### Phase 1: Extract Services (8 hours)
 
 #### 1.1 Create LocationService
+
 **File**: `src/services/LocationService.js`
 **Responsibility**: Geolocation operations
 
@@ -115,11 +118,13 @@ export class LocationService {
 ```
 
 **Extracts from home.js**:
+
 - Lines 240-290 (getCurrentLocation logic)
 - Lines 470-520 (tracking setup)
 - Lines 530-550 (tracking cleanup)
 
 #### 1.2 Create DisplayService
+
 **File**: `src/services/DisplayService.js`
 **Responsibility**: UI state updates
 
@@ -146,11 +151,13 @@ export class DisplayService {
 ```
 
 **Extracts from home.js**:
+
 - Lines 570-580 (_renderToElement)
 - Lines 390-420 (cache display logic)
 - Lines 550-570 (speech queue display)
 
 #### 1.3 Create TrackingService
+
 **File**: `src/services/TrackingService.js`
 **Responsibility**: Continuous tracking state
 
@@ -185,6 +192,7 @@ export class TrackingService {
 ```
 
 **Extracts from home.js**:
+
 - Lines 495-535 (tracking toggle logic)
 - Lines 295-310 (tracking state management)
 
@@ -193,6 +201,7 @@ export class TrackingService {
 ### Phase 2: Create ViewModels (4 hours)
 
 #### 2.1 HomeViewModel
+
 **File**: `src/viewmodels/HomeViewModel.js`
 
 ```javascript
@@ -247,6 +256,7 @@ export class HomeViewModel {
 ### Phase 3: Extract Event Handlers (2 hours)
 
 #### 3.1 LocationButtonHandler
+
 **File**: `src/handlers/LocationButtonHandler.js`
 
 ```javascript
@@ -329,23 +339,27 @@ export default {
 ## Benefits
 
 ### 1. Single Responsibility
+
 - Views: Only UI rendering and basic DOM manipulation
 - Services: Business logic and external integrations
 - ViewModels: State management and coordination
 - Handlers: Event processing
 
 ### 2. Testability
+
 - Services can be unit tested independently
 - ViewModels can be tested without DOM
 - Handlers can be tested with mock elements
 - Views can be tested with mock services
 
 ### 3. Reusability
+
 - Services can be shared between views
 - ViewModels follow consistent patterns
 - Handlers can be composed
 
 ### 4. Maintainability
+
 - Smaller files (200 lines each)
 - Clear separation of concerns
 - Easier to locate and fix bugs
@@ -355,6 +369,7 @@ export default {
 ## Implementation Checklist
 
 ### Phase 1: Services (Day 1 morning)
+
 - [ ] Create `src/services/` directory
 - [ ] Implement LocationService.js
 - [ ] Implement TrackingService.js
@@ -363,6 +378,7 @@ export default {
 - [ ] Test services independently
 
 ### Phase 2: ViewModels (Day 1 afternoon)
+
 - [ ] Create `src/viewmodels/` directory
 - [ ] Implement HomeViewModel.js
 - [ ] Implement ConverterViewModel.js
@@ -370,12 +386,14 @@ export default {
 - [ ] Test state management
 
 ### Phase 3: Handlers (Day 2 morning)
+
 - [ ] Create `src/handlers/` directory
 - [ ] Implement LocationButtonHandler.js
 - [ ] Implement TrackingToggleHandler.js
 - [ ] Write handler tests
 
 ### Phase 4: View Refactoring (Day 2 afternoon)
+
 - [ ] Refactor home.js to use services
 - [ ] Refactor converter.js to use services
 - [ ] Update view tests
@@ -387,12 +405,15 @@ export default {
 ## Risks & Mitigation
 
 ### Risk 1: Breaking Changes
+
 **Mitigation**: Comprehensive test coverage before refactoring
 
 ### Risk 2: Over-Engineering
+
 **Mitigation**: Start simple, add complexity only when needed
 
 ### Risk 3: Time Overrun
+
 **Mitigation**: Phase by phase approach, can stop after each phase
 
 ---
@@ -400,12 +421,14 @@ export default {
 ## Success Metrics
 
 ### Before
+
 - home.js: 580 lines (mixed responsibilities)
 - converter.js: 526 lines (mixed responsibilities)
 - Testability: Medium (DOM-dependent)
 - Reusability: Low (tight coupling)
 
 ### After
+
 - home.js: ~200 lines (UI only)
 - converter.js: ~200 lines (UI only)
 - Services: 3 files, ~350 lines
@@ -415,6 +438,7 @@ export default {
 - Reusability: High (services shared)
 
 ### Total Lines
+
 - Before: 1,106 lines
 - After: ~1,210 lines (104 more, but better organized)
 - Trade-off: Slightly more code, but much better structure
@@ -424,6 +448,7 @@ export default {
 ## When to Implement
 
 **Recommended**: Next sprint or when:
+
 1. Adding significant new features to views
 2. Multiple bugs in view layer
 3. Need to reuse location/tracking logic
@@ -438,16 +463,19 @@ export default {
 If 2 days is too much, do incrementally:
 
 ### Week 1: Extract one service (4 hours)
+
 - LocationService only
 - Update home.js to use it
 - Tests
 
 ### Week 2: Extract another service (4 hours)
+
 - DisplayService
 - Update both views
 - Tests
 
 ### Week 3: Extract handlers (4 hours)
+
 - Event handlers
 - Final cleanup
 

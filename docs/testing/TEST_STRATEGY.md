@@ -147,11 +147,13 @@ pytest tests/e2e/
 ### Gap Analysis
 
 **Priority 1** - Increase to 70%:
+
 - Add edge case tests for `AddressExtractor`
 - Test error paths in `GeolocationService`
 - Cover fallback logic in API fetchers
 
 **Priority 2** - Maintain 100%:
+
 - Keep critical singletons at 100%
 - Maintain SIDRA displayer coverage
 - Test all immutability patterns
@@ -165,6 +167,7 @@ pytest tests/e2e/
 **Dependencies**: None (mocked if needed)
 
 **Example**:
+
 ```javascript
 describe('GeoPosition', () => {
   it('should be immutable', () => {
@@ -181,6 +184,7 @@ describe('GeoPosition', () => {
 **Dependencies**: Multiple real components
 
 **Example**:
+
 ```javascript
 describe('Address Fetching Flow', () => {
   it('should coordinate geocoder and displayer', async () => {
@@ -202,6 +206,7 @@ describe('Address Fetching Flow', () => {
 **Dependencies**: Full browser, DOM, APIs (mocked)
 
 **Example**:
+
 ```javascript
 describe('Complete Geolocation Workflow', () => {
   it('should track location changes while driving', async () => {
@@ -225,12 +230,14 @@ describe('Complete Geolocation Workflow', () => {
 The project uses a **domain-based organization** instead of Jest's default `__tests__` colocated structure:
 
 **Benefits**:
+
 1. **Centralized Testing**: All tests in one location for easy discovery
 2. **Test Type Separation**: Clear distinction between unit/integration/E2E
 3. **CI/CD Optimization**: Run test types independently in pipeline stages
 4. **Documentation**: Tests serve as living documentation when grouped by concern
 
 **Trade-offs**:
+
 - Slightly longer import paths
 - Need to maintain parallel structure with `src/`
 

@@ -136,6 +136,7 @@ This document provides a comprehensive timeline of architectural changes across 
 | **0.9.0-alpha** | Jan 11, 2026 | ✅ Current | Documentation updates only |
 
 **Breaking Changes in 0.9.0-alpha**:
+
 - ❌ Removed `accuracy` setter (immutability)
 - ❌ Constructor no longer logs creation
 - ❌ Constructor no longer mutates input objects
@@ -156,6 +157,7 @@ This document provides a comprehensive timeline of architectural changes across 
 | 0.8.x-alpha | Planned | 🔄 Future | Enhanced observer management |
 
 **Key Features**:
+
 - ✅ Singleton pattern (single position state)
 - ✅ Observer pattern (subscribe/unsubscribe)
 - ✅ Multi-layer validation (accuracy, distance, time)
@@ -175,12 +177,14 @@ This document provides a comprehensive timeline of architectural changes across 
 | 0.8.x-alpha | Planned | 🔄 Major | PR #189 refactoring (dependency injection, extraction) |
 
 **Current Features**:
+
 - ✅ Service coordination (GeolocationService, ReverseGeocoder)
 - ✅ Observer pattern for position/address changes
 - ✅ UI element initialization and event binding
 - ✅ `startTracking()` for continuous monitoring
 
 **Planned Improvements (0.8.x-alpha)**:
+
 - 🔄 Dependency injection for testability
 - 🔄 ChangeDetectionCoordinator extraction
 - 🔄 High cohesion (focused methods)
@@ -198,6 +202,7 @@ This document provides a comprehensive timeline of architectural changes across 
 | 0.8.x-alpha | Planned | 🔄 Future | Initial implementation with immutable instances |
 
 **Planned Features**:
+
 - 🔄 Automatic extraction from geocoding data
 - 🔄 Portuguese descriptions for reference place types
 - 🔄 Immutable instances (frozen after creation)
@@ -212,6 +217,7 @@ This document provides a comprehensive timeline of architectural changes across 
 #### GeoPosition Breaking Changes
 
 **Before (0.5.x-alpha)**:
+
 ```javascript
 const position = new GeoPosition(browserPosition);
 position.accuracy = 20;  // Mutates and updates accuracyQuality
@@ -219,6 +225,7 @@ console.log(position.toString());  // Logs during construction
 ```
 
 **After (0.9.0-alpha and later)**:
+
 ```javascript
 // Option 1: Create new instance with different accuracy
 const newBrowserPosition = {
@@ -246,6 +253,7 @@ console.log("Created position:", position.toString());
 While PR #189 introduces significant refactoring, **100% backward compatibility is maintained**. However, new code should prefer the enhanced patterns:
 
 **Current (0.9.0-alpha)** - Still works in 0.8.x-alpha:
+
 ```javascript
 const manager = new WebGeocodingManager(document, {
     locationResult: 'location-result'
@@ -254,6 +262,7 @@ manager.startTracking();
 ```
 
 **Enhanced (0.8.x-alpha)** - Recommended for new code:
+
 ```javascript
 // Dependency injection for testability
 const manager = new WebGeocodingManager(
@@ -336,6 +345,7 @@ npm test -- __tests__/PositionManager.test.js           # PositionManager tests
 ## Related Documentation
 
 ### Architecture Documentation
+
 - **[GEO_POSITION.md](./GEO_POSITION.md)** - GeoPosition class with version history
 - **[POSITION_MANAGER.md](./POSITION_MANAGER.md)** - PositionManager class with version history
 - **[WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md)** - WebGeocodingManager class with version history
@@ -343,11 +353,13 @@ npm test -- __tests__/PositionManager.test.js           # PositionManager tests
 - **[REFERENCE_PLACE.md](./REFERENCE_PLACE.md)** - Planned ReferencePlace class
 
 ### Development Guidelines
+
 - **[REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md)** - Immutability and pure functions
 - **[CONTRIBUTING.md](../../.github/CONTRIBUTING.md)** - Contribution guidelines
 - **[TDD_GUIDE.md](../../.github/TDD_GUIDE.md)** - Test-driven development
 
 ### Project Documentation
+
 - **[README.md](../../README.md)** - Project overview and quick start
 - **[CHANGELOG](../../CHANGELOG.md)** - Detailed change log (if available)
 - **[PROJECT_PURPOSE_AND_ARCHITECTURE.md](../PROJECT_PURPOSE_AND_ARCHITECTURE.md)** - Project goals and architecture
@@ -369,19 +381,25 @@ npm test -- __tests__/PositionManager.test.js           # PositionManager tests
 ## Frequently Asked Questions
 
 ### Q: Can I upgrade from 0.9.0-alpha to 0.9.0-alpha without changes?
+
 **A**: Yes! ✅ Full backward compatibility is maintained. Simply update package.json version.
 
 ### Q: What happens to my 0.5.x-alpha code in 0.9.0-alpha?
+
 **A**: It will break. ❌ You must migrate to immutable patterns. See migration guide above.
 
 ### Q: Will 0.8.x-alpha break my 0.9.0-alpha code?
+
 **A**: No! ✅ PR #189 maintains 100% backward compatibility. New features are additive.
 
 ### Q: Which version should I use for production?
+
 **A**: Version 0.9.0-alpha is recommended. It's stable, thoroughly tested, and production-ready.
 
 ### Q: How do I test against multiple versions?
+
 **A**: Use git tags and npm version management:
+
 ```bash
 git checkout v0.9.0-alpha && npm install && npm test
 git checkout v0.9.0-alpha && npm install && npm test
@@ -389,6 +407,7 @@ git checkout v0.9.0-alpha && npm install && npm test
 ```
 
 ### Q: What's the release schedule?
+
 **A**: Alpha versions are released as features stabilize. No fixed schedule. Monitor GitHub releases.
 
 ---
@@ -398,6 +417,7 @@ git checkout v0.9.0-alpha && npm install && npm test
 When documenting new features or changes:
 
 1. **Add version context** to all architecture documents:
+
    ```markdown
    Introduced in version X.X.X-alpha, stable in Y.Y.Y-alpha
    ```
@@ -409,6 +429,7 @@ When documenting new features or changes:
 4. **Update this timeline** when significant changes occur
 
 5. **Tag git commits** with version numbers:
+
    ```bash
    git tag v0.9.0-alpha
    git push origin v0.9.0-alpha

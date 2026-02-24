@@ -16,6 +16,7 @@ Issue #189 successfully refactored WebGeocodingManager for better cohesion and c
 ## Technical Debt Items
 
 ### ✅ Documentation Complete
+
 - [x] Comprehensive analysis document created (`ISSUE_189_NEXT_STEPS.md`)
 - [x] All items documented with full technical specifications
 - [x] Priority and effort estimations provided
@@ -24,6 +25,7 @@ Issue #189 successfully refactored WebGeocodingManager for better cohesion and c
 ### 📋 Issues To Create
 
 #### 1. Configuration Object for Element IDs
+
 - **Priority**: High
 - **Effort**: Small (< 1 day)
 - **Issue Number**: _Pending creation_
@@ -32,6 +34,7 @@ Issue #189 successfully refactored WebGeocodingManager for better cohesion and c
 - **Key Benefits**: Single source of truth, easier testing, better documentation
 
 #### 2. Factory Pattern for Displayers  
+
 - **Priority**: Medium
 - **Effort**: Medium (1-3 days)
 - **Issue Number**: _Pending creation_
@@ -40,6 +43,7 @@ Issue #189 successfully refactored WebGeocodingManager for better cohesion and c
 - **Key Benefits**: Mock displayers in tests, support alternative implementations, loose coupling
 
 #### 3. Remove Legacy Timeout in startTracking()
+
 - **Priority**: Low
 - **Effort**: Small (< 1 day)
 - **Issue Number**: _Pending creation_
@@ -48,6 +52,7 @@ Issue #189 successfully refactored WebGeocodingManager for better cohesion and c
 - **Key Benefits**: Code cleanliness, reduced confusion, fewer side effects
 
 #### 4. Extract Change Detection to Separate Coordinator
+
 - **Priority**: High  
 - **Effort**: Large (1-2 weeks)
 - **Issue Number**: _Pending creation_
@@ -56,6 +61,7 @@ Issue #189 successfully refactored WebGeocodingManager for better cohesion and c
 - **Key Benefits**: Single Responsibility Principle, reduced complexity, better testability
 
 #### 5. Dependency Injection for Services
+
 - **Priority**: High
 - **Effort**: Small (< 1 day)
 - **Issue Number**: _Pending creation_  

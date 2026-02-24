@@ -29,6 +29,7 @@ This document provides a comprehensive reference for all public APIs in the Guia
 #### Methods
 
 ##### `getInstance()`
+
 Returns the singleton instance of PositionManager.
 
 ```javascript
@@ -40,6 +41,7 @@ const positionManager = PositionManager.getInstance();
 **Returns**: `PositionManager` - Singleton instance
 
 ##### `setCurrentPosition(geoPosition)`
+
 Updates the current position. Triggers updates on distance (20m) OR time (30s) thresholds.
 
 ```javascript
@@ -48,13 +50,16 @@ positionManager.setCurrentPosition(position);
 ```
 
 **Parameters**:
+
 - `geoPosition` (GeoPosition) - Immutable position value object
 
 **Thresholds** (v0.9.0+):
+
 - Distance: 20 meters (MINIMUM_DISTANCE_CHANGE)
 - Time: 30 seconds (MINIMUM_TIME_CHANGE)
 
 ##### `getCurrentPosition()`
+
 Retrieves the current position.
 
 ```javascript
@@ -65,6 +70,7 @@ console.log(currentPosition.latitude, currentPosition.longitude);
 **Returns**: `GeoPosition | null` - Current position or null if not set
 
 ##### `addObserver(callback)`
+
 Registers an observer for position changes.
 
 ```javascript
@@ -74,11 +80,13 @@ positionManager.addObserver((newPosition) => {
 ```
 
 **Parameters**:
+
 - `callback` (Function) - Callback invoked on position changes
 
 **Returns**: `Function` - Unsubscribe function
 
 ##### `notifyObservers()`
+
 Notifies all registered observers of position changes.
 
 ```javascript
@@ -102,6 +110,7 @@ const position = new GeoPosition(latitude, longitude, accuracy, timestamp);
 ```
 
 **Parameters**:
+
 - `latitude` (Number) - Latitude in decimal degrees
 - `longitude` (Number) - Longitude in decimal degrees
 - `accuracy` (Number) - Position accuracy in meters
@@ -119,6 +128,7 @@ position.timestamp  // Number: Unix timestamp
 #### Methods
 
 ##### `distanceTo(otherPosition)`
+
 Calculates distance to another position using Haversine formula.
 
 ```javascript
@@ -130,11 +140,13 @@ console.log(`Distance: ${distanceMeters} meters`);
 ```
 
 **Parameters**:
+
 - `otherPosition` (GeoPosition) - Target position
 
 **Returns**: `Number` - Distance in meters
 
 ##### `toJSON()`
+
 Serializes position to JSON object.
 
 ```javascript
@@ -157,6 +169,7 @@ const json = position.toJSON();
 #### Methods
 
 ##### `getCurrentPosition(options)`
+
 Retrieves the current position from browser.
 
 ```javascript
@@ -178,6 +191,7 @@ service.getCurrentPosition({
 ```
 
 **Parameters**:
+
 - `options` (Object) - Geolocation options
   - `enableHighAccuracy` (Boolean) - Request high accuracy
   - `timeout` (Number) - Timeout in milliseconds
@@ -186,11 +200,13 @@ service.getCurrentPosition({
 **Returns**: `Promise<Position>` - Browser Position object
 
 **Errors**:
+
 - `PERMISSION_DENIED` - User denied geolocation permission
 - `POSITION_UNAVAILABLE` - Position could not be determined
 - `TIMEOUT` - Request timed out
 
 ##### `watchPosition(successCallback, errorCallback, options)`
+
 Watches position changes continuously.
 
 ```javascript
@@ -209,6 +225,7 @@ service.clearWatch(watchId);
 ```
 
 **Parameters**:
+
 - `successCallback` (Function) - Called on position updates
 - `errorCallback` (Function) - Called on errors
 - `options` (Object) - Geolocation options
@@ -216,6 +233,7 @@ service.clearWatch(watchId);
 **Returns**: `Number` - Watch ID for clearing
 
 ##### `clearWatch(watchId)`
+
 Stops watching position changes.
 
 ```javascript
@@ -223,6 +241,7 @@ service.clearWatch(watchId);
 ```
 
 **Parameters**:
+
 - `watchId` (Number) - Watch ID from watchPosition()
 
 ---
@@ -242,12 +261,14 @@ const geocoder = new ReverseGeocoder(latitude, longitude);
 ```
 
 **Parameters**:
+
 - `latitude` (Number) - Latitude in decimal degrees
 - `longitude` (Number) - Longitude in decimal degrees
 
 #### Methods
 
 ##### `fetchAddress()`
+
 Fetches address data from Nominatim API.
 
 ```javascript
@@ -267,6 +288,7 @@ geocoder.fetchAddress()
 **Returns**: `Promise<Object>` - Address data from Nominatim
 
 **Response Structure**:
+
 ```javascript
 {
   display_name: "Av. Paulista, São Paulo, SP, Brazil",
@@ -288,6 +310,7 @@ geocoder.fetchAddress()
 **Rate Limiting**: 1 request/second (Nominatim usage policy)
 
 ##### `addObserver(callback)`
+
 Registers observer for address fetch events.
 
 ```javascript
@@ -299,9 +322,11 @@ geocoder.addObserver((event, data) => {
 ```
 
 **Parameters**:
+
 - `callback` (Function) - Observer callback
 
 **Events** (v0.9.0+):
+
 - `ADDRESS_FETCHED` - Address successfully fetched (uses constant from config/defaults.js)
 
 ---
@@ -346,6 +371,7 @@ address.regiaoMetropolitana  // String: Metropolitan region (v0.9.0-alpha)
 #### Methods
 
 ##### `municipioCompleto()`
+
 Returns municipality with state code.
 
 ```javascript
@@ -356,6 +382,7 @@ const fullCity = address.municipioCompleto();
 **Returns**: `String` - "Município, UF" format
 
 ##### `regiaoMetropolitanaFormatada()` (v0.9.0-alpha)
+
 Returns formatted metropolitan region name.
 
 ```javascript
@@ -366,6 +393,7 @@ const metro = address.regiaoMetropolitanaFormatada();
 **Returns**: `String | null` - Formatted metropolitan region or null
 
 ##### `enderecoCompleto()`
+
 Returns complete formatted address.
 
 ```javascript
@@ -376,6 +404,7 @@ const full = address.enderecoCompleto();
 **Returns**: `String` - Complete address
 
 ##### `toJSON()`
+
 Serializes to JSON object.
 
 ```javascript
@@ -393,6 +422,7 @@ const json = address.toJSON();
 **File**: `src/data/AddressCache.js`
 
 **Architecture** (v0.9.0-alpha):
+
 - Uses composition pattern with 3 focused classes
 - **AddressChangeDetector**: Field change detection with signature tracking
 - **CallbackRegistry**: Centralized callback management
@@ -408,11 +438,13 @@ const cache = new AddressCache(maxSize);
 ```
 
 **Parameters**:
+
 - `maxSize` (Number, optional) - Maximum cache entries (default: 100)
 
 #### Methods
 
 ##### `set(key, value)`
+
 Stores address in cache with LRU eviction.
 
 ```javascript
@@ -424,10 +456,12 @@ cache.set('current', {
 ```
 
 **Parameters**:
+
 - `key` (String) - Cache key
 - `value` (Object) - Address data
 
 ##### `get(key)`
+
 Retrieves address from cache.
 
 ```javascript
@@ -435,11 +469,13 @@ const address = cache.get('current');
 ```
 
 **Parameters**:
+
 - `key` (String) - Cache key
 
 **Returns**: `Object | null` - Cached address or null
 
 ##### `registerChangeCallback(field, callback)`
+
 Registers callback for field changes.
 
 ```javascript
@@ -449,16 +485,19 @@ cache.registerChangeCallback('bairro', (oldValue, newValue) => {
 ```
 
 **Parameters**:
+
 - `field` (String) - Field name to monitor
 - `callback` (Function) - Callback with (oldValue, newValue) signature
 
 **Supported Fields**:
+
 - `municipio` - Municipality changes
 - `bairro` - Neighborhood changes
 - `uf` - State changes
 - `regiaoMetropolitana` - Metropolitan region changes (v0.9.0-alpha)
 
 ##### `clear()`
+
 Clears all cached data.
 
 ```javascript
@@ -476,6 +515,7 @@ cache.clear();
 #### Methods
 
 ##### `extract(nominatimData)`
+
 Extracts standardized address from Nominatim response.
 
 ```javascript
@@ -491,11 +531,13 @@ console.log(address.regiaoMetropolitana); // v0.9.0-alpha
 ```
 
 **Parameters**:
+
 - `nominatimData` (Object) - Raw Nominatim API response
 
 **Returns**: `BrazilianStandardAddress` - Standardized address object
 
 **Extraction Logic** (v0.9.0-alpha):
+
 - Municipality: `city`, `town`, `village`, `municipality`
 - Neighborhood: `neighbourhood`, `suburb`, `quarter`
 - State: `state` field
@@ -522,6 +564,7 @@ const place = new ReferencePlace(
 ```
 
 **Parameters**:
+
 - `name` (String) - Place name
 - `type` (String) - Place type (amenity, shop, building, etc.)
 - `distance` (Number) - Distance in meters
@@ -529,6 +572,7 @@ const place = new ReferencePlace(
 #### Methods
 
 ##### `calculateCategory()`
+
 Determines place category from type (v0.9.0+).
 
 ```javascript
@@ -537,11 +581,13 @@ const category = place.calculateCategory();
 ```
 
 **Supported Types**:
+
 - `place`, `shop`, `amenity`, `railway`, `building`
 
 **Returns**: `String` - Categorized place type
 
 ##### `toJSON()`
+
 Serializes to JSON.
 
 ```javascript
@@ -570,12 +616,14 @@ const displayer = new HTMLPositionDisplayer(document, 'output-element-id');
 ```
 
 **Parameters**:
+
 - `document` (Document) - DOM document object
 - `elementId` (String) - Target element ID
 
 #### Methods
 
 ##### `display(geoPosition)`
+
 Displays position coordinates.
 
 ```javascript
@@ -584,9 +632,11 @@ displayer.display(position);
 ```
 
 **Parameters**:
+
 - `geoPosition` (GeoPosition) - Position to display
 
 **Output Format**:
+
 ```
 Latitude: -23.5505°
 Longitude: -46.6333°
@@ -595,6 +645,7 @@ Accuracy: 10 meters
 ```
 
 ##### `clear()`
+
 Clears displayed content.
 
 ```javascript
@@ -620,6 +671,7 @@ const displayer = new HTMLAddressDisplayer(document, 'address-output-id');
 #### Methods
 
 ##### `display(address)`
+
 Displays formatted address.
 
 ```javascript
@@ -632,9 +684,11 @@ displayer.display(address);
 ```
 
 **Parameters**:
+
 - `address` (BrazilianStandardAddress) - Address to display
 
 **Output Format**:
+
 ```
 Endereço: Avenida Paulista, 1578
 Bairro: Bela Vista
@@ -661,6 +715,7 @@ const displayer = new HTMLHighlightCardsDisplayer(document);
 #### Methods
 
 ##### `displayMunicipio(municipio, uf)`
+
 Displays municipality highlight card with state.
 
 ```javascript
@@ -669,10 +724,12 @@ displayer.displayMunicipio('Recife', 'PE');
 ```
 
 **Parameters**:
+
 - `municipio` (String) - Municipality name
 - `uf` (String) - State code
 
 ##### `displayBairro(bairro)`
+
 Displays neighborhood highlight card.
 
 ```javascript
@@ -680,9 +737,11 @@ displayer.displayBairro('Boa Viagem');
 ```
 
 **Parameters**:
+
 - `bairro` (String) - Neighborhood name
 
 ##### `displayRegiaoMetropolitana(regiaoMetropolitana)` (v0.9.0-alpha)
+
 Displays metropolitan region highlight.
 
 ```javascript
@@ -690,9 +749,11 @@ displayer.displayRegiaoMetropolitana('Região Metropolitana do Recife');
 ```
 
 **Parameters**:
+
 - `regiaoMetropolitana` (String) - Metropolitan region name
 
 ##### `clear()`
+
 Clears all highlight cards.
 
 ```javascript
@@ -718,6 +779,7 @@ const displayer = new HTMLSidraDisplayer(document, 'stats-output-id');
 #### Methods
 
 ##### `display(sidraData)`
+
 Displays population statistics with Brazilian Portuguese localization.
 
 ```javascript
@@ -730,6 +792,7 @@ displayer.display({
 ```
 
 **Parameters**:
+
 - `sidraData` (Object) - SIDRA data object
   - `municipio` (String) - Municipality name
   - `uf` (String) - State code
@@ -737,6 +800,7 @@ displayer.display({
   - `ano` (Number) - Year
 
 **Output Format**:
+
 ```
 📊 Estatísticas Demográficas
 Município: Recife, PE
@@ -746,6 +810,7 @@ Fonte: IBGE SIDRA
 ```
 
 ##### `addObserver(callback)`
+
 Registers observer for SIDRA data updates.
 
 ```javascript
@@ -755,6 +820,7 @@ displayer.addObserver((data) => {
 ```
 
 **Data Source**:
+
 - Online: IBGE SIDRA API (https://servicodados.ibge.gov.br/api/v3/agregados/6579)
 - Offline: `libs/sidra/tab6579_municipios.json` (190KB fallback)
 
@@ -769,6 +835,7 @@ displayer.addObserver((data) => {
 #### Methods
 
 ##### `createPositionDisplayer(document, elementId)`
+
 Creates position displayer.
 
 ```javascript
@@ -781,6 +848,7 @@ const positionDisplayer = factory.createPositionDisplayer(document, 'coords-outp
 **Returns**: `HTMLPositionDisplayer`
 
 ##### `createAddressDisplayer(document, elementId)`
+
 Creates address displayer.
 
 ```javascript
@@ -790,6 +858,7 @@ const addressDisplayer = factory.createAddressDisplayer(document, 'address-outpu
 **Returns**: `HTMLAddressDisplayer`
 
 ##### `createReferencePlaceDisplayer(document, elementId)`
+
 Creates reference place displayer.
 
 ```javascript
@@ -799,6 +868,7 @@ const placeDisplayer = factory.createReferencePlaceDisplayer(document, 'place-ou
 **Returns**: `HTMLReferencePlaceDisplayer`
 
 ##### `createHighlightCardsDisplayer(document)`
+
 Creates highlight cards displayer.
 
 ```javascript
@@ -808,6 +878,7 @@ const cardsDisplayer = factory.createHighlightCardsDisplayer(document);
 **Returns**: `HTMLHighlightCardsDisplayer`
 
 ##### `createSidraDisplayer(document, elementId)` (v0.9.0+)
+
 Creates SIDRA displayer.
 
 ```javascript
@@ -827,6 +898,7 @@ const sidraDisplayer = factory.createSidraDisplayer(document, 'stats-output');
 **File**: `src/speech/SpeechSynthesisManager.js`
 
 **Architecture** (v0.9.0-alpha):
+
 - Manager/Controller with Composition
 - Coordinates 4 focused components:
   - `VoiceLoader` - Voice loading with exponential backoff
@@ -845,6 +917,7 @@ const speechManager = new SpeechSynthesisManager();
 #### Methods
 
 ##### `speak(text, priority)`
+
 Queues text for speech synthesis.
 
 ```javascript
@@ -852,15 +925,18 @@ speechManager.speak('Bem-vindo ao Guia Turístico', 'high');
 ```
 
 **Parameters**:
+
 - `text` (String) - Text to speak
 - `priority` (String) - Priority level: 'high', 'normal', 'low'
 
 **Priority Processing**:
+
 - `high` - Immediate processing (interrupts current)
 - `normal` - Standard queue processing
 - `low` - Background processing
 
 ##### `setRate(rate)`
+
 Sets speech rate.
 
 ```javascript
@@ -868,11 +944,13 @@ speechManager.setRate(1.2); // 20% faster
 ```
 
 **Parameters**:
+
 - `rate` (Number) - Rate value (0.1 to 10.0, default: 1.0)
 
 **Automatic Clamping**: Values outside range are clamped with logging
 
 ##### `setPitch(pitch)`
+
 Sets speech pitch.
 
 ```javascript
@@ -880,9 +958,11 @@ speechManager.setPitch(1.0); // Normal pitch
 ```
 
 **Parameters**:
+
 - `pitch` (Number) - Pitch value (0.0 to 2.0, default: 1.0)
 
 ##### `stop()`
+
 Stops current speech and clears queue.
 
 ```javascript
@@ -890,6 +970,7 @@ speechManager.stop();
 ```
 
 ##### `pause()`
+
 Pauses current speech.
 
 ```javascript
@@ -897,6 +978,7 @@ speechManager.pause();
 ```
 
 ##### `resume()`
+
 Resumes paused speech.
 
 ```javascript
@@ -904,6 +986,7 @@ speechManager.resume();
 ```
 
 **Brazilian Portuguese Optimization**:
+
 - Prioritizes pt-BR voices
 - Falls back to pt-* prefix
 - Quality scoring: local +10, primary language +20
@@ -921,6 +1004,7 @@ speechManager.resume();
 #### Methods
 
 ##### `loadVoices()`
+
 Loads available voices with retry mechanism.
 
 ```javascript
@@ -934,11 +1018,13 @@ console.log(`Loaded ${voices.length} voices`);
 **Returns**: `Promise<Array>` - Array of SpeechSynthesisVoice objects
 
 **Retry Strategy**:
+
 - Delays: 100ms → 200ms → 400ms → 800ms → 1600ms → 3200ms → 5000ms (capped)
 - Max attempts: 10
 - Concurrent load protection
 
 ##### `getVoices()`
+
 Gets currently loaded voices (synchronous).
 
 ```javascript
@@ -948,6 +1034,7 @@ const voices = loader.getVoices();
 **Returns**: `Array` - Cached voices array
 
 ##### `hasVoices()`
+
 Checks if voices are loaded.
 
 ```javascript
@@ -959,6 +1046,7 @@ if (loader.hasVoices()) {
 **Returns**: `Boolean` - True if voices loaded
 
 ##### `clearCache()`
+
 Clears voice cache.
 
 ```javascript
@@ -976,6 +1064,7 @@ loader.clearCache();
 #### Methods
 
 ##### `selectVoice(voices)`
+
 Selects best Brazilian Portuguese voice.
 
 ```javascript
@@ -990,21 +1079,25 @@ if (bestVoice) {
 ```
 
 **Parameters**:
+
 - `voices` (Array) - Array of SpeechSynthesisVoice objects
 
 **Returns**: `SpeechSynthesisVoice | null` - Best voice or null
 
 **Selection Strategy** (3 levels):
+
 1. **Exact match**: pt-BR language code
 2. **Prefix match**: pt-* language codes
 3. **Fallback**: First available voice
 4. **None**: Returns null
 
 **Voice Quality Scoring**:
+
 - Local voice: +10 points
 - Primary language match: +20 points
 
 ##### `filterByLanguage(voices, langCode)`
+
 Filters voices by language code.
 
 ```javascript
@@ -1012,12 +1105,14 @@ const ptBRVoices = selector.filterByLanguage(voices, 'pt-BR');
 ```
 
 **Parameters**:
+
 - `voices` (Array) - Voice array
 - `langCode` (String) - Language code (e.g., 'pt-BR', 'pt-')
 
 **Returns**: `Array` - Filtered voices
 
 ##### `scoreVoice(voice, isExactMatch)`
+
 Scores a voice for selection priority.
 
 ```javascript
@@ -1025,12 +1120,14 @@ const score = selector.scoreVoice(voice, true);
 ```
 
 **Parameters**:
+
 - `voice` (SpeechSynthesisVoice) - Voice to score
 - `isExactMatch` (Boolean) - Is exact language match
 
 **Returns**: `Number` - Quality score
 
 ##### `getVoiceInfo(voice)`
+
 Gets voice information object.
 
 ```javascript
@@ -1059,6 +1156,7 @@ const config = new SpeechConfiguration();
 #### Methods
 
 ##### `setRate(rate)`
+
 Sets and validates speech rate.
 
 ```javascript
@@ -1066,11 +1164,13 @@ config.setRate(1.5); // 50% faster
 ```
 
 **Parameters**:
+
 - `rate` (Number) - Rate value (0.1 to 10.0)
 
 **Validation**: Values automatically clamped to valid range
 
 ##### `getRate()`
+
 Gets current rate.
 
 ```javascript
@@ -1080,6 +1180,7 @@ const rate = config.getRate(); // 1.5
 **Returns**: `Number` - Current rate
 
 ##### `setPitch(pitch)`
+
 Sets and validates speech pitch.
 
 ```javascript
@@ -1087,9 +1188,11 @@ config.setPitch(1.2);
 ```
 
 **Parameters**:
+
 - `pitch` (Number) - Pitch value (0.0 to 2.0)
 
 ##### `getPitch()`
+
 Gets current pitch.
 
 ```javascript
@@ -1099,6 +1202,7 @@ const pitch = config.getPitch(); // 1.2
 **Returns**: `Number` - Current pitch
 
 ##### `reset()`
+
 Resets to default values.
 
 ```javascript
@@ -1107,6 +1211,7 @@ config.reset();
 ```
 
 **Valid Ranges**:
+
 - Rate: 0.1 to 10.0 (default: 1.0)
 - Pitch: 0.0 to 2.0 (default: 1.0)
 
@@ -1127,6 +1232,7 @@ config.reset();
 #### Methods
 
 ##### `getInstance()`
+
 Gets singleton instance.
 
 ```javascript
@@ -1138,6 +1244,7 @@ const manager = timerManager.getInstance();
 **Returns**: `TimerManager` - Singleton instance
 
 ##### `setInterval(callback, delay, id)`
+
 Creates named interval timer.
 
 ```javascript
@@ -1149,6 +1256,7 @@ const timerId = timerManager.setInterval(
 ```
 
 **Parameters**:
+
 - `callback` (Function) - Timer callback
 - `delay` (Number) - Delay in milliseconds
 - `id` (String) - Unique timer identifier
@@ -1156,6 +1264,7 @@ const timerId = timerManager.setInterval(
 **Returns**: `String` - Timer ID for tracking
 
 ##### `setTimeout(callback, delay, id)`
+
 Creates named timeout timer.
 
 ```javascript
@@ -1167,6 +1276,7 @@ const timerId = timerManager.setTimeout(
 ```
 
 **Parameters**:
+
 - `callback` (Function) - Timer callback
 - `delay` (Number) - Delay in milliseconds
 - `id` (String) - Unique timer identifier
@@ -1174,6 +1284,7 @@ const timerId = timerManager.setTimeout(
 **Returns**: `String` - Timer ID
 
 ##### `clearTimer(id)`
+
 Clears specific timer by ID.
 
 ```javascript
@@ -1181,9 +1292,11 @@ timerManager.clearTimer('heartbeat-timer');
 ```
 
 **Parameters**:
+
 - `id` (String) - Timer identifier
 
 ##### `clearAllTimers()`
+
 Clears all tracked timers.
 
 ```javascript
@@ -1191,6 +1304,7 @@ timerManager.clearAllTimers();
 ```
 
 **Usage Pattern**:
+
 ```javascript
 // ✅ Good - Named timer with cleanup
 const id = timerManager.setInterval(callback, 1000, 'my-timer');
@@ -1202,6 +1316,7 @@ const id = setInterval(callback, 1000); // Memory leak risk!
 ```
 
 **Migrated Components** (v0.9.0+):
+
 - SpeechSynthesisManager
 - VoiceManager
 - SpeechQueueProcessor
@@ -1218,6 +1333,7 @@ const id = setInterval(callback, 1000); // Memory leak risk!
 #### Functions
 
 ##### `disableWithReason(button, reason)`
+
 Disables button with status message.
 
 ```javascript
@@ -1228,16 +1344,19 @@ disableWithReason(button, 'Aguardando localização para habilitar');
 ```
 
 **Parameters**:
+
 - `button` (HTMLElement) - Button element
 - `reason` (String) - Status message in Brazilian Portuguese
 
 **Features**:
+
 - Sets `disabled` attribute
 - Adds ARIA attributes (`aria-describedby`, `role="status"`, `aria-live="polite"`)
 - Color-coded status indicator
 - WCAG 2.1 AA accessible
 
 ##### `enableWithMessage(button, message)`
+
 Enables button with success message.
 
 ```javascript
@@ -1247,10 +1366,12 @@ enableWithMessage(button, 'Localização obtida com sucesso');
 ```
 
 **Parameters**:
+
 - `button` (HTMLElement) - Button element
 - `message` (String) - Success message
 
 ##### `updateButtonStatus(button, message, type)`
+
 Updates button status without changing enabled state.
 
 ```javascript
@@ -1260,17 +1381,20 @@ updateButtonStatus(button, 'Processando...', 'info');
 ```
 
 **Parameters**:
+
 - `button` (HTMLElement) - Button element
 - `message` (String) - Status message
 - `type` (String) - Status type: 'info', 'warning', 'success', 'error'
 
 **Status Types**:
+
 - `info` - Blue indicator
 - `warning` - Orange indicator
 - `success` - Green indicator
 - `error` - Red indicator
 
 ##### `removeButtonStatus(button)`
+
 Removes status message.
 
 ```javascript
@@ -1280,6 +1404,7 @@ removeButtonStatus(button);
 ```
 
 **Parameters**:
+
 - `button` (HTMLElement) - Button element
 
 ---
@@ -1326,6 +1451,7 @@ geocoder.addObserver((event) => {
 ```
 
 **Available Constants**:
+
 - `APP_VERSION` - Application version
 - `APP_NAME` - Application name
 - `MINIMUM_TIME_CHANGE` - Position update time threshold (30s)
@@ -1334,6 +1460,7 @@ geocoder.addObserver((event) => {
 - `BUTTON_STATUS_MESSAGES` - Brazilian Portuguese button status messages (v0.9.0-alpha)
 
 **Usage Guidelines**:
+
 - ✅ Import constants for consistency
 - ✅ Avoid hardcoded strings
 - ✅ Use for event names, thresholds, configuration
@@ -1410,11 +1537,13 @@ addrDisplayer.display(standardAddress);
 ## Browser Compatibility
 
 **Minimum Requirements**:
+
 - Modern browser with ES6+ support
 - Geolocation API support
 - SpeechSynthesis API (optional, for voice features)
 
 **Tested Browsers**:
+
 - Chrome 90+
 - Firefox 88+
 - Safari 14+
@@ -1425,16 +1554,19 @@ addrDisplayer.display(standardAddress);
 ## External API Dependencies
 
 ### OpenStreetMap Nominatim
+
 - **URL**: `https://nominatim.openstreetmap.org/reverse`
 - **Rate Limit**: 1 request/second
 - **Usage Policy**: https://operations.osmfoundation.org/policies/nominatim/
 
 ### IBGE (Brazilian Institute of Geography and Statistics)
+
 - **Location API**: `https://servicodados.ibge.gov.br/api/v1/localidades/estados/`
 - **SIDRA API**: `https://servicodados.ibge.gov.br/api/v3/agregados/6579/periodos/-6/variaveis/9324`
 - **Offline Fallback**: `libs/sidra/tab6579_municipios.json` (190KB)
 
 ### Google Maps
+
 - **Map Links**: `https://www.google.com/maps?q=lat,lon`
 - **Street View**: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=lat,lon`
 
@@ -1445,24 +1577,28 @@ addrDisplayer.display(standardAddress);
 ### v0.9.0-alpha Changes
 
 **Metropolitan Region Support**:
+
 - Added `regiaoMetropolitana` field to `BrazilianStandardAddress`
 - Added `regiaoMetropolitanaFormatada()` method
 - Updated `AddressExtractor` to extract from Nominatim `county` field
 - Added `displayRegiaoMetropolitana()` to `HTMLHighlightCardsDisplayer`
 
 **Speech Synthesis Refactoring**:
+
 - Refactored to composition pattern
 - New classes: `VoiceLoader`, `VoiceSelector`, `SpeechConfiguration`
 - Replaced circular timer with exponential backoff
 - Improved Brazilian Portuguese voice selection
 
 **Button Status Messages**:
+
 - New utility: `src/utils/button-status.js`
 - WCAG 2.1 AA accessible button status indicators
 - Brazilian Portuguese status messages
 - Color-coded status types
 
 **Timer Management**:
+
 - Migrated all components to `TimerManager`
 - Prevents memory leaks in long-running sessions
 - Named timer tracking for debugging
@@ -1470,28 +1606,33 @@ addrDisplayer.display(standardAddress);
 ### v0.9.0 Changes
 
 **ServiceCoordinator Enhancement**:
+
 - Added SIDRA displayer management
 - Factory method: `createSidraDisplayer()`
 
 ### v0.9.0 Changes
 
 **Position Update Logic**:
+
 - Distance threshold: 20 meters
 - Time threshold: 30 seconds
 - Updates trigger on EITHER threshold
 
 **SIDRA Integration**:
+
 - Added `HTMLSidraDisplayer` class
 - Observer pattern for automatic updates
 - Offline fallback data (libs/sidra/)
 
 **Reference Place Categorization**:
+
 - Added `calculateCategory()` method
 - Supports: place, shop, amenity, railway, building
 
 ### v0.9.0 Changes
 
 **Highlight Cards**:
+
 - Added `HTMLHighlightCardsDisplayer`
 - Municipality display with state code
 - Neighborhood tracking
@@ -1506,6 +1647,7 @@ addrDisplayer.display(standardAddress);
 **Tests**: `__tests__/`  
 
 **Related Projects**:
+
 - guia.js: https://github.com/mpbarbosa/guia_js
 - ibira.js: Brazilian IBGE integration
 

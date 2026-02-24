@@ -1,6 +1,7 @@
 # Documentation Index - Guia Turístico
 
 ---
+
 Last Updated: 2026-01-28
 Status: Active
 Category: Guide
@@ -15,6 +16,7 @@ Category: Guide
 Choose your path based on your role or goal:
 
 ### 🆕 New Contributors
+
 1. Start: [README.md](../README.md) - Project overview
 2. Then: [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Contribution guidelines  
 3. Next: [TDD_GUIDE.md](../.github/TDD_GUIDE.md) - Test-driven development
@@ -23,6 +25,7 @@ Choose your path based on your role or goal:
 **Estimated time**: 2 hours reading
 
 ### 🏗️ Architecture Deep Dive
+
 1. Start: [PROJECT_PURPOSE_AND_ARCHITECTURE.md](./PROJECT_PURPOSE_AND_ARCHITECTURE.md) - Overview
 2. Then: [CLASS_DIAGRAM.md](./architecture/CLASS_DIAGRAM.md) - System design
 3. Next: [MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md) - Module organization
@@ -31,6 +34,7 @@ Choose your path based on your role or goal:
 **Estimated time**: 3 hours reading + exploration
 
 ### 🧪 Testing & Quality
+
 1. Start: [TESTING.md](./testing/TESTING.md) - Testing overview
 2. Then: [JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md) - Jest setup
 3. Next: [HTML_GENERATION.md](./testing/HTML_GENERATION.md) - HTML testing  
@@ -39,6 +43,7 @@ Choose your path based on your role or goal:
 **Estimated time**: 2 hours reading
 
 ### 🔧 Development Setup
+
 1. Start: [README.md](../README.md#installation) - Installation
 2. Then: [WORKFLOW_SETUP.md](./WORKFLOW_SETUP.md) - Development workflow
 3. Next: [JSDOC_GUIDE.md](../.github/JSDOC_GUIDE.md) - Documentation standards
@@ -47,6 +52,7 @@ Choose your path based on your role or goal:
 **Estimated time**: 1 hour + hands-on setup
 
 ### 🐛 Debugging & Troubleshooting
+
 1. Start: [TESTING.md](./testing/TESTING.md#troubleshooting) - Common issues
 2. Then: [JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md) - Module issues
 3. Next: [FALSE_POSITIVE_PATTERNS.md](../.github/FALSE_POSITIVE_PATTERNS.md) - Tool errors
@@ -333,6 +339,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 ### Reports
 
 **Implementation Reports**
+
 - **[PHASE_3_COMPLETION_REPORT.md](./reports/implementation/PHASE_3_COMPLETION_REPORT.md)** - WebGeocodingManager Phase 3 optimization complete ✅ 🆕
   - Created SpeechCoordinator (258 lines) to extract speech synthesis logic
   - Final reduction: 990 → 928 lines (6.3% reduction, 62 lines removed)
@@ -354,6 +361,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - Ready for Phase 2 integration (completed)
 
 **Planning Documents**
+
 - **[WEBGEOCODINGMANAGER_REFACTORING_PLAN.md](./WEBGEOCODINGMANAGER_REFACTORING_PLAN.md)** - Complete refactoring plan (Phases 1-4) ✅
   - Phase 1: ✅ COMPLETE (4 coordinator classes)
   - Phase 2: ✅ COMPLETE (WebGeocodingManager integration)
@@ -758,6 +766,7 @@ CI/CD and automation documentation in **[docs/workflow-automation/](./workflow-a
 - See **[docs/workflow-automation/README.md](./workflow-automation/README.md)** for purpose and guidelines
 
 **Key Documents:**
+
 - **[AUTOMATION_SUMMARY.md](./workflow-automation/AUTOMATION_SUMMARY.md)** - Automation overview
 - **[FINAL_AUTOMATION_SUMMARY.md](./workflow-automation/FINAL_AUTOMATION_SUMMARY.md)** - Complete automation catalog
 - **[CI_CACHING_STRATEGY.md](./workflow-automation/CI_CACHING_STRATEGY.md)** - GitHub Actions caching optimization
@@ -774,6 +783,7 @@ Project infrastructure, CI/CD, and development environment documentation in **[d
 - See **[docs/infrastructure/README.md](./infrastructure/README.md)** for purpose and guidelines
 
 **Key Documents:**
+
 - **[AI_WORKFLOW_INFRASTRUCTURE.md](./infrastructure/AI_WORKFLOW_INFRASTRUCTURE.md)** - AI-assisted development setup
 - **[CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md](./infrastructure/CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md)** - jsDelivr CDN strategy
 - **[NODE_VERSION_ALIGNMENT_PLAN.md](./infrastructure/NODE_VERSION_ALIGNMENT_PLAN.md)** - Node.js standardization
@@ -793,6 +803,7 @@ Project infrastructure, CI/CD, and development environment documentation in **[d
 ---
 
 **💡 Quick Navigation Tips**:
+
 - Start with [CONTRIBUTING.md](../.github/CONTRIBUTING.md) and [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)
 - For testing: [TDD_GUIDE.md](../.github/TDD_GUIDE.md) → [UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md)
 - For code quality: [JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md) → [CODE_REVIEW_GUIDE.md](../.github/CODE_REVIEW_GUIDE.md)
@@ -848,9 +859,10 @@ When creating issues, use these templates for consistency:
   - Severity classification (cosmetic, usability, blocking)
 
 📊 **[Issue Template Comparison](../.github/ISSUE_TEMPLATE_COMPARISON.md)** - Side-by-side comparison of all templates 🆕
-  - Detailed analysis of each template's features
-  - Common patterns and unique capabilities
-  - Guidance on selecting the right template
+
+- Detailed analysis of each template's features
+- Common patterns and unique capabilities
+- Guidance on selecting the right template
 
 ## Quick Start Guides
 
@@ -873,6 +885,7 @@ When creating issues, use these templates for consistency:
    - [TESTING.md](./testing/TESTING.md) - Project test suite overview
 
 4. **Development workflow**:
+
    ```bash
    # Validate syntax
    npm run validate

@@ -12,6 +12,7 @@
 ✅ **VERIFIED**: Both documented features are fully implemented with comprehensive test coverage.
 
 **Recommendation**: Version bump from `0.9.0-alpha` to `0.9.0-alpha` is warranted based on:
+
 1. DisplayerFactory with 5 methods (v0.9.0+ feature) ✅ **IMPLEMENTED**
 2. Município state abbreviation display (v0.9.0-alpha feature) ✅ **IMPLEMENTED**
 3. Metropolitan region display (v0.9.0-alpha feature) ✅ **IMPLEMENTED**
@@ -29,6 +30,7 @@
 **File**: `src/html/DisplayerFactory.js` (247 lines)
 
 **Methods Verified**:
+
 1. ✅ `createPositionDisplayer(element)` - Line 86
 2. ✅ `createAddressDisplayer(element, enderecoPadronizadoDisplay)` - Line 120
 3. ✅ `createReferencePlaceDisplayer(element, referencePlaceDisplay)` - Line 155
@@ -36,6 +38,7 @@
 5. ✅ `createHighlightCardsDisplayer(document)` - Line 209
 
 **Code Evidence**:
+
 ```javascript
 // Line 230
 static toString() {
@@ -46,6 +49,7 @@ static toString() {
 **Version Tag in Code**: `@since 0.9.0-alpha`
 
 **Test Coverage**:
+
 - `__tests__/unit/DisplayerFactory.test.js` ✅
 - `__tests__/ui/DisplayerFactory.test.js` ✅
 - `__tests__/integration/DisplayerFactory.integration.test.js` ✅
@@ -61,12 +65,14 @@ static toString() {
 **Core Implementation**:
 
 **File**: `src/data/BrazilianStandardAddress.js`
+
 - Method: `municipioCompleto()` - Lines 78-84
 - Returns: `"${municipio}, ${siglaUF}"` format
 - Fallback: Returns municipality name only if siglaUF unavailable
 - Version tag: `@since 0.9.0-alpha`
 
 **Code Evidence**:
+
 ```javascript
 municipioCompleto() {
     if (!this.municipio) return "";
@@ -80,6 +86,7 @@ municipioCompleto() {
 **Data Extraction**:
 
 **File**: `src/data/AddressExtractor.js`
+
 - Extracts: `siglaUF` from Nominatim `state_code` or `ISO3166-2-lvl4`
 - Validation: Regex pattern `/^[A-Z]{2}$/` ensures 2-letter codes
 - Fallback: Uses `uf` if already 2-letter format
@@ -87,17 +94,20 @@ municipioCompleto() {
 **Display Integration**:
 
 **File**: `src/html/HTMLHighlightCardsDisplayer.js` - Line 70
+
 - Uses: `enderecoPadronizado.municipioCompleto()`
 - Updates: Municipality card with state abbreviation
 
 **Test Coverage**:
 
 **File**: `__tests__/html/HTMLHighlightCardsDisplayer.test.js`
+
 - Description: "Município State Abbreviation Display feature (v0.9.0-alpha)"
 - Test count: 42 tests covering all 26 Brazilian states
 - Status: All tests passing ✅
 
 **Test Examples**:
+
 - "displays município with state abbreviation (SP)" ✅
 - "displays município with state abbreviation (RJ)" ✅
 - "displays município with state abbreviation (PE)" ✅
@@ -116,6 +126,7 @@ municipioCompleto() {
 **Core Implementation**:
 
 **File**: `src/data/BrazilianStandardAddress.js`
+
 - Property: `regiaoMetropolitana`
 - Method: `regiaoMetropolitanaFormatada()` - Lines 96-100
 - Version tag: `@since 0.9.0-alpha`
@@ -123,12 +134,14 @@ municipioCompleto() {
 **Data Extraction**:
 
 **File**: `src/data/AddressExtractor.js`
+
 - Extracts: Metropolitan region from Nominatim `address.county`
 - Examples: "Região Metropolitana do Recife", "Região Metropolitana de São Paulo"
 
 **Test Coverage**:
 
 **Files**:
+
 - `__tests__/unit/BrazilianStandardAddress-MetropolitanRegion.test.js` - 19 tests ✅
 - `__tests__/unit/AddressExtractor-MetropolitanRegion.test.js` - 26 tests ✅
 - `__tests__/unit/HTMLHighlightCardsDisplayer-MetropolitanRegion.test.js` - 28 tests ✅
@@ -147,6 +160,7 @@ municipioCompleto() {
 **package.json**: `"version": "0.9.0-alpha"` (outdated)
 
 **Documentation References**:
+
 - CHANGELOG.md: Features marked as "v0.9.0-alpha" ✅
 - README.md: Features marked as "Planned v0.9.0" (now misleading)
 - Source code: `@since 0.9.0-alpha` and `@since 0.9.0-alpha` tags ✅
@@ -156,6 +170,7 @@ municipioCompleto() {
 **Current**: Version 0.9.0-alpha does NOT accurately reflect implemented features
 
 **Reality**:
+
 - DisplayerFactory (v0.9.0+ feature) is IMPLEMENTED
 - Município state display (v0.9.0-alpha feature) is IMPLEMENTED
 - Metropolitan region display (v0.9.0-alpha feature) is IMPLEMENTED
@@ -172,6 +187,7 @@ municipioCompleto() {
 **Pre-release**: -alpha (still in alpha)
 
 **Justification**:
+
 - Minor version bump (0.7 → 0.8): New factory pattern, new display features
 - Patch progression (.1 → .7): Multiple iterations of feature refinement
 - Alpha maintained: Still in pre-release development
@@ -183,15 +199,18 @@ municipioCompleto() {
 ### New Tests Added
 
 **DisplayerFactory**:
+
 - Unit tests: 3 test files ✅
 - Integration tests: 1 file ✅
 - Coverage: 100% ✅
 
 **Município State Display**:
+
 - Unit tests: 42 tests (all Brazilian states) ✅
 - Coverage: All code paths tested ✅
 
 **Metropolitan Region Display**:
+
 - Unit tests: 73 tests ✅
 - E2E tests: 4 tests ✅
 - Coverage: Comprehensive ✅
@@ -207,6 +226,7 @@ municipioCompleto() {
 **1. Version Bump** 🟡 **HIGH PRIORITY**
 
 Update `package.json`:
+
 ```json
 {
   "version": "0.9.0-alpha"
@@ -214,6 +234,7 @@ Update `package.json`:
 ```
 
 **Rationale**:
+
 - Features documented as v0.9.0-alpha are fully implemented
 - 119+ new tests passing
 - Source code already tagged with correct version numbers
@@ -222,6 +243,7 @@ Update `package.json`:
 **2. Update Documentation References** 🟢 **MEDIUM PRIORITY**
 
 Update README.md:
+
 ```markdown
 - DisplayerFactory - Factory pattern (5 methods, v0.9.0+) ← Remove "Planned"
 - Município state display (v0.9.0-alpha) ← Mark as implemented
@@ -231,6 +253,7 @@ Update README.md:
 **3. Update CHANGELOG.md** 🟢 **LOW PRIORITY**
 
 Move features from `[Unreleased]` to `[0.9.0-alpha] - 2026-01-28`:
+
 - Close the unreleased section
 - Create versioned release entry
 - Update release notes
@@ -279,6 +302,7 @@ git push origin main
 **Risk Level**: 🟢 **LOW**
 
 **Rationale**:
+
 - All features are already implemented ✅
 - All tests passing (119+ new tests) ✅
 - Version bump reflects reality, not new development
@@ -286,6 +310,7 @@ git push origin main
 - No breaking changes involved
 
 **Potential Issues**:
+
 - None identified - version bump is purely administrative
 
 ---
@@ -293,6 +318,7 @@ git push origin main
 ## Verification Checklist
 
 Before version bump:
+
 - [x] DisplayerFactory has 5 methods
 - [x] DisplayerFactory tests passing
 - [x] Município state display implemented
@@ -304,6 +330,7 @@ Before version bump:
 - [x] Source code has correct version tags
 
 After version bump:
+
 - [ ] package.json version updated to 0.9.0-alpha
 - [ ] CHANGELOG.md updated with release section
 - [ ] README.md version references updated

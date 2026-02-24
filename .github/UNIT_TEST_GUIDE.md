@@ -112,6 +112,7 @@ While unit tests take time to write, they save time by:
 Each test should verify a single behavior:
 
 ✅ **Good:**
+
 ```javascript
 test('should return 0 for same coordinates', () => {
     const coord = { lat: -23.5, lon: -46.6 };
@@ -126,6 +127,7 @@ test('should calculate positive distance for different coordinates', () => {
 ```
 
 ❌ **Avoid:**
+
 ```javascript
 test('distance calculation', () => {
     // Testing multiple behaviors in one test
@@ -157,6 +159,7 @@ test('should format CEP correctly', () => {
 Focus on what the function does, not how it does it:
 
 ✅ **Good: Testing behavior**
+
 ```javascript
 test('should return sorted cities', () => {
     const cities = ['São Paulo', 'Brasília', 'Rio de Janeiro'];
@@ -168,6 +171,7 @@ test('should return sorted cities', () => {
 ```
 
 ❌ **Avoid: Testing implementation**
+
 ```javascript
 test('should call Array.sort with correct comparator', () => {
     const sortSpy = jest.spyOn(Array.prototype, 'sort');
@@ -182,6 +186,7 @@ test('should call Array.sort with correct comparator', () => {
 Each test should set up its own data and not rely on other tests:
 
 ✅ **Good:**
+
 ```javascript
 describe('AddressCache', () => {
     let cache;
@@ -285,6 +290,7 @@ npm run test:verbose
 Use descriptive names that explain the scenario and expected outcome:
 
 ✅ **Good:**
+
 ```javascript
 test('should return empty string when address is null', () => {});
 test('should format complete Brazilian address with all components', () => {});
@@ -293,6 +299,7 @@ test('should throw error when CEP has invalid length', () => {});
 ```
 
 ❌ **Avoid:**
+
 ```javascript
 test('test1', () => {});
 test('address test', () => {});
@@ -406,6 +413,7 @@ describe('calculateDistance', () => {
 ```
 
 **Why this is easy to test:**
+
 - ✅ No setup or teardown needed
 - ✅ No mocks required
 - ✅ Deterministic output
@@ -523,6 +531,7 @@ describe('Geocoding Functions', () => {
 ```
 
 **Benefits of this approach:**
+
 - ✅ Pure functions (`buildGeocodingUrl`, `parseGeocodingResponse`) tested without mocks
 - ✅ Side effect (`fetch`) isolated to one function
 - ✅ Easier to test, maintain, and understand
@@ -535,6 +544,7 @@ describe('Geocoding Functions', () => {
 Tests should be simpler than the code they test:
 
 ✅ **Good:**
+
 ```javascript
 test('should format address', () => {
     const result = formatAddress({ street: 'Av. Paulista', number: '1000' });
@@ -543,6 +553,7 @@ test('should format address', () => {
 ```
 
 ❌ **Avoid:**
+
 ```javascript
 test('should format address', () => {
     const addresses = generateTestAddresses(100);
@@ -591,6 +602,7 @@ describe('formatCEP edge cases', () => {
 Test the public API, not internal mechanics:
 
 ✅ **Good:**
+
 ```javascript
 test('cache should return stored value', () => {
     cache.set('key', 'value');
@@ -599,6 +611,7 @@ test('cache should return stored value', () => {
 ```
 
 ❌ **Avoid:**
+
 ```javascript
 test('cache should use Map internally', () => {
     expect(cache._internalMap).toBeInstanceOf(Map);
@@ -668,6 +681,7 @@ describe('calculateDistance error handling', () => {
 Tests should not depend on each other:
 
 ❌ **Avoid:**
+
 ```javascript
 let sharedData;
 
@@ -684,6 +698,7 @@ test('should process data', () => {
 ```
 
 ✅ **Good:**
+
 ```javascript
 test('should create data', () => {
     const data = createData();
@@ -1333,6 +1348,7 @@ describe('immutable operations', () => {
 **If you're using ES6 modules (`import/export`) in your source code, you MUST configure Jest properly.**
 
 **See comprehensive guides:**
+
 - 📖 [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) - Complete analysis and solutions
 - 📖 [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) - Quick reference
 
@@ -1361,6 +1377,7 @@ describe('myFunction', () => {
 ```
 
 **Common errors and fixes:**
+
 - ❌ "Cannot use import statement outside a module" → Use `--experimental-vm-modules`
 - ❌ "describe is not defined" → Import from `@jest/globals`
 - ❌ "Module not found" → Add `.js` extension to imports
@@ -1476,6 +1493,7 @@ npm test -- --coverage --collectCoverageFrom="src/utils.js"
 - **[docs/github/GITHUB_ACTIONS_GUIDE.md](../docs/github/GITHUB_ACTIONS_GUIDE.md)** - CI/CD integration
 
 ### Architecture Examples with Tests
+
 - **[CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md)** - Complete class architecture and test organization
 - **[GEO_POSITION.md](../docs/architecture/GEO_POSITION.md)** - Well-tested GeoPosition class example
 - **[REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md)** - ReferencePlace with comprehensive test coverage
@@ -1514,6 +1532,7 @@ npm test -- --coverage --collectCoverageFrom="src/utils.js"
 ## Quick Reference Card
 
 ### Unit Test Commands
+
 ```bash
 npm test                    # Run all tests
 npm test file.test.js       # Run specific file
@@ -1525,6 +1544,7 @@ npm run test:all            # Validate + test
 ```
 
 ### Unit Test Structure
+
 ```javascript
 describe('Feature/Module', () => {
     beforeEach(() => {
@@ -1549,6 +1569,7 @@ describe('Feature/Module', () => {
 ```
 
 ### Testing Principles
+
 - ✅ Test one thing at a time
 - ✅ Use descriptive test names
 - ✅ Follow AAA pattern (Arrange-Act-Assert)
@@ -1559,6 +1580,7 @@ describe('Feature/Module', () => {
 - ✅ Keep tests simple and readable
 
 ### Pure Functions + Unit Tests
+
 - ✅ Pure functions are easiest to test
 - ✅ No mocks needed for pure functions
 - ✅ Deterministic = predictable tests
@@ -1568,17 +1590,20 @@ describe('Feature/Module', () => {
 ## Related Documentation
 
 ### Testing Guides
+
 - **[TDD_GUIDE.md](./TDD_GUIDE.md)** - Test-driven development methodology
 - **[JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md)** - Jest configuration
 - **[docs/testing/E2E_TESTING_GUIDE.md](../docs/testing/E2E_TESTING_GUIDE.md)** - End-to-end testing
 
 ### Code Quality
+
 - **[REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)** - Functional programming principles
 - **[JAVASCRIPT_BEST_PRACTICES.md](./JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript standards
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
 - **[JSDOC_GUIDE.md](./JSDOC_GUIDE.md)** - API documentation
 
 ### Complete Guide Index
+
 - **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
 
 ---

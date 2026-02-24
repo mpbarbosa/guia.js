@@ -7,6 +7,7 @@
 ## Problem
 
 The chronometer ("Tempo decorrido: 00:00:00") appeared prominently:
+
 - **No context**: Users didn't know what time was being measured
 - **No value**: Most users don't care about elapsed time
 - **Visual clutter**: Took screen space without user benefit
@@ -16,18 +17,21 @@ The chronometer ("Tempo decorrido: 00:00:00") appeared prominently:
 ### User Confusion Scenarios
 
 **Scenario 1**: Casual User
+
 - Opens app to check current location
 - Sees "Tempo decorrido: 00:00:00"
 - Thinks: "Time since what? Why does this matter?"
 - Ignores it (wasted screen space)
 
 **Scenario 2**: Power User
+
 - Uses continuous tracking for navigation
 - Wants to know how long they've been tracking
 - Chronometer is useful BUT
 - Label unclear: "Tempo decorrido" (elapsed since what?)
 
 **Scenario 3**: Mobile User
+
 - Limited screen space
 - Every pixel counts
 - Chronometer takes space from primary info
@@ -41,6 +45,7 @@ The chronometer ("Tempo decorrido: 00:00:00") appeared prominently:
 **After**: Hidden in "Opções Avançadas" details element
 
 **Benefits**:
+
 - Removes clutter from main view
 - Only visible to users who expand advanced controls
 - Power users can still access it
@@ -49,11 +54,13 @@ The chronometer ("Tempo decorrido: 00:00:00") appeared prominently:
 ### 2. Improved Label and Context
 
 **Before**:
+
 ```
 Tempo decorrido: 00:00:00
 ```
 
 **After**:
+
 ```
 Tempo de rastreamento ℹ️
 00:00:00
@@ -61,6 +68,7 @@ Tempo desde que iniciou o rastreamento contínuo
 ```
 
 **Improvements**:
+
 - Clear label: "Tempo de rastreamento" (tracking time)
 - Info icon (ℹ️) with tooltip text
 - Descriptive subtitle: Explains what's being measured
@@ -69,6 +77,7 @@ Tempo desde que iniciou o rastreamento contínuo
 ### 3. Visual Enhancement
 
 **Styled as a distinct metric card**:
+
 - Background: Light gray (#f9fafb)
 - Border: Subtle (#e5e7eb)
 - Monospace font: "Courier New" for time display
@@ -80,6 +89,7 @@ Tempo desde que iniciou o rastreamento contínuo
 **Default State**: Hidden in collapsed "Opções Avançadas"
 
 **When User Expands**:
+
 - "⚙️ Opções Avançadas" details element
 - Shows chronometer + test position button + voice synthesis
 - All developer/power user features grouped together
@@ -89,6 +99,7 @@ Tempo desde que iniciou o rastreamento contínuo
 ### HTML Structure Changes
 
 **Removed from** (line 638):
+
 ```html
 <section class="section">
   <p><strong>Tempo decorrido:</strong> <span id="chronometer">00:00:00</span></p>
@@ -96,6 +107,7 @@ Tempo desde que iniciou o rastreamento contínuo
 ```
 
 **Added to Advanced Controls** (lines 652-665):
+
 ```html
 <details id="advanced-controls" class="advanced-controls">
   <summary>⚙️ Opções Avançadas</summary>
@@ -173,17 +185,20 @@ Tempo desde que iniciou o rastreamento contínuo
 ### Accessibility Features
 
 **ARIA Attributes**:
+
 - `role="timer"` - Semantic role for chronometer
 - `aria-live="off"` - Don't announce every second (noisy)
 - `aria-label` on hint icon - Tooltip for screen readers
 
 **Visual Accessibility**:
+
 - Clear label hierarchy
 - Sufficient contrast (WCAG AA)
 - Monospace font for readability
 - Hover/focus state on hint icon
 
 **Keyboard Navigation**:
+
 - Tab to "Opções Avançadas" summary
 - Enter/Space to expand
 - Chronometer accessible via document flow
@@ -225,6 +240,7 @@ Tempo desde que iniciou o rastreamento contínuo
 ## Impact
 
 ### Before (Cluttered Main View)
+
 - ❌ "Tempo decorrido" always visible
 - ❌ No context or explanation
 - ❌ Visual clutter in main interface
@@ -232,6 +248,7 @@ Tempo desde que iniciou o rastreamento contínuo
 - ❌ Wasted screen space (especially mobile)
 
 ### After (Progressive Disclosure)
+
 - ✅ Hidden by default (cleaner main view)
 - ✅ Available in advanced options
 - ✅ Clear label and description
@@ -241,10 +258,12 @@ Tempo desde que iniciou o rastreamento contínuo
 ### Screen Space Impact
 
 **Mobile** (before):
+
 - Chronometer: 1 line (20px)
 - Saved: ~3% of screen height
 
 **Mobile** (after):
+
 - Main view: 0 lines
 - Advanced view: 3 lines (60px) when expanded
 - Net savings: 20px always, 60px when expanded by choice
@@ -252,11 +271,13 @@ Tempo desde que iniciou o rastreamento contínuo
 ### User Perception
 
 **Before**:
+
 - "What is this? Why is it here?"
 - Looks developer-centric (not polished)
 - Cluttered interface
 
 **After**:
+
 - Clean main interface
 - "Oh, advanced options for power users!"
 - Professional, focused UX
@@ -264,22 +285,26 @@ Tempo desde que iniciou o rastreamento contínuo
 ## Alternative Approaches Considered
 
 ### Option A: Remove Entirely
+
 **Pros**: Simplest, cleanest  
 **Cons**: Lose debugging capability, power user feature  
 **Decision**: Rejected - Keep for advanced users
 
 ### Option B: Show Only When Tracking
+
 **Pros**: Contextual visibility  
 **Cons**: Complex logic, flashing appearance  
 **Decision**: Rejected - Too complex for marginal benefit
 
 ### Option C: "Last Updated" Instead
+
 **Idea**: Show "Última atualização: há 5 segundos" instead of elapsed time  
 **Pros**: More user-relevant  
 **Cons**: Different metric, serves different purpose  
 **Decision**: Future enhancement - Could add alongside chronometer
 
 ### Option D: Implemented Solution
+
 **Pros**: Progressive disclosure, keeps feature, cleaner main view  
 **Cons**: One extra click for interested users  
 **Decision**: Optimal balance
@@ -289,9 +314,11 @@ Tempo desde que iniciou o rastreamento contínuo
 **Potential additions** (not critical):
 
 1. **"Last Updated" Display** (User-Centric):
+
    ```
    Última atualização: há 5 segundos
    ```
+
    - Shown in main view (more relevant than elapsed time)
    - Updates every 5 seconds
    - Helps users understand data freshness
@@ -318,6 +345,7 @@ Tempo desde que iniciou o rastreamento contínuo
 ### Manual Test Scenarios
 
 **Test 1: Main View Cleanup**
+
 1. Open app fresh (clear cache)
 2. Grant location permission
 3. Verify main view:
@@ -326,6 +354,7 @@ Tempo desde que iniciou o rastreamento contínuo
    - ✅ Clean, focused interface
 
 **Test 2: Advanced Controls Access**
+
 1. Scroll to "Opções Avançadas"
 2. Click/tap to expand
 3. Verify:
@@ -338,6 +367,7 @@ Tempo desde que iniciou o rastreamento contínuo
    - ✅ Tooltip/hint visible
 
 **Test 3: Chronometer Functionality**
+
 1. Expand advanced controls
 2. Start tracking (click "Obter Localização" or enable continuous)
 3. Verify:
@@ -349,6 +379,7 @@ Tempo desde que iniciou o rastreamento contínuo
    - ✅ Chronometer stops/resets (depending on logic)
 
 **Test 4: Mobile Responsive**
+
 1. Open on mobile device (<640px)
 2. Verify:
    - ✅ Chronometer font size reduced (1.25rem)
@@ -357,6 +388,7 @@ Tempo desde que iniciou o rastreamento contínuo
    - ✅ Text wraps properly
 
 **Test 5: Accessibility**
+
 1. Use screen reader (NVDA/VoiceOver)
 2. Navigate to "Opções Avançadas"
 3. Expand

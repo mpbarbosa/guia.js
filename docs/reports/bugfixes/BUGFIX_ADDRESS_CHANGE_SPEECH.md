@@ -10,6 +10,7 @@
 ## Problem Description
 
 ### Symptoms
+
 When driving around the city and changing neighborhoods (e.g., from Belém to Tatuapé), users heard **"Nova localização detectada"** (generic fallback message) instead of **"Você entrou no bairro Tatuapé"** (specific field change announcement).
 
 ### Root Cause
@@ -17,24 +18,28 @@ When driving around the city and changing neighborhoods (e.g., from Belém to Ta
 **Data Structure Mismatch**:
 
 **ChangeDetectionCoordinator** notification call:
+
 ```javascript
 // Line 282 in ChangeDetectionCoordinator.js
 observer.update(changeData, changeType, null, changeDetails);
 ```
 
 For bairro changes:
+
 - `changeData` = `changeDetails.to` = **"Tatuapé"** (just the string value)
 - `changeType` = "BairroChanged"
 - 3rd parameter = null
 - `changeDetails` = full change object with `currentAddress`
 
 **HtmlSpeechSynthesisDisplayer.update()** receives:
+
 - `currentAddress` = **"Tatuapé"** (string, NOT BrazilianStandardAddress object!)
 - `enderecoPadronizadoOrEvent` = "BairroChanged"
 - `posEvent` = null
 - `loadingOrChangeDetails` = changeDetails object
 
 **Speech builder expects**:
+
 ```javascript
 // Line 520 in HtmlSpeechSynthesisDisplayer.js
 buildTextToSpeechBairro(currentAddress) {
@@ -56,6 +61,7 @@ buildTextToSpeechBairro(currentAddress) {
 **File**: `src/html/HtmlSpeechSynthesisDisplayer.js` (Lines 751-771)
 
 **Before**:
+
 ```javascript
 else if (["MunicipioChanged", "BairroChanged", "LogradouroChanged"].includes(enderecoPadronizadoOrEvent)) {
     // Call the appropriate build method based on event type
@@ -73,6 +79,7 @@ else if (["MunicipioChanged", "BairroChanged", "LogradouroChanged"].includes(end
 ```
 
 **After**:
+
 ```javascript
 else if (["MunicipioChanged", "BairroChanged", "LogradouroChanged"].includes(enderecoPadronizadoOrEvent)) {
     // Extract full address from changeDetails for building speech text
@@ -104,6 +111,7 @@ Updated tests to match real-world ChangeDetectionCoordinator behavior:
 **File**: `__tests__/unit/HtmlSpeechSynthesisDisplayer.test.js`
 
 **Example - Bairro Change Test**:
+
 ```javascript
 test('should handle bairro change with priority 2', () => {
     const address = new MockBrazilianStandardAddress({
@@ -126,6 +134,7 @@ test('should handle bairro change with priority 2', () => {
 ```
 
 **Changes Made**:
+
 1. Added realistic `changeDetails` structure with `currentAddress` field
 2. First parameter now correctly passes just the changed field value (string)
 3. Third parameter changed from `'PositionManager updated'` to `null` (matches real usage)
@@ -163,6 +172,7 @@ test('should handle bairro change with priority 2', () => {
 ```
 
 **Specific Tests Validated**:
+
 - ✅ Municipality change with priority 3
 - ✅ Bairro change with priority 2
 - ✅ Logradouro change with priority 1
@@ -174,6 +184,7 @@ test('should handle bairro change with priority 2', () => {
 ## User Experience Impact
 
 ### Before Fix
+
 ```
 [User drives from Belém to Tatuapé]
     ↓
@@ -189,6 +200,7 @@ test('should handle bairro change with priority 2', () => {
 ```
 
 ### After Fix
+
 ```
 [User drives from Belém to Tatuapé]
     ↓
@@ -210,16 +222,19 @@ test('should handle bairro change with priority 2', () => {
 ### Observer Pattern Data Flow
 
 **Phase 1: Position Update**
+
 ```
 PositionManager → ReverseGeocoder → AddressCache
 ```
 
 **Phase 2: Change Detection**
+
 ```
 AddressCache (detects change) → ChangeDetectionCoordinator
 ```
 
 **Phase 3: Observer Notification**
+
 ```
 ChangeDetectionCoordinator._notifyAddressChangeObservers(
     changeDetails,   // { from, to, currentAddress, previousAddress }
@@ -230,6 +245,7 @@ ChangeDetectionCoordinator._notifyAddressChangeObservers(
 ```
 
 **Phase 4: Speech Synthesis**
+
 ```
 HtmlSpeechSynthesisDisplayer.update(
     currentAddress,              // "Tatuapé" (string from changeData)
@@ -254,11 +270,13 @@ HtmlSpeechSynthesisDisplayer.update(
 ## Related Work
 
 This fix completes the observer pattern speech synthesis integration:
+
 1. ✅ Bug #1-4: Core observer pattern bugs (previous session)
 2. ✅ First address speech announcement (previous enhancement)
 3. ✅ **Address change speech announcements (this fix)** ⭐
 
 Now all 3 speech trigger scenarios work correctly:
+
 - ✅ First address (priority 2.5)
 - ✅ Field changes (priority 1-3)
 - ✅ Periodic updates (priority 0)
@@ -280,6 +298,7 @@ Now all 3 speech trigger scenarios work correctly:
 
 **Last Updated**: 2026-02-14T02:15:00Z  
 **Related Files**:
+
 - `src/html/HtmlSpeechSynthesisDisplayer.js` (fix)
 - `__tests__/unit/HtmlSpeechSynthesisDisplayer.test.js` (tests)
 - `src/services/ChangeDetectionCoordinator.js` (notification source)

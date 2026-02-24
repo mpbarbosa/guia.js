@@ -10,11 +10,13 @@
 ## Problem Identified
 
 ### Original Issue
+
 **Location**: README.md, docs/AUTOMATION_TOOLS.md  
 **Problem**: Script dependencies (Node.js, Git, curl) not explicitly documented  
 **Impact**: Users may encounter cryptic runtime errors if prerequisites missing
 
 **Example Failure Scenarios**:
+
 ```bash
 # Without Node.js
 $ ./.github/scripts/cdn-delivery.sh
@@ -34,6 +36,7 @@ git: command not found
 ### 1. Enhanced README.md Prerequisites (Lines 21-58)
 
 **Before**:
+
 ```markdown
 ### Prerequisites
 
@@ -44,6 +47,7 @@ git: command not found
 ```
 
 **After** (Added verification commands and installation help):
+
 ```markdown
 ### Prerequisites
 
@@ -73,6 +77,7 @@ git --version
 ```
 
 **Installation Help**:
+
 ```bash
 # Ubuntu/Debian
 sudo apt update
@@ -84,6 +89,7 @@ brew install node python@3.11 git
 # Windows (with Chocolatey)
 choco install nodejs python git
 ```
+
 ```
 
 ### 2. Added CDN Delivery Prerequisites (README.md, Lines 318-348)
@@ -114,6 +120,7 @@ curl --version
 ```
 
 If any required dependency is missing:
+
 ```bash
 # Install Node.js (Ubuntu/Debian)
 sudo apt update && sudo apt install nodejs
@@ -124,6 +131,7 @@ brew install node
 # Git is usually pre-installed
 # If not: sudo apt install git (Linux) or brew install git (macOS)
 ```
+
 ```
 
 ### 3. Enhanced Automation Tools Documentation (docs/AUTOMATION_TOOLS.md)
@@ -155,6 +163,7 @@ git --version
 node --version
 npm --version
 ```
+
 ```
 
 ---
@@ -226,6 +235,7 @@ node: command not found
 ```
 
 **After**:
+
 ```bash
 # User reads Prerequisites section
 $ node --version
@@ -246,6 +256,7 @@ $ ./.github/scripts/cdn-delivery.sh
 ### Scenario 2: CDN Script User
 
 **Before**:
+
 ```bash
 $ ./.github/scripts/cdn-delivery.sh
 git: command not found
@@ -253,6 +264,7 @@ git: command not found
 ```
 
 **After**:
+
 ```bash
 # User reads CDN Delivery section
 # Sees Prerequisites with Git requirement
@@ -272,16 +284,19 @@ $ ./.github/scripts/cdn-delivery.sh
 ## Additional Benefits
 
 ### 1. Reduced Support Burden
+
 - Users self-diagnose dependency issues
 - Clear documentation prevents common questions
 - Installation help reduces back-and-forth
 
 ### 2. Improved Onboarding
+
 - New contributors know exactly what they need
 - Verification commands catch issues early
 - Platform-specific help accelerates setup
 
 ### 3. Better Documentation Quality
+
 - Follows best practices (prerequisites upfront)
 - Consistent format across sections
 - Expected outputs help users verify success
@@ -302,6 +317,7 @@ This update also prevents potential related issues:
 ## Recommendations for Future
 
 ### 1. Add to CI/CD
+
 Consider adding dependency checks to GitHub Actions:
 
 ```yaml
@@ -313,6 +329,7 @@ Consider adding dependency checks to GitHub Actions:
 ```
 
 ### 2. Create Setup Script
+
 Consider a `setup.sh` script that checks all prerequisites:
 
 ```bash
@@ -322,6 +339,7 @@ Consider a `setup.sh` script that checks all prerequisites:
 ```
 
 ### 3. Add to Pre-commit Hook
+
 Consider checking basic tools in pre-commit hook:
 
 ```bash

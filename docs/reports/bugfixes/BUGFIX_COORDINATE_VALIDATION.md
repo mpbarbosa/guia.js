@@ -1,17 +1,21 @@
 # Bug Fix: Invalid Coordinate Processing in Observer Pattern
 
 ## Date
+
 2026-02-13 (Bug #1 & #2), 2026-02-14 (Bug #3 - Event Propagation)
 
 ## Issues Identified
 
 ### Bug #1: Missing Event Type Validation
+
 ReverseGeocoder.update() was triggering geocoding operations even when PositionManager rejected position updates due to validation failures (accuracy, distance, or time constraints).
 
 ### Bug #2: Empty Coordinates from Spread Operator
+
 GeoPosition constructor used spread operator on browser GeolocationCoordinates object, which has non-enumerable getters, resulting in empty `{}` objects.
 
 ### Bug #3: Wrong Event Propagation on Error (NEW - 2026-02-14)
+
 ReverseGeocoder.update() was propagating PositionManager events ("PositionManager updated") to HTML displayers when geocoding failed, instead of using proper error events or not notifying at all.
 
 **Related Issue**: update() method called reverseGeocode() directly, bypassing CORS proxy retry logic that exists in fetchAddress().
@@ -19,18 +23,24 @@ ReverseGeocoder.update() was propagating PositionManager events ("PositionManage
 ## Root Causes
 
 ### Bug #1
+
 Missing event type validation in `ReverseGeocoder.update()` method:
+
 - The method extracted coordinates from `lastPosition` without checking if the event was a successful update (`strCurrPosUpdate`) or rejection (`strCurrPosNotUpdate`)
 - This caused unnecessary geocoding API calls for rejected positions
 
 ### Bug #2
+
 JavaScript spread operator behavior with browser API objects:
+
 - Browser GeolocationCoordinates uses getters defined on prototype (non-enumerable)
 - Spread operator `{ ...coords }` only copies enumerable own properties
 - Result: Empty object `{}` instead of coordinate data
 
 ### Bug #3  
+
 Event propagation error and missing CORS retry:
+
 - update() catch block called `notifyObservers(null, null, posEvent, false, err)`
 - `posEvent` contained "PositionManager updated" from PositionManager, not ReverseGeocoder
 - HTML displayers expect "Address fetched" event, ignore "PositionManager updated"
@@ -39,6 +49,7 @@ Event propagation error and missing CORS retry:
 ## Files Modified
 
 ### Bug #1 & #2 (2026-02-13)
+
 1. `src/services/ReverseGeocoder.js`
    - Added PositionManager import
    - Added event type validation before processing coordinates
@@ -53,6 +64,7 @@ Event propagation error and missing CORS retry:
    - Added new test: "should NOT trigger geocoding when position update is rejected"
 
 ### Bug #3 (2026-02-14)
+
 1. `src/config/defaults.js`
    - Added `GEOCODING_ERROR_EVENT` constant for error notifications
 
@@ -66,6 +78,7 @@ Event propagation error and missing CORS retry:
 ## Changes
 
 ### Bug #1: Event Type Validation
+
 ```javascript
 // BEFORE (line 383-393)
 const coords = positionManager.lastPosition.coords;
@@ -88,6 +101,7 @@ if (coords && coords.latitude && coords.longitude) {
 ```
 
 ### Bug #2: Coordinate Extraction
+
 ```javascript
 // BEFORE (GeoPosition.js line 24-28) - Used spread operator
 this.coords = { ...rawCoords };  // BUG: Creates {} for browser API
@@ -105,6 +119,7 @@ this.coords = {
 ```
 
 ### Bug #3: Event Propagation and CORS Retry (NEW - 2026-02-14)
+
 ```javascript
 // BEFORE (ReverseGeocoder.js update() method)
 this.reverseGeocode()  // Bypasses CORS retry logic
@@ -137,6 +152,7 @@ this.notifyObservers(null, null, GEOCODING_ERROR_EVENT, false, err);
 ```
 
 ## Test Results
+
 - ✅ **2,436 tests passing** (including 57 ReverseGeocoder tests)
 - ✅ New test validates rejected positions don't trigger geocoding
 - ✅ No regressions in existing functionality
@@ -145,22 +161,26 @@ this.notifyObservers(null, null, GEOCODING_ERROR_EVENT, false, err);
 ## Impact
 
 ### Bug #1: Event Type Validation
+
 - **Performance**: Eliminates unnecessary geocoding API calls (50% reduction in test scenarios)
 - **Correctness**: Observer pattern now properly filters events
 - **API Usage**: Reduces OpenStreetMap Nominatim API load
 
 ### Bug #2: Coordinate Extraction
+
 - **Reliability**: 100% coordinate extraction success rate
 - **Compatibility**: Works with both test mocks and browser API
 - **Data Integrity**: All position data properly preserved
 
 ### Bug #3: Event Propagation and CORS Retry
+
 - **Consistency**: CORS retry logic now works for all geocoding paths
 - **Event Integrity**: HTML displayers no longer receive wrong event types
 - **Error Handling**: Proper error event types for better debugging
 - **User Experience**: Improved reliability with automatic CORS fallback
 
 ## Related
+
 - PositionManager validation rules: accuracy, distance (20m), time (30s)
 - Observer pattern implementation across services
 - Event constants: `strCurrPosUpdate`, `strCurrPosNotUpdate`, `strImmediateAddressUpdate`
@@ -174,12 +194,15 @@ this.notifyObservers(null, null, GEOCODING_ERROR_EVENT, false, err);
 **Date**: 2026-02-13 (same session)
 
 ### Issue
+
 `ReverseGeocoder.update()` received `lastPosition.coords` as an empty object `{}` instead of populated coordinate data, preventing geocoding operations.
 
 ### Root Cause
+
 The `GeoPosition` constructor used the **spread operator** (`{ ...coords }`) to copy the `GeolocationCoordinates` object, but browser `GeolocationCoordinates` uses **getters** (not enumerable properties), causing the spread operator to create an empty object.
 
 **Proof:**
+
 ```javascript
 // Browser GeolocationCoordinates has getters
 const coords = navigator.geolocation.getCurrentPosition(...).coords;
@@ -190,9 +213,11 @@ Object.keys(coords);  // [] (empty array)
 ```
 
 ### Files Modified
+
 1. `src/core/GeoPosition.js` - Fixed constructor to manually extract properties
 
 ### Changes
+
 ```javascript
 // BEFORE (line 24-28) - Used spread operator
 const coords = position?.coords ?? {};
@@ -213,16 +238,19 @@ this.coords = Object.keys(coords).length > 0 ? coords : null;
 ```
 
 ### Test Results
+
 - ✅ 2,436 tests passing (all GeoPosition tests pass)
 - ✅ ReverseGeocoder correctly receives populated coordinates
 - ✅ Handles both plain objects (tests) and GeolocationCoordinates (browser)
 
 ### Impact
+
 - **Correctness**: Coordinates now properly copied from browser Geolocation API
 - **Geocoding**: `ReverseGeocoder` can now extract latitude/longitude successfully
 - **Compatibility**: Works with both test mocks and real browser API
 
 ### Technical Notes
+
 The JavaScript spread operator only copies **enumerable** properties. Browser `GeolocationCoordinates` objects use getters defined on the prototype, which are not enumerable by default. Manual property access via getters works correctly.
 
 **Reference**: [MDN - Enumerability and ownership of properties](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Enumerability_and_ownership_of_properties)
@@ -236,6 +264,7 @@ The JavaScript spread operator only copies **enumerable** properties. Browser `G
 ChangeDetectionCoordinator tried to access `changeDetails.current.logradouro` but AddressChangeDetector returns `changeDetails.to` instead.
 
 **Error Message**:
+
 ```
 TypeError: Cannot read properties of undefined (reading 'logradouro')
   at ChangeDetectionCoordinator.notifyLogradouroChangeObservers (ChangeDetectionCoordinator.js:332:26)
@@ -246,6 +275,7 @@ TypeError: Cannot read properties of undefined (reading 'logradouro')
 **Structure Mismatch** between AddressChangeDetector output and ChangeDetectionCoordinator expectations:
 
 **AddressChangeDetector returns** (correct structure):
+
 ```javascript
 {
   to: 'Rua Engenheiro Dagoberto Gasgow',
@@ -257,6 +287,7 @@ TypeError: Cannot read properties of undefined (reading 'logradouro')
 ```
 
 **ChangeDetectionCoordinator expected** (wrong assumption):
+
 ```javascript
 {
   current: { logradouro: 'Rua Engenheiro Dagoberto Gasgow' },  // ← Undefined!
@@ -273,6 +304,7 @@ Updated three notification methods in `src/services/ChangeDetectionCoordinator.j
 3. **notifyMunicipioChangeObservers()** (line 380)
 
 **Before** (Bug #4):
+
 ```javascript
 notifyLogradouroChangeObservers(changeDetails) {
     this._notifyAddressChangeObservers(
@@ -285,6 +317,7 @@ notifyLogradouroChangeObservers(changeDetails) {
 ```
 
 **After** (Fixed):
+
 ```javascript
 notifyLogradouroChangeObservers(changeDetails) {
     this._notifyAddressChangeObservers(
@@ -301,6 +334,7 @@ notifyLogradouroChangeObservers(changeDetails) {
 Updated test expectations in `__tests__/features/ChangeDetectionCoordinator.test.js`:
 
 **Before**:
+
 ```javascript
 const changeDetails = {
     previous: { logradouro: 'Rua Antiga' },
@@ -310,6 +344,7 @@ const changeDetails = {
 ```
 
 **After**:
+
 ```javascript
 const changeDetails = {
     to: 'Rua Nova',
@@ -346,6 +381,7 @@ Tests:       26 passed, 26 total
 ### Impact
 
 **Before Fix**:
+
 - ✅ Address change detection worked
 - ✅ AddressCache correctly detected changes
 - ❌ Notification observers crashed on undefined access
@@ -353,6 +389,7 @@ Tests:       26 passed, 26 total
 - ❌ Missing user notifications (toasts, speech, etc.)
 
 **After Fix**:
+
 - ✅ Address change detection works
 - ✅ Notification observers receive correct data
 - ✅ All 26 ChangeDetectionCoordinator tests pass
@@ -362,6 +399,7 @@ Tests:       26 passed, 26 total
 ### Real-World Validation
 
 **Console Evidence** (Position #6):
+
 ```
 [01:10:12.942] +++ (300) (AddressCache) Detected logradouro change ✅
 [01:10:12.942] (ChangeDetectionCoordinator) Error handling logradouro change ❌
@@ -369,6 +407,7 @@ Tests:       26 passed, 26 total
 ```
 
 **After Fix**:
+
 - Change detected ✅
 - Observers notified successfully ✅
 - User received updated address display ✅

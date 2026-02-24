@@ -47,9 +47,11 @@ http-server -S -C cert.pem -K key.pem -p 8443
 Install a CORS-unblocking browser extension:
 
 **Chrome/Edge**:
+
 - [Allow CORS: Access-Control-Allow-Origin](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf)
 
 **Firefox**:
+
 - [CORS Everywhere](https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/)
 
 ⚠️ **Warning**: Only use during development. Disable when browsing other sites.
@@ -68,6 +70,7 @@ const fullUrl = proxyUrl + apiUrl;
 ```
 
 **Public CORS Proxies**:
+
 - `https://cors-anywhere.herokuapp.com/` (requires request access)
 - `https://api.allorigins.win/raw?url=` (add your URL after)
 
@@ -78,6 +81,7 @@ const fullUrl = proxyUrl + apiUrl;
 Create a simple proxy server:
 
 **proxy-server.js**:
+
 ```javascript
 const express = require('express');
 const cors = require('cors');
@@ -102,12 +106,14 @@ app.listen(3000, () => console.log('Proxy running on port 3000'));
 ```
 
 Install dependencies:
+
 ```bash
 npm install express cors node-fetch
 node proxy-server.js
 ```
 
 Update app to use proxy:
+
 ```javascript
 const url = 'http://localhost:3000/api/reverse?lat=' + lat + '&lon=' + lon;
 ```
@@ -117,6 +123,7 @@ const url = 'http://localhost:3000/api/reverse?lat=' + lat + '&lon=' + lon;
 ### ✅ Solution 5: Disable Browser Security (Development Only)
 
 **Chrome** - Start with disabled security:
+
 ```bash
 # Windows
 chrome.exe --disable-web-security --user-data-dir="C:/chrome-dev"
@@ -139,12 +146,14 @@ The app now has **graceful error handling** for CORS failures:
 ### Enhanced Error Messages
 
 **User sees**:
+
 ```
 Erro de Rede
 Não foi possível acessar o serviço de geocodificação. Verifique sua conexão.
 ```
 
 **Instead of**:
+
 ```
 TypeError: Failed to fetch
 ```
@@ -152,11 +161,13 @@ TypeError: Failed to fetch
 ### Error Detection
 
 The app detects these error types:
+
 - **CORS errors**: "Failed to fetch" or "CORS" in message
 - **Rate limiting (429)**: "Limite de requisições atingido"
 - **Too Early (425)**: "Serviço temporariamente indisponível"
 
 ### What Happens
+
 1. ✅ Error is logged to console (for developers)
 2. ✅ User-friendly toast notification appears
 3. ✅ App continues to work (doesn't crash)
@@ -169,12 +180,14 @@ The app detects these error types:
 For production, you have two options:
 
 ### Option A: Backend Proxy (Recommended)
+
 - Deploy a backend server (Node.js, Python, etc.)
 - Backend makes requests to Nominatim
 - Frontend calls your backend
 - No CORS issues
 
 ### Option B: Use HTTPS
+
 - Deploy on HTTPS domain
 - Nominatim allows CORS from HTTPS origins
 - No proxy needed
@@ -205,6 +218,7 @@ After implementing a solution, you should see:
 ```
 
 **No more**:
+
 ```
 ❌ Access to fetch... has been blocked by CORS policy
 ❌ GET https://nominatim.openstreetmap.org/reverse net::ERR_FAILED 425
@@ -232,6 +246,7 @@ After implementing a solution, you should see:
 ## Need Help?
 
 If errors persist:
+
 1. Check browser console for detailed error messages
 2. Verify network connectivity
 3. Try a different browser

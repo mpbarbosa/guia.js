@@ -17,6 +17,7 @@ The speech synthesis system now prioritizes Brazilian Portuguese (pt-BR) voices 
 **Location:** `src/guia.js` - Lines 2735-2830
 
 **New Properties:**
+
 - `voiceRetryTimer`: Timer reference for retry mechanism
 - `voiceRetryAttempts`: Counter for tracking retry attempts
 - `maxVoiceRetryAttempts`: Maximum number of retry attempts (10)
@@ -28,7 +29,7 @@ The method now implements a two-tier priority system:
 
 1. **PRIORITY 1:** Brazilian Portuguese (pt-BR)
    - First searches for voices with language code exactly matching `pt-BR` (case-insensitive)
-   
+
 2. **PRIORITY 2:** Any Portuguese variant (pt, pt-PT, etc.)
    - Falls back to any voice starting with `pt` if pt-BR is not available
 
@@ -48,6 +49,7 @@ The method now implements a two-tier priority system:
 **Updated Method: `updateVoices()`**
 
 Implements the same two-tier priority system for the voice selection dropdown:
+
 - Marks Brazilian Portuguese voices as selected by default
 - Falls back to other Portuguese variants if pt-BR not available
 - Ensures only one voice is selected at a time
@@ -119,6 +121,7 @@ voice = voice || voices[0] || null;
 A comprehensive test page has been created: `brazilian-voice-test.html`
 
 **Features:**
+
 - Displays currently selected voice information
 - Lists all available voices with priority badges
 - Test speech synthesis with Brazilian phrases
@@ -129,7 +132,7 @@ A comprehensive test page has been created: `brazilian-voice-test.html`
 
 #### Test Scenarios
 
-1. **Brazilian Portuguese Available:** 
+1. **Brazilian Portuguese Available:**
    - pt-BR voice is selected immediately
    - No retry mechanism activated
    - Logged as: "Brazilian Portuguese voice found"
@@ -155,6 +158,7 @@ The Web Speech API loads voices asynchronously in many browsers. The `voiceschan
 ### Code Quality
 
 The implementation follows the existing code style in the repository:
+
 - Uses same logging patterns with `log()` function
 - Follows existing class structure and naming conventions
 - Maintains consistency with other timer-based features (e.g., queue timer)
@@ -163,11 +167,13 @@ The implementation follows the existing code style in the repository:
 ### Browser Compatibility
 
 The feature works with any browser that supports:
+
 - Web Speech API (`window.speechSynthesis`)
 - `speechSynthesis.getVoices()`
 - `voiceschanged` event
 
 Tested compatibility:
+
 - ✅ Chrome/Edge (Chromium-based)
 - ✅ Firefox
 - ✅ Safari (iOS/macOS)
@@ -213,6 +219,7 @@ Total maximum retry time: 10 seconds
 ## Future Enhancements
 
 Potential improvements:
+
 - Make retry parameters configurable
 - Add voice preference storage (localStorage)
 - Support voice selection by name in addition to language code
@@ -221,6 +228,7 @@ Potential improvements:
 ## Changelog
 
 **Version 0.9.0-alpha**
+
 - Added Brazilian Portuguese (pt-BR) voice prioritization
 - Implemented retry mechanism for voice loading
 - Updated HtmlSpeechSynthesisDisplayer for consistent priority

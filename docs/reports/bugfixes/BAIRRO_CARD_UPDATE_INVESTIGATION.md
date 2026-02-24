@@ -12,7 +12,7 @@ And it may not be updating when position changes occur during driving.
 
 ## Code Analysis Results
 
-### ✅ Components Verified as Correct:
+### ✅ Components Verified as Correct
 
 1. **HTMLHighlightCardsDisplayer** (`src/html/HTMLHighlightCardsDisplayer.js`)
    - ✅ Constructor properly gets `#bairro-value` element
@@ -44,7 +44,7 @@ And it may not be updating when position changes occur during driving.
 
 ## Test Suite Created
 
-### Files:
+### Files
 
 - `__tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js` (624 lines)
 - `__tests__/e2e/NeighborhoodChangeWhileDriving.README.md` (186 lines)
@@ -60,7 +60,7 @@ And it may not be updating when position changes occur during driving.
 7. ⏭️ Observer pattern propagation (skipped)
 8. ⏭️ Loading state during geocoding (skipped)
 
-### Test Results:
+### Test Results
 
 - Tests 1-3 FAIL with timeouts waiting for bairro value to change
 - Test 4 PASSES - element exists in DOM
@@ -129,16 +129,20 @@ document.getElementById('bairro-value'); // Should return element
 ```bash
 curl http://localhost:9000/src/index.html | grep "bairro-value"
 ```
+
 **Expected**: Should find `<div id="bairro-value"`  
 **Result**: ✅ VERIFIED - Element exists
 
 ### Step 2: Open Application
+
 1. Navigate to: `http://localhost:9000/src/index.html#/location`
 2. Open browser DevTools console
 3. Click "Obter Localização" or trigger geolocation
 
 ### Step 3: Monitor Console Logs
+
 Look for these log messages:
+
 ```
 (ServiceCoordinator) Subscribing HTMLHighlightCardsDisplayer to ReverseGeocoder
 (ReverseGeocoder.fetchAddress) About to notify observers
@@ -147,6 +151,7 @@ Look for these log messages:
 ```
 
 ### Step 4: Check Observer Subscription
+
 ```javascript
 // In browser console
 const manager = window.GuiaApp.getState().manager;
@@ -158,6 +163,7 @@ console.log('Includes displayer?:', geocoder.observerSubject.observers.includes(
 ```
 
 ### Step 5: Manually Trigger Update
+
 ```javascript
 // In browser console - simulate position change
 const manager = window.GuiaApp.getState().manager;
@@ -173,7 +179,8 @@ geocoder.fetchAddress().then(() => {
 
 ## Next Steps
 
-### Immediate Actions:
+### Immediate Actions
+
 1. ✅ Start web server: `python3 -m http.server 9000`
 2. 🔍 Open `http://localhost:9000/src/index.html#/location` in browser
 3. 🔍 Open DevTools console
@@ -181,27 +188,31 @@ geocoder.fetchAddress().then(() => {
 5. 🔍 Trigger geolocation and watch console logs
 6. 🔍 Check if bairro card updates
 
-### If Bug Confirmed:
+### If Bug Confirmed
+
 1. Identify which console log is missing
 2. Trace backwards to find break point
 3. Add additional logging if needed
 4. Fix identified issue
 5. Re-run E2E tests to validate fix
 
-### If Bug NOT Reproduced:
+### If Bug NOT Reproduced
+
 1. Update E2E tests to match working behavior
 2. Investigate why tests fail but manual works
 3. May need to adjust test timing or mocking
 
 ## Code Locations
 
-### Files to Monitor:
+### Files to Monitor
+
 - `src/html/HTMLHighlightCardsDisplayer.js` - Updates DOM
 - `src/services/ReverseGeocoder.js` - Notifies observers
 - `src/coordination/ServiceCoordinator.js` - Wires observers
 - `src/core/ObserverSubject.js` - Manages subscriptions
 
-### Console Log Grep Patterns:
+### Console Log Grep Patterns
+
 ```bash
 # Find all relevant logging
 grep -n "console.log\|console.warn" src/html/HTMLHighlightCardsDisplayer.js
@@ -209,7 +220,7 @@ grep -n "console.log\|console.warn" src/services/ReverseGeocoder.js
 grep -n "console.log\|console.warn" src/coordination/ServiceCoordinator.js
 ```
 
-## Expected Console Output (When Working):
+## Expected Console Output (When Working)
 
 ```
 (ServiceCoordinator) constructor called with params: {...}
@@ -246,6 +257,7 @@ ServiceCoordinator: Highlight cards displayer wired
 The E2E test successfully reproduced the production bug:
 
 **Evidence:**
+
 1. ✅ GeolocationService successfully gets coordinates (-23.55052, -46.633309)
 2. ✅ Nominatim API request intercepted and mocked
 3. ✅ Mock returns correct response: `{ suburb: "República", city: "São Paulo" }`
@@ -253,6 +265,7 @@ The E2E test successfully reproduced the production bug:
 5. ❌ **Bairro card value remains "—" (never updates)**
 
 ### Test Logs
+
 ```
 [REQUEST INTERCEPT] Nominatim request for: -23.55052,-46.633309
 [REQUEST INTERCEPT] Returning mock response with bairro: República
@@ -262,6 +275,7 @@ The E2E test successfully reproduced the production bug:
 ### Conclusion
 
 **The bug is real and reproducible.** Despite:
+
 - Successful geolocation acquisition
 - Successful reverse geocoding (mocked Nominatim response)
 - Correct app initialization
@@ -299,6 +313,7 @@ The bug was NOT in the application code - it was in the E2E test mock configurat
 **Issue**: Puppeteer request interception was returning mocked Nominatim responses WITHOUT proper HTTP headers, causing fetch API to fail silently.
 
 **Solution**: Added proper CORS headers to mocked responses:
+
 ```javascript
 request.respond({
     status: 200,
@@ -313,6 +328,7 @@ request.respond({
 ### Test Results After Fix
 
 ✅ **Test 1 PASSES**: Initial neighborhood (República) displays correctly
+
 - GeolocationService gets coordinates
 - Nominatim API request intercepted with proper headers
 - ReverseGeocoder fetches and standardizes address
@@ -331,6 +347,7 @@ request.respond({
 4. **Test Infrastructure**: Mock configuration issues can masquerade as application bugs
 
 The user-reported bug about bairro cards not updating while driving was likely caused by:
+
 - Network connectivity issues
 - Actual CORS problems with real Nominatim API
 - Or was a perception issue where updates were happening but not noticed

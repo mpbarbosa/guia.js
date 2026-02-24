@@ -27,6 +27,7 @@ This guide provides comprehensive instructions for splitting large JavaScript fi
 ### Why This Guide?
 
 The Guia Turístico project currently has a 6,000+ line `guia.js` file containing 25+ classes. While functional, this monolithic structure:
+
 - Makes code harder to navigate and understand
 - Increases merge conflicts in team environments
 - Complicates testing individual components
@@ -80,6 +81,7 @@ export class PublicClass {
 ### 1. Improved Maintainability
 
 **Before** (monolithic):
+
 ```javascript
 // guia.js - 6,000 lines
 class GeoPosition { /* ... */ }
@@ -89,6 +91,7 @@ class ReverseGeocoder { /* ... */ }
 ```
 
 **After** (modular):
+
 ```javascript
 // src/models/GeoPosition.js - 50 lines
 export class GeoPosition { /* ... */ }
@@ -101,6 +104,7 @@ export class ReverseGeocoder { /* ... */ }
 ```
 
 **Benefits**:
+
 - Find code faster (clear file names)
 - Smaller files are easier to read
 - Changes are localized to relevant modules
@@ -124,6 +128,7 @@ const serverPosition = new GeoPosition(coords);
 ### 3. Better Testability
 
 **Before** (monolithic):
+
 ```javascript
 // Hard to test - need entire 6,000-line file
 const guia = require('./guia.js');
@@ -131,6 +136,7 @@ const guia = require('./guia.js');
 ```
 
 **After** (modular):
+
 ```javascript
 // Test only what you need
 import { calculateDistance } from '../src/utils/distance.js';
@@ -160,6 +166,7 @@ src/services/ReverseGeocoder.js
 ### 5. Performance Optimization
 
 Modern bundlers can:
+
 - **Tree-shake** unused exports
 - **Code-split** for lazy loading
 - **Cache** individual modules
@@ -175,6 +182,7 @@ import { calculateDistance } from './utils.js';
 JavaScript has two primary module systems:
 
 ### 1. ES6 Modules (ESM)
+
 - **Standard**: Official ECMAScript standard (2015+)
 - **Environment**: Modern browsers, Node.js 12+
 - **Syntax**: `import`/`export`
@@ -182,6 +190,7 @@ JavaScript has two primary module systems:
 - **File Extension**: `.js` or `.mjs`
 
 ### 2. CommonJS (CJS)
+
 - **Standard**: De facto Node.js standard
 - **Environment**: Node.js, bundlers (webpack, browserify)
 - **Syntax**: `require()`/`module.exports`
@@ -204,16 +213,17 @@ JavaScript has two primary module systems:
 ### Which to Use?
 
 **For Guia.js (web + Node.js):**
+
 - **Primary**: ES6 modules (modern standard)
 - **Testing**: CommonJS for Jest compatibility
 - **Strategy**: Write ES6, transpile for compatibility
-
 
 ## ES6 Modules (ESM)
 
 ES6 modules are the modern JavaScript standard for organizing code.
 
 > 📖 **Detailed Reference**: See **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](./ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** for comprehensive coverage of:
+>
 > - All export patterns (named, default, re-exports, mixed)
 > - Import patterns (named, default, namespace, dynamic)
 > - Module naming conventions and organization
@@ -505,7 +515,6 @@ increment();
 console.log(count); // 0 (still 0 - not live binding!)
 ```
 
-
 ## Strategies for Splitting Code
 
 ### 1. Split by Layer (Architectural Pattern)
@@ -676,6 +685,7 @@ export const warn = (message, ...params) => {
 Don't split everything at once. Start with:
 
 **Phase 1**: Extract utilities (lowest risk)
+
 ```javascript
 // Easy wins - pure functions, no dependencies
 utils/distance.js
@@ -684,6 +694,7 @@ utils/async.js
 ```
 
 **Phase 2**: Extract models (low risk)
+
 ```javascript
 // Simple data structures
 models/GeoPosition.js
@@ -691,6 +702,7 @@ models/Address.js
 ```
 
 **Phase 3**: Extract services (medium risk)
+
 ```javascript
 // External integrations
 services/ReverseGeocoder.js
@@ -698,6 +710,7 @@ services/GeolocationService.js
 ```
 
 **Phase 4**: Extract managers (higher risk)
+
 ```javascript
 // Complex business logic - test thoroughly
 managers/PositionManager.js
@@ -705,6 +718,7 @@ managers/WebGeocodingManager.js
 ```
 
 **Phase 5**: Extract presenters (highest risk)
+
 ```javascript
 // DOM dependencies - careful testing needed
 presenters/HTMLPositionDisplayer.js
@@ -822,7 +836,6 @@ export const createConfig = (overrides = {}) => ({
   }
 });
 ```
-
 
 ## Practical Examples from Guia.js
 
@@ -1160,7 +1173,6 @@ For each module extraction:
 - [ ] Code review
 - [ ] Commit with descriptive message
 
-
 ## Testing Modular Code
 
 ### Jest and ES6 Modules - Critical Configuration
@@ -1168,6 +1180,7 @@ For each module extraction:
 **⚠️ IMPORTANT:** When using ES6 modules with Jest, special configuration is required.
 
 **The Problem:**
+
 ```javascript
 // Source uses ES6 modules
 // src/guia.js
@@ -1183,6 +1196,7 @@ const { MyClass } = require('../src/guia.js');
 **The Solution:**
 
 1. **Update package.json:**
+
 ```json
 {
   "type": "module",
@@ -1196,7 +1210,8 @@ const { MyClass } = require('../src/guia.js');
 }
 ```
 
-2. **Update test files to ES6:**
+1. **Update test files to ES6:**
+
 ```javascript
 // ✅ Correct: ES6 test file
 import { describe, test, expect } from '@jest/globals';
@@ -1210,6 +1225,7 @@ describe('MyClass', () => {
 ```
 
 **Key Points:**
+
 - ✅ Import Jest globals from `@jest/globals`
 - ✅ Use `import` instead of `require()`
 - ✅ Include `.js` extensions in imports
@@ -1222,6 +1238,7 @@ describe('MyClass', () => {
 ### Unit Testing Individual Modules
 
 **Before** (monolithic):
+
 ```javascript
 // Hard to test - requires entire 6,000-line file
 const guia = require('./guia.js');
@@ -1229,6 +1246,7 @@ const guia = require('./guia.js');
 ```
 
 **After** (modular):
+
 ```javascript
 // __tests__/utils/distance.test.js
 import { describe, test, expect } from '@jest/globals';
@@ -1381,6 +1399,7 @@ import { B } from './b.js';
 ```
 
 **For complete Jest configuration guide, see:**
+
 - [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) - Full guide
 - [TESTING_MODULE_SYSTEMS.md](../.github/TESTING_MODULE_SYSTEMS.md) - Quick reference
 
@@ -1487,6 +1506,7 @@ config/
 ### 6. Keep Modules Small
 
 **Guidelines:**
+
 - **Utilities**: < 100 lines
 - **Models**: < 200 lines
 - **Services**: < 300 lines
@@ -1673,6 +1693,7 @@ module.exports = { D };               // CommonJS
 ### 1. Bundlers
 
 **Webpack** - Module bundler for production
+
 ```javascript
 // webpack.config.js
 module.exports = {
@@ -1694,6 +1715,7 @@ module.exports = {
 ```
 
 **Rollup** - ES6 module bundler
+
 ```javascript
 // rollup.config.js
 export default {
@@ -1708,6 +1730,7 @@ export default {
 ### 2. Linters
 
 **ESLint** - Catch import/export errors
+
 ```javascript
 // .eslintrc.js
 module.exports = {
@@ -1722,6 +1745,7 @@ module.exports = {
 ### 3. Dependency Analysis
 
 **Madge** - Visualize module dependencies
+
 ```bash
 # Install
 npm install -g madge
@@ -1734,6 +1758,7 @@ madge --image graph.svg src/
 ```
 
 **Dependency Cruiser** - Validate module dependencies
+
 ```bash
 # Install
 npm install -D dependency-cruiser
@@ -1745,6 +1770,7 @@ npx depcruise --validate .dependency-cruiser.js src/
 ### 4. Code Coverage
 
 Ensure modules are tested:
+
 ```bash
 # Run Jest with coverage
 npm test -- --coverage
@@ -1830,11 +1856,13 @@ This guide has covered:
 ---
 
 **For questions or improvements to this guide:**
+
 - Open an issue on GitHub
 - Reference this guide in code reviews
 - Share feedback with the team
 
 **Related Documentation:**
+
 - [JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md)
 - [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)
 - [CODE_REVIEW_GUIDE.md](../.github/CODE_REVIEW_GUIDE.md)

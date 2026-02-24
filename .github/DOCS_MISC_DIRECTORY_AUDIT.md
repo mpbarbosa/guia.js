@@ -43,12 +43,14 @@ The `docs/misc/` directory is a **documentation anti-pattern** indicating unclea
 **Date**: 2026-01-01
 
 **Content Summary**:
+
 - Assessment of CI/CD integration
 - GitHub Actions workflow analysis
 - Platform: GitHub Actions
 - Version: 0.6.0-alpha
 
 **Proposed Reclassification**:
+
 ```bash
 # Create docs/devops/ if doesn't exist
 mkdir -p docs/devops/
@@ -73,11 +75,13 @@ git mv docs/misc/DEVOPS_INTEGRATION_ASSESSMENT.md docs/reports/analysis/
 **Status**: Proposed
 
 **Content Summary**:
+
 - Plan to relocate `.github/scripts/cdn-delivery.sh`
 - Script organization proposal
 - Low priority organizational improvement
 
 **Proposed Reclassification**:
+
 ```bash
 # Option 1: Implementation reports
 git mv docs/misc/CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md docs/reports/implementation/
@@ -99,6 +103,7 @@ git mv docs/misc/CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md docs/workflow-automation
 **Status**: ✅ COMPLETE
 
 **Content Summary**:
+
 - Comprehensive documentation audit
 - 17+ critical issues addressed
 - 1,097 lines added, 995 removed
@@ -106,6 +111,7 @@ git mv docs/misc/CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md docs/workflow-automation
 - Version: 0.6.0-alpha
 
 **Proposed Reclassification**:
+
 ```bash
 git mv docs/misc/DOCUMENTATION_IMPROVEMENTS_2026-01-01.md docs/reports/analysis/
 ```
@@ -125,11 +131,13 @@ git mv docs/misc/DOCUMENTATION_IMPROVEMENTS_2026-01-01.md docs/reports/analysis/
 **Status**: ✅ Fixed
 
 **Content Summary**:
+
 - Prerequisites documentation fix
 - Medium priority issue
 - Incomplete prerequisites addressed
 
 **Proposed Reclassification**:
+
 ```bash
 git mv docs/misc/PREREQUISITES_DOCUMENTATION_UPDATE.md docs/reports/bugfixes/
 ```
@@ -146,11 +154,13 @@ git mv docs/misc/PREREQUISITES_DOCUMENTATION_UPDATE.md docs/reports/bugfixes/
 **Date**: 2026-01-01
 
 **Content Summary**:
+
 - ibira.js version update
 - v0.2.1-alpha → v0.2.2-alpha
 - Source code and documentation changes
 
 **Proposed Reclassification**:
+
 ```bash
 git mv docs/misc/IBIRA_VERSION_UPDATE.md docs/reports/implementation/
 ```
@@ -169,11 +179,13 @@ git mv docs/misc/IBIRA_VERSION_UPDATE.md docs/reports/implementation/
 **Date**: Unknown (appears to be workflow output)
 
 **Content Summary**:
+
 - Appears to be AI assistant workflow log
 - Shows file reading and git commands
 - May be draft or leftover from AI session
 
 **Proposed Action**:
+
 ```bash
 # Option 1: Delete if outdated/draft
 git rm docs/misc/documentation_updates.md
@@ -201,11 +213,13 @@ git mv docs/misc/documentation_updates.md docs/archive/documentation_updates_leg
 **Status**: ✅ Fixed
 
 **Content Summary**:
+
 - Error handling documentation update
 - Medium priority
 - Script error handling docs
 
 **Proposed Reclassification**:
+
 ```bash
 # Option 1: Guides
 git mv docs/misc/ERROR_HANDLING_DOCUMENTATION.md docs/guides/ERROR_HANDLING.md
@@ -283,6 +297,7 @@ git mv docs/misc docs/archive
 ```
 
 **Recommended against**: Better to fully categorize all content
+
 ```
 
 ---
@@ -351,11 +366,13 @@ python3 .github/scripts/check-links.py
 ## Related Issues
 
 This audit is related to:
+
 1. ✅ **ARCHITECTURE_VALIDATION_REPORT.md** already identified this issue
 2. ✅ **CROSS_REFERENCE_AUDIT.md** will catch broken links after move
 3. 🆕 **docs/misc/ reclassification** (this audit)
 
 **Note**: The ARCHITECTURE_VALIDATION_REPORT.md (in docs/reports/analysis/) already recommended:
+
 ```
 git mv docs/misc/CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md docs/devops/
 git mv docs/misc/DEVOPS_INTEGRATION_ASSESSMENT.md docs/devops/
@@ -397,11 +414,13 @@ docs/
 ## Implementation Checklist
 
 ### Preparation
+
 - [ ] Review all 7 files to confirm categorization
 - [ ] Backup docs/misc/ directory
 - [ ] Run link checker to baseline current state
 
 ### File Moves
+
 - [ ] Move DEVOPS_INTEGRATION_ASSESSMENT.md → reports/analysis/
 - [ ] Move DOCUMENTATION_IMPROVEMENTS_2026-01-01.md → reports/analysis/
 - [ ] Move PREREQUISITES_DOCUMENTATION_UPDATE.md → reports/bugfixes/
@@ -411,12 +430,14 @@ docs/
 - [ ] Delete or archive documentation_updates.md
 
 ### Documentation Updates
+
 - [ ] Update cross-references (grep findings)
 - [ ] Update docs/INDEX.md if it references misc/
 - [ ] Remove docs/misc/ from PROJECT_STRUCTURE.md if listed
 - [ ] Run link checker to verify no broken links
 
 ### Validation
+
 - [ ] Verify docs/misc/ directory is removed
 - [ ] Verify all files in new locations
 - [ ] Verify no broken links
@@ -429,12 +450,14 @@ docs/
 ## Success Metrics
 
 ### Before
+
 - 7 files in docs/misc/
 - "Miscellaneous" anti-pattern
 - Poor discoverability
 - Unclear taxonomy
 
 ### After
+
 - 0 files in docs/misc/
 - Directory removed
 - All files properly categorized
@@ -448,12 +471,14 @@ docs/
 **Priority**: 🟡 **Medium**
 
 **Rationale**:
+
 - **Not critical**: Files are accessible, just poorly organized
 - **Not urgent**: No functionality impact
 - **Good housekeeping**: Improves long-term maintainability
 - **Quick win**: 30 minutes to complete
 
 **When to do**:
+
 - After critical issues fixed (version numbers, test counts)
 - Before major documentation additions
 - During documentation cleanup sprint

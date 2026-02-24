@@ -22,6 +22,7 @@ The button status messages feature provides contextual feedback to users about w
 **File**: `src/utils/button-status.js` (142 lines)
 
 #### `addButtonStatus(button, message, type = 'info')`
+
 Adds a status message below a button.
 
 ```javascript
@@ -32,6 +33,7 @@ const statusElement = addButtonStatus(button, 'Aguardando localização', 'warni
 ```
 
 **Parameters**:
+
 - `button` (HTMLButtonElement) - Target button element
 - `message` (string) - Status message text
 - `type` (string) - Message type: 'info', 'warning', 'success', 'error' (default: 'info')
@@ -39,11 +41,13 @@ const statusElement = addButtonStatus(button, 'Aguardando localização', 'warni
 **Returns**: HTMLElement - The created status element
 
 **Accessibility**:
+
 - Creates status element with `role="status"`
 - Adds `aria-live="polite"` for screen reader announcements
 - Sets `aria-describedby` on button to reference status element
 
 #### `removeButtonStatus(button)`
+
 Removes the status message from a button.
 
 ```javascript
@@ -53,6 +57,7 @@ removeButtonStatus(button);
 ```
 
 #### `updateButtonStatus(button, message, type = 'info')`
+
 Updates an existing status message or creates a new one if it doesn't exist.
 
 ```javascript
@@ -60,6 +65,7 @@ updateButtonStatus(button, 'Nova mensagem', 'success');
 ```
 
 #### `disableWithReason(button, reason)`
+
 Disables a button and shows a warning message explaining why.
 
 ```javascript
@@ -71,6 +77,7 @@ disableWithReason(button, BUTTON_STATUS_MESSAGES.WAITING_LOCATION);
 ```
 
 #### `enableWithMessage(button, successMessage)`
+
 Enables a button and optionally shows a success message.
 
 ```javascript
@@ -180,17 +187,20 @@ function _setupLocationUpdateHandlers() {
 ## Accessibility Features
 
 ### ARIA Support
+
 - **`aria-describedby`**: Connects button to status element for context
 - **`role="status"`**: Identifies element as status region
 - **`aria-live="polite"`**: Announces status changes to screen readers
 
 ### Screen Reader Experience
+
 1. User focuses on disabled button
 2. Screen reader announces button name and disabled state
 3. Screen reader reads the status message via `aria-describedby`
 4. User understands why button is disabled and what action is needed
 
 ### Visual Design
+
 - **Color coding**: Different colors for different status types
 - **Icon support**: Can include emoji/icons in messages
 - **Clear typography**: 12px font size with 1.4 line height for readability
@@ -199,6 +209,7 @@ function _setupLocationUpdateHandlers() {
 ## Usage Patterns
 
 ### Pattern 1: Initial State
+
 ```javascript
 // Show disabled state on mount
 _initializeButtonStates();
@@ -210,6 +221,7 @@ function onLocationReady() {
 ```
 
 ### Pattern 2: Dynamic State Updates
+
 ```javascript
 // Show loading state
 updateButtonStatus(button, BUTTON_STATUS_MESSAGES.LOADING, 'info');
@@ -222,6 +234,7 @@ updateButtonStatus(button, BUTTON_STATUS_MESSAGES.READY, 'success');
 ```
 
 ### Pattern 3: Conditional Enabling
+
 ```javascript
 if (hasPermission) {
   enableWithMessage(button);
@@ -233,18 +246,21 @@ if (hasPermission) {
 ## Benefits
 
 ### User Experience
+
 - **Clear communication**: Users understand why buttons are disabled
 - **Action guidance**: Users know what to do to enable features
 - **Professional appearance**: Polished, considerate UX
 - **No guessing**: Reduces user frustration
 
 ### Accessibility
+
 - **Screen reader support**: Announces status to assistive technology users
 - **WCAG 2.1 AA compliant**: Meets accessibility standards
 - **Color independence**: Not relying solely on color to convey meaning
 - **Focus management**: Properly connected to button elements
 
 ### Developer Experience
+
 - **Simple API**: Easy-to-use functions
 - **Reusable constants**: Consistent messages across application
 - **Clean DOM**: Automatic cleanup of status elements
@@ -284,12 +300,14 @@ describe('button-status', () => {
 ## Browser Compatibility
 
 Works in all modern browsers that support:
+
 - ES6 modules
 - `aria-live` attribute
 - `role` attribute
 - Basic DOM APIs (querySelector, createElement, etc.)
 
 **Tested browsers**:
+
 - Chrome 90+
 - Firefox 88+
 - Safari 14+
@@ -300,6 +318,7 @@ Works in all modern browsers that support:
 ### From Manual DOM Manipulation
 
 **Before**:
+
 ```javascript
 const status = document.getElementById("restaurants-status");
 if (status) status.textContent = "Pronto";
@@ -307,6 +326,7 @@ findRestaurantsBtn.disabled = false;
 ```
 
 **After**:
+
 ```javascript
 enableWithMessage(findRestaurantsBtn, BUTTON_STATUS_MESSAGES.READY);
 ```
@@ -314,6 +334,7 @@ enableWithMessage(findRestaurantsBtn, BUTTON_STATUS_MESSAGES.READY);
 ### From Custom Status Messages
 
 **Before**:
+
 ```javascript
 const msgEl = document.createElement('div');
 msgEl.textContent = 'Custom message';
@@ -322,6 +343,7 @@ button.parentNode.insertBefore(msgEl, button.nextSibling);
 ```
 
 **After**:
+
 ```javascript
 addButtonStatus(button, 'Custom message', 'info');
 ```

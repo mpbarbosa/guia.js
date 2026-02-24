@@ -65,6 +65,7 @@ Successfully addressed **3 critical and high-priority issues** related to workfl
 ### change-type-detector.sh Documentation
 
 **Sections Added**:
+
 - ✅ Complete usage guide with parameters
 - ✅ All Conventional Commits types explained
 - ✅ Output format and exit codes
@@ -73,6 +74,7 @@ Successfully addressed **3 critical and high-priority issues** related to workfl
 - ✅ Testing reference
 
 **Key Information**:
+
 - **Parameters**: `base_ref` (optional, default: HEAD~1)
 - **Output**: Change type string (feat|fix|docs|test|refactor|chore|ci|perf|style)
 - **Exit Codes**: 0 (success), 1 (error)
@@ -81,6 +83,7 @@ Successfully addressed **3 critical and high-priority issues** related to workfl
 ### workflow-condition-evaluator.sh Documentation
 
 **Sections Added**:
+
 - ✅ Complete usage guide with 2 parameters
 - ✅ Configuration file structure (.workflow-config.yaml)
 - ✅ File pattern rules (glob syntax)
@@ -90,6 +93,7 @@ Successfully addressed **3 critical and high-priority issues** related to workfl
 - ✅ Dependencies listed
 
 **Key Information**:
+
 - **Parameters**: `step_name` (required), `base_ref` (optional)
 - **Output**: "run" or "skip"
 - **Exit Codes**: 0 (success), 1 (error)
@@ -98,12 +102,14 @@ Successfully addressed **3 critical and high-priority issues** related to workfl
 ### Test Scripts Documentation
 
 **test-change-type-detection.sh**:
+
 - ✅ Test coverage details (20+ test cases)
 - ✅ Expected output format
 - ✅ When to run (before script modifications)
 - ✅ Execution time (~5 seconds)
 
 **test-conditional-execution.sh**:
+
 - ✅ Test coverage details (15+ scenarios)
 - ✅ Expected output format
 - ✅ When to run (before config changes)
@@ -117,11 +123,13 @@ Successfully addressed **3 critical and high-priority issues** related to workfl
 ### Portability Fix
 
 **Before**:
+
 ```bash
 cd /home/mpb/Documents/GitHub/guia_turistico/src
 ```
 
 **After**:
+
 ```bash
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -129,6 +137,7 @@ cd "$PROJECT_ROOT/src"
 ```
 
 **Benefits**:
+
 - ✅ Works from any directory
 - ✅ CI/CD compatible
 - ✅ Docker-friendly
@@ -137,12 +146,14 @@ cd "$PROJECT_ROOT/src"
 ### Help Flag Implementation
 
 Both workflow scripts now support:
+
 ```bash
 ./change-type-detector.sh --help
 ./workflow-condition-evaluator.sh --help
 ```
 
 **Features**:
+
 - Complete usage documentation
 - Parameter descriptions with examples
 - Exit code reference
@@ -156,12 +167,14 @@ Both workflow scripts now support:
 ### Developer Experience
 
 **Before**:
+
 - ❌ No usage documentation for workflow scripts
 - ❌ Test scripts undocumented
 - ❌ Script fails in CI/CD (hardcoded path)
 - ❌ No help flags for quick reference
 
 **After**:
+
 - ✅ 4 scripts fully documented in README.md
 - ✅ Test scripts with coverage details
 - ✅ Script works in all environments
@@ -179,6 +192,7 @@ Both workflow scripts now support:
 ### CI/CD Reliability
 
 **Improvements**:
+
 - ✅ Scripts work in GitHub Actions
 - ✅ Scripts work in Docker containers
 - ✅ Scripts work on any developer machine
@@ -189,6 +203,7 @@ Both workflow scripts now support:
 ## 🔍 Validation
 
 ### Syntax Validation
+
 ```bash
 ✅ bash -n .github/scripts/change-type-detector.sh
 ✅ bash -n .github/scripts/workflow-condition-evaluator.sh
@@ -196,12 +211,14 @@ Both workflow scripts now support:
 ```
 
 ### Help Flag Testing
+
 ```bash
 ✅ ./change-type-detector.sh --help (53-line output)
 ✅ ./workflow-condition-evaluator.sh --help (78-line output)
 ```
 
 ### Portability Testing
+
 ```bash
 ✅ Tested from /tmp directory
 ✅ Script resolved paths correctly
@@ -213,6 +230,7 @@ Both workflow scripts now support:
 ## 📝 Script Inventory (Updated)
 
 ### Workflow Scripts (4 total)
+
 | Script | Lines | Status | Documentation |
 |--------|-------|--------|---------------|
 | change-type-detector.sh | 308 | ✅ Complete | ✅ README + --help |
@@ -221,6 +239,7 @@ Both workflow scripts now support:
 | workflow-condition-evaluator.sh | 225 | ✅ Complete | ✅ README + --help |
 
 ### Maintenance Scripts (1 total)
+
 | Script | Lines | Status | Documentation |
 |--------|-------|--------|---------------|
 | fix-console-logging.sh | 150 | ✅ Portable | ✅ README |
@@ -232,6 +251,7 @@ Both workflow scripts now support:
 ### Requirements Met: 100%
 
 **Critical Issues** (3 resolved):
+
 - [x] Document change-type-detector.sh (308 lines)
 - [x] Document workflow-condition-evaluator.sh (225 lines)
 - [x] Add --help flags to both scripts
@@ -239,6 +259,7 @@ Both workflow scripts now support:
 - [x] Add usage examples
 
 **High Priority Issues** (3 resolved):
+
 - [x] Document test-change-type-detection.sh (237 lines)
 - [x] Document test-conditional-execution.sh (203 lines)
 - [x] Fix hardcoded path in fix-console-logging.sh
@@ -248,6 +269,7 @@ Both workflow scripts now support:
 ### Documentation Quality Score: A+
 
 **Evaluated Criteria**:
+
 - ✅ Complete usage documentation
 - ✅ Parameter descriptions
 - ✅ Exit codes documented
@@ -262,17 +284,20 @@ Both workflow scripts now support:
 ## 🚀 Next Steps
 
 ### Immediate (Completed)
+
 - [x] Commit all changes (commit 3957141)
 - [x] Update README.md to reflect documentation status
 - [x] Validate syntax and portability
 
 ### Short-term (Recommended)
+
 - [ ] Run test-change-type-detection.sh to validate detector
 - [ ] Run test-conditional-execution.sh to validate evaluator
 - [ ] Test scripts in GitHub Actions environment
 - [ ] Create .workflow-config.yaml if missing
 
 ### Long-term (Optional)
+
 - [ ] Add --dry-run flag to workflow scripts
 - [ ] Create man pages for scripts
 - [ ] Add autocomplete for script parameters
@@ -283,17 +308,20 @@ Both workflow scripts now support:
 ## 📚 Related Documentation
 
 **Primary References**:
+
 - `.github/scripts/README.md` - Complete script inventory
 - `scripts/README.md` - Maintenance scripts documentation
 - `.github/workflows/modified-files.yml` - Workflow using these scripts
 
 **Help Flags**:
+
 ```bash
 ./.github/scripts/change-type-detector.sh --help
 ./.github/scripts/workflow-condition-evaluator.sh --help
 ```
 
 **Configuration**:
+
 - `.workflow-config.yaml` - Workflow execution rules
 - `.github/workflows/DEPENDENCY_AUDIT.md` - Related workflow docs
 

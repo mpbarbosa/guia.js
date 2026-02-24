@@ -5,6 +5,7 @@ This directory contains end-to-end tests for the Guia Turístico application usi
 ## Overview
 
 E2E tests validate complete workflows and integration between multiple components, focusing on:
+
 - Geolocation coordinate processing
 - OpenStreetMap API integration
 - Brazilian address format standardization
@@ -14,6 +15,7 @@ E2E tests validate complete workflows and integration between multiple component
 ## Test Structure
 
 E2E tests follow the pattern from the `guia_js` library reference implementation:
+
 - Mock external APIs (OpenStreetMap, fetch)
 - Validate complete data flow from coordinates to formatted addresses
 - Test Brazilian-specific address components (logradouro, municipio, uf, cep)

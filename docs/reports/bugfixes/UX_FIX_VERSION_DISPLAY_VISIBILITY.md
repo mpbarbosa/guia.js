@@ -7,6 +7,7 @@
 ## Problem
 
 The version display in the footer was minimally styled and hard to use:
+
 - **Low visibility**: Small text (11px), easy to miss
 - **No accessibility**: Not announced to screen readers
 - **Limited utility**: Just version number, no additional context
@@ -17,6 +18,7 @@ The version display in the footer was minimally styled and hard to use:
 ### User Confusion Scenarios
 
 **Scenario 1**: Bug Report
+
 - User encounters bug, wants to report it
 - Searches for version number in UI
 - Finds tiny text at bottom: "0.9.0-alpha | 2026-02-11"
@@ -24,6 +26,7 @@ The version display in the footer was minimally styled and hard to use:
 - Manual screenshot or typing required
 
 **Scenario 2**: Developer Debugging
+
 - Developer opens app to debug issue
 - Needs version and browser info quickly
 - Has to scroll to footer, read small text
@@ -31,12 +34,14 @@ The version display in the footer was minimally styled and hard to use:
 - Wastes time gathering basic info
 
 **Scenario 3**: Accessibility User
+
 - Screen reader user navigates footer
 - Version marked as `role="status"` but not interactive
 - No way to get detailed version information
 - Missed opportunity for inclusive design
 
 **Scenario 4**: Mobile User
+
 - Limited screen space, small footer text (10px on mobile)
 - Version barely readable
 - Can't tap for more info
@@ -50,6 +55,7 @@ The version display in the footer was minimally styled and hard to use:
 **After**: Interactive badge with icon and hover states
 
 **Badge Features**:
+
 - Info icon (ℹ️) prefix for clarity
 - Rounded border (16px radius)
 - Surface variant background (#e7e0ec)
@@ -60,6 +66,7 @@ The version display in the footer was minimally styled and hard to use:
 ### 2. Version Info Modal
 
 **Interactive modal** triggered by clicking version badge:
+
 - Full version details (version, build date)
 - Browser information (name + version)
 - Complete user agent string (for bug reports)
@@ -69,6 +76,7 @@ The version display in the footer was minimally styled and hard to use:
 - ESC key support
 
 **Modal Benefits**:
+
 - All bug report info in one place
 - Copy-friendly data (user agent is selectable)
 - Professional appearance (Material Design 3)
@@ -78,6 +86,7 @@ The version display in the footer was minimally styled and hard to use:
 ### 3. Console Logging
 
 **Automatic logging on page load**:
+
 ```
 🗺️ Guia Turístico
 Version: 0.9.0-alpha
@@ -91,6 +100,7 @@ GitHub: https://github.com/mpbarbosa/guia_turistico
 ```
 
 **Developer Benefits**:
+
 - Instant access to version info
 - Browser detection for compatibility debugging
 - Formatted for readability (styled console.log)
@@ -100,6 +110,7 @@ GitHub: https://github.com/mpbarbosa/guia_turistico
 ### 4. Enhanced Accessibility
 
 **ARIA Attributes**:
+
 - `role="button"` - Semantic interactive element
 - `tabindex="0"` - Keyboard navigable
 - `aria-label="Versão do aplicativo - clique para ver detalhes"` - Screen reader description
@@ -108,12 +119,14 @@ GitHub: https://github.com/mpbarbosa/guia_turistico
 - `aria-labelledby` - Modal title association
 
 **Keyboard Support**:
+
 - Tab to badge → Enter/Space opens modal
 - Tab within modal → Focus close button
 - ESC closes modal
 - Return focus to badge on close
 
 **Screen Reader Announcements**:
+
 - "Modal de informações da versão aberto" (modal open)
 - "Modal de informações da versão fechado" (modal close)
 - Uses temporary `aria-live="polite"` regions
@@ -123,6 +136,7 @@ GitHub: https://github.com/mpbarbosa/guia_turistico
 ### File Structure
 
 **New Files**:
+
 1. `src/utils/version-display-manager.js` (272 lines)
    - VersionDisplayManager singleton class
    - Modal open/close methods
@@ -130,6 +144,7 @@ GitHub: https://github.com/mpbarbosa/guia_turistico
    - Console logging functionality
 
 **Modified Files**:
+
 1. `src/version-display.css` (280+ lines)
    - Badge styling (MD3 design)
    - Modal overlay and dialog
@@ -145,6 +160,7 @@ GitHub: https://github.com/mpbarbosa/guia_turistico
 ### CSS Architecture
 
 **Badge Styles** (.app-version):
+
 ```css
 display: inline-flex;
 align-items: center;
@@ -158,6 +174,7 @@ transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 ```
 
 **Hover State**:
+
 ```css
 .app-version:hover {
   background: var(--md-sys-color-secondary-container);
@@ -168,6 +185,7 @@ transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 ```
 
 **Modal Overlay** (.version-modal-overlay):
+
 ```css
 position: fixed;
 top: 0; left: 0; right: 0; bottom: 0;
@@ -178,6 +196,7 @@ animation: fadeIn 0.2s ease-out;
 ```
 
 **Modal Dialog** (.version-modal):
+
 ```css
 background: var(--md-sys-color-surface);
 border-radius: 16px;
@@ -190,6 +209,7 @@ animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 ### JavaScript Architecture
 
 **VersionDisplayManager Class**:
+
 - **Singleton Pattern**: One instance per page load
 - **Composition**: Manages badge, modal, and console logging
 - **Event Handling**: Click, keyboard, ESC key listeners
@@ -198,6 +218,7 @@ animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 - **Focus Management**: Trap focus in modal, restore on close
 
 **Key Methods**:
+
 1. `init()` - Initialize manager, setup listeners, log to console
 2. `openModal()` - Show modal, populate data, manage focus
 3. `closeModal()` - Hide modal, restore body scroll, return focus
@@ -208,6 +229,7 @@ animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 ### Browser Detection Logic
 
 **User Agent Parsing**:
+
 ```javascript
 _getBrowserInfo() {
   const ua = navigator.userAgent;
@@ -237,6 +259,7 @@ _getBrowserInfo() {
 ```
 
 **Detected Browsers**:
+
 - Chrome 94+ (includes Chromium-based)
 - Edge 94+ (Chromium-based)
 - Firefox 93+
@@ -265,12 +288,14 @@ _getBrowserInfo() {
 1. Developer opens app in Chrome DevTools
 2. Opens Console tab
 3. Sees formatted version info automatically logged:
+
    ```
    🗺️ Guia Turístico
    Version: 0.9.0-alpha
    Build Date: 2026-02-11
    Browser: Chrome 131.0
    ```
+
 4. Uses info for compatibility debugging
 5. No UI interaction needed
 
@@ -318,6 +343,7 @@ _getBrowserInfo() {
 ## Impact
 
 ### Before (Plain Text)
+
 - ❌ Low visibility (11px text, easy to miss)
 - ❌ No interactivity (static text)
 - ❌ Limited info (just version + date)
@@ -326,6 +352,7 @@ _getBrowserInfo() {
 - ❌ Bug reporting friction (manual screenshot)
 
 ### After (MD3 Badge + Modal)
+
 - ✅ High visibility (badge with icon, hover states)
 - ✅ Interactive (click/tap for details)
 - ✅ Complete info (version, date, browser, user agent)
@@ -336,20 +363,24 @@ _getBrowserInfo() {
 ### Key Metrics
 
 **Visibility**:
+
 - Badge size: 12px → 12px (same) BUT with icon and styling
 - Recognition: 30% → 90% (estimated improvement with badge design)
 
 **Accessibility**:
+
 - Keyboard navigable: No → Yes
 - Screen reader support: Basic → Full
 - ARIA compliance: Partial → Complete
 
 **Developer Experience**:
+
 - Console logging: No → Yes (automatic on load)
 - Browser detection: No → Yes
 - Bug report info: Manual → Automated modal
 
 **User Satisfaction**:
+
 - Version findability: 40% → 95% (estimated)
 - Bug report completeness: 50% → 98% (with full details)
 - Developer debugging speed: +70% (instant console info)
@@ -357,12 +388,14 @@ _getBrowserInfo() {
 ## Accessibility Features
 
 **WCAG 2.1 Compliance**:
+
 - ✓ 2.1.1 Keyboard (Level A) - Full keyboard navigation
 - ✓ 2.4.7 Focus Visible (Level AA) - Focus indicator on badge
 - ✓ 4.1.2 Name, Role, Value (Level A) - ARIA button/dialog roles
 - ✓ 4.1.3 Status Messages (Level AA) - Screen reader announcements
 
 **Keyboard Support**:
+
 - Tab: Navigate to badge
 - Enter/Space: Open modal
 - Tab: Navigate within modal
@@ -370,18 +403,21 @@ _getBrowserInfo() {
 - Focus trap: Keeps focus in modal when open
 
 **Screen Reader Support**:
+
 - Badge announces as button with description
 - Modal announces as dialog with title
 - State changes announced (open/close)
 - All content read in logical order
 
 **Visual Accessibility**:
+
 - Focus indicator: 2px solid outline (primary color)
 - Color contrast: 7:1+ on all text (WCAG AAA)
 - Touch targets: 44x44px+ (WCAG AAA)
 - Hover states: Clear visual feedback
 
 **Reduced Motion**:
+
 - `@media (prefers-reduced-motion: reduce)` - Disables animations
 - Transitions: none
 - Transforms: none
@@ -390,17 +426,20 @@ _getBrowserInfo() {
 ## Browser Compatibility
 
 **Minimum Requirements**:
+
 - Chrome 94+ (ES2022, dialog element, backdrop-filter)
 - Firefox 93+ (ES2022, ARIA dialog support)
 - Safari 15+ (ES2022, backdrop-filter, focus-visible)
 
 **Feature Support**:
+
 - `backdrop-filter`: 97.5% global support (graceful degradation)
 - `dialog` semantics: Universal screen reader support
 - ES2022 (classes, optional chaining): 95%+ support
 - CSS animations: 99.5% support
 
 **Graceful Degradation**:
+
 - No backdrop-filter: Modal still functional, solid overlay
 - Old browsers: Version text visible, modal doesn't open (no errors)
 - No JavaScript: Version text displays normally
@@ -408,11 +447,13 @@ _getBrowserInfo() {
 ## Performance Impact
 
 **Bundle Size**:
+
 - JavaScript: +272 lines (VersionDisplayManager)
 - CSS: +280 lines (badge + modal styles)
 - **Total**: +4 KB uncompressed, +1.5 KB gzipped
 
 **Runtime Performance**:
+
 - Console logging: <5ms on page load
 - Modal open: <50ms (animation duration 300ms)
 - Modal close: <50ms (animation duration 200ms)
@@ -420,6 +461,7 @@ _getBrowserInfo() {
 - Memory: ~2 KB for singleton instance
 
 **Load Time Impact**:
+
 - No impact on initial page load (inline CSS/JS)
 - No additional HTTP requests
 - No external dependencies
@@ -429,6 +471,7 @@ _getBrowserInfo() {
 ### Manual Test Scenarios
 
 **Test 1: Badge Visibility**
+
 1. Open app, scroll to footer
 2. Verify:
    - ✅ Badge visible with icon (ℹ️)
@@ -437,6 +480,7 @@ _getBrowserInfo() {
    - ✅ Cursor becomes pointer on hover
 
 **Test 2: Badge Interaction**
+
 1. Hover over badge
 2. Verify:
    - ✅ Background color changes (surface-variant → secondary-container)
@@ -448,6 +492,7 @@ _getBrowserInfo() {
    - ✅ Overlay appears (backdrop-filter blur)
 
 **Test 3: Modal Content**
+
 1. Open modal
 2. Verify all fields populated:
    - ✅ Version: 0.9.0-alpha
@@ -459,6 +504,7 @@ _getBrowserInfo() {
    - ✅ Opens GitHub CHANGELOG.md in new tab
 
 **Test 4: Modal Interactions**
+
 1. Open modal
 2. Test close methods:
    - ✅ Click "Fechar" button → Modal closes
@@ -470,6 +516,7 @@ _getBrowserInfo() {
    - ✅ Focus returns to badge after close
 
 **Test 5: Keyboard Navigation**
+
 1. Tab to version badge
 2. Verify:
    - ✅ Focus indicator visible (outline)
@@ -484,6 +531,7 @@ _getBrowserInfo() {
    - ✅ Focus returns to badge
 
 **Test 6: Screen Reader (NVDA/VoiceOver)**
+
 1. Navigate to footer with screen reader
 2. Verify announces:
    - ✅ "Versão do aplicativo - clique para ver detalhes, button"
@@ -497,6 +545,7 @@ _getBrowserInfo() {
    - ✅ "Modal de informações da versão fechado"
 
 **Test 7: Console Logging**
+
 1. Open app
 2. Open browser DevTools (F12)
 3. Go to Console tab
@@ -507,6 +556,7 @@ _getBrowserInfo() {
    - ✅ Bug report instructions visible
 
 **Test 8: Mobile Responsive**
+
 1. Open app on mobile device (<600px)
 2. Verify:
    - ✅ Badge font size reduced (11px)
@@ -516,6 +566,7 @@ _getBrowserInfo() {
    - ✅ Touch target adequate (tap badge easily)
 
 **Test 9: Browser Detection**
+
 1. Open app in Chrome
 2. Open modal
 3. Verify: "Browser: Chrome [version]"
@@ -527,6 +578,7 @@ _getBrowserInfo() {
 9. Verify: "Browser: Edge [version]"
 
 **Test 10: Reduced Motion**
+
 1. Enable "Reduce Motion" in OS settings
 2. Open app
 3. Hover over badge
@@ -573,11 +625,13 @@ _getBrowserInfo() {
 ## Future Enhancements (Not Critical)
 
 **Short-term**:
+
 1. **Copy Button**: Copy version info to clipboard (one click)
 2. **Changelog Preview**: Show recent changes in modal (no external link)
 3. **Version Check**: Notify user if newer version available
 
 **Long-term**:
+
 1. **Service Worker Version**: Show installed vs available version
 2. **Performance Metrics**: Show load time, bundle size in modal
 3. **Feature Flags**: Show enabled/disabled features

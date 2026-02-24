@@ -35,11 +35,13 @@ Test files have relaxed rules where `this` usage generates a **warning** instead
 ## NPM Scripts
 
 ### Lint all files
+
 ```bash
 npm run lint
 ```
 
 ### Lint and auto-fix issues
+
 ```bash
 npm run lint:fix
 ```
@@ -47,13 +49,15 @@ npm run lint:fix
 ## Current Status
 
 As of 2025-12-15:
+
 - **952 errors** found across the codebase
 - **270 warnings** in test files
 - Most errors are related to class-based code using `this`
 
 ## Recommended Refactoring Patterns
 
-### Instead of Classes with "this":
+### Instead of Classes with "this"
+
 ```javascript
 // ❌ Avoid
 class Counter {
@@ -66,7 +70,8 @@ class Counter {
 }
 ```
 
-### Use Factory Functions:
+### Use Factory Functions
+
 ```javascript
 // ✅ Preferred
 const createCounter = () => {
@@ -82,7 +87,8 @@ const createCounter = () => {
 };
 ```
 
-### Or Pure Functions:
+### Or Pure Functions
+
 ```javascript
 // ✅ Also good
 const increment = (count) => count + 1;

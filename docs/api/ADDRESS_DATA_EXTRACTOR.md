@@ -22,6 +22,7 @@ The `AddressDataExtractor` class is a **legacy wrapper** that maintains backward
 ## Architecture Refactoring
 
 ### Original (Pre-v0.9.0)
+
 ```
 AddressDataExtractor (Single class handling everything)
 ├── Address extraction
@@ -32,6 +33,7 @@ AddressDataExtractor (Single class handling everything)
 ```
 
 ### Refactored (v0.9.0+)
+
 ```
 AddressDataExtractor (Facade - backward compatibility only)
 ├── AddressExtractor
@@ -45,6 +47,7 @@ AddressDataExtractor (Facade - backward compatibility only)
 ```
 
 **Design Benefits:**
+
 - **Single Responsibility**: Each class has one clear purpose
 - **Testability**: Easier to test individual components
 - **Maintainability**: Simpler code with focused responsibilities
@@ -55,6 +58,7 @@ AddressDataExtractor (Facade - backward compatibility only)
 ## Migration Guide
 
 ### Old Code (Still Works)
+
 ```javascript
 import AddressDataExtractor from './data/AddressDataExtractor.js';
 
@@ -71,6 +75,7 @@ const address2 = AddressDataExtractor.getBrazilianStandardAddress(data);
 ```
 
 ### New Code (Recommended)
+
 ```javascript
 import AddressCache from './data/AddressCache.js';
 import AddressExtractor from './data/AddressExtractor.js';
@@ -112,11 +117,13 @@ const address = AddressDataExtractor.getBrazilianStandardAddress(geocodingData);
 Creates a new AddressDataExtractor instance by delegating to `AddressExtractor`.
 
 **Parameters:**
+
 - `data` (`Object`) - Raw address data from geocoding API
 
 **Returns:** Frozen `AddressDataExtractor` instance
 
 **Delegation:**
+
 ```javascript
 constructor(data) {
     const extractor = new AddressExtractor(data);
@@ -128,6 +135,7 @@ constructor(data) {
 ```
 
 **Example:**
+
 ```javascript
 const extractor = new AddressDataExtractor(geocodingData);
 console.log(extractor.enderecoPadronizado.municipioCompleto());
@@ -170,6 +178,7 @@ Reference place information extracted from geocoding data. Delegated from `Addre
 Generates a cache key for address data.
 
 **Parameters:**
+
 - `data` (`Object`) - Address data from geocoding API
 
 **Returns:** `string | null` - Cache key or null
@@ -177,6 +186,7 @@ Generates a cache key for address data.
 **Delegation:** `AddressCache.generateCacheKey(data)`
 
 **Example:**
+
 ```javascript
 const key = AddressDataExtractor.generateCacheKey(geocodingData);
 console.log(key); // "Avenida Paulista|1578|Bela Vista|São Paulo|01310-100|BR"
@@ -191,6 +201,7 @@ Clears all cache entries and resets change tracking.
 **Delegation:** `AddressCache.getInstance().clearCache()`
 
 **Example:**
+
 ```javascript
 AddressDataExtractor.clearCache();
 ```
@@ -204,6 +215,7 @@ AddressDataExtractor.clearCache();
 Sets the callback function for logradouro (street) changes.
 
 **Parameters:**
+
 - `callback` (`Function | null`) - Function to call on logradouro changes
 
 **Returns:** `void`
@@ -211,6 +223,7 @@ Sets the callback function for logradouro (street) changes.
 **Delegation:** `AddressCache.getInstance().setLogradouroChangeCallback(callback)`
 
 **Example:**
+
 ```javascript
 AddressDataExtractor.setLogradouroChangeCallback((details) => {
   console.log('Street changed:', details.current.logradouro);
@@ -223,6 +236,7 @@ AddressDataExtractor.setLogradouroChangeCallback((details) => {
 Sets the callback function for bairro (neighborhood) changes.
 
 **Parameters:**
+
 - `callback` (`Function | null`) - Function to call on bairro changes
 
 **Returns:** `void`
@@ -230,6 +244,7 @@ Sets the callback function for bairro (neighborhood) changes.
 **Delegation:** `AddressCache.getInstance().setBairroChangeCallback(callback)`
 
 **Example:**
+
 ```javascript
 AddressDataExtractor.setBairroChangeCallback((details) => {
   console.log('Neighborhood changed:', details.current.bairro);
@@ -242,6 +257,7 @@ AddressDataExtractor.setBairroChangeCallback((details) => {
 Sets the callback function for municipio (municipality) changes.
 
 **Parameters:**
+
 - `callback` (`Function | null`) - Function to call on municipio changes
 
 **Returns:** `void`
@@ -249,6 +265,7 @@ Sets the callback function for municipio (municipality) changes.
 **Delegation:** `AddressCache.getInstance().setMunicipioChangeCallback(callback)`
 
 **Example:**
+
 ```javascript
 AddressDataExtractor.setMunicipioChangeCallback((details) => {
   console.log('City changed:', details.current.municipio);
@@ -297,6 +314,7 @@ Checks if logradouro has changed. Returns true only once per change.
 **Delegation:** `AddressCache.getInstance().hasLogradouroChanged()`
 
 **Example:**
+
 ```javascript
 if (AddressDataExtractor.hasLogradouroChanged()) {
   console.log('Street changed!');
@@ -332,6 +350,7 @@ Gets detailed information about logradouro change.
 **Delegation:** `AddressCache.getInstance().getLogradouroChangeDetails()`
 
 **Return Structure:**
+
 ```javascript
 {
   hasChanged: boolean,
@@ -342,6 +361,7 @@ Gets detailed information about logradouro change.
 ```
 
 **Example:**
+
 ```javascript
 const details = AddressDataExtractor.getLogradouroChangeDetails();
 console.log(details);
@@ -362,6 +382,7 @@ Gets detailed information about bairro change.
 **Delegation:** `AddressCache.getInstance().getBairroChangeDetails()`
 
 **Return Structure:**
+
 ```javascript
 {
   hasChanged: boolean,
@@ -380,6 +401,7 @@ Gets detailed information about municipio change.
 **Delegation:** `AddressCache.getInstance().getMunicipioChangeDetails()`
 
 **Return Structure:**
+
 ```javascript
 {
   hasChanged: boolean,
@@ -398,6 +420,7 @@ Gets detailed information about municipio change.
 Main static method to get Brazilian standard address. Coordinates cache retrieval and extraction.
 
 **Parameters:**
+
 - `data` (`Object`) - Raw address data from geocoding API
 
 **Returns:** `BrazilianStandardAddress` - Standardized address object
@@ -405,6 +428,7 @@ Main static method to get Brazilian standard address. Coordinates cache retrieva
 **Delegation:** `AddressCache.getInstance().getBrazilianStandardAddress(data)`
 
 **Example:**
+
 ```javascript
 const address = AddressDataExtractor.getBrazilianStandardAddress(geocodingData);
 console.log(address.enderecoCompleto());
@@ -451,6 +475,7 @@ All static properties are implemented using property descriptors that create **l
 | `previousRawData` | `Object \| null` | Previous raw geocoding data |
 
 **Property Descriptor Example:**
+
 ```javascript
 Object.defineProperties(AddressDataExtractor, {
   cache: {
@@ -472,6 +497,7 @@ Returns a string representation of the extractor.
 **Returns:** `string`
 
 **Example:**
+
 ```javascript
 const extractor = new AddressDataExtractor(geocodingData);
 console.log(extractor.toString());
@@ -566,12 +592,14 @@ console.log(cache.getCacheSize());  // Includes both address1 and address2
 ### How to Migrate
 
 **Step 1:** Identify usage patterns
+
 ```bash
 # Find all AddressDataExtractor imports
 grep -r "AddressDataExtractor" src/
 ```
 
 **Step 2:** Replace instance usage
+
 ```javascript
 // Old
 const extractor = new AddressDataExtractor(data);
@@ -581,6 +609,7 @@ const extractor = new AddressExtractor(data);
 ```
 
 **Step 3:** Replace static usage
+
 ```javascript
 // Old
 AddressDataExtractor.getBrazilianStandardAddress(data);
@@ -590,6 +619,7 @@ AddressCache.getInstance().getBrazilianStandardAddress(data);
 ```
 
 **Step 4:** Update imports
+
 ```javascript
 // Old
 import AddressDataExtractor from './data/AddressDataExtractor.js';
@@ -604,11 +634,13 @@ import AddressCache from './data/AddressCache.js';
 ## Testing
 
 Legacy tests still pass due to facade pattern:
+
 - `__tests__/unit/data/AddressDataExtractor.test.js` - Legacy tests (still passing)
 - `__tests__/unit/data/AddressExtractor.test.js` - New extraction tests
 - `__tests__/unit/data/AddressCache.test.js` - New caching tests
 
 **Example Legacy Test (Still Works):**
+
 ```javascript
 describe('AddressDataExtractor (Legacy)', () => {
   test('extracts address correctly', () => {

@@ -26,6 +26,7 @@ This comprehensive guide provides best practices for ES6 import/export systems b
 ### 1. Named Exports (Recommended)
 
 **✅ Best Practice**: Use named exports for most cases
+
 ```javascript
 // ✅ Good - Clear, explicit, tree-shakable
 export const log = (message) => console.log(message);
@@ -45,6 +46,7 @@ export { formatTimestamp, validateCoordinates };
 ```
 
 **❌ Avoid**: Inconsistent export naming
+
 ```javascript
 // ❌ Bad - Inconsistent naming conventions
 export const logInfo = (message) => console.log(message);    // Should be 'log'
@@ -55,6 +57,7 @@ export const logError = (message) => console.error(message);  // Should be 'erro
 ### 2. Default Exports
 
 **✅ Best Practice**: Use default exports for main classes or primary functionality
+
 ```javascript
 // ✅ Good - Main class as default export
 export default class WebGeocodingManager {
@@ -75,6 +78,7 @@ export default {
 ```
 
 **❌ Avoid**: Mixing default and named exports inappropriately
+
 ```javascript
 // ❌ Bad - Confusing mix of default and named
 export default class Logger { /* ... */ }
@@ -85,6 +89,7 @@ export const warn = (msg) => { /* ... */ }; // Should be method of Logger class
 ### 3. Re-exports and Barrel Exports
 
 **✅ Best Practice**: Create index files for clean module interfaces
+
 ```javascript
 // src/utils/index.js - Barrel export
 export { log, warn, error } from './logger.js';
@@ -98,6 +103,7 @@ export { default as APIClient } from './api-client.js';
 ```
 
 **❌ Avoid**: Deep import paths in consumer code
+
 ```javascript
 // ❌ Bad - Deep import paths
 import { log } from './utils/logging/console/logger.js';
@@ -113,6 +119,7 @@ import { GeolocationService } from './services/index.js';
 ### 1. Named Imports (Recommended)
 
 **✅ Best Practice**: Use descriptive, explicit named imports
+
 ```javascript
 // ✅ Good - Clear, specific imports
 import { log, warn, error } from './utils/logger.js';
@@ -127,6 +134,7 @@ import { Service as LocationService } from './location-service.js';
 ### 2. Default Imports
 
 **✅ Best Practice**: Use meaningful names for default imports
+
 ```javascript
 // ✅ Good - Descriptive default import names
 import WebGeocodingManager from './coordination/WebGeocodingManager.js';
@@ -139,6 +147,7 @@ import Displayer from './display/LocationDisplayer.js';
 ```
 
 **❌ Avoid**: Generic or confusing default import names
+
 ```javascript
 // ❌ Bad - Generic names
 import Thing from './coordination/WebGeocodingManager.js';
@@ -149,6 +158,7 @@ import Data from './api/client.js';
 ### 3. Mixed Imports
 
 **✅ Best Practice**: Combine default and named imports when appropriate
+
 ```javascript
 // ✅ Good - Main class + utility functions
 import WebGeocodingManager, { createManager, validateConfig } from './manager.js';
@@ -164,6 +174,7 @@ import { GeolocationService } from './services/index.js';
 ### 4. Dynamic Imports
 
 **✅ Best Practice**: Use dynamic imports for code splitting and lazy loading
+
 ```javascript
 // ✅ Good - Lazy loading heavy modules
 async function initializeMapping() {
@@ -189,6 +200,7 @@ if ('geolocation' in navigator) {
 ### 1. Directory Structure
 
 **✅ Best Practice**: Organize modules by functionality
+
 ```
 src/
 ├── coordination/           # Orchestrator classes
@@ -214,6 +226,7 @@ src/
 ### 2. File Naming Conventions
 
 **✅ Best Practice**: Use consistent, descriptive names
+
 ```javascript
 // ✅ Good - Clear, descriptive file names
 WebGeocodingManager.js      // PascalCase for classes
@@ -224,6 +237,7 @@ index.js                   // Standard entry points
 ```
 
 **❌ Avoid**: Ambiguous or inconsistent naming
+
 ```javascript
 // ❌ Bad - Unclear names
 manager.js                 // What kind of manager?
@@ -235,6 +249,7 @@ stuff.js                   // Meaningless
 ### 3. Module Size Guidelines
 
 **✅ Best Practice**: Keep modules focused and reasonably sized
+
 ```javascript
 // ✅ Good - Focused, single-responsibility modules
 // logger.js - 60 lines, focused on logging
@@ -251,6 +266,7 @@ stuff.js                   // Meaningless
 ### 1. Import/Export Name Mismatches
 
 **❌ Problem**: Importing functions with wrong names
+
 ```javascript
 // logger.js exports
 export const log = (message) => console.log(message);
@@ -262,6 +278,7 @@ import { logInfo, logWarning } from './logger.js';
 ```
 
 **✅ Solution**: Match export names exactly
+
 ```javascript
 // ✅ Good - Correct import names
 import { log, warn } from './logger.js';
@@ -273,6 +290,7 @@ import { log as logInfo, warn as logWarning } from './logger.js';
 ### 2. Missing Exports
 
 **❌ Problem**: Forgetting to export functions
+
 ```javascript
 // utils.js
 const formatDate = (date) => date.toISOString();
@@ -283,6 +301,7 @@ const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
 ```
 
 **✅ Solution**: Always export public functions
+
 ```javascript
 // ✅ Good - Explicit exports
 export const formatDate = (date) => date.toISOString();
@@ -298,6 +317,7 @@ export { formatDate, validateEmail };
 ### 3. Circular Dependencies
 
 **❌ Problem**: Modules importing each other
+
 ```javascript
 // user.js
 import { validatePermission } from './permission.js';
@@ -309,6 +329,7 @@ export const validatePermission = (user) => { /* ... */ };
 ```
 
 **✅ Solution**: Refactor to eliminate circular dependencies
+
 ```javascript
 // user.js
 export class User { /* ... */ }
@@ -330,6 +351,7 @@ export class UserService {
 ### 4. Default Export Confusion
 
 **❌ Problem**: Mixing default and named exports inconsistently
+
 ```javascript
 // ❌ Bad - Confusing export pattern
 export default class Logger { /* ... */ }
@@ -340,6 +362,7 @@ import Logger, { log } from './logger.js';  // Why both?
 ```
 
 **✅ Solution**: Choose consistent patterns
+
 ```javascript
 // ✅ Good - All named exports (utility pattern)
 export const createLogger = (level) => { /* ... */ };
@@ -358,6 +381,7 @@ export default class Logger {
 ### 1. Module Script Tags
 
 **✅ Best Practice**: Use `type="module"` for ES6 modules
+
 ```html
 <!-- ✅ Good - ES6 module loading -->
 <script type="module" src="./src/guia.js"></script>
@@ -372,6 +396,7 @@ export default class Logger {
 ```
 
 **❌ Avoid**: Regular script tags for modules
+
 ```html
 <!-- ❌ Bad - Will cause "Cannot use import statement outside a module" -->
 <script src="./src/guia.js"></script>
@@ -380,6 +405,7 @@ export default class Logger {
 ### 2. Fallback for Non-Module Browsers
 
 **✅ Best Practice**: Provide fallbacks for older browsers
+
 ```html
 <!-- ✅ Good - Module with fallback -->
 <script type="module" src="./src/modern-app.js"></script>
@@ -400,6 +426,7 @@ if ('type' in HTMLScriptElement.prototype) {
 ### 3. Module Preloading
 
 **✅ Best Practice**: Preload critical modules
+
 ```html
 <!-- ✅ Good - Preload important modules -->
 <link rel="modulepreload" href="./src/coordination/WebGeocodingManager.js">
@@ -416,6 +443,7 @@ if ('type' in HTMLScriptElement.prototype) {
 ### 1. Jest Configuration for ES6 Modules
 
 **✅ Best Practice**: Configure Jest for ES6 modules
+
 ```javascript
 // jest.config.js
 export default {
@@ -440,6 +468,7 @@ export default {
 ### 2. Mocking ES6 Modules
 
 **✅ Best Practice**: Mock modules appropriately
+
 ```javascript
 // ✅ Good - Mock named exports
 jest.mock('./utils/logger.js', () => ({
@@ -466,6 +495,7 @@ jest.mock('./utils/helpers.js', () => ({
 ### 3. Testing Module Boundaries
 
 **✅ Best Practice**: Test module interfaces
+
 ```javascript
 // ✅ Good - Test module exports
 describe('Logger Module', () => {
@@ -498,6 +528,7 @@ describe('WebGeocodingManager Integration', () => {
 ### 1. Tree Shaking
 
 **✅ Best Practice**: Enable tree shaking with proper exports
+
 ```javascript
 // ✅ Good - Tree-shakable named exports
 export const log = (message) => console.log(message);
@@ -509,6 +540,7 @@ import { log } from './utils/logger.js';  // Only 'log' is bundled
 ```
 
 **❌ Avoid**: Namespace imports that prevent tree shaking
+
 ```javascript
 // ❌ Bad - Imports entire module
 import * as Logger from './utils/logger.js';
@@ -518,6 +550,7 @@ Logger.log('message');  // All exports are bundled, even unused ones
 ### 2. Code Splitting
 
 **✅ Best Practice**: Split code by routes/features
+
 ```javascript
 // ✅ Good - Route-based code splitting
 const initializeMapping = () => import('./features/mapping.js');
@@ -534,6 +567,7 @@ if (userHasPermission('mapping')) {
 ### 3. Module Caching
 
 **✅ Best Practice**: Leverage browser module caching
+
 ```javascript
 // ✅ Good - Consistent import paths for caching
 import { log } from './utils/logger.js';     // Cached
@@ -548,6 +582,7 @@ import { log, warn, error } from './utils/index.js';  // Single cached module
 ### 1. Gradual Migration from CommonJS
 
 **✅ Best Practice**: Migrate incrementally
+
 ```javascript
 // Phase 1: Convert exports while maintaining CommonJS imports
 // module.js
@@ -570,6 +605,7 @@ export const log = (message) => console.log(message);
 ### 2. Converting Large Monolithic Files
 
 **✅ Best Practice**: Extract systematically (Phase 16 approach)
+
 ```javascript
 // Phase 1: Identify extraction candidates
 // - Utility functions → utils/
@@ -596,6 +632,7 @@ import { WebGeocodingManager } from './coordination/WebGeocodingManager.js';
 ### 3. Maintaining Backward Compatibility
 
 **✅ Best Practice**: Provide compatibility layers
+
 ```javascript
 // main.js - New modular exports
 export { log, warn, error } from './utils/logger.js';
@@ -614,11 +651,13 @@ if (typeof window !== 'undefined') {
 ### 1. "Cannot use import statement outside a module"
 
 **Problem**: ES6 imports in non-module context
+
 ```
 Uncaught SyntaxError: Cannot use import statement outside a module
 ```
 
 **Solutions**:
+
 ```html
 <!-- ✅ Solution 1: Add type="module" to script tag -->
 <script type="module" src="./app.js"></script>
@@ -635,11 +674,13 @@ Uncaught SyntaxError: Cannot use import statement outside a module
 ### 2. "The requested module does not provide an export named 'X'"
 
 **Problem**: Import name doesn't match export name
+
 ```
 The requested module './utils/logger.js' does not provide an export named 'logError'
 ```
 
 **Solutions**:
+
 ```javascript
 // ✅ Check what's actually exported
 console.log(Object.keys(await import('./utils/logger.js')));
@@ -654,11 +695,13 @@ import { error as logError } from './utils/logger.js';
 ### 3. "Failed to resolve module specifier"
 
 **Problem**: Incorrect import paths
+
 ```
 Failed to resolve module specifier "./utils/logger". Relative references must start with either "/", "./", or "../".
 ```
 
 **Solutions**:
+
 ```javascript
 // ❌ Bad - Missing file extension
 import { log } from './utils/logger';
@@ -674,11 +717,13 @@ import { log } from '/absolute/path/logger.js';
 ### 4. Circular Dependency Warnings
 
 **Problem**: Modules importing each other
+
 ```
 Warning: Detected circular dependency: A -> B -> A
 ```
 
 **Solutions**:
+
 ```javascript
 // ✅ Solution 1: Extract shared dependencies
 // shared.js

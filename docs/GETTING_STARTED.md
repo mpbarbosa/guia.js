@@ -200,6 +200,7 @@ guia_turistico/
    - Coordination? → `src/coordination/`
 
 2. **Follow immutability principles** (see `.github/CONTRIBUTING.md`):
+
    ```javascript
    // ❌ Bad: Mutates array
    array.push(newItem);
@@ -209,6 +210,7 @@ guia_turistico/
    ```
 
 3. **Write tests first**:
+
    ```bash
    # Create test file in __tests__/
    touch __tests__/your-feature.test.js
@@ -218,6 +220,7 @@ guia_turistico/
    ```
 
 4. **Validate changes**:
+
    ```bash
    npm run test:all
    ```
@@ -305,6 +308,7 @@ console.log('Country:', addressData.country);
 ### Common Issues
 
 **Issue**: `npm install` fails
+
 ```bash
 # Solution: Clear npm cache
 npm cache clean --force
@@ -313,6 +317,7 @@ npm install
 ```
 
 **Issue**: Port 9000 already in use
+
 ```bash
 # Solution: Change port in vite.config.js or kill process
 lsof -ti:9000 | xargs kill -9
@@ -321,11 +326,13 @@ npm run dev -- --port 8080
 ```
 
 **Issue**: Geolocation not working
+
 - Ensure you're using HTTPS or localhost
 - Check browser location permissions
 - Verify browser console for errors
 
 **Issue**: Tests fail with `Cannot find module`
+
 ```bash
 # Solution: Reinstall dependencies
 npm ci

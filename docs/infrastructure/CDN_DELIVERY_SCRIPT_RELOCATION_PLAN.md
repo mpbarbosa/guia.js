@@ -16,6 +16,7 @@ The `.github/scripts/cdn-delivery.sh` script (348 lines, 15KB) is currently in t
 ## 🎯 Current Situation
 
 ### File Location
+
 ```
 guia_js/                               ❌ ROOT DIRECTORY
 ├── .github/scripts/cdn-delivery.sh                    (348 lines, 15KB, executable)
@@ -25,6 +26,7 @@ guia_js/                               ❌ ROOT DIRECTORY
 ```
 
 ### Script Details
+
 - **Size**: 15KB (348 lines)
 - **Purpose**: Generates jsDelivr CDN URLs from GitHub repository
 - **Type**: Build/deployment utility script
@@ -34,6 +36,7 @@ guia_js/                               ❌ ROOT DIRECTORY
 - **Output**: `cdn-urls.txt` file
 
 ### Current Usage Pattern
+
 ```bash
 # From project root
 ./.github/scripts/cdn-delivery.sh
@@ -72,12 +75,14 @@ OUTPUT_FILE="my-urls.txt" ./.github/scripts/cdn-delivery.sh
 ## ⚠️ Problems with Current Location
 
 ### 1. **Inconsistent Organization**
+
 - Other build/deployment scripts are in `.github/scripts/`
 - CDN delivery is also a build/deployment task
 - No logical reason for different locations
 - Violates "scripts go in scripts directory" convention
 
 ### 2. **Root Directory Clutter**
+
 - Root directory should contain:
   - Configuration files (package.json, .gitignore)
   - Documentation (README.md)
@@ -85,17 +90,21 @@ OUTPUT_FILE="my-urls.txt" ./.github/scripts/cdn-delivery.sh
 - Scripts should be in dedicated directory
 
 ### 3. **Discoverability Issues**
+
 - New contributors may not find script in root
 - Unclear that it's part of build/release process
 - Not grouped with related automation scripts
 
 ### 4. **CI/CD Integration Confusion**
+
 - Other CI/CD scripts are in `.github/scripts/`
 - CDN delivery will be integrated into release workflow
 - Should be co-located with related automation
 
 ### 5. **Path Dependency**
+
 Script requires being run from project root:
+
 ```bash
 # Line 67-72 in .github/scripts/cdn-delivery.sh
 if [ ! -f "package.json" ]; then
@@ -114,6 +123,7 @@ This requirement works from **any location** if we keep the script callable from
 ### Option 1: Move to `.github/scripts/` (RECOMMENDED)
 
 **Target Location**:
+
 ```
 .github/scripts/
 ├── .github/scripts/cdn-delivery.sh                    ✅ Moved here
@@ -123,6 +133,7 @@ This requirement works from **any location** if we keep the script callable from
 ```
 
 **Benefits**:
+
 - ✅ Consistent with other scripts
 - ✅ Clean root directory
 - ✅ Clear purpose (GitHub-related automation)
@@ -130,6 +141,7 @@ This requirement works from **any location** if we keep the script callable from
 - ✅ Better organization
 
 **Usage Pattern After Move**:
+
 ```bash
 # From project root
 ./.github/script./.github/scripts/cdn-delivery.sh
@@ -142,6 +154,7 @@ GITHUB_USER="username" ./.github/script./.github/scripts/cdn-delivery.sh
 ```
 
 **Script Works From Any Location** because:
+
 - Script validates `package.json` presence (line 67)
 - If not found, shows helpful error message
 - User just needs to `cd` to project root first
@@ -151,17 +164,20 @@ GITHUB_USER="username" ./.github/script./.github/scripts/cdn-delivery.sh
 ### Option 2: Create Root `scripts/` Directory (ALTERNATIVE)
 
 **Target Location**:
+
 ```
 scripts/
 └── .github/scripts/cdn-delivery.sh                    ✅ Moved here
 ```
 
 **Benefits**:
+
 - ✅ Shorter path (`./script./.github/scripts/cdn-delivery.sh`)
 - ✅ Separate from GitHub-specific files
 - ✅ Common pattern in open-source projects
 
 **Drawbacks**:
+
 - ⚠️ Creates new top-level directory
 - ⚠️ Only one script would live there
 - ⚠️ Less organized (no grouping with CI/CD scripts)
@@ -173,10 +189,12 @@ scripts/
 ### Option 3: Keep in Root (NOT RECOMMENDED)
 
 **Rationale**:
+
 - Maintains current usage pattern
 - No path changes needed
 
 **Why Not Recommended**:
+
 - Violates organization principles
 - Inconsistent with other scripts
 - Contributes to root clutter
@@ -231,6 +249,7 @@ rm cdn-urls.txt
 #### Files to Update
 
 **1. README.md**:
+
 ```bash
 # Find references
 grep -n "cdn-delivery.sh" README.md
@@ -240,6 +259,7 @@ sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cd
 ```
 
 **2. .github/copilot-instructions.md**:
+
 ```bash
 # Find references
 grep -n "cdn-delivery.sh" .github/copilot-instructions.md
@@ -249,6 +269,7 @@ sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cd
 ```
 
 **3. DEVOPS_INTEGRATION_ASSESSMENT.md**:
+
 ```bash
 # Update script path references
 sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cdn-delivery.sh|g' DEVOPS_INTEGRATION_ASSESSMENT.md
@@ -258,16 +279,19 @@ sed -i 's|cdn-delivery.sh (Root Directory)|cdn-delivery.sh (.github/scripts/)|g'
 ```
 
 **4. PREREQUISITES_DOCUMENTATION_UPDATE.md**:
+
 ```bash
 sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cdn-delivery.sh|g' PREREQUISITES_DOCUMENTATION_UPDATE.md
 ```
 
 **5. ERROR_HANDLING_COMPLETE.md**:
+
 ```bash
 sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cdn-delivery.sh|g' ERROR_HANDLING_COMPLETE.md
 ```
 
 **6. Proposed release.yml workflow** (DEVOPS_INTEGRATION_ASSESSMENT.md):
+
 ```yaml
 # Update in proposed workflow YAML
 - name: Run CDN delivery script
@@ -291,11 +315,13 @@ sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cd
 ```
 
 **Lines to update** (if referencing old path):
+
 - Line 18: Usage example
 - Line 28: Usage example
 - Line 72: Error message with path
 
 **Updated Usage Block**:
+
 ```bash
 # Usage:
 #   ./.github/script./.github/scripts/cdn-delivery.sh
@@ -321,6 +347,7 @@ sed -i 's|./.github/scripts/cdn-delivery.sh|./.github/script./.github/scripts/cd
 If shorter path is desired, create a root wrapper script:
 
 **Create `cdn-delivery` (no .sh)**:
+
 ```bash
 #!/bin/bash
 # Convenience wrapper for .github/scripts/cdn-delivery.sh
@@ -331,12 +358,14 @@ exec "$(dirname "$0")/.github/script./.github/scripts/cdn-delivery.sh" "$@"
 ```
 
 **Make executable**:
+
 ```bash
 chmod +x cdn-delivery
 git add cdn-delivery
 ```
 
 **Usage**:
+
 ```bash
 # Short form
 ./cdn-delivery
@@ -346,11 +375,13 @@ git add cdn-delivery
 ```
 
 **Benefits**:
+
 - Backward compatibility with `./cdn-delivery`
 - Cleaner usage in documentation
 - Script remains organized in `.github/scripts/`
 
 **Drawback**:
+
 - Adds another file to root (defeats purpose)
 - **Not recommended** unless strong user preference
 
@@ -456,6 +487,7 @@ git show --stat
 ## 📊 Before and After Comparison
 
 ### Before (Current State)
+
 ```
 guia_js/                               ❌ CLUTTERED ROOT
 ├── .github/scripts/cdn-delivery.sh                    ❌ Inconsistent location
@@ -479,6 +511,7 @@ Issues:
 ```
 
 ### After (Proposed State)
+
 ```
 guia_js/                               ✅ CLEAN ROOT
 ├── cdn-urls.txt                       (output file, OK in root)
@@ -507,6 +540,7 @@ Benefits:
 ## 🔍 Script Analysis
 
 ### Prerequisites (Lines 50-96)
+
 ```bash
 # Script validates:
 1. Node.js v18+ available
@@ -519,6 +553,7 @@ Benefits:
 ```
 
 ### Configuration (Lines 100-150)
+
 ```bash
 # Environment variables:
 GITHUB_USER=${GITHUB_USER:-mpbarbosa}
@@ -531,6 +566,7 @@ OUTPUT_FILE=${OUTPUT_FILE:-cdn-urls.txt}
 ```
 
 ### Output (Lines 200-348)
+
 ```bash
 # Generates cdn-urls.txt in current directory
 # If run from project root, output is in project root
@@ -544,39 +580,49 @@ OUTPUT_FILE=${OUTPUT_FILE:-cdn-urls.txt}
 ## ⚠️ Risks and Mitigation
 
 ### Risk 1: Path References in External Tools
+
 **Risk**: External scripts/tools may reference `./.github/scripts/cdn-delivery.sh`  
 **Likelihood**: Low (script is new, not widely integrated)  
 **Mitigation**:
+
 - Search entire project for references
 - Update all found references
 - Document new path in migration notes
 
 ### Risk 2: User Muscle Memory
+
 **Risk**: Users accustomed to `./.github/scripts/cdn-delivery.sh`  
 **Likelihood**: Low (script rarely executed manually)  
 **Mitigation**:
+
 - Update all documentation
 - Clear commit message explaining change
 - Optional: Create convenience wrapper (Phase 5)
 
 ### Risk 3: CI/CD Integration
+
 **Risk**: Future release workflow may reference old path  
 **Likelihood**: High (planned integration)  
 **Mitigation**:
+
 - Update proposed workflow YAML in DEVOPS_INTEGRATION_ASSESSMENT.md
 - Ensure new path is used when implementing release workflow
 
 ### Risk 4: Git History Loss
+
 **Risk**: Moving file could lose history  
 **Likelihood**: Zero (using `git mv`)  
 **Mitigation**:
+
 - Always use `git mv` (preserves history)
 - Verify with `git log --follow`
 
 ### Risk 5: Permission Loss
+
 **Risk**: File may lose executable permission  
 **Likelihood**: Zero (`git mv` preserves permissions)  
 **Mitigation**:
+
 - Verify with `test -x` after move
 - Re-add if needed: `chmod +x .github/script./.github/scripts/cdn-delivery.sh`
 
@@ -587,6 +633,7 @@ OUTPUT_FILE=${OUTPUT_FILE:-cdn-urls.txt}
 ### Similar Open Source Projects
 
 **React**:
+
 ```
 react/
 └── scripts/
@@ -596,6 +643,7 @@ react/
 ```
 
 **Vue.js**:
+
 ```
 vue/
 └── scripts/
@@ -605,6 +653,7 @@ vue/
 ```
 
 **Node.js**:
+
 ```
 node/
 └── tools/
@@ -614,6 +663,7 @@ node/
 ```
 
 **Express.js**:
+
 ```
 express/
 └── scripts/
@@ -698,6 +748,7 @@ npm test
 **Total**: ~37-43 references to update
 
 **Automated Updates**:
+
 ```bash
 # One-line update for all files
 find . -type f \( -name "*.md" -o -name "*.sh" \) -not -path "./node_modules/*" \
@@ -711,6 +762,7 @@ find . -type f \( -name "*.md" -o -name "*.sh" \) -not -path "./node_modules/*" 
 **Proceed with Option 1: Move to `.github/scripts/`**
 
 **Rationale**:
+
 1. ✅ Consistent with existing scripts
 2. ✅ Clean root directory
 3. ✅ Low risk (15-30 minute task)
@@ -719,6 +771,7 @@ find . -type f \( -name "*.md" -o -name "*.sh" \) -not -path "./node_modules/*" 
 6. ✅ Better organization for future CI/CD integration
 
 **Next Steps**:
+
 1. Create feature branch: `git checkout -b refactor/move-cdn-delivery-script`
 2. Follow phases 1-8 above
 3. Run full validation

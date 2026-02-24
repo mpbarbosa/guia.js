@@ -48,6 +48,7 @@ Creates a new GeocodingState instance.
 **Returns:** New `GeocodingState` instance
 
 **Example:**
+
 ```javascript
 import GeocodingState from './core/GeocodingState.js';
 
@@ -63,6 +64,7 @@ const state = new GeocodingState();
 Set current position and notify observers.
 
 **Parameters:**
+
 - `position` (GeoPosition | null): The new position, or null to clear
 
 **Returns:** `GeocodingState` - This instance for method chaining
@@ -70,6 +72,7 @@ Set current position and notify observers.
 **Throws:** `TypeError` if position is not a GeoPosition instance or null
 
 **Example:**
+
 ```javascript
 import GeoPosition from './core/GeoPosition.js';
 
@@ -94,6 +97,7 @@ Get current position.
 **Returns:** `GeoPosition | null` - The current position or null if not set
 
 **Example:**
+
 ```javascript
 const position = state.getCurrentPosition();
 if (position) {
@@ -114,6 +118,7 @@ Get current coordinates as a defensive copy.
 **Defensive Copy:** Returns a new object, not a reference to internal state
 
 **Example:**
+
 ```javascript
 const coords = state.getCurrentCoordinates();
 if (coords) {
@@ -132,6 +137,7 @@ Check if position is available.
 **Returns:** `boolean` - True if position is set, false otherwise
 
 **Example:**
+
 ```javascript
 if (state.hasPosition()) {
   const coords = state.getCurrentCoordinates();
@@ -148,6 +154,7 @@ if (state.hasPosition()) {
 Subscribe to state changes.
 
 **Parameters:**
+
 - `callback` (Function): Called when state changes: `(stateSnapshot) => void`
   - `stateSnapshot` (Object): State snapshot object
     - `position` (GeoPosition): Current position
@@ -158,6 +165,7 @@ Subscribe to state changes.
 **Throws:** `TypeError` if callback is not a function
 
 **Example:**
+
 ```javascript
 const unsubscribe = state.subscribe((stateSnapshot) => {
   console.log('New position:', stateSnapshot.position);
@@ -177,11 +185,13 @@ unsubscribe();
 Unsubscribe from state changes.
 
 **Parameters:**
+
 - `callback` (Function): The callback to remove
 
 **Returns:** `boolean` - True if callback was found and removed, false otherwise
 
 **Example:**
+
 ```javascript
 const handler = (state) => console.log(state);
 state.subscribe(handler);
@@ -201,6 +211,7 @@ Get number of active observers.
 **Returns:** `number` - Number of subscribed observers
 
 **Example:**
+
 ```javascript
 console.log(`Active observers: ${state.getObserverCount()}`);
 ```
@@ -218,6 +229,7 @@ Clear all observers.
 **Use Case:** Useful for cleanup or testing
 
 **Example:**
+
 ```javascript
 state.clearObservers();
 console.log(state.getObserverCount()); // 0
@@ -234,6 +246,7 @@ Clear current position state.
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 state.clear();
 console.log(state.hasPosition()); // false
@@ -252,6 +265,7 @@ Get string representation of current state.
 **Format:** `"GeocodingState: position: {status}, coordinates: {coords}, observers: {count}"`
 
 **Example:**
+
 ```javascript
 console.log(state.toString());
 // Output: "GeocodingState: position: available, coordinates: (-23.5505, -46.6333), observers: 2"

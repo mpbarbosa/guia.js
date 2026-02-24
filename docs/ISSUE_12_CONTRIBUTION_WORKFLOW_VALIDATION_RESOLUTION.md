@@ -7,6 +7,7 @@
 ## Problem Summary
 
 The `.github/CONTRIBUTING.md` file referenced validation steps but didn't provide complete, copy-paste ready commands with expected results. This created a gap where contributors might:
+
 - Skip important validation steps
 - Not know what commands to run before submitting PRs
 - Not recognize when validation fails vs succeeds
@@ -15,6 +16,7 @@ The `.github/CONTRIBUTING.md` file referenced validation steps but didn't provid
 ## Evidence of Problem
 
 **Before Resolution**:
+
 ```markdown
 # CONTRIBUTING.md line 474
 - [ ] All tests pass (`npm run test:all`)
@@ -28,6 +30,7 @@ The `.github/CONTRIBUTING.md` file referenced validation steps but didn't provid
 ```
 
 **Commands were documented separately**:
+
 - README.md lines 80-92: Command examples
 - docs/guides/QUICK_REFERENCE_CARD.md: Quick reference
 - But not integrated into contribution workflow
@@ -39,6 +42,7 @@ The `.github/CONTRIBUTING.md` file referenced validation steps but didn't provid
 **Location**: `.github/CONTRIBUTING.md` lines 480-560
 
 **Contents**:
+
 - ✅ **5 validation commands** with exact syntax
 - ✅ **Expected output examples** for each command
 - ✅ **Timing expectations** (±1-2 seconds variance)
@@ -46,6 +50,7 @@ The `.github/CONTRIBUTING.md` file referenced validation steps but didn't provid
 - ✅ **Visual formatting** for easy copy-paste
 
 **Example Entry**:
+
 ```markdown
 #### 2. Full Test Suite (~7 seconds)
 
@@ -68,6 +73,7 @@ Time:        6.789 s
 **Added comprehensive checklist** covering:
 
 #### Code Quality (5 items)
+
 - Immutability principles
 - Pure functions
 - No mutable operations
@@ -75,6 +81,7 @@ Time:        6.789 s
 - JSDoc comments
 
 #### Testing (8 items)
+
 - All validation commands pass
 - `npm run validate` - Syntax
 - `npm test` - Test suite
@@ -85,18 +92,21 @@ Time:        6.789 s
 - Coverage maintained
 
 #### Documentation (4 items)
+
 - README.md updated
 - Architecture docs updated
 - JSDoc comments added
 - Code examples included
 
 #### Code Hygiene (4 items)
+
 - No console.log
 - No commented-out code
 - No undocumented TODOs
 - Proper formatting
 
 #### Architecture & Design (5 items)
+
 - Single Responsibility Principle
 - No God Objects
 - Low coupling
@@ -114,17 +124,20 @@ Time:        6.789 s
 **Covers 4 failure scenarios**:
 
 #### A. Syntax Errors
+
 - How to check specific files
 - Common causes (missing semicolons, typos, invalid syntax)
 - Fix instructions
 
 #### B. Test Failures
+
 - Verbose mode commands
 - Running specific test files
 - Common causes (breaking changes, missing imports, side effects)
 - Fix instructions
 
 #### C. Test Count Mismatch
+
 - Expected counts: 1,820 passing / 1,968 total / 146 skipped
 - What different counts mean:
   - Increased passing = new tests added ✅
@@ -133,6 +146,7 @@ Time:        6.789 s
 - Action items for each scenario
 
 #### D. Coverage Drop
+
 - How to generate detailed report
 - How to view HTML coverage
 - Steps to improve coverage
@@ -145,6 +159,7 @@ Time:        6.789 s
 **Location**: `.github/CONTRIBUTING.md` lines 702-740
 
 **For UI changes**, provides:
+
 - Server start command: `python3 -m http.server 9000`
 - URL to access: `http://localhost:9000/src/index.html`
 - **3 test scenarios**:
@@ -160,12 +175,14 @@ Time:        6.789 s
 **Location**: `.github/CONTRIBUTING.md` lines 742-752
 
 **Command summary table** with:
+
 - Command
 - Purpose
 - Expected time
 - Expected result
 
 **Example**:
+
 ```
 | Command | Purpose | Time | Expected Result |
 |---------|---------|------|-----------------|
@@ -180,6 +197,7 @@ Time:        6.789 s
 **Location**: `.github/CONTRIBUTING.md` lines 436-460
 
 **Updated earlier section** to include:
+
 - ✅ Timing expectations
 - ✅ Expected results with counts
 - ✅ Cross-reference to detailed section
@@ -194,12 +212,14 @@ Time:        6.789 s
 **Two categories**:
 
 #### Having trouble with validation?
+
 - TDD_GUIDE.md
 - UNIT_TEST_GUIDE.md
 - docs/INDEX.md
 - How to ask questions (open issue)
 
 #### Understanding the codebase?
+
 - VERSION_TIMELINE.md (version history)
 - CLASS_DIAGRAM.md (architecture)
 - PROJECT_PURPOSE_AND_ARCHITECTURE.md (goals)
@@ -217,6 +237,7 @@ Time:        6.789 s
 **Added**: ~275 lines of comprehensive guidance
 
 **Sections Added/Enhanced**:
+
 1. **Pre-Submission Validation Commands** (lines 480-560) - NEW
    - 5 commands with expected output
    - Timing expectations
@@ -257,6 +278,7 @@ Time:        6.789 s
 ## Validation Results
 
 ### File Validation
+
 ```bash
 ✅ .github/CONTRIBUTING.md: 782 lines (507 → 782, +275 lines)
 ✅ JavaScript syntax: PASSED (src/app.js, src/guia.js)
@@ -265,6 +287,7 @@ Time:        6.789 s
 ```
 
 ### Content Verification
+
 ```bash
 ✅ Pre-Submission Validation Commands section added
 ✅ Pull Request Checklist enhanced (6 → 26 items)
@@ -282,6 +305,7 @@ Time:        6.789 s
 ### Before Resolution
 
 **Contributor Experience**:
+
 - ❌ "What command do I run?" - Had to search README.md
 - ❌ "Did my test pass?" - No expected output to compare
 - ❌ "146 skipped tests, is that bad?" - No guidance
@@ -295,6 +319,7 @@ Time:        6.789 s
 ### After Resolution
 
 **Contributor Experience**:
+
 - ✅ **Clear commands**: Copy-paste ready syntax
 - ✅ **Expected output**: Exact format to match against
 - ✅ **Context**: "146 skipped is normal"
@@ -313,6 +338,7 @@ Time:        6.789 s
 **After**: Comprehensive troubleshooting guide with solutions
 
 **Example**:
+
 ```markdown
 # Before
 - [ ] All tests pass
@@ -333,6 +359,7 @@ Test count mismatch?
 **After**: Step-by-step validation with expected results at each step
 
 **Workflow**:
+
 1. Run `npm run validate` → Expect: "No syntax errors"
 2. Run `npm test` → Expect: "1,516 passing"
 3. Run `npm run test:coverage` → Expect: "~70% coverage"
@@ -348,6 +375,7 @@ Test count mismatch?
 **After**: Explicit timing for every command with variance notes
 
 **Impact**:
+
 - Contributors know ~7 seconds is normal
 - Won't prematurely cancel thinking it's hung
 - Can identify actual performance issues (>10s unusual)
@@ -360,6 +388,7 @@ Test count mismatch?
 **After**: Exact expected output to compare against
 
 **Example**:
+
 ```markdown
 Expected Output:
   Test Suites: 64 passed, 4 skipped, 68 total
@@ -380,6 +409,7 @@ Your Output:
 **After**: 26 specific, actionable items across 5 categories
 
 **Coverage**:
+
 - Code Quality: 5 items
 - Testing: 8 items (most critical)
 - Documentation: 4 items
@@ -416,13 +446,15 @@ The enhanced CONTRIBUTING.md now links to:
 
 **Scenario**: First-time contributor wants to submit a PR
 
-**Before**: 
+**Before**:
+
 1. Read generic checklist
 2. Run `npm test` (maybe?)
 3. Submit PR
 4. Get feedback about missing validation
 
 **After**:
+
 1. Read "Pre-Submission Validation Commands"
 2. Run each command, compare output to expected
 3. Work through 26-item checklist
@@ -436,16 +468,19 @@ The enhanced CONTRIBUTING.md now links to:
 **Scenario**: Reviewing a PR with test failures
 
 **Before**:
+
 - Write comment: "Please run tests before submitting"
 - Wait for contributor response
 - Multiple review cycles
 
 **After**:
+
 - Link to specific troubleshooting section
 - Contributor self-services
 - Faster resolution
 
 **Example**:
+
 ```markdown
 Hi @contributor, please see the [Troubleshooting Test Failures](#troubleshooting-validation-failures) 
 section in CONTRIBUTING.md, specifically the "Test Count Mismatch" subsection. Your PR shows 
@@ -459,6 +494,7 @@ section in CONTRIBUTING.md, specifically the "Test Count Mismatch" subsection. Y
 ### 1. Automated PR Checklist Bot
 
 Consider adding GitHub Action that:
+
 - Runs validation commands automatically
 - Posts expected vs actual results as PR comment
 - Checks off checklist items automatically
@@ -467,11 +503,13 @@ Consider adding GitHub Action that:
 ### 2. Pre-commit Hooks
 
 Add Git hooks that:
+
 - Run `npm run validate` before every commit
 - Prevent commits with syntax errors
 - Suggest running full tests before push
 
 **Implementation**:
+
 ```bash
 # .git/hooks/pre-commit
 #!/bin/bash
@@ -482,6 +520,7 @@ echo "✅ Syntax validation passed"
 ### 3. Interactive Checklist
 
 Create interactive CLI tool:
+
 ```bash
 npx guia-turistico-checklist
 
@@ -499,6 +538,7 @@ Review checklist:
 ### 4. Video Tutorial
 
 Record screencast showing:
+
 - Running all validation commands
 - Interpreting results
 - Fixing common issues

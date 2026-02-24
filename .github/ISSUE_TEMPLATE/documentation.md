@@ -27,8 +27,8 @@ assignees: ''
 
 <!-- List the specific documentation files or sections affected -->
 
-- File/Section: 
-- Location: 
+- File/Section:
+- Location:
 
 ## Current State
 
@@ -74,7 +74,7 @@ assignees: ''
 
 <!-- Link to related documentation that should be cross-referenced -->
 
-- 
+-
 
 ## Target Audience
 
@@ -139,6 +139,7 @@ assignees: ''
 - [ ] Documentation is linked from appropriate index files
 
 **Related Guidelines:**
+
 - For code quality standards: [CODE_REVIEW_GUIDE.md](../CODE_REVIEW_GUIDE.md)
 - For testing documentation: [UNIT_TEST_GUIDE.md](../UNIT_TEST_GUIDE.md), [TDD_GUIDE.md](../TDD_GUIDE.md)
 

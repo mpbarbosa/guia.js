@@ -22,6 +22,7 @@
 **File**: `__tests__/html/HTMLHighlightCardsDisplayer.test.js`
 
 **Add 3 tests**:
+
 ```javascript
 describe('Constructor Validation', () => {
     test('should throw TypeError when document is missing', () => {
@@ -49,6 +50,7 @@ describe('Constructor Validation', () => {
 ### Add Missing DOM Element Tests (30 min)
 
 **Add 3 tests**:
+
 ```javascript
 describe('Missing DOM Elements', () => {
     test('should handle missing municipio element gracefully', () => {
@@ -84,6 +86,7 @@ describe('Missing DOM Elements', () => {
 **File**: `__tests__/integration/HTMLHighlightCardsDisplayer.integration.test.js`
 
 **Add 3 tests**:
+
 ```javascript
 describe('HTMLHighlightCardsDisplayer Integration', () => {
     test('should be subscribable to ReverseGeocoder', () => {
@@ -158,9 +161,11 @@ npm run test:coverage -- --collectCoverageFrom="src/html/HTMLHighlightCardsDispl
 ## Files to Modify/Create
 
 **Modify**:
+
 - `__tests__/html/HTMLHighlightCardsDisplayer.test.js` (add 6 tests)
 
 **Create** (Phase 2):
+
 - `__tests__/integration/HTMLHighlightCardsDisplayer.integration.test.js` (3-5 tests)
 
 ---

@@ -55,6 +55,7 @@ box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 ```
 
 **Issues**:
+
 - ❌ Random opacity values (0.1, 0.15, 0.2, 0.3)
 - ❌ Inconsistent blur radius (2px, 4px, 8px, 12px, 24px)
 - ❌ No standardized spread values
@@ -100,6 +101,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 ### Token Specifications
 
 #### Level 1: Resting Cards (1dp)
+
 ```css
 --md-sys-elevation-level1: 
   0 1px 2px 0 rgba(0, 0, 0, 0.3),    /* Key shadow */
@@ -107,10 +109,12 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 ```
 
 **Formula**:
+
 - Key shadow: `0 [Y-offset: 0.5dp] [Blur: 1dp] 0 rgba(0,0,0,0.3)`
 - Ambient: `0 [Y-offset: 1.5dp] [Blur: 2dp] [Spread: 1dp] rgba(0,0,0,0.15)`
 
 #### Level 2: Raised Cards (3dp)
+
 ```css
 --md-sys-elevation-level2: 
   0 1px 2px 0 rgba(0, 0, 0, 0.3),
@@ -118,10 +122,12 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 ```
 
 **Formula**:
+
 - Key: `0 1.5dp 2dp 0 rgba(0,0,0,0.3)`
 - Ambient: `0 3dp 6dp 2dp rgba(0,0,0,0.15)`
 
 #### Level 3: Menus & Dialogs (6dp)
+
 ```css
 --md-sys-elevation-level3: 
   0 1px 3px 0 rgba(0, 0, 0, 0.3),
@@ -129,6 +135,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 ```
 
 #### Level 4: Modals & Navigation (8dp)
+
 ```css
 --md-sys-elevation-level4: 
   0 2px 3px 0 rgba(0, 0, 0, 0.3),
@@ -136,6 +143,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 ```
 
 #### Level 5: Overlays & Toasts (12dp)
+
 ```css
 --md-sys-elevation-level5: 
   0 4px 4px 0 rgba(0, 0, 0, 0.3),
@@ -170,6 +178,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
    - Migration roadmap
 
 **Files Modified**:
+
 - `src/design-tokens.css` (+98 lines, 356→454)
 - `docs/ELEVATION_GUIDE.md` (+612 lines, created)
 - `VISUAL_ENHANCEMENT_ELEVATION_INCONSISTENT.md` (this file, created)
@@ -242,6 +251,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 **Estimated Time**: 30-40 minutes (7-10 min per file)
 
 **Expected Outcome**:
+
 - ✅ 17 violations eliminated (63% of total)
 - ✅ 100% token usage in high-priority files
 - ✅ Consistent hover states on interactive elements
@@ -253,27 +263,28 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 
 **Files to Migrate**:
 
-5. **transitions.css** (5 violations) - Animation states
+1. **transitions.css** (5 violations) - Animation states
    - Modal transitions → Level 4
    - Slide-in panels → Level 3
    - Overlay states → Level 5
 
-6. **noscript.css** (2 violations) - Fallback UI
+2. **noscript.css** (2 violations) - Fallback UI
    - `.noscript-banner` → Level 2
    - `.noscript-card` → Level 1
 
-7. **error-styles.css** (1 violation) - Error messages
+3. **error-styles.css** (1 violation) - Error messages
    - `.error-message` → Level 2 (prominent)
 
-8. **geolocation-banner.css** (1 violation) - Status banner
+4. **geolocation-banner.css** (1 violation) - Status banner
    - `.geolocation-banner` → Level 2
 
-9. **navigation.css** (1 violation) - Deprecated nav
+5. **navigation.css** (1 violation) - Deprecated nav
    - `.nav-container` → Level 1 (if still used)
 
 **Estimated Time**: 45-60 minutes (9-12 min per file)
 
 **Expected Outcome**:
+
 - ✅ All 27 violations eliminated (100%)
 - ✅ Complete token usage across application
 - ✅ Zero hardcoded box-shadow values
@@ -284,6 +295,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 **Scope**: Add tooling and advanced features
 
 1. **Stylelint Rule** - Prevent new violations
+
    ```js
    // .stylelintrc.json
    {
@@ -296,6 +308,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
    ```
 
 2. **Visual Regression Tests** - Verify elevation changes
+
    ```js
    // __tests__/visual/elevation.test.js
    test('highlight cards have correct elevation', async () => {
@@ -308,6 +321,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
    ```
 
 3. **Dark Mode Elevation** - Adjust for dark theme
+
    ```css
    @media (prefers-color-scheme: dark) {
      :root {
@@ -319,6 +333,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
    ```
 
 4. **Responsive Elevation** - Mobile-specific adjustments
+
    ```css
    @media (max-width: 768px) {
      .elevation-1-hover:active {
@@ -375,6 +390,7 @@ Is the component interactive (clickable/focusable)?
 ### Example 1: Highlight Cards
 
 **Before** (hardcoded):
+
 ```css
 /* highlight-cards.css:30 */
 .highlight-card {
@@ -392,6 +408,7 @@ Is the component interactive (clickable/focusable)?
 ```
 
 **After** (elevation tokens):
+
 ```css
 /* highlight-cards.css:30 */
 .highlight-card {
@@ -405,6 +422,7 @@ Is the component interactive (clickable/focusable)?
 ```
 
 **Or** (utility class):
+
 ```html
 <div class="highlight-card elevation-1-hover">
   <span class="highlight-card-label">Município</span>
@@ -413,6 +431,7 @@ Is the component interactive (clickable/focusable)?
 ```
 
 **Benefits**:
+
 - ✅ 6 lines → 4 lines (33% reduction)
 - ✅ Consistent with Material Design 3 spec
 - ✅ Easier to maintain (single source of truth)
@@ -421,6 +440,7 @@ Is the component interactive (clickable/focusable)?
 ### Example 2: Maps Action Buttons
 
 **Before** (hardcoded):
+
 ```css
 /* maps-actions.css:40 */
 .maps-button {
@@ -437,6 +457,7 @@ Is the component interactive (clickable/focusable)?
 ```
 
 **After** (elevation tokens):
+
 ```css
 /* maps-actions.css:40 */
 .maps-button {
@@ -454,6 +475,7 @@ Is the component interactive (clickable/focusable)?
 ```
 
 **Benefits**:
+
 - ✅ Purple shadows replaced with standard black
 - ✅ Consistent with other buttons in app
 - ✅ Proper hover/active state transitions
@@ -462,6 +484,7 @@ Is the component interactive (clickable/focusable)?
 ### Example 3: Version Modal
 
 **Before** (hardcoded):
+
 ```css
 /* version-display.css:147 */
 .version-modal {
@@ -470,6 +493,7 @@ Is the component interactive (clickable/focusable)?
 ```
 
 **After** (elevation token):
+
 ```css
 /* version-display.css:147 */
 .version-modal {
@@ -478,6 +502,7 @@ Is the component interactive (clickable/focusable)?
 ```
 
 **Benefits**:
+
 - ✅ Heavy 24px blur → Standard 8px blur (MD3 spec)
 - ✅ Single shadow → Dual shadow (key + ambient)
 - ✅ More subtle, less distracting
@@ -503,6 +528,7 @@ After migration, verify each component:
 ### Automated Testing
 
 **Unit Tests** (optional):
+
 ```js
 // __tests__/design-tokens.test.js
 describe('Elevation System', () => {
@@ -524,6 +550,7 @@ describe('Elevation System', () => {
 ```
 
 **Visual Regression** (optional):
+
 ```js
 // __tests__/visual/elevation.screenshot.test.js
 test('highlight cards elevation', async () => {
@@ -550,6 +577,7 @@ test('highlight cards elevation', async () => {
 **Shadow Contrast**: Shadows must have sufficient contrast for users with low vision.
 
 **Testing Method**:
+
 ```python
 def calculate_shadow_contrast(shadow_color, background):
     """
@@ -582,6 +610,7 @@ for level in range(6):
 ```
 
 **Results**:
+
 - Level 0: No shadow (N/A)
 - Level 1-5: ~4.5:1 contrast ratio ✅ PASS AA
 
@@ -614,6 +643,7 @@ Elevation is purely visual and doesn't need ARIA attributes, but ensure interact
 ### CSS Custom Properties
 
 **Performance**: Near-zero runtime cost
+
 - Tokens compiled at parse time
 - No JavaScript overhead
 - No repaints when changing elevation (only shadow)
@@ -639,6 +669,7 @@ Elevation is purely visual and doesn't need ARIA attributes, but ensure interact
 **Box-shadow** triggers paint but not layout. For optimal performance:
 
 1. Use `will-change` for frequently animated elements:
+
    ```css
    .elevation-1-hover {
      will-change: box-shadow;
@@ -683,7 +714,7 @@ If issues arise after migration:
 
 1. **Quick rollback**: Revert design-tokens.css changes
    - Legacy shadow tokens still work (mapped to elevation)
-   
+
 2. **Partial rollback**: Revert specific file changes
    - Files are independent, can rollback individually
 
@@ -711,6 +742,7 @@ If issues arise after migration:
 ### User Impact
 
 **Expected improvements**:
+
 - 🎨 More cohesive visual design (consistent shadows)
 - ⚡ Clearer interactive affordances (hover states)
 - ♿ Better accessibility (standardized contrast)
@@ -721,12 +753,14 @@ If issues arise after migration:
 ## Related Documentation
 
 ### Internal Resources
+
 - [Elevation Guide](../docs/ELEVATION_GUIDE.md) - Complete reference and usage
 - [Typography Guide](../docs/TYPOGRAPHY_GUIDE.md) - Material Design 3 typescale
 - [Spacing Guide](../docs/SPACING_GUIDE.md) - 8px grid spacing utilities
 - [Design Tokens](../src/design-tokens.css) - Complete token reference
 
 ### External Resources
+
 - [Material Design 3 Elevation](https://m3.material.io/styles/elevation/overview)
 - [MD3 Elevation Applying](https://m3.material.io/styles/elevation/applying-elevation)
 - [MD3 Elevation Tokens](https://m3.material.io/styles/elevation/tokens)
@@ -739,6 +773,7 @@ If issues arise after migration:
 ### v0.11.0-alpha (2026-02-15)
 
 **Phase 1 Complete**:
+
 - ✅ Created 6 Material Design 3 elevation tokens (level0-level5)
 - ✅ Added 10 utility classes (static + hover states)
 - ✅ Mapped legacy shadow tokens to new elevation system
@@ -749,13 +784,16 @@ If issues arise after migration:
 - ✅ Zero breaking changes introduced
 
 **Files Modified**:
+
 - `src/design-tokens.css` (+98 lines, 356→454)
 
 **Files Created**:
+
 - `docs/ELEVATION_GUIDE.md` (+612 lines)
 - `VISUAL_ENHANCEMENT_ELEVATION_INCONSISTENT.md` (+710 lines, this file)
 
 **Next Steps**:
+
 - Phase 2: Migrate 4-5 high-priority files (30-40 min)
 - Phase 3: Complete migration of all files (45-60 min)
 - Phase 4: Add automation and dark mode (60-90 min) - Optional

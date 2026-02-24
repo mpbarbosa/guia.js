@@ -47,6 +47,7 @@ Creates a new ObserverSubject instance.
 **Returns:** New `ObserverSubject` instance with empty observer arrays
 
 **Example:**
+
 ```javascript
 import ObserverSubject from './core/ObserverSubject.js';
 
@@ -64,6 +65,7 @@ const subject = new ObserverSubject();
 Subscribes an observer object to receive notifications. The observer must have an update() method.
 
 **Parameters:**
+
 - `observer` (Object): Observer object with an update method
   - `observer.update` (Function): Method called when notifying observers: `(subject, ...args) => void`
 
@@ -72,6 +74,7 @@ Subscribes an observer object to receive notifications. The observer must have a
 **Immutable Pattern:** Creates a new array using spread operator instead of mutating the existing observers array.
 
 **Example:**
+
 ```javascript
 const observer = {
   update: (subject, ...args) => {
@@ -96,6 +99,7 @@ console.log(originalArray !== newArray); // true - new array created
 Unsubscribes an observer object from notifications.
 
 **Parameters:**
+
 - `observer` (Object): Observer object to remove
 
 **Returns:** `void`
@@ -103,6 +107,7 @@ Unsubscribes an observer object from notifications.
 **Immutable Pattern:** Uses filter to create a new array without the observer.
 
 **Example:**
+
 ```javascript
 observerSubject.unsubscribe(observer);
 
@@ -122,11 +127,13 @@ console.log(arrayBefore !== arrayAfter); // true - new array created
 Notifies all subscribed object observers. Calls the update() method on each observer.
 
 **Parameters:**
+
 - `...args` (*): Arguments to pass to each observer's update method
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 observerSubject.notifyObservers(data1, data2, eventType);
 ```
@@ -142,6 +149,7 @@ observerSubject.notifyObservers(data1, data2, eventType);
 Subscribes a function to receive notifications.
 
 **Parameters:**
+
 - `observerFunction` (Function): Function to be called on notifications: `(subject, ...args) => void`
 
 **Returns:** `void`
@@ -149,6 +157,7 @@ Subscribes a function to receive notifications.
 **Immutable Pattern:** Creates a new array using spread operator.
 
 **Example:**
+
 ```javascript
 const handler = (subject, ...args) => {
   console.log('Function observer notified:', args);
@@ -165,6 +174,7 @@ observerSubject.subscribeFunction(handler);
 Unsubscribes a function from notifications.
 
 **Parameters:**
+
 - `observerFunction` (Function): Function to remove
 
 **Returns:** `void`
@@ -172,6 +182,7 @@ Unsubscribes a function from notifications.
 **Immutable Pattern:** Uses filter to create a new array.
 
 **Example:**
+
 ```javascript
 observerSubject.unsubscribeFunction(handler);
 ```
@@ -185,11 +196,13 @@ observerSubject.unsubscribeFunction(handler);
 Notifies all subscribed function observers.
 
 **Parameters:**
+
 - `...args` (*): Arguments to pass to each observer function
 
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 observerSubject.notifyFunctionObservers(data1, data2);
 ```
@@ -207,6 +220,7 @@ Gets the count of subscribed object observers.
 **Returns:** `number` - Number of subscribed observers
 
 **Example:**
+
 ```javascript
 console.log(`Object observers: ${subject.getObserverCount()}`);
 ```
@@ -222,6 +236,7 @@ Gets the count of subscribed function observers.
 **Returns:** `number` - Number of subscribed function observers
 
 **Example:**
+
 ```javascript
 console.log(`Function observers: ${subject.getFunctionObserverCount()}`);
 ```
@@ -237,6 +252,7 @@ Clears all observers (both object and function observers).
 **Returns:** `void`
 
 **Example:**
+
 ```javascript
 subject.clearAllObservers();
 console.log(subject.getObserverCount()); // 0

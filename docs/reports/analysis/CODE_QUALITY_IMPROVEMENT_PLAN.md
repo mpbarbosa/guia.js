@@ -18,11 +18,13 @@ This plan addresses the comprehensive code quality assessment findings, prioriti
 **Impact:** Medium
 
 ### Task 1.1: Centralize Console.log Usage
+
 **Problem:** 220 console.log calls vs 13 logger calls (17:1 ratio)
 
 **Files Affected:** 35 files
 
 **Solution Script:**
+
 ```bash
 #!/bin/bash
 # scripts/migrate-console-to-logger.sh
@@ -52,11 +54,13 @@ echo "✅ Console migration complete"
 ```
 
 **Validation:**
+
 ```bash
 npm run test:all  # Must pass all 1,794 tests
 ```
 
 **Expected Outcome:**
+
 - ✅ Consistent logging interface across codebase
 - ✅ Production-ready logging control
 - ✅ Improved code standards score: 72 → 75
@@ -64,14 +68,17 @@ npm run test:all  # Must pass all 1,794 tests
 ---
 
 ### Task 1.2: Extract Magic Numbers
+
 **Problem:** ~20 magic numbers hardcoded in logic
 
 **Target Files:**
+
 - `src/data/AddressCache.js` (line 67)
 - `src/speech/SpeechSynthesisManager.js` (lines 76-96)
 - Others as identified
 
 **Solution:**
+
 ```javascript
 // BEFORE: AddressCache.js:67
 this.cache = new LRUCache(50, 300000);
@@ -94,12 +101,14 @@ class AddressCache {
 ```
 
 **Pattern to Apply:**
+
 1. Identify all hardcoded numbers (except 0, 1, -1)
 2. Extract to frozen config objects at top of file
 3. Add comments explaining values (e.g., "// 5 minutes")
 4. Use descriptive constant names (not just FIVE_MINUTES)
 
 **Expected Outcome:**
+
 - ✅ Self-documenting code
 - ✅ Easier configuration changes
 - ✅ Improved maintainability score
@@ -107,15 +116,18 @@ class AddressCache {
 ---
 
 ### Task 1.3: Add destroy() Methods
+
 **Problem:** Timer leaks in 12 instances across 8 files
 
 **Target Files:**
+
 - `src/data/AddressCache.js` (setInterval at line 81)
 - `src/timing/Chronometer.js` (setInterval at line 104)
 - `src/speech/SpeechQueue.js` (setTimeout usage)
 - Others as identified
 
 **Solution Pattern:**
+
 ```javascript
 // AddressCache.js - BEFORE
 constructor() {
@@ -146,6 +158,7 @@ destroy() {
 ```
 
 **Implementation Checklist:**
+
 - [ ] Add destroy() to AddressCache
 - [ ] Add destroy() to Chronometer
 - [ ] Add destroy() to SpeechQueue
@@ -154,6 +167,7 @@ destroy() {
 - [ ] Document destroy() usage in JSDoc
 
 **Expected Outcome:**
+
 - ✅ Zero timer leak risks
 - ✅ Proper resource cleanup
 - ✅ Better test isolation
@@ -161,9 +175,11 @@ destroy() {
 ---
 
 ### Task 1.4: Remove Deprecated Methods
+
 **Problem:** 15+ deprecated static wrapper methods in AddressCache
 
 **Solution:**
+
 ```javascript
 // AddressCache.js - Mark for removal in v1.0.0
 
@@ -180,6 +196,7 @@ static clearCache() {
 ```
 
 **Migration Guide:**
+
 ```markdown
 ## Breaking Changes in v1.0.0
 
@@ -194,6 +211,7 @@ AddressCache.setLogradouroChangeCallback(callback);
 ```
 
 **AFTER:**
+
 ```javascript
 const cache = AddressCache.getInstance();
 cache.clearCache();
@@ -201,6 +219,7 @@ cache.setLogradouroChangeCallback(callback);
 ```
 
 **Why:** Reduces API surface area, clearer singleton usage
+
 ```
 
 **Expected Outcome:**
@@ -772,6 +791,7 @@ describe('ObserverSubject - Enhanced', () => {
 **Goal:** Separate concerns into focused classes
 
 **New Structure:**
+
 ```
 src/data/
 ├── AddressCache.js (300 lines) - Pure caching logic
@@ -855,11 +875,13 @@ hasMunicipioChanged() {
 ## Validation & Testing Strategy
 
 ### Pre-Implementation Checklist
+
 - [ ] Create feature branch: `feature/code-quality-improvements`
 - [ ] Baseline test run: `npm run test:all` (record results)
 - [ ] Create backup: `git stash push -m "pre-quality-improvements"`
 
 ### Per-Phase Validation
+
 ```bash
 # After each phase:
 npm run validate          # Syntax check
@@ -873,6 +895,7 @@ npm run test:coverage     # Coverage check
 ```
 
 ### Integration Testing
+
 ```bash
 # Start web server
 python3 -m http.server 9000
@@ -886,6 +909,7 @@ python3 -m http.server 9000
 ```
 
 ### Rollback Procedures
+
 ```bash
 # If phase fails validation:
 git reset --hard HEAD
@@ -902,6 +926,7 @@ npm test     # Verify rollback
 ## Success Metrics
 
 ### Quantitative Targets
+
 | Metric | Baseline | Target | Measurement |
 |--------|----------|--------|-------------|
 | Avg File Size | 387 lines | <300 lines | `find src -name "*.js" -exec wc -l {} \; \| awk '{sum+=$1; count++} END {print sum/count}'` |
@@ -912,6 +937,7 @@ npm test     # Verify rollback
 | Maintainability | 72/100 | 85/100 | Manual assessment |
 
 ### Qualitative Targets
+
 - ✅ All new code follows established patterns
 - ✅ JSDoc documentation updated for all changes
 - ✅ No new TODO/FIXME comments added
@@ -925,21 +951,25 @@ npm test     # Verify rollback
 ### Sprint Plan (3-week timeline)
 
 **Week 1: Quick Wins + Timer Management**
+
 - Days 1-2: Phase 1 (console migration, magic numbers, destroy methods)
 - Days 3-4: Phase 2 (TimerManager implementation)
 - Day 5: Testing, documentation, integration
 
 **Week 2: Observer + DRY Improvements**
+
 - Days 1-2: Phase 3 (observer pattern enhancements)
 - Day 3: Phase 5 (DRY improvements)
 - Days 4-5: Testing, refactoring prep
 
 **Week 3: God Object Refactoring**
+
 - Days 1-3: Phase 4 (split AddressCache)
 - Day 4: Phase 4 (split SpeechSynthesisManager)
 - Day 5: Integration testing, documentation
 
 ### Resource Requirements
+
 - **Developer Time:** 12-15 days
 - **Code Reviewer:** 3-4 hours (review PRs)
 - **QA Testing:** 4-6 hours (manual validation)
@@ -950,6 +980,7 @@ npm test     # Verify rollback
 ## Risk Mitigation
 
 ### High-Risk Items
+
 1. **God Object Refactoring (Phase 4)**
    - **Risk:** Breaking existing functionality
    - **Mitigation:** Comprehensive test suite, incremental approach
@@ -961,6 +992,7 @@ npm test     # Verify rollback
    - **Contingency:** Keep both old and new implementations temporarily
 
 ### Medium-Risk Items
+
 1. **Console Migration (Phase 1)**
    - **Risk:** Missing imports, broken builds
    - **Mitigation:** Automated script with validation
@@ -976,17 +1008,20 @@ npm test     # Verify rollback
 ## Communication Plan
 
 ### Stakeholder Updates
+
 - **Daily:** Brief status update in team standup
 - **Weekly:** Written progress report with metrics
 - **End of Sprint:** Demo of improvements, updated documentation
 
 ### Documentation Updates
+
 - [ ] Update `docs/ARCHITECTURE.md` with new patterns
 - [ ] Update `docs/CONTRIBUTING.md` with new standards
 - [ ] Create `docs/MIGRATION_GUIDE.md` for breaking changes
 - [ ] Update `.github/copilot-instructions.md` with new utilities
 
 ### Team Training
+
 - **TimerManager Usage:** 15-minute team presentation
 - **Observer Pattern:** 10-minute code walkthrough
 - **Best Practices:** Updated coding standards document
@@ -998,6 +1033,7 @@ npm test     # Verify rollback
 This comprehensive code quality improvement plan addresses the B-grade (72/100) assessment findings with a systematic, low-risk approach. The phased implementation allows for incremental progress with continuous validation, ensuring zero regression in the existing 1,794 passing tests.
 
 **Key Success Factors:**
+
 1. ✅ Start with quick wins (console, magic numbers)
 2. ✅ Address critical risks early (timers, observers)
 3. ✅ Save complex refactoring for last (God Objects)
@@ -1005,6 +1041,7 @@ This comprehensive code quality improvement plan addresses the B-grade (72/100) 
 5. ✅ Comprehensive documentation and team communication
 
 **Expected Outcomes:**
+
 - 🎯 Maintainability: 72 → 85+ (18% improvement)
 - 🎯 Zero memory leaks (timer management)
 - 🎯 Consistent logging (production-ready)

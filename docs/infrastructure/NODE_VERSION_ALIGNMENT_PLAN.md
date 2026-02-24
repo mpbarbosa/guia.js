@@ -7,6 +7,7 @@
 ## Problem Statement
 
 ### Current State (Mismatched)
+
 | Environment | Node.js Version | Status |
 |-------------|----------------|--------|
 | **Local (.nvmrc)** | v25.2.1 | ❌ Too new |
@@ -15,6 +16,7 @@
 | **package.json** | `>=18.0.0 <26.0.0` | ⚠️ Too permissive |
 
 ### Impact
+
 1. **jsdom upgrade blocked**: v27.4.0 requires Node.js `^20.19.0 || ^22.12.0 || >=24.0.0`
 2. **"Works on my machine" risk**: Local (v25) vs CI (v18/v20)
 3. **Dependency vulnerabilities**: Older Node.js versions may have security issues
@@ -25,6 +27,7 @@
 ## Recommended Solution: Align to Node.js 20 LTS
 
 ### Why Node.js 20 LTS?
+
 ✅ **Long-term support** until 2026-04-30  
 ✅ **jsdom 27.x compatible** (`^20.19.0` required)  
 ✅ **Stable and battle-tested** in production  
@@ -32,6 +35,7 @@
 ✅ **Balance** between stability and modern features  
 
 ### Target Configuration
+
 ```
 Local Development:  Node.js 20.19.0
 CI/CD Pipeline:     Node.js 20.19.0
@@ -45,11 +49,13 @@ package.json:       ">=20.19.0 <21.0.0"
 ### Phase 1: Update Configuration Files (15 minutes)
 
 #### Step 1.1: Update .nvmrc
+
 ```bash
 echo "20.19.0" > .nvmrc
 ```
 
 #### Step 1.2: Update package.json engines
+
 ```json
 {
   "engines": {
@@ -60,6 +66,7 @@ echo "20.19.0" > .nvmrc
 ```
 
 #### Step 1.3: Update CI workflows
+
 ```yaml
 # .github/workflows/copilot-coding-agent.yml
 # Change all occurrences:
@@ -104,6 +111,7 @@ git push
 ### Phase 4: Documentation Updates (5 minutes)
 
 Update the following files to reflect Node.js 20.19.0:
+
 - ✅ `.github/CONTRIBUTING.md` - Add Node.js version requirement
 - ✅ `README.md` - Update prerequisites section
 - ✅ `.github/copilot-instructions.md` - Update environment requirements
@@ -112,7 +120,7 @@ Update the following files to reflect Node.js 20.19.0:
 
 ## Post-Alignment: jsdom Upgrade Path
 
-### Once Node.js 20.19.0 is aligned:
+### Once Node.js 20.19.0 is aligned
 
 ```bash
 # Use existing validation script
@@ -125,7 +133,8 @@ Update the following files to reflect Node.js 20.19.0:
 # 4. Manual browser testing (src/index.html)
 ```
 
-### Expected jsdom 27.4.0 Benefits:
+### Expected jsdom 27.4.0 Benefits
+
 ✅ `TextEncoder`/`TextDecoder` support (Web API compatibility)  
 ✅ Improved byte decoding performance  
 ✅ Memory leak fixes  
@@ -135,13 +144,15 @@ Update the following files to reflect Node.js 20.19.0:
 
 ## Alternative: Upgrade to Node.js 25
 
-### Why NOT Recommended (for now):
+### Why NOT Recommended (for now)
+
 ❌ **No LTS status** - Still in "current" phase  
 ❌ **Less CI/CD support** - Many tools still target Node.js 20  
 ❌ **Bleeding edge** - Potential for unexpected breaking changes  
 ❌ **jsdom 27.x requires 24+** - Node.js 25 is compatible but overkill  
 
-### When to Consider Node.js 25:
+### When to Consider Node.js 25
+
 - ⏳ After Node.js 22 LTS is released (2024-10)
 - ⏳ When dependencies broadly support v25
 - ⏳ When CI/CD platforms have robust v25 support
@@ -151,11 +162,13 @@ Update the following files to reflect Node.js 20.19.0:
 ## Risk Assessment
 
 ### Low Risk ✅
+
 - Node.js 20.19.0 is mature and stable
 - All dependencies compatible with Node.js 20
 - Existing tests provide regression safety net
 
 ### Mitigation Strategy
+
 1. **Backup**: Current state works (no urgent pressure)
 2. **Rollback**: Keep commit separate for easy revert
 3. **Testing**: Full test suite validation before merge
@@ -178,12 +191,14 @@ Update the following files to reflect Node.js 20.19.0:
 ## Checklist
 
 ### Pre-Implementation
+
 - [ ] Review current Node.js usage: `node --version`
 - [ ] Check CI logs for Node.js warnings
 - [ ] Backup current configuration
 - [ ] Review dependency compatibility
 
 ### Implementation
+
 - [ ] Update `.nvmrc` to 20.19.0
 - [ ] Update `package.json` engines
 - [ ] Update all CI workflow files
@@ -192,6 +207,7 @@ Update the following files to reflect Node.js 20.19.0:
 - [ ] Commit and push changes
 
 ### Post-Implementation
+
 - [ ] Monitor CI pipeline (all checks pass)
 - [ ] Update documentation files
 - [ ] Plan jsdom upgrade (use validation script)

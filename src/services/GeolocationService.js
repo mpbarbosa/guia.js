@@ -455,10 +455,10 @@ class GeolocationService {
 						maximumFractionDigits: 2
 					});
 					altitudeDisplay.textContent = `${altitudeFormatted} metros`;
-					altitudeContainer.style.display = ''; // Show the altitude
+					altitudeContainer.classList.remove('hidden'); // Show the altitude
 				} else {
 					// Hide altitude when not available
-					altitudeContainer.style.display = 'none';
+					altitudeContainer.classList.add('hidden');
 				}
 			}
 		}

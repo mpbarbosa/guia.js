@@ -293,3 +293,9 @@
     border-top-color: rgba(255, 255, 255, 0.08);
   }
 }
+
+/* User-agent value: smaller font, allow long strings to wrap */
+.version-info-user-agent {
+  font-size: 11px;
+  word-break: break-word;
+}

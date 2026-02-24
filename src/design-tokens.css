@@ -76,6 +76,7 @@
   --color-text-primary: #1c1b1f;
   --color-text-secondary: #49454f;
   --color-text-tertiary: #6b7280;
+  --color-text-muted: #6b7280;
   --color-text-disabled: #9ca3af;
 
   /* Surface Colors */
@@ -449,3 +450,8 @@
 .shadow-md { box-shadow: var(--shadow-md); }
 .shadow-lg { box-shadow: var(--shadow-lg); }
 .shadow-xl { box-shadow: var(--shadow-xl); }
+
+/* ===== VISIBILITY UTILITIES ===== */
+/* Generic display toggle — use classList.add/remove('hidden') */
+.hidden { display: none !important; }
+

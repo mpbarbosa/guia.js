@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
+  plugins: [vue()],
   root: 'src',
   base: './',
   envDir: '..', // .env files live in project root, not in src/

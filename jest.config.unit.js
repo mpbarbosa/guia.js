@@ -14,14 +14,42 @@ export default {
   // Use jsdom for DOM testing
   testEnvironment: 'jsdom',
   
+  // Treat .ts and .vue as ESM (required for --experimental-vm-modules)
+  extensionsToTreatAsEsm: ['.ts', '.vue'],
+  
   // Setup file with jsdom mocks
   setupFilesAfterEnv: [
     '<rootDir>/jest.setup.js'
   ],
   
-  // ES Modules support
-  transform: {},
-  transformIgnorePatterns: [],
+  // Force CJS builds of Vue packages in Jest (avoids ESM loader issues)
+  moduleNameMapper: {
+    '^vue$': '<rootDir>/node_modules/vue/index.js',
+    '^@vue/runtime-dom$': '<rootDir>/node_modules/@vue/runtime-dom/index.js',
+    '^@vue/runtime-core$': '<rootDir>/node_modules/@vue/runtime-core/index.js',
+    '^@vue/reactivity$': '<rootDir>/node_modules/@vue/reactivity/index.js',
+    '^@vue/shared$': '<rootDir>/node_modules/@vue/shared/index.js',
+    '^@vue/compiler-dom$': '<rootDir>/node_modules/@vue/compiler-dom/index.js',
+    '^@vue/compiler-core$': '<rootDir>/node_modules/@vue/compiler-core/index.js',
+    '^@vue/server-renderer$': '<rootDir>/node_modules/@vue/server-renderer/index.js',
+    '^@vue/compiler-sfc$': '<rootDir>/node_modules/@vue/compiler-sfc/index.js',
+    '^@vue/test-utils$': '<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js',
+  },
+
+  // ES Modules support (JS files stay untransformed; TS/Vue files use ts-jest)
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', {
+      useESM: true,
+      tsconfig: {
+        allowJs: true,
+        checkJs: false,
+      },
+    }],
+    '^.+\\.vue$': '<rootDir>/jest.vue-transformer.cjs',
+  },
+  transformIgnorePatterns: [
+    '/node_modules/(?!(vue)/)',
+  ],
   
   // Performance
   maxWorkers: 1,
@@ -30,10 +58,12 @@ export default {
   // Standard timeout
   testTimeout: 30000,
   
-  // All tests EXCEPT E2E
+  // All tests EXCEPT E2E (JS and TS)
   testMatch: [
     '**/__tests__/**/*.js',
-    '**/*.test.js'
+    '**/__tests__/**/*.ts',
+    '**/*.test.js',
+    '**/*.test.ts',
   ],
   
   // Ignore E2E tests and helpers
@@ -44,11 +74,15 @@ export default {
     '/__tests__/e2e/'  // EXCLUDE E2E tests
   ],
   
-  // Coverage collection
+  // Coverage collection (JS and TS source files)
   collectCoverageFrom: [
     'src/**/*.js',
+    'src/**/*.ts',
+    'src/**/*.vue',
     '!src/**/*.test.js',
+    '!src/**/*.test.ts',
     '!src/**/*.spec.js',
+    '!src/**/*.spec.ts',
     '!node_modules/**',
     '!coverage/**'
   ],

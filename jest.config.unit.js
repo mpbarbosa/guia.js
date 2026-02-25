@@ -25,6 +25,7 @@ export default {
   // Force CJS builds of Vue packages in Jest (avoids ESM loader issues)
   moduleNameMapper: {
     '^vue$': '<rootDir>/node_modules/vue/index.js',
+    '^vue-router$': '<rootDir>/node_modules/vue-router/dist/vue-router.cjs',
     '^@vue/runtime-dom$': '<rootDir>/node_modules/@vue/runtime-dom/index.js',
     '^@vue/runtime-core$': '<rootDir>/node_modules/@vue/runtime-core/index.js',
     '^@vue/reactivity$': '<rootDir>/node_modules/@vue/reactivity/index.js',
@@ -34,7 +35,12 @@ export default {
     '^@vue/server-renderer$': '<rootDir>/node_modules/@vue/server-renderer/index.js',
     '^@vue/compiler-sfc$': '<rootDir>/node_modules/@vue/compiler-sfc/index.js',
     '^@vue/test-utils$': '<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js',
+    // Strip .js extension from relative imports so Jest resolves .ts before .js
+    '^(\\.{1,2}/.*)\\.js$': '$1',
   },
+
+  // Try .ts before .js when resolving extensionless imports
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 
   // ES Modules support (JS files stay untransformed; TS/Vue files use ts-jest)
   transform: {

@@ -1,4 +1,3 @@
-'use strict';
 import { log } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
 
@@ -39,6 +38,8 @@ import { ADDRESS_FETCHED_EVENT, NO_REFERENCE_PLACE } from "../config/defaults.js
  * @author Marcelo Pereira Barbosa
  */
 class HTMLReferencePlaceDisplayer {
+	element: HTMLElement;
+	referencePlaceDisplay: HTMLElement | boolean;
 	/**
 	 * Creates a new HTMLReferencePlaceDisplayer instance.
 	 * 
@@ -62,7 +63,7 @@ class HTMLReferencePlaceDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	constructor(element, referencePlaceDisplay = false) {
+	constructor(element: HTMLElement, referencePlaceDisplay: HTMLElement | boolean = false) {
 		this.element = element;
 		this.referencePlaceDisplay = referencePlaceDisplay;
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
@@ -93,7 +94,7 @@ class HTMLReferencePlaceDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	renderReferencePlaceHtml(referencePlace) {
+	renderReferencePlaceHtml(referencePlace: object | null): string {
 		if (!referencePlace) {
 			return `
 				<div class="empty-state reference-place-empty">
@@ -205,7 +206,7 @@ class HTMLReferencePlaceDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	update(addressData, brazilianStandardAddress, posEvent, loading, error) {
+	update(addressData: object, brazilianStandardAddress: object | null, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
 		// Log update for debugging (following MP Barbosa logging standards)
 		log(`(HTMLReferencePlaceDisplayer) update() called with posEvent: ${posEvent}`);
 		
@@ -259,7 +260,7 @@ class HTMLReferencePlaceDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	toString() {
+	toString(): string {
 		return `${this.constructor.name}: ${this.element.id || 'no-id'}`;
 	}
 }

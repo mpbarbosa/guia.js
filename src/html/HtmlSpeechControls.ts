@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * HTML speech synthesis UI controls manager.
  * 
@@ -76,6 +74,20 @@ import SpeechSynthesisManager from '../speech/SpeechSynthesisManager.js'; // esl
  * @since 0.11.0-alpha
  */
 export class HtmlSpeechControls {
+	document: Document;
+	elementIds: object;
+	speechManager: object;
+	voiceSelect: HTMLSelectElement | null;
+	textInput: HTMLInputElement | null;
+	speakBtn: HTMLButtonElement | null;
+	pauseBtn: HTMLButtonElement | null;
+	resumeBtn: HTMLButtonElement | null;
+	stopBtn: HTMLButtonElement | null;
+	rateInput: HTMLInputElement | null;
+	rateValue: HTMLElement | null;
+	pitchInput: HTMLInputElement | null;
+	pitchValue: HTMLElement | null;
+	_boundHandlers: Map<string, EventListenerOrEventListenerObject>;
 	/**
 	 * Creates a new HtmlSpeechControls instance.
 	 * 
@@ -117,7 +129,7 @@ export class HtmlSpeechControls {
 	 *   speakBtnId: 'speak-btn'
 	 * }, speechManager);
 	 */
-	constructor(document, elementIds, speechManager) {
+	constructor(document: Document, elementIds: object, speechManager: object) {
 		// Parameter validation
 		if (document == null) {
 			throw new TypeError("Document parameter cannot be null or undefined");
@@ -282,7 +294,7 @@ export class HtmlSpeechControls {
 	 * // "Microsoft Helena - Portuguese (Portugal) (pt-PT)"
 	 * // "System Voice (en-US)"
 	 */
-	updateVoices() {
+	updateVoices(): void {
 		if (!this.voiceSelect) return;
 
 		// Clear existing options
@@ -336,7 +348,7 @@ export class HtmlSpeechControls {
 	 * @returns {void}
 	 * @since 0.11.0-alpha
 	 */
-	_setupEventHandlers() {
+	_setupEventHandlers(): void {
 		// Voice selection change handler
 		if (this.voiceSelect) {
 			const voiceChangeHandler = (e) => {
@@ -441,7 +453,7 @@ export class HtmlSpeechControls {
 	 * // Cleanup when controls no longer needed
 	 * controls.destroy();
 	 */
-	destroy() {
+	destroy(): void {
 		// Remove voice select listener
 		if (this.voiceSelect && this._boundHandlers.has('voiceChange')) {
 			this.voiceSelect.removeEventListener('change', this._boundHandlers.get('voiceChange'));
@@ -493,7 +505,7 @@ export class HtmlSpeechControls {
 	 * console.log(controls.toString());
 	 * // Output: "HtmlSpeechControls"
 	 */
-	toString() {
+	toString(): string {
 		return this.constructor.name;
 	}
 }

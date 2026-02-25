@@ -1,4 +1,3 @@
-'use strict';
 import { log, warn } from '../utils/logger.js';
 /**
  * HTMLHighlightCardsDisplayer - Updates highlight cards for municipio, bairro, and logradouro
@@ -17,12 +16,20 @@ import { log, warn } from '../utils/logger.js';
  * @class
  */
 class HTMLHighlightCardsDisplayer {
+	_document: Document;
+	_municipioElement: HTMLElement | null;
+	_regiaoMetropolitanaElement: HTMLElement | null;
+	_bairroElement: HTMLElement | null;
+	_logradouroElement: HTMLElement | null;
+	_municipioCard: HTMLElement | null;
+	_bairroCard: HTMLElement | null;
+	_logradouroCard: HTMLElement | null;
     /**
      * Creates a new HTMLHighlightCardsDisplayer instance
      * 
      * @param {Document} document - Document object for DOM queries
      */
-    constructor(document) {
+    constructor(document: Document) {
         if (!document) {
             throw new TypeError('HTMLHighlightCardsDisplayer: document is required');
         }
@@ -48,7 +55,7 @@ class HTMLHighlightCardsDisplayer {
      * @param {boolean} isLoading - Whether content is loading
      * @private
      */
-    _setLoadingState(isLoading) {
+    _setLoadingState(isLoading: boolean): void {
         const cards = [this._municipioCard, this._bairroCard, this._logradouroCard];
         
         cards.forEach(card => {
@@ -69,14 +76,14 @@ class HTMLHighlightCardsDisplayer {
     /**
      * Shows loading state (call before geocoding starts)
      */
-    showLoading() {
+    showLoading(): void {
         this._setLoadingState(true);
     }
     
     /**
      * Hides loading state (automatically called by update)
      */
-    hideLoading() {
+    hideLoading(): void {
         this._setLoadingState(false);
     }
     
@@ -86,7 +93,7 @@ class HTMLHighlightCardsDisplayer {
      * @param {Object} addressData - Address data from geocoding
      * @param {Object} enderecoPadronizado - Standardized Brazilian address
      */
-    update(addressData, enderecoPadronizado) {
+    update(addressData: object, enderecoPadronizado: object): void {
         log('(HTMLHighlightCardsDisplayer) update called with:', {
             hasAddressData: !!addressData,
             hasEnderecoPadronizado: !!enderecoPadronizado,

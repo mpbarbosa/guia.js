@@ -1,4 +1,3 @@
-'use strict';
 import { log, warn } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
 
@@ -40,6 +39,8 @@ import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
  * @author Marcelo Pereira Barbosa
  */
 class HTMLAddressDisplayer {
+	element: HTMLElement;
+	enderecoPadronizadoDisplay: HTMLElement | boolean;
 	/**
 	 * Creates a new HTMLAddressDisplayer instance.
 	 * 
@@ -63,7 +64,7 @@ class HTMLAddressDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	constructor(element, enderecoPadronizadoDisplay = false) {
+	constructor(element: HTMLElement, enderecoPadronizadoDisplay: HTMLElement | boolean = false) {
 		this.element = element;
 		this.enderecoPadronizadoDisplay = enderecoPadronizadoDisplay;
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
@@ -99,7 +100,7 @@ class HTMLAddressDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	renderAddressHtml(addressData, enderecoPadronizado) {
+	renderAddressHtml(addressData: object, enderecoPadronizado: object): string {
 		log('(HTMLAddressDisplayer) renderAddressHtml() called with addressData:', addressData);
 		
 		if (!addressData) {
@@ -186,7 +187,7 @@ class HTMLAddressDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	update(addressData, enderecoPadronizado, posEvent, loading, error) {
+	update(addressData: object, enderecoPadronizado: object, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
 		// Log update for debugging (following MP Barbosa logging standards)
 		log(`(HTMLAddressDisplayer) update() called with posEvent: ${posEvent}`);
 		
@@ -235,7 +236,7 @@ class HTMLAddressDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	toString() {
+	toString(): string {
 		return `${this.constructor.name}: ${this.element?.id || 'no-id'}`;
 	}
 }

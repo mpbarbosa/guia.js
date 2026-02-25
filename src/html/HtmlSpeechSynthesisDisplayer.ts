@@ -1,4 +1,3 @@
-'use strict';
 import { log } from '../utils/logger.js';
 
 /**
@@ -94,6 +93,12 @@ import SpeechTextBuilder from '../speech/SpeechTextBuilder.js';
  * };
  */
 class HtmlSpeechSynthesisDisplayer {
+	document: Document;
+	elementIds: object;
+	speechManager: object;
+	_textBuilder: object;
+	_speechControls: object;
+	_addressObserver: object;
 	/**
 	 * Creates a new HtmlSpeechSynthesisDisplayer facade instance.
 	 * 
@@ -147,7 +152,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 *   pitchValueId: 'pitch-value'
 	 * });
 	 */
-	constructor(document, elementIds) {
+	constructor(document: Document, elementIds: object) {
 		// Parameter validation with specific error messages (same as original)
 		if (document == null) {
 			throw new TypeError("Document parameter cannot be null or undefined");
@@ -327,7 +332,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * @example
 	 * displayer.updateVoices();
 	 */
-	updateVoices() {
+	updateVoices(): void {
 		// Delegate to HtmlSpeechControls component
 		if (this._speechControls && typeof this._speechControls.updateVoices === 'function') {
 			this._speechControls.updateVoices();
@@ -349,7 +354,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * const text = displayer.buildTextToSpeechLogradouro(address);
 	 * // Returns: "Você está na Rua das Flores, 123"
 	 */
-	buildTextToSpeechLogradouro(currentAddress) {
+	buildTextToSpeechLogradouro(currentAddress: object): string {
 		return this._textBuilder.buildTextToSpeechLogradouro(currentAddress);
 	}
 
@@ -368,7 +373,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * const text = displayer.buildTextToSpeechBairro(address);
 	 * // Returns: "Você entrou no bairro Centro"
 	 */
-	buildTextToSpeechBairro(currentAddress) {
+	buildTextToSpeechBairro(currentAddress: object): string {
 		return this._textBuilder.buildTextToSpeechBairro(currentAddress);
 	}
 
@@ -393,7 +398,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * });
 	 * // Returns: "Você saiu de Recife e entrou em Olinda"
 	 */
-	buildTextToSpeechMunicipio(currentAddress, changeDetails) {
+	buildTextToSpeechMunicipio(currentAddress: object, changeDetails?: object): string {
 		return this._textBuilder.buildTextToSpeechMunicipio(currentAddress, changeDetails);
 	}
 
@@ -412,7 +417,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * const text = displayer.buildTextToSpeech(address);
 	 * // Returns: "Você está na Rua das Flores, 123, no bairro Centro, em São Paulo"
 	 */
-	buildTextToSpeech(currentAddress) {
+	buildTextToSpeech(currentAddress: object): string {
 		return this._textBuilder.buildTextToSpeech(currentAddress);
 	}
 
@@ -447,7 +452,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 *   { oldValue: 'Centro', newValue: 'Jardins' }
 	 * );
 	 */
-	update(currentAddress, event, posEvent, changeDetails) {
+	update(currentAddress: object, event: string, posEvent: string, changeDetails?: object): void {
 		// Log for backward compatibility with original implementation
 		if (typeof console !== 'undefined' && console.log) {
 			log('+++ (301) HtmlSpeechSynthesisDisplayer.update called +++');
@@ -476,7 +481,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * console.log(displayer.toString());
 	 * // Output: "HtmlSpeechSynthesisDisplayer: no voice"
 	 */
-	toString() {
+	toString(): string {
 		const voiceName = this.speechManager.voice?.name || 'no voice';
 		return `${this.constructor.name}: ${voiceName}`;
 	}
@@ -501,7 +506,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * // Cleanup when component is unmounted or no longer needed
 	 * displayer.destroy();
 	 */
-	destroy() {
+	destroy(): void {
 		// Cleanup HtmlSpeechControls event listeners
 		if (this._speechControls && typeof this._speechControls.destroy === 'function') {
 			this._speechControls.destroy();

@@ -1,4 +1,3 @@
-'use strict';
 import { warn } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
 
@@ -36,6 +35,7 @@ import { escapeHtml } from '../utils/html-sanitizer.js';
  * @author Marcelo Pereira Barbosa
  */
 class HTMLPositionDisplayer {
+	element: HTMLElement;
 	/**
 	 * Creates a new HTMLPositionDisplayer instance.
 	 * 
@@ -52,7 +52,7 @@ class HTMLPositionDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	constructor(element) {
+	constructor(element: HTMLElement) {
 		this.element = element;
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
 	}
@@ -78,7 +78,7 @@ class HTMLPositionDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	renderPositionHtml(positionManager) {
+	renderPositionHtml(positionManager: object): string {
 		if (!positionManager || !positionManager.lastPosition) {
 			return "<p class='error'>No position data available.</p>";
 		}
@@ -152,7 +152,7 @@ class HTMLPositionDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	formatAccuracyQuality(quality) {
+	formatAccuracyQuality(quality: string): string {
 		const qualityMap = {
 			'excellent': 'Excelente',
 			'good': 'Boa',
@@ -192,7 +192,7 @@ class HTMLPositionDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	update(positionManager, posEvent, loading, error) {
+	update(positionManager: object, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
 		// Validate element exists before attempting DOM updates
 		if (!this.element) {
 			warn('HTMLPositionDisplayer: Cannot update - element is null or undefined');
@@ -239,7 +239,7 @@ class HTMLPositionDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	toString() {
+	toString(): string {
 		const id = this.element.id;
 		return `${this.constructor.name}: ${!id || id === 'null' ? 'no-id' : id}`;
 	}

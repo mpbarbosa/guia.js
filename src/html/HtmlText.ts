@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Manages HTML text content updates with timestamp formatting.
  * 
@@ -56,7 +54,11 @@ class HtmlText {
 	 *   immediateAddressUpdate: 'address.immediate'
 	 * });
 	 */
-	constructor(document, element, eventConfig = {}) {
+	constructor(
+    document: Document,
+    element: HTMLElement | null,
+    eventConfig: { positionUpdate?: string; immediateAddressUpdate?: string } = {},
+  ) {
 		this.document = document;
 		this.element = element;
 		
@@ -96,7 +98,7 @@ class HtmlText {
 	 * // Typically called automatically via observer pattern
 	 * positionManager.subscribe(htmlText);
 	 */
-	update(positionManager, posEvent, loading, error) {
+	update(positionManager: object, posEvent: string, loading: unknown, error: Error | null): void {
 		if (this.element) {
 			if (error) {
 				this.element.textContent = `Error: ${error.message}`;
@@ -124,7 +126,7 @@ class HtmlText {
 	 * // Output: "HtmlText: timestamp-display" (if element has id="timestamp-display")
 	 * // Output: "HtmlText: no-id" (if element has no id)
 	 */
-	toString() {
+	toString(): string {
 		return `${this.constructor.name}: ${this.element?.id || 'no-id'}`;
 	}
 }

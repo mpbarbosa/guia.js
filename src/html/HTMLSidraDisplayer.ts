@@ -1,4 +1,3 @@
-'use strict';
 import { log, warn, error as logError } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
 import ibgeDataFormatter from '../utils/ibge-data-formatter.js';
@@ -39,6 +38,8 @@ import { ADDRESS_FETCHED_EVENT, IBGE_LOADING_MESSAGE, IBGE_ERROR_MESSAGE, IBGE_U
  * @author Marcelo Pereira Barbosa
  */
 class HTMLSidraDisplayer {
+	element: HTMLElement;
+	dataType: string;
 	/**
 	 * Creates a new HTMLSidraDisplayer instance.
 	 * 
@@ -62,7 +63,7 @@ class HTMLSidraDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	constructor(element, options = {}) {
+	constructor(element: HTMLElement, options: { dataType?: string } = {}) {
 		this.element = element;
 		this.dataType = options.dataType || 'PopEst';
 		log(`>>> (HTMLSidraDisplayer) Created for element id='${element?.id || 'no-id'}' with dataType='${this.dataType}'`);
@@ -94,7 +95,7 @@ class HTMLSidraDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	update(addressData, enderecoPadronizado, posEvent, loading, error) {
+	update(addressData: object, enderecoPadronizado: object, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
 		// Log update for debugging (following MP Barbosa logging standards)
 		log(`(HTMLSidraDisplayer) update() called with posEvent: ${posEvent}`);
 		
@@ -144,7 +145,7 @@ class HTMLSidraDisplayer {
 	 * @since 0.9.0-alpha
 	 * @updated 0.11.0-alpha - Enhanced with IBGEDataFormatter for user-friendly display
 	 */
-	_updateSidraData(enderecoPadronizado) {
+	_updateSidraData(enderecoPadronizado: object): void {
 		// Validate input
 		if (!enderecoPadronizado) {
 			warn('(HTMLSidraDisplayer) No enderecoPadronizado provided, skipping SIDRA update');
@@ -195,7 +196,7 @@ class HTMLSidraDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	toString() {
+	toString(): string {
 		const elementId = this.element?.id || 'no-id';
 		return `HTMLSidraDisplayer: ${elementId} (${this.dataType})`;
 	}

@@ -1,4 +1,4 @@
-'use strict';
+
 
 /**
  * Factory for creating displayer instances with dependency injection support.
@@ -82,7 +82,7 @@ class DisplayerFactory {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	static createPositionDisplayer(element) {
+	static createPositionDisplayer(element: HTMLElement | string): HTMLPositionDisplayer {
 		const displayer = new HTMLPositionDisplayer(element);
 		return displayer; // HTMLPositionDisplayer already freezes itself
 	}
@@ -116,7 +116,7 @@ class DisplayerFactory {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	static createAddressDisplayer(element, enderecoPadronizadoDisplay = false) {
+	static createAddressDisplayer(element: HTMLElement | string, enderecoPadronizadoDisplay: HTMLElement | string | boolean = false): HTMLAddressDisplayer {
 		const displayer = new HTMLAddressDisplayer(element, enderecoPadronizadoDisplay);
 		return displayer; // HTMLAddressDisplayer already freezes itself
 	}
@@ -151,7 +151,7 @@ class DisplayerFactory {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	static createReferencePlaceDisplayer(element, referencePlaceDisplay = false) {
+	static createReferencePlaceDisplayer(element: HTMLElement | string, referencePlaceDisplay: HTMLElement | boolean = false): HTMLReferencePlaceDisplayer {
 		const displayer = new HTMLReferencePlaceDisplayer(element, referencePlaceDisplay);
 		return displayer; // HTMLReferencePlaceDisplayer already freezes itself
 	}
@@ -181,7 +181,7 @@ class DisplayerFactory {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	static createSidraDisplayer(element) {
+	static createSidraDisplayer(element: HTMLElement | string): HTMLSidraDisplayer {
 		const displayer = new HTMLSidraDisplayer(element);
 		return displayer; // HTMLSidraDisplayer already freezes itself
 	}
@@ -205,7 +205,7 @@ class DisplayerFactory {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	static createHighlightCardsDisplayer(document) {
+	static createHighlightCardsDisplayer(document: Document): HTMLHighlightCardsDisplayer {
 		const displayer = new HTMLHighlightCardsDisplayer(document);
 		return displayer; // HTMLHighlightCardsDisplayer already freezes itself
 	}
@@ -225,7 +225,7 @@ class DisplayerFactory {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	static toString() {
+	static toString(): string {
 		return `${this.name}: 5 factory methods available`;
 	}
 }

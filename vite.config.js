@@ -1,8 +1,24 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import { resolve, dirname } from 'path';
+import { existsSync } from 'fs';
+
+// Plugin: resolve .js imports to .ts when the .ts file exists (gradual migration support)
+function resolveJsToTs() {
+  return {
+    name: 'resolve-js-to-ts',
+    resolveId(source, importer) {
+      if (!source.startsWith('.') || !source.endsWith('.js') || !importer) return null;
+      const base = resolve(dirname(importer), source);
+      const tsPath = base.replace(/\.js$/, '.ts');
+      if (existsSync(tsPath)) return tsPath;
+      return null;
+    }
+  };
+}
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [resolveJsToTs(), vue()],
   root: 'src',
   base: './',
   envDir: '..', // .env files live in project root, not in src/

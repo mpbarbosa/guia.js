@@ -815,14 +815,14 @@
     
     <script type="module" src="error-recovery.js" onerror="console.error('❌ Failed to load error-recovery.js')"></script>
     <script type="module" src="geolocation-banner.js" onerror="console.error('❌ Failed to load geolocation-banner.js')"></script>
-    <script type="module" src="utils/progressive-disclosure.js" onerror="console.error('❌ Failed to load progressive-disclosure.js')"></script>
+    <script type="module" src="utils/progressive-disclosure.ts" onerror="console.error('❌ Failed to load progressive-disclosure.ts')"></script>
     
     <!-- Onboarding component -->
     <script type="module" src="components/onboarding.js"></script>
     
     <!-- Update version display with enhanced manager -->
     <script type="module">
-      import versionDisplayManager from './utils/version-display-manager.js';
+      import versionDisplayManager from './utils/version-display-manager.ts';
       
       // Initialize version display manager
       // - Updates version badge
@@ -833,7 +833,7 @@
     
     <!-- Maps Integration - Discoverable map viewing options -->
     <script type="module">
-      import mapsIntegration from './utils/maps-integration.js';
+      import mapsIntegration from './utils/maps-integration.ts';
       
       // Initialize maps integration
       // - Creates action buttons for Google Maps, Street View, OSM, Waze
@@ -894,7 +894,7 @@
 </style><div><div class="gf-app"></div></div></template></div>
 
 <!-- Button Utilities -->
-<script type="module" src="utils/button-utils.js"></script>
+<script type="module" src="utils/button-utils.ts"></script>
 
 <!-- Service Worker Registration (optional, graceful fallback) -->
 <script>

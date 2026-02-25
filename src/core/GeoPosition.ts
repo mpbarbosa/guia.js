@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Geographic position data wrapper with convenience methods.
  * 
@@ -20,7 +18,19 @@ import { calculateDistance } from '../utils/distance.js';
  * @immutable All instances are frozen after creation
  */
 class GeoPosition {
-	constructor(position) {
+	geolocationPosition: object | null;
+	coords: object | null;
+	latitude: number;
+	longitude: number;
+	accuracy: number;
+	accuracyQuality: string;
+	altitude: number;
+	altitudeAccuracy: number;
+	heading: number;
+	speed: number;
+	timestamp: number;
+
+	constructor(position: object) {
 		// FIX: GeolocationCoordinates uses getters (not enumerable), spread operator creates empty object
 		// Extract properties manually to handle browser Geolocation API correctly
 		const rawCoords = position?.coords;
@@ -84,7 +94,7 @@ class GeoPosition {
 	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates/accuracy} GeolocationCoordinates.accuracy
 	 * @since 0.6.0-alpha
 	 */
-	static getAccuracyQuality(accuracy) {
+	static getAccuracyQuality(accuracy: number): string {
 		if (accuracy <= 10) {
 			return "excellent";
 		} else if (accuracy <= 30) {
@@ -113,7 +123,7 @@ class GeoPosition {
 	 * @since 0.6.0-alpha
 	 * @deprecated Use accuracyQuality property instead - this method has a bug (calls undefined getAccuracyQuality)
 	 */
-	calculateAccuracyQuality() {
+	calculateAccuracyQuality(): string {
 		return getAccuracyQuality(this.accuracy);
 	}
 
@@ -138,7 +148,7 @@ class GeoPosition {
 	 * @see {@link calculateDistance} - The underlying distance calculation function
 	 * @since 0.6.0-alpha
 	 */
-	distanceTo(otherPosition) {
+	distanceTo(otherPosition: {latitude: number, longitude: number}): number {
 		return calculateDistance(
 			this.latitude,
 			this.longitude,
@@ -163,7 +173,7 @@ class GeoPosition {
 	 * 
 	 * @since 0.6.0-alpha
 	 */
-	toString() {
+	toString(): string {
 		if (!this.latitude || !this.longitude) {
 			return `${this.constructor.name}: No position data`;
 		}

@@ -1,5 +1,4 @@
-'use strict';
-
+// @ts-nocheck
 /**
  * EventCoordinator - Manages event handling and user interactions
  * 

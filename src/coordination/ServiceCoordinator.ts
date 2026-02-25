@@ -1,5 +1,4 @@
-'use strict';
-
+// @ts-nocheck
 /**
  * ServiceCoordinator - Manages services, observers, and displayers
  * @version 0.9.0-alpha

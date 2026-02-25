@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Generic address field change detector with notification signature tracking.
  * 
@@ -40,7 +38,8 @@
  * detector.hasFieldChanged('bairro', current, previous);
  */
 class AddressChangeDetector {
-	
+	notificationSignatures: Map<string, string>;
+
 	/**
 	 * Creates a new AddressChangeDetector instance.
 	 * 
@@ -93,7 +92,7 @@ class AddressChangeDetector {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	hasFieldChanged(field, current, previous) {
+	hasFieldChanged(field: string, current: Record<string, unknown> | null, previous: Record<string, unknown> | null): boolean {
 		// Validate addresses exist
 		if (!current || !previous) {
 			return false;
@@ -155,7 +154,7 @@ class AddressChangeDetector {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	getChangeDetails(field, current, previous, rawCurrent = null, rawPrevious = null) {
+	getChangeDetails(field: string, current: Record<string, unknown> | null, previous: Record<string, unknown> | null, rawCurrent: object | null = null, rawPrevious: object | null = null): object {
 		return {
 			from: previous ? previous[field] : null,
 			to: current ? current[field] : null,
@@ -182,7 +181,7 @@ class AddressChangeDetector {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	clearFieldSignature(field) {
+	clearFieldSignature(field: string): boolean {
 		return this.notificationSignatures.delete(field);
 	}
 	
@@ -200,7 +199,7 @@ class AddressChangeDetector {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	clearAllSignatures() {
+	clearAllSignatures(): void {
 		this.notificationSignatures.clear();
 	}
 	
@@ -218,7 +217,7 @@ class AddressChangeDetector {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	getFieldSignature(field) {
+	getFieldSignature(field: string): string | undefined {
 		return this.notificationSignatures.get(field);
 	}
 	
@@ -235,7 +234,7 @@ class AddressChangeDetector {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	hasFieldSignature(field) {
+	hasFieldSignature(field: string): boolean {
 		return this.notificationSignatures.has(field);
 	}
 	
@@ -250,7 +249,7 @@ class AddressChangeDetector {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	getTrackedFields() {
+	getTrackedFields(): string[] {
 		return Array.from(this.notificationSignatures.keys());
 	}
 }

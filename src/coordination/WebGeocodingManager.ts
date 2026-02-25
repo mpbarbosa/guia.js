@@ -1,5 +1,4 @@
-'use strict';
-
+// @ts-nocheck
 /**
  * WebGeocodingManager - Main coordination class for geocoding workflow
  * @version 0.9.0-alpha

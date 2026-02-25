@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * GeocodingState - Centralized state management for geocoding data
  * 
@@ -53,6 +51,10 @@ import { warn } from '../utils/logger.js';
  * @class
  */
 class GeocodingState {
+    _currentPosition: GeoPosition | null;
+    _currentCoordinates: {latitude: number, longitude: number} | null;
+    _observers: ((snapshot: object) => void)[];
+
     /**
      * Creates a new GeocodingState instance
      * 
@@ -95,7 +97,7 @@ class GeocodingState {
      * @example
      * state.setPosition(null); // Clear position
      */
-    setPosition(position) {
+    setPosition(position: GeoPosition | null): GeocodingState {
         if (position !== null && !(position instanceof GeoPosition)) {
             throw new TypeError('GeocodingState: position must be a GeoPosition instance or null');
         }
@@ -124,7 +126,7 @@ class GeocodingState {
      *   log(position.latitude, position.accuracyQuality);
      * }
      */
-    getCurrentPosition() {
+    getCurrentPosition(): GeoPosition | null {
         return this._currentPosition;
     }
 
@@ -139,7 +141,7 @@ class GeocodingState {
      *   log(`Lat: ${coords.latitude}, Lon: ${coords.longitude}`);
      * }
      */
-    getCurrentCoordinates() {
+    getCurrentCoordinates(): {latitude: number, longitude: number} | null {
         return this._currentCoordinates ? { ...this._currentCoordinates } : null;
     }
 
@@ -154,7 +156,7 @@ class GeocodingState {
      *   // Use coordinates...
      * }
      */
-    hasPosition() {
+    hasPosition(): boolean {
         return this._currentPosition !== null;
     }
 
@@ -176,7 +178,7 @@ class GeocodingState {
      * // Later, unsubscribe
      * unsubscribe();
      */
-    subscribe(callback) {
+    subscribe(callback: (snapshot: object) => void): () => void {
         if (typeof callback !== 'function') {
             throw new TypeError('GeocodingState: callback must be a function');
         }
@@ -203,7 +205,7 @@ class GeocodingState {
      * // Later...
      * state.unsubscribe(handler);
      */
-    unsubscribe(callback) {
+    unsubscribe(callback: (snapshot: object) => void): boolean {
         const index = this._observers.indexOf(callback);
         if (index > -1) {
             this._observers.splice(index, 1);
@@ -220,7 +222,7 @@ class GeocodingState {
      * @example
      * log(`Active observers: ${state.getObserverCount()}`);
      */
-    getObserverCount() {
+    getObserverCount(): number {
         return this._observers.length;
     }
 
@@ -232,7 +234,7 @@ class GeocodingState {
      * @example
      * state.clearObservers();
      */
-    clearObservers() {
+    clearObservers(): void {
         this._observers = [];
     }
 
@@ -243,7 +245,7 @@ class GeocodingState {
      * state.clear();
      * log(state.hasPosition()); // false
      */
-    clear() {
+    clear(): void {
         this._currentPosition = null;
         this._currentCoordinates = null;
     }
@@ -256,7 +258,7 @@ class GeocodingState {
      * 
      * @private
      */
-    _notifyObservers() {
+    _notifyObservers(): void {
         const stateSnapshot = {
             position: this._currentPosition,
             coordinates: this.getCurrentCoordinates()
@@ -280,7 +282,7 @@ class GeocodingState {
      * log(state.toString());
      * // "GeocodingState: position: available, coordinates: (lat, lon), observers: 2"
      */
-    toString() {
+    toString(): string {
         const hasPos = this._currentPosition ? 'available' : 'null';
         const coords = this._currentCoordinates ?
             `(${this._currentCoordinates.latitude.toFixed(4)}, ${this._currentCoordinates.longitude.toFixed(4)})` :

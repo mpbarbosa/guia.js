@@ -1,5 +1,4 @@
-'use strict';
-
+// @ts-nocheck
 /**
  * Coordinator for address component change detection.
  * 

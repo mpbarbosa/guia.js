@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Interface/Base class for geolocation providers.
  * 
@@ -45,7 +43,7 @@ class GeolocationProvider {
 	 *   { enableHighAccuracy: true, timeout: 5000 }
 	 * );
 	 */
-	getCurrentPosition(_successCallback, _errorCallback, _options) {
+	getCurrentPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options: object): void {
 		throw new Error('GeolocationProvider.getCurrentPosition() must be implemented by subclass');
 	}
 
@@ -65,7 +63,7 @@ class GeolocationProvider {
 	 *   { enableHighAccuracy: true }
 	 * );
 	 */
-	watchPosition(_successCallback, _errorCallback, _options) {
+	watchPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options: object): number {
 		throw new Error('GeolocationProvider.watchPosition() must be implemented by subclass');
 	}
 
@@ -79,7 +77,7 @@ class GeolocationProvider {
 	 * @example
 	 * provider.clearWatch(watchId);
 	 */
-	clearWatch(_watchId) {
+	clearWatch(watchId: number): void {
 		throw new Error('GeolocationProvider.clearWatch() must be implemented by subclass');
 	}
 
@@ -94,7 +92,7 @@ class GeolocationProvider {
 	 *   // Use geolocation
 	 * }
 	 */
-	isSupported() {
+	isSupported(): boolean {
 		throw new Error('GeolocationProvider.isSupported() must be implemented by subclass');
 	}
 }

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Address data storage with history tracking.
  * 
@@ -43,7 +41,11 @@
  * const key = AddressDataStore.generateCacheKey(rawData);
  */
 class AddressDataStore {
-	
+	currentAddress: object | null;
+	previousAddress: object | null;
+	currentRawData: object | null;
+	previousRawData: object | null;
+
 	/**
 	 * Creates a new AddressDataStore instance.
 	 * 
@@ -102,7 +104,7 @@ class AddressDataStore {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	update(newAddress, newRawData) {
+	update(newAddress: object | null, newRawData: object | null): void {
 		// Move current to previous
 		this.previousAddress = this.currentAddress;
 		this.previousRawData = this.currentRawData;
@@ -127,7 +129,7 @@ class AddressDataStore {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	getCurrent() {
+	getCurrent(): {address: object | null, raw: object | null} {
 		return {
 			address: this.currentAddress,
 			raw: this.currentRawData
@@ -150,7 +152,7 @@ class AddressDataStore {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	getPrevious() {
+	getPrevious(): {address: object | null, raw: object | null} {
 		return {
 			address: this.previousAddress,
 			raw: this.previousRawData
@@ -173,7 +175,7 @@ class AddressDataStore {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	hasHistory() {
+	hasHistory(): boolean {
 		return this.currentAddress !== null && this.previousAddress !== null;
 	}
 	
@@ -184,7 +186,7 @@ class AddressDataStore {
 	 * @returns {Object|null} Current raw data from geocoding API
 	 * @since 0.9.0-alpha
 	 */
-	getCurrentRawData() {
+	getCurrentRawData(): object | null {
 		return this.currentRawData;
 	}
 	
@@ -195,7 +197,7 @@ class AddressDataStore {
 	 * @returns {Object|null} Previous raw data from geocoding API
 	 * @since 0.9.0-alpha
 	 */
-	getPreviousRawData() {
+	getPreviousRawData(): object | null {
 		return this.previousRawData;
 	}
 	
@@ -212,7 +214,7 @@ class AddressDataStore {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	clear() {
+	clear(): void {
 		this.currentAddress = null;
 		this.previousAddress = null;
 		this.currentRawData = null;
@@ -231,7 +233,7 @@ class AddressDataStore {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	hasCurrent() {
+	hasCurrent(): boolean {
 		return this.currentAddress !== null;
 	}
 	
@@ -247,7 +249,7 @@ class AddressDataStore {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	hasPrevious() {
+	hasPrevious(): boolean {
 		return this.previousAddress !== null;
 	}
 	
@@ -278,7 +280,7 @@ class AddressDataStore {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	static generateCacheKey(data) {
+	static generateCacheKey(data: object | null): string | null {
 		// Validate input data
 		if (!data || !data.address) {
 			return null;

@@ -1,5 +1,4 @@
-'use strict';
-
+// @ts-nocheck
 /**
  * Reverse geocoding service for converting coordinates to addresses.
  * @version 0.9.0-alpha

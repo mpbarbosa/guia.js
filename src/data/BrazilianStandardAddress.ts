@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Standardized Brazilian address structure.
  * 
@@ -25,6 +23,17 @@
  * @class
  */
 class BrazilianStandardAddress {
+	logradouro: string | null;
+	numero: string | null;
+	complemento: string | null;
+	bairro: string | null;
+	municipio: string | null;
+	regiaoMetropolitana: string | null;
+	uf: string | null;
+	siglaUF: string | null;
+	cep: string | null;
+	pais: string;
+
 	/**
 	 * Creates a new BrazilianStandardAddress instance.
 	 * 
@@ -50,7 +59,7 @@ class BrazilianStandardAddress {
 	 * @returns {string} Formatted street address or just street name
 	 * @since 0.9.0-alpha
 	 */
-	logradouroCompleto() {
+	logradouroCompleto(): string {
 		if (!this.logradouro) return "";
 		if (this.numero) {
 			return `${this.logradouro}, ${this.numero}`;
@@ -64,7 +73,7 @@ class BrazilianStandardAddress {
 	 * @returns {string} Formatted neighborhood name
 	 * @since 0.9.0-alpha
 	 */
-	bairroCompleto() {
+	bairroCompleto(): string {
 		return this.bairro || "";
 	}
 
@@ -74,7 +83,7 @@ class BrazilianStandardAddress {
 	 * @returns {string} Formatted city and state
 	 * @since 0.9.0-alpha
 	 */
-	municipioCompleto() {
+	municipioCompleto(): string {
 		if (!this.municipio) return "";
 		if (this.siglaUF) {
 			return `${this.municipio}, ${this.siglaUF}`;
@@ -92,7 +101,7 @@ class BrazilianStandardAddress {
 	 * address.regiaoMetropolitana = "Região Metropolitana do Recife";
 	 * address.regiaoMetropolitanaFormatada();
 	 */
-	regiaoMetropolitanaFormatada() {
+	regiaoMetropolitanaFormatada(): string {
 		return this.regiaoMetropolitana || "";
 	}
 
@@ -103,7 +112,7 @@ class BrazilianStandardAddress {
 	 * @returns {string} Complete formatted address
 	 * @since 0.9.0-alpha
 	 */
-	enderecoCompleto() {
+	enderecoCompleto(): string {
 		return [
 			this.logradouroCompleto(),
 			this.bairro,
@@ -114,7 +123,7 @@ class BrazilianStandardAddress {
 			.join(", ");
 	}
 
-	toString() {
+	toString(): string {
 		return `${this.constructor.name}: ${this.enderecoCompleto() || 'Empty address'}`;
 	}
 }

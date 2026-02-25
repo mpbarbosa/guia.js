@@ -1,5 +1,4 @@
-'use strict';
-
+// @ts-nocheck
 /**
  * UICoordinator - Manages UI element initialization and DOM manipulation
  * 

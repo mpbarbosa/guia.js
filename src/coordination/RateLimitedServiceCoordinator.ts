@@ -1,5 +1,4 @@
-'use strict';
-
+// @ts-nocheck
 /**
  * Rate-limited service coordinator for API requests.
  * 

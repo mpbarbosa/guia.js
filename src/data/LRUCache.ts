@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * LRU (Least Recently Used) cache with time-based expiration.
  * 
@@ -30,7 +28,11 @@
  * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa (extracted from AddressCache)
  */
-class LRUCache {
+class LRUCache<K = string, V = unknown> {
+	cache: Map<K, {value: V, timestamp: number, lastAccessed: number}>;
+	maxSize: number;
+	expirationMs: number;
+
 	/**
 	 * Creates a new LRU cache instance.
 	 * 
@@ -69,7 +71,7 @@ class LRUCache {
 	 * // After expiration period
 	 * const expired = cache.get('key1'); // null (entry removed)
 	 */
-	get(key) {
+	get(key: K): V | null {
 		const entry = this.cache.get(key);
 		if (!entry) {
 			return null;
@@ -110,7 +112,7 @@ class LRUCache {
 	 * cache.set('user:123', { name: 'Alice', role: 'admin' });
 	 * cache.set('user:456', { name: 'Bob', role: 'user' });
 	 */
-	set(key, value) {
+	set(key: K, value: V): void {
 		// Evict LRU entry if cache is full
 		this.evictIfNeeded();
 
@@ -134,7 +136,7 @@ class LRUCache {
 	 * @private
 	 * @returns {void}
 	 */
-	evictIfNeeded() {
+	evictIfNeeded(): void {
 		if (this.cache.size >= this.maxSize) {
 			// First entry in Map is least recently accessed
 			const firstKey = this.cache.keys().next().value;
@@ -162,7 +164,7 @@ class LRUCache {
 	 *   log(`Cleaned up ${removed} expired entries`);
 	 * }, 60000);
 	 */
-	cleanExpired() {
+	cleanExpired(): number {
 		const now = Date.now();
 		let removed = 0;
 
@@ -187,7 +189,7 @@ class LRUCache {
 	 * cache.clear();
 	 * log(cache.size); // 0
 	 */
-	clear() {
+	clear(): void {
 		this.cache.clear();
 	}
 
@@ -199,7 +201,7 @@ class LRUCache {
 	 * @example
 	 * log(`Cache contains ${cache.size} entries`);
 	 */
-	get size() {
+	get size(): number {
 		return this.cache.size;
 	}
 
@@ -217,7 +219,7 @@ class LRUCache {
 	 *   log('User is cached');
 	 * }
 	 */
-	has(key) {
+	has(key: K): boolean {
 		return this.cache.has(key);
 	}
 
@@ -233,7 +235,7 @@ class LRUCache {
 	 * log(cache.toString());
 	 * // "LRUCache: size=25/50, expiration=300000ms"
 	 */
-	toString() {
+	toString(): string {
 		return `${this.constructor.name}: size=${this.size}/${this.maxSize}, expiration=${this.expirationMs}ms`;
 	}
 }

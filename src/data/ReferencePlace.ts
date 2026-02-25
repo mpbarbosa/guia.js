@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Reference place data extracted from geocoding data.
  * 
@@ -37,6 +35,11 @@ import { NO_REFERENCE_PLACE, VALID_REF_PLACE_CLASSES } from '../config/defaults.
  * log(refPlace.toString()); // "ReferencePlace: Shopping Center - Shopping Morumbi"
  */
 class ReferencePlace {
+	className: string | null;
+	typeName: string | null;
+	name: string | null;
+	description: string;
+
 	/**
 	 * Reference place mapping for known OSM classes/types.
 	 * Maps OpenStreetMap feature classes and types to Portuguese descriptions.
@@ -47,7 +50,7 @@ class ReferencePlace {
 	 * @see {@link https://wiki.openstreetmap.org/wiki/Map_Features} OSM feature documentation
 	 * @since 0.9.0-alpha
 	 */
-	static referencePlaceMap = {
+	static referencePlaceMap: Record<string, Record<string, string>> = {
 		"place": { "house": "Residencial" },
 		"shop": {
 			"mall": "Shopping Center",
@@ -74,7 +77,7 @@ class ReferencePlace {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	constructor(data) {
+	constructor(data: object) {
 		this.className = (data && data.class) || null;
 		this.typeName = (data && data.type) || null;
 		this.name = (data && data.name) || null;
@@ -93,7 +96,7 @@ class ReferencePlace {
 	 * @returns {string} Portuguese description of the reference place type
 	 * @since 0.9.0-alpha
 	 */
-	calculateDescription() {
+	calculateDescription(): string {
 		if (!this.className || !this.typeName) {
 			return NO_REFERENCE_PLACE;
 		}
@@ -119,7 +122,7 @@ class ReferencePlace {
 		return `${this.className}: ${this.typeName}`;
 	}
 
-	calculateCategory() {
+	calculateCategory(): string {
 		const referenceClassName = ReferencePlace.referencePlaceMap[this.className] || "unknown";
 		if (typeof referenceClassName === 'string') {
 			return referenceClassName;
@@ -142,7 +145,7 @@ class ReferencePlace {
 	 * log(refPlace.toString()); 
 	 * // Output: "ReferencePlace: Shopping Center - Shopping Morumbi"
 	 */
-	toString() {
+	toString(): string {
 		const baseName = `${this.constructor.name}: ${this.description}`;
 		if (this.name) {
 			return `${baseName} - ${this.name}`;

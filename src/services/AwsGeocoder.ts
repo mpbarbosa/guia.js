@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Reverse geocoder for the AWS Location Based Service.
  *
@@ -22,10 +20,13 @@ import AwsAddressExtractor from '../data/AwsAddressExtractor.js';
  * @class
  */
 class AwsGeocoder {
+	baseUrl: string;
+	endpoint: string;
+
 	/**
 	 * @param {string} [baseUrl] - AWS API base URL (defaults to env.awsLbsBaseUrl)
 	 */
-	constructor(baseUrl) {
+	constructor(baseUrl?: string) {
 		this.baseUrl = baseUrl || env.awsLbsBaseUrl;
 		this.endpoint = `${this.baseUrl}/api/geocode/reverse`;
 	}
@@ -38,7 +39,7 @@ class AwsGeocoder {
 	 * @returns {Promise<{rawData: Object, enderecoPadronizado: BrazilianStandardAddress}>}
 	 * @throws {Error} On network failure or non-OK HTTP status
 	 */
-	async reverseGeocode(latitude, longitude) {
+	async reverseGeocode(latitude: number, longitude: number): Promise<{rawData: object, enderecoPadronizado: object}> {
 		if (!latitude || !longitude) {
 			throw new Error('(AwsGeocoder) Invalid coordinates');
 		}

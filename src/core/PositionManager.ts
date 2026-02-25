@@ -1,5 +1,4 @@
-'use strict';
-
+// @ts-nocheck
 /**
  * Centralized singleton manager for device geographic position.
  * 

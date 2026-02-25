@@ -1,5 +1,4 @@
-'use strict';
-
+// @ts-nocheck
 /**
  * Address cache with LRU eviction and change detection.
  * 

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * ObserverSubject - Centralizes observer pattern implementation with immutable state updates
  * 
@@ -54,6 +52,9 @@
 import { log } from '../utils/logger.js';
 
 class ObserverSubject {
+	observers: object[];
+	functionObservers: ((...args: unknown[]) => void)[];
+
 	/**
 	 * Creates a new ObserverSubject instance.
 	 * Initializes empty arrays for both object and function observers.
@@ -90,7 +91,7 @@ class ObserverSubject {
 	 * const newArray = observerSubject.observers;
 	 * log(originalArray !== newArray); // true - new array created
 	 */
-	subscribe(observer) {
+	subscribe(observer: object): void {
 		if (observer) {
 			this.observers = [...this.observers, observer];
 		}
@@ -115,7 +116,7 @@ class ObserverSubject {
 	 * const arrayAfter = observerSubject.observers;
 	 * log(arrayBefore !== arrayAfter); // true - new array created
 	 */
-	unsubscribe(observer) {
+	unsubscribe(observer: object): void {
 		this.observers = this.observers.filter((o) => o !== observer);
 	}
 
@@ -129,7 +130,7 @@ class ObserverSubject {
 	 * @example
 	 * observerSubject.notifyObservers(data1, data2, eventType);
 	 */
-	notifyObservers(...args) {
+	notifyObservers(...args: unknown[]): void {
 		log("+++ (100) (ObserverSubject) Notifying observers with args:", args);
 		this.observers.forEach((observer) => {
 			if (typeof observer.update === "function") {
@@ -154,7 +155,7 @@ class ObserverSubject {
 	 * };
 	 * observerSubject.subscribeFunction(handler);
 	 */
-	subscribeFunction(observerFunction) {
+	subscribeFunction(observerFunction: (...args: unknown[]) => void): void {
 		if (observerFunction) {
 			this.functionObservers = [...this.functionObservers, observerFunction];
 		}
@@ -172,7 +173,7 @@ class ObserverSubject {
 	 * @example
 	 * observerSubject.unsubscribeFunction(handler);
 	 */
-	unsubscribeFunction(observerFunction) {
+	unsubscribeFunction(observerFunction: (...args: unknown[]) => void): void {
 		this.functionObservers = this.functionObservers.filter(
 			(fn) => fn !== observerFunction,
 		);
@@ -187,7 +188,7 @@ class ObserverSubject {
 	 * @example
 	 * observerSubject.notifyFunctionObservers(data1, data2);
 	 */
-	notifyFunctionObservers(...args) {
+	notifyFunctionObservers(...args: unknown[]): void {
 		this.functionObservers.forEach((fn) => {
 			if (typeof fn === "function") {
 				fn(...args);
@@ -200,7 +201,7 @@ class ObserverSubject {
 	 * 
 	 * @returns {number} Number of subscribed observers
 	 */
-	getObserverCount() {
+	getObserverCount(): number {
 		return this.observers.length;
 	}
 
@@ -209,7 +210,7 @@ class ObserverSubject {
 	 * 
 	 * @returns {number} Number of subscribed function observers
 	 */
-	getFunctionObserverCount() {
+	getFunctionObserverCount(): number {
 		return this.functionObservers.length;
 	}
 
@@ -218,7 +219,7 @@ class ObserverSubject {
 	 * 
 	 * @returns {void}
 	 */
-	clearAllObservers() {
+	clearAllObservers(): void {
 		this.observers = [];
 		this.functionObservers = [];
 	}

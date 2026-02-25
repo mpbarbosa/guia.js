@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Browser-based geolocation provider using the Web Geolocation API.
  * 
@@ -31,6 +29,8 @@ import GeolocationProvider from './GeolocationProvider.js';
  * @extends GeolocationProvider
  */
 class BrowserGeolocationProvider extends GeolocationProvider {
+	navigator: object | null;
+
 	/**
 	 * Creates a new BrowserGeolocationProvider instance.
 	 * 
@@ -57,7 +57,7 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * // Explicit null - no navigator, no fallback
 	 * const provider = new BrowserGeolocationProvider(null);
 	 */
-	constructor(navigatorObj) {
+	constructor(navigatorObj?: object | null) {
 		super();
 		
 		// Distinguish between "no argument" and "explicit undefined/null"
@@ -81,7 +81,7 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} options - Geolocation options
 	 * @returns {void}
 	 */
-	getCurrentPosition(successCallback, errorCallback, options) {
+	getCurrentPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options: object): void {
 		if (!this.isSupported()) {
 			const error = {
 				code: 0,
@@ -110,7 +110,7 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} options - Geolocation options
 	 * @returns {number|null} Watch ID for clearing the watch, or null if not supported
 	 */
-	watchPosition(successCallback, errorCallback, options) {
+	watchPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options: object): number {
 		if (!this.isSupported()) {
 			return null;
 		}
@@ -130,7 +130,7 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * @param {number} watchId - Watch ID returned from watchPosition
 	 * @returns {void}
 	 */
-	clearWatch(watchId) {
+	clearWatch(watchId: number): void {
 		if (this.isSupported() && watchId !== null) {
 			this.navigator.geolocation.clearWatch(watchId);
 		}
@@ -145,7 +145,7 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * 
 	 * @returns {boolean} True if geolocation is supported
 	 */
-	isSupported() {
+	isSupported(): boolean {
 		return Boolean(this.navigator && 'geolocation' in this.navigator);
 	}
 
@@ -157,7 +157,7 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * 
 	 * @returns {boolean} True if Permissions API is supported
 	 */
-	isPermissionsAPISupported() {
+	isPermissionsAPISupported(): boolean {
 		return Boolean(this.navigator && 'permissions' in this.navigator);
 	}
 
@@ -166,7 +166,7 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * 
 	 * @returns {Object|null} Navigator object or null if not available
 	 */
-	getNavigator() {
+	getNavigator(): object | null {
 		return this.navigator;
 	}
 }

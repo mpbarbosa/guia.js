@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Address data extractor and standardizer — base class.
  *
@@ -25,10 +23,13 @@ import ReferencePlace from './ReferencePlace.js';
  * @abstract
  */
 class AddressExtractor {
+	data: object;
+	enderecoPadronizado: BrazilianStandardAddress;
+
 	/**
 	 * @param {Object} data - Raw address data from a geocoding API
 	 */
-	constructor(data) {
+	constructor(data: object) {
 		this.data = data;
 		this.enderecoPadronizado = new BrazilianStandardAddress();
 		this.padronizaEndereco();
@@ -41,7 +42,7 @@ class AddressExtractor {
 	 *
 	 * @abstract
 	 */
-	padronizaEndereco() {
+	padronizaEndereco(): void {
 		// implemented by subclasses
 	}
 
@@ -51,13 +52,13 @@ class AddressExtractor {
 	 * @param {string} iso3166Code - e.g. "BR-SP"
 	 * @returns {string|null} e.g. "SP", or null if invalid
 	 */
-	static extractSiglaUF(iso3166Code) {
+	static extractSiglaUF(iso3166Code: string): string | null {
 		if (!iso3166Code || typeof iso3166Code !== 'string') return null;
 		const match = iso3166Code.match(/^BR-([A-Z]{2})$/);
 		return match ? match[1] : null;
 	}
 
-	toString() {
+	toString(): string {
 		return `${this.constructor.name}: ${this.enderecoPadronizado.enderecoCompleto()}`;
 	}
 }
@@ -82,7 +83,7 @@ class NominatimAddressExtractor extends AddressExtractor {
 	 *
 	 * @override
 	 */
-	padronizaEndereco() {
+	padronizaEndereco(): void {
 		if (!this.data || !this.data.address) return;
 
 		const address = this.data.address;

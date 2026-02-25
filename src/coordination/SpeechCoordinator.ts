@@ -1,5 +1,4 @@
-'use strict';
-
+// @ts-nocheck
 /**
  * SpeechCoordinator - Manages speech synthesis functionality
  * 

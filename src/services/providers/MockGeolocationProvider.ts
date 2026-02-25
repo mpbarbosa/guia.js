@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Mock geolocation provider for testing and development.
  * 
@@ -32,6 +30,11 @@ import GeolocationProvider from './GeolocationProvider.js';
  * @extends GeolocationProvider
  */
 class MockGeolocationProvider extends GeolocationProvider {
+	config: {supported: boolean, defaultPosition: object | null, defaultError: object | null, delay: number};
+	watchIdCounter: number;
+	activeWatches: Map<number, object>;
+	pendingTimeouts: Set<ReturnType<typeof setTimeout>>;
+
 	/**
 	 * Creates a new MockGeolocationProvider instance.
 	 * 
@@ -84,7 +87,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} options - Geolocation options (unused in mock)
 	 * @returns {void}
 	 */
-	getCurrentPosition(successCallback, errorCallback, _options) {
+	getCurrentPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, _options: object): void {
 		if (!this.isSupported()) {
 			const error = {
 				code: 0,
@@ -127,7 +130,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} options - Geolocation options (unused in mock)
 	 * @returns {number|null} Watch ID for clearing the watch, or null if not supported
 	 */
-	watchPosition(successCallback, errorCallback, options) {
+	watchPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options: object): number {
 		if (!this.isSupported()) {
 			return null;
 		}
@@ -166,7 +169,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * @param {number} watchId - Watch ID returned from watchPosition
 	 * @returns {void}
 	 */
-	clearWatch(watchId) {
+	clearWatch(watchId: number): void {
 		this.activeWatches.delete(watchId);
 	}
 
@@ -175,7 +178,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * 
 	 * @returns {boolean} True if geolocation is configured as supported
 	 */
-	isSupported() {
+	isSupported(): boolean {
 		return this.config.supported;
 	}
 
@@ -184,7 +187,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * 
 	 * @returns {boolean} Always returns false for mock
 	 */
-	isPermissionsAPISupported() {
+	isPermissionsAPISupported(): boolean {
 		return false;
 	}
 
@@ -202,7 +205,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 *   timestamp: Date.now()
 	 * });
 	 */
-	setPosition(position) {
+	setPosition(position: object): void {
 		this.config.defaultPosition = position;
 		this.config.defaultError = null;
 	}
@@ -218,7 +221,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * @example
 	 * provider.setError({ code: 1, message: 'Permission denied' });
 	 */
-	setError(error) {
+	setError(error: object): void {
 		this.config.defaultError = error;
 		this.config.defaultPosition = null;
 	}
@@ -235,7 +238,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * const watchId = provider.watchPosition(callback);
 	 * provider.triggerWatchUpdate({ coords: { latitude: -23.5, longitude: -46.6 } });
 	 */
-	triggerWatchUpdate(position) {
+	triggerWatchUpdate(position?: object): void {
 		const positionToSend = position || this.config.defaultPosition;
 		
 		this.activeWatches.forEach((watch) => {
@@ -251,7 +254,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} [error] - Error to send (uses default if not provided)
 	 * @returns {void}
 	 */
-	triggerWatchError(error) {
+	triggerWatchError(error?: object): void {
 		const errorToSend = error || this.config.defaultError || {
 			code: 2,
 			message: 'Position unavailable'
@@ -273,7 +276,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * @param {Function} fn - Function to call
 	 * @returns {void}
 	 */
-	_callWithDelay(fn) {
+	_callWithDelay(fn: () => void): void {
 		const timeoutId = this.config.delay > 0
 			? setTimeout(() => {
 				this.pendingTimeouts.delete(timeoutId);
@@ -311,7 +314,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 *   });
 	 * });
 	 */
-	destroy() {
+	destroy(): void {
 		// Clear all active watches
 		this.activeWatches.clear();
 		

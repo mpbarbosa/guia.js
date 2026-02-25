@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Centralized callback registry with type-safe management and error handling.
  * 
@@ -50,7 +48,8 @@
  * registry.unregister('bairro');
  */
 class CallbackRegistry {
-	
+	callbacks: Map<string, ((...args: unknown[]) => void) | null>;
+
 	/**
 	 * Creates a new CallbackRegistry instance.
 	 * 
@@ -94,7 +93,7 @@ class CallbackRegistry {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	register(type, callback) {
+	register(type: string, callback: ((...args: unknown[]) => void) | null): void {
 		if (callback !== null && typeof callback !== 'function') {
 			throw new TypeError(
 				`Callback for type "${type}" must be a function or null. Received: ${typeof callback}`
@@ -125,7 +124,7 @@ class CallbackRegistry {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	get(type) {
+	get(type: string): ((...args: unknown[]) => void) | null {
 		return this.callbacks.get(type) || null;
 	}
 	
@@ -157,7 +156,7 @@ class CallbackRegistry {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	execute(type, ...args) {
+	execute(type: string, ...args: unknown[]): boolean {
 		const callback = this.callbacks.get(type);
 		
 		if (typeof callback === 'function') {
@@ -196,7 +195,7 @@ class CallbackRegistry {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	has(type) {
+	has(type: string): boolean {
 		return this.callbacks.has(type);
 	}
 	
@@ -218,7 +217,7 @@ class CallbackRegistry {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	unregister(type) {
+	unregister(type: string): boolean {
 		return this.callbacks.delete(type);
 	}
 	
@@ -236,7 +235,7 @@ class CallbackRegistry {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	clear() {
+	clear(): void {
 		this.callbacks.clear();
 	}
 	
@@ -260,7 +259,7 @@ class CallbackRegistry {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	getRegisteredTypes() {
+	getRegisteredTypes(): string[] {
 		return Array.from(this.callbacks.keys());
 	}
 	
@@ -276,7 +275,7 @@ class CallbackRegistry {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	size() {
+	size(): number {
 		return this.callbacks.size;
 	}
 	
@@ -294,7 +293,7 @@ class CallbackRegistry {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	isEmpty() {
+	isEmpty(): boolean {
 		return this.callbacks.size === 0;
 	}
 }

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Address extractor for AWS Location Based Service responses.
  *
@@ -95,7 +93,7 @@ class AwsAddressExtractor extends AddressExtractor {
 	 *
 	 * @override
 	 */
-	padronizaEndereco() {
+	padronizaEndereco(): void {
 		if (!this.data || !this.data.address) return;
 
 		const address = this.data.address;

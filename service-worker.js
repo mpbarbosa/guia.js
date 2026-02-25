@@ -4,7 +4,7 @@
  * @version 0.11.3-alpha
  */
 
-const CACHE_NAME = 'guia-turistico-v0.11.3-alpha-20260223-1981f9e';
+const CACHE_NAME = 'guia-turistico-v0.11.3-alpha-20260225-28ae31e';
 const STATIC_ASSETS = [
   './',
   './index.html'
@@ -69,19 +69,10 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // JS and CSS assets: network-first strategy
-  // Always tries to get the latest version from the network.
-  // Falls back to cache when offline, so the app still works.
-  // This ensures Android Chrome (no Ctrl+Shift+R) always receives updated code.
-  const isAppAsset = request.url.match(/\.(js|css)(\?.*)?$/) ||
-                     request.url.includes('/assets/');
-
-  if (isAppAsset) {
-    event.respondWith(networkFirstStrategy(request));
-  } else {
-    // HTML / navigation: cache-first strategy (fast offline shell)
-    event.respondWith(cacheFirstStrategy(request));
-  }
+  // All app assets use network-first strategy so the dev server (Vite) always
+  // processes requests — critical for html-proxy virtual modules (inline scripts).
+  // Falls back to cache when offline so the PWA shell still loads.
+  event.respondWith(networkFirstStrategy(request));
 });
 
 /**
@@ -93,11 +84,19 @@ self.addEventListener('fetch', event => {
 function networkFirstStrategy(request) {
   return fetch(request)
     .then(response => {
-      if (response && response.status === 200) {
+      if (response && response.ok) {
         const responseToCache = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(request, responseToCache));
+        return response;
       }
-      return response;
+      // Non-2xx response (e.g. 500): fall back to cache if available
+      return caches.match(request).then(cached => {
+        if (cached) {
+          console.log('[SW] Network error, serving from cache:', request.url);
+          return cached;
+        }
+        return response;
+      });
     })
     .catch(() => {
       console.log('[SW] Network failed, serving from cache:', request.url);

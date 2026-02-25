@@ -4,11 +4,11 @@
 
 project:
   name: "guia_turistico"
-  kind: "client_spa"
+  kind: "location_based_service"
   description: "Tourist guide Single-Page Application with geolocation tracking"
 tech_stack:
   primary_language: "javascript"
-  framework: "vanilla_js"
+  framework: "vue"
   build_system: "npm"
   test_framework: "jest"
   test_command: "npm test"

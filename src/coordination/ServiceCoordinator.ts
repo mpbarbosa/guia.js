@@ -346,18 +346,13 @@ class ServiceCoordinator {
                     // Update change detection coordinator
                     this._changeDetectionCoordinator.setCurrentPosition(position);
                     
-                    // Update reverse geocoder coordinates
+                    // Sync reverse geocoder coordinates so they are consistent with
+                    // the new position. The actual fetchAddress() call is triggered
+                    // automatically via the ReverseGeocoder observer wired to
+                    // PositionManager — no need to call it explicitly here, which
+                    // would cause a duplicate geocode request.
                     this._reverseGeocoder.latitude = position.coords.latitude;
                     this._reverseGeocoder.longitude = position.coords.longitude;
-                    
-                    // Trigger reverse geocoding to fetch address
-                    this._reverseGeocoder.fetchAddress()
-                        .then(() => {
-                            log('ServiceCoordinator: Address fetched successfully');
-                        })
-                        .catch((err) => {
-                            logError('ServiceCoordinator: Failed to fetch address', err);
-                        });
                 }
                 return position;
             })

@@ -143,6 +143,7 @@ class ReverseGeocoder {
 	 * @param {string} url - URL to monitor for fetch updates
 	 */
 	_subscribe(url) {
+		if (!this.fetchManager) return;
 		this.observerSubject.observers.forEach((observer) => {
 			this.fetchManager.subscribe(observer, url);
 		});

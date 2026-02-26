@@ -144,7 +144,7 @@ export const GEOLOCATION_OPTIONS = Object.freeze({
  * A non-zero maximumAge reduces GPS restarts when the user hasn't moved far.
  * 
  * @constant {Object}
- * @since 0.11.3-alpha
+ * @since 0.11.4-alpha
  */
 export const MOBILE_GEOLOCATION_OPTIONS = Object.freeze({
 	enableHighAccuracy: true,

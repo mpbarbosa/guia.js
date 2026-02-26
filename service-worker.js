@@ -1,10 +1,10 @@
 /**
  * Service Worker for Guia Turístico
  * Provides offline support and caching for PWA functionality
- * @version 0.11.3-alpha
+ * @version 0.11.4-alpha
  */
 
-const CACHE_NAME = 'guia-turistico-v0.11.3-alpha-20260225-28ae31e';
+const CACHE_NAME = 'guia-turistico-v0.11.4-alpha-20260225-28ae31e';
 const STATIC_ASSETS = [
   './',
   './index.html'

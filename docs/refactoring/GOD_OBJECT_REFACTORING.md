@@ -4,8 +4,8 @@
 
 **AddressCache.js** (1,146 lines) exhibits the God Object anti-pattern by handling **4+ distinct responsibilities** in a single class. This violates the Single Responsibility Principle (SRP) and creates a maintenance nightmare with excessive coupling, difficult testing, and poor code organization.
 
-**Status**: Analysis Complete | Refactoring Planned  
-**Severity**: CRITICAL (Architectural Issue)  
+**Status**: Analysis Complete | Refactoring Planned
+**Severity**: CRITICAL (Architectural Issue)
 **Recommendation**: Extract responsibilities into focused, cohesive classes
 
 ## Current State Analysis
@@ -172,19 +172,19 @@ class AddressCache {
   // Caching
   generateCacheKey() { }
   evictLeastRecentlyUsed() { }
-  
+
   // Change detection
   hasLogradouroChanged() { }
   hasBairroChanged() { }
   hasMunicipioChanged() { }
-  
+
   // Observer pattern
   subscribe() { }
   notify() { }
-  
+
   // Address processing
   getBrazilianStandardAddress() { }
-  
+
   // ... 100+ more methods
 }
 ```
@@ -226,13 +226,13 @@ class AddressCache {
 describe('AddressCache', () => {
   it('evicts LRU entries', () => {
     const cache = AddressCache.getInstance();
-    
+
     // Must set up:
     // - Observer subscriptions
     // - Change detection state
     // - Address processing
     // - Cache entries
-    
+
     // Just to test cache eviction!
   });
 });
@@ -347,7 +347,7 @@ AFTER: Separated Concerns
 ```javascript
 /**
  * Pure cache implementation with LRU eviction and expiration.
- * 
+ *
  * ONLY handles caching - no change detection, no observers, no processing.
  */
 class AddressCache {
@@ -356,45 +356,45 @@ class AddressCache {
     this.maxCacheSize = config.maxCacheSize || 50;
     this.cacheExpirationMs = config.cacheExpirationMs || 300000;
   }
-  
+
   /**
    * Gets value from cache if exists and not expired.
    */
   get(key) {
     const entry = this.cache.get(key);
     if (!entry) return null;
-    
+
     // Check expiration
     if (Date.now() - entry.timestamp > this.cacheExpirationMs) {
       this.cache.delete(key);
       return null;
     }
-    
+
     // Update access time for LRU
     entry.lastAccessed = Date.now();
     return entry.value;
   }
-  
+
   /**
    * Sets value in cache with automatic LRU eviction.
    */
   set(key, value) {
     this.evictLeastRecentlyUsedIfNeeded();
-    
+
     this.cache.set(key, {
       value,
       timestamp: Date.now(),
       lastAccessed: Date.now()
     });
   }
-  
+
   /**
    * Generates cache key from address data.
    */
   generateCacheKey(data) {
     // Key generation logic (unchanged)
   }
-  
+
   /**
    * Evicts LRU entries when max size reached.
    */
@@ -403,7 +403,7 @@ class AddressCache {
       // LRU eviction logic (unchanged)
     }
   }
-  
+
   /**
    * Removes expired entries.
    */
@@ -415,14 +415,14 @@ class AddressCache {
       }
     }
   }
-  
+
   /**
    * Clears all cache entries.
    */
   clearCache() {
     this.cache.clear();
   }
-  
+
   /**
    * Gets cache size.
    */
@@ -451,7 +451,7 @@ export default AddressCache;
 ```javascript
 /**
  * Detects changes in Brazilian address components.
- * 
+ *
  * Tracks changes across three levels:
  * - Logradouro (street level)
  * - Bairro (neighborhood level)
@@ -463,18 +463,18 @@ class AddressChangeDetector {
     this.previousAddress = null;
     this.currentRawData = null;
     this.previousRawData = null;
-    
+
     // Change tracking
     this.lastLogradouroSignature = null;
     this.lastBairroSignature = null;
     this.lastMunicipioSignature = null;
-    
+
     // Callbacks
     this.logradouroChangeCallback = null;
     this.bairroChangeCallback = null;
     this.municipioChangeCallback = null;
   }
-  
+
   /**
    * Updates current address and detects changes.
    */
@@ -484,7 +484,7 @@ class AddressChangeDetector {
     this.currentAddress = standardAddress;
     this.currentRawData = rawData;
   }
-  
+
   /**
    * Checks if logradouro (street) has changed.
    */
@@ -492,13 +492,13 @@ class AddressChangeDetector {
     if (!this.currentAddress || !this.previousAddress) {
       return false;
     }
-    
+
     const currentSignature = this._generateLogradouroSignature(this.currentAddress);
     const previousSignature = this._generateLogradouroSignature(this.previousAddress);
-    
+
     return currentSignature !== previousSignature;
   }
-  
+
   /**
    * Gets logradouro change details.
    */
@@ -509,9 +509,9 @@ class AddressChangeDetector {
       changed: this.hasLogradouroChanged()
     };
   }
-  
+
   // Similar methods for bairro and municipio...
-  
+
   /**
    * Sets callback for logradouro changes.
    */
@@ -521,7 +521,7 @@ class AddressChangeDetector {
     }
     this.logradouroChangeCallback = callback;
   }
-  
+
   /**
    * Notifies callbacks if changes detected.
    */
@@ -531,16 +531,16 @@ class AddressChangeDetector {
     }
     // Similar for bairro and municipio...
   }
-  
+
   // Private helper methods
   _generateLogradouroSignature(address) {
     // Signature generation logic
   }
-  
+
   _generateBairroSignature(address) {
     // Signature generation logic
   }
-  
+
   _generateMunicipioSignature(address) {
     // Signature generation logic
   }
@@ -568,14 +568,14 @@ import ObserverSubject from '../core/ObserverSubject.js';
 
 /**
  * Observable wrapper for address changes.
- * 
+ *
  * Provides observer pattern for address update notifications.
  */
 class AddressObservable {
   constructor() {
     this.observerSubject = new ObserverSubject();
   }
-  
+
   /**
    * Subscribes observer to address changes.
    */
@@ -585,14 +585,14 @@ class AddressObservable {
     }
     this.observerSubject.subscribe(observer);
   }
-  
+
   /**
    * Unsubscribes observer from address changes.
    */
   unsubscribe(observer) {
     this.observerSubject.unsubscribe(observer);
   }
-  
+
   /**
    * Notifies all observers with address change event.
    */
@@ -604,7 +604,7 @@ class AddressObservable {
       timestamp: Date.now()
     });
   }
-  
+
   /**
    * Gets count of subscribed observers.
    */
@@ -641,7 +641,7 @@ class AddressProcessor {
   constructor() {
     this.extractor = new AddressExtractor();
   }
-  
+
   /**
    * Extracts and creates Brazilian standard address from raw data.
    */
@@ -649,10 +649,10 @@ class AddressProcessor {
     if (!rawData || !rawData.address) {
       return null;
     }
-    
+
     // Extract address components
     const extracted = this.extractor.extract(rawData);
-    
+
     // Create standardized address
     const standardAddress = new BrazilianStandardAddress();
     standardAddress.logradouro = extracted.logradouro;
@@ -661,10 +661,10 @@ class AddressProcessor {
     standardAddress.cidade = extracted.cidade;
     standardAddress.estado = extracted.estado;
     standardAddress.cep = extracted.cep;
-    
+
     return standardAddress;
   }
-  
+
   /**
    * Validates address data.
    */
@@ -698,7 +698,7 @@ import AddressProcessor from './AddressProcessor.js';
 
 /**
  * Coordinates address caching, change detection, and notifications.
- * 
+ *
  * Facade pattern that delegates to focused components.
  */
 class AddressCacheCoordinator {
@@ -708,50 +708,50 @@ class AddressCacheCoordinator {
     this.observable = new AddressObservable();
     this.processor = new AddressProcessor();
   }
-  
+
   /**
    * Gets or computes address from raw data.
    */
   getOrCompute(rawData) {
     // Generate cache key
     const key = this.cache.generateCacheKey(rawData);
-    
+
     // Try cache first
     let address = this.cache.get(key);
     if (address) {
       return address;
     }
-    
+
     // Process address
     address = this.processor.process(rawData);
-    
+
     // Cache result
     this.cache.set(key, address);
-    
+
     // Detect changes
     this.changeDetector.updateAddress(address, rawData);
     if (this.changeDetector.hasLogradouroChanged()) {
       const details = this.changeDetector.getLogradouroChangeDetails();
       this.observable.notify(details, 'logradouro');
     }
-    
+
     return address;
   }
-  
+
   /**
    * Subscribes to address changes.
    */
   subscribe(observer) {
     this.observable.subscribe(observer);
   }
-  
+
   /**
    * Sets change callback.
    */
   setLogradouroChangeCallback(callback) {
     this.changeDetector.setLogradouroChangeCallback(callback);
   }
-  
+
   // Delegate other operations to components...
 }
 

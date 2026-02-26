@@ -111,20 +111,20 @@ import puppeteer from 'puppeteer';
 import http from 'http';
 // ... (HTTP server setup)
 
-const browser = await puppeteer.launch({ 
-    headless: false, 
-    args: ['--no-sandbox'] 
+const browser = await puppeteer.launch({
+    headless: false,
+    args: ['--no-sandbox']
 });
 const page = await browser.newPage();
 
-await page.setGeolocation({ 
-    latitude: -18.4696091, 
-    longitude: -43.4953982, 
-    accuracy: 100 
+await page.setGeolocation({
+    latitude: -18.4696091,
+    longitude: -43.4953982,
+    accuracy: 100
 });
 
 await browser.defaultBrowserContext().overridePermissions(
-    'http://localhost:9999', 
+    'http://localhost:9999',
     ['geolocation']
 );
 

@@ -155,9 +155,9 @@ const position = await service.getSingleLocationUpdate();
 ### Browser Usage with BrowserGeolocationProvider
 
 ```javascript
-import { 
-  GeolocationService, 
-  BrowserGeolocationProvider 
+import {
+  GeolocationService,
+  BrowserGeolocationProvider
 } from './src/guia.js';
 
 // Explicit provider creation
@@ -183,12 +183,12 @@ test('should handle position updates', async () => {
   const mockProvider = new MockGeolocationProvider({
     defaultPosition: mockPosition
   });
-  
+
   const mockPositionManager = { update: jest.fn() };
   const service = new GeolocationService(null, mockProvider, mockPositionManager);
-  
+
   await service.getSingleLocationUpdate();
-  
+
   expect(mockPositionManager.update).toHaveBeenCalledWith(mockPosition);
 });
 ```
@@ -204,10 +204,10 @@ test('should work with browser provider', async () => {
       getCurrentPosition: jest.fn((success) => success(mockPosition))
     }
   };
-  
+
   const browserProvider = new BrowserGeolocationProvider(mockNavigator);
   const service = new GeolocationService(null, browserProvider);
-  
+
   const position = await service.getSingleLocationUpdate();
   expect(position).toBe(mockPosition);
 });
@@ -220,13 +220,13 @@ test('should handle watch updates', (done) => {
   const mockProvider = new MockGeolocationProvider({
     defaultPosition: initialPosition
   });
-  
+
   const service = new GeolocationService(null, mockProvider);
   const watchId = service.watchCurrentLocation();
-  
+
   // Trigger update
   mockProvider.triggerWatchUpdate(newPosition);
-  
+
   setTimeout(() => {
     expect(service.lastKnownPosition).toBe(newPosition);
     service.stopWatching();
@@ -373,7 +373,7 @@ Gets current position once.
 **Parameters**:
 
 - `successCallback: Function` - Called with position on success
-- `errorCallback: Function` - Called with error on failure  
+- `errorCallback: Function` - Called with error on failure
 - `options: Object` - Geolocation options (enableHighAccuracy, timeout, maximumAge)
 
 **Returns**: `void`

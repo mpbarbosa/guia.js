@@ -6,7 +6,7 @@ This document explains the high-cohesion principles applied to the `.github` fol
 
 High cohesion in the `.github` folder means ensuring that each configuration file, workflow, action, and template has a single, well-defined responsibility. Components should be focused, self-contained, and internally consistent, making them easier to understand, test, and maintain.
 
-## What is High Cohesion?
+## What is High Cohesion
 
 **High cohesion** is a software design principle where elements within a module or component are closely related and work together to achieve a single, well-defined purpose. In the context of `.github` configuration:
 
@@ -477,18 +477,18 @@ test-suite:
   steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-    
+
     - name: Install dependencies
       run: npm ci
-    
+
     - name: Run tests
       run: npm test
-    
+
     - name: Generate coverage
       run: npm run test:coverage
 ```
@@ -502,16 +502,16 @@ everything:
   steps:
     - name: Run tests
       run: npm test
-    
+
     - name: Build Docker image
       run: docker build .
-    
+
     - name: Send Slack notification
       run: curl -X POST slack-webhook
-    
+
     - name: Update documentation
       run: npm run docs
-    
+
     - name: Clean old releases
       run: gh release delete old
 ```
@@ -621,7 +621,7 @@ describe('AddressExtractor', () => {
     const result = AddressExtractor.extractSiglaUF('BR-SP');
     expect(result).toBe('SP');
   });
-  
+
   // All tests focus on extraction - one responsibility
 });
 
@@ -631,7 +631,7 @@ describe('AddressCache', () => {
     cache.getBrazilianStandardAddress(data);
     // Verify caching behavior
   });
-  
+
   // All tests focus on caching - different responsibility
 });
 ```
@@ -679,7 +679,7 @@ describe('AddressCache', () => {
   - Integration with low coupling principles
   - Testing and measurement guidelines
 
-## Questions?
+## Questions
 
 If you have questions about applying high cohesion principles or need help refactoring for better cohesion, please open an issue using the [GitHub Configuration template](./ISSUE_TEMPLATE/github_config.md).
 

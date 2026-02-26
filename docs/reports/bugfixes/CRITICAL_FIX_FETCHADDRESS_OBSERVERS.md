@@ -64,25 +64,25 @@ async fetchAddress() {
 async fetchAddress() {
     try {
         const addressData = await this.reverseGeocode();
-        
+
         // Store raw address data
         this.currentAddress = addressData;
-        
+
         // Standardize address for Brazilian format
         if (this.AddressDataExtractor) {
-            this.enderecoPadronizado = 
+            this.enderecoPadronizado =
                 this.AddressDataExtractor.getBrazilianStandardAddress(addressData);
         }
-        
+
         // ✅ Notify observers with complete parameters
         this.notifyObservers(
-            this.currentAddress, 
-            this.enderecoPadronizado, 
+            this.currentAddress,
+            this.enderecoPadronizado,
             ADDRESS_FETCHED_EVENT, // Using constant from config/defaults.js
             false,
             null
         );
-        
+
         return addressData;
     } catch (error) {
         this.error = error;

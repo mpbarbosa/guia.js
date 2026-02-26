@@ -2,9 +2,9 @@
 
 ---
 
-**Last Updated**: 2026-02-17  
-**Version**: 0.11.0-alpha  
-**Status**: Active  
+**Last Updated**: 2026-02-17
+**Version**: 0.11.0-alpha
+**Status**: Active
 **Category**: Architecture
 ---
 
@@ -134,7 +134,7 @@ The application follows a **layered architecture** with clear separation of conc
 
 ```javascript
 // Core position flow
-GeoPosition (immutable) 
+GeoPosition (immutable)
     → PositionManager (singleton state)
     → GeolocationService (browser API)
     → ReverseGeocoder (address lookup)
@@ -143,7 +143,7 @@ GeoPosition (immutable)
 
 #### GeoPosition
 
-**File**: `src/core/GeoPosition.js`  
+**File**: `src/core/GeoPosition.js`
 **Purpose**: Immutable geographic coordinate container
 
 **Key Methods**:
@@ -156,7 +156,7 @@ GeoPosition (immutable)
 
 #### PositionManager
 
-**File**: `src/core/PositionManager.js`  
+**File**: `src/core/PositionManager.js`
 **Purpose**: Centralized position state management
 
 **Key Methods**:
@@ -184,7 +184,7 @@ Nominatim API Response
 
 #### BrazilianStandardAddress
 
-**File**: `src/data/BrazilianStandardAddress.js`  
+**File**: `src/data/BrazilianStandardAddress.js`
 **Purpose**: Brazilian address standardization
 
 **Key Properties**:
@@ -200,7 +200,7 @@ Nominatim API Response
 
 #### AddressCache
 
-**File**: `src/data/AddressCache.js`  
+**File**: `src/data/AddressCache.js`
 **Purpose**: Address caching with change detection
 
 **Architecture**: Composition pattern with 3 components:
@@ -228,7 +228,7 @@ WebGeocodingManager (main coordinator)
 
 #### WebGeocodingManager
 
-**File**: `src/coordination/WebGeocodingManager.js`  
+**File**: `src/coordination/WebGeocodingManager.js`
 **Purpose**: Main application coordinator
 
 **Key Responsibilities**:
@@ -258,7 +258,7 @@ SpeechSynthesisManager (main orchestrator)
 
 #### SpeechSynthesisManager
 
-**File**: `src/speech/SpeechSynthesisManager.js`  
+**File**: `src/speech/SpeechSynthesisManager.js`
 **Purpose**: Speech synthesis orchestration using composition
 
 **Composition Pattern**: 4 focused components
@@ -464,7 +464,7 @@ class HtmlSpeechSynthesisDisplayer {
     this.observer = new AddressSpeechObserver();
     this.textBuilder = new SpeechTextBuilder();
   }
-  
+
   // Simple interface hiding complex composition
   async init() {
     await this.controls.init();
@@ -495,15 +495,15 @@ export class MyViewController {
     this.document = document;
     this.params = params;
   }
-  
+
   async init() {
     // Initialize resources
   }
-  
+
   destroy() {
     // Clean up resources
   }
-  
+
   static async create(document, params) {
     const controller = new MyViewController(document, params);
     await controller.init();
@@ -533,16 +533,16 @@ export class HTMLMyDataDisplayer {
     this.document = document;
     this.element = null;
   }
-  
+
   initialize() {
     this.element = this.document.getElementById('my-data');
   }
-  
+
   display(data) {
     if (!this.element) return;
     this.element.innerHTML = this.formatData(data);
   }
-  
+
   formatData(data) {
     // Format logic
     return `<div>${data}</div>`;
@@ -571,7 +571,7 @@ export class MyService {
   constructor() {
     this.baseUrl = 'https://api.example.com';
   }
-  
+
   async fetchData(params) {
     try {
       const response = await fetch(`${this.baseUrl}/endpoint`, {
@@ -599,16 +599,16 @@ export class MyCoordinator {
     this.service = dependencies.service;
     this.displayer = dependencies.displayer;
   }
-  
+
   async initialize() {
     // Setup coordination logic
   }
-  
+
   async execute() {
     const data = await this.service.fetchData();
     this.displayer.display(data);
   }
-  
+
   destroy() {
     // Clean up resources
   }
@@ -676,6 +676,6 @@ export class MyCoordinator {
 
 ---
 
-**Last Updated**: 2026-02-17  
-**Architecture Version**: 0.11.0-alpha  
+**Last Updated**: 2026-02-17
+**Architecture Version**: 0.11.0-alpha
 **Documentation Status**: ✅ Complete

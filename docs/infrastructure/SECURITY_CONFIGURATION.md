@@ -21,17 +21,17 @@ This guide documents the implementation of security recommendations including en
    NOMINATIM_API_URL=https://nominatim.openstreetmap.org
    NOMINATIM_USER_AGENT=GuiaTuristico/0.11.0
    IBGE_API_URL=https://servicodados.ibge.gov.br
-   
+
    RATE_LIMIT_NOMINATIM=60
    RATE_LIMIT_IBGE=120
-   
+
    ENABLE_SPEECH_SYNTHESIS=true
    ENABLE_OFFLINE_MODE=true
    ENABLE_ANALYTICS=false
-   
+
    DEBUG_MODE=false
    LOG_LEVEL=info
-   
+
    CSP_ENABLED=true
    CORS_ENABLED=false
    ```
@@ -260,7 +260,7 @@ Before deploying to production:
 Check browser console for CSP violation reports:
 
 ```
-Refused to load the script 'https://example.com/script.js' 
+Refused to load the script 'https://example.com/script.js'
 because it violates the following Content Security Policy directive: "script-src 'self'"
 ```
 
@@ -298,5 +298,5 @@ Error: Rate limiter queue full for Nominatim (max: 100)
 
 ---
 
-**Last Updated**: 2026-02-15  
+**Last Updated**: 2026-02-15
 **Version**: 0.11.0-alpha

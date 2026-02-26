@@ -1,7 +1,7 @@
 # Views Layer Documentation
 
-**Version**: 0.9.0+  
-**Location**: `src/views/`  
+**Version**: 0.9.0+
+**Location**: `src/views/`
 **Purpose**: SPA view controllers for route-specific functionality
 
 ## Overview
@@ -17,9 +17,9 @@ The views layer contains JavaScript modules that control individual pages (route
 
 ### 1. Home View (`home.js`)
 
-**Route**: `/` or `#/`  
-**Purpose**: Main location tracking interface  
-**File Size**: ~24KB  
+**Route**: `/` or `#/`
+**Purpose**: Main location tracking interface
+**File Size**: ~24KB
 
 **Responsibilities**:
 
@@ -44,9 +44,9 @@ export function initHome() {
 
 ### 2. Converter View (`converter.js`)
 
-**Route**: `/converter` or `#/converter`  
-**Purpose**: Coordinate-to-address conversion utility  
-**File Size**: ~19KB  
+**Route**: `/converter` or `#/converter`
+**Purpose**: Coordinate-to-address conversion utility
+**File Size**: ~19KB
 
 **Responsibilities**:
 
@@ -87,7 +87,7 @@ Views follow a controller pattern where:
 ### Example Flow
 
 ```
-User navigates to #/ 
+User navigates to #/
   → app.js router calls initHome()
   → home.js initializes ServiceCoordinator
   → ServiceCoordinator creates all display components
@@ -97,14 +97,14 @@ User navigates to #/
 
 ## Design Decisions
 
-### Why Separate Views?
+### Why Separate Views
 
 1. **Route-Specific Logic**: Each route has distinct initialization needs
 2. **Code Splitting**: Potential for lazy loading in future
 3. **Maintainability**: Clear separation between routes reduces coupling
 4. **Testing**: Views can be tested independently
 
-### Why Not Use a Framework?
+### Why Not Use a Framework
 
 - **Lightweight**: No framework overhead, pure JavaScript
 - **Learning**: Demonstrates SPA routing patterns
@@ -134,10 +134,10 @@ User navigates to #/
 // src/views/new-view.js
 export function initNewView() {
   console.log('Initializing new view...');
-  
+
   // DOM initialization
   const container = document.getElementById('newViewContainer');
-  
+
   // Component setup
   // Event handlers
   // Business logic

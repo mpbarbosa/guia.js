@@ -121,21 +121,21 @@ guia_js/
 
 ## 🐛 Troubleshooting
 
-### Tests Failing?
+### Tests Failing
 
 ```bash
 npm test                    # Run to see specific failures
 node -c src/guia.js         # Check syntax errors
 ```
 
-### Syntax Errors?
+### Syntax Errors
 
 ```bash
 npm run validate            # Validate all JS files
 node -c src/filename.js     # Check specific file
 ```
 
-### Web Server Issues?
+### Web Server Issues
 
 ```bash
 # Change port if 9000 is in use
@@ -145,7 +145,7 @@ python3 -m http.server 8000
 curl -I http://localhost:9000/test.html
 ```
 
-### CDN Script Errors?
+### CDN Script Errors
 
 ```bash
 # Verify prerequisites
@@ -226,6 +226,6 @@ cd /path/to/guia_js
 
 ---
 
-**Last Updated**: 2026-01-01  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-01
+**Version**: 0.9.0-alpha
 **Status**: Active Development

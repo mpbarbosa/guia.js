@@ -73,7 +73,7 @@ Use the **Agile Ticket** template to create actionable user stories and tasks. T
 
 ## Referential Transparency
 
-### What is Referential Transparency?
+### What is Referential Transparency
 
 **Referential transparency** is a fundamental principle in functional programming where an expression can be replaced with its resulting value without changing the program's behavior. A function is referentially transparent when:
 
@@ -141,7 +141,7 @@ async function processLocation(lat, lon) {
   if (!validateCoordinates(lat, lon)) {  // Pure
     throw new Error('Invalid coordinates');
   }
-  
+
   const address = await fetchAddress(lat, lon);  // Side effect: I/O
   console.log('Address fetched:', address);  // Side effect: logging
   return address;
@@ -344,11 +344,11 @@ class Subject {
   constructor() {
     this.observers = [];
   }
-  
+
   subscribe(observer) {
     this.observers.push(observer);  // Mutation
   }
-  
+
   unsubscribe(observer) {
     const index = this.observers.indexOf(observer);
     this.observers.splice(index, 1);  // Mutation
@@ -360,11 +360,11 @@ class Subject {
   constructor() {
     this.observers = [];
   }
-  
+
   subscribe(observer) {
     this.observers = [...this.observers, observer];  // New array
   }
-  
+
   unsubscribe(observer) {
     this.observers = this.observers.filter(o => o !== observer);  // New array
   }
@@ -924,7 +924,7 @@ python3 -m http.server 9000
 
 - **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
 
-## Questions?
+## Questions
 
 If you have questions about contributing, please open an issue for discussion.
 
@@ -932,6 +932,6 @@ Thank you for contributing to Guia Turístico! 🎉
 
 ---
 
-**Version**: 0.9.0-alpha  
-**Status**: Active Development  
+**Version**: 0.9.0-alpha
+**Status**: Active Development
 **Last Updated**: 2026-01-28

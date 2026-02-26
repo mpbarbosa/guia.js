@@ -1,9 +1,9 @@
 # AddressDataExtractor API Documentation
 
-**Version:** 0.9.0-alpha  
-**File:** `src/data/AddressDataExtractor.js`  
-**Author:** Marcelo Pereira Barbosa  
-**Since:** 0.9.0-alpha  
+**Version:** 0.9.0-alpha
+**File:** `src/data/AddressDataExtractor.js`
+**Author:** Marcelo Pereira Barbosa
+**Since:** 0.9.0-alpha
 **Status:** ⚠️ **DEPRECATED** - Use `AddressCache` directly for new code
 
 ## Overview
@@ -148,21 +148,21 @@ console.log(extractor.enderecoPadronizado.municipioCompleto());
 
 ### `data`
 
-**Type:** `Object`  
+**Type:** `Object`
 **Access:** Public (read-only after freeze)
 
 Raw geocoding data passed to constructor. Delegated from `AddressExtractor`.
 
 ### `enderecoPadronizado`
 
-**Type:** `BrazilianStandardAddress`  
+**Type:** `BrazilianStandardAddress`
 **Access:** Public (read-only after freeze)
 
 The extracted and standardized Brazilian address object. Delegated from `AddressExtractor`.
 
 ### `referencePlace`
 
-**Type:** `ReferencePlace`  
+**Type:** `ReferencePlace`
 **Access:** Public (read-only after freeze)
 
 Reference place information extracted from geocoding data. Delegated from `AddressExtractor`.
@@ -576,7 +576,7 @@ console.log(cache.getCacheSize());  // Includes both address1 and address2
 
 **⚠️ This class is deprecated and exists only for backward compatibility.**
 
-### Why Deprecated?
+### Why Deprecated
 
 1. **Violation of Single Responsibility Principle**: Original class mixed extraction, caching, and change detection
 2. **Difficult to Test**: Monolithic design made unit testing complex
@@ -651,11 +651,11 @@ describe('AddressDataExtractor (Legacy)', () => {
         state_code: "SP"
       }
     };
-    
+
     const extractor = new AddressDataExtractor(data);
     expect(extractor.enderecoPadronizado.logradouro).toBe("Avenida Paulista");
   });
-  
+
   test('static methods work', () => {
     const address = AddressDataExtractor.getBrazilianStandardAddress(data);
     expect(address).toBeInstanceOf(BrazilianStandardAddress);

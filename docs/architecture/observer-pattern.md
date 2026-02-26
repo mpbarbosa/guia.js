@@ -1,7 +1,7 @@
 # ObserverSubject Pattern Documentation - Guia Turístico
 
-**Version:** 0.9.0-alpha  
-**Date:** 2026-02-11  
+**Version:** 0.9.0-alpha
+**Date:** 2026-02-11
 **Author:** Comprehensive analysis of Observer pattern implementation
 
 ---
@@ -68,7 +68,7 @@ class ObserverSubject {
 /**
  * Subscribes an observer object to receive notifications.
  * Uses immutable pattern - creates new array instead of mutating.
- * 
+ *
  * @param {Object} observer - Observer with update() method
  * @returns {void}
  */
@@ -81,7 +81,7 @@ subscribe(observer) {
 /**
  * Unsubscribes an observer from notifications.
  * Uses immutable pattern - filters to new array.
- * 
+ *
  * @param {Object} observer - Observer to remove
  * @returns {void}
  */
@@ -92,7 +92,7 @@ unsubscribe(observer) {
 /**
  * Notifies all subscribed observer objects.
  * Passes this subject as first argument plus any additional args.
- * 
+ *
  * @param {...*} args - Arguments to pass to update()
  * @returns {void}
  */
@@ -113,7 +113,7 @@ notifyObservers(...args) {
 /**
  * Subscribes a function to receive notifications.
  * Supports functional programming style.
- * 
+ *
  * @param {Function} observerFunction - Callback function
  * @returns {void}
  */
@@ -125,7 +125,7 @@ subscribeFunction(observerFunction) {
 
 /**
  * Unsubscribes a function from notifications.
- * 
+ *
  * @param {Function} observerFunction - Function to remove
  * @returns {void}
  */
@@ -137,7 +137,7 @@ unsubscribeFunction(observerFunction) {
 
 /**
  * Notifies all subscribed function observers.
- * 
+ *
  * @param {...*} args - Arguments to pass to functions
  * @returns {void}
  */
@@ -164,8 +164,8 @@ Classes that **publish events** by maintaining an `observerSubject` instance.
 
 ### 1. PositionManager ⭐
 
-**File:** `src/core/PositionManager.js` (543 lines)  
-**Role:** Subject + Observer (dual-role)  
+**File:** `src/core/PositionManager.js` (543 lines)
+**Role:** Subject + Observer (dual-role)
 **Pattern:** Singleton
 
 #### Subject Behavior
@@ -193,7 +193,7 @@ Object.assign(PositionManager.prototype, withObserver({ excludeNotify: true }));
 /**
  * Observer pattern update method.
  * Called when new position data arrives from GeolocationService.
- * 
+ *
  * @param {Object} position - Geolocation position object
  * @returns {void}
  */
@@ -211,12 +211,12 @@ update(position) {
 
     // Distance/time validation (20m OR 30s)
     const shouldUpdate = this._shouldUpdatePosition(position);
-    
+
     if (shouldUpdate) {
         // Update internal state
         this.lastPosition = new GeoPosition(position);
         this.tsPosicaoAtual = Date.now();
-        
+
         // Notify observers
         this.notifyObservers(PositionManager.strCurrPosUpdate, position, null);
     }
@@ -263,8 +263,8 @@ positionManager.subscribe(myObserver);
 
 ### 2. ReverseGeocoder ⭐
 
-**File:** `src/services/ReverseGeocoder.js` (512 lines)  
-**Role:** Subject + Observer (dual-role)  
+**File:** `src/services/ReverseGeocoder.js` (512 lines)
+**Role:** Subject + Observer (dual-role)
 **Pattern:** Multi-instance (one per coordinate pair)
 
 #### Subject Behavior
@@ -290,7 +290,7 @@ Object.assign(ReverseGeocoder.prototype, withObserver({ excludeNotify: true }));
 /**
  * Observer pattern update method.
  * Called when PositionManager notifies of position changes.
- * 
+ *
  * @param {PositionManager} positionManager - Source of position data
  * @param {string} posEvent - Event type
  * @param {Object} loading - Loading state
@@ -305,14 +305,14 @@ update(positionManager, posEvent, loading, error) {
     }
 
     // Filter events - only process position updates
-    if (posEvent !== PositionManager.strCurrPosUpdate && 
+    if (posEvent !== PositionManager.strCurrPosUpdate &&
         posEvent !== PositionManager.strImmediateAddressUpdate) {
         return;
     }
 
     // Extract coordinates
     const { latitude, longitude } = positionManager.lastPosition;
-    
+
     // Trigger async reverse geocoding
     this.reverseGeocode(latitude, longitude)
         .then(() => {
@@ -382,8 +382,8 @@ reverseGeocoder.subscribe(addressDisplayer);
 
 ### 3. WebGeocodingManager
 
-**File:** `src/coordination/WebGeocodingManager.js` (847 lines)  
-**Role:** Subject only  
+**File:** `src/coordination/WebGeocodingManager.js` (847 lines)
+**Role:** Subject only
 **Pattern:** Main application coordinator
 
 #### Subject Behavior
@@ -413,8 +413,8 @@ Publishes various geocoding workflow events coordinating the entire application 
 
 ### 4. AddressCache
 
-**File:** `src/data/AddressCache.js` (1171 lines)  
-**Role:** Subject only  
+**File:** `src/data/AddressCache.js` (1171 lines)
+**Role:** Subject only
 **Pattern:** Singleton with composition architecture (v0.9.0-alpha)
 
 #### Subject Behavior
@@ -485,8 +485,8 @@ addressCache.subscribe(observer);
 
 ### 5. SpeechQueue
 
-**File:** `src/speech/SpeechQueue.js` (511 lines)  
-**Role:** Subject only  
+**File:** `src/speech/SpeechQueue.js` (511 lines)
+**Role:** Subject only
 **Pattern:** Priority queue with dual notification
 
 #### Subject Behavior
@@ -536,8 +536,8 @@ notifyFunctionObservers() {
 }
 
 // Mixin partial delegation (line 499)
-Object.assign(SpeechQueue.prototype, { 
-    unsubscribe: mixinMethods.unsubscribe 
+Object.assign(SpeechQueue.prototype, {
+    unsubscribe: mixinMethods.unsubscribe
 });
 ```
 
@@ -600,14 +600,14 @@ Subscribe to **PositionManager** for position change notifications.
 
 #### 1. HTMLPositionDisplayer
 
-**File:** `src/html/HTMLPositionDisplayer.js` (303 lines)  
+**File:** `src/html/HTMLPositionDisplayer.js` (303 lines)
 **Subscribes To:** PositionManager
 
 ```javascript
 /**
  * Observer pattern update method.
  * Called when position changes occur.
- * 
+ *
  * @param {PositionManager} positionManager - Source of position data
  * @param {string} posEvent - Event type
  * @param {Object} loading - Loading state
@@ -642,7 +642,7 @@ update(positionManager, posEvent, loading, error) {
     // Display coordinates
     const { latitude, longitude, accuracy } = position;
     this.displayCoordinates(latitude, longitude, accuracy);
-    
+
     // Update Google Maps link
     this.updateMapLink(latitude, longitude);
 }
@@ -664,14 +664,14 @@ update(positionManager, posEvent, loading, error) {
 
 #### 2. HtmlText
 
-**File:** `src/html/HtmlText.js` (152 lines)  
+**File:** `src/html/HtmlText.js` (152 lines)
 **Subscribes To:** PositionManager
 
 ```javascript
 /**
  * Observer pattern update method.
  * Generic text display for position data.
- * 
+ *
  * @param {PositionManager} positionManager - Source of position data
  * @param {string} posEvent - Event type
  * @param {Object} loading - Loading state
@@ -693,7 +693,7 @@ update(positionManager, posEvent, loading, error) {
 
     if (positionManager && positionManager.lastPosition) {
         const { latitude, longitude } = positionManager.lastPosition;
-        this.element.textContent = 
+        this.element.textContent =
             `Posição: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
     }
 }
@@ -703,14 +703,14 @@ update(positionManager, posEvent, loading, error) {
 
 #### 3. Chronometer
 
-**File:** `src/timing/Chronometer.js` (356 lines)  
+**File:** `src/timing/Chronometer.js` (356 lines)
 **Subscribes To:** PositionManager
 
 ```javascript
 /**
  * Observer pattern update method.
  * Resets/updates timer on position changes.
- * 
+ *
  * @param {PositionManager} positionManager - Source of position data
  * @param {string} eventType - Event type
  * @param {Object} data - Additional event data
@@ -721,11 +721,11 @@ update(positionManager, eventType, data, error) {
     // Only respond to actual position updates
     if (eventType === PositionManager.strCurrPosUpdate ||
         eventType === PositionManager.strImmediateAddressUpdate) {
-        
+
         // Reset timer for new position
         this.reset();
         this.start();
-        
+
         log("(Chronometer) Timer reset on position update");
     }
 }
@@ -748,14 +748,14 @@ Subscribe to **ReverseGeocoder** for address data notifications.
 
 #### 4. HTMLAddressDisplayer ✅
 
-**File:** `src/html/HTMLAddressDisplayer.js` (386 lines)  
+**File:** `src/html/HTMLAddressDisplayer.js` (386 lines)
 **Subscribes To:** ReverseGeocoder
 
 ```javascript
 /**
  * Observer pattern update method.
  * Called when address changes occur.
- * 
+ *
  * @param {Object} addressData - Raw geocoding data from Nominatim
  * @param {BrazilianStandardAddress} enderecoPadronizado - Standardized address
  * @param {string} posEvent - Event type (ADDRESS_FETCHED_EVENT)
@@ -778,7 +778,7 @@ update(addressData, enderecoPadronizado, posEvent, loading, error) {
 
     // Handle error state
     if (error) {
-        this.element.innerHTML = 
+        this.element.innerHTML =
             `<p class="error">Erro ao carregar endereço: ${error.message}</p>`;
         return;
     }
@@ -813,14 +813,14 @@ update(addressData, enderecoPadronizado, posEvent, loading, error) {
 
 #### 5. HTMLHighlightCardsDisplayer
 
-**File:** `src/html/HTMLHighlightCardsDisplayer.js` (309 lines)  
+**File:** `src/html/HTMLHighlightCardsDisplayer.js` (309 lines)
 **Subscribes To:** ReverseGeocoder
 
 ```javascript
 /**
  * Observer pattern update method.
  * Updates municipality and neighborhood highlight cards.
- * 
+ *
  * @param {Object} addressData - Raw geocoding data
  * @param {BrazilianStandardAddress} enderecoPadronizado - Standardized address
  * @returns {void}
@@ -860,14 +860,14 @@ update(addressData, enderecoPadronizado) {
 
 #### 6. HTMLReferencePlaceDisplayer
 
-**File:** `src/html/HTMLReferencePlaceDisplayer.js` (302 lines)  
+**File:** `src/html/HTMLReferencePlaceDisplayer.js` (302 lines)
 **Subscribes To:** ReverseGeocoder
 
 ```javascript
 /**
  * Observer pattern update method.
  * Displays nearby reference places (landmarks).
- * 
+ *
  * @param {Object} addressData - Raw geocoding data
  * @param {BrazilianStandardAddress} brazilianStandardAddress - Standardized address
  * @param {string} posEvent - Event type
@@ -890,7 +890,7 @@ update(addressData, brazilianStandardAddress, posEvent, loading, error) {
 
     // Extract reference place from address data
     const referencePlace = this._extractReferencePlace(addressData);
-    
+
     if (referencePlace) {
         this.displayReferencePlace(referencePlace);
     } else {
@@ -901,13 +901,13 @@ update(addressData, brazilianStandardAddress, posEvent, loading, error) {
 _extractReferencePlace(addressData) {
     // Check for shop, amenity, railway, building, place
     const categories = ['shop', 'amenity', 'railway', 'building', 'place'];
-    
+
     for (const category of categories) {
         if (addressData[category]) {
             return new ReferencePlace(addressData);
         }
     }
-    
+
     return null;
 }
 ```
@@ -924,14 +924,14 @@ _extractReferencePlace(addressData) {
 
 #### 7. HTMLSidraDisplayer
 
-**File:** `src/html/HTMLSidraDisplayer.js` (258 lines)  
+**File:** `src/html/HTMLSidraDisplayer.js` (258 lines)
 **Subscribes To:** ReverseGeocoder
 
 ```javascript
 /**
  * Observer pattern update method.
  * Fetches and displays IBGE SIDRA demographic data.
- * 
+ *
  * @param {Object} addressData - Raw geocoding data
  * @param {BrazilianStandardAddress} enderecoPadronizado - Standardized address
  * @param {string} posEvent - Event type
@@ -987,16 +987,16 @@ update(addressData, enderecoPadronizado, posEvent, loading, error) {
 
 #### 8. HtmlSpeechSynthesisDisplayer
 
-**File:** `src/html/HtmlSpeechSynthesisDisplayer.js` (779 lines)  
+**File:** `src/html/HtmlSpeechSynthesisDisplayer.js` (779 lines)
 **Subscribes To:** ReverseGeocoder, AddressCache
 
 ```javascript
 /**
  * Observer pattern update method.
  * Handles address changes and triggers speech synthesis.
- * 
+ *
  * Flexible signature supporting multiple notification contexts.
- * 
+ *
  * @param {Object} currentAddress - Current address data
  * @param {string|Object} enderecoPadronizadoOrEvent - Standardized address or event
  * @param {string} posEvent - Position event type
@@ -1007,13 +1007,13 @@ update(addressData, enderecoPadronizado, posEvent, loading, error) {
 update(currentAddress, enderecoPadronizadoOrEvent, posEvent, loadingOrChangeDetails, error) {
     // Context detection: From ReverseGeocoder or AddressCache?
     const isFromReverseGeocoder = (posEvent === ADDRESS_FETCHED_EVENT);
-    const isFromAddressCache = (typeof loadingOrChangeDetails === 'object' && 
+    const isFromAddressCache = (typeof loadingOrChangeDetails === 'object' &&
                                 loadingOrChangeDetails?.fieldName);
 
     if (isFromReverseGeocoder) {
         // Initial address load - lower priority
         this._handleAddressFetch(currentAddress, enderecoPadronizadoOrEvent);
-    } 
+    }
     else if (isFromAddressCache) {
         // Field change - prioritized speech
         const changeDetails = loadingOrChangeDetails;
@@ -1034,10 +1034,10 @@ _handleFieldChange(fieldName, newValue, oldValue) {
     };
 
     const priority = priorities[fieldName] || 0;
-    
+
     // Generate Portuguese speech text
     const speechText = this._generateSpeechText(fieldName, newValue);
-    
+
     // Enqueue to SpeechQueue
     if (this.speechQueue && speechText) {
         this.speechQueue.enqueue(speechText, priority);
@@ -1051,7 +1051,7 @@ _generateSpeechText(fieldName, value) {
         'bairro': `Você entrou no bairro ${value}`,
         'logradouro': `Você está em ${value}`
     };
-    
+
     return templates[fieldName] || null;
 }
 ```
@@ -1076,15 +1076,15 @@ _generateSpeechText(fieldName, value) {
 
 #### 9. AddressDataStore
 
-**File:** `src/data/AddressDataStore.js** (253 lines)  
-**Subscribes To:** Internal (AddressCache composition)  
+**File:** `src/data/AddressDataStore.js** (253 lines)
+**Subscribes To:** Internal (AddressCache composition)
 **Role:** Observer in composition architecture
 
 ```javascript
 /**
  * Internal update method for address data storage.
  * Part of AddressCache's composition architecture.
- * 
+ *
  * @param {BrazilianStandardAddress} newAddress - New standardized address
  * @param {Object} newRawData - New raw geocoding data
  * @returns {void}
@@ -1339,11 +1339,11 @@ All Subject classes provide these methods (via composition or mixin):
 ```javascript
 /**
  * Subscribes an observer to receive notifications.
- * 
+ *
  * @param {Object} observer - Observer object with update() method
  * @returns {void}
  * @throws {TypeError} If observer doesn't have update() method (SpeechQueue only)
- * 
+ *
  * @example
  * const myObserver = {
  *     update(subject, ...args) {
@@ -1359,10 +1359,10 @@ All Subject classes provide these methods (via composition or mixin):
 ```javascript
 /**
  * Unsubscribes an observer from notifications.
- * 
+ *
  * @param {Object} observer - Observer to remove
  * @returns {void}
- * 
+ *
  * @example
  * subject.unsubscribe(myObserver);
  */
@@ -1374,14 +1374,14 @@ All Subject classes provide these methods (via composition or mixin):
 /**
  * Notifies all subscribed observers.
  * Passes subject as first argument, plus any additional arguments.
- * 
+ *
  * @param {...*} args - Arguments to pass to observers
  * @returns {void}
- * 
+ *
  * @example
  * // PositionManager
  * this.notifyObservers(this, 'strCurrPosUpdate', positionData, null);
- * 
+ *
  * // ReverseGeocoder
  * this.notifyObservers(addressData, standardized, ADDRESS_FETCHED_EVENT, false, null);
  */
@@ -1397,25 +1397,25 @@ All Observer classes must implement:
 /**
  * Observer pattern update method.
  * Called when subject notifies of state changes.
- * 
+ *
  * Signature varies by Subject:
- * 
+ *
  * From PositionManager:
  * @param {PositionManager} positionManager - Source
  * @param {string} posEvent - Event type
  * @param {Object} data - Position data
  * @param {Object} error - Error if any
- * 
+ *
  * From ReverseGeocoder:
  * @param {Object} addressData - Raw geocoding data
  * @param {BrazilianStandardAddress} enderecoPadronizado - Standardized address
  * @param {string} posEvent - Event type (ADDRESS_FETCHED_EVENT)
  * @param {boolean} loading - Loading state
  * @param {Object} error - Error if any
- * 
+ *
  * From SpeechQueue:
  * @param {SpeechQueue} queue - Queue instance
- * 
+ *
  * @returns {void}
  */
 ```
@@ -1441,7 +1441,7 @@ class MyPositionObserver {
 
         if (eventType === PositionManager.strCurrPosUpdate) {
             const { latitude, longitude } = positionManager.lastPosition;
-            this.element.textContent = 
+            this.element.textContent =
                 `New position: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
         }
     }
@@ -1495,7 +1495,7 @@ const addressCache = AddressCache.getInstance();
 // Monitor neighborhood changes
 addressCache.registerCallback('bairro', (currentValue, previousValue, fieldName) => {
     console.log(`Neighborhood changed from "${previousValue}" to "${currentValue}"`);
-    
+
     // Trigger custom action
     showNotification(`You entered ${currentValue}`);
 });
@@ -1503,7 +1503,7 @@ addressCache.registerCallback('bairro', (currentValue, previousValue, fieldName)
 // Monitor municipality changes
 addressCache.registerCallback('municipio', (currentValue, previousValue) => {
     console.log(`Municipality: ${previousValue} → ${currentValue}`);
-    
+
     // Update UI
     updateMunicipalityBadge(currentValue);
 });
@@ -1519,7 +1519,7 @@ const queueMonitor = {
     update(queue) {
         const size = queue.size();
         console.log(`Queue size: ${size}`);
-        
+
         if (queue.hasItems()) {
             const nextItem = queue.peek();
             console.log(`Next speech: "${nextItem.text}" (priority ${nextItem.priority})`);
@@ -1552,49 +1552,49 @@ async function setupGeolocationChain() {
     // 1. Get singletons
     const positionManager = PositionManager.getInstance();
     const addressCache = AddressCache.getInstance();
-    
+
     // 2. Create displayers
     const positionDisplayer = new HTMLPositionDisplayer(
         document.getElementById('coordinates')
     );
-    
+
     const addressDisplayer = new HTMLAddressDisplayer(
         document.getElementById('address-details'),
         document.getElementById('standardized-address')
     );
-    
+
     const highlightCards = new HTMLHighlightCardsDisplayer();
-    
+
     const sidraDisplayer = new HTMLSidraDisplayer(
         document.getElementById('sidra-data')
     );
-    
+
     // 3. Create speech synthesis
     const speechQueue = new SpeechQueue();
     const speechSynthesisDisplayer = new HtmlSpeechSynthesisDisplayer(speechQueue);
-    
+
     // 4. Create reverse geocoder
     const reverseGeocoder = new ReverseGeocoder(0, 0); // Initial coords
-    
+
     // 5. Wire position observers
     positionManager.subscribe(positionDisplayer);
     positionManager.subscribe(reverseGeocoder);
-    
+
     // 6. Wire address observers
     reverseGeocoder.subscribe(addressDisplayer);
     reverseGeocoder.subscribe(highlightCards);
     reverseGeocoder.subscribe(sidraDisplayer);
     reverseGeocoder.subscribe(speechSynthesisDisplayer);
-    
+
     // 7. Wire address change observers
     addressCache.registerCallback('bairro', (current, previous) => {
         speechSynthesisDisplayer.handleBairroChange(current, previous);
     });
-    
+
     addressCache.registerCallback('municipio', (current, previous) => {
         speechSynthesisDisplayer.handleMunicipioChange(current, previous);
     });
-    
+
     // 8. Wire speech queue observers
     const speechManager = new SpeechSynthesisManager();
     speechQueue.subscribeFunction((queue) => {
@@ -1602,7 +1602,7 @@ async function setupGeolocationChain() {
             speechManager.processQueue(queue);
         }
     });
-    
+
     console.log('✓ Complete observer pattern chain initialized');
 }
 
@@ -1624,11 +1624,11 @@ subscribe(observer) {
         warn('Cannot subscribe null observer');
         return;
     }
-    
+
     if (typeof observer.update !== 'function') {
         throw new TypeError('Observer must have update() method');
     }
-    
+
     this.observerSubject.subscribe(observer);
 }
 ```
@@ -1645,10 +1645,10 @@ update(subject, ...args) {
             warn('Invalid subject in update');
             return;
         }
-        
+
         // Process notification
         this.handleUpdate(subject, ...args);
-        
+
     } catch (error) {
         error('Observer update failed:', error);
     }
@@ -1665,13 +1665,13 @@ class MyComponent {
         this.subject = PositionManager.getInstance();
         this.subject.subscribe(this);
     }
-    
+
     destroy() {
         // Clean up subscription
         this.subject.unsubscribe(this);
         console.log('Unsubscribed from position updates');
     }
-    
+
     update(positionManager, eventType, data, error) {
         // Handle updates
     }
@@ -1781,12 +1781,12 @@ class MyComponent {
     constructor() {
         this.subjects = [];
     }
-    
+
     subscribeToSubject(subject) {
         subject.subscribe(this);
         this.subjects.push(subject);
     }
-    
+
     destroy() {
         // Unsubscribe from all subjects
         this.subjects.forEach(subject => {
@@ -1903,6 +1903,6 @@ ObserverSubject (base class)
 
 **END OF DOCUMENTATION**
 
-*Generated: 2026-02-11*  
-*Version: 0.9.0-alpha*  
+*Generated: 2026-02-11*
+*Version: 0.9.0-alpha*
 *Guia Turístico - Tourist Guide Application*

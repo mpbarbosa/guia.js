@@ -1,7 +1,7 @@
 # Coverage Gap Deep Dive and Action Plan
 
-**Analysis Type**: 🔶 MEDIUM PRIORITY - Test Coverage Improvement  
-**Analysis Date**: 2026-01-11  
+**Analysis Type**: 🔶 MEDIUM PRIORITY - Test Coverage Improvement
+**Analysis Date**: 2026-01-11
 **Current Status**: ⚠️ Failing branch coverage threshold by 0.4% (72.6% vs 73% target)
 
 ## Executive Summary
@@ -48,8 +48,8 @@
 
 ### 1. GeolocationService.js - 28.03% statements ❌
 
-**Current Coverage**: 28.03% statements, 24.59% branches  
-**Target Coverage**: 75%  
+**Current Coverage**: 28.03% statements, 24.59% branches
+**Target Coverage**: 75%
 **Effort**: 3-4 hours
 
 **Uncovered Lines** (from analysis):
@@ -72,10 +72,10 @@ describe('Permission Handling', () => {
         navigator.geolocation.getCurrentPosition.mockImplementation((success, error) => {
             error(error);
         });
-        
+
         // Test error handling
     });
-    
+
     it('should provide user-friendly permission denied message', () => {
         // Test UI feedback
     });
@@ -88,25 +88,25 @@ describe('Permission Handling', () => {
 describe('Timeout Handling', () => {
     it('should timeout after specified duration', () => {
         jest.useFakeTimers();
-        
+
         // Mock slow response
         navigator.geolocation.getCurrentPosition.mockImplementation(() => {
             // Never calls success or error
         });
-        
+
         const options = { timeout: 5000 };
         service.getCurrentPosition(options);
-        
+
         jest.advanceTimersByTime(6000);
-        
+
         // Should have timed out
         expect(errorCallback).toHaveBeenCalledWith(
             expect.objectContaining({ code: 3 })
         );
-        
+
         jest.useRealTimers();
     });
-    
+
     it('should handle timeout with custom error message', () => {
         // Test timeout messaging
     });
@@ -121,7 +121,7 @@ describe('Position Unavailable', () => {
         const error = { code: 2, message: 'POSITION_UNAVAILABLE' };
         // Test handling
     });
-    
+
     it('should retry after position unavailable', () => {
         // Test retry logic
     });
@@ -135,14 +135,14 @@ describe('Accuracy Options', () => {
     it('should request high accuracy when specified', () => {
         const options = { enableHighAccuracy: true };
         service.getCurrentPosition(options);
-        
+
         expect(navigator.geolocation.getCurrentPosition).toHaveBeenCalledWith(
             expect.any(Function),
             expect.any(Function),
             expect.objectContaining({ enableHighAccuracy: true })
         );
     });
-    
+
     it('should fallback to low accuracy on failure', () => {
         // Test fallback logic
     });
@@ -155,8 +155,8 @@ describe('Accuracy Options', () => {
 
 ### 2. ReverseGeocoder.js - 35.59% statements ❌
 
-**Current Coverage**: 35.59% statements, 32.35% branches  
-**Target Coverage**: 75%  
+**Current Coverage**: 35.59% statements, 32.35% branches
+**Target Coverage**: 75%
 **Effort**: 2-3 hours
 
 **Uncovered Lines**:
@@ -174,30 +174,30 @@ describe('Accuracy Options', () => {
 describe('Network Error Handling', () => {
     it('should handle network timeout', async () => {
         fetch.mockRejectedValue(new Error('Network timeout'));
-        
+
         const result = await geocoder.reverse(lat, lon);
-        
+
         expect(result).toHaveProperty('error');
         expect(result.error).toContain('timeout');
     });
-    
+
     it('should retry on network failure', async () => {
         // First call fails, second succeeds
         fetch
             .mockRejectedValueOnce(new Error('Network error'))
             .mockResolvedValueOnce({ ok: true, json: () => mockData });
-        
+
         const result = await geocoder.reverse(lat, lon);
-        
+
         expect(fetch).toHaveBeenCalledTimes(2);
         expect(result).toHaveProperty('address');
     });
-    
+
     it('should give up after max retries', async () => {
         fetch.mockRejectedValue(new Error('Network error'));
-        
+
         const result = await geocoder.reverse(lat, lon);
-        
+
         expect(fetch).toHaveBeenCalledTimes(3); // Max retries
         expect(result.error).toContain('maximum retries');
     });
@@ -214,19 +214,19 @@ describe('Rate Limiting', () => {
             status: 429,
             statusText: 'Too Many Requests'
         });
-        
+
         const result = await geocoder.reverse(lat, lon);
-        
+
         expect(result.error).toContain('rate limit');
     });
-    
+
     it('should respect Retry-After header', async () => {
         fetch.mockResolvedValueOnce({
             ok: false,
             status: 429,
             headers: new Map([['Retry-After', '60']])
         });
-        
+
         // Should wait before retrying
     });
 });
@@ -238,13 +238,13 @@ describe('Rate Limiting', () => {
 describe('Coordinate Validation', () => {
     it('should reject invalid latitude', async () => {
         const result = await geocoder.reverse(91, 0); // > 90°
-        
+
         expect(result.error).toContain('Invalid latitude');
     });
-    
+
     it('should reject invalid longitude', async () => {
         const result = await geocoder.reverse(0, 181); // > 180°
-        
+
         expect(result.error).toContain('Invalid longitude');
     });
 });
@@ -259,9 +259,9 @@ describe('Partial API Responses', () => {
             ok: true,
             json: () => ({ lat: '0', lon: '0', display_name: 'Unknown' })
         });
-        
+
         const result = await geocoder.reverse(0, 0);
-        
+
         expect(result).toHaveProperty('display_name');
         expect(result.address).toBeUndefined();
     });
@@ -282,8 +282,8 @@ describe('Partial API Responses', () => {
 
 ### 3. WebGeocodingManager.js - 26.15% statements ❌
 
-**Current Coverage**: 26.15% statements, 29.11% branches  
-**Target Coverage**: 75%  
+**Current Coverage**: 26.15% statements, 29.11% branches
+**Target Coverage**: 75%
 **Effort**: 4-5 hours
 
 **Uncovered Lines**:
@@ -302,25 +302,25 @@ describe('Partial API Responses', () => {
 describe('End-to-End Workflows', () => {
     it('should complete full geocoding workflow', async () => {
         const manager = new WebGeocodingManager(document, config);
-        
+
         // Mock position obtained
         const mockPosition = createMockPosition(-23.55, -46.63);
         geolocationService.getCurrentPosition.mockResolvedValue(mockPosition);
-        
+
         // Mock geocoding response
         const mockAddress = createMockAddress('São Paulo');
         reverseGeocoder.reverse.mockResolvedValue(mockAddress);
-        
+
         // Start workflow
         await manager.startTracking();
-        
+
         // Verify full chain
         expect(geolocationService.getCurrentPosition).toHaveBeenCalled();
         expect(reverseGeocoder.reverse).toHaveBeenCalledWith(-23.55, -46.63);
         expect(positionDisplayer.display).toHaveBeenCalled();
         expect(addressDisplayer.display).toHaveBeenCalled();
     });
-    
+
     it('should handle workflow interruption', async () => {
         // Test cancellation mid-workflow
     });
@@ -334,18 +334,18 @@ describe('Error Propagation', () => {
     it('should propagate geolocation errors to observers', async () => {
         const errorObserver = jest.fn();
         manager.subscribeToErrors(errorObserver);
-        
+
         geolocationService.getCurrentPosition.mockRejectedValue(
             new Error('Permission denied')
         );
-        
+
         await manager.startTracking();
-        
+
         expect(errorObserver).toHaveBeenCalledWith(
             expect.objectContaining({ type: 'GEOLOCATION_ERROR' })
         );
     });
-    
+
     it('should handle geocoding errors gracefully', async () => {
         // Test partial failure handling
     });
@@ -361,12 +361,12 @@ describe('Configuration', () => {
             updateInterval: 1000,
             retryAttempts: 5
         };
-        
+
         const manager = new WebGeocodingManager(document, customConfig);
-        
+
         expect(manager.config).toMatchObject(customConfig);
     });
-    
+
     it('should validate configuration parameters', () => {
         expect(() => {
             new WebGeocodingManager(document, { updateInterval: -1 });
@@ -381,8 +381,8 @@ describe('Configuration', () => {
 
 ### 4. EventCoordinator.js - 27.41% statements ❌
 
-**Current Coverage**: 27.41% statements, 30.76% branches  
-**Target Coverage**: 70%  
+**Current Coverage**: 27.41% statements, 30.76% branches
+**Target Coverage**: 70%
 **Effort**: 2 hours
 
 **Missing Test Scenarios**:
@@ -391,40 +391,40 @@ describe('Configuration', () => {
 describe('Event Handling Edge Cases', () => {
     it('should debounce rapid events', () => {
         jest.useFakeTimers();
-        
+
         // Simulate rapid clicks
         for (let i = 0; i < 10; i++) {
             button.click();
         }
-        
+
         jest.runAllTimers();
-        
+
         // Should only execute once
         expect(handler).toHaveBeenCalledTimes(1);
-        
+
         jest.useRealTimers();
     });
-    
+
     it('should handle event handler errors', () => {
         const failingHandler = jest.fn(() => {
             throw new Error('Handler error');
         });
-        
+
         coordinator.on('click', failingHandler);
-        
+
         // Should not crash
         expect(() => button.click()).not.toThrow();
-        
+
         // Should log error
         expect(console.error).toHaveBeenCalled();
     });
-    
+
     it('should cleanup event listeners on destroy', () => {
         coordinator.on('click', handler);
         coordinator.destroy();
-        
+
         button.click();
-        
+
         // Should not be called after destroy
         expect(handler).not.toHaveBeenCalled();
     });
@@ -437,8 +437,8 @@ describe('Event Handling Edge Cases', () => {
 
 ### 5. ServiceCoordinator.js - 30.76% statements ❌
 
-**Current Coverage**: 30.76% statements, 22.22% branches  
-**Target Coverage**: 70%  
+**Current Coverage**: 30.76% statements, 22.22% branches
+**Target Coverage**: 70%
 **Effort**: 2-3 hours
 
 **Uncovered Lines**:
@@ -454,27 +454,27 @@ describe('Service Initialization', () => {
         const failingService = {
             initialize: jest.fn().mockRejectedValue(new Error('Init failed'))
         };
-        
+
         coordinator.register('failing', failingService);
-        
+
         await expect(coordinator.initializeAll()).rejects.toThrow();
     });
-    
+
     it('should continue initializing other services on partial failure', async () => {
         coordinator.register('failing', { initialize: jest.fn().mockRejectedValue() });
         coordinator.register('working', { initialize: jest.fn().mockResolvedValue() });
-        
+
         await coordinator.initializeAll({ continueOnError: true });
-        
+
         expect(coordinator.get('working').isInitialized()).toBe(true);
     });
-    
+
     it('should respect service dependencies', async () => {
         coordinator.register('serviceA', serviceA, { dependsOn: ['serviceB'] });
         coordinator.register('serviceB', serviceB);
-        
+
         await coordinator.initializeAll();
-        
+
         // serviceB should initialize before serviceA
         expect(serviceB.initialize).toHaveBeenCalledBefore(serviceA.initialize);
     });
@@ -495,8 +495,8 @@ describe('Service Initialization', () => {
 
 ### 6. AddressDataExtractor.js - 63.63% statements ⚠️
 
-**Current Coverage**: 63.63%  
-**Target Coverage**: 80%  
+**Current Coverage**: 63.63%
+**Target Coverage**: 80%
 **Effort**: 1-2 hours
 
 **Uncovered Lines**:
@@ -513,11 +513,11 @@ describe('Address Parsing Edge Cases', () => {
     it('should handle null address components', () => {
         const data = { address: null };
         const result = extractor.extract(data);
-        
+
         expect(result).toHaveProperty('address');
         expect(result.address).toBe('');
     });
-    
+
     it('should parse address with missing city', () => {
         const data = {
             address: {
@@ -526,13 +526,13 @@ describe('Address Parsing Edge Cases', () => {
                 // city missing
             }
         };
-        
+
         const result = extractor.extract(data);
-        
+
         expect(result.address).toContain('Avenida Paulista');
         expect(result.city).toBe('');
     });
-    
+
     it('should handle complex Brazilian address formats', () => {
         // Test various Brazilian address structures
     });
@@ -545,8 +545,8 @@ describe('Address Parsing Edge Cases', () => {
 
 ### 7. AddressCache.js - 75% statements ⚠️
 
-**Current Coverage**: 75%  
-**Target Coverage**: 85%  
+**Current Coverage**: 75%
+**Target Coverage**: 85%
 **Effort**: 2 hours
 
 **Uncovered Lines**:
@@ -559,26 +559,26 @@ describe('Address Parsing Edge Cases', () => {
 describe('Cache Eviction', () => {
     it('should evict oldest entry when cache full', () => {
         const cache = new AddressCache({ maxSize: 3 });
-        
+
         cache.set('key1', 'value1');
         cache.set('key2', 'value2');
         cache.set('key3', 'value3');
         cache.set('key4', 'value4'); // Triggers eviction
-        
+
         expect(cache.has('key1')).toBe(false);
         expect(cache.has('key4')).toBe(true);
     });
-    
+
     it('should respect TTL for cache entries', () => {
         jest.useFakeTimers();
-        
+
         const cache = new AddressCache({ ttl: 5000 });
         cache.set('key', 'value');
-        
+
         jest.advanceTimersByTime(6000);
-        
+
         expect(cache.has('key')).toBe(false);
-        
+
         jest.useRealTimers();
     });
 });
@@ -586,17 +586,17 @@ describe('Cache Eviction', () => {
 describe('Serialization', () => {
     it('should serialize cache to JSON', () => {
         cache.set('key1', { lat: 0, lon: 0 });
-        
+
         const json = cache.toJSON();
-        
+
         expect(JSON.parse(json)).toHaveProperty('key1');
     });
-    
+
     it('should deserialize cache from JSON', () => {
         const json = JSON.stringify({ key1: { lat: 0, lon: 0 } });
-        
+
         cache.fromJSON(json);
-        
+
         expect(cache.get('key1')).toMatchObject({ lat: 0, lon: 0 });
     });
 });
@@ -706,19 +706,19 @@ describe('ModuleName', () => {
         // Initialize mocks
         // Reset state
     });
-    
+
     describe('Happy Path', () => {
         it('should handle normal operation', () => {
             // Test normal flow
         });
     });
-    
+
     describe('Error Handling', () => {
         it('should handle specific error', () => {
             // Test error scenarios
         });
     });
-    
+
     describe('Edge Cases', () => {
         it('should handle edge case', () => {
             // Test boundaries
@@ -738,7 +738,7 @@ navigator.geolocation = {
 };
 
 // Fetch mock
-global.fetch = jest.fn(() => 
+global.fetch = jest.fn(() =>
     Promise.resolve({
         ok: true,
         json: () => Promise.resolve(mockData)
@@ -796,7 +796,7 @@ npm run test:coverage
 
 ---
 
-**Analysis Date**: 2026-01-11  
-**Status**: 📋 Action plan ready  
-**Priority**: 🔶 MEDIUM (below threshold by 0.4%)  
+**Analysis Date**: 2026-01-11
+**Status**: 📋 Action plan ready
+**Priority**: 🔶 MEDIUM (below threshold by 0.4%)
 **Next Action**: Start Phase 1 (Services layer tests)

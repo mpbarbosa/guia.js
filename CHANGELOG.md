@@ -142,7 +142,7 @@ controller.getSingleLocationUpdate();
 controller.startTracking();
 ```
 
-**Breaking Changes**: None (deprecation warnings only)  
+**Breaking Changes**: None (deprecation warnings only)
 **Removal Timeline**: Deprecated methods will be fully removed in v1.0.0
 
 ## [0.9.0-alpha] - 2026-01-28
@@ -270,5 +270,5 @@ Initial release with guia.js integration.
 
 ---
 
-**Last Updated**: 2026-02-09  
+**Last Updated**: 2026-02-09
 **Status**: ✅ Active

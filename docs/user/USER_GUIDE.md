@@ -2,8 +2,8 @@
 
 **Complete guide for using the Guia Turístico tourist guide application.**
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-02-12  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-02-12
 **Status**: Complete
 
 ---
@@ -30,7 +30,7 @@
 
 Guia Turístico is a web-based tourist guide application that helps you explore Brazilian cities using real-time location tracking. The application shows your current location, nearby landmarks, and provides demographic information about your area.
 
-### What Can You Do?
+### What Can You Do
 
 - 📍 **Track your location in real-time** as you walk or drive
 - 🗺️ **View your address** automatically based on your coordinates
@@ -564,7 +564,7 @@ The application is fully accessible with:
 
 ## Privacy & Permissions
 
-### What Data Is Collected?
+### What Data Is Collected
 
 **Guia Turístico respects your privacy:**
 
@@ -589,7 +589,7 @@ The application accesses:
 - ❌ No user accounts or profiles
 - ❌ No tracking cookies for advertising
 
-### What Data Is Shared?
+### What Data Is Shared
 
 **With OpenStreetMap Nominatim**:
 
@@ -688,19 +688,19 @@ To revoke location permission:
 
 ## Frequently Asked Questions
 
-### Q: Does this work offline?
+### Q: Does this work offline
 
 **A**: Partially. Coordinates work offline if your device has GPS. Address lookup requires internet connection.
 
-### Q: Can I use this outside Brazil?
+### Q: Can I use this outside Brazil
 
 **A**: Yes, but Brazilian-specific features (IBGE, municipalities) only work in Brazil.
 
-### Q: Is this free?
+### Q: Is this free
 
 **A**: Yes, Guia Turístico is free and open-source.
 
-### Q: How accurate is the location?
+### Q: How accurate is the location
 
 **A**: Accuracy depends on your device:
 
@@ -708,11 +708,11 @@ To revoke location permission:
 - **Wi-Fi**: ±20-50 meters
 - **Cell towers**: ±100-1000 meters
 
-### Q: Why does it ask for location permission?
+### Q: Why does it ask for location permission
 
 **A**: Browsers require explicit user permission to access location data for privacy reasons.
 
-### Q: Can I embed this in my website?
+### Q: Can I embed this in my website
 
 **A**: See [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) for embedding instructions.
 
@@ -754,6 +754,6 @@ To revoke location permission:
 
 ---
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-02-12  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-02-12
 **Status**: Complete

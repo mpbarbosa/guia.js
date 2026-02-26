@@ -10,7 +10,7 @@ Validate that Milho Verde coordinates (-18.4696091, -43.4953982) are correctly d
 
 1. **Page Structure** (100% passing)
    - `getLocationBtn` element exists
-   - `locationResult` container exists  
+   - `locationResult` container exists
    - `app-content` container exists
    - All DOM elements properly identified
 
@@ -51,7 +51,7 @@ For full end-to-end validation, consider:
 The test successfully validates:
 
 - ✅ Mock geolocation infrastructure works correctly
-- ✅ Coordinate extraction from HTML works correctly  
+- ✅ Coordinate extraction from HTML works correctly
 - ✅ Page structure supports coordinate display
 - ⚠️ End-to-end integration requires architecture changes
 

@@ -4,8 +4,8 @@
 
 The Guia Turístico codebase currently uses the Singleton pattern in 2 classes with 101 total `.getInstance()` calls across the application. While singletons provide convenient global access, they create hidden dependencies, make testing difficult, and introduce tight coupling between components.
 
-**Status**: Analysis Complete | Refactoring Planned  
-**Severity**: Medium  
+**Status**: Analysis Complete | Refactoring Planned
+**Severity**: Medium
 **Recommendation**: Gradual migration to Dependency Injection
 
 ## Current State Analysis
@@ -67,7 +67,7 @@ describe('AddressDataExtractor', () => {
     cache.set('key1', 'value1');
     // Test modifies shared global state
   });
-  
+
   it('test 2', () => {
     const cache = AddressCache.getInstance();
     // This test sees polluted state from test 1!
@@ -147,7 +147,7 @@ const value = AddressCache.getInstance().get('key'); // Which value?
 // NEW - Supports both patterns
 class AddressCache {
   static instance = null;
-  
+
   // Keep singleton pattern (backward compatible)
   static getInstance() {
     if (!AddressCache.instance) {
@@ -155,7 +155,7 @@ class AddressCache {
     }
     return AddressCache.instance;
   }
-  
+
   // NEW - Allow constructor injection
   constructor(config = {}) {
     this.maxCacheSize = config.maxCacheSize || 50;
@@ -197,7 +197,7 @@ class AddressDataExtractor {
     // Default to singleton for backward compatibility
     this.addressCache = addressCache || AddressCache.getInstance();
   }
-  
+
   extractAddress(rawData) {
     return this.addressCache.getOrCompute(rawData);
   }
@@ -226,11 +226,11 @@ class ServiceContainer {
   constructor() {
     this.services = new Map();
   }
-  
+
   register(name, factory) {
     this.services.set(name, { factory, instance: null });
   }
-  
+
   get(name) {
     const service = this.services.get(name);
     if (!service.instance) {
@@ -244,10 +244,10 @@ class ServiceContainer {
 const container = new ServiceContainer();
 
 container.register('addressCache', () => new AddressCache());
-container.register('positionManager', (c) => 
+container.register('positionManager', (c) =>
   new PositionManager(c.get('addressCache'))
 );
-container.register('webGeocodingManager', (c) => 
+container.register('webGeocodingManager', (c) =>
   new WebGeocodingManager(
     document,
     c.get('positionManager'),
@@ -282,9 +282,9 @@ describe('AddressDataExtractor', () => {
       getOrCompute: jest.fn().mockReturnValue('mocked address')
     };
     const extractor = new AddressDataExtractor(mockCache);
-    
+
     const result = extractor.extractAddress(rawData);
-    
+
     expect(mockCache.getOrCompute).toHaveBeenCalledWith(rawData);
     expect(result).toBe('mocked address');
   });
@@ -384,7 +384,7 @@ class AddressCache {
     }
     return AddressCache.instance;
   }
-  
+
   // Prefer constructor injection (new way)
   constructor(config = {}) {
     // ... initialization
@@ -414,17 +414,17 @@ class AddressCache {
 
 ### 1. Keep Singletons (Rejected)
 
-**Pros**: No refactoring needed  
+**Pros**: No refactoring needed
 **Cons**: Technical debt accumulates, testing remains difficult
 
 ### 2. Big-Bang Refactor (Rejected)
 
-**Pros**: Complete solution immediately  
+**Pros**: Complete solution immediately
 **Cons**: Too risky, high chance of regressions
 
 ### 3. Gradual Migration (SELECTED)
 
-**Pros**: Lower risk, maintains stability, testable increments  
+**Pros**: Lower risk, maintains stability, testable increments
 **Cons**: Takes longer, requires discipline
 
 ## Conclusion

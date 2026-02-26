@@ -110,9 +110,9 @@ Use for errors that require attention even in production:
 - Unrecoverable errors
 
 ```javascript
-error('Failed to fetch location', { 
-  code: error.code, 
-  message: error.message 
+error('Failed to fetch location', {
+  code: error.code,
+  message: error.message
 });
 ```
 
@@ -139,8 +139,8 @@ Use for development information (hidden in production by default):
 - Normal operation flow
 
 ```javascript
-log('Position manager initialized', { 
-  trackingInterval: 50000 
+log('Position manager initialized', {
+  trackingInterval: 50000
 });
 ```
 
@@ -154,9 +154,9 @@ Use for detailed debugging (only when explicitly enabled):
 - Detailed flow tracing
 
 ```javascript
-debug('Notifying observers', { 
-  observerCount: observers.length, 
-  eventType: 'position-change' 
+debug('Notifying observers', {
+  observerCount: observers.length,
+  eventType: 'position-change'
 });
 ```
 
@@ -280,7 +280,7 @@ console.log(config);
    array.forEach(item => {
      log('Processing', item); // Floods console
    });
-   
+
    // ✅ GOOD
    log('Processing array', { count: array.length });
    array.forEach(item => {

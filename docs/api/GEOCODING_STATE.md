@@ -1,8 +1,8 @@
 # GeocodingState API Documentation
 
-**Version:** 0.9.0-alpha  
-**Module:** `src/core/GeocodingState.js`  
-**Pattern:** Observer, State Management  
+**Version:** 0.9.0-alpha
+**Module:** `src/core/GeocodingState.js`
+**Pattern:** Observer, State Management
 **Author:** Marcelo Pereira Barbosa
 
 ## Overview
@@ -371,14 +371,14 @@ import GeocodingState from './core/GeocodingState.js';
 
 function setupState() {
   const state = new GeocodingState();
-  
+
   // Subscribe observers
   const observer1 = (s) => console.log('Observer 1:', s);
   const observer2 = (s) => console.log('Observer 2:', s);
-  
+
   state.subscribe(observer1);
   state.subscribe(observer2);
-  
+
   // Cleanup function
   return () => {
     state.clearObservers();
@@ -402,20 +402,20 @@ import GeoPosition from './core/GeoPosition.js';
 class WebGeocodingManager {
   constructor() {
     this.state = new GeocodingState();
-    
+
     // Subscribe to state changes
     this.state.subscribe((snapshot) => {
       this.onPositionChange(snapshot);
     });
   }
-  
+
   onPositionChange(snapshot) {
     if (snapshot.coordinates) {
       console.log('Fetching address for:', snapshot.coordinates);
       // Trigger geocoding...
     }
   }
-  
+
   updatePosition(browserPosition) {
     const position = new GeoPosition(browserPosition);
     this.state.setPosition(position);
@@ -482,8 +482,8 @@ console.log(coords3.latitude); // Original value, not 0
 
 ## History
 
-**Since:** 0.9.0-alpha  
-**Extraction:** Extracted from WebGeocodingManager during Phase 17 refactoring  
+**Since:** 0.9.0-alpha
+**Extraction:** Extracted from WebGeocodingManager during Phase 17 refactoring
 **Purpose:** Separate state management concerns from coordination logic
 
 ## Testing
@@ -498,21 +498,21 @@ describe('GeocodingState', () => {
   test('state management', () => {
     const state = new GeocodingState();
     expect(state.hasPosition()).toBe(false);
-    
+
     const position = new GeoPosition(browserPosition);
     state.setPosition(position);
-    
+
     expect(state.hasPosition()).toBe(true);
     expect(state.getCurrentPosition()).toBe(position);
   });
-  
+
   test('observer notification', () => {
     const state = new GeocodingState();
     const callback = jest.fn();
-    
+
     state.subscribe(callback);
     state.setPosition(position);
-    
+
     expect(callback).toHaveBeenCalledWith(
       expect.objectContaining({
         position: position,
@@ -520,14 +520,14 @@ describe('GeocodingState', () => {
       })
     );
   });
-  
+
   test('defensive copy', () => {
     const state = new GeocodingState();
     state.setPosition(position);
-    
+
     const coords1 = state.getCurrentCoordinates();
     const coords2 = state.getCurrentCoordinates();
-    
+
     expect(coords1).not.toBe(coords2);
     expect(coords1).toEqual(coords2);
   });

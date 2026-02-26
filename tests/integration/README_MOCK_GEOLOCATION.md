@@ -88,13 +88,13 @@ def _setup_mock_geolocation(self):
         }},
         timestamp: Date.now()
     }};
-    
+
     // Create MockGeolocationProvider with the position
     window.mockProvider = new window.MockGeolocationProvider({{
         defaultPosition: window.mockPosition,
         delay: 100  // Small delay to simulate async behavior
     }});
-    
+
     // Create GeolocationService with the mock provider
     window.mockGeolocationService = new window.GeolocationService(
         null,  // locationResult element
@@ -102,11 +102,11 @@ def _setup_mock_geolocation(self):
         null,  // Use default PositionManager
         {{}}   // Default config
     );
-    
+
     console.log('[TEST] Mock geolocation setup complete');
     console.log('[TEST] Mock will return:', window.mockPosition.coords.latitude, window.mockPosition.coords.longitude);
     """
-    
+
     self.driver.execute_script(mock_setup_script)
 ```
 
@@ -121,7 +121,7 @@ Create a test HTML page that uses the mock provider from the start:
     <title>Test - Milho Verde Geolocation</title>
     <script type="module">
         import { MockGeolocationProvider, GeolocationService, WebGeocodingManager } from './src/guia.js';
-        
+
         // Test coordinates for Milho Verde
         const TEST_POSITION = {
             coords: {
@@ -135,26 +135,26 @@ Create a test HTML page that uses the mock provider from the start:
             },
             timestamp: Date.now()
         };
-        
+
         // Create mock provider
         const mockProvider = new MockGeolocationProvider({
             defaultPosition: TEST_POSITION,
             delay: 100
         });
-        
+
         // Create service with mock provider
         const locationResult = document.getElementById('locationResult');
         const mockService = new GeolocationService(
             locationResult,
             mockProvider
         );
-        
+
         // Create manager with mock service
         const manager = new WebGeocodingManager(document, {
             locationResult: 'locationResult',
             geolocationService: mockService
         });
-        
+
         // Make manager available globally for testing
         window.testManager = manager;
     </script>
@@ -175,22 +175,22 @@ If you need to use the existing index.html, inject the mock before the page load
 ```python
 def test_with_pre_initialization_mock(self):
     """Test using mock injected before page script execution."""
-    
+
     # Navigate to page
     self.driver.get(f"{self.base_url}/index.html")
-    
+
     # Wait for guia.js to load
     self.wait.until(
         lambda driver: driver.execute_script(
             "return typeof window.MockGeolocationProvider !== 'undefined'"
         )
     )
-    
+
     # Now inject the mock BEFORE the page initializes its manager
     mock_injection = f"""
     // Store reference to original GeolocationService
     window._OriginalGeolocationService = window.GeolocationService;
-    
+
     // Override GeolocationService constructor to use mock
     window.GeolocationService = function(locationResult, provider, pm, config) {{
         // If no provider specified, use mock instead of browser
@@ -207,26 +207,26 @@ def test_with_pre_initialization_mock(self):
                 }},
                 timestamp: Date.now()
             }};
-            
+
             provider = new window.MockGeolocationProvider({{
                 defaultPosition: mockPosition,
                 delay: 100
             }});
-            
+
             console.log('[TEST] Auto-injected MockGeolocationProvider');
         }}
-        
+
         // Call original constructor with our provider
         return new window._OriginalGeolocationService(locationResult, provider, pm, config);
     }};
-    
+
     // Copy static methods if any
     Object.setPrototypeOf(window.GeolocationService, window._OriginalGeolocationService);
     window.GeolocationService.prototype = window._OriginalGeolocationService.prototype;
     """
-    
+
     self.driver.execute_script(mock_injection)
-    
+
     # Now continue with your test
     get_location_btn = self.wait.until(
         EC.element_to_be_clickable((By.ID, "getLocationBtn"))
@@ -252,7 +252,7 @@ def _setup_guia_mock_geolocation(self):
             "typeof window.WebGeocodingManager !== 'undefined'"
         )
     )
-    
+
     # Create and configure mock provider
     mock_setup = f"""
     // Create mock position
@@ -268,14 +268,14 @@ def _setup_guia_mock_geolocation(self):
         }},
         timestamp: Date.now()
     }};
-    
+
     // Create mock provider
     window.TEST_MOCK_PROVIDER = new window.MockGeolocationProvider({{
         defaultPosition: window.TEST_POSITION,
         supported: true,
         delay: 100
     }});
-    
+
     // Override the global GeolocationService to use our mock
     window._OriginalGeolocationService = window.GeolocationService;
     window.GeolocationService = function(locationResult, provider, pm, config) {{
@@ -287,29 +287,29 @@ def _setup_guia_mock_geolocation(self):
             config
         );
     }};
-    
+
     // Maintain prototype chain
     window.GeolocationService.prototype = window._OriginalGeolocationService.prototype;
-    
+
     console.log('[TEST] MockGeolocationProvider configured successfully');
     console.log('[TEST] Will return coordinates:', window.TEST_POSITION.coords);
-    
+
     return true;
     """
-    
+
     result = self.driver.execute_script(mock_setup)
     if not result:
         raise Exception("Failed to configure MockGeolocationProvider")
-    
+
     print("[TEST] MockGeolocationProvider configured for Milho Verde coordinates")
 
 def test_02_mock_provider_configuration(self):
     """Verify MockGeolocationProvider is properly configured."""
     self.driver.get(f"{self.base_url}/index.html")
-    
+
     # Setup mock
     self._setup_guia_mock_geolocation()
-    
+
     # Verify mock is configured
     verification = self.driver.execute_script("""
         return {
@@ -320,7 +320,7 @@ def test_02_mock_provider_configuration(self):
             longitude: window.TEST_POSITION ? window.TEST_POSITION.coords.longitude : null
         };
     """)
-    
+
     self.assertTrue(verification['providerExists'], "Mock provider should exist")
     self.assertTrue(verification['isSupported'], "Mock provider should be supported")
     self.assertEqual(verification['latitude'], self.TEST_LATITUDE)
@@ -329,26 +329,26 @@ def test_02_mock_provider_configuration(self):
 def test_03_coordinates_with_mock_provider(self):
     """Test that mock provider returns correct coordinates."""
     self.driver.get(f"{self.base_url}/index.html")
-    
+
     # Setup mock
     self._setup_guia_mock_geolocation()
-    
+
     # Trigger geolocation
     get_location_btn = self.wait.until(
         EC.element_to_be_clickable((By.ID, "getLocationBtn"))
     )
     get_location_btn.click()
-    
+
     # Wait for position to be processed
     time.sleep(2)
-    
+
     # Verify coordinates are displayed
     location_result = self.driver.find_element(By.ID, "locationResult")
     result_text = location_result.text.lower()
-    
+
     # Should contain the test coordinates
     self.assertTrue(
-        str(self.TEST_LATITUDE) in result_text or 
+        str(self.TEST_LATITUDE) in result_text or
         "milho verde" in result_text or
         "serro" in result_text,
         f"Result should contain location info, got: {result_text}"
@@ -363,16 +363,16 @@ You can test the mock provider independently:
 def test_mock_provider_direct(self):
     """Test MockGeolocationProvider directly via JavaScript."""
     self.driver.get(f"{self.base_url}/index.html")
-    
+
     result = self.driver.execute_async_script(f"""
         const done = arguments[0];
-        
+
         // Wait for guia.js to load
         if (typeof window.MockGeolocationProvider === 'undefined') {{
             done({{error: 'MockGeolocationProvider not loaded'}});
             return;
         }}
-        
+
         // Create mock position
         const mockPosition = {{
             coords: {{
@@ -386,13 +386,13 @@ def test_mock_provider_direct(self):
             }},
             timestamp: Date.now()
         }};
-        
+
         // Create mock provider
         const provider = new window.MockGeolocationProvider({{
             defaultPosition: mockPosition,
             delay: 100
         }});
-        
+
         // Test getCurrentPosition
         provider.getCurrentPosition(
             (position) => {{
@@ -409,7 +409,7 @@ def test_mock_provider_direct(self):
             {{}}
         );
     """)
-    
+
     self.assertTrue(result['success'], f"Mock provider test failed: {result}")
     self.assertAlmostEqual(result['latitude'], self.TEST_LATITUDE, places=6)
     self.assertAlmostEqual(result['longitude'], self.TEST_LONGITUDE, places=6)

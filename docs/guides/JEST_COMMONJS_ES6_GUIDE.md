@@ -45,7 +45,7 @@ When splitting JavaScript modules, developers face a critical choice between **E
 
 ## Understanding the Problem
 
-### What Causes the Conflict?
+### What Causes the Conflict
 
 The conflict arises from fundamental differences in how module systems work:
 
@@ -859,7 +859,7 @@ describe('MyClass', () => {
    ```javascript
    // Before
    const { Class1, Class2 } = require('../../src/guia.js');
-   
+
    // After
    import { Class1, Class2 } from '../../src/guia.js';
    ```
@@ -871,7 +871,7 @@ describe('MyClass', () => {
    const fs = require('fs');
    const guiaContent = fs.readFileSync('../../src/guia.js', 'utf8');
    eval(guiaContent);
-   
+
    // ✅ AFTER - Use dynamic import
    const guia = await import('../../src/guia.js');
    const { BrazilianStandardAddress } = guia;
@@ -882,7 +882,7 @@ describe('MyClass', () => {
    ```javascript
    // Before
    jest.mock('../../src/module.js');
-   
+
    // After (same, but ensure file path has .js)
    jest.mock('../../src/module.js');
    ```
@@ -1187,7 +1187,7 @@ const { add } = require('./source.js'); // Won't work if source is ES6
 # README.md
 ## Module System
 
-This project uses **ES6 modules** (not CommonJS). 
+This project uses **ES6 modules** (not CommonJS).
 
 - Source: ES6 `import/export`
 - Tests: ES6 with `--experimental-vm-modules`
@@ -1411,7 +1411,7 @@ describe('module tests', () => {
   beforeAll(async () => {
     module = await import('./module.js');
   });
-  
+
   test('test 1', () => { /* use module */ });
   test('test 2', () => { /* use module */ });
 });
@@ -1593,9 +1593,9 @@ node --experimental-vm-modules node_modules/jest/bin/jest.js --watch
 
 ---
 
-**Document Version:** 1.0.0  
-**Last Updated:** 2025-10-15  
-**Author:** GitHub Copilot  
+**Document Version:** 1.0.0
+**Last Updated:** 2025-10-15
+**Author:** GitHub Copilot
 **Target Audience:** Contributors, Maintainers, GitHub Copilot
 
 **Related Issues:**

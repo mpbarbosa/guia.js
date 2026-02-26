@@ -375,7 +375,7 @@ from mock_geolocation_helper import setup_mock_geolocation
 # Setup (one line)
 setup_mock_geolocation(driver, latitude=-18.4696091, longitude=-43.4953982)
 
-# That's it! Your tests now use deterministic mocking.
+# That's it! Your tests now use deterministic mocking
 ```
 
 ---

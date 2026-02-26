@@ -4,8 +4,8 @@
 
 This Selenium integration test validates the complete geolocation workflow for a specific real-world location in Brazil:
 
-**Location**: Milho Verde, Serro, Minas Gerais, Brasil  
-**Coordinates**: Latitude -18.4696091, Longitude -43.4953982  
+**Location**: Milho Verde, Serro, Minas Gerais, Brasil
+**Coordinates**: Latitude -18.4696091, Longitude -43.4953982
 **Expected Address**: Camping Nozinho, 172, Rua Direita, Milho Verde, Serro, MG, 39150-000
 
 ## Test Coverage

@@ -1,7 +1,7 @@
 # Version Bump Quick Reference
 
-**Version**: 0.9.0-alpha → 0.9.0-alpha  
-**Date**: 2026-01-28  
+**Version**: 0.9.0-alpha → 0.9.0-alpha
+**Date**: 2026-01-28
 **Status**: ✅ Ready to Push
 
 ---

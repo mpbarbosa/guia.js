@@ -44,13 +44,13 @@ def _mock_geolocation(self):
         accuracy=10,
         delay=100
     )
-    
+
     if not result['success']:
         raise Exception(f"Failed to setup mock geolocation: {result.get('error')}")
-    
+
     print(f"[TEST] MockGeolocationProvider configured successfully")
     print(f"[TEST] Test coordinates: {result['coordinates']}")
-    
+
     return result
 ```
 

@@ -1,8 +1,8 @@
 # BrazilianStandardAddress API Documentation
 
-**Version:** 0.9.0-alpha  
-**File:** `src/data/BrazilianStandardAddress.js`  
-**Author:** Marcelo Pereira Barbosa  
+**Version:** 0.9.0-alpha
+**File:** `src/data/BrazilianStandardAddress.js`
+**Author:** Marcelo Pereira Barbosa
 **Since:** 0.9.0-alpha
 
 ## Overview
@@ -508,16 +508,16 @@ describe('BrazilianStandardAddress', () => {
     address.bairro = "Bela Vista";
     address.municipio = "São Paulo";
     address.siglaUF = "SP";
-    
+
     expect(address.enderecoCompleto()).toBe(
       "Avenida Paulista, 1578, Bela Vista, São Paulo, SP"
     );
   });
-  
+
   test('formats metropolitan region correctly', () => {
     const address = new BrazilianStandardAddress();
     address.regiaoMetropolitana = "Região Metropolitana do Recife";
-    
+
     expect(address.regiaoMetropolitanaFormatada()).toBe(
       "Região Metropolitana do Recife"
     );

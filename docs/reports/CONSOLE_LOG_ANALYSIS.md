@@ -64,7 +64,7 @@ Added logging to ServiceCoordinator.wireObservers() to verify subscription:
 ```javascript
 console.log('(ServiceCoordinator) Subscribing HTMLHighlightCardsDisplayer to ReverseGeocoder');
 this._reverseGeocoder.subscribe(this._displayers.highlightCards);
-console.log('(ServiceCoordinator) ReverseGeocoder now has', 
+console.log('(ServiceCoordinator) ReverseGeocoder now has',
     this._reverseGeocoder.observerSubject.observers.length, 'observers');
 ```
 
@@ -147,13 +147,13 @@ this.reverseGeocode()
 
 ### ServiceCoordinator Subscription
 
-**File**: `src/coordination/ServiceCoordinator.js`  
+**File**: `src/coordination/ServiceCoordinator.js`
 **Lines**: 227-241
 
 ```javascript
 if (this._reverseGeocoder) {
     positionManager.subscribe(this._reverseGeocoder);
-    
+
     if (this._displayers.highlightCards) {
         this._reverseGeocoder.subscribe(this._displayers.highlightCards);  // Line 234
         log('ServiceCoordinator: Highlight cards displayer wired');

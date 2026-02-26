@@ -1,7 +1,7 @@
 # Architecture Decision Record (ADR)
 
-**Project**: Guia Turístico (Tourist Guide SPA)  
-**Version**: 0.9.0-alpha  
+**Project**: Guia Turístico (Tourist Guide SPA)
+**Version**: 0.9.0-alpha
 **Date**: 2026-01-06
 
 ---
@@ -86,8 +86,8 @@ Before making architectural changes, ask:
 
 ---
 
-**Last Updated**: 2026-01-06  
-**Maintainer**: Architecture Team  
+**Last Updated**: 2026-01-06
+**Maintainer**: Architecture Team
 **Review Frequency**: When considering deployment or distribution changes
 
 **Critical Document**: This ADR prevents inappropriate architectural decisions. Read before making infrastructure changes.

@@ -1,8 +1,8 @@
 # SpeechSynthesisManager API Reference
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-02-12  
-**Status**: Stable  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-02-12
+**Status**: Stable
 **Module**: `src/speech/SpeechSynthesisManager.js`
 
 ---

@@ -1,8 +1,8 @@
 # Python Integration Tests
 
-**Purpose**: Browser-based integration tests using Selenium WebDriver and pytest  
-**Framework**: pytest + Selenium  
-**Python Version**: 3.11+  
+**Purpose**: Browser-based integration tests using Selenium WebDriver and pytest
+**Framework**: pytest + Selenium
+**Python Version**: 3.11+
 **Test Coverage**: Visual hierarchy, console logging, geolocation workflows
 
 ---
@@ -11,7 +11,7 @@
 
 This directory contains **Python-based integration tests** that complement the main Jest test suite. These tests focus on **real browser behavior** using Selenium WebDriver.
 
-### Why Python + Selenium?
+### Why Python + Selenium
 
 The Guia Turístico project uses **dual testing frameworks**:
 
@@ -163,7 +163,7 @@ integration/test_milho_verde_geolocation.py ... [100%]
 
 ### 1. Visual Hierarchy Tests (`test_visual_hierarchy.py`)
 
-**Purpose**: Validate Material Design 3 visual prominence  
+**Purpose**: Validate Material Design 3 visual prominence
 **What it tests**:
 
 - Location cards are larger than action buttons
@@ -180,7 +180,7 @@ pytest integration/test_visual_hierarchy.py -v
 
 ### 2. Console Log Capture Tests (`test_console_logging.py`)
 
-**Purpose**: Test Firefox console log capture library  
+**Purpose**: Test Firefox console log capture library
 **What it tests**:
 
 - Console listener injection
@@ -196,7 +196,7 @@ pytest integration/test_console_logging.py -v
 
 ### 3. Geolocation Workflow Tests (`test_milho_verde_geolocation.py`)
 
-**Purpose**: End-to-end geolocation testing  
+**Purpose**: End-to-end geolocation testing
 **What it tests**:
 
 - Mock geolocation provider integration
@@ -341,19 +341,19 @@ pytest integration/ --html=report.html --self-contained-html
 
 ### Common Issues
 
-**Issue**: `ModuleNotFoundError: No module named 'pytest'`  
+**Issue**: `ModuleNotFoundError: No module named 'pytest'`
 **Solution**: Activate virtual environment: `source venv/bin/activate`
 
-**Issue**: `WebDriverException: 'geckodriver' executable needs to be in PATH`  
+**Issue**: `WebDriverException: 'geckodriver' executable needs to be in PATH`
 **Solution**: Install geckodriver (see Browser Drivers section above)
 
-**Issue**: `selenium.common.exceptions.SessionNotCreatedException: Could not start a new session`  
+**Issue**: `selenium.common.exceptions.SessionNotCreatedException: Could not start a new session`
 **Solution**: Update browser or WebDriver to compatible versions
 
-**Issue**: Tests fail with "Connection refused"  
+**Issue**: Tests fail with "Connection refused"
 **Solution**: Ensure web server is running: `python3 -m http.server 9000`
 
-**Issue**: `HEADLESS=true` not working  
+**Issue**: `HEADLESS=true` not working
 **Solution**: Check environment variable is set before pytest command
 
 ### Debug Mode
@@ -497,8 +497,8 @@ tests/
 
 ---
 
-**Last Updated**: 2026-01-09  
-**Python Version**: 3.11+  
-**Selenium Version**: 4.39.0  
-**pytest Version**: 9.0.2  
+**Last Updated**: 2026-01-09
+**Python Version**: 3.11+
+**Selenium Version**: 4.39.0
+**pytest Version**: 9.0.2
 **Maintained By**: Guia Turístico testing team

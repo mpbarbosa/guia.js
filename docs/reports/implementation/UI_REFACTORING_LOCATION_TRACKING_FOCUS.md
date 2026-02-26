@@ -1,7 +1,7 @@
 # UI Refactoring: Focus on Location Tracking (v0.9.0)
 
-**Date**: 2026-01-15  
-**Type**: User Interface Simplification  
+**Date**: 2026-01-15
+**Type**: User Interface Simplification
 **Impact**: Medium - UI structure changed, no breaking API changes
 
 ---
@@ -185,8 +185,8 @@ npm run validate
 ```html
 <footer class="app-footer">
   <nav aria-label="Ferramentas secundárias">
-    <a href="#/converter">Conversor</a> | 
-    <a href="#/statistics">Estatísticas</a> | 
+    <a href="#/converter">Conversor</a> |
+    <a href="#/statistics">Estatísticas</a> |
     <a href="#/about">Sobre</a>
   </nav>
 </footer>
@@ -274,6 +274,6 @@ If issues are discovered:
 
 ---
 
-**Implementation Complete**: 2026-01-15  
-**Estimated Effort**: 1 hour (HTML/CSS/JS changes + documentation)  
+**Implementation Complete**: 2026-01-15
+**Estimated Effort**: 1 hour (HTML/CSS/JS changes + documentation)
 **Risk Level**: Low (UI-only changes, no API modifications)

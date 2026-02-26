@@ -66,7 +66,7 @@ global.setupParams = { /* config */ };
 
 describe('E2E: Location Test', () => {
     const EXPECTED_DATA = { /* OSM response */ };
-    
+
     beforeEach(() => {
         jest.clearAllMocks();
         global.fetch.mockResolvedValue({
@@ -74,7 +74,7 @@ describe('E2E: Location Test', () => {
             json: async () => EXPECTED_DATA
         });
     });
-    
+
     describe('Test Category', () => {
         test('should validate specific behavior', () => {
             // Test implementation

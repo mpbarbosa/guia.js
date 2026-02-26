@@ -609,16 +609,16 @@ describe('Municipio and Bairro Validation (Detailed)', () => {
       display_name: 'Serro, Minas Gerais',
       address: { municipality: 'Serro' }
     };
-    
+
     // Standardized Brazilian format
     const standardized = new MockBrazilianStandardAddress({
       municipio: 'Serro',
       uf: 'MG'
     });
-    
+
     // Update display
     addressDisplayer.update(address, standardized, 'PositionManager updated', false, null);
-    
+
     // Validate both formats
     expect(mockElement.innerHTML).toContain('"municipality": "Serro"');
     expect(mockStandardizedElement.innerHTML).toContain('Serro');

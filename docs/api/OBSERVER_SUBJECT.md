@@ -1,8 +1,8 @@
 # ObserverSubject API Documentation
 
-**Version:** 0.9.0-alpha  
-**Module:** `src/core/ObserverSubject.js`  
-**Pattern:** Observer (Subject Implementation)  
+**Version:** 0.9.0-alpha
+**Module:** `src/core/ObserverSubject.js`
+**Pattern:** Observer (Subject Implementation)
 **Author:** Marcelo Pereira Barbosa
 
 ## Overview
@@ -278,11 +278,11 @@ class MyClass {
   constructor() {
     this.observerSubject = new ObserverSubject();
   }
-  
+
   subscribe(observer) {
     this.observerSubject.subscribe(observer);
   }
-  
+
   notify(...args) {
     this.observerSubject.notifyObservers(...args);
   }
@@ -376,29 +376,29 @@ class PositionManager {
   constructor(position) {
     this.observerSubject = new ObserverSubject();
     this.lastPosition = null;
-    
+
     if (position) {
       this.update(position);
     }
   }
-  
+
   subscribe(observer) {
     this.observerSubject.subscribe(observer);
   }
-  
+
   unsubscribe(observer) {
     this.observerSubject.unsubscribe(observer);
   }
-  
+
   update(position) {
     this.lastPosition = new GeoPosition(position);
     this.observerSubject.notifyObservers(
-      this, 
+      this,
       'position-updated',
       this.lastPosition
     );
   }
-  
+
   get observers() {
     return this.observerSubject.observers;
   }
@@ -463,14 +463,14 @@ subject.notifyObservers(); // Logs error but continues
 ```javascript
 function createManagedSubject() {
   const subject = new ObserverSubject();
-  
+
   // Setup observers
   const observer1 = { update: () => console.log('Observer 1') };
   const observer2 = { update: () => console.log('Observer 2') };
-  
+
   subject.subscribe(observer1);
   subject.subscribe(observer2);
-  
+
   // Return subject with cleanup function
   return {
     subject,
@@ -520,34 +520,34 @@ describe('ObserverSubject', () => {
   test('subscribe and notify', () => {
     const subject = new ObserverSubject();
     const observer = { update: jest.fn() };
-    
+
     subject.subscribe(observer);
     subject.notifyObservers('test-event', 'data');
-    
+
     expect(observer.update).toHaveBeenCalledWith('test-event', 'data');
   });
-  
+
   test('immutable observer array', () => {
     const subject = new ObserverSubject();
     const observer = { update: () => {} };
-    
+
     const array1 = subject.observers;
     subject.subscribe(observer);
     const array2 = subject.observers;
-    
+
     expect(array1).not.toBe(array2);
     expect(array1.length).toBe(0);
     expect(array2.length).toBe(1);
   });
-  
+
   test('unsubscribe', () => {
     const subject = new ObserverSubject();
     const observer = { update: jest.fn() };
-    
+
     subject.subscribe(observer);
     subject.unsubscribe(observer);
     subject.notifyObservers('test');
-    
+
     expect(observer.update).not.toHaveBeenCalled();
   });
 });
@@ -578,11 +578,11 @@ class OldClass {
   constructor() {
     this.observers = [];
   }
-  
+
   subscribe(observer) {
     this.observers.push(observer); // Direct mutation
   }
-  
+
   notify() {
     this.observers.forEach(o => o.update());
   }
@@ -595,11 +595,11 @@ class NewClass {
   constructor() {
     this.observerSubject = new ObserverSubject();
   }
-  
+
   subscribe(observer) {
     this.observerSubject.subscribe(observer); // Immutable
   }
-  
+
   notify() {
     this.observerSubject.notifyObservers();
   }

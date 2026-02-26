@@ -1,9 +1,9 @@
 # SpeechQueue Class Extraction - Phase 12
 
-**Date:** December 2024  
-**Version:** 0.9.0-alpha  
-**Author:** Marcelo Pereira Barbosa  
-**Phase:** 12 - SpeechQueue Module Extraction  
+**Date:** December 2024
+**Version:** 0.9.0-alpha
+**Author:** Marcelo Pereira Barbosa
+**Phase:** 12 - SpeechQueue Module Extraction
 
 ## Overview
 
@@ -28,10 +28,10 @@ Phase 12 successfully extracts the `SpeechQueue` class from the monolithic `guia
 enqueue(text, priority = 0) {
     // Clean expired items first
     this.cleanExpired();
-    
+
     // Create new SpeechItem
     const item = new SpeechItem(text, priority);
-    
+
     // Find insertion point for priority order (higher priority first)
     let insertIndex = 0;
     for (let i = 0; i < this.items.length; i++) {
@@ -41,15 +41,15 @@ enqueue(text, priority = 0) {
         }
         insertIndex = i + 1;
     }
-    
+
     // Insert item at correct position
     this.items.splice(insertIndex, 0, item);
-    
+
     // Enforce size limit
     if (this.items.length > this.maxSize) {
         this.items = this.items.slice(0, this.maxSize);
     }
-    
+
     // Notify observers
     this.notifyObservers();
     this.notifyFunctionObservers();
@@ -64,32 +64,32 @@ class SpeechQueue {
     constructor() {
         this.observerSubject = new ObserverSubject();
     }
-    
+
     // Object observers with update() method
     subscribe(observer) {
         if (observer == null) {
             console.warn("(SpeechQueue) Attempted to subscribe a null observer.");
             return;
         }
-        
+
         if (typeof observer.update !== 'function') {
             throw new TypeError("Observer must have an update() method");
         }
-        
+
         this.observerSubject.subscribe(observer);
     }
-    
+
     // Function observers for simpler usage
     subscribeFunction(observerFunction) {
         if (observerFunction == null) {
             console.warn("(SpeechQueue) Attempted to subscribe a null observer function.");
             return;
         }
-        
+
         if (typeof observerFunction !== 'function') {
             throw new TypeError("Observer must be a function");
         }
-        
+
         this.observerSubject.subscribeFunction(observerFunction);
     }
 }
@@ -101,7 +101,7 @@ class SpeechQueue {
 // Automatic cleanup of expired items
 cleanExpired() {
     const originalSize = this.items.length;
-    
+
     // Filter out expired items using SpeechItem expiration logic
     this.items = this.items.filter(item => !item.isExpired(this.expirationMs));
 
@@ -152,7 +152,7 @@ constructor(maxSize = 100, expirationMs = 30000) {
     if (!Number.isInteger(maxSize) || maxSize < 1 || maxSize > 1000) {
         throw new RangeError(`maxSize must be an integer between 1 and 1000, got: ${maxSize}`);
     }
-    
+
     if (!Number.isInteger(expirationMs) || expirationMs < 1000 || expirationMs > 300000) {
         throw new RangeError(`expirationMs must be an integer between 1000 and 300000, got: ${expirationMs}`);
     }
@@ -167,11 +167,11 @@ enqueue(text, priority = 0) {
     if (typeof text !== 'string') {
         throw new TypeError(`Text must be a string, got: ${typeof text}`);
     }
-    
+
     if (text.trim() === '') {
         throw new Error("Text cannot be empty or only whitespace");
     }
-    
+
     if (typeof priority !== 'number' || !Number.isFinite(priority)) {
         throw new TypeError(`Priority must be a finite number, got: ${typeof priority}`);
     }
@@ -246,7 +246,7 @@ while (!queue.isEmpty()) {
 const uiObserver = {
     update(queue) {
         document.getElementById('queue-size').textContent = queue.size();
-        document.getElementById('queue-status').textContent = 
+        document.getElementById('queue-status').textContent =
             queue.isEmpty() ? 'Empty' : 'Processing';
     }
 };
@@ -551,8 +551,8 @@ Phase 12 successfully extracts the SpeechQueue class into a robust, standalone m
 
 The extraction maintains 100% backward compatibility while providing a foundation for future enhancements and optimizations. The module follows MP Barbosa project standards for immutability, error handling, and documentation quality.
 
-**Total Lines Added:** 420+ (module) + 750+ (tests) + 50+ (documentation) = 1220+ lines  
-**Files Modified:** 3 (guia.js, SpeechQueue.js, tests)  
-**Test Coverage:** 90+ test cases (unit + integration)  
-**Performance Impact:** Improved (automatic cleanup, size limits)  
+**Total Lines Added:** 420+ (module) + 750+ (tests) + 50+ (documentation) = 1220+ lines
+**Files Modified:** 3 (guia.js, SpeechQueue.js, tests)
+**Test Coverage:** 90+ test cases (unit + integration)
+**Performance Impact:** Improved (automatic cleanup, size limits)
 **Breaking Changes:** None (100% backward compatible)

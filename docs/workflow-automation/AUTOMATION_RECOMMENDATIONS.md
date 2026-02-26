@@ -1,8 +1,8 @@
 # Documentation Automation Recommendations
 
-**Document Type**: Implementation Guide  
-**Created**: 2026-01-11  
-**Status**: 📋 Ready for Implementation  
+**Document Type**: Implementation Guide
+**Created**: 2026-01-11
+**Status**: 📋 Ready for Implementation
 **Priority**: 🟡 HIGH (Quality Assurance Automation)
 
 ## Executive Summary
@@ -55,28 +55,28 @@ on:
 jobs:
   check-versions:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      
+
       - name: Get package version
         id: package-version
         run: |
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "📦 Package version: $VERSION"
-      
+
       - name: Check version in source files
         run: |
           VERSION="${{ steps.package-version.outputs.version }}"
           echo "Checking version references in source files..."
-          
+
           # Check src/app.js
           if ! grep -q "version $VERSION" src/app.js; then
             echo "❌ Version mismatch in src/app.js"
@@ -84,20 +84,20 @@ jobs:
             echo "Found: $(grep -o 'version [0-9.]*-alpha' src/app.js)"
             exit 1
           fi
-          
+
           # Check src/index.html
           if ! grep -q "$VERSION" src/index.html; then
             echo "❌ Version mismatch in src/index.html"
             exit 1
           fi
-          
+
           echo "✅ Source file versions match package.json"
-      
+
       - name: Check version in documentation
         run: |
           VERSION="${{ steps.package-version.outputs.version }}"
           echo "Checking version references in documentation..."
-          
+
           # Check critical docs
           DOCS=(
             "README.md"
@@ -106,7 +106,7 @@ jobs:
             ".github/CONTRIBUTING.md"
             ".github/copilot-instructions.md"
           )
-          
+
           errors=0
           for doc in "${DOCS[@]}"; do
             if [ -f "$doc" ]; then
@@ -118,27 +118,27 @@ jobs:
               fi
             fi
           done
-          
+
           if [ $errors -gt 0 ]; then
             echo "❌ Found $errors documentation files without current version"
             echo "💡 Run: npm run update-version to fix"
             exit 1
           fi
-          
+
           echo "✅ All documentation references current version"
-      
+
       - name: Check for version placeholders
         run: |
           echo "Checking for version placeholders..."
-          
+
           # Find any X.Y.Z or YYYY-MM-DD placeholders
           if grep -r "version X\.Y\.Z\|0\.0\.0\|YYYY-MM-DD" docs/ .github/ --exclude-dir=node_modules; then
             echo "❌ Found version placeholders that need updating"
             exit 1
           fi
-          
+
           echo "✅ No version placeholders found"
-      
+
       - name: Report results
         if: success()
         run: |
@@ -180,25 +180,25 @@ on:
 jobs:
   update-badges:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run tests with JSON output
         run: |
           npm test -- --json --outputFile=test-results.json || true
-      
+
       - name: Parse test results
         id: test-stats
         run: |
@@ -216,11 +216,11 @@ jobs:
               const results = require('./test-results.json');
               (results.numTotalTests || 0) - (results.numPassedTests || 0) - (results.numFailedTests || 0)
             ")
-            
+
             echo "passing=$PASSING" >> $GITHUB_OUTPUT
             echo "total=$TOTAL" >> $GITHUB_OUTPUT
             echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
-            
+
             echo "📊 Test Results:"
             echo "  Passing: $PASSING"
             echo "  Total: $TOTAL"
@@ -229,40 +229,40 @@ jobs:
             echo "❌ No test results file found"
             exit 1
           fi
-      
+
       - name: Update README.md badges
         run: |
           PASSING="${{ steps.test-stats.outputs.passing }}"
           TOTAL="${{ steps.test-stats.outputs.total }}"
           SKIPPED="${{ steps.test-stats.outputs.skipped }}"
-          
+
           # Update test count in README.md
           sed -i "s/Tests: [0-9,]* passing/Tests: ${PASSING} passing/g" README.md
           sed -i "s/[0-9,]* total//${TOTAL} total/g" README.md
           sed -i "s/[0-9,]* skipped/${SKIPPED} skipped/g" README.md
-          
+
           echo "✅ Updated README.md with test counts"
-      
+
       - name: Update documentation
         run: |
           PASSING="${{ steps.test-stats.outputs.passing }}"
           TOTAL="${{ steps.test-stats.outputs.total }}"
-          
+
           # Update .github/copilot-instructions.md
           sed -i "s/1,516 passing//${PASSING} passing/g" .github/copilot-instructions.md
           sed -i "s/1,653 total/${TOTAL} total/g" .github/copilot-instructions.md
-          
+
           # Update docs/INDEX.md
           sed -i "s/${PASSING} passing/${PASSING} passing/g" docs/INDEX.md
           sed -i "s/${TOTAL} total/${TOTAL} total/g" docs/INDEX.md
-          
+
           echo "✅ Updated documentation with test counts"
-      
+
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           if git diff --quiet; then
             echo "No changes to commit"
           else
@@ -271,13 +271,13 @@ jobs:
             git push
             echo "✅ Committed test count updates"
           fi
-      
+
       - name: Create badge URLs
         run: |
           PASSING="${{ steps.test-stats.outputs.passing }}"
           TOTAL="${{ steps.test-stats.outputs.total }}"
           PERCENTAGE=$((PASSING * 100 / TOTAL))
-          
+
           echo "📊 Badge URLs:"
           echo "Tests: https://img.shields.io/badge/tests-${PASSING}%20passing-brightgreen"
           echo "Total: https://img.shields.io/badge/tests-${TOTAL}%20total-blue"
@@ -327,11 +327,11 @@ on:
 jobs:
   check-links:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Check links with Lychee
         uses: lycheeverse/lychee-action@v1
         with:
@@ -348,14 +348,14 @@ jobs:
             --accept 200,403,999
             '**/*.md'
             '**/*.js'
-          
+
           # Fail PR if broken links found
           fail: ${{ github.event_name == 'pull_request' }}
-      
+
       - name: Check critical API endpoints
         run: |
           echo "Checking critical API endpoints..."
-          
+
           # OpenStreetMap Nominatim
           status=$(curl -s -o /dev/null -w "%{http_code}" "https://nominatim.openstreetmap.org/reverse?format=json&lat=0&lon=0" || echo "000")
           if [ "$status" = "200" ] || [ "$status" = "400" ]; then
@@ -363,7 +363,7 @@ jobs:
           else
             echo "❌ OpenStreetMap Nominatim: HTTP $status"
           fi
-          
+
           # IBGE API
           status=$(curl -s -o /dev/null -w "%{http_code}" "https://servicodados.ibge.gov.br/api/v1/localidades/estados" || echo "000")
           if [ "$status" = "200" ]; then
@@ -371,7 +371,7 @@ jobs:
           else
             echo "❌ IBGE API: HTTP $status"
           fi
-          
+
           # MDN (documentation reference)
           status=$(curl -s -o /dev/null -w "%{http_code}" "https://developer.mozilla.org/" || echo "000")
           if [ "$status" = "200" ]; then
@@ -379,7 +379,7 @@ jobs:
           else
             echo "⚠️ MDN: HTTP $status"
           fi
-      
+
       - name: Create issue for broken links
         if: failure() && github.event_name == 'schedule'
         uses: actions/github-script@v6
@@ -390,17 +390,17 @@ jobs:
               repo: context.repo.repo,
               title: '🔗 Broken links detected in documentation',
               body: `Automated link checker found broken links.
-              
+
               **When**: ${new Date().toISOString()}
               **Workflow**: [View Run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
-              
+
               Please review the workflow logs and update broken links.
-              
+
               **Priority Links to Check**:
               - OpenStreetMap Nominatim API
               - IBGE API endpoints
               - MDN documentation references
-              
+
               /cc @maintainers`,
               labels: ['documentation', 'automated', 'maintenance']
             })
@@ -447,55 +447,55 @@ on:
 jobs:
   jsdoc-coverage:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Generate JSDoc
         run: |
           mkdir -p docs/api
           npx jsdoc -c jsdoc.json -r src/ -d docs/api || true
-      
+
       - name: Calculate JSDoc coverage
         id: coverage
         run: |
           echo "Calculating JSDoc coverage..."
-          
+
           # Count total functions/methods
           TOTAL=$(grep -r "function\|class.*{" src/ --include="*.js" | wc -l)
-          
+
           # Count documented functions (with /** */)
           DOCUMENTED=$(grep -B1 "function\|class" src/ --include="*.js" | grep -c "/\*\*" || echo 0)
-          
+
           # Calculate percentage
           if [ $TOTAL -gt 0 ]; then
             PERCENTAGE=$((DOCUMENTED * 100 / TOTAL))
           else
             PERCENTAGE=0
           fi
-          
+
           echo "total=$TOTAL" >> $GITHUB_OUTPUT
           echo "documented=$DOCUMENTED" >> $GITHUB_OUTPUT
           echo "percentage=$PERCENTAGE" >> $GITHUB_OUTPUT
-          
+
           echo "📊 JSDoc Coverage:"
           echo "  Total functions: $TOTAL"
           echo "  Documented: $DOCUMENTED"
           echo "  Coverage: ${PERCENTAGE}%"
-      
+
       - name: Update coverage badge
         run: |
           PERCENTAGE="${{ steps.coverage.outputs.percentage }}"
-          
+
           # Determine badge color
           if [ $PERCENTAGE -ge 90 ]; then
             COLOR="brightgreen"
@@ -506,9 +506,9 @@ jobs:
           else
             COLOR="red"
           fi
-          
+
           echo "Badge URL: https://img.shields.io/badge/JSDoc-${PERCENTAGE}%25-${COLOR}"
-      
+
       - name: Comment on PR
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v6
@@ -519,24 +519,24 @@ jobs:
               documented: ${{ steps.coverage.outputs.documented }},
               percentage: ${{ steps.coverage.outputs.percentage }}
             };
-            
-            const emoji = coverage.percentage >= 90 ? '🎉' : 
+
+            const emoji = coverage.percentage >= 90 ? '🎉' :
                          coverage.percentage >= 70 ? '✅' :
                          coverage.percentage >= 50 ? '⚠️' : '❌';
-            
+
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: `${emoji} **JSDoc Coverage Report**
-              
+
               - **Total Functions**: ${coverage.total}
               - **Documented**: ${coverage.documented}
               - **Coverage**: ${coverage.percentage}%
-              
+
               ${coverage.percentage < 70 ? '⚠️ Coverage below 70% threshold' : '✅ Coverage meets minimum threshold'}`
             })
-      
+
       - name: Publish coverage report
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
@@ -545,13 +545,13 @@ jobs:
           TOTAL="${{ steps.coverage.outputs.total }}"
           DOCUMENTED="${{ steps.coverage.outputs.documented }}"
           DATE=$(date -I)
-          
+
           if [ -f docs/JSDOC_COVERAGE_REPORT.md ]; then
             # Update existing report
             sed -i "s/Last Updated: .*/Last Updated: $DATE/" docs/JSDOC_COVERAGE_REPORT.md
             sed -i "s/Overall Coverage: .*%/Overall Coverage: ${PERCENTAGE}%/" docs/JSDOC_COVERAGE_REPORT.md
           fi
-          
+
           echo "✅ Updated JSDoc coverage report"
 ```
 
@@ -611,7 +611,7 @@ errors=0
 
 for file in "${!FILES[@]}"; do
     pattern="${FILES[$file]}"
-    
+
     if [ -f "$file" ]; then
         if grep -q "$pattern" "$file"; then
             echo "✅ $file"
@@ -898,7 +898,7 @@ git commit -m "docs: update Last Updated dates"
    ```bash
    # Trigger manually
    gh workflow run version-consistency.yml
-   
+
    # Check status
    gh run list --workflow=version-consistency.yml
    ```
@@ -908,7 +908,7 @@ git commit -m "docs: update Last Updated dates"
    ```bash
    # Run locally
    ./scripts/update-test-counts.sh
-   
+
    # Verify changes
    git diff README.md
    ```
@@ -918,7 +918,7 @@ git commit -m "docs: update Last Updated dates"
    ```bash
    # Trigger manually
    gh workflow run link-checker.yml
-   
+
    # Monitor first run
    gh run watch
    ```
@@ -928,7 +928,7 @@ git commit -m "docs: update Last Updated dates"
    ```bash
    # Trigger manually
    gh workflow run jsdoc-coverage.yml
-   
+
    # Check generated docs
    open docs/api/index.html
    ```
@@ -1158,6 +1158,6 @@ npm run update-version
 
 ---
 
-**Created**: 2026-01-11  
-**Status**: 📋 Ready for Implementation  
+**Created**: 2026-01-11
+**Status**: 📋 Ready for Implementation
 **Next Action**: Begin Phase 1 (Version Check + Test Badges)

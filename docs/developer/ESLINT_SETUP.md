@@ -76,7 +76,7 @@ class Counter {
 // ✅ Preferred
 const createCounter = () => {
   let count = 0;
-  
+
   return {
     increment: () => {
       count++;

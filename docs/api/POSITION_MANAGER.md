@@ -1,8 +1,8 @@
 # PositionManager API Documentation
 
-**Version:** 0.9.0-alpha  
-**Module:** `src/core/PositionManager.js`  
-**Pattern:** Singleton, Observer  
+**Version:** 0.9.0-alpha
+**Module:** `src/core/PositionManager.js`
+**Pattern:** Singleton, Observer
 **Author:** Marcelo Pereira Barbosa
 
 ## Overview
@@ -337,11 +337,11 @@ const displayObserver = {
         console.log('Position updated:', manager.latitude, manager.longitude);
         console.log('Accuracy:', manager.accuracyQuality);
         break;
-      
+
       case PositionManager.strCurrPosNotUpdate:
         console.log('Position update rejected (filtering applied)');
         break;
-      
+
       case PositionManager.strImmediateAddressUpdate:
         console.log('Immediate update:', manager.latitude, manager.longitude);
         break;
@@ -394,17 +394,17 @@ describe('PositionManager', () => {
     const instance2 = PositionManager.getInstance();
     expect(instance1).toBe(instance2);
   });
-  
+
   test('update with valid position', () => {
     const manager = PositionManager.getInstance();
     const observer = { update: jest.fn() };
     manager.subscribe(observer);
-    
+
     const position = {
       coords: { latitude: -23.5505, longitude: -46.6333, accuracy: 10 },
       timestamp: Date.now()
     };
-    
+
     manager.update(position);
     expect(observer.update).toHaveBeenCalled();
   });

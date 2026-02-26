@@ -192,7 +192,7 @@ pytest -k "coordinates_display_correctly"
 # Run only Chrome tests
 pytest -k "chrome"
 
-# Run only Firefox tests  
+# Run only Firefox tests
 pytest -k "firefox"
 ```
 
@@ -214,7 +214,7 @@ pytest -k "firefox"
    ```python
    class TestMilhoVerdeGeolocationChrome(unittest.TestCase):
        # Chrome-specific setup and tests
-   
+
    class TestMilhoVerdeGeolocationFirefox(unittest.TestCase):
        # Firefox-specific setup and tests
    ```

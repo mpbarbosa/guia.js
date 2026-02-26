@@ -1,8 +1,8 @@
 # Git Hooks Directory Investigation
 
-**Investigation Date**: 2026-01-06  
-**Project**: guia_turistico v0.9.0-alpha  
-**Focus Area**: `.github/hooks/` directory documentation  
+**Investigation Date**: 2026-01-06
+**Project**: guia_turistico v0.9.0-alpha
+**Focus Area**: `.github/hooks/` directory documentation
 **Status**: ✅ Complete
 
 ---
@@ -265,12 +265,12 @@ git commit -m "docs: update README"
 
 # Output:
 # ═══ Documentation Consistency Check (Pre-commit) ═══
-# 
-# [1/5] Version consistency...
+#
+# [1/5] Version consistency..
 #   ✓ README.md
 #   ✓ docs/INDEX.md
 # ✓ Versions consistent
-# ...
+# ..
 # ═══ ✓ All checks passed ═══
 ```
 
@@ -393,10 +393,10 @@ for hook in .github/hooks/*; do
     if [ -f "$hook" ] && [ -x "$hook" ]; then
         hook_name=$(basename "$hook")
         target=".git/hooks/$hook_name"
-        
+
         cp "$hook" "$target"
         chmod +x "$target"
-        
+
         echo "✓ Installed $hook_name"
     fi
 done
@@ -535,7 +535,7 @@ If all developers install the hook:
 - [ ] Create hook uninstall script
 - [ ] Add metrics/logging to hook
 
-**Total Estimated Time**: 3 hours  
+**Total Estimated Time**: 3 hours
 **Priority**: High (Critical fixes), Medium (Documentation), Low (Enhancements)
 
 ---
@@ -595,6 +595,6 @@ The pre-commit hook is a **valuable quality assurance tool** that provides fast,
 
 ---
 
-**Version**: 1.0  
-**Status**: ✅ Investigation Complete  
+**Version**: 1.0
+**Status**: ✅ Investigation Complete
 **Implementation**: ⏳ Pending Approval

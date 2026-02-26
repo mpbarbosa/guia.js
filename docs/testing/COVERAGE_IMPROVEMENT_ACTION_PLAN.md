@@ -1,8 +1,8 @@
 # Coverage Improvement Action Plan
 
-**Project**: Guia Turístico  
-**Current Coverage**: ~70% overall  
-**Target Coverage**: 80%+ for critical modules  
+**Project**: Guia Turístico
+**Current Coverage**: ~70% overall
+**Target Coverage**: 80%+ for critical modules
 **Timeline**: 2-3 days (Phase 1), 1-2 weeks (complete)
 
 ---
@@ -24,9 +24,9 @@ This action plan addresses critical test coverage gaps identified in the codebas
 
 ### Priority 1: WebGeocodingManager.js ⭐ CRITICAL
 
-**File**: `src/coordination/WebGeocodingManager.js`  
-**Current Lines**: ~971 total  
-**Uncovered Lines**: 500+ (estimated based on DOM dependencies)  
+**File**: `src/coordination/WebGeocodingManager.js`
+**Current Lines**: ~971 total
+**Uncovered Lines**: 500+ (estimated based on DOM dependencies)
 **Target Coverage**: 70% → 85%
 
 #### Gap Analysis
@@ -57,21 +57,21 @@ describe('WebGeocodingManager Integration Tests', () => {
         test('should complete full cycle: permission → location → geocoding → display', async () => {
             // Test end-to-end happy path
         });
-        
+
         test('should handle permission denial gracefully', async () => {
             // Test error path: user denies permission
         });
-        
+
         test('should retry on API failure with exponential backoff', async () => {
             // Test retry logic
         });
     });
-    
+
     describe('State management', () => {
         test('should track loading states correctly', async () => {
             // Verify loading indicators
         });
-        
+
         test('should maintain position history', async () => {
             // Test position tracking
         });
@@ -79,7 +79,7 @@ describe('WebGeocodingManager Integration Tests', () => {
 });
 ```
 
-**Target**: Cover lines 387-422 (error handling)  
+**Target**: Cover lines 387-422 (error handling)
 **Estimated Coverage Gain**: +5%
 
 **1.2 DOM Manipulation Tests** (4 hours)
@@ -90,7 +90,7 @@ Create `__tests__/unit/WebGeocodingManager.dom.test.js`:
 describe('WebGeocodingManager DOM Manipulation', () => {
     let mockDocument;
     let mockElements;
-    
+
     beforeEach(() => {
         // Setup JSDOM mock environment
         mockDocument = {
@@ -98,45 +98,45 @@ describe('WebGeocodingManager DOM Manipulation', () => {
             createElement: jest.fn(),
             addEventListener: jest.fn()
         };
-        
+
         mockElements = {
             startButton: { addEventListener: jest.fn(), disabled: false },
             locationDisplay: { textContent: '' },
             addressDisplay: { innerHTML: '' }
         };
-        
+
         mockDocument.getElementById.mockImplementation((id) => mockElements[id]);
     });
-    
+
     describe('Button initialization', () => {
         test('should bind click handler to start tracking button', () => {
             // Test lines 472-500
         });
-        
+
         test('should disable button while tracking', () => {
             // Test button state management
         });
     });
-    
+
     describe('Display updates', () => {
         test('should update location display with coordinates', () => {
             // Test lines 650-700
         });
-        
+
         test('should update address display with formatted address', () => {
             // Test lines 750-800
         });
-        
+
         test('should handle missing DOM elements gracefully', () => {
             // Test defensive programming
         });
     });
-    
+
     describe('Event listeners', () => {
         test('should attach all required event listeners', () => {
             // Test lines 850-900
         });
-        
+
         test('should remove listeners on cleanup', () => {
             // Test memory leak prevention
         });
@@ -144,8 +144,8 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 });
 ```
 
-**Target**: Cover lines 472-971 (DOM code)  
-**Estimated Coverage Gain**: +15%  
+**Target**: Cover lines 472-971 (DOM code)
+**Estimated Coverage Gain**: +15%
 **Total Phase 1 Coverage Gain**: +20% for WebGeocodingManager.js
 
 ---
@@ -154,8 +154,8 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 
 ### Priority 2: ServiceCoordinator.js
 
-**File**: `src/coordination/ServiceCoordinator.js`  
-**Uncovered Areas**: Observer wiring, lifecycle management  
+**File**: `src/coordination/ServiceCoordinator.js`
+**Uncovered Areas**: Observer wiring, lifecycle management
 **Estimated Effort**: 3 hours
 
 **Action Items**:
@@ -173,8 +173,8 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 
 ### Priority 3: ReverseGeocoder.js
 
-**File**: `src/services/ReverseGeocoder.js`  
-**Uncovered Areas**: API retry logic, error handling  
+**File**: `src/services/ReverseGeocoder.js`
+**Uncovered Areas**: API retry logic, error handling
 **Estimated Effort**: 2 hours
 
 **Action Items**:
@@ -191,8 +191,8 @@ describe('WebGeocodingManager DOM Manipulation', () => {
 
 ### Priority 4: HTMLAddressDisplayer.js
 
-**File**: `src/html/HTMLAddressDisplayer.js`  
-**Current Coverage**: Partial  
+**File**: `src/html/HTMLAddressDisplayer.js`
+**Current Coverage**: Partial
 **Estimated Effort**: 2 hours
 
 **Action Items**:
@@ -344,7 +344,7 @@ __tests__/
     └── UserInteractions.e2e.test.js                     (NEW - 3 hours)
 ```
 
-**Total New Files**: 11  
+**Total New Files**: 11
 **Total Estimated Effort**: 31 hours (~4 working days)
 
 ---
@@ -395,8 +395,8 @@ __tests__/
 
 ### Risk 1: DOM Mocking Complexity
 
-**Probability**: High  
-**Impact**: Medium  
+**Probability**: High
+**Impact**: Medium
 **Mitigation**:
 
 - Use JSDOM for complex DOM operations
@@ -405,8 +405,8 @@ __tests__/
 
 ### Risk 2: Test Flakiness
 
-**Probability**: Medium  
-**Impact**: High  
+**Probability**: Medium
+**Impact**: High
 **Mitigation**:
 
 - Implement proper waits in E2E tests
@@ -415,8 +415,8 @@ __tests__/
 
 ### Risk 3: Time Overruns
 
-**Probability**: Medium  
-**Impact**: Medium  
+**Probability**: Medium
+**Impact**: Medium
 **Mitigation**:
 
 - Buffer 20% extra time per phase
@@ -567,6 +567,6 @@ This action plan provides a systematic approach to improving test coverage from 
 
 ---
 
-**Last Updated**: 2026-01-15  
-**Document Owner**: Development Team  
+**Last Updated**: 2026-01-15
+**Document Owner**: Development Team
 **Review Schedule**: Weekly during implementation

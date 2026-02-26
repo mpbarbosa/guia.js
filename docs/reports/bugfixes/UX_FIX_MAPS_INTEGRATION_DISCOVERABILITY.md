@@ -1,8 +1,8 @@
 # UX Fix: Google Maps Integration Not Discoverable
 
-**Date**: 2026-02-15  
-**Priority**: High  
-**Issue**: Map viewing capabilities hidden, no visible UI for map integration  
+**Date**: 2026-02-15
+**Priority**: High
+**Issue**: Map viewing capabilities hidden, no visible UI for map integration
 
 ## Problem
 
@@ -174,27 +174,27 @@ https://www.google.com/maps/search/?api=1&query=-23.550520,-46.633309
 ```javascript
 class MapsIntegration {
   constructor() { /* Singleton pattern */ }
-  
+
   init() {
     this._setupMapsActionsContainer();
     this._setupCoordinatesObserver();
   }
-  
+
   updateCoordinates(lat, lng) {
     this.currentCoordinates = { latitude, longitude };
     // Update buttons, show container
   }
-  
+
   _handleAction(action) {
     // Generate URL, open in new tab
     // Handle popup blocking, show toasts
   }
-  
+
   _getGoogleMapsUrl(lat, lng) {
     // Mobile: geo: URI
     // Desktop: HTTPS URL
   }
-  
+
   _openUrl(url, action) {
     // window.open() with popup detection
     // Fallback to toast with direct link
@@ -278,7 +278,7 @@ class MapsIntegration {
 ```javascript
 _getGoogleMapsUrl(lat, lng) {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  
+
   if (isMobile) {
     // Opens native Maps app
     return `geo:${lat},${lng}?q=${lat},${lng}`;
@@ -303,7 +303,7 @@ _getGoogleMapsUrl(lat, lng) {
 ```javascript
 _openUrl(url, action) {
   const opened = window.open(url, '_blank', 'noopener,noreferrer');
-  
+
   if (!opened || opened.closed || typeof opened.closed === 'undefined') {
     // Popup blocked
     this._showPopupBlockedMessage(url, action);
@@ -452,7 +452,7 @@ _showPopupBlockedMessage(url, action) {
 **Screen Reader Support**:
 
 ```html
-<button 
+<button
   aria-label="Abrir localização atual no Google Maps"
   data-action="google-maps"
 >
@@ -721,7 +721,7 @@ _showPopupBlockedMessage(url, action) {
 
 ## Summary
 
-**Problem**: Maps integration hidden, users manually copy-paste coordinates  
-**Solution**: 4 visible action buttons (Google Maps, Street View, OSM, Waze) with deep linking  
-**Result**: 83% reduction in navigation steps (6→1), 100% discoverability, mobile deep linking  
+**Problem**: Maps integration hidden, users manually copy-paste coordinates
+**Solution**: 4 visible action buttons (Google Maps, Street View, OSM, Waze) with deep linking
+**Result**: 83% reduction in navigation steps (6→1), 100% discoverability, mobile deep linking
 **Status**: ✅ Production-ready, fully tested, WCAG AAA compliant

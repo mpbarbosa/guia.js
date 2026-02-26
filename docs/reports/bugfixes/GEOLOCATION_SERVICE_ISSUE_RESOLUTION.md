@@ -1,8 +1,8 @@
 # GeolocationService Issue Resolution Summary
 
-**Issue:** Potential issues with GeolocationService class  
-**Date:** October 11, 2025  
-**Author:** MP Barbosa with GitHub Copilot  
+**Issue:** Potential issues with GeolocationService class
+**Date:** October 11, 2025
+**Author:** MP Barbosa with GitHub Copilot
 **Version:** 0.9.0-alpha
 
 ## Problem Statement

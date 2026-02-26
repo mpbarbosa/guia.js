@@ -1,8 +1,8 @@
 # Git Best Practices Guide - Guia Turístico Project
 
-> **📋 Document Scope: Guia Turístico Specific**  
-> This is the **Guia Turístico-specific version** with customizations for this web application project.  
-> **Canonical Reference**: See [/docs/GIT_BEST_PRACTICES_GUIDE.md](../../../../../../docs/GIT_BEST_PRACTICES_GUIDE.md) in the main repository for universal best practices.  
+> **📋 Document Scope: Guia Turístico Specific**
+> This is the **Guia Turístico-specific version** with customizations for this web application project.
+> **Canonical Reference**: See [/docs/GIT_BEST_PRACTICES_GUIDE.md](../../../../../../docs/GIT_BEST_PRACTICES_GUIDE.md) in the main repository for universal best practices.
 > **Main Repository**: [mpbarbosa_site](https://github.com/mpbarbosa/mpbarbosa_site)
 
 ## Overview
@@ -199,6 +199,6 @@ This ensures:
 
 ---
 
-**Project**: Guia.js  
-**Last Updated**: October 20, 2025  
+**Project**: Guia.js
+**Last Updated**: October 20, 2025
 **Author**: MP Barbosa

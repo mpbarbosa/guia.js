@@ -276,15 +276,15 @@ Add to `package.json`:
 
 ## Summary
 
-### Question: Should we test these files?
+### Question: Should we test these files
 
 **Answer**: No, current approach is industry-standard and sufficient.
 
-### Question: Why 0% coverage?
+### Question: Why 0% coverage
 
 **Answer**: Browser-specific UI code that requires real DOM environment.
 
-### Question: Is this a problem?
+### Question: Is this a problem
 
 **Answer**: No, because:
 
@@ -293,12 +293,12 @@ Add to `package.json`:
 3. ✅ Simple code with low bug risk
 4. ✅ Standard practice for browser UI code
 
-### Question: What should we do?
+### Question: What should we do
 
 **Answer**: Document manual testing process and continue current approach.
 
 ---
 
-**Last Reviewed**: 2026-01-09  
-**Next Review**: During next major refactoring or if jsdom compatibility improves  
+**Last Reviewed**: 2026-01-09
+**Next Review**: During next major refactoring or if jsdom compatibility improves
 **Decision**: Keep current testing strategy (manual browser testing for UI code)

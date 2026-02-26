@@ -1,8 +1,8 @@
 # Class Extraction Phase 9: HTMLAddressDisplayer
 
-**Data de Extração:** Dezembro 2024  
-**Versão:** 0.9.0-alpha  
-**Autor:** Marcelo Pereira Barbosa  
+**Data de Extração:** Dezembro 2024
+**Versão:** 0.9.0-alpha
+**Autor:** Marcelo Pereira Barbosa
 **Status:** Concluído
 
 ## Resumo Executivo
@@ -60,20 +60,20 @@ renderAddressHtml(addressData, standardizedAddress = null) {
     if (standardizedAddress && this.enderecoPadronizadoDisplay) {
         this.enderecoPadronizadoDisplay.innerHTML = standardizedAddress.enderecoCompleto();
     }
-    
+
     // Geração de HTML com progressive disclosure
     let html = `<div class="address-info">`;
     html += `<p><strong>Endereço:</strong> ${addressData.display_name || 'Não disponível'}</p>`;
-    
+
     // Detalhes expandíveis
     html += `<details class="address-details">`;
     html += `<summary>Ver detalhes completos</summary>`;
-    
+
     // Renderização categorizadas dos dados
     Object.entries(addressData).forEach(([key, value]) => {
         html += this.formatAddressAttribute(key, value);
     });
-    
+
     html += `</details></div>`;
     return html;
 }
@@ -87,7 +87,7 @@ update(addressData, position, msg, isVisible, error) {
         this.element.innerHTML = `<div class="error">Erro ao carregar endereço: ${error.message}</div>`;
         return;
     }
-    
+
     if (addressData && this.element) {
         this.element.innerHTML = this.renderAddressHtml(addressData);
     }
@@ -102,7 +102,7 @@ formatAddressAttribute(key, value) {
     if (Array.isArray(value)) {
         return `<p><strong>${key}:</strong> [${value.join(', ')}]</p>`;
     }
-    
+
     // Objetos aninhados (ex: address)
     if (typeof value === 'object' && value !== null) {
         let html = `<p><strong>${key}:</strong></p><ul>`;
@@ -112,7 +112,7 @@ formatAddressAttribute(key, value) {
         html += `</ul>`;
         return html;
     }
-    
+
     // Valores primitivos
     return `<p><strong>${key}:</strong> ${value}</p>`;
 }
@@ -295,6 +295,6 @@ A manutenção de 100% de compatibilidade com versões anteriores, combinada com
 
 ---
 
-**Documento gerado automaticamente durante a Fase 9 de extração de classes**  
-**Sistema Guia Turístico - Arquitetura Modular**  
+**Documento gerado automaticamente durante a Fase 9 de extração de classes**
+**Sistema Guia Turístico - Arquitetura Modular**
 **© 2024 Marcelo Pereira Barbosa**

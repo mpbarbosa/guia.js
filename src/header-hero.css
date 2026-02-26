@@ -1,0 +1,207 @@
+/**
+ * Header Hero Styles
+ *
+ * Full-width hero header for "Onde estou?" with:
+ * - Animated diagonal gradient background
+ * - Topographic/geographic pattern overlay
+ * - Pulsing SVG map-pin
+ * - Editorial split-line title with gradient text
+ * - Live location subtitle
+ *
+ * @since 0.11.3-alpha
+ */
+
+/* ─── Hero Container ──────────────────────────────────────────────────── */
+
+.app-hero-header {
+  position: relative;
+  width: 100%;
+  padding: 2.5rem 1.5rem 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: left;
+  overflow: hidden;
+  isolation: isolate;               /* keep pseudo-elements contained     */
+
+  /* Animated diagonal gradient */
+  background: linear-gradient(
+    135deg,
+    #1565c0 0%,
+    #1976d2 20%,
+    #7c3aed 55%,
+    #0891b2 100%
+  );
+  background-size: 300% 300%;
+  animation: heroGradientShift 12s ease infinite;
+}
+
+@keyframes heroGradientShift {
+  0%   { background-position:   0%  50%; }
+  50%  { background-position: 100%  50%; }
+  100% { background-position:   0%  50%; }
+}
+
+/* ─── Topographic overlay ─────────────────────────────────────────────── */
+
+.app-hero-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  background:
+    radial-gradient(ellipse 80px 40px at center, transparent 68%, rgba(255,255,255,0.8) 69%, transparent 72%),
+    radial-gradient(ellipse 140px 70px at center, transparent 68%, rgba(255,255,255,0.6) 69%, transparent 72%),
+    radial-gradient(ellipse 200px 100px at center, transparent 68%, rgba(255,255,255,0.4) 69%, transparent 72%),
+    radial-gradient(ellipse 260px 130px at center, transparent 68%, rgba(255,255,255,0.3) 69%, transparent 72%);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Subtle grid of crosshairs for a map feel */
+.app-hero-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.9) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.9) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ─── Map-pin ──────────────────────────────────────────────────────────── */
+
+.hero-pin-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-pin-svg {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+  animation: heroPinPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes heroPinPulse {
+  0%, 100% { transform: translateY(0)   scale(1);    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)); }
+  40%       { transform: translateY(-4px) scale(1.08); filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5)); }
+}
+
+/* Ripple ring behind the pin */
+.hero-pin-ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  animation: heroPinRipple 2.4s ease-out infinite;
+}
+
+@keyframes heroPinRipple {
+  0%   { transform: scale(0.7); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* ─── Title "Onde estou?" ─────────────────────────────────────────────── */
+
+.hero-title {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  line-height: 1.1;
+  user-select: none;
+}
+
+.hero-title-onde {
+  display: block;
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.hero-title-estou {
+  display: block;
+  font-size: clamp(2.25rem, 8vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+
+  /* Gradient text — white-to-light-cyan */
+  background: linear-gradient(135deg, #ffffff 30%, #b2ebf2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  /* Fallback for browsers that don't support background-clip: text */
+  color: #ffffff;
+}
+
+/* ─── Live location subtitle ──────────────────────────────────────────── */
+
+.hero-location-text {
+  position: relative;
+  z-index: 1;
+  margin: 0.75rem 0 0;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.88);
+  min-height: 1.5em;           /* prevent layout shift while pending     */
+  transition: opacity 0.4s ease;
+}
+
+.hero-location-text[data-pending='true'] {
+  opacity: 0.5;
+  font-style: italic;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .app-hero-header {
+    padding: 1.75rem 1rem 1.5rem;
+  }
+
+  .hero-pin-wrapper {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-pin-svg {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* ─── Reduced motion ─────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .app-hero-header {
+    animation: none;
+    background-position: 0% 50%;
+  }
+
+  .hero-pin-svg {
+    animation: none;
+  }
+
+  .hero-pin-ripple {
+    animation: none;
+    display: none;
+  }
+}

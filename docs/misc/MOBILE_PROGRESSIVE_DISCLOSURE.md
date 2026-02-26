@@ -1,8 +1,8 @@
 # Mobile UX Improvement: Progressive Disclosure
 
-**Date**: 2026-02-15  
-**Priority**: High  
-**Issue**: Overwhelming information density on mobile  
+**Date**: 2026-02-15
+**Priority**: High
+**Issue**: Overwhelming information density on mobile
 
 ## Problem
 
@@ -20,7 +20,7 @@ Mobile users faced excessive information overload:
 
 1. Open app → See município/bairro cards
 2. Scroll down → Full address section
-3. Scroll down → Coordinates section  
+3. Scroll down → Coordinates section
 4. Scroll down → Reference place section
 5. Scroll down → IBGE data + chronometer
 6. Scroll down → Advanced controls
@@ -67,7 +67,7 @@ Mobile users faced excessive information overload:
 - Only on mobile (desktop always expanded)
 - Restores state on reload
 
-**First-time users**: Collapsed (less overwhelming)  
+**First-time users**: Collapsed (less overwhelming)
 **Returning users**: Remembers last state (convenience)
 
 ### 4. Accessibility Features
@@ -109,7 +109,7 @@ Mobile users faced excessive information overload:
     <span class="summary-text">Informações Adicionais</span>
     <span class="summary-arrow">▼</span>
   </summary>
-  
+
   <div class="secondary-info-content">
     <!-- Address, coordinates, IBGE, etc. -->
   </div>
@@ -163,20 +163,20 @@ class ProgressiveDisclosureManager {
     if (this.isMobile()) {
       this.restoreState();
     }
-    
+
     // Listen for toggle
     this.detailsElement.addEventListener('toggle', () => {
       this.saveState();
       this.announceState();
     });
   }
-  
+
   restoreState() {
     const saved = localStorage.getItem(STORAGE_KEY);
     // First visit: closed by default on mobile
     this.detailsElement.open = saved ? JSON.parse(saved).open : false;
   }
-  
+
   announceState() {
     // Screen reader announcement
     const message = this.detailsElement.open
@@ -408,7 +408,7 @@ class ProgressiveDisclosureManager {
 
 ## Summary
 
-**Problem**: 3-4 screens of scrolling, information overload  
-**Solution**: Collapsible secondary info + sticky primary cards  
-**Result**: 1-2 screens, 60% reduction in scrolling, improved glanceability  
+**Problem**: 3-4 screens of scrolling, information overload
+**Solution**: Collapsible secondary info + sticky primary cards
+**Result**: 1-2 screens, 60% reduction in scrolling, improved glanceability
 **Impact**: Better mobile UX, maintains desktop experience, fully accessible

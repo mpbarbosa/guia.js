@@ -214,7 +214,7 @@ class HTMLAddressDisplayer {
 		if (posEvent === ADDRESS_FETCHED_EVENT && (addressData || enderecoPadronizado)) {
 			// Render comprehensive address HTML
 			const html = this.renderAddressHtml(addressData, enderecoPadronizado);
-			this.element.innerHTML += html;
+			this.element.innerHTML = html;
 		}
 		
 		// Note: For other event types or when no address data is available,

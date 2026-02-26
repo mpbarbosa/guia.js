@@ -179,7 +179,7 @@ assignees: ''
 
 ---
 
-<!-- 
+<!--
 Testing Guidelines:
 - Test Copilot with various contexts (minimal, moderate, extensive)
 - Document both successful and unsuccessful suggestions

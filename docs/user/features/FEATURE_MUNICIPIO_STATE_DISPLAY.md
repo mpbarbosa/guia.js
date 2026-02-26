@@ -4,8 +4,8 @@
 
 Display the state abbreviation alongside the município name in the highlight card to provide better geographic context to users.
 
-**Version**: 0.9.0-alpha  
-**Date**: 2026-01-24  
+**Version**: 0.9.0-alpha
+**Date**: 2026-01-24
 **Author**: Marcelo Pereira Barbosa
 
 ## Motivation
@@ -64,9 +64,9 @@ municipioCompleto() {
 **Already exists** - Extracts state abbreviation from Nominatim response:
 
 ```javascript
-this.enderecoPadronizado.siglaUF = 
-    address.state_code || 
-    AddressExtractor.extractSiglaUF(address['ISO3166-2-lvl4']) || 
+this.enderecoPadronizado.siglaUF =
+    address.state_code ||
+    AddressExtractor.extractSiglaUF(address['ISO3166-2-lvl4']) ||
     null;
 ```
 

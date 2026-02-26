@@ -67,11 +67,11 @@ const ibiraLoadingPromise = (async () => {
             const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
             // Success: return { success: true, source: 'cdn', manager }
         }
-        
+
         // 2. Fallback to local module
         const ibiraModule = await import('ibira.js');
         // Success: return { success: true, source: 'local', manager }
-        
+
     } catch (error) {
         // 3. Use minimal fallback
         // Returns stub implementation

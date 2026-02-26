@@ -54,7 +54,7 @@ The test simulates a user driving through São Paulo, Brazil, visiting four diff
    - Validates bairro shows on first geolocation
    - Expected: "República" displayed in bairro card
 
-2. **Single Move Test**  
+2. **Single Move Test**
    - Simulates moving from República to Jardim Paulista
    - Validates card updates to new neighborhood
    - Expected: Card changes from "República" to "Jardim Paulista"
@@ -197,6 +197,6 @@ Potential improvements:
 
 ---
 
-**Last Updated**: 2026-01-15  
-**Test Version**: 1.0.0  
+**Last Updated**: 2026-01-15
+**Test Version**: 1.0.0
 **Status**: Active

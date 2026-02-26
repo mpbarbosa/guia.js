@@ -1035,13 +1035,13 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			
 			addressDisplayer.update(address2, standardized2, ADDRESS_FETCHED_EVENT, false, null);
 			
-			// Both bairros should be present (appended)
-			expect(mockElement.innerHTML).toContain('Centro');
+			// Only the latest bairro should be present (no duplication)
+			expect(mockElement.innerHTML).not.toContain('Centro');
 			expect(mockElement.innerHTML).toContain('Milho Verde');
-			// Municipio should appear multiple times (once per update)
+			// Municipio should appear at least once (from latest update)
 			const serroMatches = mockElement.innerHTML.match(/Serro/g);
 			expect(serroMatches).not.toBeNull();
-			expect(serroMatches.length).toBeGreaterThan(1);
+			expect(serroMatches.length).toBeGreaterThanOrEqual(1);
 		});
 
 		it('should validate empty bairro with valid municipio', () => {
@@ -1109,7 +1109,7 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			addressDisplayer.update(address1, standardized1, ADDRESS_FETCHED_EVENT, false, null);
 			expect(mockElement.innerHTML).toContain('Serro');
 			
-			// Second address (should append)
+			// Second address (should replace, not append)
 			const address2 = {
 				display_name: 'Address 2',
 				address: { municipality: 'Diamantina' }
@@ -1118,8 +1118,8 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 			
 			addressDisplayer.update(address2, standardized2, ADDRESS_FETCHED_EVENT, false, null);
 			
-			// Both addresses should be present (appended)
-			expect(mockElement.innerHTML).toContain('Serro');
+			// Only the latest address should be present (no duplication)
+			expect(mockElement.innerHTML).not.toContain('Serro');
 			expect(mockElement.innerHTML).toContain('Diamantina');
 		});
 
@@ -1138,9 +1138,9 @@ describe('PositionManager + HTMLAddressDisplayer Integration', () => {
 				addressDisplayer.update(address, standardized, ADDRESS_FETCHED_EVENT, false, null);
 			});
 			
-			// All addresses should be present
-			expect(mockElement.innerHTML).toContain('Serro');
-			expect(mockElement.innerHTML).toContain('Diamantina');
+			// Only the last address should be present (no duplication from rapid updates)
+			expect(mockElement.innerHTML).not.toContain('Serro');
+			expect(mockElement.innerHTML).not.toContain('Diamantina');
 			expect(mockElement.innerHTML).toContain('Belo Horizonte');
 		});
 	});

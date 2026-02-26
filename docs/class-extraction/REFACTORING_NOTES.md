@@ -18,12 +18,12 @@ Technical debt issue requesting to move `setupParams.referencePlaceMap` to the `
 class ReferencePlace {
     static referencePlaceMap = {
         "place": { "house": "Residencial" },
-        "shop": { 
+        "shop": {
             "mall": "Shopping Center",
             "car_repair": "Oficina Mecânica"
         },
         "amenity": { "cafe": "Café" },
-        "railway": { 
+        "railway": {
             "subway": "Estação do Metrô",
             "station": "Estação do Metrô"
         },

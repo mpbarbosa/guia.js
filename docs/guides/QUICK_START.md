@@ -1,6 +1,6 @@
 # Quick Start Guide
 
-**Version:** 0.9.0-alpha  
+**Version:** 0.9.0-alpha
 **Get up and running in under 10 minutes**
 
 ## Prerequisites
@@ -233,10 +233,10 @@ import BrazilianStandardAddress from './src/data/BrazilianStandardAddress.js';
 async function getAddress(lat, lon) {
   const geocoder = new ReverseGeocoder(lat, lon);
   const data = await geocoder.fetchAddress();
-  
+
   const address = new BrazilianStandardAddress();
   address.setFromNominatim(data);
-  
+
   console.log(address.toString());
   return address;
 }
@@ -412,7 +412,7 @@ git pull origin main
 git checkout -b feature/my-feature
 
 # 3. Make changes
-# ... edit files ...
+# ... edit files ..
 
 # 4. Validate
 npm run test:all
@@ -582,32 +582,32 @@ You've completed the Quick Start when you can:
 
 ---
 
-## What's Next?
+## What's Next
 
 Choose your path:
 
 ### 🎨 Frontend Developer
 
-→ Explore `src/html/` display components  
-→ Read [USER_GUIDE.md](./user/USER_GUIDE.md)  
+→ Explore `src/html/` display components
+→ Read [USER_GUIDE.md](./user/USER_GUIDE.md)
 → Modify CSS in `src/*.css`
 
 ### 🔧 Backend Developer
 
-→ Explore `src/services/` API integrations  
-→ Read [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md)  
+→ Explore `src/services/` API integrations
+→ Read [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md)
 → Implement new service providers
 
 ### 🧪 QA Engineer
 
-→ Explore `__tests__/` test suites  
-→ Read [TESTING_GUIDE.md](./TESTING_GUIDE.md)  
+→ Explore `__tests__/` test suites
+→ Read [TESTING_GUIDE.md](./TESTING_GUIDE.md)
 → Write new test scenarios
 
 ### 📚 Technical Writer
 
-→ Explore `docs/` documentation  
-→ Read existing guides  
+→ Explore `docs/` documentation
+→ Read existing guides
 → Improve documentation clarity
 
 ---
@@ -616,6 +616,6 @@ Choose your path:
 
 ---
 
-**Version:** 0.9.0-alpha  
-**Last Updated:** 2026-02-11  
+**Version:** 0.9.0-alpha
+**Last Updated:** 2026-02-11
 **Status:** ✅ Production Ready

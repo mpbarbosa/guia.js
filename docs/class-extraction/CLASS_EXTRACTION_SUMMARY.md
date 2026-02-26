@@ -187,7 +187,7 @@ import GeoPosition from './core/GeoPosition.js';
 ### Phase 2: Service Layer ✅ COMPLETED
 
 - ✅ ReverseGeocoder - Extracted to src/services/ReverseGeocoder.js
-- ✅ GeolocationService - Extracted to src/services/GeolocationService.js  
+- ✅ GeolocationService - Extracted to src/services/GeolocationService.js
 - ✅ ChangeDetectionCoordinator - Extracted to src/services/ChangeDetectionCoordinator.js
 
 **Phase 2 Results:**
@@ -248,7 +248,7 @@ See CLASS_EXTRACTION_PHASE_5.md for complete Phase 5 documentation.
 ### Future Phases: Presentation Layer (Optional)
 
 - HTMLPositionDisplayer
-- HTMLAddressDisplayer  
+- HTMLAddressDisplayer
 - SpeechSynthesisManager
 - DisplayerFactory
 

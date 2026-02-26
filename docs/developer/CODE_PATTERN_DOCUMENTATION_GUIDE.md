@@ -1,7 +1,7 @@
 # Code Pattern Documentation Guide
 
-**Date**: 2026-01-11  
-**Purpose**: Clarify valid code patterns that may be mistaken for broken references  
+**Date**: 2026-01-11
+**Purpose**: Clarify valid code patterns that may be mistaken for broken references
 **Status**: Reference Document
 
 ---
@@ -16,8 +16,8 @@ This document explains code patterns and examples in the documentation that may 
 
 ### 1. Comment Placeholders: `/* ... */`
 
-**Pattern**: `/* ... */`  
-**Purpose**: Indicates omitted code for brevity in examples  
+**Pattern**: `/* ... */`
+**Purpose**: Indicates omitted code for brevity in examples
 **Usage**: Standard JavaScript/documentation convention
 
 **Examples**:
@@ -42,8 +42,8 @@ const errorMap = { /* ... */ };
 
 ### 2. Regex Patterns for String Replacement
 
-**Pattern**: `/pattern/g` with escape sequences  
-**Purpose**: JavaScript regex for find-and-replace operations  
+**Pattern**: `/pattern/g` with escape sequences
+**Purpose**: JavaScript regex for find-and-replace operations
 **Usage**: Code transformation scripts
 
 **Examples**:
@@ -63,8 +63,8 @@ content = content.replace(/AddressDataExtractor\./g, 'AddressCache.getInstance()
 
 ### 3. HTML Tag Detection Regex
 
-**Pattern**: `/<\w+/g` and `/<\/\w+>/g`  
-**Purpose**: Detect and count HTML opening/closing tags in tests  
+**Pattern**: `/<\w+/g` and `/<\/\w+>/g`
+**Purpose**: Detect and count HTML opening/closing tags in tests
 **Usage**: Test validation for HTML generation
 
 **Examples**:
@@ -85,8 +85,8 @@ const closingTags = (html.match(/<\/\w+>/g) || []).length;
 
 ### 4. Regex Pattern Whitelisting
 
-**Pattern**: `/\/\*\s*\.\.\.\s*\*\//`  
-**Purpose**: Regex to match and whitelist comment placeholders  
+**Pattern**: `/\/\*\s*\.\.\.\s*\*\//`
+**Purpose**: Regex to match and whitelist comment placeholders
 **Usage**: Automated validation tooling
 
 **Example**:
@@ -106,8 +106,8 @@ if (matches(/\/\*\s*\.\.\.\s*\*\//)) skip();
 
 ### 5. Directory Path References
 
-**Pattern**: `/src`, `/docs`, `/tests`  
-**Purpose**: Discuss directory structure and organization  
+**Pattern**: `/src`, `/docs`, `/tests`
+**Purpose**: Discuss directory structure and organization
 **Usage**: Architecture documentation
 
 **Examples**:
@@ -178,9 +178,9 @@ const VALIDATE_PATTERNS = [
 
 ## Summary
 
-**Total Files Affected**: 8 documentation files  
-**Total Valid Patterns**: 11+ occurrences  
-**Action Required**: ❌ None - patterns are correct  
+**Total Files Affected**: 8 documentation files
+**Total Valid Patterns**: 11+ occurrences
+**Action Required**: ❌ None - patterns are correct
 
 **Impact**:
 

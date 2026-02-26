@@ -67,7 +67,7 @@ The `address` object contains detailed address components. Fields vary based on 
   "addr:city": "São Paulo",                    // OSM standard city
   "addr:state": "SP",                          // OSM standard state
   "addr:postcode": "01426-001",                // OSM standard postcode
-  
+
   // Nominatim Fields (Fallback Format)
   "road": "Rodovia dos Bandeirantes",          // Street name (primary)
   "street": "Alternative Street Name",         // Alternative street field
@@ -224,7 +224,7 @@ console.log(result.municipio);       // "São Paulo"
 console.log(result.uf);              // "SP"
 console.log(result.siglaUF);         // "SP"
 console.log(result.cep);             // "01426-001"
-console.log(result.enderecoCompleto()); 
+console.log(result.enderecoCompleto());
 // "Rua Oscar Freire, 123, Jardins, São Paulo, SP, 01426-001"
 ```
 
@@ -299,7 +299,7 @@ console.log(result2.uf);         // "Rio de Janeiro" (full state name from state
 console.log(result2.siglaUF);    // "RJ" (extracted from ISO3166-2-lvl4)
 
 // The municipioCompleto() method uses siglaUF for consistent formatting
-console.log(result2.municipioCompleto()); 
+console.log(result2.municipioCompleto());
 // "Rio de Janeiro, RJ"
 ```
 
@@ -679,9 +679,9 @@ describe('Nominatim API Format Support', () => {
         postcode: '01310-200'
       }
     };
-    
+
     const result = AddressDataExtractor.getBrazilianStandardAddress(nominatimData);
-    
+
     expect(result.logradouro).toBe('Avenida Paulista');
     expect(result.numero).toBe('1578');
     expect(result.bairro).toBe('Bela Vista');
@@ -792,6 +792,6 @@ Documentation is part of the Guia Turístico project. See repository root for li
 
 ---
 
-**Last Updated**: 2026-01-10  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-10
+**Version**: 0.9.0-alpha
 **Status**: ✅ Complete and up-to-date

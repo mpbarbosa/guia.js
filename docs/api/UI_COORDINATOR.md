@@ -1,7 +1,7 @@
 # UICoordinator API Documentation
 
-**Version**: 0.9.0-alpha  
-**Module**: `coordination/UICoordinator`  
+**Version**: 0.9.0-alpha
+**Module**: `coordination/UICoordinator`
 **Since**: 0.9.0-alpha (Phase 1: WebGeocodingManager refactoring)
 
 ---
@@ -76,5 +76,5 @@ coordinator.updateTimestamp(Date.now());
 
 ---
 
-**Status**: ✅ Production Ready  
+**Status**: ✅ Production Ready
 **Test Coverage**: 80%+

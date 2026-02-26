@@ -10,7 +10,7 @@
 - [Common Pitfalls](#common-pitfalls)
 - [Resources](#resources)
 
-## What is Referential Transparency?
+## What is Referential Transparency
 
 **Referential transparency** is a property of functions where an expression can be replaced with its resulting value without changing the program's behavior. A function is referentially transparent if:
 
@@ -318,7 +318,7 @@ async function handleAddressSubmission(addressData) {
   if (!validateAddress(addressData)) {  // Pure
     throw new Error('Invalid address');
   }
-  
+
   const formatted = formatAddress(addressData);  // Pure
   await saveToDatabase(formatted);  // Impure: I/O
   console.log('Address saved');  // Impure: I/O
@@ -429,7 +429,7 @@ class UserService {
   loadUser(id) {
     this.currentUser = fetchUser(id);
   }
-  
+
   getUserName() {
     return this.currentUser.name;  // Depends on loadUser being called first
   }
@@ -440,7 +440,7 @@ class UserService {
   async loadUser(id) {
     return await fetchUser(id);
   }
-  
+
   getUserName(user) {
     return user.name;
   }
@@ -459,11 +459,11 @@ describe('calculateDistance', () => {
     const result = calculateDistance(0, 0, 1, 1);
     expect(result).toBeCloseTo(157249.6, 1);
   });
-  
+
   test('returns 0 for same point', () => {
     expect(calculateDistance(10, 20, 10, 20)).toBe(0);
   });
-  
+
   test('distance is symmetric', () => {
     const d1 = calculateDistance(1, 2, 3, 4);
     const d2 = calculateDistance(3, 4, 1, 2);
@@ -483,12 +483,12 @@ describe('pure function properties', () => {
     expect(add(3, 5)).toBe(add(5, 3));
     expect(add(-2, 7)).toBe(add(7, -2));
   });
-  
+
   test('add is associative', () => {
     // For all a, b, c: add(add(a, b), c) === add(a, add(b, c))
     expect(add(add(1, 2), 3)).toBe(add(1, add(2, 3)));
   });
-  
+
   test('multiple calls return same result', () => {
     const input = [1, 2, 3];
     const result1 = double(input);
@@ -511,17 +511,17 @@ describe('formatAddress', () => {
       city: 'São Paulo',
       state: 'SP'
     };
-    
+
     expect(formatAddress(address)).toBe('Rua Augusta, 123, São Paulo, SP');
   });
-  
+
   test('handles missing number', () => {
     const address = {
       street: 'Rua Augusta',
       city: 'São Paulo',
       state: 'SP'
     };
-    
+
     expect(formatAddress(address)).toBe('Rua Augusta, São Paulo, SP');
   });
 });
@@ -533,23 +533,23 @@ describe('formatAddress', () => {
 describe('referential transparency checks', () => {
   test('function is deterministic', () => {
     const inputs = [[1, 2], [3, 4], [-1, 0]];
-    
+
     inputs.forEach(([a, b]) => {
       const result1 = add(a, b);
       const result2 = add(a, b);
       const result3 = add(a, b);
-      
+
       expect(result1).toBe(result2);
       expect(result2).toBe(result3);
     });
   });
-  
+
   test('function does not modify inputs', () => {
     const original = [1, 2, 3];
     const copy = [...original];
-    
+
     const result = double(original);
-    
+
     expect(original).toEqual(copy);  // Input unchanged
     expect(result).not.toBe(original);  // Returns new array
   });
@@ -707,5 +707,5 @@ For architecture examples:
 
 **Remember**: Referential transparency is not about dogma—it's about making code more predictable, testable, and maintainable. Use these principles as tools to write better software.
 
-**Version**: 0.9.0-alpha  
+**Version**: 0.9.0-alpha
 **Last Updated**: 2026-01-11

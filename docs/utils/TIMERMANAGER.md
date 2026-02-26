@@ -6,9 +6,9 @@
 
 ## Location
 
-**File:** `src/utils/TimerManager.js`  
-**Size:** 147 lines  
-**Test Coverage:** 100% (26 tests)  
+**File:** `src/utils/TimerManager.js`
+**Size:** 147 lines
+**Test Coverage:** 100% (26 tests)
 **Test File:** `__tests__/utils/TimerManager.test.js`
 
 ## Purpose
@@ -138,7 +138,7 @@ process.on('exit', () => {
 
 ## Testing
 
-**Coverage:** 100% (26 tests)  
+**Coverage:** 100% (26 tests)
 **Test File:** `__tests__/utils/TimerManager.test.js`
 
 ## Related Documentation

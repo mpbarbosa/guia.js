@@ -10,14 +10,14 @@
 # Run E2E tests only (Node environment)
 npm run test:e2e
 
-# Run unit/integration tests only (jsdom environment)  
+# Run unit/integration tests only (jsdom environment)
 npm run test:unit
 
 # Run both (sequentially)
 npm run test:all-suites
 ```
 
-## Why Separate Commands?
+## Why Separate Commands
 
 E2E tests use **Puppeteer** which requires a **Node.js environment**.
 Unit tests use **jsdom** which simulates a browser DOM in Node.js.
@@ -75,7 +75,7 @@ This ensures both unit and E2E tests execute properly.
 ## Configuration Files
 
 - `jest.config.e2e.js` - E2E tests (Node environment, 60s timeout)
-- `jest.config.unit.js` - Unit tests (jsdom environment, 30s timeout)  
+- `jest.config.unit.js` - Unit tests (jsdom environment, 30s timeout)
 - `package.json` - Default config (jsdom, used by `npm test`)
 
 ## Writing E2E Tests
@@ -87,7 +87,7 @@ Place files in `__tests__/e2e/` and use `.e2e.test.js` suffix:
 describe('E2E: My Feature', () => {
   // Use e2e-helpers for retry-based polling
   const { waitForElement, waitForElementText } = require('../helpers/e2e-helpers-lib');
-  
+
   it('should work', async () => {
     await waitForElementText(page, '#result', 'Expected');
   });

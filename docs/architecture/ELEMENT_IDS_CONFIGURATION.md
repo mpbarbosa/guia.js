@@ -101,8 +101,8 @@ const manager = new WebGeocodingManager(document, {
 The element IDs configuration is frozen to prevent accidental modifications:
 
 ```javascript
-const manager = new WebGeocodingManager(document, { 
-    locationResult: 'location-result' 
+const manager = new WebGeocodingManager(document, {
+    locationResult: 'location-result'
 });
 
 // Attempting to modify will fail silently (or throw in strict mode)

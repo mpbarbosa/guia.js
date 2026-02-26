@@ -1,7 +1,7 @@
 # Comprehensive Architecture Guide - Guia Turístico
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-02-09  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-02-09
 **Status**: Production-ready (with 20 known failing tests)
 
 ## Table of Contents
@@ -235,7 +235,7 @@ class HTMLAddressDisplayer {
   constructor(document, elementId) {
     this.element = document.getElementById(elementId);
   }
-  
+
   display(addressData) {
     // Update DOM with formatted address
     this.element.innerHTML = this.formatAddress(addressData);
@@ -432,7 +432,7 @@ observer.notify(ADDRESS_FETCHED_EVENT, data);
 ```javascript
 class PositionManager {
   static #instance = null;
-  
+
   static getInstance() {
     if (!PositionManager.#instance) {
       PositionManager.#instance = new PositionManager();
@@ -462,7 +462,7 @@ class ObserverSubject {
     this.observers[eventName] = this.observers[eventName] || [];
     this.observers[eventName].push(callback);
   }
-  
+
   notifyObservers(eventName, data) {
     (this.observers[eventName] || []).forEach(callback => {
       callback(data);
@@ -500,11 +500,11 @@ class DisplayerFactory {
   static createPositionDisplayer(document, elementId) {
     return new HTMLPositionDisplayer(document, elementId);
   }
-  
+
   static createAddressDisplayer(document, elementId) {
     return new HTMLAddressDisplayer(document, elementId);
   }
-  
+
   // ... 5 factory methods total
 }
 ```
@@ -529,7 +529,7 @@ class SpeechSynthesisManager {
   speak(text, options) {
     // Delegates to SpeechController, VoiceManager, QueueProcessor, etc.
   }
-  
+
   pause() { /* ... */ }
   resume() { /* ... */ }
   cancel() { /* ... */ }
@@ -689,8 +689,8 @@ if (isMobileDevice() && ['medium', 'bad', 'very bad'].includes(accuracyQuality))
 
 ### 1. guia.js Library
 
-**Repository**: [github.com/mpbarbosa/guia_js](https://github.com/mpbarbosa/guia_js)  
-**Version**: v0.9.0-alpha  
+**Repository**: [github.com/mpbarbosa/guia_js](https://github.com/mpbarbosa/guia_js)
+**Version**: v0.9.0-alpha
 **Purpose**: Core geolocation functionality
 
 **Integration**:
@@ -706,17 +706,17 @@ if (isMobileDevice() && ['medium', 'bad', 'very bad'].includes(accuracyQuality))
 
 ### 2. ibira.js Library
 
-**Repository**: [github.com/mpbarbosa/ibira.js](https://github.com/mpbarbosa/ibira.js)  
-**Version**: v0.2.1-alpha  
+**Repository**: [github.com/mpbarbosa/ibira.js](https://github.com/mpbarbosa/ibira.js)
+**Version**: v0.2.1-alpha
 **Purpose**: Brazilian IBGE integration
 
 ---
 
 ### 3. OpenStreetMap Nominatim API
 
-**Endpoint**: `https://nominatim.openstreetmap.org/reverse`  
-**Purpose**: Reverse geocoding (coordinates → address)  
-**Rate Limit**: 1 request per second  
+**Endpoint**: `https://nominatim.openstreetmap.org/reverse`
+**Purpose**: Reverse geocoding (coordinates → address)
+**Rate Limit**: 1 request per second
 **Usage Policy**: Required to provide attribution
 
 ---
@@ -939,6 +939,6 @@ __tests__/
 
 ---
 
-**Last Review**: 2026-02-09  
-**Reviewers**: Technical Architecture Team  
+**Last Review**: 2026-02-09
+**Reviewers**: Technical Architecture Team
 **Status**: ✅ Complete

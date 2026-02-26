@@ -9,8 +9,8 @@ Category: Architecture
 
 **Navigation**: [🏠 Home](../README.md) > [📚 Docs](./README.md) > Project Purpose & Architecture
 
-**Version**: 0.9.0-alpha  
-**Document Date**: 2026-02-09  
+**Version**: 0.9.0-alpha
+**Document Date**: 2026-02-09
 **Purpose**: Define project boundaries and prevent inappropriate architectural decisions
 
 > **Quick Start**: For a brief project overview and getting started guide, see the [README.md](../README.md). This document provides detailed architectural reasoning and design decisions.
@@ -41,11 +41,11 @@ Category: Architecture
 
 **Guia Turístico is NOT a library or SDK**, and therefore:
 
-❌ **NOT a reusable JavaScript library** - It's a web application that uses guia.js library  
-❌ **NOT published to npm** - It's deployed as a website, not installed as a dependency  
-❌ **NOT embeddable in other apps** - It's a standalone application for end users  
-❌ **NOT a backend service** - Pure frontend application (uses external APIs)  
-❌ **NOT a general-purpose geolocation tool** - Specialized for tourist guidance use case  
+❌ **NOT a reusable JavaScript library** - It's a web application that uses guia.js library
+❌ **NOT published to npm** - It's deployed as a website, not installed as a dependency
+❌ **NOT embeddable in other apps** - It's a standalone application for end users
+❌ **NOT a backend service** - Pure frontend application (uses external APIs)
+❌ **NOT a general-purpose geolocation tool** - Specialized for tourist guidance use case
 
 ### Relationship with guia.js Library
 
@@ -442,10 +442,10 @@ echo "<html>...</html>" > index.html
 </head>
 <body>
     <div id="map-container"></div>
-    
+
     <!-- Import Guia.js from CDN -->
     <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js"></script>
-    
+
     <script>
         // Use Guia.js APIs
         const manager = new WebGeocodingManager(document, 'map-container');
@@ -465,10 +465,10 @@ function GeoMap() {
   useEffect(() => {
     const manager = new WebGeocodingManager(document, 'map-root');
     manager.startGeolocation();
-    
+
     return () => manager.cleanup();
   }, []);
-  
+
   return <div id="map-root"></div>;
 }
 ```
@@ -852,8 +852,8 @@ If jQuery (a JavaScript library similar to Guia.js) wouldn't do it, Guia.js shou
 
 ---
 
-**Document Maintainer**: Project Architecture Team  
-**Last Review**: 2026-01-06  
+**Document Maintainer**: Project Architecture Team
+**Last Review**: 2026-01-06
 **Next Review**: When considering new distribution methods
 
 **Purpose**: This document serves as the definitive reference for understanding Guia Turístico project identity and preventing architectural mistakes like inappropriate GitHub Pages migration.

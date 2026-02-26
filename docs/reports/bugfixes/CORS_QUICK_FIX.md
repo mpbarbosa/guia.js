@@ -167,13 +167,13 @@ Why?
 
 ## Troubleshooting
 
-### Proxy still not working?
+### Proxy still not working
 
 1. **Check proxy URL**: Must end with `?url=` or handle URL encoding
 2. **Network issues**: Test proxy directly in browser
 3. **Rate limiting**: allorigins.win has rate limits
 
-### Want to use a different proxy?
+### Want to use a different proxy
 
 ```javascript
 // Other public proxies:
@@ -181,7 +181,7 @@ export const CORS_PROXY = 'https://corsproxy.io/?';
 export const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';  // Requires request access
 ```
 
-### Need more control?
+### Need more control
 
 Run your own proxy server. See `CORS_TROUBLESHOOTING.md` for complete setup instructions.
 

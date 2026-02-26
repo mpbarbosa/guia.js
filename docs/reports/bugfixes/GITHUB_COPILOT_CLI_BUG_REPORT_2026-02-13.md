@@ -60,7 +60,7 @@
 
 3. Press **Ctrl+Enter** hotkey
 
-**Expected Result**: Prompt is enqueued and processed  
+**Expected Result**: Prompt is enqueued and processed
 **Actual Result**: A newline is inserted in the input field, prompt is not enqueued
 
 ---
@@ -135,7 +135,7 @@ Current TTY settings may affect key handling:
 
 ## Impact
 
-**Severity**: **High**  
+**Severity**: **High**
 **User Impact**: Critical workflow disruption - users cannot enqueue prompts using the documented hotkey
 
 **Affected Users**:

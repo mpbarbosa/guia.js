@@ -1,7 +1,7 @@
 # SpeechCoordinator API Documentation
 
-**Version**: 0.9.0-alpha  
-**Module**: `coordination/SpeechCoordinator`  
+**Version**: 0.9.0-alpha
+**Module**: `coordination/SpeechCoordinator`
 **Since**: 0.9.0-alpha
 
 ---
@@ -99,6 +99,6 @@ coordinator.cleanup();
 
 ---
 
-**Status**: ✅ Production Ready  
-**Test Coverage**: 85%+  
+**Status**: ✅ Production Ready
+**Test Coverage**: 85%+
 **Language**: Brazilian Portuguese (pt-BR)

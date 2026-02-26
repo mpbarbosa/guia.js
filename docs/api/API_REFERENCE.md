@@ -1,7 +1,7 @@
 # Guia Turístico API Reference
 
-**Version:** 0.9.0-alpha  
-**Last Updated:** 2026-02-11  
+**Version:** 0.9.0-alpha
+**Last Updated:** 2026-02-11
 **Status:** ✅ Production Ready
 
 ## Table of Contents
@@ -20,8 +20,8 @@
 
 ### PositionManager
 
-**File:** `src/core/PositionManager.js`  
-**Type:** Singleton  
+**File:** `src/core/PositionManager.js`
+**Type:** Singleton
 **Purpose:** Central manager for current geolocation state
 
 #### Methods
@@ -112,8 +112,8 @@ console.log(`Moved ${distance} meters`);
 
 ### GeoPosition
 
-**File:** `src/core/GeoPosition.js`  
-**Type:** Immutable Value Object  
+**File:** `src/core/GeoPosition.js`
+**Type:** Immutable Value Object
 **Purpose:** Represents a geographic position
 
 #### Constructor
@@ -171,7 +171,7 @@ console.log(pos1.equals(pos2)); // true
 
 ### GeolocationService
 
-**File:** `src/services/GeolocationService.js`  
+**File:** `src/services/GeolocationService.js`
 **Purpose:** Browser geolocation API wrapper with provider pattern support
 
 #### Constructor
@@ -243,7 +243,7 @@ service.getCurrentPosition(
 
 ### ReverseGeocoder
 
-**File:** `src/services/ReverseGeocoder.js`  
+**File:** `src/services/ReverseGeocoder.js`
 **Purpose:** OpenStreetMap Nominatim reverse geocoding integration
 
 #### Constructor
@@ -305,7 +305,7 @@ try {
 
 ### BrazilianStandardAddress
 
-**File:** `src/data/BrazilianStandardAddress.js`  
+**File:** `src/data/BrazilianStandardAddress.js`
 **Purpose:** Brazilian address standardization and formatting
 
 #### Constructor
@@ -379,8 +379,8 @@ console.log(address.regiaoMetropolitanaFormatada());
 
 ### AddressCache
 
-**File:** `src/data/AddressCache.js`  
-**Type:** Composition-based cache system (v0.9.0-alpha refactored)  
+**File:** `src/data/AddressCache.js`
+**Type:** Composition-based cache system (v0.9.0-alpha refactored)
 **Purpose:** Caches addresses with change detection and callback management
 
 #### Constructor
@@ -482,7 +482,7 @@ cache.clear();
 
 ### ReferencePlace
 
-**File:** `src/data/ReferencePlace.js`  
+**File:** `src/data/ReferencePlace.js`
 **Purpose:** Represents nearby reference locations
 
 #### Constructor
@@ -526,7 +526,7 @@ console.log(category); // e.g., "Ponto de Referência"
 
 ### HTMLPositionDisplayer
 
-**File:** `src/html/HTMLPositionDisplayer.js`  
+**File:** `src/html/HTMLPositionDisplayer.js`
 **Purpose:** Displays coordinates and Google Maps integration
 
 #### Constructor
@@ -568,7 +568,7 @@ displayer.clear();
 
 ### HTMLAddressDisplayer
 
-**File:** `src/html/HTMLAddressDisplayer.js`  
+**File:** `src/html/HTMLAddressDisplayer.js`
 **Purpose:** Displays formatted address information
 
 #### Constructor
@@ -597,7 +597,7 @@ displayer.display(address);
 
 ### HTMLHighlightCardsDisplayer
 
-**File:** `src/html/HTMLHighlightCardsDisplayer.js`  
+**File:** `src/html/HTMLHighlightCardsDisplayer.js`
 **Purpose:** Displays municipality and neighborhood highlight cards (v0.9.0+)
 
 #### Constructor
@@ -632,7 +632,7 @@ displayer.display(address);
 
 ### HTMLSidraDisplayer
 
-**File:** `src/html/HTMLSidraDisplayer.js`  
+**File:** `src/html/HTMLSidraDisplayer.js`
 **Purpose:** Displays IBGE SIDRA demographic statistics (v0.9.0+)
 
 #### Constructor
@@ -669,7 +669,7 @@ displayer.display('Recife', 'PE');
 
 ### DisplayerFactory
 
-**File:** `src/html/DisplayerFactory.js`  
+**File:** `src/html/DisplayerFactory.js`
 **Purpose:** Factory for creating display components
 
 #### Methods
@@ -708,8 +708,8 @@ const addressDisplayer = factory.createAddressDisplayer(document, 'address-conta
 
 ### SpeechSynthesisManager
 
-**File:** `src/speech/SpeechSynthesisManager.js`  
-**Type:** Singleton, Composition Pattern (v0.9.0-alpha refactored)  
+**File:** `src/speech/SpeechSynthesisManager.js`
+**Type:** Singleton, Composition Pattern (v0.9.0-alpha refactored)
 **Purpose:** Main orchestrator for speech synthesis
 
 #### Architecture
@@ -798,7 +798,7 @@ manager.resume();
 
 ### VoiceLoader
 
-**File:** `src/speech/VoiceLoader.js` (v0.9.0-alpha)  
+**File:** `src/speech/VoiceLoader.js` (v0.9.0-alpha)
 **Purpose:** Voice loading with exponential backoff retry
 
 #### Methods
@@ -825,7 +825,7 @@ const voices = await loader.loadVoices();
 
 ### VoiceSelector
 
-**File:** `src/speech/VoiceSelector.js` (v0.9.0-alpha)  
+**File:** `src/speech/VoiceSelector.js` (v0.9.0-alpha)
 **Purpose:** Intelligent Brazilian Portuguese voice selection
 
 #### Methods
@@ -865,8 +865,8 @@ const bestVoice = selector.selectVoice(voices);
 
 ### TimerManager
 
-**File:** `src/utils/TimerManager.js`  
-**Type:** Singleton  
+**File:** `src/utils/TimerManager.js`
+**Type:** Singleton
 **Purpose:** Centralized timer management to prevent memory leaks
 
 #### Methods
@@ -937,7 +937,7 @@ timerManager.clearAll();
 
 ### Chronometer
 
-**File:** `src/timing/Chronometer.js`  
+**File:** `src/timing/Chronometer.js`
 **Purpose:** Performance timing and elapsed time tracking
 
 #### Constructor
@@ -1062,10 +1062,10 @@ export const VERSION = '0.9.0-alpha';
 #### Usage
 
 ```javascript
-import { 
-  ADDRESS_FETCHED_EVENT, 
+import {
+  ADDRESS_FETCHED_EVENT,
   MINIMUM_TIME_CHANGE,
-  MINIMUM_DISTANCE_CHANGE 
+  MINIMUM_DISTANCE_CHANGE
 } from './src/config/defaults.js';
 
 // Use constants for consistency
@@ -1214,5 +1214,5 @@ See [API_EXAMPLES.md](./API_EXAMPLES.md) for comprehensive code examples.
 
 ---
 
-**Version:** 0.9.0-alpha  
+**Version:** 0.9.0-alpha
 **Last Updated:** 2026-02-11

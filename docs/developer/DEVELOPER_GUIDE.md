@@ -1,7 +1,7 @@
 # Developer Guide - Guia Turístico
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-02-09  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-02-09
 **Audience**: Developers contributing to or building on Guia Turístico
 
 ## Table of Contents
@@ -425,10 +425,10 @@ console.log('Debug info'); // ❌ Don't do this
 
 ```javascript
 // Import constants instead of hardcoding strings
-import { 
-  ADDRESS_FETCHED_EVENT, 
+import {
+  ADDRESS_FETCHED_EVENT,
   MINIMUM_DISTANCE_CHANGE,
-  MINIMUM_TIME_CHANGE 
+  MINIMUM_TIME_CHANGE
 } from './config/defaults.js';
 
 // ✅ GOOD: Use constants
@@ -447,17 +447,17 @@ if (distance >= 20) {  // Magic number
 ```javascript
 /**
  * Calculate distance between two geographic points using Haversine formula.
- * 
+ *
  * @param {number} lat1 - Latitude of first point in decimal degrees
  * @param {number} lon1 - Longitude of first point in decimal degrees
  * @param {number} lat2 - Latitude of second point in decimal degrees
  * @param {number} lon2 - Longitude of second point in decimal degrees
  * @returns {number} Distance in meters
- * 
+ *
  * @example
  * const distance = calculateDistance(-23.550520, -46.633309, -22.906847, -43.172896);
  * console.log(distance); // 357870.6 (São Paulo to Rio, ~358km)
- * 
+ *
  * @see {@link https://en.wikipedia.org/wiki/Haversine_formula} Haversine formula
  * @since 0.9.0-alpha
  */
@@ -511,7 +511,7 @@ describe('PositionManager', () => {
   test('getInstance returns singleton instance', () => {
     const instance1 = PositionManager.getInstance();
     const instance2 = PositionManager.getInstance();
-    
+
     expect(instance1).toBe(instance2);
   });
 
@@ -566,7 +566,7 @@ describe('E2E: Geolocation Flow', () => {
   beforeAll(async () => {
     browser = await puppeteer.launch({ headless: true });
     page = await browser.newPage();
-    
+
     // Mock geolocation
     await page.setGeolocation({
       latitude: -23.550520,
@@ -580,13 +580,13 @@ describe('E2E: Geolocation Flow', () => {
 
   test('location button triggers position display', async () => {
     await page.goto('http://localhost:9877/src/index.html');
-    
+
     // Click location button
     await page.click('#getLocationButton');
-    
+
     // Wait for coordinates to appear
     await page.waitForSelector('#latitude:not(:empty)');
-    
+
     const lat = await page.$eval('#latitude', el => el.textContent);
     expect(lat).toContain('-23.550520');
   });
@@ -720,7 +720,7 @@ export class HTMLNewFeatureDisplayer {
   constructor(document, elementId) {
     this.element = document.getElementById(elementId);
   }
-  
+
   display(data) {
     this.element.textContent = data;
     log('Displayed new feature:', data);

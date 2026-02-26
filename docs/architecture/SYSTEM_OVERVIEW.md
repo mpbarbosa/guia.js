@@ -1,7 +1,7 @@
 # System Architecture Overview
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-02-11  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-02-11
 **Document Type**: Technical Architecture Guide
 
 ## Table of Contents
@@ -557,7 +557,7 @@ app.js
 // PositionManager.js
 class PositionManager {
   static #instance = null;
-  
+
   static getInstance() {
     if (!PositionManager.#instance) {
       PositionManager.#instance = new PositionManager();
@@ -585,12 +585,12 @@ class PositionManager {
 // Observer pattern implementation
 class PositionManager {
   #observers = [];
-  
+
   addObserver(callback) {
     this.#observers.push(callback);
     return () => this.removeObserver(callback); // Returns unsubscribe function
   }
-  
+
   notifyObservers() {
     this.#observers.forEach(cb => cb(this.#currentPosition));
   }
@@ -618,7 +618,7 @@ class GeoPosition {
   #longitude;
   #accuracy;
   #timestamp;
-  
+
   constructor(lat, lon, accuracy, timestamp) {
     this.#latitude = lat;
     this.#longitude = lon;
@@ -626,7 +626,7 @@ class GeoPosition {
     this.#timestamp = timestamp;
     Object.freeze(this); // Enforce immutability
   }
-  
+
   get latitude() { return this.#latitude; }
   get longitude() { return this.#longitude; }
 }
@@ -653,14 +653,14 @@ class SpeechSynthesisManager {
   #voiceSelector;
   #configuration;
   #queue;
-  
+
   constructor() {
     this.#voiceLoader = new VoiceLoader();
     this.#voiceSelector = new VoiceSelector();
     this.#configuration = new SpeechConfiguration();
     this.#queue = new SpeechQueue();
   }
-  
+
   async speak(text, priority) {
     const voices = await this.#voiceLoader.loadVoices();
     const voice = this.#voiceSelector.selectVoice(voices);
@@ -691,11 +691,11 @@ class DisplayerFactory {
   createPositionDisplayer(document, elementId) {
     return new HTMLPositionDisplayer(document, elementId);
   }
-  
+
   createSidraDisplayer(document, elementId) {
     return new HTMLSidraDisplayer(document, elementId);
   }
-  
+
   // ... other factory methods
 }
 ```
@@ -747,7 +747,7 @@ class WebGeocodingManager {
     this.geolocationService = new GeolocationService();
     this.positionManager = PositionManager.getInstance();
   }
-  
+
   async requestLocation() {
     const pos = await this.geolocationService.getCurrentPosition();
     this.positionManager.setCurrentPosition(pos);
@@ -777,11 +777,11 @@ class VoiceSelector {
     // Strategy 1: Exact pt-BR match
     let selected = this.filterByLanguage(voices, 'pt-BR')[0];
     if (selected) return selected;
-    
+
     // Strategy 2: pt-* prefix match
     selected = this.filterByLanguage(voices, 'pt-')[0];
     if (selected) return selected;
-    
+
     // Strategy 3: First available
     return voices[0] || null;
   }
@@ -1028,6 +1028,6 @@ GET /reverse?format=json&lat=-23.5505&lon=-46.6333&addressdetails=1
 
 ---
 
-**Last Updated**: 2026-02-11  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-02-11
+**Version**: 0.9.0-alpha
 **Status**: ✅ Complete and Validated

@@ -440,10 +440,10 @@ timerManager.clearTimer('my-update-timer');
 **Contextual status messages for buttons (v0.9.0+).**
 
 ```javascript
-import { 
-  disableWithReason, 
-  enableWithMessage, 
-  BUTTON_STATUS_MESSAGES 
+import {
+  disableWithReason,
+  enableWithMessage,
+  BUTTON_STATUS_MESSAGES
 } from './src/utils/button-status.js';
 
 // Methods
@@ -563,27 +563,27 @@ async function completeWorkflow() {
   // 1. Get user's position
   const geoService = new GeolocationService();
   const position = await geoService.getCurrentPosition();
-  
+
   // 2. Display coordinates
   const positionDisplayer = new HTMLPositionDisplayer(document, 'position-area');
   positionDisplayer.displayPosition(position);
-  
+
   // 3. Fetch address
   const geocoder = new ReverseGeocoder(position.latitude, position.longitude);
   const nominatimData = await geocoder.fetchAddress();
-  
+
   // 4. Extract Brazilian address
   const extractor = new AddressExtractor(nominatimData);
   const address = extractor.extractBrazilianAddress();
-  
+
   // 5. Display address
   const addressDisplayer = new HTMLAddressDisplayer(document, 'address-area');
   addressDisplayer.displayAddress(address);
-  
+
   // 6. Announce via speech
   const speechManager = new SpeechSynthesisManager();
   await speechManager.speak(`Você está em ${address.municipioCompleto()}`);
-  
+
   console.log('Workflow complete!');
 }
 
@@ -681,5 +681,5 @@ try {
 
 ---
 
-**Last Updated**: 2026-02-12  
+**Last Updated**: 2026-02-12
 **Version**: 0.9.0-alpha

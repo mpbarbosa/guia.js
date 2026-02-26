@@ -1,7 +1,7 @@
 # Spacing System Guide
 
-**Version:** 0.11.0-alpha  
-**Last Updated:** 2026-02-15  
+**Version:** 0.11.0-alpha
+**Last Updated:** 2026-02-15
 **Status:** ✅ Production Ready
 
 ## Table of Contents
@@ -22,10 +22,10 @@ The Guia Turístico spacing system follows **Material Design 3's 8dp grid system
 
 ### Design Principles
 
-✅ **8px Base Grid** - All spacing follows 8px increments (4px for micro-adjustments)  
-✅ **Semantic Naming** - Clear size labels (xs, sm, md, lg, xl, 2xl, 3xl)  
-✅ **Single Source of Truth** - All values defined in `design-tokens.css`  
-✅ **Utility-First** - Reusable classes reduce CSS bloat  
+✅ **8px Base Grid** - All spacing follows 8px increments (4px for micro-adjustments)
+✅ **Semantic Naming** - Clear size labels (xs, sm, md, lg, xl, 2xl, 3xl)
+✅ **Single Source of Truth** - All values defined in `design-tokens.css`
+✅ **Utility-First** - Reusable classes reduce CSS bloat
 ✅ **Responsive** - Consistent spacing across breakpoints
 
 ### Benefits
@@ -174,11 +174,11 @@ xl  ━━━━━━━━ 32px │ ▪️▪️▪️▪️▪️▪️▪️
 .gap-0, .gap-xs, .gap-sm, .gap-md, .gap-lg, .gap-xl, .gap-2xl, .gap-3xl
 
 /* Row gaps */
-.row-gap-0, .row-gap-xs, .row-gap-sm, .row-gap-md, .row-gap-lg, 
+.row-gap-0, .row-gap-xs, .row-gap-sm, .row-gap-md, .row-gap-lg,
 .row-gap-xl, .row-gap-2xl, .row-gap-3xl
 
 /* Column gaps */
-.column-gap-0, .column-gap-xs, .column-gap-sm, .column-gap-md, 
+.column-gap-0, .column-gap-xs, .column-gap-sm, .column-gap-md,
 .column-gap-lg, .column-gap-xl, .column-gap-2xl, .column-gap-3xl
 ```
 
@@ -300,7 +300,7 @@ When utility classes aren't enough:
   /* Use tokens directly for non-standard combinations */
   padding: var(--spacing-md) var(--spacing-lg);
   margin: var(--spacing-xl) auto;
-  
+
   /* Combine with calc() for special cases */
   padding-top: calc(var(--spacing-lg) + var(--spacing-xs)); /* 28px */
 }
@@ -480,10 +480,10 @@ grep -rn "gap:\s*[0-9].*px" src/*.css
 .dynamic-spacing {
   /* Add two tokens */
   margin-top: calc(var(--spacing-lg) + var(--spacing-sm)); /* 32px */
-  
+
   /* Multiply token */
   padding: calc(var(--spacing-md) * 1.5); /* 24px */
-  
+
   /* Subtract token */
   gap: calc(var(--spacing-xl) - var(--spacing-xs)); /* 28px */
 }
@@ -606,18 +606,18 @@ console.log(
 
 The spacing system provides:
 
-✅ **7 spacing tokens** (xs → 3xl) following 8px grid  
-✅ **224 utility classes** (margin, padding, gap variations)  
-✅ **Single source of truth** (design-tokens.css)  
-✅ **Flexible patterns** (utilities, direct tokens, calc)  
+✅ **7 spacing tokens** (xs → 3xl) following 8px grid
+✅ **224 utility classes** (margin, padding, gap variations)
+✅ **Single source of truth** (design-tokens.css)
+✅ **Flexible patterns** (utilities, direct tokens, calc)
 ✅ **Responsive support** (media query compatible)
 
-**Audit Status:** 170 violations found across 15 files  
-**Migration Priority:** High-use components first (onboarding, cards, navigation)  
+**Audit Status:** 170 violations found across 15 files
+**Migration Priority:** High-use components first (onboarding, cards, navigation)
 **Next Steps:** Gradual migration using utility classes + tokens
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** 2026-02-15  
+**Document Version:** 1.0
+**Last Updated:** 2026-02-15
 **Maintainer:** Guia Turístico Team

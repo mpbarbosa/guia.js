@@ -76,7 +76,7 @@ this.reverseGeocoder = params.reverseGeocoder ||
 ✓ Application initialized successfully
 
 // First attempt (will fail due to CORS)
-Access to fetch at 'https://nominatim.openstreetmap.org/reverse...' 
+Access to fetch at 'https://nominatim.openstreetmap.org/reverse...'
 has been blocked by CORS policy
 
 [ReverseGeocoder.fetchAddress] Failed: TypeError: Failed to fetch

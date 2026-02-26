@@ -1,7 +1,7 @@
 # Testing Module Systems: ES6 vs CommonJS in Jest
 
-**Target Audience:** Maintainers, Contributors, GitHub Copilot  
-**Purpose:** Quick reference for module system decisions in testing  
+**Target Audience:** Maintainers, Contributors, GitHub Copilot
+**Purpose:** Quick reference for module system decisions in testing
 **Related:** [Full Guide](../docs/JEST_COMMONJS_ES6_GUIDE.md)
 
 ---
@@ -33,7 +33,7 @@ import { describe, test, expect } from '@jest/globals';
 import { MyClass } from '../../src/guia.js';
 ```
 
-**Estimated effort:** 1-2 days  
+**Estimated effort:** 1-2 days
 **Impact:** Fixes all 19 failing test suites
 
 ---
@@ -122,7 +122,7 @@ describe('MyClass', () => {
 });
 ```
 
-**Effort:** Medium (1-2 days for Guia.js)  
+**Effort:** Medium (1-2 days for Guia.js)
 **Best for:** Guia.js ✅
 
 ---
@@ -166,7 +166,7 @@ npm install --save-dev @babel/core @babel/preset-env babel-jest
 }
 ```
 
-**Effort:** Medium (1 day)  
+**Effort:** Medium (1 day)
 **Best for:** Production projects needing stability
 
 ---
@@ -200,7 +200,7 @@ if (typeof module !== 'undefined') {
 }
 ```
 
-**Effort:** Low (few hours)  
+**Effort:** Low (few hours)
 **Best for:** Legacy compatibility (not recommended for Guia.js)
 
 ---
@@ -439,7 +439,7 @@ const B = require('./b.js');
 ```javascript
 /**
  * Test: [Feature Name]
- * 
+ *
  * @jest-environment node
  */
 
@@ -690,9 +690,9 @@ node --inspect --experimental-vm-modules node_modules/jest/bin/jest.js --runInBa
 
 ---
 
-**Document Version:** 1.0.0  
-**Last Updated:** 2025-10-15  
-**Maintained By:** Guia.js Team  
+**Document Version:** 1.0.0
+**Last Updated:** 2025-10-15
+**Maintained By:** Guia.js Team
 **Status:** Active
 
 **Related Issues:**

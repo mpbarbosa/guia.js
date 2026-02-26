@@ -1,6 +1,6 @@
 # Guia.js Deployment and Distribution Guide
 
-**Version**: 0.9.0-alpha  
+**Version**: 0.9.0-alpha
 **Last Updated**: 2026-01-06
 
 ---
@@ -67,10 +67,10 @@ git push origin vX.Y.Z
 </head>
 <body>
     <div id="map-container"></div>
-    
+
     <!-- Import Guia.js from CDN -->
     <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js"></script>
-    
+
     <script>
         // Use Guia.js APIs
         const manager = new WebGeocodingManager(document, 'map-container');
@@ -84,7 +84,7 @@ git push origin vX.Y.Z
 
 ---
 
-## What About test.html?
+## What About test.html
 
 **`test.html` is a development tool**, not a deployment target.
 
@@ -250,7 +250,7 @@ If all checks pass, proceed. Otherwise, reconsider.
 
 ---
 
-**Last Updated**: 2026-01-06  
+**Last Updated**: 2026-01-06
 **Maintainer**: Architecture Team
 
 **Remember**: Guia.js is distributed via CDN, not deployed as a website. If you're thinking about GitHub Pages, you're probably on the wrong track. 🎯

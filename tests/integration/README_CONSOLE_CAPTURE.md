@@ -88,7 +88,7 @@ import pytest
 def test_page_loads_without_errors(firefox_driver, console_capture):
     """Test that page loads without console errors."""
     firefox_driver.get("https://example.com")
-    
+
     # Assert no console errors
     console_capture.assert_no_errors()
 
@@ -96,7 +96,7 @@ def test_page_loads_without_errors(firefox_driver, console_capture):
 def test_wait_for_api_log(firefox_driver, console_capture):
     """Test waiting for specific log message."""
     firefox_driver.get("https://example.com/api")
-    
+
     # Wait for API completion log
     log = console_capture.wait_for_log(r"API call completed", timeout=5.0)
     assert log is not None, "API call not logged"
@@ -274,7 +274,7 @@ Provides FirefoxConsoleCapture with auto-clear enabled.
 def test_sequential_pages(firefox_driver, console_capture_autoclear):
     firefox_driver.get("https://example.com/page1")
     assert len(console_capture_autoclear.get_errors()) == 0
-    
+
     firefox_driver.get("https://example.com/page2")
     assert len(console_capture_autoclear.get_errors()) == 0  # Logs auto-cleared
 ```
@@ -295,7 +295,7 @@ Provides default wait timeout (15 seconds).
 def test_page_has_no_errors(firefox_driver, console_capture):
     """Ensure page loads without JavaScript errors."""
     firefox_driver.get("https://example.com")
-    
+
     console_capture.assert_no_errors("Page should load cleanly")
 ```
 
@@ -305,7 +305,7 @@ def test_page_has_no_errors(firefox_driver, console_capture):
 def test_api_call_logs(firefox_driver, console_capture):
     """Wait for API call completion log."""
     firefox_driver.get("https://example.com/api-test")
-    
+
     log = console_capture.wait_for_log(r"API call completed", timeout=5.0)
     assert log is not None, "API call not logged"
     assert "status 200" in log["message"]
@@ -317,10 +317,10 @@ def test_api_call_logs(firefox_driver, console_capture):
 def test_no_warnings_or_errors(firefox_driver, console_capture):
     """Ensure page has no warnings or errors."""
     firefox_driver.get("https://example.com")
-    
+
     warnings = console_capture.get_warnings()
     errors = console_capture.get_errors()
-    
+
     assert len(warnings) == 0, f"Unexpected warnings: {warnings}"
     assert len(errors) == 0, f"Unexpected errors: {errors}"
 ```
@@ -331,9 +331,9 @@ def test_no_warnings_or_errors(firefox_driver, console_capture):
 def test_log_summary(firefox_driver, console_capture):
     """Analyze console log distribution."""
     firefox_driver.get("https://example.com")
-    
+
     summary = console_capture.get_log_summary()
-    
+
     # Allow some info logs but no errors
     assert summary["ERROR"] == 0, "No errors allowed"
     assert summary["WARNING"] <= 2, "Max 2 warnings allowed"
@@ -351,9 +351,9 @@ def test_with_custom_config(firefox_driver):
         wait_timeout=5.0
     )
     console = FirefoxConsoleCapture(firefox_driver, config=config)
-    
+
     firefox_driver.get("https://example.com")
-    
+
     logs = console.get_logs()  # Auto-clears after retrieval
     assert len(logs) <= 100
 ```
@@ -371,12 +371,12 @@ The library automatically captures:
 def test_javascript_error_handling(firefox_driver, console_capture):
     """Test that JavaScript errors are captured."""
     firefox_driver.get("https://example.com")
-    
+
     # Trigger intentional error
     firefox_driver.execute_script("throw new Error('Test error');")
-    
+
     time.sleep(0.5)  # Wait for error to be captured
-    
+
     errors = console_capture.get_errors()
     assert any("Test error" in e["message"] for e in errors)
 ```
@@ -387,13 +387,13 @@ def test_javascript_error_handling(firefox_driver, console_capture):
 def test_log_pattern_matching(firefox_driver, console_capture):
     """Match logs using regex patterns."""
     firefox_driver.get("https://example.com")
-    
+
     # Wait for log matching pattern
     log = console_capture.wait_for_log(
         r"Request to /api/.*completed in \d+ms",
         timeout=3.0
     )
-    
+
     assert log is not None
 ```
 
@@ -403,10 +403,10 @@ def test_log_pattern_matching(firefox_driver, console_capture):
 def test_multi_page_navigation(firefox_driver, console_capture_autoclear):
     """Test multiple pages with auto-clear."""
     pages = ["page1.html", "page2.html", "page3.html"]
-    
+
     for page in pages:
         firefox_driver.get(f"https://example.com/{page}")
-        
+
         # Each page checked independently
         errors = console_capture_autoclear.get_errors()
         assert len(errors) == 0, f"Errors on {page}: {errors}"

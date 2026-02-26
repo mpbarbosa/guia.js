@@ -1,8 +1,8 @@
 # Large View Files Refactoring Plan
 
-**Date**: 2026-01-24  
-**Status**: 📋 DOCUMENTED (Deferred to future sprint)  
-**Priority**: MEDIUM  
+**Date**: 2026-01-24
+**Status**: 📋 DOCUMENTED (Deferred to future sprint)
+**Priority**: MEDIUM
 **Estimated Effort**: 2 days (16 hours)
 
 ---
@@ -284,27 +284,27 @@ export class LocationButtonHandler {
 ```javascript
 export default {
   title: 'Guia Turístico - Localização',
-  
+
   // Services (injected or created)
   locationService: null,
   trackingService: null,
   displayService: null,
   viewModel: null,
-  
+
   styles: [],
-  
+
   render() {
     return `<!-- HTML only, no logic -->`;
   },
-  
+
   mount() {
     // Initialize services
     this._initServices();
-    
+
     // Setup handlers
     this._setupHandlers();
   },
-  
+
   _initServices() {
     const manager = new WebGeocodingManager('output');
     this.locationService = new LocationService(manager);
@@ -316,13 +316,13 @@ export default {
       this.displayService
     );
   },
-  
+
   _setupHandlers() {
     const locationBtn = document.getElementById("obter-localizacao-btn");
     this.locationHandler = new LocationButtonHandler(this.viewModel);
     this.locationHandler.attach(locationBtn);
   },
-  
+
   cleanup() {
     this.trackingService?.stop();
     this.locationService?.cleanup();
@@ -481,7 +481,7 @@ If 2 days is too much, do incrementally:
 
 ---
 
-**Status**: 📋 DOCUMENTED, ready for implementation when prioritized  
-**Effort**: 2 days (16 hours) or incremental over 3 weeks  
-**Impact**: HIGH (better maintainability, testability, reusability)  
+**Status**: 📋 DOCUMENTED, ready for implementation when prioritized
+**Effort**: 2 days (16 hours) or incremental over 3 weeks
+**Impact**: HIGH (better maintainability, testability, reusability)
 **Risk**: LOW (can be done incrementally)

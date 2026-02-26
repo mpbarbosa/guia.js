@@ -12,7 +12,7 @@ TypeError: Failed to fetch
 ```
 
 ```javascript
-GET https://nominatim.openstreetmap.org/reverse?format=json&lat=-23.550520&lon=-46.633309 
+GET https://nominatim.openstreetmap.org/reverse?format=json&lat=-23.550520&lon=-46.633309
 CORS error / Failed to fetch
 ```
 
@@ -39,7 +39,7 @@ Request → https://api.allorigins.win/raw?url=https%3A%2F%2Fnominatim.openstree
 If both attempts fail, the user sees:
 
 ```
-"Não foi possível acessar o serviço de geocodificação. 
+"Não foi possível acessar o serviço de geocodificação.
 Verifique sua conexão ou consulte CORS_TROUBLESHOOTING.md"
 ```
 
@@ -174,12 +174,12 @@ RewriteRule ^api/nominatim/(.*) https://nominatim.openstreetmap.org/$1 [P,L]
 location /api/nominatim/ {
     proxy_pass https://nominatim.openstreetmap.org/;
     proxy_set_header Host nominatim.openstreetmap.org;
-    
+
     # Add CORS headers
     add_header Access-Control-Allow-Origin * always;
     add_header Access-Control-Allow-Methods "GET, POST, OPTIONS" always;
     add_header Access-Control-Allow-Headers "Content-Type" always;
-    
+
     # Handle OPTIONS preflight
     if ($request_method = 'OPTIONS') {
         return 204;
@@ -217,9 +217,9 @@ const config = {
         console.log('Direct access:', response.ok ? 'SUCCESS' : 'FAILED');
     } catch (err) {
         console.log('Direct access FAILED (expected in production)');
-        
+
         // Try CORS proxy
-        const proxyUrl = 'https://api.allorigins.win/raw?url=' + 
+        const proxyUrl = 'https://api.allorigins.win/raw?url=' +
             encodeURIComponent('https://nominatim.openstreetmap.org/reverse?format=json&lat=-23.5505&lon=-46.6333');
         const proxyResponse = await fetch(proxyUrl);
         console.log('CORS proxy:', proxyResponse.ok ? 'SUCCESS' : 'FAILED');
@@ -250,5 +250,5 @@ const config = {
 
 ---
 
-**Last Updated**: 2026-02-16  
+**Last Updated**: 2026-02-16
 **Version**: 0.9.0-alpha

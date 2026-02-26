@@ -305,10 +305,10 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 
 For full details on each script — including executable permissions, shebangs, environment variables, exit codes, workflow relationships, and CI/CD integration — see [`scripts/README.md`](./scripts/README.md).
 
-> **Integration tests**: `tests/integration/run_visual_hierarchy_tests.sh` starts a local HTTP server and runs Selenium-based visual hierarchy tests. See [`scripts/README.md`](./scripts/README.md) for full documentation.  
-> **CI/CD note**: These scripts are **local developer tools**. GitHub Actions workflows in `.github/workflows/` automate equivalent operations (badge updates, test-count sync, doc linting) on push/PR. For CI helper scripts used inside workflows, see [`.github/scripts/`](./.github/scripts/).  
-> **Permissions**: All scripts ship executable (`chmod +x`). If lost after cloning, restore with `chmod +x scripts/*.sh`.  
-> **Entry point**: Scripts use `#!/bin/bash` and must be invoked as `./scripts/<name>.sh` or `bash scripts/<name>.sh`, not `sh`.  
+> **Integration tests**: `tests/integration/run_visual_hierarchy_tests.sh` starts a local HTTP server and runs Selenium-based visual hierarchy tests. See [`scripts/README.md`](./scripts/README.md) for full documentation.
+> **CI/CD note**: These scripts are **local developer tools**. GitHub Actions workflows in `.github/workflows/` automate equivalent operations (badge updates, test-count sync, doc linting) on push/PR. For CI helper scripts used inside workflows, see [`.github/scripts/`](./.github/scripts/).
+> **Permissions**: All scripts ship executable (`chmod +x`). If lost after cloning, restore with `chmod +x scripts/*.sh`.
+> **Entry point**: Scripts use `#!/bin/bash` and must be invoked as `./scripts/<name>.sh` or `bash scripts/<name>.sh`, not `sh`.
 > **Error handling**: All scripts use `set -e` — any failing command exits immediately with code 1. None require external environment variables.
 
 ## 📁 Project Structure
@@ -428,7 +428,7 @@ To ensure clear communication about testing concepts:
 
 - **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`)
   - The project has 57 passing test suites across 5 categories
-  
+
 - **Test**: Individual test case within a suite using `it()` or `test()`
   - Example: `it('should return singleton instance')`
   - The project has 3,242 tests total (3,074 passing, 168 skipped)
@@ -735,7 +735,7 @@ Guia.js generates Google Maps links for enhanced location visualization and navi
 // Map view URL format
 https://www.google.com/maps?q=<latitude>,<longitude>
 
-// Street View URL format  
+// Street View URL format
 https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=<latitude>,<longitude>
 ```
 
@@ -1172,7 +1172,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js
    ```html
    <!-- ✅ Good: Pinned version -->
    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js"></script>
-   
+
    <!-- ❌ Avoid: Latest version (unpredictable) -->
    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@main/src/guia.js"></script>
    ```
@@ -1182,10 +1182,10 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js
    ```bash
    # Push code
    git push
-   
+
    # Generate URLs
    ./.github/scripts/cdn-delivery.sh
-   
+
    # Test commit URL immediately
    # Then create tag once tested
    git tag v0.6.0-alpha
@@ -1350,7 +1350,7 @@ Combine and minify multiple files in a single request:
 ```html
 <script type="module">
   import { WebGeocodingManager, PositionManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js';
-  
+
   // Use imported classes
   const manager = new WebGeocodingManager(document, 'map-container');
   const position = PositionManager.getInstance();
@@ -1773,6 +1773,6 @@ ISC License - See repository for details
 
 ---
 
-**Version**: 0.9.0-alpha (active development)  
-**Status**: Active Development  
+**Version**: 0.9.0-alpha (active development)
+**Status**: Active Development
 **Last Updated**: 2026-02-23

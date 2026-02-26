@@ -1,7 +1,7 @@
 # EventCoordinator API Documentation
 
-**Version**: 0.9.0-alpha  
-**Module**: `coordination/EventCoordinator`  
+**Version**: 0.9.0-alpha
+**Module**: `coordination/EventCoordinator`
 **Since**: 0.9.0-alpha (Phase 1: WebGeocodingManager refactoring)
 
 ---
@@ -152,8 +152,8 @@ eventCoordinator.removeEventListeners();
 
 ### Geolocation Button
 
-**Button ID**: `obter-localizacao-btn`  
-**Event**: `click`  
+**Button ID**: `obter-localizacao-btn`
+**Event**: `click`
 **Function**: Triggers geolocation tracking
 
 #### Behavior
@@ -178,8 +178,8 @@ eventCoordinator.initializeEventListeners();
 
 ### Restaurant Search Button
 
-**Button ID**: `encontrar-restaurantes-btn`  
-**Event**: `click`  
+**Button ID**: `encontrar-restaurantes-btn`
+**Event**: `click`
 **Function**: Delegates to `window.findNearbyRestaurants(lat, lon)`
 
 #### Behavior
@@ -221,8 +221,8 @@ eventCoordinator.initializeEventListeners();
 
 ### City Statistics Button
 
-**Button ID**: `estatisticas-cidade-btn`  
-**Event**: `click`  
+**Button ID**: `estatisticas-cidade-btn`
+**Event**: `click`
 **Function**: Delegates to `window.fetchCityStatistics(lat, lon)`
 
 #### Behavior
@@ -431,11 +431,11 @@ showError('Localização não disponível. Obtenha sua localização primeiro.')
   <button id="obter-localizacao-btn" class="btn btn-primary">
     📍 Obter Localização
   </button>
-  
+
   <button id="encontrar-restaurantes-btn" class="btn btn-secondary" disabled>
     🍽️ Encontrar Restaurantes
   </button>
-  
+
   <button id="estatisticas-cidade-btn" class="btn btn-secondary" disabled>
     📊 Estatísticas da Cidade
   </button>
@@ -466,10 +466,10 @@ removeEventListeners() {
   this._handlers.forEach((handlerInfo, element) => {
     element.removeEventListener(handlerInfo.type, handlerInfo.listener);
   });
-  
+
   // 2. Clear the map
   this._handlers.clear();
-  
+
   // 3. Reset initialization flag
   this._initialized = false;
 }
@@ -496,6 +496,6 @@ removeEventListeners() {
 
 ---
 
-**Status**: ✅ Production Ready  
-**Test Coverage**: 85%+ (unit + integration tests)  
+**Status**: ✅ Production Ready
+**Test Coverage**: 85%+ (unit + integration tests)
 **Breaking Changes**: None (initial version)

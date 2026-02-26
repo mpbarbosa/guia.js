@@ -1,7 +1,7 @@
 # Test Strategy Documentation
 
-**Version**: 0.9.0+  
-**Test Count**: 2,045 tests (1,899 passing, 146 skipped)  
+**Version**: 0.9.0+
+**Test Count**: 2,045 tests (1,899 passing, 146 skipped)
 **Coverage**: ~70% overall, 100% on critical components
 
 ## Overview
@@ -17,11 +17,11 @@ This strategy provides comprehensive coverage with specialized tools for each te
 
 ### Jest/Puppeteer (`__tests__/`)
 
-**Purpose**: Primary test suite for unit, integration, and E2E tests  
-**Language**: JavaScript (Node.js)  
-**Browser**: Chromium (headless)  
-**Test Count**: 2,045 tests across 88 suites  
-**Execution Time**: ~30-45 seconds  
+**Purpose**: Primary test suite for unit, integration, and E2E tests
+**Language**: JavaScript (Node.js)
+**Browser**: Chromium (headless)
+**Test Count**: 2,045 tests across 88 suites
+**Execution Time**: ~30-45 seconds
 **Command**: `npm test`
 
 #### Directory Organization
@@ -49,7 +49,7 @@ __tests__/
 └── features/                  # Feature-specific tests
 ```
 
-#### Why This Organization?
+#### Why This Organization
 
 - **Unit**: Tests single components in isolation (fast, no dependencies)
 - **Integration**: Tests component interaction (moderate speed, some dependencies)
@@ -60,9 +60,9 @@ __tests__/
 
 ### Python/Playwright (`tests/`)
 
-**Purpose**: Cross-browser validation and visual regression  
-**Language**: Python 3.11+  
-**Browsers**: Chromium, Firefox, WebKit (Safari)  
+**Purpose**: Cross-browser validation and visual regression
+**Language**: Python 3.11+
+**Browsers**: Chromium, Firefox, WebKit (Safari)
 **Command**: `pytest tests/e2e/`
 
 #### Directory Organization
@@ -75,7 +75,7 @@ tests/
     └── conftest.py            # Pytest fixtures
 ```
 
-#### Why Python/Playwright?
+#### Why Python/Playwright
 
 - **Cross-browser**: Validates behavior across all major browsers
 - **Visual Testing**: Screenshot comparison and visual regression
@@ -162,8 +162,8 @@ pytest tests/e2e/
 
 ### Unit Tests
 
-**Purpose**: Test single functions/classes in isolation  
-**Speed**: Very fast (<100ms per test)  
+**Purpose**: Test single functions/classes in isolation
+**Speed**: Very fast (<100ms per test)
 **Dependencies**: None (mocked if needed)
 
 **Example**:
@@ -179,8 +179,8 @@ describe('GeoPosition', () => {
 
 ### Integration Tests
 
-**Purpose**: Test component interaction  
-**Speed**: Fast to moderate (100-500ms per test)  
+**Purpose**: Test component interaction
+**Speed**: Fast to moderate (100-500ms per test)
 **Dependencies**: Multiple real components
 
 **Example**:
@@ -190,10 +190,10 @@ describe('Address Fetching Flow', () => {
   it('should coordinate geocoder and displayer', async () => {
     const geocoder = new ReverseGeocoder(-23.55, -46.63);
     const displayer = new HTMLAddressDisplayer(mockElement);
-    
+
     geocoder.subscribe(displayer);
     await geocoder.fetchAddress();
-    
+
     expect(mockElement.innerHTML).toContain('São Paulo');
   });
 });
@@ -201,8 +201,8 @@ describe('Address Fetching Flow', () => {
 
 ### E2E Tests
 
-**Purpose**: Test complete user workflows  
-**Speed**: Slower (1-5 seconds per test)  
+**Purpose**: Test complete user workflows
+**Speed**: Slower (1-5 seconds per test)
 **Dependencies**: Full browser, DOM, APIs (mocked)
 
 **Example**:
@@ -212,11 +212,11 @@ describe('Complete Geolocation Workflow', () => {
   it('should track location changes while driving', async () => {
     await page.goto('http://localhost:9877/src/index.html');
     await page.click('#botaoObterLocalizacao');
-    
+
     // Simulate movement
     await mockGeolocationChange(-23.55, -46.63);
     await page.waitForSelector('#bairroCard');
-    
+
     expect(await page.$eval('#bairroCard', el => el.textContent))
       .toContain('Vila Mariana');
   });
@@ -225,7 +225,7 @@ describe('Complete Geolocation Workflow', () => {
 
 ## Custom Test Organization
 
-### Why Not Standard Jest Structure?
+### Why Not Standard Jest Structure
 
 The project uses a **domain-based organization** instead of Jest's default `__tests__` colocated structure:
 
@@ -243,7 +243,7 @@ The project uses a **domain-based organization** instead of Jest's default `__te
 
 ## Skipped Tests (146)
 
-### Why Skip Tests?
+### Why Skip Tests
 
 Tests are skipped for specific reasons:
 
@@ -287,10 +287,10 @@ it('should calculate distance correctly', () => {
   // Arrange - Set up test data
   const lat1 = -23.550520, lon1 = -46.633309;
   const lat2 = -23.551520, lon2 = -46.634309;
-  
+
   // Act - Execute the operation
   const distance = calculateDistance(lat1, lon1, lat2, lon2);
-  
+
   // Assert - Verify the result
   expect(distance).toBeCloseTo(157.23, 2);
 });

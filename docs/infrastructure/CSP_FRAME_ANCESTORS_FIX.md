@@ -87,7 +87,7 @@ npm test -- __tests__/config/csp.test.js
 Key tests:
 
 - ✅ Meta content excludes frame-ancestors
-- ✅ HTTP headers include frame-ancestors  
+- ✅ HTTP headers include frame-ancestors
 - ✅ X-Frame-Options present for fallback
 - ✅ All other CSP directives work in both modes
 
@@ -120,5 +120,5 @@ app.use((req, res, next) => {
 
 ---
 
-**Fixed in version**: 0.9.0-alpha  
+**Fixed in version**: 0.9.0-alpha
 **Date**: 2026-02-16

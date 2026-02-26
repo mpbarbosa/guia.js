@@ -32,7 +32,7 @@ Track these essential metrics for user experience:
 
 #### 1. Largest Contentful Paint (LCP)
 
-**Target**: < 2.5 seconds  
+**Target**: < 2.5 seconds
 **Measures**: Loading performance
 
 ```javascript
@@ -46,7 +46,7 @@ new PerformanceObserver((list) => {
 
 #### 2. First Input Delay (FID)
 
-**Target**: < 100ms  
+**Target**: < 100ms
 **Measures**: Interactivity
 
 ```javascript
@@ -60,7 +60,7 @@ new PerformanceObserver((list) => {
 
 #### 3. Cumulative Layout Shift (CLS)
 
-**Target**: < 0.1  
+**Target**: < 0.1
 **Measures**: Visual stability
 
 ```javascript
@@ -84,12 +84,12 @@ new PerformanceObserver((list) => {
 class PerformanceMonitor {
     static measureGeolocation() {
         const start = performance.now();
-        
+
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const duration = performance.now() - start;
                 console.log(`Geolocation: ${duration.toFixed(2)}ms`);
-                
+
                 // Target: < 2000ms
                 if (duration > 2000) {
                     console.warn('Geolocation slow!');
@@ -109,29 +109,29 @@ class PerformanceMonitor {
 class AddressPerformance {
     static async measureGeocode(lat, lon) {
         const start = performance.now();
-        
+
         const address = await reverseGeocoder.geocode(lat, lon);
         const duration = performance.now() - start;
-        
+
         console.log(`Geocoding: ${duration.toFixed(2)}ms`);
-        
+
         // Target: < 1000ms (network dependent)
         return { address, duration };
     }
-    
+
     static measureExtraction(nominatimData) {
         const start = performance.now();
-        
+
         const address = addressExtractor.extract(nominatimData);
         const duration = performance.now() - start;
-        
+
         console.log(`Extraction: ${duration.toFixed(2)}ms`);
-        
+
         // Target: < 100ms
         if (duration > 100) {
             console.warn('Extraction slow!');
         }
-        
+
         return { address, duration };
     }
 }
@@ -143,14 +143,14 @@ class AddressPerformance {
 class UIPerformance {
     static measureRender(callback) {
         const start = performance.now();
-        
+
         requestAnimationFrame(() => {
             callback();
-            
+
             requestAnimationFrame(() => {
                 const duration = performance.now() - start;
                 console.log(`UI Render: ${duration.toFixed(2)}ms`);
-                
+
                 // Target: < 16ms (60 FPS)
                 if (duration > 16) {
                     console.warn('Frame drop detected!');
@@ -169,36 +169,36 @@ class MemoryMonitor {
         if (performance.memory) {
             const used = performance.memory.usedJSHeapSize / 1048576;
             const total = performance.memory.totalJSHeapSize / 1048576;
-            
+
             console.log(`Memory: ${used.toFixed(2)}MB / ${total.toFixed(2)}MB`);
-            
+
             // Target: < 50MB
             if (used > 50) {
                 console.warn('High memory usage!');
             }
-            
+
             return { used, total };
         }
         return null;
     }
-    
+
     static detectLeaks(testFunction, iterations = 100) {
         const initial = this.checkMemory();
-        
+
         for (let i = 0; i < iterations; i++) {
             testFunction();
         }
-        
+
         // Force garbage collection if available
         if (global.gc) {
             global.gc();
         }
-        
+
         const final = this.checkMemory();
         const growth = final.used - initial.used;
-        
+
         console.log(`Memory growth: ${growth.toFixed(2)}MB over ${iterations} iterations`);
-        
+
         // Alert if memory grows significantly
         if (growth > 5) {
             console.warn('Possible memory leak detected!');
@@ -276,11 +276,11 @@ async function runLighthouse(url) {
     output: 'html',
     port: chrome.port
   };
-  
+
   const runnerResult = await lighthouse(url, options);
-  
+
   console.log('Performance score:', runnerResult.lhr.categories.performance.score * 100);
-  
+
   await chrome.kill();
 }
 ```
@@ -304,33 +304,33 @@ Create `performance-test.html`:
     <script type="module">
         import { GeoPosition } from './src/core/GeoPosition.js';
         import { PositionManager } from './src/core/PositionManager.js';
-        
+
         const metrics = {
             geoPositionCreation: [],
             distanceCalculation: [],
             managerOperations: []
         };
-        
+
         function benchmark(name, fn, iterations = 1000) {
             const times = [];
-            
+
             for (let i = 0; i < iterations; i++) {
                 const start = performance.now();
                 fn();
                 const duration = performance.now() - start;
                 times.push(duration);
             }
-            
+
             const avg = times.reduce((a, b) => a + b) / times.length;
             const min = Math.min(...times);
             const max = Math.max(...times);
-            
+
             return { name, avg, min, max, iterations };
         }
-        
+
         document.getElementById('run-test').addEventListener('click', () => {
             console.log('Running performance tests...');
-            
+
             // Test 1: GeoPosition creation
             const result1 = benchmark('GeoPosition Creation', () => {
                 new GeoPosition({
@@ -342,21 +342,21 @@ Create `performance-test.html`:
                     timestamp: Date.now()
                 });
             });
-            
+
             console.log(`${result1.name}: avg=${result1.avg.toFixed(3)}ms, min=${result1.min.toFixed(3)}ms, max=${result1.max.toFixed(3)}ms`);
-            
+
             // Test 2: Distance calculation
             const pos = new GeoPosition({
                 coords: { latitude: -23.5505, longitude: -46.6333, accuracy: 10 },
                 timestamp: Date.now()
             });
-            
+
             const result2 = benchmark('Distance Calculation', () => {
                 pos.distanceTo(-22.9068, -43.1729);
             }, 10000);
-            
+
             console.log(`${result2.name}: avg=${result2.avg.toFixed(3)}ms`);
-            
+
             // Display results
             document.getElementById('metrics').innerHTML = `
                 <h2>Results</h2>
@@ -380,7 +380,7 @@ Create `performance-test.html`:
 window.addEventListener('load', () => {
     const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
     console.log(`Page Load: ${loadTime}ms`);
-    
+
     // Target: < 500ms
     if (loadTime > 500) {
         console.warn('Slow page load!');
@@ -402,16 +402,16 @@ async function testRapidUpdates() {
         },
         timestamp: Date.now() + (i * 100)
     }));
-    
+
     const start = performance.now();
-    
+
     for (const pos of positions) {
         await manager.handlePositionUpdate(pos);
     }
-    
+
     const duration = performance.now() - start;
     console.log(`10 updates: ${duration.toFixed(2)}ms`);
-    
+
     // Target: < 1000ms total
 }
 ```
@@ -423,20 +423,20 @@ async function testRapidUpdates() {
 ```javascript
 function memoryStressTest() {
     console.log('Memory before:', performance.memory.usedJSHeapSize / 1048576, 'MB');
-    
+
     for (let i = 0; i < 100; i++) {
         const pos = new GeoPosition({
             coords: { latitude: -23.5505, longitude: -46.6333, accuracy: 10 },
             timestamp: Date.now()
         });
-        
+
         // Use position
         pos.distanceTo(-22.9068, -43.1729);
     }
-    
+
     // Force GC if available
     if (global.gc) global.gc();
-    
+
     console.log('Memory after:', performance.memory.usedJSHeapSize / 1048576, 'MB');
 }
 ```
@@ -572,14 +572,14 @@ const addressCache = new Map();
 
 async function getCachedAddress(lat, lon) {
     const key = `${lat.toFixed(4)},${lon.toFixed(4)}`;
-    
+
     if (addressCache.has(key)) {
         return addressCache.get(key);
     }
-    
+
     const address = await reverseGeocoder.geocode(lat, lon);
     addressCache.set(key, address);
-    
+
     return address;
 }
 ```
@@ -615,15 +615,15 @@ class PerformanceReporter {
                 page_path: window.location.pathname
             });
         }
-        
+
         // Log locally
         console.log(`[Performance] ${metric}: ${value}`);
     }
-    
+
     static reportGeolocationTime(duration) {
         this.report('geolocation_time', duration);
     }
-    
+
     static reportGeocodingTime(duration) {
         this.report('geocoding_time', duration);
     }
@@ -645,7 +645,7 @@ const PERFORMANCE_BUDGET = {
 function checkBudget(metric, value) {
     if (value > PERFORMANCE_BUDGET[metric]) {
         console.warn(`⚠️ Performance budget exceeded: ${metric} took ${value}ms (budget: ${PERFORMANCE_BUDGET[metric]}ms)`);
-        
+
         // Report violation
         PerformanceReporter.report(`budget_violation_${metric}`, value);
     }
@@ -660,6 +660,6 @@ function checkBudget(metric, value) {
 
 ---
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-01-01  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-01-01
 **Performance Targets**: LCP < 2.5s, FID < 100ms, CLS < 0.1

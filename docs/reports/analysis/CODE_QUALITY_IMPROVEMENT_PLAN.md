@@ -2,9 +2,9 @@
 
 ## Executive Summary
 
-**Current Grade:** B (72/100)  
-**Target Grade:** A (85+/100)  
-**Timeline:** 12-15 developer days across 5 sprints  
+**Current Grade:** B (72/100)
+**Target Grade:** A (85+/100)
+**Timeline:** 12-15 developer days across 5 sprints
 **Risk Level:** Low to Medium (mitigated by 1,794 passing tests)
 
 This plan addresses the comprehensive code quality assessment findings, prioritizing high-impact, low-risk improvements.
@@ -13,8 +13,8 @@ This plan addresses the comprehensive code quality assessment findings, prioriti
 
 ## Phase 1: Quick Wins (Priority: 🔴 HIGH, Risk: LOW)
 
-**Timeline:** 1-2 days  
-**Effort:** 8-10 hours  
+**Timeline:** 1-2 days
+**Effort:** 8-10 hours
 **Impact:** Medium
 
 ### Task 1.1: Centralize Console.log Usage
@@ -93,7 +93,7 @@ const CACHE_CONFIG = Object.freeze({
 class AddressCache {
     constructor() {
         this.cache = new LRUCache(
-            CACHE_CONFIG.MAX_SIZE, 
+            CACHE_CONFIG.MAX_SIZE,
             CACHE_CONFIG.TTL_MS
         );
     }
@@ -231,8 +231,8 @@ cache.setLogradouroChangeCallback(callback);
 
 ## Phase 2: Timer Management (Priority: 🔴 HIGH, Risk: LOW)
 
-**Timeline:** 1-2 days  
-**Effort:** 8-10 hours  
+**Timeline:** 1-2 days
+**Effort:** 8-10 hours
 **Impact:** High (prevents memory leaks)
 
 ### Task 2.1: Create TimerManager Utility
@@ -245,21 +245,21 @@ cache.setLogradouroChangeCallback(callback);
 /**
  * Centralized timer management to prevent memory leaks
  * Singleton pattern with automatic cleanup tracking
- * 
+ *
  * @class TimerManager
  * @example
  * import timerManager from './utils/TimerManager.js';
- * 
+ *
  * // Set timer with tracking
  * timerManager.setInterval(
  *     () => console.log('tick'),
  *     1000,
  *     'myTimer'
  * );
- * 
+ *
  * // Clear specific timer
  * timerManager.clearTimer('myTimer');
- * 
+ *
  * // Clear all timers
  * timerManager.clearAll();
  */
@@ -268,11 +268,11 @@ class TimerManager {
         if (TimerManager.instance) {
             return TimerManager.instance;
         }
-        
+
         this.timers = new Map();
         TimerManager.instance = this;
     }
-    
+
     /**
      * Create tracked interval timer
      * @param {Function} callback - Function to execute
@@ -285,23 +285,23 @@ class TimerManager {
         if (this.timers.has(id)) {
             this.clearTimer(id);
         }
-        
+
         const timerId = setInterval(callback, delay);
-        
+
         // Node.js: Prevent timer from keeping process alive
         if (typeof timerId === 'object' && typeof timerId.unref === 'function') {
             timerId.unref();
         }
-        
-        this.timers.set(id, { 
-            timerId, 
+
+        this.timers.set(id, {
+            timerId,
             type: 'interval',
             created: Date.now()
         });
-        
+
         return id;
     }
-    
+
     /**
      * Create tracked timeout timer
      * @param {Function} callback - Function to execute
@@ -313,25 +313,25 @@ class TimerManager {
         if (this.timers.has(id)) {
             this.clearTimer(id);
         }
-        
+
         const timerId = setTimeout(() => {
             callback();
             this.timers.delete(id); // Auto-cleanup after execution
         }, delay);
-        
+
         if (typeof timerId === 'object' && typeof timerId.unref === 'function') {
             timerId.unref();
         }
-        
-        this.timers.set(id, { 
-            timerId, 
+
+        this.timers.set(id, {
+            timerId,
             type: 'timeout',
             created: Date.now()
         });
-        
+
         return id;
     }
-    
+
     /**
      * Clear specific timer by ID
      * @param {string} id - Timer ID to clear
@@ -342,17 +342,17 @@ class TimerManager {
         if (!timer) {
             return false;
         }
-        
+
         if (timer.type === 'interval') {
             clearInterval(timer.timerId);
         } else {
             clearTimeout(timer.timerId);
         }
-        
+
         this.timers.delete(id);
         return true;
     }
-    
+
     /**
      * Clear all tracked timers
      * Useful for cleanup in tests or component destruction
@@ -367,7 +367,7 @@ class TimerManager {
         });
         this.timers.clear();
     }
-    
+
     /**
      * Get count of active timers (for debugging)
      * @returns {number} Number of active timers
@@ -375,7 +375,7 @@ class TimerManager {
     getActiveCount() {
         return this.timers.size;
     }
-    
+
     /**
      * Get all timer IDs (for debugging)
      * @returns {string[]} Array of timer IDs
@@ -401,94 +401,94 @@ describe('TimerManager', () => {
         timerManager.clearAll();
         jest.useFakeTimers();
     });
-    
+
     afterEach(() => {
         jest.useRealTimers();
         timerManager.clearAll();
     });
-    
+
     describe('setInterval', () => {
         it('should create tracked interval timer', () => {
             const callback = jest.fn();
             timerManager.setInterval(callback, 1000, 'test-interval');
-            
+
             expect(timerManager.getActiveCount()).toBe(1);
             expect(timerManager.getTimerIds()).toContain('test-interval');
-            
+
             jest.advanceTimersByTime(1000);
             expect(callback).toHaveBeenCalledTimes(1);
-            
+
             jest.advanceTimersByTime(1000);
             expect(callback).toHaveBeenCalledTimes(2);
         });
-        
+
         it('should replace timer with same ID', () => {
             const callback1 = jest.fn();
             const callback2 = jest.fn();
-            
+
             timerManager.setInterval(callback1, 1000, 'same-id');
             timerManager.setInterval(callback2, 1000, 'same-id');
-            
+
             expect(timerManager.getActiveCount()).toBe(1);
-            
+
             jest.advanceTimersByTime(1000);
             expect(callback1).not.toHaveBeenCalled();
             expect(callback2).toHaveBeenCalledTimes(1);
         });
     });
-    
+
     describe('setTimeout', () => {
         it('should create tracked timeout timer', () => {
             const callback = jest.fn();
             timerManager.setTimeout(callback, 1000, 'test-timeout');
-            
+
             expect(timerManager.getActiveCount()).toBe(1);
-            
+
             jest.advanceTimersByTime(1000);
             expect(callback).toHaveBeenCalledTimes(1);
-            
+
             // Auto-cleanup after execution
             expect(timerManager.getActiveCount()).toBe(0);
         });
     });
-    
+
     describe('clearTimer', () => {
         it('should clear specific timer', () => {
             const callback = jest.fn();
             timerManager.setInterval(callback, 1000, 'to-clear');
-            
+
             const result = timerManager.clearTimer('to-clear');
             expect(result).toBe(true);
             expect(timerManager.getActiveCount()).toBe(0);
-            
+
             jest.advanceTimersByTime(1000);
             expect(callback).not.toHaveBeenCalled();
         });
-        
+
         it('should return false for non-existent timer', () => {
             const result = timerManager.clearTimer('non-existent');
             expect(result).toBe(false);
         });
     });
-    
+
     describe('clearAll', () => {
         it('should clear all timers', () => {
             timerManager.setInterval(jest.fn(), 1000, 'timer1');
             timerManager.setInterval(jest.fn(), 2000, 'timer2');
             timerManager.setTimeout(jest.fn(), 3000, 'timer3');
-            
+
             expect(timerManager.getActiveCount()).toBe(3);
-            
+
             timerManager.clearAll();
             expect(timerManager.getActiveCount()).toBe(0);
         });
     });
-    
+
     describe('singleton pattern', () => {
         it('should return same instance', () => {
             const instance1 = timerManager;
             const { default: instance2 } = await import('../../src/utils/TimerManager.js');
-            
+
             expect(instance1).toBe(instance2);
         });
     });
@@ -508,12 +508,12 @@ import timerManager from '../utils/TimerManager.js';
 // In constructor (around line 81)
 constructor() {
     // ... existing code ...
-    
+
     // BEFORE:
     // this.cleanupInterval = setInterval(() => {
     //     this.cleanExpiredEntries();
     // }, 60000);
-    
+
     // AFTER:
     timerManager.setInterval(
         () => this.cleanExpiredEntries(),
@@ -553,15 +553,15 @@ start() {
     if (this.isRunning) {
         return;
     }
-    
+
     this.isRunning = true;
     this.startTime = Date.now();
-    
+
     // BEFORE:
     // this.intervalId = setInterval(() => {
     //     this.updateDisplay();
     // }, 1000);
-    
+
     // AFTER:
     timerManager.setInterval(
         () => this.updateDisplay(),
@@ -574,7 +574,7 @@ stop() {
     if (!this.isRunning) {
         return;
     }
-    
+
     this.isRunning = false;
     timerManager.clearTimer(`chronometer-${this.id || Date.now()}`);
 }
@@ -595,8 +595,8 @@ destroy() {
 
 ## Phase 3: Observer Pattern Improvements (Priority: 🟡 MEDIUM, Risk: LOW)
 
-**Timeline:** 1 day  
-**Effort:** 6-8 hours  
+**Timeline:** 1 day
+**Effort:** 6-8 hours
 **Impact:** Medium (prevents memory leaks)
 
 ### Task 3.1: Enhanced ObserverSubject with Cleanup
@@ -609,7 +609,7 @@ destroy() {
 /**
  * Enhanced observer pattern with automatic cleanup
  * Supports both object observers and function callbacks
- * 
+ *
  * @class ObserverSubject
  */
 class ObserverSubject {
@@ -618,7 +618,7 @@ class ObserverSubject {
         this.functionObservers = [];
         this.subscriptionMap = new WeakMap(); // Auto-cleanup for GC'd objects
     }
-    
+
     /**
      * Subscribe observer to notifications
      * @param {Object|Function} observer - Observer with update() method or callback function
@@ -630,29 +630,29 @@ class ObserverSubject {
         // Handle function observers
         if (typeof observer === 'function') {
             this.functionObservers = [...this.functionObservers, observer];
-            
+
             return () => {
                 this.functionObservers = this.functionObservers.filter(
                     o => o !== observer
                 );
             };
         }
-        
+
         // Handle object observers
         if (typeof observer === 'object' && observer !== null) {
             // Mark as weak reference if requested
             if (options.weak) {
                 this.subscriptionMap.set(observer, { weak: true });
             }
-            
+
             this.observers = [...this.observers, observer];
-            
+
             return () => this.unsubscribe(observer);
         }
-        
+
         throw new TypeError('Observer must be object with update() method or function');
     }
-    
+
     /**
      * Unsubscribe observer from notifications
      * @param {Object|Function} observer - Observer to remove
@@ -667,7 +667,7 @@ class ObserverSubject {
             this.subscriptionMap.delete(observer);
         }
     }
-    
+
     /**
      * Notify all observers with update
      * @param {...any} args - Arguments to pass to observers
@@ -683,7 +683,7 @@ class ObserverSubject {
                 }
             }
         });
-        
+
         // Notify function observers
         this.functionObservers.forEach(callback => {
             try {
@@ -693,7 +693,7 @@ class ObserverSubject {
             }
         });
     }
-    
+
     /**
      * Get count of active observers
      * @returns {number} Total observer count
@@ -701,7 +701,7 @@ class ObserverSubject {
     getObserverCount() {
         return this.observers.length + this.functionObservers.length;
     }
-    
+
     /**
      * Clear all observers
      * Useful for testing or component destruction
@@ -723,53 +723,53 @@ describe('ObserverSubject - Enhanced', () => {
         it('should return unsubscribe function', () => {
             const observer = { update: jest.fn() };
             const unsubscribe = subject.subscribe(observer);
-            
+
             expect(typeof unsubscribe).toBe('function');
-            
+
             subject.notifyObservers('test');
             expect(observer.update).toHaveBeenCalledTimes(1);
-            
+
             unsubscribe();
             subject.notifyObservers('test2');
             expect(observer.update).toHaveBeenCalledTimes(1); // Not called again
         });
     });
-    
+
     describe('function observers', () => {
         it('should support function callbacks', () => {
             const callback = jest.fn();
             const unsubscribe = subject.subscribe(callback);
-            
+
             subject.notifyObservers('data');
             expect(callback).toHaveBeenCalledWith(subject, 'data');
-            
+
             unsubscribe();
             subject.notifyObservers('data2');
             expect(callback).toHaveBeenCalledTimes(1);
         });
     });
-    
+
     describe('error handling', () => {
         it('should catch observer errors without breaking notification chain', () => {
-            const observer1 = { 
+            const observer1 = {
                 update: jest.fn(() => { throw new Error('test error'); })
             };
             const observer2 = { update: jest.fn() };
-            
+
             subject.subscribe(observer1);
             subject.subscribe(observer2);
-            
+
             const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-            
+
             subject.notifyObservers();
-            
+
             expect(observer1.update).toHaveBeenCalled();
             expect(observer2.update).toHaveBeenCalled();
             expect(consoleSpy).toHaveBeenCalledWith(
                 'Observer update error:',
                 expect.any(Error)
             );
-            
+
             consoleSpy.mockRestore();
         });
     });
@@ -780,8 +780,8 @@ describe('ObserverSubject - Enhanced', () => {
 
 ## Phase 4: God Object Refactoring (Priority: 🔴 HIGH, Risk: MEDIUM)
 
-**Timeline:** 3-5 days  
-**Effort:** 24-40 hours  
+**Timeline:** 3-5 days
+**Effort:** 24-40 hours
 **Impact:** High (maintainability)
 
 **Note:** This is the most complex phase. Recommend doing last after other improvements are stable.
@@ -813,15 +813,15 @@ src/data/
 
 ## Phase 5: DRY Improvements (Priority: 🟡 MEDIUM, Risk: LOW)
 
-**Timeline:** 2-3 hours  
-**Effort:** 2-3 hours  
+**Timeline:** 2-3 hours
+**Effort:** 2-3 hours
 **Impact:** Low (code clarity)
 
 ### Task 5.1: Extract Duplicate Change Detection
 
 **File:** `src/data/AddressCache.js` (or new AddressChangeDetector.js)
 
-**Current:** 84 lines across 3 methods  
+**Current:** 84 lines across 3 methods
 **Target:** 42 lines with extracted helper
 
 ```javascript
@@ -836,21 +836,21 @@ _hasFieldChanged(fieldName, signatureKey) {
     if (!this.currentAddress || !this.previousAddress) {
         return false;
     }
-    
+
     const currentValue = this.currentAddress[fieldName];
     const previousValue = this.previousAddress[fieldName];
-    
+
     if (currentValue === previousValue) {
         return false;
     }
-    
+
     const changeSignature = `${previousValue}=>${currentValue}`;
     const lastNotified = this[signatureKey];
-    
+
     if (lastNotified === changeSignature) {
         return false;
     }
-    
+
     this[signatureKey] = changeSignature;
     return true;
 }
@@ -1048,13 +1048,13 @@ This comprehensive code quality improvement plan addresses the B-grade (72/100) 
 - 🎯 Reduced file sizes (better modularity)
 - 🎯 Improved onboarding (clearer architecture)
 
-**Timeline:** 3 weeks  
-**Confidence:** High (mitigated by strong test coverage)  
+**Timeline:** 3 weeks
+**Confidence:** High (mitigated by strong test coverage)
 **Recommendation:** Proceed with Phase 1 immediately
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** 2026-01-15  
-**Status:** Ready for Implementation  
+**Document Version:** 1.0
+**Last Updated:** 2026-01-15
+**Status:** Ready for Implementation
 **Approver:** Development Team Lead

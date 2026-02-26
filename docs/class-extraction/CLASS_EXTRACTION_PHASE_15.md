@@ -2,10 +2,10 @@
 
 ## SpeechSynthesisManager Class Extraction - Phase 15
 
-**Project**: MP Barbosa Travel Guide (Guia Turístico)  
-**Version**: 0.9.0-alpha  
-**Date**: October 16, 2025  
-**Author**: Marcelo Pereira Barbosa  
+**Project**: MP Barbosa Travel Guide (Guia Turístico)
+**Version**: 0.9.0-alpha
+**Date**: October 16, 2025
+**Author**: Marcelo Pereira Barbosa
 
 ### Overview
 
@@ -46,7 +46,7 @@ classDiagram
         +processQueue()
         +getStatus()
     }
-    
+
     class SpeechQueue {
         +enqueue(text, priority)
         +dequeue()
@@ -54,7 +54,7 @@ classDiagram
         +isEmpty()
         +size()
     }
-    
+
     class WebSpeechAPI {
         +speak(utterance)
         +cancel()
@@ -62,7 +62,7 @@ classDiagram
         +resume()
         +getVoices()
     }
-    
+
     SpeechSynthesisManager --> SpeechQueue : uses
     SpeechSynthesisManager --> WebSpeechAPI : integrates
 ```
@@ -104,12 +104,12 @@ speak(text, priority = 0) {
 // Automatic retry for Brazilian Portuguese voice detection
 startVoiceRetryTimer() {
     if (this.voiceRetryTimer) return;
-    
+
     this.voiceRetryTimer = setInterval(() => {
         this.voiceRetryAttempts++;
         this.loadVoices();
-        
-        if (this.voice?.lang === 'pt-BR' || 
+
+        if (this.voice?.lang === 'pt-BR' ||
             this.voiceRetryAttempts >= this.maxVoiceRetryAttempts) {
             this.stopVoiceRetryTimer();
         }
@@ -331,16 +331,16 @@ class TouristGuide {
         this.speechManager = new SpeechSynthesisManager();
         this.speechManager.setRate(0.8); // Slower for tourists
     }
-    
+
     async announceLocation(location) {
         const message = `Você chegou ao ${location.name}. ${location.description}`;
         await this.speechManager.speak(message, 2);
     }
-    
+
     async emergencyAlert(message) {
         await this.speechManager.speak(`ATENÇÃO: ${message}`, 10);
     }
-    
+
     async provideTip(tip) {
         await this.speechManager.speak(`Dica: ${tip}`, 1);
     }
@@ -355,17 +355,17 @@ class AccessibilityManager {
         this.speechManager = new SpeechSynthesisManager();
         this.configureForAccessibility();
     }
-    
+
     configureForAccessibility() {
         this.speechManager.setRate(0.7);   // Slower for comprehension
         this.speechManager.setPitch(1.1);  // Clearer pronunciation
     }
-    
+
     async announceUIElement(element) {
         const announcement = `${element.type}: ${element.text}`;
         await this.speechManager.speak(announcement, 3);
     }
-    
+
     async announceNavigation(direction) {
         await this.speechManager.speak(`Navegando para ${direction}`, 4);
     }
@@ -422,8 +422,8 @@ const processQueue = () => {
 ```javascript
 // Environment detection
 const hasWebSpeechAPI = () => {
-    return typeof window !== 'undefined' && 
-           'speechSynthesis' in window && 
+    return typeof window !== 'undefined' &&
+           'speechSynthesis' in window &&
            'SpeechSynthesisUtterance' in window;
 };
 
@@ -518,6 +518,6 @@ The extraction maintains backward compatibility while providing a clean, reusabl
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: October 16, 2025  
+**Document Version**: 1.0
+**Last Updated**: October 16, 2025
 **Next Review**: Phase 16 Planning

@@ -163,7 +163,7 @@ const normalizeInput = compose(removeSpaces, lowercase, trim);
 
 ## Pure Functions and Referential Transparency
 
-### 1. What Makes a Function Pure?
+### 1. What Makes a Function Pure
 
 A pure function must:
 
@@ -242,7 +242,7 @@ const extractAddressData = (rawData) => {
 const fetchAndExtractAddress = async (lat, lon) => {
     // Impure: I/O operation isolated to single function
     const rawData = await fetch(`/api/geocode?lat=${lat}&lon=${lon}`).then(r => r.json());
-    
+
     // Call pure function for data transformation
     return extractAddressData(rawData);
 };
@@ -341,7 +341,7 @@ class GeoPosition {
         this.longitude = position.coords.longitude;
         this.accuracy = position.coords.accuracy;
         // ... copy all properties individually
-        
+
         // ❌ Would be bad: this.coords = position.coords; (shares reference)
     }
 }
@@ -649,19 +649,19 @@ const parseCoordinates = (input) => {
     if (typeof input !== 'string') {
         return { error: 'Input must be a string' };
     }
-    
+
     const parts = input.split(',');
     if (parts.length !== 2) {
         return { error: 'Invalid format' };
     }
-    
+
     const lat = parseFloat(parts[0]);
     const lon = parseFloat(parts[1]);
-    
+
     if (isNaN(lat) || isNaN(lon)) {
         return { error: 'Invalid numbers' };
     }
-    
+
     return { latitude: lat, longitude: lon };
 };
 
@@ -683,15 +683,15 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
         typeof lat2 !== 'number' || typeof lon2 !== 'number') {
         throw new TypeError('All coordinates must be numbers');
     }
-    
+
     if (lat1 < -90 || lat1 > 90 || lat2 < -90 || lat2 > 90) {
         throw new RangeError('Latitude must be between -90 and 90');
     }
-    
+
     if (lon1 < -180 || lon1 > 180 || lon2 < -180 || lon2 > 180) {
         throw new RangeError('Longitude must be between -180 and 180');
     }
-    
+
     // Main logic here
     // ...
 };
@@ -851,7 +851,7 @@ const processAddress = (data) => {
     if (!data) return null;
     if (!data.address) return null;
     if (!data.address.city) return null;
-    
+
     return formatAddress(data.address);
 };
 
@@ -955,17 +955,17 @@ const totalDistance = previousDistance + newDistance;
 ```javascript
 /**
  * Calculates the great-circle distance between two geographic points.
- * 
+ *
  * @param {number} lat1 - Latitude of first point in decimal degrees (-90 to 90)
  * @param {number} lon1 - Longitude of first point in decimal degrees (-180 to 180)
  * @param {number} lat2 - Latitude of second point in decimal degrees (-90 to 90)
  * @param {number} lon2 - Longitude of second point in decimal degrees (-180 to 180)
  * @returns {number} Distance in meters between the two points
- * 
+ *
  * @example
  * const distance = calculateDistance(-23.5505, -46.6333, -22.9068, -43.1729);
  * console.log(distance); // ~357,710 meters
- * 
+ *
  * @see {@link https://en.wikipedia.org/wiki/Haversine_formula}
  * @since 0.9.0-alpha
  */

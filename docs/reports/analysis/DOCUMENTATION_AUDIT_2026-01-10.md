@@ -1,8 +1,8 @@
 # Documentation Audit Report - Guia Turístico v0.9.0-alpha
 
-**Date**: 2026-01-10  
-**Auditor**: GitHub Copilot CLI  
-**Standard**: JSDoc 3 with MDN Web Docs style  
+**Date**: 2026-01-10
+**Auditor**: GitHub Copilot CLI
+**Standard**: JSDoc 3 with MDN Web Docs style
 
 ---
 
@@ -47,7 +47,7 @@ The Guia Turístico codebase demonstrates **excellent documentation practices** 
 
 ### 2. Critical Gap: Missing @throws Documentation
 
-**Impact**: HIGH  
+**Impact**: HIGH
 **Affected**: 19 throw statements (31% of all throws)
 
 #### Files with Documentation Gaps
@@ -103,7 +103,7 @@ constructor(params) {
 
 ### 3. Async/Promise Documentation Quality
 
-**Impact**: MEDIUM  
+**Impact**: MEDIUM
 **Status**: Good coverage with minor gaps
 
 #### Well-Documented Examples
@@ -113,24 +113,24 @@ constructor(params) {
 ```javascript
 /**
  * Initialize the Guia Turístico single-page application.
- * 
+ *
  * Sets up the SPA routing system, navigation handlers, and initializes the application
  * state. This is the main entry point for the application and should be called once
  * when the DOM is ready.
- * 
+ *
  * **Initialization Steps**:
  * 1. Initialize client-side router
  * 2. Set up navigation UI and event handlers
  * 3. Handle initial route based on URL hash
  * 4. Register hashchange and popstate listeners
- * 
+ *
  * @async
  * @returns {Promise<void>} Resolves when initialization is complete
- * 
+ *
  * @example
  * // Initialize app on DOMContentLoaded
  * document.addEventListener('DOMContentLoaded', init);
- * 
+ *
  * @example
  * // Manual initialization
  * await init();
@@ -144,10 +144,10 @@ async function init() { ... }
 ```javascript
 /**
  * Creates a promise that resolves after the specified delay.
- * 
+ *
  * @param {number} ms - Delay in milliseconds
  * @returns {Promise<void>} Promise that resolves after the delay
- * 
+ *
  * @example
  * await delay(1000); // Wait 1 second
  */
@@ -164,7 +164,7 @@ export const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 ### 4. TypeScript Integration Gap
 
-**Impact**: MEDIUM  
+**Impact**: MEDIUM
 **Status**: No formal TypeScript definitions
 
 #### Current State
@@ -188,12 +188,12 @@ export class WebGeocodingManager {
    * Creates a new WebGeocodingManager instance
    */
   constructor(document: Document, params: WebGeocodingManagerParams);
-  
+
   /**
    * Start tracking user position
    */
   startTracking(): void;
-  
+
   /**
    * Stop tracking user position
    */
@@ -211,7 +211,7 @@ export interface WebGeocodingManagerParams {
 
 ### 5. Package Version Documentation
 
-**Impact**: LOW  
+**Impact**: LOW
 **Status**: Using GitHub repository references
 
 #### Current package.json Dependencies
@@ -255,35 +255,35 @@ Or publish to npm with proper semantic versioning.
 ```javascript
 /**
  * Centralized singleton manager for device geographic position.
- * 
+ *
  * PositionManager implements the singleton and observer patterns to provide a single
  * source of truth for the current device position. It wraps the browser's Geolocation API,
  * applies multi-layer validation rules (accuracy, distance, time thresholds), and notifies
  * subscribed observers about position changes.
- * 
+ *
  * Key Features:
  * - Singleton pattern ensures one position state across application
  * - Observer pattern for decoupled position change notifications
  * - Smart filtering prevents excessive processing from GPS noise
  * - Multi-layer validation (accuracy quality, distance threshold, time interval)
- * 
+ *
  * Validation Rules:
  * 1. Accuracy Quality: Rejects medium/bad/very bad accuracy on mobile devices
  * 2. Distance Threshold: Ignores movements less than 20 meters
  * 3. Time Interval: Distinguishes regular updates (≥50s) from immediate updates (<50s)
- * 
+ *
  * @module core/PositionManager
  * @pattern Singleton - Only one instance manages position state
  * @pattern Observer - Notifies subscribers of position changes
- * 
+ *
  * @see {@link GeoPosition} For position data wrapper with convenience methods
  * @see {@link ObserverSubject} For observer pattern implementation
  * @see [Complete Documentation](../../docs/architecture/POSITION_MANAGER.md)
- * 
+ *
  * @example
  * // Basic usage - get singleton instance
  * const manager = PositionManager.getInstance();
- * 
+ *
  * @example
  * // Subscribe to position updates
  * const observer = {
@@ -314,11 +314,11 @@ Or publish to npm with proper semantic versioning.
 ```javascript
 /**
  * Calculates the great-circle distance between two geographic points using the Haversine formula.
- * 
+ *
  * The Haversine formula determines the shortest distance over the earth's surface between two points
  * given their latitude and longitude coordinates. This implementation assumes a spherical Earth
  * with radius 6,371,000 meters (mean radius).
- * 
+ *
  * Formula: d = R × c
  * Where:
  * - R = Earth's radius (6,371,000 meters)
@@ -326,18 +326,18 @@ Or publish to npm with proper semantic versioning.
  * - a = sin²(Δφ/2) + cos(φ1) × cos(φ2) × sin²(Δλ/2)
  * - φ = latitude in radians
  * - λ = longitude in radians
- * 
+ *
  * @param {number} lat1 - Latitude of first point in decimal degrees (-90 to 90)
  * @param {number} lon1 - Longitude of first point in decimal degrees (-180 to 180)
  * @param {number} lat2 - Latitude of second point in decimal degrees (-90 to 90)
  * @param {number} lon2 - Longitude of second point in decimal degrees (-180 to 180)
  * @returns {number} Distance in meters between the two points
- * 
+ *
  * @example
  * // Distance between São Paulo and Rio de Janeiro
  * const distance = calculateDistance(-23.5505, -46.6333, -22.9068, -43.1729);
  * console.log(distance); // ~357,710 meters (357.7 km)
- * 
+ *
  * @see {@link https://en.wikipedia.org/wiki/Haversine_formula} Haversine formula on Wikipedia
  * @see {@link https://www.movable-type.co.uk/scripts/latlong.html} Calculate distance, bearing and more
  */
@@ -359,29 +359,29 @@ Or publish to npm with proper semantic versioning.
 ```javascript
 /**
  * WebGeocodingManager - Main coordination class for geocoding workflow
- * 
+ *
  * @fileoverview Main coordination class for geocoding workflow in the Guia.js application.
  * WebGeocodingManager orchestrates the geolocation services, geocoding operations,
  * and UI updates for displaying location-based information. It follows the Coordinator
  * pattern, managing communication between services and displayers.
- * 
+ *
  * **Architecture Pattern**: Coordinator/Mediator
  * - Coordinates between geolocation services and UI displayers
- * - Manages observer subscriptions between components  
+ * - Manages observer subscriptions between components
  * - Handles change detection callbacks for address components
- * 
+ *
  * **Design Principles Applied**:
  * - **Single Responsibility**: Focuses on coordinating geocoding workflow
  * - **Dependency Injection**: Receives document and configuration via constructor
  * - **Observer Pattern**: Implements subject/observer for state changes
  * - **Immutability**: Uses Object.freeze on created displayers
- * 
+ *
  * @module coordination/WebGeocodingManager
  * @since 0.9.0-alpha - Initial WebGeocodingManager implementation
  * @since 0.9.0-alpha - Updated to use factory pattern for displayers
  * @since 0.9.0-alpha - Extracted to dedicated coordination module (Phase 16)
  * @author Marcelo Pereira Barbosa
- * 
+ *
  * @requires core/GeoPosition
  * @requires core/ObserverSubject
  * @requires core/PositionManager
@@ -465,24 +465,24 @@ Or publish to npm with proper semantic versioning.
 ```javascript
 /**
  * Fetches address data from geocoding API with retry logic.
- * 
+ *
  * **Promise Chain**:
  * 1. Validates coordinates
  * 2. Generates cache key
  * 3. Checks cache for existing data
  * 4. Makes API request with exponential backoff (3 retries)
  * 5. Processes and caches response
- * 
+ *
  * **Error Propagation**:
  * - Network errors trigger retry mechanism
  * - Validation errors reject immediately
  * - API errors propagate to caller
- * 
+ *
  * **Timing**:
  * - Cache hit: <1ms
  * - API success: 100-500ms
  * - API with retries: up to 3 seconds
- * 
+ *
  * @async
  * @param {number} latitude - Latitude coordinate
  * @param {number} longitude - Longitude coordinate
@@ -536,18 +536,18 @@ import path from 'path';
  */
 function validateThrowsDocumentation(filePath) {
   const content = fs.readFileSync(filePath, 'utf8');
-  
+
   // Find all throw statements
   const throwMatches = content.match(/throw new \w+\(/g) || [];
-  
+
   // Find all @throws tags
   const throwsDocsMatches = content.match(/@throws/g) || [];
-  
+
   if (throwMatches.length > throwsDocsMatches.length) {
     console.error(`⚠️  ${filePath}: ${throwMatches.length} throws, ${throwsDocsMatches.length} documented`);
     return false;
   }
-  
+
   return true;
 }
 
@@ -556,13 +556,13 @@ function validateThrowsDocumentation(filePath) {
  */
 function validateAsyncDocumentation(filePath) {
   const content = fs.readFileSync(filePath, 'utf8');
-  
+
   // Find async function declarations
   const asyncFunctions = content.match(/async function \w+/g) || [];
-  
+
   // Scan for corresponding @async or @returns Promise tags
   // (simplified check, production would need better parsing)
-  
+
   return true;
 }
 
@@ -646,7 +646,7 @@ With these improvements, the documentation would achieve a **9.5/10** rating and
 
 ---
 
-**Audit Completed**: 2026-01-10  
-**Auditor**: GitHub Copilot CLI  
-**Standard**: JSDoc 3 with MDN Web Docs style  
+**Audit Completed**: 2026-01-10
+**Auditor**: GitHub Copilot CLI
+**Standard**: JSDoc 3 with MDN Web Docs style
 **Version**: Guia Turístico v0.9.0-alpha

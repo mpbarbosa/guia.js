@@ -1,7 +1,7 @@
 # ChangeDetectionCoordinator API Documentation
 
-**Version:** 0.9.0-alpha  
-**Module:** `services/ChangeDetectionCoordinator`  
+**Version:** 0.9.0-alpha
+**Module:** `services/ChangeDetectionCoordinator`
 **Location:** `src/services/ChangeDetectionCoordinator.js`
 
 ## Overview
@@ -452,7 +452,7 @@ handleBairroChange(changeDetails: Object): void
 **Parameters:**
 
 - `changeDetails.previous` (Object): Previous address component values
-- `changeDetails.current` (Object): Current address component values  
+- `changeDetails.current` (Object): Current address component values
 - `changeDetails.hasChanged` (boolean): Whether change actually occurred
 
 **Example:**

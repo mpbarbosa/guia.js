@@ -1,8 +1,8 @@
 # Workflow Terminology Disambiguation
 
-**Issue**: Two distinct meanings for the word "workflow" in the repository  
-**Priority**: DOCUMENTATION (prevents contributor confusion)  
-**Date**: 2026-01-01  
+**Issue**: Two distinct meanings for the word "workflow" in the repository
+**Priority**: DOCUMENTATION (prevents contributor confusion)
+**Date**: 2026-01-01
 **Status**: Documented for clarity
 
 ---
@@ -22,9 +22,9 @@ The guia_js repository uses the term **"workflow"** in **two completely differen
 
 ### 1. AI Workflow (`.ai_workflow/`)
 
-**Location**: `.ai_workflow/` directory in repository root  
-**Purpose**: Stores execution logs and artifacts from external AI workflow automation tool  
-**Source**: `/home/mpb/Documents/GitHub/ai_workflow` (separate project)  
+**Location**: `.ai_workflow/` directory in repository root
+**Purpose**: Stores execution logs and artifacts from external AI workflow automation tool
+**Source**: `/home/mpb/Documents/GitHub/ai_workflow` (separate project)
 **Nature**: **Output directory** (generated files)
 
 #### Directory Structure
@@ -51,8 +51,8 @@ The guia_js repository uses the term **"workflow"** in **two completely differen
 
 #### Configuration File
 
-**File**: `.workflow-config.yaml`  
-**Purpose**: Configuration for AI workflow automation tool  
+**File**: `.workflow-config.yaml`
+**Purpose**: Configuration for AI workflow automation tool
 **Content**:
 
 ```yaml
@@ -113,9 +113,9 @@ The AI workflow tool:
 
 ### 2. GitHub Workflows (`.github/workflows/`)
 
-**Location**: `.github/workflows/` directory  
-**Purpose**: CI/CD automation configuration for GitHub Actions  
-**Source**: GitHub's native CI/CD platform  
+**Location**: `.github/workflows/` directory
+**Purpose**: CI/CD automation configuration for GitHub Actions
+**Source**: GitHub's native CI/CD platform
 **Nature**: **Configuration files** (YAML definitions)
 
 #### Directory Structure
@@ -134,8 +134,8 @@ The AI workflow tool:
 
 ##### 1. `copilot-coding-agent.yml` (Primary Validation)
 
-**Triggers**: Push to main/develop, PRs to main  
-**Duration**: ~30-60 seconds  
+**Triggers**: Push to main/develop, PRs to main
+**Duration**: ~30-60 seconds
 **Jobs**:
 
 - JavaScript syntax validation (`node -c`)
@@ -162,20 +162,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-      
+
       - name: Validate JavaScript syntax
         run: node -c src/guia.js && node -c src/guia_ibge.js
 ```
 
 ##### 2. `documentation-lint.yml` (Documentation Quality)
 
-**Triggers**: .md file changes, PRs, push to main  
-**Duration**: ~1-3 minutes  
+**Triggers**: .md file changes, PRs, push to main
+**Duration**: ~1-3 minutes
 **Jobs**:
 
 - Markdown linting (markdownlint-cli2)
@@ -210,8 +210,8 @@ jobs:
 
 ##### 3. `modified-files.yml` (Smart Change Detection)
 
-**Triggers**: Push/PR to main/develop  
-**Duration**: ~2-5 minutes  
+**Triggers**: Push/PR to main/develop
+**Duration**: ~2-5 minutes
 **Jobs**:
 
 - Change detection (JS, tests, docs, src)
@@ -517,7 +517,7 @@ Need to change:
 
 ## 🔄 Workflow Interactions
 
-### Do They Interact?
+### Do They Interact
 
 **Short Answer**: No
 
@@ -722,7 +722,7 @@ The term **"workflow"** has **two distinct, unrelated meanings** in this reposit
 
 ---
 
-**Document Version**: 1.0  
-**Date**: 2026-01-01  
-**Purpose**: Disambiguation and contributor clarity  
+**Document Version**: 1.0
+**Date**: 2026-01-01
+**Purpose**: Disambiguation and contributor clarity
 **Maintenance**: Update when workflows are added or renamed

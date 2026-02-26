@@ -1,7 +1,7 @@
 # Documentation Cross-Reference Audit Report
 
-**Generated**: 2026-01-06  
-**Project**: Guia Turístico v0.9.0-alpha  
+**Generated**: 2026-01-06
+**Project**: Guia Turístico v0.9.0-alpha
 **Status**: 🟡 **Action Recommended**
 
 ---
@@ -238,11 +238,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Check Documentation Links
         run: |
           python3 .github/scripts/check-links.py
-          
+
       - name: Report Results
         if: failure()
         run: |
@@ -291,38 +291,38 @@ def find_markdown_files(root_dir='.'):
     """Find all markdown files"""
     exclude_dirs = {'node_modules', '.git', '.ai_workflow', 'coverage'}
     md_files = []
-    
+
     for root, dirs, files in os.walk(root_dir):
         dirs[:] = [d for d in dirs if d not in exclude_dirs]
         for file in files:
             if file.endswith('.md'):
                 md_files.append(os.path.join(root, file))
-    
+
     return md_files
 
 def check_links(md_files):
     """Check all internal markdown links"""
     link_pattern = re.compile(r'\[([^\]]+)\]\(([^\)]+\.md[^\)]*)\)')
     broken = []
-    
+
     for md_file in md_files:
         with open(md_file, 'r', encoding='utf-8', errors='ignore') as f:
             lines = f.readlines()
-        
+
         for line_num, line in enumerate(lines, 1):
             matches = link_pattern.findall(line)
             for text, link in matches:
                 # Skip external links and anchors
                 if link.startswith(('http://', 'https://', '#')):
                     continue
-                
+
                 # Remove anchor
                 link_path = link.split('#')[0]
-                
+
                 # Resolve path
                 source_dir = os.path.dirname(md_file)
                 target_path = os.path.normpath(os.path.join(source_dir, link_path))
-                
+
                 # Check existence
                 if not os.path.exists(target_path):
                     broken.append({
@@ -331,17 +331,17 @@ def check_links(md_files):
                         'link': link_path,
                         'target': target_path
                     })
-    
+
     return broken
 
 def main():
     print("Checking documentation links...\n")
-    
+
     md_files = find_markdown_files()
     print(f"Scanning {len(md_files)} markdown files\n")
-    
+
     broken = check_links(md_files)
-    
+
     if broken:
         print(f"❌ Found {len(broken)} broken links:\n")
         for item in broken:
@@ -399,7 +399,7 @@ if __name__ == '__main__':
 | docs/reports/ | 32 | 5 | 84.4% |
 | .github/ | 121 | 0 | 100% ✅ |
 
-**Best**: `.github/` documentation (100% valid links)  
+**Best**: `.github/` documentation (100% valid links)
 **Needs Work**: `docs/guides/` (52.9% valid - 40 broken links)
 
 ---
@@ -412,8 +412,8 @@ if __name__ == '__main__':
 
 ---
 
-**Last Updated**: 2026-01-06  
-**Next Audit**: 2026-01-13 (Weekly until 100%)  
+**Last Updated**: 2026-01-06
+**Next Audit**: 2026-01-13 (Weekly until 100%)
 **Responsible**: Documentation Team
 
 **Action Summary**:

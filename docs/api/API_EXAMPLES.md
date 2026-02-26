@@ -1,6 +1,6 @@
 # Guia Turístico API Examples
 
-**Version:** 0.9.0-alpha  
+**Version:** 0.9.0-alpha
 **Last Updated:** 2026-02-11
 
 Comprehensive code examples for all major API features.
@@ -65,10 +65,10 @@ const manager = PositionManager.getInstance();
 service.watchPosition(
   (position) => {
     const { latitude, longitude } = position.coords;
-    
+
     // Update position
     const newPos = manager.updatePosition(latitude, longitude);
-    
+
     // Check if significant movement occurred
     const distance = manager.getDistanceFromPrevious();
     if (distance > MINIMUM_DISTANCE_CHANGE) {
@@ -142,24 +142,24 @@ async function fetchAddress(latitude, longitude) {
   try {
     // Create geocoder
     const geocoder = new ReverseGeocoder(latitude, longitude);
-    
+
     // Fetch address data
     const nominatimData = await geocoder.fetchAddress();
-    
+
     // Create standardized address
     const address = new BrazilianStandardAddress();
     address.setFromNominatim(nominatimData);
-    
+
     // Display address information
     console.log('Complete Address:', address.toString());
     console.log('Municipality:', address.municipioCompleto());
     console.log('Neighborhood:', address.bairro);
-    
+
     // Display metropolitan region (v0.9.0-alpha+)
     if (address.regiaoMetropolitana) {
       console.log('Metro Region:', address.regiaoMetropolitanaFormatada());
     }
-    
+
     return address;
   } catch (error) {
     console.error('Address fetch failed:', error);
@@ -212,11 +212,11 @@ async function extractCompleteAddressData(latitude, longitude) {
   // Fetch raw data
   const geocoder = new ReverseGeocoder(latitude, longitude);
   const nominatimData = await geocoder.fetchAddress();
-  
+
   // Extract structured data
   const extractor = new AddressDataExtractor();
   const addressData = extractor.extract(nominatimData);
-  
+
   console.log('Extracted Data:', {
     street: addressData.logradouro,
     neighborhood: addressData.bairro,
@@ -225,7 +225,7 @@ async function extractCompleteAddressData(latitude, longitude) {
     postalCode: addressData.cep,
     metroRegion: addressData.regiaoMetropolitana
   });
-  
+
   return addressData;
 }
 ```
@@ -393,11 +393,11 @@ async function selectBestVoice() {
   // Load voices
   const loader = new VoiceLoader();
   const voices = await loader.loadVoices();
-  
+
   // Select best Brazilian Portuguese voice
   const selector = new VoiceSelector();
   const bestVoice = selector.selectVoice(voices);
-  
+
   if (bestVoice) {
     console.log('Selected voice:', bestVoice.name);
     console.log('Language:', bestVoice.lang);
@@ -405,7 +405,7 @@ async function selectBestVoice() {
   } else {
     console.warn('No voices available');
   }
-  
+
   return bestVoice;
 }
 ```
@@ -500,11 +500,11 @@ class GuiaTuristico {
 
   async handlePosition(position) {
     const { latitude, longitude } = position.coords;
-    
+
     // Update position
     const geoPos = this.manager.updatePosition(latitude, longitude);
     this.positionDisplayer.display(geoPos);
-    
+
     // Check if significant movement
     const distance = this.manager.getDistanceFromPrevious();
     if (distance > 20) {
@@ -517,14 +517,14 @@ class GuiaTuristico {
       // Fetch address
       const geocoder = new ReverseGeocoder(latitude, longitude);
       const data = await geocoder.fetchAddress();
-      
+
       // Standardize
       const address = new BrazilianStandardAddress();
       address.setFromNominatim(data);
-      
+
       // Display
       this.addressDisplayer.display(address);
-      
+
       // Speak
       this.speech.speak(
         `Você está em ${address.bairro}, ${address.municipio}`
@@ -638,7 +638,7 @@ class PeriodicUpdater {
       () => {
         this.updateCount++;
         console.log(`Update #${this.updateCount}`);
-        
+
         if (this.updateCount >= 10) {
           this.stop();
         }
@@ -694,7 +694,7 @@ class PerformanceMonitor {
   async measureAsync(operation, label) {
     this.chrono.reset();
     this.chrono.start();
-    
+
     try {
       const result = await operation();
       const elapsed = this.chrono.stop();
@@ -709,7 +709,7 @@ class PerformanceMonitor {
   measure(operation, label) {
     this.chrono.reset();
     this.chrono.start();
-    
+
     try {
       const result = operation();
       const elapsed = this.chrono.stop();
@@ -906,7 +906,7 @@ const geocoder = new ReverseGeocoder(lat, lon);
 try {
   const address = await Promise.race([
     geocoder.fetchAddress(),
-    new Promise((_, reject) => 
+    new Promise((_, reject) =>
       setTimeout(() => reject(new Error('Timeout')), 10000)
     )
   ]);
@@ -943,5 +943,5 @@ if (voices.length === 0) {
 
 ---
 
-**Version:** 0.9.0-alpha  
+**Version:** 0.9.0-alpha
 **Last Updated:** 2026-02-11

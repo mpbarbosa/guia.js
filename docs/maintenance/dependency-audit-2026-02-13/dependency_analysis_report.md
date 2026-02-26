@@ -1,7 +1,7 @@
 # Dependency Health & Security Analysis Report
 
-**Date**: 2026-02-13  
-**Project**: Guia Turístico v0.9.0-alpha  
+**Date**: 2026-02-13
+**Project**: Guia Turístico v0.9.0-alpha
 **Node.js**: v25.6.1 | **npm**: 11.10.0
 
 ---
@@ -222,7 +222,7 @@ npm install puppeteer@24.37.2
 npm run test:all
 ```
 
-**Expected Time**: ~2 minutes  
+**Expected Time**: ~2 minutes
 **Risk Level**: 🟢 MINIMAL
 
 ### Short-term Actions (Next Sprint)
@@ -238,7 +238,7 @@ npm run lint
 npm run test:all
 ```
 
-**Expected Time**: ~15 minutes  
+**Expected Time**: ~15 minutes
 **Risk Level**: 🟡 MODERATE (may need config updates)
 
 ### Medium-term Actions (Before v1.0.0)
@@ -251,7 +251,7 @@ npm run test:all
 # - Full regression test suite
 ```
 
-**Expected Time**: ~30 minutes  
+**Expected Time**: ~30 minutes
 **Risk Level**: 🟡 MODERATE (breaking changes possible)
 
 ---

@@ -1,7 +1,7 @@
 # Cross-Reference Navigation Template
 
-**Version**: 1.0.0  
-**Last Updated**: 2026-01-28  
+**Version**: 1.0.0
+**Last Updated**: 2026-01-28
 **Purpose**: Standard template for adding navigation and cross-references to documentation
 
 ---
@@ -30,8 +30,8 @@ Category: Architecture | Testing | API | Guide | Report | Utility
 ---
 ```
 
-**Purpose**: Document tracking and status  
-**Location**: Immediately after title  
+**Purpose**: Document tracking and status
+**Location**: Immediately after title
 **See**: [Documentation Metadata Template](./DOCUMENTATION_METADATA_TEMPLATE.md)
 
 ---
@@ -202,9 +202,9 @@ _Last updated: YYYY-MM-DD_
 ```markdown
 ---
 
-**Document Maintainer**: Team/Person Name  
-**Last Review**: YYYY-MM-DD  
-**Next Review**: YYYY-MM-DD or "As needed"  
+**Document Maintainer**: Team/Person Name
+**Last Review**: YYYY-MM-DD
+**Next Review**: YYYY-MM-DD or "As needed"
 **Related Issues**: [#123](https://github.com/user/repo/issues/123)
 ```
 

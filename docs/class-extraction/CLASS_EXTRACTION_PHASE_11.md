@@ -1,8 +1,8 @@
 # Class Extraction Phase 11: SpeechItem
 
-**Data de Extração:** Dezembro 2024  
-**Versão:** 0.9.0-alpha  
-**Autor:** Marcelo Pereira Barbosa  
+**Data de Extração:** Dezembro 2024
+**Versão:** 0.9.0-alpha
+**Autor:** Marcelo Pereira Barbosa
 **Status:** Concluído
 
 ## Resumo Executivo
@@ -74,7 +74,7 @@ constructor(text, priority = 0, timestamp = Date.now()) {
     this.text = text;
     this.priority = priority;
     this.timestamp = timestamp;
-    
+
     // Prevent further modification following MP Barbosa standards
     Object.freeze(this);
 }
@@ -92,8 +92,8 @@ isExpired(expirationMs = 30000) { // 30 seconds default
 
 ```javascript
 toString() {
-    const displayText = this.text.length > 50 
-        ? this.text.substring(0, 50) + '...' 
+    const displayText = this.text.length > 50
+        ? this.text.substring(0, 50) + '...'
         : this.text;
     return `${this.constructor.name}: "${displayText}" (priority: ${this.priority})`;
 }
@@ -232,8 +232,8 @@ const validItems = queue.filter(item => !item.isExpired());
 
 ```javascript
 toString() {
-    const displayText = this.text.length > 50 
-        ? this.text.substring(0, 50) + '...' 
+    const displayText = this.text.length > 50
+        ? this.text.substring(0, 50) + '...'
         : this.text;
     return `${this.constructor.name}: "${displayText}" (priority: ${this.priority})`;
 }
@@ -393,6 +393,6 @@ O padrão Value Object implementado serve como modelo para futuras representaç�
 
 ---
 
-**Documento gerado automaticamente durante a Fase 11 de extração de classes**  
-**Sistema Guia Turístico - Arquitetura de Síntese de Voz Modular**  
+**Documento gerado automaticamente durante a Fase 11 de extração de classes**
+**Sistema Guia Turístico - Arquitetura de Síntese de Voz Modular**
 **© 2024 Marcelo Pereira Barbosa**

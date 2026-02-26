@@ -1,8 +1,8 @@
 # VoiceLoader API Reference
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-02-12  
-**Status**: Stable  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-02-12
+**Status**: Stable
 **Module**: `src/speech/VoiceLoader.js`
 
 ---
@@ -90,7 +90,7 @@ const loader = new VoiceLoader();
 try {
   const voices = await loader.loadVoices();
   console.log(`Loaded ${voices.length} voices`);
-  
+
   voices.forEach(voice => {
     console.log(`${voice.name} (${voice.lang})`);
   });
@@ -234,7 +234,7 @@ const loader = new VoiceLoader({ maxRetries: 5 });
 
 try {
   const voices = await loader.loadVoices();
-  
+
   if (voices.length === 0) {
     console.warn('No voices available in browser');
   } else {
@@ -370,8 +370,8 @@ const mockSpeechSynthesis = {
   ]
 };
 
-const loader = new VoiceLoader({ 
-  speechSynthesis: mockSpeechSynthesis 
+const loader = new VoiceLoader({
+  speechSynthesis: mockSpeechSynthesis
 });
 
 const voices = await loader.loadVoices();

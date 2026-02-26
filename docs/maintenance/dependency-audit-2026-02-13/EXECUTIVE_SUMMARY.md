@@ -188,19 +188,19 @@ Before deployment:
 
 ## 📞 Questions & Answers
 
-**Q: Is it safe to deploy now?**  
+**Q: Is it safe to deploy now?**
 A: Yes. ✅ Security issue fixed, all tests passing, no regressions detected.
 
-**Q: Should we update ESLint to v10?**  
+**Q: Should we update ESLint to v10?**
 A: Not immediately. 🟡 It's a major version with potential breaking changes. Schedule for next sprint with full testing.
 
-**Q: Should we update jsdom to v28?**  
+**Q: Should we update jsdom to v28?**
 A: Not immediately. 🟡 Same as ESLint - major version, needs thorough testing. Plan after ESLint v10 is complete.
 
-**Q: Why are guia.js and ibira.js still alpha?**  
+**Q: Why are guia.js and ibira.js still alpha?**
 A: They're internal projects (mpbarbosa org). Promote to v1.0.0 before Guia Turístico v1.0.0 release.
 
-**Q: What if we find issues with an update?**  
+**Q: What if we find issues with an update?**
 A: Revert with `git revert` and document the issue. Try again in next sprint with more investigation.
 
 ---

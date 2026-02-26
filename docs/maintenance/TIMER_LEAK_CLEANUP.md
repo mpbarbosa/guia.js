@@ -4,8 +4,8 @@
 
 The test suite reports **worker process failures** due to timer leaks, with tests failing to exit gracefully. Analysis identifies **20 timer creations** (5 `setInterval`, 15 `setTimeout`) but only **3 cleanup calls**, creating significant memory and process leak risks.
 
-**Status**: Analysis Complete | Fixes Required  
-**Severity**: HIGH (Test Failures + Production Risk)  
+**Status**: Analysis Complete | Fixes Required
+**Severity**: HIGH (Test Failures + Production Risk)
 **Root Cause**: Missing cleanup in lifecycle methods and test teardown
 
 ## Problem Statement
@@ -211,11 +211,11 @@ class Chronometer {
   start() {
     this.intervalId = setInterval(...);
   }
-  
+
   stop() {
     clearInterval(this.intervalId);
   }
-  
+
   // Missing: destroy() or cleanup()
 }
 
@@ -223,7 +223,7 @@ class Chronometer {
 class Chronometer {
   start() { ... }
   stop() { ... }
-  
+
   destroy() {
     this.stop();
     // Clean up any other resources
@@ -248,7 +248,7 @@ class AddressCache {
       this.cleanExpiredEntries();
     }, 60000);
   }
-  
+
   destroy() {
     if (this.cleanupInterval) {
       clearInterval(this.cleanupInterval);
@@ -275,17 +275,17 @@ describe('Chronometer', () => {
 // ✅ PROPER CLEANUP
 describe('Chronometer', () => {
   let chrono;
-  
+
   beforeEach(() => {
     chrono = new Chronometer();
   });
-  
+
   afterEach(() => {
     if (chrono) {
       chrono.stop(); // or chrono.destroy()
     }
   });
-  
+
   it('starts timer', () => {
     chrono.start();
     // Timer will be cleaned up
@@ -326,17 +326,17 @@ destroy() {
 ```javascript
 class Chronometer {
   // Existing methods...
-  
+
   /**
    * Destroys the chronometer and cleans up all resources.
-   * 
+   *
    * Stops the timer, clears the interval, and releases references.
    * This method should be called when the chronometer is no longer needed,
    * especially in test environments to prevent timer leaks.
-   * 
+   *
    * @returns {void}
    * @since 0.9.0-alpha
-   * 
+   *
    * @example
    * const chrono = new Chronometer();
    * chrono.start();
@@ -356,17 +356,17 @@ class Chronometer {
 ```javascript
 class SpeechSynthesisManager {
   // Existing methods...
-  
+
   /**
    * Destroys the speech manager and cleans up all resources.
-   * 
+   *
    * Stops all timers, clears the queue, cancels any ongoing speech,
    * and releases references. Critical for preventing timer leaks in
    * test environments.
-   * 
+   *
    * @returns {void}
    * @since 0.9.0-alpha
-   * 
+   *
    * @example
    * const manager = new SpeechSynthesisManager();
    * // ... use manager
@@ -376,17 +376,17 @@ class SpeechSynthesisManager {
     // Stop all timers
     this.stopVoiceRetryTimer();
     this.stopQueueTimer();
-    
+
     // Cancel ongoing speech
     if (this.synth) {
       this.synth.cancel();
     }
-    
+
     // Clear queue
     if (this.speechQueue) {
       this.speechQueue.clear();
     }
-    
+
     // Release references
     this.synth = null;
     this.speechQueue = null;
@@ -401,19 +401,19 @@ class SpeechSynthesisManager {
 class AddressCache {
   constructor() {
     // ... existing code
-    
+
     // CHANGE: Make timer instance-based, not global
     this.cleanupInterval = setInterval(() => {
       this.cleanExpiredEntries();
     }, 60000);
   }
-  
+
   /**
    * Destroys the cache and cleans up all resources.
-   * 
+   *
    * Stops the cleanup timer, clears the cache, and releases references.
    * Important for test environments to prevent timer leaks.
-   * 
+   *
    * @returns {void}
    * @since 0.9.0-alpha
    */
@@ -423,14 +423,14 @@ class AddressCache {
       clearInterval(this.cleanupInterval);
       this.cleanupInterval = null;
     }
-    
+
     // Clear cache
     this.clearCache();
-    
+
     // Release references
     this.observerSubject = null;
   }
-  
+
   // REMOVE: Global timer (LINE 1116)
   // AddressCache.cleanupInterval = setInterval(...)  // DELETE THIS!
 }
@@ -444,11 +444,11 @@ class AddressCache {
 // __tests__/unit/Chronometer.test.js
 describe('Chronometer', () => {
   let chronometer;
-  
+
   beforeEach(() => {
     chronometer = new Chronometer(document, 'test-element');
   });
-  
+
   afterEach(() => {
     // CRITICAL: Always clean up
     if (chronometer) {
@@ -456,7 +456,7 @@ describe('Chronometer', () => {
       chronometer = null;
     }
   });
-  
+
   it('starts timing', () => {
     chronometer.start();
     expect(chronometer.isRunning).toBe(true);
@@ -490,7 +490,7 @@ class TimerRegistry {
   constructor() {
     this.timers = new Set();
   }
-  
+
   /**
    * Registers a setInterval timer.
    */
@@ -499,7 +499,7 @@ class TimerRegistry {
     this.timers.add({ id, type: 'interval' });
     return id;
   }
-  
+
   /**
    * Registers a setTimeout timer.
    */
@@ -508,7 +508,7 @@ class TimerRegistry {
     this.timers.add({ id, type: 'timeout' });
     return id;
   }
-  
+
   /**
    * Clears a specific timer.
    */
@@ -523,7 +523,7 @@ class TimerRegistry {
       this.timers.delete(timer);
     }
   }
-  
+
   /**
    * Clears all tracked timers.
    */
@@ -549,7 +549,7 @@ class Chronometer {
       this.updateDisplay();
     }, 1000);
   }
-  
+
   stop() {
     if (this.intervalId) {
       timerRegistry.clear(this.intervalId);
@@ -580,10 +580,10 @@ class AutoCleanupTimer {
     this.timerId = null;
     this.isRunning = false;
   }
-  
+
   start() {
     if (this.isRunning) return;
-    
+
     this.isRunning = true;
     if (this.type === 'interval') {
       this.timerId = setInterval(this.callback, this.delay);
@@ -591,10 +591,10 @@ class AutoCleanupTimer {
       this.timerId = setTimeout(this.callback, this.delay);
     }
   }
-  
+
   stop() {
     if (!this.isRunning) return;
-    
+
     this.isRunning = false;
     if (this.type === 'interval') {
       clearInterval(this.timerId);
@@ -603,7 +603,7 @@ class AutoCleanupTimer {
     }
     this.timerId = null;
   }
-  
+
   destroy() {
     this.stop();
     this.callback = null;
@@ -619,15 +619,15 @@ class Chronometer {
       'interval'
     );
   }
-  
+
   start() {
     this.displayTimer.start();
   }
-  
+
   stop() {
     this.displayTimer.stop();
   }
-  
+
   destroy() {
     this.displayTimer.destroy();
   }

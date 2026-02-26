@@ -18,7 +18,7 @@ Maintainer: @username (optional)
 Related: [Link to related docs] (optional)
 ---
 
-## Content starts here...
+## Content starts here..
 ```
 
 ## Metadata Field Descriptions
@@ -256,6 +256,6 @@ Suggested review intervals:
 
 ---
 
-Last Updated: 2026-01-28  
-Status: Active  
+Last Updated: 2026-01-28
+Status: Active
 Category: Guide

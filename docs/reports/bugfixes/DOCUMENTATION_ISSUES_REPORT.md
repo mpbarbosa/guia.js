@@ -1,7 +1,7 @@
 # Documentation Issues Report
 
-**Generated:** 2026-01-06  
-**Standard:** JSDoc 3 with MDN Web Docs style  
+**Generated:** 2026-01-06
+**Standard:** JSDoc 3 with MDN Web Docs style
 **Scope:** Complete codebase analysis (35 files, 446 definitions)
 
 ## Executive Summary
@@ -298,22 +298,22 @@ async fetchAddress() {
 ```javascript
 /**
  * Brief one-line description of the function
- * 
+ *
  * Detailed description explaining:
  * - What the function does
  * - When to use it
  * - Important behaviors or side effects
- * 
+ *
  * @param {Type} paramName - Parameter description with constraints
  * @param {Type} [optionalParam=default] - Optional parameter description
  * @returns {Type} Description of return value
  * @throws {ErrorType} When and why this error is thrown
- * 
+ *
  * @example
  * // Example usage with expected output
  * const result = functionName(arg1, arg2);
  * // Returns: expectedValue
- * 
+ *
  * @since 0.9.0-alpha
  * @see {@link RelatedFunction}
  */
@@ -327,20 +327,20 @@ function functionName(paramName, optionalParam = default) {
 ```javascript
 /**
  * Brief one-line description of the class
- * 
+ *
  * Detailed description explaining:
  * - Class purpose and responsibilities
  * - Design patterns used
  * - Key features and capabilities
- * 
+ *
  * @class
  * @implements {InterfaceName}
  * @extends {ParentClass}
- * 
+ *
  * @example
  * const instance = new ClassName(config);
  * instance.method();
- * 
+ *
  * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
@@ -361,18 +361,18 @@ class ClassName {
 ```javascript
 /**
  * Brief description of async operation
- * 
+ *
  * Detailed description of:
  * - What data is fetched/processed
  * - Expected timing/performance
  * - Dependencies on external services
- * 
+ *
  * @async
  * @param {Type} param - Parameter description
  * @returns {Promise<Type>} Description of resolved value
  * @throws {ErrorType} Network errors, API failures
  * @throws {ErrorType} Validation errors
- * 
+ *
  * @example
  * try {
  *   const data = await asyncFunction(param);

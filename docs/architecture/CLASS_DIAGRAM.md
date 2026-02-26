@@ -47,7 +47,7 @@ classDiagram
         +static extractSiglaUF(iso3166Code)
         +toString()
     }
-    
+
     class AddressCache {
         <<Singleton>>
         -static AddressCache instance
@@ -79,7 +79,7 @@ classDiagram
         -_computeBairroCompleto(rawData)
         Note: Static wrappers available for backward compatibility
     }
-    
+
     class AddressDataExtractor {
         <<Legacy Facade>>
         -Object data
@@ -88,7 +88,7 @@ classDiagram
         +static getBrazilianStandardAddress(data)
         +toString()
     }
-    
+
     class BrazilianStandardAddress {
         +String logradouro
         +String numero
@@ -100,7 +100,7 @@ classDiagram
         +String pais
         +enderecoCompleto()
     }
-    
+
     AddressExtractor --> BrazilianStandardAddress: creates
     AddressCache --> BrazilianStandardAddress: manages
     AddressCache ..> AddressExtractor: uses for extraction
@@ -198,7 +198,7 @@ classDiagram
         +Number speed
         +Number timestamp
     }
-    
+
     class PositionManager {
         <<Singleton>>
         -static PositionManager instance
@@ -214,7 +214,7 @@ classDiagram
         +distanceTo(otherPosition)
         +toString()
     }
-    
+
     class SingletonStatusManager {
         <<Singleton>>
         -static SingletonStatusManager instance
@@ -223,14 +223,14 @@ classDiagram
         +setStatus(status)
         +getStatus()
     }
-    
+
     %% Service Layer
     class APIFetcher {
         <<Abstract>>
         #String apiUrl
         +fetch()
     }
-    
+
     class ReverseGeocoder {
         -Number latitude
         -Number longitude
@@ -238,13 +238,13 @@ classDiagram
         +reverseGeocode()
         +toString()
     }
-    
+
     class GeolocationService {
         -Object navigator
         +getCurrentPosition()
         +watchPosition()
     }
-    
+
     class ChangeDetectionCoordinator {
         -ReverseGeocoder reverseGeocoder
         -ObserverSubject observerSubject
@@ -263,7 +263,7 @@ classDiagram
         +notifyBairroChangeObservers(changeDetails)
         +notifyMunicipioChangeObservers(changeDetails)
     }
-    
+
     class WebGeocodingManager {
         -Object document
         -String elementId
@@ -274,7 +274,7 @@ classDiagram
         +handleGeolocation()
         +startTracking()
     }
-    
+
     %% Data Processing Layer (Post PR #121)
     class BrazilianStandardAddress {
         +String logradouro
@@ -287,7 +287,7 @@ classDiagram
         +String pais
         +enderecoCompleto()
     }
-    
+
     class AddressExtractor {
         -Object data
         -BrazilianStandardAddress enderecoPadronizado
@@ -295,7 +295,7 @@ classDiagram
         +static extractSiglaUF(iso3166Code)
         +toString()
     }
-    
+
     class AddressCache {
         -static Map~String,CacheEntry~ cache
         -static Number maxCacheSize
@@ -313,7 +313,7 @@ classDiagram
         +static hasBairroChanged()
         +static hasMunicipioChanged()
     }
-    
+
     class AddressDataExtractor {
         <<Legacy Facade>>
         -Object data
@@ -321,39 +321,39 @@ classDiagram
         +constructor(data)
         +static getBrazilianStandardAddress(data)
     }
-    
+
     %% Presentation Layer
     class HTMLPositionDisplayer {
         -HTMLElement element
         +renderPositionHtml(positionManager)
         +toString()
     }
-    
+
     class HTMLAddressDisplayer {
         -HTMLElement element
         +renderAddressHtml(address)
     }
-    
+
     class HtmlSpeechSynthesisDisplayer {
         -Object document
         -Object elementIds
         +update(posEvent, enderecoPadronizado)
         +buildTextToSpeech(address)
     }
-    
+
     class SpeechSynthesisManager {
         -SpeechSynthesis speechSynthesis
         +speak(text)
         +cancel()
     }
-    
+
     class SpeechQueue {
         -Array queue
         +enqueue(item, priority)
         +dequeue()
         +isEmpty()
     }
-    
+
     %% Relationships
     APIFetcher <|-- ReverseGeocoder
     PositionManager --> GeoPosition: manages
@@ -627,8 +627,8 @@ See repository root for license information.
 
 ---
 
-**Last Updated**: 2026-01-11  
-**Version**: 0.9.0-alpha (Class Diagram for version 0.9.0-alpha)  
+**Last Updated**: 2026-01-11
+**Version**: 0.9.0-alpha (Class Diagram for version 0.9.0-alpha)
 **Status**: ✅ Complete and up-to-date
 
 ### Version History

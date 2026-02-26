@@ -1,8 +1,8 @@
 # CDN Delivery Script Relocation Plan
 
-**Issue**: `.github/scripts/cdn-delivery.sh` located in project root instead of scripts directory  
-**Priority**: LOW (organizational improvement, no functionality impact)  
-**Date**: 2026-01-01  
+**Issue**: `.github/scripts/cdn-delivery.sh` located in project root instead of scripts directory
+**Priority**: LOW (organizational improvement, no functionality impact)
+**Date**: 2026-01-01
 **Status**: Proposed
 
 ---
@@ -581,8 +581,8 @@ OUTPUT_FILE=${OUTPUT_FILE:-cdn-urls.txt}
 
 ### Risk 1: Path References in External Tools
 
-**Risk**: External scripts/tools may reference `./.github/scripts/cdn-delivery.sh`  
-**Likelihood**: Low (script is new, not widely integrated)  
+**Risk**: External scripts/tools may reference `./.github/scripts/cdn-delivery.sh`
+**Likelihood**: Low (script is new, not widely integrated)
 **Mitigation**:
 
 - Search entire project for references
@@ -591,8 +591,8 @@ OUTPUT_FILE=${OUTPUT_FILE:-cdn-urls.txt}
 
 ### Risk 2: User Muscle Memory
 
-**Risk**: Users accustomed to `./.github/scripts/cdn-delivery.sh`  
-**Likelihood**: Low (script rarely executed manually)  
+**Risk**: Users accustomed to `./.github/scripts/cdn-delivery.sh`
+**Likelihood**: Low (script rarely executed manually)
 **Mitigation**:
 
 - Update all documentation
@@ -601,8 +601,8 @@ OUTPUT_FILE=${OUTPUT_FILE:-cdn-urls.txt}
 
 ### Risk 3: CI/CD Integration
 
-**Risk**: Future release workflow may reference old path  
-**Likelihood**: High (planned integration)  
+**Risk**: Future release workflow may reference old path
+**Likelihood**: High (planned integration)
 **Mitigation**:
 
 - Update proposed workflow YAML in DEVOPS_INTEGRATION_ASSESSMENT.md
@@ -610,8 +610,8 @@ OUTPUT_FILE=${OUTPUT_FILE:-cdn-urls.txt}
 
 ### Risk 4: Git History Loss
 
-**Risk**: Moving file could lose history  
-**Likelihood**: Zero (using `git mv`)  
+**Risk**: Moving file could lose history
+**Likelihood**: Zero (using `git mv`)
 **Mitigation**:
 
 - Always use `git mv` (preserves history)
@@ -619,8 +619,8 @@ OUTPUT_FILE=${OUTPUT_FILE:-cdn-urls.txt}
 
 ### Risk 5: Permission Loss
 
-**Risk**: File may lose executable permission  
-**Likelihood**: Zero (`git mv` preserves permissions)  
+**Risk**: File may lose executable permission
+**Likelihood**: Zero (`git mv` preserves permissions)
 **Mitigation**:
 
 - Verify with `test -x` after move
@@ -780,9 +780,9 @@ find . -type f \( -name "*.md" -o -name "*.sh" \) -not -path "./node_modules/*" 
 
 ---
 
-**Document Version**: 1.0  
-**Priority**: LOW  
-**Impact**: High (organization) / None (functionality)  
-**Estimated Effort**: 15-30 minutes  
-**Risk Level**: Low  
+**Document Version**: 1.0
+**Priority**: LOW
+**Impact**: High (organization) / None (functionality)
+**Estimated Effort**: 15-30 minutes
+**Risk Level**: Low
 **Breaking Change**: Path change (fully documented)

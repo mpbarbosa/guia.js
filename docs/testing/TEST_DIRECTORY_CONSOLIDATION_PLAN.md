@@ -1,8 +1,8 @@
 # Test Directory Consolidation Plan
 
-**Issue**: Ambiguous test directory structure with both `tests/` and `__tests__/`  
-**Priority**: LOW (causes mild confusion but not breaking)  
-**Date**: 2026-01-01  
+**Issue**: Ambiguous test directory structure with both `tests/` and `__tests__/`
+**Priority**: LOW (causes mild confusion but not breaking)
+**Date**: 2026-01-01
 **Status**: Proposed
 
 ---
@@ -120,7 +120,7 @@ import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
    ```javascript
    // Change from:
    import WebGeocodingManager from '../src/coordination/WebGeocodingManager.js';
-   
+
    // To:
    import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
    ```
@@ -139,7 +139,7 @@ import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
    // package.json
    "lint": "eslint src/**/*.js __tests__/**/*.js",
    "lint:fix": "eslint --fix src/**/*.js __tests__/**/*.js"
-   
+
    // eslint.config.js
    files: ['**/__tests__/**/*.js', '**/*.test.js']
    ```
@@ -329,7 +329,7 @@ git status  # Verify deletion is staged
 
    ```markdown
    ## Testing
-   
+
    Tests are located in `__tests__/` directory:
    - `__tests__/unit/` - Unit tests
    - `__tests__/integration/` - Integration tests
@@ -340,7 +340,7 @@ git status  # Verify deletion is staged
 
    ```markdown
    ### Repository Structure
-   
+
    - `__tests__/` - 60 test files with 1224+ total tests
      - `unit/` - Unit tests for individual classes
      - `integration/` - Integration tests for module interactions
@@ -351,7 +351,7 @@ git status  # Verify deletion is staged
 
    ```markdown
    ## Test Organization
-   
+
    All tests are located in `__tests__/` directory:
    - Unit tests: `__tests__/unit/`
    - Integration tests: `__tests__/integration/`
@@ -539,9 +539,9 @@ Consolidation is successful when:
 
 ---
 
-**Document Version**: 1.0  
-**Status**: Proposed  
-**Priority**: LOW  
-**Estimated Effort**: 30-45 minutes  
-**Risk Level**: Low  
+**Document Version**: 1.0
+**Status**: Proposed
+**Priority**: LOW
+**Estimated Effort**: 30-45 minutes
+**Risk Level**: Low
 **Impact**: Improves clarity, no functional changes

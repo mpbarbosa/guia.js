@@ -1,7 +1,7 @@
 # Documentation Date Audit Report
 
-**Generated**: 2026-01-06  
-**Project**: Guia Turístico v0.9.0-alpha  
+**Generated**: 2026-01-06
+**Project**: Guia Turístico v0.9.0-alpha
 **Status**: 🟡 **Minor Updates Needed**
 
 ---
@@ -181,8 +181,8 @@ Add footer to files without dates:
 ```markdown
 ---
 
-**Last Updated**: 2026-01-06  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-06
+**Version**: 0.9.0-alpha
 **Status**: ✅ Current
 ```
 
@@ -242,8 +242,8 @@ Add to PR template:
 ```markdown
 ---
 
-**Last Updated**: YYYY-MM-DD  
-**Version**: X.Y.Z-alpha  
+**Last Updated**: YYYY-MM-DD
+**Version**: X.Y.Z-alpha
 **Status**: ✅ Current / 🟡 Review Needed / 🔴 Outdated
 ```
 
@@ -252,8 +252,8 @@ Add to PR template:
 ```markdown
 ---
 
-**Last Updated**: 2026-01-06  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-06
+**Version**: 0.9.0-alpha
 **Status**: ✅ Current
 ```
 
@@ -379,26 +379,26 @@ def find_outdated(max_age_days=90):
     today = datetime.now()
     pattern = r'\*\*Last Updated\*\*:\s*(\d{4}-\d{2}-\d{2})'
     outdated = []
-    
+
     for root, dirs, files in os.walk('.'):
         dirs[:] = [d for d in dirs if d not in ['node_modules', '.git']]
         for file in files:
             if not file.endswith('.md'):
                 continue
-            
+
             path = os.path.join(root, file)
             with open(path, 'r', encoding='utf-8', errors='ignore') as f:
                 content = f.read()
-            
+
             match = re.search(pattern, content)
             if match:
                 date_str = match.group(1)
                 date = datetime.strptime(date_str, '%Y-%m-%d')
                 age = (today - date).days
-                
+
                 if age > max_age_days:
                     outdated.append((path, date_str, age))
-    
+
     return outdated
 
 if __name__ == '__main__':
@@ -415,6 +415,6 @@ if __name__ == '__main__':
 
 ---
 
-**Last Updated**: 2026-01-06  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-06
+**Version**: 0.9.0-alpha
 **Status**: ✅ Complete

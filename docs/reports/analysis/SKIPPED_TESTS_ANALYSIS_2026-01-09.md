@@ -50,7 +50,7 @@
 **Details**:
 
 ```javascript
-// TODO: This test suite expects a different WebGeocodingManager API 
+// TODO: This test suite expects a different WebGeocodingManager API
 // that doesn't match the current implementation. Skipping until the refactoring is completed.
 ```
 

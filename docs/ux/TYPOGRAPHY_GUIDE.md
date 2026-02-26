@@ -1,7 +1,7 @@
 # Material Design 3 Typography System Guide
 
-**Version:** v0.11.0-alpha  
-**Date:** 2026-02-15  
+**Version:** v0.11.0-alpha
+**Date:** 2026-02-15
 **Status:** ✅ Production Ready
 
 ## Overview
@@ -18,8 +18,8 @@ All typography tokens follow this pattern:
 --md-sys-typescale-{category}-{size}[-{property}]
 ```
 
-**Categories:** display, headline, title, body, label  
-**Sizes:** large, medium, small  
+**Categories:** display, headline, title, body, label
+**Sizes:** large, medium, small
 **Properties:** (base), weight, line-height, tracking
 
 ## Typography Scale
@@ -269,7 +269,7 @@ Typography scales down on smaller screens for better readability.
    ```css
    /* Before */
    .card-title { font-size: 22px; }
-   
+
    /* After */
    .card-title { font-size: var(--md-sys-typescale-title-large); }
    ```
@@ -279,7 +279,7 @@ Typography scales down on smaller screens for better readability.
    ```html
    <!-- Before -->
    <div class="card-title">Título</div>
-   
+
    <!-- After -->
    <div class="card-title text-title-large">Título</div>
    ```
@@ -381,8 +381,8 @@ When reviewing typography changes:
 
 ### Files Audited
 
-**Total CSS files:** 16  
-**Files with violations:** 10  
+**Total CSS files:** 16
+**Files with violations:** 10
 **Total violations:** 117 hardcoded font-size declarations
 
 ### Priority Files for Migration
@@ -578,7 +578,7 @@ When reviewing typography changes:
 
 ---
 
-**Version:** v0.11.0-alpha  
-**Last Updated:** 2026-02-15  
-**Status:** ✅ Production Ready  
+**Version:** v0.11.0-alpha
+**Last Updated:** 2026-02-15
+**Status:** ✅ Production Ready
 **Next:** Phase 2 migration (4 high-priority files)

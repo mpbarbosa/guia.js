@@ -1,7 +1,7 @@
 # Migration Guide - Guia Turístico
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-02-14  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-02-14
 **Purpose**: Guide for upgrading between versions
 
 ---
@@ -30,8 +30,8 @@ This guide helps you migrate your Guia Turístico application between major and 
 
 ## Version 0.8.x → 0.9.0
 
-**Release Date**: 2026-02-09  
-**Status**: Current Alpha Release  
+**Release Date**: 2026-02-09
+**Status**: Current Alpha Release
 **Migration Effort**: Low (mostly additions)
 
 ### Breaking Changes
@@ -191,7 +191,7 @@ Verify:
 
 ## Version 0.7.x → 0.8.0
 
-**Release Date**: 2026-01-28  
+**Release Date**: 2026-01-28
 **Migration Effort**: Medium
 
 ### Breaking Changes
@@ -307,7 +307,7 @@ npm run test:all
 
 ## Version 0.6.x → 0.7.0
 
-**Release Date**: 2026-01-15  
+**Release Date**: 2026-01-15
 **Migration Effort**: High
 
 ### Breaking Changes
@@ -456,8 +456,8 @@ Verify:
 
 #### 1. Custom Event System
 
-**Deprecated**: 0.7.0  
-**Removal**: 1.0.0  
+**Deprecated**: 0.7.0
+**Removal**: 1.0.0
 **Alternative**: Observer pattern
 
 ```javascript
@@ -471,8 +471,8 @@ positionManager.addObserver(ADDRESS_FETCHED_EVENT, handler);
 
 #### 2. Direct Singleton Instantiation
 
-**Deprecated**: 0.7.0  
-**Removal**: 1.0.0  
+**Deprecated**: 0.7.0
+**Removal**: 1.0.0
 **Alternative**: `getInstance()` method
 
 ```javascript
@@ -485,8 +485,8 @@ const manager = PositionManager.getInstance();
 
 #### 3. VoiceManager Class
 
-**Deprecated**: 0.9.0  
-**Removal**: 1.0.0  
+**Deprecated**: 0.9.0
+**Removal**: 1.0.0
 **Alternative**: VoiceLoader + VoiceSelector
 
 ```javascript

@@ -4,8 +4,8 @@
 
 Display metropolitan region information (Região Metropolitana) in the Municipality Card to provide additional geographic context for users in metropolitan areas.
 
-**Version**: 0.9.0-alpha  
-**Date**: 2026-01-28  
+**Version**: 0.9.0-alpha
+**Date**: 2026-01-28
 **Author**: Marcelo Pereira Barbosa
 
 ## Motivation
@@ -119,14 +119,14 @@ constructor(document) {
 ```javascript
 update(addressData, enderecoPadronizado) {
     // ... existing code
-    
+
     // Update metropolitan region (displayed between label and municipality)
     if (this._regiaoMetropolitanaElement) {
         const regiaoMetropolitana = enderecoPadronizado.regiaoMetropolitanaFormatada();
         this._regiaoMetropolitanaElement.textContent = regiaoMetropolitana;
         log('Updated regiao-metropolitana-value to:', regiaoMetropolitana || '(empty)');
     }
-    
+
     // ... existing municipio and bairro updates
 }
 ```

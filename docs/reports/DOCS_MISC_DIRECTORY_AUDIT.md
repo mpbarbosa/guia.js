@@ -1,7 +1,7 @@
 # docs/misc/ Directory Audit and Reclassification Plan
 
-**Date**: 2026-01-06  
-**Status**: 🟡 Medium Priority - Documentation Taxonomy Issue  
+**Date**: 2026-01-06
+**Status**: 🟡 Medium Priority - Documentation Taxonomy Issue
 **Files**: 7 files (2,766 lines total)
 
 ---
@@ -38,8 +38,8 @@ The `docs/misc/` directory is a **documentation anti-pattern** indicating unclea
 
 ### 1. DEVOPS_INTEGRATION_ASSESSMENT.md (800 lines)
 
-**Current Location**: `docs/misc/`  
-**Type**: DevOps assessment report  
+**Current Location**: `docs/misc/`
+**Type**: DevOps assessment report
 **Date**: 2026-01-01
 
 **Content Summary**:
@@ -62,16 +62,16 @@ git mv docs/misc/DEVOPS_INTEGRATION_ASSESSMENT.md docs/devops/
 git mv docs/misc/DEVOPS_INTEGRATION_ASSESSMENT.md docs/reports/analysis/
 ```
 
-**Recommended**: `docs/reports/analysis/` (already exists)  
+**Recommended**: `docs/reports/analysis/` (already exists)
 **Rationale**: This is an analysis report, fits with existing reports structure
 
 ---
 
 ### 2. CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md (735 lines)
 
-**Current Location**: `docs/misc/`  
-**Type**: Implementation plan  
-**Date**: 2026-01-01  
+**Current Location**: `docs/misc/`
+**Type**: Implementation plan
+**Date**: 2026-01-01
 **Status**: Proposed
 
 **Content Summary**:
@@ -90,16 +90,16 @@ git mv docs/misc/CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md docs/reports/implementat
 git mv docs/misc/CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md docs/workflow-automation/
 ```
 
-**Recommended**: `docs/reports/implementation/`  
+**Recommended**: `docs/reports/implementation/`
 **Rationale**: Implementation plan fits reports/implementation category
 
 ---
 
 ### 3. DOCUMENTATION_IMPROVEMENTS_2026-01-01.md (560 lines)
 
-**Current Location**: `docs/misc/`  
-**Type**: Documentation audit report  
-**Date**: 2026-01-01  
+**Current Location**: `docs/misc/`
+**Type**: Documentation audit report
+**Date**: 2026-01-01
 **Status**: ✅ COMPLETE
 
 **Content Summary**:
@@ -116,7 +116,7 @@ git mv docs/misc/CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md docs/workflow-automation
 git mv docs/misc/DOCUMENTATION_IMPROVEMENTS_2026-01-01.md docs/reports/analysis/
 ```
 
-**Recommended**: `docs/reports/analysis/`  
+**Recommended**: `docs/reports/analysis/`
 **Rationale**: This is an analysis/audit report
 
 **Note**: Consider renaming to `DOCUMENTATION_AUDIT_2026-01-01.md` for consistency with current audits
@@ -125,9 +125,9 @@ git mv docs/misc/DOCUMENTATION_IMPROVEMENTS_2026-01-01.md docs/reports/analysis/
 
 ### 4. PREREQUISITES_DOCUMENTATION_UPDATE.md (354 lines)
 
-**Current Location**: `docs/misc/`  
-**Type**: Documentation update report  
-**Date**: 2026-01-01  
+**Current Location**: `docs/misc/`
+**Type**: Documentation update report
+**Date**: 2026-01-01
 **Status**: ✅ Fixed
 
 **Content Summary**:
@@ -142,15 +142,15 @@ git mv docs/misc/DOCUMENTATION_IMPROVEMENTS_2026-01-01.md docs/reports/analysis/
 git mv docs/misc/PREREQUISITES_DOCUMENTATION_UPDATE.md docs/reports/bugfixes/
 ```
 
-**Recommended**: `docs/reports/bugfixes/`  
+**Recommended**: `docs/reports/bugfixes/`
 **Rationale**: This is a documentation bugfix report
 
 ---
 
 ### 5. IBIRA_VERSION_UPDATE.md (138 lines)
 
-**Current Location**: `docs/misc/`  
-**Type**: Version update report  
+**Current Location**: `docs/misc/`
+**Type**: Version update report
 **Date**: 2026-01-01
 
 **Content Summary**:
@@ -165,7 +165,7 @@ git mv docs/misc/PREREQUISITES_DOCUMENTATION_UPDATE.md docs/reports/bugfixes/
 git mv docs/misc/IBIRA_VERSION_UPDATE.md docs/reports/implementation/
 ```
 
-**Recommended**: `docs/reports/implementation/`  
+**Recommended**: `docs/reports/implementation/`
 **Rationale**: Version update implementation report
 
 **Alternative**: If Ibirapuera-specific, consider creating `docs/integrations/ibira/` or moving to `docs/issue-189/` (if related)
@@ -174,8 +174,8 @@ git mv docs/misc/IBIRA_VERSION_UPDATE.md docs/reports/implementation/
 
 ### 6. documentation_updates.md (97 lines)
 
-**Current Location**: `docs/misc/`  
-**Type**: AI workflow log / draft  
+**Current Location**: `docs/misc/`
+**Type**: AI workflow log / draft
 **Date**: Unknown (appears to be workflow output)
 
 **Content Summary**:
@@ -198,7 +198,7 @@ git mv docs/misc/documentation_updates.md .ai_workflow/backlog/legacy/
 git mv docs/misc/documentation_updates.md docs/archive/documentation_updates_legacy.md
 ```
 
-**Recommended**: **DELETE** or move to `.ai_workflow/`  
+**Recommended**: **DELETE** or move to `.ai_workflow/`
 **Rationale**: Appears to be draft/log, not formal documentation
 
 **Action Required**: Review content to determine if it has value or is superseded by DOCUMENTATION_IMPROVEMENTS_2026-01-01.md
@@ -207,9 +207,9 @@ git mv docs/misc/documentation_updates.md docs/archive/documentation_updates_leg
 
 ### 7. ERROR_HANDLING_DOCUMENTATION.md (82 lines)
 
-**Current Location**: `docs/misc/`  
-**Type**: Documentation guide/update  
-**Date**: 2026-01-01  
+**Current Location**: `docs/misc/`
+**Type**: Documentation guide/update
+**Date**: 2026-01-01
 **Status**: ✅ Fixed
 
 **Content Summary**:
@@ -228,7 +228,7 @@ git mv docs/misc/ERROR_HANDLING_DOCUMENTATION.md docs/guides/ERROR_HANDLING.md
 git mv docs/misc/ERROR_HANDLING_DOCUMENTATION.md docs/reports/bugfixes/
 ```
 
-**Recommended**: `docs/guides/` (rename to `ERROR_HANDLING.md`)  
+**Recommended**: `docs/guides/` (rename to `ERROR_HANDLING.md`)
 **Rationale**: If this is guidance, belongs in guides/. If it's a report about fixing docs, belongs in reports/bugfixes/
 
 **Action Required**: Review content to determine if it's a guide or a report
@@ -285,7 +285,7 @@ If there's a need for "uncategorized" space:
 ```markdown
 ### Option: Rename misc → archive
 
-**Rationale**: 
+**Rationale**:
 - "archive" is clearer than "misc"
 - Indicates historical/reference material
 - Still allows temporary storage

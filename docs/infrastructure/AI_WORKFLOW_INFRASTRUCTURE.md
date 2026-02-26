@@ -1,7 +1,7 @@
 # AI Workflow Infrastructure Documentation
 
-**Last Updated**: 2026-01-16  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-16
+**Version**: 0.9.0-alpha
 **Purpose**: Document the `.ai_workflow/` directory structure and usage
 
 ## Overview
@@ -63,6 +63,6 @@ The `.ai_workflow/` directory contains AI-assisted development workflow artifact
 
 ---
 
-**Status**: Production-ready infrastructure  
-**Maintenance**: Low (periodic cleanup recommended)  
+**Status**: Production-ready infrastructure
+**Maintenance**: Low (periodic cleanup recommended)
 **Dependencies**: None (file-system only)

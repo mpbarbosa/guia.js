@@ -39,7 +39,7 @@ The method now implements a two-tier priority system:
   - Runs every 1 second
   - Maximum 10 attempts
   - Automatically stops when pt-BR voice is found or max attempts reached
-  
+
 - `stopVoiceRetryTimer()`: Cleans up the retry timer
 
 #### 2. HtmlSpeechSynthesisDisplayer Class Enhancements
@@ -147,7 +147,7 @@ A comprehensive test page has been created: `brazilian-voice-test.html`
    - Retry mechanism starts but eventually gives up
    - Logged as: "Max retry attempts reached"
 
-### Why Retry Mechanism?
+### Why Retry Mechanism
 
 The Web Speech API loads voices asynchronously in many browsers. The `voiceschanged` event may fire multiple times as voices become available. The retry mechanism ensures:
 

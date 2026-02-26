@@ -116,17 +116,17 @@ from mock_geolocation_helper import setup_mock_geolocation
 # 2. In your test
 def test_location_feature(self):
     self.driver.get(f"{self.base_url}/index.html")
-    
+
     # 3. Setup mock
     result = setup_mock_geolocation(
         self.driver,
         latitude=-18.4696091,
         longitude=-43.4953982
     )
-    
+
     # 4. Verify setup
     self.assertTrue(result['success'])
-    
+
     # 5. Continue with your test
     # ...
 ```
@@ -157,7 +157,7 @@ tests/integration/
 
 ---
 
-## 🔍 What Problem Does This Solve?
+## 🔍 What Problem Does This Solve
 
 ### Before (Current Approach)
 

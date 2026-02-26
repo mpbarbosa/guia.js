@@ -14,7 +14,7 @@ The project includes a comprehensive GitHub Actions workflow that automatically:
 4. **Validates** markdown files and checks for broken links
 5. **Reports results** in an easy-to-read summary
 
-## What Happens When You Push Changes?
+## What Happens When You Push Changes
 
 ### JavaScript Source Files (`src/*.js`)
 

@@ -194,7 +194,7 @@ Para suportar testes, foram feitas modificações mínimas:
 - Adicionada seção de exports no final do arquivo para Node.js
 - Mantém compatibilidade total com uso no navegador
 
-### guia_ibge.js  
+### guia_ibge.js
 
 - Adicionada seção de exports para Node.js
 - Mantém funcionalidade original

@@ -6,8 +6,8 @@ The NeighborhoodChangeWhileDriving E2E test (and 7 other Puppeteer-based E2E tes
 
 ### Root Cause
 
-Jest's default testEnvironment is `jsdom` (configured in package.json).  
-Puppeteer requires a Node.js environment because it uses the `ws` (WebSocket) package.  
+Jest's default testEnvironment is `jsdom` (configured in package.json).
+Puppeteer requires a Node.js environment because it uses the `ws` (WebSocket) package.
 The `@jest-environment node` doc comment is not being honored, causing Puppeteer to load `ws/browser.js` instead of the Node.js version.
 
 ### Error Message
@@ -20,7 +20,7 @@ ws does not work in the browser. Browser clients must use the native WebSocket o
 ## Affected Tests (All use Puppeteer)
 
 1. `__tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js`
-2. `__tests__/e2e/ChangeDetectionCoordinator.e2e.test.js`  
+2. `__tests__/e2e/ChangeDetectionCoordinator.e2e.test.js`
 3. `__tests__/e2e/complete-address-validation.e2e.test.js`
 4. `__tests__/e2e/metropolitan-region-display.e2e.test.js`
 5. `__tests__/e2e/milho-verde-locationResult.e2e.test.js`
@@ -33,7 +33,7 @@ ws does not work in the browser. Browser clients must use the native WebSocket o
 ## What We've Done
 
 1. ✅ Created `__tests__/utils/e2e-helpers.js` with robust waitFor utilities
-2. ✅ Refactored NeighborhoodChangeWhileDriving.e2e.test.js to use helpers  
+2. ✅ Refactored NeighborhoodChangeWhileDriving.e2e.test.js to use helpers
 3. ✅ Replaced fixed delays (`setTimeout`) with retry-based polling (`waitForElementText`, `waitForNetworkIdle`)
 4. ✅ Added `@jest-environment node` comment (but not working due to Jest config)
 5. ✅ Cleared Jest cache
@@ -46,9 +46,9 @@ ws does not work in the browser. Browser clients must use the native WebSocket o
 - Cleared Jest cache
 - **Result**: Failed - Jest still uses jsdom environment
 
-### Option 2: Split Jest Configurations  
+### Option 2: Split Jest Configurations
 
-- Create separate `jest.config.e2e.js` for Puppeteer tests  
+- Create separate `jest.config.e2e.js` for Puppeteer tests
 - Run E2E tests separately: `npm run test:e2e`
 - **Status**: Not implemented (requires package.json changes)
 
@@ -83,13 +83,13 @@ ws does not work in the browser. Browser clients must use the native WebSocket o
 
 ## Impact on Test Count Goals
 
-**Original Plan**: Un-skip 140+ Puppeteer E2E tests  
+**Original Plan**: Un-skip 140+ Puppeteer E2E tests
 **Revised Plan**: Un-skip 30+ integration/unit tests (Phase 2)
 
 **New Success Metrics**:
 
 - Before: 2,665 passing, 202 skipped (92.9%)
-- Target: 2,695+ passing, ~170 skipped (94.0%)  
+- Target: 2,695+ passing, ~170 skipped (94.0%)
 - Still significant improvement without Puppeteer tests
 
 ## Files Created/Modified
@@ -125,5 +125,5 @@ While we cannot fix the Puppeteer E2E tests in this PR due to Jest environment l
 
 ---
 
-**Date**: 2026-02-15  
+**Date**: 2026-02-15
 **Status**: Documented Known Limitation

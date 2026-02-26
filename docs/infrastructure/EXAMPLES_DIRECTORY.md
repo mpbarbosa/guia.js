@@ -1,7 +1,7 @@
 # Examples Directory Documentation
 
-**Last Updated**: 2026-01-16  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-16
+**Version**: 0.9.0-alpha
 **Purpose**: Document the purpose and organization of the `examples/` directory
 
 ## Overview
@@ -161,6 +161,6 @@ examples/
 
 ---
 
-**Status**: Active directory with 18 examples  
-**Maintenance**: Audit recommended for v0.9.0  
+**Status**: Active directory with 18 examples
+**Maintenance**: Audit recommended for v0.9.0
 **Organization**: Subcategory structure planned

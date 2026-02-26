@@ -204,7 +204,7 @@ guia_turistico/
    ```javascript
    // ❌ Bad: Mutates array
    array.push(newItem);
-   
+
    // ✅ Good: Creates new array
    const newArray = [...array, newItem];
    ```
@@ -214,7 +214,7 @@ guia_turistico/
    ```bash
    # Create test file in __tests__/
    touch __tests__/your-feature.test.js
-   
+
    # Run tests in watch mode
    npm run test:watch
    ```
@@ -358,5 +358,5 @@ npm ci
 
 ---
 
-**Last Updated**: 2026-02-12  
+**Last Updated**: 2026-02-12
 **Version**: 0.9.0-alpha

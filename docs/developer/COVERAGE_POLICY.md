@@ -1,6 +1,6 @@
 # Coverage Policy
 
-**Date**: 2026-01-09  
+**Date**: 2026-01-09
 **Effective**: Immediately
 
 ## Coverage Thresholds
@@ -272,5 +272,5 @@ Raising baseline to prevent regression."
 
 ---
 
-**Last Updated**: 2026-01-09  
+**Last Updated**: 2026-01-09
 **Next Review**: 2026-04-09 (Quarterly)

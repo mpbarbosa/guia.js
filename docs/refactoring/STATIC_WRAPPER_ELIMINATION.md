@@ -1,9 +1,9 @@
 # Static Wrapper Pattern Elimination Plan
 
-**Issue**: #4.4 - Duplicate Static Wrapper Pattern  
-**Severity**: Medium  
-**Component**: AddressCache.js  
-**Lines of Code**: ~371 lines (32% of file)  
+**Issue**: #4.4 - Duplicate Static Wrapper Pattern
+**Severity**: Medium
+**Component**: AddressCache.js
+**Lines of Code**: ~371 lines (32% of file)
 **Status**: Analysis Complete - Implementation Pending
 
 ---
@@ -30,7 +30,7 @@ AddressCache.js contains **53 static wrapper methods** (24 methods + 14 getters 
 ```javascript
 class AddressCache {
     static instance = null;
-    
+
     // Core singleton access
     static getInstance() {
         if (!AddressCache.instance) {
@@ -38,13 +38,13 @@ class AddressCache {
         }
         return AddressCache.instance;
     }
-    
+
     // Instance method (actual implementation)
     clearCache() {
         this.cache.clear();
         // ... actual logic ...
     }
-    
+
     // Static wrapper (deprecated boilerplate)
     /**
      * @deprecated Use getInstance().clearCache() instead
@@ -89,7 +89,7 @@ This creates a **triple indirection chain**:
 
 ```
 External code → AddressDataExtractor.clearCache()
-              → AddressCache.clearCache()  
+              → AddressCache.clearCache()
               → AddressCache.getInstance().clearCache()
 ```
 
@@ -138,7 +138,7 @@ cache.clearCache();
 
 ## Root Cause Analysis
 
-### Why Do These Wrappers Exist?
+### Why Do These Wrappers Exist
 
 1. **Historical Singleton Pattern**: Original code used static methods only
 2. **Refactoring to Instance Methods**: Added instance methods for testability
@@ -253,7 +253,7 @@ describe('AddressCache', () => {
     afterEach(() => {
         AddressCache.clearCache(); // Static API
     });
-    
+
     it('should cache addresses', () => {
         const result = AddressCache.generateCacheKey(data); // Static API
         expect(result).toBe('expected-key');
@@ -266,15 +266,15 @@ describe('AddressCache', () => {
 ```javascript
 describe('AddressCache', () => {
     let cache;
-    
+
     beforeEach(() => {
         cache = AddressCache.getInstance();
     });
-    
+
     afterEach(() => {
         cache.clearCache(); // Instance API
     });
-    
+
     it('should cache addresses', () => {
         const result = cache.generateCacheKey(data); // Instance API
         expect(result).toBe('expected-key');
@@ -326,23 +326,23 @@ npm run test:all
 // BEFORE: AddressCache.js (1,146 lines)
 class AddressCache {
     static getInstance() { /* keep */ }
-    
+
     clearCache() { /* keep - instance method */ }
     static clearCache() { /* REMOVE - static wrapper */ }
-    
+
     get cache() { /* keep - instance getter */ }
     static get cache() { /* REMOVE - static getter */ }
-    
+
     set cache(value) { /* keep - instance setter */ }
     static set cache(value) { /* REMOVE - static setter */ }
-    
+
     // ... repeat for 51 more wrappers (REMOVE ALL)
 }
 
 // AFTER: AddressCache.js (~775 lines)
 class AddressCache {
     static getInstance() { /* only static method */ }
-    
+
     // All instance methods, getters, setters remain
     clearCache() { /* instance method */ }
     // ... 50+ instance methods
@@ -360,13 +360,13 @@ let skipUntilCloseBrace = false;
 
 for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    
+
     // Detect start of static wrapper (has @deprecated tag)
     if (line.includes('@deprecated') && line.includes('getInstance()')) {
         skipUntilCloseBrace = true;
         continue;
     }
-    
+
     // Skip wrapper method definition
     if (skipUntilCloseBrace) {
         if (line.trim() === '}') {
@@ -374,7 +374,7 @@ for (let i = 0; i < lines.length; i++) {
         }
         continue;
     }
-    
+
     result.push(line);
 }
 
@@ -545,12 +545,12 @@ const path = require('path');
 
 /**
  * Migrates AddressCache static API calls to instance API
- * 
+ *
  * Transforms:
- *   AddressCache.clearCache() 
+ *   AddressCache.clearCache()
  * To:
  *   AddressCache.getInstance().clearCache()
- * 
+ *
  * Also handles AddressDataExtractor → AddressCache migrations
  */
 
@@ -567,7 +567,7 @@ const staticMethods = [
 
 const staticProperties = [
     'cache', 'maxCacheSize', 'cacheExpirationMs',
-    'lastNotifiedChangeSignature', 'lastNotifiedBairroChangeSignature', 
+    'lastNotifiedChangeSignature', 'lastNotifiedBairroChangeSignature',
     'lastNotifiedMunicipioChangeSignature',
     'logradouroChangeCallback', 'bairroChangeCallback', 'municipioChangeCallback',
     'currentAddress', 'previousAddress', 'currentRawData', 'previousRawData',
@@ -576,10 +576,10 @@ const staticProperties = [
 
 function migrateFile(filePath) {
     console.log(`Migrating: ${filePath}`);
-    
+
     let content = fs.readFileSync(filePath, 'utf8');
     let modified = false;
-    
+
     // Replace AddressDataExtractor imports
     if (content.includes('AddressDataExtractor')) {
         content = content.replace(
@@ -588,7 +588,7 @@ function migrateFile(filePath) {
         );
         modified = true;
     }
-    
+
     // Replace static method calls
     staticMethods.forEach(method => {
         const regex = new RegExp(`AddressCache\\.${method}\\(`, 'g');
@@ -597,7 +597,7 @@ function migrateFile(filePath) {
             modified = true;
         }
     });
-    
+
     // Replace static property access
     staticProperties.forEach(prop => {
         // Getter pattern: AddressCache.cache
@@ -606,7 +606,7 @@ function migrateFile(filePath) {
             content = content.replace(getterRegex, `AddressCache.getInstance().${prop}`);
             modified = true;
         }
-        
+
         // Setter pattern: AddressCache.cache = value
         const setterRegex = new RegExp(`AddressCache\\.${prop}\\s*=`, 'g');
         if (setterRegex.test(content)) {
@@ -614,10 +614,10 @@ function migrateFile(filePath) {
             modified = true;
         }
     });
-    
+
     // Replace AddressDataExtractor class usage
     content = content.replace(/AddressDataExtractor\./g, 'AddressCache.getInstance().');
-    
+
     if (modified) {
         fs.writeFileSync(filePath, content, 'utf8');
         console.log(`  ✓ Modified`);
@@ -630,19 +630,19 @@ function migrateFile(filePath) {
 
 function migrateDirectory(dir) {
     let filesModified = 0;
-    
+
     const files = fs.readdirSync(dir);
     files.forEach(file => {
         const fullPath = path.join(dir, file);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isDirectory() && !file.startsWith('.') && file !== 'node_modules') {
             filesModified += migrateDirectory(fullPath);
         } else if (file.endsWith('.js') && !file.includes('AddressCache.js')) {
             filesModified += migrateFile(fullPath);
         }
     });
-    
+
     return filesModified;
 }
 
@@ -775,7 +775,7 @@ describe('Geolocation Service', () => {
     afterEach(() => {
         AddressCache.clearCache(); // Static API
     });
-    
+
     it('should geocode address', () => {
         const key = AddressCache.generateCacheKey(data); // Static API
         expect(key).toBeTruthy();
@@ -788,15 +788,15 @@ describe('Geolocation Service', () => {
 ```javascript
 describe('Geolocation Service', () => {
     let cache;
-    
+
     beforeEach(() => {
         cache = AddressCache.getInstance();
     });
-    
+
     afterEach(() => {
         cache.clearCache(); // Instance API
     });
-    
+
     it('should geocode address', () => {
         const key = cache.generateCacheKey(data); // Instance API
         expect(key).toBeTruthy();
@@ -1042,7 +1042,7 @@ AddressDataExtractor.clearCache()
   → AddressCache.clearCache()
     → AddressCache.getInstance().clearCache()
 
-// After: 1 function call  
+// After: 1 function call
 cache.clearCache()
 ```
 
@@ -1191,9 +1191,9 @@ The **Static Wrapper Pattern Elimination** addresses a significant code quality 
 4. **Clean up code**: Remove 616 total lines (AddressCache + AddressDataExtractor)
 5. **Eliminate triple indirection**: Direct access to instance methods
 
-**Recommended Timeline**: 6 weeks (44 hours effort)  
-**Recommended Release**: v1.0.0 (breaking change)  
-**Prerequisite**: God Object Refactoring should complete first  
+**Recommended Timeline**: 6 weeks (44 hours effort)
+**Recommended Release**: v1.0.0 (breaking change)
+**Prerequisite**: God Object Refactoring should complete first
 **Risk Level**: Medium (phased approach mitigates risks)
 
 **Next Steps**:
@@ -1205,8 +1205,8 @@ The **Static Wrapper Pattern Elimination** addresses a significant code quality 
 
 ---
 
-**Document Status**: Analysis Complete  
-**Created**: 2026-01-09  
-**Author**: GitHub Copilot CLI  
-**Related Plans**: GOD_OBJECT_REFACTORING.md, SINGLETON_REFACTORING_PLAN.md, DEPENDENCY_MANAGEMENT.md  
+**Document Status**: Analysis Complete
+**Created**: 2026-01-09
+**Author**: GitHub Copilot CLI
+**Related Plans**: GOD_OBJECT_REFACTORING.md, SINGLETON_REFACTORING_PLAN.md, DEPENDENCY_MANAGEMENT.md
 **Issue**: #4.4 - Duplicate Static Wrapper Pattern

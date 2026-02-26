@@ -1,8 +1,8 @@
 # LRUCache API Documentation
 
-**Version:** 0.9.0-alpha  
-**File:** `src/data/LRUCache.js` (243 lines)  
-**Author:** Marcelo Pereira Barbosa (extracted from AddressCache)  
+**Version:** 0.9.0-alpha
+**File:** `src/data/LRUCache.js` (243 lines)
+**Author:** Marcelo Pereira Barbosa (extracted from AddressCache)
 **Since:** 0.9.0-alpha
 
 ## Overview
@@ -70,7 +70,7 @@ const cache3 = new LRUCache(10, 60000);
 
 ### `cache`
 
-**Type:** `Map<string, Object>`  
+**Type:** `Map<string, Object>`
 **Access:** Private (accessed internally)
 
 Internal JavaScript `Map` storing cache entries. Each entry contains:
@@ -85,7 +85,7 @@ Internal JavaScript `Map` storing cache entries. Each entry contains:
 
 ### `maxSize`
 
-**Type:** `number`  
+**Type:** `number`
 **Access:** Public
 
 Maximum number of entries allowed in cache before LRU eviction occurs.
@@ -101,7 +101,7 @@ cache.maxSize = 100;  // Increase capacity
 
 ### `expirationMs`
 
-**Type:** `number`  
+**Type:** `number`
 **Access:** Public
 
 Time in milliseconds before cache entries expire.
@@ -270,7 +270,7 @@ setTimeout(() => {
   const removed = cache.cleanExpired();
   console.log(`Cleaned up ${removed} expired entries`);
   // Output: "Cleaned up 3 expired entries"
-  
+
   console.log(cache.size);  // 0 (all expired)
 }, 6000);
 ```
@@ -382,7 +382,7 @@ console.log(cache.toString());
 
 Gets the current number of entries in the cache.
 
-**Type:** `number`  
+**Type:** `number`
 **Access:** Read-only
 
 **Example:**
@@ -484,8 +484,8 @@ import LRUCache from './data/LRUCache.js';
 const cache = new LRUCache(50, 300000);  // 50 items, 5 min expiration
 
 // Store user data
-cache.set('user:123', { 
-  name: 'Alice', 
+cache.set('user:123', {
+  name: 'Alice',
   email: 'alice@example.com',
   preferences: { theme: 'dark' }
 });
@@ -504,22 +504,22 @@ const apiCache = new LRUCache(100, 600000);  // 100 items, 10 min
 
 async function fetchUserData(userId) {
   const cacheKey = `user:${userId}`;
-  
+
   // Check cache first
   const cached = apiCache.get(cacheKey);
   if (cached) {
     console.log('Cache hit!');
     return cached;
   }
-  
+
   // Cache miss - fetch from API
   console.log('Cache miss - fetching from API');
   const response = await fetch(`/api/users/${userId}`);
   const data = await response.json();
-  
+
   // Store in cache
   apiCache.set(cacheKey, data);
-  
+
   return data;
 }
 ```
@@ -559,20 +559,20 @@ const computeCache = new LRUCache(200, 3600000);  // 200 items, 1 hour
 
 function expensiveComputation(input) {
   const cacheKey = `compute:${JSON.stringify(input)}`;
-  
+
   // Check cache
   const cached = computeCache.get(cacheKey);
   if (cached !== null) {
     return cached;
   }
-  
+
   // Perform expensive computation
   console.log('Computing...');
   const result = /* complex calculation */ input * 2;
-  
+
   // Cache result
   computeCache.set(cacheKey, result);
-  
+
   return result;
 }
 ```
@@ -666,36 +666,36 @@ The `LRUCache` class was extracted from `AddressCache` to follow the Single Resp
 class AddressCache {
   constructor() {
     this.cache = new LRUCache(50, 300000);  // 50 entries, 5 min
-    
+
     // Periodic cleanup
     timerManager.setInterval(() => {
       this.cleanExpiredEntries();
     }, 60000, 'address-cache-cleanup');
   }
-  
+
   cleanExpiredEntries() {
     const removed = this.cache.cleanExpired();
     if (removed > 0) {
       log(`Cleaned ${removed} expired cache entries`);
     }
   }
-  
+
   getBrazilianStandardAddress(data) {
     const cacheKey = this.generateCacheKey(data);
-    
+
     // Check cache
     const cached = this.cache.get(cacheKey);
     if (cached) {
       return cached.address;
     }
-    
+
     // Extract and cache
     const extractor = new AddressExtractor(data);
     this.cache.set(cacheKey, {
       address: extractor.enderecoPadronizado,
       rawData: data
     });
-    
+
     return extractor.enderecoPadronizado;
   }
 }
@@ -714,37 +714,37 @@ describe('LRUCache', () => {
     cache.set('key1', 'value1');
     expect(cache.get('key1')).toBe('value1');
   });
-  
+
   test('evicts LRU entry when full', () => {
     const cache = new LRUCache(2);  // Max 2 entries
-    
+
     cache.set('a', 1);
     cache.set('b', 2);
     cache.set('c', 3);  // Evicts 'a'
-    
+
     expect(cache.get('a')).toBeNull();
     expect(cache.get('b')).toBe(2);
     expect(cache.get('c')).toBe(3);
   });
-  
+
   test('expires entries after expiration time', (done) => {
     const cache = new LRUCache(10, 100);  // 100ms expiration
-    
+
     cache.set('key', 'value');
     expect(cache.get('key')).toBe('value');
-    
+
     setTimeout(() => {
       expect(cache.get('key')).toBeNull();  // Expired
       done();
     }, 150);
   });
-  
+
   test('cleanExpired removes expired entries', (done) => {
     const cache = new LRUCache(10, 50);
-    
+
     cache.set('a', 1);
     cache.set('b', 2);
-    
+
     setTimeout(() => {
       const removed = cache.cleanExpired();
       expect(removed).toBe(2);

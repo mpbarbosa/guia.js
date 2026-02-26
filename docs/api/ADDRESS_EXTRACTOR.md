@@ -1,8 +1,8 @@
 # AddressExtractor API Documentation
 
-**Version:** 0.9.0-alpha  
-**File:** `src/data/AddressExtractor.js`  
-**Author:** Marcelo Pereira Barbosa  
+**Version:** 0.9.0-alpha
+**File:** `src/data/AddressExtractor.js`
+**Author:** Marcelo Pereira Barbosa
 **Since:** 0.9.0-alpha
 
 ## Overview
@@ -94,14 +94,14 @@ console.log(extractor.enderecoPadronizado.municipioCompleto());
 
 ### `data`
 
-**Type:** `Object`  
+**Type:** `Object`
 **Access:** Public (read-only after freeze)
 
 Raw geocoding data passed to constructor.
 
 ### `enderecoPadronizado`
 
-**Type:** `BrazilianStandardAddress`  
+**Type:** `BrazilianStandardAddress`
 **Access:** Public (read-only after freeze)
 
 The extracted and standardized Brazilian address object.
@@ -156,7 +156,7 @@ static extractSiglaUF(iso3166Code) {
     if (!iso3166Code || typeof iso3166Code !== 'string') {
         return null;
     }
-    
+
     // Extract the state code after "BR-" prefix
     const match = iso3166Code.match(/^BR-([A-Z]{2})$/);
     return match ? match[1] : null;
@@ -200,7 +200,7 @@ Standardizes the address data into Brazilian format. This method is automaticall
 #### 1. Street Name (`logradouro`)
 
 ```javascript
-this.enderecoPadronizado.logradouro = 
+this.enderecoPadronizado.logradouro =
     address['addr:street'] ||    // OSM tag (highest priority)
     address.road ||               // Nominatim standard
     address.street ||             // Alternative format
@@ -213,7 +213,7 @@ this.enderecoPadronizado.logradouro =
 #### 2. Street Number (`numero`)
 
 ```javascript
-this.enderecoPadronizado.numero = 
+this.enderecoPadronizado.numero =
     address['addr:housenumber'] || // OSM tag
     address.house_number ||         // Nominatim standard
     null;
@@ -224,7 +224,7 @@ this.enderecoPadronizado.numero =
 #### 3. Neighborhood (`bairro`)
 
 ```javascript
-this.enderecoPadronizado.bairro = 
+this.enderecoPadronizado.bairro =
     address['addr:neighbourhood'] || // OSM tag
     address.neighbourhood ||          // Nominatim standard
     address.suburb ||                 // Alternative
@@ -237,7 +237,7 @@ this.enderecoPadronizado.bairro =
 #### 4. Municipality (`municipio`)
 
 ```javascript
-this.enderecoPadronizado.municipio = 
+this.enderecoPadronizado.municipio =
     address['addr:city'] ||  // OSM tag
     address.city ||          // Nominatim standard
     address.town ||          // Smaller cities
@@ -267,7 +267,7 @@ this.enderecoPadronizado.regiaoMetropolitana = address.county || null;
 #### 6. State Full Name (`uf`)
 
 ```javascript
-this.enderecoPadronizado.uf = 
+this.enderecoPadronizado.uf =
     address['addr:state'] ||  // OSM tag (priority)
     address.state ||          // Nominatim standard
     null;
@@ -280,7 +280,7 @@ this.enderecoPadronizado.uf =
 #### 7. State Abbreviation (`siglaUF`)
 
 ```javascript
-this.enderecoPadronizado.siglaUF = 
+this.enderecoPadronizado.siglaUF =
     address.state_code ||                              // Direct code
     AddressExtractor.extractSiglaUF(address['ISO3166-2-lvl4']) || // Extract from ISO code
     null;
@@ -302,7 +302,7 @@ if (this.enderecoPadronizado.uf && /^[A-Z]{2}$/.test(this.enderecoPadronizado.uf
 #### 8. Postal Code (`cep`)
 
 ```javascript
-this.enderecoPadronizado.cep = 
+this.enderecoPadronizado.cep =
     address['addr:postcode'] || // OSM tag
     address.postcode ||         // Nominatim standard
     null;
@@ -313,13 +313,13 @@ this.enderecoPadronizado.cep =
 #### 9. Country (`pais`)
 
 ```javascript
-this.enderecoPadronizado.pais = 
-    address.country === 'Brasil' || address.country === 'Brazil' 
-        ? 'Brasil' 
+this.enderecoPadronizado.pais =
+    address.country === 'Brasil' || address.country === 'Brazil'
+        ? 'Brasil'
         : (address.country || 'Brasil');
 ```
 
-**Default:** "Brasil"  
+**Default:** "Brasil"
 **Normalization:** Both "Brasil" and "Brazil" are normalized to "Brasil"
 
 #### 10. Reference Place
@@ -578,17 +578,17 @@ describe('AddressExtractor', () => {
         country: "Brasil"
       }
     };
-    
+
     const extractor = new AddressExtractor(data);
     const address = extractor.enderecoPadronizado;
-    
+
     expect(address.logradouro).toBe("Avenida Paulista");
     expect(address.numero).toBe("1578");
     expect(address.bairro).toBe("Bela Vista");
     expect(address.municipio).toBe("São Paulo");
     expect(address.siglaUF).toBe("SP");
   });
-  
+
   test('is frozen after creation', () => {
     const extractor = new AddressExtractor({ address: {} });
     expect(Object.isFrozen(extractor)).toBe(true);

@@ -1,7 +1,7 @@
 # Node.js Version Alignment Plan
 
-**Created**: 2026-01-16  
-**Status**: 🔴 CRITICAL - Environment Mismatch Detected  
+**Created**: 2026-01-16
+**Status**: 🔴 CRITICAL - Environment Mismatch Detected
 **Priority**: HIGH - Blocks jsdom upgrade to v27.4.0
 
 ## Problem Statement
@@ -26,13 +26,13 @@
 
 ## Recommended Solution: Align to Node.js 20 LTS
 
-### Why Node.js 20 LTS?
+### Why Node.js 20 LTS
 
-✅ **Long-term support** until 2026-04-30  
-✅ **jsdom 27.x compatible** (`^20.19.0` required)  
-✅ **Stable and battle-tested** in production  
-✅ **CI/CD friendly** (widely supported)  
-✅ **Balance** between stability and modern features  
+✅ **Long-term support** until 2026-04-30
+✅ **jsdom 27.x compatible** (`^20.19.0` required)
+✅ **Stable and battle-tested** in production
+✅ **CI/CD friendly** (widely supported)
+✅ **Balance** between stability and modern features
 
 ### Target Configuration
 
@@ -135,10 +135,10 @@ Update the following files to reflect Node.js 20.19.0:
 
 ### Expected jsdom 27.4.0 Benefits
 
-✅ `TextEncoder`/`TextDecoder` support (Web API compatibility)  
-✅ Improved byte decoding performance  
-✅ Memory leak fixes  
-✅ Better standards compliance  
+✅ `TextEncoder`/`TextDecoder` support (Web API compatibility)
+✅ Improved byte decoding performance
+✅ Memory leak fixes
+✅ Better standards compliance
 
 ---
 
@@ -146,10 +146,10 @@ Update the following files to reflect Node.js 20.19.0:
 
 ### Why NOT Recommended (for now)
 
-❌ **No LTS status** - Still in "current" phase  
-❌ **Less CI/CD support** - Many tools still target Node.js 20  
-❌ **Bleeding edge** - Potential for unexpected breaking changes  
-❌ **jsdom 27.x requires 24+** - Node.js 25 is compatible but overkill  
+❌ **No LTS status** - Still in "current" phase
+❌ **Less CI/CD support** - Many tools still target Node.js 20
+❌ **Bleeding edge** - Potential for unexpected breaking changes
+❌ **jsdom 27.x requires 24+** - Node.js 25 is compatible but overkill
 
 ### When to Consider Node.js 25
 
@@ -224,6 +224,6 @@ Update the following files to reflect Node.js 20.19.0:
 
 ---
 
-**Status**: Plan ready for execution ✅  
-**Next Action**: Update `.nvmrc` and begin Phase 1  
+**Status**: Plan ready for execution ✅
+**Next Action**: Update `.nvmrc` and begin Phase 1
 **Blocker Removed After**: jsdom can upgrade to v27.4.0

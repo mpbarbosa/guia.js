@@ -1,8 +1,8 @@
 # GeoPosition API Documentation
 
-**Version:** 0.9.0-alpha  
-**Module:** `src/core/GeoPosition.js`  
-**Pattern:** Value Object (Immutable)  
+**Version:** 0.9.0-alpha
+**Module:** `src/core/GeoPosition.js`
+**Pattern:** Value Object (Immutable)
 **Author:** Marcelo Pereira Barbosa
 
 ## Overview
@@ -62,7 +62,7 @@ navigator.geolocation.getCurrentPosition((browserPosition) => {
   const position = new GeoPosition(browserPosition);
   console.log(position.latitude, position.longitude);
   console.log(position.accuracyQuality); // 'good'
-  
+
   // Attempting to modify will fail (or throw in strict mode)
   position.latitude = 0; // No effect - object is frozen
 });
@@ -215,7 +215,7 @@ import GeoPosition from './core/GeoPosition.js';
 
 navigator.geolocation.getCurrentPosition((browserPosition) => {
   const position = new GeoPosition(browserPosition);
-  
+
   console.log('Position acquired:');
   console.log(`  Coordinates: ${position.latitude}, ${position.longitude}`);
   console.log(`  Accuracy: ${position.accuracy}m (${position.accuracyQuality})`);
@@ -262,9 +262,9 @@ import GeoPosition from './core/GeoPosition.js';
 
 function validatePosition(browserPosition) {
   const position = new GeoPosition(browserPosition);
-  
+
   const acceptableQualities = ['excellent', 'good'];
-  
+
   if (acceptableQualities.includes(position.accuracyQuality)) {
     console.log('Position quality acceptable:', position.accuracyQuality);
     return true;
@@ -336,17 +336,17 @@ let lastPosition = null;
 
 function onPositionUpdate(browserPosition) {
   const currentPosition = new GeoPosition(browserPosition);
-  
+
   if (lastPosition) {
     const distanceMoved = currentPosition.distanceTo(lastPosition);
     console.log(`Moved ${distanceMoved.toFixed(1)} meters`);
-    
+
     if (distanceMoved >= 20) {
       console.log('Significant movement detected');
       // Trigger address update
     }
   }
-  
+
   lastPosition = currentPosition;
 }
 
@@ -388,16 +388,16 @@ describe('GeoPosition', () => {
       coords: { latitude: -23.5505, longitude: -46.6333, accuracy: 10 },
       timestamp: Date.now()
     };
-    
+
     const position = new GeoPosition(browserPosition);
-    
+
     // Attempt to modify
     expect(() => {
       'use strict';
       position.latitude = 0;
     }).toThrow();
   });
-  
+
   test('accuracy quality classification', () => {
     expect(GeoPosition.getAccuracyQuality(5)).toBe('excellent');
     expect(GeoPosition.getAccuracyQuality(25)).toBe('good');
@@ -405,14 +405,14 @@ describe('GeoPosition', () => {
     expect(GeoPosition.getAccuracyQuality(150)).toBe('bad');
     expect(GeoPosition.getAccuracyQuality(500)).toBe('very bad');
   });
-  
+
   test('distance calculation', () => {
     const pos1 = new GeoPosition({
       coords: { latitude: 0, longitude: 0 },
       timestamp: Date.now()
     });
     const pos2 = { latitude: 0, longitude: 1 };
-    
+
     const distance = pos1.distanceTo(pos2);
     expect(distance).toBeCloseTo(111319, -2); // ~111km per degree at equator
   });

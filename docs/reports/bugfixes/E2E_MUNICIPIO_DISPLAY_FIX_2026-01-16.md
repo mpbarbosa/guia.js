@@ -1,7 +1,7 @@
 # E2E Test Fix: Municipio-Bairro Display Test Timeout
 
-**Date**: 2026-01-16  
-**Issue**: E2E test timing out - municipio/bairro not updating  
+**Date**: 2026-01-16
+**Issue**: E2E test timing out - municipio/bairro not updating
 **Status**: ✅ **RESOLVED**
 
 ---
@@ -31,7 +31,7 @@ await page.waitForFunction(...) // Waiting for municipio to update from "—"
 The test setup:
 
 1. Set Puppeteer geolocation BEFORE page load
-2. Loaded page with mocked Nominatim responses  
+2. Loaded page with mocked Nominatim responses
 3. Expected `watchPosition` to fire automatically
 
 **Problem**: Even though `page.setGeolocation()` was called, the browser's `watchPosition` callback wasn't firing, OR the PositionManager was rejecting the update due to:
@@ -73,7 +73,7 @@ await page.evaluate((lat, lon) => {
         },
         timestamp: Date.now()
     };
-    
+
     const appState = window.GuiaApp.getState();
     if (appState && appState.manager && appState.manager.geolocationService) {
         const posManager = appState.manager.geolocationService.positionManager;
@@ -175,6 +175,6 @@ This fix follows the same pattern as:
 
 ---
 
-**Fix Complete**: 2026-01-16  
-**Time Spent**: ~15 minutes (leveraging previous fix pattern)  
+**Fix Complete**: 2026-01-16
+**Time Spent**: ~15 minutes (leveraging previous fix pattern)
 **Impact**: Medium (unblocks municipio/bairro E2E testing)

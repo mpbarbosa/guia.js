@@ -1,7 +1,7 @@
 # ServiceCoordinator API Documentation
 
-**Version**: 0.9.0-alpha  
-**Module**: `coordination/ServiceCoordinator`  
+**Version**: 0.9.0-alpha
+**Module**: `coordination/ServiceCoordinator`
 **Since**: 0.9.0-alpha (Phase 1: WebGeocodingManager refactoring)
 
 ---
@@ -433,6 +433,6 @@ try {
 
 ---
 
-**Status**: ✅ Production Ready  
-**Test Coverage**: 90%+ (integration tests)  
+**Status**: ✅ Production Ready
+**Test Coverage**: 90%+ (integration tests)
 **Breaking Changes**: None (initial version)

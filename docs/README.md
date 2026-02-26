@@ -224,7 +224,7 @@ Found outdated information or broken links? Want to improve documentation?
 
 ---
 
-## 📞 Need Help?
+## 📞 Need Help
 
 - **Questions?** Open a [GitHub Discussion](https://github.com/mpbarbosa/guia_turistico/discussions)
 - **Bug reports?** Create an [Issue](https://github.com/mpbarbosa/guia_turistico/issues)
@@ -232,7 +232,7 @@ Found outdated information or broken links? Want to improve documentation?
 
 ---
 
-**Last Updated**: 2026-02-15  
-**Documentation Version**: 0.9.0-alpha  
-**Total Documentation Files**: 312+ markdown files  
+**Last Updated**: 2026-02-15
+**Documentation Version**: 0.9.0-alpha
+**Total Documentation Files**: 312+ markdown files
 **Directory Structure**: 20 documented categories

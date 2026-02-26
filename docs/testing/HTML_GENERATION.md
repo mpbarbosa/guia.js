@@ -1,7 +1,7 @@
 # Testing HTML Generation in JavaScript
 
-**Project**: Guia Turístico v0.9.0-alpha  
-**Topic**: Strategies for Testing HTML-Generating Code  
+**Project**: Guia Turístico v0.9.0-alpha
+**Topic**: Strategies for Testing HTML-Generating Code
 **Last Updated**: 2026-01-11
 
 ---
@@ -32,13 +32,13 @@ test('should render complete São Paulo address with all attributes', () => {
             state: 'São Paulo'
         }
     };
-    
+
     const html = displayer.renderAddressHtml(addressData);
-    
+
     // Validate HTML structure
     expect(html).toContain('address-details');
     expect(html).toContain('Endereço Atual');
-    
+
     // Validate content
     expect(html).toContain('Avenida Paulista, 1578, Bela Vista');
     expect(html).toContain('display_name');
@@ -76,7 +76,7 @@ beforeEach(() => {
         id: 'address-display',
         innerHTML: ''
     };
-    
+
     displayer = new HTMLAddressDisplayer(mockElement);
 });
 
@@ -88,9 +88,9 @@ test('should update element on position update event', () => {
             city: 'São Paulo'
         }
     };
-    
+
     displayer.update(addressData, null, 'strCurrPosUpdate', false, null);
-    
+
     // Verify innerHTML was updated
     expect(mockElement.innerHTML).toContain('Praça da Sé');
     expect(mockElement.innerHTML).toContain('São Paulo');
@@ -125,9 +125,9 @@ test('should generate proper HTML5 details/summary structure', () => {
         display_name: 'Test Structure',
         address: { road: 'Test Road' }
     };
-    
+
     const html = displayer.renderAddressHtml(addressData);
-    
+
     // Validate HTML5 semantic structure
     expect(html).toContain('<details class="address-details" closed>');
     expect(html).toContain('<summary><strong>Endereço Atual</strong></summary>');
@@ -136,12 +136,12 @@ test('should generate proper HTML5 details/summary structure', () => {
 
 test('should close all HTML tags properly', () => {
     const html = displayer.renderAddressHtml(addressData);
-    
+
     // Count opening and closing tags
     const openingTags = (html.match(/<\w+/g) || []).length;
     const closingTags = (html.match(/<\/\w+>/g) || []).length;
     const selfClosingTags = (html.match(/<\w+[^>]*\/>/g) || []).length;
-    
+
     // Should have balanced tags
     expect(openingTags - selfClosingTags).toBe(closingTags);
 });
@@ -172,7 +172,7 @@ Ensure generated HTML includes correct styling hooks and semantic attributes.
 ```javascript
 test('should generate semantic CSS classes for styling', () => {
     const html = displayer.renderAddressHtml(addressData);
-    
+
     // Validate CSS classes for styling
     expect(html).toContain('class="address-details"');
     expect(html).toContain('class="address-attributes"');
@@ -182,13 +182,13 @@ test('should generate semantic CSS classes for styling', () => {
 
 test('should include proper error state classes', () => {
     const errorHtml = displayer.renderAddressHtml(null);
-    
+
     expect(errorHtml).toContain("class='error'");
 });
 
 test('should include loading state classes', () => {
     displayer.update(null, null, 'strCurrPosUpdate', true, null);
-    
+
     expect(mockElement.innerHTML).toContain('class="loading"');
 });
 ```
@@ -217,13 +217,13 @@ test('should handle special characters in address data', () => {
             special: '<script>alert("xss")</script>'
         }
     };
-    
+
     const html = displayer.renderAddressHtml(addressData);
-    
+
     // Should contain special characters correctly
     expect(html).toContain('Praça da Sé');
     expect(html).toContain('São Paulo');
-    
+
     // Should NOT execute script tags (if using proper escaping)
     // Note: Current implementation uses innerHTML directly
     // Consider using textContent for user input
@@ -235,9 +235,9 @@ test('should handle null and undefined values safely', () => {
         address: null,
         coordinates: undefined
     };
-    
+
     const html = displayer.renderAddressHtml(addressData);
-    
+
     expect(html).toContain('null');
     // undefined might not appear in JSON.stringify
 });
@@ -254,7 +254,7 @@ Validate behavior with unusual or missing data.
 ```javascript
 test('should return error message for null address data', () => {
     const html = displayer.renderAddressHtml(null);
-    
+
     expect(html).toContain("Dados de endereço não disponíveis");
     expect(html).toContain("class='error'");
 });
@@ -266,9 +266,9 @@ test('should handle address data without display_name', () => {
             neighbourhood: 'Consolação'
         }
     };
-    
+
     const html = displayer.renderAddressHtml(addressData);
-    
+
     expect(html).toContain('Rua Augusta');
     expect(html).not.toContain('Endereço Completo:');
 });
@@ -279,9 +279,9 @@ test('should handle empty objects gracefully', () => {
         address: {},
         extratags: {}
     };
-    
+
     const html = displayer.renderAddressHtml(addressData);
-    
+
     expect(html).toContain('address-details');
     expect(html).toContain('{}'); // Empty object representation
 });
@@ -298,7 +298,7 @@ Verify correct language-specific content and formatting.
 ```javascript
 test('should use Portuguese terms in HTML output', () => {
     const html = displayer.renderAddressHtml(addressData);
-    
+
     expect(html).toContain('Endereço Atual');
     expect(html).toContain('Todos os atributos de addressData:');
     expect(html).toContain('Endereço Completo:');
@@ -306,7 +306,7 @@ test('should use Portuguese terms in HTML output', () => {
 
 test('should provide Portuguese error messages', () => {
     const errorHtml = displayer.renderAddressHtml(null);
-    
+
     expect(errorHtml).toContain('não disponíveis');
 });
 
@@ -317,9 +317,9 @@ test('should handle Portuguese special characters', () => {
             place: 'Praça da Sé'
         }
     };
-    
+
     const html = displayer.renderAddressHtml(addressData);
-    
+
     expect(html).toContain('Praça da Sé');
     expect(html).toContain('São Paulo');
 });
@@ -354,14 +354,14 @@ test('should handle large address data objects efficiently', () => {
         display_name: 'Large Address Test',
         address: {}
     };
-    
+
     // Add many properties
     for (let i = 0; i < 100; i++) {
         largeAddressData.address[`property_${i}`] = `value_${i}`;
     }
-    
+
     const html = displayer.renderAddressHtml(largeAddressData);
-    
+
     expect(html).toContain('Large Address Test');
     expect(html).toContain('property_0');
     expect(html).toContain('property_99');
@@ -389,7 +389,7 @@ test('should create immutable address displayer', () => {
     const displayer = DisplayerFactory.createAddressDisplayer(mockElement);
 
     expect(Object.isFrozen(displayer)).toBe(true);
-    
+
     expect(() => {
         displayer.newProperty = 'test';
     }).toThrow();
@@ -417,10 +417,10 @@ Test HTML generation in context with other modules.
 test('should work with DisplayerFactory', async () => {
     const guiaModule = await import('../../src/guia.js');
     const { DisplayerFactory } = guiaModule;
-    
+
     const mockElement = { id: 'factory-test', innerHTML: '' };
     const displayer = DisplayerFactory.createAddressDisplayer(mockElement);
-    
+
     expect(displayer).toBeInstanceOf(HTMLAddressDisplayer);
     expect(displayer.element).toBe(mockElement);
 });
@@ -428,19 +428,19 @@ test('should work with DisplayerFactory', async () => {
 test('should work alongside other HTML display modules', async () => {
     const HtmlTextModule = await import('../../src/html/HtmlText.js');
     const HTMLPositionDisplayerModule = await import('../../src/html/HTMLPositionDisplayer.js');
-    
+
     const HtmlText = HtmlTextModule.default;
     const HTMLPositionDisplayer = HTMLPositionDisplayerModule.default;
-    
+
     // Create instances of all modules
     const textElement = { id: 'text-test', innerHTML: '' };
     const positionElement = { id: 'position-test', innerHTML: '' };
     const addressElement = { id: 'address-test', innerHTML: '' };
-    
+
     const htmlText = new HtmlText(mockDocument, textElement);
     const positionDisplayer = new HTMLPositionDisplayer(positionElement);
     const addressDisplayer = new HTMLAddressDisplayer(addressElement);
-    
+
     // All should be properly instantiated
     expect(htmlText).toBeDefined();
     expect(positionDisplayer).toBeDefined();
@@ -521,9 +521,9 @@ __tests__/
 renderAddressHtml(addressData) {
     let html = `<details class="address-details" closed>
         <summary><strong>Endereço Atual</strong></summary>`;
-    
+
     // Content here
-    
+
     html += `</details>`;
     return html;
 }
@@ -534,7 +534,7 @@ renderAddressHtml(addressData) {
 ```javascript
 test('should use progressive disclosure structure', () => {
     const html = displayer.renderAddressHtml(addressData);
-    
+
     expect(html).toContain('<details class="address-details" closed>');
     expect(html).toContain('<summary>');
     expect(html).toContain('</details>');
@@ -550,13 +550,13 @@ renderAddressHtml(addressData) {
     if (!addressData) {
         return "<p class='error'>Dados de endereço não disponíveis.</p>";
     }
-    
+
     let html = '<div>';
-    
+
     if (addressData.display_name) {
         html += `<p>${addressData.display_name}</p>`;
     }
-    
+
     html += '</div>';
     return html;
 }
@@ -599,9 +599,9 @@ test('should format nested objects with JSON pretty-printing', () => {
         address: { road: 'Test Street' },
         simple: 'value'
     };
-    
+
     const html = displayer.renderAddressHtml(addressData);
-    
+
     expect(html).toContain('<pre>');
     expect(html).toContain('Test Street');
 });
@@ -666,7 +666,7 @@ test('should format nested objects with JSON pretty-printing', () => {
    ```javascript
    // Bad: Brittle to formatting changes
    expect(html).toBe('<div class="address"><p>...</p></div>');
-   
+
    // Good: Test presence of key elements
    expect(html).toContain('class="address"');
    expect(html).toContain('<p>');
@@ -677,7 +677,7 @@ test('should format nested objects with JSON pretty-printing', () => {
    ```javascript
    // Bad: Requires full browser/JSDOM
    const element = document.createElement('div');
-   
+
    // Good: Use lightweight mocks
    const element = { innerHTML: '', id: 'test' };
    ```
@@ -686,7 +686,7 @@ test('should format nested objects with JSON pretty-printing', () => {
 
    ```javascript
    // Bad: Testing renderAddressHtml() AND update() together
-   
+
    // Good: Separate tests
    describe('renderAddressHtml', () => { ... });
    describe('update method', () => { ... });
@@ -750,39 +750,39 @@ describe('HTMLAddressDisplayer', () => {
     describe('Constructor and Initialization', () => {
         // Initialization tests
     });
-    
+
     describe('Address Data Rendering', () => {
         // renderAddressHtml() tests
     });
-    
+
     describe('Standardized Address Integration', () => {
         // Integration with BrazilianStandardAddress
     });
-    
+
     describe('Portuguese Localization', () => {
         // Localization tests
     });
-    
+
     describe('Observer Pattern Integration', () => {
         // update() method tests
     });
-    
+
     describe('Edge Cases and Error Handling', () => {
         // Error state tests
     });
-    
+
     describe('HTML Structure Validation', () => {
         // Structure correctness tests
     });
-    
+
     describe('Performance and Memory Management', () => {
         // Performance tests
     });
-    
+
     describe('Brazilian Address Types', () => {
         // Brazilian context tests
     });
-    
+
     describe('Data Type Handling', () => {
         // Type-aware rendering tests
     });
@@ -844,6 +844,6 @@ With **1224+ tests** and **~70% coverage**, guia_js demonstrates that comprehens
 
 ---
 
-**Last Updated**: 2026-01-01  
-**Version**: 1.0  
+**Last Updated**: 2026-01-01
+**Version**: 1.0
 **Author**: Based on guia_js testing infrastructure

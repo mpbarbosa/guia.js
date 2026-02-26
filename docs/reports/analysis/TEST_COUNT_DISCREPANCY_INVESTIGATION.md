@@ -1,7 +1,7 @@
 # Critical Issue: Test Count Discrepancy Investigation
 
-**Issue Type**: 🔴 CRITICAL - Data Integrity  
-**Investigation Date**: 2026-01-11  
+**Issue Type**: 🔴 CRITICAL - Data Integrity
+**Investigation Date**: 2026-01-11
 **Status**: ✅ ROOT CAUSE IDENTIFIED
 
 ## Executive Summary
@@ -528,7 +528,7 @@ npm test
 
 ---
 
-**Investigation Date**: 2026-01-11  
-**Investigator**: GitHub Copilot CLI  
-**Status**: ✅ Root cause identified, action plan created  
+**Investigation Date**: 2026-01-11
+**Investigator**: GitHub Copilot CLI
+**Status**: ✅ Root cause identified, action plan created
 **Next Action**: Fix failing tests, then update documentation

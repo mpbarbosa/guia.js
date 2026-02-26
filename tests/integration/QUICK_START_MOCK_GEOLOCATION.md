@@ -17,14 +17,14 @@ from mock_geolocation_helper import setup_mock_geolocation
 ```python
 def test_my_location_feature(self):
     self.driver.get(f"{self.base_url}/index.html")
-    
+
     # Setup mock geolocation
     setup_mock_geolocation(
         self.driver,
         latitude=-18.4696091,
         longitude=-43.4953982
     )
-    
+
     # Continue with your test...
 ```
 
@@ -34,7 +34,7 @@ def test_my_location_feature(self):
     # Trigger geolocation
     get_location_btn = self.driver.find_element(By.ID, "getLocationBtn")
     get_location_btn.click()
-    
+
     # Verify results
     time.sleep(2)
     result = self.driver.find_element(By.ID, "locationResult")
@@ -80,7 +80,7 @@ class TestMyFeature(unittest.TestCase):
     def test_location_display(self):
         # Navigate
         self.driver.get(f"{self.base_url}/index.html")
-        
+
         # Setup mock
         result = setup_mock_geolocation(
             self.driver,
@@ -88,11 +88,11 @@ class TestMyFeature(unittest.TestCase):
             longitude=-43.4953982
         )
         self.assertTrue(result['success'])
-        
+
         # Verify
         verification = verify_mock_configuration(self.driver)
         self.assertTrue(verification['configured'])
-        
+
         # Test your feature
         # ...
 ```
@@ -104,7 +104,7 @@ cd tests/integration
 python3 example_mock_geolocation_test.py
 ```
 
-## Why Use This?
+## Why Use This
 
 | Old Approach | MockGeolocationProvider |
 |--------------|-------------------------|

@@ -1,16 +1,16 @@
 # HTMLHighlightCardsDisplayer Test Coverage - Action Plan
 
-**Class**: HTMLHighlightCardsDisplayer  
-**Current Coverage**: 75% statements, 60% branches  
-**Target Coverage**: 88% statements, 85% branches  
+**Class**: HTMLHighlightCardsDisplayer
+**Current Coverage**: 75% statements, 60% branches
+**Target Coverage**: 88% statements, 85% branches
 **Total Effort**: 1-2 hours
 
 ---
 
 ## Quick Summary
 
-✅ **42 tests passing** - Excellent feature coverage  
-❌ **60% branch coverage** - Below 69% threshold  
+✅ **42 tests passing** - Excellent feature coverage
+❌ **60% branch coverage** - Below 69% threshold
 ⚠️ **Missing**: Constructor validation, missing DOM elements, integration tests
 
 ---
@@ -55,13 +55,13 @@ describe('Constructor Validation', () => {
 describe('Missing DOM Elements', () => {
     test('should handle missing municipio element gracefully', () => {
         const mockDocument = {
-            getElementById: (id) => 
+            getElementById: (id) =>
                 id === 'municipio-value' ? null : { textContent: '' }
         };
         const displayer = new HTMLHighlightCardsDisplayer(mockDocument);
         const enderecoPadronizado = new BrazilianStandardAddress();
         enderecoPadronizado.municipio = 'Recife';
-        
+
         expect(() => displayer.update({}, enderecoPadronizado)).not.toThrow();
     });
 
@@ -142,10 +142,10 @@ npm run test:coverage -- --collectCoverageFrom="src/html/HTMLHighlightCardsDispl
 
 ## Success Criteria
 
-✅ All 48+ tests passing  
-✅ Branch coverage ≥85% (exceeds 73% threshold)  
-✅ Statement coverage ≥88%  
-✅ No uncovered error paths  
+✅ All 48+ tests passing
+✅ Branch coverage ≥85% (exceeds 73% threshold)
+✅ Statement coverage ≥88%
+✅ No uncovered error paths
 ✅ Integration scenarios validated
 
 ---

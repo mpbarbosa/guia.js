@@ -302,7 +302,7 @@ const person = { name: 'Alice', age: 30 };
 console.log(Object.values(person)); // ['Alice', 30]
 
 // Object.entries
-console.log(Object.entries(person)); 
+console.log(Object.entries(person));
 // [['name', 'Alice'], ['age', 30]]
 
 // Iterate entries
@@ -568,11 +568,11 @@ export const appConfig = config;
 class Counter {
   count = 0; // Public field
   #privateCount = 0; // Private field
-  
+
   #increment() { // Private method
     this.#privateCount++;
   }
-  
+
   increment() {
     this.count++;
     this.#increment();
@@ -583,7 +583,7 @@ class Counter {
 class Database {
   static instanceCount = 0;
   static #maxConnections = 10;
-  
+
   static {
     console.log('Class initialized');
   }
@@ -816,8 +816,8 @@ This project uses:
 - Marcelo Pereira Barbosa (Original Author)
 - GitHub Copilot (Documentation)
 
-**Version:** 1.0.0  
-**Last Updated:** October 15, 2024  
+**Version:** 1.0.0
+**Last Updated:** October 15, 2024
 **Target Audience:** Contributors, Maintainers, GitHub Copilot
 
 **Note:** Optimized for GitHub Copilot understanding and aligned with project's functional programming principles.

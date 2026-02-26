@@ -1,9 +1,9 @@
 # UX Fix: IBGE Data Display Format Enhancement
 
-**Category:** Usability  
-**Priority:** Medium  
-**Status:** ✅ Complete  
-**Date:** 2026-02-15  
+**Category:** Usability
+**Priority:** Medium
+**Status:** ✅ Complete
+**Date:** 2026-02-15
 **Version:** v0.11.0-alpha
 
 ## Problem Statement
@@ -47,13 +47,13 @@ class IBGEDataFormatter {
   // Natural language formatting
   formatPopulation(population)  // "12.325.232"
   formatPopulationNaturalLanguage(population)  // "12.3 milhões"
-  
+
   // City classification
   classifyCity(population)  // {level, label, description, icon}
-  
+
   // HTML generation
   generateFormattedHTML(municipio, uf, population, year, classification)
-  
+
   // Integration with existing SIDRA library
   interceptAndFormat(element, dataType, params)
 }
@@ -144,7 +144,7 @@ formatPopulationNaturalLanguage(12325232)  // "12.3 milhões"
       População: <strong>12.3 milhões</strong> de habitantes
     </span>
   </div>
-  
+
   <!-- Classification Badge -->
   <div class="ibge-classification">
     <span class="classification-icon">🏙️</span>
@@ -153,7 +153,7 @@ formatPopulationNaturalLanguage(12325232)  // "12.3 milhões"
       <div class="classification-description">Grande centro urbano</div>
     </div>
   </div>
-  
+
   <!-- Progressive Disclosure -->
   <details class="ibge-details">
     <summary class="ibge-summary">
@@ -175,10 +175,10 @@ formatPopulationNaturalLanguage(12325232)  // "12.3 milhões"
       </div>
     </div>
   </details>
-  
+
   <!-- Data Source -->
   <div class="ibge-source">
-    Fonte: 
+    Fonte:
     <a href="https://sidra.ibge.gov.br" target="_blank" rel="noopener">
       IBGE SIDRA
     </a>
@@ -368,12 +368,12 @@ describe('IBGEDataFormatter', () => {
     expect(formatter.formatPopulation(12325232))
       .toBe('12.325.232');
   });
-  
+
   test('formats population in natural language', () => {
     expect(formatter.formatPopulationNaturalLanguage(12325232))
       .toBe('12.3 milhões');
   });
-  
+
   test('classifies cities correctly', () => {
     const classification = formatter.classifyCity(12325232);
     expect(classification.label).toBe('Metrópole');
@@ -539,13 +539,13 @@ _updateSidraData(enderecoPadronizado) {
     "municipio": enderecoPadronizado.municipio,
     "siglaUf": enderecoPadronizado.siglaUF
   };
-  
+
   try {
     // Primary method: enhanced formatter
     ibgeDataFormatter.interceptAndFormat(this.element, this.dataType, params);
   } catch (err) {
     logError('Error using IBGE formatter, falling back:', err);
-    
+
     // Fallback: original SIDRA function
     if (typeof window.displaySidraDadosParams === 'function') {
       window.displaySidraDadosParams(this.element, this.dataType, params);
@@ -800,7 +800,7 @@ The IBGE data formatting enhancement successfully transforms technical demograph
 
 ---
 
-**Version:** v0.11.0-alpha  
-**Author:** GitHub Copilot CLI  
-**Date:** 2026-02-15  
+**Version:** v0.11.0-alpha
+**Author:** GitHub Copilot CLI
+**Date:** 2026-02-15
 **Status:** Complete (Pending Testing)

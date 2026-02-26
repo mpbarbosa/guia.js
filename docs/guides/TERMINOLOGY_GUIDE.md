@@ -295,26 +295,26 @@ Some terms have different conventions in code vs. documentation:
 
 ### Inconsistent Case
 
-❌ **Wrong**: "The Guia.js library uses the Npm package..."  
+❌ **Wrong**: "The Guia.js library uses the Npm package..."
 ✅ **Right**: "The guia.js library uses the npm package..."
 
-❌ **Wrong**: "Run end-to-end tests..."  
+❌ **Wrong**: "Run end-to-end tests..."
 ✅ **Right**: "Run E2E tests..." or "Run end-to-end (E2E) tests..."
 
 ### Missing Accents
 
-❌ **Wrong**: "Display the municipio name..."  
+❌ **Wrong**: "Display the municipio name..."
 ✅ **Right**: "Display the município name..."
 
-❌ **Wrong**: "Região Metropolitana" → "regiao metropolitana"  
+❌ **Wrong**: "Região Metropolitana" → "regiao metropolitana"
 ✅ **Right**: "Região Metropolitana" (preserve capitalization and accents)
 
 ### Inconsistent Terminology
 
-❌ **Wrong**: Mixing "neighborhood" and "bairro" in same document  
+❌ **Wrong**: Mixing "neighborhood" and "bairro" in same document
 ✅ **Right**: Use "bairro" consistently for Brazilian context
 
-❌ **Wrong**: Alternating between "single-page app" and "SPA"  
+❌ **Wrong**: Alternating between "single-page app" and "SPA"
 ✅ **Right**: Define "Single-Page Application (SPA)" once, use "SPA" after
 
 ---
@@ -401,7 +401,7 @@ When adding new terminology:
 - Acronyms: Defined and consistent ✅
 - Capitalization: Follows conventions ✅
 
-**Last Audit**: 2026-01-28  
+**Last Audit**: 2026-01-28
 **Next Audit**: 2026-04-28 (quarterly review)
 
 ---

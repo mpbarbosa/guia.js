@@ -1,8 +1,8 @@
 # Root Directory HTML Test Files Consolidation Plan
 
-**Issue**: 11 HTML test files cluttering the repository root  
-**Priority**: LOW (organizational improvement, no functionality impact)  
-**Date**: 2026-01-01  
+**Issue**: 11 HTML test files cluttering the repository root
+**Priority**: LOW (organizational improvement, no functionality impact)
+**Date**: 2026-01-01
 **Status**: Proposed
 
 ---
@@ -102,10 +102,10 @@ Total: 11 files, 2,269 lines, ~88KB
 
 ### Feature Coverage
 
-**Geolocation**: test.html, device-detection-test.html  
-**Speech Synthesis**: brazilian-voice-test.html, speech-queue-test.html, test-50s-speech.html  
-**Address Display**: bairro-display-test.html, immediate-address-test.html  
-**Timing**: timeout-test.html, timer-test.html, test-50s-speech.html  
+**Geolocation**: test.html, device-detection-test.html
+**Speech Synthesis**: brazilian-voice-test.html, speech-queue-test.html, test-50s-speech.html
+**Address Display**: bairro-display-test.html, immediate-address-test.html
+**Timing**: timeout-test.html, timer-test.html, test-50s-speech.html
 **Module Loading**: module-test.html, ibira-test.html
 
 ---
@@ -362,12 +362,12 @@ Interactive examples demonstrating Guia.js geolocation functionality.
   - Brazilian Portuguese TTS
   - Voice selection
   - Speech queue
-  
+
 - **speech-queue.html** - Speech queue management
   - Queue multiple utterances
   - Priority handling
   - Interrupt and resume
-  
+
 - **periodic-speech.html** - Periodic address announcement
   - Automatic address speech every 50 seconds
   - Background geolocation
@@ -379,7 +379,7 @@ Interactive examples demonstrating Guia.js geolocation functionality.
   - Dynamic imports
   - Module exports
   - Tree shaking
-  
+
 - **integration.html** - Full system integration
   - Multiple features combined
   - Real-world usage patterns
@@ -710,7 +710,7 @@ Benefits:
 
 ### Risk 1: Breaking Web Server URLs
 
-**Risk**: External links to test.html will break  
+**Risk**: External links to test.html will break
 **Mitigation**:
 
 - Create redirect in web server config
@@ -719,7 +719,7 @@ Benefits:
 
 ### Risk 2: Import Path Errors
 
-**Risk**: Relative imports may break  
+**Risk**: Relative imports may break
 **Mitigation**:
 
 - Automated sed replacement
@@ -728,7 +728,7 @@ Benefits:
 
 ### Risk 3: GitHub Workflow Failures
 
-**Risk**: CI/CD references to test.html will fail  
+**Risk**: CI/CD references to test.html will fail
 **Mitigation**:
 
 - Update all workflow YAML files
@@ -737,7 +737,7 @@ Benefits:
 
 ### Risk 4: Lost History
 
-**Risk**: File history lost with rename  
+**Risk**: File history lost with rename
 **Mitigation**:
 
 - Use `git mv` (preserves history)
@@ -816,8 +816,8 @@ After consolidation:
 
 ---
 
-**Document Version**: 1.0  
-**Priority**: LOW  
-**Impact**: High (organization) / Low (functionality)  
-**Estimated Effort**: 1-2 hours  
+**Document Version**: 1.0
+**Priority**: LOW
+**Impact**: High (organization) / Low (functionality)
+**Estimated Effort**: 1-2 hours
 **Risk Level**: Low (with proper validation)

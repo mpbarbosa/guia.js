@@ -66,7 +66,7 @@ constructor(document, params) {
     // Store dependencies
     this.document = document;
     // ... parameter initialization
-    
+
     // Delegate to focused methods
     this._initializeUIElements();
     this._createDisplayers();
@@ -110,7 +110,7 @@ notifyBairroChangeObservers(changeDetails) {
     }
     for (const fn of this.functionObservers) {
         try {
-            fn(this.currentPosition, this.reverseGeocoder.currentAddress, 
+            fn(this.currentPosition, this.reverseGeocoder.currentAddress,
                this.reverseGeocoder.enderecoPadronizado, changeDetails);
         } catch (error) {
             console.error("Error notifying...", error);
@@ -196,22 +196,22 @@ Added 200+ lines of JSDoc documentation including:
 ```javascript
 /**
  * Main coordination class for geocoding workflow in the Guia.js application.
- * 
+ *
  * WebGeocodingManager orchestrates the geolocation services, geocoding operations,
  * and UI updates for displaying location-based information. It follows the Coordinator
  * pattern, managing communication between services and displayers.
- * 
+ *
  * **Architecture Pattern**: Coordinator/Mediator
  * - Coordinates between geolocation services and UI displayers
  * - Manages observer subscriptions between components
  * - Handles change detection callbacks for address components
- * 
+ *
  * **Design Principles Applied**:
  * - **Single Responsibility**: Focuses on coordinating geocoding workflow
  * - **Dependency Injection**: Receives document and configuration via constructor
  * - **Observer Pattern**: Implements subject/observer for state changes
  * - **Immutability**: Uses Object.freeze on created displayers
- * 
+ *
  * @class WebGeocodingManager
  * @see {@link PositionManager} For position state management
  * @see {@link ReverseGeocoder} For geocoding API integration
@@ -236,14 +236,14 @@ Example:
 ```javascript
 /**
  * Subscribes an observer to receive notifications about position and address changes.
- * 
+ *
  * Observers must implement an update(posEvent, currentAddress, enderecoPadronizado)
  * method to receive notifications. Null observers are rejected with a warning.
- * 
+ *
  * @param {Object} observer - Observer object with update() method
  * @param {Function} observer.update - Method called when notifications occur
  * @returns {void}
- * 
+ *
  * @example
  * const myObserver = {
  *   update: (pos, addr, endPad) => {

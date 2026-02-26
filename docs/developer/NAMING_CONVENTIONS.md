@@ -37,7 +37,7 @@
   - Examples: `_initializeUIElements()`, `_initializeFetchManager()`, `_initializeChronometer()`
 - **Status**: ⚠️ Mixed (some use `init`, some `initialize`)
 
-### 5. Setup/Configuration Methods  
+### 5. Setup/Configuration Methods
 
 - **Public**: `setup*()`
   - Examples: `setupChangeDetection()`, `setupLogradouroChangeDetection()`
@@ -116,7 +116,7 @@ These methods are:
 2. ⚠️ Keep public methods without underscore even if called internally
 3. ✅ Document deprecation warnings for legacy methods
 
-### Long Term  
+### Long Term
 
 1. Audit remaining 595+ methods for proper public/private designation
 2. Add ESLint rule to enforce underscore prefix for private methods

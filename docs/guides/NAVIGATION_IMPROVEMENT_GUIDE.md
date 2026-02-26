@@ -1,7 +1,7 @@
 # Navigation Structure Improvement Guide
 
-**Generated**: 2026-01-06  
-**Project**: Guia Turístico v0.9.0-alpha  
+**Generated**: 2026-01-06
+**Project**: Guia Turístico v0.9.0-alpha
 **Status**: 🟢 **Implementation Guide**
 
 ---
@@ -201,8 +201,8 @@ Additional resources:
 
 ---
 
-**Last Updated**: YYYY-MM-DD  
-**Version**: X.Y.Z-alpha  
+**Last Updated**: YYYY-MM-DD
+**Version**: X.Y.Z-alpha
 **Status**: ✅ Current
 ```
 
@@ -235,8 +235,8 @@ Continue your testing journey:
 
 ---
 
-**Last Updated**: 2026-01-06  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-06
+**Version**: 0.9.0-alpha
 **Status**: ✅ Current
 ```
 
@@ -374,10 +374,10 @@ def generate_breadcrumb(file_path):
     """Generate breadcrumb based on file path"""
     parts = file_path.split('/')
     breadcrumb = "**Navigation**: "
-    
+
     # Always start with Home
     breadcrumb += "[🏠 Home](../README.md)"
-    
+
     # Add intermediate paths
     level = 0
     for i, part in enumerate(parts[:-1]):
@@ -388,20 +388,20 @@ def generate_breadcrumb(file_path):
         elif part in ['architecture', 'testing', 'api-integration']:
             icon = {"architecture": "🏗️", "testing": "🧪", "api-integration": "🔌"}[part]
             breadcrumb += f" > [{icon} {part.replace('-', ' ').title()}](./README.md)"
-    
+
     # Add current file
     filename = parts[-1].replace('.md', '').replace('-', ' ').title()
     breadcrumb += f" > {filename}"
-    
+
     return breadcrumb
 
 def add_breadcrumb_to_file(file_path):
     """Add or update breadcrumb in a file"""
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
-    
+
     breadcrumb = generate_breadcrumb(file_path)
-    
+
     # Check if breadcrumb already exists
     if '**Navigation**:' in content:
         # Update existing
@@ -418,7 +418,7 @@ def add_breadcrumb_to_file(file_path):
             content,
             count=1
         )
-    
+
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(content)
 
@@ -461,6 +461,6 @@ Measure effectiveness and user preference.
 
 ---
 
-**Last Updated**: 2026-01-06  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-06
+**Version**: 0.9.0-alpha
 **Status**: ✅ Implementation Guide

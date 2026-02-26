@@ -1,8 +1,8 @@
 # AddressCache API Documentation
 
-**Version:** 0.9.0-alpha  
-**File:** `src/data/AddressCache.js` (1,165 lines)  
-**Author:** Marcelo Pereira Barbosa  
+**Version:** 0.9.0-alpha
+**File:** `src/data/AddressCache.js` (1,165 lines)
+**Author:** Marcelo Pereira Barbosa
 **Since:** 0.9.0-alpha
 
 ## Overview
@@ -103,7 +103,7 @@ const cache = AddressCache.getInstance();  // ✅
 constructor() {
     this.observerSubject = new ObserverSubject();
     this.cache = new LRUCache(50, 300000); // 50 entries, 5 minutes
-    
+
     this.lastNotifiedChangeSignature = null;
     this.lastNotifiedBairroChangeSignature = null;
     this.lastNotifiedMunicipioChangeSignature = null;
@@ -114,7 +114,7 @@ constructor() {
     this.previousAddress = null;
     this.currentRawData = null;
     this.previousRawData = null;
-    
+
     // Cleanup timer using TimerManager (prevents memory leaks)
     timerManager.setInterval(() => {
         this.cleanExpiredEntries();
@@ -614,13 +614,13 @@ Gets detailed information about bairro change including complete neighborhood st
 ```javascript
 {
   hasChanged: boolean,
-  current: { 
-    bairro: string | null, 
-    bairroCompleto: string | null 
+  current: {
+    bairro: string | null,
+    bairroCompleto: string | null
   },
-  previous: { 
-    bairro: string | null, 
-    bairroCompleto: string | null 
+  previous: {
+    bairro: string | null,
+    bairroCompleto: string | null
   },
   timestamp: number
 }
@@ -635,13 +635,13 @@ const details = cache.getBairroChangeDetails();
 console.log(details);
 // {
 //   hasChanged: true,
-//   current: { 
-//     bairro: "Boa Viagem", 
-//     bairroCompleto: "Boa Viagem, Pina" 
+//   current: {
+//     bairro: "Boa Viagem",
+//     bairroCompleto: "Boa Viagem, Pina"
 //   },
-//   previous: { 
-//     bairro: "Centro", 
-//     bairroCompleto: "Centro" 
+//   previous: {
+//     bairro: "Centro",
+//     bairroCompleto: "Centro"
 //   },
 //   timestamp: 1640000000000
 // }
@@ -666,13 +666,13 @@ Gets detailed information about municipio change including state information.
 ```javascript
 {
   hasChanged: boolean,
-  current: { 
-    municipio: string | undefined, 
-    uf: string | undefined 
+  current: {
+    municipio: string | undefined,
+    uf: string | undefined
   },
-  previous: { 
-    municipio: string | undefined, 
-    uf: string | undefined 
+  previous: {
+    municipio: string | undefined,
+    uf: string | undefined
   },
   timestamp: number
 }
@@ -1073,7 +1073,7 @@ cache.setMunicipioChangeCallback((details) => {
 // Get address and display
 function updateLocation(geocodingData) {
   const address = cache.getBrazilianStandardAddress(geocodingData);
-  
+
   const displayer = new HTMLAddressDisplayer(address, document);
   displayer.display();
 }
@@ -1140,17 +1140,17 @@ Comprehensive test coverage in:
 ```javascript
 describe('AddressCache', () => {
   let cache;
-  
+
   beforeEach(() => {
     cache = AddressCache.getInstance();
     cache.clearCache();
   });
-  
+
   afterEach(() => {
     cache.destroy();
     AddressCache.instance = null;
   });
-  
+
   test('caches addresses correctly', () => {
     const data = {
       address: {
@@ -1158,26 +1158,26 @@ describe('AddressCache', () => {
         city: "São Paulo"
       }
     };
-    
+
     const address1 = cache.getBrazilianStandardAddress(data);
     expect(cache.getCacheSize()).toBe(1);
-    
+
     const address2 = cache.getBrazilianStandardAddress(data);
     expect(cache.getCacheSize()).toBe(1);  // Still 1 (cached)
   });
-  
+
   test('detects logradouro changes', () => {
     const callback = jest.fn();
     cache.setLogradouroChangeCallback(callback);
-    
+
     cache.getBrazilianStandardAddress({
       address: { road: "Rua A", city: "São Paulo" }
     });
-    
+
     cache.getBrazilianStandardAddress({
       address: { road: "Rua B", city: "São Paulo" }
     });
-    
+
     expect(callback).toHaveBeenCalled();
   });
 });

@@ -1,10 +1,10 @@
 # Bug Fix: IBGE Population Data Not Displaying
 
-**Issue**: IBGE population data not showing in the application  
-**Category**: Bug Fix  
-**Priority**: Critical  
-**Version**: 0.11.0-alpha  
-**Date**: 2026-02-15  
+**Issue**: IBGE population data not showing in the application
+**Category**: Bug Fix
+**Priority**: Critical
+**Version**: 0.11.0-alpha
+**Date**: 2026-02-15
 **Status**: ✅ Fixed
 
 ---
@@ -96,11 +96,11 @@ async _fetchLocalPopulationData(municipio, uf) {
 
 ## Validation
 
-✅ **Syntax**: `npm run validate` passing  
-✅ **Path resolution**: Absolute path works from any location  
-✅ **Data file exists**: 190KB JSON with 5,570 municipalities  
-✅ **No breaking changes**: Only path string modified  
-✅ **Backward compatible**: Works with existing code  
+✅ **Syntax**: `npm run validate` passing
+✅ **Path resolution**: Absolute path works from any location
+✅ **Data file exists**: 190KB JSON with 5,570 municipalities
+✅ **No breaking changes**: Only path string modified
+✅ **Backward compatible**: Works with existing code
 
 ---
 
@@ -126,7 +126,7 @@ async _fetchLocalPopulationData(municipio, uf) {
 Dados IBGE:
   População: 1.5 milhões de habitantes
   🏙️ Metrópole - Grande Centro Urbano
-  
+
   📊 Detalhes Demográficos
   População Total: 1.555.125 habitantes
   Estimativa: IBGE 2024
@@ -161,8 +161,8 @@ Dados IBGE:
 ]
 ```
 
-**Size**: 190KB  
-**Entries**: 5,570 Brazilian municipalities  
+**Size**: 190KB
+**Entries**: 5,570 Brazilian municipalities
 **Source**: IBGE SIDRA Table 6579 (population estimates)
 
 ### Path Resolution
@@ -235,7 +235,7 @@ http://your-domain.com/libs/sidra/tab6579_municipios.json
    ```javascript
    // ✅ Good: Absolute path
    fetch('/libs/data.json')
-   
+
    // ❌ Bad: Relative path
    fetch('../libs/data.json')
    ```

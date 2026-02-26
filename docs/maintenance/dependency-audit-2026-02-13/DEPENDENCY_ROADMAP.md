@@ -1,7 +1,7 @@
 # Dependency Management Roadmap
 
-**Project**: Guia Turístico v0.9.0-alpha  
-**Date**: 2026-02-13  
+**Project**: Guia Turístico v0.9.0-alpha
+**Date**: 2026-02-13
 **Status**: Post-security-audit update
 
 ---
@@ -10,7 +10,7 @@
 
 ### Phase 1: Immediate (✅ COMPLETED)
 
-**Timeline**: Today  
+**Timeline**: Today
 **Risk**: 🟢 MINIMAL
 
 - [x] Fix qs vulnerability (npm audit fix)
@@ -24,12 +24,12 @@
 
 ### Phase 2: Short-term (Recommended)
 
-**Timeline**: Next sprint (1-2 weeks)  
+**Timeline**: Next sprint (1-2 weeks)
 **Risk**: 🟡 MODERATE
 
 #### ESLint v10 Migration
 
-**Current**: 9.39.2  
+**Current**: 9.39.2
 **Available**: 10.0.0 (major version)
 
 **Pre-migration Checklist**:
@@ -72,12 +72,12 @@ npm run validate
 
 ### Phase 3: Medium-term (Scheduled)
 
-**Timeline**: End of sprint or next milestone  
+**Timeline**: End of sprint or next milestone
 **Risk**: 🟡 MODERATE
 
 #### jsdom v28 Update (Dependent on ESLint v10)
 
-**Current**: 25.0.1  
+**Current**: 25.0.1
 **Available**: 28.0.0 (major version - 3 major versions behind)
 
 **Important Note**: jsdom updates can be sensitive for test suites!
@@ -149,7 +149,7 @@ Option B (Conservative): Update jsdom only
 
 ### Phase 4: Long-term (Before v1.0.0)
 
-**Timeline**: Pre-release preparation  
+**Timeline**: Pre-release preparation
 **Risk**: 🟢 MINIMAL (planning only)
 
 #### Production Dependency Stabilization
@@ -329,8 +329,8 @@ npm list --size
 
 ### Risk: jsdom Breaking Changes
 
-**Likelihood**: Medium  
-**Impact**: High (affects 100+ tests)  
+**Likelihood**: Medium
+**Impact**: High (affects 100+ tests)
 **Mitigation**:
 
 - Test in isolation first
@@ -340,8 +340,8 @@ npm list --size
 
 ### Risk: ESLint Configuration Incompatibility
 
-**Likelihood**: Low  
-**Impact**: Medium (build failures)  
+**Likelihood**: Low
+**Impact**: Medium (build failures)
 **Mitigation**:
 
 - Review eslint.config.js before update
@@ -351,8 +351,8 @@ npm list --size
 
 ### Risk: Transitive Dependency Conflicts
 
-**Likelihood**: Low  
-**Impact**: Medium (subtle bugs)  
+**Likelihood**: Low
+**Impact**: Medium (subtle bugs)
 **Mitigation**:
 
 - Always run `npm audit` after updates

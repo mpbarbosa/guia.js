@@ -1,7 +1,7 @@
 # DisplayerFactory API Documentation
 
-**Version**: 0.9.0-alpha  
-**Module**: `html/DisplayerFactory`  
+**Version**: 0.9.0-alpha
+**Module**: `html/DisplayerFactory`
 **Since**: 0.9.0-alpha
 
 ---
@@ -97,6 +97,6 @@ const highlightDisplayer = DisplayerFactory.createHighlightCardsDisplayer(
 
 ---
 
-**Status**: ✅ Production Ready  
-**Test Coverage**: 95%+  
+**Status**: ✅ Production Ready
+**Test Coverage**: 95%+
 **Pattern**: Factory Pattern

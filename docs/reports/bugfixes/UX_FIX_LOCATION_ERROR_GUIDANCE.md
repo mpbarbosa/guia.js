@@ -1,8 +1,8 @@
 # UX Fix: Location Permission Error Guidance
 
-**Date**: 2026-02-15  
-**Issue**: Dead-end experience when location permission denied  
-**Severity**: Critical  
+**Date**: 2026-02-15
+**Issue**: Dead-end experience when location permission denied
+**Severity**: Critical
 **Impact**: 20-30% of users (typical denial rate)
 
 ## Problem

@@ -74,7 +74,7 @@ The Guia Turístico application demonstrates solid foundational design with Mate
 ### Issue 4: Speech Synthesis Status Completely Hidden from Users
 
 - **Category**: User Feedback / Transparency
-- **Severity**: Critical  
+- **Severity**: Critical
 - **Location**: `examples/loc-em-movimento.html` (line 19-20), speech synthesis implementation
 - **Description**: Users cannot see:
   - Whether speech synthesis is enabled/disabled
@@ -83,7 +83,7 @@ The Guia Turístico application demonstrates solid foundational design with Mate
   - Speech synthesis errors or failures
   - If browser blocks audio
   - Current playback rate/pitch settings
-  
+
   The queue display (`tam-fila-fala`) exists in HTML but provides no visual context—just a number with no label or explanation.
 - **Impact**:
   - Users don't understand delays in location announcements
@@ -159,7 +159,7 @@ The Guia Turístico application demonstrates solid foundational design with Mate
   5. Location info (SIDRA data)
   6. Location results
   7. Text input area
-  
+
   No clear hierarchy or grouping. Information overload. Users don't know what data is most important.
 - **Impact**:
   - Analysis paralysis and decision fatigue
@@ -196,7 +196,7 @@ The Guia Turístico application demonstrates solid foundational design with Mate
 ### Improvement 4: Color Contrast Issues in Secondary Elements
 
 - **Category**: Accessibility (WCAG 2.1 AA)
-- **Severity**: Medium  
+- **Severity**: Medium
 - **Location**: `loc-em-movimento.css` (lines 162-163), `.secondary-actions` opacity
 - **Description**: Secondary action buttons use `opacity: 0.85`, creating insufficient contrast:
   - Button text: ~6.2:1 ratio (below 7:1 for enhanced contrast)
@@ -237,7 +237,7 @@ The Guia Turístico application demonstrates solid foundational design with Mate
 ### Improvement 6: No Visual Feedback on Button Interactions
 
 - **Category**: Interaction Design
-- **Severity**: Medium  
+- **Severity**: Medium
 - **Location**: `loc-em-movimento.css` button styles, button:active states
 - **Description**: Buttons have hover effects but:
   - No active/press state visual feedback (`:active` not styled differently)
@@ -336,7 +336,7 @@ The Guia Turístico application demonstrates solid foundational design with Mate
 
 ### Enhancement 4: Dark Mode Partial Implementation
 
-- **Category**: Visual Design / Completeness  
+- **Category**: Visual Design / Completeness
 - **Location**: `design-tokens.css`, partial dark mode support
 - **Issue**: Dark mode CSS variables exist but:
   - Not all components tested in dark mode
@@ -484,7 +484,7 @@ The Guia Turístico application demonstrates solid foundational design with Mate
 ✅ Mobile-first approach implemented
 ✅ 640px mobile breakpoint
 ⚠️ **Gap**: No 768px tablet breakpoint
-✅ 900px desktop breakpoint  
+✅ 900px desktop breakpoint
 ✅ 1200px+ large desktop support
 
 ### Touch Targets

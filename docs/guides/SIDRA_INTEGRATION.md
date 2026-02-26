@@ -1,7 +1,7 @@
 # SIDRA Integration Documentation
 
-**Version**: 0.9.0+  
-**Component**: HTMLSidraDisplayer  
+**Version**: 0.9.0+
+**Component**: HTMLSidraDisplayer
 **Purpose**: Display IBGE demographic data for Brazilian municipalities
 
 ## Overview

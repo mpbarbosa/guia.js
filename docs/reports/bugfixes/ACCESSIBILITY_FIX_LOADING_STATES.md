@@ -1,8 +1,8 @@
 # Accessibility Fix: Loading States Semantic Communication
 
-**Date**: 2026-02-15  
-**Issue**: Missing screen reader feedback during async operations  
-**Severity**: Critical  
+**Date**: 2026-02-15
+**Issue**: Missing screen reader feedback during async operations
+**Severity**: Critical
 
 ## Problem
 

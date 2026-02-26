@@ -346,7 +346,7 @@ After making any changes, ALWAYS run through these validation scenarios:
 # Run all tests (~30 seconds)
 npm test
 
-# Run tests with coverage report (~30 seconds)  
+# Run tests with coverage report (~30 seconds)
 npm run test:coverage
 
 # Run tests in watch mode (development)
@@ -624,7 +624,7 @@ npm install
 # Syntax check (always run first)
 node -c src/guia.js && node -c src/guia_ibge.js
 
-# Basic functionality test  
+# Basic functionality test
 node src/guia.js
 
 # Full test suite
@@ -640,7 +640,7 @@ curl -s http://localhost:9000/src/index.html | head -5
 ### Performance Expectations
 
 - **Syntax validation**: <1 second each file
-- **Basic Node.js test**: <1 second  
+- **Basic Node.js test**: <1 second
 - **Jest test suite**: ~45 seconds for 1,968 tests (1,820 passing, 146 skipped)
 - **Jest with coverage**: ~45 seconds
 - **Web server startup**: ~3 seconds, then runs indefinitely
@@ -700,7 +700,7 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 ### Known Limitations
 
 - External API calls may fail in restricted network environments
-- Geolocation requires HTTPS in production (localhost works for development)  
+- Geolocation requires HTTPS in production (localhost works for development)
 - Speech synthesis availability varies by browser
 - Some tests generate verbose console output (this is expected behavior)
 
@@ -857,7 +857,7 @@ guia_turistico/
 ### guia.js Overview
 
 - **Lines 1-61**: Version info, utility functions (calculateDistance, log, warn)
-- **Lines 62-666**: Core classes (CurrentPosition, APIFetcher, GeolocationService, WebGeocodingManager)  
+- **Lines 62-666**: Core classes (CurrentPosition, APIFetcher, GeolocationService, WebGeocodingManager)
 - **Lines 667-999**: Chronometer and helper functions
 - **Lines 1000-1530**: Display classes (HTMLPositionDisplayer, AddressDataExtractor, HTMLAddressDisplayer)
 - **Lines 1531-2082**: Speech synthesis and text utilities
@@ -887,7 +887,7 @@ npm install
 # Syntax check (always run first)
 npm run validate
 
-# Basic functionality test  
+# Basic functionality test
 node src/app.js
 
 # Start development server with HMR (recommended)
@@ -960,5 +960,5 @@ npm run ci:test-local
 
 ---
 
-**Last Updated**: 2026-02-11  
+**Last Updated**: 2026-02-11
 **Status**: ✅ Active

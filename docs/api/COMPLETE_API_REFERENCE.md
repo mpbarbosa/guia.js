@@ -1,8 +1,8 @@
 # Complete API Reference - Guia Turístico v0.9.0-alpha
 
 ---
-**Last Updated**: 2026-02-11  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-02-11
+**Version**: 0.9.0-alpha
 **Status**: Complete Reference
 
 ---
@@ -2830,7 +2830,7 @@ const customObserver = {
       console.error('Position error:', error);
       return;
     }
-    
+
     console.log('New position:', {
       lat: posManager.latitude,
       lon: posManager.longitude,
@@ -3139,7 +3139,7 @@ describe('GeoPosition', () => {
     const pos2 = new GeoPosition({
       coords: {latitude: -22.9068, longitude: -43.1729, accuracy: 10}
     });
-    
+
     const distance = pos1.distanceTo(pos2);
     expect(distance).toBeCloseTo(357000, -3); // ~357km
   });
@@ -3155,7 +3155,7 @@ import WebGeocodingManager from './coordination/WebGeocodingManager.js';
 describe('WebGeocodingManager', () => {
   it('fetches address after position update', async () => {
     const manager = new WebGeocodingManager(document, 'test-root');
-    
+
     const mockPosition = {
       coords: {
         latitude: -23.5505,
@@ -3163,9 +3163,9 @@ describe('WebGeocodingManager', () => {
         accuracy: 15
       }
     };
-    
+
     await manager.updatePosition(mockPosition);
-    
+
     const address = manager.getCurrentAddress();
     expect(address).toBeDefined();
     expect(address.municipio).toBe('São Paulo');
@@ -3201,8 +3201,8 @@ See `__tests__/e2e/` for comprehensive end-to-end test examples using Puppeteer.
 
 ---
 
-**Document Version**: 1.0.0  
-**Last Updated**: 2026-02-11  
+**Document Version**: 1.0.0
+**Last Updated**: 2026-02-11
 **Status**: Complete ✅
 
 For questions or contributions, see [CONTRIBUTING.md](../.github/CONTRIBUTING.md).

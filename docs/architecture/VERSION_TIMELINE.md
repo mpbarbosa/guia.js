@@ -380,23 +380,23 @@ npm test -- __tests__/PositionManager.test.js           # PositionManager tests
 
 ## Frequently Asked Questions
 
-### Q: Can I upgrade from 0.9.0-alpha to 0.9.0-alpha without changes?
+### Q: Can I upgrade from 0.9.0-alpha to 0.9.0-alpha without changes
 
 **A**: Yes! ✅ Full backward compatibility is maintained. Simply update package.json version.
 
-### Q: What happens to my 0.5.x-alpha code in 0.9.0-alpha?
+### Q: What happens to my 0.5.x-alpha code in 0.9.0-alpha
 
 **A**: It will break. ❌ You must migrate to immutable patterns. See migration guide above.
 
-### Q: Will 0.8.x-alpha break my 0.9.0-alpha code?
+### Q: Will 0.8.x-alpha break my 0.9.0-alpha code
 
 **A**: No! ✅ PR #189 maintains 100% backward compatibility. New features are additive.
 
-### Q: Which version should I use for production?
+### Q: Which version should I use for production
 
 **A**: Version 0.9.0-alpha is recommended. It's stable, thoroughly tested, and production-ready.
 
-### Q: How do I test against multiple versions?
+### Q: How do I test against multiple versions
 
 **A**: Use git tags and npm version management:
 
@@ -406,7 +406,7 @@ git checkout v0.9.0-alpha && npm install && npm test
 git checkout v0.9.0-alpha && npm install && npm test
 ```
 
-### Q: What's the release schedule?
+### Q: What's the release schedule
 
 **A**: Alpha versions are released as features stabilize. No fixed schedule. Monitor GitHub releases.
 
@@ -437,9 +437,9 @@ When documenting new features or changes:
 
 ---
 
-**Last Updated**: 2026-02-09  
-**Document Version**: 1.0  
+**Last Updated**: 2026-02-09
+**Document Version**: 1.0
 **Status**: ✅ Complete and up-to-date
 
-**Maintainer**: Marcelo Pereira Barbosa  
+**Maintainer**: Marcelo Pereira Barbosa
 **Contact**: See repository root for contact information

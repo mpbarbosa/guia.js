@@ -1,7 +1,7 @@
 # Migration Guide: v0.9.0 → v0.10.0-alpha
 
-**Published**: 2026-02-15  
-**Status**: Active  
+**Published**: 2026-02-15
+**Status**: Active
 **Scope**: HomeViewController introduction and WebGeocodingManager refactoring
 
 ---
@@ -23,7 +23,7 @@ Version 0.10.0-alpha introduces the **HomeViewController** to manage home view l
 
 ---
 
-## Who Needs to Migrate?
+## Who Needs to Migrate
 
 ### ✅ You Should Migrate If
 
@@ -212,7 +212,7 @@ constructor(document, params = {})
 
 Initialize the controller (creates WebGeocodingManager and Chronometer).
 
-**Returns**: `Promise<void>`  
+**Returns**: `Promise<void>`
 **Throws**: `Error` if already initialized
 
 ```javascript
@@ -223,7 +223,7 @@ await homeController.init();
 
 Capture a single position update.
 
-**Returns**: `Promise<GeoPosition>`  
+**Returns**: `Promise<GeoPosition>`
 **Throws**: `Error` if not initialized
 
 ```javascript
@@ -235,7 +235,7 @@ console.log(position.latitude, position.longitude);
 
 Start continuous location tracking.
 
-**Returns**: `void`  
+**Returns**: `void`
 **Throws**: `Error` if not initialized
 
 ```javascript
@@ -246,7 +246,7 @@ homeController.startTracking();
 
 Stop continuous location tracking.
 
-**Returns**: `void`  
+**Returns**: `void`
 **Throws**: `Error` if not initialized
 
 ```javascript
@@ -257,7 +257,7 @@ homeController.stopTracking();
 
 Toggle tracking on/off (convenience method).
 
-**Returns**: `void`  
+**Returns**: `void`
 **Throws**: `Error` if not initialized
 
 ```javascript
@@ -399,7 +399,7 @@ function cleanupHome() {
 // Route transitions
 async function loadRoute(route) {
     cleanupHome();  // Clean up previous view
-    
+
     if (route === '/') {
         await initHome();
     }
@@ -417,10 +417,10 @@ When you call deprecated methods, you'll see console warnings:
 ```
 ⚠️ getSingleLocationUpdate() is deprecated as of v0.10.0-alpha
    Use HomeViewController.getSingleLocationUpdate() instead.
-   
+
    OLD: manager.getSingleLocationUpdate()
    NEW: homeController.getSingleLocationUpdate()
-   
+
    This method will be removed in v1.0.0
 ```
 
@@ -474,11 +474,11 @@ describe('Home View Integration', () => {
             locationResult: 'location-result',
             autoStartTracking: true
         });
-        
+
         await homeController.init();
-        
+
         expect(homeController.isTracking()).toBe(true);
-        
+
         homeController.destroy();
     });
 });
@@ -576,6 +576,6 @@ Use this checklist to track your migration progress:
 
 ---
 
-**Last Updated**: 2026-02-15  
-**Version**: 0.10.0-alpha  
+**Last Updated**: 2026-02-15
+**Version**: 0.10.0-alpha
 **Status**: ✅ Active

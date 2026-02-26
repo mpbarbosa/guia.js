@@ -158,10 +158,10 @@ To use the modular version in HTML:
 <script type="module">
   import { calculateDistance } from './src/utils/distance.js';
   import { isMobileDevice } from './src/utils/device.js';
-  
+
   const distance = calculateDistance(-23.5505, -46.6333, -22.9068, -43.1729);
   console.log(`Distance: ${distance}m`);
-  
+
   if (isMobileDevice()) {
     console.log('Running on mobile device');
   }

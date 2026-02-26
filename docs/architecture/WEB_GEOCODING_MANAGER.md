@@ -167,7 +167,7 @@ const manager = new WebGeocodingManager(document, {
 ```javascript
 // Configure geocoder before injection
 const customGeocoder = new ReverseGeocoder();
-customGeocoder.configure({ 
+customGeocoder.configure({
   provider: 'nominatim',
   timeout: 5000,
   retries: 3
@@ -272,7 +272,7 @@ manager.subscribeFunction((position, currentAddress, enderecoPadronizado) => {
     municipio: enderecoPadronizado.municipio,
     accuracy: position.coords.accuracy
   });
-  
+
   // Update dashboard
   updateHeatMap(locationHistory);
   updateVisitedNeighborhoods(locationHistory);
@@ -696,12 +696,12 @@ describe('WebGeocodingManager with mocked services', () => {
       currentAddress: { display_name: 'Test' },
       enderecoPadronizado: { logradouro: 'Test Street' }
     };
-    
+
     const manager = new WebGeocodingManager(document, {
       locationResult: 'location-result',
       reverseGeocoder: mockGeocoder
     });
-    
+
     expect(manager.reverseGeocoder).toBe(mockGeocoder);
   });
 });
@@ -714,14 +714,14 @@ it('should notify observers on position change', () => {
   const manager = new WebGeocodingManager(document, {
     locationResult: 'location-result'
   });
-  
+
   const observer = {
     update: jest.fn()
   };
-  
+
   manager.subscribe(observer);
   manager.notifyObservers();
-  
+
   expect(observer.update).toHaveBeenCalled();
 });
 ```
@@ -775,7 +775,7 @@ Function observers receive additional change details, making them more suitable 
 - Element IDs configuration is frozen to ensure immutability
 - Observer arrays use immutable patterns in ObserverSubject
 
-### Why Not Fully Immutable?
+### Why Not Fully Immutable
 
 The class maintains mutable state for:
 
@@ -823,7 +823,7 @@ Only react to specific types of changes:
 ```javascript
 manager.subscribeFunction((position, currentAddress, enderecoPadronizado, changeDetails) => {
   if (!changeDetails) return; // Initial notification
-  
+
   switch (changeDetails.component) {
     case 'logradouro':
       handleStreetChange(enderecoPadronizado.logradouro);
@@ -1066,6 +1066,6 @@ See repository root for license information.
 
 ---
 
-**Last Updated**: 2026-01-11  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-11
+**Version**: 0.9.0-alpha
 **Status**: ✅ Complete and up-to-date

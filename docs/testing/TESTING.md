@@ -183,7 +183,7 @@ guia_turistico/
 
 ## 🔀 Dual Testing Systems: Jest + Selenium (pytest)
 
-### Why Two Testing Frameworks?
+### Why Two Testing Frameworks
 
 The Guia Turístico project uses **two complementary testing systems** for different testing needs:
 
@@ -300,7 +300,7 @@ HEADLESS=true pytest -v
    - Firefox driver setup with console logging
    - Geolocation permissions configuration
 
-### Why This Architecture?
+### Why This Architecture
 
 **✅ Justified Complexity**:
 
@@ -570,8 +570,8 @@ See [GITHUB_INTEGRATION_TEST_GUIDE.md](./.github/GITHUB_INTEGRATION_TEST_GUIDE.m
 
 ---
 
-**Last Updated**: 2026-01-09  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-09
+**Version**: 0.9.0-alpha
 **Status**: ✅ Active and maintained
 
 For questions or issues with testing, see [CONTRIBUTING.md](./.github/CONTRIBUTING.md) or open a GitHub issue.
@@ -590,9 +590,9 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 
 #### 1. SpeechSynthesisManager.test.js - Cross-Environment Compatibility
 
-**Status**: Partially skipped (only nested "Cross-Environment Compatibility" suite)  
-**Skipped Tests**: ~12 tests  
-**Reason**: Edge case testing for exotic environments without `setTimeout`/`clearInterval`  
+**Status**: Partially skipped (only nested "Cross-Environment Compatibility" suite)
+**Skipped Tests**: ~12 tests
+**Reason**: Edge case testing for exotic environments without `setTimeout`/`clearInterval`
 **Coverage**: Main test suite passes with 100+ tests validating core functionality
 
 **Why skipped**:
@@ -607,14 +607,14 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 
 #### 2. WebGeocodingManager.test.js
 
-**Status**: Entirely skipped  
-**Skipped Tests**: ~35 tests  
+**Status**: Entirely skipped
+**Skipped Tests**: ~35 tests
 **Reason**: API mismatch - tests expect different constructor/API than current implementation
 
 **Why skipped**:
 
 ```javascript
-// TODO: This test suite expects a different WebGeocodingManager API 
+// TODO: This test suite expects a different WebGeocodingManager API
 // that doesn't match the current implementation. Skipping until refactoring is completed.
 ```
 
@@ -630,9 +630,9 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 
 #### 3. MunicipioChangeText.test.js ✅ **FIXED**
 
-**Status**: ~~Entirely skipped~~ → **NOW ENABLED**  
-**Tests Enabled**: 8 tests for Issue #218 (municipality change announcements)  
-**Previous Issue**: Top-level `await import()` caused Jest to hang  
+**Status**: ~~Entirely skipped~~ → **NOW ENABLED**
+**Tests Enabled**: 8 tests for Issue #218 (municipality change announcements)
+**Previous Issue**: Top-level `await import()` caused Jest to hang
 **Fix Applied**: Moved dynamic import to `beforeAll()` hook with async cleanup
 
 **Fixed on**: 2026-01-09
@@ -641,8 +641,8 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 
 #### 4. SpeechSynthesisManager.integration.test.js
 
-**Status**: Entirely skipped  
-**Skipped Tests**: ~40 integration tests  
+**Status**: Entirely skipped
+**Skipped Tests**: ~40 integration tests
 **Reason**: Async timing issues cause indefinite test hangs
 
 **Why skipped**:
@@ -664,8 +664,8 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 
 #### 5. HtmlSpeechSynthesisDisplayer.integration.test.js
 
-**Status**: Entirely skipped  
-**Skipped Tests**: ~28 integration tests  
+**Status**: Entirely skipped
+**Skipped Tests**: ~28 integration tests
 **Reason**: jsdom/parse5 ES module compatibility issues
 
 **Why skipped**:
@@ -687,15 +687,15 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 
 #### 6. WebGeocodingManager.integration.test.js
 
-**Status**: Entirely skipped  
-**Skipped Tests**: ~15 integration tests  
+**Status**: Entirely skipped
+**Skipped Tests**: ~15 integration tests
 **Reason**: Tests written for future refactored architecture (modular dependencies)
 
 **Why skipped**:
 
 ```javascript
-// TODO: This test suite is for a future refactoring where dependencies are extracted 
-// to separate modules. Currently these modules don't exist yet (Logger, LocationDisplayer, 
+// TODO: This test suite is for a future refactoring where dependencies are extracted
+// to separate modules. Currently these modules don't exist yet (Logger, LocationDisplayer,
 // SpeechManager, etc.). Skipping until the refactoring is completed.
 ```
 
@@ -742,7 +742,7 @@ npm test
 # Output shows: "Test Suites: 4 skipped, 63 passed, 63 of 67 total"
 ```
 
-**Last Reviewed**: 2026-01-09  
+**Last Reviewed**: 2026-01-09
 **Next Review**: When planning major refactoring or architecture changes
 
 ---
@@ -829,7 +829,7 @@ http://localhost:9000/src/index.html
 
 - [ ] Fresh page load (no permission) → Verify banner appears
 - [ ] Banner shows "Permitir" (Allow) button
-- [ ] Banner shows "Agora não" (Not now) button  
+- [ ] Banner shows "Agora não" (Not now) button
 - [ ] Click "Permitir" → Verify browser permission prompt
 - [ ] Grant permission → Verify banner dismisses
 - [ ] Deny permission → Verify "permission denied" message
@@ -850,8 +850,8 @@ http://localhost:9000/src/index.html
 
 ### Coverage Metrics Context
 
-**Reported Coverage**: 69.66% overall  
-**Browser-only code**: 865 lines (19% of src/)  
+**Reported Coverage**: 69.66% overall
+**Browser-only code**: 865 lines (19% of src/)
 **Adjusted coverage** (excluding browser files): ~85%
 
 **Why we don't exclude browser files from coverage**:
@@ -866,39 +866,39 @@ http://localhost:9000/src/index.html
 
 #### Option 1: jsdom Setup
 
-**Effort**: 2-3 hours  
-**Benefit**: Basic DOM testing in Jest  
-**Blocker**: Parse5/ES module compatibility issues (documented in skipped tests)  
+**Effort**: 2-3 hours
+**Benefit**: Basic DOM testing in Jest
+**Blocker**: Parse5/ES module compatibility issues (documented in skipped tests)
 **Recommendation**: ⏸️ Wait for jsdom ecosystem to mature
 
 #### Option 2: Playwright/Cypress E2E
 
-**Effort**: 4-6 hours  
-**Benefit**: Comprehensive browser testing  
-**Trade-off**: Slow execution, complex setup  
+**Effort**: 4-6 hours
+**Benefit**: Comprehensive browser testing
+**Trade-off**: Slow execution, complex setup
 **Recommendation**: ⏸️ Consider if manual testing becomes insufficient
 
 #### Option 3: Extract Pure Functions
 
-**Effort**: 3-4 hours refactoring  
-**Benefit**: Testable logic separation  
-**Trade-off**: May reduce code clarity  
+**Effort**: 3-4 hours refactoring
+**Benefit**: Testable logic separation
+**Trade-off**: May reduce code clarity
 **Recommendation**: 💡 Consider during next major refactor
 
 ---
 
 ### Summary
 
-**Question**: Should we test these browser files?  
+**Question**: Should we test these browser files?
 **Answer**: Current manual testing approach is industry-standard and sufficient.
 
-**Question**: Does 0% coverage indicate a problem?  
+**Question**: Does 0% coverage indicate a problem?
 **Answer**: No - it's expected for browser-specific UI code.
 
-**Question**: What's the mitigation strategy?  
+**Question**: What's the mitigation strategy?
 **Answer**: Manual testing checklist + Selenium integration tests + low complexity code.
 
-**Last Reviewed**: 2026-01-09  
+**Last Reviewed**: 2026-01-09
 **Manual Testing**: Required before each release
 
 ---
@@ -931,8 +931,8 @@ This is considered **good coverage** for JavaScript projects. Industry standard 
 
 #### 1. Browser-Only Files (0% coverage)
 
-**Files**: `app.js`, `error-recovery.js`, `geolocation-banner.js`  
-**Reason**: Cannot run in Jest/Node.js environment  
+**Files**: `app.js`, `error-recovery.js`, `geolocation-banner.js`
+**Reason**: Cannot run in Jest/Node.js environment
 **Mitigation**: Manual testing checklist (documented above)
 
 #### 2. Error Handling Paths
@@ -941,9 +941,9 @@ Many untested branches are defensive programming:
 
 ```javascript
 // Fallback for unknown error codes (rarely occurs)
-return errorMap[errorCode] || { 
-  name: "UnknownError", 
-  message: "Unknown error occurred" 
+return errorMap[errorCode] || {
+  name: "UnknownError",
+  message: "Unknown error occurred"
 };
 ```
 
@@ -1088,16 +1088,16 @@ Untested branches for API failures:
 
 ### Summary
 
-**Question**: Is 74.39% branch coverage bad?  
+**Question**: Is 74.39% branch coverage bad?
 **Answer**: No, it's **good** for JavaScript projects.
 
-**Question**: Where are the gaps?  
+**Question**: Where are the gaps?
 **Answer**: Error paths (defensive), browser APIs (manual tested), external API errors (complex mocking)
 
-**Question**: Should we improve it?  
+**Question**: Should we improve it?
 **Answer**: Optional. Current coverage provides confidence. Focus on new features.
 
-**Last Updated**: 2026-01-09  
+**Last Updated**: 2026-01-09
 **Coverage Status**: ✅ Acceptable (74.39% branch, 69.66% statement)
 
 ---

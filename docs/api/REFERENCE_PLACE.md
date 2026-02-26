@@ -1,9 +1,9 @@
 # ReferencePlace API Documentation
 
-**Version:** 0.9.0-alpha  
-**File:** `src/data/ReferencePlace.js`  
-**Author:** Marcelo Pereira Barbosa  
-**Since:** 0.9.0-alpha  
+**Version:** 0.9.0-alpha
+**File:** `src/data/ReferencePlace.js`
+**Author:** Marcelo Pereira Barbosa
+**Since:** 0.9.0-alpha
 **Version Info:** 0.9.0-alpha
 
 ## Overview
@@ -149,22 +149,22 @@ Reference place mapping for known OSM classes/types. Maps OpenStreetMap feature 
 
 ```javascript
 static referencePlaceMap = {
-  "place": { 
-    "house": "Residencial" 
+  "place": {
+    "house": "Residencial"
   },
   "shop": {
     "mall": "Shopping Center",
     "car_repair": "Oficina Mecânica"
   },
-  "amenity": { 
-    "cafe": "Café" 
+  "amenity": {
+    "cafe": "Café"
   },
   "railway": {
     "subway": "Estação do Metrô",
     "station": "Estação do Metrô"
   },
-  "building": { 
-    "yes": "Edifício" 
+  "building": {
+    "yes": "Edifício"
   }
 };
 ```
@@ -555,7 +555,7 @@ const places = [
 ];
 
 // Filter by category
-const malls = places.filter(place => 
+const malls = places.filter(place =>
   place.calculateCategory() === 'Shopping Center'
 );
 
@@ -633,7 +633,7 @@ export const NO_REFERENCE_PLACE = "Não classificado";
 
 export const VALID_REF_PLACE_CLASSES = [
   'place',
-  'shop', 
+  'shop',
   'amenity',
   'railway',
   'building'
@@ -659,20 +659,20 @@ describe('ReferencePlace', () => {
       type: 'mall',
       name: 'Shopping Morumbi'
     };
-    
+
     const refPlace = new ReferencePlace(data);
-    
+
     expect(refPlace.className).toBe('shop');
     expect(refPlace.typeName).toBe('mall');
     expect(refPlace.name).toBe('Shopping Morumbi');
     expect(refPlace.description).toBe('Shopping Center Shopping Morumbi');
   });
-  
+
   test('is frozen after creation', () => {
     const refPlace = new ReferencePlace({ class: 'shop', type: 'mall' });
     expect(Object.isFrozen(refPlace)).toBe(true);
   });
-  
+
   test('calculates category correctly', () => {
     const refPlace = new ReferencePlace({ class: 'shop', type: 'mall' });
     expect(refPlace.calculateCategory()).toBe('Shopping Center');

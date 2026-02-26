@@ -1,7 +1,7 @@
 # JSDoc Documentation Audit Report
 
-**Generated**: 2026-01-06  
-**Project**: Guia Turístico v0.9.0-alpha  
+**Generated**: 2026-01-06
+**Project**: Guia Turístico v0.9.0-alpha
 **Status**: 🔴 **Action Required**
 
 ---
@@ -219,11 +219,11 @@ These are the most critical files as they represent the primary public interface
 ```javascript
 /**
  * Logs a message to both console and DOM textarea element.
- * 
+ *
  * @param {string} message - The main message to log
  * @param {...any} params - Additional parameters to append
  * @returns {void}
- * 
+ *
  * @example
  * log('User action', 'clicked button');
  * // Output: [timestamp] User action clicked button
@@ -288,19 +288,19 @@ See [.github/JSDOC_GUIDE.md](./JSDOC_GUIDE.md) for comprehensive standards.
 ```javascript
 /**
  * Brief description of what the function does.
- * 
+ *
  * Detailed explanation if needed, including algorithm details,
  * edge cases, or important behavioral notes.
- * 
+ *
  * @param {Type} paramName - Description of parameter
  * @returns {Type} Description of return value
  * @throws {ErrorType} When this error occurs
- * 
+ *
  * @example
  * // Example usage
  * const result = myFunction(param);
  * // result: expected output
- * 
+ *
  * @since 0.9.0-alpha
  * @see {@link RelatedClass}
  */
@@ -312,15 +312,15 @@ export function myFunction(paramName) { ... }
 ```javascript
 /**
  * Brief description of class purpose.
- * 
+ *
  * @class
  * @classdesc Detailed explanation of class responsibilities,
  * design patterns used, and relationships with other classes.
- * 
+ *
  * @example
  * const instance = new MyClass();
  * instance.method();
- * 
+ *
  * @since 0.9.0-alpha
  */
 export default class MyClass { ... }
@@ -331,10 +331,10 @@ export default class MyClass { ... }
 ```javascript
 /**
  * Brief description of constant purpose.
- * 
+ *
  * @constant {Type}
  * @default value
- * 
+ *
  * @example
  * if (condition === MY_CONSTANT) { ... }
  */
@@ -466,8 +466,8 @@ node .github/scripts/jsdoc-audit.js
 
 ---
 
-**Last Updated**: 2026-01-06  
-**Next Audit**: 2026-01-13 (Weekly)  
+**Last Updated**: 2026-01-06
+**Next Audit**: 2026-01-13 (Weekly)
 **Responsible**: Development Team
 
 **Status Summary**:

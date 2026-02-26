@@ -141,7 +141,7 @@ const setupParams = {
     mobileNotAcceptedAccuracy: ["medium", "bad", "very bad"],
     desktopNotAcceptedAccuracy: ["bad", "very bad"],
     notAcceptedAccuracy: null, // Automatically set based on device type
-    
+
     // ... other configuration options
 };
 ```
@@ -297,21 +297,21 @@ const result = isMobileDevice({
 
 Array of accuracy quality levels rejected on mobile devices.
 
-**Type**: `string[]`  
+**Type**: `string[]`
 **Default**: `["medium", "bad", "very bad"]`
 
 ### `setupParams.desktopNotAcceptedAccuracy`
 
 Array of accuracy quality levels rejected on desktop devices.
 
-**Type**: `string[]`  
+**Type**: `string[]`
 **Default**: `["bad", "very bad"]`
 
 ### `setupParams.notAcceptedAccuracy`
 
 Currently active accuracy rejection list (automatically set based on device type).
 
-**Type**: `string[]`  
+**Type**: `string[]`
 **Auto-configured**: Set to either `mobileNotAcceptedAccuracy` or `desktopNotAcceptedAccuracy`
 
 ## Troubleshooting
@@ -379,7 +379,7 @@ const result = isMobileDevice(); // May not use the mock
 
 ### Issue: Location always rejected on desktop
 
-**Possible cause**: Location service providing accuracy > 200m  
+**Possible cause**: Location service providing accuracy > 200m
 **Solution**: This is expected behavior - the location is genuinely too inaccurate. The system correctly rejects "very bad" accuracy on both mobile and desktop.
 
 ### Issue: Want stricter accuracy on desktop

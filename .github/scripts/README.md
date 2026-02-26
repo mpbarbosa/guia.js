@@ -2,7 +2,7 @@
 
 **Purpose**: Automation scripts for CI/CD workflows, git hooks, and documentation maintenance
 
-**Location**: `.github/scripts/`  
+**Location**: `.github/scripts/`
 **Count**: 17 executable files (13 shell, 3 Python, 1 JavaScript)
 
 ---
@@ -13,10 +13,10 @@
 
 #### 1. check-version-consistency.sh (243 lines)
 
-**Purpose**: Validates version consistency across project files  
-**Usage**: `./.github/scripts/check-version-consistency.sh`  
-**npm script**: `npm run check:version`  
-**Documentation**: README.md (line 829)  
+**Purpose**: Validates version consistency across project files
+**Usage**: `./.github/scripts/check-version-consistency.sh`
+**npm script**: `npm run check:version`
+**Documentation**: README.md (line 829)
 
 **Checks**:
 
@@ -28,9 +28,9 @@
 
 #### 2. check-references.sh
 
-**Purpose**: Validates internal documentation links  
-**Usage**: `./.github/scripts/check-references.sh`  
-**npm script**: `npm run check:references`  
+**Purpose**: Validates internal documentation links
+**Usage**: `./.github/scripts/check-references.sh`
+**npm script**: `npm run check:references`
 **Documentation**: README.md
 
 **What it does**:
@@ -43,9 +43,9 @@
 
 #### 3. check-terminology.sh
 
-**Purpose**: Enforces consistent terminology across documentation  
-**Usage**: `./.github/scripts/check-terminology.sh`  
-**npm script**: `npm run check:terminology`  
+**Purpose**: Enforces consistent terminology across documentation
+**Usage**: `./.github/scripts/check-terminology.sh`
+**npm script**: `npm run check:terminology`
 
 **What it does**:
 
@@ -57,8 +57,8 @@
 
 #### 4. update-doc-metadata.sh (453 lines)
 
-**Purpose**: Updates metadata in documentation files  
-**Usage**: `./.github/scripts/update-doc-metadata.sh [options]`  
+**Purpose**: Updates metadata in documentation files
+**Usage**: `./.github/scripts/update-doc-metadata.sh [options]`
 
 **Options**:
 
@@ -75,10 +75,10 @@
 
 #### 5. validate-cross-references.sh (78 lines)
 
-**Purpose**: Validates cross-references between documentation files  
-**Usage**: `./.github/scripts/validate-cross-references.sh [OPTIONS]`  
-**npm script**: Consider adding `npm run check:cross-refs`  
-**Documentation**: ✅ **COMPLETE**  
+**Purpose**: Validates cross-references between documentation files
+**Usage**: `./.github/scripts/validate-cross-references.sh [OPTIONS]`
+**npm script**: Consider adding `npm run check:cross-refs`
+**Documentation**: ✅ **COMPLETE**
 **--help flag**: ✅ **YES**
 
 **What it does**:
@@ -147,9 +147,9 @@ Used in documentation validation workflows to ensure all internal links remain v
 
 #### 6. cdn-delivery.sh (229 lines)
 
-**Purpose**: Generates jsDelivr CDN URLs for the current version  
-**Usage**: `./.github/scripts/cdn-delivery.sh`  
-**npm script**: `npm run cdn:generate`  
+**Purpose**: Generates jsDelivr CDN URLs for the current version
+**Usage**: `./.github/scripts/cdn-delivery.sh`
+**npm script**: `npm run cdn:generate`
 **Documentation**: README.md (comprehensive - lines 850-940)
 
 **Output**: `cdn-urls.txt` with distribution URLs
@@ -171,9 +171,9 @@ Used in documentation validation workflows to ensure all internal links remain v
 
 #### 7. test-workflow-locally.sh (318 lines)
 
-**Purpose**: Simulates GitHub Actions workflow locally before pushing  
-**Usage**: `./.github/scripts/test-workflow-locally.sh`  
-**npm script**: `npm run ci:test-local`  
+**Purpose**: Simulates GitHub Actions workflow locally before pushing
+**Usage**: `./.github/scripts/test-workflow-locally.sh`
+**npm script**: `npm run ci:test-local`
 **Documentation**: README.md, docs/WORKFLOW_SETUP.md
 
 **What it validates**:
@@ -193,8 +193,8 @@ Used in documentation validation workflows to ensure all internal links remain v
 
 #### 8. validate-jsdom-update.sh (120+ lines)
 
-**Purpose**: Validates jsdom dependency updates for DOM API compatibility  
-**Usage**: `./.github/scripts/validate-jsdom-update.sh [version]`  
+**Purpose**: Validates jsdom dependency updates for DOM API compatibility
+**Usage**: `./.github/scripts/validate-jsdom-update.sh [version]`
 **Documentation**: ✅ **COMPLETE**
 
 **What it does**:
@@ -277,9 +277,9 @@ npm install    # Reinstall original dependencies
 
 #### 9. change-type-detector.sh (308 lines)
 
-**Purpose**: Detects change type from Conventional Commits messages  
-**Usage**: `./.github/scripts/change-type-detector.sh [base_ref]`  
-**Used by**: `.github/workflows/modified-files.yml`  
+**Purpose**: Detects change type from Conventional Commits messages
+**Usage**: `./.github/scripts/change-type-detector.sh [base_ref]`
+**Used by**: `.github/workflows/modified-files.yml`
 **Documentation**: ✅ **COMPLETE**
 
 **What it does**:
@@ -357,9 +357,9 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 
 #### 10. test-change-type-detection.sh (237 lines)
 
-**Purpose**: Test suite for change-type-detector.sh  
-**Usage**: `./.github/scripts/test-change-type-detection.sh [OPTIONS]`  
-**Documentation**: ✅ **COMPLETE**  
+**Purpose**: Test suite for change-type-detector.sh
+**Usage**: `./.github/scripts/test-change-type-detection.sh [OPTIONS]`
+**Documentation**: ✅ **COMPLETE**
 **--help flag**: ✅ **YES**
 
 **What it does**:
@@ -404,9 +404,9 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 
 #### 11. test-conditional-execution.sh (203 lines)
 
-**Purpose**: Test suite for workflow-condition-evaluator.sh  
-**Usage**: `./.github/scripts/test-conditional-execution.sh [OPTIONS]`  
-**Documentation**: ✅ **COMPLETE**  
+**Purpose**: Test suite for workflow-condition-evaluator.sh
+**Usage**: `./.github/scripts/test-conditional-execution.sh [OPTIONS]`
+**Documentation**: ✅ **COMPLETE**
 **--help flag**: ✅ **YES**
 
 **What it does**:
@@ -454,9 +454,9 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 
 #### 12. workflow-condition-evaluator.sh (225 lines)
 
-**Purpose**: Evaluates conditional workflow execution rules from .workflow-config.yaml  
-**Usage**: `./.github/scripts/workflow-condition-evaluator.sh <step_name> [base_ref]`  
-**Used by**: `.github/workflows/modified-files.yml`  
+**Purpose**: Evaluates conditional workflow execution rules from .workflow-config.yaml
+**Usage**: `./.github/scripts/workflow-condition-evaluator.sh <step_name> [base_ref]`
+**Used by**: `.github/workflows/modified-files.yml`
 **Documentation**: ✅ **COMPLETE**
 
 **What it does**:
@@ -509,7 +509,7 @@ steps:
           - "src/**/*.js"
           - "__tests__/**/*.js"
       - change_types: ["feat", "fix", "refactor"]
-  
+
   update-docs:
     run_on:
       - file_patterns:
@@ -559,9 +559,9 @@ Used in `.github/workflows/modified-files.yml`:
 
 #### 13. update-badges.sh
 
-**Purpose**: Updates README badges (test counts, coverage, etc.)  
-**Usage**: `./.github/scripts/update-badges.sh`  
-**npm script**: `npm run update:badges`  
+**Purpose**: Updates README badges (test counts, coverage, etc.)
+**Usage**: `./.github/scripts/update-badges.sh`
+**npm script**: `npm run update:badges`
 **Documentation**: README.md, multiple docs files
 
 **What it does**:
@@ -595,9 +595,9 @@ Some validation checks have both Python and shell implementations. Understanding
 
 #### 14. check-references.py
 
-**Purpose**: Enhanced reference checker with false positive filtering  
-**Usage**: `python3 .github/scripts/check-references.py`  
-**Shell wrapper**: `check-references.sh` (basic version)  
+**Purpose**: Enhanced reference checker with false positive filtering
+**Usage**: `python3 .github/scripts/check-references.py`
+**Shell wrapper**: `check-references.sh` (basic version)
 **Version**: 1.0.0 (2026-01-28)
 
 **What it does**:
@@ -645,9 +645,9 @@ EXCLUDE_REGEX_PATTERNS = [
 
 #### 15. check-terminology.py
 
-**Purpose**: Terminology consistency validator with context awareness  
-**Usage**: `python3 .github/scripts/check-terminology.py`  
-**Shell wrapper**: `check-terminology.sh` (basic version)  
+**Purpose**: Terminology consistency validator with context awareness
+**Usage**: `python3 .github/scripts/check-terminology.py`
+**Shell wrapper**: `check-terminology.sh` (basic version)
 **Version**: 1.0.0 (2026-01-28)
 
 **What it does**:
@@ -704,8 +704,8 @@ EXCLUDE_REGEX_PATTERNS = [
 
 #### 16. check-links.py
 
-**Purpose**: External link checker with timeout handling and status validation  
-**Usage**: `python3 .github/scripts/check-links.py`  
+**Purpose**: External link checker with timeout handling and status validation
+**Usage**: `python3 .github/scripts/check-links.py`
 **No shell equivalent** (requires HTTP client)
 
 **What it checks**:
@@ -777,7 +777,7 @@ python3 .github/scripts/check-links.py --verbose
 
 #### 17. generate_api_docs.js
 
-**Purpose**: Generates API documentation from JSDoc comments  
+**Purpose**: Generates API documentation from JSDoc comments
 **Usage**: `node .github/scripts/generate_api_docs.js`
 
 ---
@@ -929,8 +929,8 @@ npm run ci:test-local         # Test workflow locally
 
 ---
 
-**Last Updated**: 2026-02-15  
-**Script Count**: 20 documented  
-**Workflow Count**: 10 analyzed  
-**Integration Opportunities**: 6 identified  
+**Last Updated**: 2026-02-15
+**Script Count**: 20 documented
+**Workflow Count**: 10 analyzed
+**Integration Opportunities**: 6 identified
 **Status**: ✅ All scripts documented and standardized

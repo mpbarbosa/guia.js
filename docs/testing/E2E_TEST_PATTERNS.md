@@ -1,7 +1,7 @@
 # E2E Test Patterns and Best Practices
 
-**Date**: 2026-01-15  
-**Purpose**: Document proven patterns for Puppeteer E2E tests  
+**Date**: 2026-01-15
+**Purpose**: Document proven patterns for Puppeteer E2E tests
 **Scope**: Browser-based end-to-end testing with Puppeteer
 
 ---
@@ -40,7 +40,7 @@ tests/e2e/                   # Python + Playwright E2E tests
 test('should get location', async () => {
     const page = await browser.newPage();
     await page.goto('http://localhost:9000/src/index.html');
-    
+
     // ❌ TOO LATE - page already loaded
     await page.setGeolocation({ latitude: -23.55, longitude: -46.63 });
     await page.overridePermissions('http://localhost:9000', ['geolocation']);
@@ -52,11 +52,11 @@ test('should get location', async () => {
 ```javascript
 test('should get location', async () => {
     const page = await browser.newPage();
-    
+
     // ✅ Set permissions BEFORE navigation
     await page.overridePermissions('http://localhost:9000', ['geolocation']);
     await page.setGeolocation({ latitude: -23.55, longitude: -46.63 });
-    
+
     // Now navigate
     await page.goto('http://localhost:9000/src/index.html');
 });
@@ -73,14 +73,14 @@ test('should get location', async () => {
 ```javascript
 async function setupPageWithMocks(browser, coords) {
     const page = await browser.newPage();
-    
+
     // 1. Enable request interception
     await page.setRequestInterception(true);
-    
+
     // 2. Mock API responses
     page.on('request', (request) => {
         const url = request.url();
-        
+
         if (url.includes('nominatim.openstreetmap.org/reverse')) {
             // ✅ MUST include CORS headers
             request.respond({
@@ -110,19 +110,19 @@ async function setupPageWithMocks(browser, coords) {
             request.continue(); // Allow other requests
         }
     });
-    
+
     // 3. Set geolocation (BEFORE goto)
     await page.overridePermissions('http://localhost:9000', ['geolocation']);
-    await page.setGeolocation({ 
-        latitude: coords.lat, 
-        longitude: coords.lng 
+    await page.setGeolocation({
+        latitude: coords.lat,
+        longitude: coords.lng
     });
-    
+
     // 4. Navigate
     await page.goto('http://localhost:9000/src/index.html', {
         waitUntil: 'networkidle2'
     });
-    
+
     return page;
 }
 ```
@@ -195,7 +195,7 @@ describe('E2E: Feature Name', () => {
     let browser;
     let server;
     const PORT = 9000;
-    
+
     beforeAll(async () => {
         // 1. Start HTTP server
         server = http.createServer((req, res) => {
@@ -210,18 +210,18 @@ describe('E2E: Feature Name', () => {
                 }
             });
         });
-        
+
         await new Promise((resolve) => {
             server.listen(PORT, () => resolve());
         });
-        
+
         // 2. Launch browser
         browser = await puppeteer.launch({
             headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
     });
-    
+
     afterAll(async () => {
         // 3. Cleanup (CRITICAL for preventing worker hangs)
         if (browser) await browser.close();
@@ -229,22 +229,22 @@ describe('E2E: Feature Name', () => {
             await new Promise(resolve => server.close(resolve));
         }
     });
-    
+
     test('should do something', async () => {
         const page = await browser.newPage();
-        
+
         try {
             // Setup mocks BEFORE navigation
             await page.overridePermissions(`http://localhost:${PORT}`, ['geolocation']);
             await page.setGeolocation({ latitude: -23.55, longitude: -46.63 });
-            
+
             await page.setRequestInterception(true);
             page.on('request', request => {
                 // Mock API calls
                 if (request.url().includes('nominatim')) {
                     request.respond({
                         status: 200,
-                        headers: { 
+                        headers: {
                             'Access-Control-Allow-Origin': '*',
                             'Content-Type': 'application/json'
                         },
@@ -254,26 +254,26 @@ describe('E2E: Feature Name', () => {
                     request.continue();
                 }
             });
-            
+
             // Navigate
             await page.goto(`http://localhost:${PORT}/src/index.html`, {
                 waitUntil: 'networkidle2',
                 timeout: 5000
             });
-            
+
             // Interact with page
             await page.click('#button-id');
-            
+
             // Wait for results
             await page.waitForFunction(
                 () => document.querySelector('#result')?.textContent !== '',
                 { timeout: 3000 }
             );
-            
+
             // Assert
             const result = await page.$eval('#result', el => el.textContent);
             expect(result).toContain('Expected Text');
-            
+
         } finally {
             // Always close page
             await page.close();
@@ -315,7 +315,7 @@ const text = await page.$eval('#result', el => el.textContent);
 
 // ✅ CORRECT
 await page.click('#button');
-await page.waitForFunction(() => 
+await page.waitForFunction(() =>
     document.querySelector('#result')?.textContent !== ''
 );
 const text = await page.$eval('#result', el => el.textContent);
@@ -447,5 +447,5 @@ Before writing E2E tests:
 
 ---
 
-**Status**: ✅ **Patterns Documented**  
+**Status**: ✅ **Patterns Documented**
 **Next**: Apply patterns to remaining E2E tests

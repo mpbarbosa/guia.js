@@ -1,7 +1,7 @@
 # Material Design 3 Elevation System Guide
 
-**Version**: 0.11.0-alpha  
-**Last Updated**: 2026-02-15  
+**Version**: 0.11.0-alpha
+**Last Updated**: 2026-02-15
 **Status**: ✅ Production Ready
 
 ## Overview
@@ -82,7 +82,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 #### Level 1: Resting Cards (1dp)
 
 ```css
---md-sys-elevation-level1: 
+--md-sys-elevation-level1:
   0 1px 2px 0 rgba(0, 0, 0, 0.3),
   0 1px 3px 1px rgba(0, 0, 0, 0.15);
 ```
@@ -99,7 +99,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 #### Level 2: Raised Cards (3dp)
 
 ```css
---md-sys-elevation-level2: 
+--md-sys-elevation-level2:
   0 1px 2px 0 rgba(0, 0, 0, 0.3),
   0 2px 6px 2px rgba(0, 0, 0, 0.15);
 ```
@@ -116,7 +116,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 #### Level 3: Menus & Dialogs (6dp)
 
 ```css
---md-sys-elevation-level3: 
+--md-sys-elevation-level3:
   0 1px 3px 0 rgba(0, 0, 0, 0.3),
   0 4px 8px 3px rgba(0, 0, 0, 0.15);
 ```
@@ -133,7 +133,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 #### Level 4: Modals & Navigation (8dp)
 
 ```css
---md-sys-elevation-level4: 
+--md-sys-elevation-level4:
   0 2px 3px 0 rgba(0, 0, 0, 0.3),
   0 6px 10px 4px rgba(0, 0, 0, 0.15);
 ```
@@ -150,7 +150,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 #### Level 5: Overlays & Notifications (12dp)
 
 ```css
---md-sys-elevation-level5: 
+--md-sys-elevation-level5:
   0 4px 4px 0 rgba(0, 0, 0, 0.3),
   0 8px 12px 6px rgba(0, 0, 0, 0.15);
 ```
@@ -402,7 +402,7 @@ for level, color in shadows:
 **By file** (top 5):
 
 1. `onboarding.css` - 5 violations
-2. `transitions.css` - 5 violations  
+2. `transitions.css` - 5 violations
 3. `maps-actions.css` - 5 violations
 4. `version-display.css` - 4 violations
 5. `highlight-cards.css` - 3 violations
@@ -529,7 +529,7 @@ If you need custom elevation beyond Level 5:
 ```css
 .custom-component {
   /* Based on MD3 spec: 0 [offset] [blur] [spread] rgba(...) */
-  box-shadow: 
+  box-shadow:
     0 6px 6px 0 rgba(0, 0, 0, 0.3),
     0 16px 20px 8px rgba(0, 0, 0, 0.15);
 }
@@ -549,10 +549,10 @@ Elevation behaves differently in dark mode:
 @media (prefers-color-scheme: dark) {
   :root {
     /* Increase shadow opacity for visibility */
-    --md-sys-elevation-level1: 
+    --md-sys-elevation-level1:
       0 1px 2px 0 rgba(0, 0, 0, 0.5),
       0 1px 3px 1px rgba(0, 0, 0, 0.25);
-    
+
     /* ... adjust all levels ... */
   }
 }

@@ -1,7 +1,7 @@
 # Documentation Navigation & Metadata - Quick Reference
 
-**Version**: 1.0.0  
-**Last Updated**: 2026-01-28  
+**Version**: 1.0.0
+**Last Updated**: 2026-01-28
 **Status**: Active
 
 ## 🚀 Quick Start
@@ -232,11 +232,11 @@ python3 .github/scripts/check-links.py
 
 ### Metadata Field Usage
 
-**Last Updated**: Always update for significant changes  
-**Status**: Keep current (Active/Draft/Deprecated)  
-**Version**: Use when doc is version-specific  
-**Category**: Helps with organization and search  
-**Maintainer**: Optional, use for team ownership  
+**Last Updated**: Always update for significant changes
+**Status**: Keep current (Active/Draft/Deprecated)
+**Version**: Use when doc is version-specific
+**Category**: Helps with organization and search
+**Maintainer**: Optional, use for team ownership
 **Related**: Link to related docs for navigation
 
 ## 🎯 Common Workflows

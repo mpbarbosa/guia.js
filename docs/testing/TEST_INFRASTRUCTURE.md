@@ -1,7 +1,7 @@
 # Test Infrastructure Documentation
 
-**Last Updated**: 2026-01-16  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-16
+**Version**: 0.9.0-alpha
 **Purpose**: Clarify the distinction between Jest and Playwright test suites
 
 ## Overview
@@ -61,19 +61,19 @@ tests/
 
 ### Use Jest/Puppeteer (`__tests__/`) for
 
-✅ **Daily development** - Fast feedback loop  
-✅ **Unit and integration tests** - Component isolation  
-✅ **CI/CD pipeline** - Primary automated testing  
-✅ **Code coverage** - Jest coverage reports  
-✅ **Debugging** - Node.js debugging tools  
+✅ **Daily development** - Fast feedback loop
+✅ **Unit and integration tests** - Component isolation
+✅ **CI/CD pipeline** - Primary automated testing
+✅ **Code coverage** - Jest coverage reports
+✅ **Debugging** - Node.js debugging tools
 
 ### Use Python/Playwright (`tests/`) for
 
-✅ **Cross-browser testing** - Chrome, Firefox, Safari  
-✅ **Visual regression** - Screenshot comparisons  
-✅ **CI/CD validation** - Pre-release browser checks  
-✅ **Production readiness** - Real browser testing  
-✅ **Accessibility testing** - Playwright accessibility tools  
+✅ **Cross-browser testing** - Chrome, Firefox, Safari
+✅ **Visual regression** - Screenshot comparisons
+✅ **CI/CD validation** - Pre-release browser checks
+✅ **Production readiness** - Real browser testing
+✅ **Accessibility testing** - Playwright accessibility tools
 
 ## Execution Commands
 
@@ -227,6 +227,6 @@ pytest tests/e2e/ -s --headed
 
 ---
 
-**Status**: Dual infrastructure operational  
-**Primary**: Jest/Puppeteer (1,820 tests passing)  
+**Status**: Dual infrastructure operational
+**Primary**: Jest/Puppeteer (1,820 tests passing)
 **Secondary**: Python/Playwright (cross-browser validation)

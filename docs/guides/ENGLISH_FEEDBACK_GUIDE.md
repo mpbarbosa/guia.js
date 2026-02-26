@@ -1,8 +1,8 @@
 # English Feedback Guide for GitHub Copilot CLI
 
-**Purpose**: Improve English language skills while using GitHub Copilot  
-**Target Audience**: Non-native English speakers (especially Portuguese speakers)  
-**Activation**: On-demand with `[[ENGLISH-FEEDBACK]]` keyword  
+**Purpose**: Improve English language skills while using GitHub Copilot
+**Target Audience**: Non-native English speakers (especially Portuguese speakers)
+**Activation**: On-demand with `[[ENGLISH-FEEDBACK]]` keyword
 **Last Updated**: 2026-02-13
 
 ---
@@ -104,7 +104,7 @@ POLISHED VERSION:
 ❌ "The documentation what have errors"
 ✅ "The documentation that has errors"
 
-Error: 
+Error:
 - "what" should be "that" (relative pronoun for things)
 - "have" should be "has" (singular subject "documentation")
 ```
@@ -272,7 +272,7 @@ POLISHED VERSION:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ORIGINAL TEXT:
-"We should to refactor the code for make it more better and less complex because 
+"We should to refactor the code for make it more better and less complex because
 the new developers are having difficulty to understand the architecture"
 
 GRAMMAR ISSUES:
@@ -293,16 +293,16 @@ VOCABULARY SUGGESTIONS:
   Reason: More concise
 
 CLARITY IMPROVEMENTS:
-"We should refactor the code to make it simpler because new developers are 
+"We should refactor the code to make it simpler because new developers are
 having difficulty understanding the architecture"
 
 STYLE RECOMMENDATIONS:
 More professional version:
-"We should refactor the code to improve its clarity and reduce complexity, 
+"We should refactor the code to improve its clarity and reduce complexity,
 as new developers are struggling to understand the architecture"
 
 POLISHED VERSION:
-"We should refactor the code to make it simpler and easier to understand, 
+"We should refactor the code to make it simpler and easier to understand,
 as new developers are having difficulty with the current architecture"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -327,7 +327,7 @@ as new developers are having difficulty with the current architecture"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ORIGINAL TEXT:
-"Can you check out the bug in the login page? It's kinda broken and users 
+"Can you check out the bug in the login page? It's kinda broken and users
 are getting mad"
 
 VOCABULARY SUGGESTIONS:
@@ -347,7 +347,7 @@ Transform from casual conversation to professional technical communication:
 - Maintain professional tone
 
 POLISHED VERSION:
-"Could you investigate the bug in the login page? It is not functioning 
+"Could you investigate the bug in the login page? It is not functioning
 properly and users are experiencing frustration"
 
 OR (more concise):
@@ -509,7 +509,7 @@ Portuguese allows dropping subject pronouns. English requires explicit subjects.
 
 **Adjective placement:**
 
-Portuguese: noun + adjective  
+Portuguese: noun + adjective
 English: adjective + noun
 
 ```
@@ -702,18 +702,18 @@ If you answered "yes" to 3+ questions, use `[[ENGLISH-FEEDBACK]]`!
 
 ## 📝 Summary
 
-**Activation**: `[[ENGLISH-FEEDBACK]]` at start of prompt  
-**Coverage**: Grammar, vocabulary, clarity, style  
-**Language**: English only (immersive learning)  
-**Format**: Structured, easy-to-scan feedback  
-**Target**: Non-native speakers (especially Portuguese)  
+**Activation**: `[[ENGLISH-FEEDBACK]]` at start of prompt
+**Coverage**: Grammar, vocabulary, clarity, style
+**Language**: English only (immersive learning)
+**Format**: Structured, easy-to-scan feedback
+**Target**: Non-native speakers (especially Portuguese)
 **Goal**: Improve English while working with Copilot
 
 ---
 
-**Version**: 1.0  
-**Last Updated**: 2026-02-13  
-**Maintainer**: GitHub Copilot CLI Team  
+**Version**: 1.0
+**Last Updated**: 2026-02-13
+**Maintainer**: GitHub Copilot CLI Team
 **License**: Internal Use Only
 
 ---

@@ -1,7 +1,7 @@
 # GeolocationService API Documentation
 
-**Version:** 0.9.0-alpha  
-**Module:** `services/GeolocationService`  
+**Version:** 0.9.0-alpha
+**Module:** `services/GeolocationService`
 **Location:** `src/services/GeolocationService.js`
 
 ## Overview
@@ -564,8 +564,8 @@ const mockPositionManager = {
 };
 
 const service = new GeolocationService(
-  null, 
-  mockProvider, 
+  null,
+  mockProvider,
   mockPositionManager
 );
 

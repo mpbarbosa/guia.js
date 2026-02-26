@@ -18,7 +18,7 @@ Choose your path based on your role or goal:
 ### 🆕 New Contributors
 
 1. Start: [README.md](../README.md) - Project overview
-2. Then: [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Contribution guidelines  
+2. Then: [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Contribution guidelines
 3. Next: [TDD_GUIDE.md](../.github/TDD_GUIDE.md) - Test-driven development
 4. Finally: [UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md) - Writing tests
 
@@ -37,7 +37,7 @@ Choose your path based on your role or goal:
 
 1. Start: [TESTING.md](./testing/TESTING.md) - Testing overview
 2. Then: [JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md) - Jest setup
-3. Next: [HTML_GENERATION.md](./testing/HTML_GENERATION.md) - HTML testing  
+3. Next: [HTML_GENERATION.md](./testing/HTML_GENERATION.md) - HTML testing
 4. Finally: [TDD_GUIDE.md](../.github/TDD_GUIDE.md) - TDD methodology
 
 **Estimated time**: 2 hours reading
@@ -94,7 +94,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - Integration with mpbarbosa.com personal website
   - Directory structure explanation (/src for library organization)
   - Historical context of restructuring commit
-  
+
 - **[PROJECT_CLARIFICATION.md](./PROJECT_CLARIFICATION.md)** - 📦 ARCHIVED: Historical clarifications (2026-01-06)
   - Historical record of project identity confusion resolution
   - Preserved for audit trail and AI tool reference
@@ -815,10 +815,10 @@ When creating issues, use these templates for consistency:
 
 - **[Technical Debt](../.github/ISSUE_TEMPLATE/technical_debt.md)** - Report technical debt
   - Now includes referential transparency considerations 🆕
-  
+
 - **[Feature Request](../.github/ISSUE_TEMPLATE/feature_request.md)** - Propose new features
   - Now includes implementation considerations for pure functions 🆕
-  
+
 - **[Copilot Issue](../.github/ISSUE_TEMPLATE/copilot_issue.md)** - Report Copilot-related issues
   - Now includes referential transparency guidelines 🆕
 
@@ -889,13 +889,13 @@ When creating issues, use these templates for consistency:
    ```bash
    # Validate syntax
    npm run validate
-   
+
    # Run tests
    npm test
-   
+
    # Run tests with coverage
    npm run test:coverage
-   
+
    # Full validation
    npm run test:all
    ```

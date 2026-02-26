@@ -8,8 +8,8 @@
 
 **Goal**: Reach 80%+ coverage through 3 phases (~15 hours)
 
-**Phase 1**: Fix Jest config + test browser files (3.5 hours)  
-**Phase 2**: Test uncovered guia.js lines (4 hours)  
+**Phase 1**: Fix Jest config + test browser files (3.5 hours)
+**Phase 2**: Test uncovered guia.js lines (4 hours)
 **Phase 3**: Increase branch coverage to 60%+, achieve 80% (8 hours)
 
 ---
@@ -73,7 +73,7 @@ navigator.permissions.query();
 - Error codes 1, 2, 3 tested in multiple files
 - Fallback branches already covered
 
-**Attempt**: Created `GeolocationService.errorPaths.test.js`  
+**Attempt**: Created `GeolocationService.errorPaths.test.js`
 **Result**: Tests failed due to complex constructor signature and existing coverage
 
 **Lesson**: Error paths that matter are already tested.
@@ -177,7 +177,7 @@ function handleRoute() {
 }
 ```
 
-**Gain**: +5-8% coverage + better architecture  
+**Gain**: +5-8% coverage + better architecture
 **Effort**: 8-12 hours refactoring
 
 #### Step 2: jsdom Setup for Remaining UI (4-6 hours)
@@ -186,7 +186,7 @@ function handleRoute() {
 - Mock navigator APIs
 - Add browser-specific tests
 
-**Gain**: +2-4% coverage  
+**Gain**: +2-4% coverage
 **Effort**: 4-6 hours setup + maintenance burden
 
 #### Step 3: Comprehensive Error Mocking (4-6 hours)
@@ -195,7 +195,7 @@ function handleRoute() {
 - Test HTTP error codes
 - Test network timeouts
 
-**Gain**: +2-3% coverage  
+**Gain**: +2-3% coverage
 **Effort**: 4-6 hours
 
 **Total**: 16-24 hours to reach ~79-81% coverage
@@ -215,9 +215,9 @@ function handleRoute() {
 
 ### If Hard Requirement: Understand the Cost
 
-**Real effort**: 20-30 hours (not 15)  
-**Real benefit**: Marginal quality improvement  
-**Hidden cost**: Ongoing maintenance of complex mocks  
+**Real effort**: 20-30 hours (not 15)
+**Real benefit**: Marginal quality improvement
+**Hidden cost**: Ongoing maintenance of complex mocks
 
 **Better approach**: Challenge the 80% requirement with data showing current quality.
 
@@ -225,17 +225,17 @@ function handleRoute() {
 
 ## Summary
 
-**Question**: Can we reach 80% coverage in 15 hours as proposed?  
+**Question**: Can we reach 80% coverage in 15 hours as proposed?
 **Answer**: No. Real effort is 20-30 hours, and many proposed tasks are not feasible.
 
-**Question**: Should we try to reach 80% coverage?  
+**Question**: Should we try to reach 80% coverage?
 **Answer**: Only if it's a hard requirement. Current 74% is good.
 
-**Question**: What's the best use of 15 hours?  
+**Question**: What's the best use of 15 hours?
 **Answer**: Build features, add Selenium E2E tests, or improve architecture. Not chasing coverage percentage.
 
 ---
 
-**Last Reviewed**: 2026-01-09  
-**Recommendation**: Accept current coverage as good, focus on value-add work  
+**Last Reviewed**: 2026-01-09
+**Recommendation**: Accept current coverage as good, focus on value-add work
 **Reality**: 80% coverage would require 20-30 hours with questionable ROI

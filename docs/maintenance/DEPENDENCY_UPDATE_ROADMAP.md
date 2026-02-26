@@ -1,7 +1,7 @@
 # Dependency Update Roadmap
 
-**Project:** Guia Turístico v0.9.0-alpha  
-**Created:** 2026-01-09  
+**Project:** Guia Turístico v0.9.0-alpha
+**Created:** 2026-01-09
 **Status:** Planning Phase
 
 ---
@@ -370,31 +370,31 @@ npm audit
 
 ### 2026-01-09: jsdom Classification
 
-**Decision:** Move jsdom from dependencies → devDependencies  
-**Rationale:** Not used in production code, only in (currently skipped) tests  
-**Impact:** ~7MB production bundle reduction  
-**Status:** ✅ COMPLETED  
+**Decision:** Move jsdom from dependencies → devDependencies
+**Rationale:** Not used in production code, only in (currently skipped) tests
+**Impact:** ~7MB production bundle reduction
+**Status:** ✅ COMPLETED
 
 ### 2026-01-09: Jest Version Drift
 
-**Decision:** Defer to Phase 2 (lockfile regeneration)  
-**Rationale:** Tests work perfectly with Jest 29, no urgent need to update  
-**Impact:** Will naturally resolve when lockfile regenerated  
-**Status:** ⏳ PLANNED (Phase 2)  
+**Decision:** Defer to Phase 2 (lockfile regeneration)
+**Rationale:** Tests work perfectly with Jest 29, no urgent need to update
+**Impact:** Will naturally resolve when lockfile regenerated
+**Status:** ⏳ PLANNED (Phase 2)
 
 ### 2026-01-09: Security False Positives
 
-**Decision:** Defer to Phase 2 (lockfile regeneration)  
-**Rationale:** Actual code is secure (glob 7.2.3, js-yaml 3.14.2), npm audit confused by lockfile metadata  
-**Impact:** False warnings eliminated after fresh install  
-**Status:** ⏳ PLANNED (Phase 2)  
+**Decision:** Defer to Phase 2 (lockfile regeneration)
+**Rationale:** Actual code is secure (glob 7.2.3, js-yaml 3.14.2), npm audit confused by lockfile metadata
+**Impact:** False warnings eliminated after fresh install
+**Status:** ⏳ PLANNED (Phase 2)
 
 ### 2026-01-09: Version Pinning Strategy
 
-**Decision:** Keep caret ranges (`^`) for alpha/beta phases  
-**Rationale:** Project is 0.9.0-alpha, needs flexibility for rapid development  
-**Impact:** Easier to stay current with security patches and bug fixes  
-**Status:** ✅ ACCEPTED (revisit at 1.0.0)  
+**Decision:** Keep caret ranges (`^`) for alpha/beta phases
+**Rationale:** Project is 0.9.0-alpha, needs flexibility for rapid development
+**Impact:** Easier to stay current with security patches and bug fixes
+**Status:** ✅ ACCEPTED (revisit at 1.0.0)
 
 ---
 
@@ -402,24 +402,24 @@ npm audit
 
 ### Phase 1 (Environment Specification) - LOW RISK ⚠️
 
-**Likelihood of breakage:** 1%  
-**Impact if breaks:** Low (just documentation, no code changes)  
-**Rollback complexity:** Trivial (delete .nvmrc, remove engines field)  
-**Recommended:** ✅ Execute immediately  
+**Likelihood of breakage:** 1%
+**Impact if breaks:** Low (just documentation, no code changes)
+**Rollback complexity:** Trivial (delete .nvmrc, remove engines field)
+**Recommended:** ✅ Execute immediately
 
 ### Phase 2 (Lockfile Regeneration) - MODERATE RISK ⚠️⚠️
 
-**Likelihood of breakage:** 10-15%  
-**Impact if breaks:** Moderate (tests may fail, Jest 30 API changes)  
-**Rollback complexity:** Easy (git reset to backup tag)  
-**Recommended:** ✅ Execute with backup strategy  
+**Likelihood of breakage:** 10-15%
+**Impact if breaks:** Moderate (tests may fail, Jest 30 API changes)
+**Rollback complexity:** Easy (git reset to backup tag)
+**Recommended:** ✅ Execute with backup strategy
 
 ### Phase 3 (Dependency Updates) - VARIABLE RISK ⚠️⚠️⚠️
 
-**Likelihood of breakage:** 20-30% (depends on specific updates)  
-**Impact if breaks:** High (may require code changes, API migrations)  
-**Rollback complexity:** Moderate (may need per-package rollback)  
-**Recommended:** ⏳ Defer to v0.9.0 cycle  
+**Likelihood of breakage:** 20-30% (depends on specific updates)
+**Impact if breaks:** High (may require code changes, API migrations)
+**Rollback complexity:** Moderate (may need per-package rollback)
+**Recommended:** ⏳ Defer to v0.9.0 cycle
 
 ---
 
@@ -457,7 +457,7 @@ npm audit
 
 ---
 
-**Last Updated:** 2026-01-09  
-**Next Review:** Before v0.9.0-alpha release  
-**Owner:** Project maintainer  
+**Last Updated:** 2026-01-09
+**Next Review:** Before v0.9.0-alpha release
+**Owner:** Project maintainer
 **Status:** 📋 Planning → ⏭️ Ready for Phase 1 execution

@@ -47,13 +47,13 @@ Tests the complete geolocation workflow from start to finish:
 test('should execute complete workflow from geolocation to display', async () => {
     // 1. Initialize position
     const position = new GeoPosition(mockCoords);
-    
+
     // 2. Reverse geocode
     const addressData = await geocoder.getReverseGeocodedData(...);
-    
+
     // 3. Extract Brazilian address
     const brazilianAddress = AddressDataExtractor.getBrazilianStandardAddress(addressData);
-    
+
     // 4. Verify complete workflow
     expect(brazilianAddress.municipio).toBe('São Paulo');
 });
@@ -90,10 +90,10 @@ test('should detect municipality change and trigger high-priority speech', async
     // 1. Create addresses
     const address1 = getBrazilianStandardAddress({ city: 'São Paulo' });
     const address2 = getBrazilianStandardAddress({ city: 'Campinas' });
-    
+
     // 2. Detect change
     expect(address1.municipio !== address2.municipio).toBe(true);
-    
+
     // 3. Queue high-priority speech
     speechQueue.enqueue(`Entrando em ${address2.municipio}`, 'high');
     expect(speechQueue.items[0].priority).toBe('high');
@@ -141,10 +141,10 @@ test('should process complete São Paulo address from OSM to Brazilian format', 
             postcode: '01310-200'
         }
     };
-    
+
     // 2. Extract Brazilian address
     const brazilianAddress = AddressDataExtractor.getBrazilianStandardAddress(osmResponse);
-    
+
     // 3. Verify all components
     expect(brazilianAddress.logradouro).toBe('Avenida Paulista');
     expect(brazilianAddress.bairro).toBe('Bela Vista');
@@ -186,10 +186,10 @@ Tests error handling and recovery mechanisms:
 ```javascript
 test('should handle network timeout gracefully', async () => {
     // Mock timeout
-    global.fetch.mockImplementationOnce(() => 
+    global.fetch.mockImplementationOnce(() =>
         Promise.reject(new Error('Network timeout'))
     );
-    
+
     // Should handle error gracefully
     try {
         await geocoder.getReverseGeocodedData(lat, lon);
@@ -240,25 +240,25 @@ test('should handle complete navigation session', async () => {
         { lat: -23.5606, lon: -46.6556, bairro: 'Jardins' },
         { lat: -23.5707, lon: -46.6779, bairro: 'Pinheiros' },
     ];
-    
+
     let previousAddress = null;
-    
+
     for (const point of route) {
         // 1. Create position
         const position = new GeoPosition(point);
-        
+
         // 2. Geocode
         const data = await geocoder.getReverseGeocodedData(...);
         const address = AddressDataExtractor.getBrazilianStandardAddress(data);
-        
+
         // 3. Detect changes
         if (previousAddress && address.bairro !== previousAddress.bairro) {
             speechQueue.enqueue(`Entrando no bairro ${address.bairro}`, 'normal');
         }
-        
+
         previousAddress = address;
     }
-    
+
     expect(speechQueue.items.length).toBeGreaterThan(0);
 });
 ```
@@ -368,13 +368,13 @@ describe('E2E: [Feature Name]', () => {
         test('should [expected behavior]', async () => {
             // 1. Setup
             const position = new GeoPosition(coords);
-            
+
             // 2. Mock external dependencies
             global.fetch.mockResolvedValueOnce({ ... });
-            
+
             // 3. Execute workflow
             const result = await performWorkflow();
-            
+
             // 4. Verify results
             expect(result).toBeDefined();
             expect(result.property).toBe(expectedValue);
@@ -428,8 +428,8 @@ These E2E tests are part of the CI pipeline:
 
 ## Version
 
-E2E Test Suite Version: **1.0.0**  
-Guia.js Version: **0.6.0-alpha**  
+E2E Test Suite Version: **1.0.0**
+Guia.js Version: **0.6.0-alpha**
 Last Updated: 2024
 
 ## Contributing

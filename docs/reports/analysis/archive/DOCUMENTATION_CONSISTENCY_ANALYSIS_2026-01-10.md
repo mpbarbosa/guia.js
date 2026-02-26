@@ -1,12 +1,12 @@
 # Documentation Consistency Analysis Report
 
-**Project**: Guia Turístico (Tourist Guide Web Application)  
-**Analysis Date**: 2026-01-10  
-**Project Type**: nodejs_library  
-**Primary Language**: JavaScript  
-**Total Documentation Files**: 209  
-**Modified Files Count**: 105  
-**Change Scope**: mixed-changes  
+**Project**: Guia Turístico (Tourist Guide Web Application)
+**Analysis Date**: 2026-01-10
+**Project Type**: nodejs_library
+**Primary Language**: JavaScript
+**Total Documentation Files**: 209
+**Modified Files Count**: 105
+**Change Scope**: mixed-changes
 **Analyzer**: GitHub Copilot CLI
 
 ---
@@ -28,8 +28,8 @@ The Guia Turístico project demonstrates **strong documentation practices** with
 
 ### 1. Test Count Discrepancy - **CRITICAL**
 
-**Priority**: ⚠️ CRITICAL  
-**Impact**: Misleading metrics in core documentation (README, copilot-instructions)  
+**Priority**: ⚠️ CRITICAL
+**Impact**: Misleading metrics in core documentation (README, copilot-instructions)
 **Severity**: High - Affects project credibility and CI/CD validation
 
 **Problem**: Documentation reports **1,516 passing tests** but actual test suite shows **1,516 passing tests**.
@@ -84,8 +84,8 @@ Tests:       137 skipped, 1516 passed, 1653 total
 
 ### 2. Broken Reference Patterns - **CRITICAL**
 
-**Priority**: ⚠️ CRITICAL  
-**Impact**: Confusing code examples with regex patterns  
+**Priority**: ⚠️ CRITICAL
+**Impact**: Confusing code examples with regex patterns
 **Severity**: Medium - Creates ambiguity but doesn't break functionality
 
 **Problem**: 11 documentation files contain `/* ... */` and regex patterns that appear to be broken references but are actually **code examples**.
@@ -133,8 +133,8 @@ docs/misc/PROJECT_CLARIFICATION.md:
 
 ### 3. Version Number Inconsistency - **HIGH**
 
-**Priority**: ⚠️ HIGH  
-**Impact**: Confusion about project version history  
+**Priority**: ⚠️ HIGH
+**Impact**: Confusion about project version history
 **Severity**: Medium - Mix of correct (0.9.0-alpha) and outdated (0.9.0-alpha) references
 
 **Problem**: Documentation contains **88 version references** with **mixed versions** (0.9.0-alpha and 0.9.0-alpha).
@@ -205,8 +205,8 @@ docs/architecture/POSITION_MANAGER.md line 5: "Introduced in version 0.9.0-alpha
 
 ### 4. Project Name Confusion - **HIGH**
 
-**Priority**: ⚠️ HIGH  
-**Impact**: Inconsistent project identity in documentation  
+**Priority**: ⚠️ HIGH
+**Impact**: Inconsistent project identity in documentation
 **Severity**: Medium - **34 files** still reference "guia_js" instead of "guia_turistico"
 
 **Problem**: Project was renamed from "guia_js" (library) to "guia_turistico" (application), but documentation contains mixed references.
@@ -259,8 +259,8 @@ Line 123: "guia.js"  ❌ Ambiguous (file exists but implies old project name)
 
 ### 5. Missing Documentation Cross-References - **HIGH**
 
-**Priority**: ⚠️ HIGH  
-**Impact**: Navigation difficulties, broken learning paths  
+**Priority**: ⚠️ HIGH
+**Impact**: Navigation difficulties, broken learning paths
 **Severity**: Low - References exist but not documented
 
 **Problem**: `.github/CONTRIBUTING.md` references 3 documentation files that exist but aren't properly indexed.
@@ -318,8 +318,8 @@ Line 427: See [TDD_GUIDE.md](./TDD_GUIDE.md)  ✅ File exists
 
 ### 6. CDN URL References - Outdated Examples
 
-**Priority**: 🔶 HIGH  
-**Impact**: Users may reference wrong CDN versions  
+**Priority**: 🔶 HIGH
+**Impact**: Users may reference wrong CDN versions
 **Severity**: Low - Examples work but show outdated version
 
 **Problem**: README.md contains CDN examples referencing **0.9.0-alpha** and **0.9.0-alpha** instead of current **0.9.0-alpha**.
@@ -361,8 +361,8 @@ Line 626: curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/pac
 
 ### 7. Test Execution Timing Inconsistency
 
-**Priority**: 🔶 HIGH  
-**Impact**: Developer expectations vs actual performance  
+**Priority**: 🔶 HIGH
+**Impact**: Developer expectations vs actual performance
 **Severity**: Low - Minor timing discrepancies
 
 **Problem**: Documentation reports varied test execution times (**5, 6, 7, 10 seconds**).
@@ -401,8 +401,8 @@ Time:        6.817 s  ≈ 7 seconds ✅
 
 ### 8. Test HTML File References - Obsolete
 
-**Priority**: 🔶 HIGH  
-**Impact**: Confusing references to legacy test files  
+**Priority**: 🔶 HIGH
+**Impact**: Confusing references to legacy test files
 **Severity**: Low - **172 references** to `test.html`, only **23** to correct `src/index.html`
 
 **Problem**: Documentation extensively references `test.html` (legacy file) instead of `src/index.html` (correct SPA entry).
@@ -445,8 +445,8 @@ demo-issue-218.js         ⚠️ Demo file
 
 ### 9. README.md Structure Section - Inconsistent
 
-**Priority**: 🔶 HIGH  
-**Impact**: Incorrect project structure visualization  
+**Priority**: 🔶 HIGH
+**Impact**: Incorrect project structure visualization
 **Severity**: Medium - Shows "guia_js/" instead of "guia_turistico/"
 
 **Problem**: README.md lines 121-150 show project structure with wrong root directory name.
@@ -472,8 +472,8 @@ guia_turistico/
 
 ### 10. JSDoc Coverage - Missing Examples
 
-**Priority**: 🔶 HIGH  
-**Impact**: Inconsistent API documentation quality  
+**Priority**: 🔶 HIGH
+**Impact**: Inconsistent API documentation quality
 **Severity**: Low - Framework exists but examples needed
 
 **Problem**: `.github/JSDOC_GUIDE.md` exists but actual JSDoc coverage not documented.
@@ -524,8 +524,8 @@ See `src/core/GeoPosition.js` for excellent JSDoc examples:
 
 ### 11. Architecture Documentation - Version Confusion
 
-**Priority**: 🔶 HIGH  
-**Impact**: Historical context unclear  
+**Priority**: 🔶 HIGH
+**Impact**: Historical context unclear
 **Severity**: Low - Mix of current and historical version references
 
 **Problem**: Architecture docs correctly reference "Introduced in version 0.9.0-alpha" but lack current version context.
@@ -569,8 +569,8 @@ docs/architecture/POSITION_MANAGER.md:
 
 ### 12. Contribution Workflow - Missing Validation Commands
 
-**Priority**: 🔶 HIGH  
-**Impact**: Contributors may skip important validation steps  
+**Priority**: 🔶 HIGH
+**Impact**: Contributors may skip important validation steps
 **Severity**: Low - Commands documented separately but not in workflow
 
 **Problem**: `.github/CONTRIBUTING.md` references validation but doesn't show exact commands.
@@ -622,8 +622,8 @@ npm run test:all
 
 ### 13. Documentation Date Auditing
 
-**Priority**: 🔷 MEDIUM  
-**Impact**: Helps identify stale documentation  
+**Priority**: 🔷 MEDIUM
+**Impact**: Helps identify stale documentation
 
 **Observation**: Most docs lack "Last Updated" fields.
 
@@ -633,8 +633,8 @@ npm run test:all
 
 ### 14. Issue Template References
 
-**Priority**: 🔷 MEDIUM  
-**Impact**: Better issue creation guidance  
+**Priority**: 🔷 MEDIUM
+**Impact**: Better issue creation guidance
 
 **Observation**: `docs/issue-189/CREATE_ISSUES_GUIDE.md` provides excellent templates but isn't linked from CONTRIBUTING.md.
 
@@ -644,8 +644,8 @@ npm run test:all
 
 ### 15. Testing Documentation Structure
 
-**Priority**: 🔷 MEDIUM  
-**Impact**: Easier navigation of testing resources  
+**Priority**: 🔷 MEDIUM
+**Impact**: Easier navigation of testing resources
 
 **Observation**: Testing documentation scattered across multiple files (TESTING.md, TDD_GUIDE.md, UNIT_TEST_GUIDE.md, TESTING_HTML_GENERATION.md).
 
@@ -657,7 +657,7 @@ npm run test:all
 
 ### 16. Documentation Style Consistency
 
-**Priority**: 🔵 LOW  
+**Priority**: 🔵 LOW
 **Observation**: Mix of emoji usage in documentation (some docs use ✅ ❌ ⚠️, others don't).
 
 **Recommendation**: Standardize emoji usage for visual consistency (optional style guide).
@@ -666,7 +666,7 @@ npm run test:all
 
 ### 17. Code Example Formatting
 
-**Priority**: 🔵 LOW  
+**Priority**: 🔵 LOW
 **Observation**: Code examples generally well-formatted but mix of `javascript` and `js` syntax highlighting.
 
 **Recommendation**: Standardize code block language tags to `javascript` for consistency.
@@ -675,7 +675,7 @@ npm run test:all
 
 ### 18. External Link Checking
 
-**Priority**: 🔵 LOW  
+**Priority**: 🔵 LOW
 **Observation**: No automated external link checking for API documentation references (OpenStreetMap, IBGE, Google Maps).
 
 **Recommendation**: Add GitHub Action to periodically check external link validity.
@@ -779,6 +779,6 @@ The Guia Turístico project demonstrates **strong documentation practices** with
 
 ---
 
-**Report Generated**: 2026-01-10  
-**Analysis Method**: Comprehensive consistency analysis across 209 documentation files  
+**Report Generated**: 2026-01-10
+**Analysis Method**: Comprehensive consistency analysis across 209 documentation files
 **Next Review**: Recommended after 0.9.0 release or quarterly (2026-04-10)

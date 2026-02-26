@@ -1,7 +1,7 @@
 # Guia Turístico - Troubleshooting Guide
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-02-11  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-02-11
 **Status**: Complete
 
 ---
@@ -257,7 +257,7 @@ If rate limited:
    fetch('/libs/sidra/tab6579_municipios.json')
      .then(r => r.json())
      .then(console.log);
-   
+
    // Should show JSON with municipality data
    ```
 
@@ -758,7 +758,7 @@ Future versions may add user controls.
 
 ---
 
-## Still Having Issues?
+## Still Having Issues
 
 ### Before Reporting a Bug
 
@@ -789,7 +789,7 @@ When reporting bugs, provide:
 
 ---
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-02-11  
-**Maintainer**: GitHub Copilot CLI  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-02-11
+**Maintainer**: GitHub Copilot CLI
 **Status**: ✅ Complete

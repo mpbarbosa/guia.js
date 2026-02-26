@@ -55,10 +55,10 @@ This guide defines the JSDoc documentation standards for the Guia Turístico pro
 ```javascript
 /**
  * Geographic position data wrapper with convenience methods.
- * 
+ *
  * Provides an immutable wrapper around browser Geolocation API position data,
  * adding convenience methods for distance calculations and accuracy assessment.
- * 
+ *
  * @module core/GeoPosition
  * @since 0.6.0-alpha
  * @author Marcelo Pereira Barbosa
@@ -70,13 +70,13 @@ This guide defines the JSDoc documentation standards for the Guia Turístico pro
 ```javascript
 /**
  * Represents a geographic position with enhanced methods.
- * 
+ *
  * This class wraps the browser's Geolocation API position object and provides
  * additional utility methods while maintaining immutability.
- * 
+ *
  * @class
  * @immutable All instances are frozen after creation
- * 
+ *
  * @example
  * const position = new GeoPosition({
  *   coords: {
@@ -98,27 +98,27 @@ class GeoPosition {
 ```javascript
 /**
  * Classifies GPS accuracy into quality levels based on accuracy value in meters.
- * 
+ *
  * Provides a standardized way to assess the quality of GPS position data
  * based on the accuracy reported by the device. Lower values indicate better accuracy.
- * 
+ *
  * Quality Levels:
  * - excellent: ≤ 10 meters (high precision, suitable for all applications)
- * - good: 11-30 meters (good precision, suitable for most applications)  
+ * - good: 11-30 meters (good precision, suitable for most applications)
  * - medium: 31-100 meters (moderate precision, may be acceptable for some uses)
  * - bad: 101-200 meters (poor precision, generally not recommended)
  * - very bad: > 200 meters (very poor precision, should be rejected)
- * 
+ *
  * @static
  * @param {number} accuracy - GPS accuracy value in meters from GeolocationCoordinates
  * @returns {string} Quality classification: 'excellent'|'good'|'medium'|'bad'|'very bad'
- * 
+ *
  * @example
  * // Classify different accuracy levels
  * console.log(GeoPosition.getAccuracyQuality(5));   // 'excellent'
  * console.log(GeoPosition.getAccuracyQuality(25));  // 'good'
  * console.log(GeoPosition.getAccuracyQuality(75));  // 'medium'
- * 
+ *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates/accuracy}
  * @since 0.6.0-alpha
  */
@@ -132,13 +132,13 @@ static getAccuracyQuality(accuracy) {
 ```javascript
 /**
  * Creates a chronometer instance for tracking position-related events.
- * 
+ *
  * @param {HTMLElement} element - DOM element where chronometer will be displayed
  * @param {Object} [eventConfig] - Configuration object for position events
  * @param {string} [eventConfig.positionUpdate='strCurrPosUpdate'] - Event name for successful position updates
- * @param {string} [eventConfig.immediateAddressUpdate='strImmediateAddressUpdate'] - Event name for immediate address updates  
+ * @param {string} [eventConfig.immediateAddressUpdate='strImmediateAddressUpdate'] - Event name for immediate address updates
  * @param {string} [eventConfig.positionNotUpdate='strCurrPosNotUpdate'] - Event name for rejected position updates
- * 
+ *
  * @example
  * const chrono = new Chronometer(document.getElementById('timer'), {
  *   positionUpdate: 'gps-updated',
@@ -155,21 +155,21 @@ constructor(element, eventConfig = {}) {
 ```javascript
 /**
  * Calculates the great-circle distance between two geographic coordinates.
- * 
+ *
  * Uses the Haversine formula to compute the shortest distance over Earth's surface,
  * assuming a spherical Earth with radius of 6371 km.
- * 
+ *
  * @param {number} lat1 - Latitude of first point in decimal degrees
  * @param {number} lon1 - Longitude of first point in decimal degrees
  * @param {number} lat2 - Latitude of second point in decimal degrees
  * @param {number} lon2 - Longitude of second point in decimal degrees
  * @returns {number} Distance in meters (rounded to nearest meter)
- * 
+ *
  * @example
  * // Distance between São Paulo and Rio de Janeiro
  * const distance = calculateDistance(-23.5505, -46.6333, -22.9068, -43.1729);
  * console.log(distance); // Approximately 357000 meters (357 km)
- * 
+ *
  * @see {@link https://en.wikipedia.org/wiki/Haversine_formula} Haversine formula
  * @since 0.6.0-alpha
  */
@@ -185,17 +185,17 @@ export function calculateDistance(lat1, lon1, lat2, lon2) {
 ```javascript
 /**
  * Singleton manager for current geographic position state.
- * 
+ *
  * Maintains a single source of truth for the current position across the application.
  * Uses the singleton pattern to ensure only one instance exists.
- * 
+ *
  * @class
  * @singleton
- * 
+ *
  * @example
  * // Get singleton instance with initial position
  * const manager = PositionManager.getInstance(position);
- * 
+ *
  * // Get existing instance (returns same instance)
  * const sameManager = PositionManager.getInstance();
  * console.log(manager === sameManager); // true
@@ -203,7 +203,7 @@ export function calculateDistance(lat1, lon1, lat2, lon2) {
 class PositionManager {
   /**
    * Gets the singleton instance of PositionManager.
-   * 
+   *
    * @static
    * @param {Object} [position] - Initial position (only used on first call)
    * @returns {PositionManager} The singleton instance
@@ -219,9 +219,9 @@ class PositionManager {
 ```javascript
 /**
  * Factory for creating display components based on configuration.
- * 
+ *
  * @class
- * 
+ *
  * @example
  * const factory = new DisplayerFactory();
  * const displayer = factory.createPositionDisplayer(document, 'map-container');
@@ -229,7 +229,7 @@ class PositionManager {
 class DisplayerFactory {
   /**
    * Creates a position displayer instance.
-   * 
+   *
    * @param {Document} document - DOM document object
    * @param {string} elementId - ID of the container element
    * @returns {HTMLPositionDisplayer} Configured position displayer
@@ -246,17 +246,17 @@ class DisplayerFactory {
 ```javascript
 /**
  * Wrapper for browser's Geolocation API with enhanced error handling.
- * 
+ *
  * Provides a consistent interface to geolocation services with:
  * - Dependency injection for testability
  * - Standardized error handling
  * - High-accuracy position requests
- * 
+ *
  * @class
- * 
+ *
  * @example
  * const service = new GeolocationService(navigator.geolocation);
- * 
+ *
  * service.getCurrentPosition(
  *   (position) => console.log('Location:', position.coords),
  *   (error) => console.error('Error:', error.message)
@@ -265,7 +265,7 @@ class DisplayerFactory {
 class GeolocationService {
   /**
    * Creates a geolocation service instance.
-   * 
+   *
    * @param {Geolocation} geolocation - Browser's geolocation API object (injected for testing)
    */
   constructor(geolocation) {
@@ -279,14 +279,14 @@ class GeolocationService {
 ```javascript
 /**
  * Formats milliseconds into human-readable time string.
- * 
+ *
  * @param {number} milliseconds - Time duration in milliseconds
  * @returns {string} Formatted time string in HH:MM:SS format
- * 
+ *
  * @example
  * formatTime(3661000); // "01:01:01"
  * formatTime(90000);   // "00:01:30"
- * 
+ *
  * @private
  */
 function formatTime(milliseconds) {
@@ -299,16 +299,16 @@ function formatTime(milliseconds) {
 ```javascript
 /**
  * Calculates the accuracy quality for the current position.
- * 
+ *
  * @returns {string} Quality classification for current position accuracy
- * 
+ *
  * @deprecated Use the `accuracyQuality` property instead - this method has a bug
  * @see GeoPosition#accuracyQuality
- * 
+ *
  * @example
  * // ❌ Old way (deprecated)
  * const quality = position.calculateAccuracyQuality();
- * 
+ *
  * // ✅ New way (recommended)
  * const quality = position.accuracyQuality;
  */
@@ -375,7 +375,7 @@ Use square brackets `[param]` for optional parameters:
  * @example
  * // Basic usage
  * const result = myFunction('input');
- * 
+ *
  * @example
  * // Advanced usage with options
  * const result = myFunction('input', {
@@ -445,5 +445,5 @@ Maintain consistent tag ordering for readability:
 
 ---
 
-**Version**: 0.9.0-alpha  
+**Version**: 0.9.0-alpha
 **Last Updated**: 2026-01-11

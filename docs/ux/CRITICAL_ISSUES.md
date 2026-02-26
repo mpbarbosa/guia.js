@@ -1,16 +1,16 @@
 # Critical UX Issues - Must Fix Before Production
 
-**Date**: 2026-01-27  
-**Priority**: 🔴 CRITICAL  
-**Total Issues**: 10  
+**Date**: 2026-01-27
+**Priority**: 🔴 CRITICAL
+**Total Issues**: 10
 **Estimated Total Time**: 8-10 hours
 
 ---
 
 ## 🔴 Issue #1: Duplicate Element IDs Across Views
 
-**Severity**: CRITICAL  
-**Category**: Accessibility / Standards Compliance  
+**Severity**: CRITICAL
+**Category**: Accessibility / Standards Compliance
 **Impact**: Breaks accessibility, violates HTML spec, confuses screen readers
 
 ### Problem
@@ -37,7 +37,7 @@ Multiple views use the same IDs causing DOM conflicts:
 // After
 <div id="home-position-display">
 
-// Before (converter.js)  
+// Before (converter.js)
 <div id="position-display">
 
 // After
@@ -62,15 +62,15 @@ document.querySelectorAll('[id]').forEach(el => {
 });
 ```
 
-**Estimated Time**: 45 minutes  
+**Estimated Time**: 45 minutes
 **Priority**: P0 - Fix immediately
 
 ---
 
 ## 🔴 Issue #2: Form Validation Without Enforcement
 
-**Severity**: CRITICAL  
-**Category**: Data Validation / User Experience  
+**Severity**: CRITICAL
+**Category**: Data Validation / User Experience
 **Impact**: Wasted API calls, poor error handling, confusing UX
 
 ### Problem
@@ -95,22 +95,22 @@ Coordinate converter accepts invalid input:
 // Add to converter view
 function validateCoordinates(lat, lon) {
   const errors = [];
-  
+
   if (isNaN(lat) || lat < -90 || lat > 90) {
     errors.push('Latitude must be between -90 and 90');
   }
-  
+
   if (isNaN(lon) || lon < -180 || lon > 180) {
     errors.push('Longitude must be between -180 and 180');
   }
-  
+
   return errors;
 }
 
 // Update input attributes
-<input type="number" 
-       step="0.000001" 
-       min="-90" 
+<input type="number"
+       step="0.000001"
+       min="-90"
        max="90"
        required
        aria-describedby="lat-help">
@@ -131,15 +131,15 @@ expect(validateCoordinates(0, 181)).toContain('between -180 and 180');
 expect(validateCoordinates(45, 90)).toHaveLength(0);
 ```
 
-**Estimated Time**: 1 hour  
+**Estimated Time**: 1 hour
 **Priority**: P0 - Fix immediately
 
 ---
 
 ## 🔴 Issue #3: No Loading States
 
-**Severity**: CRITICAL  
-**Category**: User Experience / Perceived Performance  
+**Severity**: CRITICAL
+**Category**: User Experience / Perceived Performance
 **Impact**: Users think app is broken, confusion during API calls
 
 ### Problem
@@ -167,19 +167,19 @@ class LoadingStateManager {
   constructor() {
     this.activeRequests = new Set();
   }
-  
+
   startLoading(requestId, message = 'Carregando...') {
     this.activeRequests.add(requestId);
     this.updateUI(message);
   }
-  
+
   stopLoading(requestId) {
     this.activeRequests.delete(requestId);
     if (this.activeRequests.size === 0) {
       this.hideUI();
     }
   }
-  
+
   updateUI(message) {
     // Show spinner + message
     document.getElementById('loading-overlay').classList.add('active');
@@ -212,15 +212,15 @@ expect(screen.getByRole('status')).toHaveTextContent('Obtendo localização');
 await waitFor(() => expect(loadingOverlay).not.toBeVisible());
 ```
 
-**Estimated Time**: 2 hours  
+**Estimated Time**: 2 hours
 **Priority**: P0 - Fix immediately
 
 ---
 
 ## 🔴 Issue #4: Missing Empty States
 
-**Severity**: HIGH  
-**Category**: User Experience / First Impression  
+**Severity**: HIGH
+**Category**: User Experience / First Impression
 **Impact**: Confusing first-time user experience
 
 ### Problem
@@ -264,7 +264,7 @@ function renderEmptyState(type) {
       action: null
     }
   };
-  
+
   return `
     <div class="empty-state">
       <span class="empty-state-icon">${states[type].icon}</span>
@@ -293,15 +293,15 @@ expect(municipioCard).toHaveTextContent('Aguardando dados');
 expect(municipioCard.querySelector('.empty-state-icon')).toBeInTheDocument();
 ```
 
-**Estimated Time**: 1.5 hours  
+**Estimated Time**: 1.5 hours
 **Priority**: P1 - Fix before production
 
 ---
 
 ## 🔴 Issue #5: Touch Targets Too Small (Mobile)
 
-**Severity**: HIGH  
-**Category**: Mobile Accessibility  
+**Severity**: HIGH
+**Category**: Mobile Accessibility
 **Impact**: Buttons difficult to tap on mobile devices
 
 ### Problem
@@ -365,15 +365,15 @@ buttons.forEach(btn => {
 });
 ```
 
-**Estimated Time**: 30 minutes  
+**Estimated Time**: 30 minutes
 **Priority**: P1 - Fix before production
 
 ---
 
 ## 🔴 Issue #6: Color Contrast Violations
 
-**Severity**: HIGH  
-**Category**: Accessibility (WCAG AA)  
+**Severity**: HIGH
+**Category**: Accessibility (WCAG AA)
 **Impact**: Text unreadable for users with low vision
 
 ### Problem
@@ -433,15 +433,15 @@ const report = await lighthouse(url, { onlyCategories: ['accessibility'] });
 expect(report.lhr.categories.accessibility.score).toBeGreaterThan(0.9);
 ```
 
-**Estimated Time**: 1 hour  
+**Estimated Time**: 1 hour
 **Priority**: P1 - Fix before production
 
 ---
 
 ## 🔴 Issue #7: Inconsistent Disabled Button States
 
-**Severity**: MEDIUM  
-**Category**: User Experience  
+**Severity**: MEDIUM
+**Category**: User Experience
 **Impact**: Users can't tell when buttons are disabled
 
 ### Problem
@@ -509,15 +509,15 @@ expect(button).toBeDisabled();
 expect(button).toHaveClass('loading');
 ```
 
-**Estimated Time**: 30 minutes  
+**Estimated Time**: 30 minutes
 **Priority**: P1 - Fix before production
 
 ---
 
 ## 🔴 Issue #8: No Offline Support
 
-**Severity**: MEDIUM  
-**Category**: Resilience / User Experience  
+**Severity**: MEDIUM
+**Category**: Resilience / User Experience
 **Impact**: Complete failure in poor network conditions
 
 ### Problem
@@ -579,15 +579,15 @@ expect(await page.textContent('.offline-banner')).toContain('Sem conexão');
 expect(await page.textContent('#last-known-location')).toBeTruthy();
 ```
 
-**Estimated Time**: 2 hours (basic), 8 hours (full PWA)  
+**Estimated Time**: 2 hours (basic), 8 hours (full PWA)
 **Priority**: P2 - Important for production
 
 ---
 
 ## 🔴 Issue #9: Speech Synthesis Without Controls
 
-**Severity**: MEDIUM  
-**Category**: Accessibility (WCAG 1.4.2)  
+**Severity**: MEDIUM
+**Category**: Accessibility (WCAG 1.4.2)
 **Impact**: Violates WCAG audio control requirement
 
 ### Problem
@@ -614,11 +614,11 @@ class SpeechControls {
     this.enabled = localStorage.getItem('speech-enabled') === 'true';
     this.render();
   }
-  
+
   render() {
     return `
       <div class="speech-controls" role="region" aria-label="Controles de voz">
-        <button 
+        <button
           aria-pressed="${this.enabled}"
           aria-label="${this.enabled ? 'Desativar' : 'Ativar'} síntese de voz">
           ${this.enabled ? '🔊' : '🔇'}
@@ -626,9 +626,9 @@ class SpeechControls {
         ${this.enabled ? `
           <button aria-label="Pausar voz">⏸️</button>
           <button aria-label="Parar voz">⏹️</button>
-          <input type="range" 
-                 min="0" 
-                 max="1" 
+          <input type="range"
+                 min="0"
+                 max="1"
                  step="0.1"
                  aria-label="Volume"
                  value="0.8">
@@ -656,15 +656,15 @@ expect(window.speechSynthesis.cancel).toHaveBeenCalled();
 expect(localStorage.getItem('speech-enabled')).toBe('false');
 ```
 
-**Estimated Time**: 1.5 hours  
+**Estimated Time**: 1.5 hours
 **Priority**: P1 - Fix before production (WCAG compliance)
 
 ---
 
 ## 🔴 Issue #10: Mobile Viewport Issues
 
-**Severity**: MEDIUM  
-**Category**: Mobile Responsiveness  
+**Severity**: MEDIUM
+**Category**: Mobile Responsiveness
 **Impact**: Unusable on screens < 375px width
 
 ### Problem
@@ -723,7 +723,7 @@ expect(localStorage.getItem('speech-enabled')).toBe('false');
     flex-direction: column;
     gap: 8px;
   }
-  
+
   button {
     width: 100%;
   }
@@ -748,7 +748,7 @@ for (const width of sizes) {
 }
 ```
 
-**Estimated Time**: 1.5 hours  
+**Estimated Time**: 1.5 hours
 **Priority**: P1 - Fix before production
 
 ---

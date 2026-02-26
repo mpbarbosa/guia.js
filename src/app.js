@@ -7,6 +7,7 @@
  */
 
 import HomeViewController from './views/home.js';
+import HTMLHeaderDisplayer from './html/HTMLHeaderDisplayer.js';
 import { log, warn, error } from './utils/logger.js';
 import { VERSION_STRING } from './config/version.js';
 import { env } from './config/environment.js';
@@ -97,7 +98,10 @@ async function init() {
   
   // Initialize navigation
   initNavigation();
-  
+
+  // Initialize hero header — mirrors live municipio/bairro into the header subtitle
+  HTMLHeaderDisplayer.create(document);
+
   // Handle initial route
   handleRoute();
   

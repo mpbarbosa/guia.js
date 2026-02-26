@@ -91,7 +91,7 @@ Consider adding to CI/CD:
 ```yaml
 - name: Generate API Documentation
   run: npm run docs:generate
-  
+
 - name: Validate JSDoc
   run: npm run docs:generate 2>&1 | tee jsdoc.log && ! grep -i "error" jsdoc.log
 ```

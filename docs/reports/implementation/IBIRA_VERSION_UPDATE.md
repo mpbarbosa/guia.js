@@ -1,8 +1,8 @@
 # ibira.js Version Update
 
-**Date**: 2026-01-01  
-**Updated From**: v0.2.1-alpha  
-**Updated To**: v0.2.2-alpha  
+**Date**: 2026-01-01
+**Updated From**: v0.2.1-alpha
+**Updated To**: v0.2.2-alpha
 **Status**: ✅ Complete
 
 ## Changes Made
@@ -149,6 +149,6 @@ Follow the update procedure documented in `docs/IBIRA_INTEGRATION.md`:
 
 ---
 
-**Status**: ✅ **Update Complete and Verified**  
-**Version**: 0.9.0-alpha  
+**Status**: ✅ **Update Complete and Verified**
+**Version**: 0.9.0-alpha
 **Last Updated**: 2026-01-01

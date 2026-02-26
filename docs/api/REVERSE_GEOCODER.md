@@ -1,7 +1,7 @@
 # ReverseGeocoder API Documentation
 
-**Version:** 0.9.0-alpha  
-**Module:** `services/ReverseGeocoder`  
+**Version:** 0.9.0-alpha
+**Module:** `services/ReverseGeocoder`
 **Location:** `src/services/ReverseGeocoder.js`
 
 ## Overview
@@ -512,7 +512,7 @@ try {
   } else {
     console.error('Geocoding failed:', error);
   }
-  
+
   // Observers are notified automatically on error
 }
 ```
@@ -553,7 +553,7 @@ https://nominatim.openstreetmap.org/reverse?format=json&lat={latitude}&lon={long
 
 - `format=json`: Response format
 - `lat={latitude}`: Latitude coordinate
-- `lon={longitude}`: Longitude coordinate  
+- `lon={longitude}`: Longitude coordinate
 - `zoom=18`: Detail level (18 = building level)
 - `addressdetails=1`: Include detailed address components
 
@@ -610,7 +610,7 @@ When `AddressDataExtractor` is configured, addresses are converted to:
 ```javascript
 {
   logradouro: "Praça da Sé",
-  bairro: "Centro", 
+  bairro: "Centro",
   municipio: "São Paulo",
   siglaUF: "SP",
   estado: "São Paulo",
@@ -671,7 +671,7 @@ const displayObserver = {
       console.error('Address fetch failed:', error);
       return;
     }
-    
+
     console.log('City:', enderecoPadronizado.municipio);
     console.log('State:', enderecoPadronizado.siglaUF);
     console.log('Neighborhood:', enderecoPadronizado.bairro);

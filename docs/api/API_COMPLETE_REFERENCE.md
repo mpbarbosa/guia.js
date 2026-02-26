@@ -1,6 +1,6 @@
 # Complete API Reference
 
-**Version**: 0.9.0-alpha  
+**Version**: 0.9.0-alpha
 **Last Updated**: 2026-02-11
 
 This document provides a comprehensive reference for all public APIs in the Guia Turístico application.
@@ -1427,9 +1427,9 @@ console.log(APP_VERSION);  // "0.9.0-alpha"
 #### Timing Configuration
 
 ```javascript
-import { 
-  MINIMUM_TIME_CHANGE, 
-  MINIMUM_DISTANCE_CHANGE 
+import {
+  MINIMUM_TIME_CHANGE,
+  MINIMUM_DISTANCE_CHANGE
 } from './config/defaults.js';
 
 // Position update thresholds
@@ -1641,10 +1641,10 @@ addrDisplayer.display(standardAddress);
 
 ## Support and Resources
 
-**Repository**: https://github.com/mpbarbosa/guia_turistico  
-**Documentation**: `/docs/`  
-**Examples**: `/examples/`  
-**Tests**: `__tests__/`  
+**Repository**: https://github.com/mpbarbosa/guia_turistico
+**Documentation**: `/docs/`
+**Examples**: `/examples/`
+**Tests**: `__tests__/`
 
 **Related Projects**:
 
@@ -1653,6 +1653,6 @@ addrDisplayer.display(standardAddress);
 
 ---
 
-**Last Updated**: 2026-02-11  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-02-11
+**Version**: 0.9.0-alpha
 **Status**: ✅ Complete and Validated

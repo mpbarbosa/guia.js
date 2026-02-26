@@ -8,7 +8,7 @@ This document has been relocated to improve documentation organization:
 
 ---
 
-## Why was this moved?
+## Why was this moved
 
 As part of the documentation consolidation effort (Issue 2.1), testing-related documentation is being centralized in the `docs/testing/` directory for better discoverability and organization.
 
@@ -20,5 +20,5 @@ As part of the documentation consolidation effort (Issue 2.1), testing-related d
 
 ---
 
-**Last Updated**: 2026-02-13  
+**Last Updated**: 2026-02-13
 **Status**: Redirect stub (content moved to testing/HTML_GENERATION.md)

@@ -1,9 +1,9 @@
 # Visual Enhancement: Card Elevation Inconsistent
 
-**Issue**: Enhancement 7 - Card Elevation Inconsistent  
-**Priority**: Low  
-**Version**: 0.11.0-alpha  
-**Date**: 2026-02-15  
+**Issue**: Enhancement 7 - Card Elevation Inconsistent
+**Priority**: Low
+**Version**: 0.11.0-alpha
+**Date**: 2026-02-15
 **Status**: ✅ Phase 1 Complete (Foundation + Documentation)
 
 ---
@@ -40,7 +40,7 @@ Shadow definitions exist (`--shadow-sm` to `--shadow-xl`) but cards use custom `
 
 ```css
 /* highlight-cards.css:30 */
-box-shadow: 
+box-shadow:
   0 2px 4px rgba(103, 80, 164, 0.15),
   0 1px 2px rgba(103, 80, 164, 0.1);
 
@@ -103,7 +103,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 #### Level 1: Resting Cards (1dp)
 
 ```css
---md-sys-elevation-level1: 
+--md-sys-elevation-level1:
   0 1px 2px 0 rgba(0, 0, 0, 0.3),    /* Key shadow */
   0 1px 3px 1px rgba(0, 0, 0, 0.15); /* Ambient shadow */
 ```
@@ -116,7 +116,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 #### Level 2: Raised Cards (3dp)
 
 ```css
---md-sys-elevation-level2: 
+--md-sys-elevation-level2:
   0 1px 2px 0 rgba(0, 0, 0, 0.3),
   0 2px 6px 2px rgba(0, 0, 0, 0.15);
 ```
@@ -129,7 +129,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 #### Level 3: Menus & Dialogs (6dp)
 
 ```css
---md-sys-elevation-level3: 
+--md-sys-elevation-level3:
   0 1px 3px 0 rgba(0, 0, 0, 0.3),
   0 4px 8px 3px rgba(0, 0, 0, 0.15);
 ```
@@ -137,7 +137,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 #### Level 4: Modals & Navigation (8dp)
 
 ```css
---md-sys-elevation-level4: 
+--md-sys-elevation-level4:
   0 2px 3px 0 rgba(0, 0, 0, 0.3),
   0 6px 10px 4px rgba(0, 0, 0, 0.15);
 ```
@@ -145,7 +145,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
 #### Level 5: Overlays & Toasts (12dp)
 
 ```css
---md-sys-elevation-level5: 
+--md-sys-elevation-level5:
   0 4px 4px 0 rgba(0, 0, 0, 0.3),
   0 8px 12px 6px rgba(0, 0, 0, 0.15);
 ```
@@ -195,7 +195,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
   --md-sys-elevation-level3: 0 1px 3px 0 rgba(0,0,0,0.3), ...;
   --md-sys-elevation-level4: 0 2px 3px 0 rgba(0,0,0,0.3), ...;
   --md-sys-elevation-level5: 0 4px 4px 0 rgba(0,0,0,0.3), ...;
-  
+
   /* Legacy mapping */
   --shadow-sm: var(--md-sys-elevation-level1);
   --shadow-md: var(--md-sys-elevation-level2);
@@ -313,7 +313,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
    // __tests__/visual/elevation.test.js
    test('highlight cards have correct elevation', async () => {
      const card = await page.$('.highlight-card');
-     const shadow = await card.evaluate(el => 
+     const shadow = await card.evaluate(el =>
        getComputedStyle(el).boxShadow
      );
      expect(shadow).toContain('rgba(0, 0, 0, 0.3)');
@@ -325,7 +325,7 @@ Level 5 (12dp)   ▫️▫️▫️▫️▫️ Overlay    Toasts, overlays
    ```css
    @media (prefers-color-scheme: dark) {
      :root {
-       --md-sys-elevation-level1: 
+       --md-sys-elevation-level1:
          0 1px 2px 0 rgba(0, 0, 0, 0.5),  /* Darker */
          0 1px 3px 1px rgba(0, 0, 0, 0.25);
      }
@@ -394,14 +394,14 @@ Is the component interactive (clickable/focusable)?
 ```css
 /* highlight-cards.css:30 */
 .highlight-card {
-  box-shadow: 
+  box-shadow:
     0 2px 4px rgba(103, 80, 164, 0.15),
     0 1px 2px rgba(103, 80, 164, 0.1);
   transition: box-shadow 0.3s ease;
 }
 
 .highlight-card:hover {
-  box-shadow: 
+  box-shadow:
     0 4px 8px rgba(103, 80, 164, 0.2),
     0 2px 4px rgba(103, 80, 164, 0.15);
 }
@@ -538,7 +538,7 @@ describe('Elevation System', () => {
     expect(root.getPropertyValue('--md-sys-elevation-level1')).toContain('rgba');
     // ... test all levels
   });
-  
+
   test('utility classes apply elevation', () => {
     const el = document.createElement('div');
     el.className = 'elevation-1';
@@ -557,11 +557,11 @@ test('highlight cards elevation', async () => {
   await page.goto('http://localhost:9000');
   const card = await page.$('.highlight-card');
   await card.screenshot({ path: 'screenshots/card-resting.png' });
-  
+
   await card.hover();
   await page.waitForTimeout(200); // Wait for transition
   await card.screenshot({ path: 'screenshots/card-hover.png' });
-  
+
   // Compare with baseline
   expect(await compareImages('card-resting.png', 'baseline/card-resting.png'))
     .toBeLessThan(0.01); // 1% difference threshold
@@ -586,17 +586,17 @@ def calculate_shadow_contrast(shadow_color, background):
     """
     # Extract RGBA values
     r, g, b, a = parse_rgba(shadow_color)
-    
+
     # Calculate relative luminance
     def luminance(r, g, b):
         def adjust(c):
             c = c / 255.0
             return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
         return 0.2126 * adjust(r) + 0.7152 * adjust(g) + 0.0722 * adjust(b)
-    
+
     L1 = luminance(*parse_rgb(background))
     L2 = luminance(r, g, b)
-    
+
     # Calculate contrast
     lighter = max(L1, L2)
     darker = min(L1, L2)

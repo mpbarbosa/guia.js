@@ -8,7 +8,7 @@
 
 This document catalogs patterns that are **NOT broken references** but may be incorrectly flagged by automated documentation checkers. These patterns are intentional and valid parts of the documentation.
 
-**Last Updated**: 2026-01-06  
+**Last Updated**: 2026-01-06
 **Applies to**: All automated documentation validation tools
 
 ---
@@ -17,8 +17,8 @@ This document catalogs patterns that are **NOT broken references** but may be in
 
 ### 1. Code Example Placeholders: `/* ... */`
 
-**Pattern**: JavaScript comment syntax used as placeholder in code examples  
-**Count**: 29+ occurrences across documentation  
+**Pattern**: JavaScript comment syntax used as placeholder in code examples
+**Count**: 29+ occurrences across documentation
 **Status**: ✅ **Valid** - Not a broken reference
 
 #### Examples from Documentation
@@ -60,8 +60,8 @@ class Chronometer {
 
 ### 2. Regular Expression Patterns in Code
 
-**Pattern**: Regex patterns for HTML tag matching  
-**Count**: Multiple occurrences  
+**Pattern**: Regex patterns for HTML tag matching
+**Count**: Multiple occurrences
 **Status**: ✅ **Valid** - Not a broken reference
 
 #### Examples from Documentation
@@ -87,7 +87,7 @@ const selfClosingTags = (html.match(/<\w+[^>]*\/>/g) || []).length;
 **Common Regex Patterns**:
 
 - `/<\w+/g` - Opening HTML tags
-- `/<\/\w+>/g` - Closing HTML tags  
+- `/<\/\w+>/g` - Closing HTML tags
 - `/<\w+[^>]*\/>/g` - Self-closing tags
 - `/pattern/flags` - General regex syntax
 
@@ -105,8 +105,8 @@ const selfClosingTags = (html.match(/<\w+[^>]*\/>/g) || []).length;
 
 ### 3. Descriptive Text with Slashes (Not File Paths)
 
-**Pattern**: Prose text containing forward slashes for description  
-**Count**: Multiple occurrences  
+**Pattern**: Prose text containing forward slashes for description
+**Count**: Multiple occurrences
 **Status**: ✅ **Valid** - Not a broken reference
 
 #### Examples from Documentation
@@ -219,10 +219,10 @@ else:
 exclude_patterns:
   # JavaScript comment placeholders
   - '/\*\s*\.\.\.\s*\*/'
-  
+
   # Regex patterns in code
   - '/\/[^\/]+\/[gimsuy]*/'
-  
+
   # Text in parentheses with explanatory context
   - '\([^)]*(?:for|about|regarding)[^)]*\/[^)]*\)'
 
@@ -268,7 +268,7 @@ file_extensions:
 | Descriptive text | 5+ | 5+ | 0 |
 | **Total** | **44+** | **44+** | **0** |
 
-**Impact**: 44+ false positives flagged by automated checker  
+**Impact**: 44+ false positives flagged by automated checker
 **Resolution**: Apply exclusion rules documented above
 
 ---
@@ -291,7 +291,7 @@ file_extensions:
 ```javascript
 // Skip validation for code examples
 function isCodeExample(line) {
-  return line.includes('/* ... */') || 
+  return line.includes('/* ... */') ||
          /\/[^\/]+\/[gimsuy]/.test(line);
 }
 
@@ -315,7 +315,7 @@ documentation_validation:
     - "/* ... */"  # Code placeholders
     - regex_syntax  # Regex patterns in code
     - descriptive_text  # Prose with slashes
-  
+
   only_check:
     - markdown_links: true
     - file_extensions: ['.md', '.js', '.html']
@@ -353,6 +353,6 @@ Before flagging as broken reference, ask:
 
 ---
 
-**Maintained by**: Documentation Team  
-**Review Cycle**: Quarterly or when new false positives discovered  
+**Maintained by**: Documentation Team
+**Review Cycle**: Quarterly or when new false positives discovered
 **Contact**: See [CONTRIBUTING.md](./CONTRIBUTING.md) for questions

@@ -26,13 +26,13 @@ conditionals:
       - "src/**/*.js": changed
       - "__tests__/**/*.test.js": changed
     description: "Skip tests if only documentation or non-code files changed"
-  
+
   step4_directory_structure:
     skip_if:
       - no_new_files: true
     cache_duration: 24h
     description: "Cache directory structure scan for 24 hours if no new files"
-  
+
   step3_syntax_validation:
     skip_if:
       - no_js_changes: true
@@ -40,7 +40,7 @@ conditionals:
       - "src/**/*.js": changed
       - "**/*.js": changed
     description: "Skip syntax validation if no JavaScript files changed"
-  
+
   step5_coverage_report:
     skip_if:
       - only_docs_changed: true

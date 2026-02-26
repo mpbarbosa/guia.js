@@ -4,8 +4,8 @@
 
 AddressCache.js implements an **emerging callback hell** pattern with **3 separate callback properties** for change detection. This violates DRY principles, creates API complexity, and prevents extensibility. The solution is to modernize to a **single unified callback** with change type parameter, or better yet, migrate to **Observer pattern** (already partially implemented).
 
-**Status**: Analysis Complete | Modernization Planned  
-**Severity**: Medium (Growing Technical Debt)  
+**Status**: Analysis Complete | Modernization Planned
+**Severity**: Medium (Growing Technical Debt)
 **Recommendation**: Consolidate to single callback or migrate to Observer
 
 ## Current State Analysis
@@ -19,7 +19,7 @@ class AddressCache {
     this.logradouroChangeCallback = null;  // Street changes
     this.bairroChangeCallback = null;      // Neighborhood changes
     this.municipioChangeCallback = null;    // City changes
-    
+
     // Plus observer pattern (already exists!)
     this.observerSubject = new ObserverSubject();
   }
@@ -151,7 +151,7 @@ class AddressCache {
     this.logradouroChangeCallback = null;
     this.bairroChangeCallback = null;
     this.municipioChangeCallback = null;
-    
+
     // New: Observer pattern
     this.observerSubject = new ObserverSubject();
   }
@@ -184,18 +184,18 @@ class AddressCache {
     // this.logradouroChangeCallback = null;
     // this.bairroChangeCallback = null;
     // this.municipioChangeCallback = null;
-    
+
     // AFTER: Single unified callback
     this.changeCallback = null;
   }
-  
+
   /**
    * Sets a unified change callback for all change types.
-   * 
+   *
    * @param {Function} callback - Called with (changeType, details)
    * @param {string} changeType - 'logradouro', 'bairro', or 'municipio'
    * @param {Object} details - Change details object
-   * 
+   *
    * @example
    * cache.setChangeCallback((changeType, details) => {
    *   switch(changeType) {
@@ -217,21 +217,21 @@ class AddressCache {
     }
     this.changeCallback = callback;
   }
-  
+
   /**
    * Gets the unified change callback.
    */
   getChangeCallback() {
     return this.changeCallback;
   }
-  
+
   /**
    * Removes the change callback.
    */
   clearChangeCallback() {
     this.changeCallback = null;
   }
-  
+
   /**
    * Internal: Notifies callback of changes.
    */
@@ -244,19 +244,19 @@ class AddressCache {
       }
     }
   }
-  
+
   // Usage in change detection:
   _detectChanges() {
     if (this.hasLogradouroChanged()) {
       const details = this.getLogradouroChangeDetails();
       this._notifyChange('logradouro', details);
     }
-    
+
     if (this.hasBairroChanged()) {
       const details = this.getBairroChangeDetails();
       this._notifyChange('bairro', details);
     }
-    
+
     if (this.hasMunicipioChanged()) {
       const details = this.getMunicipioChangeDetails();
       this._notifyChange('municipio', details);
@@ -304,24 +304,24 @@ class AddressCache {
     this.changeCallbacks = new Map();
     // Map<changeType, Set<callback>>
   }
-  
+
   /**
    * Registers a callback for specific change type(s).
-   * 
+   *
    * @param {string|string[]} types - Change type(s) to listen for
    * @param {Function} callback - Called with (changeType, details)
-   * 
+   *
    * @example
    * // Single type
    * cache.onChangeType('logradouro', (type, details) => {
    *   console.log('Street changed:', details);
    * });
-   * 
+   *
    * // Multiple types
    * cache.onChangeType(['bairro', 'municipio'], (type, details) => {
    *   console.log(`${type} changed:`, details);
    * });
-   * 
+   *
    * // All types (wildcard)
    * cache.onChangeType('*', (type, details) => {
    *   console.log('Something changed:', type, details);
@@ -331,26 +331,26 @@ class AddressCache {
     if (typeof callback !== 'function') {
       throw new TypeError('Callback must be a function');
     }
-    
+
     const typeArray = Array.isArray(types) ? types : [types];
-    
+
     for (const type of typeArray) {
       if (!this.changeCallbacks.has(type)) {
         this.changeCallbacks.set(type, new Set());
       }
       this.changeCallbacks.get(type).add(callback);
     }
-    
+
     // Return unsubscribe function
     return () => this.offChangeType(types, callback);
   }
-  
+
   /**
    * Removes a callback for specific change type(s).
    */
   offChangeType(types, callback) {
     const typeArray = Array.isArray(types) ? types : [types];
-    
+
     for (const type of typeArray) {
       const callbacks = this.changeCallbacks.get(type);
       if (callbacks) {
@@ -361,7 +361,7 @@ class AddressCache {
       }
     }
   }
-  
+
   /**
    * Internal: Notifies all registered callbacks for a change type.
    */
@@ -377,7 +377,7 @@ class AddressCache {
         }
       }
     }
-    
+
     // Notify wildcard callbacks
     const wildcardCallbacks = this.changeCallbacks.get('*');
     if (wildcardCallbacks) {
@@ -447,22 +447,22 @@ class AddressCache {
     // this.bairroChangeCallback = null;
     // this.municipioChangeCallback = null;
     // this.changeCallback = null;
-    
+
     // KEEP: Observer pattern only
     this.observerSubject = new ObserverSubject();
   }
-  
+
   /**
    * Subscribes an observer to address changes.
-   * 
+   *
    * Observer will receive update(changeEvent) calls with:
    * - changeEvent.type: 'address-change'
    * - changeEvent.changeType: 'logradouro', 'bairro', or 'municipio'
    * - changeEvent.details: Change details object
    * - changeEvent.timestamp: When change occurred
-   * 
+   *
    * @param {Object} observer - Object with update(event) method
-   * 
+   *
    * @example
    * const observer = {
    *   update(event) {
@@ -474,14 +474,14 @@ class AddressCache {
   subscribe(observer) {
     this.observerSubject.subscribe(observer);
   }
-  
+
   /**
    * Unsubscribes an observer.
    */
   unsubscribe(observer) {
     this.observerSubject.unsubscribe(observer);
   }
-  
+
   /**
    * Internal: Notifies observers of changes.
    */
@@ -492,7 +492,7 @@ class AddressCache {
       details,
       timestamp: Date.now()
     };
-    
+
     this.observerSubject.notify(event);
   }
 }
@@ -527,23 +527,23 @@ cache.subscribeToChangeType('logradouro', (details) => {
 ```javascript
 /**
  * Convenience method for functional observers.
- * 
+ *
  * @param {string|string[]} changeTypes - Types to listen for
  * @param {Function} callback - Called with (details, changeType, event)
  * @returns {Function} Unsubscribe function
- * 
+ *
  * @example
  * const unsubscribe = cache.subscribeToChangeType('logradouro', (details) => {
  *   console.log('Street:', details);
  * });
- * 
+ *
  * // Later:
  * unsubscribe();
  */
 subscribeToChangeType(changeTypes, callback) {
   const types = Array.isArray(changeTypes) ? changeTypes : [changeTypes];
   const wildcard = types.includes('*');
-  
+
   const observer = {
     update(event) {
       if (event.type === 'address-change') {
@@ -558,9 +558,9 @@ subscribeToChangeType(changeTypes, callback) {
       }
     }
   };
-  
+
   this.subscribe(observer);
-  
+
   // Return unsubscribe function
   return () => this.unsubscribe(observer);
 }

@@ -130,12 +130,12 @@ if (navigator.geolocation) {
     (browserPosition) => {
       // Wrap browser position in GeoPosition for easier access
       const position = new GeoPosition(browserPosition);
-      
+
       // Access position data with simplified properties
       console.log(`Latitude: ${position.latitude}`);
       console.log(`Longitude: ${position.longitude}`);
       console.log(`Accuracy: ${position.accuracy}m (${position.accuracyQuality})`);
-      
+
       // Log complete position info
       console.log(position.toString());
       // Output: "GeoPosition: -23.5505, -46.6333, good, 760, 0, 0, 1634567890123"
@@ -201,26 +201,26 @@ let lastPosition = null;
 // Simulate continuous position tracking
 function handlePositionUpdate(browserPosition) {
   const currentPosition = new GeoPosition(browserPosition);
-  
+
   // Check accuracy quality
-  if (currentPosition.accuracyQuality === 'bad' || 
+  if (currentPosition.accuracyQuality === 'bad' ||
       currentPosition.accuracyQuality === 'very bad') {
     console.log('Position accuracy too poor, waiting for better signal...');
     return;
   }
-  
+
   // Calculate distance traveled
   if (lastPosition) {
     const distanceTraveled = currentPosition.distanceTo(lastPosition);
     console.log(`Traveled ${Math.round(distanceTraveled)} meters`);
   }
-  
+
   // Display current location info
   console.log(`Current Position: ${currentPosition.latitude}, ${currentPosition.longitude}`);
   console.log(`Speed: ${currentPosition.speed} m/s`);
   console.log(`Heading: ${currentPosition.heading}°`);
   console.log(`Accuracy: ${currentPosition.accuracy}m (${currentPosition.accuracyQuality})`);
-  
+
   // Store for next comparison
   lastPosition = currentPosition;
 }
@@ -551,7 +551,7 @@ All tests pass:
 
    ```javascript
    // DON'T: position.accuracy = 20;  // No longer works
-   
+
    // DO: Create new instance with updated accuracy
    const updatedPosition = new GeoPosition({
        ...browserPosition,
@@ -607,10 +607,10 @@ navigator.geolocation.watchPosition((browserPos) => {
 
 ```javascript
 function isAcceptableAccuracy(position, isMobile = false) {
-  const acceptable = isMobile 
+  const acceptable = isMobile
     ? ['excellent', 'good']
     : ['excellent', 'good', 'medium'];
-  
+
   return acceptable.includes(position.accuracyQuality);
 }
 
@@ -763,6 +763,6 @@ Marcelo Pereira Barbosa
 
 ---
 
-**Last Updated**: 2026-01-11  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-01-11
+**Version**: 0.9.0-alpha
 **Status**: ✅ Complete and up-to-date

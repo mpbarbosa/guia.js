@@ -62,7 +62,7 @@ Tests the complete geolocation acquisition and processing workflow.
 **Test Flow**:
 
 ```javascript
-User Action → Geolocation Request → Position Acquired → 
+User Action → Geolocation Request → Position Acquired →
 Validation → Storage → UI Update → Success Notification
 ```
 
@@ -83,7 +83,7 @@ Tests address processing specific to Brazilian location data.
 **Test Flow**:
 
 ```javascript
-Coordinates → Reverse Geocoding → Address Extraction → 
+Coordinates → Reverse Geocoding → Address Extraction →
 Standardization → Brazilian Format → Cache Storage → Display
 ```
 
@@ -104,7 +104,7 @@ Tests change detection and speech synthesis integration.
 **Test Flow**:
 
 ```javascript
-Position Update → Change Detection → Speech Queue → 
+Position Update → Change Detection → Speech Queue →
 Priority Sorting → Speech Synthesis → Completion Callback
 ```
 
@@ -126,7 +126,7 @@ Tests error scenarios and recovery mechanisms.
 **Test Flow**:
 
 ```javascript
-Error Trigger → Error Detection → Error Handler → 
+Error Trigger → Error Detection → Error Handler →
 User Notification → Recovery Attempt → Fallback State
 ```
 
@@ -147,7 +147,7 @@ Tests complex interactions between multiple components.
 **Test Flow**:
 
 ```javascript
-User Action → Manager Coordination → Service Calls → 
+User Action → Manager Coordination → Service Calls →
 State Updates → Observer Notifications → UI Synchronization
 ```
 
@@ -184,11 +184,11 @@ describe('Feature E2E Tests', () => {
         it('should complete full user workflow successfully', async () => {
             // Arrange: Setup initial state
             const userInput = { latitude: -23.5505, longitude: -46.6333 };
-            
+
             // Act: Execute complete workflow
             const result = await componentA.processInput(userInput);
             const display = componentB.displayResult(result);
-            
+
             // Assert: Verify end-to-end behavior
             expect(result.processed).toBe(true);
             expect(display.shown).toBe(true);
@@ -210,19 +210,19 @@ describe('Complete User Journey', () => {
     it('should handle user getting location and viewing address', async () => {
         // 1. User clicks "Get Location" button
         const userAction = { action: 'getLocation' };
-        
+
         // 2. Application requests geolocation
         const position = await geolocationService.getCurrentPosition();
-        
+
         // 3. Application geocodes coordinates
         const address = await reverseGeocoder.geocode(
             position.coords.latitude,
             position.coords.longitude
         );
-        
+
         // 4. Application displays results
         const display = addressDisplayer.display(address);
-        
+
         // 5. Verify complete flow
         expect(position).toBeDefined();
         expect(address.municipality).toBe('São Paulo');
@@ -241,10 +241,10 @@ describe('Multi-Component Coordination', () => {
         // Setup components
         const manager = new WebGeocodingManager(document, 'container');
         const positionManager = PositionManager.getInstance();
-        
+
         // Trigger workflow
         await manager.handleGeolocation(mockPosition);
-        
+
         // Verify coordination
         expect(positionManager.currentPosition).toBeDefined();
         expect(manager.lastAddress).toBeDefined();
@@ -264,7 +264,7 @@ describe('Error Recovery', () => {
         reverseGeocoder.geocode = jest.fn()
             .mockRejectedValueOnce(new Error('Network error'))
             .mockResolvedValueOnce({ municipality: 'São Paulo' });
-        
+
         // Act: First attempt fails, second succeeds
         let firstAttempt;
         try {
@@ -272,10 +272,10 @@ describe('Error Recovery', () => {
         } catch (error) {
             // Error handled
         }
-        
+
         // Retry succeeds
         const secondAttempt = await manager.processPosition(mockPosition);
-        
+
         // Verify recovery
         expect(firstAttempt).toBeUndefined();
         expect(secondAttempt.municipality).toBe('São Paulo');
@@ -436,10 +436,10 @@ Check that application state changes correctly:
 ```javascript
 it('should transition through correct states', async () => {
     expect(manager.state).toBe('idle');
-    
+
     const promise = manager.getLocation();
     expect(manager.state).toBe('loading');
-    
+
     await promise;
     expect(manager.state).toBe('complete');
 });
@@ -453,13 +453,13 @@ Ensure errors don't crash the application:
 it('should handle errors gracefully', async () => {
     // Trigger error condition
     const errorPromise = manager.processInvalidData(null);
-    
+
     // Should not throw
     await expect(errorPromise).resolves.toMatchObject({
         error: true,
         recovered: true
     });
-    
+
     // Application should still be functional
     expect(manager.state).not.toBe('crashed');
 });
@@ -486,10 +486,10 @@ it('should complete slow operation', async () => {
 // Solution: Use waitFor or explicit promises
 it('should update after delay', async () => {
     manager.triggerDelayedUpdate();
-    
+
     // ❌ Bad: Race condition
     // expect(manager.updated).toBe(true);
-    
+
     // ✅ Good: Wait for condition
     await new Promise(resolve => {
         const check = setInterval(() => {
@@ -499,7 +499,7 @@ it('should update after delay', async () => {
             }
         }, 100);
     });
-    
+
     expect(manager.updated).toBe(true);
 });
 ```
@@ -511,9 +511,9 @@ it('should update after delay', async () => {
 it('should call mocked function', async () => {
     const mockFn = jest.fn().mockResolvedValue('result');
     component.dependency = mockFn;
-    
+
     await component.performAction();
-    
+
     // Debug: Check if mock was called
     console.log('Mock calls:', mockFn.mock.calls);
     expect(mockFn).toHaveBeenCalled();
@@ -537,6 +537,6 @@ it('should call mocked function', async () => {
 
 ---
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-01-01  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-01-01
 **Test Coverage**: 63 E2E tests across 5 test files

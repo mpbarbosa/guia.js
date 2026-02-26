@@ -17,7 +17,7 @@ Comprehensive guide for testing Guia.js across different browsers and devices.
 
 Guia.js relies on modern browser APIs (Geolocation, ES6 modules, Speech Synthesis). This guide ensures compatibility across target browsers and provides fallback strategies.
 
-**Primary Target**: Modern browsers released in last 2 years  
+**Primary Target**: Modern browsers released in last 2 years
 **Minimum Requirements**:
 
 - ES6 module support
@@ -131,11 +131,11 @@ try {
 function testSpeech() {
     if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance('São Paulo');
-        
+
         // Get available voices
         const voices = speechSynthesis.getVoices();
         console.log(`Voices available: ${voices.length}`);
-        
+
         // Test speech
         speechSynthesis.speak(utterance);
     } else {
@@ -202,7 +202,7 @@ navigator.geolocation.getCurrentPosition((position) => {
 navigator.geolocation.watchPosition(
     handlePosition,
     handleError,
-    { 
+    {
         enableHighAccuracy: true,
         maximumAge: 60000 // Accept 1-minute-old position
     }
@@ -267,7 +267,7 @@ Test on real devices and browsers:
 3. Open chrome://inspect in Chrome
 4. Test on real device
 
-# Safari iOS Testing  
+# Safari iOS Testing
 1. Connect iPhone via USB
 2. Enable Web Inspector on iPhone: Settings → Safari → Advanced
 3. Open Safari on Mac → Develop → [Your iPhone]
@@ -287,10 +287,10 @@ test.describe('Cross-browser tests', () => {
     test('should load geolocation in Chrome', async ({ page, context }) => {
         await context.grantPermissions(['geolocation']);
         await context.setGeolocation({ latitude: -23.5505, longitude: -46.6333 });
-        
+
         await page.goto('http://localhost:9000/test.html');
         await page.click('#get-location');
-        
+
         await expect(page.locator('#coordinates')).toContainText('-23.55');
     });
 });
@@ -367,34 +367,34 @@ Create `browser-test-checklist.md`:
 </head>
 <body>
     <h1>Guia.js Browser Compatibility Test</h1>
-    
+
     <div id="results">
         <h2>Feature Detection</h2>
         <ul id="features"></ul>
     </div>
-    
+
     <button id="test-geolocation">Test Geolocation</button>
     <button id="test-speech">Test Speech</button>
     <button id="test-modules">Test Modules</button>
-    
+
     <pre id="output"></pre>
 
     <script type="module">
         const output = document.getElementById('output');
         const features = document.getElementById('features');
-        
+
         function log(message) {
             output.textContent += message + '\n';
             console.log(message);
         }
-        
+
         function checkFeature(name, condition) {
             const li = document.createElement('li');
             li.textContent = `${name}: ${condition ? '✅' : '❌'}`;
             li.style.color = condition ? 'green' : 'red';
             features.appendChild(li);
         }
-        
+
         // Feature detection
         checkFeature('ES6 Modules', typeof import !== 'undefined');
         checkFeature('Geolocation API', 'geolocation' in navigator);
@@ -403,11 +403,11 @@ Create `browser-test-checklist.md`:
         checkFeature('async/await', (async () => {})() instanceof Promise);
         checkFeature('Optional Chaining', true); // If this runs, it's supported
         checkFeature('Nullish Coalescing', true); // If this runs, it's supported
-        
+
         // Test geolocation
         document.getElementById('test-geolocation').addEventListener('click', () => {
             log('Testing geolocation...');
-            
+
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     log(`✅ Success: ${position.coords.latitude}, ${position.coords.longitude}`);
@@ -419,29 +419,29 @@ Create `browser-test-checklist.md`:
                 { enableHighAccuracy: true, timeout: 10000 }
             );
         });
-        
+
         // Test speech
         document.getElementById('test-speech').addEventListener('click', () => {
             log('Testing speech synthesis...');
-            
+
             if ('speechSynthesis' in window) {
                 const utterance = new SpeechSynthesisUtterance('São Paulo');
                 const voices = speechSynthesis.getVoices();
                 log(`✅ ${voices.length} voices available`);
-                
+
                 utterance.onend = () => log('✅ Speech completed');
                 utterance.onerror = (e) => log(`❌ Speech error: ${e.error}`);
-                
+
                 speechSynthesis.speak(utterance);
             } else {
                 log('❌ Speech Synthesis not supported');
             }
         });
-        
+
         // Test module import
         document.getElementById('test-modules').addEventListener('click', async () => {
             log('Testing dynamic import...');
-            
+
             try {
                 const module = await import('./src/guia.js');
                 log('✅ Dynamic import successful');
@@ -450,7 +450,7 @@ Create `browser-test-checklist.md`:
                 log(`❌ Dynamic import failed: ${error.message}`);
             }
         });
-        
+
         log('Browser: ' + navigator.userAgent);
         log('Ready for testing');
     </script>
@@ -469,7 +469,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
     testDir: './__tests__/browser',
-    
+
     projects: [
         {
             name: 'chromium',
@@ -492,7 +492,7 @@ export default defineConfig({
             use: { ...devices['iPhone 12'] },
         },
     ],
-    
+
     webServer: {
         command: 'python3 -m http.server 9000',
         port: 9000,
@@ -529,7 +529,7 @@ npx playwright show-report
 
 ### Safari iOS Speech Synthesis
 
-**Issue**: Limited voice support, may not work reliably  
+**Issue**: Limited voice support, may not work reliably
 **Workaround**: Provide visual-only fallback
 
 ```javascript
@@ -546,7 +546,7 @@ function isSafariIOS() {
 
 ### Firefox Module Loading Timing
 
-**Issue**: Occasionally slow to load large modules  
+**Issue**: Occasionally slow to load large modules
 **Workaround**: Show loading indicator
 
 ```javascript
@@ -562,7 +562,7 @@ import('./src/guia.js')
 
 ### Chrome Android Geolocation Accuracy
 
-**Issue**: First position may have low accuracy  
+**Issue**: First position may have low accuracy
 **Workaround**: Wait for improved accuracy or use watchPosition
 
 ```javascript
@@ -593,6 +593,6 @@ function getAccuratePosition() {
 
 ---
 
-**Version**: 0.9.0-alpha  
-**Last Updated**: 2026-01-01  
+**Version**: 0.9.0-alpha
+**Last Updated**: 2026-01-01
 **Supported Browsers**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+

@@ -211,14 +211,14 @@ src/
 // src/core/PositionManager.js
 class PositionManager extends ObserverSubject {
   static #instance = null;
-  
+
   static getInstance() {
     if (!PositionManager.#instance) {
       PositionManager.#instance = new PositionManager();
     }
     return PositionManager.#instance;
   }
-  
+
   // Private constructor
   constructor() {
     if (PositionManager.#instance) {
@@ -255,7 +255,7 @@ class MyObserver {
     const positionManager = PositionManager.getInstance();
     positionManager.attach(this);
   }
-  
+
   update(eventType, data) {
     if (eventType === 'positionUpdated') {
       console.log('New position:', data);
@@ -281,14 +281,14 @@ class DisplayerFactory {
       'position-display-area'
     );
   }
-  
+
   static createAddressDisplayer(document) {
     return new HTMLAddressDisplayer(
       document,
       'address-display-area'
     );
   }
-  
+
   // ... more factory methods
 }
 
@@ -314,12 +314,12 @@ class SpeechSynthesisManager {
     this.configuration = new SpeechConfiguration();
     this.queue = new SpeechQueue();
   }
-  
+
   async speak(text, priority = 'normal') {
     const voices = await this.voiceLoader.loadVoices();
     const voice = this.voiceSelector.selectVoice(voices, 'pt-BR');
     const rate = this.configuration.getRate();
-    
+
     this.queue.enqueue(new SpeechItem(text, voice, rate, priority));
     this.processQueue();
   }
@@ -341,22 +341,22 @@ class GeoPosition {
   #longitude;
   #accuracy;
   #timestamp;
-  
+
   constructor(latitude, longitude, accuracy = null, timestamp = Date.now()) {
     // Validate and freeze
     this.#latitude = this.#validateLatitude(latitude);
     this.#longitude = this.#validateLongitude(longitude);
     this.#accuracy = accuracy;
     this.#timestamp = timestamp;
-    
+
     Object.freeze(this); // Immutable
   }
-  
+
   get latitude() { return this.#latitude; }
   get longitude() { return this.#longitude; }
-  
+
   // No setters - object is immutable
-  
+
   toJSON() {
     return {
       latitude: this.#latitude,
@@ -424,28 +424,28 @@ describe('GeoPosition', () => {
   describe('constructor', () => {
     it('should create immutable position object', () => {
       const position = new GeoPosition(-23.550520, -46.633309);
-      
+
       expect(position.latitude).toBe(-23.550520);
       expect(position.longitude).toBe(-46.633309);
-      
+
       // Test immutability
       expect(() => {
         position.latitude = 0;
       }).toThrow();
     });
-    
+
     it('should validate latitude range', () => {
       expect(() => {
         new GeoPosition(91, 0); // Invalid
       }).toThrow('Latitude must be between -90 and 90');
     });
   });
-  
+
   describe('toJSON', () => {
     it('should serialize to JSON', () => {
       const position = new GeoPosition(-23.550520, -46.633309, 10);
       const json = position.toJSON();
-      
+
       expect(json).toEqual({
         latitude: -23.550520,
         longitude: -46.633309,
@@ -469,10 +469,10 @@ describe('Address Extraction Integration', () => {
     // São Paulo coordinates
     const geocoder = new ReverseGeocoder(-23.550520, -46.633309);
     const nominatimData = await geocoder.fetchAddress();
-    
+
     const extractor = new AddressExtractor(nominatimData);
     const address = extractor.extractBrazilianAddress();
-    
+
     expect(address.municipio).toBe('São Paulo');
     expect(address.uf).toBe('SP');
     expect(address.pais).toBe('Brasil');
@@ -488,18 +488,18 @@ import puppeteer from 'puppeteer';
 
 describe('Complete Geolocation Workflow', () => {
   let browser, page;
-  
+
   beforeAll(async () => {
     browser = await puppeteer.launch({ headless: true });
   });
-  
+
   afterAll(async () => {
     await browser.close();
   });
-  
+
   beforeEach(async () => {
     page = await browser.newPage();
-    
+
     // Mock geolocation
     await page.evaluateOnNewDocument(() => {
       navigator.geolocation.getCurrentPosition = (success) => {
@@ -512,19 +512,19 @@ describe('Complete Geolocation Workflow', () => {
         });
       };
     });
-    
+
     await page.goto('http://localhost:9877/src/index.html');
   });
-  
+
   it('should display coordinates and address after clicking button', async () => {
     // Click geolocation button
     await page.click('#get-location-btn');
-    
+
     // Wait for coordinates
     await page.waitForSelector('#coordinates-display');
     const coords = await page.$eval('#coordinates-display', el => el.textContent);
     expect(coords).toContain('-23.550520');
-    
+
     // Wait for address
     await page.waitForSelector('#address-display', { timeout: 10000 });
     const address = await page.$eval('#address-display', el => el.textContent);
@@ -699,8 +699,8 @@ import { MINIMUM_DISTANCE_CHANGE, MINIMUM_TIME_CHANGE } from '../config/defaults
 const shouldUpdate = (oldPos, newPos, lastUpdateTime) => {
   const distance = calculateDistance(oldPos, newPos);
   const timeElapsed = Date.now() - lastUpdateTime;
-  
-  return distance >= MINIMUM_DISTANCE_CHANGE || 
+
+  return distance >= MINIMUM_DISTANCE_CHANGE ||
          timeElapsed >= MINIMUM_TIME_CHANGE;
 };
 ```
@@ -784,5 +784,5 @@ console.log(timerManager.getActiveTimers());
 
 ---
 
-**Last Updated**: 2026-02-12  
+**Last Updated**: 2026-02-12
 **Version**: 0.9.0-alpha

@@ -24,7 +24,7 @@ This guide provides comprehensive instructions for splitting large JavaScript fi
 
 > 📚 **Essential Companion**: See **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](./ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** for comprehensive ES6 import/export patterns, naming conventions, and practical solutions to common module issues.
 
-### Why This Guide?
+### Why This Guide
 
 The Guia Turístico project currently has a 6,000+ line `guia.js` file containing 25+ classes. While functional, this monolithic structure:
 
@@ -43,7 +43,7 @@ This guide shows how to split such files into focused, maintainable modules.
 4. **Referential Transparency**: Preserve pure function characteristics
 5. **Testability**: Enable isolated unit testing
 
-## What are JavaScript Modules?
+## What are JavaScript Modules
 
 **JavaScript modules** are self-contained units of code that encapsulate related functionality and expose only what's necessary through exports. Modules provide:
 
@@ -96,7 +96,7 @@ class ReverseGeocoder { /* ... */ }
 // src/models/GeoPosition.js - 50 lines
 export class GeoPosition { /* ... */ }
 
-// src/managers/PositionManager.js - 100 lines  
+// src/managers/PositionManager.js - 100 lines
 export class PositionManager { /* ... */ }
 
 // src/services/ReverseGeocoder.js - 80 lines
@@ -210,7 +210,7 @@ JavaScript has two primary module systems:
 | **Node.js Support** | ✅ v12+ | ✅ All versions |
 | **Future** | ✅ Standard | ⚠️ Legacy |
 
-### Which to Use?
+### Which to Use
 
 **For Guia.js (web + Node.js):**
 
@@ -252,7 +252,7 @@ export const calculateDistance = (lat1, lon1, lat2, lon2) => {
   return R * c;
 };
 
-export const getOpenStreetMapUrl = (latitude, longitude) => 
+export const getOpenStreetMapUrl = (latitude, longitude) =>
   `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
 ```
 
@@ -431,7 +431,7 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
   return R * c;
 };
 
-const getOpenStreetMapUrl = (latitude, longitude) => 
+const getOpenStreetMapUrl = (latitude, longitude) =>
   `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
 
 // Named exports
@@ -640,7 +640,7 @@ export class AddressParser { /* ... */ }
 // validators/AddressValidator.js
 export class AddressValidator { /* ... */ }
 
-// formatters/AddressFormatter.js  
+// formatters/AddressFormatter.js
 export class AddressFormatter { /* ... */ }
 
 // caching/AddressCache.js
@@ -880,13 +880,13 @@ export const toRadians = (degrees) => (degrees * Math.PI) / 180;
 
 /**
  * Calculates the great-circle distance between two geographic points using the Haversine formula.
- * 
+ *
  * @param {number} lat1 - Latitude of first point in decimal degrees (-90 to 90)
  * @param {number} lon1 - Longitude of first point in decimal degrees (-180 to 180)
  * @param {number} lat2 - Latitude of second point in decimal degrees (-90 to 90)
  * @param {number} lon2 - Longitude of second point in decimal degrees (-180 to 180)
  * @returns {number} Distance in meters between the two points
- * 
+ *
  * @example
  * // Distance between São Paulo and Rio de Janeiro
  * const distance = calculateDistance(-23.5505, -46.6333, -22.9068, -43.1729);
@@ -1032,9 +1032,9 @@ const warn = (message, ...params) => {
 
 /**
  * Formats current timestamp for log messages.
- * 
+ *
  * @returns {string} ISO 8601 timestamp
- * 
+ *
  * @example
  * formatTimestamp(); // "2025-10-15T04:33:48.006Z"
  */
@@ -1042,10 +1042,10 @@ export const formatTimestamp = () => new Date().toISOString();
 
 /**
  * Logs info message with timestamp.
- * 
+ *
  * @param {string} message - Message to log
  * @param {...any} params - Additional parameters
- * 
+ *
  * @example
  * log('Position updated', { lat: -23.5505, lon: -46.6333 });
  * // Output: [2025-10-15T04:33:48.006Z] Position updated { lat: -23.5505, lon: -46.6333 }
@@ -1056,10 +1056,10 @@ export const log = (message, ...params) => {
 
 /**
  * Logs warning message with timestamp.
- * 
+ *
  * @param {string} message - Warning message
  * @param {...any} params - Additional parameters
- * 
+ *
  * @example
  * warn('Low accuracy detected', { accuracy: 500 });
  * // Output: [2025-10-15T04:33:48.006Z] Low accuracy detected { accuracy: 500 }
@@ -1070,10 +1070,10 @@ export const warn = (message, ...params) => {
 
 /**
  * Logs error message with timestamp.
- * 
+ *
  * @param {string} message - Error message
  * @param {...any} params - Additional parameters
- * 
+ *
  * @example
  * error('Geolocation failed', new Error('Permission denied'));
  */
@@ -1337,7 +1337,7 @@ describe('Geolocation Integration', () => {
     });
 
     const distance = position1.distanceTo(position2);
-    
+
     expect(distance).toBeGreaterThan(0);
     expect(distance).toBeLessThan(200); // Small movement
   });
@@ -1519,17 +1519,17 @@ If a module exceeds these limits, consider splitting further.
 ```javascript
 /**
  * Distance calculation utilities using Haversine formula.
- * 
+ *
  * This module provides pure functions for calculating great-circle
  * distances between geographic coordinates. All functions are
  * referentially transparent and suitable for unit testing.
- * 
+ *
  * @module utils/distance
  * @see {@link https://en.wikipedia.org/wiki/Haversine_formula}
- * 
+ *
  * @example
  * import { calculateDistance } from './utils/distance.js';
- * 
+ *
  * const distance = calculateDistance(
  *   -23.5505, -46.6333,  // São Paulo
  *   -22.9068, -43.1729   // Rio de Janeiro
@@ -1823,15 +1823,15 @@ npm test -- --coverage
 
 This guide has covered:
 
-✅ **What modules are** and why they matter  
-✅ **Benefits** of modular code (maintainability, testability, reusability)  
-✅ **ES6 vs CommonJS** module systems  
-✅ **Strategies** for splitting large files  
-✅ **Practical examples** from Guia.js codebase  
-✅ **Migration strategies** for safe refactoring  
-✅ **Testing** modular code  
-✅ **Best practices** and common pitfalls  
-✅ **Tools** for automation and analysis  
+✅ **What modules are** and why they matter
+✅ **Benefits** of modular code (maintainability, testability, reusability)
+✅ **ES6 vs CommonJS** module systems
+✅ **Strategies** for splitting large files
+✅ **Practical examples** from Guia.js codebase
+✅ **Migration strategies** for safe refactoring
+✅ **Testing** modular code
+✅ **Best practices** and common pitfalls
+✅ **Tools** for automation and analysis
 
 ### Next Steps
 
@@ -1870,7 +1870,7 @@ This guide has covered:
 - [LOW_COUPLING_GUIDE.md](../.github/LOW_COUPLING_GUIDE.md)
 - [HIGH_COHESION_GUIDE.md](../.github/HIGH_COHESION_GUIDE.md)
 
-**Author:** Guia.js Team  
-**Version:** 1.0.0  
-**Last Updated:** 2025-10-15  
+**Author:** Guia.js Team
+**Version:** 1.0.0
+**Last Updated:** 2025-10-15
 **License:** MIT

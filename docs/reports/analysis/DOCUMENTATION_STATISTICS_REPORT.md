@@ -1,7 +1,7 @@
 # Documentation Statistics Report
 
-**Date**: 2026-01-06  
-**Project**: Guia Turístico v0.9.0-alpha  
+**Date**: 2026-01-06
+**Project**: Guia Turístico v0.9.0-alpha
 **Status**: 📊 Complete Metrics
 
 ---

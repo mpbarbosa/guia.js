@@ -26,7 +26,7 @@ This guide explains the fundamental principle of separating HTML (structure), CS
 - **Collaboration**: Different team members can work on different aspects simultaneously
 - **Performance**: Separation enables better caching and optimization strategies
 
-## What is Separation of Concerns?
+## What is Separation of Concerns
 
 **Separation of Concerns (SoC)** is a design principle for separating a computer program into distinct sections, where each section addresses a separate concern. In web development, this means:
 
@@ -143,7 +143,7 @@ When these technologies are properly separated:
 // ✅ Good: Focused on behavior and logic
 document.addEventListener('DOMContentLoaded', () => {
   const shareBtn = document.querySelector('.share-btn');
-  
+
   shareBtn.addEventListener('click', () => {
     shareArticle();
   });
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function shareArticle() {
   const title = document.querySelector('.post-title').textContent;
   const url = window.location.href;
-  
+
   if (navigator.share) {
     navigator.share({
       title: title,
@@ -294,7 +294,7 @@ When logic is separated from DOM manipulation, you can test business logic witho
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My App</title>
-  
+
   <!-- ✅ External CSS -->
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -303,7 +303,7 @@ When logic is separated from DOM manipulation, you can test business logic witho
     <h1>Welcome</h1>
     <button id="actionBtn">Click Me</button>
   </div>
-  
+
   <!-- ✅ External JavaScript -->
   <script src="script.js"></script>
 </body>
@@ -342,7 +342,7 @@ submitBtn.addEventListener('click', handleSubmit);
 Use `data-*` attributes to pass configuration to JavaScript without mixing concerns:
 
 ```html
-<button 
+<button
   class="action-btn"
   data-action="save"
   data-item-id="123">
@@ -369,7 +369,7 @@ Use CSS classes to represent state, controlled by JavaScript:
 .modal.is-active { display: block; }
 
 .button { background-color: blue; }
-.button.is-disabled { 
+.button.is-disabled {
   background-color: gray;
   cursor: not-allowed;
 }
@@ -460,26 +460,26 @@ project/
   <div class="container">
     <form id="contactForm" class="contact-form">
       <h1>Contact Us</h1>
-      
+
       <div class="form-group">
         <label for="name">Name</label>
         <input type="text" id="name" name="name" required>
       </div>
-      
+
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required>
       </div>
-      
+
       <div class="form-group">
         <label for="message">Message</label>
         <textarea id="message" name="message" rows="5" required></textarea>
       </div>
-      
+
       <button type="submit" class="btn btn-primary">Send Message</button>
     </form>
   </div>
-  
+
   <script src="script.js"></script>
 </body>
 </html>
@@ -569,19 +569,19 @@ body {
 // script.js
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('contactForm');
-  
+
   form.addEventListener('submit', handleFormSubmit);
 });
 
 function handleFormSubmit(event) {
   event.preventDefault();
-  
+
   const formData = {
     name: document.getElementById('name').value,
     email: document.getElementById('email').value,
     message: document.getElementById('message').value
   };
-  
+
   if (validateForm(formData)) {
     sendFormData(formData);
   }
@@ -592,12 +592,12 @@ function validateForm(data) {
     alert('Please fill in all fields');
     return false;
   }
-  
+
   if (!isValidEmail(data.email)) {
     alert('Please enter a valid email address');
     return false;
   }
-  
+
   return true;
 }
 
@@ -632,21 +632,21 @@ This example shows how Guia.js applies separation of concerns:
   <div class="container">
     <h1>Guia.js - Teste de Geolocalização</h1>
     <p>Aplicação de geolocalização para endereços brasileiros</p>
-    
+
     <div class="button-group">
       <button id="location-btn" class="btn btn-primary">Obter Localização</button>
       <button id="restaurant-btn" class="btn btn-secondary">Encontrar Restaurantes</button>
       <button id="stats-btn" class="btn btn-secondary">Estatísticas da Cidade</button>
     </div>
-    
+
     <div id="result-area" class="result-area">
       <p>Clique em "Obter Localização" para começar...</p>
     </div>
-    
+
     <h3>Log de Atividades:</h3>
     <textarea id="activity-log" class="activity-log" readonly></textarea>
   </div>
-  
+
   <script src="src/guia.js"></script>
   <script src="scripts/test-app.js"></script>
 </body>
@@ -739,22 +739,22 @@ function initializeApp() {
   const locationBtn = document.getElementById('location-btn');
   const restaurantBtn = document.getElementById('restaurant-btn');
   const statsBtn = document.getElementById('stats-btn');
-  
+
   locationBtn.addEventListener('click', handleLocationRequest);
   restaurantBtn.addEventListener('click', handleRestaurantSearch);
   statsBtn.addEventListener('click', handleCityStats);
-  
+
   logActivity('Application initialized');
 }
 
 function handleLocationRequest() {
   logActivity('Requesting geolocation...');
-  
+
   if (!navigator.geolocation) {
     displayError('Geolocation not supported');
     return;
   }
-  
+
   navigator.geolocation.getCurrentPosition(
     handlePositionSuccess,
     handlePositionError
@@ -767,7 +767,7 @@ function handlePositionSuccess(position) {
     longitude: position.coords.longitude,
     accuracy: position.coords.accuracy
   };
-  
+
   displayLocation(coords);
   logActivity(`Location obtained: ${coords.latitude}, ${coords.longitude}`);
 }
@@ -958,10 +958,10 @@ container.innerHTML = html;
 function createCard(title, content) {
   const template = document.getElementById('card-template');
   const card = template.content.cloneNode(true);
-  
+
   card.querySelector('.card-title').textContent = title;
   card.querySelector('.card-content').textContent = content;
-  
+
   return card;
 }
 ```
@@ -1133,7 +1133,7 @@ function updateUI(data) {
 
 // Pure function - Create markup
 function createResultsList(items) {
-  return items.map(item => 
+  return items.map(item =>
     `<li data-id="${item.id}">${item.name}</li>`
   ).join('');
 }
@@ -1230,11 +1230,11 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Earth's radius in km
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
-  
+
   const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
             Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
             Math.sin(dLon/2) * Math.sin(dLon/2);
-  
+
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   return R * c;
 }
@@ -1297,7 +1297,7 @@ describe('Email Validation', () => {
   test('accepts valid email', () => {
     expect(isValidEmail('user@example.com')).toBe(true);
   });
-  
+
   test('rejects invalid email', () => {
     expect(isValidEmail('invalid-email')).toBe(false);
   });
@@ -1346,8 +1346,8 @@ See: [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)
 
 ---
 
-**Author**: GitHub Copilot  
-**Date**: 2025-10-12  
+**Author**: GitHub Copilot
+**Date**: 2025-10-12
 **Version**: 1.0.0
 
 ## License

@@ -213,19 +213,19 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class ConsoleConfig:
     """Configuration for console log capture."""
-    
+
     # Default log level to capture
     default_level: str = "INFO"
-    
+
     # Clear logs after each retrieval
     auto_clear: bool = False
-    
+
     # Include source location in logs
     include_source: bool = True
-    
+
     # Maximum log entries to retrieve (prevent memory issues)
     max_entries: int = 1000
-    
+
     # Timeout for waiting for logs (seconds)
     wait_timeout: float = 10.0
 ```
@@ -355,7 +355,7 @@ def inject_console_listener(driver: webdriver.Firefox) -> None:
     """Inject JavaScript to capture console logs."""
     script = """
     window._captured_logs = [];
-    
+
     ['log', 'info', 'warn', 'error', 'debug'].forEach(function(method) {
         const original = console[method];
         console[method] = function(...args) {

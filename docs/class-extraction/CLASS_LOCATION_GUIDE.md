@@ -232,5 +232,5 @@ __tests__/
 
 ---
 
-**Last Updated**: 2026-01-11  
+**Last Updated**: 2026-01-11
 **Version**: 0.9.0-alpha

@@ -1,7 +1,7 @@
 # Guia Turístico Project Structure Documentation
 
-**Version:** 0.9.0-alpha  
-**Last Updated:** 2026-01-16  
+**Version:** 0.9.0-alpha
+**Last Updated:** 2026-01-16
 **Project Type:** Tourist Guide Web Application
 
 > **Project Overview**: For project identity, features, and quick start guide, see the [README.md](../README.md). This document focuses on directory organization and file structure.
@@ -15,7 +15,7 @@ Guia.js is a **reusable JavaScript library component** designed to be integrated
 ```
 Personal Site Architecture:
 ├── Source Repository: https://github.com/mpbarbosa/mpbarbosa_site
-├── Staging Repository: https://github.com/mpbarbosa/mpbarbosa.com  
+├── Staging Repository: https://github.com/mpbarbosa/mpbarbosa.com
 └── Component Libraries:
     └── guia_js (this project) - Brazilian geolocation library
 ```

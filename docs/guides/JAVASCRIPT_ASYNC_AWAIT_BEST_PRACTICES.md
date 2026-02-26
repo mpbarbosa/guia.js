@@ -47,11 +47,11 @@ async function calculateDistance(coord1, coord2) {
     const R = 6371; // Earth's radius in kilometers
     const dLat = (coord2.lat - coord1.lat) * Math.PI / 180;
     const dLon = (coord2.lon - coord1.lon) * Math.PI / 180;
-    
+
     const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
               Math.cos(coord1.lat * Math.PI / 180) * Math.cos(coord2.lat * Math.PI / 180) *
               Math.sin(dLon/2) * Math.sin(dLon/2);
-    
+
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     return R * c;
 }
@@ -61,7 +61,7 @@ async function calculateDistanceWithSideEffects(coord1, coord2) {
     // Mutates global state - violates referential transparency
     window.lastCalculation = Date.now();
     localStorage.setItem('lastCoords', JSON.stringify(coord2));
-    
+
     // Result depends on external factors
     const weather = await fetch('/api/weather');
     return someComplexCalculation(coord1, coord2, weather.data);
@@ -78,17 +78,17 @@ async function getReverseGeocodedAddress(latitude, longitude) {
     try {
         // Primary geocoding service
         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        
+
         const data = await response.json();
         return formatBrazilianAddress(data);
-        
+
     } catch (primaryError) {
         warn('(getReverseGeocodedAddress) Primary service failed:', primaryError.message);
-        
+
         try {
             // Fallback to cached data
             const cached = await getCachedAddress(latitude, longitude);
@@ -96,13 +96,13 @@ async function getReverseGeocodedAddress(latitude, longitude) {
                 log('(getReverseGeocodedAddress) Using cached address');
                 return cached;
             }
-            
+
             // Last resort: Generate approximate address
             return generateApproximateAddress(latitude, longitude);
-            
+
         } catch (fallbackError) {
             warn('(getReverseGeocodedAddress) All methods failed:', fallbackError.message);
-            
+
             // Return minimal but functional data
             return {
                 display_name: `Coordenadas: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
@@ -123,10 +123,10 @@ Maintain data integrity with immutable structures:
 // ✅ GOOD: Immutable data construction
 async function processLocationData(coordinates) {
     const geocodeResult = await getReverseGeocodedAddress(
-        coordinates.latitude, 
+        coordinates.latitude,
         coordinates.longitude
     );
-    
+
     // Create immutable result object
     return Object.freeze({
         originalCoordinates: Object.freeze({ ...coordinates }),
@@ -166,28 +166,28 @@ async function processAdministrativeHierarchy(location, maxDepth = 5, currentDep
         warn('(processAdministrativeHierarchy) Invalid location provided');
         return null;
     }
-    
+
     // STACK OVERFLOW PREVENTION: Depth limiting
     if (currentDepth >= maxDepth) {
         log(`(processAdministrativeHierarchy) Max depth ${maxDepth} reached`);
         return createLocationResult(location, currentDepth);
     }
-    
+
     try {
         // Get current level data
         const currentData = await getAdministrativeData(location);
-        
+
         // Check for parent administrative level
         const parentLocation = extractParentLocation(currentData);
-        
+
         if (parentLocation && isValidForProcessing(parentLocation, location)) {
             // CONTROLLED RECURSION: Continue with validation
             const parentData = await processAdministrativeHierarchy(
-                parentLocation, 
-                maxDepth, 
+                parentLocation,
+                maxDepth,
                 currentDepth + 1
             );
-            
+
             // IMMUTABLE RESULT: Freeze object to prevent mutations
             return Object.freeze({
                 current: currentData,
@@ -197,14 +197,14 @@ async function processAdministrativeHierarchy(location, maxDepth = 5, currentDep
                 timestamp: Date.now()
             });
         }
-        
+
         // Base case: No parent or max depth reached
         return createLocationResult(currentData, currentDepth);
-        
+
     } catch (error) {
         // GRACEFUL DEGRADATION: Handle errors without breaking chain
         warn(`(processAdministrativeHierarchy) Error at depth ${currentDepth}:`, error.message);
-        
+
         return Object.freeze({
             current: null,
             parent: null,
@@ -223,12 +223,12 @@ function isValidForProcessing(newLocation, previousLocation, threshold = 0.01) {
     if (!newLocation?.coordinates || !previousLocation?.coordinates) {
         return false;
     }
-    
+
     const distance = calculateDistance(
-        newLocation.coordinates, 
+        newLocation.coordinates,
         previousLocation.coordinates
     );
-    
+
     return distance > threshold; // Avoid infinite loops on same location
 }
 ```
@@ -244,14 +244,14 @@ async function fetchAllLocationPages(baseUrl, page = 1, retries = 0, allResults 
     const MAX_RETRIES = 3;
     const MAX_PAGES = 100; // Prevent infinite pagination
     const RETRY_DELAY_BASE = 1000;
-    
+
     try {
         // RESOURCE MANAGEMENT: Limit total pages
         if (page > MAX_PAGES) {
             warn(`(fetchAllLocationPages) Max pages (${MAX_PAGES}) reached`);
             return Object.freeze([...allResults]);
         }
-        
+
         const response = await fetch(`${baseUrl}?page=${page}&format=json`, {
             timeout: 10000, // 10 second timeout
             headers: {
@@ -259,37 +259,37 @@ async function fetchAllLocationPages(baseUrl, page = 1, retries = 0, allResults 
                 'Accept': 'application/json'
             }
         });
-        
+
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        
+
         const data = await response.json();
         const newResults = [...allResults, ...data.results];
-        
+
         // BRAZILIAN LOCALE: Log progress in Portuguese
         log(`(fetchAllLocationPages) Página ${page} processada: ${data.results.length} resultados`);
-        
+
         if (data.hasNextPage && data.results.length > 0) {
             // CONTROLLED RECURSION: Continue with next page
             return fetchAllLocationPages(baseUrl, page + 1, 0, newResults);
         }
-        
+
         // SUCCESS: Return immutable results
         return Object.freeze(newResults);
-        
+
     } catch (error) {
         warn(`(fetchAllLocationPages) Erro na página ${page}:`, error.message);
-        
+
         if (retries < MAX_RETRIES) {
             // EXPONENTIAL BACKOFF: Increasing delay between retries
             const delay = RETRY_DELAY_BASE * Math.pow(2, retries);
             log(`(fetchAllLocationPages) Tentando novamente em ${delay}ms (tentativa ${retries + 1}/${MAX_RETRIES})`);
-            
+
             await new Promise(resolve => setTimeout(resolve, delay));
             return fetchAllLocationPages(baseUrl, page, retries + 1, allResults);
         }
-        
+
         // GRACEFUL DEGRADATION: Return partial results instead of complete failure
         warn(`(fetchAllLocationPages) Falha após ${MAX_RETRIES} tentativas. Retornando ${allResults.length} resultados parciais`);
         return Object.freeze([...allResults]);
@@ -311,20 +311,20 @@ async function processLocationHierarchyIterative(initialLocation) {
     const results = [];
     const processed = new Set();
     const MAX_LOCATIONS = 50;
-    
+
     while (queue.length > 0 && results.length < MAX_LOCATIONS) {
         const { location, depth, path } = queue.shift();
-        
+
         // DUPLICATE DETECTION: Avoid processing same location twice
         const locationKey = createLocationKey(location);
         if (processed.has(locationKey)) {
             continue;
         }
         processed.add(locationKey);
-        
+
         try {
             const locationData = await getAdministrativeData(location);
-            
+
             // IMMUTABLE RESULT: Create frozen result object
             const result = Object.freeze({
                 location: locationData,
@@ -333,9 +333,9 @@ async function processLocationHierarchyIterative(initialLocation) {
                 coordinates: Object.freeze({ ...location.coordinates }),
                 timestamp: Date.now()
             });
-            
+
             results.push(result);
-            
+
             // ADD PARENT TO QUEUE: Continue hierarchy traversal
             const parentLocation = extractParentLocation(locationData);
             if (parentLocation && depth < 5) {
@@ -345,13 +345,13 @@ async function processLocationHierarchyIterative(initialLocation) {
                     path: [...path, locationData.name]
                 });
             }
-            
+
         } catch (error) {
             // CONTINUE ON ERROR: Don't stop entire process for single failure
             warn(`(processLocationHierarchy) Erro processando ${locationKey}:`, error.message);
         }
     }
-    
+
     return Object.freeze(results);
 }
 
@@ -377,11 +377,11 @@ function createLocationKey(location) {
  */
 async function robustGeolocationOperation(operation, fallbackStrategies = []) {
     const errors = [];
-    
+
     try {
         // PRIMARY OPERATION: Attempt main functionality
         const result = await operation();
-        
+
         // VALIDATION: Ensure result meets quality standards
         if (isValidGeolocationResult(result)) {
             return {
@@ -391,23 +391,23 @@ async function robustGeolocationOperation(operation, fallbackStrategies = []) {
                 timestamp: Date.now()
             };
         }
-        
+
         throw new Error('Primary result failed validation');
-        
+
     } catch (primaryError) {
         errors.push({
             stage: 'primary',
             error: primaryError.message,
             timestamp: Date.now()
         });
-        
+
         // FALLBACK STRATEGIES: Try alternatives in order
         for (let i = 0; i < fallbackStrategies.length; i++) {
             try {
                 log(`(robustGeolocationOperation) Tentando estratégia de fallback ${i + 1}`);
-                
+
                 const fallbackResult = await fallbackStrategies[i]();
-                
+
                 if (isValidGeolocationResult(fallbackResult)) {
                     return {
                         success: true,
@@ -417,7 +417,7 @@ async function robustGeolocationOperation(operation, fallbackStrategies = []) {
                         timestamp: Date.now()
                     };
                 }
-                
+
             } catch (fallbackError) {
                 errors.push({
                     stage: `fallback-${i + 1}`,
@@ -426,10 +426,10 @@ async function robustGeolocationOperation(operation, fallbackStrategies = []) {
                 });
             }
         }
-        
+
         // GRACEFUL DEGRADATION: Return meaningful failure response
         warn('(robustGeolocationOperation) Todas as estratégias falharam');
-        
+
         return {
             success: false,
             data: null,
@@ -445,7 +445,7 @@ async function getCurrentLocationRobust() {
     return robustGeolocationOperation(
         // Primary operation
         () => navigator.geolocation.getCurrentPosition(),
-        
+
         // Fallback strategies
         [
             () => getCachedLocation(),
@@ -475,9 +475,9 @@ class LocalizedGeolocationError extends Error {
             'INVALID_COORDINATES': "Coordenadas inválidas fornecidas.",
             'SERVICE_UNAVAILABLE': "Serviço de localização temporariamente indisponível."
         };
-        
+
         const userMessage = userMessages[code] || "Erro desconhecido na obtenção da localização.";
-        
+
         super(userMessage);
         this.name = 'LocalizedGeolocationError';
         this.code = code;
@@ -485,7 +485,7 @@ class LocalizedGeolocationError extends Error {
         this.userMessage = userMessage;
         this.timestamp = Date.now();
     }
-    
+
     /**
      * Returns formatted error for display
      */
@@ -504,17 +504,17 @@ async function getLocationWithLocalizedErrors() {
     try {
         const position = await getCurrentPosition();
         return position;
-        
+
     } catch (error) {
         // Convert to localized error
         const localizedError = new LocalizedGeolocationError(
             error.code || 'UNKNOWN_ERROR',
             error.message
         );
-        
+
         // Log technical details (in English for debugging)
         warn('(getLocationWithLocalizedErrors) Technical error:', error.message);
-        
+
         // Throw user-friendly error (in Portuguese)
         throw localizedError;
     }
@@ -540,49 +540,49 @@ class ConcurrentGeocoder {
         this.activeRequests = 0;
         this.requestQueue = [];
     }
-    
+
     /**
      * Process multiple locations with controlled concurrency
      */
     async geocodeMultipleLocations(coordinates) {
         const results = new Map();
         const chunks = this.chunkArray(coordinates, this.maxConcurrent);
-        
+
         for (const chunk of chunks) {
             // CONTROLLED CONCURRENCY: Process chunks in parallel
             const chunkPromises = chunk.map(async (coord, index) => {
                 // RATE LIMITING: Stagger requests to avoid overwhelming API
                 await this.delay(index * this.rateLimitDelay);
-                
+
                 const cacheKey = `${coord.latitude},${coord.longitude}`;
-                
+
                 // CACHING: Check cache first
                 if (this.cache.has(cacheKey)) {
                     log(`(geocodeMultipleLocations) Cache hit para ${cacheKey}`);
                     return { coord, result: this.cache.get(cacheKey), cached: true };
                 }
-                
+
                 try {
                     this.activeRequests++;
                     const result = await this.geocodeSingleLocation(coord);
-                    
+
                     // CACHE RESULT: Store for future use
                     this.cache.set(cacheKey, result);
-                    
+
                     return { coord, result, cached: false };
-                    
+
                 } catch (error) {
                     warn(`(geocodeMultipleLocations) Erro para ${cacheKey}:`, error.message);
                     return { coord, result: null, error: error.message };
-                    
+
                 } finally {
                     this.activeRequests--;
                 }
             });
-            
+
             // WAIT FOR CHUNK: Complete current chunk before starting next
             const chunkResults = await Promise.allSettled(chunkPromises);
-            
+
             // PROCESS RESULTS: Handle both successful and failed operations
             chunkResults.forEach((promiseResult, index) => {
                 if (promiseResult.status === 'fulfilled') {
@@ -590,22 +590,22 @@ class ConcurrentGeocoder {
                     results.set(`${coord.latitude},${coord.longitude}`, result);
                 }
             });
-            
+
             // RATE LIMITING: Pause between chunks
             if (chunks.indexOf(chunk) < chunks.length - 1) {
                 await this.delay(this.rateLimitDelay * 2);
             }
         }
-        
+
         return results;
     }
-    
+
     /**
      * Geocode single location with retry logic
      */
     async geocodeSingleLocation(coordinates, retries = 0) {
         const MAX_RETRIES = 3;
-        
+
         try {
             const response = await fetch(
                 `https://nominatim.openstreetmap.org/reverse?lat=${coordinates.latitude}&lon=${coordinates.longitude}&format=json`,
@@ -615,25 +615,25 @@ class ConcurrentGeocoder {
                     }
                 }
             );
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}`);
             }
-            
+
             const data = await response.json();
             return this.formatBrazilianAddress(data);
-            
+
         } catch (error) {
             if (retries < MAX_RETRIES) {
                 const delay = 1000 * Math.pow(2, retries); // Exponential backoff
                 await this.delay(delay);
                 return this.geocodeSingleLocation(coordinates, retries + 1);
             }
-            
+
             throw error;
         }
     }
-    
+
     /**
      * Utility methods
      */
@@ -644,11 +644,11 @@ class ConcurrentGeocoder {
         }
         return chunks;
     }
-    
+
     delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-    
+
     formatBrazilianAddress(osmData) {
         // Format address for Brazilian users
         return {
@@ -677,7 +677,7 @@ class ConcurrentGeocoder {
 async function* processLocationDataStream(dataSource) {
     let batch = [];
     const BATCH_SIZE = 100;
-    
+
     try {
         for await (const locationData of dataSource) {
             // VALIDATE INPUT: Ensure data quality
@@ -685,29 +685,29 @@ async function* processLocationDataStream(dataSource) {
                 warn('(processLocationDataStream) Dados de localização inválidos ignorados');
                 continue;
             }
-            
+
             batch.push(locationData);
-            
+
             // YIELD BATCH: Process data in manageable chunks
             if (batch.length >= BATCH_SIZE) {
                 const processedBatch = await processBatch(batch);
                 yield* processedBatch; // Yield individual results
-                
+
                 batch = []; // Clear batch to free memory
-                
+
                 // GARBAGE COLLECTION HINT: Allow GC between batches
                 if (global.gc) {
                     global.gc();
                 }
             }
         }
-        
+
         // PROCESS REMAINING: Handle final partial batch
         if (batch.length > 0) {
             const processedBatch = await processBatch(batch);
             yield* processedBatch;
         }
-        
+
     } catch (error) {
         warn('(processLocationDataStream) Erro no processamento do stream:', error.message);
         throw error;
@@ -717,21 +717,21 @@ async function* processLocationDataStream(dataSource) {
 // Usage example
 async function processLargeLocationDataset(filePath) {
     const results = [];
-    
+
     try {
         const dataStream = createLocationDataStream(filePath);
-        
+
         for await (const processedLocation of processLocationDataStream(dataStream)) {
             results.push(processedLocation);
-            
+
             // PROGRESS REPORTING: Update user on progress
             if (results.length % 1000 === 0) {
                 log(`(processLargeLocationDataset) Processados ${results.length} locais`);
             }
         }
-        
+
         return Object.freeze(results);
-        
+
     } catch (error) {
         warn('(processLargeLocationDataset) Erro no processamento:', error.message);
         return Object.freeze(results); // Return partial results
@@ -768,7 +768,7 @@ class AsyncGeolocationTestUtils {
             timestamp: Date.now()
         };
     }
-    
+
     /**
      * Creates mock geocoding response
      */
@@ -777,7 +777,7 @@ class AsyncGeolocationTestUtils {
             display_name: "Avenida Paulista, São Paulo, SP, Brasil",
             address: {
                 road: "Avenida Paulista",
-                suburb: "Bela Vista", 
+                suburb: "Bela Vista",
                 city: "São Paulo",
                 state: "São Paulo",
                 country: "Brasil",
@@ -788,14 +788,14 @@ class AsyncGeolocationTestUtils {
             ...overrides
         };
     }
-    
+
     /**
      * Simulates network delay for realistic testing
      */
     static async simulateNetworkDelay(ms = 100) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-    
+
     /**
      * Creates rejecting promise for error testing
      */
@@ -809,40 +809,40 @@ class AsyncGeolocationTestUtils {
 // Test examples using Jest
 describe('Async Geolocation Operations', () => {
     let geocoder;
-    
+
     beforeEach(() => {
         geocoder = new ConcurrentGeocoder({
             maxConcurrent: 2,
             rateLimitDelay: 50
         });
     });
-    
+
     describe('Single Location Geocoding', () => {
         test('should geocode valid coordinates successfully', async () => {
             // ARRANGE: Setup mock data
             const coordinates = { latitude: -23.5505, longitude: -46.6333 };
             const expectedResult = AsyncGeolocationTestUtils.createMockGeocodingResponse();
-            
+
             // Mock fetch to return expected data
             global.fetch = jest.fn().mockResolvedValue({
                 ok: true,
                 json: () => Promise.resolve(expectedResult)
             });
-            
+
             // ACT: Execute operation
             const result = await geocoder.geocodeSingleLocation(coordinates);
-            
+
             // ASSERT: Verify results
             expect(result).toBeDefined();
             expect(result.cidade).toBe('São Paulo');
             expect(result.coordinates.latitude).toBe(-23.5505);
             expect(fetch).toHaveBeenCalledTimes(1);
         });
-        
+
         test('should handle network errors with retry logic', async () => {
             // ARRANGE: Setup failing then succeeding mock
             const coordinates = { latitude: -23.5505, longitude: -46.6333 };
-            
+
             global.fetch = jest.fn()
                 .mockRejectedValueOnce(new Error('Network error'))
                 .mockRejectedValueOnce(new Error('Network error'))
@@ -850,29 +850,29 @@ describe('Async Geolocation Operations', () => {
                     ok: true,
                     json: () => Promise.resolve(AsyncGeolocationTestUtils.createMockGeocodingResponse())
                 });
-            
+
             // ACT: Execute operation
             const result = await geocoder.geocodeSingleLocation(coordinates);
-            
+
             // ASSERT: Verify retry behavior
             expect(result).toBeDefined();
             expect(fetch).toHaveBeenCalledTimes(3); // Initial + 2 retries
         });
-        
+
         test('should fail gracefully after max retries', async () => {
             // ARRANGE: Setup always-failing mock
             const coordinates = { latitude: -23.5505, longitude: -46.6333 };
-            
+
             global.fetch = jest.fn().mockRejectedValue(new Error('Persistent network error'));
-            
+
             // ACT & ASSERT: Expect failure after retries
             await expect(geocoder.geocodeSingleLocation(coordinates))
                 .rejects.toThrow('Persistent network error');
-                
+
             expect(fetch).toHaveBeenCalledTimes(4); // Initial + 3 retries
         });
     });
-    
+
     describe('Concurrent Operations', () => {
         test('should process multiple locations with rate limiting', async () => {
             // ARRANGE: Setup multiple coordinates
@@ -881,49 +881,49 @@ describe('Async Geolocation Operations', () => {
                 { latitude: -22.9068, longitude: -43.1729 },
                 { latitude: -19.9167, longitude: -43.9345 }
             ];
-            
+
             global.fetch = jest.fn().mockResolvedValue({
                 ok: true,
                 json: () => Promise.resolve(AsyncGeolocationTestUtils.createMockGeocodingResponse())
             });
-            
+
             const startTime = Date.now();
-            
+
             // ACT: Execute concurrent operations
             const results = await geocoder.geocodeMultipleLocations(coordinates);
-            
+
             const endTime = Date.now();
             const duration = endTime - startTime;
-            
+
             // ASSERT: Verify results and timing
             expect(results.size).toBe(3);
             expect(duration).toBeGreaterThan(100); // Should include rate limiting delays
             expect(fetch).toHaveBeenCalledTimes(3);
         });
     });
-    
+
     describe('Async Recursion', () => {
         test('should process administrative hierarchy with depth limiting', async () => {
             // ARRANGE: Setup mock hierarchy data
             const mockLocation = {
                 coordinates: { latitude: -23.5505, longitude: -46.6333 }
             };
-            
+
             const mockHierarchy = [
                 { name: 'Bela Vista', level: 'neighbourhood', parent: 'centro' },
                 { name: 'Centro', level: 'district', parent: 'sao-paulo' },
                 { name: 'São Paulo', level: 'city', parent: null }
             ];
-            
+
             // Mock the administrative data function
             jest.spyOn(global, 'getAdministrativeData').mockImplementation(async (location) => {
                 await AsyncGeolocationTestUtils.simulateNetworkDelay(50);
                 return mockHierarchy.shift() || null;
             });
-            
+
             // ACT: Execute recursive operation
             const result = await processAdministrativeHierarchy(mockLocation, 3);
-            
+
             // ASSERT: Verify hierarchy structure
             expect(result).toBeDefined();
             expect(result.depth).toBe(0);
@@ -931,35 +931,35 @@ describe('Async Geolocation Operations', () => {
             expect(result.parent).toBeDefined();
             expect(result.parent.current.name).toBe('Centro');
         });
-        
+
         test('should prevent infinite recursion with depth limiting', async () => {
             // ARRANGE: Setup infinite hierarchy mock
             const mockLocation = {
                 coordinates: { latitude: -23.5505, longitude: -46.6333 }
             };
-            
+
             jest.spyOn(global, 'getAdministrativeData').mockResolvedValue({
                 name: 'Infinite Level',
                 level: 'test',
                 parent: mockLocation // Circular reference
             });
-            
+
             // ACT: Execute with depth limit
             const result = await processAdministrativeHierarchy(mockLocation, 2);
-            
+
             // ASSERT: Verify depth limiting works
             expect(result.depth).toBeLessThanOrEqual(2);
         });
     });
-    
+
     describe('Error Handling', () => {
         test('should handle Portuguese error messages correctly', async () => {
             // ARRANGE: Setup error scenario
             const error = new LocalizedGeolocationError(1, 'Permission denied');
-            
+
             // ACT: Get display message
             const displayMessage = error.getDisplayMessage();
-            
+
             // ASSERT: Verify Portuguese localization
             expect(displayMessage.title).toBe('Erro de Localização');
             expect(displayMessage.message).toContain('Permissão de localização negada');
@@ -976,16 +976,16 @@ describe('Performance Characteristics', () => {
             latitude: -23.5505 + (i * 0.001),
             longitude: -46.6333 + (i * 0.001)
         }));
-        
+
         global.fetch = jest.fn().mockResolvedValue({
             ok: true,
             json: () => Promise.resolve(AsyncGeolocationTestUtils.createMockGeocodingResponse())
         });
-        
+
         const startTime = Date.now();
         await geocoder.geocodeMultipleLocations(coordinates);
         const duration = Date.now() - startTime;
-        
+
         // Should complete within reasonable time (allowing for rate limiting)
         expect(duration).toBeLessThan(5000); // 5 seconds max
     });
@@ -1009,7 +1009,7 @@ class AsyncLocationObserver {
         this.isProcessing = false;
         this.pendingNotifications = [];
     }
-    
+
     /**
      * Subscribe to location updates with async callback support
      */
@@ -1017,11 +1017,11 @@ class AsyncLocationObserver {
         if (typeof asyncCallback !== 'function') {
             throw new Error('Observer callback must be a function');
         }
-        
+
         this.observers.add(asyncCallback);
         log(`(AsyncLocationObserver) Observer adicionado. Total: ${this.observers.size}`);
     }
-    
+
     /**
      * Unsubscribe from location updates
      */
@@ -1032,7 +1032,7 @@ class AsyncLocationObserver {
         }
         return removed;
     }
-    
+
     /**
      * Notify all observers with async operation support
      */
@@ -1042,9 +1042,9 @@ class AsyncLocationObserver {
             this.pendingNotifications.push(locationData);
             return;
         }
-        
+
         this.isProcessing = true;
-        
+
         try {
             // CONCURRENT OBSERVER EXECUTION: Run all observers in parallel
             const notificationPromises = Array.from(this.observers).map(async (observer) => {
@@ -1055,29 +1055,29 @@ class AsyncLocationObserver {
                     warn('(AsyncLocationObserver) Erro em observer:', error.message);
                 }
             });
-            
+
             // WAIT FOR ALL: Complete all notifications before continuing
             await Promise.allSettled(notificationPromises);
-            
+
             // PROCESS PENDING: Handle queued notifications
             if (this.pendingNotifications.length > 0) {
                 const nextNotification = this.pendingNotifications.shift();
                 // Schedule next notification asynchronously
                 setTimeout(() => this.notifyObservers(nextNotification), 0);
             }
-            
+
         } finally {
             this.isProcessing = false;
         }
     }
-    
+
     /**
      * Get current observer count
      */
     getObserverCount() {
         return this.observers.size;
     }
-    
+
     /**
      * Clear all observers
      */
@@ -1092,16 +1092,16 @@ class AsyncLocationObserver {
 class EnhancedGeolocationService extends GeolocationService {
     constructor(locationResult, navigator, positionManager, config = {}) {
         super(locationResult, navigator, positionManager, config);
-        
+
         // Add async observer support
         this.locationObserver = new AsyncLocationObserver();
-        
+
         // Subscribe to PositionManager updates
         this.positionManager.subscribe(async (position) => {
             await this.handlePositionUpdate(position);
         });
     }
-    
+
     /**
      * Handle position updates with async processing
      */
@@ -1109,7 +1109,7 @@ class EnhancedGeolocationService extends GeolocationService {
         try {
             // UPDATE INTERNAL STATE: Store latest position
             this.lastKnownPosition = position;
-            
+
             // NOTIFY OBSERVERS: Inform subscribers of position change
             await this.locationObserver.notifyObservers({
                 position: Object.freeze({ ...position }),
@@ -1117,24 +1117,24 @@ class EnhancedGeolocationService extends GeolocationService {
                 accuracy: position.coords.accuracy,
                 source: 'geolocation-api'
             });
-            
+
             // UPDATE DISPLAY: Refresh UI elements
             if (this.locationResult) {
                 this.updateLocationDisplay(position);
             }
-            
+
         } catch (error) {
             warn('(EnhancedGeolocationService) Erro no processamento de posição:', error.message);
         }
     }
-    
+
     /**
      * Subscribe to location updates with async callback
      */
     subscribeToLocationUpdates(asyncCallback) {
         this.locationObserver.subscribe(asyncCallback);
     }
-    
+
     /**
      * Unsubscribe from location updates
      */
@@ -1154,12 +1154,12 @@ class EnhancedGeolocationService extends GeolocationService {
 class AsyncWebGeocodingManager extends WebGeocodingManager {
     constructor(document, params) {
         super(document, params);
-        
+
         // Add async operation tracking
         this.pendingOperations = new Map();
         this.operationCounter = 0;
     }
-    
+
     /**
      * Create manager instance with async dependency loading
      */
@@ -1170,17 +1170,17 @@ class AsyncWebGeocodingManager extends WebGeocodingManager {
             ensurePositionManagerReady(),
             validateDOMElements(params)
         ]);
-        
+
         log('(AsyncWebGeocodingManager) Dependências carregadas, criando manager');
         return new AsyncWebGeocodingManager(document, params);
     }
-    
+
     /**
      * Enhanced coordinate processing with async operations
      */
     async processCoordinatesAsync(latitude, longitude) {
         const operationId = `coords-${++this.operationCounter}`;
-        
+
         try {
             // TRACK OPERATION: Monitor async operations for debugging
             this.pendingOperations.set(operationId, {
@@ -1189,18 +1189,18 @@ class AsyncWebGeocodingManager extends WebGeocodingManager {
                 latitude,
                 longitude
             });
-            
+
             // VALIDATE COORDINATES: Ensure valid input
             if (!this.isValidCoordinate(latitude, longitude)) {
                 throw new Error(`Coordenadas inválidas: ${latitude}, ${longitude}`);
             }
-            
+
             // CONCURRENT OPERATIONS: Run geocoding and position update in parallel
             const [geocodingResult, positionUpdate] = await Promise.allSettled([
                 this.reverseGeocoder.reverseGeocode(),
                 this.updatePositionManager(latitude, longitude)
             ]);
-            
+
             // PROCESS RESULTS: Handle both successful and failed operations
             const result = {
                 operationId,
@@ -1209,22 +1209,22 @@ class AsyncWebGeocodingManager extends WebGeocodingManager {
                 positionUpdate: this.processSettledResult(positionUpdate, 'position'),
                 timestamp: Date.now()
             };
-            
+
             // NOTIFY OBSERVERS: Inform subscribers of processing completion
             await this.notifyProcessingComplete(result);
-            
+
             return Object.freeze(result);
-            
+
         } catch (error) {
             warn(`(AsyncWebGeocodingManager) Erro na operação ${operationId}:`, error.message);
             throw error;
-            
+
         } finally {
             // CLEANUP: Remove operation tracking
             this.pendingOperations.delete(operationId);
         }
     }
-    
+
     /**
      * Process Promise.allSettled results consistently
      */
@@ -1244,7 +1244,7 @@ class AsyncWebGeocodingManager extends WebGeocodingManager {
             };
         }
     }
-    
+
     /**
      * Update PositionManager with new coordinates
      */
@@ -1261,10 +1261,10 @@ class AsyncWebGeocodingManager extends WebGeocodingManager {
             },
             timestamp: Date.now()
         };
-        
+
         return this.positionManager.update(mockPosition);
     }
-    
+
     /**
      * Notify observers of processing completion
      */
@@ -1273,7 +1273,7 @@ class AsyncWebGeocodingManager extends WebGeocodingManager {
             await this.observerSubject.notifyObserversAsync(result);
         }
     }
-    
+
     /**
      * Get status of pending operations
      */
@@ -1284,7 +1284,7 @@ class AsyncWebGeocodingManager extends WebGeocodingManager {
             duration: Date.now() - operation.startTime
         }));
     }
-    
+
     /**
      * Validate coordinate values
      */
@@ -1321,7 +1321,7 @@ async function controlledRecursion(data, maxDepth = 10, currentDepth = 0) {
     if (currentDepth >= maxDepth) {
         return data; // Base case
     }
-    
+
     try {
         const result = await processData(data);
         if (shouldContinue(result)) {
@@ -1374,15 +1374,15 @@ async function processMultipleLocations(locations) {
     const concurrencyLimit = 5;
     const chunks = chunkArray(locations, concurrencyLimit);
     const allResults = [];
-    
+
     for (const chunk of chunks) {
         const chunkResults = await Promise.allSettled(
             chunk.map(location => geocodeLocation(location))
         );
         allResults.push(...chunkResults);
     }
-    
-    return allResults.map(result => 
+
+    return allResults.map(result =>
         result.status === 'fulfilled' ? result.value : null
     ).filter(Boolean);
 }
@@ -1418,7 +1418,7 @@ async function complexOperation() {
         const processed = await processData(data);
         const result = await saveResult(processed);
         return result;
-        
+
     } catch (error) {
         // Specific error handling based on error type
         if (error.name === 'FetchError') {
@@ -1454,7 +1454,7 @@ class AsyncOperationLogger {
             timestamp: Date.now()
         });
     }
-    
+
     static logAsyncComplete(operation, result, duration) {
         log(`(${operation}) Operação concluída em ${duration}ms`, {
             operation,
@@ -1463,7 +1463,7 @@ class AsyncOperationLogger {
             timestamp: Date.now()
         });
     }
-    
+
     static logAsyncError(operation, error, duration) {
         warn(`(${operation}) Falha após ${duration}ms: ${error.message}`, {
             operation,
@@ -1472,7 +1472,7 @@ class AsyncOperationLogger {
             timestamp: Date.now()
         });
     }
-    
+
     static sanitizeParams(params) {
         // Remove sensitive data from logs
         const sanitized = { ...params };
@@ -1490,24 +1490,24 @@ class AsyncOperationLogger {
 async function geocodeLocationWithLogging(coordinates) {
     const operation = 'geocodeLocation';
     const startTime = Date.now();
-    
+
     AsyncOperationLogger.logAsyncStart(operation, { coordinates });
-    
+
     try {
         const result = await geocodeLocation(coordinates);
-        
+
         AsyncOperationLogger.logAsyncComplete(
-            operation, 
-            result, 
+            operation,
+            result,
             Date.now() - startTime
         );
-        
+
         return result;
-        
+
     } catch (error) {
         AsyncOperationLogger.logAsyncError(
-            operation, 
-            error, 
+            operation,
+            error,
             Date.now() - startTime
         );
         throw error;
@@ -1540,7 +1540,7 @@ class MaterialAsyncUI {
             `;
         }
     }
-    
+
     static showErrorState(elementId, error) {
         const element = document.getElementById(elementId);
         if (element) {
@@ -1549,7 +1549,7 @@ class MaterialAsyncUI {
                     <div class="mdc-card__content">
                         <h3 class="error-title">Erro na Operação</h3>
                         <p class="error-message">${error.userMessage || error.message}</p>
-                        <button class="mdc-button mdc-button--raised retry-button" 
+                        <button class="mdc-button mdc-button--raised retry-button"
                                 onclick="retryOperation()">
                             <span class="mdc-button__label">Tentar Novamente</span>
                         </button>
@@ -1558,7 +1558,7 @@ class MaterialAsyncUI {
             `;
         }
     }
-    
+
     static showSuccessState(elementId, data) {
         const element = document.getElementById(elementId);
         if (element) {
@@ -1574,7 +1574,7 @@ class MaterialAsyncUI {
             `;
         }
     }
-    
+
     static formatResultData(data) {
         if (data.coordinates) {
             return `
@@ -1592,15 +1592,15 @@ async function performLocationOperationWithUI(coordinates, elementId) {
     try {
         // SHOW LOADING: Immediate visual feedback
         MaterialAsyncUI.showLoadingState(elementId, 'Obtendo localização...');
-        
+
         // PERFORM OPERATION: Execute async operation
         const result = await geocodeLocationWithRetry(coordinates);
-        
+
         // SHOW SUCCESS: Display results
         MaterialAsyncUI.showSuccessState(elementId, result);
-        
+
         return result;
-        
+
     } catch (error) {
         // SHOW ERROR: User-friendly error display
         MaterialAsyncUI.showErrorState(elementId, error);
@@ -1630,18 +1630,18 @@ class CompatibleAsyncOperations {
                 return this.xmlHttpRequestFallback(url, options);
             }
         }
-        
+
         // Older browsers: Use XMLHttpRequest
         return this.xmlHttpRequestFallback(url, options);
     }
-    
+
     /**
      * XMLHttpRequest wrapped as Promise for compatibility
      */
     static xmlHttpRequestFallback(url, options = {}) {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
-            
+
             xhr.onload = function() {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     resolve({
@@ -1654,23 +1654,23 @@ class CompatibleAsyncOperations {
                     reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
                 }
             };
-            
+
             xhr.onerror = () => reject(new Error('Network error'));
             xhr.ontimeout = () => reject(new Error('Request timeout'));
-            
+
             xhr.open(options.method || 'GET', url);
             xhr.timeout = options.timeout || 10000;
-            
+
             if (options.headers) {
                 Object.keys(options.headers).forEach(key => {
                     xhr.setRequestHeader(key, options.headers[key]);
                 });
             }
-            
+
             xhr.send(options.body);
         });
     }
-    
+
     /**
      * Promise.allSettled polyfill for older browsers
      */
@@ -1678,7 +1678,7 @@ class CompatibleAsyncOperations {
         if (Promise.allSettled) {
             return Promise.allSettled(promises);
         }
-        
+
         // Polyfill implementation
         return Promise.all(
             promises.map(promise =>

@@ -97,10 +97,10 @@ The E2E test verifies the complete user journey from geolocation request to disp
    ```javascript
    navigator.geolocation.getCurrentPosition = (success) => {
        success({
-           coords: { 
-               latitude: -9.747887, 
+           coords: {
+               latitude: -9.747887,
                longitude: -36.664797,
-               accuracy: 10 
+               accuracy: 10
            },
            timestamp: Date.now()
        });
@@ -142,7 +142,7 @@ The E2E test verifies the complete user journey from geolocation request to disp
    ```javascript
    const municipio = await page.$eval('#municipio-value', el => el.textContent.trim());
    const bairro = await page.$eval('#bairro-value', el => el.textContent.trim());
-   
+
    expect(municipio).toBe('Arapiraca');
    expect(bairro).toBe('Centro');
    ```

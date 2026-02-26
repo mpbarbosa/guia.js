@@ -182,13 +182,13 @@ def clear_logs(self):
 ```python
 def test_example(firefox_driver, console_capture, base_url):
     firefox_driver.get(f"{base_url}/index.html")
-    
+
     # Clear page's initial logs
     console_capture.clear_logs()
-    
+
     # Perform test action
     driver.execute_script("console.error('Test error');")
-    
+
     # Assert on clean log state
     errors = console_capture.get_errors()
     assert "Test error" in errors[0]["message"]
@@ -279,10 +279,10 @@ The library can now be used in existing Guia Turístico integration tests:
 def test_index_page_no_errors(firefox_driver, console_capture):
     """Ensure index page loads without JavaScript errors."""
     firefox_driver.get(f"{base_url}/index.html")
-    
+
     # Wait for page to fully load
     time.sleep(2)
-    
+
     # Check for console errors
     console_capture.assert_no_errors("Index page should load without errors")
 ```
@@ -373,8 +373,8 @@ The implementation follows modern Python 3.13 conventions, uses structural patte
 
 ---
 
-**Date**: 2026-01-04  
-**Python Version**: 3.13.7  
-**Selenium Version**: 4.15.0+  
-**pytest Version**: 9.0.2  
+**Date**: 2026-01-04
+**Python Version**: 3.13.7
+**Selenium Version**: 4.15.0+
+**pytest Version**: 9.0.2
 **Status**: ✅ Complete and Tested

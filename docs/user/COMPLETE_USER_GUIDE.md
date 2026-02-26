@@ -2,9 +2,9 @@
 
 ---
 
-Last Updated: 2026-02-16  
-Status: Active  
-Category: User Guide  
+Last Updated: 2026-02-16
+Status: Active
+Category: User Guide
 Version: 0.11.0-alpha
 ---
 
@@ -672,7 +672,7 @@ If you accidentally denied location access:
 
 ### General Questions
 
-**Q: Do I need an internet connection?**  
+**Q: Do I need an internet connection?**
 A: Yes, internet is required for:
 
 - Address lookups (OpenStreetMap API)
@@ -683,7 +683,7 @@ The app will still show coordinates offline, but addresses won't update.
 
 ---
 
-**Q: Does this work on my device?**  
+**Q: Does this work on my device?**
 A: The app works on:
 
 - ✅ Modern smartphones (Android/iOS)
@@ -699,7 +699,7 @@ Requirements:
 
 ---
 
-**Q: Is my location data secure?**  
+**Q: Is my location data secure?**
 A: Yes! Your location:
 
 - Stays in your browser (not stored on servers)
@@ -711,7 +711,7 @@ See [Privacy & Permissions](#privacy--permissions) for details.
 
 ---
 
-**Q: Can I use this while driving?**  
+**Q: Can I use this while driving?**
 A: Yes, but:
 
 - ⚠️ Don't interact with the app while driving
@@ -723,7 +723,7 @@ A: Yes, but:
 
 ---
 
-**Q: Why does it say "Bairro: undefined"?**  
+**Q: Why does it say "Bairro: undefined"?**
 A: Some locations don't have neighborhood data:
 
 - Rural areas
@@ -735,7 +735,7 @@ This is normal and doesn't indicate an error.
 
 ---
 
-**Q: Can I see my location history?**  
+**Q: Can I see my location history?**
 A: No, the app doesn't store location history. This is intentional for:
 
 - Privacy protection
@@ -748,7 +748,7 @@ If you need history tracking, consider using dedicated tracking apps.
 
 ### Technical Questions
 
-**Q: What coordinate system does this use?**  
+**Q: What coordinate system does this use?**
 A: The app uses:
 
 - **WGS 84** (World Geodetic System 1984)
@@ -757,7 +757,7 @@ A: The app uses:
 
 ---
 
-**Q: How accurate is the location?**  
+**Q: How accurate is the location?**
 A: Accuracy depends on:
 
 - Device GPS quality
@@ -772,7 +772,7 @@ Typical accuracy:
 
 ---
 
-**Q: What's the difference between the two position buttons?**  
+**Q: What's the difference between the two position buttons?**
 A:
 
 - **"Obter Localização"** (Get Location): One-time update
@@ -782,7 +782,7 @@ Use single capture when stationary, tracking when moving.
 
 ---
 
-**Q: Why are updates not instant?**  
+**Q: Why are updates not instant?**
 A: Updates require:
 
 - GPS signal acquisition (1-5 seconds)
@@ -795,7 +795,7 @@ Smart filtering also prevents updates unless you moved ≥20m or 30s passed.
 
 ---
 
-**Q: Can I customize the app?**  
+**Q: Can I customize the app?**
 A: For developers:
 
 - ✅ Fork the GitHub repository
@@ -865,8 +865,8 @@ See [Developer Guide](../developer/DEVELOPER_GUIDE.md) for details.
 
 ---
 
-**Last Updated**: 2026-02-16  
-**Version**: 0.11.0-alpha  
+**Last Updated**: 2026-02-16
+**Version**: 0.11.0-alpha
 **License**: ISC
 
 ---

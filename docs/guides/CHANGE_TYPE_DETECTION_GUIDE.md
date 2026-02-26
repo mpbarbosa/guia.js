@@ -159,7 +159,7 @@ If all detection fails, defaults to `fix` with comprehensive testing.
 
 ```bash
 # Commit: "fix: correct geocoding calculation"
-# Steps: security_audit (15s), syntax_validation (5s), 
+# Steps: security_audit (15s), syntax_validation (5s)
 #        test_execution (25s), quality_checks (5s)
 # Total: ~50s (was ~90s) → 44% faster
 ```
@@ -187,7 +187,7 @@ change_detection:
       test_strategy: "selective"
       examples:
         - "custom: example commit"
-  
+
   routing:
     custom_type:
       steps:
@@ -203,7 +203,7 @@ Add pattern matching in `change-type-detector.sh`:
 ```bash
 detect_type_from_pattern() {
     # ... existing patterns ...
-    
+
     # Custom type pattern
     if echo "$lower_message" | grep -qE "^custom\s"; then
         echo "custom_type"
@@ -259,7 +259,7 @@ fi
     echo "type=$TYPE" >> $GITHUB_OUTPUT
 
 - name: Run Tests
-  if: contains(steps.detect.outputs.type, 'feat') || 
+  if: contains(steps.detect.outputs.type, 'feat') ||
       contains(steps.detect.outputs.type, 'fix')
   run: npm test
 ```

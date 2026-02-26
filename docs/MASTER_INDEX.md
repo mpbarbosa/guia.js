@@ -1,7 +1,7 @@
 # Guia Turístico - Master Documentation Index
 
-**Last Updated**: 2026-02-13  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-02-13
+**Version**: 0.9.0-alpha
 **Status**: ✅ Active
 
 ---
@@ -318,7 +318,7 @@ See [Documentation Guide](CODE_PATTERN_DOCUMENTATION_GUIDE.md) for details.
 
 ---
 
-## 🆘 Need Help?
+## 🆘 Need Help
 
 - **Can't find documentation?** - Check this index or search [docs/](.)
 - **Documentation outdated?** - [Open an issue](https://github.com/mpbarbosa/guia_turistico/issues)

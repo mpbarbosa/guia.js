@@ -253,6 +253,6 @@ node-version: '18'
   - Removed duplicate workflow file
   - Standardized issue templates
 
-## Questions?
+## Questions
 
 If you have questions about these patterns or need help applying them, please open an issue for discussion.

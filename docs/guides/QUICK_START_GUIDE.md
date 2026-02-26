@@ -1,7 +1,7 @@
 # Quick Start Guide - Guia Turístico
 
-**Last Updated**: 2026-02-13  
-**Version**: 0.9.0-alpha  
+**Last Updated**: 2026-02-13
+**Version**: 0.9.0-alpha
 **Estimated Time**: 5-10 minutes
 
 ---
@@ -130,7 +130,7 @@ npm run preview    # Preview on port 9001
 python3 -m http.server 9000
 ```
 
-**Access**: http://localhost:9000/src/index.html  
+**Access**: http://localhost:9000/src/index.html
 **Use when**: Debugging without build tools
 
 ---
@@ -151,7 +151,7 @@ console.log('Home view initialized - My First Change!');
 
 ### 2. See the Change
 
-**With Vite** (npm run dev): Changes appear instantly!  
+**With Vite** (npm run dev): Changes appear instantly!
 **Without Vite**: Refresh browser manually
 
 ### 3. Validate Your Change

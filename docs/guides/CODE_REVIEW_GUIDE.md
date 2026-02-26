@@ -74,7 +74,7 @@ Go through the code systematically using the checklists below.
 
 When reviewing functions, ask these questions:
 
-#### Are functions pure?
+#### Are functions pure
 
 - [ ] **Same input → Same output**: Does the function always return the same result for the same arguments?
 - [ ] **No side effects**: Does the function avoid modifying external state?
@@ -95,7 +95,7 @@ function getNextId(currentId) {
 }
 ```
 
-#### Is state mutated?
+#### Is state mutated
 
 - [ ] **No direct mutations**: Are arrays and objects modified in place?
 - [ ] **Returns new values**: Does the function return new data structures?
@@ -114,7 +114,7 @@ function addItem(list, item) {
 }
 ```
 
-#### Are dependencies explicit?
+#### Are dependencies explicit
 
 - [ ] **No hidden dependencies**: Does the function depend on global variables or config?
 - [ ] **Parameters over globals**: Are all dependencies passed as parameters?
@@ -135,7 +135,7 @@ function fetchUser(apiUrl, id) {
 
 ### Side Effects
 
-#### Are side effects isolated?
+#### Are side effects isolated
 
 - [ ] **Boundary isolation**: Are side effects kept at application boundaries?
 - [ ] **Clear separation**: Is business logic separated from I/O operations?
@@ -154,7 +154,7 @@ function formatAddress(address) {  // Pure
 async function saveAddress(address) {  // Impure (clear from name)
   const isValid = validateAddress(address);  // Pure
   if (!isValid) throw new Error('Invalid address');
-  
+
   const formatted = formatAddress(address);  // Pure
   await database.save(formatted);  // Side effect
 }
@@ -162,7 +162,7 @@ async function saveAddress(address) {  // Impure (clear from name)
 
 ### Temporal Coupling
 
-#### Is call order independent?
+#### Is call order independent
 
 - [ ] **No call order dependencies**: Can functions be called in any order?
 - [ ] **Explicit data flow**: Is data passed between functions rather than stored in shared state?
@@ -444,7 +444,7 @@ class DataLoader {
   load(id) {
     this.data = fetchData(id);
   }
-  
+
   getData() {
     return this.data;
   }
@@ -458,7 +458,7 @@ class DataLoader {
   async load(id) {
     return await fetchData(id);
   }
-  
+
   transform(data) {
     return processData(data);
   }

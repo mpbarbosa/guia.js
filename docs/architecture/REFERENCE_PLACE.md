@@ -260,6 +260,6 @@ Marcelo Pereira Barbosa
 
 ---
 
-**Last Updated**: 2026-01-11  
-**Version**: 0.9.0-alpha (documentation for planned 0.8.x-alpha feature)  
+**Last Updated**: 2026-01-11
+**Version**: 0.9.0-alpha (documentation for planned 0.8.x-alpha feature)
 **Status**: 🚧 Planned for future implementation

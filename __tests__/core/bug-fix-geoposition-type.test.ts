@@ -8,7 +8,7 @@
  */
 
 import GeocodingState from '../../src/core/GeocodingState.js';
-import GeoPosition from '../../src/core/GeoPosition.js';
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js';
 
 describe('Bug Fix: GeoPosition Type Error', () => {
 	let geocodingState;

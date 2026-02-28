@@ -7,18 +7,7 @@
  * @since 0.4.1-alpha (HTML page version alignment)
  */
 
-import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';
-
-// Mock DOM functions to prevent errors in test environment  
-global.document = undefined;
-
-// Mock console to suppress logging during tests but allow error tracking
-global.console = {
-    log: jest.fn(),
-    error: jest.fn(),
-    warn: jest.fn(),
-    info: jest.fn()
-};
+import { describe, test, expect, jest, beforeEach, beforeAll, afterAll } from '@jest/globals';
 
 // Mock setupParams that guia.js depends on
 global.setupParams = {
@@ -56,23 +45,40 @@ global.setupParams = {
     defaultCountry: 'Brasil'
 };
 
+// Suppress console output during tests
+const consoleSpy = {
+    log: jest.spyOn(console, 'log').mockImplementation(() => {}),
+    warn: jest.spyOn(console, 'warn').mockImplementation(() => {}),
+    error: jest.spyOn(console, 'error').mockImplementation(() => {}),
+    info: jest.spyOn(console, 'info').mockImplementation(() => {}),
+};
+
 // Mock functions that guia.js uses
 global.log = jest.fn();
 global.warn = jest.fn();
 
 // Import the guia.js module with proper error handling following project structure
-let AddressDataExtractor, BrazilianStandardAddress, OSMAddressData;
-try {
-    const guiaModule = await import('../../src/guia.js');
-    
-    // Extract the classes we need for testing
-    if (guiaModule.AddressDataExtractor) {
-        AddressDataExtractor = guiaModule.AddressDataExtractor;
+let AddressDataExtractor;
+beforeAll(async () => {
+    try {
+        const guiaModule = await import('../../src/guia.js');
+        if (guiaModule.AddressDataExtractor) {
+            AddressDataExtractor = guiaModule.AddressDataExtractor;
+        }
+    } catch (error) {
+        console.warn('Could not load guia.js:', error.message);
     }
-} catch (error) {
-    // As per instructions, submodules may fail without authentication
-    console.warn('Could not load guia.js (submodule authentication required):', error.message);
-}
+});
+
+afterAll(() => {
+    consoleSpy.log.mockRestore();
+    consoleSpy.warn.mockRestore();
+    consoleSpy.error.mockRestore();
+    consoleSpy.info.mockRestore();
+    delete global.setupParams;
+    delete global.log;
+    delete global.warn;
+});
 
 describe('AddressDataExtractor - MP Barbosa Travel Guide (v0.4.1-alpha)', () => {
     
@@ -84,7 +90,6 @@ describe('AddressDataExtractor - MP Barbosa Travel Guide (v0.4.1-alpha)', () => 
         test('should initialize with default Brazilian settings', () => {
             if (!AddressDataExtractor) {
                 console.warn('AddressDataExtractor not available - submodules may not be initialized');
-                expect(true).toBe(true); // Pass test when submodules not available
                 return;
             }
 
@@ -118,9 +123,7 @@ describe('AddressDataExtractor - MP Barbosa Travel Guide (v0.4.1-alpha)', () => 
 
         test('should handle missing classes gracefully (submodule not initialized)', () => {
             if (!AddressDataExtractor) {
-                // This is expected behavior per the instructions when submodules aren't initialized
                 expect(AddressDataExtractor).toBeUndefined();
-                console.log('AddressDataExtractor not available - this is normal when submodules are not initialized');
                 return;
             }
             
@@ -637,7 +640,6 @@ describe('AddressDataExtractor - MP Barbosa Travel Guide (v0.4.1-alpha)', () => 
 
             // This is expected behavior when submodules require authentication
             if (submoduleStatus.guia_turistico === 'not_initialized') {
-                console.log('Submodule not initialized - this is normal without GitHub authentication');
                 expect(submoduleStatus.authentication_required).toBe(true);
                 expect(submoduleStatus.fallback_behavior).toBe('graceful_degradation');
             }

@@ -85,7 +85,7 @@ global.fetch = jest.fn();
 const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
 const { default: AddressDataExtractor } = await import('../../src/data/AddressDataExtractor.js');
 const { default: ReferencePlace } = await import('../../src/data/ReferencePlace.js');
-const { default: GeoPosition } = await import('../../src/core/GeoPosition.js');
+const { GeoPosition } = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js');
 
 describe('E2E: Milho Verde, Serro, MG - Complete Address Validation', () => {
     

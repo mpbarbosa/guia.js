@@ -451,14 +451,14 @@
         margin-bottom: 2rem;
       }
     </style>
-    <script type="module" crossorigin src="./assets/main-Dxdn5dz6.js"></script>
+    <script type="module" crossorigin src="./assets/main-C9bU6fji.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/core-DeS8EXJ3.js">
     <link rel="modulepreload" crossorigin href="./assets/speech-DoCySOKj.js">
     <link rel="modulepreload" crossorigin href="./assets/data-C5JbRVsp.js">
     <link rel="modulepreload" crossorigin href="./assets/services-BAkOqXNQ.js">
-    <link rel="modulepreload" crossorigin href="./assets/html-DpDhY_RR.js">
-    <link rel="modulepreload" crossorigin href="./assets/coordination-maUxW2oV.js">
-    <link rel="stylesheet" crossorigin href="./assets/main-Bc5bbrZx.css">
+    <link rel="modulepreload" crossorigin href="./assets/html-BGGYK7CM.js">
+    <link rel="modulepreload" crossorigin href="./assets/coordination-BoR0tPho.js">
+    <link rel="stylesheet" crossorigin href="./assets/main-CvTXWqGW.css">
   </head>
   <body><div class="navigation-progress" role="progressbar" aria-label="Progresso de navegação"><div class="navigation-progress-bar" style="width: 0%;"></div></div>
     
@@ -551,8 +551,23 @@
 
     <!-- Main App Content (dynamically loaded by router) -->
     <main id="app-content" role="main">
-      <header class="">
-        <h1>Onde estou?</h1>
+      <header class="app-hero-header" role="banner">
+        <!-- Topographic / grid overlay is rendered via CSS ::before and ::after -->
+
+        <!-- Animated map-pin -->
+        <div class="hero-pin-wrapper" aria-hidden="true">
+          <span class="hero-pin-ripple"></span>
+          <svg class="hero-pin-svg" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
+          </svg>
+        </div>
+
+        <!-- Enhanced split-line title -->
+        <h1 class="hero-title">
+          <span class="hero-title-onde">Onde</span>
+          <span class="hero-title-estou">estou?</span>
+        </h1>
+
       </header>
 
       <!-- Onboarding Card (shown for first-time users or when location denied) -->

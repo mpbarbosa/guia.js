@@ -12,6 +12,9 @@
             padding: 20px;
             background-color: #f5f5f5;
         }
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+        }
         .container {
             background-color: white;
             padding: 20px;
@@ -28,25 +31,25 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <main class="container">
         <h1>Bairro Display Test - Guia.js</h1>
         <p>This page demonstrates the new bairro prominent display feature.</p>
         
-        <div class="demo-section">
-            <h2>Example 1: Complete Address with Bairro and Municipality</h2>
+        <section class="demo-section" aria-labelledby="demo1-heading">
+            <h2 id="demo1-heading">Example 1: Complete Address with Bairro and Municipality</h2>
             <div id="demo1"></div>
-        </div>
+        </section>
         
-        <div class="demo-section">
-            <h2>Example 2: Address with Only Municipality (No Bairro)</h2>
+        <section class="demo-section" aria-labelledby="demo2-heading">
+            <h2 id="demo2-heading">Example 2: Address with Only Municipality (No Bairro)</h2>
             <div id="demo2"></div>
-        </div>
+        </section>
         
-        <div class="demo-section">
-            <h2>Example 3: Bairro without Região (Simple Bairro)</h2>
+        <section class="demo-section" aria-labelledby="demo3-heading">
+            <h2 id="demo3-heading">Example 3: Bairro without Região (Simple Bairro)</h2>
             <div id="demo3"></div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script src="src/guia.js"></script>
     <script>

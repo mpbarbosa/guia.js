@@ -46,6 +46,11 @@
             background: #1565c0;
         }
         
+        .test-button:focus-visible {
+            outline: 3px solid #005fcc;
+            outline-offset: 2px;
+        }
+        
         .test-button.danger {
             background: #d32f2f;
         }
@@ -71,7 +76,8 @@
 </head>
 <body>
     <h1>🐛 Teste de Tratamento Global de Erros</h1>
-    
+
+    <main aria-label="Painel de testes de tratamento de erros">
     <div class="info-box">
         <strong>Como usar:</strong>
         <ul>
@@ -82,8 +88,8 @@
         </ul>
     </div>
     
-    <div class="test-section">
-        <h2>Testes de Erros Síncronos</h2>
+    <section class="test-section" aria-labelledby="sync-errors-heading">
+        <h2 id="sync-errors-heading">Testes de Erros Síncronos</h2>
         <button class="test-button danger" onclick="testReferenceError()">
             Gerar ReferenceError
         </button>
@@ -93,10 +99,10 @@
         <button class="test-button danger" onclick="testCustomError()">
             Gerar Erro Customizado
         </button>
-    </div>
+    </section>
     
-    <div class="test-section">
-        <h2>Testes de Erros Assíncronos</h2>
+    <section class="test-section" aria-labelledby="async-errors-heading">
+        <h2 id="async-errors-heading">Testes de Erros Assíncronos</h2>
         <button class="test-button danger" onclick="testPromiseRejection()">
             Gerar Promise Rejection
         </button>
@@ -106,10 +112,10 @@
         <button class="test-button danger" onclick="testTimeoutError()">
             Gerar Erro em setTimeout
         </button>
-    </div>
+    </section>
     
-    <div class="test-section">
-        <h2>Controles do Painel</h2>
+    <section class="test-section" aria-labelledby="panel-controls-heading">
+        <h2 id="panel-controls-heading">Controles do Painel</h2>
         <button class="test-button" onclick="window.ErrorRecovery.showErrorPanel()">
             Abrir Painel de Erros
         </button>
@@ -119,15 +125,16 @@
         <button class="test-button" onclick="window.ErrorRecovery.clearErrorHistory()">
             Limpar Histórico
         </button>
-    </div>
+    </section>
     
-    <div class="test-section">
-        <h2>Informações do Sistema</h2>
-        <p id="error-count">Erros capturados: 0</p>
+    <section class="test-section" aria-labelledby="system-info-heading">
+        <h2 id="system-info-heading">Informações do Sistema</h2>
+        <p id="error-count" aria-live="polite" aria-atomic="true">Erros capturados: 0</p>
         <button class="test-button" onclick="updateErrorCount()">
             Atualizar Contagem
         </button>
-    </div>
+    </section>
+    </main>
     
     <!-- Load Error Recovery System -->
     <script src="error-recovery.js"></script>

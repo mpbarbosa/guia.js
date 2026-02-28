@@ -432,12 +432,15 @@ describe('GeoPosition - Referential Transparency Tests', () => {
                 return;
             }
 
-            // Should not throw or cause side effects with null input
+            // null is an object (typeof null === 'object'), so it is accepted
             expect(() => new GeoPosition(null)).not.toThrow();
-            expect(() => new GeoPosition(undefined)).not.toThrow();
             expect(() => new GeoPosition({})).not.toThrow();
+
+            // undefined is a primitive — paraty GeoPosition throws GeoPositionError for primitives
+            // This is an intentional improvement over the previous local implementation
+            expect(() => new GeoPosition(undefined)).toThrow('GeoPosition: position must be an object');
             
-            // Should not have logged
+            // Should not have logged for null/empty object
             expect(mockLog).not.toHaveBeenCalled();
         });
     });

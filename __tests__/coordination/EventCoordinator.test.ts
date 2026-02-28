@@ -32,12 +32,12 @@ try {
     const eventModule = await import('../../src/coordination/EventCoordinator.js');
     const uiModule = await import('../../src/coordination/UICoordinator.js');
     const stateModule = await import('../../src/core/GeocodingState.js');
-    const positionModule = await import('../../src/core/GeoPosition.js');
+    const positionModule = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js');
     
     EventCoordinator = eventModule.default;
     UICoordinator = uiModule.default;
     GeocodingState = stateModule.default;
-    GeoPosition = positionModule.default;
+    GeoPosition = positionModule.GeoPosition;
 } catch (error) {
     console.warn('Could not load modules:', error.message);
 }

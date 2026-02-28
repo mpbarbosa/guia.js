@@ -27,10 +27,10 @@ global.warn = jest.fn();
 let GeocodingState, GeoPosition;
 try {
     const geocodingStateModule = await import('../../src/core/GeocodingState.js');
-    const geoPositionModule = await import('../../src/core/GeoPosition.js');
+    const geoPositionModule = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js');
     
     GeocodingState = geocodingStateModule.default;
-    GeoPosition = geoPositionModule.default;
+    GeoPosition = geoPositionModule.GeoPosition;
 } catch (error) {
     console.warn('Could not load modules:', error.message);
 }

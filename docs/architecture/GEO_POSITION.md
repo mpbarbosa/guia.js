@@ -1,8 +1,27 @@
 # GeoPosition Class Documentation
 
+## Source & Location
+
+> **Since v0.11.4-alpha**: `GeoPosition` is provided by the external [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) library, imported via CDN. The local `src/core/GeoPosition.ts` file has been removed.
+
+**CDN URL (ESM):** `https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js`
+
+**Import (source files / browser):**
+```ts
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js';
+```
+
+**Import (Jest tests — via `moduleNameMapper`):**
+```ts
+// jest.config.unit.js maps the CDN URL → paraty_geocore.js/src/index (local TS source)
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js';
+```
+
+---
+
 ## Overview
 
-The `GeoPosition` class was introduced in version 0.9.0-alpha to encapsulate and manage geographic position data obtained from the browser's Geolocation API. It provides a **pure, referentially transparent, immutable** way to handle GPS coordinates, accuracy information, altitude, speed, and heading data with automatic quality classification.
+The `GeoPosition` class encapsulates and manages geographic position data obtained from the browser's Geolocation API. It provides a **pure, referentially transparent, immutable** way to handle GPS coordinates, accuracy information, altitude, speed, and heading data with automatic quality classification.
 
 **Key Characteristics:**
 
@@ -44,7 +63,7 @@ Previously, developers had to work directly with the browser's `GeolocationPosit
 ### Basic Usage
 
 ```javascript
-const { GeoPosition } = require('./src/guia.js');
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js';
 
 // Simulate browser GeolocationPosition object
 const geolocationPosition = {
@@ -194,7 +213,7 @@ console.log(position.altitude);   // null
 Here's a complete example of tracking a user's movement while driving:
 
 ```javascript
-const { GeoPosition } = require('./src/guia.js');
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js';
 
 let lastPosition = null;
 

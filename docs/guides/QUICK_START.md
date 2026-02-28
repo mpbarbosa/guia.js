@@ -248,8 +248,8 @@ getAddress(-23.550520, -46.633309);
 ### Display on Map
 
 ```javascript
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js';
 import HTMLPositionDisplayer from './src/html/HTMLPositionDisplayer.js';
-import GeoPosition from './src/core/GeoPosition.js';
 
 const displayer = new HTMLPositionDisplayer(document, 'position-container');
 const position = new GeoPosition(-23.550520, -46.633309);

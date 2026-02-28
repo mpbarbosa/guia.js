@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Fixed
+
+- **GeoPosition CDN import** (`src/core/GeoPosition.ts` removed — now imported from `paraty_geocore.js` CDN):
+  - Upgraded from `paraty_geocore.js@0.9.2-alpha` (CJS dist) to `@0.9.3-alpha` (ESM dist)
+  - Resolved browser error: `SyntaxError: does not provide an export named 'default'`
+  - **Root cause**: Old CDN URL served CommonJS format which browsers cannot load as ES modules
+  - **Fix**: `paraty_geocore.js` now ships an ESM build at `dist/esm/index.js` (native browser ESM)
+  - Updated all 5 source files and 7 test files to use named import: `import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js'`
+
 ## [0.11.0-alpha] - 2026-02-15
 
 ### Refactored

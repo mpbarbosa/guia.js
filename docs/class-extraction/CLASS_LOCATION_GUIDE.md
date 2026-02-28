@@ -7,7 +7,7 @@ This guide helps locate classes and functions after the Phase 2-16 modularizatio
 | Component | Original Location (guia.js) | New Location | Phase |
 |-----------|----------------------------|--------------|-------|
 | **Core Classes** | | | |
-| `GeoPosition` | Lines ~100-200 | `src/core/GeoPosition.js` | Phase 3 |
+| `GeoPosition` | Lines ~100-200 | **CDN** (`paraty_geocore.js@0.9.3-alpha/dist/esm/index.js`) | External lib |
 | `PositionManager` | Lines ~200-350 | `src/core/PositionManager.js` | Phase 4 |
 | `ObserverSubject` | Lines ~350-400 | `src/core/ObserverSubject.js` | Phase 5 |
 | **Services** | | | |
@@ -146,8 +146,8 @@ const service = new GeolocationService(navigator.geolocation);
 ### After Modularization (ES6 imports)
 
 ```javascript
-// Import specific modules
-import { GeoPosition } from './src/core/GeoPosition.js';
+// Import GeoPosition from CDN (external library)
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js';
 import { PositionManager } from './src/core/PositionManager.js';
 import { GeolocationService } from './src/services/GeolocationService.js';
 

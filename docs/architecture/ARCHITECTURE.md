@@ -143,8 +143,16 @@ GeoPosition (immutable)
 
 #### GeoPosition
 
-**File**: `src/core/GeoPosition.js`
+**Source**: [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) (external library, `v0.9.3-alpha`)
+**CDN URL**: `https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js`
 **Purpose**: Immutable geographic coordinate container
+
+> ⚠️ `src/core/GeoPosition.ts` was removed in `v0.11.4-alpha`. `GeoPosition` is now imported directly from the `paraty_geocore.js` CDN (ESM build).
+
+**Import**:
+```ts
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js';
+```
 
 **Key Methods**:
 

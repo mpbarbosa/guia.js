@@ -31,6 +31,7 @@ declare -a EXCLUDED_REFS
 
 # Load configuration
 if [ -f "$CONFIG_FILE" ]; then
+    # shellcheck source=/dev/null
     source "$CONFIG_FILE"
     echo -e "${BLUE}📋 Loaded configuration from $CONFIG_FILE${NC}"
 else
@@ -134,6 +135,7 @@ extract_references() {
                 fi
                 
                 # Resolve path relative to file location
+                # shellcheck disable=SC2094  # $file is a path variable, not a file descriptor
                 dir=$(dirname "$file")
                 if [[ "$ref" == /* ]]; then
                     # Absolute path from repo root

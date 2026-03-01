@@ -55,7 +55,7 @@
  * @author Marcelo Pereira Barbosa
  */
 
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.4-alpha/dist/esm/index.js';
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.9-alpha/dist/esm/index.js';
 import ObserverSubject from './ObserverSubject.js';
 import { calculateDistance } from '../utils/distance.js';
 import { log, warn } from '../utils/logger.js';

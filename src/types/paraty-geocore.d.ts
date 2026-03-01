@@ -6,10 +6,10 @@
  * the `https://` URL to any type information.
  *
  * @see https://github.com/mpbarbosa/paraty_geocore.js
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.4-alpha/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.9-alpha/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.4-alpha/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.9-alpha/dist/esm/index.js' {
 	/** GPS accuracy quality classification. */
 	export type AccuracyQuality = 'excellent' | 'good' | 'medium' | 'bad' | 'very bad';
 

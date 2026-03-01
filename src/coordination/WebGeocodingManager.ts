@@ -63,12 +63,11 @@
  */
 
 // Import core domain classes
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.4-alpha/dist/esm/index.js';
+import { GeoPosition, GeocodingState } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.9-alpha/dist/esm/index.js';
 import ObserverSubject from '../core/ObserverSubject.js';
 
 
 // Import Phase 1 & Phase 3 coordinator classes
-import GeocodingState from '../core/GeocodingState.js';
 import UICoordinator from './UICoordinator.js';
 import EventCoordinator from './EventCoordinator.js';
 import ServiceCoordinator from './ServiceCoordinator.js';

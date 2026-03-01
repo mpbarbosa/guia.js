@@ -2,9 +2,8 @@
  * @fileoverview Address Parser - Pure functions for parsing Nominatim address data
  * Handles Brazilian geopolitical divisions: municipality, district (distrito), and neighborhood (bairro)
  * 
- * This module serves as the source of truth for address parsing logic.
- * The same logic is duplicated in browser views (home.js, converter.js) due to
- * CommonJS/ES6 module incompatibility without a build step.
+ * This module is the canonical source of address parsing logic, shared via ES6 imports
+ * (bundled by Vite for browser views). Consumers: src/views/converter.js.
  * 
  * @module address-parser
  */
@@ -22,6 +21,7 @@ function extractDistrito(address) {
   if (!address) return null;
   
   // Check direct properties first
+  // Priority: village > district > hamlet > town (most to least specific for BR distritos)
   const distrito = address.village 
     || address.district 
     || address.hamlet
@@ -53,6 +53,7 @@ function extractBairro(address) {
   if (!address) return null;
   
   // Check direct properties first
+  // Priority: suburb > neighbourhood > quarter > residential (Nominatim hierarchy for bairros)
   const bairro = address.suburb 
     || address.neighbourhood 
     || address.quarter 

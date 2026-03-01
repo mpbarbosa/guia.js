@@ -6,10 +6,10 @@
  * the `https://` URL to any type information.
  *
  * @see https://github.com/mpbarbosa/paraty_geocore.js
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.4-alpha/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.4-alpha/dist/esm/index.js' {
 	/** GPS accuracy quality classification. */
 	export type AccuracyQuality = 'excellent' | 'good' | 'medium' | 'bad' | 'very bad';
 
@@ -73,4 +73,25 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-al
 	}
 
 	export default GeoPosition;
+
+	/** Earth's mean radius in meters used for Haversine distance calculations. */
+	export const EARTH_RADIUS_METERS: number;
+
+	/**
+	 * Calculates the great-circle distance between two geographic points using the Haversine formula.
+	 * @param lat1 - Latitude of first point in decimal degrees
+	 * @param lon1 - Longitude of first point in decimal degrees
+	 * @param lat2 - Latitude of second point in decimal degrees
+	 * @param lon2 - Longitude of second point in decimal degrees
+	 * @returns Distance in meters between the two points
+	 */
+	export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number;
+
+	/**
+	 * Creates a Promise that resolves after the specified number of milliseconds.
+	 * Negative values are clamped to 0.
+	 * @param ms - Delay duration in milliseconds
+	 * @returns Promise that resolves after `ms` milliseconds
+	 */
+	export function delay(ms: number): Promise<void>;
 }

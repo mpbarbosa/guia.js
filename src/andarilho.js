@@ -218,6 +218,18 @@ async function getCityStats() {
 	}
 }
 
+// Haversine formula for distance calculation (fallback when not available globally)
+function calculateDistance(lat1, lon1, lat2, lon2) {
+	const R = 6371e3;
+	const φ1 = (lat1 * Math.PI) / 180;
+	const φ2 = (lat2 * Math.PI) / 180;
+	const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+	const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+	const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+		Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+	return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 // Function to get nearby restaurants using Overpass API
 async function getNearbyRestaurants(lat, lon, radius) {
 	// Overpass QL query to find restaurants within radius
@@ -342,14 +354,14 @@ function extractCityStats(wikiData) {
 	// Look for other common statistics
 	const commonStats = [
 		{
-			regex: /elevation\s*[^0-9]*([0-9,.]+)\s*(m|ft|meters|feet)/i,
+			regex: /elevation\s*[^0-9]*([0-9,.]+)\s*(meters|feet|m|ft)/i,
 			label: "Elevation",
 		},
 		{
-			regex: /density\s*[^0-9]*([0-9,.]+)\s*\/\s*(sq|square)?\s*(mi|km)/i,
+			regex: /density\s*[^0-9]*([0-9,.]+)\s*\/\s*(?:sq|square)?\s*(mi|km)/i,
 			label: "Density",
 		},
-		{ regex: /time\s*zone\s*([^\n]+)/i, label: "Time Zone" },
+		{ regex: /time\s*zone\s*([^\s.,;]+)/i, label: "Time Zone" },
 		{ regex: /founded\s*([^\n]+)/i, label: "Founded" },
 	];
 
@@ -368,3 +380,5 @@ function extractCityStats(wikiData) {
 
 	return result;
 }
+
+export { getNearbyRestaurants, searchWikipedia, getWikipediaPage, extractCityStats };

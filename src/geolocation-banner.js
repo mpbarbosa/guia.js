@@ -36,7 +36,7 @@
    * Initialize geolocation banner
    */
   function init() {
-    checkGeolocationPermission().then(status => {
+    return checkGeolocationPermission().then(status => {
       permissionStatus = status;
       
       if (status === 'prompt') {

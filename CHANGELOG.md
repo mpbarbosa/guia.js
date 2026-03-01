@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **`paraty_geocore.js` dependency upgrade** from `@0.9.3-alpha` to `@0.9.4-alpha`:
+  - Updated CDN URL in all 5 source files, 7 test files, `jest.config.unit.js`, and `src/types/paraty-geocore.d.ts`
+  - Added missing type declarations to `paraty-geocore.d.ts`: `calculateDistance`, `EARTH_RADIUS_METERS`, `delay`
+  - `delay(ms)` now clamps negative values to `0` (upstream fix in `utils/async`)
+  - `GeoPosition.getAccuracyQuality()` uses named `ACCURACY_THRESHOLDS` constants internally (no API change)
+
 - **GeoPosition CDN import** (`src/core/GeoPosition.ts` removed — now imported from `paraty_geocore.js` CDN):
   - Upgraded from `paraty_geocore.js@0.9.2-alpha` (CJS dist) to `@0.9.3-alpha` (ESM dist)
   - Resolved browser error: `SyntaxError: does not provide an export named 'default'`

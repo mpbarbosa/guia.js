@@ -36,9 +36,7 @@
       timestamp: new Date().toISOString()
     };
     
-    addToErrorHistory(errorInfo);
     displayError('Ocorreu um erro inesperado', errorInfo.message, errorInfo);
-    updateErrorPanel();
     
     // Prevent default browser error handling
     event.preventDefault();
@@ -55,9 +53,7 @@
       timestamp: new Date().toISOString()
     };
     
-    addToErrorHistory(errorInfo);
     displayError('Erro na operação assíncrona', errorInfo.message, errorInfo);
-    updateErrorPanel();
     
     // Prevent default browser error handling
     event.preventDefault();
@@ -82,6 +78,11 @@
    * @param {Object} errorInfo - Full error information
    */
   function displayError(title, message, errorInfo) {
+    if (errorInfo) {
+      const historyEntry = { ...errorInfo, type: title, message };
+      addToErrorHistory(historyEntry);
+      updateErrorPanel();
+    }
     const container = getOrCreateToastContainer();
     
     const toast = document.createElement('div');
@@ -345,6 +346,7 @@
 
   // Export recovery utilities
   window.ErrorRecovery = {
+    init: initializeUI,
     displayError: displayError,
     strategies: recoveryStrategies,
     showErrorPanel: showErrorPanel,

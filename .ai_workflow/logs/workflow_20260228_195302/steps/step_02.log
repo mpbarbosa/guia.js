@@ -1,0 +1,46 @@
+[2026-02-28T22:53:43.004Z] 
+→ Starting: Consistency Analysis
+[2026-02-28T22:53:43.004Z] ════════════════════════════════════════════════════════════
+[2026-02-28T22:53:43.004Z] 🔷  Step 2: Documentation Consistency Analysis
+[2026-02-28T22:53:43.004Z] ════════════════════════════════════════════════════════════
+[2026-02-28T22:53:43.144Z] Found 416 documentation files
+[2026-02-28T22:53:43.145Z] Expected version: 0.11.4-alpha
+[2026-02-28T22:53:43.176Z] Version check: 858 issue(s) found
+[2026-02-28T22:53:43.307Z] Link check: 1160 broken link(s) found
+[2026-02-28T22:53:44.465Z] ✓ GitHub Copilot SDK initialized successfully
+[2026-02-28T22:53:45.540Z] Available Copilot models (13): claude-sonnet-4.5, claude-haiku-4.5, claude-opus-4.5, claude-sonnet-4, gemini-3-pro-preview, gpt-5.2-codex, gpt-5.2, gpt-5.1-codex-max, gpt-5.1-codex, gpt-5.1, gpt-5.1-codex-mini, gpt-5-mini, gpt-4.1
+[2026-02-28T22:53:45.574Z] [DEBUG] AI cache initialized: .ai_workflow/.ai_cache
+[2026-02-28T22:53:45.578Z] [DEBUG] Cache miss: 9fd4465e...
+[2026-02-28T22:53:45.578Z] [DEBUG] Request Options: {"model":"gpt-4.1","temperature":0.7,"maxTokens":4000,"stream":false,"persona":"documentation_expert","cache":true}
+[2026-02-28T22:53:45.578Z] [DEBUG] Persona: documentation_expert
+[2026-02-28T22:53:45.578Z] [DEBUG] Model: gpt-4.1
+[2026-02-28T22:53:45.578Z] [AI] SDK call starting — persona: documentation_expert, model: gpt-4.1, prompt_chars: 114855
+[2026-02-28T22:53:45.578Z] [DEBUG] Executing AI request (attempt 1/3)
+[2026-02-28T22:53:45.578Z] [DEBUG] AiHelper._sendRequest called
+[2026-02-28T22:53:45.578Z] [Copilot SDK] Calling sendMessage — model: gpt-4.1, prompt_length: 114855 chars
+[2026-02-28T22:53:45.578Z] [DEBUG] Sending prompt...
+[2026-02-28T22:55:45.616Z] ⚠ [AI] SDK call failed — persona: documentation_expert, model: gpt-4.1, error: Timeout after 120000ms waiting for session.idle
+[2026-02-28T22:55:45.617Z] [AI] Retrying in 1000ms (attempt 2/3)...
+[2026-02-28T22:55:47.933Z] [AI] Client and session recreated for retry
+[2026-02-28T22:55:47.933Z] [AI] Timeout detected — increasing timeout to 240000ms for retry
+[2026-02-28T22:55:47.933Z] [DEBUG] Executing AI request (attempt 2/3)
+[2026-02-28T22:55:47.933Z] [DEBUG] AiHelper._sendRequest called
+[2026-02-28T22:55:47.933Z] [Copilot SDK] Calling sendMessage — model: gpt-4.1, prompt_length: 114855 chars
+[2026-02-28T22:55:47.933Z] [DEBUG] Sending prompt...
+[2026-02-28T22:59:47.992Z] ⚠ [AI] SDK call failed — persona: documentation_expert, model: gpt-4.1, error: Timeout after 240000ms waiting for session.idle
+[2026-02-28T22:59:47.992Z] [AI] Retrying in 2000ms (attempt 3/3)...
+[2026-02-28T22:59:51.446Z] [AI] Client and session recreated for retry
+[2026-02-28T22:59:51.446Z] [AI] Timeout detected — increasing timeout to 300000ms for retry
+[2026-02-28T22:59:51.447Z] [DEBUG] Executing AI request (attempt 3/3)
+[2026-02-28T22:59:51.447Z] [DEBUG] AiHelper._sendRequest called
+[2026-02-28T22:59:51.447Z] [Copilot SDK] Calling sendMessage — model: gpt-4.1, prompt_length: 114855 chars
+[2026-02-28T22:59:51.447Z] [DEBUG] Sending prompt...
+[2026-02-28T23:04:51.506Z] ⚠ [AI] SDK call failed — persona: documentation_expert, model: gpt-4.1, error: Timeout after 300000ms waiting for session.idle
+[2026-02-28T23:04:51.506Z] [AI] Retrying in 4000ms (attempt 4/3)...
+[2026-02-28T23:04:56.990Z] [AI] Client and session recreated for retry
+[2026-02-28T23:04:56.990Z] [AI] Timeout detected — increasing timeout to 300000ms for retry
+[2026-02-28T23:04:56.990Z] ✗ Step 2 failed: AI request failed after 4 attempts: Timeout after 300000ms waiting for session.idle
+[2026-02-28T23:04:56.990Z] ✗ Error executing step step_02: AI request failed after 4 attempts: Timeout after 300000ms waiting for session.idle
+[2026-02-28T23:04:56.990Z] ✗ Step step_02 failed: AI request failed after 4 attempts: Timeout after 300000ms waiting for session.idle
+[2026-02-28T23:04:56.991Z] [DEBUG] Recorded outcome for step_02: failure
+[2026-02-28T23:04:56.991Z] ✗ ✗ Failed: Consistency Analysis - AI request failed after 4 attempts: Timeout after 300000ms waiting for session.idle

@@ -10,6 +10,9 @@ import { jest } from '@jest/globals';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
+// Make jest available as a global for ESM test files (required with --experimental-vm-modules)
+globalThis.jest = jest;
+
 // Mock Speech Synthesis API for jsdom environment
 if (typeof window !== 'undefined') {
 	// Mock alert function for jsdom environment

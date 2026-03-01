@@ -42,7 +42,7 @@
  * log(position.accuracy, position.accuracyQuality);
  */
 
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js';
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.4-alpha/dist/esm/index.js';
 import { warn } from '../utils/logger.js';
 
 /**

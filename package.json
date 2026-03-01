@@ -1,6 +1,6 @@
 {
   "name": "guia_turistico",
-  "version": "0.11.4-alpha",
+  "version": "0.11.5-alpha",
   "description": "Tourist guide web application built on top of guia.js library",
   "type": "module",
   "main": "src/app.js",
@@ -75,7 +75,9 @@
       "/node_modules/",
       "/__mocks__/",
       "/__tests__/helpers/",
-      "/__tests__/e2e/"
+      "/__tests__/e2e/",
+      "test/speech/",
+      "test/app.test.js"
     ],
     "collectCoverageFrom": [
       "src/**/*.js",

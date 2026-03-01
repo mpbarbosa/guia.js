@@ -1,0 +1,22 @@
+[2026-03-01T23:49:39.151Z] 
+→ Starting: Markdown Linting
+[2026-03-01T23:49:39.151Z] ════════════════════════════════════════════════════════════
+[2026-03-01T23:49:39.151Z] 🔷  Step 13: Markdown Linting
+[2026-03-01T23:49:39.151Z] ════════════════════════════════════════════════════════════
+[2026-03-01T23:49:39.151Z] Enumerating markdown files...
+[2026-03-01T23:49:39.196Z] Found 445 markdown files
+[2026-03-01T23:49:39.196Z] Checking for mdl (markdownlint)...
+[2026-03-01T23:49:39.291Z] mdl is installed: 0.13.0
+[2026-03-01T23:49:39.291Z] Running mdl on all markdown files...
+[2026-03-01T23:49:45.524Z] ⚠ Found 10631 markdown linting violations
+[2026-03-01T23:49:45.524Z] Checking for common markdown anti-patterns...
+[2026-03-01T23:49:45.539Z] No common anti-patterns detected
+[2026-03-01T23:49:46.787Z] ✓ GitHub Copilot SDK initialized successfully
+[2026-03-01T23:49:47.802Z] Available Copilot models (13): claude-sonnet-4.5, claude-haiku-4.5, claude-opus-4.5, claude-sonnet-4, gemini-3-pro-preview, gpt-5.2-codex, gpt-5.2, gpt-5.1-codex-max, gpt-5.1-codex, gpt-5.1, gpt-5.1-codex-mini, gpt-5-mini, gpt-4.1
+[2026-03-01T23:49:47.849Z] [DEBUG] AI cache initialized: .ai_workflow/.ai_cache
+[2026-03-01T23:49:47.853Z] [DEBUG] Cache hit: 0cd7b6f4...
+[2026-03-01T23:49:47.855Z] ✓ Step step_13 completed in 8704ms
+[2026-03-01T23:49:47.855Z] [DEBUG] [Performance] step_13: 8.7s
+[2026-03-01T23:49:47.855Z] ⚠ [WARNING] Operation 'step_13' took 8.7s (memory: 54.94MB)
+[2026-03-01T23:49:47.855Z] [DEBUG] Recorded outcome for step_13: success
+[2026-03-01T23:49:47.855Z] ✓ Completed: Markdown Linting (9s)

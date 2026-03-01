@@ -1,0 +1,208 @@
+[2026-03-01T23:42:28.931Z] 
+→ Starting: Commit Artifacts
+[2026-03-01T23:42:28.931Z] ════════════════════════════════════════════════════════════
+[2026-03-01T23:42:28.931Z] 🔷  Step 0f: Commit Workflow Artifacts
+[2026-03-01T23:42:28.931Z] ════════════════════════════════════════════════════════════
+[2026-03-01T23:42:28.942Z] Found 161 artifact file(s) to commit
+[2026-03-01T23:42:28.953Z] [DEBUG] Staged 161 file(s) (forced)
+[2026-03-01T23:42:29.699Z] ✗ Failed to auto-commit: Git command failed: git commit -m "chore(docs): update docs and logs and summaries [skip ci]
+
+Files updated:
+- .ai_workflow/.step_cache/step_10_partition.json
+- .ai_workflow/backlog/workflow_20260228_195302/step_00.md
+- .ai_workflow/backlog/workflow_20260228_195302/step_01.md
+- .ai_workflow/backlog/workflow_20260228_195302/step_02.md
+- .ai_workflow/backlog/workflow_20260228_195302/step_04.md
+- .ai_workflow/backlog/workflow_20260228_195302/step_0b.md
+- .ai_workflow/backlog/workflow_20260228_201742/step_00.md
+- .ai_workflow/backlog/workflow_20260228_201742/step_01.md
+- .ai_workflow/backlog/workflow_20260228_201742/step_02.md
+- .ai_workflow/backlog/workflow_20260228_201742/step_03.md
+... and 151 more
+
+Auto-committed by ai_workflow.js v2.0.0
+Files: 161 | Timestamp: 2026-03-01T23:42:28.942Z"
+Command failed: git commit -m "chore(docs): update docs and logs and summaries [skip ci]
+
+Files updated:
+- .ai_workflow/.step_cache/step_10_partition.json
+- .ai_workflow/backlog/workflow_20260228_195302/step_00.md
+- .ai_workflow/backlog/workflow_20260228_195302/step_01.md
+- .ai_workflow/backlog/workflow_20260228_195302/step_02.md
+- .ai_workflow/backlog/workflow_20260228_195302/step_04.md
+- .ai_workflow/backlog/workflow_20260228_195302/step_0b.md
+- .ai_workflow/backlog/workflow_20260228_201742/step_00.md
+- .ai_workflow/backlog/workflow_20260228_201742/step_01.md
+- .ai_workflow/backlog/workflow_20260228_201742/step_02.md
+- .ai_workflow/backlog/workflow_20260228_201742/step_03.md
+... and 151 more
+
+Auto-committed by ai_workflow.js v2.0.0
+Files: 161 | Timestamp: 2026-03-01T23:42:28.942Z"
+🔍 Running pre-commit validation...
+  ✓ Validating JavaScript syntax...
+
+> guia_turistico@0.11.6-alpha validate
+> test -f src/app.js && test -f src/guia.js && test -f src/guia_ibge.js && node -c src/app.js && node -c src/guia.js && node -c src/guia_ibge.js
+
+  ✓ Running tests for changed files...
+
+> guia_turistico@0.11.6-alpha test:changed
+> node --experimental-vm-modules node_modules/jest/bin/jest.js --onlyChanged --passWithNoTests
+
+(node:434308) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS test/andarilho.test.js
+  ● Console
+
+    console.error
+      Overpass API error: Error: Overpass API error: 500
+          at getNearbyRestaurants (/home/mpb/Documents/GitHub/guia_turistico/src/andarilho.js:252:10)
+          at Object.<anonymous> (/home/mpb/Documents/GitHub/guia_turistico/test/andarilho.test.js:39:5)
+
+      277 | 		);
+      278 | 	} catch (error) {
+    > 279 | 		console.error("Overpass API error:", error);
+          | 		        ^
+      280 | 		throw error;
+      281 | 	}
+      282 | }
+
+      at getNearbyRestaurants (src/andarilho.js:279:11)
+      at Object.<anonymous> (test/andarilho.test.js:39:5)
+
+    console.error
+      Overpass API error: Error: Network down
+          at Object.<anonymous> (/home/mpb/Documents/GitHub/guia_turistico/test/andarilho.test.js:45:33)
+          at Promise.finally.completed (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)
+          at _callCircusTest (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)
+          at _runTest (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:947:3)
+          at /home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:849:7
+          at _runTestsForDescribeBlock (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:862:11)
+          at _runTestsForDescribeBlock (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+          at run (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:761:3)
+          at runAndTransformResultsToJestFormat (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)
+          at jestAdapter (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/runner.js:101:19)
+          at runTestInternal (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-runner/build/index.js:275:16)
+          at runTest (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-runner/build/index.js:343:7)
+
+      277 | 		);
+      278 | 	} catch (error) {
+    > 279 | 		console.error("Overpass API error:", error);
+          | 		        ^
+      280 | 		throw error;
+      281 | 	}
+      282 | }
+
+      at getNearbyRestaurants (src/andarilho.js:279:11)
+      at Object.<anonymous> (test/andarilho.test.js:46:5)
+
+    console.error
+      Wikipedia search error: Error: Wikipedia API error: 404
+          at searchWikipedia (/home/mpb/Documents/GitHub/guia_turistico/src/andarilho.js:292:10)
+          at Object.<anonymous> (/home/mpb/Documents/GitHub/guia_turistico/test/andarilho.test.js:98:5)
+
+      295 | 		return await response.json();
+      296 | 	} catch (error) {
+    > 297 | 		console.error("Wikipedia search error:", error);
+          | 		        ^
+      298 | 		throw error;
+      299 | 	}
+      300 | }
+
+      at searchWikipedia (src/andarilho.js:297:11)
+      at Object.<anonymous> (test/andarilho.test.js:98:5)
+
+    console.error
+      Wikipedia search error: Error: Network fail
+          at Object.<anonymous> (/home/mpb/Documents/GitHub/guia_turistico/test/andarilho.test.js:104:33)
+          at Promise.finally.completed (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)
+          at _callCircusTest (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)
+          at _runTest (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:947:3)
+          at /home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:849:7
+          at _runTestsForDescribeBlock (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:862:11)
+          at _runTestsForDescribeBlock (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+          at run (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:761:3)
+          at runAndTransformResultsToJestFormat (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)
+          at jestAdapter (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/runner.js:101:19)
+          at runTestInternal (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-runner/build/index.js:275:16)
+          at runTest (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-runner/build/index.js:343:7)
+
+      295 | 		return await response.json();
+      296 | 	} catch (error) {
+    > 297 | 		console.error("Wikipedia search error:", error);
+          | 		        ^
+      298 | 		throw error;
+      299 | 	}
+      300 | }
+
+      at searchWikipedia (src/andarilho.js:297:11)
+      at Object.<anonymous> (test/andarilho.test.js:105:5)
+
+    console.error
+      Wikipedia page fetch error: Error: Wikipedia API error: 403
+          at getWikipediaPage (/home/mpb/Documents/GitHub/guia_turistico/src/andarilho.js:310:10)
+          at Object.<anonymous> (/home/mpb/Documents/GitHub/guia_turistico/test/andarilho.test.js:129:5)
+
+      313 | 		return await response.json();
+      314 | 	} catch (error) {
+    > 315 | 		console.error("Wikipedia page fetch error:", error);
+          | 		        ^
+      316 | 		throw error;
+      317 | 	}
+      318 | }
+
+      at getWikipediaPage (src/andarilho.js:315:11)
+      at Object.<anonymous> (test/andarilho.test.js:129:5)
+
+    console.error
+      Wikipedia page fetch error: Error: Fetch error
+          at Object.<anonymous> (/home/mpb/Documents/GitHub/guia_turistico/test/andarilho.test.js:135:33)
+          at Promise.finally.completed (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)
+          at _callCircusTest (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)
+          at _runTest (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:947:3)
+          at /home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:849:7
+          at _runTestsForDescribeBlock (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:862:11)
+          at _runTestsForDescribeBlock (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+          at run (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:761:3)
+          at runAndTransformResultsToJestFormat (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)
+          at jestAdapter (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-circus/build/runner.js:101:19)
+          at runTestInternal (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-runner/build/index.js:275:16)
+          at runTest (/home/mpb/Documents/GitHub/guia_turistico/node_modules/jest-runner/build/index.js:343:7)
+
+      313 | 		return await response.json();
+      314 | 	} catch (error) {
+    > 315 | 		console.error("Wikipedia page fetch error:", error);
+          | 		        ^
+      316 | 		throw error;
+      317 | 	}
+      318 | }
+
+      at getWikipediaPage (src/andarilho.js:315:11)
+      at Object.<anonymous> (test/andarilho.test.js:136:5)
+
+FAIL __tests__/types/paraty-geocore.test.js
+  ● Test suite failed to run
+
+    Cannot find module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.4-alpha/dist/esm/index.js' from '__tests__/types/paraty-geocore.test.js'
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:863:11)
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       16 passed, 16 total
+Snapshots:   0 total
+Time:        0.292 s, estimated 1 s
+Ran all test suites related to changed files.
+husky - pre-commit script failed (code 1)
+
+[2026-03-01T23:42:29.700Z] Skipped: error
+[2026-03-01T23:42:29.700Z] ✓ Step step_0f completed in 769ms
+[2026-03-01T23:42:29.700Z] [DEBUG] [Performance] step_0f: 769ms
+[2026-03-01T23:42:29.700Z] [DEBUG] Recorded outcome for step_0f: success
+[2026-03-01T23:42:29.700Z] ✓ Completed: Commit Artifacts (1s)

@@ -67,5 +67,9 @@ export default [
       // Tests can be more lenient with certain rules
       'no-unused-vars': 'off'  // Test files often import for side effects
     }
+  },
+  {
+    // Migrate .eslintignore patterns to flat config ignores
+    ignores: ['node_modules/**', 'coverage/**', 'dist/**', 'build/**', '**/*.min.js']
   }
 ];

@@ -2,7 +2,7 @@
 
 > ⚠️ **Moved to `paraty_geocore.js`**
 >
-> Since `v0.11.5-alpha`, the `GeoPosition` class lives in the external [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) library.
+> Since `v0.11.6-alpha`, the `GeoPosition` class lives in the external [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) library.
 > The local `src/core/GeoPosition.ts` file has been removed.
 >
 > **Full documentation:** [paraty_geocore.js/docs/GEO_POSITION.md](https://github.com/mpbarbosa/paraty_geocore.js/blob/main/docs/GEO_POSITION.md)

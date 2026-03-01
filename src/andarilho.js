@@ -16,7 +16,7 @@ function getLocation() {
 
 	// Get current position
 	navigator.geolocation.getCurrentPosition(
-		async (position) => {
+		async (_position) => {
 			try {
 				// Update the address section
 				const addressSection = document.getElementById("addressSection");
@@ -381,4 +381,4 @@ function extractCityStats(wikiData) {
 	return result;
 }
 
-export { getNearbyRestaurants, searchWikipedia, getWikipediaPage, extractCityStats };
+export { getLocation, findNearbyRestaurants, getCityStats, getNearbyRestaurants, searchWikipedia, getWikipediaPage, extractCityStats };

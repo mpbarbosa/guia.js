@@ -13,10 +13,15 @@ Usage:
 """
 
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.exceptions import TimeoutException
+
+# Module-level constants for default test parameters
+DEFAULT_TIMEOUT = 10   # Maximum wait time in seconds for library load
+DEFAULT_ACCURACY = 10  # Position accuracy in meters
+DEFAULT_DELAY = 100    # Simulated async geolocation delay in milliseconds
 
 
-def wait_for_guia_library(driver, timeout=10):
+def wait_for_guia_library(driver, timeout=DEFAULT_TIMEOUT):
     """
     Wait for guia.js library to be fully loaded.
     
@@ -31,19 +36,27 @@ def wait_for_guia_library(driver, timeout=10):
         TimeoutException: If library doesn't load within timeout
     """
     wait = WebDriverWait(driver, timeout)
-    
-    is_loaded = wait.until(
-        lambda d: d.execute_script("""
-            return typeof window.MockGeolocationProvider !== 'undefined' && 
-                   typeof window.GeolocationService !== 'undefined' && 
-                   typeof window.WebGeocodingManager !== 'undefined';
-        """)
-    )
-    
+
+    # Check that all three guia.js globals are present before proceeding
+    try:
+        is_loaded = wait.until(
+            lambda d: d.execute_script("""
+                return typeof window.MockGeolocationProvider !== 'undefined' &&
+                       typeof window.GeolocationService !== 'undefined' &&
+                       typeof window.WebGeocodingManager !== 'undefined';
+            """)
+        )
+    except TimeoutException:
+        import logging
+        logging.warning(
+            "[wait_for_guia_library] guia.js library did not load within %ds", timeout
+        )
+        return False
+
     return is_loaded
 
 
-def setup_mock_geolocation(driver, latitude, longitude, accuracy=10, delay=100):
+def setup_mock_geolocation(driver, latitude, longitude, accuracy=DEFAULT_ACCURACY, delay=DEFAULT_DELAY):
     """
     Configure MockGeolocationProvider for testing.
     
@@ -282,7 +295,7 @@ def reset_geolocation_service(driver):
     return driver.execute_script(reset_script)
 
 
-def create_custom_position(latitude, longitude, accuracy=10, **kwargs):
+def create_custom_position(latitude, longitude, accuracy=DEFAULT_ACCURACY, **kwargs):
     """
     Create a custom position object for testing.
     

@@ -19,7 +19,7 @@
 #   - package.json version
 #   - README.md version references
 #   - docs/INDEX.md version
-#   - src/config/defaults.js GUIA_VERSION
+#   - src/config/defaults.ts GUIA_VERSION
 #   - .github/copilot-instructions.md version
 #
 # ==============================================================================
@@ -123,24 +123,24 @@ fi
 echo ""
 
 # ==============================================================================
-# 4. Check src/config/defaults.js
+# 4. Check src/config/defaults.ts
 # ==============================================================================
 
-echo -e "${YELLOW}Checking src/config/defaults.js...${NC}"
+echo -e "${YELLOW}Checking src/config/defaults.ts...${NC}"
 
-if [ ! -f "src/config/defaults.js" ]; then
-    echo -e "${RED}❌ src/config/defaults.js not found${NC}"
+if [ ! -f "src/config/defaults.ts" ]; then
+    echo -e "${RED}❌ src/config/defaults.ts not found${NC}"
     INCONSISTENCIES=$((INCONSISTENCIES + 1))
 else
     # GUIA_VERSION is an object with major, minor, patch, prerelease
     # Extract each component
-    MAJOR=$(grep -oP "major:\s*\K[0-9]+" src/config/defaults.js | head -1)
-    MINOR=$(grep -oP "minor:\s*\K[0-9]+" src/config/defaults.js | head -1)
-    PATCH=$(grep -oP "patch:\s*\K[0-9]+" src/config/defaults.js | head -1)
-    PRERELEASE=$(grep -oP "prerelease:\s*['\"]?\K[a-z]+" src/config/defaults.js | head -1)
+    MAJOR=$(grep -oP "major:\s*\K[0-9]+" src/config/defaults.ts | head -1)
+    MINOR=$(grep -oP "minor:\s*\K[0-9]+" src/config/defaults.ts | head -1)
+    PATCH=$(grep -oP "patch:\s*\K[0-9]+" src/config/defaults.ts | head -1)
+    PRERELEASE=$(grep -oP "prerelease:\s*['\"]?\K[a-z]+" src/config/defaults.ts | head -1)
     
     if [ -z "$MAJOR" ] || [ -z "$MINOR" ] || [ -z "$PATCH" ]; then
-        echo -e "${RED}❌ Could not find GUIA_VERSION components in src/config/defaults.js${NC}"
+        echo -e "${RED}❌ Could not find GUIA_VERSION components in src/config/defaults.ts${NC}"
         INCONSISTENCIES=$((INCONSISTENCIES + 1))
     else
         # Construct version string
@@ -150,12 +150,12 @@ else
         fi
         
         if [ "$DEFAULTS_VERSION" != "$PACKAGE_VERSION" ]; then
-            echo -e "${RED}❌ Version mismatch in src/config/defaults.js${NC}"
+            echo -e "${RED}❌ Version mismatch in src/config/defaults.ts${NC}"
             echo "   Expected: $PACKAGE_VERSION"
             echo "   Found: $DEFAULTS_VERSION"
             INCONSISTENCIES=$((INCONSISTENCIES + 1))
         else
-            echo -e "${GREEN}✅ src/config/defaults.js version matches${NC}"
+            echo -e "${GREEN}✅ src/config/defaults.ts version matches${NC}"
         fi
     fi
 fi
@@ -208,7 +208,7 @@ if [ $INCONSISTENCIES -eq 0 ]; then
     echo "  ✅ package.json"
     echo "  ✅ README.md"
     echo "  ✅ docs/INDEX.md"
-    echo "  ✅ src/config/defaults.js"
+    echo "  ✅ src/config/defaults.ts"
     echo "  ✅ .github/copilot-instructions.md"
     echo ""
     exit 0
@@ -217,7 +217,7 @@ else
     echo ""
     echo "To fix:"
     echo "  1. Update package.json with: npm version <new-version>"
-    echo "  2. Update src/config/defaults.js GUIA_VERSION constant"
+    echo "  2. Update src/config/defaults.ts GUIA_VERSION constant"
     echo "  3. Update README.md version references"
     echo "  4. Update docs/INDEX.md if applicable"
     echo "  5. Update .github/copilot-instructions.md if applicable"
@@ -228,7 +228,7 @@ else
     echo "  npm version patch  # or minor, or major"
     echo ""
     echo "  ${BLUE}# Update source code version${NC}"
-    echo "  # Edit src/config/defaults.js manually"
+    echo "  # Edit src/config/defaults.ts manually"
     echo "  export const GUIA_VERSION = '0.6.1-alpha';"
     echo ""
     echo "  ${BLUE}# Update documentation${NC}"

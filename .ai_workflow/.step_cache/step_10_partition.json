@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "partitionIndex": 1,
+  "partitionIndex": 2,
   "totalPartitions": 7,
   "filesHash": "091586a6",
   "partitionLabels": [
@@ -12,5 +12,5 @@
     "__tests__/managers, __tests__/integration, __tests__/html, __tests__/features, __tests__/external, __tests__/data, __tests__/core",
     "__tests__/coordination, __tests__/config, __tests__/components, jsdoc.json, manifest.json, package-lock.json, package.json, tsconfig.json, public/libs, libs/sidra, scripts"
   ],
-  "updatedAt": "2026-03-01T23:41:43.523Z"
+  "updatedAt": "2026-03-01T23:49:39.063Z"
 }

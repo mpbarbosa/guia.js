@@ -97,9 +97,17 @@
             background-color: #ffc107;
             color: #333;
         }
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 <body>
+    <main aria-label="Teste de seleção de voz em português brasileiro">
     <h1>🎙️ Teste de Seleção de Voz em Português Brasileiro</h1>
     
     <div class="container">
@@ -129,6 +137,7 @@
         <textarea id="log" readonly></textarea>
     </div>
 
+    </main>
     <!-- Hidden elements for speech synthesis -->
     <div style="display: none;">
         <textarea id="speech-text-input"></textarea>
@@ -236,7 +245,7 @@
             logMessage('📋 Total de vozes disponíveis: ' + voices.length);
             
             // Create table
-            let tableHTML = '<table><thead><tr><th>Nome</th><th>Idioma</th><th>Prioridade</th></tr></thead><tbody>';
+            let tableHTML = '<table><caption>Vozes disponíveis no sistema e suas prioridades para português brasileiro</caption><thead><tr><th scope="col">Nome</th><th scope="col">Idioma</th><th scope="col">Prioridade</th></tr></thead><tbody>';
             
             voices.forEach((voice, index) => {
                 let priorityBadge = '';

@@ -2,9 +2,9 @@
  * version-display-manager.test.ts — Tests for VersionDisplayManager (src/utils/version-display-manager.ts)
  */
 
-import VersionDisplayManager from './version-display-manager';
+import VersionDisplayManager from '../../src/utils/version-display-manager';
 
-jest.mock('../config/version.js', () => ({
+jest.mock('../../src/config/version', () => ({
   VERSION: '1.2.3',
   BUILD_DATE: '2026-02-28',
   VERSION_WITH_DATE: '1.2.3 (2026-02-28)'

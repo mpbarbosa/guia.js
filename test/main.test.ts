@@ -2,7 +2,7 @@
  * main.test.ts — Tests for Vue 3 application entry point (src/main.ts)
  */
 
-import { app, router } from './main';
+import { app, router } from '../src/main';
 
 describe('main.ts Vue app entry point', () => {
   let createAppMock: jest.Mock;

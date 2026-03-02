@@ -2,7 +2,7 @@
  * maps-integration.test.ts — Tests for MapsIntegration utility (src/utils/maps-integration.ts)
  */
 
-import MapsIntegration from './maps-integration';
+import MapsIntegration from '../../src/utils/maps-integration';
 
 describe('MapsIntegration', () => {
   let instance: typeof MapsIntegration;
@@ -198,7 +198,7 @@ describe('MapsIntegration', () => {
     it('should warn for unknown action (edge case)', () => {
       const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
       instance._handleAction('unknown-action');
-      expect(warnSpy).toHaveBeenCalledWith('Unknown action: ');
+      expect(warnSpy).toHaveBeenCalledWith('Unknown action: unknown-action');
       warnSpy.mockRestore();
     });
 
@@ -245,7 +245,7 @@ describe('MapsIntegration', () => {
       const logSpy = jest.spyOn(console, 'log').mockImplementation();
       instance._showPopupBlockedMessage('http://test.com', 'openstreetmap');
       expect(window.alert).toHaveBeenCalled();
-      expect(logSpy).toHaveBeenCalledWith('Blocked URL: ');
+      expect(logSpy).toHaveBeenCalledWith('Blocked URL: http://test.com');
       logSpy.mockRestore();
     });
   });
@@ -282,7 +282,7 @@ describe('MapsIntegration', () => {
         configurable: true,
       });
       const url = instance._getGoogleMapsUrl(1, 2);
-      expect(url).toContain('geo:,?q=,');
+      expect(url).toContain('geo:1,2?q=1,2');
     });
 
     it('should generate Street View URL', () => {
@@ -292,12 +292,12 @@ describe('MapsIntegration', () => {
 
     it('should generate OpenStreetMap URL', () => {
       const url = instance._getOpenStreetMapUrl(1, 2);
-      expect(url).toContain('https://www.openstreetmap.org/?mlat=&mlon=#map=16//');
+      expect(url).toContain('https://www.openstreetmap.org/?mlat=1&mlon=2#map=16/1/2');
     });
 
     it('should generate Waze URL', () => {
       const url = instance._getWazeUrl(1, 2);
-      expect(url).toContain('https://www.waze.com/ul?ll=,&navigate=yes');
+      expect(url).toContain('https://www.waze.com/ul?ll=1,2&navigate=yes');
     });
   });
 });

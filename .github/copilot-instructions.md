@@ -1,6 +1,6 @@
 # Guia Turístico - Tourist Guide Web Application
 
-Guia Turístico is a single-page web application (version 0.12.0-alpha) built on top of the **guia.js** geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
+Guia Turístico is a single-page web application (version 0.12.1-alpha) built on top of the **guia.js** geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
 **Project Relationship**:
 

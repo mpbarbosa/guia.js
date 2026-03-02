@@ -1,8 +1,8 @@
 // HTMLHeaderDisplayer.test.ts
-import HTMLHeaderDisplayer from '../src/html/HTMLHeaderDisplayer';
-import { log, warn } from '../src/utils/logger.js';
+import HTMLHeaderDisplayer from '../../src/html/HTMLHeaderDisplayer';
+import { log, warn } from '../../src/utils/logger';
 
-jest.mock('../src/utils/logger.js', () => ({
+jest.mock('../../src/utils/logger', () => ({
   log: jest.fn(),
   warn: jest.fn(),
 }));

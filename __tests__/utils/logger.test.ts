@@ -121,6 +121,7 @@ describe('logger utility', () => {
     test('does not call console.log when disabled', () => {
       setLogLevel({ enabled: false });
       const spy = jest.spyOn(console, 'log').mockImplementation(() => {});
+      spy.mockClear();
       log('should not appear');
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
@@ -129,6 +130,7 @@ describe('logger utility', () => {
     test('does not call console.warn when disabled', () => {
       setLogLevel({ enabled: false });
       const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      spy.mockClear();
       warn('should not appear');
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();

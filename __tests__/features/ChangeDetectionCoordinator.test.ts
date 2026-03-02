@@ -191,8 +191,8 @@ describe('ChangeDetectionCoordinator', () => {
         test('should catch and log errors during logradouro change handling', () => {
             const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
             
-            // Force an error by breaking the observer subject
-            coordinator.observerSubject.observers = null;
+            // Force an error by replacing the observer subject with one that has null observers
+            coordinator.observerSubject = { observers: null, functionObservers: [] };
 
             const changeDetails = {
                 previous: { logradouro: 'Rua Antiga' },

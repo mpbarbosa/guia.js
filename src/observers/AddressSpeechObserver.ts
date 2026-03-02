@@ -63,6 +63,12 @@ export class AddressSpeechObserver {
       );
       priority = SPEECH_PRIORITY.FIRST_ADDRESS;
       this._firstAddressAnnounced = true;
+      if (textToBeSpoken) {
+        this.speechManager.speak(textToBeSpoken, priority);
+        if (this.textInput) {
+          this.textInput.value = textToBeSpoken;
+        }
+      }
     } else if (
       ["MunicipioChanged", "BairroChanged", "LogradouroChanged"].includes(
         enderecoPadronizadoOrEvent,
@@ -92,6 +98,9 @@ export class AddressSpeechObserver {
 
       if (textToBeSpoken) {
         this.speechManager.speak(textToBeSpoken, priority);
+        if (this.textInput) {
+          this.textInput.value = textToBeSpoken;
+        }
       }
     } else if (posEvent === PositionManager.strCurrPosUpdate) {
       textToBeSpoken = this.textBuilder.buildTextToSpeech(

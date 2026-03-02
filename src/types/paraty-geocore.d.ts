@@ -1,8 +1,8 @@
 /**
  * TypeScript ambient type declarations for the paraty_geocore.js CDN module.
  *
- * Exports: GeoPosition, GeoPositionError, ObserverSubject, GeocodingState,
- * calculateDistance, EARTH_RADIUS_METERS, delay.
+ * Exports: GeoPosition, GeoPositionError, ObserverSubject, DualObserverSubject,
+ * GeocodingState, calculateDistance, EARTH_RADIUS_METERS, delay.
  *
  * @see https://github.com/mpbarbosa/paraty_geocore.js
  * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-alpha/dist/esm/index.js
@@ -92,6 +92,40 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-a
 		subscribe(observer: (snapshot: T) => void): () => void;
 		_notifyObservers(snapshot: T): void;
 		_observers: Array<(snapshot: T) => void>;
+	}
+
+	/**
+	 * Dual-pattern observer subject — supports both GoF object observers (with update())
+	 * and function-based observers in two independent collections.
+	 *
+	 * Canonical implementation: paraty_geocore.js / src/core/DualObserverSubject.ts
+	 */
+	export class DualObserverSubject {
+		/** Object observers subscribed via subscribe(). */
+		observers: Array<{ update?: (...args: unknown[]) => void }>;
+		/** Function observers subscribed via subscribeFunction(). */
+		functionObservers: Array<(...args: unknown[]) => void>;
+
+		/** Subscribe an object observer (called via update() on notification). Null/undefined silently ignored. */
+		subscribe(observer: { update?: (...args: unknown[]) => void } | null | undefined): void;
+		/** Unsubscribe an object observer by reference. */
+		unsubscribe(observer: { update?: (...args: unknown[]) => void }): void;
+		/** Notify all object observers — calls update(...args) on each. */
+		notifyObservers(...args: unknown[]): void;
+
+		/** Subscribe a function observer. Null/undefined silently ignored. */
+		subscribeFunction(fn: ((...args: unknown[]) => void) | null | undefined): void;
+		/** Unsubscribe a function observer by reference. */
+		unsubscribeFunction(fn: (...args: unknown[]) => void): void;
+		/** Notify all function observers — calls fn(...args) on each. */
+		notifyFunctionObservers(...args: unknown[]): void;
+
+		/** Count of object observers. */
+		getObserverCount(): number;
+		/** Count of function observers. */
+		getFunctionObserverCount(): number;
+		/** Clear both observer collections. */
+		clearAllObservers(): void;
 	}
 
 	/** Snapshot passed to GeocodingState observers on every state change. */

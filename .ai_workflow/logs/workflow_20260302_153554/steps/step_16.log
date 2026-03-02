@@ -1,0 +1,94 @@
+[2026-03-02T18:42:49.192Z] 
+→ Starting: Version Update
+[2026-03-02T18:42:49.192Z] ════════════════════════════════════════════════════════════
+[2026-03-02T18:42:49.192Z] 🔷  Step 16: Version Update
+[2026-03-02T18:42:49.192Z] ════════════════════════════════════════════════════════════
+[2026-03-02T18:42:49.192Z] Phase 1: Detecting current version...
+[2026-03-02T18:42:49.192Z] ✓ Current version: 0.11.8-alpha
+[2026-03-02T18:42:49.193Z] Phase 2: Determining bump type...
+[2026-03-02T18:42:49.193Z] Heuristic bump type: patch
+[2026-03-02T18:42:50.630Z] ✓ GitHub Copilot SDK initialized successfully
+[2026-03-02T18:42:51.590Z] Available Copilot models (13): claude-sonnet-4.5, claude-haiku-4.5, claude-opus-4.5, claude-sonnet-4, gemini-3-pro-preview, gpt-5.2-codex, gpt-5.2, gpt-5.1-codex-max, gpt-5.1-codex, gpt-5.1, gpt-5.1-codex-mini, gpt-5-mini, gpt-4.1
+[2026-03-02T18:42:51.636Z] [DEBUG] AI cache initialized: .ai_workflow/.ai_cache
+[2026-03-02T18:42:51.671Z] [DEBUG] Cache miss: 46f9f290...
+[2026-03-02T18:42:51.671Z] [DEBUG] Request Options: {"model":"gpt-4.1","temperature":0.7,"maxTokens":4000,"stream":false,"persona":"devops_engineer","cache":true}
+[2026-03-02T18:42:51.671Z] [DEBUG] Persona: devops_engineer
+[2026-03-02T18:42:51.671Z] [DEBUG] Model: gpt-4.1
+[2026-03-02T18:42:51.671Z] [AI] SDK call starting — persona: devops_engineer, model: gpt-4.1, prompt_chars: 7547
+[2026-03-02T18:42:51.671Z] [DEBUG] Executing AI request (attempt 1/3)
+[2026-03-02T18:42:51.671Z] [DEBUG] AiHelper._sendRequest called
+[2026-03-02T18:42:51.671Z] [Copilot SDK] Calling sendMessage — model: gpt-4.1, prompt_length: 7547 chars
+[2026-03-02T18:42:51.671Z] [DEBUG] Sending prompt...
+[2026-03-02T18:42:56.472Z] [Copilot SDK] sendAndWait returned — model: gpt-4.1
+[2026-03-02T18:42:56.472Z] [AI] SDK call completed — persona: devops_engineer, model: gpt-4.1, response_chars: 480, latency: 4801ms
+[2026-03-02T18:42:56.472Z] ✓ AI request completed successfully
+[2026-03-02T18:42:56.473Z] [DEBUG] Prompt logged to: 2026-03-02T18-42-56-472Z_0001_devops_engineer.md
+[2026-03-02T18:42:56.476Z] [DEBUG] Response cached: 46f9f290...
+[2026-03-02T18:42:56.476Z] AI refined bump type: minor (was: patch, confidence: high)
+[2026-03-02T18:42:56.476Z] [VERSION BUMP] previous: 0.11.8-alpha → next: 0.12.0-alpha (minor)
+[2026-03-02T18:42:56.476Z] ✓ New version: 0.11.8-alpha → 0.12.0-alpha
+[2026-03-02T18:42:56.476Z] Phase 3: Updating versions in files...
+[2026-03-02T18:42:58.578Z] Version scan found 64 file(s) referencing 0.11.8-alpha
+[2026-03-02T18:42:58.600Z] Phase 3b: Updating version config files...
+[2026-03-02T18:42:58.601Z] ✓ Updated 64 files, skipped 26, failed 0
+[2026-03-02T18:42:58.601Z] Phase 3c: Updating service worker cache names...
+[2026-03-02T18:42:58.726Z] ⚠ Version consistency check reported issues (exit 1) — attempting auto-fix...
+[2026-03-02T18:42:58.728Z] ⚠ 1 file(s) could not be auto-fixed (manual update may be needed)
+[2026-03-02T18:42:58.858Z] ⚠ Version consistency check still reports issues after auto-fix:
+> guia_turistico@0.12.0-alpha check:version
+> ./.github/scripts/check-version-consistency.sh
+
+╔════════════════════════════════════════════════════════════╗
+║         Version Consistency Checker for Guia.js            ║
+╚════════════════════════════════════════════════════════════╝
+
+📦 Source of Truth (package.json): v0.12.0-alpha
+
+Checking README.md...
+✅ README.md version matches
+
+Checking docs/INDEX.md...
+✅ docs/INDEX.md version matches
+
+Checking src/config/defaults.ts...
+❌ Version mismatch in src/config/defaults.ts
+   Expected: 0.12.0-alpha
+   Found: 0.11.7-alpha
+
+Checking .github/copilot-instructions.md...
+✅ .github/copilot-instructions.md version matches
+
+╔════════════════════════════════════════════════════════════╗
+║                    Summary                                 ║
+╚════════════════════════════════════════════════════════════╝
+
+❌ Found 1 version inconsistency/inconsistencies
+
+To fix:
+  1. Update package.json with: npm version <new-version>
+  2. Update src/config/defaults.ts GUIA_VERSION constant
+  3. Update README.md version references
+  4. Update docs/INDEX.md if applicable
+  5. Update .github/copilot-instructions.md if applicable
+  6. Run this script again to verify
+
+Example workflow:
+  \033[0;34m# Bump version\033[0m
+  npm version patch  # or minor, or major
+
+  \033[0;34m# Update source code version\033[0m
+  # Edit src/config/defaults.ts manually
+  export const GUIA_VERSION = '0.6.1-alpha';
+
+  \033[0;34m# Update documentation\033[0m
+  # Edit README.md line 7
+  # Edit other documentation as needed
+
+  \033[0;34m# Verify consistency\033[0m
+  ./.github/scripts/check-version-consistency.sh
+[2026-03-02T18:42:58.859Z] ✓ Step 16: Version update completed
+[2026-03-02T18:42:58.859Z] ✓ Step step_16 completed in 9667ms
+[2026-03-02T18:42:58.859Z] [DEBUG] [Performance] step_16: 9.7s
+[2026-03-02T18:42:58.860Z] ⚠ [WARNING] Operation 'step_16' took 9.7s (memory: 38.41MB)
+[2026-03-02T18:42:58.860Z] [DEBUG] Recorded outcome for step_16: success
+[2026-03-02T18:42:58.860Z] ✓ Completed: Version Update (10s)

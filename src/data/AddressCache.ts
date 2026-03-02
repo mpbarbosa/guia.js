@@ -527,7 +527,9 @@ class AddressCache {
 		const currentBairroCompleto = this._computeBairroCompleto(currentRawData);
 		const previousBairroCompleto = this._computeBairroCompleto(previousRawData);
 		
-		// Return legacy format for backward compatibility
+		// Return legacy format for backward compatibility, extended with
+		// AddressChangeDetector-compatible fields (to, from, currentAddress, previousAddress)
+		// so that ChangeDetectionCoordinator.notifyBairroChangeObservers() can use them.
 		return {
 			hasChanged: (current?.bairro ?? null) !== (previous?.bairro ?? null),
 			current: {
@@ -538,7 +540,12 @@ class AddressCache {
 				bairro: previous?.bairro,
 				bairroCompleto: previousBairroCompleto
 			},
-			timestamp: Date.now()
+			timestamp: Date.now(),
+			// AddressChangeDetector-compatible fields
+			to: current?.bairro ?? null,
+			from: previous?.bairro ?? null,
+			currentAddress: current ?? null,
+			previousAddress: previous ?? null
 		};
 	}
 

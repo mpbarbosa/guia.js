@@ -16,7 +16,7 @@ global.console.warn = jest.fn();
 
 describe('Core Modules Integration', () => {
     test('should import GeoPosition from core module', async () => {
-        const { GeoPosition } = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-alpha/dist/esm/index.js');
+        const { GeoPosition } = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.0-alpha/dist/esm/index.js');
         expect(GeoPosition).toBeDefined();
         expect(typeof GeoPosition).toBe('function');
     });
@@ -34,7 +34,7 @@ describe('Core Modules Integration', () => {
     });
 
     test('should create immutable GeoPosition', async () => {
-        const { GeoPosition } = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-alpha/dist/esm/index.js');
+        const { GeoPosition } = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.0-alpha/dist/esm/index.js');
         
         const mockPosition = {
             coords: {
@@ -100,7 +100,7 @@ describe('Core Modules Integration', () => {
     });
 
     test('core classes should work together', async () => {
-        const { GeoPosition } = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-alpha/dist/esm/index.js');
+        const { GeoPosition } = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.0-alpha/dist/esm/index.js');
         const { default: ObserverSubject } = await import('../../src/core/ObserverSubject.js');
         
         const subject = new ObserverSubject();

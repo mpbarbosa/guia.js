@@ -1,7 +1,7 @@
-import { log, warn } from '../utils/logger.js';
+import { log } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
 
-import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
+import AddressDisplayObserver from '../observers/AddressDisplayObserver.js';
 
 /**
  * HTML-based address information displayer with comprehensive address data visualization.
@@ -38,9 +38,10 @@ import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
  * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
-class HTMLAddressDisplayer {
+export class HTMLAddressDisplayer {
 	element: HTMLElement;
 	enderecoPadronizadoDisplay: HTMLElement | boolean;
+	_displayObserver: AddressDisplayObserver;
 	/**
 	 * Creates a new HTMLAddressDisplayer instance.
 	 * 
@@ -67,7 +68,11 @@ class HTMLAddressDisplayer {
 	constructor(element: HTMLElement, enderecoPadronizadoDisplay: HTMLElement | boolean = false) {
 		this.element = element;
 		this.enderecoPadronizadoDisplay = enderecoPadronizadoDisplay;
-		Object.freeze(this); // Prevent further modification following MP Barbosa standards
+		this._displayObserver = new AddressDisplayObserver(element, this);
+		// NOTE: This instance is frozen because element and enderecoPadronizadoDisplay
+		// are set once at construction and never mutated; all display updates act on
+		// the DOM element's innerHTML, not on the instance properties themselves
+		Object.freeze(this);
 	}
 
 	/**
@@ -100,7 +105,7 @@ class HTMLAddressDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	renderAddressHtml(addressData: object, enderecoPadronizado: object): string {
+	renderAddressHtml(addressData: any, enderecoPadronizado: any): string {
 		log('(HTMLAddressDisplayer) renderAddressHtml() called with addressData:', addressData);
 		
 		if (!addressData) {
@@ -187,38 +192,8 @@ class HTMLAddressDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	update(addressData: object, enderecoPadronizado: object, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
-		// Log update for debugging (following MP Barbosa logging standards)
-		log(`(HTMLAddressDisplayer) update() called with posEvent: ${posEvent}`);
-		
-		if (!this.element) {
-			warn('(HTMLAddressDisplayer) No element provided, skipping update');
-			return;
-		}
-		
-		// Handle loading state with Portuguese localized message
-		if (loading) {
-			this.element.innerHTML = '<p class="loading">Carregando endereço...</p>';
-			return;
-		}
-
-		// Handle error state with Portuguese localized error message
-		// XSS Protection: Sanitize error.message to prevent script injection
-		if (error) {
-			this.element.innerHTML = `<p class="error">Erro ao carregar endereço: ${escapeHtml(error.message)}</p>`;
-			return;
-		}
-
-		// Handle successful address data for position updates
-		// Note: Using actual event value from PositionManager constant
-		if (posEvent === ADDRESS_FETCHED_EVENT && (addressData || enderecoPadronizado)) {
-			// Render comprehensive address HTML
-			const html = this.renderAddressHtml(addressData, enderecoPadronizado);
-			this.element.innerHTML = html;
-		}
-		
-		// Note: For other event types or when no address data is available,
-		// we don't update the display to avoid clearing existing content unnecessarily
+	update(addressData: any, enderecoPadronizado: any, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
+		this._displayObserver.update(addressData, enderecoPadronizado, posEvent, loading, error);
 	}
 
 	/**
@@ -242,13 +217,3 @@ class HTMLAddressDisplayer {
 }
 
 export default HTMLAddressDisplayer;
-/**
- * Module exports for HTML address display.
- * @exports HTMLAddressDisplayer - Renders formatted Brazilian addresses in HTML
- */
-export { HTMLAddressDisplayer };
-
-// Export to window for browser compatibility
-if (typeof window !== 'undefined') {
-	window.HTMLAddressDisplayer = HTMLAddressDisplayer;
-}

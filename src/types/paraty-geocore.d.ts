@@ -5,10 +5,10 @@
  * GeocodingState, calculateDistance, EARTH_RADIUS_METERS, delay.
  *
  * @see https://github.com/mpbarbosa/paraty_geocore.js
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-alpha/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.0-alpha/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-alpha/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.0-alpha/dist/esm/index.js' {
 	/** GPS accuracy quality classification. */
 	export type AccuracyQuality = 'excellent' | 'good' | 'medium' | 'bad' | 'very bad';
 
@@ -90,6 +90,9 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-a
 	/** Generic observer/subject — manages a list of typed observer callbacks. */
 	export class ObserverSubject<T> {
 		subscribe(observer: (snapshot: T) => void): () => void;
+		unsubscribe(callback: (snapshot: T) => void): boolean;
+		getObserverCount(): number;
+		clearObservers(): void;
 		_notifyObservers(snapshot: T): void;
 		_observers: Array<(snapshot: T) => void>;
 	}
@@ -102,9 +105,9 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-a
 	 */
 	export class DualObserverSubject {
 		/** Object observers subscribed via subscribe(). */
-		observers: Array<{ update?: (...args: unknown[]) => void }>;
+		readonly observers: ReadonlyArray<{ update?: (...args: unknown[]) => void }>;
 		/** Function observers subscribed via subscribeFunction(). */
-		functionObservers: Array<(...args: unknown[]) => void>;
+		readonly functionObservers: ReadonlyArray<(...args: unknown[]) => void>;
 
 		/** Subscribe an object observer (called via update() on notification). Null/undefined silently ignored. */
 		subscribe(observer: { update?: (...args: unknown[]) => void } | null | undefined): void;

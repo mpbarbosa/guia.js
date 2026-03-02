@@ -10,7 +10,8 @@
 #   1 - Error: Version inconsistencies found
 #
 # Usage:
-#   ./check-version-consistency.sh
+#   ./check-version-consistency.sh           # Check only
+#   ./check-version-consistency.sh --fix     # Check and auto-fix src/config/defaults.ts
 #   
 #   Or as a pre-commit hook:
 #   ln -s ../../.github/scripts/check-version-consistency.sh .git/hooks/pre-commit
@@ -25,6 +26,14 @@
 # ==============================================================================
 
 set -e
+
+# Parse flags
+FIX_MODE=false
+for arg in "$@"; do
+    if [[ "$arg" == "--fix" ]]; then
+        FIX_MODE=true
+    fi
+done
 
 # Colors for output
 RED='\033[0;31m'
@@ -150,10 +159,21 @@ else
         fi
         
         if [ "$DEFAULTS_VERSION" != "$PACKAGE_VERSION" ]; then
-            echo -e "${RED}❌ Version mismatch in src/config/defaults.ts${NC}"
-            echo "   Expected: $PACKAGE_VERSION"
-            echo "   Found: $DEFAULTS_VERSION"
-            INCONSISTENCIES=$((INCONSISTENCIES + 1))
+            if [ "$FIX_MODE" = true ]; then
+                MAJOR_EXPECTED=$(echo "$PACKAGE_VERSION" | cut -d. -f1)
+                MINOR_EXPECTED=$(echo "$PACKAGE_VERSION" | cut -d. -f2)
+                PATCH_EXPECTED=$(echo "$PACKAGE_VERSION" | cut -d. -f3 | cut -d- -f1)
+                sed -i "s/major:\s*[0-9]\+/major: $MAJOR_EXPECTED/" src/config/defaults.ts
+                sed -i "s/minor:\s*[0-9]\+/minor: $MINOR_EXPECTED/" src/config/defaults.ts
+                sed -i "s/patch:\s*[0-9]\+/patch: $PATCH_EXPECTED/" src/config/defaults.ts
+                echo -e "${GREEN}🔧 Auto-fixed src/config/defaults.ts: $DEFAULTS_VERSION → $PACKAGE_VERSION${NC}"
+            else
+                echo -e "${RED}❌ Version mismatch in src/config/defaults.ts${NC}"
+                echo "   Expected: $PACKAGE_VERSION"
+                echo "   Found: $DEFAULTS_VERSION"
+                echo "   💡 Run with --fix to auto-fix this file"
+                INCONSISTENCIES=$((INCONSISTENCIES + 1))
+            fi
         else
             echo -e "${GREEN}✅ src/config/defaults.ts version matches${NC}"
         fi

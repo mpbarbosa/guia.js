@@ -8,3 +8,34 @@
 [2026-03-02T18:43:01.634Z] Changes: 32 files
 [2026-03-02T18:43:01.634Z] Inferred commit type: feat(implementation+tests)
 [2026-03-02T18:43:01.634Z] Staging all changes...
+[2026-03-02T18:43:01.672Z] [DEBUG] Force-staged .ai_workflow/ artifacts
+[2026-03-02T18:43:01.672Z] Changes staged successfully
+[2026-03-02T18:43:01.672Z] Generating commit message...
+[2026-03-02T18:43:02.918Z] ✓ GitHub Copilot SDK initialized successfully
+[2026-03-02T18:43:04.447Z] Available Copilot models (13): claude-sonnet-4.5, claude-haiku-4.5, claude-opus-4.5, claude-sonnet-4, gemini-3-pro-preview, gpt-5.2-codex, gpt-5.2, gpt-5.1-codex-max, gpt-5.1-codex, gpt-5.1, gpt-5.1-codex-mini, gpt-5-mini, gpt-4.1
+[2026-03-02T18:43:04.488Z] [DEBUG] AI cache initialized: .ai_workflow/.ai_cache
+[2026-03-02T18:43:04.561Z] [DEBUG] Cache miss: 7a67e131...
+[2026-03-02T18:43:04.561Z] [DEBUG] Request Options: {"model":"gpt-4.1","temperature":0.7,"maxTokens":4000,"stream":false,"persona":"git_specialist","cache":true}
+[2026-03-02T18:43:04.561Z] [DEBUG] Persona: git_specialist
+[2026-03-02T18:43:04.561Z] [DEBUG] Model: gpt-4.1
+[2026-03-02T18:43:04.561Z] [AI] SDK call starting — persona: git_specialist, model: gpt-4.1, prompt_chars: 10215
+[2026-03-02T18:43:04.561Z] [DEBUG] Executing AI request (attempt 1/3)
+[2026-03-02T18:43:04.561Z] [DEBUG] AiHelper._sendRequest called
+[2026-03-02T18:43:04.561Z] [Copilot SDK] Calling sendMessage — model: gpt-4.1, prompt_length: 10215 chars
+[2026-03-02T18:43:04.561Z] [DEBUG] Sending prompt...
+[2026-03-02T18:43:09.979Z] [Copilot SDK] sendAndWait returned — model: gpt-4.1
+[2026-03-02T18:43:09.979Z] [AI] SDK call completed — persona: git_specialist, model: gpt-4.1, response_chars: 694, latency: 5418ms
+[2026-03-02T18:43:09.980Z] ✓ AI request completed successfully
+[2026-03-02T18:43:09.981Z] [DEBUG] Prompt logged to: 2026-03-02T18-43-09-980Z_0001_git_specialist.md
+[2026-03-02T18:43:09.986Z] [DEBUG] Response cached: 7a67e131...
+[2026-03-02T18:43:09.986Z] AI commit message generated
+[2026-03-02T18:43:09.986Z] Creating commit...
+[2026-03-02T18:43:10.039Z] Changes committed successfully
+[2026-03-02T18:43:10.046Z] Tagged release: v0.12.0-alpha
+[2026-03-02T18:43:13.989Z] Pushed tag v0.12.0-alpha to remote
+[2026-03-02T18:43:13.989Z] Pushing to origin/main...
+[2026-03-02T18:43:19.093Z] ✓ Step step_12 completed in 17494ms
+[2026-03-02T18:43:19.093Z] [DEBUG] [Performance] step_12: 17.5s
+[2026-03-02T18:43:19.093Z] ⚠ [WARNING] Operation 'step_12' took 17.5s (memory: 32.02MB)
+[2026-03-02T18:43:19.093Z] [DEBUG] Recorded outcome for step_12: success
+[2026-03-02T18:43:19.093Z] ✓ Completed: Git Finalization (17s)

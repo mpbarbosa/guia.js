@@ -111,7 +111,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 ### Architecture & Design
 
 - **[architecture/VERSION_TIMELINE.md](./architecture/VERSION_TIMELINE.md)** - Version History Timeline 🆕
-  - Comprehensive version timeline (0.5.x → 0.11.8-alpha current)
+  - Comprehensive version timeline (0.5.x → 0.12.0-alpha current)
   - Component evolution (GeoPosition, PositionManager, WebGeocodingManager)
   - Breaking changes and migration guides
   - Visual timeline diagram
@@ -668,7 +668,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 ### Architecture & Design
 
 - **[architecture/VERSION_TIMELINE.md](./architecture/VERSION_TIMELINE.md)** - Version History and Migration Guide 🆕
-  - **Comprehensive version timeline from 0.5.x to 0.11.8-alpha (current)**
+  - **Comprehensive version timeline from 0.5.x to 0.12.0-alpha (current)**
   - Version-by-version architectural changes
   - Breaking changes and migration guides
   - Component-specific version history (GeoPosition, PositionManager, WebGeocodingManager)
@@ -991,7 +991,7 @@ Major documentation update to formalize the project's commitment to functional p
 
 ## Project Information
 
-- **Version**: 0.11.8-alpha (active development)
+- **Version**: 0.12.0-alpha (active development)
 - **License**: ISC (see LICENSE file)
 - **Author**: Marcelo Pereira Barbosa
 - **Last Updated**: 2026-02-09

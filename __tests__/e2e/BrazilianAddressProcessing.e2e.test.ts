@@ -18,25 +18,14 @@
  */
 
 import { describe, test, expect, jest, beforeEach, afterEach, beforeAll, afterAll } from '@jest/globals';
+import { TEST_GEOLOCATION_OPTIONS } from '../helpers/e2e-helpers-lib.js';
 
 // Mock DOM functions to prevent errors in test environment
 global.document = undefined;
 
-// Mock console to suppress logging during tests
-global.console = {
-    log: jest.fn(),
-    error: jest.fn(),
-    warn: jest.fn(),
-    info: jest.fn()
-};
-
 // Mock setupParams
 global.setupParams = {
-    geolocationOptions: {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 60000
-    },
+    geolocationOptions: TEST_GEOLOCATION_OPTIONS,
     validRefPlaceClasses: ['amenity', 'building', 'shop', 'place'],
     notAcceptedAccuracy: ['bad', 'very bad'],
     referencePlaceMap: {

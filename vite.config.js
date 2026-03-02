@@ -46,6 +46,11 @@ export default defineConfig({
         // Let Vite automatically chunk based on dynamic imports
         // This is simpler and more maintainable
         manualChunks(id) {
+          // MapLibre GL JS gets its own chunk (large, ~900KB)
+          if (id.includes('maplibre-gl')) {
+            return 'map';
+          }
+
           // Vendor chunks for external dependencies
           if (id.includes('node_modules')) {
             return 'vendor';

@@ -1,0 +1,11 @@
+#!/bin/sh
+# Husky pre-push hook
+# Full test suite validation before push
+
+echo "🚀 Running pre-push validation..."
+
+# Run full test suite
+echo "  ✓ Running full test suite..."
+npm test || exit 1
+
+echo "✅ Pre-push checks passed!"

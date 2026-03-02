@@ -21,6 +21,7 @@ import Chronometer from '../timing/Chronometer.js';
 import PositionManager from '../core/PositionManager.js';
 import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.9-alpha/dist/esm/index.js';
 import { log, warn, error } from '../utils/logger.js';
+import MapLibreDisplayer from '../html/MapLibreDisplayer.js';
 
 /**
  * Home View Controller for location tracking and geocoding display.
@@ -149,6 +150,9 @@ class HomeViewController {
       // 3. Set up event listeners (stub for Step 4)
       this._setupEventListeners();
       
+      // 4. Initialize MapLibre map displayer
+      this._initializeMapDisplayer();
+      
       // Mark as initialized BEFORE auto-start to avoid check error
       this.initialized = true;
       
@@ -222,6 +226,15 @@ class HomeViewController {
     // Destroy manager
     if (this.manager && typeof this.manager.destroy === 'function') {
       this.manager.destroy();
+    }
+
+    // Unsubscribe map position observer
+    if (this._mapPositionObserver) {
+      try {
+        PositionManager.getInstance().unsubscribe(this._mapPositionObserver);
+      } catch (_) { /* ignore */ }
+      this._mapPositionObserver = null;
+      this._mapDisplayer = null;
     }
     
     // Reset state
@@ -342,7 +355,35 @@ class HomeViewController {
       warn('HomeViewController: Continuing without chronometer');
     }
   }
-  
+
+  /**
+   * Initializes the MapLibre map displayer and subscribes to position updates.
+   * @private
+   */
+  _initializeMapDisplayer() {
+    try {
+      this._mapDisplayer = new MapLibreDisplayer('maplibre-map', 'map-toggle-btn');
+      this._mapDisplayer.bindToggleButton();
+
+      // Observer that forwards position changes to the map displayer
+      this._mapPositionObserver = {
+        update: (positionManager) => {
+          const lat = positionManager.latitude;
+          const lon = positionManager.longitude;
+          if (lat != null && lon != null) {
+            this._mapDisplayer.updatePosition(lat, lon);
+          }
+        }
+      };
+
+      PositionManager.getInstance().subscribe(this._mapPositionObserver);
+      log('HomeViewController: MapLibreDisplayer initialized');
+    } catch (err) {
+      error('HomeViewController: Failed to initialize MapLibreDisplayer:', err);
+      // Non-critical — app works without the map
+    }
+  }
+
   /**
    * Sets up event listeners for UI buttons.
    * @private

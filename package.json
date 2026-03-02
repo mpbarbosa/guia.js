@@ -1,6 +1,6 @@
 {
   "name": "guia_turistico",
-  "version": "0.11.7-alpha",
+  "version": "0.11.8-alpha",
   "description": "Tourist guide web application built on top of guia.js library",
   "type": "module",
   "main": "src/app.js",
@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --forceExit",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "test:verbose": "node --experimental-vm-modules node_modules/jest/bin/jest.js --verbose",
@@ -63,11 +63,28 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
+    "extensionsToTreatAsEsm": [
+      ".ts",
+      ".vue"
+    ],
     "setupFilesAfterEnv": [
       "<rootDir>/jest.setup.js"
     ],
-    "transform": {},
-    "transformIgnorePatterns": [],
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "useESM": true,
+          "tsconfig": {
+            "allowJs": true,
+            "checkJs": false
+          }
+        }
+      ]
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(vue)/)"
+    ],
     "maxWorkers": 1,
     "cacheDirectory": ".jest-cache",
     "testTimeout": 30000,
@@ -85,6 +102,18 @@
       "!src/**/*.spec.js",
       "!node_modules/**",
       "!coverage/**"
+    ],
+    "moduleNameMapper": {
+      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.9\\.4-alpha/dist/esm/index\\.js$": "<rootDir>/../paraty_geocore.js/src/index",
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
     ],
     "testMatch": [
       "**/__tests__/**/*.js",
@@ -127,6 +156,7 @@
   "dependencies": {
     "guia.js": "github:mpbarbosa/guia_js#v0.6.0-alpha",
     "ibira.js": "github:mpbarbosa/ibira.js#v0.2.1-alpha",
+    "maplibre-gl": "^5.19.0",
     "vue": "^3.5.29",
     "vue-router": "^4.6.4"
   },

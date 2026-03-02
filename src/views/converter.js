@@ -143,7 +143,7 @@ export default {
         
         .example {
           font-size: 0.9em;
-          color: #7f8c8d;
+          color: #6c757d; /* was #7f8c8d (3.65:1 on white, WCAG AA fail) */
           margin-top: 5px;
         }
         

@@ -21,6 +21,18 @@ const DEFAULT_CONFIG = {
 };
 
 /**
+ * Standard geolocation options for use in test setupParams mocks.
+ * Centralizes the commonly duplicated timeout and maximumAge values.
+ *
+ * @type {{ enableHighAccuracy: boolean, timeout: number, maximumAge: number }}
+ */
+export const TEST_GEOLOCATION_OPTIONS = {
+    enableHighAccuracy: true,
+    timeout: 10000,     // 10 seconds
+    maximumAge: 60000,  // 1 minute
+};
+
+/**
  * Wait for an element to be present in the DOM
  * 
  * @param {Page} page - Puppeteer page instance

@@ -1,5 +1,10 @@
 'use strict';
 import { log, warn } from '../utils/logger.js';
+
+const QUEUE_MAX_SIZE = 100;       // Maximum items in the speech queue
+const QUEUE_TIMEOUT_MS = 30000;   // Queue item timeout in milliseconds
+const QUEUE_INTERVAL_MS = 100;    // Queue processing interval in milliseconds
+
 /**
  * Speech Synthesis Manager - Facade Pattern
  * 
@@ -93,10 +98,10 @@ export class SpeechSynthesisManager {
         this.config = new SpeechConfiguration(this.enableLogging);
         
         // Queue management
-        this.speechQueue = new SpeechQueue(100, 30000, this.enableLogging);
+        this.speechQueue = new SpeechQueue(QUEUE_MAX_SIZE, QUEUE_TIMEOUT_MS, this.enableLogging);
         this.queueProcessor = new SpeechQueueProcessor(
             () => this._processNextItem(),
-            100,  // interval in ms
+            QUEUE_INTERVAL_MS,  // interval in ms
             this.enableLogging
         );
         

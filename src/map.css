@@ -1,0 +1,25 @@
+/* Map section — MapLibre GL JS inline map */
+
+#map-section {
+  margin-top: 0.75rem;
+}
+
+#map-toggle-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.maplibre-map-container {
+  width: 100%;
+  height: 300px;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--color-border, #e2e8f0);
+}
+
+/* Ensure MapLibre canvas fills the container */
+.maplibre-map-container .maplibregl-map {
+  width: 100%;
+  height: 100%;
+}

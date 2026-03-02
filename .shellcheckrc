@@ -1,0 +1,4 @@
+# ShellCheck configuration
+# Exclude SC2148 (missing shebang) — applies to auto-generated .husky/_/ files
+# which intentionally omit shebangs and must not be modified
+disable=SC2148

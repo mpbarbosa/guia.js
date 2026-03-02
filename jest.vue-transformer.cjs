@@ -27,8 +27,11 @@ module.exports = {
   supportsStaticESM: true,
 
   /**
+   * Transform a .vue SFC into a Jest-compatible ESM module.
+   *
    * @param {string} source - Raw .vue file content
    * @param {string} filename - Absolute file path
+   * @returns {{ code: string }} Transformed module code
    */
   process(source, filename) {
     const id = getId(filename);
@@ -42,30 +45,44 @@ module.exports = {
     }
 
     // 2. Compile <script setup lang="ts"> with inline template → single component JS
-    const script = compileScript(descriptor, {
-      id,
-      isProd: false,
-      inlineTemplate: true,  // Compiles template into the script so they're always connected
-      sourceMap: false,
-      templateOptions: {
+    let script;
+    try {
+      script = compileScript(descriptor, {
         id,
-        filename,
         isProd: false,
+        inlineTemplate: true,  // Compiles template into the script so they're always connected
         sourceMap: false,
-        compilerOptions: { mode: 'module' },
-      },
-    });
+        templateOptions: {
+          id,
+          filename,
+          isProd: false,
+          sourceMap: false,
+          compilerOptions: { mode: 'module' },
+        },
+      });
+    } catch (err) {
+      throw new Error(
+        `[vue-transformer] Script/template compilation failed in ${filename}: ${err.message}`
+      );
+    }
 
     // 3. Transpile TS → plain JS (strips type annotations, preserves ESM imports)
-    const tsResult = ts.transpileModule(script.content, {
-      compilerOptions: {
-        module: ts.ModuleKind.ESNext,
-        target: ts.ScriptTarget.ES2022,
-        strict: false,
-        sourceMap: false,
-      },
-      fileName: filename.replace('.vue', '.ts'),
-    });
+    let tsResult;
+    try {
+      tsResult = ts.transpileModule(script.content, {
+        compilerOptions: {
+          module: ts.ModuleKind.ESNext,
+          target: ts.ScriptTarget.ES2022,
+          strict: false,
+          sourceMap: false,
+        },
+        fileName: filename.replace('.vue', '.ts'),
+      });
+    } catch (err) {
+      throw new Error(
+        `[vue-transformer] TypeScript transpilation failed in ${filename}: ${err.message}`
+      );
+    }
 
     return { code: tsResult.outputText };
   },

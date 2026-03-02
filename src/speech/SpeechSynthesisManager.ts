@@ -1163,8 +1163,22 @@ class SpeechSynthesisManager {
 }
 
 export default SpeechSynthesisManager;
+
+/**
+ * Named priority levels for the speech synthesis queue.
+ * Higher values are processed first.
+ */
+export const SPEECH_PRIORITY = {
+    PERIODIC: 0,        // Periodic position updates (lowest priority)
+    LOGRADOURO: 1,      // Street-level address changes
+    BAIRRO: 2,          // Neighborhood changes
+    FIRST_ADDRESS: 2.5, // First address announcement after startup
+    MUNICIPIO: 3,       // Municipality changes (highest priority)
+} as const;
+
 /**
  * Module exports for speech synthesis management.
  * @exports SPEECH_CONFIG - Default speech synthesis configuration
+ * @exports SPEECH_PRIORITY - Named priority levels for the speech queue
  */
 export { SPEECH_CONFIG };

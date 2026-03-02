@@ -1,6 +1,6 @@
 import { log } from '../utils/logger.js';
 import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
-import SpeechSynthesisManager from '../speech/SpeechSynthesisManager.js'; // eslint-disable-line no-unused-vars
+import SpeechSynthesisManager, { SPEECH_PRIORITY } from '../speech/SpeechSynthesisManager.js'; // eslint-disable-line no-unused-vars
 import { SpeechTextBuilder } from '../speech/SpeechTextBuilder.js'; // eslint-disable-line no-unused-vars
 import PositionManager from '../core/PositionManager.js';
 
@@ -42,14 +42,14 @@ return;
 }
 
 let textToBeSpoken = "";
-let priority = 0;
+let priority = SPEECH_PRIORITY.PERIODIC;
 
 if (posEvent === ADDRESS_FETCHED_EVENT && !this._firstAddressAnnounced) {
 if (typeof console !== 'undefined' && console.log) {
 log("+++ (305) (AddressSpeechObserver) First address - announcing");
 }
 textToBeSpoken = this.textBuilder.buildTextToSpeech(enderecoPadronizadoOrEvent);
-priority = 2.5;
+priority = SPEECH_PRIORITY.FIRST_ADDRESS;
 this._firstAddressAnnounced = true;
 }
 else if (["MunicipioChanged", "BairroChanged", "LogradouroChanged"].includes(enderecoPadronizadoOrEvent)) {
@@ -61,21 +61,18 @@ const fullAddress = loadingOrChangeDetails?.currentAddress || currentAddress;
 
 if (enderecoPadronizadoOrEvent === "MunicipioChanged") {
 textToBeSpoken = this.textBuilder.buildTextToSpeechMunicipio(fullAddress, loadingOrChangeDetails);
-priority = 3;
+priority = SPEECH_PRIORITY.MUNICIPIO;
 } else if (enderecoPadronizadoOrEvent === "BairroChanged") {
 textToBeSpoken = this.textBuilder.buildTextToSpeechBairro(fullAddress);
-priority = 2;
+priority = SPEECH_PRIORITY.BAIRRO;
 } else if (enderecoPadronizadoOrEvent === "LogradouroChanged") {
 textToBeSpoken = this.textBuilder.buildTextToSpeechLogradouro(fullAddress);
-priority = 1;
+priority = SPEECH_PRIORITY.LOGRADOURO;
 }
 }
 else if (posEvent === PositionManager.strCurrPosUpdate) {
 textToBeSpoken = this.textBuilder.buildTextToSpeech(enderecoPadronizadoOrEvent);
-priority = 0;
-}
-
-if (textToBeSpoken) {
+priority = SPEECH_PRIORITY.PERIODIC;
 if (this.textInput) {
 this.textInput.value = textToBeSpoken;
 }

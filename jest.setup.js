@@ -1,10 +1,23 @@
 /**
  * Jest setup file
- * Configures global polyfills for test environment
+ * Configures global polyfills and shared mocks for test environment.
+ *
+ * This file runs via setupFilesAfterEnv and centralizes global mocks
+ * that would otherwise be duplicated across individual test files.
  */
 
 import { TextEncoder, TextDecoder } from 'util';
 import { jest } from '@jest/globals';
+
+// Suppress console output during tests to keep test output clean.
+// Individual test files may override specific methods with jest.spyOn if needed.
+global.console = {
+    log: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    info: jest.fn(),
+    debug: jest.fn(),
+};
 
 // Polyfill TextEncoder/TextDecoder for jsdom environment
 global.TextEncoder = TextEncoder;

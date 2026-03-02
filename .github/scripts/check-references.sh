@@ -157,6 +157,7 @@ extract_references() {
                 fi
             done <<< "$refs"
         fi
+    # shellcheck disable=SC2094
     done < "$file"
 }
 

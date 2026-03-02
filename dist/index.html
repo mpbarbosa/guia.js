@@ -4,7 +4,7 @@
     <meta name="version" content="0.9.0-alpha" data-source="src/config/version.js">
     
     <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com; manifest-src 'self'; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com https://demotiles.maplibre.org; worker-src blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'">
     
     <!-- Security Headers (meta tag fallback for static hosting) -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -451,14 +451,16 @@
         margin-bottom: 2rem;
       }
     </style>
-    <script type="module" crossorigin src="./assets/main-XwOB16is.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/core-FswvroDi.js">
-    <link rel="modulepreload" crossorigin href="./assets/speech-CK-EAjaV.js">
-    <link rel="modulepreload" crossorigin href="./assets/data-3xd-dCZq.js">
-    <link rel="modulepreload" crossorigin href="./assets/services-B0AP4H_W.js">
-    <link rel="modulepreload" crossorigin href="./assets/html-DWJrGJHR.js">
-    <link rel="modulepreload" crossorigin href="./assets/coordination-B71T5I98.js">
-    <link rel="stylesheet" crossorigin href="./assets/main-CvTXWqGW.css">
+    <script type="module" crossorigin src="./assets/main-D59_jjt_.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/core-BG-HQNFF.js">
+    <link rel="modulepreload" crossorigin href="./assets/speech-C7Q3K9U5.js">
+    <link rel="modulepreload" crossorigin href="./assets/data-GA3v0ZrG.js">
+    <link rel="modulepreload" crossorigin href="./assets/services-BsHULyPd.js">
+    <link rel="modulepreload" crossorigin href="./assets/map-WLs8NypD.js">
+    <link rel="modulepreload" crossorigin href="./assets/html-C4r5vH2b.js">
+    <link rel="modulepreload" crossorigin href="./assets/coordination-JXMJF962.js">
+    <link rel="stylesheet" crossorigin href="./assets/map-DwUhsmFz.css">
+    <link rel="stylesheet" crossorigin href="./assets/main-DOXUA45U.css">
   </head>
   <body><div class="navigation-progress" role="progressbar" aria-label="Progresso de navegação"><div class="navigation-progress-bar" style="width: 0%;"></div></div>
     
@@ -658,6 +660,14 @@
           
           <section id="locationResult" aria-label="Resultado da localização">
           </section>
+
+          <div id="map-section">
+            <button id="map-toggle-btn" class="md3-button-outlined" aria-label="Mostrar mapa da localização atual" aria-expanded="false">
+              <span class="button-icon" aria-hidden="true">🗺️</span>
+              <span class="button-text">Ver no Mapa</span>
+            </button>
+            <div id="maplibre-map" class="maplibre-map-container" aria-label="Mapa da localização atual" role="img" hidden></div>
+          </div>
         </div>
       </details>
 

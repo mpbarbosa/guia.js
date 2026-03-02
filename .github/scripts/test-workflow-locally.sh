@@ -66,6 +66,7 @@ if [ -x ".github/scripts/change-type-detector.sh" ]; then
     
     # Load cached information
     if [ -f ".github/cache/change_type.cache" ]; then
+        # shellcheck source=/dev/null
         source .github/cache/change_type.cache
         echo ""
         echo "Change Type Analysis:"

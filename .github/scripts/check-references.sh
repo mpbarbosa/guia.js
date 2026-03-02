@@ -99,6 +99,7 @@ extract_references() {
     local in_code_block=false
     local line_num=0
     
+    # shellcheck disable=SC2094  # $file is read-only here; done < "$file" is safe
     while IFS= read -r line; do
         ((line_num++))
         
@@ -157,7 +158,6 @@ extract_references() {
                 fi
             done <<< "$refs"
         fi
-    # shellcheck disable=SC2094
     done < "$file"
 }
 

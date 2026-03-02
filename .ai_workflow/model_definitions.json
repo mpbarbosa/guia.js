@@ -1,163 +1,227 @@
 {
-  "workflow_run_id": "workflow_20260216_220240",
-  "generated_at": "2026-02-17T01:03:07Z",
+  "workflow_run_id": "workflow_20260302_203120",
+  "generated_at": "2026-03-02T23:37:59Z",
   "git_info": {
-    "commit": "fe27d65",
+    "commit": "42130ae",
     "branch": "main"
   },
   "change_summary": {
-    "total_files": 17,
+    "total_files": 5,
     "by_category": {
-      "code": 10,
-      "documentation": 6,
-      "tests": 1
+      "code": 0,
+      "documentation": 0,
+      "tests": 4,
+      "config": 1
     }
   },
   "complexity_analysis": {
     "code": {
-  "score": 30,
-  "tier": "medium",
-  "factors": {
-    "cyclomatic": 0,
-    "lines_changed": 0,
-    "function_depth": 0,
-    "semantic": "major_refactor"
-  }
-},
+      "score": 0,
+      "tier": "low",
+      "factors": {
+        "cyclomatic": 0,
+        "lines_changed": 0,
+        "function_depth": 0,
+        "semantic": "no_change"
+      }
+    },
     "documentation": {
-  "score": 0,
-  "tier": "low",
-  "factors": {
-    "words_changed": 0,
-    "files_affected": 0,
-    "structural_changes": 0,
-    "primary_doc": false
-  }
-},
+      "score": 0,
+      "tier": "low",
+      "factors": {
+        "words_changed": 0,
+        "files_affected": 0,
+        "structural_changes": 0,
+        "primary_doc": false
+      }
+    },
     "tests": {
-  "score": 107,
-  "tier": "high",
-  "factors": {
-    "test_cases": 30,
-    "lines_changed": 51,
-    "coverage_impact": "major_expansion"
-  }
-}
+      "score": 40,
+      "tier": "medium",
+      "factors": {
+        "test_cases": 181,
+        "lines_changed": 4,
+        "coverage_impact": "incremental"
+      }
+    }
   },
   "model_definitions": {
     "version_update": {
-      "model": "claude-sonnet-4.5",
-      "reason": "Medium complexity version analysis changes - balanced model recommended",
-      "tier": "medium",
-      "alternatives": ["gpt-5.1-codex", "gpt-5-mini" ]
+      "model": "gpt-4.1",
+      "reason": "No source changes \u2014 patch config bump only",
+      "tier": "low",
+      "alternatives": [
+        "gpt-5.1-codex",
+        "gpt-5-mini"
+      ]
     },
     "bootstrap_docs": {
       "model": "claude-sonnet-4.5",
       "reason": "Documentation generation from scratch requires reasoning",
       "tier": "medium",
-      "alternatives": ["gpt-5.1-codex", "gpt-5-mini" ]
+      "alternatives": [
+        "gpt-5.1-codex",
+        "gpt-5-mini"
+      ]
     },
     "documentation": {
-      "model": "claude-haiku-4.5",
-      "reason": "Low complexity documentation changes - fast model sufficient",
+      "model": "gpt-4.1",
+      "reason": "No documentation files changed this run",
       "tier": "low",
-      "alternatives": ["gpt-5-mini", "gemini-3-flash" ]
+      "alternatives": [
+        "gpt-5-mini",
+        "gemini-3-flash"
+      ]
     },
     "consistency": {
-      "model": "claude-haiku-4.5",
-      "reason": "Low complexity documentation validation changes - fast model sufficient",
+      "model": "gpt-4.1",
+      "reason": "No documentation files changed this run",
       "tier": "low",
-      "alternatives": ["gpt-5-mini", "gemini-3-flash" ]
+      "alternatives": [
+        "gpt-5-mini",
+        "gemini-3-flash"
+      ]
     },
     "script_refs": {
-      "model": "claude-sonnet-4.5",
-      "reason": "Medium complexity script analysis changes - balanced model recommended",
-      "tier": "medium",
-      "alternatives": ["gpt-5.1-codex", "gpt-5-mini" ]
+      "model": "gpt-4.1",
+      "reason": "No source file changes this run",
+      "tier": "low",
+      "alternatives": [
+        "gpt-5.1-codex",
+        "gpt-5-mini"
+      ]
     },
     "directory": {
-      "model": "claude-haiku-4.5",
-      "reason": "Low complexity directory validation changes - fast model sufficient",
+      "model": "gpt-4.1",
+      "reason": "No structural changes this run",
       "tier": "low",
-      "alternatives": ["gpt-5-mini", "gemini-3-flash" ]
+      "alternatives": [
+        "gpt-5-mini",
+        "gemini-3-flash"
+      ]
     },
     "test_review": {
-      "model": "claude-opus-4.5",
-      "reason": "High complexity test analysis changes - deep reasoning required",
-      "tier": "high",
-      "alternatives": ["gpt-5.2", "claude-sonnet-4.0", "gemini-3-pro" ]
+      "model": "gpt-5.1-codex-mini",
+      "reason": "Test file changes (4 files) \u2014 review needed",
+      "tier": "medium",
+      "alternatives": [
+        "gpt-5.2",
+        "claude-sonnet-4.0",
+        "gemini-3-pro"
+      ]
     },
     "test_gen": {
-      "model": "claude-opus-4.5",
-      "reason": "Test generation (tier adjusted: high → higher)",
-      "tier": "high",
-      "alternatives": ["gpt-5.2", "claude-sonnet-4.0", "gemini-3-pro" ]
+      "model": "gpt-5.1-codex-mini",
+      "reason": "Test generation scoped to test file changes",
+      "tier": "medium",
+      "alternatives": [
+        "gpt-5.2",
+        "claude-sonnet-4.0",
+        "gemini-3-pro"
+      ]
     },
     "test_exec": {
-      "model": "claude-haiku-4.5",
-      "reason": "Low complexity test execution changes - fast model sufficient",
+      "model": "gpt-4.1",
+      "reason": "Test execution results are straightforward",
       "tier": "low",
-      "alternatives": ["gpt-5-mini", "gemini-3-flash" ]
+      "alternatives": [
+        "gpt-5-mini",
+        "gemini-3-flash"
+      ]
     },
     "dependencies": {
-      "model": "claude-sonnet-4.5",
-      "reason": "Medium complexity dependency analysis changes - balanced model recommended",
-      "tier": "medium",
-      "alternatives": ["gpt-5.1-codex", "gpt-5-mini" ]
+      "model": "gpt-4.1",
+      "reason": "No package.json changes this run",
+      "tier": "low",
+      "alternatives": [
+        "gpt-5.1-codex",
+        "gpt-5-mini"
+      ]
     },
     "code_quality": {
-      "model": "claude-sonnet-4.5",
-      "reason": "Medium complexity code analysis changes - balanced model recommended",
-      "tier": "medium",
-      "alternatives": ["gpt-5.1-codex", "gpt-5-mini" ]
+      "model": "gpt-4.1",
+      "reason": "No source files changed \u2014 linter-only findings",
+      "tier": "low",
+      "alternatives": [
+        "gpt-5.1-codex",
+        "gpt-5-mini"
+      ]
     },
     "deployment_gate": {
       "model": "claude-opus-4.5",
       "reason": "Deployment readiness requires careful analysis",
       "tier": "high",
-      "alternatives": ["gpt-5.2", "claude-sonnet-4.0", "gemini-3-pro" ]
+      "alternatives": [
+        "gpt-5.2",
+        "claude-sonnet-4.0",
+        "gemini-3-pro"
+      ]
     },
     "context": {
-      "model": "claude-sonnet-4.5",
-      "reason": "Context building for AI workflows",
-      "tier": "medium",
-      "alternatives": ["gpt-5.1-codex", "gpt-5-mini" ]
+      "model": "gpt-4.1",
+      "reason": "Small changeset \u2014 context building lightweight",
+      "tier": "low",
+      "alternatives": [
+        "gpt-5.1-codex",
+        "gpt-5-mini"
+      ]
     },
     "frontend_dev": {
       "model": "claude-opus-4.5",
       "reason": "Frontend development analysis requires UI expertise",
       "tier": "high",
-      "alternatives": ["gpt-5.2", "claude-sonnet-4.0", "gemini-3-pro" ]
+      "alternatives": [
+        "gpt-5.2",
+        "claude-sonnet-4.0",
+        "gemini-3-pro"
+      ]
     },
     "git_finalization": {
-      "model": "claude-haiku-4.5",
-      "reason": "Low complexity git operations changes - fast model sufficient",
+      "model": "gpt-4.1",
+      "reason": "Minimal diff \u2014 config and test files only",
       "tier": "low",
-      "alternatives": ["gpt-5-mini", "gemini-3-flash" ]
+      "alternatives": [
+        "gpt-5-mini",
+        "gemini-3-flash"
+      ]
     },
     "markdown_lint": {
-      "model": "claude-haiku-4.5",
-      "reason": "Low complexity markdown validation changes - fast model sufficient",
+      "model": "gpt-4.1",
+      "reason": "No documentation files changed this run",
       "tier": "low",
-      "alternatives": ["gpt-5-mini", "gemini-3-flash" ]
+      "alternatives": [
+        "gpt-5-mini",
+        "gemini-3-flash"
+      ]
     },
     "prompt_engineer": {
       "model": "claude-opus-4.5",
       "reason": "Prompt engineering requires deep reasoning",
       "tier": "high",
-      "alternatives": ["gpt-5.2", "claude-sonnet-4.0", "gemini-3-pro" ]
+      "alternatives": [
+        "gpt-5.2",
+        "claude-sonnet-4.0",
+        "gemini-3-pro"
+      ]
     },
     "ux_analysis": {
-      "model": "claude-sonnet-4.5",
-      "reason": "UX analysis (forced tier: high for UI reasoning)",
-      "tier": "high",
-      "alternatives": ["gpt-5.2", "claude-sonnet-4.0", "gemini-3-pro" ]
+      "model": "gpt-5.1-codex-mini",
+      "reason": "UI files present (231); standard UX pass",
+      "tier": "medium",
+      "alternatives": [
+        "gpt-5.2",
+        "claude-sonnet-4.0",
+        "gemini-3-pro"
+      ]
     },
     "final_version_update": {
-      "model": "claude-sonnet-4.5",
-      "reason": "Medium complexity version finalization changes - balanced model recommended",
-      "tier": "medium",
-      "alternatives": ["gpt-5.1-codex", "gpt-5-mini" ]
+      "model": "gpt-4.1",
+      "reason": "Patch bump only \u2014 no major version change",
+      "tier": "low",
+      "alternatives": [
+        "gpt-5.1-codex",
+        "gpt-5-mini"
+      ]
     }
   },
   "override": null

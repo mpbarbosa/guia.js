@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Changed
+
+- **`paraty_geocore.js` dependency upgrade** from `@0.9.9-alpha` to `@0.9.10-alpha`:
+  - Updated CDN URL in all source files, test files, `jest.config.unit.js`, `package.json`, and `src/types/paraty-geocore.d.ts`
+  - `GeocodingState` and `ObserverSubject` are now exported from the CDN — the local `src/core/GeocodingState.js` stub has been removed
+  - `src/coordination/WebGeocodingManager.ts` now imports `GeocodingState` from the CDN alongside `GeoPosition`
+  - Updated ambient type declarations in `src/types/paraty-geocore.d.ts` to include `ObserverSubject`, `GeocodingState`, and `GeocodingStateSnapshot`
+  - `geocodingState.destroy()` call replaced by `geocodingState.clear()` to match the CDN API
+  - Updated `test/core/GeocodingState.test.js` to test the CDN class (validation, observer pattern, `clear()`, `hasPosition()`)
 
 ### Fixed
 

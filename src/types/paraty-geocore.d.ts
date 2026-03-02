@@ -1,15 +1,14 @@
 /**
  * TypeScript ambient type declarations for the paraty_geocore.js CDN module.
  *
- * This file enables TypeScript type-checking for the CDN URL import used in
- * `src/core/GeoPosition.ts`. Without this declaration, TypeScript cannot resolve
- * the `https://` URL to any type information.
+ * Exports: GeoPosition, GeoPositionError, ObserverSubject, GeocodingState,
+ * calculateDistance, EARTH_RADIUS_METERS, delay.
  *
  * @see https://github.com/mpbarbosa/paraty_geocore.js
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.9-alpha/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-alpha/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.9-alpha/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-alpha/dist/esm/index.js' {
 	/** GPS accuracy quality classification. */
 	export type AccuracyQuality = 'excellent' | 'good' | 'medium' | 'bad' | 'very bad';
 
@@ -79,19 +78,49 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.9-al
 
 	/**
 	 * Calculates the great-circle distance between two geographic points using the Haversine formula.
-	 * @param lat1 - Latitude of first point in decimal degrees
-	 * @param lon1 - Longitude of first point in decimal degrees
-	 * @param lat2 - Latitude of second point in decimal degrees
-	 * @param lon2 - Longitude of second point in decimal degrees
-	 * @returns Distance in meters between the two points
 	 */
 	export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number;
 
 	/**
 	 * Creates a Promise that resolves after the specified number of milliseconds.
 	 * Negative values are clamped to 0.
-	 * @param ms - Delay duration in milliseconds
-	 * @returns Promise that resolves after `ms` milliseconds
 	 */
 	export function delay(ms: number): Promise<void>;
+
+	/** Generic observer/subject — manages a list of typed observer callbacks. */
+	export class ObserverSubject<T> {
+		subscribe(observer: (snapshot: T) => void): () => void;
+		_notifyObservers(snapshot: T): void;
+		_observers: Array<(snapshot: T) => void>;
+	}
+
+	/** Snapshot passed to GeocodingState observers on every state change. */
+	export interface GeocodingStateSnapshot {
+		position: GeoPosition | null;
+		coordinates: { latitude: number; longitude: number } | null;
+	}
+
+	/** Centralized state manager for current position and coordinates. */
+	export class GeocodingState extends ObserverSubject<GeocodingStateSnapshot> {
+		constructor();
+
+		/**
+		 * Set current position and notify observers.
+		 * @throws {TypeError} If position is not a GeoPosition instance or null.
+		 * @returns {GeocodingState} This instance for chaining.
+		 */
+		setPosition(position: GeoPosition | null): GeocodingState;
+
+		/** Returns the current GeoPosition, or null if not set. */
+		getCurrentPosition(): GeoPosition | null;
+
+		/** Returns {latitude, longitude}, or null if no position is set. */
+		getCurrentCoordinates(): { latitude: number; longitude: number } | null;
+
+		/** Returns true if a position is currently set. */
+		hasPosition(): boolean;
+
+		/** Clears the current position state. */
+		clear(): void;
+	}
 }

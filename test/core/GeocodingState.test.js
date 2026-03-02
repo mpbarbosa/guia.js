@@ -1,102 +1,117 @@
-// src/core/__tests__/GeocodingState.test.js
+// test/core/GeocodingState.test.js
+// Tests for GeocodingState imported from paraty_geocore.js CDN.
 
-import GeocodingState from '../GeocodingState';
+import { GeocodingState, GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-alpha/dist/esm/index.js';
 
-describe('GeocodingState', () => {
-  let state;
+const makeGeoPosition = (lat = -23.55, lon = -46.63) =>
+	new GeoPosition({ coords: { latitude: lat, longitude: lon } });
 
-  beforeEach(() => {
-    state = new GeocodingState();
-  });
+describe('GeocodingState (CDN)', () => {
+	let state;
 
-  describe('constructor', () => {
-    it('initializes with null position', () => {
-      expect(state._position).toBeNull();
-    });
-  });
+	beforeEach(() => {
+		state = new GeocodingState();
+	});
 
-  describe('getCurrentPosition', () => {
-    it('returns null when no position is set', () => {
-      expect(state.getCurrentPosition()).toBeNull();
-    });
+	describe('constructor', () => {
+		it('initializes with no position', () => {
+			expect(state.getCurrentPosition()).toBeNull();
+			expect(state.getCurrentCoordinates()).toBeNull();
+			expect(state.hasPosition()).toBe(false);
+		});
+	});
 
-    it('returns the current position when set', () => {
-      const pos = { coords: { latitude: 1, longitude: 2 } };
-      state.setPosition(pos);
-      expect(state.getCurrentPosition()).toBe(pos);
-    });
-  });
+	describe('setPosition / getCurrentPosition', () => {
+		it('accepts a valid GeoPosition', () => {
+			const pos = makeGeoPosition();
+			state.setPosition(pos);
+			expect(state.getCurrentPosition()).toBe(pos);
+			expect(state.hasPosition()).toBe(true);
+		});
 
-  describe('getCurrentCoordinates', () => {
-    it('returns null when no position is set', () => {
-      expect(state.getCurrentCoordinates()).toBeNull();
-    });
+		it('accepts null to clear the position', () => {
+			state.setPosition(makeGeoPosition());
+			state.setPosition(null);
+			expect(state.getCurrentPosition()).toBeNull();
+			expect(state.hasPosition()).toBe(false);
+		});
 
-    it('returns null when position is set but has no coords', () => {
-      state.setPosition({ foo: 'bar' });
-      expect(state.getCurrentCoordinates()).toBeNull();
-    });
+		it('returns this for chaining', () => {
+			const result = state.setPosition(makeGeoPosition());
+			expect(result).toBe(state);
+		});
 
-    it('returns coords when position has coords', () => {
-      const coords = { latitude: 10, longitude: 20 };
-      state.setPosition({ coords });
-      expect(state.getCurrentCoordinates()).toBe(coords);
-    });
+		it('throws TypeError for a plain object', () => {
+			expect(() => state.setPosition({ coords: { latitude: 1, longitude: 2 } }))
+				.toThrow(TypeError);
+		});
 
-    it('returns coords when position has coords as null', () => {
-      state.setPosition({ coords: null });
-      expect(state.getCurrentCoordinates()).toBeNull();
-    });
-  });
+		it('throws TypeError for undefined', () => {
+			expect(() => state.setPosition(undefined)).toThrow(TypeError);
+		});
+	});
 
-  describe('setPosition', () => {
-    it('sets the position to a given object', () => {
-      const pos = { coords: { latitude: 5, longitude: 6 } };
-      state.setPosition(pos);
-      expect(state._position).toBe(pos);
-    });
+	describe('getCurrentCoordinates', () => {
+		it('returns null when no position is set', () => {
+			expect(state.getCurrentCoordinates()).toBeNull();
+		});
 
-    it('sets the position to null', () => {
-      state.setPosition(null);
-      expect(state._position).toBeNull();
-    });
+		it('returns {latitude, longitude} after setPosition', () => {
+			state.setPosition(makeGeoPosition(-10, -50));
+			const coords = state.getCurrentCoordinates();
+			expect(coords).toEqual({ latitude: -10, longitude: -50 });
+		});
 
-    it('sets the position to an object without coords', () => {
-      const pos = { foo: 'bar' };
-      state.setPosition(pos);
-      expect(state._position).toBe(pos);
-    });
-  });
+		it('returns a defensive copy', () => {
+			state.setPosition(makeGeoPosition());
+			const a = state.getCurrentCoordinates();
+			const b = state.getCurrentCoordinates();
+			expect(a).not.toBe(b);
+			expect(a).toEqual(b);
+		});
+	});
 
-  describe('destroy', () => {
-    it('resets position to null', () => {
-      state.setPosition({ coords: { latitude: 1, longitude: 2 } });
-      state.destroy();
-      expect(state._position).toBeNull();
-    });
+	describe('clear', () => {
+		it('resets position and coordinates to null', () => {
+			state.setPosition(makeGeoPosition());
+			state.clear();
+			expect(state.getCurrentPosition()).toBeNull();
+			expect(state.getCurrentCoordinates()).toBeNull();
+			expect(state.hasPosition()).toBe(false);
+		});
 
-    it('does not throw if called when position is already null', () => {
-      expect(() => state.destroy()).not.toThrow();
-      expect(state._position).toBeNull();
-    });
-  });
+		it('does not throw when already cleared', () => {
+			expect(() => state.clear()).not.toThrow();
+		});
+	});
 
-  describe('integration scenarios', () => {
-    it('setPosition, getCurrentPosition, getCurrentCoordinates, destroy sequence', () => {
-      const coords = { latitude: 42, longitude: 24 };
-      const pos = { coords };
-      state.setPosition(pos);
-      expect(state.getCurrentPosition()).toBe(pos);
-      expect(state.getCurrentCoordinates()).toBe(coords);
-      state.destroy();
-      expect(state.getCurrentPosition()).toBeNull();
-      expect(state.getCurrentCoordinates()).toBeNull();
-    });
+	describe('observer pattern', () => {
+		it('notifies subscriber when position is set', () => {
+			const snapshots = [];
+			state.subscribe((snap) => snapshots.push(snap));
+			const pos = makeGeoPosition();
+			state.setPosition(pos);
+			expect(snapshots).toHaveLength(1);
+			expect(snapshots[0].position).toBe(pos);
+			expect(snapshots[0].coordinates).toEqual({ latitude: -23.55, longitude: -46.63 });
+		});
 
-    it('handles edge case: setPosition with undefined', () => {
-      state.setPosition(undefined);
-      expect(state.getCurrentPosition()).toBeUndefined();
-      expect(state.getCurrentCoordinates()).toBeNull();
-    });
-  });
+		it('does not notify when position is cleared with null', () => {
+			state.setPosition(makeGeoPosition());
+			const snapshots = [];
+			state.subscribe((snap) => snapshots.push(snap));
+			state.setPosition(null);
+			expect(snapshots).toHaveLength(0);
+			expect(state.hasPosition()).toBe(false);
+		});
+
+		it('unsubscribe stops notifications', () => {
+			const calls = [];
+			const unsub = state.subscribe((snap) => calls.push(snap));
+			unsub();
+			state.setPosition(makeGeoPosition());
+			expect(calls).toHaveLength(0);
+		});
+	});
 });
+

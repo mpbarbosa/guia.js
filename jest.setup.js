@@ -23,6 +23,12 @@ global.console = {
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
+// Polyfill URL.createObjectURL/revokeObjectURL — not implemented in jsdom
+if (typeof global.URL.createObjectURL === 'undefined') {
+    global.URL.createObjectURL = jest.fn(() => 'blob:mock-url');
+    global.URL.revokeObjectURL = jest.fn();
+}
+
 // Make jest available as a global for ESM test files (required with --experimental-vm-modules)
 globalThis.jest = jest;
 

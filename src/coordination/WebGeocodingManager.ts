@@ -63,8 +63,7 @@
  */
 
 // Import core domain classes
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.9-alpha/dist/esm/index.js';
-import GeocodingState from '../core/GeocodingState.js';
+import { GeoPosition, GeocodingState } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.10-alpha/dist/esm/index.js';
 import ObserverSubject from '../core/ObserverSubject.js';
 
 
@@ -988,8 +987,8 @@ class WebGeocodingManager {
 			this.uiCoordinator.destroy();
 		}
 		
-		if (this.geocodingState && typeof this.geocodingState.destroy === 'function') {
-			this.geocodingState.destroy();
+		if (this.geocodingState) {
+			this.geocodingState.clear();
 		}
 		
 		// Phase 3: Clean up speech coordinator

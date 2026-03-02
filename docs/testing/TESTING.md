@@ -32,13 +32,14 @@ npm run validate
 
 ### Current Test Status
 
-**As of 2026-01-09**:
+**As of 2026-03-02**:
 
-- ✅ **1,282 passing tests** (1,419 total tests)
-- ✅ **63 passing test suites** (67 total suites)
-- ⚠️ **137 skipped tests** in 4 suites (integration/edge cases)
-- 📊 **Coverage**: 69.66% overall (src/**/*.js pattern)
-- ⚡ **Execution time**: ~6 seconds
+- ✅ **2,437 passing tests** (2,639 total tests)
+- ✅ **96 test suites passing** (~109 total)
+- ✅ **~84.7% overall code coverage**, 100% on guia_ibge.js
+- ⚠️ **~202 skipped tests** (integration/edge cases)
+- 📊 **Coverage**: 84.7% overall
+- ⚡ **Execution time**: ~45 seconds
 
 ---
 
@@ -52,7 +53,7 @@ npm run validate
    - Coverage information
    - **Start here** for basic testing knowledge
 
-2. **[Unit Test Guide](./.github/UNIT_TEST_GUIDE.md)**
+2. **[Unit Test Guide](./developer/DEVELOPER_GUIDE.md)**
    - Writing effective unit tests
    - Test organization patterns
    - Mocking and stubbing strategies
@@ -60,20 +61,20 @@ npm run validate
 
 ### Test Development
 
-1. **[TDD Guide](./.github/TDD_GUIDE.md)**
+1. **[TDD Guide](./guides/CODE_REVIEW_GUIDE.md)**
    - Test-Driven Development methodology
    - Red-Green-Refactor cycle
    - TDD best practices
    - Examples from the codebase
 
-2. **[Jest & Module Systems Guide](./.github/JEST_COMMONJS_ES6_GUIDE.md)** ⭐ **Essential Reading**
+2. **[Jest & Module Systems Guide](./developer/ESLINT_SETUP.md)** ⭐ **Essential Reading**
    - ES6 modules vs CommonJS in Jest
    - Node.js experimental VM modules
    - Configuration best practices
    - Troubleshooting module issues
    - **Must read for all contributors**
 
-3. **[Testing Module Systems](./.github/TESTING_MODULE_SYSTEMS.md)**
+3. **[Testing Module Systems](./testing/TEST_INFRASTRUCTURE.md)**
    - Module system compatibility
    - Import/export patterns
    - Jest configuration for ES6 modules
@@ -108,7 +109,7 @@ npm run validate
     - Mock API responses
     - Integration test patterns
 
-2. **[GitHub Integration Test Guide](./.github/GITHUB_INTEGRATION_TEST_GUIDE.md)**
+2. **[GitHub Integration Test Guide](./guides/DEPLOYMENT_GUIDE.md)**
     - CI/CD testing integration
     - GitHub Actions workflows
     - Automated testing pipelines
@@ -392,7 +393,7 @@ The project uses ES6 modules (`type: "module"` in package.json), which requires 
 node --experimental-vm-modules node_modules/jest/bin/jest.js
 ```
 
-**See [JEST_COMMONJS_ES6_GUIDE.md](./.github/JEST_COMMONJS_ES6_GUIDE.md) for details.**
+**See [DEVELOPER_GUIDE.md](./developer/DEVELOPER_GUIDE.md) for module configuration details.**
 
 ---
 
@@ -425,7 +426,7 @@ npm run test:coverage
 
 ### 1. Write Tests Before Code (TDD)
 
-See [TDD_GUIDE.md](./.github/TDD_GUIDE.md) for methodology.
+See [CONTRIBUTING.md](./.github/CONTRIBUTING.md) for TDD methodology.
 
 ### 2. Follow Immutability Principles
 
@@ -464,7 +465,7 @@ Error: Cannot use import statement outside a module
 ```
 
 **Solution**: Ensure `"type": "module"` in package.json and use `--experimental-vm-modules` flag.
-See [JEST_COMMONJS_ES6_GUIDE.md](./.github/JEST_COMMONJS_ES6_GUIDE.md).
+See [DEVELOPER_GUIDE.md](./developer/DEVELOPER_GUIDE.md) for Jest module configuration.
 
 #### DOM Not Available
 
@@ -509,7 +510,7 @@ npm run test:all
 ./.github/scripts/test-workflow-locally.sh
 ```
 
-See [GITHUB_INTEGRATION_TEST_GUIDE.md](./.github/GITHUB_INTEGRATION_TEST_GUIDE.md) for CI/CD setup.
+See [DEPLOYMENT_GUIDE.md](./guides/DEPLOYMENT_GUIDE.md) for CI/CD setup.
 
 ---
 
@@ -582,9 +583,9 @@ For questions or issues with testing, see [CONTRIBUTING.md](./.github/CONTRIBUTI
 
 ### Overview
 
-The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 tests). These are intentionally skipped for valid technical reasons and do not represent missing coverage.
+The project has **~13 skipped test suites** (~202 skipped tests). These are intentionally skipped for valid technical reasons and do not represent missing coverage.
 
-**Coverage Impact**: Despite skipped tests, the project maintains **69.66% overall code coverage** with 1,282 passing tests providing comprehensive validation of core functionality.
+**Coverage Impact**: Despite skipped tests, the project maintains **84.7% overall code coverage** with 2,437 passing tests providing comprehensive validation of core functionality.
 
 ### Skipped Test Suites Breakdown
 
@@ -712,7 +713,7 @@ The project has **4 test suites with 137 skipped tests** (9.6% of total 1,419 te
 
 | Aspect | Status |
 |--------|--------|
-| **Core Functionality Coverage** | ✅ 69.66% with 1,282 passing tests |
+| **Core Functionality Coverage** | ✅ 84.7% with 2,437 passing tests |
 | **Unit Test Coverage** | ✅ Comprehensive (all core classes tested) |
 | **Browser Testing** | ✅ Selenium/pytest validates real usage |
 | **E2E Scenarios** | ✅ 4 E2E test files covering workflows |
@@ -767,7 +768,7 @@ Three files have **0% Jest coverage** (865 lines total):
 
 Browser UI code is commonly tested through manual QA and E2E tests rather than unit tests:
 
-- ✅ **Unit tests** cover pure logic (69.66% coverage on testable code)
+- ✅ **Unit tests** cover pure logic (84.7% coverage on testable code)
 - ✅ **Manual testing** validates browser features and UX
 - ✅ **Selenium tests** cover integration scenarios (`tests/integration/`)
 
@@ -850,7 +851,7 @@ http://localhost:9000/src/index.html
 
 ### Coverage Metrics Context
 
-**Reported Coverage**: 69.66% overall
+**Reported Coverage**: 84.7% overall
 **Browser-only code**: 865 lines (19% of src/)
 **Adjusted coverage** (excluding browser files): ~85%
 
@@ -917,7 +918,7 @@ This is considered **good coverage** for JavaScript projects. Industry standard 
 
 | Directory | Branch Coverage | Statement Coverage | Status |
 |-----------|----------------|-------------------|--------|
-| **Overall** | **74.39%** | **69.66%** | ✅ Good |
+| **Overall** | **74.39%** | **84.7%** | ✅ Good |
 | src/core/ | 85.07% | 84.21% | ✅ Excellent |
 | src/data/ | 89.10% | 77.70% | ✅ Excellent |
 | src/html/ | 93.69% | 93.84% | ✅ Excellent |
@@ -1069,7 +1070,7 @@ Untested branches for API failures:
 | Metric | Current | Acceptable Range |
 |--------|---------|-----------------|
 | Branch | 74.39% | 70-80% ✅ |
-| Statement | 69.66% | 70-80% ✅ |
+| Statement | 84.7% | 70-80% ✅ |
 | Function | 58.09% | 60-70% ⚠️ |
 
 **Status**: Within acceptable range
@@ -1079,7 +1080,7 @@ Untested branches for API failures:
 | Metric | Current | Target | Effort |
 |--------|---------|--------|--------|
 | Branch | 74.39% | 85-90% | 16-20 hours |
-| Statement | 69.66% | 85-90% | 16-20 hours |
+| Statement | 84.7% | 85-90% | 16-20 hours |
 | Function | 58.09% | 80-85% | 16-20 hours |
 
 **Recommendation**: ⏸️ Consider during next major refactor
@@ -1098,7 +1099,7 @@ Untested branches for API failures:
 **Answer**: Optional. Current coverage provides confidence. Focus on new features.
 
 **Last Updated**: 2026-01-09
-**Coverage Status**: ✅ Acceptable (74.39% branch, 69.66% statement)
+**Coverage Status**: ✅ Acceptable (74.39% branch, 84.7% statement)
 
 ---
 
@@ -1119,7 +1120,7 @@ Untested branches for API failures:
 }
 ```
 
-**Current Coverage**: 69.66% statement, 74.39% branch = **Good** ✅
+**Current Coverage**: 84.7% statement, 74.39% branch = **Good** ✅
 
 **Policy**: Coverage must not decrease below thresholds. PRs that reduce coverage will fail CI.
 

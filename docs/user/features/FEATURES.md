@@ -1,4 +1,4 @@
-# Guia Turístico Features (v0.11.0-alpha)
+# Guia Turístico Features (v0.12.0-alpha)
 
 Central index of all user-facing and technical feature documentation.
 
@@ -16,26 +16,26 @@ Central index of all user-facing and technical feature documentation.
 
 | Feature | Documentation | Status |
 |---------|--------------|--------|
-| Geolocation Services | [README.md#features](../README.md) | ✅ Core |
-| Address Geocoding | [API_REFERENCE.md](API_REFERENCE.md) | ✅ Core |
-| Speech Synthesis | [VOICE_SELECTION.md](VOICE_SELECTION.md) | ✅ Core |
-| IBGE/SIDRA Integration | [SIDRA_INTEGRATION.md](SIDRA_INTEGRATION.md) | ✅ v0.9.0-alpha |
+| Geolocation Services | [README.md](../../README.md) | ✅ Core |
+| Address Geocoding | [API Reference](../../api/API_REFERENCE.md) | ✅ Core |
+| Speech Synthesis | [Voice Selection Guide](../../guides/VOICE_SELECTION.md) | ✅ Core |
+| IBGE/SIDRA Integration | [SIDRA Integration](../../guides/SIDRA_INTEGRATION.md) | ✅ v0.9.0-alpha |
 
 ## Architecture & Technical
 
 | Document | Description |
 |----------|-------------|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System architecture overview |
-| [MODULES.md](MODULES.md) | Module/component descriptions |
-| [API_REFERENCE.md](API_REFERENCE.md) | API endpoints reference |
-| [TESTING.md](TESTING.md) | Testing strategy and coverage |
-| [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) | Developer setup and workflow |
-| [MIGRATION_v0.10.0.md](MIGRATION_v0.10.0.md) | v0.10.0 migration guide |
+| [ARCHITECTURE.md](../../architecture/ARCHITECTURE.md) | System architecture overview |
+| [MODULES.md](../../architecture/MODULES.md) | Module/component descriptions |
+| [API Reference](../../api/API_REFERENCE.md) | API endpoints reference |
+| [TESTING.md](../../testing/TESTING.md) | Testing strategy and coverage |
+| [DEVELOPER_GUIDE.md](../../developer/DEVELOPER_GUIDE.md) | Developer setup and workflow |
+| [MIGRATION_v0.10.0.md](../../guides/MIGRATION_v0.10.0.md) | v0.10.0 migration guide |
 
 ## Browsing All Docs
 
-See [INDEX.md](INDEX.md) or [MASTER_INDEX.md](MASTER_INDEX.md) for the full documentation index.
+See [INDEX.md](../../INDEX.md) or [MASTER_INDEX.md](../../MASTER_INDEX.md) for the full documentation index.
 
 ---
 
-**Last Updated**: 2026-02-23
+**Last Updated**: 2026-03-02

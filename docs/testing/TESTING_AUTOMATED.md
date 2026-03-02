@@ -2,7 +2,7 @@
 
 ---
 
-Last Updated: 2026-01-28
+Last Updated: 2026-03-02
 Status: Active
 Category: Testing
 ---
@@ -19,10 +19,17 @@ O projeto agora inclui testes automatizados usando Jest, configurados para funci
 
 ```
 __tests__/
-├── utils.test.js              # Testa funções utilitárias básicas
-├── CurrentPosition.test.js     # Testa a classe CurrentPosition
-├── SingletonStatusManager.test.js # Testa o gerenciador de status singleton
-└── guia_ibge.test.js          # Testa funções do módulo IBGE
+├── unit/                          # Pure unit tests
+│   ├── core/                      # Core classes (GeoPosition, PositionManager)
+│   ├── data/                      # Data processing
+│   ├── services/                  # Services (geocoding, geolocation)
+│   ├── html/                      # Display components
+│   └── utils/                     # Utility functions
+├── integration/                   # Multi-component tests
+├── e2e/                           # Full user workflows
+├── managers/                      # Service managers
+├── external/                      # External API mocking
+└── features/                      # Feature-specific tests
 ```
 
 ## Executando os Testes
@@ -65,15 +72,12 @@ npm run test:all
 
 Todos os testes devem passar:
 
-- ✅ 1251 testes passando (1399 total)
-  - 91 testes E2E (workflows completos)
-  - ~800 testes de integração
-  - ~360 testes unitários e de features
-- ✅ 59 suites de teste passando (67 total)
-  - 6 suites E2E
-  - ~40 suites de integração
-  - ~21 suites unitárias
-- ✅ ~70% de cobertura em guia.js, 100% em guia_ibge.js (~26% geral)
+- ✅ 2.437 testes passando (2.639 total)
+  - ~91 testes E2E (workflows completos)
+  - ~1.200 testes de integração
+  - ~1.100 testes unitários e de features
+- ✅ 96 suites de teste passando (~109 total)
+- ✅ ~84,7% de cobertura geral, 100% em guia_ibge.js
 
 ## Funcionalidades Testadas
 
@@ -130,10 +134,10 @@ O projeto possui dois tipos de testes E2E com propósitos distintos:
 
 **Python E2E** (`tests/e2e/`)
 
-- **Framework**: Jest (para teste específico de Milho Verde)
+- **Framework**: Jest (Node.js)
 - **Ambiente**: Node.js
-- **Propósito**: Testa casos reais com dados do OpenStreetMap
-- **Execução**: Manual (arquivo específico)
+- **Propósito**: Testa caso real com dados do OpenStreetMap (Milho Verde/Serro-MG)
+- **Execução**: `npm test -- tests/e2e/MilhoVerde-SerroMG.e2e.test.js`
 - **Velocidade**: Rápido (mocks de API)
 - **Documentação**: [tests/e2e/README.md](../tests/e2e/README.md)
 

@@ -1,12 +1,10 @@
 # Guia Turístico - Troubleshooting Guide
 
-**Version**: 0.9.0-alpha
-**Last Updated**: 2026-02-11
+**Version**: 0.12.0-alpha
+**Last Updated**: 2026-03-02
 **Status**: Complete
 
 ---
-
-## Table of Contents
 
 - [Quick Fixes](#quick-fixes)
 - [Permission Issues](#permission-issues)
@@ -785,11 +783,11 @@ When reporting bugs, provide:
 - 📘 **[User Guide](USER_GUIDE.md)** - Full documentation
 - 🏗️ **[System Overview](../architecture/SYSTEM_OVERVIEW.md)** - Architecture details
 - 🔧 **[Developer Guide](../developer/DEVELOPER_GUIDE.md)** - For contributors
-- 📚 **[API Reference](../API_COMPLETE_REFERENCE.md)** - Technical docs
+- 📚 **[API Reference](../api/COMPLETE_API_REFERENCE.md)** - Technical docs
 
 ---
 
-**Version**: 0.9.0-alpha
-**Last Updated**: 2026-02-11
+**Version**: 0.12.0-alpha
+**Last Updated**: 2026-03-02
 **Maintainer**: GitHub Copilot CLI
 **Status**: ✅ Complete

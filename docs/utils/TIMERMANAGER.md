@@ -6,10 +6,10 @@
 
 ## Location
 
-**File:** `src/utils/TimerManager.js`
-**Size:** 147 lines
+**File:** `src/utils/TimerManager.ts`
+**Size:** 160 lines
 **Test Coverage:** 100% (26 tests)
-**Test File:** `__tests__/utils/TimerManager.test.js`
+**Test File:** `__tests__/utils/TimerManager.test.ts`
 
 ## Purpose
 
@@ -48,8 +48,8 @@ Creates a tracked interval timer.
 
 **Example:**
 
-```javascript
-import timerManager from './utils/TimerManager.js';
+```typescript
+import timerManager from './utils/TimerManager.ts';
 
 timerManager.setInterval(
     () => console.log('tick'),
@@ -110,8 +110,8 @@ Gets all active timer IDs.
 
 ## Usage Example
 
-```javascript
-import timerManager from './utils/TimerManager.js';
+```typescript
+import timerManager from './utils/TimerManager.ts';
 
 // Start interval
 timerManager.setInterval(
@@ -139,9 +139,8 @@ process.on('exit', () => {
 ## Testing
 
 **Coverage:** 100% (26 tests)
-**Test File:** `__tests__/utils/TimerManager.test.js`
+**Test File:** `__tests__/utils/TimerManager.test.ts`
 
 ## Related Documentation
 
-- [TIMER_MANAGEMENT_CLEANUP.md](../TIMER_MANAGEMENT_CLEANUP.md)
 - [CONTRIBUTING.md](../../.github/CONTRIBUTING.md)

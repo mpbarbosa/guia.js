@@ -16,7 +16,7 @@ Comprehensive guide for writing and running end-to-end tests in Guia.js.
 
 End-to-end (E2E) tests verify complete user workflows by testing the entire application stack from user interaction to final output. Unlike unit tests that test individual components in isolation, E2E tests ensure all components work together correctly.
 
-**Current Status**: 5 E2E test files with comprehensive workflow coverage
+**Current Status**: 15 E2E test files with comprehensive workflow coverage
 
 **Location**: `__tests__/e2e/`
 
@@ -28,25 +28,36 @@ End-to-end (E2E) tests verify complete user workflows by testing the entire appl
 
 ```
 __tests__/e2e/
-├── README.md                              # E2E test documentation
-├── CompleteGeolocationWorkflow.e2e.test.js    # Full geolocation flow
-├── BrazilianAddressProcessing.e2e.test.js     # Address processing workflows
-├── AddressChangeAndSpeech.e2e.test.js         # Change detection + speech
-├── ErrorHandlingRecovery.e2e.test.js          # Error scenarios
-└── MultiComponentIntegration.e2e.test.js      # Complex component interactions
+├── README.md                                      # E2E test documentation
+├── CompleteGeolocationWorkflow.e2e.test.ts        # Full geolocation flow
+├── BrazilianAddressProcessing.e2e.test.ts         # Address processing workflows
+├── AddressChangeAndSpeech.e2e.test.ts             # Change detection + speech
+├── ErrorHandlingRecovery.e2e.test.ts              # Error scenarios
+├── MultiComponentIntegration.e2e.test.ts          # Complex component interactions
+├── NeighborhoodChangeWhileDriving.e2e.test.ts     # Bairro change tracking
+├── MilhoVerde-SerroMG.e2e.test.ts                 # Real-world location test
+├── municipio-bairro-display.e2e.test.ts           # Municipality/bairro display
+├── municipio-bairro-simple.e2e.test.ts            # Simplified display test
+├── complete-address-validation.e2e.test.ts        # Full address validation
+├── metropolitan-region-display.e2e.test.ts        # Metro region display
+├── milho-verde-locationResult.e2e.test.ts         # Location result integration
+├── ChangeDetectionCoordinator.e2e.test.ts         # Change detection
+├── PontalCoruripe-CoastalHamlet-simple.e2e.test.ts # Coastal location test
+├── version-label.e2e.test.ts                      # Version label test
+└── sanity.e2e.test.js                             # Sanity check
 ```
 
 ### Test File Naming Convention
 
-- Format: `<Feature><Action>.e2e.test.js`
+- Format: `<Feature><Action>.e2e.test.ts`
 - Examples:
-  - `CompleteGeolocationWorkflow.e2e.test.js`
-  - `BrazilianAddressProcessing.e2e.test.js`
-  - `ErrorHandlingRecovery.e2e.test.js`
+  - `CompleteGeolocationWorkflow.e2e.test.ts`
+  - `BrazilianAddressProcessing.e2e.test.ts`
+  - `ErrorHandlingRecovery.e2e.test.ts`
 
 ## Available E2E Tests
 
-### 1. CompleteGeolocationWorkflow.e2e.test.js
+### 1. CompleteGeolocationWorkflow.e2e.test.ts
 
 Tests the complete geolocation acquisition and processing workflow.
 
@@ -68,7 +79,7 @@ Validation → Storage → UI Update → Success Notification
 
 **Coverage**: ~315 lines, 8 test cases
 
-### 2. BrazilianAddressProcessing.e2e.test.js
+### 2. BrazilianAddressProcessing.e2e.test.ts
 
 Tests address processing specific to Brazilian location data.
 
@@ -89,7 +100,7 @@ Standardization → Brazilian Format → Cache Storage → Display
 
 **Coverage**: ~445 lines, 10 test cases
 
-### 3. AddressChangeAndSpeech.e2e.test.js
+### 3. AddressChangeAndSpeech.e2e.test.ts
 
 Tests change detection and speech synthesis integration.
 
@@ -110,7 +121,7 @@ Priority Sorting → Speech Synthesis → Completion Callback
 
 **Coverage**: ~422 lines, 12 test cases
 
-### 4. ErrorHandlingRecovery.e2e.test.js
+### 4. ErrorHandlingRecovery.e2e.test.ts
 
 Tests error scenarios and recovery mechanisms.
 
@@ -132,7 +143,7 @@ User Notification → Recovery Attempt → Fallback State
 
 **Coverage**: ~458 lines, 15 test cases
 
-### 5. MultiComponentIntegration.e2e.test.js
+### 5. MultiComponentIntegration.e2e.test.ts
 
 Tests complex interactions between multiple components.
 
@@ -336,7 +347,7 @@ npm test -- __tests__/e2e/ --coverage
 
 ```bash
 # Run single test file
-npm test -- __tests__/e2e/CompleteGeolocationWorkflow.e2e.test.js
+npm test -- __tests__/e2e/CompleteGeolocationWorkflow.e2e.test.ts
 
 # Run tests matching pattern
 npm test -- --testNamePattern="Complete User Journey"
@@ -352,13 +363,13 @@ npm test -- __tests__/e2e/ --watch
 ### Expected Output
 
 ```
-PASS __tests__/e2e/CompleteGeolocationWorkflow.e2e.test.js
+PASS __tests__/e2e/CompleteGeolocationWorkflow.e2e.test.ts
   Complete Geolocation Workflow
     ✓ should acquire and process position (45ms)
     ✓ should handle position updates (32ms)
     ✓ should notify observers (28ms)
 
-PASS __tests__/e2e/BrazilianAddressProcessing.e2e.test.js
+PASS __tests__/e2e/BrazilianAddressProcessing.e2e.test.ts
   Brazilian Address Processing
     ✓ should extract Brazilian address (38ms)
     ✓ should standardize município (25ms)
@@ -530,13 +541,12 @@ it('should call mocked function', async () => {
 
 ## Related Documentation
 
-- [Unit Testing Guide](./UNIT_TESTING_GUIDE.md) - Testing individual components
-- [Integration Testing](../README.md) - Testing component interactions
-- [Test Organization](../__tests__/README.md) - Overall test structure
+- [Integration Testing](../developer/DEVELOPER_GUIDE.md) - Testing component interactions
+- [Test Organization](../__tests__/e2e/README.md) - E2E test structure
 - [Contributing Guide](../.github/CONTRIBUTING.md) - Development guidelines
 
 ---
 
-**Version**: 0.9.0-alpha
-**Last Updated**: 2026-01-01
-**Test Coverage**: 63 E2E tests across 5 test files
+**Version**: 0.12.0-alpha
+**Last Updated**: 2026-03-02
+**Test Coverage**: ~200 E2E tests across 15+ test files

@@ -2,10 +2,10 @@
 
 ---
 
-Last Updated: 2026-02-16
+Last Updated: 2026-03-02
 Status: Active
 Category: User Guide
-Version: 0.11.0-alpha
+Version: 0.12.0-alpha
 ---
 
 **Navigation**: [🏠 Home](../../README.md) > [📚 Documentation](../INDEX.md) > 👤 Complete User Guide

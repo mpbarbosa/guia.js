@@ -2,13 +2,11 @@
 
 **Complete guide for using the Guia Turístico tourist guide application.**
 
-**Version**: 0.9.0-alpha
-**Last Updated**: 2026-02-12
+**Version**: 0.12.0-alpha
+**Last Updated**: 2026-03-02
 **Status**: Complete
 
 ---
-
-## Table of Contents
 
 1. [Introduction](#introduction)
 2. [Getting Started](#getting-started)
@@ -714,7 +712,7 @@ To revoke location permission:
 
 ### Q: Can I embed this in my website
 
-**A**: See [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) for embedding instructions.
+**A**: See the [Developer Guide](../developer/DEVELOPER_GUIDE.md) for integration instructions.
 
 ---
 
@@ -735,16 +733,15 @@ To revoke location permission:
 
 ### Documentation
 
-- 📘 **[Quick Start Guide](../QUICK_START.md)** - Get started in 5 minutes
 - 🏗️ **[Architecture Overview](../architecture/SYSTEM_OVERVIEW.md)** - How the app works
 - 🔧 **[Developer Guide](../developer/DEVELOPER_GUIDE.md)** - For contributors
-- 📚 **[API Reference](../API_COMPLETE_REFERENCE.md)** - Technical documentation
+- 📚 **[API Reference](../api/COMPLETE_API_REFERENCE.md)** - Technical documentation
 
 ### Feature Guides
 
-- 🔘 **[Button Status Messages](../FEATURE_BUTTON_STATUS_MESSAGES.md)** - Button state feature
-- 🌆 **[Metropolitan Region Display](../FEATURE_METROPOLITAN_REGION_DISPLAY.md)** - Region feature
-- 🗺️ **[State Abbreviation Display](../FEATURE_MUNICIPIO_STATE_DISPLAY.md)** - State display feature
+- 🔘 **[Button Status Messages](./features/FEATURE_BUTTON_STATUS_MESSAGES.md)** - Button state feature
+- 🌆 **[Metropolitan Region Display](./features/FEATURE_METROPOLITAN_REGION_DISPLAY.md)** - Region feature
+- 🗺️ **[State Abbreviation Display](./features/FEATURE_MUNICIPIO_STATE_DISPLAY.md)** - State display feature
 
 ### External Resources
 
@@ -754,6 +751,6 @@ To revoke location permission:
 
 ---
 
-**Version**: 0.9.0-alpha
-**Last Updated**: 2026-02-12
+**Version**: 0.12.0-alpha
+**Last Updated**: 2026-03-02
 **Status**: Complete

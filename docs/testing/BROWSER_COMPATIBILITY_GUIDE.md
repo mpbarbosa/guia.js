@@ -468,7 +468,7 @@ Create `playwright.config.js`:
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-    testDir: './__tests__/browser',
+    testDir: './__tests__/e2e',  // Note: Playwright cross-browser support is aspirational; current E2E tests use Jest/Puppeteer
 
     projects: [
         {
@@ -593,6 +593,6 @@ function getAccuratePosition() {
 
 ---
 
-**Version**: 0.9.0-alpha
+**Version**: 0.12.0-alpha
 **Last Updated**: 2026-01-01
 **Supported Browsers**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+

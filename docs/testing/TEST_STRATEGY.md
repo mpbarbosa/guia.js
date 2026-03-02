@@ -1,15 +1,15 @@
 # Test Strategy Documentation
 
 **Version**: 0.9.0+
-**Test Count**: 2,045 tests (1,899 passing, 146 skipped)
-**Coverage**: ~70% overall, 100% on critical components
+**Test Count**: 2,437 tests (2,437 passing, ~202 skipped)
+**Coverage**: ~84.7% overall, 100% on critical components
 
 ## Overview
 
 Guia Turístico uses a **dual test infrastructure** approach:
 
 1. **Jest/Puppeteer** (`__tests__/`) - Primary testing, JavaScript-based
-2. **Python/Playwright** (`tests/`) - Cross-browser validation
+2. **JavaScript E2E** (`tests/`) - Real-world location scenario testing
 
 This strategy provides comprehensive coverage with specialized tools for each testing concern.
 
@@ -20,7 +20,7 @@ This strategy provides comprehensive coverage with specialized tools for each te
 **Purpose**: Primary test suite for unit, integration, and E2E tests
 **Language**: JavaScript (Node.js)
 **Browser**: Chromium (headless)
-**Test Count**: 2,045 tests across 88 suites
+**Test Count**: 2,437 tests across ~109 suites
 **Execution Time**: ~30-45 seconds
 **Command**: `npm test`
 
@@ -39,7 +39,7 @@ __tests__/
 │   ├── position-updates/      # Position change coordination
 │   └── observer-patterns/     # Observer pattern integration
 ├── e2e/                       # Full user workflows (Puppeteer)
-│   ├── NeighborhoodChangeWhileDriving.e2e.test.js
+│   ├── NeighborhoodChangeWhileDriving.e2e.test.ts
 │   ├── CompleteGeolocationWorkflow.e2e.test.js
 │   ├── municipio-bairro-display.e2e.test.js
 │   ├── complete-address-validation.e2e.test.js
@@ -58,29 +58,25 @@ __tests__/
 - **External**: Tests API integration with mocking
 - **Features**: Tests business features end-to-end
 
-### Python/Playwright (`tests/`)
+### JavaScript E2E (`tests/e2e/`)
 
-**Purpose**: Cross-browser validation and visual regression
-**Language**: Python 3.11+
-**Browsers**: Chromium, Firefox, WebKit (Safari)
-**Command**: `pytest tests/e2e/`
+**Purpose**: Real-world location testing with OpenStreetMap data
+**Language**: JavaScript (Node.js)
+**Command**: `npm test -- tests/e2e/MilhoVerde-SerroMG.e2e.test.js`
 
 #### Directory Organization
 
 ```
 tests/
-└── e2e/                       # Cross-browser E2E tests
-    ├── test_geolocation.py    # Geolocation API tests
-    ├── test_navigation.py     # SPA routing tests
-    └── conftest.py            # Pytest fixtures
+└── e2e/                              # Real-world location tests
+    ├── MilhoVerde-SerroMG.e2e.test.js  # Milho Verde/Serro-MG scenario
+    └── README.md                       # Test documentation
 ```
 
-#### Why Python/Playwright
+#### Why a Separate tests/ Directory
 
-- **Cross-browser**: Validates behavior across all major browsers
-- **Visual Testing**: Screenshot comparison and visual regression
-- **CI/CD Integration**: Separate validation stage in pipeline
-- **Browser Diversity**: WebKit (Safari) not available in Puppeteer
+- **Real-world data**: Tests real OSM coordinates for Milho Verde/Serro-MG
+- **Isolated execution**: Separate from the main Jest suite
 
 ## Test Execution Strategy
 
@@ -100,10 +96,10 @@ npm run test:coverage
 npm run test:watch
 
 # Specific E2E test
-npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.js
+npm test -- __tests__/e2e/NeighborhoodChangeWhileDriving.e2e.test.ts
 
-# Cross-browser tests (requires Python)
-pytest tests/e2e/
+# Real-world location test
+npm test -- tests/e2e/MilhoVerde-SerroMG.e2e.test.js
 ```
 
 ### CI/CD Pipeline
@@ -127,7 +123,7 @@ pytest tests/e2e/
 
 ### Target Coverage
 
-- **Overall**: 70% minimum (currently 69.82%)
+- **Overall**: 70% minimum (currently 84.7%)
 - **Critical Paths**: 100% (PositionManager, ServiceCoordinator)
 - **Business Logic**: 90%+ (geocoding, address processing)
 - **Display Components**: 80%+ (UI rendering)
@@ -142,7 +138,7 @@ pytest tests/e2e/
 | ReverseGeocoder | 92% | 90% | ✅ |
 | HTMLSidraDisplayer | 100% | 100% | ✅ |
 | AddressExtractor | 88% | 90% | ⚠️ |
-| Overall | 69.82% | 70% | ⚠️ |
+| Overall | 84.7% | 70% | ⚠️ |
 
 ### Gap Analysis
 
@@ -311,4 +307,3 @@ global.navigator.geolocation = {
 
 - [TEST_INFRASTRUCTURE.md](../testing/TEST_INFRASTRUCTURE.md) - Infrastructure comparison
 - [CONTRIBUTING.md](../../.github/CONTRIBUTING.md) - Testing guidelines
-- [TDD_GUIDE.md](../../.github/TDD_GUIDE.md) - Test-driven development

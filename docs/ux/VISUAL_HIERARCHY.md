@@ -14,9 +14,9 @@ Inverted the visual prominence to prioritize location information over action bu
 
 ## Implementation
 
-### New CSS Module: location-highlights.css
+### New CSS Module: highlight-cards.css
 
-Created a new CSS module (`src/location-highlights.css`) that implements:
+Created a new CSS module (`src/highlight-cards.css`) that implements:
 
 1. **Prominent Location Cards**
    - Large gradient blue cards with elevation shadows
@@ -39,12 +39,12 @@ Created a new CSS module (`src/location-highlights.css`) that implements:
 
 ### Files Modified
 
-1. **src/location-highlights.css** (NEW)
+1. **src/highlight-cards.css** (NEW)
    - 206 lines, ~5.1KB
    - Complete styling for location highlights and button de-emphasis
 
 2. **src/views/home.js**
-   - Added `location-highlights.css` to styles array
+   - Added `highlight-cards.css` to styles array
    - No HTML changes needed (existing structure works)
 
 3. **src/index.html**
@@ -94,7 +94,7 @@ Created a new CSS module (`src/location-highlights.css`) that implements:
 ### Location Highlights (Primary Focus)
 
 ```css
-.location-highlights {
+.highlight-cards {
   /* Grid container for cards */
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -193,7 +193,7 @@ Tested and compatible with:
 
 ## Testing
 
-See `tests/integration/test_visual_hierarchy.py` for automated Selenium tests that verify:
+See `docs/testing/VISUAL_HIERARCHY_TESTS.md` for test documentation covering:
 
 1. Location cards are larger than action buttons
 2. Location cards have higher visual prominence (color, elevation)
@@ -213,10 +213,10 @@ Potential improvements for future versions:
 
 ## Related Documentation
 
-- [UX Improvements Guide](./UX_IMPROVEMENTS.md)
-- [Design Patterns](./DESIGN_PATTERNS.md)
-- [Accessibility Audit](./ACCESSIBILITY_AUDIT.md)
-- [Material Design 3 Guidelines](./UX_QUICK_REFERENCE.md)
+- [UX Analysis Report](../reports/analysis/UX_ANALYSIS_REPORT_2026-02-11.md)
+- [Spacing Guide](./SPACING_GUIDE.md)
+- [Typography Guide](./TYPOGRAPHY_GUIDE.md)
+- [Highlight Cards CSS](./CRITICAL_ISSUES.md)
 
 ## Migration Notes
 

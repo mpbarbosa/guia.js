@@ -59,7 +59,7 @@ workflow:
       phase: "pre-flight"
       can_parallelize: false
       dependencies: ["0b"]
-      ai_persona: "requirements_engineer"
+      ai_persona: "architecture_reviewer"
       
     - id: "00"
       name: "Pre-Analysis"

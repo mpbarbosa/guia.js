@@ -5,10 +5,10 @@
  * GeocodingState, calculateDistance, EARTH_RADIUS_METERS, delay.
  *
  * @see https://github.com/mpbarbosa/paraty_geocore.js
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.0-alpha/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.2/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.0-alpha/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.2/dist/esm/index.js' {
 	/** GPS accuracy quality classification. */
 	export type AccuracyQuality = 'excellent' | 'good' | 'medium' | 'bad' | 'very bad';
 

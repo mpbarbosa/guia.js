@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "partitionIndex": 1,
+  "totalPartitions": 3,
+  "filesHash": "4e11b13f",
+  "partitionLabels": [
+    "__tests__/e2e, __tests__/types",
+    "test, test/core",
+    "test/html, test/speech, tests/e2e, tests/unit"
+  ],
+  "updatedAt": "2026-03-10T01:18:42.415Z"
+}

@@ -5,7 +5,7 @@
  * Declarative skeleton loading placeholder.
  * Mirrors createSkeleton() from Skeletons.js.
  *
- * @since 0.12.1-alpha
+ * @since 0.12.2-alpha
  */
 
 type SkeletonType = 'text' | 'heading' | 'circle' | 'rect';

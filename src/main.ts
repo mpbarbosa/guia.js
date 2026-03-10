@@ -5,7 +5,7 @@
  * The existing app.js + index.html pipeline remains fully functional;
  * this file is the new entry point for the migrated Vue build.
  *
- * @since 0.12.1-alpha
+ * @since 0.12.2-alpha
  */
 import { createApp } from 'vue';
 import App from './App.vue';

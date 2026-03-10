@@ -1,0 +1,41 @@
+[2026-03-10T01:18:59.417Z] 
+→ Starting: Dependency Analysis
+[2026-03-10T01:18:59.418Z] ════════════════════════════════════════════════════════════
+[2026-03-10T01:18:59.418Z] 🔷  Step 9: Dependency Validation
+[2026-03-10T01:18:59.418Z] ════════════════════════════════════════════════════════════
+[2026-03-10T01:18:59.525Z] Detected language: javascript
+[2026-03-10T01:18:59.526Z] Found dependency files: package.json, package-lock.json
+[2026-03-10T01:18:59.526Z] Total dependencies: 24
+[2026-03-10T01:18:59.529Z] ⚠ Lockfile integrity issues found (2):
+[2026-03-10T01:18:59.529Z] ⚠   • node_modules/guia.js: non-HTTPS resolved URL "git+ssh://git@github.com/mpbarbosa/guia_js.git#f41713a1c5c195c0e417ec45d621f3dfe6f68fe9"
+[2026-03-10T01:18:59.529Z] ⚠   • node_modules/ibira.js: non-HTTPS resolved URL "git+ssh://git@github.com/mpbarbosa/ibira.js.git#1754d17cd5f5a1718917c8e513e81261eda8b9eb"
+[2026-03-10T01:18:59.529Z] ✓ No vulnerabilities found
+[2026-03-10T01:18:59.530Z] ⚠ npm install --dry-run failed — possible unresolvable lockfile entries
+[2026-03-10T01:18:59.530Z] ⚠   
+[2026-03-10T01:19:01.990Z] ✓ GitHub Copilot SDK initialized successfully
+[2026-03-10T01:19:01.990Z] Available Copilot models (13): claude-sonnet-4.5, claude-haiku-4.5, claude-opus-4.5, claude-sonnet-4, gemini-3-pro-preview, gpt-5.2-codex, gpt-5.2, gpt-5.1-codex-max, gpt-5.1-codex, gpt-5.1, gpt-5.1-codex-mini, gpt-5-mini, gpt-4.1
+[2026-03-10T01:19:01.993Z] [DEBUG] AI cache initialized: .ai_workflow/.ai_cache
+[2026-03-10T01:19:01.997Z] [DEBUG] [ai_cache] step_09: file hash changed, calling AI
+[2026-03-10T01:19:01.998Z] [DEBUG] Request Options: {"model":"gpt-4.1","temperature":0.7,"maxTokens":4000,"stream":false,"persona":"dependency_analyst","cache":true}
+[2026-03-10T01:19:01.998Z] [DEBUG] Persona: dependency_analyst
+[2026-03-10T01:19:01.998Z] [DEBUG] Model: gpt-4.1
+[2026-03-10T01:19:01.998Z] [AI] SDK call starting — persona: dependency_analyst, model: gpt-4.1, prompt_chars: 3502
+[2026-03-10T01:19:01.998Z] [DEBUG] Executing AI request (attempt 1/3)
+[2026-03-10T01:19:08.628Z] [AI] SDK call completed — persona: dependency_analyst, model: gpt-4.1, response_chars: 1980, latency: 6630ms
+[2026-03-10T01:19:08.629Z] ✓ AI request completed successfully
+[2026-03-10T01:19:08.629Z] [DEBUG] Prompt logged to: 2026-03-10T01-19-08-629Z_0001_dependency_analyst.md
+[2026-03-10T01:19:08.635Z] [DEBUG] [ai_cache] step_09_js: file hash changed, calling AI
+[2026-03-10T01:19:08.635Z] [DEBUG] Request Options: {"model":"gpt-4.1","temperature":0.7,"maxTokens":4000,"stream":false,"persona":"dependency_analyst","cache":true}
+[2026-03-10T01:19:08.635Z] [DEBUG] Persona: dependency_analyst
+[2026-03-10T01:19:08.635Z] [DEBUG] Model: gpt-4.1
+[2026-03-10T01:19:08.635Z] [AI] SDK call starting — persona: dependency_analyst, model: gpt-4.1, prompt_chars: 14336
+[2026-03-10T01:19:08.635Z] [DEBUG] Executing AI request (attempt 1/3)
+[2026-03-10T01:19:20.505Z] [AI] SDK call completed — persona: dependency_analyst, model: gpt-4.1, response_chars: 7651, latency: 11870ms
+[2026-03-10T01:19:20.505Z] ✓ AI request completed successfully
+[2026-03-10T01:19:20.505Z] [DEBUG] Prompt logged to: 2026-03-10T01-19-20-505Z_0002_dependency_analyst.md
+[2026-03-10T01:19:20.507Z] ✓ Step 9 completed - dependencies validated!
+[2026-03-10T01:19:20.507Z] ✓ Step step_09 completed in 21090ms
+[2026-03-10T01:19:20.507Z] [DEBUG] [Performance] step_09: 21.1s
+[2026-03-10T01:19:20.507Z] ⚠ [WARNING] Operation 'step_09' took 21.1s (memory: 89.81MB)
+[2026-03-10T01:19:20.507Z] [DEBUG] Recorded outcome for step_09: success
+[2026-03-10T01:19:20.507Z] ✓ Completed: Dependency Analysis (21s)

@@ -723,7 +723,7 @@ npm run test:all
 
 ### Short-term Actions (Next 2 Weeks)
 
-6. 📝 Review 34 files with "guia_js" references (distinguish library vs project references)
+1. 📝 Review 34 files with "guia_js" references (distinguish library vs project references)
 2. 📝 Add cross-references in docs/INDEX.md for .github documentation
 3. 📝 Standardize test timing references to "~7 seconds"
 4. 📝 Add validation commands to CONTRIBUTING.md checklist
@@ -731,7 +731,7 @@ npm run test:all
 
 ### Long-term Improvements (Next Month)
 
-11. 📋 Create testing documentation index (docs/testing/INDEX.md)
+1. 📋 Create testing documentation index (docs/testing/INDEX.md)
 2. 📋 Add version history sections to architecture docs
 3. 📋 Implement automated external link checking
 4. 📋 Add documentation style guide

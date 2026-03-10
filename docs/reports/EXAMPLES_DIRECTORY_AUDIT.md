@@ -44,7 +44,7 @@ The `examples/` directory contains **17 example files** but `examples/README.md`
 
 #### JavaScript Examples (3)
 
-14. 🔴 **geolocation-service-demo.js** - Mentioned in main README.md but not in examples/README.md
+1. 🔴 **geolocation-service-demo.js** - Mentioned in main README.md but not in examples/README.md
 2. 🔴 **jest-esm-migration-example.js** - Mentioned in main README.md but not in examples/README.md
 3. 🔴 **provider-pattern-demo.js** - No documentation
 
@@ -103,7 +103,7 @@ The `examples/` directory contains **17 example files** but `examples/README.md`
 
 #### Testing & Debugging Examples
 
-5. **test.html** (10 min)
+1. **test.html** (10 min)
    - Purpose: Basic functionality testing
    - How to access: `http://localhost:9000/examples/test.html`
    - What to test: Core geolocation features
@@ -122,7 +122,7 @@ The `examples/` directory contains **17 example files** but `examples/README.md`
 
 #### Speech Synthesis Examples
 
-9. **brazilian-voice-test.html** (10 min)
+1. **brazilian-voice-test.html** (10 min)
    - Purpose: Brazilian Portuguese voice testing
    - Expected behavior: Text-to-speech with PT-BR voice
 
@@ -136,7 +136,7 @@ The `examples/` directory contains **17 example files** but `examples/README.md`
 
 #### Address & Location Examples
 
-12. **address-converter.html** (10 min)
+1. **address-converter.html** (10 min)
     - Purpose: Address format conversion
     - Expected behavior: Convert between address formats
 
@@ -154,7 +154,7 @@ The `examples/` directory contains **17 example files** but `examples/README.md`
 
 #### UI & Integration Examples
 
-16. **loc-em-movimento.html** (10 min)
+1. **loc-em-movimento.html** (10 min)
     - Purpose: Full application demo
     - Expected behavior: Complete geolocation UI
 

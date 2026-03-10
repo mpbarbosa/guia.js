@@ -122,7 +122,7 @@ jsdom:    25.0.1 → 28.0.0 (Major - requires full validation)
 
 ### Medium-term (Next Sprint)
 
-3. **ESLint v10 Evaluation** (Major Version)
+1. **ESLint v10 Evaluation** (Major Version)
    - Research breaking changes in ESLint 10.x
    - Create feature branch for testing
    - Validate linting configuration compatibility
@@ -137,7 +137,7 @@ jsdom:    25.0.1 → 28.0.0 (Major - requires full validation)
 
 ### Long-term (Before v1.0.0)
 
-5. **Production Dependency Stability**
+1. **Production Dependency Stability**
    - Promote guia.js from v0.6.0-alpha → v1.0.0-stable
    - Promote ibira.js from v0.2.1-alpha → v1.0.0-stable
    - Update package.json with stable versions

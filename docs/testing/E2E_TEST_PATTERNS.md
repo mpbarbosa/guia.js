@@ -432,7 +432,7 @@ Before writing E2E tests:
 
 ### **From Coverage Campaign**
 
-6. ✅ E2E tests catch integration issues unit tests miss
+1. ✅ E2E tests catch integration issues unit tests miss
 2. ✅ Mock timing is critical (race conditions are common)
 3. ✅ Proper cleanup prevents worker timeout warnings
 4. ⚠️ E2E tests are 10-100x slower than unit tests

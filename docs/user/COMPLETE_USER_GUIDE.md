@@ -5,7 +5,7 @@
 Last Updated: 2026-03-02
 Status: Active
 Category: User Guide
-Version: 0.12.1-alpha
+Version: 0.12.2-alpha
 ---
 
 **Navigation**: [🏠 Home](../../README.md) > [📚 Documentation](../INDEX.md) > 👤 Complete User Guide

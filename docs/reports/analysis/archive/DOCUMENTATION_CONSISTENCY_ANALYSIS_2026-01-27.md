@@ -523,7 +523,7 @@ Status: Current | Draft | Deprecated
 
 ### 🟡 MEDIUM PRIORITY (Improve Quality)
 
-3. **Update vague version references** (2.1)
+1. **Update vague version references** (2.1)
    - Replace "0.7.x" with "0.9.0-alpha" in `.github/copilot-instructions.md`
    - Review architecture docs for version-specific info
 
@@ -534,7 +534,7 @@ Status: Current | Draft | Deprecated
 
 ### 🟢 LOW PRIORITY (Nice to Have)
 
-5. **Improve automated reference checking** (1.2)
+1. **Improve automated reference checking** (1.2)
    - Add exclusion patterns for regex and code examples
    - Document false positive patterns
 

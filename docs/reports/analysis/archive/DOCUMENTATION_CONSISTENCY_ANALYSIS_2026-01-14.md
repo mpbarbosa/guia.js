@@ -630,7 +630,7 @@ npm run automation:test
 
 ### Short-Term (This Week)
 
-6. ⚠️ **Update** `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md` title and content
+1. ⚠️ **Update** `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md` title and content
 2. ⚠️ **Update** `docs/misc/PROJECT_CLARIFICATION.md` version references
 3. ⚠️ **Add** @throws documentation to 19 throw statements (create issue)
 4. ⚠️ **Review** async function JSDoc completeness
@@ -638,14 +638,14 @@ npm run automation:test
 
 ### Medium-Term (Next Sprint)
 
-11. 📝 **Enhance** CDN delivery documentation in copilot instructions
+1. 📝 **Enhance** CDN delivery documentation in copilot instructions
 2. 📝 **Add** automation scripts section to CONTRIBUTING.md
 3. 📝 **Create** GitHub issue for systematic @throws documentation
 4. 📝 **Update** project structure line counts (or mark approximate)
 
 ### Optional (Backlog)
 
-15. 💡 **Consider** archiving pre-2025 documentation
+1. 💡 **Consider** archiving pre-2025 documentation
 2. 💡 **Update** analysis tools to ignore valid code patterns
 3. 💡 **Add** project identity note to all major documentation files
 

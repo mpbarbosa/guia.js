@@ -177,7 +177,7 @@ Updated `docs/INDEX.md` to include VERSION_TIMELINE.md in:
 
 ### New Documentation (1 file)
 
-6. **docs/architecture/VERSION_TIMELINE.md** (478 lines, 15KB)
+1. **docs/architecture/VERSION_TIMELINE.md** (478 lines, 15KB)
    - Comprehensive version timeline with ASCII diagram
    - Component-specific version tables
    - Migration guides for version upgrades
@@ -188,7 +188,7 @@ Updated `docs/INDEX.md` to include VERSION_TIMELINE.md in:
 
 ### Index Updates (1 file)
 
-7. **docs/INDEX.md** (716+ lines)
+1. **docs/INDEX.md** (716+ lines)
    - Added VERSION_TIMELINE.md to main Architecture section (lines 92-96)
    - Added VERSION_TIMELINE.md to .github Quick Reference (lines 602-612)
    - **Total changes**: ~20 lines added

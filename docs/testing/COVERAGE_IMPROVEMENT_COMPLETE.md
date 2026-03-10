@@ -92,7 +92,7 @@ All files:           83.97% statements
 
 ### Additional Tests
 
-3. **`__tests__/coordination/SpeechCoordinator.test.js`** (220 lines)
+1. **`__tests__/coordination/SpeechCoordinator.test.js`** (220 lines)
    - 13 core behavior tests
    - Constructor validation, getters, string representation
    - Runtime: 114ms

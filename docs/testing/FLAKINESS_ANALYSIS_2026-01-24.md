@@ -408,13 +408,13 @@ jobs:
 
 ### Phase 2: Monitoring (1-2 hours)
 
-4. ⚡ Set up flakiness detection CI/CD (1 hour)
+1. ⚡ Set up flakiness detection CI/CD (1 hour)
 2. ⚡ Add test duration tracking (30 min)
 3. ⚡ Document retry patterns (30 min)
 
 ### Phase 3: Long-term (Optional)
 
-7. 🔄 Review E2E tests quarterly
+1. 🔄 Review E2E tests quarterly
 2. 🔄 Monitor failure patterns in CI/CD
 3. 🔄 Update wait strategies as needed
 

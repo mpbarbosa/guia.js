@@ -194,7 +194,7 @@
 
 ### Can Keep Skipped (Low Priority)
 
-3. **SpeechSynthesisManager.test.js (Cross-Environment only)**
+1. **SpeechSynthesisManager.test.js (Cross-Environment only)**
    - Edge cases only, main suite runs fine
    - Not worth enabling unless targeting minimal runtimes
 

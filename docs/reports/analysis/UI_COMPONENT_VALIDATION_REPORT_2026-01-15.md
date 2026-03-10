@@ -525,7 +525,7 @@ Code Standards Compliance:
 
 ### Short-term (This Week)
 
-3. **Add integration tests** (30 minutes)
+1. **Add integration tests** (30 minutes)
    - Update ServiceCoordinator.test.js
    - Test highlightCards wiring
    - Run full test suite: `npm test`

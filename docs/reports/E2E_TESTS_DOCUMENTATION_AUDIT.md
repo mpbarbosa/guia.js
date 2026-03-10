@@ -320,6 +320,7 @@ docs/
 The project includes comprehensive E2E tests covering complete application workflows:
 
 ```
+
 **tests**/e2e/
 ├── README.md                                   # E2E test documentation
 ├── AddressChangeAndSpeech.e2e.test.js         # Address change + speech (21 tests)
@@ -657,7 +658,7 @@ node .github/scripts/count-tests.js
 
 ### Recommended Changes
 
-2. **`__tests__/e2e/README.md`**
+1. **`__tests__/e2e/README.md`**
    - Update test count (line 7)
    - Add MilhoVerde documentation (after line 189)
    - Update version and timestamp (lines 411-412)
@@ -665,7 +666,7 @@ node .github/scripts/count-tests.js
 
 ### Optional Changes
 
-3. **`.github/scripts/count-tests.js`** - Create new file
+1. **`.github/scripts/count-tests.js`** - Create new file
 2. **`__tests__/e2e/COVERAGE.md`** - Create new file
 3. **`README.md`** - Add E2E test badge
 

@@ -1,6 +1,6 @@
 # Performance Testing Guide
 
-**Version**: 0.12.1-alpha | **Last Updated**: 2026-03-02
+**Version**: 0.12.2-alpha | **Last Updated**: 2026-03-02
 
 Comprehensive guide for performance testing and optimization in Guia.js.
 

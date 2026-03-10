@@ -57,14 +57,14 @@ this.reverseGeocoder = params.reverseGeocoder ||
 
 ### Automatic Fallback
 
-5. Error handler detects CORS failure
+1. Error handler detects CORS failure
 2. Shows toast: "Não foi possível acessar o serviço. Tentando via proxy..."
 3. Automatically retries via `https://api.allorigins.win/raw?url=`
 4. **Success!** Address is fetched and displayed
 
 ### Subsequent Requests
 
-9. Next location request uses proxy automatically
+1. Next location request uses proxy automatically
 2. No CORS errors on subsequent requests
 
 ## Console Output (Expected)

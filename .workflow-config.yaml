@@ -69,6 +69,14 @@ workflow:
       can_parallelize: false
       dependencies: ["0c"]
 
+# Deployment Configuration
+# Consumed by the `ai-workflow deploy` command.
+# Run:   ai-workflow deploy [--source dist|src] [--dry-run]
+deploy:
+  enabled: true
+  script: "scripts/build_and_deploy.sh"
+  description: "Build production bundle and deploy to staging via mpbarbosa_site"
+
 spa:
   routes:
     - path: "/"

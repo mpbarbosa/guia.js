@@ -5,9 +5,25 @@
  */
 
 const CACHE_NAME = 'guia-turistico-v0.12.2-alpha-20260225-28ae31e';
+
+/** Shell assets precached on install — routes that must work offline. */
 const STATIC_ASSETS = [
   './',
-  './index.html'
+  './index.html',
+  './offline.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
+];
+
+/**
+ * External API origins whose responses should be cached for offline use.
+ * Uses network-first with cache fallback so the latest data is always
+ * preferred when the device has connectivity.
+ */
+const API_ORIGINS = [
+  'nominatim.openstreetmap.org',
+  'servicodados.ibge.gov.br',
 ];
 
 // Install event - cache static assets
@@ -56,28 +72,35 @@ self.addEventListener('activate', event => {
 // Fetch event - smart caching strategy based on asset type
 self.addEventListener('fetch', event => {
   const { request } = event;
+  const url = new URL(request.url);
   
   // Skip non-GET requests
   if (request.method !== 'GET') {
     return;
   }
-  
-  // Skip external API requests (OpenStreetMap, IBGE, etc.)
-  if (request.url.includes('nominatim.openstreetmap.org') ||
-      request.url.includes('servicodados.ibge.gov.br') ||
-      request.url.includes('cdn.jsdelivr.net')) {
+
+  // Skip CDN imports (paraty_geocore.js, maplibre-gl) — no benefit caching these
+  if (url.hostname === 'cdn.jsdelivr.net') {
     return;
   }
 
-  // All app assets use network-first strategy so the dev server (Vite) always
-  // processes requests — critical for html-proxy virtual modules (inline scripts).
-  // Falls back to cache when offline so the PWA shell still loads.
+  // External API calls: network-first with cache fallback so offline geocoding
+  // can serve the last known result for the same coordinates.
+  if (API_ORIGINS.some(origin => url.hostname.includes(origin))) {
+    event.respondWith(networkFirstStrategy(request));
+    return;
+  }
+
+  // All other app assets use network-first strategy so the dev server (Vite)
+  // always processes requests — critical for html-proxy virtual modules.
+  // Falls back to cache (including offline.html) when truly offline.
   event.respondWith(networkFirstStrategy(request));
 });
 
 /**
  * Network-first strategy: fetch from network, cache the result, fall back to cache on failure.
- * Used for JS/CSS assets so mobile devices always receive the latest deployed code.
+ * Used for all requests — ensures the latest content is always preferred.
+ * For navigation requests that fail, serves offline.html as a fallback.
  * @param {Request} request
  * @returns {Promise<Response>}
  */
@@ -101,7 +124,12 @@ function networkFirstStrategy(request) {
     .catch(() => {
       console.log('[SW] Network failed, serving from cache:', request.url);
       return caches.match(request).then(cached => {
-        return cached || new Response('', { status: 503, statusText: 'Service Unavailable' });
+        if (cached) return cached;
+        // Navigation fallback: serve offline shell
+        if (request.mode === 'navigate') {
+          return caches.match('./offline.html');
+        }
+        return new Response('', { status: 503, statusText: 'Service Unavailable' });
       });
     });
 }

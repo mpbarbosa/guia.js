@@ -4,9 +4,7 @@ This document provides a comprehensive side-by-side comparison of all GitHub Iss
 
 ## Template Overview
 
-==========================================================
-ISSUE TEMPLATE COMPARISON
-==========================================================
+**ISSUE TEMPLATE COMPARISON**
 
 | Template                    | Lines | Title Prefix      | Labels                                      |
 |-----------------------------|-------|-------------------|---------------------------------------------|

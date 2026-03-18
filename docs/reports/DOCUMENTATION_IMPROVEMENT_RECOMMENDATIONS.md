@@ -202,7 +202,7 @@ Document any API changes between versions:
 **Brazilian Address Standardization**
 ```
 
-#### C. MIGRATION_GUIDE_TESTING.md
+### C. MIGRATION_GUIDE_TESTING.md
 
 Help developers migrate tests:
 

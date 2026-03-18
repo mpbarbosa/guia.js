@@ -5,6 +5,7 @@
 Last Updated: 2026-01-28
 Status: Active
 Category: Architecture
+
 ---
 
 **Navigation**: [🏠 Home](../README.md) > [📚 Docs](./README.md) > Project Purpose & Architecture

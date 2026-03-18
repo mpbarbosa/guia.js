@@ -5,13 +5,14 @@
 Last Updated: 2026-02-23
 Status: Active
 version: 0.12.4-alpha
+
 ---
 
 [![Tests](https://img.shields.io/badge/tests-3074%20passing%20%2F%203242%20total-green)](https://github.com/mpbarbosa/guia_turistico)
 [![Version](https://img.shields.io/badge/version-0.11.7--alpha-blue)](https://github.com/mpbarbosa/guia_turistico)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia_turistico)
 
-> **Note on Test Status**: 3,074 tests pass successfully out of 3,242 total (168 skipped, 0 failing), with 122 of 127 test suites passing (5 skipped). The test suite is stable with 100% pass rate. See [Testing Overview](#testing-overview) for details.
+> **Note on Test Status**: 3,074 tests pass successfully out of 3,242 total (168 skipped, 0 failing), with 122 of 127 test suites passing (5 skipped). The test suite is stable with 100% pass rate. See the Testing section below for details.
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
@@ -472,10 +473,10 @@ To ensure clear communication about testing concepts:
 - **Immutability Tests**: Verifying referential transparency patterns
 - **API Tests**: External API integration validation
 
-### Testing Terminology
+### Test Definitions
 
 - **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 122 passing suites
-- **Test**: Individual test case within a suite using `it()` or `test()` (e.g., `it('should return singleton instance')`) - we have 3,242 tests (3,074 passing, 168 skipped)
+- **Test**: Individual test case within a suite
 - **Test Category**: Organizational grouping by functionality (unit, integration, features, external, managers)
 - **Code Coverage**: Percentage of source code executed during tests (76% overall, exceeds 65% threshold)
 
@@ -1595,9 +1596,7 @@ For comprehensive guidance, see:
 - ✅ **Comprehensive Tests** - Write tests for all new functionality
 - ✅ **Documentation** - Update docs for API changes
 
-### Pre-Push Validation
-
-Test locally before pushing to catch issues early:
+### Local Pre-Push Validation
 
 ```bash
 # Simulate GitHub Actions workflow locally

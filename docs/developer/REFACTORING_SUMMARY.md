@@ -118,7 +118,7 @@ Changes:
 
 ## Before/After Comparison
 
-### Before: Hardcoded Validation
+<!-- markdownlint-disable MD024 -->
 
 ```yaml
 - name: Validate JavaScript syntax

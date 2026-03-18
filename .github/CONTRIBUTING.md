@@ -6,6 +6,7 @@ Last Updated: 2026-01-28
 Status: Active
 Version: 0.9.0-alpha
 Category: Guide
+
 ---
 
 Thank you for your interest in contributing to Guia Turístico! This document provides guidelines and best practices for contributing to this project.

@@ -23,7 +23,7 @@ npm run dev                    # Vite dev server on port 9000
 # → Open http://localhost:9000
 ```
 
-**That's it!** You're ready to develop. See [detailed guide](#detailed-guide) below for more options.
+**That's it!** You're ready to develop. See [Installation](#installation) below for more options.
 
 ---
 

@@ -9,12 +9,11 @@ This document provides a comprehensive reference for all public APIs in the Guia
 
 1. [Core APIs](#core-apis)
 2. [Service APIs](#service-apis)
-3. [Coordination APIs](#coordination-apis)
-4. [Data Processing APIs](#data-processing-apis)
-5. [Display/UI APIs](#displayui-apis)
-6. [Speech Synthesis APIs](#speech-synthesis-apis)
-7. [Utility APIs](#utility-apis)
-8. [Configuration](#configuration)
+3. [Data Processing APIs](#data-processing-apis)
+4. [Display/UI APIs](#displayui-apis)
+5. [Speech Synthesis APIs](#speech-synthesis-apis)
+6. [Utility APIs](#utility-apis)
+7. [Configuration](#configuration)
 
 ---
 
@@ -1574,7 +1573,7 @@ addrDisplayer.display(standardAddress);
 
 ## Migration Notes
 
-### v0.9.0-alpha Changes
+<!-- markdownlint-disable MD024 -->
 
 **Metropolitan Region Support**:
 

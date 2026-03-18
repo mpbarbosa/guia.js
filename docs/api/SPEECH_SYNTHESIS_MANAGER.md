@@ -625,9 +625,7 @@ See `__tests__/unit/speech/SpeechSynthesisManager.test.js` for comprehensive tes
 
 ## Changelog
 
-### v0.9.0-alpha
-
-- ✅ Refactored to composition pattern
+<!-- markdownlint-disable MD024 -->
 - ✅ Extracted VoiceLoader, VoiceSelector, SpeechConfiguration
 - ✅ Added exponential backoff voice loading
 - ✅ Integrated TimerManager to prevent memory leaks

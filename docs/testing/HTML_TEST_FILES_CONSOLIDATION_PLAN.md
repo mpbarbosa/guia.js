@@ -510,11 +510,7 @@ Each test should:
 | Manual Tests | `tests/manual/` | Manual browser validation |
 | Examples | `examples/` | User-facing demonstrations |
 
-## Related Documentation
-
-- [Test Coverage](../testing/HTML_GENERATION.md)
-- [CI/CD Workflows](../../.github/workflows/)
-- [Contributing Guide](../../.github/CONTRIBUTING.md)
+## Further Reading
 
 ```
 

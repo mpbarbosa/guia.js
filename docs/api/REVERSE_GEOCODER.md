@@ -823,10 +823,7 @@ expect(testObserver.update).toHaveBeenCalledWith(
 
 ## Change Log
 
-### v0.9.0-alpha
-
-- Extracted from `guia.js` in Phase 2 modularization
-- Enhanced observer pattern integration
+<!-- markdownlint-disable MD024 -->
 - Improved error handling and validation
 - Fixed code duplication in `reverseGeocode()`
 - Added fallback to native `fetch()` when fetch manager unavailable

@@ -5,6 +5,7 @@
 Last Updated: 2026-01-28
 Status: Active
 Category: Guide
+
 ---
 
 **Purpose**: Maintain consistent terminology across documentation, code, and communications.

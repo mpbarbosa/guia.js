@@ -6,6 +6,7 @@ Last Updated: 2026-03-02
 Status: Active
 Category: User Guide
 Version: 0.12.4-alpha
+
 ---
 
 **Navigation**: [🏠 Home](../../README.md) > [📚 Documentation](../INDEX.md) > 👤 Complete User Guide
@@ -489,7 +490,7 @@ The app minimizes battery drain:
 
 ---
 
-### 🔐 Resetting Permissions
+### Resetting Permissions
 
 If you accidentally denied location access:
 

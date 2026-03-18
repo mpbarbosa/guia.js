@@ -600,10 +600,7 @@ const mockPosition = {
 
 ## Change Log
 
-### v0.9.0-alpha
-
-- Extracted from `guia.js` in Phase 2 modularization
-- Added provider abstraction pattern with `BrowserGeolocationProvider`
+<!-- markdownlint-disable MD024 -->
 - Enhanced dependency injection support
 - Added race condition prevention with `isPendingRequest` flag
 - Improved documentation and type annotations

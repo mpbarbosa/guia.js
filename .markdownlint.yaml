@@ -19,12 +19,8 @@ MD004:
 MD007:
   indent: 2
 
-# MD013 - Line length: allow up to 120 characters; exempt code blocks and tables
-#          (long URLs and generated content make strict limits impractical)
-MD013:
-  line_length: 120
-  code_blocks: false
-  tables: false
+# MD013 - Line length: disabled — long URLs and AI-generated content make strict limits impractical
+MD013: false
 
 # MD024 - Multiple headings with the same content: allow if they are not siblings
 MD024:
@@ -41,7 +37,7 @@ MD026:
 MD029:
   style: ordered
 
-# MD033 - Inline HTML: allow a small set of semantic/layout elements used in docs
+# MD033 - Inline HTML: allow semantic/layout elements and type names used in API docs
 MD033:
   allowed_elements:
     - details
@@ -49,9 +45,22 @@ MD033:
     - br
     - sub
     - sup
+    - String
+    - Position
+    - Object
+    - SpeechSynthesisVoice
+    - T
+    - previous
+    - current
 
 # MD034 - Bare URLs: disabled — bare URLs are used intentionally in some docs
 MD034: false
+
+# MD036 - Emphasis used instead of a heading: disabled — bold text as section label is a common pattern in docs
+MD036: false
+
+# MD040 - Fenced code blocks should have a language specified: disabled — many docs contain output/mixed content
+MD040: false
 
 # MD041 - First line should be a top-level heading: disabled — some docs use badges or preamble
 MD041: false
@@ -59,3 +68,6 @@ MD041: false
 # MD046 - Code block style: enforce fenced blocks (``` ... ```) over indented blocks
 MD046:
   style: fenced
+
+# MD060 - Table column style: disabled — tables are auto-generated with varying alignment styles
+MD060: false

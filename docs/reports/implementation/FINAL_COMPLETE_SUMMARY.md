@@ -83,7 +83,7 @@ All documentation issues resolved, automation implemented, and comprehensive gui
 | # | File | Changes | Type |
 |---|------|---------|------|
 | 1 | README.md | +350 lines | Enhanced |
-| 2  .github/scripts/cdn-delivery.sh  +100 lines | Enhanced |
+| 2 | .github/scripts/cdn-delivery.sh | +100 lines | Enhanced |
 | 3 | .github/copilot-instructions.md | +94 lines | Updated |
 | 4 | docs/INDEX.md | +52 lines | Updated |
 | 5 | docs/IBIRA_INTEGRATION.md | +15 lines | Updated |

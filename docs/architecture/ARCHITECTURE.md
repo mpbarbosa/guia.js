@@ -6,6 +6,7 @@
 **Version**: 0.11.0-alpha
 **Status**: Active
 **Category**: Architecture
+
 ---
 
 **Navigation**: [🏠 Documentation Hub](../README.md) | [📖 Complete Index](../INDEX.md) | [🎯 Quick Start](../guides/GETTING_STARTED.md)

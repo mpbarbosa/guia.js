@@ -147,7 +147,7 @@ GeoPosition (immutable)
 **CDN URL**: `https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.0/dist/esm/index.js`
 **Purpose**: Immutable geographic coordinate container
 
-> ⚠️ `src/core/GeoPosition.ts` was removed in `v0.12.3-alpha`. `GeoPosition` is now imported directly from the `paraty_geocore.js` CDN (ESM build).
+> ⚠️ `src/core/GeoPosition.ts` was removed in `v0.12.4-alpha`. `GeoPosition` is now imported directly from the `paraty_geocore.js` CDN (ESM build).
 
 **Import**:
 

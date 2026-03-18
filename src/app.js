@@ -600,7 +600,12 @@ if (typeof document !== 'undefined') {
 if (typeof window !== 'undefined') {
   window.GuiaApp = {
     navigateTo,
-    getState: () => AppState
+    getState: () => AppState,
+    switchProvider: (provider) => {
+      const manager = AppState.homeViewController?.manager;
+      if (!manager) return false;
+      return manager.switchProvider(provider);
+    }
   };
 
   // Update LBS provider indicator whenever a geocoding request completes
@@ -617,5 +622,34 @@ if (typeof window !== 'undefined') {
     } else {
       nameEl.textContent = 'OpenStreetMap Nominatim';
     }
+  });
+
+  // Show provider-switch button only when AWS is available; toggle on click
+  window.addEventListener('geocoder-provider-used', () => {
+    const btn = document.getElementById('provider-switch-btn');
+    if (!btn) return;
+    const manager = AppState.homeViewController?.manager;
+    if (manager?.reverseGeocoder?.hasAwsProvider()) {
+      btn.hidden = false;
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (e.target?.id !== 'provider-switch-btn') return;
+    const manager = AppState.homeViewController?.manager;
+    if (!manager) return;
+    const current = manager.getPrimaryProvider();
+    const next = current === 'aws' ? 'nominatim' : 'aws';
+    manager.switchProvider(next);
+  });
+
+  // Sync button label when provider changes via switchProvider()
+  window.addEventListener('geocoder-provider-changed', (event) => {
+    const nameEl = document.getElementById('lbs-provider-name');
+    if (!nameEl) return;
+    const { provider } = event.detail;
+    nameEl.textContent = provider === 'aws'
+      ? 'AWS Location Service (próxima geocodificação)'
+      : 'OpenStreetMap Nominatim (próxima geocodificação)';
   });
 }

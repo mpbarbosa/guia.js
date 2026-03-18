@@ -287,6 +287,22 @@
   color: #10b981; /* green — OpenStreetMap green tone */
 }
 
+/* Provider switch button — inline icon button */
+.provider-switch-btn {
+  background: none;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1;
+  padding: 1px 5px;
+  opacity: 0.6;
+  transition: opacity .15s;
+}
+.provider-switch-btn:hover { opacity: 1; }
+.provider-switch-btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
 @media (prefers-color-scheme: dark) {
   .lbs-provider-indicator {
     color: #9ca3af;

@@ -635,6 +635,37 @@ class WebGeocodingManager {
 	}
 
 	/**
+	 * Switches the primary geocoding provider at runtime.
+	 *
+	 * Delegates to `ReverseGeocoder.switchProvider()`. Has no effect if the
+	 * AWS geocoder is not configured — Nominatim will always be used in that case.
+	 *
+	 * @param {'aws'|'nominatim'} provider - Target provider
+	 * @returns {boolean} `true` if the switch was applied, `false` if AWS is unavailable
+	 *
+	 * @example
+	 * manager.switchProvider('nominatim');
+	 */
+	switchProvider(provider: 'aws' | 'nominatim'): boolean {
+		if (!this.reverseGeocoder) return false;
+		if (provider === 'aws' && !this.reverseGeocoder.hasAwsProvider()) {
+			warn('(WebGeocodingManager) Cannot switch to AWS: provider not configured');
+			return false;
+		}
+		this.reverseGeocoder.switchProvider(provider);
+		return true;
+	}
+
+	/**
+	 * Returns the name of the active primary geocoding provider.
+	 *
+	 * @returns {'aws'|'nominatim'|null}
+	 */
+	getPrimaryProvider(): 'aws' | 'nominatim' | null {
+		return this.reverseGeocoder?.getPrimaryProvider() ?? null;
+	}
+
+	/**
 	 * Gets the current Brazilian standardized address.
 	 * 
 	 * Returns the standardized address object from the reverse geocoder,

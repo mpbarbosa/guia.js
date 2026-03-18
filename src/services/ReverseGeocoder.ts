@@ -113,6 +113,9 @@ class ReverseGeocoder {
 		// AWS geocoder: use injected instance, or auto-create when AWS is enabled
 		this._awsGeocoder = config.awsGeocoder ||
 			(env.awsLbsEnabled && env.awsLbsBaseUrl ? new AwsGeocoder() : null);
+
+		// Runtime-switchable primary provider (initialized from env config)
+		this._primaryProvider = (env.geocodingPrimaryProvider === 'nominatim') ? 'nominatim' : 'aws';
 		
 		// Track if CORS fallback has been used
 		this._corsRetryAttempted = false;
@@ -239,10 +242,9 @@ class ReverseGeocoder {
 	 * @since 0.9.0-alpha
 	 */
 	async fetchAddress() {
-		// Determine provider order from configuration.
-		// 'aws' (default) → AWS primary, Nominatim fallback.
-		// 'nominatim'     → Nominatim primary, AWS fallback.
-		const primaryIsAws = !env.geocodingPrimaryProvider || env.geocodingPrimaryProvider !== 'nominatim';
+		// Determine provider order. Reads from the runtime-switchable field so
+		// callers can use switchProvider() without restarting the application.
+		const primaryIsAws = this._primaryProvider !== 'nominatim';
 
 		// ── Primary provider: AWS Location Based Service (when configured as primary) ──
 		if (primaryIsAws && this._awsGeocoder && this.latitude && this.longitude) {
@@ -629,6 +631,52 @@ class ReverseGeocoder {
 			return `${this.constructor.name}: No coordinates set`;
 		}
 		return `${this.constructor.name}: ${this.latitude}, ${this.longitude}`;
+	}
+
+	/**
+	 * Switches the primary geocoding provider at runtime.
+	 *
+	 * Allows the application to toggle between Nominatim and AWS Location
+	 * Service without restarting. The change takes effect on the next call
+	 * to `fetchAddress()`.
+	 *
+	 * @param {'aws'|'nominatim'} provider - The provider to set as primary
+	 * @throws {Error} If `provider` is not a recognised value
+	 * @fires CustomEvent#geocoder-provider-changed
+	 *
+	 * @example
+	 * reverseGeocoder.switchProvider('nominatim');
+	 */
+	switchProvider(provider: 'aws' | 'nominatim'): void {
+		if (provider !== 'aws' && provider !== 'nominatim') {
+			throw new Error(`(ReverseGeocoder) Unknown provider: "${provider}". Use 'aws' or 'nominatim'.`);
+		}
+		if (this._primaryProvider === provider) return; // no-op
+
+		log(`(ReverseGeocoder) Switching primary provider: ${this._primaryProvider} → ${provider}`);
+		this._primaryProvider = provider;
+
+		if (typeof window !== 'undefined') {
+			window.dispatchEvent(new CustomEvent('geocoder-provider-changed', { detail: { provider } }));
+		}
+	}
+
+	/**
+	 * Returns whether the AWS geocoder is available (configured and enabled).
+	 *
+	 * @returns {boolean}
+	 */
+	hasAwsProvider(): boolean {
+		return this._awsGeocoder !== null;
+	}
+
+	/**
+	 * Returns the name of the currently configured primary provider.
+	 *
+	 * @returns {'aws'|'nominatim'}
+	 */
+	getPrimaryProvider(): 'aws' | 'nominatim' {
+		return this._primaryProvider;
 	}
 
 	/**

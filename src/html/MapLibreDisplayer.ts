@@ -19,11 +19,18 @@ const TILE_STYLE = 'https://demotiles.maplibre.org/style.json';
 const DEFAULT_ZOOM = 3;
 
 export class MapLibreDisplayer {
+  private _mapContainerId: string;
+  private _toggleButtonId: string;
+  private _map: maplibregl.Map | null;
+  private _marker: maplibregl.Marker | null;
+  private _pendingLat: number | null;
+  private _pendingLon: number | null;
+
   /**
    * @param {string} mapContainerId - ID of the div that will host the map canvas.
    * @param {string} toggleButtonId  - ID of the button that shows/hides the map.
    */
-  constructor(mapContainerId, toggleButtonId) {
+  constructor(mapContainerId: string, toggleButtonId: string) {
     this._mapContainerId = mapContainerId;
     this._toggleButtonId = toggleButtonId;
     this._map = null;
@@ -40,7 +47,7 @@ export class MapLibreDisplayer {
    * Bind the toggle button click to show/hide the map container.
    * Call once after the DOM is ready.
    */
-  bindToggleButton() {
+  bindToggleButton(): void {
     const btn = document.getElementById(this._toggleButtonId);
     if (!btn) return;
     btn.addEventListener('click', () => this._toggle());
@@ -54,7 +61,7 @@ export class MapLibreDisplayer {
    * @param {number} lat - Latitude in decimal degrees.
    * @param {number} lon - Longitude in decimal degrees.
    */
-  updatePosition(lat, lon) {
+  updatePosition(lat: number, lon: number): void {
     this._pendingLat = lat;
     this._pendingLon = lon;
 
@@ -73,7 +80,7 @@ export class MapLibreDisplayer {
   // Private helpers
   // ---------------------------------------------------------------------------
 
-  _toggle() {
+  private _toggle(): void {
     const container = document.getElementById(this._mapContainerId);
     const btn = document.getElementById(this._toggleButtonId);
     if (!container) return;
@@ -99,7 +106,7 @@ export class MapLibreDisplayer {
     }
   }
 
-  _initMap() {
+  private _initMap(): void {
     const lat = this._pendingLat ?? -15.793889; // Brasília as fallback
     const lon = this._pendingLon ?? -47.882778;
 
@@ -117,10 +124,10 @@ export class MapLibreDisplayer {
     });
   }
 
-  _createMarker(lat, lon) {
+  private _createMarker(lat: number, lon: number): void {
     this._marker = new maplibregl.Marker({ color: '#2563eb' })
       .setLngLat([lon, lat])
-      .addTo(this._map);
+      .addTo(this._map!);
   }
 }
 

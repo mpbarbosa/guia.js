@@ -8,4 +8,4 @@
  * @module core/ObserverSubject
  * @since 0.9.0-alpha (moved to paraty_geocore in 0.11.9-alpha)
  */
-export { DualObserverSubject as default } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.2/dist/esm/index.js';
+export { DualObserverSubject as default } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.0/dist/esm/index.js';

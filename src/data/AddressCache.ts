@@ -20,6 +20,7 @@
  */
 
 import ObserverSubject from '../core/ObserverSubject.js';
+import { withObserver } from '../utils/ObserverMixin.js';
 import AddressExtractor from './AddressExtractor.js';
 import BrazilianStandardAddress from './BrazilianStandardAddress.js'; // eslint-disable-line no-unused-vars
 import LRUCache from './LRUCache.js';
@@ -759,10 +760,6 @@ class AddressCache {
 		return AddressCache.getInstance().toString();
 	}
 
-	subscribe(observer) {
-		return this.observerSubject.subscribe(observer);
-	}
-
 	/**
 	 * Static wrapper for backward compatibility.
 	 * @deprecated Use getInstance().subscribe() instead
@@ -772,10 +769,6 @@ class AddressCache {
 		return AddressCache.getInstance().subscribe(observer);
 	}
 
-	unsubscribe(observer) {
-		return this.observerSubject.unsubscribe(observer);
-	}
-
 	/**
 	 * Static wrapper for backward compatibility.
 	 * @deprecated Use getInstance().unsubscribe() instead
@@ -783,10 +776,6 @@ class AddressCache {
 	 */
 	static unsubscribe(observer) {
 		return AddressCache.getInstance().unsubscribe(observer);
-	}
-
-	notifyObservers(event) {
-		this.observerSubject.notifyObservers(event);
 	}
 
 	/**
@@ -1152,6 +1141,10 @@ class AddressCache {
 		return AddressCache.getInstance().destroy();
 	}
 }
+
+// Apply observer mixin — provides subscribe(), unsubscribe(), and notifyObservers()
+// delegating to this.observerSubject, consistent with ReverseGeocoder and PositionManager.
+Object.assign(AddressCache.prototype, withObserver());
 
 /**
  * Legacy wrapper class that maintains backward compatibility with existing code.

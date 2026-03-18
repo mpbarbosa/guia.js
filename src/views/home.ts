@@ -14,14 +14,50 @@
  * @author Marcelo Pereira Barbosa
  */
 
-'use strict';
-
 import WebGeocodingManager from '../coordination/WebGeocodingManager.js';
 import Chronometer from '../timing/Chronometer.js';
 import PositionManager from '../core/PositionManager.js';
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.2/dist/esm/index.js';
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.0/dist/esm/index.js';
 import { log, warn, error } from '../utils/logger.js';
 import MapLibreDisplayer from '../html/MapLibreDisplayer.js';
+
+/** Speech synthesis element IDs configuration. */
+interface SpeechSynthesisIds {
+  languageSelectId?: string;
+  voiceSelectId?: string;
+  textInputId?: string;
+  speakBtnId?: string;
+  pauseBtnId?: string;
+  resumeBtnId?: string;
+  stopBtnId?: string;
+  rateInputId?: string;
+  rateValueId?: string;
+  pitchInputId?: string;
+  pitchValueId?: string;
+}
+
+/** Element IDs for all display components. */
+interface ElementIds {
+  positionDisplay?: string;
+  referencePlaceDisplay?: string;
+  enderecoPadronizadoDisplay?: string;
+  speechSynthesis?: SpeechSynthesisIds;
+  sidraDisplay?: string;
+}
+
+/** Constructor parameters for HomeViewController. */
+interface HomeViewControllerParams {
+  locationResult: string | HTMLElement;
+  elementIds?: ElementIds;
+  manager?: WebGeocodingManager;
+  chronometer?: Chronometer;
+  autoStartTracking?: boolean;
+}
+
+/** Inline observer forwarding PositionManager state to the map displayer. */
+interface MapPositionObserver {
+  update: (positionManager: PositionManager) => void;
+}
 
 /**
  * Home View Controller for location tracking and geocoding display.
@@ -60,26 +96,28 @@ import MapLibreDisplayer from '../html/MapLibreDisplayer.js';
  * await controller.init();
  */
 class HomeViewController {
+  document: Document;
+  params: HomeViewControllerParams;
+  autoStartTracking: boolean;
+  initialized: boolean;
+  tracking: boolean;
+  manager: WebGeocodingManager | null;
+  chronometer: Chronometer | null;
+
+  private _boundHandlers: Record<string, EventListener>;
+  private _mapDisplayer: MapLibreDisplayer | null;
+  private _mapPositionObserver: MapPositionObserver | null;
+
   /**
    * Creates a HomeViewController instance.
    * 
    * @param {Document} document - Browser document object for DOM manipulation
-   * @param {Object} params - Configuration parameters
-   * @param {string|HTMLElement} params.locationResult - Location result element ID or element
-   * @param {Object} [params.elementIds] - Element IDs for all display components
-   * @param {string} [params.elementIds.positionDisplay] - Coordinate display element ID
-   * @param {string} [params.elementIds.referencePlaceDisplay] - Reference place display element ID
-   * @param {string} [params.elementIds.enderecoPadronizadoDisplay] - Address display element ID
-   * @param {Object} [params.elementIds.speechSynthesis] - Speech synthesis configuration
-   * @param {string} [params.elementIds.sidraDisplay] - SIDRA statistics display element ID
-   * @param {WebGeocodingManager} [params.manager] - Optional pre-configured manager (dependency injection)
-   * @param {Chronometer} [params.chronometer] - Optional pre-configured chronometer (dependency injection)
-   * @param {boolean} [params.autoStartTracking=true] - Auto-start tracking on init
+   * @param {HomeViewControllerParams} params - Configuration parameters
    * 
    * @throws {TypeError} If document is not provided
    * @throws {TypeError} If params.locationResult is not specified
    */
-  constructor(document, params = {}) {
+  constructor(document: Document, params: HomeViewControllerParams) {
     // Validation
     if (!document) {
       throw new TypeError('HomeViewController requires a document object');
@@ -103,6 +141,10 @@ class HomeViewController {
     
     // Event listener handlers (bound methods stored for cleanup)
     this._boundHandlers = {};
+
+    // Map components (initialized in _initializeMapDisplayer)
+    this._mapDisplayer = null;
+    this._mapPositionObserver = null;
     
     log('HomeViewController created (not yet initialized)');
   }
@@ -129,7 +171,7 @@ class HomeViewController {
    * await controller.init();
    * console.log('Home view ready');
    */
-  async init() {
+  async init(): Promise<void> {
     console.log('[GT] HomeViewController.init() called, initialized:', this.initialized); // DEBUG
     if (this.initialized) {
       warn('HomeViewController already initialized');
@@ -187,7 +229,7 @@ class HomeViewController {
    *   console.log('Location tracking is active');
    * }
    */
-  isTracking() {
+  isTracking(): boolean {
     return this.tracking;
   }
   
@@ -207,7 +249,7 @@ class HomeViewController {
    * controller.destroy();
    * console.log('HomeViewController cleaned up');
    */
-  destroy() {
+  destroy(): void {
     log('Destroying HomeViewController...');
     
     // Stop tracking if active
@@ -255,7 +297,7 @@ class HomeViewController {
    * console.log(controller.toString());
    * // Output: "HomeViewController {initialized: true, tracking: false}"
    */
-  toString() {
+  toString(): string {
     return `HomeViewController {initialized: ${this.initialized}, tracking: ${this.tracking}}`;
   }
   
@@ -271,7 +313,7 @@ class HomeViewController {
    * @returns {Promise<void>}
    * @throws {Error} If manager creation fails
    */
-  async _initializeManager() {
+  private async _initializeManager(): Promise<void> {
     // Skip if manager already provided via dependency injection
     if (this.manager) {
       log('HomeViewController: Using provided manager (dependency injection)');
@@ -323,7 +365,7 @@ class HomeViewController {
    * @returns {Promise<void>}
    * @throws {Error} If chronometer element not found or initialization fails
    */
-  async _initializeChronometer() {
+  private async _initializeChronometer(): Promise<void> {
     // Skip if chronometer already provided via dependency injection
     if (this.chronometer) {
       log('HomeViewController: Using provided chronometer (dependency injection)');
@@ -360,7 +402,7 @@ class HomeViewController {
    * Initializes the MapLibre map displayer and subscribes to position updates.
    * @private
    */
-  _initializeMapDisplayer() {
+  private _initializeMapDisplayer(): void {
     try {
       this._mapDisplayer = new MapLibreDisplayer('maplibre-map', 'map-toggle-btn');
       this._mapDisplayer.bindToggleButton();
@@ -389,7 +431,7 @@ class HomeViewController {
    * @private
    * @returns {void}
    */
-  _setupEventListeners() {
+  private _setupEventListeners(): void {
     // Get Location button (primary action)
     const locationBtn = this.document.getElementById('enable-location-btn');
     if (locationBtn) {
@@ -430,7 +472,7 @@ class HomeViewController {
    * @returns {void}
    * @since 0.10.0-alpha
    */
-  _removeEventListeners() {
+  private _removeEventListeners(): void {
     // Remove location button listener
     const locationBtn = this.document.getElementById('enable-location-btn');
     if (locationBtn && this._boundHandlers.locationClick) {
@@ -461,7 +503,7 @@ class HomeViewController {
    * @returns {void}
    * @since 0.10.0-alpha
    */
-  _updateTrackingUI(isTracking) {
+  private _updateTrackingUI(isTracking: boolean): void {
     const locationBtn = this.document.getElementById('enable-location-btn');
     if (!locationBtn) {
       warn('HomeViewController: Cannot update UI - enable-location-btn not found');
@@ -511,7 +553,7 @@ class HomeViewController {
    * @example
    * await controller.getSingleLocationUpdate();
    */
-  async getSingleLocationUpdate() {
+  async getSingleLocationUpdate(): Promise<GeolocationPosition> {
     if (!this.initialized) {
       throw new Error('HomeViewController not initialized. Call init() first.');
     }
@@ -576,7 +618,7 @@ class HomeViewController {
    * @example
    * controller.startTracking();
    */
-  startTracking() {
+  startTracking(): void {
     if (!this.initialized) {
       throw new Error('HomeViewController not initialized. Call init() first.');
     }
@@ -640,7 +682,7 @@ class HomeViewController {
    * @example
    * controller.stopTracking();
    */
-  stopTracking() {
+  stopTracking(): void {
     if (!this.initialized) {
       warn('HomeViewController not initialized');
       return;
@@ -688,7 +730,7 @@ class HomeViewController {
    * @example
    * controller.toggleTracking(); // Start if stopped, stop if started
    */
-  toggleTracking() {
+  toggleTracking(): void {
     if (!this.initialized) {
       throw new Error('HomeViewController not initialized. Call init() first.');
     }
@@ -714,7 +756,7 @@ class HomeViewController {
    * const controller = await HomeViewController.create(document, {...});
    * // Controller is ready to use
    */
-  static async create(document, params = {}) {
+  static async create(document: Document, params: HomeViewControllerParams): Promise<HomeViewController> {
     const controller = new HomeViewController(document, params);
     await controller.init();
     return controller;

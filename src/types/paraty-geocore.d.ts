@@ -2,13 +2,14 @@
  * TypeScript ambient type declarations for the paraty_geocore.js CDN module.
  *
  * Exports: GeoPosition, GeoPositionError, ObserverSubject, DualObserverSubject,
- * GeocodingState, calculateDistance, EARTH_RADIUS_METERS, delay.
+ * GeocodingState, calculateDistance, EARTH_RADIUS_METERS, delay,
+ * withObserver, ObserverMixinOptions, ObserverMixinResult.
  *
  * @see https://github.com/mpbarbosa/paraty_geocore.js
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.2/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.0/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.2/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.0/dist/esm/index.js' {
 	/** GPS accuracy quality classification. */
 	export type AccuracyQuality = 'excellent' | 'good' | 'medium' | 'bad' | 'very bad';
 
@@ -160,4 +161,48 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.10.2/d
 		/** Clears the current position state. */
 		clear(): void;
 	}
+
+	// ─── ObserverMixin (0.11.0) ────────────────────────────────────────────────
+
+	/**
+	 * Configuration options for the {@link withObserver} mixin factory.
+	 * @since 0.11.0
+	 */
+	export interface ObserverMixinOptions {
+		/** When true, validates that the internal `observerSubject` is not null before delegating. */
+		checkNull?: boolean;
+		/** Class name used in warning messages (requires `checkNull: true`). */
+		className?: string;
+		/** When true, the `notify` method is omitted from the returned mixin. */
+		excludeNotify?: boolean;
+	}
+
+	/**
+	 * The set of observer-pattern methods returned by {@link withObserver}.
+	 * When `excludeNotify` is `true` the `notify` member is absent at runtime.
+	 * @since 0.11.0
+	 */
+	export interface ObserverMixinResult {
+		subscribe(observer: ObserverObject | ObserverFunction): void;
+		unsubscribe(observer: ObserverObject | ObserverFunction): void;
+		notify?(data?: unknown): void;
+	}
+
+	/**
+	 * Factory that returns a plain object whose methods delegate to `this.observerSubject`.
+	 * Mix the result into a class prototype via `Object.assign(MyClass.prototype, withObserver())`.
+	 *
+	 * @param {ObserverMixinOptions} [options] - Optional configuration.
+	 * @returns {ObserverMixinResult} Object containing subscribe/unsubscribe (and optionally notify).
+	 * @since 0.11.0
+	 *
+	 * @example
+	 * import { withObserver } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.0/dist/esm/index.js';
+	 *
+	 * class MyClass {
+	 *     constructor() { this.observerSubject = new DualObserverSubject(); }
+	 * }
+	 * Object.assign(MyClass.prototype, withObserver({ checkNull: true, className: 'MyClass' }));
+	 */
+	export function withObserver(options?: ObserverMixinOptions): ObserverMixinResult;
 }

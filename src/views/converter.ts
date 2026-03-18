@@ -13,6 +13,37 @@ import { escapeHtml } from '../utils/html-sanitizer.js';
 import { determineLocationType, formatLocationValue } from '../address-parser.js';
 import { env } from '../config/environment.js';
 
+/** Nominatim reverse-geocoding address sub-object. */
+interface NominatimAddress {
+  road?: string;
+  house_number?: string;
+  suburb?: string;
+  quarter?: string;
+  neighbourhood?: string;
+  district?: string;
+  city_district?: string;
+  city?: string;
+  town?: string;
+  village?: string;
+  state?: string;
+  postcode?: string;
+  country?: string;
+  [key: string]: string | undefined;
+}
+
+/** Nominatim reverse-geocoding API response. */
+interface NominatimResponse {
+  display_name: string;
+  address?: NominatimAddress;
+  error?: string;
+}
+
+/** Return type from determineLocationType. */
+interface LocationType {
+  type: 'distrito' | 'bairro';
+  value: string | null;
+}
+
 /**
  * Converter view configuration object
  * @type {Object}
@@ -289,25 +320,25 @@ export default {
     `;
   },
   
-  async mount(container) {
+  async mount(container: HTMLElement): Promise<void> {
     log("(converter-view) Mounting converter view...");
     
     // Initialize the converter
-    const form = container.querySelector('form');
-    const latitudeInput = container.querySelector('#latitude');
-    const longitudeInput = container.querySelector('#longitude');
+    const form = container.querySelector<HTMLFormElement>('form');
+    const latitudeInput = container.querySelector<HTMLInputElement>('#latitude');
+    const longitudeInput = container.querySelector<HTMLInputElement>('#longitude');
     
     if (form && latitudeInput && longitudeInput) {
       this._initConverter(form, latitudeInput, longitudeInput);
     }
   },
   
-  cleanup() {
+  cleanup(): void {
     log("(converter-view) Cleaning up converter view...");
     // No specific cleanup needed for converter
   },
   
-  _initConverter(form, latitudeInput, longitudeInput) {
+  _initConverter(form: HTMLFormElement, latitudeInput: HTMLInputElement, longitudeInput: HTMLInputElement): void {
     // Setup form submission
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -329,10 +360,12 @@ export default {
     longitudeInput.addEventListener("input", () => this._clearError(longitudeInput));
   },
   
-  _validateInput(input, type) {
+  _validateInput(input: HTMLInputElement, type: string): boolean {
     const value = input.value.trim();
     const errorDiv = document.getElementById(`${type}-error`);
     
+    if (!errorDiv) return true; // element not in DOM — skip validation UI
+
     if (!value) {
       this._showInputError(input, errorDiv, `Por favor, insira ${type === "latitude" ? "a latitude" : "a longitude"}.`);
       return false;
@@ -358,13 +391,13 @@ export default {
     return true;
   },
   
-  _showInputError(input, errorDiv, message) {
+  _showInputError(input: HTMLInputElement, errorDiv: HTMLElement, message: string): void {
     input.setAttribute("aria-invalid", "true");
     errorDiv.textContent = message;
     errorDiv.hidden = false;
   },
   
-  _clearError(input) {
+  _clearError(input: HTMLInputElement): void {
     const type = input.id;
     const errorDiv = document.getElementById(`${type}-error`);
     input.setAttribute("aria-invalid", "false");
@@ -374,8 +407,9 @@ export default {
     }
   },
   
-  async _fetchAddress(latitude, longitude) {
+  async _fetchAddress(latitude: string, longitude: string): Promise<void> {
     const results = document.getElementById("results");
+    if (!results) return;
     results.innerHTML = '<p class="loading" role="status">Buscando endereço...</p>';
     
     try {
@@ -427,7 +461,7 @@ export default {
     }
   },
   
-  _formatAddress(address) {
+  _formatAddress(address: NominatimAddress): string {
     const fields = [
       { key: 'road', label: 'Rua' },
       { key: 'house_number', label: 'Número' },
@@ -454,7 +488,7 @@ export default {
    * @param {Object} data - Nominatim response data
    * @private
    */
-  _updateHighlightCards(data) {
+  _updateHighlightCards(data: NominatimResponse): void {
     // Update municipality card
     const municipioValue = document.getElementById("municipio-value");
     if (municipioValue) {
@@ -475,7 +509,7 @@ export default {
    * Note: Uses address-parser.js module for consistent address parsing logic.
    * The module is imported as ES6 module and shared between views and tests.
    */
-  _updateLocationTypeCard(data) {
+  _updateLocationTypeCard(data: NominatimResponse): void {
     const address = data.address || data;
     
     // Determine location type
@@ -508,7 +542,7 @@ export default {
    * @returns {{type: 'distrito'|'bairro', value: string|null}} Location type and value
    * @private
    */
-  _determineLocationType(address) {
+  _determineLocationType(address: NominatimAddress): LocationType {
     return determineLocationType(address);
   },
   
@@ -518,7 +552,7 @@ export default {
    * @returns {string} Formatted value
    * @private
    */
-  _formatLocationValue(value) {
+  _formatLocationValue(value: string | null): string {
     return formatLocationValue(value);
   }
 };

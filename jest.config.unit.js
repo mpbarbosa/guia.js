@@ -36,7 +36,7 @@ export default {
     '^@vue/compiler-sfc$': '<rootDir>/node_modules/@vue/compiler-sfc/index.js',
     '^@vue/test-utils$': '<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js',
     // Map paraty_geocore.js CDN URL to local TS source for Jest (Node.js cannot fetch https:// URLs)
-    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.10\\.2/dist/esm/index\\.js$':
+    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.11\\.0/dist/esm/index\\.js$':
       '<rootDir>/../paraty_geocore.js/src/index',
     // Strip .js extension from relative imports so Jest resolves .ts before .js
     '^(\\.{1,2}/.*)\\.js$': '$1',

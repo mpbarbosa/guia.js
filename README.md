@@ -105,7 +105,7 @@ Enhanced geographic context with state codes:
 
 **Coverage**: All 26 Brazilian states + Federal District
 
-📚 **Learn More**: See [FEATURE_BUTTON_STATUS_MESSAGES.md](./docs/FEATURE_BUTTON_STATUS_MESSAGES.md), [FEATURE_METROPOLITAN_REGION_DISPLAY.md](./docs/FEATURE_METROPOLITAN_REGION_DISPLAY.md), and [FEATURE_MUNICIPIO_STATE_DISPLAY.md](./docs/FEATURE_MUNICIPIO_STATE_DISPLAY.md) for complete details.
+📚 **Learn More**: See [FEATURE_BUTTON_STATUS_MESSAGES.md](./docs/user/features/FEATURE_BUTTON_STATUS_MESSAGES.md), [FEATURE_METROPOLITAN_REGION_DISPLAY.md](./docs/user/features/FEATURE_METROPOLITAN_REGION_DISPLAY.md), and [FEATURE_MUNICIPIO_STATE_DISPLAY.md](./docs/user/features/FEATURE_MUNICIPIO_STATE_DISPLAY.md) for complete details.
 
 ## 🚀 Quick Start
 
@@ -217,7 +217,7 @@ python3 -m http.server 9000
 - Use `npm run build` before deployment to production
 - Use `npm run preview` to test production build locally
 
-**⚠️ Production Deployment**: Ensure the entire `dist/` folder is deployed, including the `dist/libs/sidra/` directory. See [DEPLOYMENT.md](docs/DEPLOYMENT.md) for details.
+**⚠️ Production Deployment**: Ensure the entire `dist/` folder is deployed, including the `dist/libs/sidra/` directory. See [DEPLOYMENT_GUIDE.md](docs/guides/DEPLOYMENT_GUIDE.md) for details.
 
 ### Quick Validation
 
@@ -313,7 +313,7 @@ For full details on each script — including executable permissions, shebangs, 
 
 ## 📁 Project Structure
 
-This section provides a quick reference to the project's directory organization. For a complete directory tree and detailed file organization, see [PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md). For architectural details and design decisions, see [PROJECT_PURPOSE_AND_ARCHITECTURE.md](./docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md).
+This section provides a quick reference to the project's directory organization. For a complete directory tree and detailed file organization, see [PROJECT_STRUCTURE.md](./docs/developer/PROJECT_STRUCTURE.md). For architectural details and design decisions, see [PROJECT_PURPOSE_AND_ARCHITECTURE.md](./docs/architecture/PROJECT_PURPOSE_AND_ARCHITECTURE.md).
 
 ```
 guia_turistico/
@@ -463,8 +463,8 @@ To ensure clear communication about testing concepts:
 
 1. **[Documentation Index](docs/INDEX.md)** - Complete documentation hub
 2. **[Contributing Guide](.github/CONTRIBUTING.md)** - Code style and submission process
-3. **[JavaScript Best Practices](.github/JAVASCRIPT_BEST_PRACTICES.md)** - Coding standards
-4. **[Referential Transparency Guide](.github/REFERENTIAL_TRANSPARENCY.md)** - Functional programming principles
+3. **[JavaScript Best Practices](docs/guides/JAVASCRIPT_BEST_PRACTICES.md)** - Coding standards
+4. **[Referential Transparency Guide](docs/guides/REFERENTIAL_TRANSPARENCY.md)** - Functional programming principles
 
 ### Architecture Documentation
 
@@ -475,16 +475,16 @@ To ensure clear communication about testing concepts:
 
 ### Development Guides
 
-- **[Module Splitting Guide](docs/MODULE_SPLITTING_GUIDE.md)** - Modularization strategies
-- **[ES6 Import/Export Best Practices](.github/ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - Module patterns
-- **[TDD Guide](.github/TDD_GUIDE.md)** - Test-driven development
-- **[Unit Test Guide](.github/UNIT_TEST_GUIDE.md)** - Unit testing fundamentals
+- **[Module Splitting Guide](docs/guides/MODULE_SPLITTING_GUIDE.md)** - Modularization strategies
+- **[ES6 Import/Export Best Practices](docs/guides/ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - Module patterns
+- **[TDD Guide](docs/guides/TDD_GUIDE.md)** - Test-driven development
+- **[Unit Test Guide](docs/guides/UNIT_TEST_GUIDE.md)** - Unit testing fundamentals
 
 ### Configuration & Tools
 
-- **[ESLint Setup](docs/ESLINT_SETUP.md)** - Linter configuration with custom rules
-- **[Workflow Setup](docs/WORKFLOW_SETUP.md)** - GitHub Actions and CI/CD
-- **[Jest & Module Systems](.github/JEST_COMMONJS_ES6_GUIDE.md)** - Testing module configurations
+- **[ESLint Setup](docs/developer/ESLINT_SETUP.md)** - Linter configuration with custom rules
+- **[Workflow Setup](docs/workflow-automation/WORKFLOW_SETUP.md)** - GitHub Actions and CI/CD
+- **[Jest & Module Systems](docs/guides/JEST_COMMONJS_ES6_GUIDE.md)** - Testing module configurations
 
 ## ⚡ Build System & Performance
 
@@ -685,7 +685,7 @@ https://nominatim.openstreetmap.org/reverse
   &lon=-46.633309
 ```
 
-**Documentation**: [Nominatim API Format](docs/api-integration/NOMINATIM_API_FORMAT.md)
+**Documentation**: [Nominatim API Format](docs/api-integration/NOMINATIM_INTEGRATION.md)
 
 ### IBGE (Brazilian Institute of Geography and Statistics)
 
@@ -694,7 +694,7 @@ https://nominatim.openstreetmap.org/reverse
 https://servicodados.ibge.gov.br/api/v1/localidades/estados/
 ```
 
-**Documentation**: [IBGE Integration](docs/IBIRA_INTEGRATION.md)
+**Documentation**: [IBGE Integration](docs/guides/IBIRA_INTEGRATION.md)
 
 ### IBGE API via ibira.js
 
@@ -717,7 +717,7 @@ import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js'
 - Zero-configuration mock for testing environments
 - Full IBGE API compatibility through `IbiraAPIFetchManager`
 
-**Documentation**: [IBIRA Integration Guide](docs/IBIRA_INTEGRATION.md)
+**Documentation**: [IBIRA Integration Guide](docs/guides/IBIRA_INTEGRATION.md)
 
 ### Google Maps Integration
 
@@ -1559,8 +1559,8 @@ git push
 
 For comprehensive guidance, see:
 
-- [GitHub Actions Guide](docs/GITHUB_ACTIONS_GUIDE.md)
-- [Workflow Setup](docs/WORKFLOW_SETUP.md)
+- [GitHub Actions Guide](docs/guides/GITHUB_ACTIONS_GUIDE.md)
+- [Workflow Setup](docs/workflow-automation/WORKFLOW_SETUP.md)
 - [Contributing Guidelines](.github/CONTRIBUTING.md)
 
 ### Development Guidelines
@@ -1670,7 +1670,7 @@ This project emphasizes functional programming principles:
 5. **Low Coupling** - Components are independent
 6. **High Cohesion** - Each module has single responsibility
 
-**Learn More**: [Referential Transparency Guide](.github/REFERENTIAL_TRANSPARENCY.md)
+**Learn More**: [Referential Transparency Guide](docs/guides/REFERENTIAL_TRANSPARENCY.md)
 
 ## 🐛 Known Issues & Limitations
 
@@ -1763,7 +1763,7 @@ ISC License - See repository for details
 - Complete API error recovery mechanisms
 - Add end-to-end browser tests
 
-**Track Progress**: See [Issue #189 Follow-up](docs/issue-189/ISSUE_189_README.md)
+**Track Progress**: See [Issue #189 Follow-up](docs/reports/analysis/)
 
 ## 📞 Support
 

@@ -8,7 +8,7 @@
 **Category**: Architecture
 ---
 
-**Navigation**: [🏠 Documentation Hub](./README.md) | [📖 Complete Index](./INDEX.md) | [🎯 Quick Start](./GETTING_STARTED.md)
+**Navigation**: [🏠 Documentation Hub](../README.md) | [📖 Complete Index](../INDEX.md) | [🎯 Quick Start](../guides/GETTING_STARTED.md)
 
 ---
 
@@ -676,12 +676,12 @@ export class MyCoordinator {
 
 ## Related Documentation
 
-- **[Getting Started Guide](./GETTING_STARTED.md)** - Setup and first steps
-- **[API Reference](./API_REFERENCE.md)** - Complete API documentation
-- **[Developer Guide](./developer/DEVELOPER_GUIDE.md)** - Development workflows
-- **[Testing Guide](./testing/TEST_STRATEGY.md)** - Testing philosophy
-- **[Views Layer](./architecture/VIEWS_LAYER.md)** - View controllers in detail
-- **[System Overview](./architecture/SYSTEM_OVERVIEW.md)** - High-level architecture
+- **[Getting Started Guide](../guides/GETTING_STARTED.md)** - Setup and first steps
+- **[API Reference](../api/API_REFERENCE.md)** - Complete API documentation
+- **[Developer Guide](../developer/DEVELOPER_GUIDE.md)** - Development workflows
+- **[Testing Guide](../testing/TEST_STRATEGY.md)** - Testing philosophy
+- **[Views Layer](./VIEWS_LAYER.md)** - View controllers in detail
+- **[System Overview](./SYSTEM_OVERVIEW.md)** - High-level architecture
 
 ---
 

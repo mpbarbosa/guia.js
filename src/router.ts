@@ -4,7 +4,7 @@
  * Uses hash mode to mirror the existing custom hash-router in app.js.
  * Routes match the paths defined in src/config/routes.js.
  *
- * @since 0.12.4-alpha
+ * @since 0.12.5-alpha
  */
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
 import { defineAsyncComponent } from 'vue';

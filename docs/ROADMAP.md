@@ -1,6 +1,6 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
-**Current Version**: `0.12.2-alpha` | **Status**: Active Development
+**Current Version**: `0.12.3-alpha` | **Status**: Active Development
 **Last Updated**: 2026-03-10
 
 ---

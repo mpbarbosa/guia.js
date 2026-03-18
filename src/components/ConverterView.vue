@@ -6,7 +6,7 @@
  * Converts latitude/longitude coordinates to a human-readable address using
  * the Nominatim reverse-geocoding API.
  *
- * @since 0.12.3-alpha
+ * @since 0.12.4-alpha
  */
 import { ref, computed } from 'vue';
 import { escapeHtml } from '../utils/html-sanitizer.js';

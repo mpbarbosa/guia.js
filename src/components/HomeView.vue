@@ -8,7 +8,7 @@
  *
  * Full template migration (from index.html) happens in Phase 4.
  *
- * @since 0.12.3-alpha
+ * @since 0.12.4-alpha
  */
 import { ref, onMounted, onUnmounted } from 'vue';
 import HomeViewController from '../views/home.js';

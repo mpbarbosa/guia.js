@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { resolve, dirname } from 'path';
 import { existsSync } from 'fs';
@@ -17,102 +17,119 @@ function resolveJsToTs() {
   };
 }
 
-export default defineConfig({
-  plugins: [resolveJsToTs(), vue()],
-  root: 'src',
-  base: './',
-  envDir: '..', // .env files live in project root, not in src/
-  publicDir: '../public', // Copy libs/ and service-worker.js from public/
-  
-  build: {
-    outDir: '../dist',
-    emptyOutDir: true,
-    minify: 'terser',
-    sourcemap: true,
-    target: 'es2022', // Support modern browsers with top-level await
-    
-    terserOptions: {
-      compress: {
-        drop_console: false, // Keep console logs for debugging
-        drop_debugger: true,
-      },
-    },
-    
-    rollupOptions: {
-      input: {
-        main: './src/index.html',
-      },
-      output: {
-        // Let Vite automatically chunk based on dynamic imports
-        // This is simpler and more maintainable
-        manualChunks(id) {
-          // MapLibre GL JS gets its own chunk (large, ~900KB)
-          if (id.includes('maplibre-gl')) {
-            return 'map';
-          }
+export default defineConfig(({ mode }) => {
+  const envVars = loadEnv(mode, process.cwd(), '');
 
-          // Vendor chunks for external dependencies
-          if (id.includes('node_modules')) {
-            return 'vendor';
-          }
-          
-          // Speech synthesis modules
-          if (id.includes('/speech/')) {
-            return 'speech';
-          }
-          
-          // Core modules
-          if (id.includes('/core/')) {
-            return 'core';
-          }
-          
-          // Services
-          if (id.includes('/services/')) {
-            return 'services';
-          }
-          
-          // Data processing
-          if (id.includes('/data/')) {
-            return 'data';
-          }
-          
-          // HTML displayers
-          if (id.includes('/html/')) {
-            return 'html';
-          }
-          
-          // Coordination
-          if (id.includes('/coordination/')) {
-            return 'coordination';
-          }
+  // When VITE_AWS_LBS_BASE_URL is empty the browser uses relative /api/* URLs,
+  // which this proxy forwards to AWS server-side — no CORS preflight needed.
+  const awsProxyTarget =
+    envVars.VITE_AWS_LBS_BASE_URL ||
+    'https://b2inkriw8k.execute-api.us-east-1.amazonaws.com';
+
+  return {
+    plugins: [resolveJsToTs(), vue()],
+    root: 'src',
+    base: './',
+    envDir: '..', // .env files live in project root, not in src/
+    publicDir: '../public', // Copy libs/ and service-worker.js from public/
+    
+    build: {
+      outDir: '../dist',
+      emptyOutDir: true,
+      minify: 'terser',
+      sourcemap: true,
+      target: 'es2022', // Support modern browsers with top-level await
+      
+      terserOptions: {
+        compress: {
+          drop_console: false, // Keep console logs for debugging
+          drop_debugger: true,
         },
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]',
+      },
+      
+      rollupOptions: {
+        input: {
+          main: './src/index.html',
+        },
+        output: {
+          // Let Vite automatically chunk based on dynamic imports
+          // This is simpler and more maintainable
+          manualChunks(id) {
+            // MapLibre GL JS gets its own chunk (large, ~900KB)
+            if (id.includes('maplibre-gl')) {
+              return 'map';
+            }
+
+            // Vendor chunks for external dependencies
+            if (id.includes('node_modules')) {
+              return 'vendor';
+            }
+            
+            // Speech synthesis modules
+            if (id.includes('/speech/')) {
+              return 'speech';
+            }
+            
+            // Core modules
+            if (id.includes('/core/')) {
+              return 'core';
+            }
+            
+            // Services
+            if (id.includes('/services/')) {
+              return 'services';
+            }
+            
+            // Data processing
+            if (id.includes('/data/')) {
+              return 'data';
+            }
+            
+            // HTML displayers
+            if (id.includes('/html/')) {
+              return 'html';
+            }
+            
+            // Coordination
+            if (id.includes('/coordination/')) {
+              return 'coordination';
+            }
+          },
+          chunkFileNames: 'assets/[name]-[hash].js',
+          entryFileNames: 'assets/[name]-[hash].js',
+          assetFileNames: 'assets/[name]-[hash].[ext]',
+        },
+      },
+      
+      // Performance optimizations
+      chunkSizeWarningLimit: 500,
+    },
+    
+    // Development server configuration
+    server: {
+      port: 9000,
+      strictPort: false,
+      open: false, // Don't auto-open browser
+      cors: true,
+      proxy: {
+        '/api': {
+          target: awsProxyTarget,
+          changeOrigin: true,
+          secure: true,
+        },
       },
     },
     
-    // Performance optimizations
-    chunkSizeWarningLimit: 500,
-  },
-  
-  // Development server configuration
-  server: {
-    port: 9000,
-    strictPort: false,
-    open: false, // Don't auto-open browser
-    cors: true,
-  },
-  
-  // Preview server configuration
-  preview: {
-    port: 9001,
-    strictPort: false,
-    open: false, // Don't auto-open browser
-  },
-  
-  // Optimize dependencies
-  optimizeDeps: {
-    include: ['guia.js', 'ibira.js'],
-  },
+    // Preview server configuration
+    preview: {
+      port: 9001,
+      strictPort: false,
+      open: false, // Don't auto-open browser
+    },
+    
+    // Optimize dependencies
+    optimizeDeps: {
+      include: ['guia.js', 'ibira.js'],
+    },
+  };
 });

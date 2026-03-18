@@ -41,6 +41,10 @@ export const productionCSP = {
     'https://servicodados.ibge.gov.br', // IBGE API
     'https://www.google-analytics.com' // If analytics enabled
   ],
+  'worker-src': [
+    "'self'", // For service-worker.js loaded from same origin
+    'blob:'   // For workers created via blob URLs
+  ],
   'base-uri': ["'self'"],
   'form-action': ["'self'"]
   // NOTE: 'frame-ancestors' cannot be used in <meta> tags, only in HTTP headers
@@ -79,6 +83,10 @@ export const developmentCSP = {
     'https://servicodados.ibge.gov.br',
     'http://localhost:*', // Local development servers
     'ws://localhost:*' // WebSocket for hot reload
+  ],
+  'worker-src': [
+    "'self'", // For service-worker.js loaded from same origin
+    'blob:'   // For workers created via blob URLs
   ],
   'base-uri': ["'self'"],
   'form-action': ["'self'"]

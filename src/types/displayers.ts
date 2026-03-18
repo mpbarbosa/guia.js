@@ -1,7 +1,7 @@
 /**
  * Shared TypeScript interfaces for HTML displayer components
  *
- * @since 0.12.2-alpha
+ * @since 0.12.3-alpha
  */
 
 /** Observer interface — all displayers implement this */

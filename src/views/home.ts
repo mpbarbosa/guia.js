@@ -553,10 +553,12 @@ class HomeViewController {
    * @example
    * await controller.getSingleLocationUpdate();
    */
-  async getSingleLocationUpdate(): Promise<GeolocationPosition> {
+  async getSingleLocationUpdate(options?: { silent?: boolean }): Promise<GeolocationPosition> {
     if (!this.initialized) {
       throw new Error('HomeViewController not initialized. Call init() first.');
     }
+
+    const silent = options?.silent ?? false;
     
     if (!this.manager || !this.manager.serviceCoordinator) {
       throw new Error('ServiceCoordinator not available');
@@ -590,8 +592,9 @@ class HomeViewController {
     } catch (err) {
       error('HomeViewController: Single location update failed:', err);
       
-      // Display error via manager
-      if (this.manager && typeof this.manager._displayError === 'function') {
+      // Display error via manager unless called silently (e.g. from startTracking
+      // where the watch is already active and will recover on its own).
+      if (!silent && this.manager && typeof this.manager._displayError === 'function') {
         this.manager._displayError(err);
       }
       
@@ -634,8 +637,10 @@ class HomeViewController {
         this.manager.speechCoordinator.initializeSpeechSynthesis();
       }
       
-      // Get initial location and start continuous tracking
-      this.getSingleLocationUpdate().catch(err => {
+      // Get initial location without surfacing errors — the continuous watch
+      // is started immediately below and will deliver a position once the
+      // device acquires one, so a timeout here is not user-actionable.
+      this.getSingleLocationUpdate({ silent: true }).catch(err => {
         warn('HomeViewController: Initial location update failed:', err.message);
         // Continue with tracking even if initial update fails
       });

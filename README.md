@@ -4,7 +4,7 @@
 
 Last Updated: 2026-02-23
 Status: Active
-version: 0.12.2-alpha
+version: 0.12.3-alpha
 ---
 
 [![Tests](https://img.shields.io/badge/tests-3074%20passing%20%2F%203242%20total-green)](https://github.com/mpbarbosa/guia_turistico)

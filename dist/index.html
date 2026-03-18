@@ -4,7 +4,7 @@
     <meta name="version" content="0.9.0-alpha" data-source="src/config/version.js">
     
     <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com https://demotiles.maplibre.org; worker-src blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com https://demotiles.maplibre.org; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'">
     
     <!-- Security Headers (meta tag fallback for static hosting) -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -451,16 +451,16 @@
         margin-bottom: 2rem;
       }
     </style>
-    <script type="module" crossorigin src="./assets/main-BrKzZZ3K.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/core-BclQXFov.js">
-    <link rel="modulepreload" crossorigin href="./assets/speech-D5d8Uy7d.js">
-    <link rel="modulepreload" crossorigin href="./assets/data-54PqpbrR.js">
-    <link rel="modulepreload" crossorigin href="./assets/services-IY9QAVS9.js">
+    <script type="module" crossorigin src="./assets/main-CTwQxU3v.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/core-V8StNg0n.js">
+    <link rel="modulepreload" crossorigin href="./assets/speech-mKZCxeu_.js">
+    <link rel="modulepreload" crossorigin href="./assets/data-U0D6GpbC.js">
+    <link rel="modulepreload" crossorigin href="./assets/services-KbGp2D8g.js">
     <link rel="modulepreload" crossorigin href="./assets/map-WLs8NypD.js">
-    <link rel="modulepreload" crossorigin href="./assets/html-DvmIygZ5.js">
-    <link rel="modulepreload" crossorigin href="./assets/coordination-DZImoX_D.js">
+    <link rel="modulepreload" crossorigin href="./assets/html-BtDacn2_.js">
+    <link rel="modulepreload" crossorigin href="./assets/coordination-C0q30IZB.js">
     <link rel="stylesheet" crossorigin href="./assets/map-DwUhsmFz.css">
-    <link rel="stylesheet" crossorigin href="./assets/main-DOXUA45U.css">
+    <link rel="stylesheet" crossorigin href="./assets/main-DYARB2-Z.css">
   </head>
   <body><div class="navigation-progress" role="progressbar" aria-label="Progresso de navegação"><div class="navigation-progress-bar" style="width: 0%;"></div></div>
     
@@ -569,6 +569,9 @@
           <span class="hero-title-onde">Onde</span>
           <span class="hero-title-estou">estou?</span>
         </h1>
+
+        <!-- Live location subtitle (updated by HTMLHeaderDisplayer) -->
+        <p id="header-location-text" class="hero-location-text" aria-live="polite" data-pending="true">— · —</p>
 
       </header>
 
@@ -754,6 +757,13 @@
       <div id="lbs-provider-indicator" class="lbs-provider-indicator" role="status" aria-live="polite" aria-label="Serviço de localização utilizado">
         <span class="lbs-provider-icon" aria-hidden="true">📡</span>
         <span id="lbs-provider-name" class="lbs-provider-name">Aguardando localização...</span>
+        <button
+          id="provider-switch-btn"
+          class="provider-switch-btn"
+          hidden
+          aria-label="Alternar provedor de geocodificação"
+          title="Alternar entre Nominatim e AWS"
+        >↔</button>
       </div>
       
       <!-- Version Info Modal -->

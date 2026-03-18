@@ -99,8 +99,8 @@ class ReverseGeocoder {
 	lastFetch: number;
 	fetchManager: { fetch(url: string): Promise<unknown>; subscribe(observer: unknown, url: string): void; observers?: unknown[] } | null;
 	AddressDataExtractor: { getBrazilianStandardAddress(data: unknown): unknown } | null;
-	subscribe!: (observer: unknown) => void;
-	unsubscribe!: (observer: unknown) => void;
+	declare subscribe: (observer: unknown) => void;
+	declare unsubscribe: (observer: unknown) => void;
 
 	/**
 	 * Creates a new ReverseGeocoder instance.

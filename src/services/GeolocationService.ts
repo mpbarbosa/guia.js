@@ -29,7 +29,7 @@
  */
 
 import PositionManager from '../core/PositionManager.js';
-import { log, error } from '../utils/logger.js';
+import { log, warn, error } from '../utils/logger.js';
 import { GEOLOCATION_OPTIONS, MOBILE_GEOLOCATION_OPTIONS } from '../config/defaults.js';
 import { isMobileDevice } from '../utils/device.js';
 import BrowserGeolocationProvider from './providers/BrowserGeolocationProvider.js';
@@ -338,6 +338,40 @@ class GeolocationService {
 					resolve(position);
 				},
 				(err) => {
+					// On TIMEOUT (code 3), retry once with low-accuracy (WiFi/IP) which is faster
+					if (err.code === 3 && this.config.geolocationOptions.enableHighAccuracy !== false) {
+						warn("(GeolocationService) High-accuracy timed out, retrying with low accuracy...");
+						const fallbackOptions: PositionOptions = {
+							...this.config.geolocationOptions,
+							enableHighAccuracy: false,
+							timeout: 10000
+						};
+						this.provider.getCurrentPosition(
+							(position) => {
+								log(">>> (GeolocationService) Low-accuracy fallback successful");
+								this.isPendingRequest = false;
+								this.pendingPromise = null;
+								this.lastKnownPosition = position;
+								this.positionManager.update(position);
+								if (this.locationResult) {
+									this.updateLocationDisplay(position);
+								}
+								resolve(position);
+							},
+							(fallbackErr) => {
+								this.isPendingRequest = false;
+								this.pendingPromise = null;
+								error("(GeolocationService) Single location update failed:", fallbackErr.message || fallbackErr);
+								if (this.locationResult) {
+									this.updateErrorDisplay(fallbackErr);
+								}
+								reject(formatGeolocationError(fallbackErr));
+							},
+							fallbackOptions
+						);
+						return; // Await fallback result; do not reject yet
+					}
+
 					this.isPendingRequest = false;
 					this.pendingPromise = null;
 					// Privacy: Log error without coordinates
@@ -402,7 +436,14 @@ class GeolocationService {
 				}
 			},
 			(err) => {
-				// Privacy: Log error without coordinates
+				// Timeout (code 3) is transient for a continuous watch — the watch
+				// keeps running and will deliver a fix once the device acquires one.
+				// Only surface fatal errors (permission denied, position unavailable).
+				if (err.code === 3) {
+					warn("(GeolocationService) Position watch timeout (watch continues):", err.message || err);
+					return;
+				}
+
 				error("(GeolocationService) Position watch error:", err.message || err);
 
 				// Update display with error if element is available

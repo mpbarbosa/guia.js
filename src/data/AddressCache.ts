@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 /**
  * Address cache with LRU eviction and change detection.
  * 
@@ -22,7 +22,6 @@
 import ObserverSubject from '../core/ObserverSubject.js';
 import { withObserver } from '../utils/ObserverMixin.js';
 import AddressExtractor from './AddressExtractor.js';
-import BrazilianStandardAddress from './BrazilianStandardAddress.js'; // eslint-disable-line no-unused-vars
 import LRUCache from './LRUCache.js';
 import { log } from '../utils/logger.js';
 import timerManager from '../utils/TimerManager.js';
@@ -40,7 +39,7 @@ class AddressCache {
 	 * @type {AddressCache|null}
 	 * @private
 	 */
-	static instance = null;
+	static instance: AddressCache | null = null;
 
 	/**
 	 * Gets or creates the singleton AddressCache instance.
@@ -52,11 +51,11 @@ class AddressCache {
 	 * @returns {AddressCache} The singleton AddressCache instance
 	 * @since 0.9.0-alpha
 	 */
-	static getInstance() {
+	static getInstance(): AddressCache {
 		if (!AddressCache.instance) {
 			AddressCache.instance = new AddressCache();
 		}
-		return AddressCache.instance;
+		return AddressCache.instance!;
 	}
 
 	/**
@@ -74,6 +73,24 @@ class AddressCache {
 	 * @private
 	 * @since 0.9.0-alpha
 	 */
+	observerSubject!: ObserverSubject;
+	subscribe!: (observer: unknown) => void;
+	unsubscribe!: (observer: unknown) => void;
+	notifyObservers!: (...args: unknown[]) => void;
+	cache: LRUCache;
+	changeDetector: AddressChangeDetector;
+	callbackRegistry: CallbackRegistry;
+	dataStore: AddressDataStore;
+	lastNotifiedChangeSignature: string | null;
+	lastNotifiedBairroChangeSignature: string | null;
+	lastNotifiedMunicipioChangeSignature: string | null;
+	logradouroChangeCallback: ((details: unknown) => void) | null;
+	bairroChangeCallback: ((details: unknown) => void) | null;
+	municipioChangeCallback: ((details: unknown) => void) | null;
+	currentAddress: object | null;
+	previousAddress: object | null;
+	currentRawData: object | null;
+	previousRawData: object | null;
 	constructor() {
 		this.observerSubject = new ObserverSubject();
 		
@@ -116,8 +133,8 @@ class AddressCache {
 	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
-	generateCacheKey(data) {
-		return AddressDataStore.generateCacheKey(data);
+	generateCacheKey(data: unknown) {
+		return AddressDataStore.generateCacheKey(data as object | null);
 	}
 
 	/**
@@ -125,8 +142,8 @@ class AddressCache {
 	 * @deprecated Use getInstance().generateCacheKey() or AddressDataStore.generateCacheKey() instead
 	 * @static
 	 */
-	static generateCacheKey(data) {
-		return AddressDataStore.generateCacheKey(data);
+	static generateCacheKey(data: unknown) {
+		return AddressDataStore.generateCacheKey(data as object | null);
 	}
 
 	/**
@@ -224,7 +241,7 @@ class AddressCache {
 	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
-	setLogradouroChangeCallback(callback) {
+	setLogradouroChangeCallback(callback: ((details: unknown) => void) | null) {
 		this.callbackRegistry.register('logradouro', callback);
 		// Legacy: Keep property synchronized for backward compatibility
 		this.logradouroChangeCallback = callback;
@@ -235,7 +252,7 @@ class AddressCache {
 	 * @deprecated Use getInstance().setLogradouroChangeCallback() instead
 	 * @static
 	 */
-	static setLogradouroChangeCallback(callback) {
+	static setLogradouroChangeCallback(callback: ((details: unknown) => void) | null) {
 		return AddressCache.getInstance().setLogradouroChangeCallback(callback);
 	}
 
@@ -258,7 +275,7 @@ class AddressCache {
 	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
-	setBairroChangeCallback(callback) {
+	setBairroChangeCallback(callback: ((details: unknown) => void) | null) {
 		this.callbackRegistry.register('bairro', callback);
 		this.bairroChangeCallback = callback;
 	}
@@ -268,7 +285,7 @@ class AddressCache {
 	 * @deprecated Use getInstance().setBairroChangeCallback() instead
 	 * @static
 	 */
-	static setBairroChangeCallback(callback) {
+	static setBairroChangeCallback(callback: ((details: unknown) => void) | null) {
 		return AddressCache.getInstance().setBairroChangeCallback(callback);
 	}
 
@@ -291,7 +308,7 @@ class AddressCache {
 	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
-	setMunicipioChangeCallback(callback) {
+	setMunicipioChangeCallback(callback: ((details: unknown) => void) | null) {
 		this.callbackRegistry.register('municipio', callback);
 		this.municipioChangeCallback = callback;
 	}
@@ -301,7 +318,7 @@ class AddressCache {
 	 * @deprecated Use getInstance().setMunicipioChangeCallback() instead
 	 * @static
 	 */
-	static setMunicipioChangeCallback(callback) {
+	static setMunicipioChangeCallback(callback: ((details: unknown) => void) | null) {
 		return AddressCache.getInstance().setMunicipioChangeCallback(callback);
 	}
 
@@ -372,8 +389,8 @@ class AddressCache {
 	 * @since 0.9.0-alpha
 	 */
 	hasLogradouroChanged() {
-		const current = this.dataStore.getCurrent().address;
-		const previous = this.dataStore.getPrevious().address;
+		const current = this.dataStore.getCurrent().address as Record<string, unknown> | null;
+		const previous = this.dataStore.getPrevious().address as Record<string, unknown> | null;
 		
 		if (!current || !previous) {
 			return false;
@@ -413,8 +430,8 @@ class AddressCache {
 	 * @since 0.9.0-alpha
 	 */
 	hasBairroChanged() {
-		const current = this.dataStore.getCurrent().address;
-		const previous = this.dataStore.getPrevious().address;
+		const current = this.dataStore.getCurrent().address as Record<string, unknown> | null;
+		const previous = this.dataStore.getPrevious().address as Record<string, unknown> | null;
 		
 		if (!current || !previous) {
 			return false;
@@ -454,8 +471,8 @@ class AddressCache {
 	 * @since 0.9.0-alpha
 	 */
 	hasMunicipioChanged() {
-		const current = this.dataStore.getCurrent().address;
-		const previous = this.dataStore.getPrevious().address;
+		const current = this.dataStore.getCurrent().address as Record<string, unknown> | null;
+		const previous = this.dataStore.getPrevious().address as Record<string, unknown> | null;
 		
 		if (!current || !previous) {
 			return false;
@@ -496,8 +513,8 @@ class AddressCache {
 	getLogradouroChangeDetails() {
 		return this.changeDetector.getChangeDetails(
 			'logradouro',
-			this.dataStore.getCurrent().address,
-			this.dataStore.getPrevious().address
+			this.dataStore.getCurrent().address as Record<string, unknown> | null,
+			this.dataStore.getPrevious().address as Record<string, unknown> | null
 		);
 	}
 
@@ -519,8 +536,8 @@ class AddressCache {
 	 * @since 0.9.0-alpha
 	 */
 	getBairroChangeDetails() {
-		const current = this.dataStore.getCurrent().address;
-		const previous = this.dataStore.getPrevious().address;
+		const current = this.dataStore.getCurrent().address as Record<string, unknown> | null;
+		const previous = this.dataStore.getPrevious().address as Record<string, unknown> | null;
 		const currentRawData = this.dataStore.getCurrentRawData();
 		const previousRawData = this.dataStore.getPreviousRawData();
 		
@@ -568,12 +585,15 @@ class AddressCache {
 	 * @returns {string} Complete bairro string
 	 * @since 0.9.0-alpha
 	 */
-	_computeBairroCompleto(rawData) {
-		if (!rawData || !rawData.address) {
+	_computeBairroCompleto(rawData: unknown): string | null {
+		if (!rawData || typeof rawData !== 'object') {
 			return null;
 		}
-
-		const address = rawData.address;
+		const rd = rawData as { address?: { neighbourhood?: string; suburb?: string; quarter?: string } };
+		if (!rd.address) {
+			return null;
+		}
+		const address = rd.address;
 		const neighbourhood = address.neighbourhood || null;
 		const suburb = address.suburb || null;
 		const quarter = address.quarter || null;
@@ -596,8 +616,8 @@ class AddressCache {
 	 * @since 0.9.0-alpha
 	 */
 	getMunicipioChangeDetails() {
-		const current = this.dataStore.getCurrent().address;
-		const previous = this.dataStore.getPrevious().address;
+		const current = this.dataStore.getCurrent().address as Record<string, unknown> | null;
+		const previous = this.dataStore.getPrevious().address as Record<string, unknown> | null;
 		
 		const currentMunicipio = current?.municipio ?? undefined;
 		const previousMunicipio = previous?.municipio ?? undefined;
@@ -637,7 +657,7 @@ class AddressCache {
 	 * @returns {BrazilianStandardAddress} Standardized address object
 	 * @since 0.9.0-alpha
 	 */
-	getBrazilianStandardAddress(data) {
+	getBrazilianStandardAddress(data: unknown) {
 		const cacheKey = this.generateCacheKey(data);
 
 		if (cacheKey) {
@@ -645,7 +665,7 @@ class AddressCache {
 			this.cleanExpiredEntries();
 
 			// Check if we have a valid cached entry
-			const cached = this.cache.get(cacheKey);
+			const cached = this.cache.get(cacheKey) as { address: unknown; rawData: unknown } | null;
 			if (cached) {
 				// LRUCache.get() already handles expiration and LRU updates
 				return cached.address;
@@ -653,7 +673,7 @@ class AddressCache {
 		}
 
 		// Create new standardized address using AddressExtractor
-		const extractor = new AddressExtractor(data);
+		const extractor = new AddressExtractor(data as object);
 
 		// Cache the result if we have a valid key
 		if (cacheKey) {
@@ -664,7 +684,7 @@ class AddressCache {
 			});
 
 			// Update data store with new address and raw data (v0.9.0-alpha refactoring)
-			this.dataStore.update(extractor.enderecoPadronizado, data);
+			this.dataStore.update(extractor.enderecoPadronizado, data as object | null);
 			
 			// Sync legacy properties for backward compatibility
 			this.currentAddress = this.dataStore.getCurrent().address;
@@ -686,10 +706,10 @@ class AddressCache {
 				const changeDetails = this.getLogradouroChangeDetails();
 				try {
 					this.logradouroChangeCallback(changeDetails);
-				} catch (error) {
-					error(
+				} catch (callbackError) {
+					console.error(
 						"(AddressCache) Error calling logradouro change callback:",
-						error,
+						callbackError,
 					);
 				}
 			}
@@ -701,10 +721,10 @@ class AddressCache {
 				const changeDetails = this.getBairroChangeDetails();
 				try {
 					this.bairroChangeCallback(changeDetails);
-				} catch (error) {
-					error(
+				} catch (callbackError) {
+					console.error(
 						"(AddressCache) Error calling bairro change callback:",
-						error,
+						callbackError,
 					);
 				}
 			}
@@ -716,10 +736,10 @@ class AddressCache {
 				const changeDetails = this.getMunicipioChangeDetails();
 				try {
 					this.municipioChangeCallback(changeDetails);
-				} catch (error) {
-					error(
+				} catch (callbackError) {
+					console.error(
 						"(AddressCache) Error calling municipio change callback:",
-						error,
+						callbackError,
 					);
 				}
 			}
@@ -739,7 +759,7 @@ class AddressCache {
 	 * @deprecated Use getInstance().getBrazilianStandardAddress() instead
 	 * @static
 	 */
-	static getBrazilianStandardAddress(data) {
+	static getBrazilianStandardAddress(data: unknown) {
 		return AddressCache.getInstance().getBrazilianStandardAddress(data);
 	}
 
@@ -765,7 +785,7 @@ class AddressCache {
 	 * @deprecated Use getInstance().subscribe() instead
 	 * @static
 	 */
-	static subscribe(observer) {
+	static subscribe(observer: unknown) {
 		return AddressCache.getInstance().subscribe(observer);
 	}
 
@@ -774,7 +794,7 @@ class AddressCache {
 	 * @deprecated Use getInstance().unsubscribe() instead
 	 * @static
 	 */
-	static unsubscribe(observer) {
+	static unsubscribe(observer: unknown) {
 		return AddressCache.getInstance().unsubscribe(observer);
 	}
 
@@ -783,7 +803,7 @@ class AddressCache {
 	 * @deprecated Use getInstance().notifyObservers() instead
 	 * @static
 	 */
-	static notifyObservers(event) {
+	static notifyObservers(event: unknown) {
 		return AddressCache.getInstance().notifyObservers(event);
 	}
 
@@ -800,7 +820,7 @@ class AddressCache {
 		return AddressCache.getInstance().getCacheSize();
 	}
 
-	subscribeFunction(fn) {
+	subscribeFunction(fn: (...args: unknown[]) => void) {
 		return this.observerSubject.subscribeFunction(fn);
 	}
 
@@ -809,11 +829,11 @@ class AddressCache {
 	 * @deprecated Use getInstance().subscribeFunction() instead
 	 * @static
 	 */
-	static subscribeFunction(fn) {
+	static subscribeFunction(fn: (...args: unknown[]) => void) {
 		return AddressCache.getInstance().subscribeFunction(fn);
 	}
 
-	unsubscribeFunction(fn) {
+	unsubscribeFunction(fn: (...args: unknown[]) => void) {
 		return this.observerSubject.unsubscribeFunction(fn);
 	}
 
@@ -822,11 +842,11 @@ class AddressCache {
 	 * @deprecated Use getInstance().unsubscribeFunction() instead
 	 * @static
 	 */
-	static unsubscribeFunction(fn) {
+	static unsubscribeFunction(fn: (...args: unknown[]) => void) {
 		return AddressCache.getInstance().unsubscribeFunction(fn);
 	}
 
-	notifyFunctions(event) {
+	notifyFunctions(event: unknown) {
 		this.observerSubject.notifyFunctionObservers(event);
 	}
 
@@ -835,7 +855,7 @@ class AddressCache {
 	 * @deprecated Use getInstance().notifyFunctions() instead
 	 * @static
 	 */
-	static notifyFunctions(event) {
+	static notifyFunctions(event: unknown) {
 		return AddressCache.getInstance().notifyFunctions(event);
 	}
 
@@ -1122,7 +1142,7 @@ class AddressCache {
 		this.clearCache();
 		
 		// Release references to prevent memory leaks
-		this.observerSubject = null;
+		this.observerSubject = null!;
 		this.logradouroChangeCallback = null;
 		this.bairroChangeCallback = null;
 		this.municipioChangeCallback = null;

@@ -17,6 +17,9 @@ declare global {
       geocoder?: ReverseGeocoder;
       [key: string]: unknown;
     };
+    ibiraLoadingPromise?: Promise<void>;
+    IbiraAPIFetchManager?: new(config: object) => unknown;
+    ErrorRecovery?: { displayError(title: string, message: string): void };
   }
 }
 

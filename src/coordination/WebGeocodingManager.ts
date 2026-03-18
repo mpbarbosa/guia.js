@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 /**
  * WebGeocodingManager - Main coordination class for geocoding workflow
  * @version 0.9.0-alpha
@@ -149,6 +149,19 @@ const DEFAULT_ELEMENT_IDS = {
 Object.freeze(DEFAULT_ELEMENT_IDS.speechSynthesis);
 Object.freeze(DEFAULT_ELEMENT_IDS);
 
+interface WebGeocodingManagerParams {
+	locationResult: string | HTMLElement;
+	elementIds?: typeof DEFAULT_ELEMENT_IDS;
+	displayerFactory?: unknown;
+	geolocationService?: unknown;
+	reverseGeocoder?: unknown;
+	IbiraAPIFetchManager?: unknown;
+	positionDisplay?: HTMLElement | null;
+	enderecoPadronizadoDisplay?: HTMLElement | null;
+	referencePlaceDisplay?: HTMLElement | null;
+	sidraDisplay?: HTMLElement | null;
+}
+
 /**
  * Main coordination class for geocoding workflow in the Guia.js application.
  * 
@@ -191,6 +204,24 @@ Object.freeze(DEFAULT_ELEMENT_IDS);
  * manager.startTracking();
  */
 class WebGeocodingManager {
+	document!: Document;
+	locationResult: HTMLElement | null;
+	elementIds!: typeof DEFAULT_ELEMENT_IDS;
+	positionDisplay: HTMLElement | null;
+	enderecoPadronizadoDisplay: HTMLElement | null;
+	referencePlaceDisplay: HTMLElement | null;
+	sidraDisplay: HTMLElement | null;
+	displayerFactory: unknown;
+	observerSubject!: ObserverSubject;
+	geocodingState!: InstanceType<typeof GeocodingState>;
+	uiCoordinator!: UICoordinator;
+	eventCoordinator!: EventCoordinator;
+	serviceCoordinator!: ServiceCoordinator;
+	changeDetectionCoordinator!: ChangeDetectionCoordinator;
+	speechCoordinator!: SpeechCoordinator;
+	reverseGeocoder!: ReverseGeocoder;
+	geolocationService: unknown;
+
 	/**
 	 * Creates a new WebGeocodingManager instance after waiting for Ibira.js to load.
 	 * 
@@ -215,7 +246,7 @@ class WebGeocodingManager {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	static async createAsync(document, params) {
+	static async createAsync(document: Document, params: WebGeocodingManagerParams): Promise<WebGeocodingManager> {
 		// Wait for Ibira.js loading to complete
 		if (typeof window !== 'undefined' && window.ibiraLoadingPromise) {
 			await window.ibiraLoadingPromise;
@@ -285,7 +316,7 @@ class WebGeocodingManager {
 	 *   reverseGeocoder: mockGeocoder
 	 * });
 	 */
-	constructor(document, params) {
+	constructor(document: Document, params: WebGeocodingManagerParams) {
 		// Validate required parameters
 		if (!document) {
 			throw new TypeError('WebGeocodingManager requires a document object');
@@ -353,13 +384,19 @@ class WebGeocodingManager {
 		this.changeDetectionCoordinator.setAddressDataExtractor(AddressDataExtractor);
 		
 		// ServiceCoordinator replaces service initialization and coordination
-		this.serviceCoordinator = new ServiceCoordinator({
-			geolocationService: params.geolocationService || new GeolocationService(this.locationResult),
+		this.serviceCoordinator = new (ServiceCoordinator as unknown as new(p: {
+			geolocationService: GeolocationService;
+			reverseGeocoder: ReverseGeocoder;
+			changeDetectionCoordinator: ChangeDetectionCoordinator;
+			observerSubject: ObserverSubject;
+			displayerFactory?: typeof DisplayerFactory;
+			document?: Document;
+		}) => ServiceCoordinator)({
+			geolocationService: (params.geolocationService as GeolocationService | undefined) ?? new GeolocationService(this.locationResult),
 			reverseGeocoder: this.reverseGeocoder,
 			changeDetectionCoordinator: this.changeDetectionCoordinator,
 			observerSubject: this.observerSubject,
-			locationResultElement: this.locationResult,
-			displayerFactory: this.displayerFactory,
+			displayerFactory: (this.displayerFactory ?? DisplayerFactory) as typeof DisplayerFactory,
 			document: document
 		});
 
@@ -385,8 +422,8 @@ class WebGeocodingManager {
 		this.speechCoordinator = new SpeechCoordinator(
 			document,
 			this.elementIds.speechSynthesis,
-			this.reverseGeocoder,
-			this.observerSubject
+			this.reverseGeocoder as unknown as { subscribe(o: unknown): void; unsubscribe(o: unknown): void },
+			this.observerSubject as unknown as { subscribe(o: unknown): void; unsubscribe(o: unknown): void }
 		);
 		
 		// Expose geolocationService for backward compatibility
@@ -425,7 +462,7 @@ class WebGeocodingManager {
 	 * Sets current coordinates in GeocodingState (backward compatibility).
 	 * @param {Object} coords - Coordinates object to store
 	 */
-	set currentCoords(coords) {
+	set currentCoords(coords: { latitude: number; longitude: number; accuracy?: number } | null) {
 		if (coords) {
 			const position = new GeoPosition({
 				coords: {
@@ -445,17 +482,17 @@ class WebGeocodingManager {
 	 * @param {Object} params - Constructor parameters
 	 * @private
 	 */
-	_initializeFetchManager(params) {
-		let fetchManager = null;
+	_initializeFetchManager(params: WebGeocodingManagerParams): void {
+		let fetchManager: ReverseGeocoder['fetchManager'] = null;
 		
 		// Try to get IbiraAPIFetchManager from various sources
-		const IbiraAPIFetchManagerClass = params.IbiraAPIFetchManager || 
+		const IbiraAPIFetchManagerClass = params.IbiraAPIFetchManager as (new(cfg: unknown) => unknown) | undefined ||
 			(typeof window !== 'undefined' && window.IbiraAPIFetchManager) ||
-			(typeof global !== 'undefined' && global.IbiraAPIFetchManager);
+			(typeof globalThis !== 'undefined' && (globalThis as { IbiraAPIFetchManager?: new(cfg: unknown) => unknown }).IbiraAPIFetchManager);
 
 		if (IbiraAPIFetchManagerClass) {
 			try {
-				fetchManager = new IbiraAPIFetchManagerClass({
+				fetchManager = new (IbiraAPIFetchManagerClass as new(cfg: object) => NonNullable<ReverseGeocoder['fetchManager']>)({
 					maxCacheSize: 100,           // Maximum cache entries
 					cacheExpiration: 300000,     // 5 minutes cache expiration
 					cleanupInterval: 60000,      // Cleanup every minute
@@ -464,8 +501,8 @@ class WebGeocodingManager {
 					retryMultiplier: 2           // Exponential backoff
 				});
 				log('(WebGeocodingManager) Using IbiraAPIFetchManager');
-			} catch (error) {
-				warn('(WebGeocodingManager) Failed to create IbiraAPIFetchManager:', error.message);
+			} catch (e) {
+				warn('(WebGeocodingManager) Failed to create IbiraAPIFetchManager:', (e as Error).message);
 				fetchManager = null;
 			}
 		} else {
@@ -474,7 +511,7 @@ class WebGeocodingManager {
 
 		// Create reverse geocoder with or without fetch manager
 		// Pass CORS configuration from defaults
-		this.reverseGeocoder = params.reverseGeocoder ||
+		this.reverseGeocoder = (params.reverseGeocoder as ReverseGeocoder | undefined) ||
 			new ReverseGeocoder(fetchManager, {
 				corsProxy: CORS_PROXY,
 				enableCorsFallback: ENABLE_CORS_FALLBACK
@@ -521,7 +558,7 @@ class WebGeocodingManager {
 	 * @returns {Object|null} Position displayer or null
 	 */
 	get positionDisplayer() {
-		return this.serviceCoordinator.positionDisplayer;
+		return (this.serviceCoordinator as unknown as { positionDisplayer: unknown }).positionDisplayer;
 	}
 
 	/**
@@ -529,7 +566,7 @@ class WebGeocodingManager {
 	 * @returns {Object|null} Address displayer or null
 	 */
 	get addressDisplayer() {
-		return this.serviceCoordinator.addressDisplayer;
+		return (this.serviceCoordinator as unknown as { addressDisplayer: unknown }).addressDisplayer;
 	}
 
 	/**
@@ -537,7 +574,7 @@ class WebGeocodingManager {
 	 * @returns {Object|null} Reference place displayer or null
 	 */
 	get referencePlaceDisplayer() {
-		return this.serviceCoordinator.referencePlaceDisplayer;
+		return (this.serviceCoordinator as unknown as { referencePlaceDisplayer: unknown }).referencePlaceDisplayer;
 	}
 
 	/**
@@ -615,7 +652,7 @@ class WebGeocodingManager {
 	 *   log('Address changed:', endPad.enderecoCompleto());
 	 * });
 	 */
-	subscribeFunction(observerFunction) {
+	subscribeFunction(observerFunction: (...args: unknown[]) => void): void {
 		if (observerFunction == null) {
 			warn("(WebGeocodingManager) Attempted to subscribe a null observer function.");
 			return;
@@ -630,7 +667,7 @@ class WebGeocodingManager {
 	 * @param {Function} observerFunction - Function observer to unsubscribe
 	 * @returns {void}
 	 */
-	unsubscribeFunction(observerFunction) {
+	unsubscribeFunction(observerFunction: (...args: unknown[]) => void): void {
 		this.observerSubject.unsubscribeFunction(observerFunction);
 	}
 
@@ -746,8 +783,8 @@ class WebGeocodingManager {
 		observers.forEach(observerFunction => {
 			try {
 				observerFunction(...notificationData);
-			} catch (error) {
-				warn(`(WebGeocodingManager) Error notifying function observer:`, error.message);
+			} catch (e) {
+				warn(`(WebGeocodingManager) Error notifying function observer:`, (e as Error).message);
 				// Continue with other observers even if one fails
 			}
 		});
@@ -805,9 +842,9 @@ class WebGeocodingManager {
 				}
 				return position;
 			})
-			.catch((error) => {
-				this._displayError(error);
-				throw error;
+			.catch((e: unknown) => {
+				this._displayError(e as Error);
+				throw e;
 			});
 	}
 
@@ -960,7 +997,7 @@ class WebGeocodingManager {
 	 * @returns {void}
 	 * @private
 	 */
-	_displayError(errorObj) {
+	_displayError(errorObj: Error): void {
 		error("Display Error:", errorObj);
 
 		// Try to find a suitable element to display the error
@@ -977,7 +1014,7 @@ class WebGeocodingManager {
 					<h4>Erro</h4>
 					<p><strong>Tipo:</strong> ${errorObj.name || 'Error'}</p>
 					<p><strong>Mensagem:</strong> ${errorObj.message}</p>
-					${errorObj.code ? `<p><strong>Código:</strong> ${errorObj.code}</p>` : ''}
+					${(errorObj as Error & { code?: unknown }).code ? `<p><strong>Código:</strong> ${(errorObj as Error & { code?: unknown }).code}</p>` : ''}
 				</div>
 			`;
 		} else {
@@ -1010,12 +1047,12 @@ class WebGeocodingManager {
 			this.serviceCoordinator.destroy();
 		}
 		
-		if (this.eventCoordinator && typeof this.eventCoordinator.destroy === 'function') {
-			this.eventCoordinator.destroy();
+		if (this.eventCoordinator && typeof (this.eventCoordinator as unknown as { destroy?: () => void }).destroy === 'function') {
+			(this.eventCoordinator as unknown as { destroy(): void }).destroy();
 		}
 		
-		if (this.uiCoordinator && typeof this.uiCoordinator.destroy === 'function') {
-			this.uiCoordinator.destroy();
+		if (this.uiCoordinator && typeof (this.uiCoordinator as unknown as { destroy?: () => void }).destroy === 'function') {
+			(this.uiCoordinator as unknown as { destroy(): void }).destroy();
 		}
 		
 		if (this.geocodingState) {
@@ -1028,18 +1065,18 @@ class WebGeocodingManager {
 		}
 		
 		// Release coordinator references
-		this.serviceCoordinator = null;
-		this.eventCoordinator = null;
-		this.uiCoordinator = null;
-		this.geocodingState = null;
-		this.speechCoordinator = null;
+		this.serviceCoordinator = null!;
+		this.eventCoordinator = null!;
+		this.uiCoordinator = null!;
+		this.geocodingState = null!;
+		this.speechCoordinator = null!;
 		
 		// Release legacy references
-		this.reverseGeocoder = null;
+		this.reverseGeocoder = null!;
 		this.geolocationService = null;
-		this.changeDetectionCoordinator = null;
-		this.observerSubject = null;
-		this.document = null;
+		this.changeDetectionCoordinator = null!;
+		this.observerSubject = null!;
+		this.document = null!;
 	}
 
 	/**

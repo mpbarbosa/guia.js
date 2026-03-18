@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 /**
  * Reverse geocoding service for converting coordinates to addresses.
  * @version 0.9.0-alpha
@@ -53,7 +53,7 @@ import AwsGeocoder from './AwsGeocoder.js';
  * @returns {string} Complete API URL (with or without CORS proxy)
  * @private
  */
-const getOpenStreetMapUrl = (latitude, longitude, baseUrl, corsProxy = null) => {
+const getOpenStreetMapUrl = (latitude: number, longitude: number, baseUrl: string, corsProxy: string | null = null): string => {
 	const nominatimUrl = `${baseUrl}&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
 	// Wrap with CORS proxy if provided
 	return corsProxy ? `${corsProxy}${encodeURIComponent(nominatimUrl)}` : nominatimUrl;
@@ -83,6 +83,25 @@ const getOpenStreetMapUrl = (latitude, longitude, baseUrl, corsProxy = null) => 
  * @class ReverseGeocoder
  */
 class ReverseGeocoder {
+	latitude: number | null;
+	longitude: number | null;
+	url: string | null;
+	config: { openstreetmapBaseUrl: string; corsProxy: string | null; enableCorsFallback: boolean };
+	_awsGeocoder: { reverseGeocode(lat: number, lon: number): Promise<{ rawData: unknown; enderecoPadronizado: unknown }> } | null;
+	_primaryProvider: 'aws' | 'nominatim';
+	_corsRetryAttempted: boolean;
+	observerSubject!: ObserverSubject;
+	currentAddress: unknown;
+	enderecoPadronizado: unknown;
+	data: unknown;
+	error: unknown;
+	loading: boolean;
+	lastFetch: number;
+	fetchManager: { fetch(url: string): Promise<unknown>; subscribe(observer: unknown, url: string): void; observers?: unknown[] } | null;
+	AddressDataExtractor: { getBrazilianStandardAddress(data: unknown): unknown } | null;
+	subscribe!: (observer: unknown) => void;
+	unsubscribe!: (observer: unknown) => void;
+
 	/**
 	 * Creates a new ReverseGeocoder instance.
 	 * 
@@ -98,7 +117,23 @@ class ReverseGeocoder {
 	 * @param {boolean} [config.enableCorsFallback] - Auto-retry with CORS proxy on error
 	 * @param {AwsGeocoder} [config.awsGeocoder] - AWS geocoder instance (injected or auto-created)
 	 */
-	constructor(fetchManager, config = {}) {
+	constructor(fetchManager: typeof ReverseGeocoder.prototype.fetchManager, config: {
+		openstreetmapBaseUrl?: string;
+		corsProxy?: string | null;
+		enableCorsFallback?: boolean;
+		awsGeocoder?: ReverseGeocoder['_awsGeocoder'];
+	} = {}) {
+		// Initialize declared properties
+		this.latitude = null;
+		this.longitude = null;
+		this.url = null;
+		this.enderecoPadronizado = null;
+		this.data = null;
+		this.error = null;
+		this.loading = false;
+		this.lastFetch = 0;
+		this.AddressDataExtractor = null;
+
 		// Store fetch manager for API operations (supports IbiraAPIFetchManager or fallback)
 		this.fetchManager = fetchManager;
 		
@@ -145,10 +180,11 @@ class ReverseGeocoder {
 	 * 
 	 * @param {string} url - URL to monitor for fetch updates
 	 */
-	_subscribe(url) {
+	_subscribe(url: string) {
 		if (!this.fetchManager) return;
+		const fm = this.fetchManager;
 		this.observerSubject.observers.forEach((observer) => {
-			this.fetchManager.subscribe(observer, url);
+			fm.subscribe(observer, url);
 		});
 	}
 	
@@ -158,7 +194,7 @@ class ReverseGeocoder {
 	 * 
 	 * @param {...*} args - Arguments to pass to observer update() methods (typically address data)
 	 */
-	notifyObservers(...args) {
+	notifyObservers(...args: unknown[]) {
 		log("(ReverseGeocoder) Notifying observers with args:", args);
 		this.observerSubject.notifyObservers(...args);
 	}
@@ -184,7 +220,7 @@ class ReverseGeocoder {
 	 * @param {number} latitude - Latitude coordinate
 	 * @param {number} longitude - Longitude coordinate
 	 */
-	setCoordinates(latitude, longitude) {
+	setCoordinates(latitude: number, longitude: number) {
 		// Validate coordinates before processing to avoid unnecessary API calls
 		if (!latitude || !longitude) {
 			return;
@@ -241,7 +277,7 @@ class ReverseGeocoder {
 	 * @throws {Error} If coordinates are invalid or geocoding fails
 	 * @since 0.9.0-alpha
 	 */
-	async fetchAddress() {
+	async fetchAddress(): Promise<unknown> {
 		// Determine provider order. Reads from the runtime-switchable field so
 		// callers can use switchProvider() without restarting the application.
 		const primaryIsAws = this._primaryProvider !== 'nominatim';
@@ -265,7 +301,7 @@ class ReverseGeocoder {
 				);
 				return rawData;
 			} catch (awsErr) {
-				warn('(ReverseGeocoder.fetchAddress) AWS provider failed, falling back to Nominatim:', awsErr.message);
+				warn('(ReverseGeocoder.fetchAddress) AWS provider failed, falling back to Nominatim:', (awsErr as Error).message);
 			}
 		}
 
@@ -280,9 +316,9 @@ class ReverseGeocoder {
 			if (this.AddressDataExtractor) {
 				this.enderecoPadronizado = this.AddressDataExtractor.getBrazilianStandardAddress(addressData);
 				log('(ReverseGeocoder.fetchAddress) Standardized address:', {
-					municipio: this.enderecoPadronizado?.municipio,
-					bairro: this.enderecoPadronizado?.bairro,
-					siglaUF: this.enderecoPadronizado?.siglaUF
+					municipio: (this.enderecoPadronizado as Record<string, unknown> | null)?.municipio,
+					bairro: (this.enderecoPadronizado as Record<string, unknown> | null)?.bairro,
+					siglaUF: (this.enderecoPadronizado as Record<string, unknown> | null)?.siglaUF
 				});
 			}
 			
@@ -325,7 +361,7 @@ class ReverseGeocoder {
 					);
 					return rawData;
 				} catch (awsErr) {
-					warn('(ReverseGeocoder.fetchAddress) AWS fallback also failed:', awsErr.message);
+					warn('(ReverseGeocoder.fetchAddress) AWS fallback also failed:', (awsErr as Error).message);
 				}
 			}
 
@@ -335,7 +371,7 @@ class ReverseGeocoder {
 			let shouldRetryWithProxy = false;
 			
 			// Detect CORS errors
-			if (err.message && (err.message.includes('CORS') || err.message.includes('Failed to fetch'))) {
+			if ((err as Error).message && ((err as Error).message.includes('CORS') || (err as Error).message.includes('Failed to fetch'))) {
 				errorMessage = 'Não foi possível acessar o serviço de geocodificação.';
 				shouldNotifyUser = true;
 				shouldRetryWithProxy = this.config.enableCorsFallback && !this._corsRetryAttempted;
@@ -345,10 +381,10 @@ class ReverseGeocoder {
 				} else {
 					errorMessage += ' Verifique sua conexão ou consulte CORS_TROUBLESHOOTING.md';
 				}
-			} else if (err.message && err.message.includes('429')) {
+			} else if ((err as Error).message && (err as Error).message.includes('429')) {
 				errorMessage = 'Limite de requisições atingido. Aguarde alguns segundos e tente novamente.';
 				shouldNotifyUser = true;
-			} else if (err.message && err.message.includes('425')) {
+			} else if ((err as Error).message && (err as Error).message.includes('425')) {
 				errorMessage = 'Serviço temporariamente indisponível. Tente novamente em alguns segundos.';
 				shouldNotifyUser = true;
 			}
@@ -371,12 +407,11 @@ class ReverseGeocoder {
 				this._corsRetryAttempted = true;
 				
 				// Use allorigins.win as fallback CORS proxy
-				const _originalUrl = this.config.openstreetmapBaseUrl;
 				this.config.corsProxy = 'https://api.allorigins.win/raw?url=';
 				
 				try {
 					// Retry the fetch
-					const result = await this.fetchAddress();
+					const result: unknown = await this.fetchAddress();
 					
 					// Reset proxy after successful fetch
 					this.config.corsProxy = null;
@@ -429,7 +464,7 @@ class ReverseGeocoder {
 	 * @since 0.9.0-alpha
 	 * @author Marcelo Pereira Barbosa
 	 */
-	update(positionManager, posEvent, loading, error) {
+	update(positionManager: unknown, posEvent: unknown, _loading: unknown, _errState: unknown) {
 		log(`(ReverseGeocoder) update() called with posEvent: ${posEvent}`);
 		// DEPENDENCY MANAGEMENT:
 		// AddressDataExtractor is imported dynamically to avoid circular dependency
@@ -442,7 +477,7 @@ class ReverseGeocoder {
 		// INPUT VALIDATION:
 		// Validate positionManager and position data to ensure robust operation
 		// Following MP Barbosa standards for graceful degradation when data is unavailable
-		if (!positionManager || !positionManager.lastPosition) {
+		if (!positionManager || !(positionManager as { lastPosition?: unknown }).lastPosition) {
 			warn("(ReverseGeocoder) Invalid PositionManager or no last position.");
 			return;
 		}
@@ -459,7 +494,8 @@ class ReverseGeocoder {
 		// EVENT FILTERING AND COORDINATE EXTRACTION:
 		// Only process actual position updates, ignore other events for performance optimization
 		// Extract coordinates from position data with proper validation
-		const coords = positionManager.lastPosition.coords;
+		const pm = positionManager as { lastPosition: { coords: { latitude: number; longitude: number } } };
+		const coords = pm.lastPosition.coords;
 		if (coords && coords.latitude && coords.longitude) {
 			console.log('(ReverseGeocoder) Received position update with coordinates:', {
 				latitude: coords.latitude,
@@ -477,7 +513,7 @@ class ReverseGeocoder {
 					// Success path logs are already included in fetchAddress()
 					log('(ReverseGeocoder.update) Geocoding completed successfully');
 				})
-				.catch((err) => {
+				.catch((err: unknown) => {
 					// ERROR HANDLING:
 					// Log geocoding failures but DO NOT notify observers
 					// fetchAddress() already handles CORS retry and error notifications
@@ -585,8 +621,8 @@ class ReverseGeocoder {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
 				return await response.json();
-			} catch (error) {
-				throw error;
+			} catch (e) {
+				throw e;
 			}
 		}
 
@@ -597,10 +633,10 @@ class ReverseGeocoder {
 			// Fetch data using the configured URL with built-in caching and error handling
 			return await this.fetchManager.fetch(this.url);
 
-		} catch (error) {
+		} catch (e) {
 			// FIXED: Simplified error propagation - just re-throw the error
 			// Modern promise chains handle this automatically without manual catch/reject
-			throw error;
+			throw e;
 		}
 	}
 
@@ -686,7 +722,7 @@ class ReverseGeocoder {
 	 * @param {'aws'|'nominatim'} provider
 	 * @private
 	 */
-	_dispatchProviderEvent(provider) {
+	_dispatchProviderEvent(provider: 'aws' | 'nominatim'): void {
 		if (typeof window === 'undefined') return;
 		window.dispatchEvent(new CustomEvent('geocoder-provider-used', { detail: { provider } }));
 	}

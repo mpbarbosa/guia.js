@@ -19,12 +19,66 @@ import {
 } from '../../src/guia.js';
 
 // Mock document to prevent errors in test environment
-global.document = undefined;
+global.document = undefined as any;
+
+/**
+ * Interface for address data structure
+ */
+interface Address {
+    logradouro?: string;
+    bairro?: string;
+    municipio?: string;
+}
+
+/**
+ * Interface for mock reverse geocoder
+ */
+interface MockReverseGeocoder {
+    currentAddress: Address;
+    enderecoPadronizado: string;
+}
+
+/**
+ * Interface for coordinates
+ */
+interface Coordinates {
+    latitude: number;
+    longitude: number;
+}
+
+/**
+ * Interface for position with coordinates
+ */
+interface Position {
+    coords: Coordinates;
+    timestamp?: number;
+}
+
+/**
+ * Interface for change details
+ */
+interface ChangeDetails {
+    previous?: Address;
+    current?: Address;
+    to?: string;
+    from?: string;
+    field?: string;
+    hasChanged?: boolean;
+    currentAddress?: Address;
+    previousAddress?: Address;
+}
+
+/**
+ * Interface for mock observer
+ */
+interface MockObserver {
+    update: jest.Mock;
+}
 
 describe('ChangeDetectionCoordinator', () => {
-    let coordinator;
-    let mockReverseGeocoder;
-    let mockObserverSubject;
+    let coordinator: ChangeDetectionCoordinator;
+    let mockReverseGeocoder: MockReverseGeocoder;
+    let mockObserverSubject: ObserverSubject;
 
     beforeEach(() => {
         // Create mock reverse geocoder
@@ -276,9 +330,9 @@ describe('ChangeDetectionCoordinator', () => {
 
             coordinator.notifyMunicipioChangeObservers(changeDetails);
 
-            // For municipio, the full address is passed
+            // For municipio, the BrazilianStandardAddress is passed (not raw currentAddress)
             expect(mockObserver.update).toHaveBeenCalledWith(
-                mockReverseGeocoder.currentAddress,
+                mockReverseGeocoder.enderecoPadronizado,
                 'MunicipioChanged',
                 null,
                 changeDetails

@@ -403,7 +403,7 @@ class ChangeDetectionCoordinator {
 		this._notifyAddressChangeObservers(
 			changeDetails,
 			"MunicipioChanged",
-			this.reverseGeocoder.currentAddress, // Full address for municipio (backward compatible)
+			this.reverseGeocoder.enderecoPadronizado, // BrazilianStandardAddress (works with both Nominatim and AWS geocoder)
 			'(ChangeDetectionCoordinator) Notificando os observadores da mudança de município.'
 		);
 	}

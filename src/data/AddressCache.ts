@@ -74,9 +74,9 @@ class AddressCache {
 	 * @since 0.9.0-alpha
 	 */
 	observerSubject!: ObserverSubject;
-	subscribe!: (observer: unknown) => void;
-	unsubscribe!: (observer: unknown) => void;
-	notifyObservers!: (...args: unknown[]) => void;
+	declare subscribe: (observer: unknown) => void;
+	declare unsubscribe: (observer: unknown) => void;
+	declare notifyObservers: (...args: unknown[]) => void;
 	cache: LRUCache;
 	changeDetector: AddressChangeDetector;
 	callbackRegistry: CallbackRegistry;
@@ -634,6 +634,8 @@ class AddressCache {
 				municipio: previousMunicipio,
 				uf: previousUf
 			},
+			currentAddress: current ?? null,
+			previousAddress: previous ?? null,
 			timestamp: Date.now()
 		};
 	}

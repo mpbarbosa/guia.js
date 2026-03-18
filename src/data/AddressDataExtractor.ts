@@ -190,7 +190,6 @@ class AddressDataExtractor {
 // These maintain backward compatibility but all operations use AddressCache singleton internally
 // Use property descriptors to create live references that stay synchronized
 type AnyRecord = Record<string, unknown>;
-// @ts-ignore -- AddressCache has @ts-nocheck; helper bypasses type inference until it's fully typed
 const _getCache = (): AnyRecord => AddressCache.getInstance() as unknown as AnyRecord;
 
 Object.defineProperties(AddressDataExtractor, {

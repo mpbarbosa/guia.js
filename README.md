@@ -311,6 +311,28 @@ For full details on each script — including executable permissions, shebangs, 
 > **Entry point**: Scripts use `#!/bin/bash` and must be invoked as `./scripts/<name>.sh` or `bash scripts/<name>.sh`, not `sh`.
 > **Error handling**: All scripts use `set -e` — any failing command exits immediately with code 1. None require external environment variables.
 
+#### GitHub CI/CD Helper Scripts (`.github/scripts/`)
+
+These scripts are invoked by GitHub Actions workflows and by the `npm run ci:test-local` / `npm run cdn:generate` npm aliases. They can also be run directly from the project root:
+
+| Script | Purpose |
+|---|---|
+| `bump-sw-cache.sh` | Updates `CACHE_NAME` in `service-worker.js` with current version, date, and git SHA |
+| `cdn-delivery.sh` | Generates jsDelivr CDN URLs for the current version; output saved to `cdn-urls.txt` |
+| `change-type-detector.sh` | Detects change type from Conventional Commit messages (used by workflow routing) |
+| `check-references.sh` | Validates internal file references in docs; filters known false-positive patterns |
+| `check-terminology.sh` | Validates documentation against the project terminology guide |
+| `check-version-consistency.sh` | Verifies version numbers are consistent across all files; `--fix` flag auto-corrects |
+| `test-change-type-detection.sh` | Test suite for the change-type detector (all Conventional Commit scenarios) |
+| `test-conditional-execution.sh` | Test suite for the workflow condition evaluator |
+| `test-workflow-locally.sh` | Simulates the GitHub Actions workflow locally; run before pushing to catch CI failures |
+| `update-badges.sh` | Extracts test/coverage results from `npm test` output and updates README badges |
+| `update-doc-metadata.sh` | Adds or updates "Last Updated" metadata in documentation files |
+| `update-version-references.sh` | Propagates the version from `package.json` to all version reference points |
+| `validate-cross-references.sh` | Validates internal hyperlinks in documentation files |
+| `validate-jsdom-update.sh` | Validates jsdom upgrade compatibility (run after bumping `jsdom` devDependency) |
+| `workflow-condition-evaluator.sh` | Evaluates conditional execution rules from `.workflow-config.yaml` |
+
 ## 📁 Project Structure
 
 This section provides a quick reference to the project's directory organization. For a complete directory tree and detailed file organization, see [PROJECT_STRUCTURE.md](./docs/developer/PROJECT_STRUCTURE.md). For architectural details and design decisions, see [PROJECT_PURPOSE_AND_ARCHITECTURE.md](./docs/architecture/PROJECT_PURPOSE_AND_ARCHITECTURE.md).

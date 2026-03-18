@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 /**
  * ServiceCoordinator - Manages services, observers, and displayers
  * @version 0.9.0-alpha
@@ -40,6 +40,54 @@
 import PositionManager from '../core/PositionManager.js';
 import { log, warn, error as logError } from '../utils/logger.js';
 
+// ─── Local minimal interfaces for injected dependencies ──────────────────────
+
+interface IGeolocationServiceForSC {
+	getSingleLocationUpdate(): Promise<GeolocationPosition>;
+	watchCurrentLocation(): number | null;
+	stopTracking?(): void;
+}
+
+interface IReverseGeocoderForSC {
+	subscribe(observer: unknown): void;
+	observerSubject?: { observers: unknown[] };
+	latitude: number;
+	longitude: number;
+	currentAddress: unknown;
+	enderecoPadronizado: unknown;
+	update?: (...args: unknown[]) => void;
+}
+
+interface IChangeDetectionCoordinatorForSC {
+	setCurrentPosition(position: unknown): void;
+	setupChangeDetection(): void;
+}
+
+interface IDisplayerFactory {
+	createPositionDisplayer(el: unknown): unknown;
+	createAddressDisplayer(el1: unknown, el2: unknown): unknown;
+	createReferencePlaceDisplayer(el: unknown): unknown;
+	createHighlightCardsDisplayer(doc: Document): unknown;
+	createSidraDisplayer(el: unknown): unknown;
+}
+
+interface IDisplayers {
+	position: unknown;
+	address: unknown;
+	referencePlace: unknown;
+	highlightCards: unknown;
+	sidra: unknown;
+	[key: string]: unknown;
+}
+
+interface ServiceCoordinatorParams {
+	geolocationService: IGeolocationServiceForSC;
+	reverseGeocoder: IReverseGeocoderForSC;
+	changeDetectionCoordinator: IChangeDetectionCoordinatorForSC;
+	observerSubject: unknown;
+	displayerFactory?: IDisplayerFactory;
+	document?: Document;
+}
 
 /**
  * ServiceCoordinator class - Manages service lifecycle and coordination
@@ -47,6 +95,15 @@ import { log, warn, error as logError } from '../utils/logger.js';
  * @class
  */
 class ServiceCoordinator {
+    // ─── Private property declarations ─────────────────────────────────────
+    private _geolocationService: IGeolocationServiceForSC | null;
+    private _document: Document | undefined;
+    private _reverseGeocoder: IReverseGeocoderForSC | null;
+    private _changeDetectionCoordinator: IChangeDetectionCoordinatorForSC | null;
+    private _displayerFactory: IDisplayerFactory | null;
+    private _displayers: Readonly<IDisplayers> | null;
+    private _watchId: number | null;
+    private _initialized: boolean;
     /**
      * Creates a new ServiceCoordinator instance
      * 
@@ -68,7 +125,7 @@ class ServiceCoordinator {
      *   displayerFactory: DisplayerFactory
      * });
      */
-    constructor(params) {
+    constructor(params: ServiceCoordinatorParams) {
         if (!params) {
             throw new TypeError('ServiceCoordinator: params object is required');
         }
@@ -118,14 +175,13 @@ class ServiceCoordinator {
          * @type {ObserverSubject}
          * @private
          */
-        this._observerSubject = params.observerSubject;
 
         /**
          * Factory for creating displayers
          * @type {Object}
          * @private
          */
-        this._displayerFactory = params.displayerFactory;
+        this._displayerFactory = params.displayerFactory ?? null;
 
         /**
          * Created displayers (position, address, reference place)
@@ -191,7 +247,7 @@ class ServiceCoordinator {
      *   sidraElement
      * );
      */
-    createDisplayers(positionDisplay, addressDisplay, enderecoPadronizadoDisplay, referencePlaceDisplay, sidraDisplay) {
+    createDisplayers(positionDisplay: unknown, addressDisplay: unknown, enderecoPadronizadoDisplay: unknown, referencePlaceDisplay: unknown, sidraDisplay: unknown) {
         if (!this._displayerFactory) {
             throw new Error('ServiceCoordinator: displayerFactory not configured');
         }
@@ -253,7 +309,7 @@ class ServiceCoordinator {
 
         // Wire position displayer to position updates
         if (this._displayers.position) {
-            positionManager.subscribe(this._displayers.position);
+            positionManager.subscribe(this._displayers.position as { update?: (...args: unknown[]) => void });
             log('ServiceCoordinator: Position displayer wired');
         }
 
@@ -344,15 +400,15 @@ class ServiceCoordinator {
                     positionManager.update(position);
                     
                     // Update change detection coordinator
-                    this._changeDetectionCoordinator.setCurrentPosition(position);
+                    this._changeDetectionCoordinator!.setCurrentPosition(position);
                     
                     // Sync reverse geocoder coordinates so they are consistent with
                     // the new position. The actual fetchAddress() call is triggered
                     // automatically via the ReverseGeocoder observer wired to
                     // PositionManager — no need to call it explicitly here, which
                     // would cause a duplicate geocode request.
-                    this._reverseGeocoder.latitude = position.coords.latitude;
-                    this._reverseGeocoder.longitude = position.coords.longitude;
+                    this._reverseGeocoder!.latitude = position.coords.latitude;
+                    this._reverseGeocoder!.longitude = position.coords.longitude;
                 }
                 return position;
             })
@@ -386,7 +442,7 @@ class ServiceCoordinator {
         this._watchId = this._geolocationService.watchCurrentLocation();
         
         // Set up address component change detection
-        this._changeDetectionCoordinator.setupChangeDetection();
+        this._changeDetectionCoordinator!.setupChangeDetection();
 
         log('ServiceCoordinator: Tracking started', { watchId: this._watchId });
 
@@ -512,7 +568,6 @@ class ServiceCoordinator {
         this._geolocationService = null;
         this._reverseGeocoder = null;
         this._changeDetectionCoordinator = null;
-        this._observerSubject = null;
         this._displayerFactory = null;
         this._displayers = null;
         this._initialized = false;

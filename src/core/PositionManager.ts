@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 /**
  * Centralized singleton manager for device geographic position.
  * 
@@ -63,14 +63,17 @@ import { withObserver } from '../utils/ObserverMixin.js';
 import { createDefaultConfig } from '../config/defaults.js';
 
 // Initialize with defaults
-let setupParams = createDefaultConfig();
+type AppSetupConfig = Omit<ReturnType<typeof createDefaultConfig>, 'notAcceptedAccuracy'> & {
+	notAcceptedAccuracy: string[] | null;
+};
+let setupParams: AppSetupConfig = createDefaultConfig() as AppSetupConfig;
 
 /**
  * Initialize setupParams - allows override for testing.
  * @param {Object} config - Configuration object with tracking parameters
  * @since 0.9.0-alpha
  */
-export function initializeConfig(config) {
+export function initializeConfig(config: AppSetupConfig): void {
 	setupParams = config;
 }
 
@@ -97,7 +100,19 @@ class PositionManager {
 	 * @type {PositionManager|null}
 	 * @private
 	 */
-	static instance = null;
+	static instance: PositionManager | null = null;
+
+	// ─── Instance property declarations ────────────────────────────────────────
+	/** Internal observer subject for managing subscribers */
+	private observerSubject!: InstanceType<typeof ObserverSubject>;
+	/** Timestamp (ms) of the most recently accepted position */
+	private lastModified: number | null = null;
+	/** Last accepted geographic position */
+	private lastPosition: GeoPosition | null = null;
+
+	// Methods injected at runtime by withObserver() — declared here for type safety
+	declare subscribe: (observer: { update?: (...args: unknown[]) => void } | ((...args: unknown[]) => void)) => void;
+	declare unsubscribe: (observer: { update?: (...args: unknown[]) => void } | ((...args: unknown[]) => void)) => void;
 
 	/**
 	 * Event string constant fired when position is successfully updated.
@@ -152,13 +167,13 @@ class PositionManager {
 	 * 
 	 * @since 0.6.0-alpha
 	 */
-	static getInstance(position) {
+	static getInstance(position?: GeolocationPosition): PositionManager {
 		if (!PositionManager.instance) {
 			PositionManager.instance = new PositionManager(position);
 		} else if (position) {
 			PositionManager.instance.update(position);
 		}
-		return PositionManager.instance;
+		return PositionManager.instance!;
 	}
 
 	/**
@@ -181,9 +196,8 @@ class PositionManager {
 	 * 
 	 * @since 0.6.0-alpha
 	 */
-	constructor(position) {
+	constructor(position?: GeolocationPosition) {
 		this.observerSubject = new ObserverSubject();
-		this.tsPosicaoAtual = null;
 		this.lastModified = null;
 		if (position) {
 			this.update(position);
@@ -267,7 +281,7 @@ class PositionManager {
 	 * @param {*} data - Optional data to pass to observers
 	 * @param {Error} error - Optional error object
 	 */
-	notifyObservers(posEvent, data = null, error = null) {
+	notifyObservers(posEvent: string, data: unknown = null, error: { name: string; message: string } | null = null): void {
 		this.observerSubject.notifyObservers(this, posEvent, data, error);
 	}
 
@@ -311,7 +325,7 @@ class PositionManager {
 	 * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition} GeolocationPosition
 	 * @since 0.6.0-alpha
 	 */
-	update(position) {
+	update(position: GeolocationPosition): void {
 		let bUpdateCurrPos = true;
 		let error = null;
 
@@ -425,7 +439,6 @@ class PositionManager {
 
 		// Atualiza a posição apenas se tiver passado mais de 1 minuto
 		this.lastPosition = new GeoPosition(position);
-		this.position = this.lastPosition;
 		this.lastModified = position.timestamp;
 		this.notifyObservers(posEvent, null, error);
 	}
@@ -446,7 +459,7 @@ class PositionManager {
 	 * @since 0.6.0-alpha
 	 */
 	toString() {
-		const position = this.lastPosition || {};
+		const position = this.lastPosition;
 		if (!position || !this.latitude || !this.longitude) {
 			return `${this.constructor.name}: No position data`;
 		}

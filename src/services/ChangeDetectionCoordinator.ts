@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 /**
  * Coordinator for address component change detection.
  * 
@@ -11,8 +11,21 @@
  * @author Marcelo Pereira Barbosa
  */
 
-import ObserverSubject from '../core/ObserverSubject.js'; // eslint-disable-line no-unused-vars
+import ObserverSubject from '../core/ObserverSubject.js';
 import { log, warn, error } from '../utils/logger.js';
+
+/** Minimal interface for the reverse geocoder dependency */
+interface IReverseGeocoderForCDC {
+	currentAddress: unknown;
+	enderecoPadronizado: unknown;
+}
+
+/** Minimal interface for AddressDataExtractor dependency */
+interface IAddressDataExtractorForCDC {
+	setLogradouroChangeCallback(cb: ((changeDetails: unknown) => void) | null): void;
+	setBairroChangeCallback(cb: ((changeDetails: unknown) => void) | null): void;
+	setMunicipioChangeCallback(cb: ((changeDetails: unknown) => void) | null): void;
+}
 
 /**
  * Coordinates address component change detection and notifications.
@@ -20,6 +33,12 @@ import { log, warn, error } from '../utils/logger.js';
  * @class ChangeDetectionCoordinator
  */
 class ChangeDetectionCoordinator {
+	// ─── Instance property declarations ──────────────────────────────────────
+	private reverseGeocoder: IReverseGeocoderForCDC;
+	private observerSubject: InstanceType<typeof ObserverSubject>;
+	private currentPosition: unknown;
+	private AddressDataExtractor: IAddressDataExtractorForCDC | null;
+
 	/**
 	 * Creates a new ChangeDetectionCoordinator instance.
 	 * 
@@ -27,7 +46,7 @@ class ChangeDetectionCoordinator {
 	 * @param {Object} params.reverseGeocoder - ReverseGeocoder instance for address data
 	 * @param {Object} params.observerSubject - ObserverSubject for managing observers
 	 */
-	constructor(params) {
+	constructor(params: { reverseGeocoder: IReverseGeocoderForCDC; observerSubject: InstanceType<typeof ObserverSubject> }) {
 		this.reverseGeocoder = params.reverseGeocoder;
 		this.observerSubject = params.observerSubject;
 		this.currentPosition = null; // Will be updated externally
@@ -46,7 +65,7 @@ class ChangeDetectionCoordinator {
 	 * @param {Object} addressDataExtractor - AddressDataExtractor class or instance
 	 * @returns {void}
 	 */
-	setAddressDataExtractor(addressDataExtractor) {
+	setAddressDataExtractor(addressDataExtractor: IAddressDataExtractorForCDC): void {
 		this.AddressDataExtractor = addressDataExtractor;
 	}
 
@@ -56,7 +75,7 @@ class ChangeDetectionCoordinator {
 	 * 
 	 * @param {Object} position - Current position object
 	 */
-	setCurrentPosition(position) {
+	setCurrentPosition(position: unknown): void {
 		this.currentPosition = position;
 	}
 
@@ -193,9 +212,9 @@ class ChangeDetectionCoordinator {
 	 * @param {boolean} changeDetails.hasChanged - Whether change actually occurred
 	 * @returns {void}
 	 */
-	handleLogradouroChange(changeDetails) {
+	handleLogradouroChange(changeDetails: unknown) {
 		try {
-			this.notifyLogradouroChangeObservers(changeDetails);
+			this.notifyLogradouroChangeObservers(changeDetails as { to: unknown; from?: unknown; currentAddress?: unknown; previousAddress?: unknown });
 		} catch (err) {
 			error(
 				"(ChangeDetectionCoordinator) Error handling logradouro change:",
@@ -216,9 +235,9 @@ class ChangeDetectionCoordinator {
 	 * @param {boolean} changeDetails.hasChanged - Whether change actually occurred
 	 * @returns {void}
 	 */
-	handleBairroChange(changeDetails) {
+	handleBairroChange(changeDetails: unknown) {
 		try {
-			this.notifyBairroChangeObservers(changeDetails);
+			this.notifyBairroChangeObservers(changeDetails as { to: unknown; from?: unknown; currentAddress?: unknown; previousAddress?: unknown });
 		} catch (err) {
 			error(
 				"(ChangeDetectionCoordinator) Error handling bairro change:",
@@ -239,9 +258,9 @@ class ChangeDetectionCoordinator {
 	 * @param {boolean} changeDetails.hasChanged - Whether change actually occurred
 	 * @returns {void}
 	 */
-	handleMunicipioChange(changeDetails) {
+	handleMunicipioChange(changeDetails: unknown) {
 		try {
-			this.notifyMunicipioChangeObservers(changeDetails);
+			this.notifyMunicipioChangeObservers(changeDetails as { to: unknown; from?: unknown; currentAddress?: unknown; previousAddress?: unknown });
 		} catch (err) {
 			error(
 				"(ChangeDetectionCoordinator) Error handling municipio change:",
@@ -268,7 +287,7 @@ class ChangeDetectionCoordinator {
 	 * @param {*} changeData - Specific data for the change (e.g., new logradouro value)
 	 * @param {string} logMessage - Optional log message for debugging
 	 */
-	_notifyAddressChangeObservers(changeDetails, changeType, changeData, logMessage) {
+	_notifyAddressChangeObservers(changeDetails: unknown, changeType: string, changeData: unknown, logMessage: string | null) {
 		// Log if message provided
 		if (logMessage) {
 			log(logMessage);
@@ -297,7 +316,7 @@ class ChangeDetectionCoordinator {
 	 * @param {Object} changeDetails - Details about the change
 	 * @param {string} changeType - Type of change for error messages
 	 */
-	_notifyFunctionObserversWithError(changeDetails, changeType) {
+	_notifyFunctionObserversWithError(changeDetails: unknown, changeType: string) {
 		for (const fn of this.observerSubject.functionObservers) {
 			try {
 				fn(
@@ -330,7 +349,7 @@ class ChangeDetectionCoordinator {
 	 * @param {Object} changeDetails.currentAddress - Current full address
 	 * @param {Object} changeDetails.previousAddress - Previous full address
 	 */
-	notifyLogradouroChangeObservers(changeDetails) {
+	notifyLogradouroChangeObservers(changeDetails: { to: unknown; from?: unknown; currentAddress?: unknown; previousAddress?: unknown }) {
 		this._notifyAddressChangeObservers(
 			changeDetails,
 			"LogradouroChanged",
@@ -354,7 +373,7 @@ class ChangeDetectionCoordinator {
 	 * @param {Object} changeDetails.currentAddress - Current full address
 	 * @param {Object} changeDetails.previousAddress - Previous full address
 	 */
-	notifyBairroChangeObservers(changeDetails) {
+	notifyBairroChangeObservers(changeDetails: { to: unknown; from?: unknown; currentAddress?: unknown; previousAddress?: unknown }) {
 		this._notifyAddressChangeObservers(
 			changeDetails,
 			"BairroChanged",
@@ -380,7 +399,7 @@ class ChangeDetectionCoordinator {
 	 * @param {Object} changeDetails.currentAddress - Current full address
 	 * @param {Object} changeDetails.previousAddress - Previous full address
 	 */
-	notifyMunicipioChangeObservers(changeDetails) {
+	notifyMunicipioChangeObservers(changeDetails: { to: unknown; from?: unknown; currentAddress?: unknown; previousAddress?: unknown }) {
 		this._notifyAddressChangeObservers(
 			changeDetails,
 			"MunicipioChanged",

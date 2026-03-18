@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 /**
  * Geolocation service for browser-based location access.
  * 
@@ -50,9 +50,27 @@ import {
  * @returns {boolean} True if Permissions API is supported
  * @private
  */
-const isPermissionsAPISupported = (navigatorObj) => {
-	return navigatorObj && 'permissions' in navigatorObj;
+const isPermissionsAPISupported = (navigatorObj: Navigator | null | undefined): boolean => {
+	return navigatorObj != null && 'permissions' in navigatorObj;
 };
+
+/** Minimal interface for geolocation providers (BrowserGeolocationProvider et al.) */
+interface IGeolocationProvider {
+	isPermissionsAPISupported?(): boolean;
+	isSupported(): boolean;
+	getCurrentPosition(
+		success: PositionCallback,
+		error: PositionErrorCallback,
+		options?: PositionOptions
+	): void;
+	watchPosition(
+		success: PositionCallback,
+		error: PositionErrorCallback,
+		options?: PositionOptions
+	): number;
+	clearWatch(id: number): void;
+	getNavigator?(): Navigator | null;
+}
 
 /**
  * Geolocation service using HTML5 Geolocation API.
@@ -85,6 +103,17 @@ const isPermissionsAPISupported = (navigatorObj) => {
  * @class GeolocationService
  */
 class GeolocationService {
+	// ─── Instance property declarations ──────────────────────────────────────
+	private locationResult: Element | null;
+	private watchId: number | null;
+	private isWatching: boolean;
+	private lastKnownPosition: GeolocationPosition | null;
+	private isPendingRequest: boolean;
+	private pendingPromise: Promise<GeolocationPosition> | null;
+	private config: { geolocationOptions: PositionOptions };
+	private provider!: IGeolocationProvider;
+	private navigator: Navigator | null;
+	private positionManager: PositionManager;
 	/**
 	 * Creates a new GeolocationService instance.
 	 * 
@@ -126,16 +155,21 @@ class GeolocationService {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	constructor(locationResult, geolocationProvider, positionManagerInstance, config = {}) {
+	constructor(
+		locationResult?: Element | null,
+		geolocationProvider?: IGeolocationProvider | { geolocation: unknown } | null,
+		positionManagerInstance?: PositionManager | null,
+		config: { geolocationOptions?: PositionOptions } = {}
+	) {
 		log(">>> (GeolocationService) constructor called");
 		// Store DOM element for location result display
-		this.locationResult = locationResult;
+		this.locationResult = locationResult ?? null;
 		
 		// Initialize position watching state management
 		this.watchId = null;
 		this.isWatching = false;
 		this.lastKnownPosition = null;
-		this.permissionStatus = null;
+		
 		
 		// RACE CONDITION PREVENTION:
 		// Prevents overlapping geolocation requests that could cause stale data
@@ -157,19 +191,20 @@ class GeolocationService {
 		// 1. Explicit provider injection (preferred for testing)
 		// 2. Navigator object for backward compatibility (will be wrapped)
 		// 3. Default to BrowserGeolocationProvider with global navigator
-		if (geolocationProvider && typeof geolocationProvider.getCurrentPosition === 'function') {
+		if (geolocationProvider && typeof (geolocationProvider as IGeolocationProvider).getCurrentPosition === 'function') {
 			// Case 1: Already a provider instance
-			this.provider = geolocationProvider;
+			const p = geolocationProvider as IGeolocationProvider;
+			this.provider = p;
 			// Keep navigator reference for backward compatibility with checkPermissions()
-			this.navigator = geolocationProvider.getNavigator ? geolocationProvider.getNavigator() : null;
+			this.navigator = p.getNavigator ? p.getNavigator() : null;
 		} else if (geolocationProvider && 'geolocation' in geolocationProvider) {
 			// Case 2: Backward compatibility - navigator object passed
-			this.provider = new BrowserGeolocationProvider(geolocationProvider);
-			this.navigator = geolocationProvider;
+			this.provider = new BrowserGeolocationProvider(geolocationProvider as Navigator) as unknown as IGeolocationProvider;
+			this.navigator = geolocationProvider as Navigator;
 		} else {
 			// Case 3: Default - create BrowserGeolocationProvider with global navigator
 			const nav = typeof navigator !== 'undefined' ? navigator : null;
-			this.provider = new BrowserGeolocationProvider(nav);
+			this.provider = new BrowserGeolocationProvider(nav) as unknown as IGeolocationProvider;
 			this.navigator = nav;
 		}
 
@@ -207,15 +242,15 @@ class GeolocationService {
 				: isPermissionsAPISupported(this.navigator);
 				
 			if (hasPermissionsAPI) {
-				const permission = await this.navigator.permissions.query({ name: 'geolocation' });
-				this.permissionStatus = permission.state;
+				const permission = await this.navigator!.permissions.query({ name: 'geolocation' });
+				// permission.state stored (diagnostic use only)
 				return permission.state;
 			} else {
 				// Fallback for browsers without Permissions API
 				return 'prompt';
 			}
-		} catch (error) {
-			error("(GeolocationService) Error checking permissions:", error);
+		} catch (err) {
+			error("(GeolocationService) Error checking permissions:", err);
 			return 'prompt';
 		}
 	}
@@ -420,13 +455,13 @@ class GeolocationService {
 	 * @returns {void}
 	 * @since 0.9.0-alpha
 	 */
-	updateLocationDisplay(position) {
+	updateLocationDisplay(position: GeolocationPosition) {
 		// Validate display element availability
 		if (!this.locationResult) return;
 
 		// Extract coordinate data for formatting
 		const coords = position.coords;
-		const timestamp = new Date(position.timestamp).toLocaleString(); // eslint-disable-line no-unused-vars
+		void new Date(position.timestamp).toLocaleString(); // timestamp formatting available if needed
 		
 		// FORMAT COORDINATE DATA:
 		// Display coordinates with appropriate precision and timestamp
@@ -477,7 +512,7 @@ class GeolocationService {
 	 * @returns {void}
 	 * @since 0.9.0-alpha
 	 */
-	updateErrorDisplay(error) {
+	updateErrorDisplay(error: GeolocationPositionError) {
 		// Validate display element availability
 		if (!this.locationResult) return;
 

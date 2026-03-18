@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * SpeechCoordinator - Manages speech synthesis functionality
  * 
@@ -33,45 +32,25 @@
 import HtmlSpeechSynthesisDisplayer from '../html/HtmlSpeechSynthesisDisplayer.js';
 import { log, warn } from '../utils/logger.js';
 
+interface ISubscribable {
+    subscribe(observer: unknown): void;
+    unsubscribe(observer: unknown): void;
+}
+
 /**
  * SpeechCoordinator class - Manages speech synthesis
  * 
  * @class
  */
 class SpeechCoordinator {
-    /**
-     * Creates a new SpeechCoordinator instance
-     * 
-     * @param {Document} document - DOM document object
-     * @param {Object} elementIds - Speech synthesis element IDs configuration
-     * @param {Object} elementIds.languageSelectId - Language selection dropdown ID
-     * @param {Object} elementIds.voiceSelectId - Voice selection dropdown ID
-     * @param {Object} elementIds.textInputId - Text input field ID
-     * @param {Object} elementIds.speakBtnId - Speak button ID
-     * @param {Object} elementIds.pauseBtnId - Pause button ID
-     * @param {Object} elementIds.resumeBtnId - Resume button ID
-     * @param {Object} elementIds.stopBtnId - Stop button ID
-     * @param {Object} elementIds.rateInputId - Rate slider ID
-     * @param {Object} elementIds.rateValueId - Rate value display ID
-     * @param {Object} elementIds.pitchInputId - Pitch slider ID
-     * @param {Object} elementIds.pitchValueId - Pitch value display ID
-     * @param {ReverseGeocoder} reverseGeocoder - Reverse geocoder to subscribe to
-     * @param {ObserverSubject} observerSubject - Observer subject to subscribe to
-     * 
-     * @throws {TypeError} If document is not provided
-     * @throws {TypeError} If elementIds is not provided
-     * @throws {TypeError} If reverseGeocoder is not provided
-     * @throws {TypeError} If observerSubject is not provided
-     * 
-     * @example
-     * const coordinator = new SpeechCoordinator(
-     *   document,
-     *   elementIds.speechSynthesis,
-     *   reverseGeocoder,
-     *   observerSubject
-     * );
-     */
-    constructor(document, elementIds, reverseGeocoder, observerSubject) {
+    private _document: Document;
+    private _elementIds: Record<string, unknown>;
+    private _reverseGeocoder: ISubscribable;
+    private _observerSubject: ISubscribable;
+    private _speechDisplayer: unknown;
+    private _initialized: boolean;
+
+    constructor(document: Document, elementIds: Record<string, unknown>, reverseGeocoder: ISubscribable, observerSubject: ISubscribable) {
         if (!document) {
             throw new TypeError('SpeechCoordinator: document is required');
         }
@@ -166,7 +145,7 @@ class SpeechCoordinator {
             this._initialized = true;
             log('SpeechCoordinator: Speech synthesis initialized successfully');
         } catch (error) {
-            warn('SpeechCoordinator: Failed to initialize speech synthesis:', error.message);
+            warn('SpeechCoordinator: Failed to initialize speech synthesis:', (error as Error).message);
         }
 
         return this;

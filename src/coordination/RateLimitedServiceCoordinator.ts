@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Rate-limited service coordinator for API requests.
  * 
@@ -18,6 +17,9 @@ import { log, warn } from '../utils/logger.js';
  * Singleton coordinator for rate-limited API services.
  */
 class RateLimitedServiceCoordinator {
+  static instance: RateLimitedServiceCoordinator | undefined;
+  private limiters!: Record<string, RateLimiter>;
+
   constructor() {
     if (RateLimitedServiceCoordinator.instance) {
       return RateLimitedServiceCoordinator.instance;
@@ -26,13 +28,13 @@ class RateLimitedServiceCoordinator {
     // Initialize rate limiters based on environment configuration
     this.limiters = {
       nominatim: new RateLimiter({
-        maxRequests: env.rateLimitNominatim,
+        maxRequests: env.rateLimitNominatim as number,
         interval: 60000,
         maxQueueSize: 100,
         name: 'Nominatim'
       }),
       ibge: new RateLimiter({
-        maxRequests: env.rateLimitIbge,
+        maxRequests: env.rateLimitIbge as number,
         interval: 60000,
         maxQueueSize: 100,
         name: 'IBGE'
@@ -69,7 +71,7 @@ class RateLimitedServiceCoordinator {
    *   return response.json();
    * });
    */
-  async scheduleNominatim(fn) {
+  async scheduleNominatim(fn: () => Promise<unknown>) {
     return this.limiters.nominatim.schedule(fn);
   }
   
@@ -85,7 +87,7 @@ class RateLimitedServiceCoordinator {
    *   return response.json();
    * });
    */
-  async scheduleIbge(fn) {
+  async scheduleIbge(fn: () => Promise<unknown>) {
     return this.limiters.ibge.schedule(fn);
   }
   
@@ -107,7 +109,7 @@ class RateLimitedServiceCoordinator {
    * @param {string} api - API name ('nominatim' or 'ibge')
    * @returns {Object|null} Statistics or null if API not found
    */
-  getStatsForAPI(api) {
+  getStatsForAPI(api: string) {
     return this.limiters[api]?.getStats() || null;
   }
   
@@ -144,7 +146,7 @@ class RateLimitedServiceCoordinator {
    * 
    * @param {string} api - API name ('nominatim' or 'ibge')
    */
-  reset(api) {
+  reset(api: string) {
     if (this.limiters[api]) {
       this.limiters[api].reset();
       log(`Rate limiter reset: ${api}`);

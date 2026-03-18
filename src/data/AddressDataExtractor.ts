@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Legacy address data extractor facade.
  * 
@@ -12,6 +11,7 @@
  * @author Marcelo Pereira Barbosa
  */
 
+import type BrazilianStandardAddress from './BrazilianStandardAddress.js';
 import AddressExtractor from './AddressExtractor.js';
 import AddressCache from './AddressCache.js';
 
@@ -44,17 +44,13 @@ import AddressCache from './AddressCache.js';
  * const address = AddressCache.getBrazilianStandardAddress(geocodingData);
  */
 class AddressDataExtractor {
-	/**
-	 * Creates a new AddressDataExtractor instance.
-	 * Delegates to AddressExtractor for actual extraction.
-	 * 
-	 * @param {Object} data - Raw address data from geocoding API
-	 */
-	constructor(data) {
+	data: object;
+	enderecoPadronizado: BrazilianStandardAddress;
+
+	constructor(data: object) {
 		const extractor = new AddressExtractor(data);
 		this.data = extractor.data;
 		this.enderecoPadronizado = extractor.enderecoPadronizado;
-		this.referencePlace = extractor.referencePlace;
 		Object.freeze(this);
 	}
 
@@ -62,7 +58,7 @@ class AddressDataExtractor {
 	 * Delegates to AddressCache for cache key generation.
 	 * @static
 	 */
-	static generateCacheKey(data) {
+	static generateCacheKey(data: object) {
 		return AddressCache.generateCacheKey(data);
 	}
 
@@ -78,7 +74,7 @@ class AddressDataExtractor {
 	 * Delegates to AddressCache for callback management.
 	 * @static
 	 */
-	static setLogradouroChangeCallback(callback) {
+	static setLogradouroChangeCallback(callback: ((...args: unknown[]) => void) | null) {
 		return AddressCache.setLogradouroChangeCallback(callback);
 	}
 
@@ -86,7 +82,7 @@ class AddressDataExtractor {
 	 * Delegates to AddressCache for callback management.
 	 * @static
 	 */
-	static setBairroChangeCallback(callback) {
+	static setBairroChangeCallback(callback: ((...args: unknown[]) => void) | null) {
 		return AddressCache.setBairroChangeCallback(callback);
 	}
 
@@ -94,7 +90,7 @@ class AddressDataExtractor {
 	 * Delegates to AddressCache for callback management.
 	 * @static
 	 */
-	static setMunicipioChangeCallback(callback) {
+	static setMunicipioChangeCallback(callback: ((...args: unknown[]) => void) | null) {
 		return AddressCache.setMunicipioChangeCallback(callback);
 	}
 
@@ -175,7 +171,7 @@ class AddressDataExtractor {
 	 * Delegates to AddressCache which coordinates with AddressExtractor.
 	 * @static
 	 */
-	static getBrazilianStandardAddress(data) {
+	static getBrazilianStandardAddress(data: object) {
 		return AddressCache.getBrazilianStandardAddress(data);
 	}
 
@@ -193,50 +189,54 @@ class AddressDataExtractor {
 // Legacy static properties for AddressDataExtractor - delegated to AddressCache singleton
 // These maintain backward compatibility but all operations use AddressCache singleton internally
 // Use property descriptors to create live references that stay synchronized
+type AnyRecord = Record<string, unknown>;
+// @ts-ignore -- AddressCache has @ts-nocheck; helper bypasses type inference until it's fully typed
+const _getCache = (): AnyRecord => AddressCache.getInstance() as unknown as AnyRecord;
+
 Object.defineProperties(AddressDataExtractor, {
 	cache: {
-		get: () => AddressCache.getInstance().cache,
-		set: (value) => { AddressCache.getInstance().cache = value; }
+		get: () => _getCache().cache,
+		set: (value) => { _getCache().cache = value; }
 	},
 	maxCacheSize: {
-		get: () => AddressCache.getInstance().maxCacheSize,
-		set: (value) => { AddressCache.getInstance().maxCacheSize = value; }
+		get: () => _getCache().maxCacheSize,
+		set: (value) => { _getCache().maxCacheSize = value; }
 	},
 	cacheExpirationMs: {
-		get: () => AddressCache.getInstance().cacheExpirationMs,
-		set: (value) => { AddressCache.getInstance().cacheExpirationMs = value; }
+		get: () => _getCache().cacheExpirationMs,
+		set: (value) => { _getCache().cacheExpirationMs = value; }
 	},
 	lastNotifiedChangeSignature: {
-		get: () => AddressCache.getInstance().lastNotifiedChangeSignature,
-		set: (value) => { AddressCache.getInstance().lastNotifiedChangeSignature = value; }
+		get: () => _getCache().lastNotifiedChangeSignature,
+		set: (value) => { _getCache().lastNotifiedChangeSignature = value; }
 	},
 	lastNotifiedBairroChangeSignature: {
-		get: () => AddressCache.getInstance().lastNotifiedBairroChangeSignature,
-		set: (value) => { AddressCache.getInstance().lastNotifiedBairroChangeSignature = value; }
+		get: () => _getCache().lastNotifiedBairroChangeSignature,
+		set: (value) => { _getCache().lastNotifiedBairroChangeSignature = value; }
 	},
 	lastNotifiedMunicipioChangeSignature: {
-		get: () => AddressCache.getInstance().lastNotifiedMunicipioChangeSignature,
-		set: (value) => { AddressCache.getInstance().lastNotifiedMunicipioChangeSignature = value; }
+		get: () => _getCache().lastNotifiedMunicipioChangeSignature,
+		set: (value) => { _getCache().lastNotifiedMunicipioChangeSignature = value; }
 	},
 	logradouroChangeCallback: {
-		get: () => AddressCache.getInstance().logradouroChangeCallback,
-		set: (value) => { AddressCache.getInstance().logradouroChangeCallback = value; }
+		get: () => _getCache().logradouroChangeCallback,
+		set: (value) => { _getCache().logradouroChangeCallback = value; }
 	},
 	bairroChangeCallback: {
-		get: () => AddressCache.getInstance().bairroChangeCallback,
-		set: (value) => { AddressCache.getInstance().bairroChangeCallback = value; }
+		get: () => _getCache().bairroChangeCallback,
+		set: (value) => { _getCache().bairroChangeCallback = value; }
 	},
 	municipioChangeCallback: {
-		get: () => AddressCache.getInstance().municipioChangeCallback,
-		set: (value) => { AddressCache.getInstance().municipioChangeCallback = value; }
+		get: () => _getCache().municipioChangeCallback,
+		set: (value) => { _getCache().municipioChangeCallback = value; }
 	},
 	currentAddress: {
-		get: () => AddressCache.getInstance().currentAddress,
-		set: (value) => { AddressCache.getInstance().currentAddress = value; }
+		get: () => _getCache().currentAddress,
+		set: (value) => { _getCache().currentAddress = value; }
 	},
 	previousAddress: {
-		get: () => AddressCache.getInstance().previousAddress,
-		set: (value) => { AddressCache.getInstance().previousAddress = value; }
+		get: () => _getCache().previousAddress,
+		set: (value) => { _getCache().previousAddress = value; }
 	}
 });
 

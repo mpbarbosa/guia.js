@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * EventCoordinator - Manages event handling and user interactions
  * 
@@ -39,25 +38,31 @@
 import { log, warn } from '../utils/logger.js';
 import { showError, showInfo } from '../utils/toast.js';
 
+interface IUICoordinator {
+    getElement(name: string): Element | null;
+}
+
+interface ICoords {
+    latitude: number;
+    longitude: number;
+}
+
+interface IGeocodingState {
+    getCurrentCoordinates(): ICoords | null;
+}
+
 /**
  * EventCoordinator class - Manages event listeners and handlers
  * 
  * @class
  */
 class EventCoordinator {
-    /**
-     * Creates a new EventCoordinator instance
-     * 
-     * @param {UICoordinator} uiCoordinator - UI coordinator for accessing DOM elements
-     * @param {GeocodingState} geocodingState - State manager for current position/coordinates
-     * 
-     * @throws {TypeError} If uiCoordinator is not provided
-     * @throws {TypeError} If geocodingState is not provided
-     * 
-     * @example
-     * const coordinator = new EventCoordinator(uiCoordinator, geocodingState);
-     */
-    constructor(uiCoordinator, geocodingState) {
+    private _uiCoordinator: IUICoordinator;
+    private _geocodingState: IGeocodingState;
+    private _handlers: Map<Element, { type: string; listener: EventListener }>;
+    private _initialized: boolean;
+
+    constructor(uiCoordinator: IUICoordinator, geocodingState: IGeocodingState) {
         if (!uiCoordinator) {
             throw new TypeError('EventCoordinator: uiCoordinator is required');
         }

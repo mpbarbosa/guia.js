@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * UICoordinator - Manages UI element initialization and DOM manipulation
  * 
@@ -44,27 +43,11 @@ import { log, warn } from '../utils/logger.js';
  * @class
  */
 class UICoordinator {
-    /**
-     * Creates a new UICoordinator instance
-     * 
-     * @param {Document} document - The document object to query for elements
-     * @param {Object} elementIds - Configuration object mapping element names to IDs
-     * @param {string} [elementIds.chronometer] - ID for chronometer element
-     * @param {string} [elementIds.findRestaurantsBtn] - ID for find restaurants button
-     * @param {string} [elementIds.cityStatsBtn] - ID for city stats button
-     * @param {string} [elementIds.timestampDisplay] - ID for timestamp display element
-     * @param {Object} [elementIds.speechSynthesis] - Speech synthesis element IDs
-     * 
-     * @throws {TypeError} If document is not provided
-     * @throws {TypeError} If elementIds is not an object
-     * 
-     * @example
-     * const coordinator = new UICoordinator(document, {
-     *   chronometer: 'chronometer',
-     *   findRestaurantsBtn: 'find-restaurants-btn'
-     * });
-     */
-    constructor(document, elementIds = {}) {
+    private _document: Document;
+    private _elementIds: Record<string, unknown>;
+    private _elements: Record<string, HTMLElement | null>;
+
+    constructor(document: Document, elementIds: Record<string, unknown> = {}) {
         if (!document) {
             throw new TypeError('UICoordinator: document is required');
         }
@@ -132,7 +115,7 @@ class UICoordinator {
      *   button.addEventListener('click', handler);
      * }
      */
-    getElement(name) {
+    getElement(name: string) {
         return this._elements[name] || null;
     }
 
@@ -147,7 +130,7 @@ class UICoordinator {
      *   // Use chronometer element
      * }
      */
-    hasElement(name) {
+    hasElement(name: string) {
         return this._elements[name] !== null && this._elements[name] !== undefined;
     }
 
@@ -175,7 +158,7 @@ class UICoordinator {
      * coordinator.updateTimestamp(Date.now());
      * // Displays: "10/01/2026, 15:30:45"
      */
-    updateTimestamp(timestamp) {
+    updateTimestamp(timestamp: number) {
         const element = this._elements.timestampDisplay;
         if (element) {
             element.textContent = new Date(timestamp).toLocaleString('pt-BR');
@@ -193,7 +176,7 @@ class UICoordinator {
      * @example
      * coordinator.updateChronometer('00:05:23');
      */
-    updateChronometer(text) {
+    updateChronometer(text: string) {
         const element = this._elements.chronometer;
         if (element) {
             element.textContent = text;
@@ -209,9 +192,9 @@ class UICoordinator {
      * @example
      * coordinator.setButtonEnabled('findRestaurantsBtn', false);
      */
-    setButtonEnabled(name, enabled) {
-        const element = this._elements[name];
-        if (element && element.disabled !== undefined) {
+    setButtonEnabled(name: string, enabled: boolean) {
+        const element = this._elements[name] as HTMLButtonElement | null;
+        if (element && 'disabled' in element) {
             element.disabled = !enabled;
         }
     }
@@ -251,13 +234,13 @@ class UICoordinator {
      * @example
      * const element = this._findElement('chronometer');
      */
-    _findElement(elementName) {
-        const elementId = this._elementIds[elementName];
+    _findElement(elementName: string) {
+        const elementId = this._elementIds[elementName] as string | undefined;
         if (!elementId) {
             return null;
         }
 
-        const element = this._document.getElementById(elementId);
+        const element = this._document.getElementById(elementId as string);
         if (!element) {
             warn(`UICoordinator: Element '${elementId}' (${elementName}) not found in document`);
         }

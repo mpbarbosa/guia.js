@@ -1,0 +1,274 @@
+# update-paraty-geocore.yml
+# Checks for a new paraty_geocore.js release on GitHub and updates the
+# jsDelivr CDN URL in src/guia.js, jest.config.unit.js, package.json, and
+# any test/documentation files that reference the version string, then opens
+# a pull request with the full set of changes.
+#
+# paraty_geocore.js is consumed via a jsDelivr CDN URL hard-coded in
+# src/guia.js (not via package.json dependencies), so no npm install is
+# needed — only a URL version-string replacement across relevant files.
+#
+# CDN URL pattern:
+#   https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@<TAG>/dist/esm/index.js
+#
+# Triggers:
+#   - Weekly schedule (Wednesday 09:00 UTC) — keeps the dependency current
+#   - workflow_dispatch — pin to a specific version or force a refresh
+
+name: Update paraty_geocore.js
+
+on:
+  schedule:
+    - cron: '0 9 * * 3'   # every Wednesday at 09:00 UTC
+  workflow_dispatch:
+    inputs:
+      version:
+        description: |
+          paraty_geocore.js tag to update to (e.g. v0.12.0).
+          Leave blank to use the latest published release.
+        required: false
+        default: ''
+
+permissions:
+  contents: write        # push update branch
+  pull-requests: write   # open / update PR
+
+# Prevent concurrent runs from racing on the same PR branch.
+# cancel-in-progress: false queues the second run rather than dropping it,
+# ensuring every scheduled or manual trigger is eventually processed.
+concurrency:
+  group: update-paraty-geocore
+  cancel-in-progress: false
+
+jobs:
+  update-paraty-geocore:
+    name: Check & Update paraty_geocore.js
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Node.js setup ─────────────────────────────────────────────────────
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: npm
+
+      # ── 3. Resolve target version ─────────────────────────────────────────────
+      - name: Resolve target paraty_geocore.js version
+        id: resolve
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          INPUT_VERSION="${{ github.event.inputs.version }}"
+
+          if [[ -n "${INPUT_VERSION}" ]]; then
+            VERSION="${INPUT_VERSION#v}"
+            TAG="v${VERSION}"
+            echo "Source: workflow_dispatch input"
+          else
+            TAG="$(gh api repos/mpbarbosa/paraty_geocore.js/releases/latest --jq '.tag_name')"
+            [[ -n "${TAG}" ]] || { echo "❌  Could not determine latest paraty_geocore.js release." >&2; exit 1; }
+            VERSION="${TAG#v}"
+            echo "Source: GitHub latest release"
+          fi
+
+          CDN_URL="https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@${TAG}/dist/esm/index.js"
+
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}"         >> "$GITHUB_OUTPUT"
+          echo "cdn_url=${CDN_URL}" >> "$GITHUB_OUTPUT"
+          echo "ℹ️  Target: paraty_geocore.js ${TAG}"
+          echo "ℹ️  CDN URL: ${CDN_URL}"
+
+      # ── 4. Check current version ──────────────────────────────────────────────
+      - name: Check current paraty_geocore.js version in src/guia.js
+        id: current
+        run: |
+          # Extract the version tag currently embedded in the CDN URL inside src/guia.js
+          CURRENT_URL="$(grep -oP "https://cdn\.jsdelivr\.net/gh/mpbarbosa/paraty_geocore\.js@[^/]+/dist/esm/index\.js" src/guia.js | head -1)"
+          CURRENT_VERSION="$(echo "${CURRENT_URL}" | grep -oP '(?<=paraty_geocore\.js@)[^/]+')"
+
+          echo "current_url=${CURRENT_URL}"       >> "$GITHUB_OUTPUT"
+          echo "current_version=${CURRENT_VERSION}" >> "$GITHUB_OUTPUT"
+
+          TARGET_URL="${{ steps.resolve.outputs.cdn_url }}"
+
+          if [[ "${CURRENT_URL}" == "${TARGET_URL}" ]]; then
+            echo "up_to_date=true" >> "$GITHUB_OUTPUT"
+            echo "✅  paraty_geocore.js is already at ${{ steps.resolve.outputs.tag }} — nothing to do."
+          else
+            echo "up_to_date=false" >> "$GITHUB_OUTPUT"
+            echo "ℹ️  Updating paraty_geocore.js: ${CURRENT_URL}  →  ${TARGET_URL}"
+          fi
+
+      # ── 5. Update CDN URL in src/guia.js ─────────────────────────────────────
+      - name: Update paraty_geocore.js CDN URL in src/guia.js
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          OLD_URL="${{ steps.current.outputs.current_url }}"
+          NEW_URL="${{ steps.resolve.outputs.cdn_url }}"
+
+          sed -i "s|${OLD_URL}|${NEW_URL}|g" src/guia.js
+          echo "✅  src/guia.js updated."
+
+      # ── 6. Update moduleNameMapper in jest.config.unit.js ────────────────────
+      # The Jest config maps the CDN URL regex to the local paraty_geocore.js
+      # source so Node.js can resolve the https:// import during tests.
+      - name: Update moduleNameMapper in jest.config.unit.js
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          OLD_VERSION="${{ steps.current.outputs.current_version }}"
+          NEW_VERSION="${{ steps.resolve.outputs.version }}"
+
+          # The key is a regex string; escape dots for the sed pattern
+          OLD_ESCAPED="${OLD_VERSION//./\\.}"
+          NEW_ESCAPED="${NEW_VERSION}"
+
+          sed -i "s|paraty_geocore\\.js@${OLD_ESCAPED}/dist|paraty_geocore.js@${NEW_VERSION}/dist|g" jest.config.unit.js
+          echo "✅  jest.config.unit.js updated."
+
+      # ── 7. Update moduleNameMapper in package.json ────────────────────────────
+      - name: Update moduleNameMapper in package.json
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          OLD_VERSION="${{ steps.current.outputs.current_version }}"
+          NEW_VERSION="${{ steps.resolve.outputs.version }}"
+
+          sed -i "s|paraty_geocore\\.js@${OLD_VERSION}/dist|paraty_geocore.js@${NEW_VERSION}/dist|g" package.json
+          echo "✅  package.json updated."
+
+      # ── 8. Run validation ─────────────────────────────────────────────────────
+      - name: Run validation (npm run validate)
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          npm ci
+          npm run validate
+
+      # ── 9. Run tests ──────────────────────────────────────────────────────────
+      - name: Run unit & integration tests
+        if: steps.current.outputs.up_to_date != 'true'
+        run: npm test
+
+      # ── 10. Update CDN URL in test files ──────────────────────────────────────
+      # Some test files import directly from the CDN URL. Update the version
+      # string in those files and re-run only the affected tests to confirm
+      # they still pass against the new paraty_geocore.js API surface.
+      - name: Adjust paraty_geocore.js related tests
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          OLD_URL="${{ steps.current.outputs.current_url }}"
+          NEW_URL="${{ steps.resolve.outputs.cdn_url }}"
+          OLD_VERSION="${{ steps.current.outputs.current_version }}"
+          NEW_VERSION="${{ steps.resolve.outputs.version }}"
+
+          echo "ℹ️  Scanning test/ and __tests__/ for paraty_geocore.js CDN URL references…"
+
+          mapfile -t TEST_FILES < <(grep -rl "paraty_geocore" test/ __tests__/ 2>/dev/null || true)
+
+          if [[ ${#TEST_FILES[@]} -eq 0 ]]; then
+            echo "ℹ️  No paraty_geocore.js references found in test files — nothing to adjust."
+          else
+            echo "📄  Test files with paraty_geocore.js references: ${TEST_FILES[*]}"
+
+            for f in "${TEST_FILES[@]}"; do
+              # Replace full CDN URL first to avoid double-processing the version token
+              if [[ -n "${OLD_URL}" ]]; then
+                sed -i "s|${OLD_URL}|${NEW_URL}|g" "${f}"
+              fi
+              # Replace any remaining bare version strings on paraty lines
+              if [[ -n "${OLD_VERSION}" && "${OLD_VERSION}" != "${NEW_VERSION}" ]]; then
+                grep -n "paraty_geocore" "${f}" | grep -q "${OLD_VERSION}" && \
+                  sed -i "/paraty_geocore/s|${OLD_VERSION}|${NEW_VERSION}|g" "${f}" || true
+              fi
+              echo "   ✏️  Updated: ${f}"
+            done
+
+            echo "🧪  Re-running affected test files…"
+            npx jest --passWithNoTests "${TEST_FILES[@]}"
+            echo "✅  Affected tests passed after adjustment."
+          fi
+
+      # ── 11. Update paraty_geocore.js related documentation ────────────────────
+      # Replaces the old CDN URL and version tag in all Markdown files so that
+      # CDN snippets and version references stay accurate.
+      - name: Update paraty_geocore.js related documentation
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          OLD_URL="${{ steps.current.outputs.current_url }}"
+          NEW_URL="${{ steps.resolve.outputs.cdn_url }}"
+          OLD_VERSION="${{ steps.current.outputs.current_version }}"
+          NEW_VERSION="${{ steps.resolve.outputs.version }}"
+
+          echo "ℹ️  Scanning Markdown files for paraty_geocore.js references…"
+
+          mapfile -t DOC_FILES < <(find . -name '*.md' \
+            ! -path './node_modules/*' \
+            ! -path './.ai_workflow/*' \
+            -print 2>/dev/null || true)
+
+          UPDATED=0
+          for f in "${DOC_FILES[@]}"; do
+            if grep -q "paraty_geocore" "${f}" 2>/dev/null; then
+              # Replace full CDN URL first (avoids double-processing the version token)
+              if [[ -n "${OLD_URL}" ]]; then
+                sed -i "s|${OLD_URL}|${NEW_URL}|g" "${f}"
+              fi
+              # Replace any remaining bare version strings on paraty lines
+              if [[ -n "${OLD_VERSION}" && "${OLD_VERSION}" != "${NEW_VERSION}" ]]; then
+                grep -n "paraty_geocore" "${f}" | grep -q "${OLD_VERSION}" && \
+                  sed -i "/paraty_geocore/s|${OLD_VERSION}|${NEW_VERSION}|g" "${f}" || true
+              fi
+              echo "   ✏️  Updated: ${f}"
+              UPDATED=$((UPDATED + 1))
+            fi
+          done
+
+          if [[ ${UPDATED} -eq 0 ]]; then
+            echo "ℹ️  No paraty_geocore.js references found in documentation — nothing to update."
+          else
+            echo "✅  Updated ${UPDATED} documentation file(s)."
+          fi
+
+      # ── 12. Open pull request ─────────────────────────────────────────────────
+      - name: Create pull request
+        if: steps.current.outputs.up_to_date != 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/update-paraty-geocore-${{ steps.resolve.outputs.version }}
+          delete-branch: true
+          commit-message: |
+            chore(deps): update paraty_geocore.js to ${{ steps.resolve.outputs.tag }}
+
+            Update paraty_geocore.js jsDelivr CDN URL to ${{ steps.resolve.outputs.tag }}.
+            URL: ${{ steps.resolve.outputs.cdn_url }}
+          title: "chore(deps): update paraty_geocore.js to ${{ steps.resolve.outputs.tag }}"
+          body: |
+            ## paraty_geocore.js → ${{ steps.resolve.outputs.tag }}
+
+            Updates the `paraty_geocore.js` jsDelivr CDN URL to the latest release.
+
+            | | |
+            |---|---|
+            | **Previous** | `${{ steps.current.outputs.current_url }}` |
+            | **New** | `${{ steps.resolve.outputs.cdn_url }}` |
+
+            ### Files changed
+            - `src/guia.js` — CDN import URL
+            - `jest.config.unit.js` — `moduleNameMapper` regex key
+            - `package.json` — inline Jest `moduleNameMapper` regex key
+            - `__tests__/` and `test/` — CDN import URLs in test files (if any)
+            - `*.md` — CDN URL and version references in documentation (if any)
+
+            ### Checks
+            - [x] Syntax validation (`npm run validate`)
+            - [x] Unit & integration tests (`npm test`)
+            - [x] paraty_geocore.js related tests adjusted and re-run
+            - [x] paraty_geocore.js related documentation updated
+
+            > Triggered by: `${{ github.event_name }}`
+          labels: dependencies

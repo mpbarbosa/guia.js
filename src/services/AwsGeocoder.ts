@@ -27,7 +27,7 @@ class AwsGeocoder {
 	 * @param {string} [baseUrl] - AWS API base URL (defaults to env.awsLbsBaseUrl)
 	 */
 	constructor(baseUrl?: string) {
-		this.baseUrl = baseUrl || env.awsLbsBaseUrl;
+		this.baseUrl = baseUrl || (env.awsLbsBaseUrl as string);
 		this.endpoint = `${this.baseUrl}/api/geocode/reverse`;
 	}
 

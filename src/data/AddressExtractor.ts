@@ -11,6 +11,7 @@
 
 import BrazilianStandardAddress from './BrazilianStandardAddress.js';
 import ReferencePlace from './ReferencePlace.js';
+import type { NominatimAddress, NominatimResponse, OsmElement } from '../types/nominatim.js';
 
 /**
  * Base class for extracting geocoding API responses into a standardized
@@ -23,13 +24,13 @@ import ReferencePlace from './ReferencePlace.js';
  * @abstract
  */
 class AddressExtractor {
-	data: object;
+	data: Record<string, unknown>;
 	enderecoPadronizado: BrazilianStandardAddress;
 
 	/**
 	 * @param {Object} data - Raw address data from a geocoding API
 	 */
-	constructor(data: object) {
+	constructor(data: Record<string, unknown>) {
 		this.data = data;
 		this.enderecoPadronizado = new BrazilianStandardAddress();
 		this.padronizaEndereco();
@@ -52,7 +53,7 @@ class AddressExtractor {
 	 * @param {string} iso3166Code - e.g. "BR-SP"
 	 * @returns {string|null} e.g. "SP", or null if invalid
 	 */
-	static extractSiglaUF(iso3166Code: string): string | null {
+	static extractSiglaUF(iso3166Code: string | undefined): string | null {
 		if (!iso3166Code || typeof iso3166Code !== 'string') return null;
 		const match = iso3166Code.match(/^BR-([A-Z]{2})$/);
 		return match ? match[1] : null;
@@ -78,6 +79,8 @@ class AddressExtractor {
  * @immutable Instances are frozen after construction
  */
 class NominatimAddressExtractor extends AddressExtractor {
+	declare data: NominatimResponse;
+
 	/**
 	 * Maps Nominatim fields into the standardized Brazilian address.
 	 *
@@ -86,7 +89,7 @@ class NominatimAddressExtractor extends AddressExtractor {
 	padronizaEndereco(): void {
 		if (!this.data || !this.data.address) return;
 
-		const address = this.data.address;
+		const address: NominatimAddress = this.data.address;
 
 		this.enderecoPadronizado.logradouro =
 			address['addr:street'] || address.road || address.street || address.pedestrian || null;
@@ -121,7 +124,7 @@ class NominatimAddressExtractor extends AddressExtractor {
 				? 'Brasil'
 				: (address.country || 'Brasil');
 
-		this.enderecoPadronizado.referencePlace = new ReferencePlace(this.data);
+		this.enderecoPadronizado.referencePlace = new ReferencePlace(this.data as OsmElement);
 	}
 }
 

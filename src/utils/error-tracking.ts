@@ -4,9 +4,9 @@ import { env } from '../config/environment.js';
 /**
  * Error tracking service configuration.
  */
-let errorTrackingConfig = {
+let errorTrackingConfig: { enabled: boolean; service: string | null; dsn: string | null; environment: string; release: string | null; sampleRate: number; beforeSend: ((error: unknown, context: object) => unknown) | null } = {
   enabled: false,
-  service: null, // 'sentry', 'rollbar', etc.
+  service: null,
   dsn: null,
   environment: env.isProduction() ? 'production' : 'development',
   release: null,
@@ -100,7 +100,7 @@ export function reportError(error: Error | string, context: Record<string, unkno
   
   // Call beforeSend filter if provided
   if (errorTrackingConfig.beforeSend) {
-    const filteredError = errorTrackingConfig.beforeSend(error, context);
+    const filteredError = (errorTrackingConfig.beforeSend as (e: unknown, c: object) => unknown)(error, context);
     if (filteredError === null) {
       return; // Error filtered out
     }
@@ -124,28 +124,29 @@ export function reportError(error: Error | string, context: Record<string, unkno
  * Report error to Sentry.
  * @private
  */
-function reportToSentry(error, context) {
+function reportToSentry(error: Error | unknown, context: Record<string, unknown>) {
   if (typeof window === 'undefined' || !window.Sentry) {
     return;
   }
   
   window.Sentry.withScope((scope) => {
+    const s = scope as { setTag(k: string, v: string): void; setContext(k: string, v: object): void };
     // Add context
     if (context.component) {
-      scope.setTag('component', context.component);
+      s.setTag('component', context.component as string);
     }
     if (context.action) {
-      scope.setTag('action', context.action);
+      s.setTag('action', context.action as string);
     }
     if (context.extra) {
-      scope.setContext('extra', context.extra);
+      s.setContext('extra', context.extra as object);
     }
     
     // Capture exception
     if (error instanceof Error) {
-      window.Sentry.captureException(error);
+      window.Sentry!.captureException(error);
     } else {
-      window.Sentry.captureMessage(String(error));
+      window.Sentry!.captureMessage(String(error));
     }
   });
 }
@@ -154,7 +155,7 @@ function reportToSentry(error, context) {
  * Report error to Rollbar.
  * @private
  */
-function reportToRollbar(error, context) {
+function reportToRollbar(error: Error | unknown, context: Record<string, unknown>) {
   if (typeof window === 'undefined' || !window.Rollbar) {
     return;
   }
@@ -185,7 +186,7 @@ export function setUserContext(user: Record<string, string>): void {
   }
   
   if (errorTrackingConfig.service === 'rollbar' && typeof window !== 'undefined' && window.Rollbar) {
-    window.Rollbar.configure({ payload: { person: user } });
+    (window.Rollbar!['configure'] as (c: object) => void)({ payload: { person: user } });
   }
 }
 
@@ -203,7 +204,7 @@ export function addBreadcrumb(message: string, category: string = 'default', dat
   if (!errorTrackingConfig.enabled) return;
   
   if (errorTrackingConfig.service === 'sentry' && typeof window !== 'undefined' && window.Sentry) {
-    window.Sentry.addBreadcrumb({
+    (window.Sentry!['addBreadcrumb'] as (b: object) => void)({
       message,
       category,
       data,

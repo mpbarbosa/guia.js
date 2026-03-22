@@ -29,7 +29,7 @@ import GeolocationProvider from './GeolocationProvider.js';
  * @extends GeolocationProvider
  */
 class BrowserGeolocationProvider extends GeolocationProvider {
-	navigator: object | null;
+	navigator: Navigator | null;
 
 	/**
 	 * Creates a new BrowserGeolocationProvider instance.
@@ -57,7 +57,7 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * // Explicit null - no navigator, no fallback
 	 * const provider = new BrowserGeolocationProvider(null);
 	 */
-	constructor(navigatorObj?: object | null) {
+	constructor(navigatorObj?: Navigator | null) {
 		super();
 		
 		// Distinguish between "no argument" and "explicit undefined/null"
@@ -85,15 +85,16 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 		if (!this.isSupported()) {
 			const error = {
 				code: 0,
-				message: 'Geolocation is not supported'
-			};
+				message: 'Geolocation is not supported',
+				PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3
+			} as unknown as GeolocationPositionError;
 			if (errorCallback) {
 				errorCallback(error);
 			}
 			return;
 		}
 
-		this.navigator.geolocation.getCurrentPosition(
+		this.navigator!.geolocation.getCurrentPosition(
 			successCallback,
 			errorCallback,
 			options
@@ -110,12 +111,12 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} options - Geolocation options
 	 * @returns {number|null} Watch ID for clearing the watch, or null if not supported
 	 */
-	watchPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options: object): number {
+	watchPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options: object): number | null {
 		if (!this.isSupported()) {
 			return null;
 		}
 
-		return this.navigator.geolocation.watchPosition(
+		return this.navigator!.geolocation.watchPosition(
 			successCallback,
 			errorCallback,
 			options
@@ -132,7 +133,7 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 */
 	clearWatch(watchId: number): void {
 		if (this.isSupported() && watchId !== null) {
-			this.navigator.geolocation.clearWatch(watchId);
+			this.navigator!.geolocation.clearWatch(watchId);
 		}
 	}
 

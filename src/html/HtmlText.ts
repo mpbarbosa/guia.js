@@ -29,6 +29,9 @@
  * @author Marcelo Pereira Barbosa
  */
 class HtmlText {
+	document: Document;
+	element: HTMLElement | null;
+	eventConfig: { positionUpdate: string; immediateAddressUpdate: string };
 	/**
 	 * Creates a new HtmlText instance.
 	 * 
@@ -98,7 +101,7 @@ class HtmlText {
 	 * // Typically called automatically via observer pattern
 	 * positionManager.subscribe(htmlText);
 	 */
-	update(positionManager: object, posEvent: string, loading: unknown, error: Error | null): void {
+	update(_positionManager: unknown, posEvent: string, loading: unknown, error: Error | null): void {
 		if (this.element) {
 			if (error) {
 				this.element.textContent = `Error: ${error.message}`;

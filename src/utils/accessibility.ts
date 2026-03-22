@@ -106,15 +106,14 @@ export function makeEmojisAccessible(container: HTMLElement = document.body): vo
   const walker = document.createTreeWalker(
     container,
     NodeFilter.SHOW_TEXT,
-    null,
-    false
+    null
   );
   
   const nodesToUpdate = [];
   let node;
   
   while (node = walker.nextNode()) {
-    if (emojiRegex.test(node.textContent)) {
+    if (emojiRegex.test(node.textContent ?? '')) {
       nodesToUpdate.push(node);
     }
     emojiRegex.lastIndex = 0; // Reset regex state
@@ -122,9 +121,9 @@ export function makeEmojisAccessible(container: HTMLElement = document.body): vo
   
   nodesToUpdate.forEach(textNode => {
     const parent = textNode.parentNode;
-    if (!parent || parent.hasAttribute('role')) return; // Skip if already accessible
+    if (!parent || (parent as Element).hasAttribute?.('role')) return; // Skip if already accessible
     
-    const matches = textNode.textContent.match(emojiRegex);
+    const matches = (textNode.textContent ?? '').match(emojiRegex);
     if (!matches) return;
     
     matches.forEach(emoji => {
@@ -134,7 +133,7 @@ export function makeEmojisAccessible(container: HTMLElement = document.body): vo
       
       // Create accessible version
       const span = createAccessibleEmoji(emoji, accessible.label);
-      const parts = textNode.textContent.split(emoji);
+      const parts = (textNode.textContent ?? '').split(emoji);
       
       if (parts.length === 2) {
         const before = document.createTextNode(parts[0]);

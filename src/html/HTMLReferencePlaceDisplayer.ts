@@ -1,5 +1,7 @@
 import { log } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
+import type ReferencePlace from '../data/ReferencePlace.js';
+import type BrazilianStandardAddress from '../data/BrazilianStandardAddress.js';
 
 import { ADDRESS_FETCHED_EVENT, NO_REFERENCE_PLACE } from "../config/defaults.js";
 
@@ -63,8 +65,8 @@ class HTMLReferencePlaceDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	constructor(element: HTMLElement, referencePlaceDisplay: HTMLElement | boolean = false) {
-		this.element = element;
+	constructor(element: HTMLElement | string, referencePlaceDisplay: HTMLElement | boolean = false) {
+		this.element = typeof element === 'string' ? document.getElementById(element) as HTMLElement : element;
 		this.referencePlaceDisplay = referencePlaceDisplay;
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
 	}
@@ -94,7 +96,7 @@ class HTMLReferencePlaceDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	renderReferencePlaceHtml(referencePlace: object | null): string {
+	renderReferencePlaceHtml(referencePlace: ReferencePlace | null): string {
 		if (!referencePlace) {
 			return `
 				<div class="empty-state reference-place-empty">
@@ -206,7 +208,7 @@ class HTMLReferencePlaceDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	update(addressData: object, brazilianStandardAddress: object | null, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
+	update(_addressData: Record<string, unknown>, brazilianStandardAddress: BrazilianStandardAddress | null, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
 		// Log update for debugging (following MP Barbosa logging standards)
 		log(`(HTMLReferencePlaceDisplayer) update() called with posEvent: ${posEvent}`);
 		

@@ -32,14 +32,14 @@ export async function withLoading(button: HTMLButtonElement, asyncFn: () => Prom
 
   // Store original state
   const originalText = button.textContent;
-  const wasDisabled = button.disabled || button.getAttribute('aria-disabled') === 'true';
+  const wasDisabled = (button as HTMLButtonElement).disabled || button.getAttribute('aria-disabled') === 'true';
 
   try {
     // Apply loading state
     button.classList.add('loading');
     
     if (disableOnLoad) {
-      button.disabled = true;
+      (button as HTMLButtonElement).disabled = true;
       button.setAttribute('aria-disabled', 'true');
     }
 
@@ -66,7 +66,7 @@ export async function withLoading(button: HTMLButtonElement, asyncFn: () => Prom
     button.classList.remove('loading');
 
     if (disableOnLoad && !wasDisabled) {
-      button.disabled = false;
+      (button as HTMLButtonElement).disabled = false;
       button.setAttribute('aria-disabled', 'false');
     }
 
@@ -99,13 +99,13 @@ export function setButtonDisabled(button: HTMLButtonElement, disabled: boolean, 
   if (!button) return;
 
   if (disabled) {
-    button.disabled = true;
+    (button as HTMLButtonElement).disabled = true;
     button.setAttribute('aria-disabled', 'true');
     if (reason) {
       button.setAttribute('aria-label', `${button.textContent} - ${reason}`);
     }
   } else {
-    button.disabled = false;
+    (button as HTMLButtonElement).disabled = false;
     button.setAttribute('aria-disabled', 'false');
     if (reason) {
       button.removeAttribute('aria-label');
@@ -196,7 +196,7 @@ export function standardizeButtons(): void {
     }
     
     // Ensure ARIA disabled state matches
-    if (button.disabled && button.getAttribute('aria-disabled') !== 'true') {
+    if ((button as HTMLButtonElement).disabled && button.getAttribute('aria-disabled') !== 'true') {
       button.setAttribute('aria-disabled', 'true');
     }
     

@@ -27,7 +27,7 @@ import { escapeHtml } from './html-sanitizer.js';
  * @returns {Object} Error info with name and message
  * @private
  */
-const getGeolocationErrorInfo = (errorCode) => {
+const getGeolocationErrorInfo = (errorCode: number) => {
 	// Standard W3C Geolocation API error code mappings
 	const errorMap = {
 		1: {
@@ -45,7 +45,7 @@ const getGeolocationErrorInfo = (errorCode) => {
 	};
 
 	// Fallback for unknown error codes (defensive programming)
-	return errorMap[errorCode] || {
+	return errorMap[errorCode as keyof typeof errorMap] || {
 		name: "UnknownGeolocationError",
 		message: "Unknown geolocation error occurred"
 	};
@@ -60,7 +60,7 @@ const getGeolocationErrorInfo = (errorCode) => {
 export const formatGeolocationError = (error: { code: number; message: string }): Error => {
 	const errorInfo = getGeolocationErrorInfo(error.code);
 
-	const formattedError = new Error(errorInfo.message);
+	const formattedError = new Error(errorInfo.message) as Error & { code?: number; originalError?: unknown };
 	formattedError.name = errorInfo.name;
 	formattedError.code = error.code;
 	formattedError.originalError = error;
@@ -94,7 +94,7 @@ export const getGeolocationErrorMessage = (errorCode: number): string => {
 	};
 
 	// Fallback message for unknown errors in Portuguese
-	return errorMessages[errorCode] || "Erro desconhecido";
+	return errorMessages[errorCode as keyof typeof errorMessages] || "Erro desconhecido";
 };
 
 /**

@@ -52,7 +52,7 @@ export function showToast(message: string, type: string = 'info', options: { dur
 
   // Toast structure
   toast.innerHTML = `
-    <div class="toast-icon">${icons[type] || icons.info}</div>
+    <div class="toast-icon">${icons[type as keyof typeof icons] || icons.info}</div>
     <div class="toast-message">${escapeHtml(message)}</div>
     ${dismissible ? '<button class="toast-close" type="button" aria-label="Fechar notificação">×</button>' : ''}
   `;
@@ -68,7 +68,7 @@ export function showToast(message: string, type: string = 'info', options: { dur
   // Handle dismiss button
   if (dismissible) {
     const closeBtn = toast.querySelector('.toast-close');
-    closeBtn.addEventListener('click', () => {
+    closeBtn?.addEventListener('click', () => {
       dismissToast(toast);
     });
   }
@@ -110,7 +110,7 @@ export function dismissToast(toast: HTMLElement): void {
  */
 export function dismissAllToasts(): void {
   const toasts = document.querySelectorAll('.toast');
-  toasts.forEach(toast => dismissToast(toast));
+  toasts.forEach(toast => dismissToast(toast as HTMLElement));
 }
 
 /**
@@ -120,7 +120,7 @@ export function dismissAllToasts(): void {
  * @returns {string} Escaped text
  * @private
  */
-function escapeHtml(text) {
+function escapeHtml(text: string) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;

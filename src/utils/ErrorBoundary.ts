@@ -72,15 +72,15 @@ class ErrorBoundary {
         
       } catch (error) {
         this.hasError = true;
-        this.lastError = error;
+        this.lastError = error instanceof Error ? error : null;
         
         // Always display in browser console regardless of log level or container
         console.error(`[ErrorBoundary] Error in ${this.componentName}:`, error);
-        logError(`Error in ${this.componentName}:`, error);
+        logError(`Error in ${this.componentName}:`, error instanceof Error ? error : String(error));
         
         // Track error in monitoring service
         if (this.trackErrors) {
-          reportError(error, {
+          reportError(error instanceof Error ? error : new Error(String(error)), {
             component: this.componentName,
             context: 'ErrorBoundary'
           });
@@ -89,16 +89,16 @@ class ErrorBoundary {
         // Call custom error handler if provided
         if (this.onError) {
           try {
-            await this.onError(error, this.componentName);
+            await this.onError(error instanceof Error ? error : new Error(String(error)), this.componentName);
           } catch (handlerError) {
             console.error('[ErrorBoundary] Error in custom error handler:', handlerError);
-            logError('Error in custom error handler:', handlerError);
+            logError('Error in custom error handler:', handlerError instanceof Error ? handlerError : String(handlerError));
           }
         }
         
         // Render fallback UI if container provided
         if (container) {
-          this.renderFallback(container, error);
+          this.renderFallback(container, error instanceof Error ? error : new Error(String(error)));
         }
         
         // Always re-throw so the exception is never silently swallowed

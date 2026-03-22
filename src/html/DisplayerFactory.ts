@@ -117,7 +117,11 @@ class DisplayerFactory {
 	 * @since 0.9.0-alpha
 	 */
 	static createAddressDisplayer(element: HTMLElement | string, enderecoPadronizadoDisplay: HTMLElement | string | boolean = false): HTMLAddressDisplayer {
-		const displayer = new HTMLAddressDisplayer(element, enderecoPadronizadoDisplay);
+		const resolvedEnderecoDisplay: HTMLElement | boolean =
+			typeof enderecoPadronizadoDisplay === 'string'
+				? (document.getElementById(enderecoPadronizadoDisplay) ?? false)
+				: enderecoPadronizadoDisplay;
+		const displayer = new HTMLAddressDisplayer(element, resolvedEnderecoDisplay);
 		return displayer; // HTMLAddressDisplayer already freezes itself
 	}
 

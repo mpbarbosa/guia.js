@@ -72,7 +72,7 @@
  * @since 0.9.0-alpha
  * @author Marcelo Pereira Barbosa
  */
-export const isMobileDevice = (options = {}) => {
+export const isMobileDevice = (options: { navigatorObj?: Navigator | null; windowObj?: Window | null } = {}) => {
 	// Allow dependency injection for testing (referential transparency)
 	const navigatorObj = options.navigatorObj || (typeof navigator !== 'undefined' ? navigator : null);
 	const windowObj = options.windowObj || (typeof window !== 'undefined' ? window : null);
@@ -85,7 +85,7 @@ export const isMobileDevice = (options = {}) => {
 	// Method 1: User agent detection
 	// Safely access user agent with fallbacks
 	const userAgent = navigatorObj.userAgent || navigatorObj.vendor ||
-		(windowObj.opera ? windowObj.opera : '') || '';
+		((windowObj as Window & { opera?: string }).opera ?? '') || '';
 	const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i;
 	const isMobileUA = mobileRegex.test(userAgent.toLowerCase());
 

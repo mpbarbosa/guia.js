@@ -204,10 +204,10 @@ class SpeechSynthesisManager {
         this.synth = window.speechSynthesis;
         
         // Initialize composition components (extracted classes)
-        this.voiceLoader = new VoiceLoader({ enableLogging });
+        this.voiceLoader = new VoiceLoader({});
         this.voiceSelector = new VoiceSelector({ 
-            primaryLanguage: SPEECH_CONFIG.primaryLanguage,
-            fallbackLanguagePrefix: SPEECH_CONFIG.fallbackLanguagePrefix 
+            primaryLang: SPEECH_CONFIG.primaryLanguage,
+            fallbackLangPrefix: SPEECH_CONFIG.fallbackLanguagePrefix 
         });
         this.configuration = new SpeechConfiguration(enableLogging);
         
@@ -297,8 +297,8 @@ class SpeechSynthesisManager {
      * @param {string} message - Main log message
      * @param {...any} params - Additional parameters to log
      */
-    safeLog(message, ...params) {
-        if (this.enableLogging && typeof console !== 'undefined' && console.log) {
+    safeLog(message: unknown, ...params: unknown[]) {
+        if (this.enableLogging && typeof console !== 'undefined' && typeof console.log === 'function') {
             const fullMessage = `[${new Date().toISOString()}] ${message} ${params.join(" ")}`;
             log(fullMessage);
         }
@@ -311,9 +311,9 @@ class SpeechSynthesisManager {
      * @param {string} message - Main warning message
      * @param {...any} params - Additional parameters to log
      */
-    safeWarn(message, ...params) {
-        if (this.enableLogging && typeof console !== 'undefined' && console.warn) {
-            warn(message, ...params);
+    safeWarn(message: unknown, ...params: unknown[]) {
+        if (this.enableLogging && typeof console !== 'undefined' && typeof console.warn === 'function') {
+            warn(String(message), ...params);
         }
     }
 
@@ -358,7 +358,7 @@ class SpeechSynthesisManager {
          */
         const selectVoiceSync = () => {
             // Get voices from Web Speech API directly (synchronous fallback for backward compatibility)
-            this.voices = this.synth.getVoices();
+            this.voices = this.synth!.getVoices();
             this.safeLog(`(SpeechSynthesisManager) Found ${this.voices.length} available voices`);
             
             // Select voice using VoiceSelector (with priority strategy)
@@ -466,7 +466,7 @@ class SpeechSynthesisManager {
             this.safeLog(`(SpeechSynthesisManager) Voice retry attempt ${this.voiceRetryAttempts}/${this.maxVoiceRetryAttempts}`);
 
             // Get current available voices for retry check
-            const voices = this.synth.getVoices();
+            const voices = this.synth!.getVoices();
             const brazilianVoice = voices.find(voice =>
                 voice.lang && voice.lang.toLowerCase() === SPEECH_CONFIG.primaryLanguage
             );
@@ -532,7 +532,7 @@ class SpeechSynthesisManager {
      * // Clear voice selection (use default)
      * speechManager.setVoice(null);
      */
-    setVoice(voice) {
+    setVoice(voice: SpeechSynthesisVoice | null) {
         // Validate voice parameter
         if (voice !== null && (typeof voice !== 'object' || !voice.name)) {
             throw new TypeError('Voice must be a valid SpeechSynthesisVoice object or null');
@@ -573,7 +573,7 @@ class SpeechSynthesisManager {
      * // Set fast speech rate (automatically clamped to maximum)
      * speechManager.setRate(15); // Will be clamped to 10.0
      */
-    setRate(rate) {
+    setRate(rate: number) {
         // Validate rate parameter type
         if (typeof rate !== 'number' || isNaN(rate)) {
             throw new TypeError('Rate must be a valid number');
@@ -612,7 +612,7 @@ class SpeechSynthesisManager {
      * // Set invalid pitch (automatically clamped to maximum)
      * speechManager.setPitch(5.0); // Will be clamped to 2.0
      */
-    setPitch(pitch) {
+    setPitch(pitch: number) {
         // Validate pitch parameter type
         if (typeof pitch !== 'number' || isNaN(pitch)) {
             throw new TypeError('Pitch must be a valid number');
@@ -711,7 +711,7 @@ class SpeechSynthesisManager {
      * @since 0.9.0-alpha
      * @author Marcelo Pereira Barbosa
      */
-    speak(text, priority = 0) {
+    speak(text: string, priority = 0) {
         this.safeLog(`(SpeechSynthesisManager) Speak request: "${text}" (priority: ${priority})`);
         
         // STEP 1: Input Validation - Comprehensive validation prevents invalid requests
@@ -825,7 +825,7 @@ class SpeechSynthesisManager {
 
         // Execute the speech utterance using Web Speech API
         try {
-            this.synth.speak(utterance);
+            this.synth!.speak(utterance);
             this.safeLog(`(SpeechSynthesisManager) Speech utterance started for: "${item.text}"`);
         } catch (error) {
             this.safeWarn('(SpeechSynthesisManager) Failed to start speech utterance:', error);
@@ -916,8 +916,8 @@ class SpeechSynthesisManager {
      * setTimeout(() => speechManager.pause(), 1000);
      */
     pause() {
-        if (this.synth.speaking && !this.synth.paused) {
-            this.synth.pause();
+        if (this.synth!.speaking && !this.synth!.paused) {
+            this.synth!.pause();
             this.safeLog('(SpeechSynthesisManager) Speech paused');
         } else {
             this.safeLog('(SpeechSynthesisManager) No active speech to pause');
@@ -938,8 +938,8 @@ class SpeechSynthesisManager {
      * speechManager.resume();
      */
     resume() {
-        if (this.synth.paused) {
-            this.synth.resume();
+        if (this.synth!.paused) {
+            this.synth!.resume();
             this.safeLog('(SpeechSynthesisManager) Speech resumed');
         } else {
             this.safeLog('(SpeechSynthesisManager) No paused speech to resume');
@@ -973,7 +973,7 @@ class SpeechSynthesisManager {
      */
     stop() {
         // Cancel any current speech synthesis
-        this.synth.cancel();
+        this.synth!.cancel();
         
         // Clear all pending items from queue
         const queueSize = this.speechQueue.size();
@@ -1145,7 +1145,7 @@ class SpeechSynthesisManager {
         
         // Cancel any ongoing speech
         if (this.synth) {
-            this.synth.cancel();
+            this.synth!.cancel();
         }
         
         // Clear the speech queue

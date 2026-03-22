@@ -1,4 +1,6 @@
 import { log } from '../utils/logger.js';
+import type { SpeechElementIds } from './HtmlSpeechControls.js';
+import type BrazilianStandardAddress from '../data/BrazilianStandardAddress.js';
 
 /**
  * HTML-based speech synthesis controller with UI integration and address change notifications.
@@ -94,11 +96,11 @@ import SpeechTextBuilder from '../speech/SpeechTextBuilder.js';
  */
 class HtmlSpeechSynthesisDisplayer {
 	document: Document;
-	elementIds: object;
-	speechManager: object;
-	_textBuilder: object;
-	_speechControls: object;
-	_addressObserver: object;
+	elementIds: SpeechElementIds;
+	speechManager: SpeechSynthesisManager;
+	_textBuilder: SpeechTextBuilder;
+	_speechControls: HtmlSpeechControls;
+	_addressObserver: AddressSpeechObserver;
 	/**
 	 * Creates a new HtmlSpeechSynthesisDisplayer facade instance.
 	 * 
@@ -152,7 +154,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 *   pitchValueId: 'pitch-value'
 	 * });
 	 */
-	constructor(document: Document, elementIds: object) {
+	constructor(document: Document, elementIds: SpeechElementIds) {
 		// Parameter validation with specific error messages (same as original)
 		if (document == null) {
 			throw new TypeError("Document parameter cannot be null or undefined");
@@ -212,7 +214,7 @@ class HtmlSpeechSynthesisDisplayer {
 		this._addressObserver = new AddressSpeechObserver(
 			this.speechManager,
 			this._textBuilder,
-			document.getElementById(elementIds.textInputId) // Optional text input for updates
+			document.getElementById(elementIds.textInputId || '') // Optional text input for updates
 		);
 
 		// Log successful initialization
@@ -248,7 +250,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * @returns {HTMLSelectElement|null} Language select element or null if not found
 	 */
 	get languageSelect() {
-		return this._speechControls?.languageSelect || null;
+		return (this._speechControls as unknown as Record<string, unknown>)?.languageSelect as HTMLSelectElement | null || null;
 	}
 
 	/**
@@ -354,7 +356,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * const text = displayer.buildTextToSpeechLogradouro(address);
 	 * // Returns: "Você está na Rua das Flores, 123"
 	 */
-	buildTextToSpeechLogradouro(currentAddress: object): string {
+	buildTextToSpeechLogradouro(currentAddress: BrazilianStandardAddress): string {
 		return this._textBuilder.buildTextToSpeechLogradouro(currentAddress);
 	}
 
@@ -373,7 +375,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * const text = displayer.buildTextToSpeechBairro(address);
 	 * // Returns: "Você entrou no bairro Centro"
 	 */
-	buildTextToSpeechBairro(currentAddress: object): string {
+	buildTextToSpeechBairro(currentAddress: BrazilianStandardAddress): string {
 		return this._textBuilder.buildTextToSpeechBairro(currentAddress);
 	}
 
@@ -398,7 +400,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * });
 	 * // Returns: "Você saiu de Recife e entrou em Olinda"
 	 */
-	buildTextToSpeechMunicipio(currentAddress: object, changeDetails?: object): string {
+	buildTextToSpeechMunicipio(currentAddress: BrazilianStandardAddress, changeDetails?: Record<string, unknown>): string {
 		return this._textBuilder.buildTextToSpeechMunicipio(currentAddress, changeDetails);
 	}
 
@@ -417,7 +419,7 @@ class HtmlSpeechSynthesisDisplayer {
 	 * const text = displayer.buildTextToSpeech(address);
 	 * // Returns: "Você está na Rua das Flores, 123, no bairro Centro, em São Paulo"
 	 */
-	buildTextToSpeech(currentAddress: object): string {
+	buildTextToSpeech(currentAddress: BrazilianStandardAddress): string {
 		return this._textBuilder.buildTextToSpeech(currentAddress);
 	}
 
@@ -452,16 +454,16 @@ class HtmlSpeechSynthesisDisplayer {
 	 *   { oldValue: 'Centro', newValue: 'Jardins' }
 	 * );
 	 */
-	update(currentAddress: object, event: string, posEvent: string, changeDetails?: object): void {
+	update(currentAddress: BrazilianStandardAddress, event: string, posEvent: string, changeDetails?: Record<string, unknown>): void {
 		// Log for backward compatibility with original implementation
-		if (typeof console !== 'undefined' && console.log) {
+		if (typeof console !== 'undefined' && typeof console.log === 'function') {
 			log('+++ (301) HtmlSpeechSynthesisDisplayer.update called +++');
 			log('+++ (302) currentAddress: ', currentAddress);
 		}
 
 		// Delegate to AddressSpeechObserver component
 		// This maintains the same observer pattern interface while using composition
-		this._addressObserver.update(currentAddress, event, posEvent, changeDetails);
+		this._addressObserver.update(currentAddress, event, posEvent, changeDetails, undefined);
 	}
 
 	/**

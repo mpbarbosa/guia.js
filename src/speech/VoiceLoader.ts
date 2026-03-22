@@ -184,7 +184,7 @@ class VoiceLoader {
         
         for (let attempt = 0; attempt < this.maxRetries; attempt++) {
             // Try to get voices
-            const voices = this.speechSynthesis.getVoices();
+            const voices = this.speechSynthesis!.getVoices();
             
             // Success: voices available
             if (voices.length > 0) {

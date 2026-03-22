@@ -1,9 +1,8 @@
 import { log } from "../utils/logger.js";
 import { ADDRESS_FETCHED_EVENT } from "../config/defaults.js";
-import SpeechSynthesisManager, {
-  SPEECH_PRIORITY,
-} from "../speech/SpeechSynthesisManager.js"; // eslint-disable-line no-unused-vars
-import { SpeechTextBuilder } from "../speech/SpeechTextBuilder.js"; // eslint-disable-line no-unused-vars
+import type { default as _SpeechSynthesisManager } from "../speech/SpeechSynthesisManager.js";
+import { SPEECH_PRIORITY } from "../speech/SpeechSynthesisManager.js";
+import type { SpeechTextBuilder as _SpeechTextBuilder } from "../speech/SpeechTextBuilder.js";
 import PositionManager from "../core/PositionManager.js";
 
 export class AddressSpeechObserver {
@@ -40,7 +39,7 @@ export class AddressSpeechObserver {
     _error: unknown,
   ): void {
     // Logging is now handled by HtmlSpeechSynthesisDisplayer facade for backward compatibility
-    // if (typeof console !== 'undefined' && console.log) {
+    // if (typeof console !== 'undefined' && typeof console.log === 'function') {
     // log("+++ (301) AddressSpeechObserver.update called +++");
     // log("+++ (302) currentAddress: ", currentAddress);
     // log("+++ (303) enderecoPadronizadoOrEvent: ", enderecoPadronizadoOrEvent);
@@ -55,7 +54,7 @@ export class AddressSpeechObserver {
     let priority: any = SPEECH_PRIORITY.PERIODIC;
 
     if (posEvent === ADDRESS_FETCHED_EVENT && !this._firstAddressAnnounced) {
-      if (typeof console !== "undefined" && console.log) {
+      if (typeof console !== "undefined" && typeof console.log === "function") {
         log("+++ (305) (AddressSpeechObserver) First address - announcing");
       }
       textToBeSpoken = this.textBuilder.buildTextToSpeech(
@@ -74,7 +73,7 @@ export class AddressSpeechObserver {
         enderecoPadronizadoOrEvent,
       )
     ) {
-      if (typeof console !== "undefined" && console.log) {
+      if (typeof console !== "undefined" && typeof console.log === "function") {
         log("+++ (310) (AddressSpeechObserver) Changed");
       }
 

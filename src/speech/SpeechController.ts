@@ -73,7 +73,7 @@ export class SpeechController {
      * @private
      */
     _log(message: string, ...params: unknown[]): void {
-        if (this.enableLogging && typeof console !== 'undefined' && console.log) {
+        if (this.enableLogging && typeof console !== 'undefined' && typeof console.log === 'function') {
             log(message, ...params);
         }
     }
@@ -86,7 +86,7 @@ export class SpeechController {
      * @private
      */
     _warn(message: string, ...params: unknown[]): void {
-        if (this.enableLogging && typeof console !== 'undefined' && console.warn) {
+        if (this.enableLogging && typeof console !== 'undefined' && typeof console.warn === 'function') {
             warn(message, ...params);
         }
     }
@@ -132,7 +132,7 @@ export class SpeechController {
         if (callbacks.onStart) {
             utterance.onstart = () => {
                 this._log(`(SpeechController) Speech started: "${text}"`);
-                callbacks.onStart();
+                callbacks.onStart?.();
             };
         }
 
@@ -141,7 +141,7 @@ export class SpeechController {
             utterance.onend = () => {
                 this._log(`(SpeechController) Speech completed: "${text}"`);
                 this.currentUtterance = null;
-                callbacks.onEnd();
+                callbacks.onEnd?.();
             };
         } else {
             // Default handler to clear current utterance
@@ -156,7 +156,7 @@ export class SpeechController {
             utterance.onerror = (event) => {
                 this._warn(`(SpeechController) Speech error for "${text}":`, event.error);
                 this.currentUtterance = null;
-                callbacks.onError(event);
+                callbacks.onError?.(event);
             };
         } else {
             // Default error handler
@@ -170,7 +170,7 @@ export class SpeechController {
         if (callbacks.onBoundary) {
             utterance.onboundary = (event) => {
                 this._log(`(SpeechController) Word boundary at position ${event.charIndex}`);
-                callbacks.onBoundary(event);
+                callbacks.onBoundary?.(event);
             };
         }
     }
@@ -234,7 +234,7 @@ export class SpeechController {
             
             // Call error callback if provided
             if (callbacks.onError) {
-                callbacks.onError({ error: error.message || 'Unknown error' });
+                callbacks.onError?.(new Event('error') as unknown as SpeechSynthesisErrorEvent);
             }
             
             return false;

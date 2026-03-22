@@ -75,7 +75,7 @@ function parseValue(value: string): boolean | number | string {
  * inline the values at build time. Dynamic key access (import.meta.env[key])
  * is NOT replaced by Vite; only literal references are.
  */
-const VITE_STATIC_ENV = typeof import.meta !== 'undefined' && import.meta.env
+const VITE_STATIC_ENV: Record<string, string | undefined> = typeof import.meta !== 'undefined' && import.meta.env
   ? {
       NOMINATIM_API_URL:      import.meta.env.VITE_NOMINATIM_API_URL,
       NOMINATIM_USER_AGENT:   import.meta.env.VITE_NOMINATIM_USER_AGENT,

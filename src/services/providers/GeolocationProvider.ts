@@ -43,7 +43,7 @@ class GeolocationProvider {
 	 *   { enableHighAccuracy: true, timeout: 5000 }
 	 * );
 	 */
-	getCurrentPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options: object): void {
+	getCurrentPosition(_successCallback: (pos: object) => void, _errorCallback: (err: object) => void, _options: object): void {
 		throw new Error('GeolocationProvider.getCurrentPosition() must be implemented by subclass');
 	}
 
@@ -63,7 +63,7 @@ class GeolocationProvider {
 	 *   { enableHighAccuracy: true }
 	 * );
 	 */
-	watchPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options: object): number {
+	watchPosition(_successCallback: (pos: object) => void, _errorCallback: (err: object) => void, _options: object): number | null {
 		throw new Error('GeolocationProvider.watchPosition() must be implemented by subclass');
 	}
 
@@ -77,7 +77,7 @@ class GeolocationProvider {
 	 * @example
 	 * provider.clearWatch(watchId);
 	 */
-	clearWatch(watchId: number): void {
+	clearWatch(_watchId: number): void {
 		throw new Error('GeolocationProvider.clearWatch() must be implemented by subclass');
 	}
 

@@ -93,7 +93,7 @@ const _getConfiguredLevel = () => {
  */
 const _initializeConfig = () => {
 	const levelName = _getConfiguredLevel();
-	logConfig.level = LOG_LEVELS[levelName] ?? LOG_LEVELS.log;
+	logConfig.level = LOG_LEVELS[levelName as keyof typeof LOG_LEVELS] ?? LOG_LEVELS.log;
 	logConfig.enabled = logConfig.level > LOG_LEVELS.none;
 };
 
@@ -107,7 +107,7 @@ _initializeConfig();
  * @returns {boolean} True if level is enabled
  * @private
  */
-const _isLevelEnabled = (level) => {
+const _isLevelEnabled = (level: number) => {
 	return logConfig.enabled && logConfig.level >= level;
 };
 
@@ -239,8 +239,8 @@ export const debug = (message: string, ...params: unknown[]): void => {
  * @returns {void}
  */
 export const setLogLevel = (options: { level?: string; enabled?: boolean; timestamp?: boolean } = {}): void => {
-	if (options.level && LOG_LEVELS[options.level] !== undefined) {
-		logConfig.level = LOG_LEVELS[options.level];
+	if (options.level && LOG_LEVELS[options.level as keyof typeof LOG_LEVELS] !== undefined) {
+		logConfig.level = LOG_LEVELS[options.level as keyof typeof LOG_LEVELS];
 	}
 	if (typeof options.enabled === 'boolean') {
 		logConfig.enabled = options.enabled;
@@ -263,7 +263,7 @@ export const setLogLevel = (options: { level?: string; enabled?: boolean; timest
  */
 export const getLogLevel = () => {
 	const levelName = Object.keys(LOG_LEVELS).find(
-		key => LOG_LEVELS[key] === logConfig.level
+		key => LOG_LEVELS[key as keyof typeof LOG_LEVELS] === logConfig.level
 	) || 'log';
 	
 	return {

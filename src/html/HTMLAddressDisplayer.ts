@@ -65,8 +65,8 @@ export class HTMLAddressDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	constructor(element: HTMLElement, enderecoPadronizadoDisplay: HTMLElement | boolean = false) {
-		this.element = element;
+	constructor(element: HTMLElement | string, enderecoPadronizadoDisplay: HTMLElement | boolean = false) {
+		this.element = typeof element === 'string' ? document.getElementById(element) as HTMLElement : element;
 		this.enderecoPadronizadoDisplay = enderecoPadronizadoDisplay;
 		this._displayObserver = new AddressDisplayObserver(element, this);
 		// NOTE: This instance is frozen because element and enderecoPadronizadoDisplay
@@ -113,9 +113,9 @@ export class HTMLAddressDisplayer {
 		}
 
 		// Update standardized address display if element is provided
-		if (this.enderecoPadronizadoDisplay && enderecoPadronizado) {
+		if (this.enderecoPadronizadoDisplay && this.enderecoPadronizadoDisplay !== true && enderecoPadronizado) {
 			log('(HTMLAddressDisplayer) Updating standardized address display:', enderecoPadronizado.enderecoCompleto());
-			this.enderecoPadronizadoDisplay.innerHTML = escapeHtml(enderecoPadronizado.enderecoCompleto());
+			(this.enderecoPadronizadoDisplay as HTMLElement).innerHTML = escapeHtml(enderecoPadronizado.enderecoCompleto());
 		}
 
 		// Create progressive disclosure structure

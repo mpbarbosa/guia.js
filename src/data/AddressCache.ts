@@ -25,6 +25,8 @@ import AddressExtractor from './AddressExtractor.js';
 import LRUCache from './LRUCache.js';
 import { log } from '../utils/logger.js';
 import timerManager from '../utils/TimerManager.js';
+import type { NominatimResponse } from '../types/nominatim.js';
+import type BrazilianStandardAddress from './BrazilianStandardAddress.js';
 
 // NEW: Import refactored classes (v0.9.0-alpha)
 import AddressChangeDetector from './AddressChangeDetector.js';
@@ -87,10 +89,10 @@ class AddressCache {
 	logradouroChangeCallback: ((details: unknown) => void) | null;
 	bairroChangeCallback: ((details: unknown) => void) | null;
 	municipioChangeCallback: ((details: unknown) => void) | null;
-	currentAddress: object | null;
-	previousAddress: object | null;
-	currentRawData: object | null;
-	previousRawData: object | null;
+	currentAddress: BrazilianStandardAddress | null;
+	previousAddress: BrazilianStandardAddress | null;
+	currentRawData: NominatimResponse | null;
+	previousRawData: NominatimResponse | null;
 	constructor() {
 		this.observerSubject = new ObserverSubject();
 		
@@ -134,7 +136,7 @@ class AddressCache {
 	 * @author Marcelo Pereira Barbosa
 	 */
 	generateCacheKey(data: unknown) {
-		return AddressDataStore.generateCacheKey(data as object | null);
+		return AddressDataStore.generateCacheKey(data as NominatimResponse | null);
 	}
 
 	/**
@@ -143,7 +145,7 @@ class AddressCache {
 	 * @static
 	 */
 	static generateCacheKey(data: unknown) {
-		return AddressDataStore.generateCacheKey(data as object | null);
+		return AddressDataStore.generateCacheKey(data as NominatimResponse | null);
 	}
 
 	/**
@@ -675,7 +677,7 @@ class AddressCache {
 		}
 
 		// Create new standardized address using AddressExtractor
-		const extractor = new AddressExtractor(data as object);
+		const extractor = new AddressExtractor(data as Record<string, unknown>);
 
 		// Cache the result if we have a valid key
 		if (cacheKey) {
@@ -686,7 +688,7 @@ class AddressCache {
 			});
 
 			// Update data store with new address and raw data (v0.9.0-alpha refactoring)
-			this.dataStore.update(extractor.enderecoPadronizado, data as object | null);
+			this.dataStore.update(extractor.enderecoPadronizado, data as NominatimResponse | null);
 			
 			// Sync legacy properties for backward compatibility
 			this.currentAddress = this.dataStore.getCurrent().address;

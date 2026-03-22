@@ -1,4 +1,3 @@
-
 /**
  * Reverse geocoding service for converting coordinates to addresses.
  * @version 0.9.0-alpha
@@ -183,7 +182,7 @@ class ReverseGeocoder {
 	_subscribe(url: string) {
 		if (!this.fetchManager) return;
 		const fm = this.fetchManager;
-		this.observerSubject.observers.forEach((observer) => {
+		this.observerSubject.observers.forEach((observer: unknown) => {
 			fm.subscribe(observer, url);
 		});
 	}

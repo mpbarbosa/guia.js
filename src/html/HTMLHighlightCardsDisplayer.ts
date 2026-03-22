@@ -1,4 +1,5 @@
 import { log, warn } from '../utils/logger.js';
+import type BrazilianStandardAddress from '../data/BrazilianStandardAddress.js';
 /**
  * HTMLHighlightCardsDisplayer - Updates highlight cards for municipio, bairro, and logradouro
  * 
@@ -93,7 +94,7 @@ class HTMLHighlightCardsDisplayer {
      * @param {Object} addressData - Address data from geocoding
      * @param {Object} enderecoPadronizado - Standardized Brazilian address
      */
-    update(addressData: object, enderecoPadronizado: object): void {
+    update(addressData: Record<string, unknown>, enderecoPadronizado: BrazilianStandardAddress): void {
         log('(HTMLHighlightCardsDisplayer) update called with:', {
             hasAddressData: !!addressData,
             hasEnderecoPadronizado: !!enderecoPadronizado,

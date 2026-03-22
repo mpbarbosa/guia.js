@@ -63,7 +63,7 @@
  */
 
 // Import core domain classes
-import { GeoPosition, GeocodingState } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.0/dist/esm/index.js';
+import { GeoPosition, GeocodingState } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/dist/esm/index.js';
 import ObserverSubject from '../core/ObserverSubject.js';
 
 
@@ -780,7 +780,7 @@ class WebGeocodingManager {
 		];
 		
 		// Functional approach: declarative iteration with clear intent
-		observers.forEach(observerFunction => {
+		observers.forEach((observerFunction: (...args: unknown[]) => void) => {
 			try {
 				observerFunction(...notificationData);
 			} catch (e) {

@@ -60,7 +60,7 @@ export class SpeechConfiguration {
      * @private
      */
     safeLog(message: string, ...params: unknown[]): void {
-        if (this.enableLogging && typeof console !== 'undefined' && console.log) {
+        if (this.enableLogging && typeof console !== 'undefined' && typeof console.log === 'function') {
             log(message, ...params);
         }
     }
@@ -70,7 +70,7 @@ export class SpeechConfiguration {
      * @private
      */
     safeWarn(message: string, ...params: unknown[]): void {
-        if (this.enableLogging && typeof console !== 'undefined' && console.warn) {
+        if (this.enableLogging && typeof console !== 'undefined' && typeof console.warn === 'function') {
             warn(message, ...params);
         }
     }

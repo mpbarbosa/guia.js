@@ -76,6 +76,7 @@ class RateLimiter {
   _processQueue() {
     while (this.queue.length > 0 && this.tokens > 0) {
       const request = this.queue.shift();
+      if (!request) break;
       this.tokens--;
       
       const waitTime = Date.now() - request.timestamp;

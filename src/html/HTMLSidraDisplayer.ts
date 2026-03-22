@@ -1,6 +1,7 @@
 import { log, warn, error as logError } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
 import ibgeDataFormatter from '../utils/ibge-data-formatter.js';
+import type { BrazilianStandardAddress } from '../data/BrazilianStandardAddress.js';
 
 import { ADDRESS_FETCHED_EVENT, IBGE_LOADING_MESSAGE, IBGE_ERROR_MESSAGE, IBGE_UNAVAILABLE_MESSAGE } from '../config/defaults.js';
 
@@ -63,10 +64,10 @@ class HTMLSidraDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	constructor(element: HTMLElement, options: { dataType?: string } = {}) {
-		this.element = element;
+	constructor(element: HTMLElement | string, options: { dataType?: string } = {}) {
+		this.element = typeof element === 'string' ? document.getElementById(element) as HTMLElement : element;
 		this.dataType = options.dataType || 'PopEst';
-		log(`>>> (HTMLSidraDisplayer) Created for element id='${element?.id || 'no-id'}' with dataType='${this.dataType}'`);
+		log(`>>> (HTMLSidraDisplayer) Created for element id='${this.element?.id || 'no-id'}' with dataType='${this.dataType}'`);
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
 	}
 
@@ -95,7 +96,7 @@ class HTMLSidraDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	update(addressData: object, enderecoPadronizado: object, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
+	update(_addressData: object, enderecoPadronizado: BrazilianStandardAddress | null, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
 		// Log update for debugging (following MP Barbosa logging standards)
 		log(`(HTMLSidraDisplayer) update() called with posEvent: ${posEvent}`);
 		
@@ -145,7 +146,7 @@ class HTMLSidraDisplayer {
 	 * @since 0.9.0-alpha
 	 * @updated 0.11.0-alpha - Enhanced with IBGEDataFormatter for user-friendly display
 	 */
-	_updateSidraData(enderecoPadronizado: object): void {
+	_updateSidraData(enderecoPadronizado: BrazilianStandardAddress): void {
 		// Validate input
 		if (!enderecoPadronizado) {
 			warn('(HTMLSidraDisplayer) No enderecoPadronizado provided, skipping SIDRA update');
@@ -162,7 +163,7 @@ class HTMLSidraDisplayer {
 		
 		// Use enhanced IBGE Data Formatter for user-friendly display
 		try {
-			ibgeDataFormatter.interceptAndFormat(this.element, this.dataType, params);
+			ibgeDataFormatter.interceptAndFormat(this.element, this.dataType, { municipio: params.municipio ?? '', siglaUf: params.siglaUf ?? '' });
 		} catch (err) {
 			logError('(HTMLSidraDisplayer) Error using IBGE formatter, falling back to original:', err);
 			

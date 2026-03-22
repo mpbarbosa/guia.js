@@ -417,7 +417,7 @@ export default {
         `${env.nominatimApiUrl}/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`,
         {
           headers: {
-            'User-Agent': env.nominatimUserAgent
+            'User-Agent': env.nominatimUserAgent as string
           }
         }
       );
@@ -455,7 +455,7 @@ export default {
       results.innerHTML = `
         <div class="error" role="alert">
           <p><strong>Erro ao buscar endereço</strong></p>
-          <p>${escapeHtml(err.message)}</p>
+          <p>${escapeHtml(err instanceof Error ? err.message : String(err))}</p>
         </div>
       `;
     }
@@ -513,7 +513,7 @@ export default {
     const address = data.address || data;
     
     // Determine location type
-    const locationType = this._determineLocationType(address);
+    const locationType = this._determineLocationType(address as NominatimAddress);
     
     // Update card label
     const label = locationType.type === 'distrito' ? 'Distrito' : 'Bairro';

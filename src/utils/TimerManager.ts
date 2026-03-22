@@ -20,7 +20,7 @@
  * timerManager.clearAll();
  */
 class TimerManager {
-    timers: Map<string, { timerId: unknown; type: string; created: number }>;
+    timers: Map<string, { timerId: ReturnType<typeof setInterval>; type: string; created: number }> = new Map();
     static instance: TimerManager | null = null;
 
     constructor() {

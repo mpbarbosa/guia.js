@@ -52,8 +52,8 @@ class HTMLPositionDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	constructor(element: HTMLElement) {
-		this.element = element;
+	constructor(element: HTMLElement | string) {
+		this.element = typeof element === 'string' ? document.getElementById(element) as HTMLElement : element;
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
 	}
 
@@ -78,7 +78,7 @@ class HTMLPositionDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	renderPositionHtml(positionManager: object): string {
+	renderPositionHtml(positionManager: { lastPosition?: { geolocationPosition: GeolocationPosition; accuracyQuality?: string } | null }): string {
 		if (!positionManager || !positionManager.lastPosition) {
 			return "<p class='error'>No position data available.</p>";
 		}
@@ -105,7 +105,7 @@ class HTMLPositionDisplayer {
 		html += `<div class="accuracy-info">
             <p><strong>Precisão:</strong> ${coords ? (coords.accuracy ? coords.accuracy.toFixed(2) : 'N/A') : 'N/A'} metros</p>
             <h4>Precisão:</h4>
-            <p><strong>Qualidade:</strong> ${this.formatAccuracyQuality(geoPosition.accuracyQuality)}</p>
+            <p><strong>Qualidade:</strong> ${this.formatAccuracyQuality(geoPosition.accuracyQuality ?? '')}</p>
         </div>`;
 
 		// Display altitude information when available
@@ -160,7 +160,7 @@ class HTMLPositionDisplayer {
 			'bad': 'Ruim',
 			'very bad': 'Muito Ruim'
 		};
-		return qualityMap[quality] || quality;
+		return qualityMap[quality as keyof typeof qualityMap] || quality;
 	}
 
 	/**
@@ -192,7 +192,7 @@ class HTMLPositionDisplayer {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	update(positionManager: object, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
+	update(positionManager: { lastPosition?: { geolocationPosition: GeolocationPosition; accuracyQuality?: string } | null }, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
 		// Validate element exists before attempting DOM updates
 		if (!this.element) {
 			warn('HTMLPositionDisplayer: Cannot update - element is null or undefined');

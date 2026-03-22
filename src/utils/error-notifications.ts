@@ -25,7 +25,7 @@ export function showErrorToast(title: string, message: string, duration: number 
   // Remove existing toast if present
   const existing = document.querySelector('.error-toast');
   if (existing) {
-    dismissToast(existing);
+    dismissToast(existing as HTMLElement);
   }
   
   // Create toast element
@@ -48,7 +48,7 @@ export function showErrorToast(title: string, message: string, duration: number 
   
   // Close button handler
   const closeBtn = toast.querySelector('.error-toast-close');
-  closeBtn.addEventListener('click', () => dismissToast(toast));
+  closeBtn?.addEventListener('click', () => dismissToast(toast));
   
   // Auto-dismiss if duration specified
   if (duration > 0) {
@@ -65,7 +65,7 @@ export function showErrorToast(title: string, message: string, duration: number 
  * 
  * @param {HTMLElement} toast - Toast element to dismiss
  */
-function dismissToast(toast) {
+function dismissToast(toast: HTMLElement) {
   if (!toast || !toast.parentNode) return;
   
   toast.classList.add('dismissing');
@@ -102,7 +102,7 @@ export function showSuccessToast(title: string, message: string, duration: numbe
   document.body.appendChild(toast);
   
   const closeBtn = toast.querySelector('.success-toast-close');
-  closeBtn.addEventListener('click', () => dismissToast(toast));
+  closeBtn?.addEventListener('click', () => dismissToast(toast));
   
   if (duration > 0) {
     setTimeout(() => dismissToast(toast), duration);
@@ -115,7 +115,7 @@ export function showSuccessToast(title: string, message: string, duration: numbe
  * Escape HTML to prevent XSS.
  * @private
  */
-function escapeHTML(str) {
+function escapeHTML(str: string) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
@@ -154,6 +154,6 @@ export function showGeolocationError(errorCode: number): void {
     3: 'Tempo limite excedido ao obter localização'
   };
   
-  const message = messages[errorCode] || 'Erro desconhecido de geolocalização';
+  const message = messages[errorCode as keyof typeof messages] || 'Erro desconhecido de geolocalização';
   showErrorToast('Erro de Localização', message);
 }

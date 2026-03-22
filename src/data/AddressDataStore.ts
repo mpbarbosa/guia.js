@@ -40,11 +40,14 @@
  * // Generate cache key from raw data
  * const key = AddressDataStore.generateCacheKey(rawData);
  */
+import type { NominatimResponse } from '../types/nominatim.js';
+import type BrazilianStandardAddress from './BrazilianStandardAddress.js';
+
 class AddressDataStore {
-	currentAddress: object | null;
-	previousAddress: object | null;
-	currentRawData: object | null;
-	previousRawData: object | null;
+	currentAddress: BrazilianStandardAddress | null;
+	previousAddress: BrazilianStandardAddress | null;
+	currentRawData: NominatimResponse | null;
+	previousRawData: NominatimResponse | null;
 
 	/**
 	 * Creates a new AddressDataStore instance.
@@ -104,7 +107,7 @@ class AddressDataStore {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	update(newAddress: object | null, newRawData: object | null): void {
+	update(newAddress: BrazilianStandardAddress | null, newRawData: NominatimResponse | null): void {
 		// Move current to previous
 		this.previousAddress = this.currentAddress;
 		this.previousRawData = this.currentRawData;
@@ -129,7 +132,7 @@ class AddressDataStore {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	getCurrent(): {address: object | null, raw: object | null} {
+	getCurrent(): {address: BrazilianStandardAddress | null, raw: NominatimResponse | null} {
 		return {
 			address: this.currentAddress,
 			raw: this.currentRawData
@@ -152,7 +155,7 @@ class AddressDataStore {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	getPrevious(): {address: object | null, raw: object | null} {
+	getPrevious(): {address: BrazilianStandardAddress | null, raw: NominatimResponse | null} {
 		return {
 			address: this.previousAddress,
 			raw: this.previousRawData
@@ -186,7 +189,7 @@ class AddressDataStore {
 	 * @returns {Object|null} Current raw data from geocoding API
 	 * @since 0.9.0-alpha
 	 */
-	getCurrentRawData(): object | null {
+	getCurrentRawData(): NominatimResponse | null {
 		return this.currentRawData;
 	}
 	
@@ -197,7 +200,7 @@ class AddressDataStore {
 	 * @returns {Object|null} Previous raw data from geocoding API
 	 * @since 0.9.0-alpha
 	 */
-	getPreviousRawData(): object | null {
+	getPreviousRawData(): NominatimResponse | null {
 		return this.previousRawData;
 	}
 	
@@ -280,7 +283,7 @@ class AddressDataStore {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	static generateCacheKey(data: object | null): string | null {
+	static generateCacheKey(data: NominatimResponse | null): string | null {
 		// Validate input data
 		if (!data || !data.address) {
 			return null;

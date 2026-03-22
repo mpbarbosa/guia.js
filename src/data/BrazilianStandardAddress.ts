@@ -10,6 +10,8 @@
  * @author Marcelo Pereira Barbosa
  */
 
+import type ReferencePlace from './ReferencePlace.js';
+
 /**
  * Represents a standardized Brazilian address with formatting capabilities.
  * 
@@ -33,6 +35,8 @@ class BrazilianStandardAddress {
 	siglaUF: string | null;
 	cep: string | null;
 	pais: string;
+	/** Point-of-interest data extracted from the geocoding response, if present. */
+	referencePlace: ReferencePlace | null;
 
 	/**
 	 * Creates a new BrazilianStandardAddress instance.
@@ -51,6 +55,7 @@ class BrazilianStandardAddress {
 		this.siglaUF = null;
 		this.cep = null;
 		this.pais = "Brasil";
+		this.referencePlace = null;
 	}
 
 	/**

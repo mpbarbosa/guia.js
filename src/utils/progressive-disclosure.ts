@@ -9,7 +9,7 @@
  */
 class ProgressiveDisclosureManager {
   STORAGE_KEY: string;
-  detailsElement: HTMLElement | null;
+  detailsElement: HTMLDetailsElement | null;
 
   constructor() {
     this.STORAGE_KEY = 'guia-turistico-secondary-info-state';
@@ -20,7 +20,7 @@ class ProgressiveDisclosureManager {
    * Initialize the progressive disclosure manager
    */
   init() {
-    this.detailsElement = document.getElementById('secondary-info');
+    this.detailsElement = document.getElementById('secondary-info') as HTMLDetailsElement | null;
     
     if (!this.detailsElement) {
       console.warn('Progressive disclosure: secondary-info element not found');

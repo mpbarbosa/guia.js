@@ -17,7 +17,7 @@
 import WebGeocodingManager from '../coordination/WebGeocodingManager.js';
 import Chronometer from '../timing/Chronometer.js';
 import PositionManager from '../core/PositionManager.js';
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.0/dist/esm/index.js';
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/dist/esm/index.js';
 import { log, warn, error } from '../utils/logger.js';
 import MapLibreDisplayer from '../html/MapLibreDisplayer.js';
 
@@ -273,7 +273,7 @@ class HomeViewController {
     // Unsubscribe map position observer
     if (this._mapPositionObserver) {
       try {
-        PositionManager.getInstance().unsubscribe(this._mapPositionObserver);
+        PositionManager.getInstance().unsubscribe(this._mapPositionObserver as { update?: (...args: unknown[]) => void });
       } catch (_) { /* ignore */ }
       this._mapPositionObserver = null;
       this._mapDisplayer = null;
@@ -325,7 +325,8 @@ class HomeViewController {
       // WebGeocodingManager expects params object with locationResult property
       this.manager = new WebGeocodingManager(this.document, {
         locationResult: this.params.locationResult,
-        elementIds: this.params.elementIds || {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        elementIds: (this.params.elementIds as any) || {
           positionDisplay: 'lat-long-display',
           referencePlaceDisplay: 'reference-place-display',
           enderecoPadronizadoDisplay: 'endereco-padronizado-display',
@@ -385,7 +386,7 @@ class HomeViewController {
       
       // Subscribe chronometer to PositionManager for automatic updates
       const positionManager = PositionManager.getInstance();
-      positionManager.subscribe(this.chronometer);
+      positionManager.subscribe(this.chronometer as unknown as { update?: (...args: unknown[]) => void });
       
       // Start the chronometer immediately
       this.chronometer.start();
@@ -413,12 +414,12 @@ class HomeViewController {
           const lat = positionManager.latitude;
           const lon = positionManager.longitude;
           if (lat != null && lon != null) {
-            this._mapDisplayer.updatePosition(lat, lon);
+            this._mapDisplayer?.updatePosition(lat, lon);
           }
         }
       };
 
-      PositionManager.getInstance().subscribe(this._mapPositionObserver);
+      PositionManager.getInstance().subscribe(this._mapPositionObserver as { update?: (...args: unknown[]) => void });
       log('HomeViewController: MapLibreDisplayer initialized');
     } catch (err) {
       error('HomeViewController: Failed to initialize MapLibreDisplayer:', err);
@@ -595,7 +596,7 @@ class HomeViewController {
       // Display error via manager unless called silently (e.g. from startTracking
       // where the watch is already active and will recover on its own).
       if (!silent && this.manager && typeof this.manager._displayError === 'function') {
-        this.manager._displayError(err);
+        this.manager._displayError(err instanceof Error ? err : new Error(String(err)));
       }
       
       throw err;

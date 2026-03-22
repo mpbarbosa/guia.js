@@ -76,7 +76,7 @@ export class SpeechQueueProcessor {
      * @private
      */
     safeLog(message: string, ...params: unknown[]): void {
-        if (this.enableLogging && typeof console !== 'undefined' && console.log) {
+        if (this.enableLogging && typeof console !== 'undefined' && typeof console.log === 'function') {
             log(message, ...params);
         }
     }
@@ -86,7 +86,7 @@ export class SpeechQueueProcessor {
      * @private
      */
     safeWarn(message: string, ...params: unknown[]): void {
-        if (this.enableLogging && typeof console !== 'undefined' && console.warn) {
+        if (this.enableLogging && typeof console !== 'undefined' && typeof console.warn === 'function') {
             warn(message, ...params);
         }
     }
@@ -114,7 +114,7 @@ export class SpeechQueueProcessor {
 
         this.timer = timerManager.setInterval(() => {
             try {
-                this.processCallback();
+                this.processCallback?.();
             } catch (error) {
                 this.safeWarn('(SpeechQueueProcessor) Error in process callback:', error);
             }

@@ -11,7 +11,7 @@
  * Formats population statistics and demographic data for human-readable display
  */
 class IBGEDataFormatter {
-  CITY_CLASSIFICATIONS: Record<string, { min: number; label: string; icon: string; description: string }>;
+  CITY_CLASSIFICATIONS: Record<string, { min: number; label: string; icon: string; description: string }> = {};
   static instance: IBGEDataFormatter | null;
 
   constructor() {
@@ -57,7 +57,7 @@ class IBGEDataFormatter {
 
     if (population >= 1000000) {
       const millions = (population / 1000000).toFixed(1);
-      return `${millions} ${millions == 1.0 ? 'milhão' : 'milhões'}`;
+      return `${millions} ${parseFloat(millions) === 1.0 ? 'milhão' : 'milhões'}`;
     } else if (population >= 1000) {
       const thousands = (population / 1000).toFixed(1);
       return `${thousands} mil`;
@@ -101,7 +101,7 @@ class IBGEDataFormatter {
       `;
     }
 
-    const population = parseInt(data.population, 10);
+    const population = data.population ?? 0;
     const classification = this.classifyCity(population);
     const formattedPop = this.formatPopulation(population);
     const naturalPop = this.formatPopulationNaturalLanguage(population);

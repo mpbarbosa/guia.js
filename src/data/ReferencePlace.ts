@@ -16,6 +16,7 @@
  */
 
 import { NO_REFERENCE_PLACE, VALID_REF_PLACE_CLASSES } from '../config/defaults.js';
+import type { OsmElement } from '../types/nominatim.js';
 
 /**
  * Represents a reference place extracted from geocoding data.
@@ -77,7 +78,7 @@ class ReferencePlace {
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	constructor(data: object) {
+	constructor(data: OsmElement) {
 		this.className = (data && data.class) || null;
 		this.typeName = (data && data.type) || null;
 		this.name = (data && data.name) || null;
@@ -123,11 +124,12 @@ class ReferencePlace {
 	}
 
 	calculateCategory(): string {
-		const referenceClassName = ReferencePlace.referencePlaceMap[this.className] || "unknown";
+		const referenceClassName = this.className ? ReferencePlace.referencePlaceMap[this.className] : undefined;
+		if (!referenceClassName) return "unknown";
 		if (typeof referenceClassName === 'string') {
 			return referenceClassName;
 		}
-		const category = referenceClassName[this.typeName];
+		const category = this.typeName ? referenceClassName[this.typeName] : undefined;
 		return category || "unknown";
 	}
 

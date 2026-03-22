@@ -79,7 +79,7 @@ export class VoiceManager {
      * @private
      */
     safeLog(message: string, ...params: unknown[]): void {
-        if (this.enableLogging && typeof console !== 'undefined' && console.log) {
+        if (this.enableLogging && typeof console !== 'undefined' && typeof console.log === 'function') {
             log(message, ...params);
         }
     }
@@ -89,7 +89,7 @@ export class VoiceManager {
      * @private
      */
     safeWarn(message: string, ...params: unknown[]): void {
-        if (this.enableLogging && typeof console !== 'undefined' && console.warn) {
+        if (this.enableLogging && typeof console !== 'undefined' && typeof console.warn === 'function') {
             warn(message, ...params);
         }
     }
@@ -255,7 +255,7 @@ export class VoiceManager {
      */
     hasBrazilianVoice(): boolean {
         return this.voice !== null && 
-               this.voice.lang && 
+               !!this.voice.lang && 
                this.voice.lang.toLowerCase() === VOICE_CONFIG.primaryLanguage;
     }
 

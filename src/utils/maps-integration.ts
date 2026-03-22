@@ -11,9 +11,9 @@
  * Handles generation of map URLs and deep linking for various mapping services
  */
 class MapsIntegration {
-  currentCoordinates: { lat: number; lng: number } | null;
-  mapsActionsContainer: HTMLElement | null;
-  static instance: MapsIntegration | null;
+  currentCoordinates: { latitude: number; longitude: number } | null = null;
+  mapsActionsContainer: HTMLElement | null = null;
+  static instance: MapsIntegration | null = null;
 
   constructor() {
     if (MapsIntegration.instance) {
@@ -57,7 +57,7 @@ class MapsIntegration {
     container.innerHTML = this._generateMapsActionsHtml(null);
 
     // Insert after coordinates section
-    coordinatesSection.parentNode.insertBefore(container, coordinatesSection.nextSibling);
+    coordinatesSection.parentNode?.insertBefore(container, coordinatesSection.nextSibling);
 
     this.mapsActionsContainer = container;
   }
@@ -126,7 +126,7 @@ class MapsIntegration {
    * @param {number} latitude - Latitude value
    * @param {number} longitude - Longitude value
    */
-  updateCoordinates(latitude, longitude) {
+  updateCoordinates(latitude: number, longitude: number) {
     this.currentCoordinates = { latitude, longitude };
 
     if (this.mapsActionsContainer) {
@@ -144,7 +144,7 @@ class MapsIntegration {
    * @returns {string} HTML string for actions
    * @private
    */
-  _generateMapsActionsHtml(coords) {
+  _generateMapsActionsHtml(coords: { latitude: number; longitude: number } | null) {
     if (!coords) {
       return `<p class="maps-actions-placeholder">Aguardando coordenadas...</p>`;
     }
@@ -195,11 +195,13 @@ class MapsIntegration {
    * @private
    */
   _setupActionListeners() {
+    if (!this.mapsActionsContainer) return;
     const buttons = this.mapsActionsContainer.querySelectorAll('[data-action]');
 
     buttons.forEach(button => {
       button.addEventListener('click', (e) => {
-        const action = e.currentTarget.dataset.action;
+        const target = e.currentTarget as HTMLElement;
+        const action = target.dataset.action || '';
         this._handleAction(action);
       });
     });
@@ -210,7 +212,7 @@ class MapsIntegration {
    * @param {string} action - Action type (google-maps, street-view, etc.)
    * @private
    */
-  _handleAction(action) {
+  _handleAction(action: string) {
     if (!this.currentCoordinates) {
       console.warn('⚠️ No coordinates available');
       return;
@@ -249,7 +251,7 @@ class MapsIntegration {
    * @returns {string} Google Maps URL
    * @private
    */
-  _getGoogleMapsUrl(lat, lng) {
+  _getGoogleMapsUrl(lat: number, lng: number) {
     // Try native app first (iOS/Android), fallback to web
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -269,7 +271,7 @@ class MapsIntegration {
    * @returns {string} Street View URL
    * @private
    */
-  _getStreetViewUrl(lat, lng) {
+  _getStreetViewUrl(lat: number, lng: number) {
     return `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
   }
 
@@ -280,7 +282,7 @@ class MapsIntegration {
    * @returns {string} OpenStreetMap URL
    * @private
    */
-  _getOpenStreetMapUrl(lat, lng) {
+  _getOpenStreetMapUrl(lat: number, lng: number) {
     // Zoom level 16 for street-level detail
     return `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}`;
   }
@@ -292,7 +294,7 @@ class MapsIntegration {
    * @returns {string} Waze URL
    * @private
    */
-  _getWazeUrl(lat, lng) {
+  _getWazeUrl(lat: number, lng: number) {
     // Waze deep link works on mobile, opens web editor on desktop
     return `https://www.waze.com/ul?ll=${lat},${lng}&navigate=yes`;
   }
@@ -303,7 +305,7 @@ class MapsIntegration {
    * @param {string} action - Action type for analytics/logging
    * @private
    */
-  _openUrl(url, action) {
+  _openUrl(url: string, action: string) {
     console.log(`🗺️ Opening ${action}: ${url}`);
 
     // Open in new tab/window
@@ -324,7 +326,7 @@ class MapsIntegration {
    * @param {string} action - Action type
    * @private
    */
-  _showPopupBlockedMessage(url, action) {
+  _showPopupBlockedMessage(url: string, action: string) {
     const actionNames = {
       'google-maps': 'Google Maps',
       'street-view': 'Street View',
@@ -336,7 +338,7 @@ class MapsIntegration {
       Popup bloqueado pelo navegador.
       <br><br>
       <a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #fff; text-decoration: underline;">
-        Clique aqui para abrir ${actionNames[action]}
+        Clique aqui para abrir ${actionNames[action as keyof typeof actionNames]}
       </a>
     `;
 
@@ -355,7 +357,7 @@ class MapsIntegration {
    * @param {string} action - Action type
    * @private
    */
-  _showSuccessToast(action) {
+  _showSuccessToast(action: string) {
     const actionNames = {
       'google-maps': 'Google Maps',
       'street-view': 'Street View',
@@ -363,7 +365,7 @@ class MapsIntegration {
       'waze': 'Waze'
     };
 
-    const message = `Abrindo ${actionNames[action]}...`;
+    const message = `Abrindo ${actionNames[action as keyof typeof actionNames]}...`;
 
     // Use existing toast system if available
     if (window.showToast) {

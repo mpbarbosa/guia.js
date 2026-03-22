@@ -44,10 +44,10 @@ import AddressCache from './AddressCache.js';
  * const address = AddressCache.getBrazilianStandardAddress(geocodingData);
  */
 class AddressDataExtractor {
-	data: object;
+	data: Record<string, unknown>;
 	enderecoPadronizado: BrazilianStandardAddress;
 
-	constructor(data: object) {
+	constructor(data: Record<string, unknown>) {
 		const extractor = new AddressExtractor(data);
 		this.data = extractor.data;
 		this.enderecoPadronizado = extractor.enderecoPadronizado;

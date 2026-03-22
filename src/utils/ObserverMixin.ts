@@ -1,4 +1,5 @@
 import { warn } from './logger.js';
+import type ObserverSubject from '../core/ObserverSubject.js';
 
 /**
  * Observer Pattern Mixin for delegating to ObserverSubject.
@@ -108,7 +109,7 @@ import { warn } from './logger.js';
  *     className: 'MyClass' 
  * }));
  */
-export function withObserver(options: { checkNull?: boolean; className?: string; excludeNotify?: boolean } = {}): Record<string, (...args: unknown[]) => void> {
+export function withObserver(options: { checkNull?: boolean; className?: string; excludeNotify?: boolean } = {}): Record<string, (...args: unknown[]) => void> & ThisType<{ observerSubject: ObserverSubject; notifyObservers: (...args: unknown[]) => void }> {
 	const {
 		checkNull = false,
 		className = 'Class',
@@ -122,12 +123,12 @@ export function withObserver(options: { checkNull?: boolean; className?: string;
 		 * @param {Object} observer - Observer object with update() method
 		 * @returns {void}
 		 */
-		subscribe(observer) {
+		subscribe(observer: unknown) {
 			if (checkNull && observer == null) {
 				warn(`(${className}) Attempted to subscribe a null observer.`);
 				return;
 			}
-			this.observerSubject.subscribe(observer);
+			(this as unknown as { observerSubject: ObserverSubject }).observerSubject.subscribe(observer as { update?: (...args: unknown[]) => void } | null | undefined);
 		},
 
 		/**
@@ -136,8 +137,8 @@ export function withObserver(options: { checkNull?: boolean; className?: string;
 		 * @param {Object} observer - Observer object to remove
 		 * @returns {void}
 		 */
-		unsubscribe(observer) {
-			this.observerSubject.unsubscribe(observer);
+		unsubscribe(observer: unknown) {
+			(this as unknown as { observerSubject: ObserverSubject }).observerSubject.unsubscribe(observer as { update?: (...args: unknown[]) => void });
 		}
 	};
 
@@ -149,8 +150,8 @@ export function withObserver(options: { checkNull?: boolean; className?: string;
 		 * @param {...*} args - Arguments to pass to observer update methods
 		 * @returns {void}
 		 */
-		mixin.notifyObservers = function(...args) {
-			this.observerSubject.notifyObservers(...args);
+		(mixin as typeof mixin & { notifyObservers?: (...args: unknown[]) => void }).notifyObservers = function(...args: unknown[]) {
+			(this as unknown as { observerSubject: ObserverSubject }).observerSubject.notifyObservers(...args);
 		};
 	}
 

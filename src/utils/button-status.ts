@@ -32,7 +32,7 @@ export function addButtonStatus(button: HTMLButtonElement, message: string, type
   status.setAttribute('aria-live', 'polite');
 
   // Insert after button
-  button.parentNode.insertBefore(status, button.nextSibling);
+  button.parentNode!.insertBefore(status, button.nextSibling);
 
   // Update button ARIA to reference status
   button.setAttribute('aria-describedby', statusId);

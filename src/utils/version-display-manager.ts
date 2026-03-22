@@ -13,11 +13,11 @@ import { VERSION, BUILD_DATE, VERSION_WITH_DATE } from '../config/version.js';
  * Singleton class to manage version display and interactions
  */
 class VersionDisplayManager {
-  versionBadge: HTMLElement | null;
-  modalOverlay: HTMLElement | null;
-  modalCloseBtn: HTMLElement | null;
-  isModalOpen: boolean;
-  static instance: VersionDisplayManager | null;
+  versionBadge: HTMLElement | null = null;
+  modalOverlay: HTMLElement | null = null;
+  modalCloseBtn: HTMLElement | null = null;
+  isModalOpen: boolean = false;
+  static instance: VersionDisplayManager | null = null;
 
   constructor() {
     if (VersionDisplayManager.instance) {

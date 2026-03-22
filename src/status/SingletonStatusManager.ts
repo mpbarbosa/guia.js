@@ -50,7 +50,7 @@ import { log } from '../utils/logger.js';
  * log(manager1 === manager2); // true
  */
 class SingletonStatusManager {
-    gettingLocation: boolean;
+    gettingLocation: boolean = false;
     static instance: SingletonStatusManager | null = null;
 
     /**
@@ -188,7 +188,7 @@ class SingletonStatusManager {
 
         // Provide automatic logging for debugging and monitoring
         // Safely handle console availability across different environments
-        if (typeof console !== 'undefined' && console.log) {
+        if (typeof console !== 'undefined' && typeof console.log === 'function') {
             if (status) {
                 log('Getting location...');
             } else {

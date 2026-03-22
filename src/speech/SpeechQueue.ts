@@ -219,7 +219,7 @@ class SpeechQueue {
 	 * };
 	 * queue.subscribe(observer);
 	 */
-	subscribe(observer: object): void {
+	subscribe(observer: { update?: (...args: unknown[]) => void }): void {
 		if (observer == null) {
 			warn("(SpeechQueue) Attempted to subscribe a null observer.");
 			return;
@@ -294,7 +294,7 @@ class SpeechQueue {
 	 * @private
 	 */
 	notifyFunctionObservers(): void {
-		this.observerSubject.functionObservers.forEach((fn) => {
+		this.observerSubject.functionObservers.forEach((fn: (queue: this) => void) => {
 			try {
 				fn(this);
 			} catch (err) {

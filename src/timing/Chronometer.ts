@@ -258,7 +258,7 @@ class Chronometer {
 	 * // Typically called automatically via observer pattern
 	 * positionManager.subscribe(chronometer);
 	 */
-	update(positionManager: object, posEvent: string, _loading: unknown, _error: unknown): void {
+	update(_positionManager: object, posEvent: string, _loading: unknown, _error: unknown): void {
 		// Handle different position events using injected configuration
 		if (posEvent === this.eventConfig.positionUpdate || 
 		    posEvent === this.eventConfig.immediateAddressUpdate) {

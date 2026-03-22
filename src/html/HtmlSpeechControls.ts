@@ -49,7 +49,33 @@
  * controls.destroy();
  */
 
-import SpeechSynthesisManager from '../speech/SpeechSynthesisManager.js'; // eslint-disable-line no-unused-vars
+// @ts-ignore
+import type _SpeechSynthesisManager from '../speech/SpeechSynthesisManager.js'; // eslint-disable-line no-unused-vars
+
+export interface SpeechElementIds {
+	voiceSelectId?: string;
+	textInputId?: string;
+	speakBtnId?: string;
+	pauseBtnId?: string;
+	resumeBtnId?: string;
+	stopBtnId?: string;
+	rateInputId?: string;
+	rateValueId?: string;
+	pitchInputId?: string;
+	pitchValueId?: string;
+	[key: string]: string | undefined;
+}
+
+interface SpeechManagerLike {
+	synth?: SpeechSynthesis | null;
+	setVoice(voice: SpeechSynthesisVoice): void;
+	speak(text: string, priority: number): void;
+	pause(): void;
+	resume(): void;
+	stop(): void;
+	setRate(rate: number): void;
+	setPitch(pitch: number): void;
+}
 
 /**
  * HTML speech synthesis UI controls manager.
@@ -75,8 +101,8 @@ import SpeechSynthesisManager from '../speech/SpeechSynthesisManager.js'; // esl
  */
 export class HtmlSpeechControls {
 	document: Document;
-	elementIds: object;
-	speechManager: object;
+	elementIds: SpeechElementIds;
+	speechManager: SpeechManagerLike;
 	voiceSelect: HTMLSelectElement | null;
 	textInput: HTMLInputElement | null;
 	speakBtn: HTMLButtonElement | null;
@@ -129,7 +155,7 @@ export class HtmlSpeechControls {
 	 *   speakBtnId: 'speak-btn'
 	 * }, speechManager);
 	 */
-	constructor(document: Document, elementIds: object, speechManager: object) {
+	constructor(document: Document, elementIds: SpeechElementIds, speechManager: SpeechManagerLike) {
 		// Parameter validation
 		if (document == null) {
 			throw new TypeError("Document parameter cannot be null or undefined");
@@ -175,7 +201,7 @@ export class HtmlSpeechControls {
 		 * @type {HTMLSelectElement|null}
 		 */
 		this.voiceSelect = elementIds.voiceSelectId ? 
-			this.document.getElementById(elementIds.voiceSelectId) : null;
+			this.document.getElementById(elementIds.voiceSelectId) as HTMLSelectElement | null : null;
 
 		/**
 		 * Text input field element.
@@ -183,7 +209,7 @@ export class HtmlSpeechControls {
 		 * @type {HTMLInputElement|null}
 		 */
 		this.textInput = elementIds.textInputId ? 
-			this.document.getElementById(elementIds.textInputId) : null;
+			this.document.getElementById(elementIds.textInputId) as HTMLInputElement | null : null;
 
 		/**
 		 * Speak button element.
@@ -191,7 +217,7 @@ export class HtmlSpeechControls {
 		 * @type {HTMLButtonElement|null}
 		 */
 		this.speakBtn = elementIds.speakBtnId ? 
-			this.document.getElementById(elementIds.speakBtnId) : null;
+			this.document.getElementById(elementIds.speakBtnId) as HTMLButtonElement | null : null;
 
 		/**
 		 * Pause button element.
@@ -199,7 +225,7 @@ export class HtmlSpeechControls {
 		 * @type {HTMLButtonElement|null}
 		 */
 		this.pauseBtn = elementIds.pauseBtnId ? 
-			this.document.getElementById(elementIds.pauseBtnId) : null;
+			this.document.getElementById(elementIds.pauseBtnId) as HTMLButtonElement | null : null;
 
 		/**
 		 * Resume button element.
@@ -207,7 +233,7 @@ export class HtmlSpeechControls {
 		 * @type {HTMLButtonElement|null}
 		 */
 		this.resumeBtn = elementIds.resumeBtnId ? 
-			this.document.getElementById(elementIds.resumeBtnId) : null;
+			this.document.getElementById(elementIds.resumeBtnId) as HTMLButtonElement | null : null;
 
 		/**
 		 * Stop button element.
@@ -215,7 +241,7 @@ export class HtmlSpeechControls {
 		 * @type {HTMLButtonElement|null}
 		 */
 		this.stopBtn = elementIds.stopBtnId ? 
-			this.document.getElementById(elementIds.stopBtnId) : null;
+			this.document.getElementById(elementIds.stopBtnId) as HTMLButtonElement | null : null;
 
 		/**
 		 * Rate slider input element.
@@ -223,7 +249,7 @@ export class HtmlSpeechControls {
 		 * @type {HTMLInputElement|null}
 		 */
 		this.rateInput = elementIds.rateInputId ? 
-			this.document.getElementById(elementIds.rateInputId) : null;
+			this.document.getElementById(elementIds.rateInputId) as HTMLInputElement | null : null;
 
 		/**
 		 * Rate value display element.
@@ -239,7 +265,7 @@ export class HtmlSpeechControls {
 		 * @type {HTMLInputElement|null}
 		 */
 		this.pitchInput = elementIds.pitchInputId ? 
-			this.document.getElementById(elementIds.pitchInputId) : null;
+			this.document.getElementById(elementIds.pitchInputId) as HTMLInputElement | null : null;
 
 		/**
 		 * Pitch value display element.
@@ -301,7 +327,7 @@ export class HtmlSpeechControls {
 		this.voiceSelect.innerHTML = '';
 
 		// Get available voices from speech synthesis
-		const voices = this.speechManager.synth.getVoices();
+		const voices = this.speechManager.synth?.getVoices() ?? [];
 
 		// Track if we found a Brazilian Portuguese voice
 		let brazilianVoiceFound = false;
@@ -309,7 +335,7 @@ export class HtmlSpeechControls {
 		// Add voices to dropdown with priority selection
 		voices.forEach((voice, index) => {
 			const option = this.document.createElement('option');
-			option.value = index;
+			option.value = String(index);
 			option.textContent = `${voice.name} (${voice.lang})`;
 
 			// PRIORITY 1: Select Brazilian Portuguese voice (pt-BR) by default
@@ -324,7 +350,7 @@ export class HtmlSpeechControls {
 				this.speechManager.setVoice(voice);
 			}
 
-			this.voiceSelect.appendChild(option);
+			this.voiceSelect!.appendChild(option);
 		});
 	}
 
@@ -351,9 +377,9 @@ export class HtmlSpeechControls {
 	_setupEventHandlers(): void {
 		// Voice selection change handler
 		if (this.voiceSelect) {
-			const voiceChangeHandler = (e) => {
-				const voices = this.speechManager.synth.getVoices();
-				const selectedVoice = voices[e.target.value];
+			const voiceChangeHandler = (e: Event) => {
+				const voices = this.speechManager.synth?.getVoices() ?? [];
+				const selectedVoice = voices[parseInt((e.target as HTMLSelectElement).value)];
 				this.speechManager.setVoice(selectedVoice);
 			};
 			this.voiceSelect.addEventListener('change', voiceChangeHandler);
@@ -362,8 +388,9 @@ export class HtmlSpeechControls {
 
 		// Speak button handler
 		if (this.speakBtn && this.textInput) {
+			const textInput = this.textInput;
 			const speakHandler = () => {
-				const text = this.textInput.value.trim();
+				const text = textInput.value.trim();
 				if (text) {
 					this.speechManager.speak(text, 0); // Default priority for manual speech
 				}
@@ -401,10 +428,10 @@ export class HtmlSpeechControls {
 
 		// Rate control slider handler
 		if (this.rateInput && this.rateValue) {
-			const rateHandler = (e) => {
-				const rate = parseFloat(e.target.value);
+			const rateHandler = (e: Event) => {
+				const rate = parseFloat((e.target as HTMLInputElement).value);
 				this.speechManager.setRate(rate);
-				this.rateValue.textContent = rate.toFixed(1);
+				this.rateValue!.textContent = rate.toFixed(1);
 			};
 			this.rateInput.addEventListener('input', rateHandler);
 			this._boundHandlers.set('rate', rateHandler);
@@ -412,10 +439,10 @@ export class HtmlSpeechControls {
 
 		// Pitch control slider handler
 		if (this.pitchInput && this.pitchValue) {
-			const pitchHandler = (e) => {
-				const pitch = parseFloat(e.target.value);
+			const pitchHandler = (e: Event) => {
+				const pitch = parseFloat((e.target as HTMLInputElement).value);
 				this.speechManager.setPitch(pitch);
-				this.pitchValue.textContent = pitch.toFixed(1);
+				this.pitchValue!.textContent = pitch.toFixed(1);
 			};
 			this.pitchInput.addEventListener('input', pitchHandler);
 			this._boundHandlers.set('pitch', pitchHandler);
@@ -456,33 +483,33 @@ export class HtmlSpeechControls {
 	destroy(): void {
 		// Remove voice select listener
 		if (this.voiceSelect && this._boundHandlers.has('voiceChange')) {
-			this.voiceSelect.removeEventListener('change', this._boundHandlers.get('voiceChange'));
+			this.voiceSelect.removeEventListener('change', this._boundHandlers.get('voiceChange')!);
 		}
 
 		// Remove button listeners
 		if (this.speakBtn && this._boundHandlers.has('speak')) {
-			this.speakBtn.removeEventListener('click', this._boundHandlers.get('speak'));
+			this.speakBtn.removeEventListener('click', this._boundHandlers.get('speak')!);
 		}
 
 		if (this.pauseBtn && this._boundHandlers.has('pause')) {
-			this.pauseBtn.removeEventListener('click', this._boundHandlers.get('pause'));
+			this.pauseBtn.removeEventListener('click', this._boundHandlers.get('pause')!);
 		}
 
 		if (this.resumeBtn && this._boundHandlers.has('resume')) {
-			this.resumeBtn.removeEventListener('click', this._boundHandlers.get('resume'));
+			this.resumeBtn.removeEventListener('click', this._boundHandlers.get('resume')!);
 		}
 
 		if (this.stopBtn && this._boundHandlers.has('stop')) {
-			this.stopBtn.removeEventListener('click', this._boundHandlers.get('stop'));
+			this.stopBtn.removeEventListener('click', this._boundHandlers.get('stop')!);
 		}
 
 		// Remove slider listeners
 		if (this.rateInput && this._boundHandlers.has('rate')) {
-			this.rateInput.removeEventListener('input', this._boundHandlers.get('rate'));
+			this.rateInput.removeEventListener('input', this._boundHandlers.get('rate')!);
 		}
 
 		if (this.pitchInput && this._boundHandlers.has('pitch')) {
-			this.pitchInput.removeEventListener('input', this._boundHandlers.get('pitch'));
+			this.pitchInput.removeEventListener('input', this._boundHandlers.get('pitch')!);
 		}
 
 		// Clear voiceschanged handler

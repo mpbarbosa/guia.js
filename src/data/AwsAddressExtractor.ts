@@ -40,6 +40,7 @@
 
 import { AddressExtractor } from './AddressExtractor.js';
 import ReferencePlace from './ReferencePlace.js';
+import type { AwsAddress } from '../types/nominatim.js';
 
 /** ISO 3166-1 alpha-3 country codes for Brazil */
 const BRAZIL_CODES = new Set(['BRA', 'BR', 'Brasil', 'Brazil']);
@@ -96,7 +97,7 @@ class AwsAddressExtractor extends AddressExtractor {
 	padronizaEndereco(): void {
 		if (!this.data || !this.data.address) return;
 
-		const address = this.data.address;
+		const address = this.data.address as AwsAddress;
 
 		// addressNumber → numero (explicit field takes priority)
 		this.enderecoPadronizado.numero = address.addressNumber || null;
@@ -127,11 +128,11 @@ class AwsAddressExtractor extends AddressExtractor {
 		this.enderecoPadronizado.cep = address.postalCode || null;
 
 		// country: AWS uses ISO 3166-1 alpha-3 ("BRA") → normalize to "Brasil"
-		this.enderecoPadronizado.pais = BRAZIL_CODES.has(address.country) ? 'Brasil' : (address.country || 'Brasil');
+		this.enderecoPadronizado.pais = BRAZIL_CODES.has(address.country ?? '') ? 'Brasil' : (address.country || 'Brasil');
 
 		// Use label as display_name equivalent for logging / toString
-		if (this.data.address.label) {
-			this.data = { ...this.data, display_name: this.data.address.label };
+		if (address.label) {
+			this.data = { ...this.data, display_name: address.label };
 		}
 
 		this.enderecoPadronizado.referencePlace = new ReferencePlace(this.data);
@@ -148,7 +149,7 @@ class AwsAddressExtractor extends AddressExtractor {
 	 * @returns {{ logradouro: string|null, bairro: string|null }}
 	 * @private
 	 */
-	static _parseLabel(label, addressNumber, municipality) {
+	static _parseLabel(label: string | undefined, addressNumber: string | undefined, municipality: string | undefined) {
 		if (!label || typeof label !== 'string') return { logradouro: null, bairro: null };
 
 		const parts = label.split(', ');
@@ -183,7 +184,7 @@ class AwsAddressExtractor extends AddressExtractor {
 	 * @returns {string|null} Two-letter sigla (e.g. "SP"), or null if not recognized
 	 * @private
 	 */
-	static _resolveStateSigla(region) {
+	static _resolveStateSigla(region: string | undefined) {
 		if (!region || typeof region !== 'string') return null;
 		return BRAZIL_STATE_SIGLAS.get(region) || null;
 	}

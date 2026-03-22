@@ -31,6 +31,7 @@
 
 import HtmlSpeechSynthesisDisplayer from '../html/HtmlSpeechSynthesisDisplayer.js';
 import { log, warn } from '../utils/logger.js';
+import type { SpeechElementIds } from '../html/HtmlSpeechControls.js';
 
 interface ISubscribable {
     subscribe(observer: unknown): void;
@@ -44,13 +45,13 @@ interface ISubscribable {
  */
 class SpeechCoordinator {
     private _document: Document;
-    private _elementIds: Record<string, unknown>;
+    private _elementIds: SpeechElementIds;
     private _reverseGeocoder: ISubscribable;
     private _observerSubject: ISubscribable;
     private _speechDisplayer: unknown;
     private _initialized: boolean;
 
-    constructor(document: Document, elementIds: Record<string, unknown>, reverseGeocoder: ISubscribable, observerSubject: ISubscribable) {
+    constructor(document: Document, elementIds: SpeechElementIds, reverseGeocoder: ISubscribable, observerSubject: ISubscribable) {
         if (!document) {
             throw new TypeError('SpeechCoordinator: document is required');
         }

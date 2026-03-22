@@ -118,3 +118,18 @@
 | Complete AWS geocoding provider integration | Medium |
 | Evaluate Leaflet 2.0 v1→v2 API migration (factory methods → ES6 constructors) | Low |
 | Consolidate duplicate `CHANGELOG.md` v0.9.0 entries | Low |
+
+---
+
+## 🔧 Resolved Minor Issues (audit-and-fix)
+
+Issues identified from `.ai_workflow` workflow runs and resolved via the `audit-and-fix` pipeline.
+
+| ID | Title | Type | Fix | Commit |
+|----|-------|------|-----|--------|
+| RI-001 | Version mismatch in `src/config/defaults.ts` | docs-outdated | Set `APP_VERSION.patch = 5` to match `package.json` `0.12.5-alpha` | c997728 |
+| RI-002 | Loose return type on `getRoute()` | typescript-issue | Added `RouteConfig` interface; updated `getRoute` return type to `RouteConfig \| null` | c997728 |
+| RI-003 | Missing `CONTRIBUTING.md` at repository root | docs-outdated | Created root `CONTRIBUTING.md` linking to `.github/CONTRIBUTING.md` | 0838a50 |
+| RI-004 | Missing `docs/GETTING_STARTED.md` | docs-outdated | Created `docs/GETTING_STARTED.md` index pointing to `docs/guides/GETTING_STARTED.md` | 0838a50 |
+| RI-005 | Missing `docs/API.md` | docs-outdated | Created `docs/API.md` index pointing to `docs/api/API_REFERENCE.md` | 0838a50 |
+| RI-006 | Missing `docs/ARCHITECTURE.md` | docs-outdated | Created `docs/ARCHITECTURE.md` index pointing to `docs/architecture/` | 0838a50 |

@@ -1,7 +1,7 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
 **Current Version**: `0.12.5-alpha` | **Status**: Active Development
-**Last Updated**: 2026-03-10
+**Last Updated**: 2026-03-22
 
 ---
 
@@ -16,6 +16,7 @@
 - Material Design 3 UI with WCAG 2.1 accessibility
 - Refactored `HtmlSpeechSynthesisDisplayer` to facade pattern (−36% lines)
 - Partial TypeScript migration (coordination, core, data, config layers)
+- **Full TypeScript migration complete** — all 95 `src/` files are `.ts`, `tsc --noEmit` exits 0, strict mode enabled
 - PWA scaffold (manifest + service worker stub)
 - Vite build system with code splitting (25% bundle reduction)
 - Contextual button status messages (`button-status.js`)
@@ -24,12 +25,6 @@
 ---
 
 ## 🚧 Near-Term (v0.13 – v0.14-alpha)
-
-### TypeScript Migration — Complete Remaining Files
-
-- Migrate `src/views/home.js` and `src/views/converter.js` to TypeScript
-- Migrate remaining `.js` files in `src/html/`, `src/speech/`, `src/utils/`
-- Full type coverage with strict mode
 
 ### Finalize PWA Support
 
@@ -111,7 +106,6 @@
 
 | Item | Priority |
 |---|---|
-| Complete TypeScript migration (`.js` → `.ts`) | High |
 | Implement `service-worker.js` (currently stub) | High |
 | Replace placeholder `findNearbyRestaurants()` | Medium |
 | Replace placeholder `fetchCityStatistics()` | Medium |
@@ -133,3 +127,5 @@ Issues identified from `.ai_workflow` workflow runs and resolved via the `audit-
 | RI-004 | Missing `docs/GETTING_STARTED.md` | docs-outdated | Created `docs/GETTING_STARTED.md` index pointing to `docs/guides/GETTING_STARTED.md` | 0838a50 |
 | RI-005 | Missing `docs/API.md` | docs-outdated | Created `docs/API.md` index pointing to `docs/api/API_REFERENCE.md` | 0838a50 |
 | RI-006 | Missing `docs/ARCHITECTURE.md` | docs-outdated | Created `docs/ARCHITECTURE.md` index pointing to `docs/architecture/` | 0838a50 |
+| RI-007 | Remaining `.js` files blocking full TS strict-mode | typescript-issue | Converted all 11 remaining JS source files to TypeScript; fixed all type errors; `tsc --noEmit` exits 0; 181/181 tests pass | 3d677bc |
+| RI-008 | Original `.js` files still present alongside `.ts` counterparts | cleanup | Deleted all 11 original `.js` source files + dead `SpeechSynthesisManager.facade-wip.js`; updated `validate` script to use `tsc --noEmit` | 196a3a4 |

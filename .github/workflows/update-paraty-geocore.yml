@@ -171,6 +171,8 @@ jobs:
       # The jest.config moduleNameMapper maps the CDN URL to the local
       # paraty_geocore.js source tree (<rootDir>/../paraty_geocore.js/src/index).
       # We clone the repo at the target tag next to the workspace so tests resolve.
+      # We also run npm install (prod deps only) so paraty_geocore.js's own
+      # dependencies (e.g. bessa_patterns.ts) are available for module resolution.
       - name: Clone paraty_geocore.js for tests
         if: steps.current.outputs.up_to_date != 'true'
         run: |
@@ -178,7 +180,9 @@ jobs:
             --branch "${{ steps.resolve.outputs.tag }}" \
             https://github.com/mpbarbosa/paraty_geocore.js.git \
             "${{ github.workspace }}/../paraty_geocore.js"
-          echo "✅  paraty_geocore.js cloned at ${{ steps.resolve.outputs.tag }}"
+          cd "${{ github.workspace }}/../paraty_geocore.js"
+          npm install --omit=dev --ignore-scripts
+          echo "✅  paraty_geocore.js cloned and dependencies installed at ${{ steps.resolve.outputs.tag }}"
 
       # ── 9. Update CDN URL in test files ───────────────────────────────────────
       # Some test files import directly from the CDN URL. These must be updated

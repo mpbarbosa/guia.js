@@ -264,3 +264,20 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/d
 		toString(): string;
 	}
 }
+
+// Ibira.js ambient module declarations
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js' {
+  export class IbiraAPIFetchManager {
+    constructor(config?: object);
+    fetch(url: string): Promise<unknown>;
+    fetchData(url: string): Promise<unknown>;
+  }
+}
+
+declare module 'ibira.js' {
+  export class IbiraAPIFetchManager {
+    constructor(config?: object);
+    fetch(url: string): Promise<unknown>;
+    fetchData(url: string): Promise<unknown>;
+  }
+}

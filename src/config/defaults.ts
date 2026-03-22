@@ -174,7 +174,7 @@ export const createDefaultConfig = () => ({
 	validRefPlaceClasses: [...VALID_REF_PLACE_CLASSES],
 	mobileNotAcceptedAccuracy: [...MOBILE_ACCURACY_THRESHOLDS],
 	desktopNotAcceptedAccuracy: [...DESKTOP_ACCURACY_THRESHOLDS],
-	notAcceptedAccuracy: null, // Will be set dynamically based on device type
+	notAcceptedAccuracy: null as string[] | null, // Will be set dynamically based on device type
 	geolocationOptions: { ...GEOLOCATION_OPTIONS },
 	openstreetmapBaseUrl: OSM_BASE_URL
 });

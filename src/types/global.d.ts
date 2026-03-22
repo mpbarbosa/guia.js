@@ -13,13 +13,35 @@ declare global {
     fetchCityStatistics?: (latitude: number, longitude: number) => void;
     /** GuiaApp namespace exposed for console/debug access (registered by app.js) */
     GuiaApp?: {
+      navigateTo?: (path: string) => void;
+      getState?: () => unknown;
       switchProvider?: (provider: string) => void;
       geocoder?: ReverseGeocoder;
       [key: string]: unknown;
     };
-    ibiraLoadingPromise?: Promise<void>;
+    guiaVersion?: { toString(): string };
+    calculateDistance?: (lat1: number, lon1: number, lat2: number, lon2: number) => number;
+    ibiraLoadingPromise?: Promise<unknown>;
     IbiraAPIFetchManager?: new(config: object) => unknown;
-    ErrorRecovery?: { displayError(title: string, message: string): void };
+    ErrorRecovery?: {
+      init(): void;
+      displayError(title: string, message: string): void;
+      strategies?: Record<string, (...args: unknown[]) => void>;
+      showErrorPanel(): void;
+      hideErrorPanel(): void;
+      toggleErrorPanel(): void;
+      getErrorHistory(): unknown[];
+      clearErrorHistory(): void;
+      destroy(): void;
+    };
+    GeolocationBanner?: {
+      init(): Promise<void>;
+      requestPermission(): void;
+      dismiss(): void;
+      getStatus(): string;
+      destroy(): void;
+    };
+    dependenciesLoading?: boolean;
 
     // Classes registered on window for legacy/debug access
     /** HTMLPositionDisplayer class (registered in HTMLPositionDisplayer.ts) */

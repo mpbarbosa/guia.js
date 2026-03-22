@@ -233,6 +233,8 @@ Create `.github/markdown-link-check-config.json`:
 
 ### `bump-version.sh`
 
+> **⚠️ Not implemented** — This script was proposed but never created. Use `npm run check:version` and `update-version-references.sh` for version management instead.
+
 Automatically updates version across all files.
 
 Create `.github/scripts/bump-version.sh`:
@@ -295,6 +297,8 @@ chmod +x .github/scripts/bump-version.sh
 ## 4. Documentation Health Check
 
 ### `check-docs.sh`
+
+> **⚠️ Not implemented** — This script was proposed but never created. Use `check-references.sh` and `check-links.py` for documentation health checks instead.
 
 Comprehensive documentation audit.
 
@@ -397,6 +401,8 @@ fi
 ## 5. Automated Test Count Update
 
 ### `update-test-count.sh`
+
+> **⚠️ Not implemented** — This script was proposed but never created. Test counts are updated manually in documentation or via `npm test -- --verbose`.
 
 Automatically updates test count in documentation.
 
@@ -882,8 +888,8 @@ on:
 |------|------|----------|-------|---------|
 | pre-commit | Git Hook | ✅ Dates | ❌ | Pre-commit validation |
 | update-badges.sh | Script | ✅ | ❌ | Badge synchronization |
-| bump-version.sh | Script | ✅ | ❌ | Version updates |
-| check-docs.sh | Script | ❌ | ❌ | Health monitoring |
+| bump-version.sh | Script | — | — | ⚠️ Not implemented |
+| check-docs.sh | Script | — | — | ⚠️ Not implemented |
 | markdownlint | Linter | ✅ | ✅ | Format consistency |
 | link-check | Validator | ❌ | ✅ | Link validation |
 | line-number-check | Validator | ❌ | ✅ | Deprecation detection |
@@ -971,7 +977,7 @@ git commit -m "test: automation setup"
 markdownlint-cli2 "**/*.md"
 
 # 7. Test health check
-./.github/scripts/check-docs.sh
+# ./.github/scripts/check-docs.sh  ⚠️ Not implemented — use check-references.sh instead
 ```
 
 ### CI/CD Setup (Already Configured)

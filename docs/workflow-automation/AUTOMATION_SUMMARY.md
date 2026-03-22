@@ -42,7 +42,7 @@ chmod +x .git/hooks/pre-commit
 - Troubleshooting guide
 - Future enhancement roadmap
 
-**Additional Scripts Documented** (Ready to create):
+**Additional Scripts Documented** (Proposed — not yet implemented):
 
 - `bump-version.sh` - Auto-update version across all files
 - `check-docs.sh` - Comprehensive documentation health check

@@ -103,9 +103,9 @@ All requested automation tools have been implemented and documented.
 |---|------|------|----------|-------|--------|
 | 1 | pre-commit | Git Hook | ✅ | ❌ | ✅ Ready |
 | 2 | update-badges.sh | Script | ✅ | ❌ | ✅ Ready |
-| 3 | bump-version.sh | Script | ✅ | ❌ | 📝 Documented |
-| 4 | check-docs.sh | Script | ❌ | ❌ | 📝 Documented |
-| 5 | update-test-count.sh | Script | ✅ | ❌ | 📝 Documented |
+| 3 | bump-version.sh | Script | — | — | ⚠️ Not implemented |
+| 4 | check-docs.sh | Script | — | — | ⚠️ Not implemented |
+| 5 | update-test-count.sh | Script | — | — | ⚠️ Not implemented |
 | 6 | markdownlint | Linter | ✅ | ✅ | ✅ Configured |
 | 7 | link-check | Validator | ❌ | ✅ | ✅ Configured |
 | 8 | line-number-check | Validator | ❌ | ✅ | ✅ Configured |

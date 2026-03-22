@@ -287,6 +287,8 @@ change_detection:
 
 ### Collection Script
 
+> **⚠️ Not implemented** — `collect-metrics.sh` was proposed but never created.
+
 ```bash
 #!/bin/bash
 # Add to .github/scripts/collect-metrics.sh

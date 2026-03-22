@@ -378,6 +378,8 @@ This hook validates documentation consistency before each commit. See [WORKFLOW_
 #### 7. Create Hook Management Script
 **File**: `.github/scripts/install-hooks.sh`
 
+> **⚠️ Not implemented** — Hook installation is handled by Husky (`.husky/` directory). This script was proposed but not created.
+
 **Purpose**: Automate hook installation for new developers
 
 **Implementation**:
@@ -493,7 +495,7 @@ If all developers install the hook:
 ### Documentation to Create
 
 - `.github/hooks/README.md` - Comprehensive hook guide
-- `.github/scripts/install-hooks.sh` - Automated installer
+- `.github/scripts/install-hooks.sh` - Automated installer *(proposed, not implemented — Husky handles this)*
 - Section in WORKFLOW_SETUP.md - Hook usage guide
 
 ### Documentation to Update
@@ -523,7 +525,7 @@ If all developers install the hook:
 
 ### Phase 3: Automation (1 hour)
 
-- [ ] Create `.github/scripts/install-hooks.sh`
+- [ ] Create `.github/scripts/install-hooks.sh` *(not needed — Husky manages hook installation)*
 - [ ] Make hook version-aware (read from package.json)
 - [ ] Make hook test-count-aware (read from test output)
 - [ ] Test automated installation script

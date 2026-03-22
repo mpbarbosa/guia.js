@@ -180,22 +180,10 @@ jobs:
             "${{ github.workspace }}/../paraty_geocore.js"
           echo "✅  paraty_geocore.js cloned at ${{ steps.resolve.outputs.tag }}"
 
-      # ── 9. Run validation ─────────────────────────────────────────────────────
-      - name: Run validation (npm run validate)
-        if: steps.current.outputs.up_to_date != 'true'
-        run: |
-          npm ci
-          npm run validate
-
-      # ── 10. Run tests ─────────────────────────────────────────────────────────
-      - name: Run unit & integration tests
-        if: steps.current.outputs.up_to_date != 'true'
-        run: npm test
-
-      # ── 11. Update CDN URL in test files ──────────────────────────────────────
-      # Some test files import directly from the CDN URL. Update the version
-      # string in those files and re-run only the affected tests to confirm
-      # they still pass against the new paraty_geocore.js API surface.
+      # ── 9. Update CDN URL in test files ───────────────────────────────────────
+      # Some test files import directly from the CDN URL. These must be updated
+      # BEFORE running npm test, otherwise the tests fail because the moduleNameMapper
+      # (already updated to the new version) no longer maps the old CDN URL.
       - name: Adjust paraty_geocore.js related tests
         if: steps.current.outputs.up_to_date != 'true'
         run: |
@@ -226,10 +214,20 @@ jobs:
               echo "   ✏️  Updated: ${f}"
             done
 
-            echo "🧪  Re-running affected test files…"
-            npx jest --passWithNoTests "${TEST_FILES[@]}"
-            echo "✅  Affected tests passed after adjustment."
+            echo "✅  Test files adjusted."
           fi
+
+      # ── 10. Run validation ────────────────────────────────────────────────────
+      - name: Run validation (npm run validate)
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          npm ci
+          npm run validate
+
+      # ── 11. Run tests ─────────────────────────────────────────────────────────
+      - name: Run unit & integration tests
+        if: steps.current.outputs.up_to_date != 'true'
+        run: npm test
 
       # ── 12. Update paraty_geocore.js related documentation ────────────────────
       # Replaces the old CDN URL and version tag in all Markdown files so that

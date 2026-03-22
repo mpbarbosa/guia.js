@@ -11,10 +11,20 @@
  */
 
 /**
+ * Shape of a single route configuration entry.
+ */
+export interface RouteConfig {
+  name: string;
+  title: string;
+  requiresInit: boolean;
+  loadingEnabled: boolean;
+}
+
+/**
  * Route configuration object.
  * Maps route paths to their metadata and handlers.
  */
-export const routes = {
+export const routes: Record<string, RouteConfig> = {
   '/': {
     name: 'home',
     title: 'Início',
@@ -33,9 +43,9 @@ export const routes = {
  * Get route configuration by path.
  * 
  * @param {string} path - Route path
- * @returns {Object|null} Route configuration or null if not found
+ * @returns {RouteConfig|null} Route configuration or null if not found
  */
-export function getRoute(path: string): object | null {
+export function getRoute(path: string): RouteConfig | null {
   return routes[path] || null;
 }
 

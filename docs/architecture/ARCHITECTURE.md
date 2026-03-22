@@ -144,8 +144,8 @@ GeoPosition (immutable)
 
 #### GeoPosition
 
-**Source**: [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) (external library, `v0.11.0`)
-**CDN URL**: `https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.0/dist/esm/index.js`
+**Source**: [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) (external library, `v0.11.3`)
+**CDN URL**: `https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/dist/esm/index.js`
 **Purpose**: Immutable geographic coordinate container
 
 > ⚠️ `src/core/GeoPosition.ts` was removed in `v0.12.5-alpha`. `GeoPosition` is now imported directly from the `paraty_geocore.js` CDN (ESM build).
@@ -153,7 +153,7 @@ GeoPosition (immutable)
 **Import**:
 
 ```ts
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.0/dist/esm/index.js';
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/dist/esm/index.js';
 ```
 
 **Key Methods**:

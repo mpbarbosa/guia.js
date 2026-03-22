@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **`paraty_geocore.js` dependency upgrade** from `@0.10.2` to `@0.11.0`:
+- **`paraty_geocore.js` dependency upgrade** from `@0.10.2` to `@0.11.3`:
   - Updated CDN URL in all 5 source files, 9 test files, `jest.config.unit.js`, `package.json`, and `src/types/paraty-geocore.d.ts`
   - Added new TypeScript declarations to `src/types/paraty-geocore.d.ts`: `withObserver`, `ObserverMixinOptions`, `ObserverMixinResult`
   - Corrected stale version references (`@0.9.10-alpha`, `@0.9.3-alpha`) in `docs/architecture/ARCHITECTURE.md`, `docs/architecture/GEO_POSITION.md`, `docs/guides/QUICK_START.md`, and `docs/class-extraction/CLASS_LOCATION_GUIDE.md`

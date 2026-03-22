@@ -70,10 +70,14 @@ jobs:
             TAG="v${VERSION}"
             echo "Source: workflow_dispatch input"
           else
-            TAG="$(gh api repos/mpbarbosa/paraty_geocore.js/releases/latest --jq '.tag_name')"
-            [[ -n "${TAG}" ]] || { echo "❌  Could not determine latest paraty_geocore.js release." >&2; exit 1; }
+            # Use git ls-remote to find the latest tag (works without auth for public repos,
+            # and avoids the GitHub Releases API which requires the repo to have "releases").
+            TAG="$(git ls-remote --tags --refs --sort=-version:refname \
+              https://github.com/mpbarbosa/paraty_geocore.js.git \
+              | head -1 | awk '{print $2}' | sed 's|refs/tags/||')"
+            [[ -n "${TAG}" ]] || { echo "❌  Could not determine latest paraty_geocore.js tag." >&2; exit 1; }
             VERSION="${TAG#v}"
-            echo "Source: GitHub latest release"
+            echo "Source: git ls-remote latest tag"
           fi
 
           CDN_URL="https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@${VERSION}/dist/esm/index.js"

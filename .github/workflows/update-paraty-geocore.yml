@@ -121,7 +121,7 @@ jobs:
 
       # ── 6. Update moduleNameMapper in jest.config.unit.js ────────────────────
       # The Jest config maps the CDN URL regex to the local paraty_geocore.js
-      # source so Node.js can resolve the https:// import during tests.
+      # compiled CJS dist so Node.js can resolve the https:// import during tests.
       # The regex key uses JS string escaping (\\.  for literal dot), so we use
       # Node.js for the replacement to handle the double-backslash correctly.
       - name: Update moduleNameMapper in jest.config.unit.js
@@ -173,10 +173,9 @@ jobs:
 
       # ── 8. Clone paraty_geocore.js for tests ─────────────────────────────────
       # The jest.config moduleNameMapper maps the CDN URL to the local
-      # paraty_geocore.js source tree (<rootDir>/../paraty_geocore.js/src/index).
+      # paraty_geocore.js compiled CJS dist (<rootDir>/../paraty_geocore.js/dist/src/index.js).
       # We clone the repo at the target tag next to the workspace so tests resolve.
-      # We also run npm install (prod deps only) so paraty_geocore.js's own
-      # dependencies (e.g. bessa_patterns.ts) are available for module resolution.
+      # The dist/ files are committed to the repo, so no build step is needed.
       - name: Clone paraty_geocore.js for tests
         if: steps.current.outputs.up_to_date != 'true'
         run: |
@@ -184,9 +183,12 @@ jobs:
             --branch "${{ steps.resolve.outputs.tag }}" \
             https://github.com/mpbarbosa/paraty_geocore.js.git \
             "${{ github.workspace }}/../paraty_geocore.js"
+          echo "✅  paraty_geocore.js cloned at ${{ steps.resolve.outputs.tag }}"
+          # Install production deps (e.g. bessa_patterns.ts) so Jest can resolve
+          # transitive requires from the CJS dist (dist/src/index.js).
           cd "${{ github.workspace }}/../paraty_geocore.js"
-          npm install --omit=dev --ignore-scripts
-          echo "✅  paraty_geocore.js cloned and dependencies installed at ${{ steps.resolve.outputs.tag }}"
+          npm install --production --ignore-scripts
+          echo "✅  paraty_geocore.js dependencies installed."
 
       # ── 9. Update CDN URL in test files ───────────────────────────────────────
       # Some test files import directly from the CDN URL. These must be updated

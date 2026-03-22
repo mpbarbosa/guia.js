@@ -76,7 +76,7 @@ jobs:
             echo "Source: GitHub latest release"
           fi
 
-          CDN_URL="https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@${TAG}/dist/esm/index.js"
+          CDN_URL="https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@${VERSION}/dist/esm/index.js"
 
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "tag=${TAG}"         >> "$GITHUB_OUTPUT"
@@ -118,42 +118,81 @@ jobs:
       # ── 6. Update moduleNameMapper in jest.config.unit.js ────────────────────
       # The Jest config maps the CDN URL regex to the local paraty_geocore.js
       # source so Node.js can resolve the https:// import during tests.
+      # The regex key uses JS string escaping (\\.  for literal dot), so we use
+      # Node.js for the replacement to handle the double-backslash correctly.
       - name: Update moduleNameMapper in jest.config.unit.js
         if: steps.current.outputs.up_to_date != 'true'
+        env:
+          OLD_VERSION: ${{ steps.current.outputs.current_version }}
+          NEW_VERSION: ${{ steps.resolve.outputs.version }}
         run: |
-          OLD_VERSION="${{ steps.current.outputs.current_version }}"
-          NEW_VERSION="${{ steps.resolve.outputs.version }}"
-
-          # The key is a regex string; escape dots for the sed pattern
-          OLD_ESCAPED="${OLD_VERSION//./\\.}"
-          NEW_ESCAPED="${NEW_VERSION}"
-
-          sed -i "s|paraty_geocore\\.js@${OLD_ESCAPED}/dist|paraty_geocore.js@${NEW_VERSION}/dist|g" jest.config.unit.js
-          echo "✅  jest.config.unit.js updated."
+          node << 'EOF'
+          const fs = require('fs');
+          const oldV = process.env.OLD_VERSION;
+          const newV = process.env.NEW_VERSION;
+          // In the source file the regex key uses \\. (JS-string-escaped dots),
+          // so the literal file chars are backslash + backslash + dot.
+          const fileOld = 'paraty_geocore\\\\.js@' + oldV.replace(/\./g, '\\\\.') + '/dist';
+          const fileNew = 'paraty_geocore\\\\.js@' + newV.replace(/\./g, '\\\\.') + '/dist';
+          let content = fs.readFileSync('jest.config.unit.js', 'utf8');
+          const updated = content.split(fileOld).join(fileNew);
+          if (updated === content) {
+            console.warn('⚠️  No replacement made in jest.config.unit.js — pattern not found.');
+          } else {
+            fs.writeFileSync('jest.config.unit.js', updated);
+            console.log('✅  jest.config.unit.js updated.');
+          }
+          EOF
 
       # ── 7. Update moduleNameMapper in package.json ────────────────────────────
       - name: Update moduleNameMapper in package.json
         if: steps.current.outputs.up_to_date != 'true'
+        env:
+          OLD_VERSION: ${{ steps.current.outputs.current_version }}
+          NEW_VERSION: ${{ steps.resolve.outputs.version }}
         run: |
-          OLD_VERSION="${{ steps.current.outputs.current_version }}"
-          NEW_VERSION="${{ steps.resolve.outputs.version }}"
+          node << 'EOF'
+          const fs = require('fs');
+          const oldV = process.env.OLD_VERSION;
+          const newV = process.env.NEW_VERSION;
+          const fileOld = 'paraty_geocore\\\\.js@' + oldV.replace(/\./g, '\\\\.') + '/dist';
+          const fileNew = 'paraty_geocore\\\\.js@' + newV.replace(/\./g, '\\\\.') + '/dist';
+          let content = fs.readFileSync('package.json', 'utf8');
+          const updated = content.split(fileOld).join(fileNew);
+          if (updated === content) {
+            console.warn('⚠️  No replacement made in package.json — pattern not found.');
+          } else {
+            fs.writeFileSync('package.json', updated);
+            console.log('✅  package.json updated.');
+          }
+          EOF
 
-          sed -i "s|paraty_geocore\\.js@${OLD_VERSION}/dist|paraty_geocore.js@${NEW_VERSION}/dist|g" package.json
-          echo "✅  package.json updated."
+      # ── 8. Clone paraty_geocore.js for tests ─────────────────────────────────
+      # The jest.config moduleNameMapper maps the CDN URL to the local
+      # paraty_geocore.js source tree (<rootDir>/../paraty_geocore.js/src/index).
+      # We clone the repo at the target tag next to the workspace so tests resolve.
+      - name: Clone paraty_geocore.js for tests
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          git clone --depth=1 \
+            --branch "${{ steps.resolve.outputs.tag }}" \
+            https://github.com/mpbarbosa/paraty_geocore.js.git \
+            "${{ github.workspace }}/../paraty_geocore.js"
+          echo "✅  paraty_geocore.js cloned at ${{ steps.resolve.outputs.tag }}"
 
-      # ── 8. Run validation ─────────────────────────────────────────────────────
+      # ── 9. Run validation ─────────────────────────────────────────────────────
       - name: Run validation (npm run validate)
         if: steps.current.outputs.up_to_date != 'true'
         run: |
           npm ci
           npm run validate
 
-      # ── 9. Run tests ──────────────────────────────────────────────────────────
+      # ── 10. Run tests ─────────────────────────────────────────────────────────
       - name: Run unit & integration tests
         if: steps.current.outputs.up_to_date != 'true'
         run: npm test
 
-      # ── 10. Update CDN URL in test files ──────────────────────────────────────
+      # ── 11. Update CDN URL in test files ──────────────────────────────────────
       # Some test files import directly from the CDN URL. Update the version
       # string in those files and re-run only the affected tests to confirm
       # they still pass against the new paraty_geocore.js API surface.
@@ -192,7 +231,7 @@ jobs:
             echo "✅  Affected tests passed after adjustment."
           fi
 
-      # ── 11. Update paraty_geocore.js related documentation ────────────────────
+      # ── 12. Update paraty_geocore.js related documentation ────────────────────
       # Replaces the old CDN URL and version tag in all Markdown files so that
       # CDN snippets and version references stay accurate.
       - name: Update paraty_geocore.js related documentation
@@ -233,7 +272,7 @@ jobs:
             echo "✅  Updated ${UPDATED} documentation file(s)."
           fi
 
-      # ── 12. Open pull request ─────────────────────────────────────────────────
+      # ── 13. Open pull request ─────────────────────────────────────────────────
       - name: Create pull request
         if: steps.current.outputs.up_to_date != 'true'
         uses: peter-evans/create-pull-request@v7

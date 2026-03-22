@@ -15,7 +15,7 @@
     "test:e2e": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.config.e2e.js",
     "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.config.unit.js",
     "test:all-suites": "npm run test:unit && npm run test:e2e",
-    "validate": "test -f src/app.js && test -f src/guia.js && test -f src/guia_ibge.js && node -c src/app.js && node -c src/guia.js && node -c src/guia_ibge.js",
+    "validate": "test -f src/app.ts && test -f src/guia.ts && test -f src/guia_ibge.ts && npx tsc --noEmit",
     "test:all": "npm run validate && npm test",
     "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js __tests__/integration",
     "test:features": "node --experimental-vm-modules node_modules/jest/bin/jest.js __tests__/features",

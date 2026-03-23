@@ -112,6 +112,21 @@ class GeolocationService {
 	private isPendingRequest: boolean;
 	private pendingPromise: Promise<GeolocationPosition> | null;
 	private lastSingleFetchTime: number;
+	/**
+	 * Leading-edge throttled wrapper around the `watchPosition` success callback.
+	 *
+	 * Created once in the constructor via {@link throttle} and passed directly to
+	 * `navigator.geolocation.watchPosition`. Because the browser can fire raw GPS
+	 * events many times per second, this guard ensures that
+	 * `PositionManager.update()` and DOM re-renders run **at most once every
+	 * `GEOLOCATION_THROTTLE_INTERVAL` milliseconds** (currently 5 s).
+	 *
+	 * Use {@link flushThrottle} to reset the cooldown on demand (e.g., when the
+	 * user explicitly taps a "refresh location" button).
+	 *
+	 * @see {@link throttle} — `src/utils/throttle.ts`
+	 * @see {@link flushThrottle}
+	 */
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private throttledWatchHandler: ThrottledFunction<[GeolocationPosition], void>;
 	private config: { geolocationOptions: PositionOptions };
@@ -182,7 +197,11 @@ class GeolocationService {
 		this.pendingPromise = null;
 		this.lastSingleFetchTime = 0;
 
-		// Throttle watch callbacks: at most one update per GEOLOCATION_THROTTLE_INTERVAL
+		// Leading-edge throttle: the browser can fire raw GPS events many times per
+		// second. This guard ensures PositionManager.update() and DOM re-renders run
+		// at most once per GEOLOCATION_THROTTLE_INTERVAL (5 s). The same handler is
+		// reused for the full lifetime of the instance and passed directly to
+		// watchPosition(). Call flushThrottle() to reset the cooldown on demand.
 		this.throttledWatchHandler = throttle((position: GeolocationPosition) => {
 			this.lastKnownPosition = position;
 			this.positionManager.update(position);
@@ -314,8 +333,11 @@ class GeolocationService {
 			return this.pendingPromise;
 		}
 
-		// Throttle: if called within GEOLOCATION_THROTTLE_INTERVAL of last fetch and
-		// a cached position is available, return it immediately without a new GPS call.
+		// Manual throttle guard for single-shot fetches: if the last GPS call
+		// succeeded less than GEOLOCATION_THROTTLE_INTERVAL ago and a cached
+		// position is available, return it immediately without a new GPS call.
+		// This mirrors the leading-edge throttle applied to watchPosition callbacks
+		// and uses the same cooldown constant. Call flushThrottle() to bypass.
 		const now = Date.now();
 		if (now - this.lastSingleFetchTime < GEOLOCATION_THROTTLE_INTERVAL && this.lastKnownPosition) {
 			log(">>> (GeolocationService) getSingleLocationUpdate throttled — returning cached position");
@@ -629,13 +651,23 @@ class GeolocationService {
 	}
 
 	/**
-	 * Resets the throttle cooldown so the next `getSingleLocationUpdate()` call
-	 * and the next `watchCurrentLocation` callback both execute immediately,
-	 * regardless of how recently the last fetch occurred.
+	 * Resets **both** throttle guards so the next position fetch and the next
+	 * `watchPosition` callback both execute immediately, regardless of how
+	 * recently the last one occurred.
+	 *
+	 * Two guards are reset:
+	 * 1. `lastSingleFetchTime = 0` — bypasses the manual timestamp check in
+	 *    {@link getSingleLocationUpdate} so the next call triggers a real GPS
+	 *    request instead of returning a cached position.
+	 * 2. `throttledWatchHandler.flush()` — calls {@link ThrottledFunction.flush}
+	 *    to reset the leading-edge throttle so the next `watchPosition` callback
+	 *    is not dropped.
 	 *
 	 * Use sparingly — for example when the user explicitly taps "refresh location".
 	 *
-	 * @since 0.12.6-alpha
+	 * @see {@link throttle} — `src/utils/throttle.ts`
+	 * @see {@link ThrottledFunction.flush}
+	 * @since 0.12.5-alpha
 	 */
 	flushThrottle() {
 		this.lastSingleFetchTime = 0;

@@ -5,7 +5,7 @@
  * Presentational component for a single toast notification.
  * The imperative ToastManager (Toast.js) remains for backward compatibility.
  *
- * @since 0.12.6-alpha
+ * @since 0.12.7-alpha
  */
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning';

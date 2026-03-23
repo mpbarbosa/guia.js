@@ -4,7 +4,7 @@
  * the 5-second throttle window and that `flushThrottle()` resets the cooldown.
  *
  * @jest-environment node
- * @since 0.12.6-alpha
+ * @since 0.12.7-alpha
  */
 
 import { jest } from '@jest/globals';

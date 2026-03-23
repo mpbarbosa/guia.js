@@ -15,6 +15,8 @@ tech_stack:
   test_framework: "jest"
   test_command: "npm test"
   lint_command: "npm run lint:md"
+  lint_commands:
+    markdown: "npm run lint:md"
   routing: "hash_based"
   spa_entry: "src/app.ts"
 structure:
@@ -70,6 +72,20 @@ workflow:
       phase: "pre-flight"
       can_parallelize: false
       dependencies: ["0c"]
+
+# Linting Configuration
+# md_linter: CLI tool used for markdown linting (must be installed in node_modules/.bin/).
+# Change this value to switch tools; scripts/lint-md.js reads it at runtime.
+linting:
+  md_linter: markdownlint-cli2
+  md_config: .markdownlint.yaml
+  md_glob: "**/*.md"
+  md_excludes:
+    - "!node_modules/**"
+    - "!venv/**"
+    - "!.ai_workflow/**"
+    - "!.pytest_cache/**"
+    - "!tests/**/.pytest_cache/**"
 
 # Deployment Configuration
 # Consumed by the `ai-workflow deploy` command.

@@ -21,11 +21,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Run markdownlint
-        uses: DavidAnson/markdownlint-cli2-action@v13
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          globs: '**/*.md'
-          config: '.markdownlint.yaml'
+          node-version-file: '.nvmrc'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run markdown linter
+        run: npm run lint:md
   
   link-check:
     name: Link Validation

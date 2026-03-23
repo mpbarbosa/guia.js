@@ -187,6 +187,9 @@ run with no manual handoff.
 3. **Phase 2** — runs `fix-log-issues`: processes every `open` issue in
    `plan.md`, applies and verifies each fix, then updates
    `docs/ROADMAP.md` with the results.
+4. **Phase 3** — runs `purge-workflow-logs`: deletes `.ai_workflow/logs/`,
+   `.ai_workflow/backlog/`, and `.ai_workflow/summaries/` now that the audit
+   is complete. `plan.md` and all other `.ai_workflow/` content are retained.
 
 If interrupted mid-run, resume with `fix-log-issues` alone — `plan.md`
 preserves the status of every issue so no work is lost.

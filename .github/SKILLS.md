@@ -25,6 +25,7 @@ state.
 | [Fix log issues](#fix-log-issues) | _(Copilot skill)_ | Manual (after validate-logs) | Consume `plan.md`, apply fixes, update roadmap |
 | [Audit and fix](#audit-and-fix) | _(Copilot skill)_ | Manual | Run validate-logs then fix-log-issues in one pass |
 | [Next roadmap phase](#next-roadmap-phase) | _(Copilot skill)_ | Manual | Propose and implement the next version milestone |
+| [Sync version](#sync-version) | _(Copilot skill)_ | Manual | Propagate package.json version to all dependent files |
 
 ---
 
@@ -234,3 +235,42 @@ documentation, and commits everything atomically.
 7. Bumps `"version"` in `package.json` and `APP_VERSION` in
    `src/config/defaults.ts`.
 8. Commits everything in one atomic commit and prints a summary.
+
+---
+
+## sync-version
+
+**Skill file**: `.github/skills/sync-version/SKILL.md`
+
+Audits and synchronises every version string in the repository against the
+canonical version recorded in `package.json`. Run this skill after bumping the
+version in `package.json` to ensure all dependent files stay consistent.
+
+### When to use
+
+- After manually editing `"version"` in `package.json`
+- Before tagging a release to confirm no stale version strings remain
+- Any time `npm run check:version` reports a mismatch
+
+### What it does
+
+1. Reads the canonical version from `package.json`.
+2. Checks each file in the canonical list against that version.
+3. Reports any mismatch found.
+4. Applies targeted fixes (Node script for `src/config/defaults.ts`,
+   `sed` for all other files).
+5. Runs `npm run validate` and `npm test` to confirm nothing broke.
+6. Commits all changes in one atomic commit.
+
+### Canonical version files
+
+| File | Version carrier |
+|------|----------------|
+| `src/config/defaults.ts` | `APP_VERSION` object fields (`major`, `minor`, `patch`, `prerelease`) |
+| `src/config/version.ts` | `export const VERSION = 'X.Y.Z-PRERELEASE'` |
+| `README.md` | Version badge / header references |
+| `docs/INDEX.md` | `version:` metadata field |
+| `docs/ROADMAP.md` | `**Current Version**` header line |
+| `service-worker.js` | `@version` JSDoc + `CACHE_NAME` constant |
+| `public/service-worker.js` | Same as above |
+| `.workflow-config.yaml` | `project.version` field |

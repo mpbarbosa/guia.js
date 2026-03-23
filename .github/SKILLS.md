@@ -24,6 +24,7 @@ state.
 | [Validate logs](#validate-logs) | _(Copilot skill)_ | Manual | Validate `.ai_workflow/logs` against codebase; write `plan.md` |
 | [Fix log issues](#fix-log-issues) | _(Copilot skill)_ | Manual (after validate-logs) | Consume `plan.md`, apply fixes, update roadmap |
 | [Audit and fix](#audit-and-fix) | _(Copilot skill)_ | Manual | Run validate-logs then fix-log-issues in one pass |
+| [Next roadmap phase](#next-roadmap-phase) | _(Copilot skill)_ | Manual | Propose and implement the next version milestone |
 
 ---
 
@@ -199,3 +200,37 @@ preserves the status of every issue so no work is lost.
 
 The skill will open a pull request (or update an existing one) on a
 dedicated branch. Review and merge the PR to apply the changes to `main`.
+
+---
+
+## next-roadmap-phase
+
+**File:** `.github/skills/next-roadmap-phase/SKILL.md`
+**Trigger:** Manual (Copilot CLI skill)
+
+Reads the current project state from `docs/ROADMAP.md`,
+`docs/architecture/ARCHITECTURE.md`, and `CHANGELOG.md`, then proposes a
+scoped set of changes for the next version milestone. Once the developer
+confirms the scope, the skill implements the changes, updates all
+documentation, and commits everything atomically.
+
+### When to use
+
+- When the "Near-Term" section of `docs/ROADMAP.md` has items ready to ship.
+- When asked "what should we ship next?" or "implement the next version".
+- After `audit-and-fix` has been run and the codebase is clean.
+
+### What it does
+
+1. Reads `docs/ROADMAP.md`, `CHANGELOG.md`, and architecture docs to
+   understand what is complete, in-progress, and deferred.
+2. Proposes a next version number and a scope table (features, fixes, removals,
+   doc updates).
+3. **Waits for developer confirmation before writing any code.**
+4. Implements each confirmed change with matching tests.
+5. Runs `npm test`, `tsc --noEmit`, and `npm run lint:md` — all must be clean.
+6. Updates `docs/ROADMAP.md`, `docs/architecture/ARCHITECTURE.md`, and
+   `CHANGELOG.md`.
+7. Bumps `"version"` in `package.json` and `APP_VERSION` in
+   `src/config/defaults.ts`.
+8. Commits everything in one atomic commit and prints a summary.

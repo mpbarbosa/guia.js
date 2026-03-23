@@ -475,6 +475,15 @@
         margin-bottom: 2rem;
       }
     </style>
+
+    <!-- Import map: resolves bare specifiers from paraty_geocore.js CDN transitive deps -->
+    <script type="importmap">
+    {
+      "imports": {
+        "bessa_patterns.ts": "https://cdn.jsdelivr.net/gh/mpbarbosa/bessa_patterns.ts@v0.12.4-alpha/dist/index.mjs"
+      }
+    }
+    </script>
   </head>
   <body><div class="navigation-progress" role="progressbar" aria-label="Progresso de navegação"><div class="navigation-progress-bar" style="width: 0%;"></div></div>
     

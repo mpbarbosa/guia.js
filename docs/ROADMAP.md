@@ -112,3 +112,4 @@ Issues identified from `.ai_workflow` workflow runs and resolved via the `audit-
 | RI-011 | Version mismatch: `APP_VERSION.patch` was 5 in `src/config/defaults.ts` | docs-outdated | Updated `patch: 5` to `patch: 6`; `npm run check:version` exits 0 | d383354 |
 | RI-012 | MD031 violation in `.github/skills/copy-ts-to-paraty/SKILL.md` line 272 | markdown-lint | Added blank line before fenced code block; `npm run lint:md` exits 0 | f676312 |
 | RI-013 | MD032 violation in `docs/throttle-geolocation.md` line 4 | markdown-lint | Added blank line before list in blockquote; `npm run lint:md` exits 0 | bda4c6a |
+| RI-014 | Version mismatch: `APP_VERSION.patch` was 6 in `src/config/defaults.ts` | docs-outdated | Updated `patch: 6` to `patch: 7`; `npm run check:version` exits 0 | 9238ce7 |

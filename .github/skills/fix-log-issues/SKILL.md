@@ -56,6 +56,7 @@ Each `Type` value maps to a concrete fix strategy:
 The directory at `Path` is not referenced in any documentation file.
 
 **Fix procedure:**
+
 1. Identify the most appropriate documentation file to update (prefer
    `README.md` inside the same parent directory, or `docs/ARCHITECTURE.md`).
 2. Add a brief description of the directory's purpose under the relevant
@@ -67,6 +68,7 @@ The directory at `Path` is not referenced in any documentation file.
 One or more markdownlint rules are violated in the file at `Path`.
 
 **Fix procedure:**
+
 1. Run `npm run lint:md:fix` to apply auto-fixable corrections.
 2. Run `npm run lint:md` to identify any remaining violations.
 3. For each remaining violation, edit the file manually to comply with the
@@ -79,6 +81,7 @@ One or more markdownlint rules are violated in the file at `Path`.
 `npm install --dry-run` or `npm audit` produced a warning for a dependency.
 
 **Fix procedure:**
+
 1. Run `npm audit --audit-level=moderate` to reproduce the warning.
 2. If the advisory has a fix available: run `npm audit fix` (non-breaking
    only — do not use `--force`).
@@ -91,6 +94,7 @@ One or more markdownlint rules are violated in the file at `Path`.
 `tsc --noEmit` reported a type error or warning.
 
 **Fix procedure:**
+
 1. Run `npx tsc --noEmit` to reproduce.
 2. Edit the file at `Path` to resolve the type error using the minimum
    change that preserves existing behaviour.
@@ -102,6 +106,7 @@ One or more markdownlint rules are violated in the file at `Path`.
 The directory tree diverges from the description in `docs/ARCHITECTURE.md`.
 
 **Fix procedure:**
+
 1. Determine whether the code or the documentation is the source of truth.
    - If the code changed intentionally: update `docs/ARCHITECTURE.md`.
    - If a directory was added accidentally: remove it or move it to the
@@ -113,6 +118,7 @@ The directory tree diverges from the description in `docs/ARCHITECTURE.md`.
 A module or exported function has no corresponding test.
 
 **Fix procedure:**
+
 1. Locate the source file at `Path`.
 2. Create or extend the matching test file under `test/` following the
    existing test structure (e.g., `test/core/`, `test/utils/`).
@@ -125,6 +131,7 @@ A documentation file references a file, export, or behaviour that no longer
 exists in the codebase.
 
 **Fix procedure:**
+
 1. Open the documentation file at `Path`.
 2. Locate the stale reference described in `Description`.
 3. Update or remove the reference to match the current codebase state.

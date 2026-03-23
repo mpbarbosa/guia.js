@@ -5,7 +5,7 @@
 
 ---
 
-## ✅ Completed (v0.9 – v0.12)
+## ✅ Completed (v0.9 – v0.14)
 
 - Real-time geolocation tracking with position/address display
 - Brazilian address standardization (Nominatim + IBGE)
@@ -17,49 +17,27 @@
 - Refactored `HtmlSpeechSynthesisDisplayer` to facade pattern (−36% lines)
 - Partial TypeScript migration (coordination, core, data, config layers)
 - **Full TypeScript migration complete** — all 95 `src/` files are `.ts`, `tsc --noEmit` exits 0, strict mode enabled
-- PWA scaffold (manifest + service worker stub)
+- **PWA finalized** — `service-worker.js` with network-first/cache-first strategies, `offline.html` fallback, registered in `index.html`
+- **AWS Location Service** — `AwsGeocoder.ts` + `AwsAddressExtractor.ts` integrated; UI toggle (`#provider-switch-btn`) + `switchProvider()` wired end-to-end
+- **Interactive Map** — MapLibre GL 5.x inline map (`MapLibreDisplayer.ts`) with position marker and toggle button
 - Vite build system with code splitting (25% bundle reduction)
-- Contextual button status messages (`button-status.js`)
+- Contextual button status messages (`button-status.ts`)
 - `paraty_geocore.js` CDN dependency for shared geolocation primitives
 
 ---
 
-## 🚧 Near-Term (v0.13 – v0.14-alpha)
-
-### Finalize PWA Support
-
-- Implement `service-worker.js` cache strategies (currently a stub)
-- Offline mode: serve last-known location data from cache
-- Push notification scaffold for location change alerts
-
-### AWS Location Service Integration
-
-- `AwsGeocoder.ts` and `AwsAddressExtractor.ts` exist but are wired only as a UI toggle — complete provider switching logic
-- Make geocoding provider configurable at runtime (Nominatim ↔ AWS)
-
----
-
-## 🔭 Mid-Term (v0.15 – v0.19-alpha)
-
-### Interactive Map Layer (Leaflet 2.0)
-
-- Integrate **Leaflet 2.0** via npm/Vite (ESM + tree-shaking, no legacy bundle overhead)
-- User position marker with accuracy circle using Leaflet's `locationfound` event + `L.circle()`
-- GeoJSON overlay for bairro/município boundaries (sourced from IBGE geographic data)
-- Marker clustering for nearby POI results (`leaflet.markercluster` plugin)
-- PointerEvents API (Leaflet 2.0) for smoother mobile location tracking interaction
-- Automatic OSM attribution compliance (Leaflet 2.0 feature)
+## 🚧 Near-Term (v0.15-alpha) — In Progress
 
 ### Nearby Places — Replace Placeholder
 
-- Replace `findNearbyRestaurants()` alert with real Overpass API or Google Places integration
+- Replace `findNearbyRestaurants()` stub with real Overpass API integration
 - Category support: restaurants, pharmacies, hospitals, tourist attractions
-- Display results on Leaflet map with distance markers and popup details
+- Display results in a nearby places panel with distance and OSM link
 
 ### City Statistics — Replace Placeholder
 
-- Replace `fetchCityStatistics()` alert with live IBGE SIDRA queries
-- Show: population, GDP, HDI, area, neighboring municipalities
+- Replace `fetchCityStatistics()` stub with live IBGE SIDRA + IBGE Localidades queries
+- Show: population (SIDRA), area (IBGE Localidades), IBGE municipality code
 - Expandable stats panel within the main view
 
 ### Offline-First Architecture
@@ -106,11 +84,10 @@
 
 | Item | Priority |
 |---|---|
-| Implement `service-worker.js` (currently stub) | High |
 | Replace placeholder `findNearbyRestaurants()` | Medium |
 | Replace placeholder `fetchCityStatistics()` | Medium |
-| Complete AWS geocoding provider integration | Medium |
-| Evaluate Leaflet 2.0 v1→v2 API migration (factory methods → ES6 constructors) | Low |
+| Offline-First Architecture (IndexedDB caching) | Medium |
+| Route Navigation Utility (OpenRouteService/OSRM) | Low |
 | Consolidate duplicate `CHANGELOG.md` v0.9.0 entries | Low |
 
 ---

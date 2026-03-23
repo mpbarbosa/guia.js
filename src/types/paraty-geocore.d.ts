@@ -4,13 +4,14 @@
  * Exports: GeoPosition, GeoPositionError, ObserverSubject, DualObserverSubject,
  * GeocodingState, calculateDistance, EARTH_RADIUS_METERS, delay,
  * withObserver, ObserverMixinOptions, ObserverMixinResult,
+ * ReferencePlace, NO_REFERENCE_PLACE, VALID_REF_PLACE_CLASSES, OsmElement,
  * log, warn.
  *
  * @see https://github.com/mpbarbosa/paraty_geocore.js
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.3-alpha/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.3-alpha/dist/esm/index.js' {
 	/** GPS accuracy quality classification. */
 	export type AccuracyQuality = 'excellent' | 'good' | 'medium' | 'bad' | 'very bad';
 
@@ -195,7 +196,7 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-a
 	 * @since 0.11.0
 	 *
 	 * @example
-	 * import { withObserver } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js';
+	 * import { withObserver } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.3-alpha/dist/esm/index.js';
 	 *
 	 * class MyClass {
 	 *     constructor() { this.observerSubject = new DualObserverSubject(); }
@@ -203,6 +204,41 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-a
 	 * Object.assign(MyClass.prototype, withObserver({ checkNull: true, className: 'MyClass' }));
 	 */
 	export function withObserver(options?: ObserverMixinOptions): ObserverMixinResult;
+
+	// ─── ReferencePlace (0.12.3-alpha) ────────────────────────────────────────
+
+	/** Minimal OSM element shape used by ReferencePlace to identify points of interest. */
+	export interface OsmElement {
+		class?: string;
+		type?: string;
+		name?: string;
+		[key: string]: unknown;
+	}
+
+	/** Fallback description returned when no mapping exists for a class/type pair. */
+	export const NO_REFERENCE_PLACE: string;
+
+	/** OSM feature classes that are considered valid reference places. */
+	export const VALID_REF_PLACE_CLASSES: ReadonlyArray<string>;
+
+	/**
+	 * Immutable value object representing a reference place (POI) extracted from geocoding data.
+	 * @immutable All instances are frozen after construction.
+	 * @since 0.12.3-alpha
+	 */
+	export class ReferencePlace {
+		readonly className: string | null;
+		readonly typeName: string | null;
+		readonly name: string | null;
+		readonly description: string;
+
+		static readonly referencePlaceMap: Record<string, Record<string, string>>;
+
+		constructor(data: OsmElement | null | undefined);
+		calculateDescription(): string;
+		calculateCategory(): string;
+		toString(): string;
+	}
 
 	/**
 	 * Emits a timestamped informational message via `console.log`.

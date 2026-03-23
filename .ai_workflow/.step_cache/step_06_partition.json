@@ -1,15 +1,16 @@
 {
   "version": 1,
   "partitionIndex": 1,
-  "totalPartitions": 41,
-  "filesHash": "a85eda7b",
+  "totalPartitions": 43,
+  "filesHash": "ebb5ca39",
   "partitionLabels": [
     "__tests__/components",
     "__tests__/components (2)",
     "__tests__/components (3)",
     "__tests__/config",
     "__tests__/coordination",
-    "__tests__/core, __tests__/data",
+    "__tests__/core",
+    "__tests__/data",
     "__tests__/e2e",
     "__tests__/e2e (2)",
     "__tests__/e2e (3)",
@@ -43,8 +44,9 @@
     "__tests__/views",
     "test",
     "test (2)",
-    "test/html, test/observers, test/types",
+    "test/html, test/observers",
+    "test/services, test/types",
     "test/utils"
   ],
-  "updatedAt": "2026-03-23T21:50:16.608Z"
+  "updatedAt": "2026-03-23T23:27:39.229Z"
 }

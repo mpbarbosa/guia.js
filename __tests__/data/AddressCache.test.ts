@@ -253,4 +253,226 @@ describe('AddressCache', () => {
       expect(() => AddressCache.cleanExpiredEntries()).not.toThrow();
     });
   });
+
+  // ── Confirmation buffers (v0.12.8-alpha) ─────────────────────────────────────
+  //
+  // Each callback should fire only after the same address field has been seen
+  // LOGRADOURO_CONFIRMATION_COUNT (3) consecutive times.
+
+  describe('confirmation buffer — logradouro', () => {
+    // Each call needs a unique cache key (road + house_number + neighbourhood + city + postcode)
+    // We vary house_number to force unique cache entries while keeping road identical
+    const makeRoad = (road, id) => ({
+      display_name: `${road}, ${id}, Centro, Recife, PE`,
+      address: {
+        road,
+        house_number: String(id),  // unique per call → unique cache key
+        neighbourhood: 'Centro',
+        city: 'Recife',
+        state: 'Pernambuco',
+        postcode: '50000-000',
+        country: 'Brasil',
+        country_code: 'br',
+      },
+    });
+
+    test('logradouro callback NOT fired on first new-street observation', () => {
+      const cache = AddressCache.getInstance();
+      const cb = jest.fn();
+      cache.setLogradouroChangeCallback(cb);
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 1));
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 2)); // 1st occurrence
+      expect(cb).not.toHaveBeenCalled();
+    });
+
+    test('logradouro callback NOT fired on second consecutive occurrence', () => {
+      const cache = AddressCache.getInstance();
+      const cb = jest.fn();
+      cache.setLogradouroChangeCallback(cb);
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 1));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 2)); // establish confirmed
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 3)); // confirm 'Rua A'
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 4)); // 1st
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 5)); // 2nd
+      expect(cb).not.toHaveBeenCalled();
+    });
+
+    test('logradouro callback IS fired on third consecutive occurrence', () => {
+      const cache = AddressCache.getInstance();
+      const cb = jest.fn();
+      cache.setLogradouroChangeCallback(cb);
+      // Establish confirmed 'Rua A'
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 1));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 2));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 3));
+      // 3 consecutive 'Rua B'
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 4)); // 1st
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 5)); // 2nd
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 6)); // 3rd → fires
+      expect(cb).toHaveBeenCalledTimes(1);
+    });
+
+    test('logradouro callback NOT fired when street alternates (jitter)', () => {
+      const cache = AddressCache.getInstance();
+      const cb = jest.fn();
+      cache.setLogradouroChangeCallback(cb);
+      // Establish confirmed 'Rua A'
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 1));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 2));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 3));
+      // Jitter
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 4)); // pending B, count=1
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 5)); // back to confirmed — clears pending
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 6)); // pending B, count=1 again
+      expect(cb).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('confirmation buffer — bairro', () => {
+    const makeN = (bairro, id) => ({
+      display_name: `Rua X, ${id}, ${bairro}, Recife, PE`,
+      address: {
+        road: 'Rua X',
+        house_number: String(id),
+        neighbourhood: bairro,
+        city: 'Recife',
+        state: 'Pernambuco',
+        postcode: '50000-000',
+        country: 'Brasil',
+        country_code: 'br',
+      },
+    });
+
+    test('bairro callback NOT fired on first/second occurrence', () => {
+      const cache = AddressCache.getInstance();
+      const cb = jest.fn();
+      cache.setBairroChangeCallback(cb);
+      // Establish confirmed bairro
+      cache.getBrazilianStandardAddress(makeN('Centro', 1));
+      cache.getBrazilianStandardAddress(makeN('Centro', 2));
+      cache.getBrazilianStandardAddress(makeN('Centro', 3));
+      // Two occurrences of new bairro — should not fire
+      cache.getBrazilianStandardAddress(makeN('Boa Viagem', 4));
+      cache.getBrazilianStandardAddress(makeN('Boa Viagem', 5));
+      expect(cb).not.toHaveBeenCalled();
+    });
+
+    test('bairro callback IS fired on third consecutive occurrence', () => {
+      const cache = AddressCache.getInstance();
+      const cb = jest.fn();
+      cache.setBairroChangeCallback(cb);
+      cache.getBrazilianStandardAddress(makeN('Centro', 1));
+      cache.getBrazilianStandardAddress(makeN('Centro', 2));
+      cache.getBrazilianStandardAddress(makeN('Centro', 3));
+      cache.getBrazilianStandardAddress(makeN('Boa Viagem', 4));
+      cache.getBrazilianStandardAddress(makeN('Boa Viagem', 5));
+      cache.getBrazilianStandardAddress(makeN('Boa Viagem', 6));
+      expect(cb).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('confirmation buffer — municipio', () => {
+    const makeM = (municipio, id) => ({
+      display_name: `Rua X, ${id}, Centro, ${municipio}, PE`,
+      address: {
+        road: 'Rua X',
+        house_number: String(id),
+        neighbourhood: 'Centro',
+        city: municipio,
+        state: 'Pernambuco',
+        postcode: '50000-000',
+        country: 'Brasil',
+        country_code: 'br',
+      },
+    });
+
+    test('municipio callback NOT fired on first/second occurrence', () => {
+      const cache = AddressCache.getInstance();
+      const cb = jest.fn();
+      cache.setMunicipioChangeCallback(cb);
+      cache.getBrazilianStandardAddress(makeM('Recife', 1));
+      cache.getBrazilianStandardAddress(makeM('Recife', 2));
+      cache.getBrazilianStandardAddress(makeM('Recife', 3));
+      cache.getBrazilianStandardAddress(makeM('Olinda', 4));
+      cache.getBrazilianStandardAddress(makeM('Olinda', 5));
+      expect(cb).not.toHaveBeenCalled();
+    });
+
+    test('municipio callback IS fired on third consecutive occurrence', () => {
+      const cache = AddressCache.getInstance();
+      const cb = jest.fn();
+      cache.setMunicipioChangeCallback(cb);
+      cache.getBrazilianStandardAddress(makeM('Recife', 1));
+      cache.getBrazilianStandardAddress(makeM('Recife', 2));
+      cache.getBrazilianStandardAddress(makeM('Recife', 3));
+      cache.getBrazilianStandardAddress(makeM('Olinda', 4));
+      cache.getBrazilianStandardAddress(makeM('Olinda', 5));
+      cache.getBrazilianStandardAddress(makeM('Olinda', 6));
+      expect(cb).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('setPendingConfirmationCallback()', () => {
+    const makeRoad = (road, id) => ({
+      display_name: `${road}, ${id}, Centro, Recife, PE`,
+      address: {
+        road,
+        house_number: String(id),
+        neighbourhood: 'Centro',
+        city: 'Recife',
+        state: 'Pernambuco',
+        postcode: '50000-000',
+        country: 'Brasil',
+        country_code: 'br',
+      },
+    });
+
+    test('fires with true when a buffer enters pending state', () => {
+      const cache = AddressCache.getInstance();
+      const pendingCb = jest.fn();
+      cache.setPendingConfirmationCallback(pendingCb);
+      // Establish confirmed 'Rua A'
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 1));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 2));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 3));
+      // Introduce new street (enters pending) — should fire true
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 4));
+      const trueCalls = pendingCb.mock.calls.filter(([v]) => v === true);
+      expect(trueCalls.length).toBeGreaterThanOrEqual(1);
+    });
+
+    test('fires with false when all buffers settle after confirmation', () => {
+      const cache = AddressCache.getInstance();
+      const pendingCb = jest.fn();
+      cache.setPendingConfirmationCallback(pendingCb);
+      // Establish confirmed 'Rua A' (bairro/municipio also confirm here)
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 1));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 2));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 3));
+      // Enter pending with 'Rua B'
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 4));
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 5));
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 6)); // 3rd → confirms, pending clears
+      // Last call should have been false (settled)
+      const calls = pendingCb.mock.calls;
+      const lastCall = calls[calls.length - 1];
+      expect(lastCall[0]).toBe(false);
+    });
+
+    test('does not fire redundant identical state transitions', () => {
+      const cache = AddressCache.getInstance();
+      const pendingCb = jest.fn();
+      cache.setPendingConfirmationCallback(pendingCb);
+      // Establish confirmed 'Rua A' (burns through initial pending transitions)
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 1));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 2));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 3)); // confirmed — fires false
+      pendingCb.mockClear(); // isolate from previous transitions
+      // Introduce 'Rua B' — first triggers true only once
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 4)); // → true
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 5)); // still pending, no re-fire
+      const trueCalls = pendingCb.mock.calls.filter(([v]) => v === true);
+      expect(trueCalls).toHaveLength(1);
+    });
+  });
 });

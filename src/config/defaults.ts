@@ -90,6 +90,43 @@ export const MINIMUM_TIME_CHANGE = 30000; // 30 seconds
  */
 export const GEOLOCATION_THROTTLE_INTERVAL = 5000; // 5 seconds
 
+/**
+ * Reduced throttle interval (ms) applied while any address field has a pending confirmation.
+ * GeolocationService switches from GEOLOCATION_THROTTLE_INTERVAL to this value so that
+ * confirming reads arrive faster, reducing display lag for legitimate address changes.
+ * Restores to GEOLOCATION_THROTTLE_INTERVAL once all confirmation buffers settle.
+ *
+ * At typical city driving speeds (≥20 km/h, 5s normal throttle):
+ *   - Normal confirmation lag (5s × 3): ~10s
+ *   - Fast confirmation lag (2s × 3):  ~4s — 60% improvement
+ *
+ * @since 0.12.8-alpha
+ */
+export const GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL = 2000; // 2 seconds
+
+/**
+ * Number of consecutive identical reverse-geocoding results required before a
+ * `logradouro` (street name) change is published to the application.
+ * Mitigates GPS intersection jitter: a ~50 m error margin can transiently place
+ * the position on an adjacent street, producing a false address-change event.
+ * @since 0.12.8-alpha
+ */
+export const LOGRADOURO_CONFIRMATION_COUNT = 3;
+
+/**
+ * Number of consecutive identical reverse-geocoding results required before a
+ * `bairro` (neighbourhood) change is published to the application.
+ * @since 0.12.8-alpha
+ */
+export const BAIRRO_CONFIRMATION_COUNT = 3;
+
+/**
+ * Number of consecutive identical reverse-geocoding results required before a
+ * `municipio` (municipality/city) change is published to the application.
+ * @since 0.12.8-alpha
+ */
+export const MUNICIPIO_CONFIRMATION_COUNT = 3;
+
 /** Speech queue timer interval in milliseconds */
 export const QUEUE_TIMER_INTERVAL = 5000;
 

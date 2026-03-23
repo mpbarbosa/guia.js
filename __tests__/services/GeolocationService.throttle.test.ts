@@ -262,4 +262,78 @@ describe('GeolocationService – watchCurrentLocation throttle', () => {
 
 		expect(pm.update).toHaveBeenCalledTimes(2);
 	});
+
+	// ── setThrottleInterval() (v0.12.8-alpha) ──────────────────────────────────
+
+	test('setThrottleInterval(2000) causes events within 2s to be throttled', () => {
+		if (!GeolocationService) { expect(true).toBe(true); return; }
+
+		let capturedSuccess;
+		const provider = {
+			isSupported: jest.fn(() => true),
+			getCurrentPosition: jest.fn(),
+			watchPosition: jest.fn((success) => { capturedSuccess = success; return 1; }),
+			clearWatch: jest.fn(),
+		};
+		const pm = makePositionManager();
+		const service = new GeolocationService(null, provider, pm);
+		service.watchCurrentLocation();
+
+		// Switch to 2s throttle
+		service.setThrottleInterval(2000);
+
+		capturedSuccess(makePosition()); // fires immediately
+		jest.advanceTimersByTime(1000);
+		capturedSuccess(makePosition(-23.56, -46.64)); // within 2s window — suppressed
+
+		expect(pm.update).toHaveBeenCalledTimes(1);
+	});
+
+	test('setThrottleInterval(2000) allows events after 2s', () => {
+		if (!GeolocationService) { expect(true).toBe(true); return; }
+
+		let capturedSuccess;
+		const provider = {
+			isSupported: jest.fn(() => true),
+			getCurrentPosition: jest.fn(),
+			watchPosition: jest.fn((success) => { capturedSuccess = success; return 1; }),
+			clearWatch: jest.fn(),
+		};
+		const pm = makePositionManager();
+		const service = new GeolocationService(null, provider, pm);
+		service.watchCurrentLocation();
+
+		service.setThrottleInterval(2000);
+
+		capturedSuccess(makePosition()); // fires immediately
+		jest.advanceTimersByTime(2001);
+		capturedSuccess(makePosition(-23.56, -46.64)); // past 2s window — should fire
+
+		expect(pm.update).toHaveBeenCalledTimes(2);
+	});
+
+	test('setThrottleInterval restores 5s throttle behaviour', () => {
+		if (!GeolocationService) { expect(true).toBe(true); return; }
+
+		let capturedSuccess;
+		const provider = {
+			isSupported: jest.fn(() => true),
+			getCurrentPosition: jest.fn(),
+			watchPosition: jest.fn((success) => { capturedSuccess = success; return 1; }),
+			clearWatch: jest.fn(),
+		};
+		const pm = makePositionManager();
+		const service = new GeolocationService(null, provider, pm);
+		service.watchCurrentLocation();
+
+		// Switch to fast mode then back to normal
+		service.setThrottleInterval(2000);
+		service.setThrottleInterval(5000);
+
+		capturedSuccess(makePosition()); // fires
+		jest.advanceTimersByTime(2001);
+		capturedSuccess(makePosition(-23.56, -46.64)); // within 5s — suppressed
+
+		expect(pm.update).toHaveBeenCalledTimes(1);
+	});
 });

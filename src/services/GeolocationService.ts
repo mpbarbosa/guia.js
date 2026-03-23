@@ -129,6 +129,8 @@ class GeolocationService {
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private throttledWatchHandler: ThrottledFunction<[GeolocationPosition], void>;
+	// Raw (unthrottled) handler — stored so setThrottleInterval() can re-wrap it
+	private _rawWatchHandler: (position: GeolocationPosition) => void;
 	private config: { geolocationOptions: PositionOptions };
 	private provider!: IGeolocationProvider;
 	private navigator: Navigator | null;
@@ -202,13 +204,14 @@ class GeolocationService {
 		// at most once per GEOLOCATION_THROTTLE_INTERVAL (5 s). The same handler is
 		// reused for the full lifetime of the instance and passed directly to
 		// watchPosition(). Call flushThrottle() to reset the cooldown on demand.
-		this.throttledWatchHandler = throttle((position: GeolocationPosition) => {
+		this._rawWatchHandler = (position: GeolocationPosition) => {
 			this.lastKnownPosition = position;
 			this.positionManager.update(position);
 			if (this.locationResult) {
 				this.updateLocationDisplay(position);
 			}
-		}, GEOLOCATION_THROTTLE_INTERVAL);
+		};
+		this.throttledWatchHandler = throttle(this._rawWatchHandler, GEOLOCATION_THROTTLE_INTERVAL);
 
 		// CONFIGURATION AND PERFORMANCE OPTIMIZATION:
 		// The service accepts configuration options for geolocation parameters including
@@ -470,7 +473,7 @@ class GeolocationService {
 		}
 
 		this.watchId = this.provider.watchPosition(
-			this.throttledWatchHandler,
+			(position: GeolocationPosition) => this.throttledWatchHandler(position),
 			(err) => {
 				// Timeout (code 3) is transient for a continuous watch — the watch
 				// keeps running and will deliver a fix once the device acquires one.
@@ -672,6 +675,25 @@ class GeolocationService {
 	flushThrottle() {
 		this.lastSingleFetchTime = 0;
 		this.throttledWatchHandler.flush();
+	}
+
+	/**
+	 * Replaces the active leading-edge throttle with a new one at the given interval.
+	 *
+	 * Called by `WebGeocodingManager` when `AddressCache` signals that any address
+	 * field has a pending confirmation candidate.  The throttle is tightened to
+	 * `GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL` (2 s) so that confirming reads
+	 * arrive faster, then restored to `GEOLOCATION_THROTTLE_INTERVAL` (5 s) once
+	 * all buffers settle.
+	 *
+	 * The active `watchPosition` subscription is unaffected — only the rate at which
+	 * raw GPS events are forwarded to `PositionManager` changes (FR-04.4).
+	 *
+	 * @param {number} ms - The new throttle interval in milliseconds.
+	 * @since 0.12.8-alpha
+	 */
+	setThrottleInterval(ms: number): void {
+		this.throttledWatchHandler = throttle(this._rawWatchHandler, ms);
 	}
 }
 

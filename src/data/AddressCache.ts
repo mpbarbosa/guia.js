@@ -33,6 +33,14 @@ import AddressChangeDetector from './AddressChangeDetector.js';
 import CallbackRegistry from './CallbackRegistry.js';
 import AddressDataStore from './AddressDataStore.js';
 
+// NEW (v0.12.8-alpha): Confirmation buffers for GPS intersection jitter mitigation
+import AddressFieldConfirmationBuffer from './AddressFieldConfirmationBuffer.js';
+import {
+	LOGRADOURO_CONFIRMATION_COUNT,
+	BAIRRO_CONFIRMATION_COUNT,
+	MUNICIPIO_CONFIRMATION_COUNT
+} from '../config/defaults.js';
+
 class AddressCache {
 
 	/**
@@ -93,6 +101,15 @@ class AddressCache {
 	previousAddress: BrazilianStandardAddress | null;
 	currentRawData: NominatimResponse | null;
 	previousRawData: NominatimResponse | null;
+	// NEW (v0.12.8-alpha): Confirmation buffers — require N consecutive identical
+	// geocoding results before publishing an address-field change (jitter mitigation)
+	private _logradouroBuffer: AddressFieldConfirmationBuffer;
+	private _bairroBuffer: AddressFieldConfirmationBuffer;
+	private _municipioBuffer: AddressFieldConfirmationBuffer;
+	// Callback fired when any buffer enters/exits pending state (used to switch
+	// GeolocationService to fast-throttle mode during a confirmation window)
+	private _pendingConfirmationCallback: ((isPending: boolean) => void) | null;
+	private _anyBufferPending: boolean;
 	constructor() {
 		this.observerSubject = new ObserverSubject();
 		
@@ -118,6 +135,13 @@ class AddressCache {
 		this.previousAddress = this.dataStore.getPrevious().address;
 		this.currentRawData = this.dataStore.getCurrentRawData();
 		this.previousRawData = this.dataStore.getPreviousRawData();
+
+		// NEW (v0.12.8-alpha): one confirmation buffer per tracked address field
+		this._logradouroBuffer = new AddressFieldConfirmationBuffer(LOGRADOURO_CONFIRMATION_COUNT);
+		this._bairroBuffer     = new AddressFieldConfirmationBuffer(BAIRRO_CONFIRMATION_COUNT);
+		this._municipioBuffer  = new AddressFieldConfirmationBuffer(MUNICIPIO_CONFIRMATION_COUNT);
+		this._pendingConfirmationCallback = null;
+		this._anyBufferPending = false;
 		
 		// Instance-based cleanup timer using TimerManager (prevents memory leaks)
 		timerManager.setInterval(() => {
@@ -702,10 +726,45 @@ class AddressCache {
 			this.lastNotifiedBairroChangeSignature = null;
 			this.lastNotifiedMunicipioChangeSignature = null;
 
-			// Check for logradouro change after caching the new address
-			// This replaces the timer-based approach with event-driven checking
-			if (this.logradouroChangeCallback &&
-				this.hasLogradouroChanged()) {
+			// NEW (v0.12.8-alpha): Run confirmation buffers before invoking callbacks.
+			// Each buffer must see the new value N consecutive times before returning true.
+			// This prevents GPS intersection jitter from triggering false address changes.
+			const addr = extractor.enderecoPadronizado;
+			// Capture pre-observe state: whether each buffer has a prior confirmed value
+			// and what that confirmed value was. This lets us fire callbacks only on
+			// genuine field changes (not on the first-ever confirmation from initial state).
+			const logradouroWasPreviouslyConfirmed = this._logradouroBuffer.isConfirmed;
+			const bairroWasPreviouslyConfirmed     = this._bairroBuffer.isConfirmed;
+			const municipioWasPreviouslyConfirmed  = this._municipioBuffer.isConfirmed;
+			const prevConfirmedLogradouro = this._logradouroBuffer.confirmed;
+			const prevConfirmedBairro     = this._bairroBuffer.confirmed;
+			const prevConfirmedMunicipio  = this._municipioBuffer.confirmed;
+
+			const logradouroConfirmed = this._logradouroBuffer.observe(addr.logradouro);
+			const bairroConfirmed     = this._bairroBuffer.observe(addr.bairro);
+			const municipioConfirmed  = this._municipioBuffer.observe(addr.municipio);
+
+			// A "real" change: buffer confirmed a new value AND there was a prior confirmed
+			// value that differs from the new one. Prevents firing on first-ever confirmation.
+			const logradouroReallyChanged = logradouroConfirmed
+				&& logradouroWasPreviouslyConfirmed
+				&& addr.logradouro !== prevConfirmedLogradouro;
+			const bairroReallyChanged = bairroConfirmed
+				&& bairroWasPreviouslyConfirmed
+				&& addr.bairro !== prevConfirmedBairro;
+			const municipioReallyChanged = municipioConfirmed
+				&& municipioWasPreviouslyConfirmed
+				&& addr.municipio !== prevConfirmedMunicipio;
+
+			// Notify GeolocationService of pending state so it can switch to fast throttle
+			this._notifyPendingStateChange();
+
+			// Check for logradouro change after caching the new address.
+			// logradouroReallyChanged guarantees: buffer confirmed a new value AND it
+			// differs from the previously confirmed value (no false positives from
+			// hasLogradouroChanged(), which compares only the last two consecutive calls
+			// and incorrectly returns false once 3x the new street fills the history).
+			if (this.logradouroChangeCallback && logradouroReallyChanged) {
 				log("+++ (300) (AddressCache) Detected logradouro change, invoking callback");
 				const changeDetails = this.getLogradouroChangeDetails();
 				try {
@@ -719,9 +778,7 @@ class AddressCache {
 			}
 
 			// Check for bairro change after caching the new address
-			// This follows the same pattern as logradouro change detection
-			if (this.bairroChangeCallback &&
-				this.hasBairroChanged()) {
+			if (this.bairroChangeCallback && bairroReallyChanged) {
 				const changeDetails = this.getBairroChangeDetails();
 				try {
 					this.bairroChangeCallback(changeDetails);
@@ -734,9 +791,7 @@ class AddressCache {
 			}
 
 			// Check for municipio change after caching the new address
-			// This follows the same pattern as logradouro and bairro change detection
-			if (this.municipioChangeCallback &&
-				this.hasMunicipioChanged()) {
+			if (this.municipioChangeCallback && municipioReallyChanged) {
 				const changeDetails = this.getMunicipioChangeDetails();
 				try {
 					this.municipioChangeCallback(changeDetails);
@@ -1154,6 +1209,54 @@ class AddressCache {
 		this.previousAddress = null;
 		this.currentRawData = null;
 		this.previousRawData = null;
+
+		// NEW (v0.12.8-alpha): reset buffers and pending callback on destroy
+		this._logradouroBuffer.reset();
+		this._bairroBuffer.reset();
+		this._municipioBuffer.reset();
+		this._pendingConfirmationCallback = null;
+		this._anyBufferPending = false;
+	}
+
+	/**
+	 * Registers a callback that is invoked when any address-field confirmation buffer
+	 * transitions into or out of a pending state.
+	 *
+	 * - Called with `true`  when the first buffer enters a pending state (triggers
+	 *   fast-throttle mode in GeolocationService so confirmation reads arrive sooner).
+	 * - Called with `false` when all three buffers have settled (confirmed or reset),
+	 *   allowing GeolocationService to restore its normal throttle interval.
+	 *
+	 * Consecutive identical state transitions are suppressed (idempotent).
+	 *
+	 * @param {(isPending: boolean) => void} cb - Callback receiving the pending state.
+	 * @since 0.12.8-alpha
+	 */
+	setPendingConfirmationCallback(cb: (isPending: boolean) => void): void {
+		this._pendingConfirmationCallback = cb;
+	}
+
+	/**
+	 * Fires the pending-confirmation callback when buffer state changes.
+	 * Suppresses consecutive identical calls (FR-03.4).
+	 * @private
+	 */
+	private _notifyPendingStateChange(): void {
+		const isPending =
+			this._logradouroBuffer.hasPending ||
+			this._bairroBuffer.hasPending ||
+			this._municipioBuffer.hasPending;
+
+		if (isPending !== this._anyBufferPending) {
+			this._anyBufferPending = isPending;
+			if (this._pendingConfirmationCallback) {
+				try {
+					this._pendingConfirmationCallback(isPending);
+				} catch (err) {
+					console.error('(AddressCache) Error in pendingConfirmationCallback:', err);
+				}
+			}
+		}
 	}
 
 	/**

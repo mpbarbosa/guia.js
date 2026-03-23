@@ -39,6 +39,11 @@
 
 import PositionManager from '../core/PositionManager.js';
 import { log, warn, error as logError } from '../utils/logger.js';
+import AddressCache from '../data/AddressCache.js';
+import {
+	GEOLOCATION_THROTTLE_INTERVAL,
+	GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL
+} from '../config/defaults.js';
 
 // ─── Local minimal interfaces for injected dependencies ──────────────────────
 
@@ -46,6 +51,7 @@ interface IGeolocationServiceForSC {
 	getSingleLocationUpdate(): Promise<GeolocationPosition>;
 	watchCurrentLocation(): number | null;
 	stopTracking?(): void;
+	setThrottleInterval?(ms: number): void;
 }
 
 interface IReverseGeocoderForSC {
@@ -443,6 +449,20 @@ class ServiceCoordinator {
         
         // Set up address component change detection
         this._changeDetectionCoordinator!.setupChangeDetection();
+
+        // NEW (v0.12.8-alpha): Wire AddressCache pending-confirmation callback to
+        // switch GeolocationService into fast-throttle mode while any address field
+        // awaits confirmation (FR-04.2 / FR-04.3).
+        if (this._geolocationService?.setThrottleInterval) {
+            const geoSvc = this._geolocationService;
+            AddressCache.getInstance().setPendingConfirmationCallback((isPending: boolean) => {
+                geoSvc.setThrottleInterval!(
+                    isPending
+                        ? GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL
+                        : GEOLOCATION_THROTTLE_INTERVAL
+                );
+            });
+        }
 
         log('ServiceCoordinator: Tracking started', { watchId: this._watchId });
 

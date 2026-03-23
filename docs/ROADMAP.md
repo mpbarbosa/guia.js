@@ -28,17 +28,18 @@
 
 ## 🚧 Near-Term (v0.15-alpha) — In Progress
 
-### Nearby Places — Replace Placeholder
+### ✅ Nearby Places — Implemented
 
-- Replace `findNearbyRestaurants()` stub with real Overpass API integration
-- Category support: restaurants, pharmacies, hospitals, tourist attractions
-- Display results in a nearby places panel with distance and OSM link
+- `OverpassService.ts`: Overpass API integration for OSM place search by category
+- `HTMLNearbyPlacesPanel.ts`: Panel renders results with distance and OSM links
+- Supported categories: restaurants, pharmacies, hospitals, tourist attractions, cafés, supermarkets
+- Buttons auto-enable when GPS coordinates become available
 
-### City Statistics — Replace Placeholder
+### ✅ City Statistics — Implemented
 
-- Replace `fetchCityStatistics()` stub with live IBGE SIDRA + IBGE Localidades queries
-- Show: population (SIDRA), area (IBGE Localidades), IBGE municipality code
-- Expandable stats panel within the main view
+- `IBGECityStatsService.ts`: Live IBGE Localidades + IBGE SIDRA population queries
+- `HTMLCityStatsPanel.ts`: Panel renders population, area (km²), IBGE code with links
+- Municipality name sourced from cached Nominatim result (no extra network call)
 
 ### Offline-First Architecture
 
@@ -84,8 +85,8 @@
 
 | Item | Priority |
 |---|---|
-| Replace placeholder `findNearbyRestaurants()` | Medium |
-| Replace placeholder `fetchCityStatistics()` | Medium |
+| ~~Replace placeholder `findNearbyRestaurants()`~~ ✅ Done | ~~Medium~~ |
+| ~~Replace placeholder `fetchCityStatistics()`~~ ✅ Done | ~~Medium~~ |
 | Offline-First Architecture (IndexedDB caching) | Medium |
 | Route Navigation Utility (OpenRouteService/OSRM) | Low |
 | Consolidate duplicate `CHANGELOG.md` v0.9.0 entries | Low |

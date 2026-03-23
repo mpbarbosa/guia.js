@@ -4,13 +4,14 @@
  * Exports: GeoPosition, GeoPositionError, ObserverSubject, DualObserverSubject,
  * GeocodingState, calculateDistance, EARTH_RADIUS_METERS, delay,
  * withObserver, ObserverMixinOptions, ObserverMixinResult,
- * PositionManager, PositionManagerConfig, initializeConfig, createPositionManagerConfig.
+ * PositionManager, PositionManagerConfig, initializeConfig, createPositionManagerConfig,
+ * log, warn.
  *
  * @see https://github.com/mpbarbosa/paraty_geocore.js
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js' {
 	/** GPS accuracy quality classification. */
 	export type AccuracyQuality = 'excellent' | 'good' | 'medium' | 'bad' | 'very bad';
 
@@ -60,9 +61,6 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/d
 
 		/** Classifies GPS accuracy in meters into a quality level. */
 		static getAccuracyQuality(accuracy: number): AccuracyQuality;
-
-		/** @deprecated Use the `accuracyQuality` property instead. */
-		calculateAccuracyQuality(): AccuracyQuality;
 
 		/**
 		 * Distance in meters between this position and another,
@@ -198,7 +196,7 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/d
 	 * @since 0.11.0
 	 *
 	 * @example
-	 * import { withObserver } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/dist/esm/index.js';
+	 * import { withObserver } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js';
 	 *
 	 * class MyClass {
 	 *     constructor() { this.observerSubject = new DualObserverSubject(); }
@@ -263,6 +261,18 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/d
 		notifyObservers(posEvent: string, data?: unknown, error?: { name: string; message: string } | null): void;
 		toString(): string;
 	}
+
+	/**
+	 * Emits a timestamped informational message via `console.log`.
+	 * @since 0.12.1-alpha
+	 */
+	export function log(message: string, ...params: unknown[]): void;
+
+	/**
+	 * Emits a timestamped warning message via `console.warn`.
+	 * @since 0.12.1-alpha
+	 */
+	export function warn(message: string, ...params: unknown[]): void;
 }
 
 // Ibira.js ambient module declarations

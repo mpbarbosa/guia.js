@@ -8,7 +8,7 @@ import {
   calculateDistance,
   delay,
   GeoPositionError,
-} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/dist/esm/index.js';
+} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js';
 
 const validCoords = {
   latitude: -23.219,
@@ -76,11 +76,6 @@ describe('GeoPosition', () => {
   it('should expose accuracyQuality property', () => {
     const pos = new GeoPosition({ coords: { accuracy: 1 } });
     expect(pos.accuracyQuality).toBe('excellent');
-  });
-
-  it('should expose deprecated calculateAccuracyQuality() with same result', () => {
-    const pos = new GeoPosition({ coords: { accuracy: 1 } });
-    expect(pos.calculateAccuracyQuality()).toBe('excellent');
   });
 
   it('should return NaN from distanceTo() when this position has no coordinates', () => {

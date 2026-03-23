@@ -7,7 +7,7 @@
  * expects a GeoPosition instance.
  */
 
-import { GeocodingState, GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/dist/esm/index.js';
+import { GeocodingState, GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js';
 
 describe('Bug Fix: GeoPosition Type Error', () => {
 	let geocodingState;

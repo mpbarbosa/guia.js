@@ -1,7 +1,7 @@
 // test/core/GeocodingState.test.js
 // Tests for GeocodingState imported from paraty_geocore.js CDN.
 
-import { GeocodingState, GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.11.3/dist/esm/index.js';
+import { GeocodingState, GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js';
 
 const makeGeoPosition = (lat = -23.55, lon = -46.63) =>
 	new GeoPosition({ coords: { latitude: lat, longitude: lon } });

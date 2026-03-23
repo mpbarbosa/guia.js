@@ -30,7 +30,8 @@
 
 import PositionManager from '../core/PositionManager.js';
 import { log, warn, error } from '../utils/logger.js';
-import { GEOLOCATION_OPTIONS, MOBILE_GEOLOCATION_OPTIONS } from '../config/defaults.js';
+import { GEOLOCATION_OPTIONS, MOBILE_GEOLOCATION_OPTIONS, GEOLOCATION_THROTTLE_INTERVAL } from '../config/defaults.js';
+import { throttle, ThrottledFunction } from '../utils/throttle.js';
 import { isMobileDevice } from '../utils/device.js';
 import BrowserGeolocationProvider from './providers/BrowserGeolocationProvider.js';
 import { 
@@ -110,6 +111,9 @@ class GeolocationService {
 	private lastKnownPosition: GeolocationPosition | null;
 	private isPendingRequest: boolean;
 	private pendingPromise: Promise<GeolocationPosition> | null;
+	private lastSingleFetchTime: number;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	private throttledWatchHandler: ThrottledFunction<[GeolocationPosition], void>;
 	private config: { geolocationOptions: PositionOptions };
 	private provider!: IGeolocationProvider;
 	private navigator: Navigator | null;
@@ -176,6 +180,16 @@ class GeolocationService {
 		// or inconsistent state in the PositionManager
 		this.isPendingRequest = false;
 		this.pendingPromise = null;
+		this.lastSingleFetchTime = 0;
+
+		// Throttle watch callbacks: at most one update per GEOLOCATION_THROTTLE_INTERVAL
+		this.throttledWatchHandler = throttle((position: GeolocationPosition) => {
+			this.lastKnownPosition = position;
+			this.positionManager.update(position);
+			if (this.locationResult) {
+				this.updateLocationDisplay(position);
+			}
+		}, GEOLOCATION_THROTTLE_INTERVAL);
 
 		// CONFIGURATION AND PERFORMANCE OPTIMIZATION:
 		// The service accepts configuration options for geolocation parameters including
@@ -300,6 +314,14 @@ class GeolocationService {
 			return this.pendingPromise;
 		}
 
+		// Throttle: if called within GEOLOCATION_THROTTLE_INTERVAL of last fetch and
+		// a cached position is available, return it immediately without a new GPS call.
+		const now = Date.now();
+		if (now - this.lastSingleFetchTime < GEOLOCATION_THROTTLE_INTERVAL && this.lastKnownPosition) {
+			log(">>> (GeolocationService) getSingleLocationUpdate throttled — returning cached position");
+			return Promise.resolve(this.lastKnownPosition);
+		}
+
 		this.pendingPromise = new Promise((resolve, reject) => {
 			// Double-check after promise creation
 			if (this.isPendingRequest) {
@@ -325,6 +347,7 @@ class GeolocationService {
 					this.isPendingRequest = false;
 					this.pendingPromise = null;
 					this.lastKnownPosition = position;
+					this.lastSingleFetchTime = Date.now();
 
 					log(">>> (GeolocationService) Updating PositionManager with new position");
 					// Update PositionManager with new position
@@ -352,6 +375,7 @@ class GeolocationService {
 								this.isPendingRequest = false;
 								this.pendingPromise = null;
 								this.lastKnownPosition = position;
+								this.lastSingleFetchTime = Date.now();
 								this.positionManager.update(position);
 								if (this.locationResult) {
 									this.updateLocationDisplay(position);
@@ -424,17 +448,7 @@ class GeolocationService {
 		}
 
 		this.watchId = this.provider.watchPosition(
-			(position) => {
-				this.lastKnownPosition = position;
-
-				// Update PositionManager with new position
-				this.positionManager.update(position);
-
-				// Update display if element is available
-				if (this.locationResult) {
-					this.updateLocationDisplay(position);
-				}
-			},
+			this.throttledWatchHandler,
 			(err) => {
 				// Timeout (code 3) is transient for a continuous watch — the watch
 				// keeps running and will deliver a fix once the device acquires one.
@@ -612,6 +626,20 @@ class GeolocationService {
 	 */
 	hasPendingRequest() {
 		return this.isPendingRequest;
+	}
+
+	/**
+	 * Resets the throttle cooldown so the next `getSingleLocationUpdate()` call
+	 * and the next `watchCurrentLocation` callback both execute immediately,
+	 * regardless of how recently the last fetch occurred.
+	 *
+	 * Use sparingly — for example when the user explicitly taps "refresh location".
+	 *
+	 * @since 0.12.5-alpha
+	 */
+	flushThrottle() {
+		this.lastSingleFetchTime = 0;
+		this.throttledWatchHandler.flush();
 	}
 }
 

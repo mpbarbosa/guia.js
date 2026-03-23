@@ -1,4 +1,4 @@
-# Guia Turístico Features (v0.12.5-alpha)
+# Guia Turístico Features (v0.12.6-alpha)
 
 Central index of all user-facing and technical feature documentation.
 

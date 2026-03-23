@@ -5,7 +5,7 @@
 Last Updated: 2026-03-02
 Status: Active
 Category: User Guide
-Version: 0.12.5-alpha
+Version: 0.12.6-alpha
 
 ---
 

@@ -1,6 +1,6 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
-**Current Version**: `0.12.5-alpha` | **Status**: Active Development
+**Current Version**: `0.12.6-alpha` | **Status**: Active Development
 **Last Updated**: 2026-03-22
 
 ---
@@ -99,7 +99,7 @@ Issues identified from `.ai_workflow` workflow runs and resolved via the `audit-
 
 | ID | Title | Type | Fix | Commit |
 |----|-------|------|-----|--------|
-| RI-001 | Version mismatch in `src/config/defaults.ts` | docs-outdated | Set `APP_VERSION.patch = 5` to match `package.json` `0.12.5-alpha` | c997728 |
+| RI-001 | Version mismatch in `src/config/defaults.ts` | docs-outdated | Set `APP_VERSION.patch = 5` to match `package.json` `0.12.6-alpha` | c997728 |
 | RI-002 | Loose return type on `getRoute()` | typescript-issue | Added `RouteConfig` interface; updated `getRoute` return type to `RouteConfig \| null` | c997728 |
 | RI-003 | Missing `CONTRIBUTING.md` at repository root | docs-outdated | Created root `CONTRIBUTING.md` linking to `.github/CONTRIBUTING.md` | 0838a50 |
 | RI-004 | Missing `docs/GETTING_STARTED.md` | docs-outdated | Created `docs/GETTING_STARTED.md` index pointing to `docs/guides/GETTING_STARTED.md` | 0838a50 |

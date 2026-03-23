@@ -20,6 +20,31 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-03-18T16:07:39.954Z"
+    },
+    "src/address-parser.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-23T19:30:54.691Z"
+    },
+    "src/guia_ibge.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-23T19:30:54.691Z"
+    },
+    "src/andarilho.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-23T19:30:54.691Z"
+    },
+    "src/app.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-23T19:30:54.691Z"
+    },
+    "src/error-recovery.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-23T19:30:54.691Z"
     }
   }
 }

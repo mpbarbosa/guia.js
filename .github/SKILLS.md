@@ -27,6 +27,7 @@ state.
 | [Next roadmap phase](#next-roadmap-phase) | _(Copilot skill)_ | Manual | Propose and implement the next version milestone |
 | [Sync version](#sync-version) | _(Copilot skill)_ | Manual | Propagate package.json version to all dependent files |
 | [Copy TS to paraty](#copy-ts-to-paraty) | _(Copilot skill)_ | Manual | Migrate a TypeScript file into paraty_geocore.js with tests, exports, and docs |
+| [Purge workflow logs](#purge-workflow-logs) | _(Copilot skill)_ | Manual | Delete transient `.ai_workflow/` artefacts (logs, backlog, summaries) after an audit run |
 
 ---
 
@@ -324,3 +325,45 @@ adapts the test suite, updates `src/index.ts` exports, and updates
 
 - `update-paraty-geocore` — use this afterwards to bump guia_turistico's
   dependency on the new paraty_geocore.js version.
+
+---
+
+## purge-workflow-logs
+
+**File:** `.github/skills/purge-workflow-logs/SKILL.md`
+**Trigger:** Manual (Copilot CLI skill)
+
+Deletes the three transient artefact directories produced by AI workflow runs:
+`.ai_workflow/logs/`, `.ai_workflow/backlog/`, and `.ai_workflow/summaries/`.
+All other `.ai_workflow/` content (`plan.md`, `archive/`, `metrics/`, `*.json`)
+is left untouched. Because the deleted directories are gitignored, no commit is
+produced.
+
+### When to use
+
+- After `audit-and-fix` has completed and `plan.md` has captured all confirmed
+  issues — the raw logs are no longer needed.
+- Before starting a fresh workflow run to ensure no stale data from previous
+  runs is picked up.
+- When disk usage from `.ai_workflow/` is a concern.
+
+### When NOT to use
+
+- If `validate-logs` has not yet been run against the current log set — the
+  logs are the source of truth for the next audit pass and must not be deleted
+  before the audit.
+- If any `.ai_workflow/backlog/` step represents an in-progress run that needs
+  to be resumed.
+
+### What it does
+
+1. Lists which of the three target directories exist.
+2. Runs `rm -rf .ai_workflow/logs .ai_workflow/backlog .ai_workflow/summaries`.
+3. Verifies removal with `ls .ai_workflow/`.
+4. Confirms no git changes were produced (`git status --short`).
+5. Prints a summary listing each removed (or absent) directory.
+
+### Related skills
+
+- `validate-logs` — should be run before purging to capture any outstanding issues.
+- `audit-and-fix` — orchestrates the full pipeline; run this before purging.

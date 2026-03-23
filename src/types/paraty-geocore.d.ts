@@ -4,7 +4,6 @@
  * Exports: GeoPosition, GeoPositionError, ObserverSubject, DualObserverSubject,
  * GeocodingState, calculateDistance, EARTH_RADIUS_METERS, delay,
  * withObserver, ObserverMixinOptions, ObserverMixinResult,
- * PositionManager, PositionManagerConfig, initializeConfig, createPositionManagerConfig,
  * log, warn.
  *
  * @see https://github.com/mpbarbosa/paraty_geocore.js
@@ -204,63 +203,6 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-a
 	 * Object.assign(MyClass.prototype, withObserver({ checkNull: true, className: 'MyClass' }));
 	 */
 	export function withObserver(options?: ObserverMixinOptions): ObserverMixinResult;
-
-	/** Configuration options for PositionManager. */
-	export interface PositionManagerConfig {
-		trackingInterval: number;
-		minimumDistanceChange: number;
-		minimumTimeChange: number;
-		notAcceptedAccuracy: AccuracyQuality[] | null;
-	}
-
-	/**
-	 * Returns a PositionManagerConfig with default values.
-	 * Defaults: trackingInterval=50000ms, minimumDistanceChange=20m,
-	 * minimumTimeChange=30000ms, notAcceptedAccuracy=null.
-	 */
-	export function createPositionManagerConfig(): PositionManagerConfig;
-
-	/**
-	 * Replaces (merges) the active PositionManager configuration with the provided values.
-	 * Missing keys are filled from createPositionManagerConfig() defaults.
-	 */
-	export function initializeConfig(config: Partial<PositionManagerConfig>): void;
-
-	/**
-	 * Singleton manager for device geolocation position.
-	 * Implements the observer pattern to notify subscribers of position changes.
-	 */
-	export class PositionManager {
-		static instance: PositionManager | null;
-
-		/** Fired when position is successfully updated. */
-		static strCurrPosUpdate: string;
-		/** Fired when position update is rejected by validation rules. */
-		static strCurrPosNotUpdate: string;
-		/** Fired when position is updated and must be immediately processed. */
-		static strImmediateAddressUpdate: string;
-
-		/** Last accepted geographic position (public in library). */
-		lastPosition: GeoPosition | null;
-
-		latitude: number | undefined;
-		longitude: number | undefined;
-		accuracy: number | undefined;
-		accuracyQuality: AccuracyQuality | undefined;
-		altitude: number | null | undefined;
-		heading: number | null | undefined;
-		speed: number | null | undefined;
-		timestamp: number | undefined;
-
-		constructor(position?: GeolocationPosition);
-
-		static getInstance(position?: GeolocationPosition): PositionManager;
-		update(position: GeolocationPosition): void;
-		subscribe(observer: { update?: (...args: unknown[]) => void } | ((...args: unknown[]) => void)): void;
-		unsubscribe(observer: { update?: (...args: unknown[]) => void } | ((...args: unknown[]) => void)): void;
-		notifyObservers(posEvent: string, data?: unknown, error?: { name: string; message: string } | null): void;
-		toString(): string;
-	}
 
 	/**
 	 * Emits a timestamped informational message via `console.log`.

@@ -5,7 +5,7 @@
  * Declarative wrapper for the empty-state UI pattern.
  * Mirrors the props of createEmptyState() from EmptyState.js.
  *
- * @since 0.12.5-alpha
+ * @since 0.12.6-alpha
  */
 
 interface Props {

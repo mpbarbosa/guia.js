@@ -1,7 +1,7 @@
 /**
  * @file Toast.vue.test.ts
  * @description Tests for the Toast Vue SFC component.
- * @since 0.12.5-alpha
+ * @since 0.12.6-alpha
  */
 
 import { mount } from '@vue/test-utils';

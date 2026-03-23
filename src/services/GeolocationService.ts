@@ -635,7 +635,7 @@ class GeolocationService {
 	 *
 	 * Use sparingly — for example when the user explicitly taps "refresh location".
 	 *
-	 * @since 0.12.5-alpha
+	 * @since 0.12.6-alpha
 	 */
 	flushThrottle() {
 		this.lastSingleFetchTime = 0;

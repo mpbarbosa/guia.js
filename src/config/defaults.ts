@@ -86,7 +86,7 @@ export const MINIMUM_TIME_CHANGE = 30000; // 30 seconds
  * Minimum interval in milliseconds between geolocation API fetches (throttle window).
  * Applies to both `getSingleLocationUpdate()` and the `watchCurrentLocation()` callback.
  * Prevents excessive GPS hardware activations and downstream processing.
- * @since 0.12.5-alpha
+ * @since 0.12.6-alpha
  */
 export const GEOLOCATION_THROTTLE_INTERVAL = 5000; // 5 seconds
 
@@ -152,7 +152,7 @@ export const GEOLOCATION_OPTIONS = Object.freeze({
  * A non-zero maximumAge reduces GPS restarts when the user hasn't moved far.
  * 
  * @constant {Object}
- * @since 0.12.5-alpha
+ * @since 0.12.6-alpha
  */
 export const MOBILE_GEOLOCATION_OPTIONS = Object.freeze({
 	enableHighAccuracy: true,

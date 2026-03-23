@@ -55,7 +55,7 @@ export interface ThrottledFunction<TArgs extends unknown[], TReturn> {
  * // Force the next call through regardless of the cooldown
  * throttledHandler.flush();
  *
- * @since 0.12.5-alpha
+ * @since 0.12.6-alpha
  */
 export function throttle<TArgs extends unknown[], TReturn>(
 	fn: (...args: TArgs) => TReturn,

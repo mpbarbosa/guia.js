@@ -45,6 +45,31 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-03-23T19:30:54.691Z"
+    },
+    "src/services/GeolocationService.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-23T21:55:19.609Z"
+    },
+    "src/services/AwsGeocoder.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-23T21:55:19.609Z"
+    },
+    "src/services/ChangeDetectionCoordinator.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-23T21:55:19.609Z"
+    },
+    "src/services/IBGECityStatsService.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-23T21:55:19.609Z"
+    },
+    "src/services/OverpassService.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-23T21:55:19.609Z"
     }
   }
 }

@@ -2,23 +2,23 @@
   "version": 1,
   "partitionIndex": 1,
   "totalPartitions": 38,
-  "filesHash": "3cfc3f89",
+  "filesHash": "98eacb31",
   "partitionLabels": [
-    "src",
-    "src (2)",
-    "src/components, .ai_workflow/metrics",
+    "src/services",
+    "src/services (2)",
+    ".ai_workflow, .ai_workflow/metrics",
+    "src/components",
     "src/config",
     "src/coordination",
     "src/coordination (2)",
     "src/core",
     "src/data",
     "src/data (2)",
+    "src",
     "src/html",
     "src/html (2)",
     "src/html (3)",
     "src/observers",
-    "src/services",
-    "src/services (2)",
     "src/speech",
     "src/speech (2)",
     "src/status, src/timing",
@@ -43,5 +43,5 @@
     "libs/sidra, manifest.json, package-lock.json, package.json, public/libs",
     "tsconfig.json, .husky/_"
   ],
-  "updatedAt": "2026-03-23T19:30:54.692Z"
+  "updatedAt": "2026-03-23T21:55:19.610Z"
 }

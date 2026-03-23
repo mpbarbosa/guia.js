@@ -57,6 +57,7 @@
     <link rel="stylesheet" href="highlight-cards.css">
     <link rel="stylesheet" href="error-styles.css">
     <link rel="stylesheet" href="map.css">
+    <link rel="stylesheet" href="features-panels.css">
     
     <!-- App Shell Styles -->
     <style>
@@ -684,6 +685,30 @@
             </button>
             <div id="maplibre-map" class="maplibre-map-container" aria-label="Mapa da localização atual" role="img" hidden></div>
           </div>
+
+          <!-- Nearby Places -->
+          <div id="nearby-places-section">
+            <button id="findRestaurantsBtn" class="md3-button-outlined" disabled
+                    aria-label="Buscar restaurantes próximos à localização atual">
+              <span class="button-icon" aria-hidden="true">🍽️</span>
+              <span class="button-text">Lugares Próximos</span>
+            </button>
+            <ul id="nearby-places-panel" class="nearby-places-panel" aria-label="Lugares próximos" hidden>
+              <span class="nearby-panel-heading" aria-hidden="true"></span>
+              <li id="nearby-places-list"></li>
+            </ul>
+          </div>
+
+          <!-- City Statistics -->
+          <div id="city-stats-section">
+            <button id="cityStatsBtn" class="md3-button-outlined" disabled
+                    aria-label="Ver estatísticas da cidade atual">
+              <span class="button-icon" aria-hidden="true">📊</span>
+              <span class="button-text">Estatísticas da Cidade</span>
+            </button>
+            <div id="city-stats-panel" class="city-stats-panel" aria-label="Estatísticas do município" hidden></div>
+          </div>
+
         </div>
       </details>
 

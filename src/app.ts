@@ -19,6 +19,10 @@ import {
 } from './config/routes.js';
 import { createDefaultErrorBoundary, setupGlobalErrorHandler } from './utils/ErrorBoundary.js';
 import { showErrorToast } from './utils/error-notifications.js';
+import { findNearby } from './services/OverpassService.js';
+import { fetchStats } from './services/IBGECityStatsService.js';
+import HTMLNearbyPlacesPanel from './html/HTMLNearbyPlacesPanel.js';
+import HTMLCityStatsPanel from './html/HTMLCityStatsPanel.js';
 
 interface AppStateType {
   currentRoute: string | null;
@@ -359,4 +363,51 @@ if (typeof window !== 'undefined') {
       ? 'AWS Location Service (próxima geocodificação)'
       : 'OpenStreetMap Nominatim (próxima geocodificação)';
   });
+
+  // --- Nearby Places ---
+  const nearbyPanel = new HTMLNearbyPlacesPanel();
+  window.findNearbyRestaurants = async (lat: number, lon: number) => {
+    nearbyPanel.showLoading('restaurant');
+    const btn = document.getElementById('findRestaurantsBtn') as HTMLButtonElement | null;
+    if (btn) btn.disabled = true;
+    try {
+      const places = await findNearby(lat, lon, 500, 'restaurant');
+      nearbyPanel.render(places, 'restaurant');
+    } catch (err) {
+      warn('(app) findNearbyRestaurants failed:', err);
+      nearbyPanel.showError('Não foi possível buscar restaurantes próximos.');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  };
+
+  // --- City Statistics ---
+  const cityStatsPanel = new HTMLCityStatsPanel();
+  window.fetchCityStatistics = async (_lat: number, _lon: number) => {
+    cityStatsPanel.showLoading();
+    const btn = document.getElementById('cityStatsBtn') as HTMLButtonElement | null;
+    if (btn) btn.disabled = true;
+    try {
+      const controller = AppState.homeController;
+      const manager = (controller as unknown as { manager?: { getBrazilianStandardAddress?(): { municipio?: string | null; siglaUF?: string | null } | null } }).manager;
+      const address = manager?.getBrazilianStandardAddress?.();
+      const municipio = address?.municipio ?? null;
+      const uf = address?.siglaUF ?? null;
+      if (!municipio || !uf) {
+        cityStatsPanel.showError('Aguardando localização para obter dados do município.');
+        return;
+      }
+      const stats = await fetchStats(municipio, uf);
+      if (!stats) {
+        cityStatsPanel.showError(`Município "${municipio}" não encontrado no IBGE.`);
+        return;
+      }
+      cityStatsPanel.render(stats);
+    } catch (err) {
+      warn('(app) fetchCityStatistics failed:', err);
+      cityStatsPanel.showError('Não foi possível carregar estatísticas da cidade.');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  };
 }

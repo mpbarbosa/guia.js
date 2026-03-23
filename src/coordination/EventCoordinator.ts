@@ -49,6 +49,9 @@ interface ICoords {
 
 interface IGeocodingState {
     getCurrentCoordinates(): ICoords | null;
+    hasPosition?(): boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    subscribe?(observer: (...args: any[]) => void): void | (() => void);
 }
 
 /**
@@ -198,7 +201,16 @@ class EventCoordinator {
         const handler = () => this._handleFindRestaurants();
         button.addEventListener('click', handler);
         this._handlers.set(button, { type: 'click', listener: handler });
-        
+
+        // Enable the button once coordinates are available
+        const enableOnPosition = () => {
+            if (this._geocodingState.hasPosition?.()) {
+                (button as HTMLButtonElement).disabled = false;
+            }
+        };
+        enableOnPosition(); // in case position already set
+        this._geocodingState.subscribe?.(enableOnPosition);
+
         log('EventCoordinator: Find restaurants button handler attached');
     }
 
@@ -247,7 +259,16 @@ class EventCoordinator {
         const handler = () => this._handleCityStats();
         button.addEventListener('click', handler);
         this._handlers.set(button, { type: 'click', listener: handler });
-        
+
+        // Enable the button once coordinates are available
+        const enableOnPosition = () => {
+            if (this._geocodingState.hasPosition?.()) {
+                (button as HTMLButtonElement).disabled = false;
+            }
+        };
+        enableOnPosition();
+        this._geocodingState.subscribe?.(enableOnPosition);
+
         log('EventCoordinator: City stats button handler attached');
     }
 

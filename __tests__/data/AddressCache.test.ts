@@ -254,7 +254,7 @@ describe('AddressCache', () => {
     });
   });
 
-  // ── Confirmation buffers (v0.12.8-alpha) ─────────────────────────────────────
+  // ── Confirmation buffers (v0.12.9-alpha) ─────────────────────────────────────
   //
   // Each callback should fire only after the same address field has been seen
   // LOGRADOURO_CONFIRMATION_COUNT (3) consecutive times.

@@ -10,7 +10,7 @@
  *
  * This file MUST be .cjs because Jest loads transformers via require().
  *
- * @since 0.12.8-alpha
+ * @since 0.12.9-alpha
  */
 
 const { parse, compileScript } = require('@vue/compiler-sfc');

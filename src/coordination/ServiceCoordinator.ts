@@ -450,7 +450,7 @@ class ServiceCoordinator {
         // Set up address component change detection
         this._changeDetectionCoordinator!.setupChangeDetection();
 
-        // NEW (v0.12.8-alpha): Wire AddressCache pending-confirmation callback to
+        // NEW (v0.12.9-alpha): Wire AddressCache pending-confirmation callback to
         // switch GeolocationService into fast-throttle mode while any address field
         // awaits confirmation (FR-04.2 / FR-04.3).
         if (this._geolocationService?.setThrottleInterval) {

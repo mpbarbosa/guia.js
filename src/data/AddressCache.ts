@@ -35,6 +35,7 @@ import AddressDataStore from './AddressDataStore.js';
 
 // NEW (v0.12.9-alpha): Confirmation buffers for GPS intersection jitter mitigation
 import AddressFieldConfirmationBuffer from './AddressFieldConfirmationBuffer.js';
+import LogradouroChangeTrigger from './LogradouroChangeTrigger.js';
 import {
 	LOGRADOURO_CONFIRMATION_COUNT,
 	BAIRRO_CONFIRMATION_COUNT,
@@ -102,8 +103,10 @@ class AddressCache {
 	currentRawData: NominatimResponse | null;
 	previousRawData: NominatimResponse | null;
 	// NEW (v0.12.9-alpha): Confirmation buffers — require N consecutive identical
-	// geocoding results before publishing an address-field change (jitter mitigation)
-	private _logradouroBuffer: AddressFieldConfirmationBuffer;
+	// geocoding results before publishing an address-field change (jitter mitigation).
+	// _logradouroTrigger is a dedicated module that owns all announcement-decision
+	// logic for logradouro changes (including the bypassDistance signal).
+	private _logradouroTrigger: LogradouroChangeTrigger;
 	private _bairroBuffer: AddressFieldConfirmationBuffer;
 	private _municipioBuffer: AddressFieldConfirmationBuffer;
 	// Callback fired when any buffer enters/exits pending state (used to switch
@@ -137,7 +140,7 @@ class AddressCache {
 		this.previousRawData = this.dataStore.getPreviousRawData();
 
 		// NEW (v0.12.9-alpha): one confirmation buffer per tracked address field
-		this._logradouroBuffer = new AddressFieldConfirmationBuffer(LOGRADOURO_CONFIRMATION_COUNT);
+		this._logradouroTrigger = new LogradouroChangeTrigger(LOGRADOURO_CONFIRMATION_COUNT);
 		this._bairroBuffer     = new AddressFieldConfirmationBuffer(BAIRRO_CONFIRMATION_COUNT);
 		this._municipioBuffer  = new AddressFieldConfirmationBuffer(MUNICIPIO_CONFIRMATION_COUNT);
 		this._pendingConfirmationCallback = null;
@@ -730,25 +733,23 @@ class AddressCache {
 			// Each buffer must see the new value N consecutive times before returning true.
 			// This prevents GPS intersection jitter from triggering false address changes.
 			const addr = extractor.enderecoPadronizado;
-			// Capture pre-observe state: whether each buffer has a prior confirmed value
-			// and what that confirmed value was. This lets us fire callbacks only on
-			// genuine field changes (not on the first-ever confirmation from initial state).
-			const logradouroWasPreviouslyConfirmed = this._logradouroBuffer.isConfirmed;
+
+			// Logradouro: delegate entirely to LogradouroChangeTrigger, which owns
+			// the announcement decision and the bypassDistance signal.
+			const { announce: logradouroReallyChanged } =
+				this._logradouroTrigger.observe(addr.logradouro);
+
+			// Bairro / Municipio: keep using AddressFieldConfirmationBuffer directly.
 			const bairroWasPreviouslyConfirmed     = this._bairroBuffer.isConfirmed;
 			const municipioWasPreviouslyConfirmed  = this._municipioBuffer.isConfirmed;
-			const prevConfirmedLogradouro = this._logradouroBuffer.confirmed;
 			const prevConfirmedBairro     = this._bairroBuffer.confirmed;
 			const prevConfirmedMunicipio  = this._municipioBuffer.confirmed;
 
-			const logradouroConfirmed = this._logradouroBuffer.observe(addr.logradouro);
 			const bairroConfirmed     = this._bairroBuffer.observe(addr.bairro);
 			const municipioConfirmed  = this._municipioBuffer.observe(addr.municipio);
 
 			// A "real" change: buffer confirmed a new value AND there was a prior confirmed
 			// value that differs from the new one. Prevents firing on first-ever confirmation.
-			const logradouroReallyChanged = logradouroConfirmed
-				&& logradouroWasPreviouslyConfirmed
-				&& addr.logradouro !== prevConfirmedLogradouro;
 			const bairroReallyChanged = bairroConfirmed
 				&& bairroWasPreviouslyConfirmed
 				&& addr.bairro !== prevConfirmedBairro;
@@ -756,14 +757,15 @@ class AddressCache {
 				&& municipioWasPreviouslyConfirmed
 				&& addr.municipio !== prevConfirmedMunicipio;
 
-			// Notify GeolocationService of pending state so it can switch to fast throttle
+			// Notify GeolocationService of pending state so it can switch to fast throttle,
+			// and LogradouroChangeTrigger of its own pending state (already handled inside
+			// observe() above; bairro/municipio buffers drive the remaining callbacks).
 			this._notifyPendingStateChange();
 
 			// Check for logradouro change after caching the new address.
-			// logradouroReallyChanged guarantees: buffer confirmed a new value AND it
-			// differs from the previously confirmed value (no false positives from
-			// hasLogradouroChanged(), which compares only the last two consecutive calls
-			// and incorrectly returns false once 3x the new street fills the history).
+			// logradouroReallyChanged comes from LogradouroChangeTrigger.observe(),
+			// which guarantees: buffer confirmed a new value AND it differs from the
+			// previously confirmed value.
 			if (this.logradouroChangeCallback && logradouroReallyChanged) {
 				log("+++ (300) (AddressCache) Detected logradouro change, invoking callback");
 				const changeDetails = this.getLogradouroChangeDetails();
@@ -1211,7 +1213,7 @@ class AddressCache {
 		this.previousRawData = null;
 
 		// NEW (v0.12.9-alpha): reset buffers and pending callback on destroy
-		this._logradouroBuffer.reset();
+		this._logradouroTrigger.reset();
 		this._bairroBuffer.reset();
 		this._municipioBuffer.reset();
 		this._pendingConfirmationCallback = null;
@@ -1243,7 +1245,7 @@ class AddressCache {
 	 */
 	private _notifyPendingStateChange(): void {
 		const isPending =
-			this._logradouroBuffer.hasPending ||
+			this._logradouroTrigger.hasPending ||
 			this._bairroBuffer.hasPending ||
 			this._municipioBuffer.hasPending;
 

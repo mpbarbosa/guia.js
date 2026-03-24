@@ -76,6 +76,15 @@ class PositionManager {
 	private lastModified: number | null = null;
 	/** Last accepted geographic position (public in library). */
 	lastPosition: GeoPosition | null = null;
+	/**
+	 * When true, the distance/time gate is bypassed so every throttled GPS fix
+	 * is forwarded to subscribers.  Set to true by `LogradouroChangeTrigger`
+	 * (via `ServiceCoordinator`) while a logradouro confirmation is in progress,
+	 * so the confirmation buffer can fill up quickly regardless of movement
+	 * distance.  Reverts to false once all confirmation buffers settle.
+	 * @since 0.12.9-alpha
+	 */
+	private _bypassDistanceRule = false;
 
 	declare subscribe: (observer: { update?: (...args: unknown[]) => void } | ((...args: unknown[]) => void)) => void;
 	declare unsubscribe: (observer: { update?: (...args: unknown[]) => void } | ((...args: unknown[]) => void)) => void;
@@ -163,12 +172,16 @@ class PositionManager {
 			const timeExceeded = timeElapsed >= setupParams.minimumTimeChange;
 
 			if (!distanceExceeded && !timeExceeded) {
-				bUpdateCurrPos = false;
-				error = {
-					name: "DistanceAndTimeError",
-					message: `Neither distance (${distance.toFixed(1)}m < ${setupParams.minimumDistanceChange}m) nor time (${timeElapsedSeconds}s < ${setupParams.minimumTimeChange / 1000}s) threshold met`
-				};
-				warn("(PositionManager) Update blocked - distance:", distance.toFixed(1) + "m", "time:", timeElapsedSeconds + "s");
+				if (this._bypassDistanceRule) {
+					log("(PositionManager) Distance/time gate bypassed (confirmation pending) - distance:", distance.toFixed(1) + "m", "time:", timeElapsedSeconds + "s");
+				} else {
+					bUpdateCurrPos = false;
+					error = {
+						name: "DistanceAndTimeError",
+						message: `Neither distance (${distance.toFixed(1)}m < ${setupParams.minimumDistanceChange}m) nor time (${timeElapsedSeconds}s < ${setupParams.minimumTimeChange / 1000}s) threshold met`
+					};
+					warn("(PositionManager) Update blocked - distance:", distance.toFixed(1) + "m", "time:", timeElapsedSeconds + "s");
+				}
 			} else {
 				if (distanceExceeded && timeExceeded) {
 					log("(PositionManager) Update triggered - BOTH conditions met - distance:", distance.toFixed(1) + "m", "time:", timeElapsedSeconds + "s");
@@ -199,6 +212,27 @@ class PositionManager {
 		this.lastPosition = new GeoPosition(position);
 		this.lastModified = position.timestamp;
 		this.notifyObservers(posEvent, null, error);
+	}
+
+	/**
+	 * Enables or disables the distance/time gate bypass.
+	 *
+	 * When `true`, `PositionManager.update()` will forward every (throttled) GPS
+	 * fix to subscribers even if neither the distance nor the time threshold has
+	 * been met.  This should be set to `true` while a logradouro confirmation is
+	 * in progress (driven by `LogradouroChangeTrigger`) and restored to `false`
+	 * once the confirmation buffers settle.
+	 *
+	 * @param bypass - `true` to bypass the distance/time gate; `false` to restore normal behaviour.
+	 * @since 0.12.9-alpha
+	 */
+	setBypassDistanceRule(bypass: boolean): void {
+		this._bypassDistanceRule = bypass;
+	}
+
+	/** Returns whether the distance/time gate bypass is currently active. */
+	get bypassDistanceRule(): boolean {
+		return this._bypassDistanceRule;
 	}
 
 	toString() {

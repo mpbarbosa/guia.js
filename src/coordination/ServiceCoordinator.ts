@@ -452,7 +452,8 @@ class ServiceCoordinator {
 
         // NEW (v0.12.9-alpha): Wire AddressCache pending-confirmation callback to
         // switch GeolocationService into fast-throttle mode while any address field
-        // awaits confirmation (FR-04.2 / FR-04.3).
+        // awaits confirmation (FR-04.2 / FR-04.3), and to bypass PositionManager's
+        // distance/time gate so confirmation reads accumulate at full throttle speed.
         if (this._geolocationService?.setThrottleInterval) {
             const geoSvc = this._geolocationService;
             AddressCache.getInstance().setPendingConfirmationCallback((isPending: boolean) => {
@@ -461,6 +462,10 @@ class ServiceCoordinator {
                         ? GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL
                         : GEOLOCATION_THROTTLE_INTERVAL
                 );
+                // Bypass PositionManager distance gate while confirmation is pending
+                // so every throttled GPS fix reaches ReverseGeocoder regardless of
+                // how little the user has moved.
+                PositionManager.getInstance().setBypassDistanceRule(isPending);
             });
         }
 

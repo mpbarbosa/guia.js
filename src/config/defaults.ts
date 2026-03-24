@@ -102,7 +102,7 @@ export const GEOLOCATION_THROTTLE_INTERVAL = 5000; // 5 seconds
  *
  * @since 0.12.9-alpha
  */
-export const GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL = 2000; // 2 seconds
+export const GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL = 1500; // 1.5 seconds
 
 /**
  * Number of consecutive identical reverse-geocoding results required before a

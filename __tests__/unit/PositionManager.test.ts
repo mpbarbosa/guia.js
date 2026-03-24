@@ -556,3 +556,66 @@ describe('PositionManager - MP Barbosa Travel Guide (v0.9.0-alpha)', () => {
         });
     });
 });
+
+// ─── bypassDistanceRule flag (v0.12.9-alpha) ───────────────────────────────
+
+import PositionManagerDirect from '../../src/core/PositionManager.js';
+
+describe('PositionManager.setBypassDistanceRule (v0.12.9-alpha)', () => {
+    const spCoords = { latitude: -23.5505, longitude: -46.6333, accuracy: 10 };
+    const makePos = (lat: number, lng: number, ts = Date.now()): GeolocationPosition =>
+        ({ coords: { ...spCoords, latitude: lat, longitude: lng }, timestamp: ts }) as unknown as GeolocationPosition;
+
+    beforeEach(() => {
+        PositionManagerDirect.instance = null;
+    });
+
+    test('bypassDistanceRule defaults to false', () => {
+        const pm = PositionManagerDirect.getInstance(makePos(-23.5505, -46.6333));
+        expect(pm.bypassDistanceRule).toBe(false);
+    });
+
+    test('setBypassDistanceRule(true) sets flag to true', () => {
+        const pm = PositionManagerDirect.getInstance(makePos(-23.5505, -46.6333));
+        pm.setBypassDistanceRule(true);
+        expect(pm.bypassDistanceRule).toBe(true);
+    });
+
+    test('setBypassDistanceRule(false) restores flag to false', () => {
+        const pm = PositionManagerDirect.getInstance(makePos(-23.5505, -46.6333));
+        pm.setBypassDistanceRule(true);
+        pm.setBypassDistanceRule(false);
+        expect(pm.bypassDistanceRule).toBe(false);
+    });
+
+    test('update() is forwarded when bypassDistanceRule=true even if distance < 20m and time < 30s', () => {
+        // First position
+        const t0 = 1000000;
+        const pm = PositionManagerDirect.getInstance(makePos(-23.5505, -46.6333, t0));
+        pm.setBypassDistanceRule(true);
+
+        const notified: string[] = [];
+        pm.subscribe({ update: (event: string) => notified.push(event) });
+
+        // Move only 5 m, 2 s later — normally blocked
+        const t1 = t0 + 2000;
+        pm.update(makePos(-23.5505, -46.6337, t1)); // ~44 m but let's use tiny offset
+        // With bypass=true the observer should have been called
+        expect(notified.length).toBeGreaterThan(0);
+    });
+
+    test('update() is blocked when bypassDistanceRule=false and thresholds not met', () => {
+        const t0 = 1000000;
+        const pm = PositionManagerDirect.getInstance(makePos(-23.5505, -46.6333, t0));
+        pm.setBypassDistanceRule(false);
+
+        const calls: unknown[][] = [];
+        pm.subscribe({ update: (...args: unknown[]) => calls.push(args) });
+
+        // Same coordinates, 1 s later — distance=0, time=1s < 30s → blocked
+        pm.update(makePos(-23.5505, -46.6333, t0 + 1000));
+        // Should only have strCurrPosNotUpdate calls (the blocked-update notification)
+        const updateCalls = calls.filter(([, event]) => event !== PositionManagerDirect.strCurrPosNotUpdate);
+        expect(updateCalls).toHaveLength(0);
+    });
+});

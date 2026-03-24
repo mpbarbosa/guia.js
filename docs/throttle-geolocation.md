@@ -134,12 +134,24 @@ Browser GPS hardware
         ▼
 navigator.geolocation.watchPosition(throttledWatchHandler)
         │
-        │  (at most 1 per 5 s — leading-edge throttle)
+        │  (≤1 per 5 s normal / ≤1 per 1.5 s during confirmation — leading-edge throttle)
         ▼
 throttledWatchHandler(position)
         ├─▶ GeolocationService.lastKnownPosition = position
         ├─▶ PositionManager.update(position)
+        │       ├─ [bypassDistanceRule=false] block if distance < 20 m AND time < 30 s
+        │       └─ [bypassDistanceRule=true]  always forward (confirmation in progress)
         └─▶ GeolocationService.updateLocationDisplay(position)   [if DOM element present]
+
+AddressCache (via ReverseGeocoder, subscribed to PositionManager)
+        ├─▶ LogradouroChangeTrigger.observe(newStreet)
+        │       ├─ { announce: false, bypassDistance: true }  → pending candidate
+        │       └─ { announce: true,  bypassDistance: false } → confirmed change → speech
+        ├─▶ _notifyPendingStateChange()
+        │       └─▶ ServiceCoordinator callback (isPending)
+        │               ├─▶ GeolocationService.setThrottleInterval(1500 | 5000)
+        │               └─▶ PositionManager.setBypassDistanceRule(isPending)
+        └─▶ logradouroChangeCallback → ChangeDetectionCoordinator → AddressSpeechObserver
 ```
 
 ---
@@ -148,10 +160,47 @@ throttledWatchHandler(position)
 
 | Constant | File | Value | Meaning |
 |---|---|---|---|
-| `GEOLOCATION_THROTTLE_INTERVAL` | `src/config/defaults.ts` | `5000` ms | Minimum time between processed GPS updates |
+| `GEOLOCATION_THROTTLE_INTERVAL` | `src/config/defaults.ts` | `5000` ms | Minimum time between processed GPS updates (normal mode) |
+| `GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL` | `src/config/defaults.ts` | `1500` ms | Faster throttle while any address field awaits confirmation |
 
-Adjust this value to trade off **responsiveness** (lower) vs **battery /
+Adjust `GEOLOCATION_THROTTLE_INTERVAL` to trade off **responsiveness** (lower) vs **battery /
 CPU efficiency** (higher).
+
+---
+
+## Confirmation-window fast-path (v0.12.9-alpha)
+
+When `AddressCache` detects that a logradouro, bairro, or municipio value is being confirmed
+(i.e., `AddressFieldConfirmationBuffer.hasPending === true`), two things happen simultaneously
+via `ServiceCoordinator.startTracking()`:
+
+1. **`GeolocationService.setThrottleInterval(1500)`** — raw GPS events are processed every 1.5 s
+   instead of every 5 s.
+2. **`PositionManager.setBypassDistanceRule(true)`** — the 20 m distance/30 s time gate is
+   suspended so every throttled GPS fix is forwarded to `ReverseGeocoder`, regardless of how
+   little the user has moved.
+
+Both revert to their defaults once all confirmation buffers settle (`isPending = false`).
+
+### Practical effect at city driving speed (30 km/h)
+
+| Phase | Throttle | Distance gate | Time to confirm (3×) |
+|---|---|---|---|
+| Normal | 5 s | 20 m OR 30 s | up to ~90 s |
+| During confirmation (before fix) | 1.5 s | **bypassed** | **~4–5 s** |
+
+---
+
+## `LogradouroChangeTrigger` (v0.12.9-alpha)
+
+`src/data/LogradouroChangeTrigger.ts` is the single source of truth for the logradouro
+announcement decision.  `AddressCache` delegates to it instead of deriving the logic inline:
+
+```ts
+const { announce, bypassDistance } = this._logradouroTrigger.observe(addr.logradouro);
+// announce     → true exactly once per confirmed street change
+// bypassDistance → true while a new candidate is accumulating (drives setBypassDistanceRule)
+```
 
 ---
 
@@ -172,9 +221,12 @@ CPU efficiency** (higher).
 | File | Role |
 |---|---|
 | `src/utils/throttle.ts` | Generic throttle utility |
-| `src/services/GeolocationService.ts` | Consumer — applies throttle to GPS callbacks |
-| `src/config/defaults.ts` | Defines `GEOLOCATION_THROTTLE_INTERVAL` (5 000 ms) |
-| `src/core/PositionManager.ts` | Receives throttled position updates |
+| `src/services/GeolocationService.ts` | Consumer — applies throttle to GPS callbacks; `setThrottleInterval()` |
+| `src/config/defaults.ts` | Defines `GEOLOCATION_THROTTLE_INTERVAL` (5 000 ms) and `GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL` (1 500 ms) |
+| `src/core/PositionManager.ts` | Receives throttled position updates; `setBypassDistanceRule()` |
+| `src/data/LogradouroChangeTrigger.ts` | Single source of truth for logradouro announcement + bypass signal |
+| `src/data/AddressFieldConfirmationBuffer.ts` | Generic N-consecutive confirmation buffer |
+| `src/coordination/ServiceCoordinator.ts` | Wires `setPendingConfirmationCallback` → throttle + bypass |
 | `src/services/providers/BrowserGeolocationProvider.ts` | Wraps `navigator.geolocation` |
 
 ---

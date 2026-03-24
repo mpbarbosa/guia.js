@@ -4,7 +4,7 @@
     ".ai_workflow/metrics/current_run.json": {
       "score": 100,
       "issueCount": 0,
-      "lastAnalyzed": "2026-03-23T23:29:22.591Z"
+      "lastAnalyzed": "2026-03-24T00:16:39.857Z"
     },
     "vite.config.js": {
       "score": 100,
@@ -70,6 +70,26 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-03-23T21:55:19.609Z"
+    },
+    "src/components/EmptyState.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-24T00:16:39.857Z"
+    },
+    "src/components/Skeletons.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-24T00:16:39.857Z"
+    },
+    "src/components/Toast.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-24T00:16:39.857Z"
+    },
+    "src/components/onboarding.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-24T00:16:39.857Z"
     }
   }
 }

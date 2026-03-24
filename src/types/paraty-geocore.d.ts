@@ -8,10 +8,10 @@
  * log, warn.
  *
  * @see https://github.com/mpbarbosa/paraty_geocore.js
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.3-alpha/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.4-alpha/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.3-alpha/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.4-alpha/dist/esm/index.js' {
 	/** GPS accuracy quality classification. */
 	export type AccuracyQuality = 'excellent' | 'good' | 'medium' | 'bad' | 'very bad';
 
@@ -196,7 +196,7 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.3-a
 	 * @since 0.11.0
 	 *
 	 * @example
-	 * import { withObserver } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.3-alpha/dist/esm/index.js';
+	 * import { withObserver } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.4-alpha/dist/esm/index.js';
 	 *
 	 * class MyClass {
 	 *     constructor() { this.observerSubject = new DualObserverSubject(); }
@@ -205,7 +205,7 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.3-a
 	 */
 	export function withObserver(options?: ObserverMixinOptions): ObserverMixinResult;
 
-	// ─── ReferencePlace (0.12.3-alpha) ────────────────────────────────────────
+	// ─── ReferencePlace (0.12.4-alpha) ────────────────────────────────────────
 
 	/** Minimal OSM element shape used by ReferencePlace to identify points of interest. */
 	export interface OsmElement {
@@ -224,7 +224,7 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.3-a
 	/**
 	 * Immutable value object representing a reference place (POI) extracted from geocoding data.
 	 * @immutable All instances are frozen after construction.
-	 * @since 0.12.3-alpha
+	 * @since 0.12.4-alpha
 	 */
 	export class ReferencePlace {
 		readonly className: string | null;

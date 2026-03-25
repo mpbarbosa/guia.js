@@ -604,8 +604,8 @@ describe('GeoPosition - MP Barbosa Travel Guide (v0.4.1-alpha)', () => {
 
             const emptyPosition = {
                 coords: {
-                    latitude: null,
-                    longitude: null,
+                    latitude: undefined,
+                    longitude: undefined,
                     accuracy: 0,
                     altitude: null,
                     altitudeAccuracy: null,

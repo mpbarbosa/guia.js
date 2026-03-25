@@ -62,8 +62,10 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
             }
         };
         AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
 
-        // Add second address with different municipality
+        // Add second address with different municipality — 3x
         const secondAddress = {
             address: {
                 street: 'Avenida Copacabana',
@@ -96,8 +98,10 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
             }
         };
         AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
 
-        // Add second address with different municipality
+        // Add second address with different municipality — 3x
         const secondAddress = {
             address: {
                 street: 'Avenida Copacabana',
@@ -168,8 +172,10 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
             }
         };
         AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
 
-        // Add second address with different municipality
+        // Add second address with different municipality — 3x
         const secondAddress = {
             address: {
                 street: 'Avenida Copacabana',
@@ -210,7 +216,7 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
             logradouroCallbackCount++;
         });
 
-        // Add first address
+        // Add first address — 3x to satisfy the confirmation buffer
         const firstAddress = {
             address: {
                 street: 'Rua das Flores',
@@ -224,8 +230,10 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
             }
         };
         AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
 
-        // Add second address with different municipality, bairro, and logradouro
+        // Add second address with different municipality, bairro, and logradouro — 3x
         const secondAddress = {
             address: {
                 street: 'Avenida Copacabana', // Different logradouro
@@ -238,6 +246,8 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
                 country_code: 'BR'
             }
         };
+        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
         AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
 
         // All three callbacks should have been called
@@ -275,8 +285,10 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
             }
         };
         AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
 
-        // Add second address with different municipality
+        // Add second address with different municipality — 3x
         const secondAddress = {
             address: {
                 street: 'Avenida Copacabana',
@@ -289,6 +301,8 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
                 country_code: 'BR'
             }
         };
+        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
         AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
 
         // Callback should have been called once
@@ -311,6 +325,8 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
                 country_code: 'BR'
             }
         };
+        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
         AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
 
         // Callback count should remain the same (no change detected)

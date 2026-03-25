@@ -5,6 +5,7 @@ import {
   getStatus,
   destroy,
 } from '../src/geolocation-banner';
+import * as geolocationBannerModule from '../src/geolocation-banner';
 
 type PermissionState = 'prompt' | 'granted' | 'denied';
 
@@ -73,14 +74,14 @@ describe('geolocation-banner', () => {
   describe('checkGeolocationPermission', () => {
     it('should return "prompt" if navigator.permissions is undefined', async () => {
       // @ts-ignore: access private
-      const { checkGeolocationPermission } = require('../src/geolocation-banner');
+      const { checkGeolocationPermission } = geolocationBannerModule;
       Object.defineProperty(navigator, 'permissions', { value: undefined });
       await expect(checkGeolocationPermission()).resolves.toBe('prompt');
     });
 
     it('should return permission state from permissions.query', async () => {
       // @ts-ignore: access private
-      const { checkGeolocationPermission } = require('../src/geolocation-banner');
+      const { checkGeolocationPermission } = geolocationBannerModule;
       Object.defineProperty(navigator, 'permissions', {
         value: {
           query: jest.fn().mockResolvedValue({ state: 'granted' }),
@@ -91,7 +92,7 @@ describe('geolocation-banner', () => {
 
     it('should return "prompt" and warn if permissions.query throws', async () => {
       // @ts-ignore: access private
-      const { checkGeolocationPermission } = require('../src/geolocation-banner');
+      const { checkGeolocationPermission } = geolocationBannerModule;
       Object.defineProperty(navigator, 'permissions', {
         value: {
           query: jest.fn().mockRejectedValue(new Error('fail')),
@@ -110,7 +111,7 @@ describe('geolocation-banner', () => {
   describe('showBanner', () => {
     it('should create and append the geolocation banner', () => {
       // @ts-ignore: access private
-      const { showBanner } = require('../src/geolocation-banner');
+      const { showBanner } = geolocationBannerModule;
       showBanner();
       const banner = document.querySelector('.geolocation-banner');
       expect(banner).toBeTruthy();
@@ -120,15 +121,15 @@ describe('geolocation-banner', () => {
 
     it('should attach click handlers to buttons', () => {
       // @ts-ignore: access private
-      const { showBanner } = require('../src/geolocation-banner');
+      const { showBanner } = geolocationBannerModule;
       showBanner();
       const allowBtn = document.querySelector('.btn-primary') as HTMLElement;
       const dismissBtn = document.querySelector('.btn-secondary') as HTMLElement;
       expect(allowBtn).toBeTruthy();
       expect(dismissBtn).toBeTruthy();
       // Spy on requestPermission and dismissBanner
-      const reqSpy = jest.spyOn(require('../src/geolocation-banner'), 'requestPermission');
-      const dismissSpy = jest.spyOn(require('../src/geolocation-banner'), 'dismiss');
+      const reqSpy = jest.spyOn(geolocationBannerModule, 'requestPermission');
+      const dismissSpy = jest.spyOn(geolocationBannerModule, 'dismiss');
       allowBtn.click();
       expect(reqSpy).toHaveBeenCalled();
       dismissBtn.click();
@@ -142,7 +143,7 @@ describe('geolocation-banner', () => {
     it('should show error and dismiss if geolocation is not supported', () => {
       window.ErrorRecovery = undefined;
       Object.defineProperty(navigator, 'geolocation', { value: undefined });
-      const dismissSpy = jest.spyOn(require('../src/geolocation-banner'), 'dismiss');
+      const dismissSpy = jest.spyOn(geolocationBannerModule, 'dismiss');
       requestPermission();
       expect(window.alert).toHaveBeenCalledWith('Geolocalização não é suportada neste navegador.');
       expect(dismissSpy).toHaveBeenCalled();
@@ -152,7 +153,7 @@ describe('geolocation-banner', () => {
     it('should use ErrorRecovery.displayError if available', () => {
       window.ErrorRecovery = { displayError: jest.fn() };
       Object.defineProperty(navigator, 'geolocation', { value: undefined });
-      const dismissSpy = jest.spyOn(require('../src/geolocation-banner'), 'dismiss');
+      const dismissSpy = jest.spyOn(geolocationBannerModule, 'dismiss');
       requestPermission();
       expect(window.ErrorRecovery.displayError).toHaveBeenCalledWith('Erro', 'Geolocalização não é suportada neste navegador.');
       expect(dismissSpy).toHaveBeenCalled();
@@ -166,8 +167,8 @@ describe('geolocation-banner', () => {
       Object.defineProperty(navigator, 'geolocation', {
         value: { getCurrentPosition: mockGetCurrentPosition },
       });
-      const dismissSpy = jest.spyOn(require('../src/geolocation-banner'), 'dismiss');
-      const toastSpy = jest.spyOn(require('../src/geolocation-banner'), 'showSuccessToast');
+      const dismissSpy = jest.spyOn(geolocationBannerModule, 'dismiss');
+      const toastSpy = jest.spyOn(geolocationBannerModule, 'showSuccessToast');
       const eventSpy = jest.spyOn(window, 'dispatchEvent');
       requestPermission();
       expect(dismissSpy).toHaveBeenCalled();
@@ -187,8 +188,8 @@ describe('geolocation-banner', () => {
       Object.defineProperty(navigator, 'geolocation', {
         value: { getCurrentPosition: mockGetCurrentPosition },
       });
-      const dismissSpy = jest.spyOn(require('../src/geolocation-banner'), 'dismiss');
-      const deniedSpy = jest.spyOn(require('../src/geolocation-banner'), 'showPermissionDeniedMessage');
+      const dismissSpy = jest.spyOn(geolocationBannerModule, 'dismiss');
+      const deniedSpy = jest.spyOn(geolocationBannerModule, 'showPermissionDeniedMessage');
       requestPermission();
       expect(dismissSpy).toHaveBeenCalled();
       expect(deniedSpy).toHaveBeenCalled();
@@ -200,7 +201,7 @@ describe('geolocation-banner', () => {
   describe('dismissBanner', () => {
     it('should hide and remove the banner after timeout', () => {
       // @ts-ignore: access private
-      const { showBanner } = require('../src/geolocation-banner');
+      const { showBanner } = geolocationBannerModule;
       showBanner();
       const banner = document.querySelector('.geolocation-banner') as HTMLElement;
       expect(banner).toBeTruthy();
@@ -218,7 +219,7 @@ describe('geolocation-banner', () => {
   describe('showSuccessToast', () => {
     it('should create a success toast and remove it after timeout', () => {
       // @ts-ignore: access private
-      const { showSuccessToast } = require('../src/geolocation-banner');
+      const { showSuccessToast } = geolocationBannerModule;
       showSuccessToast();
       const toast = document.querySelector('.toast.success') as HTMLElement;
       expect(toast).toBeTruthy();
@@ -231,7 +232,7 @@ describe('geolocation-banner', () => {
 
     it('should reuse existing toast container', () => {
       // @ts-ignore: access private
-      const { createToastContainer, showSuccessToast } = require('../src/geolocation-banner');
+      const { createToastContainer, showSuccessToast } = geolocationBannerModule;
       createToastContainer();
       showSuccessToast();
       expect(document.querySelectorAll('.toast-container').length).toBe(1);
@@ -244,7 +245,7 @@ describe('geolocation-banner', () => {
       appContent.id = 'app-content';
       document.body.appendChild(appContent);
       // @ts-ignore: access private
-      const { showPermissionDeniedMessage } = require('../src/geolocation-banner');
+      const { showPermissionDeniedMessage } = geolocationBannerModule;
       showPermissionDeniedMessage();
       const status = document.querySelector('.geolocation-status.denied');
       expect(status).toBeTruthy();
@@ -253,7 +254,7 @@ describe('geolocation-banner', () => {
 
     it('should not throw if #app-content does not exist', () => {
       // @ts-ignore: access private
-      const { showPermissionDeniedMessage } = require('../src/geolocation-banner');
+      const { showPermissionDeniedMessage } = geolocationBannerModule;
       expect(() => showPermissionDeniedMessage()).not.toThrow();
     });
   });
@@ -261,17 +262,17 @@ describe('geolocation-banner', () => {
   describe('init', () => {
     it('should show banner if permission is prompt', async () => {
       // @ts-ignore: access private
-      const { checkGeolocationPermission } = require('../src/geolocation-banner');
-      jest.spyOn(require('../src/geolocation-banner'), 'checkGeolocationPermission').mockResolvedValue('prompt');
+      const { checkGeolocationPermission } = geolocationBannerModule;
+      jest.spyOn(geolocationBannerModule, 'checkGeolocationPermission').mockResolvedValue('prompt');
       await init();
       expect(document.querySelector('.geolocation-banner')).toBeTruthy();
     });
 
     it('should show denied message if permission is denied', async () => {
       // @ts-ignore: access private
-      const { checkGeolocationPermission } = require('../src/geolocation-banner');
-      jest.spyOn(require('../src/geolocation-banner'), 'checkGeolocationPermission').mockResolvedValue('denied');
-      const deniedSpy = jest.spyOn(require('../src/geolocation-banner'), 'showPermissionDeniedMessage');
+      const { checkGeolocationPermission } = geolocationBannerModule;
+      jest.spyOn(geolocationBannerModule, 'checkGeolocationPermission').mockResolvedValue('denied');
+      const deniedSpy = jest.spyOn(geolocationBannerModule, 'showPermissionDeniedMessage');
       await init();
       expect(deniedSpy).toHaveBeenCalled();
       deniedSpy.mockRestore();
@@ -279,10 +280,10 @@ describe('geolocation-banner', () => {
 
     it('should not show banner or denied message if permission is granted', async () => {
       // @ts-ignore: access private
-      const { checkGeolocationPermission } = require('../src/geolocation-banner');
-      jest.spyOn(require('../src/geolocation-banner'), 'checkGeolocationPermission').mockResolvedValue('granted');
-      const showBannerSpy = jest.spyOn(require('../src/geolocation-banner'), 'showBanner');
-      const deniedSpy = jest.spyOn(require('../src/geolocation-banner'), 'showPermissionDeniedMessage');
+      const { checkGeolocationPermission } = geolocationBannerModule;
+      jest.spyOn(geolocationBannerModule, 'checkGeolocationPermission').mockResolvedValue('granted');
+      const showBannerSpy = jest.spyOn(geolocationBannerModule, 'showBanner');
+      const deniedSpy = jest.spyOn(geolocationBannerModule, 'showPermissionDeniedMessage');
       await init();
       expect(showBannerSpy).not.toHaveBeenCalled();
       expect(deniedSpy).not.toHaveBeenCalled();
@@ -294,7 +295,7 @@ describe('geolocation-banner', () => {
   describe('destroy', () => {
     it('should clear timeouts and remove UI elements', () => {
       // @ts-ignore: access private
-      const { showBanner, showPermissionDeniedMessage } = require('../src/geolocation-banner');
+      const { showBanner, showPermissionDeniedMessage } = geolocationBannerModule;
       showBanner();
       showPermissionDeniedMessage();
       destroy();
@@ -306,7 +307,7 @@ describe('geolocation-banner', () => {
   describe('getStatus', () => {
     it('should return the current permissionStatus', () => {
       // @ts-ignore: access private
-      const { getStatus } = require('../src/geolocation-banner');
+      const { getStatus } = geolocationBannerModule;
       expect(['prompt', 'granted', 'denied']).toContain(getStatus());
     });
   });

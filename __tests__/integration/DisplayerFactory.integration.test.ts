@@ -424,11 +424,12 @@ describe('DisplayerFactory Module Integration Tests', () => {
             // This test ensures the module can be imported even in adverse conditions
             expect(DisplayerFactory).toBeDefined();
             
-            // Test with edge case parameters
+            // Test with edge case parameters — empty string is resolved via getElementById
+            // which returns null when no element with that id exists in the DOM.
             const edgeCase = '';
             const displayer = DisplayerFactory.createPositionDisplayer(edgeCase);
             
-            expect(displayer.element).toBe(edgeCase);
+            expect(displayer.element).toBeNull();
             expect(Object.isFrozen(displayer)).toBe(true);
         });
 

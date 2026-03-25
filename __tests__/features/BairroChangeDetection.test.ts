@@ -277,12 +277,14 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
             }
         };
         AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
 
-        // No callback should be called yet (only one address)
+        // No callback should be called yet (first confirmation, no prior confirmed value)
         expect(callbackCallCount).toBe(0);
         expect(callbackDetails).toBeNull();
 
-        // Add second address with different neighborhood - this should trigger callback
+        // Add second address with different neighborhood — 3x to confirm 'Bela Vista'
         const secondAddress = {
             address: {
                 street: 'Avenida Paulista',
@@ -295,6 +297,8 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
                 country_code: 'BR'
             }
         };
+        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
         AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
 
         // Callback should have been called once
@@ -317,6 +321,8 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
                 country_code: 'BR'
             }
         };
+        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
         AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
 
         // Callback count should remain the same (no change detected)
@@ -421,7 +427,7 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
             logradouroCallbackCount++;
         });
 
-        // Add first address
+        // Add first address — 3x to confirm 'Centro' in the buffer
         const firstAddress = {
             address: {
                 street: 'Rua das Flores',
@@ -435,8 +441,10 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
             }
         };
         AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
 
-        // Add second address with both different street and neighborhood
+        // Add second address with both different street and neighborhood — 3x
         const secondAddress = {
             address: {
                 street: 'Avenida Paulista',
@@ -449,6 +457,8 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
                 country_code: 'BR'
             }
         };
+        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
         AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
 
         // Both callbacks should have been called
@@ -468,6 +478,8 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
                 country_code: 'BR'
             }
         };
+        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
         AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
 
         // Only bairro callback should have been called (not logradouro)

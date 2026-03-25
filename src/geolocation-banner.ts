@@ -177,6 +177,8 @@ function getStatus(): PermissionState {
 }
 
 export { init, requestPermission, dismissBanner as dismiss, getStatus, destroy };
+// Internal exports for testing (not part of the public API)
+export { checkGeolocationPermission, showBanner, showSuccessToast, createToastContainer, showPermissionDeniedMessage };
 
 // Window export for legacy compatibility
 if (typeof window !== 'undefined') {

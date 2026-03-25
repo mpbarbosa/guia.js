@@ -1,14 +1,14 @@
+import { jest } from '@jest/globals';
+
+// Manual mocks in src/utils/__mocks__/ and src/config/__mocks__/ are used automatically.
+jest.mock('../../src/utils/logger.js');
+jest.mock('../../src/config/environment.js');
+
 import { fetchStats } from '../../src/services/IBGECityStatsService';
+import * as loggerModule from '../../src/utils/logger.js';
 
-jest.mock('../../src/utils/logger.js', () => ({
-  log: jest.fn(),
-  warn: jest.fn(),
-}));
-jest.mock('../../src/config/environment.js', () => ({
-  env: {},
-}));
-
-const { log, warn } = require('../../src/utils/logger.js');
+const log = loggerModule.log as jest.Mock;
+const warn = loggerModule.warn as jest.Mock;
 
 const mockFetch = global.fetch as jest.Mock;
 

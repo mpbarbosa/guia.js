@@ -68,8 +68,10 @@ describe('AddressDataExtractor Municipio Change Callback Integration', () => {
             }
         };
         AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
         
-        // Add second address with different municipality - this should trigger the callback
+        // Add second address with different municipality — 3x to trigger callback
         const secondAddress = {
             address: {
                 street: 'Avenida Copacabana',
@@ -82,6 +84,8 @@ describe('AddressDataExtractor Municipio Change Callback Integration', () => {
                 country_code: 'BR'
             }
         };
+        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
+        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
         AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
         
         // Callback should have been called once

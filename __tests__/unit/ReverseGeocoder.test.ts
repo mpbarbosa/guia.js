@@ -522,8 +522,8 @@ describe('ReverseGeocoder Class', () => {
         
         // Geocoding should NOT be triggered
         expect(mockReverseGeocode).not.toHaveBeenCalled();
-        expect(geocoder.latitude).toBeUndefined();
-        expect(geocoder.longitude).toBeUndefined();
+        expect(geocoder.latitude).toBeNull();
+        expect(geocoder.longitude).toBeNull();
         
         mockReverseGeocode.mockRestore();
       });
@@ -540,7 +540,7 @@ describe('ReverseGeocoder Class', () => {
         geocoder.update(mockPositionManager, 'PositionManager updated');
         
         // Should not set coordinates
-        expect(geocoder.latitude).toBeUndefined();
+        expect(geocoder.latitude).toBeNull();
       });
 
       test('should skip geocoding when latitude is missing', () => {
@@ -554,7 +554,7 @@ describe('ReverseGeocoder Class', () => {
         
         geocoder.update(mockPositionManager, 'PositionManager updated');
         
-        expect(geocoder.latitude).toBeUndefined();
+        expect(geocoder.latitude).toBeNull();
       });
 
       test('should skip geocoding when longitude is missing', () => {
@@ -568,7 +568,7 @@ describe('ReverseGeocoder Class', () => {
         
         geocoder.update(mockPositionManager, 'PositionManager updated');
         
-        expect(geocoder.latitude).toBeUndefined();
+        expect(geocoder.latitude).toBeNull();
       });
     });
 

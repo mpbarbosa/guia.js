@@ -6,6 +6,7 @@ import {
   destroy,
   recoveryStrategies,
 } from '../src/error-recovery';
+import * as errorRecoveryModule from '../src/error-recovery';
 
 describe('error-recovery', () => {
   let originalConsoleLog: typeof console.log;
@@ -56,7 +57,7 @@ describe('error-recovery', () => {
       // Spy on updateErrorPanel
       const spy = jest.spyOn(
         // @ts-ignore: access private
-        require('../src/error-recovery'),
+        errorRecoveryModule,
         'updateErrorPanel'
       );
       displayError('ErrorTitle', 'ErrorMsg', {
@@ -88,7 +89,7 @@ describe('error-recovery', () => {
       expect(btn).toBeTruthy();
       const spy = jest.spyOn(
         // @ts-ignore: access private
-        require('../src/error-recovery'),
+        errorRecoveryModule,
         'showErrorPanel'
       );
       btn.click();
@@ -134,7 +135,7 @@ describe('error-recovery', () => {
   describe('escapeHtml', () => {
     it('should escape HTML special characters', () => {
       // @ts-ignore: access private
-      const { escapeHtml } = require('../src/error-recovery');
+      const { escapeHtml } = errorRecoveryModule;
       expect(escapeHtml('<div>"&</div>')).toBe('&lt;div&gt;&quot;&amp;&lt;/div&gt;');
     });
   });
@@ -173,7 +174,7 @@ describe('error-recovery', () => {
   describe('createErrorPanel', () => {
     it('should create error panel with correct structure', () => {
       // @ts-ignore: access private
-      const { createErrorPanel } = require('../src/error-recovery');
+      const { createErrorPanel } = errorRecoveryModule;
       const panel = createErrorPanel();
       expect(panel.id).toBe('error-panel');
       expect(panel.querySelector('.error-panel-header')).toBeTruthy();
@@ -211,7 +212,7 @@ describe('error-recovery', () => {
   describe('createFloatingButton', () => {
     it('should create floating button with badge', () => {
       // @ts-ignore: access private
-      const { createFloatingButton } = require('../src/error-recovery');
+      const { createFloatingButton } = errorRecoveryModule;
       const btn = createFloatingButton();
       expect(btn.id).toBe('error-fab');
       expect(btn.querySelector('#error-fab-badge')).toBeTruthy();
@@ -220,7 +221,7 @@ describe('error-recovery', () => {
 
     it('should toggle error panel on click', () => {
       // @ts-ignore: access private
-      const { createFloatingButton } = require('../src/error-recovery');
+      const { createFloatingButton } = errorRecoveryModule;
       createFloatingButton();
       const btn = document.getElementById('error-fab') as HTMLElement;
       expect(btn).toBeTruthy();
@@ -234,7 +235,7 @@ describe('error-recovery', () => {
   describe('updateFabBadge', () => {
     it('should show badge with correct count', () => {
       // @ts-ignore: access private
-      const { updateFabBadge } = require('../src/error-recovery');
+      const { updateFabBadge } = errorRecoveryModule;
       // Add badge to DOM
       displayError('BadgeTest', 'msg', {
         type: 'Error',
@@ -248,7 +249,7 @@ describe('error-recovery', () => {
 
     it('should hide badge when no errors', () => {
       // @ts-ignore: access private
-      const { updateFabBadge } = require('../src/error-recovery');
+      const { updateFabBadge } = errorRecoveryModule;
       displayError('BadgeTest', 'msg', {
         type: 'Error',
         message: 'msg',
@@ -265,7 +266,7 @@ describe('error-recovery', () => {
     it('should show empty message when no errors', () => {
       showErrorPanel();
       // @ts-ignore: access private
-      const { updateErrorPanel } = require('../src/error-recovery');
+      const { updateErrorPanel } = errorRecoveryModule;
       window.ErrorRecovery.clearErrorHistory();
       updateErrorPanel();
       const content = document.getElementById('error-panel-content') as HTMLElement;
@@ -293,7 +294,7 @@ describe('error-recovery', () => {
   describe('formatTime', () => {
     it('should format ISO timestamp to pt-BR time', () => {
       // @ts-ignore: access private
-      const { formatTime } = require('../src/error-recovery');
+      const { formatTime } = errorRecoveryModule;
       const date = new Date('2023-01-01T12:34:56.000Z');
       const formatted = formatTime(date.toISOString());
       expect(typeof formatted).toBe('string');
@@ -350,7 +351,7 @@ describe('error-recovery', () => {
       showErrorPanel();
       // Add floating button
       // @ts-ignore: access private
-      const { createFloatingButton } = require('../src/error-recovery');
+      const { createFloatingButton } = errorRecoveryModule;
       createFloatingButton();
       destroy();
       expect(document.querySelector('.toast-container')).toBeNull();
@@ -444,7 +445,7 @@ describe('error-recovery', () => {
   describe('initializeUI', () => {
     it('should create floating button and add keydown listener', () => {
       // @ts-ignore: access private
-      const { initializeUI } = require('../src/error-recovery');
+      const { initializeUI } = errorRecoveryModule;
       initializeUI();
       expect(document.getElementById('error-fab')).toBeTruthy();
       // Simulate Ctrl+E
@@ -460,7 +461,7 @@ describe('error-recovery', () => {
 
     it('should toggle panel with Cmd+E (metaKey)', () => {
       // @ts-ignore: access private
-      const { initializeUI } = require('../src/error-recovery');
+      const { initializeUI } = errorRecoveryModule;
       initializeUI();
       showErrorPanel();
       const event = new window.KeyboardEvent('keydown', {

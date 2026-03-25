@@ -1,16 +1,16 @@
+import { jest } from '@jest/globals';
+
+// Manual mocks in src/utils/__mocks__/ are used automatically.
+jest.mock('../../src/utils/logger.js');
+jest.mock('../../src/utils/html-sanitizer.js');
+
 import { HTMLCityStatsPanel } from '../../src/html/HTMLCityStatsPanel';
 import type { CityStats } from '../../src/services/IBGECityStatsService';
+import * as loggerModule from '../../src/utils/logger.js';
+import * as htmlSanitizerModule from '../../src/utils/html-sanitizer.js';
 
-// Mock dependencies
-jest.mock('../../src/utils/logger.js', () => ({
-  log: jest.fn(),
-}));
-jest.mock('../../src/utils/html-sanitizer.js', () => ({
-  escapeHtml: (s: string) => `[escaped:${s}]`,
-}));
-
-const { log } = require('../../src/utils/logger.js');
-const { escapeHtml } = require('../../src/utils/html-sanitizer.js');
+const log = loggerModule.log as jest.Mock;
+const escapeHtml = htmlSanitizerModule.escapeHtml as jest.Mock;
 
 describe('HTMLCityStatsPanel', () => {
   let panelElem: HTMLElement;

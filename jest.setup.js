@@ -32,6 +32,21 @@ if (typeof global.URL.createObjectURL === 'undefined') {
 // Make jest available as a global for ESM test files (required with --experimental-vm-modules)
 globalThis.jest = jest;
 
+// Polyfill Performance API for jsdom environment (required by maplibre-gl and similar libs)
+if (typeof performance !== 'undefined' && typeof performance.mark === 'undefined') {
+    performance.mark = jest.fn();
+    performance.measure = jest.fn();
+    performance.clearMarks = jest.fn();
+    performance.clearMeasures = jest.fn();
+    performance.getEntriesByName = jest.fn(() => []);
+    performance.getEntriesByType = jest.fn(() => []);
+}
+
+// Provide a global fetch stub so tests can spy on it without "property does not exist" errors
+if (typeof global.fetch === 'undefined') {
+    global.fetch = jest.fn();
+}
+
 // Mock Speech Synthesis API for jsdom environment
 if (typeof window !== 'undefined') {
 	// Mock alert function for jsdom environment

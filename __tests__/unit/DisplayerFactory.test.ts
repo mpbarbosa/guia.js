@@ -69,10 +69,14 @@ describe('DisplayerFactory - MP Barbosa Travel Guide (v0.9.00-alpha)', () => {
         });
 
         test('should create position displayer with string element ID', () => {
+            const el = document.createElement('div');
+            el.id = 'position-element-id';
+            document.body.appendChild(el);
             const displayer = DisplayerFactory.createPositionDisplayer('position-element-id');
+            document.body.removeChild(el);
 
             expect(displayer).toBeInstanceOf(HTMLPositionDisplayer);
-            expect(displayer.element).toBe('position-element-id');
+            expect(displayer.element).toBe(el);
         });
 
         test('should return frozen position displayer', () => {
@@ -120,9 +124,18 @@ describe('DisplayerFactory - MP Barbosa Travel Guide (v0.9.00-alpha)', () => {
             const displayer1 = DisplayerFactory.createAddressDisplayer(mockElement, null);
             expect(displayer1.enderecoPadronizadoDisplay).toBe(null);
 
-            // Test with string
+            // Test with string — factory resolves string via getElementById; when element
+            // doesn't exist in DOM, the factory falls back to false (?? false).
             const displayer2 = DisplayerFactory.createAddressDisplayer(mockElement, 'element-id');
-            expect(displayer2.enderecoPadronizadoDisplay).toBe('element-id');
+            expect(displayer2.enderecoPadronizadoDisplay).toBe(false);
+
+            // Test with string when element exists in DOM
+            const enderecoEl = document.createElement('div');
+            enderecoEl.id = 'enderecoDisplay';
+            document.body.appendChild(enderecoEl);
+            const displayer2b = DisplayerFactory.createAddressDisplayer(mockElement, 'enderecoDisplay');
+            document.body.removeChild(enderecoEl);
+            expect(displayer2b.enderecoPadronizadoDisplay).toBe(enderecoEl);
 
             // Test with boolean true
             const displayer3 = DisplayerFactory.createAddressDisplayer(mockElement, true);
@@ -550,10 +563,13 @@ describe('DisplayerFactory - MP Barbosa Travel Guide (v0.9.00-alpha)', () => {
                     const positionDisplayer = DisplayerFactory.createPositionDisplayer(edgeCase);
                     const addressDisplayer = DisplayerFactory.createAddressDisplayer(edgeCase);
                     const referenceDisplayer = DisplayerFactory.createReferencePlaceDisplayer(edgeCase);
-                    
-                    expect(positionDisplayer.element).toBe(edgeCase);
-                    expect(addressDisplayer.element).toBe(edgeCase);
-                    expect(referenceDisplayer.element).toBe(edgeCase);
+
+                    // String edge cases are resolved via getElementById (returns null when not in DOM);
+                    // non-string falsy values are stored as-is.
+                    const expectedElement = typeof edgeCase === 'string' ? null : edgeCase;
+                    expect(positionDisplayer.element).toBe(expectedElement);
+                    expect(addressDisplayer.element).toBe(expectedElement);
+                    expect(referenceDisplayer.element).toBe(expectedElement);
                 }).not.toThrow();
             });
         });

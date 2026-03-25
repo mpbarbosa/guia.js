@@ -1,22 +1,24 @@
+import { jest } from '@jest/globals';
+
+// Manual mocks in src/utils/__mocks__/ are used automatically when jest.mock('path') is called.
+// The mock functions are defined in those files and are real jest.fn() instances.
+jest.mock('../../src/utils/logger.js');
+jest.mock('../../src/utils/distance.js');
+
 import { findNearby } from '../../src/services/OverpassService';
+import * as loggerModule from '../../src/utils/logger.js';
+import * as distanceModule from '../../src/utils/distance.js';
 
-jest.mock('../../src/utils/logger.js', () => ({
-  log: jest.fn(),
-  warn: jest.fn(),
-}));
-jest.mock('../../src/utils/distance.js', () => ({
-  calculateDistance: jest.fn(() => 123),
-}));
-
-const { log, warn } = require('../../src/utils/logger.js');
-const { calculateDistance } = require('../../src/utils/distance.js');
+const log = loggerModule.log as jest.Mock;
+const warn = loggerModule.warn as jest.Mock;
+const calculateDistance = distanceModule.calculateDistance as jest.Mock;
 
 const mockFetch = global.fetch as jest.Mock;
 
 beforeEach(() => {
   jest.resetAllMocks();
   global.fetch = jest.fn();
-  (calculateDistance as jest.Mock).mockReturnValue(123);
+  calculateDistance.mockReturnValue(123);
 });
 
 describe('OverpassService.findNearby', () => {

@@ -9,6 +9,7 @@ import { showError } from '../utils/toast.js';
 class OnboardingManager {
   private onboardingCard: HTMLElement | null = null;
   private enableLocationBtn: HTMLElement | null = null;
+  isLocationGranted: boolean = false;
 
   init(): void {
     this.onboardingCard = document.getElementById('onboarding-card');
@@ -34,15 +35,19 @@ class OnboardingManager {
       const permission = await navigator.permissions.query({ name: 'geolocation' });
 
       if (permission.state === 'granted') {
+        this.isLocationGranted = true;
         this.hideOnboarding();
       } else {
+        this.isLocationGranted = false;
         this.showOnboarding();
       }
 
       permission.addEventListener('change', () => {
         if (permission.state === 'granted') {
+          this.isLocationGranted = true;
           this.hideOnboarding();
         } else {
+          this.isLocationGranted = false;
           this.showOnboarding();
         }
       });
@@ -54,6 +59,7 @@ class OnboardingManager {
 
   setupGeolocationListeners(): void {
     document.addEventListener('geolocation:success', () => {
+      this.isLocationGranted = true;
       this.hideOnboarding();
     });
 

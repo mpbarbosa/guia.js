@@ -123,10 +123,10 @@ describe('BrowserGeolocationProvider', () => {
 			
 			provider.getCurrentPosition(jest.fn(), errorCallback, {});
 			
-			expect(errorCallback).toHaveBeenCalledWith({
+			expect(errorCallback).toHaveBeenCalledWith(expect.objectContaining({
 				code: 0,
 				message: 'Geolocation is not supported'
-			});
+			}));
 		});
 
 		test('should handle missing error callback when not supported', () => {

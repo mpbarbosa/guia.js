@@ -26,7 +26,7 @@ state.
 | [Audit and fix](#audit-and-fix) | _(Copilot skill)_ | Manual | Run validate-logs then fix-log-issues in one pass |
 | [Next roadmap phase](#next-roadmap-phase) | _(Copilot skill)_ | Manual | Propose and implement the next version milestone |
 | [Sync version](#sync-version) | _(Copilot skill)_ | Manual | Propagate package.json version to all dependent files |
-| [Copy TS to paraty](#copy-ts-to-paraty) | _(Copilot skill)_ | Manual | Migrate a TypeScript file into paraty_geocore.js with tests, exports, and docs |
+| [Copy TS to project](#copy-ts-to-project) | _(Copilot skill)_ | Manual | Migrate a TypeScript file into any target repository with tests, exports, and docs |
 | [Purge workflow logs](#purge-workflow-logs) | _(Copilot skill)_ | Manual | Delete transient `.ai_workflow/` artefacts (logs, backlog, summaries) after an audit run |
 
 ---
@@ -282,52 +282,52 @@ version in `package.json` to ensure all dependent files stay consistent.
 
 ---
 
-## copy-ts-to-paraty
+## copy-ts-to-project
 
-**File:** `.github/skills/copy-ts-to-paraty/SKILL.md`
+**File:** `.github/skills/copy-ts-to-project/SKILL.md`
 **Trigger:** Manual (Copilot CLI skill)
 
 Migrates a TypeScript source file (identified by `{inputNameFile}`) from this
-project into the `paraty_geocore.js` repository. The skill copies the file and
-any related source dependencies, adapts all imports and conventions, creates or
-adapts the test suite, updates `src/index.ts` exports, and updates
-`docs/ARCHITECTURE.md`, `docs/CHANGELOG.md`, `docs/API.md`, and a new
-`docs/{inputNameFile}-FRS.md` functional-requirements spec.
+project into any target repository (`{targetProject}`). The skill copies the
+file and any related source dependencies, adapts all imports and conventions,
+creates or adapts the test suite, updates the public entry point exports, and
+updates `docs/ARCHITECTURE.md`, `docs/CHANGELOG.md`, `docs/API.md`, and a new
+`docs/{inputNameFile}-FRS.md` functional-requirements spec (where applicable).
 
 ### When to use
 
-- When a module developed in `guia_turistico` is stable enough to be promoted
-  into the shared `paraty_geocore.js` library.
+- When a module developed here is stable enough to be promoted into another
+  library or project.
 - When asked to "migrate", "contribute", "move", or "copy" a TypeScript file
-  to paraty_geocore.js.
+  to another project.
 
 ### What it does
 
 1. Locates `{inputNameFile}.ts` in the current project.
-2. Determines the correct target subdirectory (`src/core/` or `src/utils/`)
-   and proposes a migration plan to the developer.
+2. Inspects `{targetProject}`'s directory structure and determines the correct
+   target subdirectory, then proposes a migration plan to the developer.
 3. **Waits for confirmation before writing any files.**
-4. Copies and adapts the source file (rewrites imports, replaces logger calls,
-   adds paraty_geocore.js JSDoc header, removes any DOM dependencies).
+4. Copies and adapts the source file (rewrites imports, adapts logger calls,
+   adds a JSDoc header matching the target project's convention, removes any
+   DOM dependencies).
 5. Copies or creates a test file in `test/<dir>/`, re-pointing all imports.
-6. Updates `src/index.ts` with the new exports.
+6. Updates the public entry point with the new exports.
 7. Runs `tsc --noEmit` and the full test suite — both must be green.
 8. Updates `docs/ARCHITECTURE.md`, `docs/CHANGELOG.md`, `docs/API.md`, and
-   creates `docs/{inputNameFile}-FRS.md`.
-9. Runs `npm run lint:md` — must be clean.
+   creates `docs/{inputNameFile}-FRS.md` (where the target project uses these).
+9. Runs `npm run lint:md` if available — must be clean.
 10. Commits everything atomically and prints a summary.
 
 ### Prerequisites
 
-- Both repos are present locally as sibling directories
-  (`guia_turistico/` and `paraty_geocore.js/`).
+- Both repos are present locally as sibling directories.
 - Both repos have a clean working tree.
 - The source file compiles without errors.
 
 ### Related skills
 
-- `update-paraty-geocore` — use this afterwards to bump guia_turistico's
-  dependency on the new paraty_geocore.js version.
+- `update-paraty-geocore` — use afterwards to bump this project's dependency
+  if the target is `paraty_geocore.js`.
 
 ---
 

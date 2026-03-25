@@ -101,18 +101,14 @@ describe('andarilho.ts', () => {
 
     beforeEach(() => {
       getCurrentPositionMock = jest.fn();
-      originalNavigator = global.navigator;
-      // @ts-ignore
-      global.navigator = {
-        geolocation: {
-          getCurrentPosition: getCurrentPositionMock,
-        },
-      };
+      // In jsdom, window.navigator is read-only; mutate only the geolocation sub-property
+      // (jest.setup.js already sets window.navigator.geolocation as a writable plain object).
+      window.navigator.geolocation.getCurrentPosition = getCurrentPositionMock;
     });
 
     afterEach(() => {
-      // @ts-ignore
-      global.navigator = originalNavigator;
+      // Restore the no-op stub set by jest.setup.js
+      window.navigator.geolocation.getCurrentPosition = () => {};
     });
 
     it('should call checkGeolocation and reset currentCoords/currentAddress', () => {

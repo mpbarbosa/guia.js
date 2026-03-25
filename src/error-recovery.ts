@@ -299,6 +299,8 @@ function initializeUI(): void {
 }
 
 export { displayError, showErrorPanel, hideErrorPanel, toggleErrorPanel, destroy, recoveryStrategies };
+// Internal exports for testing (not part of the public API)
+export { escapeHtml, createErrorPanel, createFloatingButton, updateFabBadge, updateErrorPanel, formatTime, initializeUI };
 
 // Window export for legacy compatibility
 window.ErrorRecovery = {

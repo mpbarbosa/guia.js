@@ -84,11 +84,13 @@ export default {
     '/__tests__/helpers/',
     '/__tests__/e2e/',  // EXCLUDE E2E tests
     '/test/app.test.js',  // Functions not exported from src/app.js (uses window.GuiaApp instead)
+    '/test/app.test.ts',  // Same as test/app.test.js: imports from './app' (no test/app.ts exists) and requires @testing-library/jest-dom which is not installed
     '/test/main.test.ts',  // jest.doMock ESM hoisting issue with App.vue
     '/test/utils/version-display-manager.test.ts',  // ESM jest.mock path resolution issue
     '/test/html/HTMLHeaderDisplayer.test.ts',  // ESM jest.mock path resolution issue
     '/test/speech/SpeechSynthesisManager.facade-wip.test.js',  // WIP file - .js extension stripping breaks resolution
     '/test/types/paraty-geocore.d.test.ts',  // Imports from CDN URL (not resolvable in Jest)
+    '/test/types/global.d.test.ts',  // Imports src/types/global.d.ts — TypeScript declaration files cannot be transpiled by ts-jest
     '/test/vite-env.d.test.ts'  // ScriptTransformer cannot handle this test file
   ],
   

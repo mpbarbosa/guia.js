@@ -49,6 +49,8 @@ jobs:
   update-ibira:
     name: Check & Update ibira.js
     runs-on: ubuntu-latest
+    env:
+      HUSKY: '0'   # disable git hooks in CI (pre-push hook runs npm test)
 
     steps:
       # ── 1. Checkout ──────────────────────────────────────────────────────────

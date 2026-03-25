@@ -90,6 +90,7 @@
 | Offline-First Architecture (IndexedDB caching) | Medium |
 | Route Navigation Utility (OpenRouteService/OSRM) | Low |
 | Consolidate duplicate `CHANGELOG.md` v0.9.0 entries | Low |
+| Fix 83 failing unit tests (`performance.mark` mock, ESM `jest.mock` `.js` paths, `require()` in ESM, `ReverseGeocoder` null vs undefined, `andarilho.ts` mock mismatch) | Medium |
 
 ---
 
@@ -115,3 +116,5 @@ Issues identified from `.ai_workflow` workflow runs and resolved via the `audit-
 | RI-014 | Version mismatch: `APP_VERSION.patch` was 6 in `src/config/defaults.ts` | docs-outdated | Updated `patch: 6` to `patch: 7`; `npm run check:version` exits 0 | 9238ce7 |
 | RI-015 | Undocumented `__mocks__` directory | undocumented-directory | Created `__mocks__/README.md` describing `fileMock.js` purpose and when to add new mocks; `npm run lint:md` exits 0 | 522982b |
 | RI-016 | Broken references to missing guide files in `CONTRIBUTING.md` | docs-outdated | Created 8 missing guide files: `JSDOC_GUIDE.md`, `REFERENTIAL_TRANSPARENCY.md`, `CODE_REVIEW_GUIDE.md`, `TDD_GUIDE.md`, `UNIT_TEST_GUIDE.md`, `LOW_COUPLING_GUIDE.md`, `HIGH_COHESION_GUIDE.md`, `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md`; `npm run lint:md` exits 0 | ca29e3e |
+| RI-017 | Version mismatch: `APP_VERSION.patch` was 7 in `src/config/defaults.ts` | docs-outdated | Updated `patch: 7` to `patch: 9`; `npm run check:version` exits 0 | df7dd25 |
+| RI-018 | Undocumented `.github/skills` directory | undocumented-directory | Created `.github/skills/README.md` pointing to `.github/SKILLS.md`; `npm run lint:md` exits 0 | df7dd25 |

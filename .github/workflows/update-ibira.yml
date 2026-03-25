@@ -250,14 +250,29 @@ jobs:
         run: npm run validate
 
       # ── 12. Run tests ─────────────────────────────────────────────────────────
-      # Skip test suites that require a multi-repo sibling dependency chain
-      # (paraty_geocore.js → bessa_patterns.ts) not available in this workflow.
-      # Those suites are covered by dedicated CI pipelines.
-      # Uses the same node flags as npm test (--experimental-vm-modules for ESM).
+      # Two suites require a multi-repo sibling dependency chain
+      # (paraty_geocore.js → bessa_patterns.ts) not available here.
+      # All other testPathIgnorePatterns from jest.config.unit.js are reproduced
+      # so the CLI flag does not override and lose the config's own exclusions.
+      # --forceExit prevents Jest hanging on open async handles.
       - name: Run unit & integration tests
         if: steps.current.outputs.up_to_date != 'true'
         run: |
           node --experimental-vm-modules node_modules/jest/bin/jest.js \
+            --forceExit \
+            --testPathIgnorePatterns="/node_modules/" \
+            --testPathIgnorePatterns="/__mocks__/" \
+            --testPathIgnorePatterns="/__tests__/helpers/" \
+            --testPathIgnorePatterns="/__tests__/e2e/" \
+            --testPathIgnorePatterns="/test/app.test.js" \
+            --testPathIgnorePatterns="/test/app.test.ts" \
+            --testPathIgnorePatterns="/test/main.test.ts" \
+            --testPathIgnorePatterns="/test/utils/version-display-manager.test.ts" \
+            --testPathIgnorePatterns="/test/html/HTMLHeaderDisplayer.test.ts" \
+            --testPathIgnorePatterns="/test/speech/SpeechSynthesisManager.facade-wip.test.js" \
+            --testPathIgnorePatterns="/test/types/paraty-geocore.d.test.ts" \
+            --testPathIgnorePatterns="/test/types/global.d.test.ts" \
+            --testPathIgnorePatterns="/test/vite-env.d.test.ts" \
             --testPathIgnorePatterns="__tests__/types/paraty-geocore.test.js" \
             --testPathIgnorePatterns="test/core/GeocodingState.test.js"
 

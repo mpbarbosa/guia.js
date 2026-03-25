@@ -368,7 +368,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - Phase 2: ✅ COMPLETE (WebGeocodingManager integration)
   - Phase 3: ✅ COMPLETE (SpeechCoordinator extraction)
   - Phase 4: Optional (documentation updates)
-  - Version update records (ibira.js v0.2.2-alpha)
+  - Version update records (ibira.js v0.4.12-alpha)
   - Error handling and prerequisites improvements
   - **7 documents, 88KB** of historical records
 

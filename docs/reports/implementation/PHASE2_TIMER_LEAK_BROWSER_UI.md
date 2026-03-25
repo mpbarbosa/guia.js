@@ -394,7 +394,7 @@ const ibiraLoadingPromise = (async () => {
                     setTimeout(() => reject(new Error('CDN import timeout')), 5000)
                 );
 
-                const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js');
+                const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.12-alpha/src/index.js');
                 const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
                 // ...
             }

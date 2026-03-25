@@ -250,13 +250,14 @@ jobs:
         run: npm run validate
 
       # ── 12. Run tests ─────────────────────────────────────────────────────────
-      # Skip test suites that require sibling repos with their own dependencies
-      # (paraty_geocore.js → bessa_patterns.ts) not available in this workflow's
-      # CI environment. Those suites are covered by dedicated CI pipelines.
+      # Skip test suites that require a multi-repo sibling dependency chain
+      # (paraty_geocore.js → bessa_patterns.ts) not available in this workflow.
+      # Those suites are covered by dedicated CI pipelines.
+      # Uses the same node flags as npm test (--experimental-vm-modules for ESM).
       - name: Run unit & integration tests
         if: steps.current.outputs.up_to_date != 'true'
         run: |
-          npx jest \
+          node --experimental-vm-modules node_modules/jest/bin/jest.js \
             --testPathIgnorePatterns="__tests__/types/paraty-geocore.test.js" \
             --testPathIgnorePatterns="test/core/GeocodingState.test.js"
 

@@ -55,6 +55,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ── 1b. Checkout paraty_geocore.js sibling (required by moduleNameMapper) ─
+      - name: Checkout paraty_geocore.js sibling repository
+        uses: actions/checkout@v4
+        with:
+          repository: mpbarbosa/paraty_geocore.js
+          path: ../paraty_geocore.js
+
       # ── 2. Node.js setup ─────────────────────────────────────────────────────
       - name: Set up Node.js 20
         uses: actions/setup-node@v4

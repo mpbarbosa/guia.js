@@ -3,7 +3,7 @@
 **Date**: 2026-03-02
 **Analyzer**: Copilot (Claude Sonnet 4.6)
 **Files analyzed**: 15 (flagged) + 12 (supporting context) = 27 total
-**Current version** (package.json): `0.12.11-alpha`
+**Current version** (package.json): `0.12.12-alpha`
 
 ---
 
@@ -62,8 +62,8 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
 ### Reference 3: docs/user/COMPLETE_USER_GUIDE.md
 
 - **Status**: False Positive — file exists
-- **Root Cause**: The file's internal cross-reference links resolve correctly (`../api/COMPLETE_API_REFERENCE.md`, `../architecture/CLASS_DIAGRAM.md`, `../developer/DEVELOPER_GUIDE.md`, `../INDEX.md` — all verified to exist). The checker most likely flagged it because the document declares `Version: 0.11.0-alpha` while the project is at `0.12.11-alpha`, and possibly because of stale anchor-level links inside TESTING.md that this file references indirectly.
-- **Recommended Fix**: Update the version header from `0.11.0-alpha` → `0.12.11-alpha`. Update the `Last Updated` date. No broken hyperlinks found.
+- **Root Cause**: The file's internal cross-reference links resolve correctly (`../api/COMPLETE_API_REFERENCE.md`, `../architecture/CLASS_DIAGRAM.md`, `../developer/DEVELOPER_GUIDE.md`, `../INDEX.md` — all verified to exist). The checker most likely flagged it because the document declares `Version: 0.11.0-alpha` while the project is at `0.12.12-alpha`, and possibly because of stale anchor-level links inside TESTING.md that this file references indirectly.
+- **Recommended Fix**: Update the version header from `0.11.0-alpha` → `0.12.12-alpha`. Update the `Last Updated` date. No broken hyperlinks found.
 - **Priority**: Medium — version discrepancy misleads users about which release the guide covers.
 - **Impact**: End users reading the guide; automated version consistency checkers.
 
@@ -72,8 +72,8 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
 ### Reference 4: docs/user/TROUBLESHOOTING.md
 
 - **Status**: False Positive — file exists
-- **Root Cause**: The document links to `../API_COMPLETE_REFERENCE.md` which resolves to `docs/API_COMPLETE_REFERENCE.md` — this file **does not exist**. The correct location is `docs/api/COMPLETE_API_REFERENCE.md` (one path level deeper). Additionally, the version header reads `0.9.0-alpha` — **three minor versions behind** the current `0.12.11-alpha`.
-- **Recommended Fix**: Change `../API_COMPLETE_REFERENCE.md` to `../api/COMPLETE_API_REFERENCE.md`. Update version to `0.12.11-alpha`.
+- **Root Cause**: The document links to `../API_COMPLETE_REFERENCE.md` which resolves to `docs/API_COMPLETE_REFERENCE.md` — this file **does not exist**. The correct location is `docs/api/COMPLETE_API_REFERENCE.md` (one path level deeper). Additionally, the version header reads `0.9.0-alpha` — **three minor versions behind** the current `0.12.12-alpha`.
+- **Recommended Fix**: Change `../API_COMPLETE_REFERENCE.md` to `../api/COMPLETE_API_REFERENCE.md`. Update version to `0.12.12-alpha`.
 - **Priority**: High — users hitting errors will be directed to broken API docs link.
 - **Impact**: End users following the troubleshooting guide; broken "Contact and Resources" section.
 
@@ -90,7 +90,7 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
   - `../FEATURE_METROPOLITAN_REGION_DISPLAY.md` → wrong path; file exists at `docs/user/features/FEATURE_METROPOLITAN_REGION_DISPLAY.md`
   - `../FEATURE_MUNICIPIO_STATE_DISPLAY.md` → wrong path; file exists at `docs/user/features/FEATURE_MUNICIPIO_STATE_DISPLAY.md`
   - Version: `0.9.0-alpha` — three minor versions behind.
-- **Recommended Fix**: Fix all six broken paths (see above). Update version to `0.12.11-alpha`. The three feature files exist but are in `features/` subdirectory — update paths accordingly.
+- **Recommended Fix**: Fix all six broken paths (see above). Update version to `0.12.12-alpha`. The three feature files exist but are in `features/` subdirectory — update paths accordingly.
 - **Priority**: Critical — this is the primary user-facing guide with 6 broken links.
 - **Impact**: All end users; the "Getting Help" and "Documentation" sections are substantially broken.
 
@@ -112,7 +112,7 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
   - `INDEX.md` → does not exist in `docs/user/features/`
   - `MASTER_INDEX.md` → does not exist in `docs/user/features/`
   - Working links: `FEATURE_BUTTON_STATUS_MESSAGES.md` ✅, `FEATURE_METROPOLITAN_REGION_DISPLAY.md` ✅, `FEATURE_MUNICIPIO_STATE_DISPLAY.md` ✅
-  - Version: `0.11.0-alpha` — slightly behind `0.12.11-alpha`.
+  - Version: `0.11.0-alpha` — slightly behind `0.12.12-alpha`.
 - **Recommended Fix**: Fix the "Architecture & Technical" table — these files reside in other `docs/` subdirectories (e.g., `../../testing/TESTING.md`, `../../developer/DEVELOPER_GUIDE.md`). The index should use correct relative paths. Remove or redirect the `../README.md` link.
 - **Priority**: Critical — this is the feature index page; 11 of 14 links are broken.
 - **Impact**: Developers navigating from the features index; anyone consulting the documentation table of contents.
@@ -163,7 +163,7 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
 
 - **Status**: False Positive — file exists
 - **Root Cause**: The partial content reviewed shows no broken hyperlinks. The document lacks an explicit version header. The link checker likely flagged it due to a missing version declaration or because it was caught in a bulk scan of the `docs/testing/` directory where neighbor files had issues.
-- **Recommended Fix**: Add version header (`0.12.11-alpha`) and last-updated date. No link fixes required based on content reviewed.
+- **Recommended Fix**: Add version header (`0.12.12-alpha`) and last-updated date. No link fixes required based on content reviewed.
 - **Priority**: Low — cosmetic/metadata issue only.
 - **Impact**: Minimal; the document is internally self-contained with external URLs only.
 
@@ -233,7 +233,7 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
 - **Status**: False Positive — file exists
 - **Root Cause**: The audit itself is outdated:
   - Generated: `2026-01-06` — approximately 8 weeks before this analysis
-  - Project version at time of audit: `0.9.0-alpha`; current: `0.12.11-alpha`
+  - Project version at time of audit: `0.9.0-alpha`; current: `0.12.12-alpha`
   - The audit reported 120 broken links at scan time; many may have been fixed since while new ones were introduced
   - Some files it lists as "missing" (e.g., `__tests__/README.md`) are still missing; others it recommends creating may now have been created
   - The audit's "Quick Fixes" section recommends actions that may no longer be correct or relevant
@@ -247,7 +247,7 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
 
 ### docs/ux/VISUAL_HIERARCHY.md
 
-- **Version**: `0.9.0` declared; current is `0.12.11-alpha` — **3 minor versions behind**
+- **Version**: `0.9.0` declared; current is `0.12.12-alpha` — **3 minor versions behind**
 - **CSS filename error**: Documents `src/location-highlights.css` but the actual file is `src/highlight-cards.css`. This is not a rename — `location-highlights.css` was planned but `highlight-cards.css` was implemented instead.
 - **Missing ux/ sibling docs**: Four linked UX docs (`UX_IMPROVEMENTS.md`, `DESIGN_PATTERNS.md`, `ACCESSIBILITY_AUDIT.md`, `UX_QUICK_REFERENCE.md`) don't exist in `docs/ux/`. The directory has other UX guides but not these specific ones.
 
@@ -259,13 +259,13 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
 
 ### docs/user/USER_GUIDE.md
 
-- **Version**: `0.9.0-alpha`; current is `0.12.11-alpha` — **3 minor versions behind**
+- **Version**: `0.9.0-alpha`; current is `0.12.12-alpha` — **3 minor versions behind**
 - **6 broken links**: See Reference 5 above. The "Getting Help" and "Feature Guides" sections are almost entirely broken.
 - **INTEGRATION_GUIDE.md missing**: Referenced as if it exists; no such file found anywhere in the repo.
 
 ### docs/user/features/FEATURES.md
 
-- **Version**: `0.11.0-alpha`; current is `0.12.11-alpha`
+- **Version**: `0.11.0-alpha`; current is `0.12.12-alpha`
 - **11 broken links in the Architecture & Technical table**: These files likely exist elsewhere in `docs/` but the table points to wrong relative paths (the `features/` directory context, not the broader `docs/` context).
 
 ### docs/testing/TESTING.md
@@ -287,7 +287,7 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
 
 ### docs/reports/CROSS_REFERENCE_AUDIT.md
 
-- **Version**: `0.9.0-alpha`; current `0.12.11-alpha`
+- **Version**: `0.9.0-alpha`; current `0.12.12-alpha`
 - **Stale link data**: Audit found 120 broken links as of 2026-01-06; current state is different.
 - **Outdated recommendations**: Some "Quick Fixes" may conflict with changes made in the 8 weeks since the audit.
 
@@ -299,7 +299,7 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
 - **False positives (file exists on disk)**: 15
 - **Truly broken (file missing from disk)**: 0
 - **Files with broken internal cross-references**: 13
-- **Files with version inconsistencies**: 10 (versions range from `0.9.0` to `0.11.0-alpha` vs current `0.12.11-alpha`)
+- **Files with version inconsistencies**: 10 (versions range from `0.9.0` to `0.11.0-alpha` vs current `0.12.12-alpha`)
 - **Files with outdated test counts**: 4
 - **Content issues found**: 31 distinct broken links + 10 version mismatches + 4 wrong file extensions (`.js` vs `.ts`)
 
@@ -323,9 +323,9 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
 
 9. **[Medium] Fix `docs/ux/VISUAL_HIERARCHY.md`** — Correct CSS filename (`location-highlights.css` → `highlight-cards.css`). Remove or fix four broken UX sibling doc links.
 
-10. **[Medium] Update `docs/user/COMPLETE_USER_GUIDE.md`** — Version bump to `0.12.11-alpha`.
+10. **[Medium] Update `docs/user/COMPLETE_USER_GUIDE.md`** — Version bump to `0.12.12-alpha`.
 
-11. **[Medium] Regenerate `docs/reports/CROSS_REFERENCE_AUDIT.md`** — Archive the 2026-01-06 version and run a fresh scan against current `0.12.11-alpha` codebase.
+11. **[Medium] Regenerate `docs/reports/CROSS_REFERENCE_AUDIT.md`** — Archive the 2026-01-06 version and run a fresh scan against current `0.12.12-alpha` codebase.
 
 12. **[Medium] Fix `docs/testing/BROWSER_COMPATIBILITY_GUIDE.md`** — Remove or correct `__tests__/browser` directory reference. Update version.
 

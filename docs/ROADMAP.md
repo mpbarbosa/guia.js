@@ -1,6 +1,6 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
-**Current Version**: `0.12.11-alpha` | **Status**: Active Development
+**Current Version**: `0.12.12-alpha` | **Status**: Active Development
 **Last Updated**: 2026-03-22
 
 ---
@@ -101,7 +101,7 @@ Issues identified from `.ai_workflow` workflow runs and resolved via the `audit-
 
 | ID | Title | Type | Fix | Commit |
 |----|-------|------|-----|--------|
-| RI-001 | Version mismatch in `src/config/defaults.ts` | docs-outdated | Set `APP_VERSION.patch = 5` to match `package.json` `0.12.11-alpha` | c997728 |
+| RI-001 | Version mismatch in `src/config/defaults.ts` | docs-outdated | Set `APP_VERSION.patch = 5` to match `package.json` `0.12.12-alpha` | c997728 |
 | RI-002 | Loose return type on `getRoute()` | typescript-issue | Added `RouteConfig` interface; updated `getRoute` return type to `RouteConfig \| null` | c997728 |
 | RI-003 | Missing `CONTRIBUTING.md` at repository root | docs-outdated | Created root `CONTRIBUTING.md` linking to `.github/CONTRIBUTING.md` | 0838a50 |
 | RI-004 | Missing `docs/GETTING_STARTED.md` | docs-outdated | Created `docs/GETTING_STARTED.md` index pointing to `docs/guides/GETTING_STARTED.md` | 0838a50 |
@@ -119,7 +119,7 @@ Issues identified from `.ai_workflow` workflow runs and resolved via the `audit-
 | RI-016 | Broken references to missing guide files in `CONTRIBUTING.md` | docs-outdated | Created 8 missing guide files: `JSDOC_GUIDE.md`, `REFERENTIAL_TRANSPARENCY.md`, `CODE_REVIEW_GUIDE.md`, `TDD_GUIDE.md`, `UNIT_TEST_GUIDE.md`, `LOW_COUPLING_GUIDE.md`, `HIGH_COHESION_GUIDE.md`, `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md`; `npm run lint:md` exits 0 | ca29e3e |
 | RI-017 | Version mismatch: `APP_VERSION.patch` was 7 in `src/config/defaults.ts` | docs-outdated | Updated `patch: 7` to `patch: 9`; `npm run check:version` exits 0 | df7dd25 |
 | RI-018 | Undocumented `.github/skills` directory | undocumented-directory | Created `.github/skills/README.md` pointing to `.github/SKILLS.md`; `npm run lint:md` exits 0 | df7dd25 |
-| RI-019 | Version badge in `README.md` outdated | docs-outdated | Updated badge from `0.11.7-alpha` to `0.12.11-alpha` | 93fdd37 |
+| RI-019 | Version badge in `README.md` outdated | docs-outdated | Updated badge from `0.11.7-alpha` to `0.12.12-alpha` | 93fdd37 |
 | RI-020 | Undocumented `__tests__/services/providers` directory | undocumented-directory | Created `__tests__/services/providers/README.md` describing the 3 provider test files | 7889dba |
 | RI-021 | Missing `.github/JAVASCRIPT_BEST_PRACTICES.md` (RI-016 incomplete) | docs-outdated | Created `.github/JAVASCRIPT_BEST_PRACTICES.md` JavaScript coding standards guide | 5ac25aa |
 | RI-022 | Missing `docs/architecture/REFERENCE_PLACE.md` | docs-outdated | Created `docs/architecture/REFERENCE_PLACE.md` ReferencePlace class architecture doc | a5b71fa |

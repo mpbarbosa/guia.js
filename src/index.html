@@ -38,7 +38,7 @@
     </script>
 
     <!-- Preload ibira.js for API fetching and caching -->
-    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.12-alpha/src/index.js">
     
     <!-- Design System -->
     <link rel="stylesheet" href="design-tokens.css">
@@ -866,7 +866,7 @@
       
       try {
         const { IbiraAPIFetchManager } = await Promise.race([
-          import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js'),
+          import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.12-alpha/src/index.js'),
           new Promise((_, reject) => setTimeout(() => reject(new Error('CDN timeout after 5s')), 5000))
         ]);
         window.IbiraAPIFetchManager = IbiraAPIFetchManager;

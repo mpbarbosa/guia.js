@@ -15,7 +15,7 @@ A comprehensive audit of the Guia.js documentation revealed several inconsistenc
 - ✅ **Version 0.9.0-alpha** consistent across all documentation
 - ✅ **468-line modularized** main file (from 2288 lines)
 - ✅ **29 source modules** in organized directory structure
-- ✅ **ibira.js v0.2.2-alpha** (latest version, up-to-date)
+- ✅ **ibira.js v0.4.12-alpha** (latest version, up-to-date)
 
 ## Issues Addressed
 

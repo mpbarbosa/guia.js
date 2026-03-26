@@ -729,7 +729,7 @@ Guia.js integrates with IBGE (Brazilian statistics) through the **ibira.js** lib
 
 ```javascript
 // Dynamic CDN import with timeout
-import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js')
+import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.12-alpha/src/index.js')
   .then(module => module.IbiraAPIFetchManager)
   .catch(() => import('ibira.js')); // Fallback to local
 ```

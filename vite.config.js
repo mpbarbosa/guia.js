@@ -28,6 +28,12 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [resolveJsToTs(), vue()],
+    resolve: {
+      alias: {
+        // Map importmap alias to the local bessa_patterns.ts package for Vite/Rollup
+        'bessa_patterns.ts': resolve(dirname(new URL(import.meta.url).pathname), '../bessa_patterns.ts/dist/index.mjs'),
+      },
+    },
     root: 'src',
     base: './',
     envDir: '..', // .env files live in project root, not in src/

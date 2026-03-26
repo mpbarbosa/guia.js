@@ -8,7 +8,7 @@
  * Follows the existing Displayer conventions (frozen instance, log/warn,
  * toString, static factory method).
  *
- * @since 0.12.11-alpha
+ * @since 0.12.12-alpha
  */
 
 import { log, warn } from '../utils/logger.js';

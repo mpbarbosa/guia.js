@@ -45,7 +45,7 @@
  * ```
  *
  * @module data/LogradouroChangeTrigger
- * @since 0.12.11-alpha
+ * @since 0.12.12-alpha
  * @author Marcelo Pereira Barbosa
  */
 

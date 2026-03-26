@@ -28,8 +28,18 @@
     <link rel="dns-prefetch" href="https://servicodados.ibge.gov.br">
     <link rel="dns-prefetch" href="https://pt.wikipedia.org">
     
+    <!-- Import map: resolves bare specifiers from paraty_geocore.js CDN transitive deps -->
+
+
     <!-- Preload ibira.js for API fetching and caching -->
-    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.2.2-alpha/src/index.js">
+    <script type="importmap">
+    {
+      "imports": {
+        "bessa_patterns.ts": "https://cdn.jsdelivr.net/gh/mpbarbosa/bessa_patterns.ts@v0.12.13-alpha/dist/index.mjs"
+      }
+    }
+    </script>
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js">
     
     <!-- Design System -->
     
@@ -451,14 +461,14 @@
         margin-bottom: 2rem;
       }
     </style>
-    <script type="module" crossorigin src="./assets/main-DFryC3Ab.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/core-D3NZI8AX.js">
-    <link rel="modulepreload" crossorigin href="./assets/data-CdAoK6PF.js">
-    <link rel="modulepreload" crossorigin href="./assets/speech-ChMcIUZl.js">
-    <link rel="modulepreload" crossorigin href="./assets/services-VnxNAWyq.js">
+    <script type="module" crossorigin src="./assets/main-Dn1rCtzi.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/core-CZWRymqB.js">
+    <link rel="modulepreload" crossorigin href="./assets/data-C1p-OmDw.js">
+    <link rel="modulepreload" crossorigin href="./assets/speech-D8cu4tYv.js">
+    <link rel="modulepreload" crossorigin href="./assets/services-CKpmfJWG.js">
     <link rel="modulepreload" crossorigin href="./assets/map-WLs8NypD.js">
-    <link rel="modulepreload" crossorigin href="./assets/html-D0trjK-t.js">
-    <link rel="modulepreload" crossorigin href="./assets/coordination-DJvUlIdt.js">
+    <link rel="modulepreload" crossorigin href="./assets/html-BGorh27F.js">
+    <link rel="modulepreload" crossorigin href="./assets/coordination-nXi6T9wY.js">
     <link rel="stylesheet" crossorigin href="./assets/map-DwUhsmFz.css">
     <link rel="stylesheet" crossorigin href="./assets/main-BlBorTOD.css">
   </head>

@@ -168,7 +168,7 @@ CPU efficiency** (higher).
 
 ---
 
-## Confirmation-window fast-path (v0.12.9-alpha)
+## Confirmation-window fast-path (v0.12.10-alpha)
 
 When `AddressCache` detects that a logradouro, bairro, or municipio value is being confirmed
 (i.e., `AddressFieldConfirmationBuffer.hasPending === true`), two things happen simultaneously
@@ -191,7 +191,7 @@ Both revert to their defaults once all confirmation buffers settle (`isPending =
 
 ---
 
-## `LogradouroChangeTrigger` (v0.12.9-alpha)
+## `LogradouroChangeTrigger` (v0.12.10-alpha)
 
 `src/data/LogradouroChangeTrigger.ts` is the single source of truth for the logradouro
 announcement decision.  `AddressCache` delegates to it instead of deriving the logic inline:

@@ -593,6 +593,6 @@ function getAccuratePosition() {
 
 ---
 
-**Version**: 0.12.9-alpha
+**Version**: 0.12.10-alpha
 **Last Updated**: 2026-01-01
 **Supported Browsers**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+

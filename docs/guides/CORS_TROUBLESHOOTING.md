@@ -1,3 +1,5 @@
+## CORS_TROUBLESHOOTING
+
 # CORS Troubleshooting Guide
 
 ## Understanding the Issue
@@ -164,91 +166,350 @@ If Nominatim is consistently unavailable, consider:
 
 # Reverse proxy to Nominatim (optional)
 RewriteEngine On
-RewriteRule ^api/nominatim/(.*) https://nominatim.openstreetmap.org/$1 [P,L]
-```
-
-### Nginx Configuration
-
-```nginx
-# Reverse proxy to Nominatim (optional)
-location /api/nominatim/ {
-    proxy_pass https://nominatim.openstreetmap.org/;
-    proxy_set_header Host nominatim.openstreetmap.org;
-
-    # Add CORS headers
-    add_header Access-Control-Allow-Origin * always;
-    add_header Access-Control-Allow-Methods "GET, POST, OPTIONS" always;
-    add_header Access-Control-Allow-Headers "Content-Type" always;
-
-    # Handle OPTIONS preflight
-    if ($request_method = 'OPTIONS') {
-        return 204;
-    }
-}
-```
-
-Then update your application:
-
-```javascript
-// src/config/defaults.js or pass via constructor
-const config = {
-    openstreetmapBaseUrl: 'https://your-domain.com/api/nominatim/reverse?format=json',
-    enableCorsFallback: false  // Not needed with reverse proxy
-};
-```
-
-## Testing CORS Fallback
-
-### Manual Test
-
-1. Open browser DevTools Console
-2. Block direct Nominatim access (use browser extension or firewall)
-3. Trigger geolocation in the app
-4. Watch console for fallback messages
-
-### Automated Test
-
-```javascript
-// Test CORS fallback in browser console
-(async () => {
-    try {
-        // This should fail with CORS in production
-        const response = await fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=-23.5505&lon=-46.6333');
-        console.log('Direct access:', response.ok ? 'SUCCESS' : 'FAILED');
-    } catch (err) {
-        console.log('Direct access FAILED (expected in production)');
-
-        // Try CORS proxy
-        const proxyUrl = 'https://api.allorigins.win/raw?url=' +
-            encodeURIComponent('https://nominatim.openstreetmap.org/reverse?format=json&lat=-23.5505&lon=-46.6333');
-        const proxyResponse = await fetch(proxyUrl);
-        console.log('CORS proxy:', proxyResponse.ok ? 'SUCCESS' : 'FAILED');
-    }
-})();
-```
-
-## Performance Impact
-
-**Direct Connection**:
-
-- ~200-500ms average response time
-- No additional latency
-
-**CORS Proxy Fallback**:
-
-- ~500-1500ms average response time
-- Additional hop through proxy server
-- Still provides functional geocoding
-
-**Recommendation**: Monitor the frequency of fallback usage. If >50% of requests use the fallback, investigate why direct connections are failing.
-
-## References
-
-- [Nominatim Usage Policy](https://operations.osmfoundation.org/policies/nominatim/)
-- [CORS Specification](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
-- [AllOrigins CORS Proxy](https://allorigins.win/)
+RewriteRule ^api/n
 
 ---
 
-**Last Updated**: 2026-02-16
-**Version**: 0.9.0-alpha
+## CORS_QUICK_FIX
+
+# Quick CORS Fix - Enable Automatic Fallback
+
+## TL;DR - One-Line Fix
+
+Open `src/config/defaults.js` and change:
+
+```javascript
+export const ENABLE_CORS_FALLBACK = false;
+```
+
+To:
+
+```javascript
+export const ENABLE_CORS_FALLBACK = true;
+```
+
+That's it! The app will now automatically retry failed requests using a CORS proxy.
+
+---
+
+## What This Does
+
+When enabled, the application will:
+
+1. **Try direct API access first** (fast, no proxy)
+2. **If CORS error occurs**, automatically retry using `https://api.allorigins.win` proxy
+3. **Show user-friendly message**: "Não foi possível acessar o serviço. Tentando via proxy..."
+4. **Fall back to proxy** for subsequent requests if direct access keeps failing
+
+---
+
+## Configuration Options
+
+### Option 1: Automatic Fallback (Recommended for Development)
+
+```javascript
+// src/config/defaults.js
+export const ENABLE_CORS_FALLBACK = true;
+export const CORS_PROXY = null;  // Uses allorigins.win automatically
+```
+
+**Pros**:
+
+- ✅ Tries direct access first (faster when it works)
+- ✅ Automatically falls back on error
+- ✅ No manual proxy configuration needed
+
+**Cons**:
+
+- ⚠️ First request will fail (CORS error logged)
+- ⚠️ Depends on third-party proxy service
+
+---
+
+### Option 2: Always Use Proxy
+
+```javascript
+// src/config/defaults.js
+export const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+export const ENABLE_CORS_FALLBACK = false;  // Not needed, always using proxy
+```
+
+**Pros**:
+
+- ✅ No CORS errors ever
+- ✅ Consistent behavior
+
+**Cons**:
+
+- ⚠️ All requests go through proxy (slower)
+- ⚠️ Depends on third-party service
+
+---
+
+### Option 3: Custom Proxy Server
+
+```javascript
+// src/config/defaults.js
+export const CORS_PROXY = 'http://localhost:3000/api/proxy?url=';
+export const ENABLE_CORS_FALLBACK = false;
+```
+
+**Pros**:
+
+- ✅ Full control over proxy
+- ✅ Better for team development
+- ✅ Can add custom headers, caching, rate limiting
+
+**Cons**:
+
+- ⚠️ Requires running your own proxy server
+
+See `CORS_TROUBLESHOOTING.md` for proxy server code.
+
+---
+
+## How It Works
+
+### Without CORS Fallback (Default)
+
+```
+User requests location
+  ↓
+App tries to fetch address from Nominatim
+  ↓
+❌ CORS Error: Access blocked by browser
+  ↓
+User sees: "Não foi possível acessar o serviço"
+```
+
+### With CORS Fallback Enabled
+
+```
+User requests location
+  ↓
+App tries to fetch address from Nominatim
+  ↓
+❌ CORS Error detected
+  ↓
+App automatically retries via CORS proxy
+  ↓
+✅ Success! Address displayed
+  ↓
+Next requests use proxy automatically
+```
+
+---
+
+## Testing
+
+After enabling CORS fallback:
+
+1. Clear browser cache (`Ctrl+Shift+Delete`)
+2. Reload the page (`Ctrl+Shift+R`)
+3. Click "Obter Localização"
+4. Watch console:
+
+**Expected output**:
+
+```
+[ErrorRecovery] CORS error detected
+[ReverseGeocoder] Retrying with CORS proxy fallback...
+[ReverseGeocoder] Using CORS proxy: https://api.allorigins.win/raw?url=
+✓ [ReverseGeocoder] CORS proxy fallback succeeded
+✓ ServiceCoordinator: Address fetched successfully
+```
+
+---
+
+## Production Deployment
+
+⚠️ **Important**: Disable CORS fallback in production!
+
+```javascript
+// For production, use HTTPS and disable proxy
+export const ENABLE_CORS_FALLBACK = false;
+export const CORS_PROXY = null;
+```
+
+Why?
+
+- Nominatim allows CORS from HTTPS origins
+- No proxy needed in production
+- Faster and more reliable
+
+---
+
+## Troubleshooting
+
+### Proxy still not working
+
+1. **Check proxy URL**: Must end with `?url=` or handle URL encoding
+2. **Network issues**: Test proxy directly in browser
+3. **Rate limiting**: allorigins.win has rate limits
+
+### Want to use a different proxy
+
+```javascript
+// Other public proxies:
+export const CORS_PROXY = 'https://corsproxy.io/?';
+export const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';  // Requires request access
+```
+
+### Need more control
+
+Run your own proxy server. See `CORS_TROUBLESHOOTING.md` for complete setup instructions.
+
+---
+
+## Summary
+
+**Quick fix**: Set `ENABLE_CORS_FALLBACK = true` in `src/config/defaults.js`
+
+**Best practices**:
+
+- ✅ Us
+
+---
+
+## CORS_TEST_RESULTS
+
+# CORS Fallback System - Test Results
+
+## Configuration Applied
+
+### File: `src/config/defaults.js`
+
+```javascript
+export const CORS_PROXY = null;  // Will use allorigins.win automatically
+export const ENABLE_CORS_FALLBACK = true;  // ✅ ENABLED
+```
+
+### File: `src/coordination/WebGeocodingManager.js`
+
+```javascript
+import { CORS_PROXY, ENABLE_CORS_FALLBACK } from '../config/defaults.js';
+
+// ...
+
+this.reverseGeocoder = params.reverseGeocoder ||
+  new ReverseGeocoder(fetchManager, {
+    corsProxy: CORS_PROXY,
+    enableCorsFallback: ENABLE_CORS_FALLBACK
+  });
+```
+
+## What Was Changed
+
+### 1. Configuration Module (`src/config/defaults.js`)
+
+- ✅ Added `CORS_PROXY` constant (null = auto-detect)
+- ✅ Added `ENABLE_CORS_FALLBACK` constant (true = enabled)
+- ✅ Added `NOMINATIM_API_BASE` constant for consistency
+
+### 2. ReverseGeocoder Service (`src/services/ReverseGeocoder.js`)
+
+- ✅ Constructor now accepts `corsProxy` and `enableCorsFallback` config
+- ✅ Added `_corsRetryAttempted` flag to prevent infinite loops
+- ✅ Enhanced error handling with CORS detection
+- ✅ Automatic retry with `https://api.allorigins.win/raw?url=` on CORS failure
+- ✅ Updated `getOpenStreetMapUrl()` helper to support proxy URLs
+- ✅ User-friendly error messages with retry notification
+
+### 3. WebGeocodingManager (`src/coordination/WebGeocodingManager.js`)
+
+- ✅ Imports CORS configuration from defaults
+- ✅ Passes configuration to ReverseGeocoder on instantiation
+- ✅ Maintains backward compatibility with custom ReverseGeocoder instances
+
+## Expected Behavior
+
+### First Request (Direct API)
+
+1. User clicks "Obter Localização"
+2. App gets coordinates from browser
+3. App tries direct Nominatim API call
+4. **CORS error occurs** (expected in development)
+
+### Automatic Fallback
+
+1. Error handler detects CORS failure
+2. Shows toast: "Não foi possível acessar o serviço. Tentando via proxy..."
+3. Automatically retries via `https://api.allorigins.win/raw?url=`
+4. **Success!** Address is fetched and displayed
+
+### Subsequent Requests
+
+1. Next location request uses proxy automatically
+2. No CORS errors on subsequent requests
+
+## Console Output (Expected)
+
+### With CORS Fallback Enabled
+
+```
+[GeolocationService] getSingleLocationUpdate called
+✓ Application initialized successfully
+
+// First attempt (will fail due to CORS)
+Access to fetch at 'https://nominatim.openstreetmap.org/reverse...'
+has been blocked by CORS policy
+
+[ReverseGeocoder.fetchAddress] Failed: TypeError: Failed to fetch
+⚠️ [ReverseGeocoder] Retrying with CORS proxy fallback...
+
+// Second attempt (via proxy)
+[ReverseGeocoder] Using CORS proxy: https://api.allorigins.win/raw?url=
+✓ [ReverseGeocoder] CORS proxy fallback succeeded
+✓ ServiceCoordinator: Address fetched successfully
+
+// Address displayed
+[ReverseGeocoder.fetchAddress] Standardized address: {...}
+```
+
+## Validation Checklist
+
+- [x] JavaScript syntax valid (`npm run validate`)
+- [x] Configuration properly imported
+- [x] ReverseGeocoder receives config
+- [x] Error detection logic in place
+- [x] Retry logic implemented
+- [x] User notifications configured
+- [x] Backward compatibility maintained
+
+## How to Test
+
+### Step 1: Verify Configuration
+
+```bash
+grep "ENABLE_CORS_FALLBACK = true" src/config/defaults.js
+# Should output: export const ENABLE_CORS_FALLBACK = true;
+```
+
+### Step 2: Clear Browser Cache
+
+1. Open DevTools (F12)
+2. Right-click refresh button
+3. Select "Empty Cache and Hard Reload"
+
+### Step 3: Test Application
+
+1. Open `http://localhost:8080/src/index.html`
+2. Open browser console (F12)
+3. Click "Obter Localização" button
+4. Grant location permission if prompted
+5. Watch console for fallback messages
+
+### Step 4: Verify Success
+
+- ✅ Toast notification appears during retry
+- ✅ Address is displayed after a few seconds
+- ✅ No unhandled errors
+- ✅ Map links work correctly
+
+## Troubleshooting
+
+### If fallback doesn't trigger
+
+1. Check config: `cat src/config/defaults.js | grep ENABLE_CORS_FALLBACK`
+2. Verify browser cache is cleared
+3. Check conso

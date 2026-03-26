@@ -22,6 +22,7 @@ state.
 
 | Skill | File | Trigger | Purpose |
 |-------|------|---------|---------|
+| [Update bessa_patterns.ts](#update-bessayml) | `update-bessa.yml` | Weekly (Tue) / manual | Bump bessa_patterns.ts jsDelivr CDN URL in importmap |
 | [Update guia.js](#update-guiayml) | `update-guia.yml` | Weekly (Mon) / manual | Bump guia.js npm dependency tag |
 | [Update paraty_geocore.js](#update-paraty-geocoreyml) | `update-paraty-geocore.yml` | Weekly (Wed) / manual | Bump paraty_geocore.js jsDelivr CDN URL |
 | [Validate logs](#validate-logs) | _(Copilot skill)_ | Manual | Validate `.ai_workflow/logs` against codebase; write `plan.md` |
@@ -31,6 +32,52 @@ state.
 | [Sync version](#sync-version) | _(Copilot skill)_ | Manual | Propagate package.json version to all dependent files |
 | [Copy TS to project](#copy-ts-to-project) | _(Copilot skill)_ | Manual | Migrate a TypeScript file into any target repository with tests, exports, and docs |
 | [Purge workflow logs](#purge-workflow-logs) | _(Copilot skill)_ | Manual | Delete transient `.ai_workflow/` artefacts (logs, backlog, summaries) after an audit run |
+
+---
+
+## update-bessa.yml
+
+**File:** `.github/workflows/update-bessa.yml`
+**Purpose:** Keep the `bessa_patterns.ts` dependency current by updating its
+jsDelivr CDN URL in the importmap `<script>` block of `src/index.html`, and
+any test or documentation files that reference the version string, then opening
+a pull request with the full set of changes.
+
+### Triggers
+
+| Event | Details |
+|-------|---------|
+| `schedule` | Every **Tuesday at 09:00 UTC** |
+| `workflow_dispatch` | Manual run; accepts an optional `version` input (e.g. `v0.13.0-alpha`) |
+
+### Manual trigger
+
+```shell
+gh workflow run update-bessa.yml --field version=v0.13.0-alpha
+```
+
+### Idempotency
+
+| Mechanism | Detail |
+|-----------|--------|
+| Concurrency group | `update-bessa-patterns` — second trigger queues rather than cancels |
+| Early-exit guard | Skips all steps when `src/index.html` already has the target CDN URL |
+| PR action | `peter-evans/create-pull-request` updates an existing PR branch |
+
+### Steps
+
+| # | Step | Skipped when |
+|---|------|-------------|
+| 1 | Checkout | — |
+| 2 | Set up Node.js 20 | — |
+| 3 | Resolve target bessa_patterns.ts version | — |
+| 4 | Check current bessa_patterns.ts version in src/index.html | — |
+| 5 | Update bessa_patterns.ts CDN URL in src/index.html | Already up to date |
+| 6 | Run validation (`npm run validate`) | Already up to date |
+| 7 | Run unit & integration tests | Already up to date |
+| 8 | Adjust bessa_patterns.ts related tests | Already up to date |
+| 9 | Update bessa_patterns.ts related documentation | Already up to date |
+| 10 | Open pull request | Already up to date |
 
 ---
 

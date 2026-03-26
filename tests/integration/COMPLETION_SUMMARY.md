@@ -138,8 +138,7 @@
 ```python
 def _mock_geolocation(self):
     # 40 lines of JavaScript injection
-    geolocation_script = f"""
-    navigator.g
+    geolocation_script
 
 ---
 

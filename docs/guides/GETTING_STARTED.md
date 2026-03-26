@@ -202,7 +202,7 @@ npm run dev                    # Vite dev server on port 9000
 
 ---
 
-## Prerequisites
+## Prerequisites for Full Setup
 
 ### Required
 

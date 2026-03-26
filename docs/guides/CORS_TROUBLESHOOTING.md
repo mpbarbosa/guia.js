@@ -321,7 +321,7 @@ After enabling CORS fallback:
 
 ---
 
-## Production Deployment
+## Production Deployment Configuration
 
 ⚠️ **Important**: Disable CORS fallback in production!
 

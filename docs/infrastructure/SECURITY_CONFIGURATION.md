@@ -274,4 +274,4 @@ Header set X-XSS-Protection "1; mode=block"
 | Directive | Meta Tag | HTTP Header | Notes |
 |-----------|----------|-------------|-------|
 | `default-src` | ✅ | ✅ | Fallback for unspecified directives |
-| `script-src` | ✅ | ✅ | Controls JavaScript s
+| `script-src` | ✅ | ✅ | Controls JavaScript sources |

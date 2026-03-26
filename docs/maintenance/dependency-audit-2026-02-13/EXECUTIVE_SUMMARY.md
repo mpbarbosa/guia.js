@@ -149,7 +149,7 @@
 | 1 | Security fix + patch update | 5 min | 🟢 None | ✅ Done |
 | 2a | ESLint v10 evaluation | 1-2 hrs | 🟡 Medium | Next sprint |
 | 2b | jsdom v28 evaluation | 2-3 hrs | 🟡 Medium | Next sprint |
-| 3 | Production dep stabilizatio
+| 3 | Production dep stabilization | 2-4 hrs | 🟡 Medium | Next sprint |
 
 ---
 

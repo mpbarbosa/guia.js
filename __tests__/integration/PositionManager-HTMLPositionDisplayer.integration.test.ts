@@ -19,7 +19,7 @@
 import { jest } from '@jest/globals';
 import PositionManager from '../../src/core/PositionManager.js';
 import HTMLPositionDisplayer from '../../src/html/HTMLPositionDisplayer.js';
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.4-alpha/dist/esm/index.js';
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.5-alpha/dist/esm/index.js';
 
 // Mock DOM environment
 global.document = undefined;

@@ -33,7 +33,7 @@
  * @author Marcelo Pereira Barbosa
  */
 
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.6-alpha/dist/esm/index.js';
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.9-alpha/dist/esm/index.js';
 import ObserverSubject from './ObserverSubject.js';
 import { calculateDistance } from '../utils/distance.js';
 import { log, warn } from '../utils/logger.js';
@@ -82,7 +82,7 @@ class PositionManager {
 	 * (via `ServiceCoordinator`) while a logradouro confirmation is in progress,
 	 * so the confirmation buffer can fill up quickly regardless of movement
 	 * distance.  Reverts to false once all confirmation buffers settle.
-	 * @since 0.12.11-alpha
+	 * @since 0.12.12-alpha
 	 */
 	private _bypassDistanceRule = false;
 
@@ -224,7 +224,7 @@ class PositionManager {
 	 * once the confirmation buffers settle.
 	 *
 	 * @param bypass - `true` to bypass the distance/time gate; `false` to restore normal behaviour.
-	 * @since 0.12.11-alpha
+	 * @since 0.12.12-alpha
 	 */
 	setBypassDistanceRule(bypass: boolean): void {
 		this._bypassDistanceRule = bypass;

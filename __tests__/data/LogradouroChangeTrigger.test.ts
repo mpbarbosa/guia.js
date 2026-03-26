@@ -15,7 +15,7 @@
  *  9. reset() clears all state
  * 10. pendingCount and threshold getters
  *
- * @since 0.12.9-alpha
+ * @since 0.12.10-alpha
  */
 
 import LogradouroChangeTrigger from '../../src/data/LogradouroChangeTrigger.js';

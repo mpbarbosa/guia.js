@@ -1,3 +1,5 @@
+## SKILLS
+
 # GitHub Skills
 
 **Package:** `guia_turistico`
@@ -101,272 +103,211 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@<TAG>/dist/esm/index.js
 | Concern | Mitigation |
 |---------|-----------|
 | Running twice for the same version | Step 4 hard-exits; `peter-evans/create-pull-request` updates the existing PR |
-| Concurrent schedule + manual trigger | `concurrency` group serialises runs |
-| `sed` double-replacement in docs | URL pass runs before version pass; second pass is guarded by a `grep` pre-check |
+| Concurrent schedule + m
 
 ---
 
-## validate-logs
-
-**File:** `.github/skills/validate-logs/SKILL.md`
-**Trigger:** Manual (Copilot CLI skill)
-
-Reads every workflow run directory under `.ai_workflow/logs/`, cross-checks
-the AI-identified issues against the live codebase, and writes a structured
-`.ai_workflow/plan.md` listing every confirmed **medium/low severity** item.
-The `plan.md` is the handoff artifact consumed by `fix-log-issues`.
-
-### When to use
-
-- After a workflow run has been reviewed and you want to archive its findings
-  before purging the logs.
-- When auditing past runs for overlooked minor improvements.
-
-### What it does
-
-1. Collects flagged entries from `steps/*.log` and `## Response` blocks from
-   `prompts/**/*.md`.
-2. Verifies each issue still exists in the current codebase (lint, tsc,
-   directory checks, etc.).
-3. Writes confirmed medium/low issues to `.ai_workflow/plan.md` with status
-   `open`, ready for `fix-log-issues`.
-
-Critical/High severity items are out of scope and are not written to `plan.md`.
+## SKILL
 
 ---
 
-## fix-log-issues
+name: update-paraty-geocore
+description: >
+  Update the paraty_geocore.js dependency in guia_turistico to the latest
+  (or a specified) release. Use this skill when asked to bump, upgrade, or
+  refresh paraty_geocore.js, or when the update-paraty-geocore GitHub Actions
+  workflow needs to be triggered, debugged, or explained
+---
 
-**File:** `.github/skills/fix-log-issues/SKILL.md`
-**Trigger:** Manual (Copilot CLI skill — run after `validate-logs`)
+## Overview
 
-Reads `.ai_workflow/plan.md` produced by `validate-logs` and applies the fix
-for each `open` issue. After every fix is verified, updates the issue status
-in `plan.md` and inserts the resolved items into the project roadmap in
-`docs/ROADMAP.md`.
+`paraty_geocore.js` is consumed by this project via a **jsDelivr CDN URL**
+hard-coded in `src/guia.js`. Unlike tarball-based dependencies, there is no
+`package.json` entry to update — the version lives directly inside the import
+statement and in the Jest `moduleNameMapper` that maps the CDN URL to the local
+source for tests.
 
-### When to use
+A dedicated GitHub Actions workflow handles the update process end-to-end.
 
-- Immediately after `validate-logs` has written `plan.md`.
-- When you want to batch-apply all confirmed minor fixes in one pass.
+## Workflow location
 
-### What it does
+```text
+.github/workflows/update-paraty-geocore.yml
+```
 
-1. Reads each `open` issue from `.ai_workflow/plan.md`.
-2. Applies the fix described in the `Fix` field (see the fix catalogue in the
-   skill file for type-specific procedures).
-3. Verifies the fix (lint, tsc, tests as appropriate).
-4. Marks the issue `done` (or `skipped` with a reason) in `plan.md`.
-5. Commits each fix atomically.
-6. Appends all resolved issues to `docs/ROADMAP.md` under
-   `## Roadmap — Minor Issues` and commits the roadmap update.
+## What the workflow does
+
+1. **Resolve version** — queries the GitHub API for the latest
+   paraty_geocore.js release tag (or uses the `version` input if provided via
+   `workflow_dispatch`).
+2. **Early-exit guard** — extracts the current version from the CDN URL in
+   `src/guia.js` and skips the rest if already up to date.
+3. **Update `src/guia.js`** — replaces the old jsDelivr CDN URL with the new
+   versioned one.
+4. **Update `jest.config.unit.js`** — replaces the `moduleNameMapper` regex
+   key that maps the CDN URL to the local paraty_geocore.js source.
+5. **Update `package.json`** — replaces the `moduleNameMapper` regex key in
+   the inline Jest configuration block.
+6. **Run validation** — runs `npm run validate` (node -c syntax checks) to
+   confirm no JS errors were introduced.
+7. **Run tests** — runs the full Jest suite to confirm nothing regressed.
+8. **Update test files** — replaces the old CDN URL in `__tests__/` and
+   `test/` files that import directly from the CDN URL.
+9. **Update documentation** — replaces old CDN URLs and version strings in
+   all `*.md` files (single-pass, guarded by pre-check grep).
+10. **Open pull request** — uses `peter-evans/create-pull-request@v7` to open
+    (or update) a PR on branch `chore/update-paraty-geocore-<version>`.
+
+## How to trigger manually
+
+```shell
+gh workflow run update-paraty-geocore.yml --field version=v0.12.0
+```
+
+Leave `version` blank to use the latest published release.
+
+## Idempotency guarantees
+
+- A `concurrency` group (`update-paraty-geocore`) prevents simultaneous runs
+  from racing on the same PR branch.
+- The early-exit guard in step 2 ensures no changes are committed if the
+  dependency is already at the target version.
+- `peter-evans/create-pull-request` updates an existing PR rather than opening
+  a duplicate.
+
+## CDN URL pattern
+
+```text
+https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@<TAG>/dist/esm/index.js
+```
+
+## Files updated by this skill
+
+| File | What changes |
+|------|-------------|
+| `src/guia.js` | `import` statement CDN URL version |
+| `jest.config.unit.js` | `moduleNameMapper` regex key CDN URL version |
+| `package.json` | Inline Jest `moduleNameMapper` regex key CDN URL version |
+| `__tests__/types/paraty-geocore.test.js` | CDN import URL version |
+| `test/core/GeocodingState.test.js` | CDN import URL version |
+| `*.md` | Any CDN URL or bare version string on paraty lines |
+
+## Related files
+
+- `.github/workflows/update-paraty-geocore.yml` — the full workflow definition
+- `src/guia.js` — consumes paraty_geocore.js via CDN import
+- `jest.config.unit.js` — maps the CDN URL to local source for Jest
 
 ---
 
-## audit-and-fix
+## CHANGELOG
 
-**File:** `.github/skills/audit-and-fix/SKILL.md`
-**Trigger:** Manual (Copilot CLI skill)
+# Changelog
 
-Orchestrates the full log-remediation pipeline in a single pass by running
-`validate-logs` then `fix-log-issues` back-to-back. Use this instead of
-invoking the two skills separately when you want an uninterrupted end-to-end
-run with no manual handoff.
+All notable changes to Guia Turístico will be documented in this file.
 
-### When to use
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-- Any time you want to audit the workflow logs and apply all fixes in one go.
-- Prefer the individual skills (`validate-logs` / `fix-log-issues`) when you
-  need to inspect or edit `plan.md` between the two phases.
+## [Unreleased]
 
-### What it does
+### Changed
 
-1. **Phase 1** — runs `validate-logs`: scans `.ai_workflow/logs/`, verifies
-   issues against the live codebase, and writes `.ai_workflow/plan.md`.
-2. Aborts early (success) if `plan.md` contains zero issues.
-3. **Phase 2** — runs `fix-log-issues`: processes every `open` issue in
-   `plan.md`, applies and verifies each fix, then updates
-   `docs/ROADMAP.md` with the results.
-4. **Phase 3** — runs `purge-workflow-logs`: deletes `.ai_workflow/logs/`,
-   `.ai_workflow/backlog/`, and `.ai_workflow/summaries/` now that the audit
-   is complete. `plan.md` and all other `.ai_workflow/` content are retained.
+- **`paraty_geocore.js` dependency upgrade** from `@0.10.2` to `@0.11.3`:
+  - Updated CDN URL in all 5 source files, 9 test files, `jest.config.unit.js`, `package.json`, and `src/types/paraty-geocore.d.ts`
+  - Added new TypeScript declarations to `src/types/paraty-geocore.d.ts`: `withObserver`, `ObserverMixinOptions`, `ObserverMixinResult`
+  - Corrected stale version references (`@0.9.10-alpha`, `@0.9.3-alpha`) in `docs/architecture/ARCHITECTURE.md`, `docs/architecture/GEO_POSITION.md`, `docs/guides/QUICK_START.md`, and `docs/class-extraction/CLASS_LOCATION_GUIDE.md`
+  - `delay` utility internally moved to `utils/async.js` in `paraty_geocore.js` — no API change
 
-If interrupted mid-run, resume with `fix-log-issues` alone — `plan.md`
-preserves the status of every issue so no work is lost.
+- **`paraty_geocore.js` dependency upgrade** from `@0.9.9-alpha` to `@0.9.10-alpha`:
+  - Updated CDN URL in all source files, test files, `jest.config.unit.js`, `package.json`, and `src/types/paraty-geocore.d.ts`
+  - `GeocodingState` and `ObserverSubject` are now exported from the CDN — the local `src/core/GeocodingState.js` stub has been removed
+  - `src/coordination/WebGeocodingManager.ts` now imports `GeocodingState` from the CDN alongside `GeoPosition`
+  - Updated ambient type declarations in `src/types/paraty-geocore.d.ts` to include `ObserverSubject`, `GeocodingState`, and `GeocodingStateSnapshot`
+  - `geocodingState.destroy()` call replaced by `geocodingState.clear()` to match the CDN API
+  - Updated `test/core/GeocodingState.test.js` to test the CDN class (validation, observer pattern, `clear()`, `hasPosition()`)
 
----
+### Fixed
 
-## Running a Skill Manually
+- **`paraty_geocore.js` dependency upgrade** from `@0.9.3-alpha` to `@0.9.4-alpha`:
+  - Updated CDN URL in all 5 source files, 7 test files, `jest.config.unit.js`, and `src/types/paraty-geocore.d.ts`
+  - Added missing type declarations to `paraty-geocore.d.ts`: `calculateDistance`, `EARTH_RADIUS_METERS`, `delay`
+  - `delay(ms)` now clamps negative values to `0` (upstream fix in `utils/async`)
+  - `GeoPosition.getAccuracyQuality()` uses named `ACCURACY_THRESHOLDS` constants internally (no API change)
 
-1. Go to the repository on GitHub → **Actions** tab.
-2. Select the skill from the left-hand workflow list.
-3. Click **Run workflow**.
-4. Optionally fill in the `version` input (leave blank for latest).
-5. Click **Run workflow** to confirm.
+- **GeoPosition CDN import** (`src/core/GeoPosition.ts` removed — now imported from `paraty_geocore.js` CDN):
+  - Upgraded from `paraty_geocore.js@0.9.2-alpha` (CJS dist) to `@0.9.3-alpha` (ESM dist)
+  - Resolved browser error: `SyntaxError: does not provide an export named 'default'`
+  - **Root cause**: Old CDN URL served CommonJS format which browsers cannot load as ES modules
+  - **Fix**: `paraty_geocore.js` now ships an ESM build at `dist/esm/index.js` (native browser ESM)
+  - Updated all 5 source files and 7 test files to use named import: `import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.9.3-alpha/dist/esm/index.js'`
 
-The skill will open a pull request (or update an existing one) on a
-dedicated branch. Review and merge the PR to apply the changes to `main`.
+## [0.11.0-alpha] - 2026-02-15
 
----
+### Refactored
 
-## next-roadmap-phase
-
-**File:** `.github/skills/next-roadmap-phase/SKILL.md`
-**Trigger:** Manual (Copilot CLI skill)
-
-Reads the current project state from `docs/ROADMAP.md`,
-`docs/architecture/ARCHITECTURE.md`, and `CHANGELOG.md`, then proposes a
-scoped set of changes for the next version milestone. Once the developer
-confirms the scope, the skill implements the changes, updates all
-documentation, and commits everything atomically.
-
-### When to use
-
-- When the "Near-Term" section of `docs/ROADMAP.md` has items ready to ship.
-- When asked "what should we ship next?" or "implement the next version".
-- After `audit-and-fix` has been run and the codebase is clean.
-
-### What it does
-
-1. Reads `docs/ROADMAP.md`, `CHANGELOG.md`, and architecture docs to
-   understand what is complete, in-progress, and deferred.
-2. Proposes a next version number and a scope table (features, fixes, removals,
-   doc updates).
-3. **Waits for developer confirmation before writing any code.**
-4. Implements each confirmed change with matching tests.
-5. Runs `npm test`, `tsc --noEmit`, and `npm run lint:md` — all must be clean.
-6. Updates `docs/ROADMAP.md`, `docs/architecture/ARCHITECTURE.md`, and
-   `CHANGELOG.md`.
-7. Bumps `"version"` in `package.json` and `APP_VERSION` in
-   `src/config/defaults.ts`.
-8. Commits everything in one atomic commit and prints a summary.
+- **HtmlSpeechSynthesisDisplayer** (814 → 518 lines, **-36% reduction**): Converted from monolithic class to facade pattern
+  - **Architecture**: Facade pattern composing 3 focused components for Single Responsibility Principle compliance
+  - **Component 1: HtmlSpeechControls** (`src/html/HtmlSpeechControls.js`, 489 lines, 51 tests)
+    - UI element management (voice select, buttons, sliders)
+    - Event handler setup and cleanup (prevents memory leaks)
+    - Brazilian Portuguese voice prioritization
+    - **API**: `updateVoices()`, `destroy()`
+  - **Component 2: AddressSpeechObserver** (`src/observers/AddressSpeechObserver.js`, 96 lines, 41 tests)
+    - Address change notification handling
+    - Priority-based speech synthesis (municipality: 3, bairro: 2, logradouro: 1, periodic: 0)
+    - First address announcement logic
+    - **API**: `update()`, `resetFirstAddressFlag()`
+  - **Component 3: SpeechTextBuilder** (`src/speech/SpeechTextBuilder.js`, 312 lines, 48
 
 ---
 
-## sync-version
+## GEO_POSITION
 
-**Skill file**: `.github/skills/sync-version/SKILL.md`
+# GeoPosition API Reference
 
-Audits and synchronises every version string in the repository against the
-canonical version recorded in `package.json`. Run this skill after bumping the
-version in `package.json` to ensure all dependent files stay consistent.
-
-### When to use
-
-- After manually editing `"version"` in `package.json`
-- Before tagging a release to confirm no stale version strings remain
-- Any time `npm run check:version` reports a mismatch
-
-### What it does
-
-1. Reads the canonical version from `package.json`.
-2. Checks each file in the canonical list against that version.
-3. Reports any mismatch found.
-4. Applies targeted fixes (Node script for `src/config/defaults.ts`,
-   `sed` for all other files).
-5. Runs `npm run validate` and `npm test` to confirm nothing broke.
-6. Commits all changes in one atomic commit.
-
-### Canonical version files
-
-| File | Version carrier |
-|------|----------------|
-| `src/config/defaults.ts` | `APP_VERSION` object fields (`major`, `minor`, `patch`, `prerelease`) |
-| `src/config/version.ts` | `export const VERSION = 'X.Y.Z-PRERELEASE'` |
-| `README.md` | Version badge / header references |
-| `docs/INDEX.md` | `version:` metadata field |
-| `docs/ROADMAP.md` | `**Current Version**` header line |
-| `service-worker.js` | `@version` JSDoc + `CACHE_NAME` constant |
-| `public/service-worker.js` | Same as above |
-| `.workflow-config.yaml` | `project.version` field |
+> ⚠️ **Moved to `paraty_geocore.js`**
+>
+> Since `v0.12.10-alpha`, the `GeoPosition` class lives in the external [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) library.
+>
+> **Full API reference:** [paraty_geocore.js/docs/GEO_POSITION_API.md](https://github.com/mpbarbosa/paraty_geocore.js/blob/main/docs/GEO_POSITION_API.md)
 
 ---
 
-## copy-ts-to-project
+## GEO_POSITION
 
-**File:** `.github/skills/copy-ts-to-project/SKILL.md`
-**Trigger:** Manual (Copilot CLI skill)
+# GeoPosition Class Documentation
 
-Migrates a TypeScript source file (identified by `{inputNameFile}`) from this
-project into any target repository (`{targetProject}`). The skill copies the
-file and any related source dependencies, adapts all imports and conventions,
-creates or adapts the test suite, updates the public entry point exports, and
-updates `docs/ARCHITECTURE.md`, `docs/CHANGELOG.md`, `docs/API.md`, and a new
-`docs/{inputNameFile}-FRS.md` functional-requirements spec (where applicable).
+> ⚠️ **Moved to `paraty_geocore.js`**
+>
+> Since `v0.12.10-alpha`, the `GeoPosition` class lives in the external [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) library.
+> The local `src/core/GeoPosition.ts` file has been removed.
+>
+> **Full documentation:** [paraty_geocore.js/docs/GEO_POSITION.md](https://github.com/mpbarbosa/paraty_geocore.js/blob/main/docs/GEO_POSITION.md)
 
-### When to use
+## Import in guia_turistico
 
-- When a module developed here is stable enough to be promoted into another
-  library or project.
-- When asked to "migrate", "contribute", "move", or "copy" a TypeScript file
-  to another project.
+```ts
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js';
+```
 
-### What it does
+## Jest (via moduleNameMapper in `jest.config.unit.js`)
 
-1. Locates `{inputNameFile}.ts` in the current project.
-2. Inspects `{targetProject}`'s directory structure and determines the correct
-   target subdirectory, then proposes a migration plan to the developer.
-3. **Waits for confirmation before writing any files.**
-4. Copies and adapts the source file (rewrites imports, adapts logger calls,
-   adds a JSDoc header matching the target project's convention, removes any
-   DOM dependencies).
-5. Copies or creates a test file in `test/<dir>/`, re-pointing all imports.
-6. Updates the public entry point with the new exports.
-7. Runs `tsc --noEmit` and the full test suite — both must be green.
-8. Updates `docs/ARCHITECTURE.md`, `docs/CHANGELOG.md`, `docs/API.md`, and
-   creates `docs/{inputNameFile}-FRS.md` (where the target project uses these).
-9. Runs `npm run lint:md` if available — must be clean.
-10. Commits everything atomically and prints a summary.
+The CDN URL is mapped to the local `paraty_geocore.js` source for offline test execution:
 
-### Prerequisites
-
-- Both repos are present locally as sibling directories.
-- Both repos have a clean working tree.
-- The source file compiles without errors.
-
-### Related skills
-
-- `update-paraty-geocore` — use afterwards to bump this project's dependency
-  if the target is `paraty_geocore.js`.
+```
+'^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.9\\.3-alpha/dist/esm/index\\.js$'
+→ '<rootDir>/../paraty_geocore.js/src/index'
+```
 
 ---
 
-## purge-workflow-logs
+## GEO_POSITION_FUNC_SPEC
 
-**File:** `.github/skills/purge-workflow-logs/SKILL.md`
-**Trigger:** Manual (Copilot CLI skill)
+# GeoPosition — Functional Specification
 
-Deletes the three transient artefact directories produced by AI workflow runs:
-`.ai_workflow/logs/`, `.ai_workflow/backlog/`, and `.ai_workflow/summaries/`.
-All other `.ai_workflow/` content (`plan.md`, `archive/`, `metrics/`, `*.json`)
-is left untouched. Because the deleted directories are gitignored, no commit is
-produced.
-
-### When to use
-
-- After `audit-and-fix` has completed and `plan.md` has captured all confirmed
-  issues — the raw logs are no longer needed.
-- Before starting a fresh workflow run to ensure no stale data from previous
-  runs is picked up.
-- When disk usage from `.ai_workflow/` is a concern.
-
-### When NOT to use
-
-- If `validate-logs` has not yet been run against the current log set — the
-  logs are the source of truth for the next audit pass and must not be deleted
-  before the audit.
-- If any `.ai_workflow/backlog/` step represents an in-progress run that needs
-  to be resumed.
-
-### What it does
-
-1. Lists which of the three target directories exist.
-2. Runs `rm -rf .ai_workflow/logs .ai_workflow/backlog .ai_workflow/summaries`.
-3. Verifies removal with `ls .ai_workflow/`.
-4. Confirms no git changes were produced (`git status --short`).
-5. Prints a summary listing each removed (or absent) directory.
-
-### Related skills
-
-- `validate-logs` — should be run before purging to capture any outstanding issues.
-- `audit-and-fix` — orchestrates the full pipeline; run this before purging.
+> ⚠️ **Moved to `paraty_geocore.js`**
+>
+> Since `v0.12.10-alpha`, the `GeoPosition` class lives in the external [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) library.
+>
+> **Full functional specification:** [paraty_geocore.js/docs/GEO_POSITION_FUNC_SPEC.md](https://github.com/mpbarbosa/paraty_geocore.js/blob/main/docs/GEO_POSITION_FUNC_SPEC.md)

@@ -13,7 +13,7 @@
 export const APP_VERSION = {
 	major: 0,
 	minor: 12,
-	patch: 9,
+	patch: 10,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
@@ -86,7 +86,7 @@ export const MINIMUM_TIME_CHANGE = 30000; // 30 seconds
  * Minimum interval in milliseconds between geolocation API fetches (throttle window).
  * Applies to both `getSingleLocationUpdate()` and the `watchCurrentLocation()` callback.
  * Prevents excessive GPS hardware activations and downstream processing.
- * @since 0.12.9-alpha
+ * @since 0.12.10-alpha
  */
 export const GEOLOCATION_THROTTLE_INTERVAL = 5000; // 5 seconds
 
@@ -100,7 +100,7 @@ export const GEOLOCATION_THROTTLE_INTERVAL = 5000; // 5 seconds
  *   - Normal confirmation lag (5s × 3): ~10s
  *   - Fast confirmation lag (2s × 3):  ~4s — 60% improvement
  *
- * @since 0.12.9-alpha
+ * @since 0.12.10-alpha
  */
 export const GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL = 1500; // 1.5 seconds
 
@@ -109,21 +109,21 @@ export const GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL = 1500; // 1.5 seconds
  * `logradouro` (street name) change is published to the application.
  * Mitigates GPS intersection jitter: a ~50 m error margin can transiently place
  * the position on an adjacent street, producing a false address-change event.
- * @since 0.12.9-alpha
+ * @since 0.12.10-alpha
  */
 export const LOGRADOURO_CONFIRMATION_COUNT = 3;
 
 /**
  * Number of consecutive identical reverse-geocoding results required before a
  * `bairro` (neighbourhood) change is published to the application.
- * @since 0.12.9-alpha
+ * @since 0.12.10-alpha
  */
 export const BAIRRO_CONFIRMATION_COUNT = 3;
 
 /**
  * Number of consecutive identical reverse-geocoding results required before a
  * `municipio` (municipality/city) change is published to the application.
- * @since 0.12.9-alpha
+ * @since 0.12.10-alpha
  */
 export const MUNICIPIO_CONFIRMATION_COUNT = 3;
 
@@ -189,7 +189,7 @@ export const GEOLOCATION_OPTIONS = Object.freeze({
  * A non-zero maximumAge reduces GPS restarts when the user hasn't moved far.
  * 
  * @constant {Object}
- * @since 0.12.9-alpha
+ * @since 0.12.10-alpha
  */
 export const MOBILE_GEOLOCATION_OPTIONS = Object.freeze({
 	enableHighAccuracy: true,

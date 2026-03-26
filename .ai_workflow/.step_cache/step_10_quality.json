@@ -4,7 +4,7 @@
     ".ai_workflow/metrics/current_run.json": {
       "score": 100,
       "issueCount": 0,
-      "lastAnalyzed": "2026-03-26T00:25:23.386Z"
+      "lastAnalyzed": "2026-03-26T02:58:00.025Z"
     },
     "vite.config.js": {
       "score": 100,
@@ -14,7 +14,7 @@
     ".ai_workflow/commit_history.json": {
       "score": 100,
       "issueCount": 0,
-      "lastAnalyzed": "2026-03-23T23:29:22.591Z"
+      "lastAnalyzed": "2026-03-26T02:58:00.025Z"
     },
     ".ai_workflow/model_definitions.json": {
       "score": 100,
@@ -90,6 +90,31 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-03-24T00:16:39.857Z"
+    },
+    "src/config/__mocks__/environment.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-26T03:24:07.969Z"
+    },
+    "src/config/csp.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-26T03:24:07.969Z"
+    },
+    "src/config/defaults.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-26T03:24:07.969Z"
+    },
+    "src/config/environment.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-26T03:24:07.969Z"
+    },
+    "src/config/routes.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-26T03:24:07.969Z"
     }
   }
 }

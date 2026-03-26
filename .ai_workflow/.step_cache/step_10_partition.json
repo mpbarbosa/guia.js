@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "partitionIndex": 1,
-  "totalPartitions": 38,
-  "filesHash": "0921af01",
+  "partitionIndex": 2,
+  "totalPartitions": 37,
+  "filesHash": "e8090c97",
   "partitionLabels": [
-    ".ai_workflow/metrics",
+    ".ai_workflow/.step_cache, .ai_workflow, .ai_workflow/metrics",
     "src/config",
     "src/config (2)",
     "src/coordination",
@@ -38,10 +38,9 @@
     "jest.config.e2e.js, jest.config.unit.js, jest.setup.js, public",
     "scripts",
     "scripts (2)",
-    "service-worker.js, jest.vue-transformer.cjs, .ai_workflow/.step_cache",
-    ".github, .markdownlint.json, .vscode, .workflow_session_cloc_cache.json, jsdoc.json",
-    "libs/sidra, manifest.json, package-lock.json, package.json, public/libs",
-    "tsconfig.json, .husky/_"
+    "service-worker.js, jest.vue-transformer.cjs, .github, .markdownlint.json, .vscode",
+    ".workflow_session_cloc_cache.json, jsdoc.json, libs/sidra, manifest.json, package-lock.json",
+    "package.json, public/libs, tsconfig.json, .husky/_"
   ],
-  "updatedAt": "2026-03-26T00:25:23.387Z"
+  "updatedAt": "2026-03-26T03:24:07.969Z"
 }

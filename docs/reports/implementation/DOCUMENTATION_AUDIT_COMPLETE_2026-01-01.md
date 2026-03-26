@@ -74,7 +74,7 @@ Comprehensive audit of guia.js documentation completed on 2026-01-01. This docum
 **Status**: CURRENT
 
 - **Current Version**: v0.2.2-alpha (latest available)
-- CDN URL correctly points to: `https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.12-alpha/src/index.js`
+- CDN URL correctly points to: `https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js`
 - Three-tier loading strategy documented: CDN → Local → Mock
 - Full documentation exists: `docs/IBIRA_INTEGRATION.md`
 - **Action**: No update needed, already at latest version
@@ -422,7 +422,7 @@ All critical, high, and medium priority documentation issues have been resolved.
 2. Actual test counts (1224 tests, 57 suites, 60 files)
 3. Real coverage (70%)
 4. Modular architecture (29 source files, 468-line entry point)
-5. Latest dependencies (ibira.js v0.4.12-alpha)
+5. Latest dependencies (ibira.js v0.4.13-alpha)
 
 All scripts are fully documented with prerequisites, error handling, and usage examples. Future maintenance recommendations provided for automation and preventing staleness.
 

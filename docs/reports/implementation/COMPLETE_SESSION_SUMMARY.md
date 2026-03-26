@@ -472,7 +472,7 @@ grep -r "Last Updated: 2025" docs/
 - [x] All errors documented with solutions
 - [x] All automation tools created/configured
 - [x] All testing guides complete
-- [x] ibira.js updated to latest (v0.4.12-alpha)
+- [x] ibira.js updated to latest (v0.4.13-alpha)
 - [x] LICENSE file created (ISC)
 - [x] Pre-commit hook functional
 - [x] CI/CD workflows configured

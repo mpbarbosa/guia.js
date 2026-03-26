@@ -371,7 +371,7 @@ git commit -m "test: verify automation"
 - [x] All prerequisites documented with verification
 - [x] All errors documented with solutions (7 scenarios)
 - [x] Complete usage documentation added
-- [x] ibira.js updated to latest (v0.4.12-alpha)
+- [x] ibira.js updated to latest (v0.4.13-alpha)
 - [x] LICENSE file created (ISC)
 - [x] Pre-commit hook functional
 - [x] CI/CD workflows configured

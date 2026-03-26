@@ -81,7 +81,7 @@ const ibiraLoadingPromise: Promise<unknown> = (async (): Promise<IbiraLoadResult
         const timeoutPromise = new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('CDN import timeout')), 5000)
         );
-        const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.12-alpha/src/index.js') as Promise<IbiraModule>;
+        const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js') as Promise<IbiraModule>;
         const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
 
         if (!ibiraModule?.IbiraAPIFetchManager) throw new Error('Invalid ibira.js module from CDN');

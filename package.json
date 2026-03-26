@@ -106,7 +106,7 @@
       "!coverage/**"
     ],
     "moduleNameMapper": {
-      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.9-alpha/dist/esm/index\\.js$": "<rootDir>/../paraty_geocore.js/src/index",
+      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.7-alpha/dist/esm/index\\.js$": "<rootDir>/../paraty_geocore.js/src/index",
       "\\.(css|less|scss|sass)$": "<rootDir>/__mocks__/fileMock.js",
       "^(\\.{1,2}/.*)\\.js$": "$1"
     },

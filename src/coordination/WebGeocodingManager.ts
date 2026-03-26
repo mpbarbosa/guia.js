@@ -63,7 +63,7 @@
  */
 
 // Import core domain classes
-import { GeoPosition, GeocodingState } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.5-alpha/dist/esm/index.js';
+import { GeoPosition, GeocodingState } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.6-alpha/dist/esm/index.js';
 import ObserverSubject from '../core/ObserverSubject.js';
 
 

@@ -23,6 +23,7 @@
 - Vite build system with code splitting (25% bundle reduction)
 - Contextual button status messages (`button-status.ts`)
 - `paraty_geocore.js` CDN dependency for shared geolocation primitives
+- **Log audit fixes** (2026-03-26): resolved `APP_VERSION.patch` mismatch in `src/config/defaults.ts` (RI-001), merge conflict in `service-worker.js` (RI-002), restored files staged for deletion by failed workflow run (RI-003)
 
 ---
 

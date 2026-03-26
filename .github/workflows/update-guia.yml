@@ -1,0 +1,308 @@
+# update-guia.yml
+# Checks for a new guia.js release on GitHub and updates the npm dependency
+# tag in package.json, installs dependencies, validates TypeScript, runs
+# tests, adjusts related code/docs/tests, and opens a pull request.
+#
+# guia.js is consumed via a GitHub-sourced npm package in package.json
+# ("guia.js": "github:mpbarbosa/guia_js#<TAG>"). No CDN URL is involved —
+# only the npm dependency tag needs to be updated.
+#
+# npm dependency pattern:
+#   "guia.js": "github:mpbarbosa/guia_js#<TAG>"
+#
+# Triggers:
+#   - Weekly schedule (Monday 09:00 UTC) — keeps the core dependency current
+#   - workflow_dispatch — pin to a specific version or force a refresh
+
+name: Update guia.js
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'   # every Monday at 09:00 UTC
+  workflow_dispatch:
+    inputs:
+      version:
+        description: |
+          guia.js tag to update to (e.g. v0.7.0-alpha).
+          Leave blank to use the latest published release.
+        required: false
+        default: ''
+
+permissions:
+  contents: write        # push update branch
+  pull-requests: write   # open / update PR
+
+# Prevent concurrent runs from racing on the same PR branch.
+# cancel-in-progress: false queues the second run rather than dropping it,
+# ensuring every scheduled or manual trigger is eventually processed.
+concurrency:
+  group: update-guia-js
+  cancel-in-progress: false
+
+jobs:
+  update-guia:
+    name: Check & Update guia.js
+    runs-on: ubuntu-latest
+    env:
+      HUSKY: '0'   # disable git hooks in CI (pre-push hook runs npm test)
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Node.js setup ─────────────────────────────────────────────────────
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: npm
+
+      # ── 3. Resolve target version ─────────────────────────────────────────────
+      - name: Resolve target guia.js version
+        id: resolve
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          INPUT_VERSION="${{ github.event.inputs.version }}"
+
+          if [[ -n "${INPUT_VERSION}" ]]; then
+            VERSION="${INPUT_VERSION#v}"
+            TAG="v${VERSION}"
+            echo "Source: workflow_dispatch input"
+          else
+            # Use git ls-remote to find the latest tag (works without auth for public repos,
+            # and avoids the GitHub Releases API which requires the repo to have "releases").
+            TAG="$(git ls-remote --tags --refs --sort=-version:refname \
+              https://github.com/mpbarbosa/guia_js.git \
+              | head -1 | awk '{print $2}' | sed 's|refs/tags/||')"
+            [[ -n "${TAG}" ]] || { echo "❌  Could not determine latest guia.js tag." >&2; exit 1; }
+            VERSION="${TAG#v}"
+            echo "Source: git ls-remote latest tag"
+          fi
+
+          NPM_REF="github:mpbarbosa/guia_js#${TAG}"
+
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}"         >> "$GITHUB_OUTPUT"
+          echo "npm_ref=${NPM_REF}" >> "$GITHUB_OUTPUT"
+          echo "ℹ️  Target: guia.js ${TAG}"
+          echo "ℹ️  npm ref: ${NPM_REF}"
+
+      # ── 4. Check current version ──────────────────────────────────────────────
+      - name: Check current guia.js version in package.json
+        id: current
+        run: |
+          CURRENT_NPM_REF="$(grep -oP '(?<="guia\.js": ")[^"]+' package.json | head -1)"
+          CURRENT_VERSION="$(echo "${CURRENT_NPM_REF}" | sed 's|.*#v||')"
+
+          echo "current_npm_ref=${CURRENT_NPM_REF}" >> "$GITHUB_OUTPUT"
+          echo "current_version=${CURRENT_VERSION}" >> "$GITHUB_OUTPUT"
+
+          TARGET_NPM_REF="${{ steps.resolve.outputs.npm_ref }}"
+
+          echo "ℹ️  npm: ${CURRENT_NPM_REF}  (target: ${TARGET_NPM_REF})"
+
+          if [[ "${CURRENT_NPM_REF}" == "${TARGET_NPM_REF}" ]]; then
+            echo "up_to_date=true" >> "$GITHUB_OUTPUT"
+            echo "✅  guia.js is already at ${{ steps.resolve.outputs.tag }} — nothing to do."
+          else
+            echo "up_to_date=false" >> "$GITHUB_OUTPUT"
+            echo "ℹ️  npm dep needs update: ${CURRENT_NPM_REF}  →  ${TARGET_NPM_REF}"
+          fi
+
+      # ── 5. Update npm dependency in package.json ──────────────────────────────
+      - name: Update guia.js npm dependency in package.json
+        if: steps.current.outputs.up_to_date != 'true'
+        env:
+          OLD_NPM_REF: ${{ steps.current.outputs.current_npm_ref }}
+          NEW_NPM_REF: ${{ steps.resolve.outputs.npm_ref }}
+        run: |
+          node << 'EOF'
+          const fs = require('fs');
+          const oldRef = process.env.OLD_NPM_REF;
+          const newRef = process.env.NEW_NPM_REF;
+          let content = fs.readFileSync('package.json', 'utf8');
+          const updated = content.split(oldRef).join(newRef);
+          if (updated === content) {
+            console.warn('⚠️  No npm dependency replacement made in package.json — pattern not found.');
+          } else {
+            fs.writeFileSync('package.json', updated);
+            console.log('✅  package.json npm dependency updated: ' + oldRef + '  →  ' + newRef);
+          }
+          EOF
+
+      # ── 6. Install updated dependencies ──────────────────────────────────────
+      - name: Install updated npm dependencies
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          npm install
+          echo "✅  npm install completed."
+
+      # ── 7. Run validation ─────────────────────────────────────────────────────
+      - name: Run validation (npm run validate)
+        if: steps.current.outputs.up_to_date != 'true'
+        run: npm run validate
+
+      # ── 8. Run tests ──────────────────────────────────────────────────────────
+      - name: Run unit & integration tests
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          node --experimental-vm-modules node_modules/jest/bin/jest.js \
+            --forceExit \
+            --testPathIgnorePatterns="/node_modules/" \
+            --testPathIgnorePatterns="/__mocks__/" \
+            --testPathIgnorePatterns="/__tests__/helpers/" \
+            --testPathIgnorePatterns="/__tests__/e2e/" \
+            --testPathIgnorePatterns="/test/app.test.js" \
+            --testPathIgnorePatterns="/test/app.test.ts" \
+            --testPathIgnorePatterns="/test/main.test.ts" \
+            --testPathIgnorePatterns="/test/utils/version-display-manager.test.ts" \
+            --testPathIgnorePatterns="/test/html/HTMLHeaderDisplayer.test.ts" \
+            --testPathIgnorePatterns="/test/speech/SpeechSynthesisManager.facade-wip.test.js" \
+            --testPathIgnorePatterns="/test/types/paraty-geocore.d.test.ts" \
+            --testPathIgnorePatterns="/test/types/global.d.test.ts" \
+            --testPathIgnorePatterns="/test/vite-env.d.test.ts" \
+            --testPathIgnorePatterns="__tests__/types/paraty-geocore.test.js" \
+            --testPathIgnorePatterns="test/core/GeocodingState.test.js"
+
+      # ── 9. Adjust guia.js related code ────────────────────────────────────────
+      # Scans src/ for files that reference guia.js and updates any hardcoded
+      # version strings (e.g. in banner comments or config constants) from the
+      # old tag to the new one. Re-runs validation to confirm no errors.
+      - name: Adjust guia.js related code
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          NEW_VERSION="${{ steps.resolve.outputs.version }}"
+          OLD_VERSION="${{ steps.current.outputs.current_version }}"
+
+          echo "ℹ️  Scanning src/ for guia.js version strings…"
+
+          mapfile -t CODE_FILES < <(grep -rl \
+            "guia[._-]js\|guia_js\|guia\.js\|from 'guia\|from \"guia" \
+            src/ 2>/dev/null || true)
+
+          if [[ ${#CODE_FILES[@]} -eq 0 ]]; then
+            echo "ℹ️  No guia.js references found in src/ — nothing to adjust."
+          else
+            echo "📄  Files with guia.js references: ${CODE_FILES[*]}"
+
+            if [[ -n "${OLD_VERSION}" && "${OLD_VERSION}" != "${NEW_VERSION}" ]]; then
+              for f in "${CODE_FILES[@]}"; do
+                sed -i "s|${OLD_VERSION}|${NEW_VERSION}|g" "${f}"
+                echo "   ✏️  Updated version string in ${f}"
+              done
+            fi
+          fi
+
+          echo "🔍  Re-running validation…"
+          npm run validate
+          echo "✅  Validation passed after code adjustment."
+
+      # ── 10. Update guia.js related documentation ──────────────────────────────
+      # Replaces the old version tag in all Markdown files so that version
+      # references stay accurate.
+      - name: Update guia.js related documentation
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          NEW_VERSION="${{ steps.resolve.outputs.version }}"
+          NEW_TAG="${{ steps.resolve.outputs.tag }}"
+          OLD_VERSION="${{ steps.current.outputs.current_version }}"
+
+          echo "ℹ️  Scanning Markdown files for guia.js references…"
+
+          mapfile -t DOC_FILES < <(find . -name '*.md' \
+            ! -path './node_modules/*' \
+            ! -path './.ai_workflow/*' \
+            -print 2>/dev/null || true)
+
+          UPDATED=0
+          for f in "${DOC_FILES[@]}"; do
+            if grep -q "guia[._-]js\|guia_js" "${f}" 2>/dev/null; then
+              if [[ -n "${OLD_VERSION}" && "${OLD_VERSION}" != "${NEW_VERSION}" ]]; then
+                grep -n "guia" "${f}" | grep -q "${OLD_VERSION}" && \
+                  sed -i "/guia/s|${OLD_VERSION}|${NEW_VERSION}|g" "${f}" || true
+              fi
+              echo "   ✏️  Updated: ${f}"
+              UPDATED=$((UPDATED + 1))
+            fi
+          done
+
+          if [[ ${UPDATED} -eq 0 ]]; then
+            echo "ℹ️  No guia.js references found in documentation — nothing to update."
+          else
+            echo "✅  Updated ${UPDATED} documentation file(s)."
+          fi
+
+      # ── 11. Adjust guia.js related tests ──────────────────────────────────────
+      # Finds test files that reference guia.js, applies the version-string
+      # replacement, then re-runs only those test files to confirm they still pass.
+      - name: Adjust guia.js related tests
+        if: steps.current.outputs.up_to_date != 'true'
+        run: |
+          NEW_VERSION="${{ steps.resolve.outputs.version }}"
+          OLD_VERSION="${{ steps.current.outputs.current_version }}"
+
+          echo "ℹ️  Scanning test/ and __tests__/ for guia.js references…"
+
+          mapfile -t TEST_FILES < <(grep -rl \
+            "guia[._-]js\|guia_js\|guia\.js" \
+            test/ __tests__/ 2>/dev/null || true)
+
+          if [[ ${#TEST_FILES[@]} -eq 0 ]]; then
+            echo "ℹ️  No guia.js references found in test files — nothing to adjust."
+          else
+            echo "📄  Test files with guia.js references: ${TEST_FILES[*]}"
+
+            if [[ -n "${OLD_VERSION}" && "${OLD_VERSION}" != "${NEW_VERSION}" ]]; then
+              for f in "${TEST_FILES[@]}"; do
+                sed -i "s|${OLD_VERSION}|${NEW_VERSION}|g" "${f}"
+                echo "   ✏️  Updated version string in ${f}"
+              done
+            fi
+
+            echo "🧪  Re-running affected test files…"
+            npx jest --passWithNoTests "${TEST_FILES[@]}"
+            echo "✅  Affected tests passed after adjustment."
+          fi
+
+      # ── 12. Open pull request ─────────────────────────────────────────────────
+      - name: Create pull request
+        if: steps.current.outputs.up_to_date != 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/update-guia-js-${{ steps.resolve.outputs.version }}
+          delete-branch: true
+          commit-message: |
+            chore(deps): update guia.js to ${{ steps.resolve.outputs.tag }}
+
+            Update guia.js npm dependency to ${{ steps.resolve.outputs.tag }}.
+            npm ref: ${{ steps.resolve.outputs.npm_ref }}
+          title: "chore(deps): update guia.js to ${{ steps.resolve.outputs.tag }}"
+          body: |
+            ## guia.js → ${{ steps.resolve.outputs.tag }}
+
+            Updates the `guia.js` npm dependency to the latest release.
+
+            | | |
+            |---|---|
+            | **Previous** | `${{ steps.current.outputs.current_npm_ref }}` |
+            | **New** | `${{ steps.resolve.outputs.npm_ref }}` |
+
+            ### Files changed
+            - `package.json` — npm dependency tag
+            - `src/` — version strings (if any)
+            - `__tests__/` and `test/` — version references in test files (if any)
+            - `*.md` — version references in documentation (if any)
+
+            ### Checks
+            - [x] npm dependencies installed (`npm install`)
+            - [x] Syntax and type validation (`npm run validate`)
+            - [x] Unit & integration tests
+            - [x] guia.js related code adjusted (version strings in `src/` updated, re-validated)
+            - [x] guia.js related documentation updated (version strings in `*.md` updated)
+            - [x] guia.js related tests adjusted and re-run
+
+            > Triggered by: `${{ github.event_name }}`
+          labels: dependencies

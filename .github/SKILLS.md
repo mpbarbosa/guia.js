@@ -22,6 +22,7 @@ state.
 
 | Skill | File | Trigger | Purpose |
 |-------|------|---------|---------|
+| [Update guia.js](#update-guiayml) | `update-guia.yml` | Weekly (Mon) / manual | Bump guia.js npm dependency tag |
 | [Update paraty_geocore.js](#update-paraty-geocoreyml) | `update-paraty-geocore.yml` | Weekly (Wed) / manual | Bump paraty_geocore.js jsDelivr CDN URL |
 | [Validate logs](#validate-logs) | _(Copilot skill)_ | Manual | Validate `.ai_workflow/logs` against codebase; write `plan.md` |
 | [Fix log issues](#fix-log-issues) | _(Copilot skill)_ | Manual (after validate-logs) | Consume `plan.md`, apply fixes, update roadmap |
@@ -30,6 +31,54 @@ state.
 | [Sync version](#sync-version) | _(Copilot skill)_ | Manual | Propagate package.json version to all dependent files |
 | [Copy TS to project](#copy-ts-to-project) | _(Copilot skill)_ | Manual | Migrate a TypeScript file into any target repository with tests, exports, and docs |
 | [Purge workflow logs](#purge-workflow-logs) | _(Copilot skill)_ | Manual | Delete transient `.ai_workflow/` artefacts (logs, backlog, summaries) after an audit run |
+
+---
+
+## update-guia.yml
+
+**File:** `.github/workflows/update-guia.yml`
+**Purpose:** Keep the `guia.js` core dependency current by updating its
+npm dependency tag (`github:mpbarbosa/guia_js#<TAG>`) in `package.json`, and
+any test or documentation files that reference the version string, then opening
+a pull request with the full set of changes.
+
+### Triggers
+
+| Event | Details |
+|-------|---------|
+| `schedule` | Every **Monday at 09:00 UTC** |
+| `workflow_dispatch` | Manual run; accepts an optional `version` input (e.g. `v0.7.0-alpha`) |
+
+### Manual trigger
+
+```shell
+gh workflow run update-guia.yml --field version=v0.7.0-alpha
+```
+
+### Idempotency
+
+| Mechanism | Detail |
+|-----------|--------|
+| Concurrency group | `update-guia-js` — second trigger queues rather than cancels |
+| Early-exit guard | Skips all steps when `package.json` already has the target tag |
+| PR action | `peter-evans/create-pull-request` updates an existing PR branch |
+
+### Steps
+
+| # | Step | Skipped when |
+|---|------|-------------|
+| 1 | Checkout | — |
+| 2 | Set up Node.js 20 | — |
+| 3 | Resolve target guia.js version | — |
+| 4 | Check current guia.js version in package.json | — |
+| 5 | Update guia.js npm dependency in package.json | Already up to date |
+| 6 | Install updated npm dependencies | Already up to date |
+| 7 | Run validation (`npm run validate`) | Already up to date |
+| 8 | Run unit & integration tests | Already up to date |
+| 9 | Adjust guia.js related code | Already up to date |
+| 10 | Update guia.js related documentation | Already up to date |
+| 11 | Adjust guia.js related tests | Already up to date |
+| 12 | Open pull request | Already up to date |
 
 ---
 

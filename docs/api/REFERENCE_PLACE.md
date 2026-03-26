@@ -1,3 +1,5 @@
+## REFERENCE_PLACE
+
 # ReferencePlace API Documentation
 
 **Version:** 0.9.0-alpha
@@ -139,575 +141,125 @@ Reference place mapping for known OSM classes/types. Maps OpenStreetMap feature 
 
 ```javascript
 {
-  "osm-class": {
-    "osm-type": "Portuguese Description"
-  }
-}
-```
-
-**Complete Mapping:**
-
-```javascript
-static referencePlaceMap = {
-  "place": {
-    "house": "Residencial"
-  },
-  "shop": {
-    "mall": "Shopping Center",
-    "car_repair": "Oficina Mecânica"
-  },
-  "amenity": {
-    "cafe": "Café"
-  },
-  "railway": {
-    "subway": "Estação do Metrô",
-    "station": "Estação do Metrô"
-  },
-  "building": {
-    "yes": "Edifício"
-  }
-};
-```
-
-**Valid Classes:** Defined in `src/config/defaults.js` as `VALID_REF_PLACE_CLASSES`
-
-- `"place"` - Residential and location places
-- `"shop"` - Commercial establishments
-- `"amenity"` - Community facilities
-- `"railway"` - Railway infrastructure
-- `"building"` - Building structures
-
-**Usage:**
-
-```javascript
-// Access mapping directly
-const description = ReferencePlace.referencePlaceMap["shop"]["mall"];
-console.log(description);  // "Shopping Center"
-
-// Check if class/type is mapped
-if (ReferencePlace.referencePlaceMap["amenity"]) {
-  if (ReferencePlace.referencePlaceMap["amenity"]["cafe"]) {
-    console.log("Café is mapped");
-  }
-}
-```
+  "osm
 
 ---
 
-## Public Methods
+## REFERENCE_PLACE
 
-### `calculateCategory()`
+# ReferencePlace Class Documentation
 
-Calculates the category of the reference place based on class and type.
+## Overview
 
-**Returns:** `string` - Category name or "unknown"
+The `ReferencePlace` class was **introduced in version 0.9.0-alpha** to encapsulate information about reference places extracted from geocoding API responses. Reference places include shopping centers, subway stations, cafes, and other points of interest that help provide contextual information about a user's location.
 
-**Logic:**
+**Current Status (v0.9.0-alpha)**: This class is planned for future implementation (version 0.8.x-alpha). The documentation describes the intended design and functionality.
 
-1. Look up class in `referencePlaceMap`
-2. If class mapping is a string, return it
-3. If class mapping is an object, look up type
-4. Return category or "unknown" if not found
+**Version Note**: While introduced conceptually in 0.9.0-alpha design documents, the implementation is targeted for version 0.8.x-alpha or later.
 
-**Example:**
+## Motivation
 
-```javascript
-const shopPlace = new ReferencePlace({
-  class: 'shop',
-  type: 'mall',
-  name: 'Shopping Morumbi'
-});
+When users navigate around a city, it's helpful to know not just the street address but also any notable reference places they might be near or at. For example:
 
-console.log(shopPlace.calculateCategory());  // "Shopping Center"
+- "You are at Shopping Center Morumbi"
+- "You are near Subway Station Sé"
+- "You are at Café Girondino"
 
-const amenityPlace = new ReferencePlace({
-  class: 'amenity',
-  type: 'cafe',
-  name: 'Café do Ponto'
-});
+Previously, this functionality existed as a standalone `getAddressType()` function. The new `ReferencePlace` class provides a more cohesive, object-oriented approach to handling reference place data.
 
-console.log(amenityPlace.calculateCategory());  // "Café"
+## Features
 
-const unknownPlace = new ReferencePlace({
-  class: 'unknown',
-  type: 'unknown'
-});
+- **Automatic extraction** of class, type, and name from geocoding data
+- **Portuguese descriptions** for reference place types
+- **Immutable instances** (frozen after creation)
+- **Integration** with `AddressExtractor` and `AddressDataExtractor`
 
-console.log(unknownPlace.calculateCategory());  // "unknown"
-```
-
-**Use Cases:**
-
-- Filter places by category
-- Group places for display
-- Determine icon or styling based on category
-
----
-
-### `toString()`
-
-Returns a string representation of the reference place.
-
-**Returns:** `string` - Formatted string with description and name
-
-**Format:**
-
-- With name: `"ReferencePlace: <description> - <name>"`
-- Without name: `"ReferencePlace: <description>"`
-
-**Example:**
-
-```javascript
-const refPlace1 = new ReferencePlace({
-  class: 'shop',
-  type: 'mall',
-  name: 'Shopping Morumbi'
-});
-
-console.log(refPlace1.toString());
-// "ReferencePlace: Shopping Center Shopping Morumbi - Shopping Morumbi"
-
-const refPlace2 = new ReferencePlace({
-  class: 'amenity',
-  type: 'cafe'
-});
-
-console.log(refPlace2.toString());
-// "ReferencePlace: Café"
-```
-
----
-
-## Private Methods
-
-### `calculateDescription()` (Private)
-
-Calculates the Portuguese description of the reference place type. Automatically called by the constructor.
-
-**Returns:** `string` - Portuguese description
-
-**Logic:**
-
-1. Check if className and typeName are present
-2. Validate className is in `VALID_REF_PLACE_CLASSES`
-3. Look up description in `referencePlaceMap`
-4. If found and name exists, append name to description
-5. If found without name, return description only
-6. If not found, return `"className: typeName"` format
-7. If invalid or missing, return `NO_REFERENCE_PLACE` constant
-
-**Examples:**
-
-**Case 1: Mapped with Name**
-
-```javascript
-// Input: class="shop", type="mall", name="Shopping Morumbi"
-// Output: "Shopping Center Shopping Morumbi"
-```
-
-**Case 2: Mapped without Name**
-
-```javascript
-// Input: class="amenity", type="cafe", name=null
-// Output: "Café"
-```
-
-**Case 3: Not Mapped**
-
-```javascript
-// Input: class="shop", type="furniture", name=null
-// Output: "shop: furniture"
-```
-
-**Case 4: Invalid Class**
-
-```javascript
-// Input: class="invalid", type="unknown", name=null
-// Output: "Não classificado" (NO_REFERENCE_PLACE constant)
-```
-
----
-
-## OSM Feature Classification
-
-### Supported OSM Classes and Types
-
-#### 1. **Place** (`class: "place"`)
-
-| Type | Portuguese | Description |
-|------|-----------|-------------|
-| `house` | "Residencial" | Residential building |
-
-**Example:**
-
-```javascript
-const home = new ReferencePlace({
-  class: 'place',
-  type: 'house',
-  name: 'Casa do João'
-});
-console.log(home.description);  // "Residencial Casa do João"
-```
-
----
-
-#### 2. **Shop** (`class: "shop"`)
-
-| Type | Portuguese | Description |
-|------|-----------|-------------|
-| `mall` | "Shopping Center" | Shopping mall |
-| `car_repair` | "Oficina Mecânica" | Car repair shop |
-
-**Example:**
-
-```javascript
-const mall = new ReferencePlace({
-  class: 'shop',
-  type: 'mall',
-  name: 'Shopping Iguatemi'
-});
-console.log(mall.description);  // "Shopping Center Shopping Iguatemi"
-
-const garage = new ReferencePlace({
-  class: 'shop',
-  type: 'car_repair',
-  name: 'Auto Mecânica Silva'
-});
-console.log(garage.description);  // "Oficina Mecânica Auto Mecânica Silva"
-```
-
----
-
-#### 3. **Amenity** (`class: "amenity"`)
-
-| Type | Portuguese | Description |
-|------|-----------|-------------|
-| `cafe` | "Café" | Café or coffee shop |
-
-**Example:**
-
-```javascript
-const cafe = new ReferencePlace({
-  class: 'amenity',
-  type: 'cafe',
-  name: 'Café Girondino'
-});
-console.log(cafe.description);  // "Café Café Girondino"
-```
-
----
-
-#### 4. **Railway** (`class: "railway"`)
-
-| Type | Portuguese | Description |
-|------|-----------|-------------|
-| `subway` | "Estação do Metrô" | Subway station |
-| `station` | "Estação do Metrô" | Train/Metro station |
-
-**Example:**
-
-```javascript
-const metro = new ReferencePlace({
-  class: 'railway',
-  type: 'subway',
-  name: 'Estação Sé'
-});
-console.log(metro.description);  // "Estação do Metrô Estação Sé"
-
-const station = new ReferencePlace({
-  class: 'railway',
-  type: 'station',
-  name: 'Estação da Luz'
-});
-console.log(station.description);  // "Estação do Metrô Estação da Luz"
-```
-
----
-
-#### 5. **Building** (`class: "building"`)
-
-| Type | Portuguese | Description |
-|------|-----------|-------------|
-| `yes` | "Edifício" | Generic building |
-
-**Example:**
-
-```javascript
-const building = new ReferencePlace({
-  class: 'building',
-  type: 'yes',
-  name: 'Edifício Itália'
-});
-console.log(building.description);  // "Edifício Edifício Itália"
-```
-
----
-
-## Integration Examples
+## Usage
 
 ### Basic Usage
 
 ```javascript
-import ReferencePlace from './data/ReferencePlace.js';
+const { ReferencePlace } = require('./src/guia.js');
 
 const data = {
   class: 'shop',
   type: 'mall',
-  name: 'Shopping Recife'
+  name: 'Shopping Morumbi'
 };
 
 const refPlace = new ReferencePlace(data);
 
-console.log(refPlace.description);      // "Shopping Center Shopping Recife"
-console.log(refPlace.name);             // "Shopping Recife"
-console.log(refPlace.className);        // "shop"
-console.log(refPlace.typeName);         // "mall"
-console.log(refPlace.calculateCategory()); // "Shopping Center"
+console.log(refPlace.className);     // 'shop'
+console.log(refPlace.typeName);      // 'mall'
+console.log(refPlace.name);          // 'Shopping Morumbi'
+console.log(refPlace.description);   // 'Shopping Center'
+console.log(refPlace.toString());    // 'ReferencePlace: Shopping Center - Shopping Morumbi'
 ```
 
-### With AddressExtractor
+### Integration with AddressDataExtractor
+
+The `ReferencePlace` is automatically created when extracting address data:
 
 ```javascript
-import AddressExtractor from './data/AddressExtractor.js';
+const { AddressDataExtractor } = require('./src/guia.js');
 
 const geocodingData = {
-  address: {
-    road: "Avenida Boa Viagem",
-    house_number: "5000",
-    city: "Recife",
-    state_code: "PE"
-  },
-  class: 'shop',
-  type: 'mall',
-  name: 'Shopping Recife'
-};
-
-const extractor = new AddressExtractor(geocodingData);
-const address = extractor.enderecoPadronizado;
-const refPlace = address.referencePlace;
-
-console.log(refPlace.description);
-// "Shopping Center Shopping Recife"
-```
-
-### Display in UI
-
-```javascript
-import ReferencePlace from './data/ReferencePlace.js';
-import HTMLReferencePlaceDisplayer from './html/HTMLReferencePlaceDisplayer.js';
-
-// Create reference place
-const refPlace = new ReferencePlace({
   class: 'railway',
   type: 'subway',
-  name: 'Estação Sé'
-});
-
-// Display in HTML
-const displayer = new HTMLReferencePlaceDisplayer(refPlace, document);
-displayer.display();
-
-// Or manual display
-if (refPlace.description !== NO_REFERENCE_PLACE) {
-  const placeElement = document.getElementById('reference-place');
-  placeElement.textContent = refPlace.description;
-  placeElement.style.display = 'block';
-}
-```
-
-### Handling Unknown Places
-
-```javascript
-import ReferencePlace from './data/ReferencePlace.js';
-import { NO_REFERENCE_PLACE } from './config/defaults.js';
-
-const unknownData = {
-  class: 'tourism',
-  type: 'hotel',
-  name: 'Hotel Brasil'
+  name: 'Estação Sé',
+  address: {
+    road: 'Praça da Sé',
+    neighbourhood: 'Sé',
+    city: 'São Paulo',
+    state: 'São Paulo'
+  }
 };
 
-const refPlace = new ReferencePlace(unknownData);
+const extractor = new AddressDataExtractor(geocodingData);
 
-console.log(refPlace.description);
-// "tourism: hotel" (fallback to class:type format)
+// Access the reference place
+console.log(extractor.referencePlace.description);  // 'Estação do Metrô'
+console.log(extractor.referencePlace.name);         // 'Estação Sé'
 
-// Check if place is classified
-if (refPlace.description === NO_REFERENCE_PLACE) {
-  console.log('No reference place available');
-} else if (refPlace.description.includes(':')) {
-  console.log('Unknown place type:', refPlace.description);
-} else {
-  console.log('Known place:', refPlace.description);
-}
+// Create speech notification
+const speechText = `Você está próximo da ${extractor.referencePlace.description} ${extractor.referencePlace.name}`;
+// "Você está próximo da Estação do Metrô Estação Sé"
 ```
 
-### Filtering by Category
+## Supported Reference Place Types
+
+The following reference place types are currently supported:
+
+| Class     | Type       | Portuguese Description |
+|-----------|------------|------------------------|
+| place     | house      | Residencial            |
+| shop      | mall       | Shopping Center        |
+| shop      | car_repair | Oficina Mecânica       |
+| amenity   | cafe       | Café                   |
+| railway   | subway     | Estação do Metrô       |
+
+Additional mappings can be configured in `setupParams.referencePlaceMap`.
+
+## Valid Reference Place Classes
+
+The following classes are considered valid for reference places (configurable in `setupParams.validRefPlaceClasses`):
+
+- `place`
+- `shop`
+- `amenity`
+- `railway`
+
+## Handling Missing or Invalid Data
+
+When data is missing or invalid, the `ReferencePlace` class handles it gracefully:
 
 ```javascript
-import ReferencePlace from './data/ReferencePlace.js';
+// No reference place data
+const data1 = { address: { road: 'Rua Augusta' } };
+const refPlace1 = new ReferencePlace(data1);
+console.log(refPlace1.description);  // 'Não classificado'
 
-const places = [
-  new ReferencePlace({ class: 'shop', type: 'mall', name: 'Shopping A' }),
-  new ReferencePlace({ class: 'amenity', type: 'cafe', name: 'Café B' }),
-  new ReferencePlace({ class: 'railway', type: 'subway', name: 'Estação C' }),
-  new ReferencePlace({ class: 'shop', type: 'mall', name: 'Shopping D' })
-];
-
-// Filter by category
-const malls = places.filter(place =>
-  place.calculateCategory() === 'Shopping Center'
-);
-
-console.log(malls.length);  // 2 (Shopping A and Shopping D)
-
-// Group by category
-const grouped = places.reduce((acc, place) => {
-  const category = place.calculateCategory();
-  if (!acc[category]) acc[category] = [];
-  acc[category].push(place);
-  return acc;
-}, {});
-
-console.log(grouped);
-// {
-//   "Shopping Center": [Shopping A, Shopping D],
-//   "Café": [Café B],
-//   "Estação do Metrô": [Estação C]
-// }
-```
-
----
-
-## Extending the Mapping
-
-To add new place types, extend the `referencePlaceMap`:
-
-```javascript
-// Add new shop type
-ReferencePlace.referencePlaceMap.shop.supermarket = "Supermercado";
-
-// Add new amenity type
-ReferencePlace.referencePlaceMap.amenity.restaurant = "Restaurante";
-
-// Add new class
-ReferencePlace.referencePlaceMap.leisure = {
-  park: "Parque",
-  playground: "Parquinho"
-};
-```
-
-**Note:** Also update `VALID_REF_PLACE_CLASSES` in `src/config/defaults.js` when adding new classes.
-
----
-
-## Immutability
-
-ReferencePlace instances are **frozen** after creation:
-
-```javascript
-const refPlace = new ReferencePlace(data);
-
-// Cannot modify properties
-refPlace.description = "New Description";  // ❌ Fails in strict mode
-refPlace.name = "New Name";                // ❌ Fails in strict mode
-
-console.log(Object.isFrozen(refPlace));    // true
-```
-
-**Rationale:**
-
-- Follows MP Barbosa immutability standards
-- Prevents accidental modification of extracted data
-- Ensures referential transparency
-- Supports functional programming patterns
-
----
-
-## Configuration Constants
-
-Referenced from `src/config/defaults.js`:
-
-```javascript
-export const NO_REFERENCE_PLACE = "Não classificado";
-
-export const VALID_REF_PLACE_CLASSES = [
-  'place',
-  'shop',
-  'amenity',
-  'railway',
-  'building'
-];
-```
-
----
-
-## Testing
-
-Comprehensive test coverage in:
-
-- `__tests__/unit/data/ReferencePlace.test.js`
-- `__tests__/integration/reference-place.test.js`
-
-**Example Test:**
-
-```javascript
-describe('ReferencePlace', () => {
-  test('creates reference place with description', () => {
-    const data = {
-      class: 'shop',
-      type: 'mall',
-      name: 'Shopping Morumbi'
-    };
-
-    const refPlace = new ReferencePlace(data);
-
-    expect(refPlace.className).toBe('shop');
-    expect(refPlace.typeName).toBe('mall');
-    expect(refPlace.name).toBe('Shopping Morumbi');
-    expect(refPlace.description).toBe('Shopping Center Shopping Morumbi');
-  });
-
-  test('is frozen after creation', () => {
-    const refPlace = new ReferencePlace({ class: 'shop', type: 'mall' });
-    expect(Object.isFrozen(refPlace)).toBe(true);
-  });
-
-  test('calculates category correctly', () => {
-    const refPlace = new ReferencePlace({ class: 'shop', type: 'mall' });
-    expect(refPlace.calculateCategory()).toBe('Shopping Center');
-  });
-});
-```
-
----
-
-## Version History
-
-### v0.9.0-alpha (Current)
-
-- Initial implementation with OSM feature mapping
-- Support for 5 OSM classes: place, shop, amenity, railway, building
-- Immutable pattern with `Object.freeze()`
-- Integration with `AddressExtractor` and display components
-
-### v0.9.0-alpha
-
-- Version info field added to module documentation
-- Referenced in address validation tests
-
----
-
-## Related Classes
-
-- **`AddressExtractor`** - Creates ReferencePlace from geocoding data
-- **`BrazilianStandardAddress`** - Contains referencePlace property
-- **`HTMLReferencePlaceDisplayer`** - Renders reference place in UI
-
----
-
-## See Also
-
-- [ADDRESS_EXTRACTOR.md](./ADDRESS_EXTRACTOR.md) - Address extraction including reference places
-- [BRAZILIAN_STANDARD_ADDRESS.md](./BRAZILIAN_STANDARD_ADDRESS.md) - Address data structure
-- [OpenStreetMap Map Features](https://wiki.openstreetmap.org/wiki/Map_Features) - OSM feature documentation
+// Invalid class
+const data2 = { class: 'unknown', type: 'unknown' };
+const refPlace2 = new ReferencePlace(data2);
+console.log(refPlace2.description

@@ -1,11 +1,12 @@
 {
   "version": 1,
   "partitionIndex": 1,
-  "totalPartitions": 37,
-  "filesHash": "1b384321",
+  "totalPartitions": 38,
+  "filesHash": "0921af01",
   "partitionLabels": [
-    ".ai_workflow/metrics, src/components",
+    ".ai_workflow/metrics",
     "src/config",
+    "src/config (2)",
     "src/coordination",
     "src/coordination (2)",
     "src/core",
@@ -42,5 +43,5 @@
     "libs/sidra, manifest.json, package-lock.json, package.json, public/libs",
     "tsconfig.json, .husky/_"
   ],
-  "updatedAt": "2026-03-24T00:16:39.859Z"
+  "updatedAt": "2026-03-26T00:25:23.387Z"
 }

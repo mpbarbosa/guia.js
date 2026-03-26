@@ -1,3 +1,5 @@
+## REFACTORING_SUMMARY
+
 # .github Folder Refactoring Summary
 
 ## Overview
@@ -172,158 +174,163 @@ Changes:
 - `.github/workflows/copilot-coding-agent.yml`
 - `.github/ISSUE_TEMPLATE/copilot_issue.md`
 - `.github/ISSUE_TEMPLATE/feature_request.md`
-- `.github/ISSUE_TEMPLATE/technical_debt.md`
+- `.github/ISSUE_TEMPLATE/tec
 
-### Deleted
+---
 
-- `.github/copilot-coding-agent.yml` (duplicate)
+## LOW_COUPLING_GUIDE
 
-## Validation Results
+# Low Coupling Guide for .github Configuration
 
-All YAML files validated successfully:
+This document explains the low-coupling principles applied to the `.github` folder configuration and how to maintain them.
 
-- ✅ `.github/workflows/copilot-coding-agent.yml`
-- ✅ `.github/actions/validate-js/action.yml`
-- ✅ `.github/actions/security-check/action.yml`
-- ✅ `.github/config.yml`
-- ✅ `.github/ISSUE_TEMPLATE/config.yml`
+## Overview
 
-## Benefits Achieved
+Low coupling in the `.github` folder means minimizing dependencies between configuration files, workflows, and templates. This makes the repository easier to maintain and allows components to evolve independently.
 
-### 1. Reduced Coupling
+## Principles Applied
 
-- Workflows and templates are more independent
-- Changes to one component don't require changes to others
-- Clear boundaries between concerns
+### 1. Centralized Configuration
 
-### 2. Improved Maintainability
+**File**: `.github/config.yml`
 
-- Logic defined once, used many times
-- Easy to understand workflow structure
-- Clear separation of concerns
+This file centralizes common settings used across workflows and templates:
 
-### 3. Enhanced Reusability
+- Common labels
+- Default assignees
+- Project file paths
+- Validation configuration
+- Code quality thresholds
 
-- Actions can be used in new workflows
-- Templates follow consistent patterns
-- Configuration can be referenced by new components
+**Benefits**:
 
-### 4. Better Documentation
+- Single source of truth for configuration
+- Changes to labels or paths only need to be updated in one place
+- Easy to understand project standards at a glance
 
-- Comprehensive guide for low-coupling principles
-- Clear examples for future contributors
-- Architecture diagram shows relationships
+**Usage Example**:
+When you need to add a new label, update it once in `config.yml` rather than in each template.
 
-### 5. Easier Testing
+### 2. Reusable Workflow Actions
 
-- Actions can be tested independently
-- Workflows are more predictable
-- Changes have smaller blast radius
+**Location**: `.github/actions/`
 
-## Migration Notes
+We've created modular, reusable actions:
 
-### For Maintainers
+#### validate-js
 
-No breaking changes were introduced:
+Validates JavaScript syntax for specified files.
 
-- Workflows continue to work as before
-- Issue templates function identically
-- All existing functionality preserved
+```yaml
+- name: Validate JavaScript
+  uses: ./.github/actions/validate-js
+  with:
+    files: 'src/guia.js src/guia_ibge.js'
+```
 
-### For Contributors
+**Benefits**:
 
-New workflows should:
+- Validation logic defined once
+- Reusable across multiple workflows
+- Easy to update validation behavior centrally
+- Can be tested independently
 
-1. Use reusable actions where possible
-2. Reference centralized configuration
-3. Follow patterns documented in `LOW_COUPLING_GUIDE.md`
+#### security-check
 
-New issue templates should:
+Performs security scanning on JavaScript files.
 
-1. Add configuration to `ISSUE_TEMPLATE/config.yml`
-2. Use consistent section naming
-3. Avoid duplicating content
+```yaml
+- name: Security Check
+  uses: ./.github/actions/security-check
+  with:
+    files: 'src/*.js'
+```
 
-## Future Improvements
+**Benefits**:
 
-### Potential Enhancements
+- Security rules defined in one place
+- Consistent security checks across all workflows
+- Easy to add new security rules
+- Can be enhanced without touching main workflows
 
-1. **Extract more reusable actions**:
-   - Node.js setup with caching
-   - Python setup with caching
-   - Test execution with reporting
+### 3. Modular Issue Templates
 
-2. **Create reusable workflows**:
-   - Standard validation workflow
-   - Security scanning workflow
-   - Release workflow
+**Location**: `.github/ISSUE_TEMPLATE/`
 
-3. **Enhance configuration**:
-   - Version pinning for actions
-   - Environment-specific settings
-   - Feature flags for optional checks
+Issue templates are now:
 
-4. **Improve templates**:
-   - Add more specific templates (bug reports, docs, etc.)
-   - Create template validator
-   - Add template examples
+- **Self-contained**: Each template has its own purpose
+- **Consistent**: Common sections use similar wording but are not duplicated
+- **Configurable**: Template configuration is in `config.yml`
 
-### Recommendations
+**Templates**:
 
-- Review quarterly for new coupling issues
-- Extract common patterns as they emerge
-- Keep documentation up to date
-- Solicit feedback from contributors
+1. `copilot_issue.md` - For Copilot-related issues
+2. `feature_request.md` - For new feature proposals
+3. `technical_debt.md` - For technical debt tracking
+4. `config.yml` - Template configuration and contact links
 
-## Related Documentation
+**Benefits**:
 
-### Project Guidelines
+- Each template can be modified independently
+- No repeated logic between templates
+- Contact links centralized in config.yml
 
-- [LOW_COUPLING_GUIDE.md](./LOW_COUPLING_GUIDE.md) - Detailed principles and examples
-- [HIGH_COHESION_GUIDE.md](./HIGH_COHESION_GUIDE.md) - Single responsibility and cohesion
-- [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) - Pure functions and immutability
-- [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md) - Review checklist
-- [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution guidelines
+### 4. Removed Duplication
 
-### Architecture Examples
+**Changes Made**:
 
-- [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) - Complete architecture showing refactored classes
-- [WEBGEOCODINGMANAGER_REFACTORING.md](../docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - PR #189 refactoring details
+- ❌ Removed duplicate `.github/copilot-coding-agent.yml` (kept only in `workflows/`)
+- ✅ Extracted validation logic to reusable actions
+- ✅ Standardized "Additional Context" sections in templates
+- ✅ Centralized file paths to avoid hardcoding
 
-### External References
+## Best Practices
 
-- [GitHub Actions: Reusing workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows)
-- [Creating composite actions](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action)
+### When Adding a New Workflow
 
-## Recent Updates (October 2025)
+1. Check if existing actions can be reused
+2. Extract common logic into new reusable actions
+3. Reference centralized configuration where possible
+4. Keep workflow jobs focused and independent
 
-### Class Extraction Initiative Completion
+Example:
 
-**Phase 4: AddressDataExtractor Legacy Facade** (October 16, 2025)
+```yaml
+jobs:
+  validate:
+    steps:
+      - uses: ./.github/actions/validate-js
+      - uses: ./.github/actions/security-check
+```
 
-- ✅ Extracted AddressDataExtractor from guia.js to dedicated module
-- ✅ Implemented facade pattern for 100% backward compatibility
-- ✅ Added 295 lines of comprehensive integration tests
-- ✅ Maintained all existing APIs while providing clear migration path
-- ✅ Created property descriptor synchronization with AddressCache singleton
+### When Adding a New Issue Template
 
-**Total Initiative Results:**
+1. Add template configuration to `ISSUE_TEMPLATE/config.yml` if needed
+2. Use consistent section naming with existing templates
+3. Keep descriptions concise and template-specific
+4. Avoid duplicating instructions - reference documentation instead
 
-- **4 phases completed**: Core, Services, Data Processing, Legacy Facade
-- **11 classes extracted**: All following low-coupling principles
-- **11 focused modules**: Each with single responsibility
-- **Zero breaking changes**: Complete backward compatibility maintained
-- **Enhanced documentation**: Including migration guidance and best practices
+### When Updating Configuration
 
-## Conclusion
+1. Update `config.yml` for shared settings
+2. Reusable actions for workflow logic
+3. Update individual templates only for template-specific content
 
-This refactoring successfully reduces coupling in the `.github` folder by:
+## Maintenance Guidelines
 
-- Centralizing configuration
-- Creating reusable components
-- Removing duplication
-- Improving documentation
+### Regular Reviews
 
-The changes make the repository easier to maintain while preserving all existing functionality.
+Periodically review for:
 
-The completed class extraction initiative demonstrates how low-coupling principles can be applied systematically to improve code organization while maintaining backward compatibility.
+- [ ] Duplicated logic across workflows
+- [ ] Hardcoded values that could be centralized
+- [ ] Actions that could be generalized and reused
+- [ ] Templates with overlapping content
+
+### Testing Changes
+
+When modifying:
+
+- **Workflows**: Test on a feature branch first
+- **Actions**: Validate inputs/outputs mat

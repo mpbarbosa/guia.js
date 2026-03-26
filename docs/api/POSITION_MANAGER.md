@@ -1,3 +1,5 @@
+## POSITION_MANAGER
+
 # PositionManager API Documentation
 
 **Version:** 0.9.0-alpha
@@ -127,312 +129,105 @@ Subscribes an observer to position change notifications.
 
 **Returns:** `void`
 
-**Example:**
-
-```javascript
-const myObserver = {
-  update: (positionManager, event) => {
-    console.log('Position event:', event, positionManager.latitude);
-  }
-};
-PositionManager.getInstance().subscribe(myObserver);
-```
-
-**Since:** 0.9.0-alpha
+**E
 
 ---
 
-### `unsubscribe(observer)`
+## POSITION_MANAGER
 
-Unsubscribes an observer from position change notifications.
+# PositionManager Class Documentation
 
-**Parameters:**
+## Overview
 
-- `observer` (Object): Observer object to unsubscribe
+The `PositionManager` class is the central singleton for managing the current geographic position in the Guia.js application. Introduced in version 0.9.0-alpha, it wraps the browser's Geolocation API, implements sophisticated position validation and filtering rules, and provides an observer-based notification system for position changes. Following the Singleton and Observer design patterns, it ensures only one position state exists throughout the application while allowing multiple components to react to position updates.
 
-**Returns:** `void`
+## Motivation
 
-**Example:**
+Managing device location in a geolocation application involves coordinating several challenges:
 
-```javascript
-PositionManager.getInstance().unsubscribe(myObserver);
+- Ensuring only one source of truth for current position
+- Filtering out inaccurate or insignificant position updates
+- Preventing excessive processing from minor GPS fluctuations
+- Notifying multiple components about position changes
+- Providing consistent position data across the application
+- Handling position validation and accuracy requirements
+
+The `PositionManager` class addresses these challenges by:
+
+- **Centralizing position state**: Single source of truth via singleton pattern
+- **Implementing validation rules**: Filters positions by accuracy, time, and distance thresholds
+- **Managing subscriptions**: Observer pattern for decoupled position notifications
+- **Providing intelligence**: Smart update logic prevents processing insignificant changes
+- **Ensuring consistency**: All components access the same position instance
+
+Previously, applications had to manage position state manually, leading to inconsistencies, duplicate position objects, and difficulty coordinating updates across components.
+
+## Features
+
+- **Singleton pattern**: Ensures single position state across application
+- **Observer pattern**: Subscribe/unsubscribe for position change notifications
+- **Smart validation**: Multi-layer filtering (accuracy, time threshold, distance threshold)
+- **Position wrapping**: Encapsulates GeolocationPosition in convenient GeoPosition objects
+- **Event types**: Distinguishes between regular updates and immediate address updates
+- **Distance calculation**: Built-in support for calculating distance from previous position
+- **Debugging support**: toString() method for logging and inspection
+- **Backward compatibility**: Maintains stable API across versions
+
+## Architecture
+
+### Class Diagram
+
+```
+PositionManager (Singleton)
+    ├── holds → GeoPosition (lastPosition)
+    ├── uses → ObserverSubject
+    │              ├── manages → Array<Observer>
+    │              └── notifies → Observer.update()
+    ├── validates with → setupParams
+    │              ├── trackingInterval (50s)
+    │              ├── minimumDistanceChange (20m)
+    │              └── notAcceptedAccuracy
+    └── fires events
+                   ├── strCurrPosUpdate
+                   ├── strCurrPosNotUpdate
+                   └── strImmediateAddressUpdate
 ```
 
-**Since:** 0.9.0-alpha
+### Design Patterns Applied
 
----
+#### 1. Singleton Pattern
 
-### `update(position)`
+Ensures only one PositionManager instance exists per application, preventing multiple conflicting position states.
 
-Updates the position with validation and filtering rules.
+#### 2. Observer Pattern
 
-**Parameters:**
+Allows multiple components to subscribe to position updates without tight coupling to the PositionManager.
 
-- `position` (GeolocationPosition): New position data from Geolocation API
-  - `position.coords` (GeolocationCoordinates): Coordinate information
-    - `latitude` (number): Latitude in decimal degrees
-    - `longitude` (number): Longitude in decimal degrees
-    - `accuracy` (number): Accuracy in meters
-    - `altitude` (number, nullable): Altitude in meters
-    - `altitudeAccuracy` (number, nullable): Altitude accuracy in meters
-    - `heading` (number, nullable): Compass heading in degrees
-    - `speed` (number, nullable): Speed in meters/second
-  - `position.timestamp` (number): Timestamp when position was acquired
+#### 3. Strategy Pattern (Validation)
 
-**Returns:** `void`
+Position validation uses configurable rules (accuracy thresholds, time intervals, distance thresholds) that can be adjusted via setupParams.
 
-**Fires:**
-
-- `strCurrPosUpdate` - When position successfully updated
-- `strCurrPosNotUpdate` - When position rejected by validation
-- `strImmediateAddressUpdate` - When update is immediate (< 50s)
-
-**Validation Rules:**
-
-1. Position validity: Must have valid position object with timestamp
-2. Time constraint: Must wait at least 50 seconds between updates
-3. Accuracy requirement: Rejects medium/bad/very bad accuracy positions
-4. Distance threshold: Must move at least 20 meters
-
-**Example:**
-
-```javascript
-// Update with new position (typically from Geolocation API)
-navigator.geolocation.getCurrentPosition((position) => {
-  const manager = PositionManager.getInstance();
-  manager.update(position); // Validates and updates if rules pass
-});
-```
-
-**Since:** 0.9.0-alpha
-
----
-
-### `toString()`
-
-Returns a string representation of the current position.
-
-**Returns:** `string` - Formatted string with position details
-
-**Example:**
-
-```javascript
-const manager = PositionManager.getInstance(position);
-console.log(manager.toString());
-// Output: "PositionManager: -23.5505, -46.6333, good, 760, 0, 0, 1634567890123"
-```
-
-**Since:** 0.9.0-alpha
-
-## Properties (Read-Only)
-
-All properties are read-only and proxied from the underlying `lastPosition` GeoPosition instance:
-
-- `latitude` (number): Current latitude in decimal degrees
-- `longitude` (number): Current longitude in decimal degrees
-- `accuracy` (number): Position accuracy in meters
-- `accuracyQuality` (string): Quality classification ('excellent', 'good', 'medium', 'bad', 'very bad')
-- `altitude` (number, nullable): Altitude in meters
-- `heading` (number, nullable): Compass heading in degrees
-- `speed` (number, nullable): Speed in meters/second
-- `timestamp` (number): Timestamp when position was acquired
-
-**Example:**
-
-```javascript
-const manager = PositionManager.getInstance();
-console.log(`Current position: ${manager.latitude}, ${manager.longitude}`);
-console.log(`Accuracy: ${manager.accuracy}m (${manager.accuracyQuality})`);
-```
-
-## Configuration
-
-### `initializeConfig(config)`
-
-Initialize setupParams - called when module loads or can be overridden for testing.
-
-**Parameters:**
-
-- `config` (Object): Configuration object with tracking parameters
-  - `notAcceptedAccuracy` (string[]): Array of unacceptable accuracy levels
-  - `minimumDistanceChange` (number): Minimum distance change in meters to trigger update
-  - `trackingInterval` (number): Tracking interval in milliseconds
-
-**Returns:** `void`
-
-**Example:**
-
-```javascript
-// Initialize with custom configuration
-initializeConfig({
-  notAcceptedAccuracy: ['medium', 'bad'],
-  minimumDistanceChange: 50,
-  trackingInterval: 30000
-});
-```
-
-**Since:** 0.9.0-alpha
-
-### Default Configuration
-
-```javascript
-{
-  notAcceptedAccuracy: ['medium', 'bad', 'very bad'],
-  minimumDistanceChange: 20,  // meters
-  trackingInterval: 50000      // milliseconds (50 seconds)
-}
-```
-
-## Usage Examples
+## Usage
 
 ### Basic Usage
 
 ```javascript
-// Get singleton instance
+// Get the singleton instance
 const manager = PositionManager.getInstance();
 
 // Subscribe to position updates
 const observer = {
   update: (positionManager, eventType) => {
     if (eventType === PositionManager.strCurrPosUpdate) {
-      console.log('Position:', positionManager.latitude, positionManager.longitude);
+      console.log('Position updated:', positionManager.latitude, positionManager.longitude);
     }
   }
 };
 manager.subscribe(observer);
 ```
 
-### Update Position from Geolocation API
+### With Initial Position
 
 ```javascript
-// Update position (typically done by GeolocationService)
-navigator.geolocation.getCurrentPosition((position) => {
-  const manager = PositionManager.getInstance();
-  manager.update(position); // Validates and updates if rules pass
-});
-```
-
-### Access Position Properties
-
-```javascript
-const manager = PositionManager.getInstance();
-console.log(`Lat: ${manager.latitude}, Lon: ${manager.longitude}`);
-console.log(`Accuracy: ${manager.accuracy}m (${manager.accuracyQuality})`);
-console.log(`Speed: ${manager.speed} m/s`);
-```
-
-### Complete Workflow Example
-
-```javascript
-import PositionManager from './core/PositionManager.js';
-
-// Initialize position manager
-const positionManager = PositionManager.getInstance();
-
-// Subscribe to updates
-const displayObserver = {
-  update: (manager, eventType) => {
-    switch (eventType) {
-      case PositionManager.strCurrPosUpdate:
-        console.log('Position updated:', manager.latitude, manager.longitude);
-        console.log('Accuracy:', manager.accuracyQuality);
-        break;
-
-      case PositionManager.strCurrPosNotUpdate:
-        console.log('Position update rejected (filtering applied)');
-        break;
-
-      case PositionManager.strImmediateAddressUpdate:
-        console.log('Immediate update:', manager.latitude, manager.longitude);
-        break;
-    }
-  }
-};
-
-positionManager.subscribe(displayObserver);
-
-// Start watching position
-navigator.geolocation.watchPosition(
-  (position) => {
-    positionManager.update(position);
-  },
-  (error) => {
-    console.error('Geolocation error:', error);
-  },
-  {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0
-  }
-);
-```
-
-## Related Classes
-
-- **[GeoPosition](./GEO_POSITION.md)** - Position data wrapper with convenience methods
-- **[ObserverSubject](./OBSERVER_SUBJECT.md)** - Observer pattern implementation
-- **[GeocodingState](./GEOCODING_STATE.md)** - State management for geocoding workflow
-- **GeolocationService** (`src/services/GeolocationService.js`) - Browser geolocation wrapper
-
-## Design Patterns
-
-- **Singleton Pattern**: Ensures only one position state exists
-- **Observer Pattern**: Decouples position changes from dependent components
-- **Facade Pattern**: Simplifies complex position tracking logic
-- **Proxy Pattern**: Properties proxied from underlying GeoPosition instance
-
-## Testing
-
-Test file: `__tests__/unit/core/PositionManager.test.js`
-
-```javascript
-import PositionManager from './PositionManager.js';
-
-describe('PositionManager', () => {
-  test('singleton instance', () => {
-    const instance1 = PositionManager.getInstance();
-    const instance2 = PositionManager.getInstance();
-    expect(instance1).toBe(instance2);
-  });
-
-  test('update with valid position', () => {
-    const manager = PositionManager.getInstance();
-    const observer = { update: jest.fn() };
-    manager.subscribe(observer);
-
-    const position = {
-      coords: { latitude: -23.5505, longitude: -46.6333, accuracy: 10 },
-      timestamp: Date.now()
-    };
-
-    manager.update(position);
-    expect(observer.update).toHaveBeenCalled();
-  });
-});
-```
-
-## Browser Compatibility
-
-- Requires HTML5 Geolocation API support
-- Works in all modern browsers (Chrome, Firefox, Safari, Edge)
-- Requires HTTPS in production (localhost allowed for development)
-
-## Performance Considerations
-
-- **Efficient Filtering**: Only processes meaningful position changes
-- **Smart Thresholds**: Configurable distance and time thresholds prevent excessive updates
-- **Immutable Observers**: Observer array managed immutably via ObserverSubject
-- **Lazy Evaluation**: Position only updated when validation rules pass
-
-## Security Considerations
-
-- Position data should be treated as sensitive user information
-- Always request user permission before accessing geolocation
-- Consider privacy implications when storing or transmitting position data
-- Use HTTPS to prevent man-in-the-middle attacks
-
-## See Also
-
-- [Complete Architecture Documentation](../architecture/POSITION_MANAGER.md)
-- [MDN Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
-- [MDN GeolocationPosition](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition)
+// Create instance with initial position from Geolocation API
+navigator.geolocation.getCurrentPosi

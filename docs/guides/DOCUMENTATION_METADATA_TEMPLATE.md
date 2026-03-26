@@ -1,3 +1,5 @@
+## DOCUMENTATION_METADATA_TEMPLATE
+
 # Documentation Metadata Template
 
 Use this template for creating new documentation files with proper metadata.
@@ -194,68 +196,219 @@ Update when:
 
 ## Best Practices
 
-1. **Be Consistent**: Use the same metadata format across all docs
-2. **Keep Current**: Update "Last Updated" when making significant changes
-3. **Link Related Docs**: Help readers navigate between related documents
-4. **Mark Drafts Clearly**: Use Status: Draft and add a warning note
-5. **Deprecate Gracefully**: Keep deprecated docs with clear warnings and migration paths
-6. **Archive Old Content**: Don't delete, mark as Archived with historical context
-
-## Frequently Updated Documents
-
-These documents should be updated regularly:
-
-### Version-Specific
-
-- `CHANGELOG.md` - Every release
-- `README.md` - Major feature additions
-- `package.json` - Version bumps
-
-### Test-Related
-
-- `docs/testing/TEST_STRATEGY.md` - Test infrastructure changes
-- `docs/testing/TEST_INFRASTRUCTURE.md` - Coverage updates
-
-### Architecture
-
-- `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md` - Major refactorings
-- `docs/architecture/CLASS_DIAGRAM.md` - Component additions
-
-### Reports
-
-- `docs/reports/` - After audits or analysis
-- `docs/CODE_QUALITY_ACTION_PLAN.md` - Progress updates
-
-## Git Integration
-
-Consider adding metadata updates to commit messages:
-
-```bash
-# When updating documentation
-git commit -m "docs: update TESTING.md with new strategy
-
-- Updated metadata (Last Updated: 2026-01-28)
-- Added E2E testing section
-- Revised coverage targets"
-```
-
-## Maintenance Schedule
-
-Suggested review intervals:
-
-- **Monthly**: Check all Active docs for outdated content
-- **Quarterly**: Review Draft docs, promote or archive
-- **Annually**: Full documentation audit
-- **After releases**: Update version-specific docs
-
-## Tools
-
-- **Metadata Updater**: `.github/scripts/update-doc-metadata.sh`
-- **Reference Checker**: `.github/scripts/check-references.py`
-- **Version Checker**: `.github/scripts/check-version-consistency.sh`
+1. **Be Consistent**: Use the same m
 
 ---
 
+## DOCUMENTATION_QUICK_REFERENCE
+
+# Documentation Navigation & Metadata - Quick Reference
+
+**Version**: 1.0.0
+**Last Updated**: 2026-01-28
+**Status**: Active
+
+## 🚀 Quick Start
+
+### Finding Documentation
+
+**Main Entry Points**:
+
+1. **`docs/README.md`** - Documentation hub with quick links (NEW ✨)
+2. **`docs/INDEX.md`** - Comprehensive categorized index
+3. **Project `README.md`** - Project overview and installation
+
+**Navigation Path**:
+
+```
+Project Root (README.md)
+  ├── docs/README.md (Documentation Hub) ← NEW!
+  │   ├── Quick Links (Essential reading)
+  │   ├── Categories (By topic)
+  │   └── Search (By keyword)
+  └── docs/INDEX.md (Full Index)
+      ├── Quick Start Paths (By role)
+      ├── All Categories (Detailed)
+      └── Complete File List
+```
+
+### Adding Metadata to Docs
+
+**Script**: `.github/scripts/update-doc-metadata.sh`
+
+```bash
+# Update single file
+.github/scripts/update-doc-metadata.sh docs/TESTING.md
+
+# Update all docs (recursive)
+.github/scripts/update-doc-metadata.sh --all --recursive
+
+# Dry run (preview changes)
+.github/scripts/update-doc-metadata.sh --dry-run --all
+
+# Custom date
+.github/scripts/update-doc-metadata.sh --date 2026-01-15 docs/TESTING.md
+```
+
+## 📋 Metadata Format
+
+### Standard Block
+
+```markdown
+# Document Title
+
+---
+Last Updated: YYYY-MM-DD
+Status: Active | Draft | Deprecated | Archived
+Version: X.X.X (optional)
+Category: Architecture | Testing | API | Guide | Report | Utility
+---
+
+Content starts here...
+```
+
+### Quick Templates
+
+**Minimal** (Required only):
+
+```markdown
+---
 Last Updated: 2026-01-28
 Status: Active
-Category: Guide
+---
+```
+
+**Complete** (All fields):
+
+```markdown
+---
+Last Updated: 2026-01-28
+Status: Active
+Version: 0.9.0-alpha
+Category: Testing
+Maintainer: @username
+Related: [Link](./path.md)
+---
+```
+
+## 🔍 Finding What You Need
+
+### By Role
+
+**New Contributor**:
+
+```
+README.md → docs/README.md → CONTRIBUTING.md → TDD_GUIDE.md
+```
+
+**Developer**:
+
+```
+docs/README.md → PROJECT_PURPOSE_AND_ARCHITECTURE.md → VIEWS_LAYER.md
+```
+
+**Tester**:
+
+```
+docs/README.md → testing/TEST_STRATEGY.md → TEST_INFRASTRUCTURE.md
+```
+
+### By Topic
+
+| Topic | Start Here |
+|-------|-----------|
+| **Architecture** | `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md` |
+| **Testing** | `docs/testing/TEST_STRATEGY.md` |
+| **API Integration** | `docs/SIDRA_INTEGRATION.md`, `docs/IBIRA_INTEGRATION.md` |
+| **Development Setup** | `docs/WORKFLOW_SETUP.md` |
+| **Contributing** | `.github/CONTRIBUTING.md` |
+
+### By Status
+
+**Active Docs**: Current, maintained
+
+- Most docs in `docs/architecture/`
+- All guides in `docs/testing/`
+- Integration docs in `docs/api-integration/`
+
+**Draft Docs**: Work in progress
+
+- Check metadata: `Status: Draft`
+- Often in `docs/reports/` during analysis
+
+**Deprecated Docs**: Outdated but kept for reference
+
+- Check metadata: `Status: Deprecated`
+- Usually includes migration path
+
+## 🛠️ Maintenance Tasks
+
+### Daily
+
+```bash
+# Before committing doc changes
+.github/scripts/update-doc-metadata.sh docs/YOUR_FILE.md
+```
+
+### Weekly
+
+```bash
+# Check for broken references
+python3 .github/scripts/check-references.py
+```
+
+### Monthly
+
+```bash
+# Update all recently modified docs
+find docs -name "*.md" -mtime -30 -exec \
+  .github/scripts/update-doc-metadata.sh {} \;
+```
+
+### Before Release
+
+```bash
+# Update all docs with new version
+.github/scripts/update-doc-metadata.sh --all --recursive
+
+# Verify references
+python3 .github/scripts/check-references.py
+
+# Update CHANGELOG
+# (manual process)
+```
+
+## 📊 Documentation Statistics
+
+**Location**: `docs/README.md` (bottom of file)
+
+Current stats:
+
+- Total files: 312+ markdown files
+- Categories: 12 subdirectories
+- Active docs: ~280
+- Draft/Deprecated: ~32
+
+## 🔗 Related Tools
+
+### Reference Checking
+
+```bash
+# Check all references
+python3 .github/scripts/check-references.py
+
+# Check specific files
+python3 .github/scripts/check-references.py docs/TESTING.md
+```
+
+### Version Consistency
+
+```bash
+# Check version across files
+.github/scripts/check-version-consistency.sh
+```
+
+### Link Validation
+
+```bash
+# Che

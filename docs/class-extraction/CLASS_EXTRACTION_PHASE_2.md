@@ -1,3 +1,5 @@
+## CLASS_EXTRACTION_PHASE_2
+
 # Class Extraction Summary - Phase 2: Service Layer
 
 ## Overview
@@ -127,86 +129,135 @@ Following repository best practices:
 - Better testability through module isolation
 - Improved code organization
 - Enhanced maintainability
-- Foundation for Phase 3 (Data Processing Layer)
+- Foundation for Phase 3 (Data P
 
-## Dependencies and Relationships
+---
 
-### ReverseGeocoder Dependencies
+## CLASS_EXTRACTION_PHASE_3
 
-- **Uses**: ObserverSubject, IbiraAPIFetchManager, AddressDataExtractor
-- **Used by**: WebGeocodingManager, ChangeDetectionCoordinator
+# Class Extraction Summary - Phase 3: Data Processing Layer
 
-### GeolocationService Dependencies
+## Overview
 
-- **Uses**: PositionManager
-- **Used by**: WebGeocodingManager
+Phase 3 of the class extraction initiative focuses on extracting data processing layer classes from `guia.js` into separate, focused modules following repository best practices established in Phase 1 and Phase 2.
 
-### ChangeDetectionCoordinator Dependencies
+## Target Classes
 
-- **Uses**: ReverseGeocoder, ObserverSubject, AddressDataExtractor
-- **Used by**: WebGeocodingManager
+### Data Processing Layer Classes to Extract
 
-## Progress Tracking
+1. **BrazilianStandardAddress** (lines 185-263)
+   - Standardized Brazilian address structure
+   - Formatting methods for complete addresses
+   - Immutable pattern with filter/join operations
+   - Dependencies: None (pure data structure)
 
-### Completion Status
+2. **ReferencePlace** (lines 291-394)
+   - Reference place data wrapper (shopping centers, subway stations, etc.)
+   - OSM class/type to Portuguese description mapping
+   - Immutable with Object.freeze()
+   - Dependencies: setupParams (config)
 
-- **Phase 1**: ✅ Complete (GeoPosition, ObserverSubject, PositionManager)
-- **Phase 2**: ✅ Complete (ReverseGeocoder, GeolocationService, ChangeDetectionCoordinator)
-- **Phase 3**: ⏳ Planned (Data Processing Layer)
-- **Phase 4**: ⏳ Planned (Presentation Layer)
+3. **AddressExtractor** (lines 970-1080)
+   - Extracts and standardizes address data from geocoding APIs
+   - Supports Nominatim and OSM address tag formats
+   - Creates BrazilianStandardAddress and ReferencePlace instances
+   - Dependencies: BrazilianStandardAddress, ReferencePlace
 
-### Current Task
-
-**Phase 2 Successfully Completed! 🎉**
-
-All service layer classes have been extracted, tested, and validated.
-
-## Final Results
-
-### Metrics Achieved
-
-- **File Size Reduction**: 20.4% (5290 → 4209 lines)
-- **Modules Created**: 3 service classes (1128 lines total)
-- **Test Coverage**: 12 new integration tests (100% passing)
-- **Overall Tests**: 620/652 passing (95.1%)
-- **Backward Compatibility**: 100% maintained
-
-### Quality Improvements
-
-✅ Clear service layer boundaries
-✅ Better testability through module isolation
-✅ Enhanced documentation and JSDoc comments
-✅ Improved code organization
-✅ Foundation for Phase 3 (Data Processing Layer)
-
-### Files Created
-
-1. **src/services/ReverseGeocoder.js** (296 lines)
+4. **AddressCache** (lines 1109-2227)
+   - LRU cache for address data
+   - Change detection for address components (logradouro, bairro, municipio)
    - Observer pattern integration
-   - OpenStreetMap Nominatim API integration
-   - Coordinate validation and URL generation
+   - Callback management for change notifications
+   - Dependencies: ObserverSubject, AddressExtractor, BrazilianStandardAddress
 
-2. **src/services/GeolocationService.js** (447 lines)
-   - Browser Geolocation API wrapper
-   - Permission management
-   - Helper functions for error formatting
-   - Dependency injection support
+## Extraction Strategy
 
-3. **src/services/ChangeDetectionCoordinator.js** (385 lines)
-   - Address component change detection
-   - Callback management for logradouro, bairro, municipio
-   - Observer pattern notifications
+### Phase 3 Goals
 
-4. ****tests**/integration/service-modules.test.js** (280 lines)
-   - 12 comprehensive integration tests
-   - Module import validation
-   - Class instantiation tests
-   - Module interaction tests
+- Extract data processing layer classes to `src/data/` directory
+- Maintain backward compatibility with existing code
+- Follow established patterns from Phase 1 and Phase 2
+- Preserve all functionality and API contracts
+- Add integration tests for extracted modules
 
-## Notes
+### Principles to Apply
 
-- Following the successful extraction pattern established in Phase 1
-- All extractions maintain full backward compatibility
-- Each module is self-contained with proper dependency injection
-- Tests validate module functionality and integration
-- Documentation includes JSDoc comments and usage examples
+Following repository best practices:
+
+1. **Referential Transparency** (REFERENTIAL_TRANSPARENCY.md)
+   - Pure functions where possible
+   - Immutable data structures
+   - Clear separation of side effects
+
+2. **Low Coupling** (LOW_COUPLING_GUIDE.md)
+   - Clear module boundaries
+   - Dependency injection for testability
+   - ES6 import/export
+
+3. **High Cohesion** (HIGH_COHESION_GUIDE.md)
+   - Single responsibility per module
+   - Related functionality grouped together
+   - Clear separation of concerns
+
+4. **Folder Structure** (FOLDER_STRUCTURE_GUIDE.md)
+   - Data processing classes in `src/data/`
+   - Tests in `__tests__/integration/`
+
+## Implementation Plan
+
+### Step 1: Create Documentation ✅
+
+- [x] Create CLASS_EXTRACTION_PHASE_3.md
+
+### Step 2: Create src/data directory ✅
+
+- [x] Create src/data/ directory for data processing modules
+
+### Step 3: Extract BrazilianStandardAddress ✅
+
+- [x] Create src/data/BrazilianStandardAddress.js
+- [x] Copy class implementation
+- [x] Add module documentation
+- [x] Export as default and named export
+
+### Step 4: Extract ReferencePlace ✅
+
+- [x] Create src/data/ReferencePlace.js
+- [x] Copy class implementation
+- [x] Add proper imports for dependencies (setupParams)
+- [x] Add module documentation
+- [x] Export as default and named export
+
+### Step 5: Extract AddressExtractor ✅
+
+- [x] Create src/data/AddressExtractor.js
+- [x] Copy class implementation
+- [x] Add proper imports for dependencies
+- [x] Add module documentation
+- [x] Export as default and named export
+
+### Step 6: Extract AddressCache ✅
+
+- [x] Create src/data/AddressCache.js
+- [x] Copy class implementation
+- [x] Add proper imports for dependencies
+- [x] Add module documentation
+- [x] Export as default and named export
+
+### Step 7: Update guia.js ✅
+
+- [x] Import extracted data processing classes
+- [x] Remove extracted class definitions
+- [x] Re-export classes for backward compatibility
+- [x] Maintain window.* globals for browser usage
+- [x] Verify syntax with `npm run validate`
+
+### Step 8: Create Integration Tests ✅
+
+- [x] Create **tests**/integration/data-modules.test.js
+- [x] Test module imports
+- [x] Test class instantiation
+- [x] Test basic functionality
+- [x] Test module interactions
+
+### Step 9

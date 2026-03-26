@@ -1,3 +1,5 @@
+## GETTING_STARTED
+
 # Getting Started with Guia Turístico
 
 **Quick start guide for developers to set up and run the application in under 10 minutes.**
@@ -165,198 +167,220 @@ guia_turistico/
 2. Browser requests location permission
 3. Coordinates displayed (latitude, longitude)
 4. Address lookup via OpenStreetMap Nominatim
-5. Brazilian location data via IBGE API
-6. Real-time updates as user moves (20m or 30s threshold)
-```
-
-### Key Components
-
-1. **PositionManager** (src/core/PositionManager.js)
-   - Singleton managing current geolocation state
-   - Updates on distance (20m) or time (30s) thresholds
-
-2. **ReverseGeocoder** (src/services/ReverseGeocoder.js)
-   - OpenStreetMap Nominatim integration
-   - Converts coordinates to addresses
-
-3. **WebGeocodingManager** (src/coordination/WebGeocodingManager.js)
-   - Main coordination class
-   - Orchestrates services and displayers
-
-4. **SpeechSynthesisManager** (src/speech/SpeechSynthesisManager.js)
-   - Brazilian Portuguese speech synthesis
-   - Queue-based processing
+5. Brazilian locati
 
 ---
 
-## Common Development Scenarios
+## QUICK_START_GUIDE
 
-### Adding a New Feature
+# Quick Start Guide - Guia Turístico
 
-1. **Identify the component layer**:
-   - Data processing? → `src/data/`
-   - API integration? → `src/services/`
-   - UI display? → `src/html/`
-   - Coordination? → `src/coordination/`
-
-2. **Follow immutability principles** (see `.github/CONTRIBUTING.md`):
-
-   ```javascript
-   // ❌ Bad: Mutates array
-   array.push(newItem);
-
-   // ✅ Good: Creates new array
-   const newArray = [...array, newItem];
-   ```
-
-3. **Write tests first**:
-
-   ```bash
-   # Create test file in __tests__/
-   touch __tests__/your-feature.test.js
-
-   # Run tests in watch mode
-   npm run test:watch
-   ```
-
-4. **Validate changes**:
-
-   ```bash
-   npm run test:all
-   ```
-
-### Debugging Geolocation Issues
-
-```javascript
-// Enable detailed logging in browser console
-// Check src/config/defaults.js for debug settings
-
-// Test with known coordinates:
-const testCoords = {
-  latitude: -23.550520,   // São Paulo
-  longitude: -46.633309
-};
-
-// Monitor network requests in DevTools:
-// - OpenStreetMap Nominatim API calls
-// - IBGE API calls
-```
-
-### Working with Brazilian Addresses
-
-```javascript
-import { BrazilianStandardAddress } from './src/data/BrazilianStandardAddress.js';
-
-// Create standardized address
-const address = new BrazilianStandardAddress();
-address.municipio = "Recife";
-address.uf = "PE";
-address.regiaoMetropolitana = "Região Metropolitana do Recife";
-
-// Get formatted output
-console.log(address.municipioCompleto());
-// Output: "Recife, PE"
-
-console.log(address.regiaoMetropolitanaFormatada());
-// Output: "Região Metropolitana do Recife"
-```
+**Last Updated**: 2026-02-13
+**Version**: 0.9.0-alpha
+**Estimated Time**: 5-10 minutes
 
 ---
 
-## API Integration Examples
-
-### Basic Geolocation Usage
-
-```javascript
-import { GeolocationService } from './src/services/GeolocationService.js';
-import { PositionManager } from './src/core/PositionManager.js';
-
-// Get current position (one-time)
-const service = new GeolocationService();
-const position = await service.getCurrentPosition();
-console.log(`Lat: ${position.latitude}, Lon: ${position.longitude}`);
-
-// Continuous tracking
-const positionManager = PositionManager.getInstance();
-positionManager.attach({
-  update: (geoPosition) => {
-    console.log('Position updated:', geoPosition.toJSON());
-  }
-});
-
-service.startWatching();
-```
-
-### Address Lookup
-
-```javascript
-import { ReverseGeocoder } from './src/services/ReverseGeocoder.js';
-
-// Convert coordinates to address
-const geocoder = new ReverseGeocoder(-23.550520, -46.633309);
-const addressData = await geocoder.fetchAddress();
-
-console.log('City:', addressData.city);
-console.log('State:', addressData.state);
-console.log('Country:', addressData.country);
-```
-
----
-
-## Troubleshooting
-
-### Common Issues
-
-**Issue**: `npm install` fails
+## TL;DR - Get Running in 5 Minutes
 
 ```bash
-# Solution: Clear npm cache
-npm cache clean --force
-rm -rf node_modules package-lock.json
+# Clone and setup
+git clone https://github.com/mpbarbosa/guia_turistico.git
+cd guia_turistico
+npm install                    # 20 seconds
+
+# Validate everything works
+npm run validate               # <1 second - syntax check
+npm test                       # ~65 seconds - 2,235 tests pass
+
+# Start development
+npm run dev                    # Vite dev server on port 9000
+# → Open http://localhost:9000
+```
+
+**That's it!** You're ready to develop. See [Installation](#installation) below for more options.
+
+---
+
+## Prerequisites
+
+### Required
+
+- **Node.js** v18+ (tested with v20.19.5)
+- **npm** v10+
+- **Git** for version control
+
+### Optional
+
+- **Python** 3.11+ (for legacy HTTP server)
+- **Chrome/Firefox** (for E2E tests)
+- **VS Code** or similar editor
+
+### Check Your Environment
+
+```bash
+node --version    # Should show v18.0.0 or higher
+npm --version     # Should show 10.0.0 or higher
+git --version     # Any recent version
+```
+
+---
+
+## Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/mpbarbosa/guia_turistico.git
+cd guia_turistico
+```
+
+### 2. Install Dependencies
+
+```bash
 npm install
 ```
 
-**Issue**: Port 9000 already in use
+**What gets installed**:
+
+- guia.js library (geolocation core)
+- Vite 7.3.1 (build tool)
+- Jest 30.1.3 (testing framework)
+- jsdom 25.0.1 (DOM simulation)
+- Puppeteer 24.35.0 (E2E testing)
+- 299 packages total
+
+**Expected time**: ~20 seconds on good connection
+
+### 3. Verify Installation
 
 ```bash
-# Solution: Change port in vite.config.js or kill process
-lsof -ti:9000 | xargs kill -9
-# Or use a different port
-npm run dev -- --port 8080
+# Quick syntax check (<1 second)
+npm run validate
+
+# Run test suite (~65 seconds)
+npm test
+
+# Expected: ✅ 2,235 tests passing (2,401 total)
 ```
 
-**Issue**: Geolocation not working
+---
 
-- Ensure you're using HTTPS or localhost
-- Check browser location permissions
-- Verify browser console for errors
+## Development Modes
 
-**Issue**: Tests fail with `Cannot find module`
+### Option 1: Modern Development (Recommended)
+
+**Use Vite dev server with Hot Module Replacement (HMR)**
 
 ```bash
-# Solution: Reinstall dependencies
-npm ci
+npm run dev
+```
+
+**Benefits**:
+
+- ⚡ Instant hot reload on file changes
+- 🚀 Fast refresh without page reload
+- 🔧 Source maps for debugging
+- 📦 Modern ES modules
+- ✅ Starts in 3 seconds
+
+**Access**: http://localhost:9000
+
+### Option 2: Production Preview
+
+**Test the production build locally**
+
+```bash
+npm run build      # Create optimized bundle
+npm run preview    # Preview on port 9001
+```
+
+**Use when**: Testing production behavior before deployment
+
+### Option 3: Legacy Mode
+
+**Direct file serving without build step**
+
+```bash
+python3 -m http.server 9000
+```
+
+**Access**: http://localhost:9000/src/index.html
+**Use when**: Debugging without build tools
+
+---
+
+## Your First Changes
+
+### 1. Make a Simple Change
+
+Edit `src/views/home.js`:
+
+```javascript
+// Find this line (around line 50)
+console.log('Home view initialized');
+
+// Change to:
+console.log('Home view initialized - My First Change!');
+```
+
+### 2. See the Change
+
+**With Vite** (npm run dev): Changes appear instantly!
+**Without Vite**: Refresh browser manually
+
+### 3. Validate Your Change
+
+```bash
+# Syntax check
+npm run validate
+
+# Run tests
+npm test
 ```
 
 ---
 
-## Next Steps
+## Common Commands
 
-1. **Read User Guide**: See [USER_GUIDE.md](./user/USER_GUIDE.md) for end-user features
-2. **Explore API**: See [API_QUICK_REFERENCE.md](./API_QUICK_REFERENCE.md) for API docs
-3. **Deep Dive**: See [DEVELOPER_GUIDE.md](./DEVELOPER_GUIDE.md) for architecture
-4. **Contribute**: See [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md) for guidelines
+### Development
+
+```bash
+npm run dev           # Start dev server (HMR)
+npm run build         # Build for production
+npm run preview       # Preview production build
+```
+
+### Validation
+
+```bash
+npm run validate      # Syntax check only
+npm test              # Run all tests
+npm run test:coverage # Test with coverage
+npm run test:watch    # Watch mode for TDD
+npm run test:all      # Syntax + tests
+```
+
+### Utilities
+
+```bash
+npm run cdn:generate  # Generate CDN URLs
+npm run ci:test-local # Test CI workflow locally
+```
 
 ---
 
-## Getting Help
+## Understanding the Codebase
 
-- **Issues**: https://github.com/mpbarbosa/guia_turistico/issues
-- **Discussions**: Check GitHub Discussions
-- **Documentation**: Browse `docs/` directory
-- **Examples**: See `examples/` directory
+### Project Structure
 
----
-
-**Last Updated**: 2026-02-12
-**Version**: 0.9.0-alpha
+```
+guia_turistico/
+├── src/                    # Source code
+│   ├── app.js             # SPA entry point
+│   ├── index.html         # Main HTML
+│   ├── views/             # View controllers
+│   │   ├── home.js        # Location tracking view
+│   │   └── converter.js   # Coordinate converter
+│   ├── core/              # Core position management
+│   ├── services/

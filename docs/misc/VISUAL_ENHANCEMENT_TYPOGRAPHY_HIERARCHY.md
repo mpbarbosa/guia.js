@@ -1,3 +1,5 @@
+## VISUAL_ENHANCEMENT_TYPOGRAPHY_HIERARCHY
+
 # Visual Enhancement: Typography Hierarchy System
 
 **Category:** Visual Design
@@ -141,555 +143,159 @@ p  { font-size: var(--md-sys-typescale-body-medium); }
 
 ### Display Scale (57px - 36px)
 
-**Use for:** Hero sections, splash screens, large promotional text
-
-| Level | Desktop | Mobile | Small | Use Case |
-|-------|---------|--------|-------|----------|
-| Large | 57px | 45px | 36px | Hero headlines |
-| Medium | 45px | 36px | 32px | Feature showcases |
-| Small | 36px | 32px | 28px | Large callouts |
-
-**Example:**
-
-```html
-<h1 class="text-display-large">12.3 milhões</h1>
-```
-
-### Headline Scale (32px - 24px)
-
-**Use for:** Page titles, prominent section headers
-
-| Level | Desktop | Mobile | Small | Use Case |
-|-------|---------|--------|-------|----------|
-| Large | 32px | 28px | 24px | Page titles (h1) |
-| Medium | 28px | 24px | 20px | Section headers (h2) |
-| Small | 24px | 24px | 24px | Subsection headers (h3) |
-
-**Example:**
-
-```html
-<h2 class="text-headline-medium">Endereço Completo</h2>
-```
-
-### Title Scale (22px - 14px)
-
-**Use for:** Subsection headers, card titles, list item headers
-
-| Level | Size | Weight | Use Case |
-|-------|------|--------|----------|
-| Large | 22px | 400 | Card headers (h4) |
-| Medium | 16px | 500 | List headers (h5) |
-| Small | 14px | 500 | Tertiary headers (h6) |
-
-**Example:**
-
-```html
-<h4 class="text-title-large">População Estimada</h4>
-```
-
-### Body Scale (16px - 12px)
-
-**Use for:** Paragraphs, content text, descriptions
-
-| Level | Size | Weight | Use Case |
-|-------|------|--------|----------|
-| Large | 16px | 400 | Primary body text |
-| Medium | 14px | 400 | Secondary text (default p) |
-| Small | 12px | 400 | Captions, metadata |
-
-**Example:**
-
-```html
-<p class="text-body-large">População: <strong>12.3 milhões</strong></p>
-```
-
-### Label Scale (14px - 11px)
-
-**Use for:** Buttons, badges, tags, form labels
-
-| Level | Size | Weight | Tracking | Use Case |
-|-------|------|--------|----------|----------|
-| Large | 14px | 500 | 0.1px | Button text |
-| Medium | 12px | 500 | 0.5px | Badges, pills |
-| Small | 11px | 500 | 0.5px | Tags, footnotes |
-
-**Example:**
-
-```html
-<button class="primary-button">
-  <span class="text-label-large">Obter Localização</span>
-</button>
-```
-
-## Usage Patterns
-
-### Pattern 1: Semantic HTML (Recommended)
-
-```html
-<article>
-  <h1>Guia Turístico</h1>  <!-- Auto: headline-large -->
-  <h2>Localização Atual</h2>  <!-- Auto: headline-medium -->
-  <p>Você está em São Paulo, SP</p>  <!-- Auto: body-medium -->
-</article>
-```
-
-**Benefits:**
-
-- Zero classes needed
-- Better SEO
-- Improved accessibility
-
-### Pattern 2: Utility Classes
-
-```html
-<div class="hero">
-  <div class="text-display-large">12.3 milhões</div>
-  <div class="text-body-large">habitantes</div>
-</div>
-```
-
-**Benefits:**
-
-- Flexible for non-semantic layouts
-- Quick prototyping
-- Visual consistency
-
-### Pattern 3: Direct Tokens (Components)
-
-```css
-.highlight-card-value {
-  font-size: var(--md-sys-typescale-display-small);
-  font-weight: var(--md-sys-typescale-display-small-weight);
-  line-height: var(--md-sys-typescale-display-small-line-height);
-}
-```
-
-**Benefits:**
-
-- Component-specific control
-- Token updates propagate
-- Easy theme customization
-
-## Migration Guide
-
-### Step 1: Identify Violations
-
-**Audit command:**
-
-```bash
-grep -rn "font-size:" src/*.css | grep -v "typography.css" | grep -E "[0-9]+px|[0-9]+rem"
-```
-
-**Result:** 117 violations across 10 files
-
-### Step 2: Map to Typescale
-
-| Current | Closest Token | Category |
-|---------|---------------|----------|
-| 11px | label-small | Label |
-| 12px | body-small OR label-medium | Body/Label |
-| 13px | body-small | Body |
-| 14px | body-medium OR title-small OR label-large | Multiple |
-| 16px | body-large OR title-medium | Body/Title |
-| 20px | (custom) | Icon/special |
-| 22px | title-large | Title |
-| 24px | headline-small | Headline |
-| 28px | headline-medium | Headline |
-| 32px | headline-large | Headline |
-
-### Step 3: Replace with Tokens
-
-**Before:**
-
-```css
-.card-title {
-  font-size: 22px;
-  font-weight: 400;
-  line-height: 1.3;
-}
-```
-
-**After:**
-
-```css
-.card-title {
-  font-size: var(--md-sys-typescale-title-large);
-  font-weight: var(--md-sys-typescale-title-large-weight);
-  line-height: var(--md-sys-typescale-title-large-line-height);
-}
-```
-
-### Step 4: Use Utility Classes (Optional)
-
-**HTML before:**
-
-```html
-<div class="card-title">Título</div>
-```
-
-**HTML after:**
-
-```html
-<h4 class="card-title text-title-large">Título</h4>
-```
-
-## Migration Status
-
-### High Priority (65 violations)
-
-| File | Violations | Impact | Example |
-|------|------------|--------|---------|
-| **ibge-data-styles.css** | 20 | High | .ibge-primary: 16px → body-large |
-| **highlight-cards.css** | 15 | High | .highlight-card-value: 2.5rem → display-medium |
-| **maps-actions.css** | 12 | High | .maps-action-btn: 14px → label-large |
-| **version-display.css** | 10 | High | .version-number: 12px → label-medium |
-| **error-styles.css** | 8 | Medium | .error-title: 1.5rem → title-large |
-
-### Medium Priority (35 violations)
-
-| File | Violations | Impact |
-|------|------------|--------|
-| geolocation-banner.css | 6 | Medium |
-| navigation.css | 5 | Medium |
-| tooltip.css | 4 | Low |
-| accessibility-compliance.css | 3 | Low |
-| design-patterns.css | 2 | Low |
-
-### Migration Phases
-
-**Phase 1 (This PR): Foundation** ✅
-
-- [x] Enhanced typography.css with complete token system
-- [x] Added 15 utility classes
-- [x] Implemented responsive scaling
-- [x] Created comprehensive documentation (docs/TYPOGRAPHY_GUIDE.md)
-
-**Phase 2 (Next PR): High Priority Files** 🔄
-
-- [ ] Migrate ibge-data-styles.css (20 violations)
-- [ ] Migrate highlight-cards.css (15 violations)
-- [ ] Migrate maps-actions.css (12 violations)
-- [ ] Migrate version-display.css (10 violations)
-
-**Phase 3 (Follow-up): Remaining Files** ⏳
-
-- [ ] Migrate error-styles.css (8)
-- [ ] Migrate geolocation-banner.css (6)
-- [ ] Migrate navigation.css (5)
-- [ ] Migrate remaining files (15)
-
-**Phase 4 (Future): Automation** 🔮
-
-- [ ] Add stylelint rule to prevent new violations
-- [ ] Create automated migration script
-- [ ] Add visual regression tests
-- [ ] Consider dark mode token variants
-
-## Code Examples
-
-### Example 1: Before & After (IBGE Data Card)
-
-**Before (20 violations):**
-
-```css
-.ibge-primary {
-  font-size: 16px;  /* Violation */
-}
-
-.ibge-icon {
-  font-size: 24px;  /* Violation */
-}
-
-.classification-label {
-  font-size: 14px;  /* Violation */
-  font-weight: 600;
-}
-
-.classification-description {
-  font-size: 13px;  /* Violation */
-}
-
-.detail-label {
-  font-size: 13px;  /* Violation */
-}
-
-.detail-value {
-  font-size: 14px;  /* Violation */
-}
-```
-
-**After (using tokens):**
-
-```css
-.ibge-primary {
-  font-size: var(--md-sys-typescale-body-large);
-  font-weight: var(--md-sys-typescale-body-large-weight);
-  line-height: var(--md-sys-typescale-body-large-line-height);
-}
-
-.ibge-icon {
-  font-size: var(--md-sys-typescale-headline-small);  /* 24px */
-}
-
-.classification-label {
-  font-size: var(--md-sys-typescale-title-small);
-  font-weight: var(--md-sys-typescale-title-small-weight);
-}
-
-.classification-description {
-  font-size: var(--md-sys-typescale-body-small);
-  font-weight: var(--md-sys-typescale-body-small-weight);
-}
-
-.detail-label {
-  font-size: var(--md-sys-typescale-body-small);
-}
-
-.detail-value {
-  font-size: var(--md-sys-typescale-body-medium);
-  font-weight: var(--md-sys-typescale-body-medium-weight);
-}
-```
-
-### Example 2: Highlight Cards
-
-**Before (15 violations):**
-
-```css
-.highlight-card-title {
-  font-size: 1rem;  /* 16px, Violation */
-}
-
-.highlight-card-value {
-  font-size: 2.5rem;  /* 40px, Violation */
-}
-
-.highlight-card-label {
-  font-size: 0.875rem;  /* 14px, Violation */
-}
-```
-
-**After (using tokens):**
-
-```css
-.highlight-card-title {
-  font-size: var(--md-sys-typescale-title-medium);
-  font-weight: var(--md-sys-typescale-title-medium-weight);
-  line-height: var(--md-sys-typescale-title-medium-line-height);
-}
-
-.highlight-card-value {
-  font-size: var(--md-sys-typescale-display-medium);  /* 45px */
-  font-weight: var(--md-sys-typescale-display-medium-weight);
-  line-height: var(--md-sys-typescale-display-medium-line-height);
-}
-
-.highlight-card-label {
-  font-size: var(--md-sys-typescale-body-medium);
-  font-weight: var(--md-sys-typescale-body-medium-weight);
-}
-```
-
-## Implementation Details
-
-### Files Created
-
-1. **docs/TYPOGRAPHY_GUIDE.md** (550+ lines)
-   - Complete token reference
-   - Usage patterns and examples
-   - Migration guide
-   - Code review checklist
-   - Testing guidelines
-
-### Files Modified
-
-1. **src/typography.css** (70 → 370 lines, +430% expansion)
-   - Added weight, line-height tokens for all 15 typescales
-   - Created 15 utility classes (.text-display-large, etc.)
-   - Added responsive scaling (mobile, small mobile)
-   - Included migration aliases for backward compatibility
-
-## Metrics & Impact
-
-### Before vs. After
-
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| **Token Completeness** | 33% (size only) | 100% (size/weight/line-height) | +200% |
-| **Utility Classes** | 3 basic | 15 complete | +400% |
-| **Responsive Scaling** | Manual | Automatic | +100% |
-| **Documentation** | None | 550+ lines | +∞ |
-| **Theme Customization** | Hard | Easy (update :root) | +300% |
-
-### Typography System Coverage
-
-| Component | Before | After | Status |
-|-----------|--------|-------|--------|
-| **Base Elements** | ✅ Partial | ✅ Complete | Enhanced |
-| **Utility Classes** | ⚠️ 3 classes | ✅ 15 classes | +400% |
-| **Responsive** | ❌ None | ✅ 2 breakpoints | New |
-| **Documentation** | ❌ None | ✅ Complete | New |
-| **Migration Guide** | ❌ None | ✅ Complete | New |
-
-### Identified Violations
-
-| Severity | Files | Violations | Example |
-|----------|-------|------------|---------|
-| High | 5 | 65 | ibge-data-styles.css (20) |
-| Medium | 3 | 35 | geolocation-banner.css (6) |
-| Low | 2 | 17 | tooltip.css (4) |
-| **Total** | **10** | **117** | - |
-
-## Benefits
-
-### For Developers
-
-✅ **Consistency:** Single source of truth for typography
-✅ **Maintainability:** Update tokens once, apply everywhere
-✅ **Productivity:** Utility classes for rapid development
-✅ **Responsive:** Automatic scaling on mobile
-✅ **Theme Support:** Easy dark mode, custom themes
-✅ **Documentation:** Complete guide with examples
-
-### For Users
-
-✅ **Visual Hierarchy:** Clear content structure
-✅ **Readability:** Optimized line heights, spacing
-✅ **Mobile Experience:** Appropriate sizing on small screens
-✅ **Accessibility:** Semantic HTML improves screen readers
-✅ **Consistency:** Predictable typography across app
-
-### For Project
-
-✅ **Material Design 3:** Full compliance with MD3 guidelines
-✅ **Scalability:** Easy to add new typescales
-✅ **Future-Proof:** Token system supports future enhancements
-✅ **Quality:** Professional typography implementation
-
-## Testing
-
-### Manual Testing Checklist
-
-- [x] Syntax validation (`npm run validate`)
-- [ ] Visual inspection: All base elements (h1-h6, p)
-- [ ] Visual inspection: All utility classes (15 classes)
-- [ ] Responsive test: Desktop (1920px)
-- [ ] Responsive test: Tablet (768px) - verify scale down
-- [ ] Responsive test: Mobile (480px) - verify further scale down
-- [ ] Print test: Typography clarity in print media
-- [ ] Accessibility: Screen reader heading hierarchy
-
-### Automated Tests (Future)
-
-```javascript
-// __tests__/typography.test.js
-describe('Typography System', () => {
-  test('all typescale tokens defined', () => {
-    const root = getComputedStyle(document.documentElement);
-    expect(root.getPropertyValue('--md-sys-typescale-headline-large'))
-      .toBe('32px');
-  });
-
-  test('utility classes apply correct tokens', () => {
-    const element = document.createElement('div');
-    element.className = 'text-headline-large';
-    document.body.appendChild(element);
-    const styles = getComputedStyle(element);
-    expect(styles.fontSize).toBe('32px');
-  });
-});
-```
-
-### Stylelint Rule (Future)
-
-```json
-{
-  "rules": {
-    "declaration-property-value-disallowed-list": {
-      "font-size": ["/^[0-9]+px$/", "/^[0-9]+(\\.[0-9]+)?rem$/"],
-      "message": "Use typography design tokens instead of hardcoded values"
-    }
-  }
-}
-```
-
-## Browser Compatibility
-
-| Feature | Chrome | Firefox | Safari | Edge |
-|---------|--------|---------|--------|------|
-| CSS Variables | 49+ | 31+ | 9.1+ | 15+ |
-| Media Queries | All | All | All | All |
-| Utility Classes | All | All | All | All |
-
-**Minimum Requirements:** Chrome 49+, Firefox 31+, Safari 9.1+, Edge 15+
-**Coverage:** 98%+ browser market share
-
-## Documentation
-
-### Created Files
-
-1. **docs/TYPOGRAPHY_GUIDE.md** (550+ lines)
-   - Complete token reference with use cases
-   - 5 typography scales documented (Display, Headline, Title, Body, Label)
-   - Migration guide with before/after examples
-   - Code review checklist
-   - Current status and migration phases
-   - Testing guidelines
-   - Browser compatibility matrix
-
-### Updated Files
-
-1. **src/typography.css**
-   - Comprehensive inline documentation
-   - Usage guide in header comments
-   - Token structure explanation
-   - Migration aliases for backward compatibility
-
-## Future Enhancements
-
-### Phase 2: File Migration
-
-1. Migrate high-priority files (65 violations)
-2. Update components to use utility classes
-3. Test visual consistency
-
-### Phase 3: Automation
-
-1. Add stylelint rule to prevent new violations
-2. Create automated migration script (find/replace)
-3. Add pre-commit hook for typography linting
-
-### Phase 4: Advanced Features
-
-1. Dark mode typography variants
-2. Custom theme builder
-3. Visual regression testing
-4. Typography playground/documentation site
-
-## Conclusion
-
-The typography system enhancement establishes a solid foundation for consistent, maintainable typography across Guia Turístico. With 15 complete typescales, utility classes, and responsive scaling, developers can now apply Material Design 3 typography patterns easily and confidently.
-
-**Key Achievements:**
-
-- 100% token system completeness (size, weight, line-height)
-- 15 utility classes for rapid development
-- Automatic responsive scaling (mobile, small mobile)
-- 550+ lines of comprehensive documentation
-- Zero breaking changes (backward compatible)
-- 117 violations identified with migration path
-
-**Next Steps:**
-
-1. **Phase 2 Migration:** High-priority files (65 violations)
-2. **Testing:** Visual inspection and responsive validation
-3. **Documentation:** Update README with typography section
-4. **Automation:** Add stylelint rule for future prevention
+**Use for:** Hero sections, splash screens,
 
 ---
 
+## TYPOGRAPHY_GUIDE
+
+# Material Design 3 Typography System Guide
+
 **Version:** v0.11.0-alpha
-**Author:** GitHub Copilot CLI
 **Date:** 2026-02-15
-**Status:** ✅ Complete (Phase 1 - Foundation)
-**Next:** Phase 2 - File Migration
+**Status:** ✅ Production Ready
+
+## Overview
+
+This guide establishes the **Material Design 3 Typography System** for Guia Turístico, ensuring consistent typographic hierarchy across all components. The system uses design tokens instead of hardcoded pixel values, enabling responsive scaling and theme customization.
+
+## Design Tokens Reference
+
+### Token Structure
+
+All typography tokens follow this pattern:
+
+```
+--md-sys-typescale-{category}-{size}[-{property}]
+```
+
+**Categories:** display, headline, title, body, label
+**Sizes:** large, medium, small
+**Properties:** (base), weight, line-height, tracking
+
+## Typography Scale
+
+### Display (57px - 36px)
+
+**Use for:** Hero sections, splash screens, large promotional text
+
+| Token | Size | Weight | Line Height | Use Case |
+|-------|------|--------|-------------|----------|
+| `--md-sys-typescale-display-large` | 57px | 400 | 1.12 | Hero headlines |
+| `--md-sys-typescale-display-medium` | 45px | 400 | 1.16 | Feature showcases |
+| `--md-sys-typescale-display-small` | 36px | 400 | 1.22 | Large callouts |
+
+**Utility Classes:**
+
+- `.text-display-large`
+- `.text-display-medium`
+- `.text-display-small`
+
+**Example:**
+
+```html
+<h1 class="text-display-large">Bem-vindo ao Guia Turístico</h1>
+```
+
+```css
+/* Direct token usage */
+.hero-title {
+  font-size: var(--md-sys-typescale-display-large);
+  font-weight: var(--md-sys-typescale-display-large-weight);
+  line-height: var(--md-sys-typescale-display-large-line-height);
+}
+```
+
+---
+
+### Headline (32px - 24px)
+
+**Use for:** Page titles, prominent section headers
+
+| Token | Size | Weight | Line Height | Use Case |
+|-------|------|--------|-------------|----------|
+| `--md-sys-typescale-headline-large` | 32px | 400 | 1.25 | Page titles (h1) |
+| `--md-sys-typescale-headline-medium` | 28px | 400 | 1.29 | Section headers (h2) |
+| `--md-sys-typescale-headline-small` | 24px | 400 | 1.33 | Subsection headers (h3) |
+
+**Utility Classes:**
+
+- `.text-headline-large`
+- `.text-headline-medium`
+- `.text-headline-small`
+
+**Example:**
+
+```html
+<h1 class="text-headline-large">Coordenadas</h1>
+<h2 class="text-headline-medium">Endereço Completo</h2>
+<h3 class="text-headline-small">Ponto de Referência</h3>
+```
+
+**Semantic HTML:** Use `<h1>`, `<h2>`, `<h3>` which automatically apply headline tokens.
+
+---
+
+### Title (22px - 14px)
+
+**Use for:** Subsection headers, card titles, list item headers
+
+| Token | Size | Weight | Line Height | Use Case |
+|-------|------|--------|-------------|----------|
+| `--md-sys-typescale-title-large` | 22px | 400 | 1.27 | Card headers (h4) |
+| `--md-sys-typescale-title-medium` | 16px | 500 | 1.5 | List headers (h5) |
+| `--md-sys-typescale-title-small` | 14px | 500 | 1.43 | Tertiary headers (h6) |
+
+**Utility Classes:**
+
+- `.text-title-large` (preferred)
+- `.text-title-medium`
+- `.text-title-small`
+- `.title-large` (deprecated alias)
+
+**Example:**
+
+```html
+<!-- Card title -->
+<div class="card">
+  <h4 class="text-title-large">População Estimada</h4>
+  <p class="text-body-medium">12.3 milhões de habitantes</p>
+</div>
+
+<!-- Highlight card -->
+<div class="highlight-card-title text-title-medium">
+  Município
+</div>
+```
+
+---
+
+### Body (16px - 12px)
+
+**Use for:** Paragraphs, content text, descriptions
+
+| Token | Size | Weight | Line Height | Use Case |
+|-------|------|--------|-------------|----------|
+| `--md-sys-typescale-body-large` | 16px | 400 | 1.5 | Primary body text |
+| `--md-sys-typescale-body-medium` | 14px | 400 | 1.43 | Secondary text (default `<p>`) |
+| `--md-sys-typescale-body-small` | 12px | 400 | 1.33 | Captions, metadata |
+
+**Utility Classes:**
+
+- `.text-body-large` (preferred)
+- `.text-body-medium`
+- `.text-body-small`
+- `.body-large` (deprecated alias)
+
+**Example:**
+
+```html
+<p class="text-body-large">
+  População: <strong>12.3 milhões</strong> de habitantes
+</p>
+
+<p class="text-body-medium">
+  Metrópole - Grande centro urbano
+</p>
+
+<p class="t

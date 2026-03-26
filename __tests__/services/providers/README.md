@@ -1,15 +1,17 @@
-# Geolocation Provider Tests
+# `__tests__/services/providers`
 
-Unit and integration tests for the geolocation provider implementations in `src/services/providers/`.
+Unit tests for the geolocation provider implementations in `src/services/providers/`.
 
 ## Files
 
-| File | Description |
-|------|-------------|
-| `GeolocationProvider.test.ts` | Tests for the `GeolocationProvider` interface/base contract |
-| `BrowserGeolocationProvider.test.ts` | Tests for the browser-native `navigator.geolocation` wrapper |
-| `MockGeolocationProvider.test.ts` | Tests verifying the mock provider used in other tests behaves correctly |
+| Test file | Module under test | Description |
+|-----------|------------------|-------------|
+| `BrowserGeolocationProvider.test.ts` | `BrowserGeolocationProvider` | Browser Geolocation API wrapper |
+| `GeolocationProvider.test.ts` | `GeolocationProvider` | Base geolocation provider interface |
+| `MockGeolocationProvider.test.ts` | `MockGeolocationProvider` | Mock provider used in other tests |
 
-## Purpose
+## Running these tests
 
-These tests validate the provider abstraction layer — ensuring all concrete geolocation providers honour the `GeolocationProvider` contract, enabling safe substitution (Strategy pattern).
+```bash
+npx jest __tests__/services/providers
+```

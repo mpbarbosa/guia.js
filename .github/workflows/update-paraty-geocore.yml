@@ -111,15 +111,24 @@ jobs:
             echo "ℹ️  Updating paraty_geocore.js: ${CURRENT_URL}  →  ${TARGET_URL}"
           fi
 
-      # ── 5. Update CDN URL in src/guia.ts ─────────────────────────────────────
-      - name: Update paraty_geocore.js CDN URL in src/guia.ts
+      # ── 5. Update CDN URL in all src/**/*.ts source files ────────────────────
+      # Multiple TypeScript files import directly from the CDN URL (not just
+      # src/guia.ts), so we update every .ts file under src/ in one pass.
+      - name: Update paraty_geocore.js CDN URL in src/**/*.ts
         if: steps.current.outputs.up_to_date != 'true'
         run: |
           OLD_URL="${{ steps.current.outputs.current_url }}"
           NEW_URL="${{ steps.resolve.outputs.cdn_url }}"
 
-          sed -i "s|${OLD_URL}|${NEW_URL}|g" src/guia.ts
-          echo "✅  src/guia.ts updated."
+          UPDATED=0
+          while IFS= read -r f; do
+            if grep -qF "${OLD_URL}" "${f}"; then
+              sed -i "s|${OLD_URL}|${NEW_URL}|g" "${f}"
+              echo "   ✏️  Updated: ${f}"
+              UPDATED=$((UPDATED + 1))
+            fi
+          done < <(find src -name "*.ts")
+          echo "✅  ${UPDATED} source file(s) updated."
 
       # ── 5b. Update CDN URL in src/types/paraty-geocore.d.ts ──────────────────
       # TypeScript resolves the CDN import via the ambient module declaration.

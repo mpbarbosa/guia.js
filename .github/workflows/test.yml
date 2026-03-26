@@ -84,7 +84,7 @@ jobs:
         continue-on-error: false  # Fail workflow on critical/high vulnerabilities
       
       - name: Upload audit results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: security-audit-results
@@ -172,7 +172,7 @@ jobs:
         run: npm run test:unit
       
       - name: Upload unit test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: unit-test-results
@@ -217,7 +217,7 @@ jobs:
         run: npm run test:integration
       
       - name: Upload integration test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: integration-test-results
@@ -262,7 +262,7 @@ jobs:
         run: npm run test:features
       
       - name: Upload feature test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: feature-test-results
@@ -307,7 +307,7 @@ jobs:
         run: npm run test:services
       
       - name: Upload service test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: service-test-results
@@ -392,7 +392,7 @@ jobs:
           fail_ci_if_error: false
       
       - name: Upload coverage artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage/

@@ -269,3 +269,56 @@ declare module 'ibira.js' {
     fetchData(url: string): Promise<unknown>;
   }
 }
+
+// bessa_patterns.ts ambient module declaration (importmap alias)
+declare module 'bessa_patterns.ts' {
+  export class CallbackRegistry {
+    constructor();
+    register(type: string, callback: ((...args: unknown[]) => void) | null): void;
+    get(type: string): ((...args: unknown[]) => void) | null;
+    execute(type: string, ...args: unknown[]): boolean;
+    has(type: string): boolean;
+    unregister(type: string): boolean;
+    clear(): void;
+    getRegisteredTypes(): string[];
+    size(): number;
+    isEmpty(): boolean;
+  }
+
+  export class ObserverSubject<T> {
+    subscribe(observer: (snapshot: T) => void): () => void;
+    unsubscribe(callback: (snapshot: T) => void): boolean;
+    getObserverCount(): number;
+    clearObservers(): void;
+    _notifyObservers(snapshot: T): void;
+  }
+
+  export class DualObserverSubject {
+    subscribe(observer: { update?: (...args: unknown[]) => void } | null | undefined): void;
+    unsubscribe(observer: { update?: (...args: unknown[]) => void }): void;
+    notifyObservers(...args: unknown[]): void;
+    subscribeFunction(fn: ((...args: unknown[]) => void) | null | undefined): void;
+    unsubscribeFunction(fn: (...args: unknown[]) => void): void;
+    notifyFunctionObservers(...args: unknown[]): void;
+    getObserverCount(): number;
+    getFunctionObserverCount(): number;
+    clearAllObservers(): void;
+  }
+
+  export interface ObserverObject {
+    update?: (...args: unknown[]) => void;
+  }
+  export type ObserverFunction = (...args: unknown[]) => void;
+
+  export interface ObserverMixinOptions {
+    checkNull?: boolean;
+    className?: string;
+    excludeNotify?: boolean;
+  }
+  export interface ObserverMixinResult {
+    subscribe(observer: ObserverObject | ObserverFunction): void;
+    unsubscribe(observer: ObserverObject | ObserverFunction): void;
+    notify?(data?: unknown): void;
+  }
+  export function withObserver(options?: ObserverMixinOptions): ObserverMixinResult;
+}

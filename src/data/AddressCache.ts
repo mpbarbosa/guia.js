@@ -30,7 +30,7 @@ import type BrazilianStandardAddress from './BrazilianStandardAddress.js';
 
 // NEW: Import refactored classes (v0.9.0-alpha)
 import AddressChangeDetector from './AddressChangeDetector.js';
-import CallbackRegistry from './CallbackRegistry.js';
+import { CallbackRegistry } from 'bessa_patterns.ts';
 import AddressDataStore from './AddressDataStore.js';
 
 // NEW (v0.12.10-alpha): Confirmation buffers for GPS intersection jitter mitigation

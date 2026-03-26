@@ -38,6 +38,8 @@ export default {
     // Map paraty_geocore.js CDN URL to local TS source for Jest (Node.js cannot fetch https:// URLs)
     '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.6-alpha/dist/esm/index\\.js$':
       '<rootDir>/../paraty_geocore.js/src/index',
+    // Map bessa_patterns.ts importmap alias to local TS source for Jest
+    '^bessa_patterns\\.ts$': '<rootDir>/../bessa_patterns.ts/src/index',
     // Strip .js extension from relative imports so Jest resolves .ts before .js
     '^(\\.{1,2}/.*)\\.js$': '$1',
     // Mock static assets (CSS, images, etc.) so imports don't fail

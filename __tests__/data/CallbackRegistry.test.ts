@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import CallbackRegistry from '../../src/data/CallbackRegistry.js';
+import { CallbackRegistry } from 'bessa_patterns.ts';
 
 describe('CallbackRegistry', () => {
 	let registry;

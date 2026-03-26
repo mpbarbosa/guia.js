@@ -4,12 +4,12 @@
     ".ai_workflow/metrics/current_run.json": {
       "score": 100,
       "issueCount": 0,
-      "lastAnalyzed": "2026-03-26T02:58:00.025Z"
+      "lastAnalyzed": "2026-03-26T03:36:03.253Z"
     },
     "vite.config.js": {
       "score": 100,
       "issueCount": 0,
-      "lastAnalyzed": "2026-03-18T15:17:12.362Z"
+      "lastAnalyzed": "2026-03-26T03:36:03.253Z"
     },
     ".ai_workflow/commit_history.json": {
       "score": 100,
@@ -115,6 +115,11 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-03-26T03:24:07.969Z"
+    },
+    "src/config/version.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-26T03:36:03.253Z"
     }
   }
 }

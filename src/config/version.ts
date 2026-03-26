@@ -10,7 +10,7 @@
  * Current application version (semantic versioning)
  * @constant {string}
  */
-export const VERSION = '0.12.10-alpha';
+export const VERSION = '0.12.11-alpha';
 
 /**
  * Build/release date

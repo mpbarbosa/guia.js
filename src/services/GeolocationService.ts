@@ -690,7 +690,7 @@ class GeolocationService {
 	 * raw GPS events are forwarded to `PositionManager` changes (FR-04.4).
 	 *
 	 * @param {number} ms - The new throttle interval in milliseconds.
-	 * @since 0.12.10-alpha
+	 * @since 0.12.11-alpha
 	 */
 	setThrottleInterval(ms: number): void {
 		this.throttledWatchHandler = throttle(this._rawWatchHandler, ms);

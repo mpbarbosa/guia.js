@@ -6,7 +6,7 @@
  * The full template (nav, header, footer) will be migrated from
  * index.html in subsequent phases.
  *
- * @since 0.12.10-alpha
+ * @since 0.12.11-alpha
  */
 import { RouterView } from 'vue-router';
 </script>

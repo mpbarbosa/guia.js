@@ -557,11 +557,11 @@ describe('PositionManager - MP Barbosa Travel Guide (v0.9.0-alpha)', () => {
     });
 });
 
-// ─── bypassDistanceRule flag (v0.12.9-alpha) ───────────────────────────────
+// ─── bypassDistanceRule flag (v0.12.10-alpha) ───────────────────────────────
 
 import PositionManagerDirect from '../../src/core/PositionManager.js';
 
-describe('PositionManager.setBypassDistanceRule (v0.12.9-alpha)', () => {
+describe('PositionManager.setBypassDistanceRule (v0.12.10-alpha)', () => {
     const spCoords = { latitude: -23.5505, longitude: -46.6333, accuracy: 10 };
     const makePos = (lat: number, lng: number, ts = Date.now()): GeolocationPosition =>
         ({ coords: { ...spCoords, latitude: lat, longitude: lng }, timestamp: ts }) as unknown as GeolocationPosition;

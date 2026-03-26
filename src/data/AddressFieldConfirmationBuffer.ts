@@ -26,7 +26,7 @@
  * `MUNICIPIO_CONFIRMATION_COUNT`).
  *
  * @module data/AddressFieldConfirmationBuffer
- * @since 0.12.9-alpha
+ * @since 0.12.10-alpha
  * @author Marcelo Pereira Barbosa
  *
  * @example

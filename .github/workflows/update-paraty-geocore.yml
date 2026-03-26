@@ -1,11 +1,11 @@
 # update-paraty-geocore.yml
 # Checks for a new paraty_geocore.js release on GitHub and updates the
-# jsDelivr CDN URL in src/guia.js, jest.config.unit.js, package.json, and
+# jsDelivr CDN URL in src/guia.ts, jest.config.unit.js, package.json, and
 # any test/documentation files that reference the version string, then opens
 # a pull request with the full set of changes.
 #
 # paraty_geocore.js is consumed via a jsDelivr CDN URL hard-coded in
-# src/guia.js (not via package.json dependencies), so no npm install is
+# src/guia.ts (not via package.json dependencies), so no npm install is
 # needed — only a URL version-string replacement across relevant files.
 #
 # CDN URL pattern:
@@ -89,11 +89,11 @@ jobs:
           echo "ℹ️  CDN URL: ${CDN_URL}"
 
       # ── 4. Check current version ──────────────────────────────────────────────
-      - name: Check current paraty_geocore.js version in src/guia.js
+      - name: Check current paraty_geocore.js version in src/guia.ts
         id: current
         run: |
-          # Extract the version tag currently embedded in the CDN URL inside src/guia.js
-          CURRENT_URL="$(grep -oP "https://cdn\.jsdelivr\.net/gh/mpbarbosa/paraty_geocore\.js@[^/]+/dist/esm/index\.js" src/guia.js | head -1)"
+          # Extract the version tag currently embedded in the CDN URL inside src/guia.ts
+          CURRENT_URL="$(grep -oP "https://cdn\.jsdelivr\.net/gh/mpbarbosa/paraty_geocore\.js@[^/]+/dist/esm/index\.js" src/guia.ts | head -1)"
           CURRENT_VERSION="$(echo "${CURRENT_URL}" | grep -oP '(?<=paraty_geocore\.js@)[^/]+')"
 
           echo "current_url=${CURRENT_URL}"       >> "$GITHUB_OUTPUT"
@@ -109,15 +109,15 @@ jobs:
             echo "ℹ️  Updating paraty_geocore.js: ${CURRENT_URL}  →  ${TARGET_URL}"
           fi
 
-      # ── 5. Update CDN URL in src/guia.js ─────────────────────────────────────
-      - name: Update paraty_geocore.js CDN URL in src/guia.js
+      # ── 5. Update CDN URL in src/guia.ts ─────────────────────────────────────
+      - name: Update paraty_geocore.js CDN URL in src/guia.ts
         if: steps.current.outputs.up_to_date != 'true'
         run: |
           OLD_URL="${{ steps.current.outputs.current_url }}"
           NEW_URL="${{ steps.resolve.outputs.cdn_url }}"
 
-          sed -i "s|${OLD_URL}|${NEW_URL}|g" src/guia.js
-          echo "✅  src/guia.js updated."
+          sed -i "s|${OLD_URL}|${NEW_URL}|g" src/guia.ts
+          echo "✅  src/guia.ts updated."
 
       # ── 6. Update moduleNameMapper in jest.config.unit.js ────────────────────
       # The Jest config maps the CDN URL regex to the local paraty_geocore.js
@@ -305,7 +305,7 @@ jobs:
             | **New** | `${{ steps.resolve.outputs.cdn_url }}` |
 
             ### Files changed
-            - `src/guia.js` — CDN import URL
+            - `src/guia.ts` — CDN import URL
             - `jest.config.unit.js` — `moduleNameMapper` regex key
             - `package.json` — inline Jest `moduleNameMapper` regex key
             - `__tests__/` and `test/` — CDN import URLs in test files (if any)

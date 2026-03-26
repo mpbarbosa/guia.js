@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project integrates [ibira.js](https://github.com/mpbarbosa/ibira.js) v0.4.12-alpha for API fetching and caching capabilities.
+This project integrates [ibira.js](https://github.com/mpbarbosa/ibira.js) v0.4.13-alpha for API fetching and caching capabilities.
 
 ## Integration Strategy
 
@@ -17,7 +17,7 @@ The integration uses a **three-tier fallback approach**:
 ### Production URL (Recommended)
 
 ```javascript
-https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.12-alpha/src/index.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js
 ```
 
 **Benefits:**
@@ -34,7 +34,7 @@ If you want to preload ibira.js before guia.js loads:
 
 ```html
 <!-- Preload ibira.js from CDN -->
-<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.12-alpha/src/index.js">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js">
 
 <!-- Then load guia.js which will use the cached version -->
 <script type="module" src="src/guia.js"></script>
@@ -63,7 +63,7 @@ const ibiraLoadingPromise = (async () => {
     try {
         // 1. Try CDN first (browser only)
         if (typeof window !== 'undefined') {
-            const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.12-alpha/src/index.js');
+            const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js');
             const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
             // Success: return { success: true, source: 'cdn', manager }
         }
@@ -146,7 +146,7 @@ manager.subscribe(observer);
 
 ## Version Information
 
-- **ibira.js version:** 0.4.12-alpha (updated 2026-01-01)
+- **ibira.js version:** 0.4.13-alpha (updated 2026-01-01)
 - **CDN Provider:** jsDelivr
 - **Integration date:** 2025-12-15
 - **Last updated:** 2026-01-01

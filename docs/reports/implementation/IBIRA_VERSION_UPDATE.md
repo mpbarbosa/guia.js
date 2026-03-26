@@ -39,7 +39,7 @@
 **CDN URL**:
 
 ```
-https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.12-alpha/src/index.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js
 ```
 
 ### Previous: v0.2.1-alpha
@@ -144,8 +144,8 @@ Follow the update procedure documented in `docs/IBIRA_INTEGRATION.md`:
 ## References
 
 - **ibira.js Repository**: https://github.com/mpbarbosa/ibira.js
-- **Latest Release**: https://github.com/mpbarbosa/ibira.js/releases/tag/v0.4.12-alpha
-- **CDN**: https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.12-alpha/src/index.js
+- **Latest Release**: https://github.com/mpbarbosa/ibira.js/releases/tag/v0.4.13-alpha
+- **CDN**: https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js
 
 ---
 

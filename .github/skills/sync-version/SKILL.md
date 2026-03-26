@@ -144,13 +144,13 @@ For each file in the canonical list, determine whether it contains
 ```
 File                          | Expected             | Found                | Status
 src/config/defaults.ts        | patch: 5             | patch: 4             | ✗ MISMATCH
-src/config/version.ts         | '0.12.11-alpha'       | '0.12.4-alpha'       | ✗ MISMATCH
-README.md                     | 0.12.11-alpha         | 0.12.11-alpha         | ✓ OK
-docs/INDEX.md                 | 0.12.11-alpha         | 0.12.11-alpha         | ✓ OK
-docs/ROADMAP.md               | 0.12.11-alpha         | 0.12.11-alpha         | ✓ OK
-service-worker.js             | 0.12.11-alpha         | 0.12.11-alpha         | ✓ OK
-public/service-worker.js      | 0.12.11-alpha         | 0.12.11-alpha         | ✓ OK
-.workflow-config.yaml         | "0.12.11-alpha"       | "0.12.11-alpha"       | ✓ OK
+src/config/version.ts         | '0.12.12-alpha'       | '0.12.4-alpha'       | ✗ MISMATCH
+README.md                     | 0.12.12-alpha         | 0.12.12-alpha         | ✓ OK
+docs/INDEX.md                 | 0.12.12-alpha         | 0.12.12-alpha         | ✓ OK
+docs/ROADMAP.md               | 0.12.12-alpha         | 0.12.12-alpha         | ✓ OK
+service-worker.js             | 0.12.12-alpha         | 0.12.12-alpha         | ✓ OK
+public/service-worker.js      | 0.12.12-alpha         | 0.12.12-alpha         | ✓ OK
+.workflow-config.yaml         | "0.12.12-alpha"       | "0.12.12-alpha"       | ✓ OK
 ```
 
 **Check `src/config/defaults.ts` field-by-field:**
@@ -283,7 +283,7 @@ Print a structured summary after execution:
 ```
 sync-version — guia_turistico
 ════════════════════════════════════════════
-Canonical version: 0.12.11-alpha
+Canonical version: 0.12.12-alpha
 ─────────────────────────────────────────────
 File                          Status
 src/config/defaults.ts        ✓ OK  (or ✗ FIXED)
@@ -297,14 +297,14 @@ public/service-worker.js      ✓ OK
 ─────────────────────────────────────────────
 Result: N fixed  |  N already correct
 ✅  Validation passed (tsc + npm test)
-✅  Committed: chore(version): sync all version strings to 0.12.11-alpha
+✅  Committed: chore(version): sync all version strings to 0.12.12-alpha
 ════════════════════════════════════════════
 ```
 
 If no mismatches are found, print:
 
 ```
-✅  sync-version: all version strings already agree with package.json (0.12.11-alpha)
+✅  sync-version: all version strings already agree with package.json (0.12.12-alpha)
     No files were modified.
 ```
 

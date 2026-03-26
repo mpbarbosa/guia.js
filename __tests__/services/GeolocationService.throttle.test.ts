@@ -4,7 +4,7 @@
  * the 5-second throttle window and that `flushThrottle()` resets the cooldown.
  *
  * @jest-environment node
- * @since 0.12.11-alpha
+ * @since 0.12.12-alpha
  */
 
 import { jest } from '@jest/globals';
@@ -263,7 +263,7 @@ describe('GeolocationService – watchCurrentLocation throttle', () => {
 		expect(pm.update).toHaveBeenCalledTimes(2);
 	});
 
-	// ── setThrottleInterval() (v0.12.11-alpha) ──────────────────────────────────
+	// ── setThrottleInterval() (v0.12.12-alpha) ──────────────────────────────────
 
 	test('setThrottleInterval(2000) causes events within 2s to be throttled', () => {
 		if (!GeolocationService) { expect(true).toBe(true); return; }

@@ -33,7 +33,7 @@ import AddressChangeDetector from './AddressChangeDetector.js';
 import { CallbackRegistry } from 'bessa_patterns.ts';
 import AddressDataStore from './AddressDataStore.js';
 
-// NEW (v0.12.11-alpha): Confirmation buffers for GPS intersection jitter mitigation
+// NEW (v0.12.12-alpha): Confirmation buffers for GPS intersection jitter mitigation
 import AddressFieldConfirmationBuffer from './AddressFieldConfirmationBuffer.js';
 import LogradouroChangeTrigger from './LogradouroChangeTrigger.js';
 import {
@@ -102,7 +102,7 @@ class AddressCache {
 	previousAddress: BrazilianStandardAddress | null;
 	currentRawData: NominatimResponse | null;
 	previousRawData: NominatimResponse | null;
-	// NEW (v0.12.11-alpha): Confirmation buffers — require N consecutive identical
+	// NEW (v0.12.12-alpha): Confirmation buffers — require N consecutive identical
 	// geocoding results before publishing an address-field change (jitter mitigation).
 	// _logradouroTrigger is a dedicated module that owns all announcement-decision
 	// logic for logradouro changes (including the bypassDistance signal).
@@ -139,7 +139,7 @@ class AddressCache {
 		this.currentRawData = this.dataStore.getCurrentRawData();
 		this.previousRawData = this.dataStore.getPreviousRawData();
 
-		// NEW (v0.12.11-alpha): one confirmation buffer per tracked address field
+		// NEW (v0.12.12-alpha): one confirmation buffer per tracked address field
 		this._logradouroTrigger = new LogradouroChangeTrigger(LOGRADOURO_CONFIRMATION_COUNT);
 		this._bairroBuffer     = new AddressFieldConfirmationBuffer(BAIRRO_CONFIRMATION_COUNT);
 		this._municipioBuffer  = new AddressFieldConfirmationBuffer(MUNICIPIO_CONFIRMATION_COUNT);
@@ -729,7 +729,7 @@ class AddressCache {
 			this.lastNotifiedBairroChangeSignature = null;
 			this.lastNotifiedMunicipioChangeSignature = null;
 
-			// NEW (v0.12.11-alpha): Run confirmation buffers before invoking callbacks.
+			// NEW (v0.12.12-alpha): Run confirmation buffers before invoking callbacks.
 			// Each buffer must see the new value N consecutive times before returning true.
 			// This prevents GPS intersection jitter from triggering false address changes.
 			const addr = extractor.enderecoPadronizado;
@@ -1212,7 +1212,7 @@ class AddressCache {
 		this.currentRawData = null;
 		this.previousRawData = null;
 
-		// NEW (v0.12.11-alpha): reset buffers and pending callback on destroy
+		// NEW (v0.12.12-alpha): reset buffers and pending callback on destroy
 		this._logradouroTrigger.reset();
 		this._bairroBuffer.reset();
 		this._municipioBuffer.reset();
@@ -1232,7 +1232,7 @@ class AddressCache {
 	 * Consecutive identical state transitions are suppressed (idempotent).
 	 *
 	 * @param {(isPending: boolean) => void} cb - Callback receiving the pending state.
-	 * @since 0.12.11-alpha
+	 * @since 0.12.12-alpha
 	 */
 	setPendingConfirmationCallback(cb: (isPending: boolean) => void): void {
 		this._pendingConfirmationCallback = cb;

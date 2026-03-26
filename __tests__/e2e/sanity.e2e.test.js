@@ -11,7 +11,7 @@
  *   npm run test:e2e -- __tests__/e2e/sanity.e2e.test.js
  *
  * @module __tests__/e2e/sanity.e2e.test
- * @since 0.12.11-alpha
+ * @since 0.12.12-alpha
  */
 
 import puppeteer from 'puppeteer';

@@ -4,7 +4,7 @@
 
 Last Updated: 2026-02-23
 Status: Active
-version: 0.12.11-alpha
+version: 0.12.12-alpha
 
 ---
 

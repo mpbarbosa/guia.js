@@ -11,7 +11,7 @@
  *  7. Custom threshold constructor argument
  *  8. reset() clears all state
  *
- * @since 0.12.11-alpha
+ * @since 0.12.12-alpha
  */
 
 import AddressFieldConfirmationBuffer from '../../src/data/AddressFieldConfirmationBuffer.js';

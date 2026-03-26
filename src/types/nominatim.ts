@@ -5,7 +5,7 @@
  * access the geocoding response fields.
  *
  * @module types/nominatim
- * @since 0.12.11-alpha
+ * @since 0.12.12-alpha
  */
 
 /**

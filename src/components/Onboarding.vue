@@ -5,7 +5,7 @@
  * First-time user experience card for requesting location permission.
  * Declarative replacement for OnboardingManager class in onboarding.js.
  *
- * @since 0.12.11-alpha
+ * @since 0.12.12-alpha
  */
 
 interface Props {

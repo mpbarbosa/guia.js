@@ -70,8 +70,20 @@ describe('OnboardingManager show/hide', () => {
 // ─── checkLocationPermission ──────────────────────────────────────────────────
 
 describe('OnboardingManager.checkLocationPermission', () => {
+  let origPerms: unknown;
+
+  beforeEach(() => {
+    origPerms = navigator.permissions;
+  });
+
+  afterEach(() => {
+    Object.defineProperty(navigator, 'permissions', {
+      value: origPerms,
+      configurable: true,
+    });
+  });
+
   test('calls showOnboarding when Permissions API is absent', async () => {
-    const origPerms = navigator.permissions;
     Object.defineProperty(navigator, 'permissions', {
       value: undefined,
       configurable: true,
@@ -79,10 +91,6 @@ describe('OnboardingManager.checkLocationPermission', () => {
     const showSpy = jest.spyOn(manager, 'showOnboarding');
     await manager.checkLocationPermission();
     expect(showSpy).toHaveBeenCalled();
-    Object.defineProperty(navigator, 'permissions', {
-      value: origPerms,
-      configurable: true,
-    });
   });
 
   test('calls hideOnboarding when permission is granted', async () => {

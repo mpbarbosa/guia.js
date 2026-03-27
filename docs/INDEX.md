@@ -58,7 +58,7 @@ Choose your path based on your role or goal:
 
 1. Start: [TESTING.md](./testing/TESTING.md#troubleshooting) - Common issues
 2. Then: [JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md) - Module issues
-3. Next: [FALSE_POSITIVE_PATTERNS.md](../.github/FALSE_POSITIVE_PATTERNS.md) - Tool errors
+3. Next: [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Contribution guidelines and immutability principles
 4. Also: [CODE_PATTERN_DOCUMENTATION_GUIDE.md](./CODE_PATTERN_DOCUMENTATION_GUIDE.md) - Valid code patterns
 5. Finally: [GitHub Issues](https://github.com/mpbarbosa/guia_turistico/issues) - Report bugs
 

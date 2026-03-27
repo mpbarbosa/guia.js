@@ -74,7 +74,7 @@ Comprehensive audit of guia.js documentation completed on 2026-01-01. This docum
 **Status**: CURRENT
 
 - **Current Version**: v0.2.2-alpha (latest available)
-- CDN URL correctly points to: `https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js`
+- CDN URL correctly points to: `https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/src/index.js`
 - Three-tier loading strategy documented: CDN → Local → Mock
 - Full documentation exists: `docs/IBIRA_INTEGRATION.md`
 - **Action**: No update needed, already at latest version

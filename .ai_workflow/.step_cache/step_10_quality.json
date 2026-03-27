@@ -120,6 +120,31 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-03-26T03:36:03.253Z"
+    },
+    "src/coordination/EventCoordinator.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-27T15:48:11.651Z"
+    },
+    "src/coordination/RateLimitedServiceCoordinator.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-27T15:48:11.651Z"
+    },
+    "src/coordination/ServiceCoordinator.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-27T15:48:11.651Z"
+    },
+    "src/coordination/SpeechCoordinator.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-27T15:48:11.651Z"
+    },
+    "src/coordination/UICoordinator.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-27T15:48:11.651Z"
     }
   }
 }

@@ -1,10 +1,9 @@
 {
   "version": 1,
   "partitionIndex": 1,
-  "totalPartitions": 36,
-  "filesHash": "44fd0d0e",
+  "totalPartitions": 30,
+  "filesHash": "7f885753",
   "partitionLabels": [
-    "vite.config.js, .ai_workflow/metrics, src/config",
     "src/coordination",
     "src/coordination (2)",
     "src/core",
@@ -26,20 +25,15 @@
     "src/utils (3)",
     "src/utils (4)",
     "src/utils (5)",
-    "src/views",
-    ".github/scripts",
-    ".github/scripts (2)",
-    ".github/scripts (3)",
-    ".github/scripts (4)",
-    "__mocks__, docs/api-generated, eslint.config.js",
+    "src/views, __mocks__",
+    "docs/api-generated, eslint.config.js",
     "examples",
     "jest.config.e2e.js, jest.config.unit.js, jest.setup.js, public",
     "scripts",
     "scripts (2)",
-    "service-worker.js, jest.vue-transformer.cjs, .ai_workflow/.step_cache",
-    ".ai_workflow/cache, .github, .markdownlint.json, .vscode, .workflow_session_cloc_cache.json",
+    "service-worker.js, jest.vue-transformer.cjs, .markdownlint.json, .vscode, .workflow_session_cloc_cache.json",
     "jsdoc.json, libs/sidra, manifest.json, package-lock.json, package.json",
-    "public/libs, tsconfig.json, .husky/_"
+    "public/libs, tsconfig.json"
   ],
-  "updatedAt": "2026-03-26T03:36:03.253Z"
+  "updatedAt": "2026-03-27T15:48:11.652Z"
 }

@@ -12,6 +12,10 @@ import type { NominatimAddress } from './types/nominatim.js';
 
 type AddressLike = NominatimAddress | { address?: NominatimAddress } | Record<string, unknown>;
 
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return v !== null && typeof v === 'object' && !Array.isArray(v);
+}
+
 /**
  * Extract district information from Nominatim address.
  * Districts (distritos) are administrative subdivisions of municipalities in Brazil.
@@ -21,14 +25,14 @@ type AddressLike = NominatimAddress | { address?: NominatimAddress } | Record<st
  * @returns District name or null if not available
  */
 function extractDistrito(address: AddressLike | null | undefined): string | null {
-  if (!address) return null;
+  if (!isRecord(address)) return null;
   
   const a = address as Record<string, unknown>;
   const distrito = (a.village || a.district || a.hamlet || a.town) as string | undefined;
   
   if (distrito) return distrito;
   
-  if (a.address) {
+  if (isRecord(a.address)) {
     const nested = a.address as Record<string, unknown>;
     return (nested.village || nested.district || nested.hamlet || nested.town || null) as string | null;
   }
@@ -44,14 +48,14 @@ function extractDistrito(address: AddressLike | null | undefined): string | null
  * @returns Neighborhood name or null if not available
  */
 function extractBairro(address: AddressLike | null | undefined): string | null {
-  if (!address) return null;
+  if (!isRecord(address)) return null;
   
   const a = address as Record<string, unknown>;
   const bairro = (a.suburb || a.neighbourhood || a.quarter || a.residential) as string | undefined;
   
   if (bairro) return bairro;
   
-  if (a.address) {
+  if (isRecord(a.address)) {
     const nested = a.address as Record<string, unknown>;
     return (nested.suburb || nested.neighbourhood || nested.quarter || nested.residential || null) as string | null;
   }

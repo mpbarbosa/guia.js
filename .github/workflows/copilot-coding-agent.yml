@@ -23,16 +23,19 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-        
-    - name: Validate JavaScript syntax
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Validate TypeScript syntax
       uses: ./.github/actions/validate-js
       with:
-        files: 'src/guia.js src/guia_ibge.js'
-        
+        files: 'src/guia.ts src/guia_ibge.ts'
+
     - name: Test basic functionality
       run: |
         echo "Testing basic Node.js functionality..."
-        node src/guia.js
+        npm run validate
         echo "✅ Basic functionality test passed"
         
     - name: Start web server and test (basic check)
@@ -57,9 +60,9 @@ jobs:
     - name: Check for required files
       run: |
         echo "Verifying required files exist..."
-        test -f src/guia.js && echo "✅ src/guia.js found"
-        test -f src/guia_ibge.js && echo "✅ src/guia_ibge.js found"
-        test -f test.html && echo "✅ test.html found"
+        test -f src/guia.ts && echo "✅ src/guia.ts found"
+        test -f src/guia_ibge.ts && echo "✅ src/guia_ibge.ts found"
+        test -f src/index.html && echo "✅ src/index.html found"
         test -f .github/copilot-instructions.md && echo "✅ copilot-instructions.md found"
         test -f .github/workflows/copilot-coding-agent.yml && echo "✅ copilot-coding-agent.yml found"
         echo "✅ All required files present"
@@ -79,20 +82,15 @@ jobs:
     - name: Check code style (basic)
       run: |
         echo "Performing basic code style checks..."
-        # Check for basic formatting issues
-        if grep -q $'\t' src/guia.js; then
-          echo "✅ Tabs found in src/guia.js (consistent with existing style)"
-        fi
-        
         # Check for console.log statements (informational)
-        console_logs=$(grep -c "console\." src/guia.js || true)
-        echo "ℹ️ Found $console_logs console statements in src/guia.js"
-        
+        console_logs=$(grep -c "console\." src/guia.ts || true)
+        echo "ℹ️ Found $console_logs console statements in src/guia.ts"
+
         # Check version consistency
-        if grep -q "prerelease: 'alpha'" src/guia.js; then
-          echo "✅ Version configuration found in src/guia.js"
+        if grep -q "prerelease.*alpha\|APP_VERSION" src/guia.ts; then
+          echo "✅ Version configuration found in src/guia.ts"
         fi
-        
+
         echo "✅ Basic code style checks completed"
 
   security-check:
@@ -105,7 +103,7 @@ jobs:
     - name: Basic security scan
       uses: ./.github/actions/security-check
       with:
-        files: 'src/*.js'
+        files: 'src/*.ts'
   test:
     runs-on: ubuntu-latest
     

@@ -1,24 +1,29 @@
-name: 'Validate JavaScript'
-description: 'Validates JavaScript syntax for all JS files in the project'
+name: 'Validate TypeScript/JavaScript'
+description: 'Validates syntax for TypeScript and JavaScript files in the project'
 inputs:
   files:
-    description: 'Space-separated list of JavaScript files to validate'
+    description: 'Space-separated list of files to validate'
     required: false
-    default: 'src/guia.js src/guia_ibge.js'
+    default: 'src/guia.ts src/guia_ibge.ts'
 runs:
   using: "composite"
   steps:
-    - name: Validate JavaScript syntax
+    - name: Validate file syntax
       shell: bash
       run: |
-        echo "Validating JavaScript syntax..."
+        echo "Validating file syntax..."
+        all_ok=true
         for file in ${{ inputs.files }}; do
           if [ -f "$file" ]; then
-            echo "Validating $file..."
-            node -c "$file"
-            echo "✅ $file syntax validation passed"
+            echo "✅ $file found"
           else
-            echo "⚠️ File not found: $file"
+            echo "❌ File not found: $file"
+            all_ok=false
           fi
         done
-        echo "✅ JavaScript syntax validation completed"
+        # TypeScript type-checking is handled by npm run validate (tsc --noEmit)
+        if [ "$all_ok" = true ]; then
+          echo "✅ All files present — TypeScript checked via tsc --noEmit"
+        else
+          exit 1
+        fi

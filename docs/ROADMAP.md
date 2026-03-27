@@ -127,3 +127,9 @@ Issues identified from `.ai_workflow` workflow runs and resolved via the `audit-
 | RI-024 | Missing `docs/MIGRATION_v0.10.0.md` | docs-outdated | Created `docs/MIGRATION_v0.10.0.md` HomeViewController migration guide | a5b71fa |
 | RI-025 | Markdown lint violations in `.github/SKILLS.md` | markdown-lint | Removed duplicate heading, broken fragment links, truncated row, embedded YAML block | fd6ab55 |
 | RI-026 | Markdown lint violations in 8 other project files | markdown-lint | Fixed MD003/MD024/MD055/MD056 violations in CHANGELOG.md and 7 other files; `npm run lint:md` exits 0 | b16bacb |
+| RI-027 | `APP_VERSION.patch` was 10 instead of 12 in `src/config/defaults.ts` | docs-outdated | Updated `patch: 10` → `patch: 12`; `tsc --noEmit` exits 0 | 24b2a70 |
+| RI-028 | Missing `"private": true` in `package.json` | dependency-warning | Added `"private": true` after version field | 4aa43e7 |
+| RI-029 | Broken link to non-existent `FALSE_POSITIVE_PATTERNS.md` in `docs/INDEX.md` line 61 | docs-outdated | Replaced with valid link to `.github/CONTRIBUTING.md` | a4aa69a |
+| RI-030 | `navigator.permissions` not restored after 4 tests in `onboarding.test.ts` | missing-test-coverage | Added `beforeEach`/`afterEach` to save and restore `navigator.permissions`; 10/10 tests pass | e5ac928 |
+| RI-031 | Browser `fetch()` fallback in `ReverseGeocoder.ts` has no AbortController | missing-test-coverage | Added `AbortController` to native `fetch()` path only; stored as `_abortController` instance field; `tsc --noEmit` exits 0 | 7b4c2a5 |
+| RI-032 | Unsafe `as Record<string, unknown>` casts in `address-parser.ts` without validation | typescript-issue | Added `isRecord()` type guard; guard is called before each cast; 49/49 tests pass | 85948b9 |

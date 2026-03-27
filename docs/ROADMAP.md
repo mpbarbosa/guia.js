@@ -1,11 +1,11 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
-**Current Version**: `0.12.12-alpha` | **Status**: Active Development
-**Last Updated**: 2026-03-22
+**Current Version**: `0.13.0-alpha` | **Status**: Active Development
+**Last Updated**: 2026-03-27
 
 ---
 
-## ✅ Completed (v0.9 – v0.14)
+## ✅ Completed (v0.9 – v0.13)
 
 - Real-time geolocation tracking with position/address display
 - Brazilian address standardization (Nominatim + IBGE)
@@ -24,23 +24,13 @@
 - Contextual button status messages (`button-status.ts`)
 - `paraty_geocore.js` CDN dependency for shared geolocation primitives
 - **Log audit fixes** (2026-03-26): resolved `APP_VERSION.patch` mismatch in `src/config/defaults.ts` (RI-001), merge conflict in `service-worker.js` (RI-002), restored files staged for deletion by failed workflow run (RI-003)
+- **Nearby Places** — `OverpassService.ts` + `HTMLNearbyPlacesPanel.ts`; Overpass API integration for 6 categories; auto-enables when GPS available (v0.13.0-alpha)
+- **City Statistics** — `IBGECityStatsService.ts` + `HTMLCityStatsPanel.ts`; live IBGE population + area data; offline-capable (v0.13.0-alpha)
+- **Dependency upgrades** (v0.13.0-alpha): `paraty_geocore.js` → `v0.12.10-alpha`, `ibira.js` → `v0.4.22-alpha`, `bessa_patterns.ts` → `v0.12.15-alpha`
 
 ---
 
-## 🚧 Near-Term (v0.15-alpha) — In Progress
-
-### ✅ Nearby Places — Implemented
-
-- `OverpassService.ts`: Overpass API integration for OSM place search by category
-- `HTMLNearbyPlacesPanel.ts`: Panel renders results with distance and OSM links
-- Supported categories: restaurants, pharmacies, hospitals, tourist attractions, cafés, supermarkets
-- Buttons auto-enable when GPS coordinates become available
-
-### ✅ City Statistics — Implemented
-
-- `IBGECityStatsService.ts`: Live IBGE Localidades + IBGE SIDRA population queries
-- `HTMLCityStatsPanel.ts`: Panel renders population, area (km²), IBGE code with links
-- Municipality name sourced from cached Nominatim result (no extra network call)
+## 🚧 Near-Term (v0.14-alpha) — In Progress
 
 ### Offline-First Architecture
 
@@ -90,8 +80,7 @@
 | ~~Replace placeholder `fetchCityStatistics()`~~ ✅ Done | ~~Medium~~ |
 | Offline-First Architecture (IndexedDB caching) | Medium |
 | Route Navigation Utility (OpenRouteService/OSRM) | Low |
-| Consolidate duplicate `CHANGELOG.md` v0.9.0 entries | Low |
-| Fix 83 failing unit tests (`performance.mark` mock, ESM `jest.mock` `.js` paths, `require()` in ESM, `ReverseGeocoder` null vs undefined, `andarilho.ts` mock mismatch) | Medium |
+| Consolidate duplicate `CHANGELOG.md` v0.9.0 entries | ~~Low~~ ✅ Done |
 
 ---
 

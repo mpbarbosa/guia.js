@@ -102,6 +102,8 @@ The application follows a **layered architecture** with clear separation of conc
 - **GeolocationService**: Browser Geolocation API wrapper
 - **ReverseGeocoder**: OpenStreetMap Nominatim integration
 - **ChangeDetectionCoordinator**: Address change tracking
+- **OverpassService** (`src/services/OverpassService.ts`): Overpass API (OpenStreetMap) place search — queries by category (restaurants, pharmacies, hospitals, tourist attractions, cafés, supermarkets) within a radius of the current GPS position; exported as `findNearby(lat, lon, category)`
+- **IBGECityStatsService** (`src/services/IBGECityStatsService.ts`): Live IBGE Localidades + SIDRA population queries; returns population, area (km²), and IBGE municipality code; exported as `fetchStats(municipioName)`
 
 **Key Principle**: API abstraction and error handling
 
@@ -123,6 +125,15 @@ The application follows a **layered architecture** with clear separation of conc
 
 - **View Controllers** (`HomeViewController`, `ConverterViewController`): SPA views
 - **HTML Displayers**: Component-specific rendering
+  - `HTMLPositionDisplayer`: Coordinate display and Google Maps links
+  - `HTMLAddressDisplayer`: Brazilian address formatting
+  - `HTMLHighlightCardsDisplayer`: Municipio and bairro cards with metropolitan region
+  - `HTMLReferencePlaceDisplayer`: Nearby reference place display
+  - `HTMLSidraDisplayer`: IBGE population statistics panel (observer pattern)
+  - `HTMLNearbyPlacesPanel` (`src/html/HTMLNearbyPlacesPanel.ts`): Renders Overpass API results as a list with distance, category icon, and OSM link; auto-shows on GPS availability
+  - `HTMLCityStatsPanel` (`src/html/HTMLCityStatsPanel.ts`): Renders IBGE city statistics (population, area, IBGE code); sources municipality name from cached Nominatim data
+  - `HtmlSpeechSynthesisDisplayer`: Speech synthesis facade (facade pattern, 3 sub-components)
+  - `MapLibreDisplayer`: Interactive MapLibre GL 5.x inline map with position marker
 - **UI Components**: Toast notifications, empty states, skeletons
 
 **Key Principle**: Declarative UI and separation from business logic
@@ -144,8 +155,8 @@ GeoPosition (immutable)
 
 #### GeoPosition
 
-**Source**: [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) (external library, `v0.11.3`)
-**CDN URL**: `https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js`
+**Source**: [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) (external library, `v0.12.10-alpha`)
+**CDN URL**: `https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-alpha/dist/esm/index.js`
 **Purpose**: Immutable geographic coordinate container
 
 > ⚠️ `src/core/GeoPosition.ts` was removed in `v0.12.12-alpha`. `GeoPosition` is now imported directly from the `paraty_geocore.js` CDN (ESM build).
@@ -153,7 +164,7 @@ GeoPosition (immutable)
 **Import**:
 
 ```ts
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js';
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-alpha/dist/esm/index.js';
 ```
 
 **Key Methods**:

@@ -25,7 +25,7 @@ on:
     inputs:
       version:
         description: |
-          bessa_patterns.ts tag to update to (e.g. v0.13.0-alpha).
+          bessa_patterns.ts tag to update to (e.g. v0.13.1-alpha).
           Leave blank to use the latest published release.
         required: false
         default: ''

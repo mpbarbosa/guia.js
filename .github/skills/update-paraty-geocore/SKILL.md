@@ -72,7 +72,7 @@ A dedicated GitHub Actions workflow handles the full update end-to-end.
 ## How to trigger manually
 
 ```shell
-gh workflow run update-paraty-geocore.yml --field version=v0.13.0-alpha
+gh workflow run update-paraty-geocore.yml --field version=v0.13.1-alpha
 ```
 
 Leave `version` blank to use the latest published release.

@@ -5,13 +5,14 @@
  * GeocodingState, calculateDistance, EARTH_RADIUS_METERS, delay,
  * withObserver, ObserverMixinOptions, ObserverMixinResult,
  * ReferencePlace, NO_REFERENCE_PLACE, VALID_REF_PLACE_CLASSES, OsmElement,
+ * PositionManager, PositionManagerConfig, createPositionManagerConfig, initializeConfig,
  * log, warn.
  *
  * @see https://github.com/mpbarbosa/paraty_geocore.js
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-alpha/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-alpha/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js' {
 	/** GPS accuracy quality classification. */
 	export type AccuracyQuality = 'excellent' | 'good' | 'medium' | 'bad' | 'very bad';
 
@@ -196,7 +197,7 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-
 	 * @since 0.11.0
 	 *
 	 * @example
-	 * import { withObserver } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-alpha/dist/esm/index.js';
+	 * import { withObserver } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
 	 *
 	 * class MyClass {
 	 *     constructor() { this.observerSubject = new DualObserverSubject(); }
@@ -251,6 +252,66 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-
 	 * @since 0.12.1-alpha
 	 */
 	export function warn(message: string, ...params: unknown[]): void;
+
+	// ─── PositionManager (0.12.11-alpha) ───────────────────────────────────────
+
+	/** Configuration parameters for PositionManager. */
+	export interface PositionManagerConfig {
+		trackingInterval: number;
+		minimumDistanceChange: number;
+		minimumTimeChange: number;
+		notAcceptedAccuracy: AccuracyQuality[] | null;
+	}
+
+	/** Returns a PositionManagerConfig populated with default values. */
+	export function createPositionManagerConfig(): PositionManagerConfig;
+
+	/**
+	 * Overrides the module-level config used by every PositionManager instance.
+	 * @param newConfig - Partial or full config object to merge with defaults
+	 */
+	export function initializeConfig(newConfig: Partial<PositionManagerConfig>): void;
+
+	/**
+	 * Manages the current geolocation position using singleton and observer patterns.
+	 * @since 0.12.10-alpha
+	 */
+	export class PositionManager {
+		static instance: PositionManager | null;
+		lastPosition: GeoPosition | null;
+
+		static strCurrPosUpdate: string;
+		static strCurrPosNotUpdate: string;
+		static strImmediateAddressUpdate: string;
+
+		static getInstance(position?: GeolocationPosition): PositionManager;
+		constructor(position?: GeolocationPosition);
+
+		get observers(): unknown[];
+		get latitude(): number | undefined;
+		get longitude(): number | undefined;
+		get accuracy(): number | undefined;
+		get accuracyQuality(): AccuracyQuality | undefined;
+		get altitude(): number | null | undefined;
+		get heading(): number | null | undefined;
+		get speed(): number | null | undefined;
+		get timestamp(): number | undefined;
+
+		subscribe(observer: { update?: (...args: unknown[]) => void }): void;
+		unsubscribe(observer: { update?: (...args: unknown[]) => void }): void;
+		notifyObservers(posEvent: string, data?: unknown, error?: { name: string; message: string } | null): void;
+		update(position: GeolocationPosition): void;
+
+		/**
+		 * Enables or disables the distance/time gate bypass.
+		 * @since 0.12.11-alpha
+		 */
+		setBypassDistanceRule(bypass: boolean): void;
+		/** Whether the distance/time gate bypass is currently active. */
+		get bypassDistanceRule(): boolean;
+
+		toString(): string;
+	}
 }
 
 // Ibira.js ambient module declarations

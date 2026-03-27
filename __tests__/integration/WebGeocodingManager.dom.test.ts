@@ -16,7 +16,7 @@
 
 import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-alpha/dist/esm/index.js';
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
 
 /**
  * Creates a comprehensive mock DOM document for testing.

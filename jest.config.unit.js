@@ -36,7 +36,7 @@ export default {
     '^@vue/compiler-sfc$': '<rootDir>/node_modules/@vue/compiler-sfc/index.js',
     '^@vue/test-utils$': '<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js',
     // Map paraty_geocore.js CDN URL to local TS source for Jest (Node.js cannot fetch https:// URLs)
-    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.7-alpha/dist/esm/index\\.js$':
+    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.10-alpha/dist/esm/index\\.js$':
       '<rootDir>/../paraty_geocore.js/src/index',
     // Map bessa_patterns.ts importmap alias to local TS source for Jest
     '^bessa_patterns\\.ts$': '<rootDir>/../bessa_patterns.ts/src/index',

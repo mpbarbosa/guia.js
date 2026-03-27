@@ -14,6 +14,6 @@ export {
 	ReferencePlace,
 	NO_REFERENCE_PLACE,
 	VALID_REF_PLACE_CLASSES,
-} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.7-alpha/dist/esm/index.js';
-export type { OsmElement } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.7-alpha/dist/esm/index.js';
+} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-alpha/dist/esm/index.js';
+export type { OsmElement } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-alpha/dist/esm/index.js';
 

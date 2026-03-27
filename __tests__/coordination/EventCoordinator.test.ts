@@ -31,7 +31,7 @@ try {
     // Import classes under test
     const eventModule = await import('../../src/coordination/EventCoordinator.js');
     const uiModule = await import('../../src/coordination/UICoordinator.js');
-    const stateModule = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.7-alpha/dist/esm/index.js');
+    const stateModule = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-alpha/dist/esm/index.js');
     const positionModule = stateModule;
     
     EventCoordinator = eventModule.default;

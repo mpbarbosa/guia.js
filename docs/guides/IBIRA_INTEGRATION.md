@@ -17,7 +17,7 @@ The integration uses a **three-tier fallback approach**:
 ### Production URL (Recommended)
 
 ```javascript
-https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/src/index.js
 ```
 
 **Benefits:**
@@ -34,7 +34,7 @@ If you want to preload ibira.js before guia.js loads:
 
 ```html
 <!-- Preload ibira.js from CDN -->
-<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/src/index.js">
 
 <!-- Then load guia.js which will use the cached version -->
 <script type="module" src="src/guia.js"></script>
@@ -63,7 +63,7 @@ const ibiraLoadingPromise = (async () => {
     try {
         // 1. Try CDN first (browser only)
         if (typeof window !== 'undefined') {
-            const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js');
+            const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/src/index.js');
             const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
             // Success: return { success: true, source: 'cdn', manager }
         }

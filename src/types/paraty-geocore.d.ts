@@ -254,7 +254,7 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.7-a
 }
 
 // Ibira.js ambient module declarations
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.13-alpha/src/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/src/index.js' {
   export class IbiraAPIFetchManager {
     constructor(config?: object);
     fetch(url: string): Promise<unknown>;

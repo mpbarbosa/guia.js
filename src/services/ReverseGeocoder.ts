@@ -98,6 +98,7 @@ class ReverseGeocoder {
 	lastFetch: number;
 	fetchManager: { fetch(url: string): Promise<unknown>; subscribe(observer: unknown, url: string): void; observers?: unknown[] } | null;
 	AddressDataExtractor: { getBrazilianStandardAddress(data: unknown): unknown } | null;
+	_abortController: AbortController | null;
 	declare subscribe: (observer: unknown) => void;
 	declare unsubscribe: (observer: unknown) => void;
 
@@ -132,6 +133,7 @@ class ReverseGeocoder {
 		this.loading = false;
 		this.lastFetch = 0;
 		this.AddressDataExtractor = null;
+		this._abortController = null;
 
 		// Store fetch manager for API operations (supports IbiraAPIFetchManager or fallback)
 		this.fetchManager = fetchManager;
@@ -615,13 +617,16 @@ class ReverseGeocoder {
 		if (!this.fetchManager) {
 			// Use browser fetch API as fallback (normal operation without ibira.js)
 			try {
-				const response = await fetch(this.url);
+				this._abortController = new AbortController();
+				const response = await fetch(this.url, { signal: this._abortController.signal });
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
 				return await response.json();
 			} catch (e) {
 				throw e;
+			} finally {
+				this._abortController = null;
 			}
 		}
 

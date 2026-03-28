@@ -108,7 +108,7 @@ expect(mockElement.innerHTML).toContain('5.00 km/h');
 **Error**:
 
 ```
-Must use import to load ES Module: /home/mpb/Documents/GitHub/guia_turistico/node_modules/@exodus/bytes/encoding-lite.js
+Must use import to load ES Module: /home/mpb/Documents/GitHub/guia_js/node_modules/@exodus/bytes/encoding-lite.js
 
 at Runtime.requireModule (node_modules/jest-runtime/build/index.js:801:21)
 at Object.<anonymous> (node_modules/html-encoding-sniffer/lib/html-encoding-sniffer.js:2:41)

@@ -22,8 +22,8 @@ Before you begin, ensure you have:
 
 ```bash
 # Clone the repository
-git clone https://github.com/mpbarbosa/guia_turistico.git
-cd guia_turistico
+git clone https://github.com/mpbarbosa/guia.js.git
+cd guia_js
 
 # Install dependencies (~20 seconds)
 npm install
@@ -119,7 +119,7 @@ npm run cdn:generate
 ## Project Structure Overview
 
 ```
-guia_turistico/
+guia_js/
 ├── src/                    # Source code
 │   ├── app.js             # SPA entry point (543 lines)
 │   ├── index.html         # Main HTML page
@@ -185,8 +185,8 @@ guia_turistico/
 
 ```bash
 # Clone and setup
-git clone https://github.com/mpbarbosa/guia_turistico.git
-cd guia_turistico
+git clone https://github.com/mpbarbosa/guia.js.git
+cd guia_js
 npm install                    # 20 seconds
 
 # Validate everything works
@@ -231,8 +231,8 @@ git --version     # Any recent version
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/mpbarbosa/guia_turistico.git
-cd guia_turistico
+git clone https://github.com/mpbarbosa/guia.js.git
+cd guia_js
 ```
 
 ### 2. Install Dependencies
@@ -375,7 +375,7 @@ npm run ci:test-local # Test CI workflow locally
 ### Project Structure
 
 ```
-guia_turistico/
+guia_js/
 ├── src/                    # Source code
 │   ├── app.js             # SPA entry point
 │   ├── index.html         # Main HTML

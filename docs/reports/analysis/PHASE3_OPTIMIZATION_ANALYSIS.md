@@ -79,7 +79,7 @@ npm list jsdom
 **Result:**
 
 ```
-guia_turistico@0.9.0-alpha
+guia_js@0.9.0-alpha
 ├─┬ guia.js (git dependency)
 │ └── jsdom@27.4.0 deduped
 └── jsdom@27.4.0

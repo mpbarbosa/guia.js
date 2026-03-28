@@ -197,7 +197,7 @@ This project supports multiple IDEs:
 ### Phase 1: Add to .gitignore (2 minutes)
 
 ```bash
-cd /home/mpb/Documents/GitHub/guia_turistico
+cd /home/mpb/Documents/GitHub/guia_js
 
 # Backup current .gitignore
 cp .gitignore .gitignore.backup

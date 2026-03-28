@@ -258,7 +258,7 @@ node
 ### Run Tests
 
 ```bash
-cd /home/mpb/Documents/GitHub/guia_turistico
+cd /home/mpb/Documents/GitHub/guia_js
 npm test -- __tests__/html/HTMLHighlightCardsDisplayer.test.js
 ```
 

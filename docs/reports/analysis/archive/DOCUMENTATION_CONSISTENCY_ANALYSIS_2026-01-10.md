@@ -207,18 +207,18 @@ docs/architecture/POSITION_MANAGER.md line 5: "Introduced in version 0.9.0-alpha
 
 **Priority**: ⚠️ HIGH
 **Impact**: Inconsistent project identity in documentation
-**Severity**: Medium - **34 files** still reference "guia_js" instead of "guia_turistico"
+**Severity**: Medium - **34 files** still reference "guia_js" instead of "guia_js"
 
-**Problem**: Project was renamed from "guia_js" (library) to "guia_turistico" (application), but documentation contains mixed references.
+**Problem**: Project was renamed from "guia_js" (library) to "guia_js" (application), but documentation contains mixed references.
 
 **Evidence**:
 
 ```bash
 # Correct project name (package.json)
-"name": "guia_turistico"  ✅ CANONICAL
+"name": "guia_js"  ✅ CANONICAL
 
 # README.md structure section (INCORRECT)
-Line 121: "guia_js/"  ❌ Should be "guia_turistico/"
+Line 121: "guia_js/"  ❌ Should be "guia_js/"
 Line 123: "guia.js"  ❌ Ambiguous (file exists but implies old project name)
 
 # docs/ directory references
@@ -228,7 +228,7 @@ Line 123: "guia.js"  ❌ Ambiguous (file exists but implies old project name)
 **Analysis**:
 
 - **Valid references**: Mentions of guia.js **library dependency** (e.g., "uses guia.js library")
-- **Invalid references**: Project structure paths, directory names, historical context that should be "guia_turistico"
+- **Invalid references**: Project structure paths, directory names, historical context that should be "guia_js"
 
 **Files Requiring Review** (34 files):
 
@@ -241,7 +241,7 @@ Line 123: "guia.js"  ❌ Ambiguous (file exists but implies old project name)
 ```markdown
 # README.md lines 121-123
 - guia_js/
-+ guia_turistico/
++ guia_js/
   ├── src/                          # Source code (ES6 modules)
 - │   ├── guia.js                   # Main entry point (468 lines, modularized from 2288 lines)
 + │   ├── app.js                    # Main application entry point
@@ -252,8 +252,8 @@ Line 123: "guia.js"  ❌ Ambiguous (file exists but implies old project name)
 
 1. Update README.md structure section (lines 121-123)
 2. Review 34 files for context: Keep valid library references, fix project name references
-3. Add clarification note: "guia_turistico (app) uses guia.js (library)"
-4. Document naming convention: `guia_turistico/` (project) vs `guia.js` (library file)
+3. Add clarification note: "guia_js (app) uses guia.js (library)"
+4. Document naming convention: `guia_js/` (project) vs `guia.js` (library file)
 
 ---
 
@@ -332,7 +332,7 @@ Line 560: curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src
 Line 626: curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/package.json"
 
 # Should reference current version
-+ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js"
++ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js"
 ```
 
 **Files Affected**:
@@ -344,10 +344,10 @@ Line 626: curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/pac
 ```markdown
 # README.md CDN examples
 - curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js"
-+ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js"
++ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js"
 
 - curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/package.json"
-+ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/package.json"
++ curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/package.json"
 ```
 
 **Action Required**:
@@ -447,7 +447,7 @@ demo-issue-218.js         ⚠️ Demo file
 
 **Priority**: 🔶 HIGH
 **Impact**: Incorrect project structure visualization
-**Severity**: Medium - Shows "guia_js/" instead of "guia_turistico/"
+**Severity**: Medium - Shows "guia_js/" instead of "guia_js/"
 
 **Problem**: README.md lines 121-150 show project structure with wrong root directory name.
 
@@ -460,7 +460,7 @@ guia_js/
 │   ├── guia.js                   # Main entry point (468 lines, modularized from 2288 lines)
 
 # Should be
-guia_turistico/
+guia_js/
 ├── src/
 │   ├── app.js                    # Main application entry (SPA)
 │   ├── guia.js                   # guia.js library exports (468 lines)

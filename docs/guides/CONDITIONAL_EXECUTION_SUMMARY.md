@@ -162,7 +162,7 @@ echo "test" > .github/cache/directory_structure.cache
 
 ## 🔗 Quick Links
 
-- [GitHub Repository](https://github.com/mpbarbosa/guia_turistico)
+- [GitHub Repository](https://github.com/mpbarbosa/guia.js)
 - [Configuration File](.workflow-config.yaml)
 - [Evaluator Script](.github/scripts/workflow-condition-evaluator.sh)
 - [Test Suite](.github/scripts/test-conditional-execution.sh)

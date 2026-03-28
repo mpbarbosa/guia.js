@@ -279,7 +279,7 @@ sudo apt-get install firefox-geckodriver
 sudo apt-get install chromium-chromedriver
 
 # Run the test suite
-cd /path/to/guia_turistico
+cd /path/to/guia_js
 ./tests/integration/run_visual_hierarchy_tests.sh
 ```
 

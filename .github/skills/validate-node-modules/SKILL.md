@@ -65,7 +65,7 @@ while IFS= read -r line; do
   VER=$(echo "$line" | grep -oP "(?<=deprecated )\S+" | head -1)
   echo ""
   echo "▶ $VER"
-  npm ls "$PKG" --depth=10 2>/dev/null | grep -v "^guia_turistico"
+  npm ls "$PKG" --depth=10 2>/dev/null | grep -v "^guia_js"
 done < /tmp/npm-warnings.txt
 ```
 
@@ -207,7 +207,7 @@ Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 ## Step 7 — Print summary
 
 ```
-validate-node-modules — guia_turistico
+validate-node-modules — guia_js
 ════════════════════════════════════════════
 Warnings found: N
 ─────────────────────────────────────────────

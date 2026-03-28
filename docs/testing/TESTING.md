@@ -133,7 +133,7 @@ npm run validate
 ### Directory Structure
 
 ```
-guia_turistico/
+guia_js/
 ├── __tests__/                    # Main test directory (67 test suites)
 │   ├── unit/                     # Unit tests (1,251 passing tests)
 │   ├── integration/              # Integration tests

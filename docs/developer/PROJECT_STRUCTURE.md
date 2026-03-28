@@ -23,7 +23,7 @@ Personal Site Architecture:
 ## Directory Structure
 
 ```
-guia_turistico/
+guia_js/
 ├── src/                          # Source code (modularized library)
 │   ├── guia.js                   # Main entry point and exports
 │   ├── guia_ibge.js              # IBGE utilities

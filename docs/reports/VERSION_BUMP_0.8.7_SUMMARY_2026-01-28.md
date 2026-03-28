@@ -56,13 +56,13 @@ Commit: cef4a71
 **Primary CDN URL**:
 
 ```
-https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js
 ```
 
 **Commit-Specific URL** (available immediately):
 
 ```
-https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e392435c01b301e7/src/guia.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@cef4a713c5b4b67d5932aec2e392435c01b301e7/src/guia.js
 ```
 
 **Note**: CDN version-specific URL will be available 5-10 minutes after pushing tag to GitHub.
@@ -183,7 +183,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 1. **Push to GitHub** 🟡 **HIGH PRIORITY**
 
    ```bash
-   cd /home/mpb/Documents/GitHub/guia_turistico
+   cd /home/mpb/Documents/GitHub/guia_js
    git push origin main
    git push origin v0.9.0-alpha
    ```
@@ -191,13 +191,13 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 2. **Verify CDN Availability** (5-10 minutes after push)
 
    ```bash
-   curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/package.json"
+   curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/package.json"
    ```
 
 ### Optional (Recommended)
 
 1. **Create GitHub Release** 🟢 **MEDIUM PRIORITY**
-   - Go to: https://github.com/mpbarbosa/guia_turistico/releases/new
+   - Go to: https://github.com/mpbarbosa/guia.js/releases/new
    - Tag: v0.9.0-alpha
    - Title: "Release v0.9.0-alpha"
    - Description: Copy from CHANGELOG.md section
@@ -267,8 +267,8 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 
 ### External Links
 
-- **GitHub Repo**: https://github.com/mpbarbosa/guia_turistico
-- **CDN Status**: https://www.jsdelivr.com/package/gh/mpbarbosa/guia_turistico
+- **GitHub Repo**: https://github.com/mpbarbosa/guia.js
+- **CDN Status**: https://www.jsdelivr.com/package/gh/mpbarbosa/guia_js
 - **guia.js Library**: https://github.com/mpbarbosa/guia_js
 
 ---
@@ -333,7 +333,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a713c5b4b67d5932aec2e39
 **Verification Command**:
 
 ```bash
-cd /home/mpb/Documents/GitHub/guia_turistico
+cd /home/mpb/Documents/GitHub/guia_js
 git log --oneline -1
 git tag -l "v0.8*"
 cat package.json | grep version

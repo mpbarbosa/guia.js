@@ -61,7 +61,7 @@ When you first visit the application, your browser will ask for permission to ac
 
 ```
 ┌─────────────────────────────────────────┐
-│ guia_turistico wants to:               │
+│ guia_js wants to:               │
 │ Know your location                     │
 │                                         │
 │ [Block]  [Allow]                       │
@@ -819,8 +819,8 @@ See [Developer Guide](../developer/DEVELOPER_GUIDE.md) for details.
 
 **Get Help**:
 
-- 🐛 [Report a Bug](https://github.com/mpbarbosa/guia_turistico/issues)
-- 💡 [Request a Feature](https://github.com/mpbarbosa/guia_turistico/issues)
+- 🐛 [Report a Bug](https://github.com/mpbarbosa/guia.js/issues)
+- 💡 [Request a Feature](https://github.com/mpbarbosa/guia.js/issues)
 - 📧 Contact the developer via GitHub
 
 ---

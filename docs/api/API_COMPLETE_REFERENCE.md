@@ -1640,7 +1640,7 @@ addrDisplayer.display(standardAddress);
 
 ## Support and Resources
 
-**Repository**: https://github.com/mpbarbosa/guia_turistico
+**Repository**: https://github.com/mpbarbosa/guia.js
 **Documentation**: `/docs/`
 **Examples**: `/examples/`
 **Tests**: `__tests__/`

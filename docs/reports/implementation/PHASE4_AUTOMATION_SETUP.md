@@ -231,7 +231,7 @@ ncu --target major
 
 # 2. Review security advisories
 npm audit
-gh api /repos/mpbarbosa/guia_turistico/dependabot/alerts
+gh api /repos/mpbarbosa/guia_js/dependabot/alerts
 
 # 3. Check Dependabot PRs
 gh pr list --label "dependencies"
@@ -439,7 +439,7 @@ Settings → Security & analysis → Dependabot security updates: Enable
 
 ```bash
 # Watch dependency PRs
-gh repo set-default mpbarbosa/guia_turistico
+gh repo set-default mpbarbosa/guia_js
 gh api user/repository_notifications -f repository_id=$(gh repo view --json id -q .id)
 ```
 

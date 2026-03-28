@@ -555,7 +555,7 @@ controller.startTracking();  // Now works
 
 - **Documentation**: See [HomeViewController JSDoc](../src/views/home.js)
 - **Examples**: See [examples/](../examples/)
-- **Issues**: Report bugs at [GitHub Issues](https://github.com/mpbarbosa/guia_turistico/issues)
+- **Issues**: Report bugs at [GitHub Issues](https://github.com/mpbarbosa/guia.js/issues)
 - **Tests**: Reference [**tests**/views/home.test.js](../__tests__/views/home.test.js)
 
 ---

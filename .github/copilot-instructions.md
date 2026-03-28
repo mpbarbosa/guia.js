@@ -843,7 +843,7 @@ curl -I "https://nominatim.openstreetmap.org/reverse"
 ### Repository Root Structure
 
 ```
-guia_turistico/
+guia_js/
 ├── src/
 │   ├── app.js (main SPA entry point)
 │   ├── index.html (main HTML page)

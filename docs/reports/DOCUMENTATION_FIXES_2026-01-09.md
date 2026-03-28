@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-Fixed all critical documentation inconsistencies identified in the Documentation Consistency Analysis. Updated test counts from outdated values (1,251 passing) to current values (1,301 passing), corrected version references (0.9.0-alpha → 0.9.0-alpha), and fixed repository references (guia_js → guia_turistico).
+Fixed all critical documentation inconsistencies identified in the Documentation Consistency Analysis. Updated test counts from outdated values (1,251 passing) to current values (1,301 passing), corrected version references (0.9.0-alpha → 0.9.0-alpha), and fixed repository references (guia_js → guia_js).
 
 **Result**: Documentation is now 100% accurate and aligned with actual project state.
 
@@ -70,16 +70,16 @@ Fixed all critical documentation inconsistencies identified in the Documentation
 ### 3. Repository Reference Fixes
 
 **Issue**: Issue creation guides pointed to wrong repository
-**Correction**: mpbarbosa/guia_js → mpbarbosa/guia_turistico
+**Correction**: mpbarbosa/guia_js → mpbarbosa/guia_js
 
 #### Files Updated
 
 **docs/issue-189/CREATE_ISSUES_GUIDE.md** (6 locations):
 
 - Line 9: Prerequisites updated with correct repository name
-- Lines 27, 168, 319, 441, 627: All GitHub issue URLs updated to point to guia_turistico
+- Lines 27, 168, 319, 441, 627: All GitHub issue URLs updated to point to guia_js
 
-**Context**: This project depends on the guia.js library but is a separate repository (guia_turistico). Contributors were being directed to create issues in the wrong repository.
+**Context**: This project depends on the guia.js library but is a separate repository (guia_js). Contributors were being directed to create issues in the wrong repository.
 
 ---
 
@@ -120,7 +120,7 @@ Documentation Status: INCONSISTENT
 Documentation Status: ACCURATE ✅
 - Version: Consistent (0.9.0-alpha everywhere)
 - Test Count: Current (1,301 passing / 1,438 total)
-- Repository URLs: Correct (guia_turistico)
+- Repository URLs: Correct (guia_js)
 - Timing: Current (~7 seconds)
 ```
 
@@ -150,7 +150,7 @@ $ grep '"version"' package.json
 
 ```bash
 $ git remote -v
-origin  https://github.com/mpbarbosa/guia_turistico.git
+origin  https://github.com/mpbarbosa/guia.js.git
 ✅ Correct repository in all docs
 ```
 
@@ -177,7 +177,7 @@ origin  https://github.com/mpbarbosa/guia_turistico.git
 
 1. **docs/issue-189/CREATE_ISSUES_GUIDE.md**
    - 6 repository URL corrections
-   - All URLs now point to guia_turistico
+   - All URLs now point to guia_js
 
 ---
 
@@ -238,7 +238,7 @@ grep -q "$TEST_COUNT" README.md || echo "⚠️ Update test counts in README"
 
 ### 3. Repository Context
 
-**Problem**: Easy to confuse guia_js (library) vs guia_turistico (application)
+**Problem**: Easy to confuse guia_js (library) vs guia_js (application)
 **Solution**: Always verify repository context in issue/PR templates
 
 **Future Prevention**:
@@ -273,7 +273,7 @@ All critical documentation inconsistencies have been resolved. The documentation
 
 - Current test suite size (1,301 passing / 1,438 total)
 - Current version (0.9.0-alpha)
-- Correct repository (guia_turistico)
+- Correct repository (guia_js)
 - Actual performance characteristics (~7 seconds)
 
 **Documentation Health**: Upgraded from B+ (85/100) to A (95/100)

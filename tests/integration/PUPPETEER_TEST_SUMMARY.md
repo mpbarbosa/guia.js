@@ -159,7 +159,7 @@ console.log('Coordinates:', coords);
 ## Test Execution
 
 ```bash
-cd /home/mpb/Documents/GitHub/guia_turistico/tests/integration
+cd /home/mpb/Documents/GitHub/guia_js/tests/integration
 node test_final.js
 ```
 

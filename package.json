@@ -1,5 +1,5 @@
 {
-  "name": "guia_turistico",
+  "name": "guia_js",
   "version": "0.13.1-alpha",
   "private": true,
   "description": "Tourist guide web application built on top of guia.js library",
@@ -159,7 +159,6 @@
     "vue-tsc": "^3.2.5"
   },
   "dependencies": {
-    "guia.js": "github:mpbarbosa/guia_js#v0.6.0-alpha",
     "ibira.js": "github:mpbarbosa/ibira.js#v0.4.22-alpha",
     "maplibre-gl": "^5.19.0",
     "vue": "^3.5.29",

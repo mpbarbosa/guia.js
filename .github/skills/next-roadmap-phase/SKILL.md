@@ -11,7 +11,7 @@ description: >
 
 ## Overview
 
-This skill encodes the full workflow for advancing `guia_turistico` to its
+This skill encodes the full workflow for advancing `guia_js` to its
 next version milestone. It follows a **propose → confirm → implement** loop
 so that scope decisions are always made by the developer, not by the agent.
 
@@ -63,7 +63,7 @@ Also inspect:
 - `docs/architecture/ARCHITECTURE.md` — current architecture and any stale
   documentation describing already-changed components
 - `src/app.ts` — application entry point; any wired-up but undocumented features
-- Open GitHub issues (if any): `gh issue list --repo mpbarbosa/guia_turistico`
+- Open GitHub issues (if any): `gh issue list --repo mpbarbosa/guia.js`
 
 ### Step 2 — Identify candidate changes
 

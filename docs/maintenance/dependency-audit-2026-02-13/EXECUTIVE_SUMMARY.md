@@ -307,7 +307,7 @@ PRODUCTION READY:          YES      ✅ (with security fix)
 ### How to Apply (if not yet committed)
 
 ```bash
-cd /home/mpb/Documents/GitHub/guia_turistico
+cd /home/mpb/Documents/GitHub/guia_js
 npm audit fix --force
 npm install puppeteer@24.37.2 --save-dev
 npm run validate  # Should pass

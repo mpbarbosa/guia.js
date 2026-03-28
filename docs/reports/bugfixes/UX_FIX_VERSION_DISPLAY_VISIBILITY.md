@@ -95,7 +95,7 @@ Browser: Chrome 131.0
 User Agent: Mozilla/5.0 (X11; Linux x86_64)...
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Para reportar bugs, inclua as informações acima.
-GitHub: https://github.com/mpbarbosa/guia_turistico
+GitHub: https://github.com/mpbarbosa/guia.js
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 

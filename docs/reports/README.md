@@ -140,7 +140,7 @@ Session summaries, completion reports, and implementation documentation.
 # [Report Title]
 
 **Date**: YYYY-MM-DD
-**Project**: guia_turistico vX.Y.Z
+**Project**: guia_js vX.Y.Z
 **Status**: [Complete/In Progress/Archived]
 **Duration**: [If applicable]
 

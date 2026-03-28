@@ -38,7 +38,7 @@ Let me continue reading more files to get a comprehensive view:
   └ 118 lines read
 
 ● Check current test stats
-  $ cd /home/mpb/Documents/GitHub/guia_turistico && npm test 2>&1 | head -100
+  $ cd /home/mpb/Documents/GitHub/guia_js && npm test 2>&1 | head -100
   └ 100 lines...
 
 Now let me check more documentation files and get the full test output:
@@ -56,7 +56,7 @@ Now let me check more documentation files and get the full test output:
   └ 118 lines read
 
 ● Get complete test results
-  $ cd /home/mpb/Documents/GitHub/guia_turistico && npm test 2>&1 | tail -50
+  $ cd /home/mpb/Documents/GitHub/guia_js && npm test 2>&1 | tail -50
   └ 1 line...
 
 Let me stop the test run and check a few more key documentation files:
@@ -71,12 +71,12 @@ Let me stop the test run and check a few more key documentation files:
   └ 267 lines read
 
 ● Check current line counts for key files
-  $ cd /home/mpb/Documents/GitHub/guia_turistico && wc -l src/data/BrazilianStandardAddress.js
+  $ cd /home/mpb/Documents/GitHub/guia_js && wc -l src/data/BrazilianStandardAddress.js
   src/data/AddressExtractor.js src/html/HTMLHighlightCardsDisplayer.js
   └ 5 lines...
 
 ● Get test summary stats
-  $ cd /home/mpb/Documents/GitHub/guia_turistico && npm test 2>&1 | grep -E "(Test
+  $ cd /home/mpb/Documents/GitHub/guia_js && npm test 2>&1 | grep -E "(Test
   Suites|Tests:|Time:)" | head -10
   └ 1 line...
 
@@ -87,13 +87,13 @@ Let me stop the test run and check a few more key documentation files:
   └ 85 lines read
 
 ● Estimate test count
-  $ cd /home/mpb/Documents/GitHub/guia_turistico && grep -c "^describe\|^it\|^test"
+  $ cd /home/mpb/Documents/GitHub/guia_js && grep -c "^describe\|^it\|^test"
   __tests__/**/*.test.js 2>/dev/null | awk -F: '{sum+=$2} END {print "Approximate test count:",
   sum}'
   └ 2 lines...
 
 ● Count test files
-  $ cd /home/mpb/Documents/GitHub/guia_turistico && find **tests** -name "*.test.js" | wc -l
+  $ cd /home/mpb/Documents/GitHub/guia_js && find **tests** -name "*.test.js" | wc -l
   └ 2 lines...
 
 Now let me create a comprehensive analysis document:

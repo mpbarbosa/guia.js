@@ -125,7 +125,7 @@
 
 ```
 parent-directory/
-├── guia_turistico/           # This project
+├── guia_js/           # This project
 │   ├── scripts/
 │   │   └── build_and_deploy.sh
 │   └── dist/                 # Created by npm run build
@@ -601,7 +601,7 @@ kill <PID>
 ```bash
 cd ..
 git clone <mpbarbosa_site-repo-url> mpbarbosa_site
-cd guia_turistico
+cd guia_js
 ./scripts/build_and_deploy.sh
 ```
 

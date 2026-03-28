@@ -2,7 +2,7 @@
 
 # GitHub Skills
 
-**Package:** `guia_turistico`
+**Package:** `guia_js`
 **Language:** JavaScript (ESM)
 **License:** ISC
 

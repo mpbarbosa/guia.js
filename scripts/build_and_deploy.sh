@@ -77,7 +77,7 @@ PREREQUISITES:
 
 DIRECTORY STRUCTURE REQUIRED:
     parent-directory/
-    ├── guia_turistico/           # This project
+    ├── guia_js/                 # This project
     │   ├── scripts/
     │   │   └── build_and_deploy.sh
     │   └── dist/                 # Created by npm run build

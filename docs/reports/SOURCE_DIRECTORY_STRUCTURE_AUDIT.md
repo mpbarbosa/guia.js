@@ -247,7 +247,7 @@ export const TRACKING_INTERVAL = 50000; // 50 seconds
 **Replace**:
 
 ```markdown
-guia_turistico/
+guia_js/
 ├── src/                          # Source code (modularized library)
 │   ├── guia.js                   # Main entry point and exports
 │   ├── guia_ibge.js              # IBGE utilities
@@ -266,7 +266,7 @@ guia_turistico/
 **With**:
 
 ```markdown
-guia_turistico/
+guia_js/
 ├── src/                          # Source code (modularized library)
 │   ├── guia.js                   # Main entry point and exports
 │   ├── guia_ibge.js              # IBGE utilities

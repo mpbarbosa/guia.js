@@ -281,7 +281,7 @@ Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 Print a structured summary after execution:
 
 ```
-sync-version — guia_turistico
+sync-version — guia_js
 ════════════════════════════════════════════
 Canonical version: 0.12.12-alpha
 ─────────────────────────────────────────────

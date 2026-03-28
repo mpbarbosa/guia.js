@@ -130,7 +130,7 @@ Successfully completed **comprehensive documentation** for **all 20+ utility scr
 
 ```bash
 # Before (hardcoded):
-cd /home/mpb/Documents/GitHub/guia_turistico/src
+cd /home/mpb/Documents/GitHub/guia_js/src
 
 # After (portable):
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -200,7 +200,7 @@ Successfully addressed **3 critical and high-priority issues** related to workfl
    - Dependency documentation
 
 4. **`scripts/fix-console-logging.sh`** (+3 lines, -2 lines)
-   - Replaced hardcoded path: `/home/mpb/Documents/GitHub/guia_turistico/src`
+   - Replaced hardcoded path: `/home/mpb/Documents/GitHub/guia_js/src`
    - Added portable resolution: `SCRIPT_DIR` + `PROJECT_ROOT`
    - Works across all environments (local, CI/CD, Docker)
 
@@ -276,7 +276,7 @@ Successfully addressed **3 critical and high-priority issues** related to workfl
 **Before**:
 
 ```bash
-cd /home/mpb/Documents/GitHub/guia_turistico/src
+cd /home/mpb/Documents/GitHub/guia_js/src
 ```
 
 **After**:

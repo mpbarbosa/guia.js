@@ -116,7 +116,7 @@ To publish API docs to GitHub Pages:
    - Go to repository Settings → Pages
    - Source: `gh-pages` branch
    - Directory: `/docs/api-generated/`
-   - URL: `https://mpbarbosa.github.io/guia_turistico/api/`
+   - URL: `https://mpbarbosa.github.io/guia_js/api/`
 
 3. **Automated Updates** (GitHub Actions):
 

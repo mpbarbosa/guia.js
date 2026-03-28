@@ -61,7 +61,7 @@ function auditFile(filePath) {
   const content = readFileSync(filePath, 'utf-8');
   const lines = content.split('\n');
   const fileResult = {
-    path: filePath.replace(/^.*\/guia_turistico\//, ''),
+    path: filePath.replace(/^.*\/guia_js\//, ''),
     exports: [],
     score: 0
   };

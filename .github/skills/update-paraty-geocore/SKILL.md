@@ -1,7 +1,7 @@
 ---
 name: update-paraty-geocore
 description: >
-  Update the paraty_geocore.js dependency in guia_turistico to the latest
+  Update the paraty_geocore.js dependency in guia_js to the latest
   (or a specified) release. Uses jsDelivr CDN as the primary delivery source
   with a GitHub repository clone as the local test fallback. Use this skill
   when asked to bump, upgrade, or refresh paraty_geocore.js, or when the

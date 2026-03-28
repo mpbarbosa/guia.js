@@ -144,7 +144,7 @@ and design decisions, see
 **Purpose**: Historical record of project identity clarifications made on 2026-01-06
 
 **Note**: This document preserves the historical context of confusion resolution
-between guia.js library and guia_turistico application. For current project information, see:
+between guia.js library and guia_js application. For current project information, see:
 - [README.md](../README.md) - Current project overview
 - [PROJECT_PURPOSE_AND_ARCHITECTURE.md](./PROJECT_PURPOSE_AND_ARCHITECTURE.md) - Architectural details
 - [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - Directory organization

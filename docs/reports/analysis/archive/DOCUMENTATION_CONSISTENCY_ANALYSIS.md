@@ -1,6 +1,6 @@
 # Documentation Consistency Analysis Report
 
-**Project**: guia_turistico (Tourist Guide Web Application)
+**Project**: guia_js (Tourist Guide Web Application)
 **Analysis Date**: 2026-01-09
 **Project Type**: nodejs_library
 **Primary Language**: JavaScript
@@ -12,7 +12,7 @@
 
 ## Executive Summary
 
-The Guia Turístico project has **comprehensive but inconsistent documentation** across 1,035 markdown files. Critical issues include **version mismatches** (0.9.0-alpha vs 0.9.0-alpha), **outdated test counts** (1,251 passing vs actual 1,282 passing), and **broken repository references** pointing to the wrong GitHub repository (guia_js vs guia_turistico). The project demonstrates strong documentation practices with detailed guides for contributors, but requires immediate attention to version alignment and cross-reference accuracy.
+The Guia Turístico project has **comprehensive but inconsistent documentation** across 1,035 markdown files. Critical issues include **version mismatches** (0.9.0-alpha vs 0.9.0-alpha), **outdated test counts** (1,251 passing vs actual 1,282 passing), and **broken repository references** pointing to the wrong GitHub repository (guia_js vs guia_js). The project demonstrates strong documentation practices with detailed guides for contributors, but requires immediate attention to version alignment and cross-reference accuracy.
 
 **Priority Actions**: Update version numbers in CONTRIBUTING.md (line 488), fix test counts in README.md, and correct repository references in issue creation guides.
 
@@ -47,7 +47,7 @@ The Guia Turístico project has **comprehensive but inconsistent documentation**
 
 # In docs/TESTING_HTML_GENERATION.md line 3
 - **Project**: guia_js v0.9.0-alpha
-+ **Project**: guia_turistico v0.9.0-alpha
++ **Project**: guia_js v0.9.0-alpha
 ```
 
 **Action Required**:
@@ -114,7 +114,7 @@ The Guia Turístico project has **comprehensive but inconsistent documentation**
 **Problem**: Issue creation guides point to wrong repository
 
 - **docs/issue-189/CREATE_ISSUES_GUIDE.md** references `mpbarbosa/guia_js` (incorrect)
-- **Correct repository**: `mpbarbosa/guia_turistico`
+- **Correct repository**: `mpbarbosa/guia_js`
 - **Impact**: Contributors will create issues in wrong project
 
 **Files Affected**:
@@ -127,13 +127,13 @@ The Guia Turístico project has **comprehensive but inconsistent documentation**
 ```markdown
 # In docs/issue-189/CREATE_ISSUES_GUIDE.md
 - Access to create issues in the mpbarbosa/guia_js repository
-+ Access to create issues in the mpbarbosa/guia_turistico repository
++ Access to create issues in the mpbarbosa/guia_js repository
 
 - Go to: https://github.com/mpbarbosa/guia_js/issues/new/choose
-+ Go to: https://github.com/mpbarbosa/guia_turistico/issues/new/choose
++ Go to: https://github.com/mpbarbosa/guia.js/issues/new/choose
 ```
 
-**Context**: This project depends on guia.js library but is a separate repository. Issue templates should point to guia_turistico repository.
+**Context**: This project depends on guia.js library but is a separate repository. Issue templates should point to guia_js repository.
 
 ---
 
@@ -402,7 +402,7 @@ For complete testing documentation, see [TESTING.md](./TESTING.md).
 **Priority**: 🟡 MEDIUM
 **Impact**: Confusion about project vs library
 
-**Problem**: Relationship between guia_turistico and guia.js library unclear
+**Problem**: Relationship between guia_js and guia.js library unclear
 
 - **package.json**: Lists "guia.js": "github:mpbarbosa/guia_js" as dependency
 - **src/guia.js**: 17KB file exists locally (appears to be re-export or subset)
@@ -425,7 +425,7 @@ For complete testing documentation, see [TESTING.md](./TESTING.md).
 
 **Guia Turístico** is a web application built on top of the **guia.js** library:
 
-- **This Repository** (guia_turistico): Tourist guide SPA application
+- **This Repository** (guia_js): Tourist guide SPA application
   - Entry point: `src/app.js`
   - Imports from: `src/guia.js` (local re-exports)
 
@@ -513,8 +513,8 @@ The project maintains minimum coverage thresholds to ensure code quality:
 **Problem**: Inconsistent project naming
 
 - **README.md**: "Guia Turístico" (with accent)
-- **package.json**: "guia_turistico" (no accent, underscore)
-- **Repository**: "guia_turistico"
+- **package.json**: "guia_js" (no accent, underscore)
+- **Repository**: "guia_js"
 - Some docs use "Guia.js" vs "guia.js" vs "Guia Turístico"
 
 **Files Affected**:
@@ -534,8 +534,8 @@ Use consistent terminology to avoid confusion:
 
 ### Project Names
 - **Guia Turístico**: Full project name (with accent) - use in documentation
-- **guia_turistico**: Repository/package name (no accent, underscore) - use in code/config
-- **guia_turistico**: npm package name (lowercase, underscore)
+- **guia_js**: Repository/package name (no accent, underscore) - use in code/config
+- **guia_js**: npm package name (lowercase, underscore)
 
 ### Library References
 - **guia.js**: Core geolocation library (external dependency)
@@ -544,9 +544,9 @@ Use consistent terminology to avoid confusion:
 
 ### When to Use Each
 - **User-facing docs** (README, guides): "Guia Turístico"
-- **Technical docs** (architecture, API): "guia_turistico"
-- **Code/imports**: `guia_turistico`, `guia.js`
-- **URLs/links**: `guia_turistico`, `guia_js` (repository names)
+- **Technical docs** (architecture, API): "guia_js"
+- **Code/imports**: `guia_js`, `guia.js`
+- **URLs/links**: `guia_js`, `guia_js` (repository names)
 ```
 
 ---

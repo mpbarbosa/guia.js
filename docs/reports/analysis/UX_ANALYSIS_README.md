@@ -203,7 +203,7 @@ Easy wins that provide immediate UX improvement:
 ## 📁 File Organization
 
 ```
-guia_turistico/
+guia_js/
 ├── UX_ANALYSIS_README.md (this file)
 ├── UX_ANALYSIS_REPORT_2026-02-11.md (comprehensive analysis)
 ├── UX_ANALYSIS_EXECUTIVE_SUMMARY.txt (quick reference)

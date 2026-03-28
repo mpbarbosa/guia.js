@@ -60,8 +60,8 @@ choco install nodejs python git
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/mpbarbosa/guia_turistico.git
-cd guia_turistico
+git clone https://github.com/mpbarbosa/guia.js.git
+cd guia_js
 
 # 2. Install dependencies (20 seconds, 299 packages)
 npm install
@@ -148,7 +148,7 @@ npm run prepare  # Initializes husky hooks
 ### Directory Organization
 
 ```
-guia_turistico/
+guia_js/
 ├── src/                    # Source code (16,500+ lines)
 │   ├── core/              # Foundation layer (4 classes)
 │   ├── services/          # External integrations (3 services)
@@ -929,8 +929,8 @@ npm run prepare
 
 ## Getting Help
 
-- **Issues**: [GitHub Issues](https://github.com/mpbarbosa/guia_turistico/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/mpbarbosa/guia_turistico/discussions)
+- **Issues**: [GitHub Issues](https://github.com/mpbarbosa/guia.js/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/mpbarbosa/guia.js/discussions)
 - **Documentation**: See [docs/](../) directory
 
 ---

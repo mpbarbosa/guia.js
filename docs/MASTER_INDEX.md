@@ -321,7 +321,7 @@ See [Documentation Guide](CODE_PATTERN_DOCUMENTATION_GUIDE.md) for details.
 ## 🆘 Need Help
 
 - **Can't find documentation?** - Check this index or search [docs/](.)
-- **Documentation outdated?** - [Open an issue](https://github.com/mpbarbosa/guia_turistico/issues)
+- **Documentation outdated?** - [Open an issue](https://github.com/mpbarbosa/guia.js/issues)
 - **Want to contribute?** - See [Contributing Guide](../.github/CONTRIBUTING.md)
 - **Have questions?** - See [FAQ](user/FAQ.md) or [Troubleshooting](user/TROUBLESHOOTING.md)
 

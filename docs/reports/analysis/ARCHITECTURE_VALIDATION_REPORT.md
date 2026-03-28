@@ -1070,7 +1070,7 @@ git commit -m "docs: document .github/hooks/ in contributing guide"
 ### Complete Directory Structure
 
 ```
-guia_turistico/
+guia_js/
 ├── .ai_workflow/              # ✅ Gitignored - AI workflow tracking (2.4MB)
 │   ├── backlog/              # ⚠️ Undocumented - workflow backlogs
 │   ├── logs/                 # ⚠️ Undocumented - workflow logs

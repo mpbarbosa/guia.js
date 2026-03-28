@@ -1,7 +1,7 @@
 # Documentation Consistency Analysis - 2026-01-27
 
 **Analysis Date**: 2026-01-27
-**Project**: Guia Turístico (guia_turistico)
+**Project**: Guia Turístico (guia_js)
 **Project Type**: client_spa (JavaScript SPA)
 **Current Version**: 0.9.0-alpha (package.json)
 **Change Scope**: no-changes (comprehensive analysis)

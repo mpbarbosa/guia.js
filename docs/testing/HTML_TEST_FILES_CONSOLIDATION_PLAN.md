@@ -1,6 +1,6 @@
 # Root Directory HTML Test Files Consolidation Plan
 
-> **⚠️ Note**: This plan was written for the **`guia_js` library repository** (`github.com/mpbarbosa/guia_js`), not for `guia_turistico`. The HTML test files described below exist in the `guia_js` root, not here. If you are looking to organize `guia_turistico` test files, see `docs/testing/TEST_DIRECTORY_CONSOLIDATION_PLAN.md` instead.
+> **⚠️ Note**: This plan was written for the **`guia_js` library repository** (`github.com/mpbarbosa/guia_js`), not for `guia_js`. The HTML test files described below exist in the `guia_js` root, not here. If you are looking to organize `guia_js` test files, see `docs/testing/TEST_DIRECTORY_CONSOLIDATION_PLAN.md` instead.
 
 ---
 **Priority**: LOW (organizational improvement, no functionality impact)

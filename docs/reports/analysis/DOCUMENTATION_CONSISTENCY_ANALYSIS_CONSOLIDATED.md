@@ -1,6 +1,6 @@
 # Documentation Consistency Analysis - Consolidated Report
 
-**Project**: Guia Turístico (guia_turistico)
+**Project**: Guia Turístico (guia_js)
 **Current Version**: 0.9.0-alpha (as of 2026-01-28)
 **Report Period**: 2026-01-09 to 2026-01-28
 **Consolidated**: 2026-01-28
@@ -113,7 +113,7 @@ The Guia Turístico project has demonstrated **consistent improvement in documen
 
 **Timeline**:
 
-- **2026-01-09**: docs/issue-189/ pointed to wrong repo (guia_js instead of guia_turistico)
+- **2026-01-09**: docs/issue-189/ pointed to wrong repo (guia_js instead of guia_js)
 - **2026-01-10**: Multiple CREATE_ISSUES_GUIDE.md files had incorrect URLs
 - **2026-01-14**: Project identity confusion - CONTRIBUTING.md title said "Guia.js" not "Guia Turístico"
 - **2026-01-27**: Clarified distinction in documentation
@@ -121,7 +121,7 @@ The Guia Turístico project has demonstrated **consistent improvement in documen
 
 **Final Resolution**:
 
-- All GitHub URLs point to `mpbarbosa/guia_turistico` ✅
+- All GitHub URLs point to `mpbarbosa/guia_js` ✅
 - Clear distinction: "Guia Turístico" (app) vs "guia.js" (library) ✅
 - CONTRIBUTING.md title corrected to "Contributing to Guia Turístico" ✅
 - Project identity documented in PROJECT_CLARIFICATION.md ✅
@@ -253,7 +253,7 @@ The Guia Turístico project has demonstrated **consistent improvement in documen
 **Standards Established**:
 
 - **Guia Turístico**: Application name (with accent) ✅
-- **guia_turistico**: Repository/package name (no accent, underscore) ✅
+- **guia_js**: Repository/package name (no accent, underscore) ✅
 - **guia.js**: Library name (lowercase) ✅
 - **Portuguese terms**: município, bairro (with accents) ✅
 
@@ -403,7 +403,7 @@ None ✅
 ### 2. Project Terminology
 
 - **Application**: "Guia Turístico" (user-facing)
-- **Repository**: "guia_turistico" (code/config)
+- **Repository**: "guia_js" (code/config)
 - **Library Dependency**: "guia.js" (lowercase)
 - **Portuguese Terms**: Use accents (município, bairro)
 

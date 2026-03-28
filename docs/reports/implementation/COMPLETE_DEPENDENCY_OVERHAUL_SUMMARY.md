@@ -161,7 +161,7 @@ found 0 vulnerabilities
 ```bash
 npm list --depth=0
 
-guia_turistico@0.9.0-alpha
+guia_js@0.9.0-alpha
 ├── eslint@9.39.2
 ├── guia.js@0.9.0-alpha (github)
 ├── ibira.js (github)

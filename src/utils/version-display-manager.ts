@@ -217,7 +217,7 @@ class VersionDisplayManager {
     console.log(`%cUser Agent: ${navigator.userAgent}`, 'font-size: 11px; color: #666;');
     console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #6750a4;');
     console.log('%cPara reportar bugs, inclua as informações acima.', 'font-size: 12px; font-style: italic;');
-    console.log('%cGitHub: https://github.com/mpbarbosa/guia_turistico', 'font-size: 11px; color: #0969da;');
+    console.log('%cGitHub: https://github.com/mpbarbosa/guia.js', 'font-size: 11px; color: #0969da;');
     console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #6750a4;');
   }
 

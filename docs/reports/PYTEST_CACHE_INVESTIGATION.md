@@ -278,7 +278,7 @@ tests/integration/__pycache__/
 ### Phase 1: Fix Typo (2 minutes)
 
 ```bash
-cd /home/mpb/Documents/GitHub/guia_turistico
+cd /home/mpb/Documents/GitHub/guia_js
 
 # Fix typo with sed
 sed -i 's/tests\/integrtion/tests\/integration/g' .gitignore

@@ -1,7 +1,7 @@
 ---
 name: update-ibira
 description: >
-  Update the ibira.js dependency in guia_turistico to the latest
+  Update the ibira.js dependency in guia_js to the latest
   (or a specified) release. Use this skill when asked to bump, upgrade, or
   refresh ibira.js, or when the update-ibira GitHub Actions workflow needs to
   be triggered, debugged, or explained.

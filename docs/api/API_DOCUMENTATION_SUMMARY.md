@@ -271,8 +271,8 @@ Performance monitoring and helper utilities.
 
 ```bash
 # Clone and install
-git clone https://github.com/mpbarbosa/guia_turistico.git
-cd guia_turistico
+git clone https://github.com/mpbarbosa/guia.js.git
+cd guia_js
 npm install
 
 # Validate
@@ -529,8 +529,8 @@ When adding new documentation:
 
 ### Getting Help
 
-- **Issues**: [GitHub Issues](https://github.com/mpbarbosa/guia_turistico/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/mpbarbosa/guia_turistico/discussions)
+- **Issues**: [GitHub Issues](https://github.com/mpbarbosa/guia.js/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/mpbarbosa/guia.js/discussions)
 - **Email**: See repository contact information
 
 ### Reporting Documentation Issues

@@ -302,7 +302,7 @@ guia_js-docs/
 ### Current Directory Structure
 
 ```
-guia_turistico/
+guia_js/
 ├── src/                    # SOURCE CODE (library core)
 │   ├── guia.js             # Main entry point (exported module)
 │   ├── guia_ibge.js        # IBGE integration

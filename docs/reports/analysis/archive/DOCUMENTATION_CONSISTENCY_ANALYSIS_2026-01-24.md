@@ -1,7 +1,7 @@
 # Documentation Consistency Analysis - 2026-01-24
 
 **Analysis Date**: 2026-01-24
-**Project**: Guia Turístico (guia_turistico)
+**Project**: Guia Turístico (guia_js)
 **Project Type**: client_spa (JavaScript SPA)
 **Version**: 0.9.0-alpha
 **Scope**: Comprehensive mixed-changes analysis
@@ -42,8 +42,8 @@ The Guia Turístico project demonstrates **strong documentation practices with 2
 
 ```markdown
 # README.md line 3-4
-- [![Tests](https://img.shields.io/badge/tests-1982%20passing%20%2F%202176%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
-+ [![Tests](https://img.shields.io/badge/tests-1982%20passing%20%2F%202176%20total-yellow)](https://github.com/mpbarbosa/guia_turistico)
+- [![Tests](https://img.shields.io/badge/tests-1982%20passing%20%2F%202176%20total-brightgreen)](https://github.com/mpbarbosa/guia.js)
++ [![Tests](https://img.shields.io/badge/tests-1982%20passing%20%2F%202176%20total-yellow)](https://github.com/mpbarbosa/guia.js)
 + ⚠️ Note: 48 tests currently failing (E2E tests with município format changes)
 ```
 

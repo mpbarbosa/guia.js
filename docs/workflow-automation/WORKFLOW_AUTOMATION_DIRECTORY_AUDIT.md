@@ -1,7 +1,7 @@
 # Workflow-Automation Directory Documentation Audit
 
 **Audit Date**: 2026-01-06
-**Project**: guia_turistico v0.9.0-alpha
+**Project**: guia_js v0.9.0-alpha
 **Focus Area**: `docs/workflow-automation/` directory visibility in INDEX.md
 **Priority**: Low
 **Status**: ✅ Complete

@@ -107,7 +107,7 @@ ps aux | grep "python3 -m http.server"
 kill <PID>
 
 # Start fresh server
-cd /path/to/guia_turistico/src
+cd /path/to/guia_js/src
 python3 -m http.server 9000
 ```
 

@@ -1,7 +1,7 @@
 ---
 name: update-guia
 description: >
-  Update the guia.js dependency in guia_turistico to the latest (or a
+  Update the guia.js dependency in guia_js to the latest (or a
   specified) release. Use this skill when asked to bump, upgrade, or refresh
   guia.js, or when the update-guia GitHub Actions workflow needs to be
   triggered, debugged, or explained.

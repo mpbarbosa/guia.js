@@ -16,8 +16,8 @@
 
 ```bash
 # Clone repository
-git clone https://github.com/mpbarbosa/guia_turistico.git
-cd guia_turistico
+git clone https://github.com/mpbarbosa/guia.js.git
+cd guia_js
 
 # Install dependencies
 npm install
@@ -145,7 +145,7 @@ npm run check:terminology
 ## Project Structure Overview
 
 ```
-guia_turistico/
+guia_js/
 ├── src/
 │   ├── app.js              # Main SPA entry point
 │   ├── index.html          # Main HTML page

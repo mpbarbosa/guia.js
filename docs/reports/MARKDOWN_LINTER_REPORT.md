@@ -377,7 +377,7 @@ Fix MD036 - Emphasis used as heading:
 
 ```bash
 # From project root
-cd /home/mpb/Documents/GitHub/guia_turistico
+cd /home/mpb/Documents/GitHub/guia_js
 
 # Option 1: Use markdownlint's built-in fixer (RECOMMENDED)
 markdownlint --fix docs/**/*.md --config .markdownlint.json

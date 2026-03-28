@@ -82,7 +82,7 @@ The project has TWO identities causing confusion:
 
 **Current Reality** (from package.json):
 
-- **Project Name**: `guia_turistico`
+- **Project Name**: `guia_js`
 - **Project Description**: "Tourist guide web application built on top of guia.js library"
 - **Dependency**: `guia.js` from `github:mpbarbosa/guia_js`
 
@@ -94,7 +94,7 @@ The project has TWO identities causing confusion:
 - `docs/misc/PROJECT_CLARIFICATION.md`: Correctly explains relationship but needs prominence
 
 **Root Cause**:
-This project IS `guia_turistico` (the application) which USES `guia.js` (the library). Documentation incorrectly refers to this project as "Guia.js" throughout.
+This project IS `guia_js` (the application) which USES `guia.js` (the library). Documentation incorrectly refers to this project as "Guia.js" throughout.
 
 **Recommended Fixes**:
 
@@ -135,7 +135,7 @@ For library documentation, see the [guia.js repository](https://github.com/mpbar
 grep -rn "Contributing to Guia.js\|Guia.js - Project\|Guia.js provides" .github/ docs/ --include="*.md"
 
 # Verify correct project identity
-grep "guia_turistico" package.json README.md
+grep "guia_js" package.json README.md
 ```
 
 ---
@@ -164,7 +164,7 @@ Tests:       137 skipped, 1739 passed, 1876 total
 **File**: `README.md` (line 3)
 
 ```markdown
-[![Tests](https://img.shields.io/badge/tests-1739%20passing%20%2F%201876%20total-brightgreen)](https://github.com/mpbarbosa/guia_turistico)
+[![Tests](https://img.shields.io/badge/tests-1739%20passing%20%2F%201876%20total-brightgreen)](https://github.com/mpbarbosa/guia.js)
 ```
 
 **File**: `.github/copilot-instructions.md` (multiple locations)
@@ -600,7 +600,7 @@ npm test 2>&1 | grep "Tests:"
 # Expected: 1739 passed, 137 skipped, 1876 total
 
 # 3. Project Identity Check
-grep "guia_turistico\|Guia Turístico" package.json README.md .github/CONTRIBUTING.md
+grep "guia_js\|Guia Turístico" package.json README.md .github/CONTRIBUTING.md
 # Expected: Consistent usage of "Guia Turístico" for this project
 
 # 4. Source Code Syntax Validation

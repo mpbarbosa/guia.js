@@ -89,7 +89,7 @@
 2. ✅ Test counts updated (180/1224 → 1,251/1,399)
 3. ✅ TESTING.md created at root (11KB)
 4. ✅ Test terminology standardized (README + copilot-instructions)
-5. ✅ Project identity clarified (guia_turistico vs guia.js)
+5. ✅ Project identity clarified (guia_js vs guia.js)
 6. ✅ WebGeocodingManager initialization fixed
 7. ✅ Mobile UI prominence adjusted
 
@@ -309,7 +309,7 @@ All commands are tested and ready to run:
 ### Markdown Linter (30 min)
 
 ```bash
-cd /home/mpb/Documents/GitHub/guia_turistico
+cd /home/mpb/Documents/GitHub/guia_js
 markdownlint --fix docs/**/*.md --config .markdownlint.json
 git diff  # Review changes
 git add docs/

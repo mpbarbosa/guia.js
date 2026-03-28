@@ -152,8 +152,8 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
 ### Reference 9: docs/testing/HTML_TEST_FILES_CONSOLIDATION_PLAN.md
 
 - **Status**: False Positive — file exists
-- **Root Cause**: The document describes a consolidation plan for `guia_js/` repository root HTML test files, but this is the `guia_turistico` repository. The plan appears to have been written for or copied from the sibling `guia_js` library repository. The HTML test files listed (e.g., `bairro-display-test.html`, `ibira-test.html`) are not present in `guia_turistico`'s root. Additionally, the "CI/CD References" section mentions GitHub workflows referencing `test.html` — those workflows are in `guia_js`, not here.
-- **Recommended Fix**: Clarify at the top of the document that this plan applies to the `guia_js` library repository, not `guia_turistico`. Alternatively, audit whether any of these HTML test files actually exist in `guia_turistico/examples/` and rewrite accordingly.
+- **Root Cause**: The document describes a consolidation plan for `guia_js/` repository root HTML test files, but this is the `guia_js` repository. The plan appears to have been written for or copied from the sibling `guia_js` library repository. The HTML test files listed (e.g., `bairro-display-test.html`, `ibira-test.html`) are not present in `guia_js`'s root. Additionally, the "CI/CD References" section mentions GitHub workflows referencing `test.html` — those workflows are in `guia_js`, not here.
+- **Recommended Fix**: Clarify at the top of the document that this plan applies to the `guia_js` library repository, not `guia_js`. Alternatively, audit whether any of these HTML test files actually exist in `guia_js/examples/` and rewrite accordingly.
 - **Priority**: Low — this is a planning document with no active broken links, but it causes confusion about repository scope.
 - **Impact**: Contributors who might act on the consolidation plan in the wrong repository.
 
@@ -329,7 +329,7 @@ All 15 flagged files **exist on disk** — the automated link checker produced *
 
 12. **[Medium] Fix `docs/testing/BROWSER_COMPATIBILITY_GUIDE.md`** — Remove or correct `__tests__/browser` directory reference. Update version.
 
-13. **[Low] Clarify `docs/testing/HTML_TEST_FILES_CONSOLIDATION_PLAN.md`** — Add notice that the plan targets the `guia_js` library repo, not `guia_turistico`.
+13. **[Low] Clarify `docs/testing/HTML_TEST_FILES_CONSOLIDATION_PLAN.md`** — Add notice that the plan targets the `guia_js` library repo, not `guia_js`.
 
 14. **[Low] Update `docs/testing/PERFORMANCE_TESTING_GUIDE.md`** — Add version header and last-updated date.
 

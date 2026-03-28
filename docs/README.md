@@ -221,14 +221,14 @@ Found outdated information or broken links? Want to improve documentation?
 1. **Small fixes**: Edit directly and submit a pull request
 2. **New documentation**: Follow the [Documentation Guide](../.github/CONTRIBUTING.md#documentation)
 3. **Broken links**: Report using the [Reference Checker](../.github/scripts/README_REFERENCE_CHECKER.md)
-4. **Major updates**: Open an [issue](https://github.com/mpbarbosa/guia_turistico/issues) first to discuss
+4. **Major updates**: Open an [issue](https://github.com/mpbarbosa/guia.js/issues) first to discuss
 
 ---
 
 ## 📞 Need Help
 
-- **Questions?** Open a [GitHub Discussion](https://github.com/mpbarbosa/guia_turistico/discussions)
-- **Bug reports?** Create an [Issue](https://github.com/mpbarbosa/guia_turistico/issues)
+- **Questions?** Open a [GitHub Discussion](https://github.com/mpbarbosa/guia.js/discussions)
+- **Bug reports?** Create an [Issue](https://github.com/mpbarbosa/guia.js/issues)
 - **General info?** See [README.md](../README.md)
 
 ---

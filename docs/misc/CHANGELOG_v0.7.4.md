@@ -232,7 +232,7 @@ Visual Weight:
 ### Quick Visual Check (30 seconds)
 
 ```bash
-cd /path/to/guia_turistico
+cd /path/to/guia_js
 python3 -m http.server 8080 --directory src
 # Open http://localhost:8080 in browser
 # Click "Obter Localização Atual"
@@ -242,7 +242,7 @@ python3 -m http.server 8080 --directory src
 ### Run Automated Tests (2 minutes)
 
 ```bash
-cd /path/to/guia_turistico
+cd /path/to/guia_js
 # Install geckodriver first: sudo apt-get install firefox-geckodriver
 ./tests/integration/run_visual_hierarchy_tests.sh
 ```

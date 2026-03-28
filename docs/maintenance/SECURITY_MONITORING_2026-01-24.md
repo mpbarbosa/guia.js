@@ -358,7 +358,7 @@ npm update package-name
 
 ### GitHub Security Tab
 
-**Access**: `https://github.com/mpbarbosa/guia_turistico/security`
+**Access**: `https://github.com/mpbarbosa/guia.js/security`
 
 **Available Views**:
 
@@ -452,7 +452,7 @@ git push origin main
 gh browse /network/updates
 
 # Or visit:
-# https://github.com/mpbarbosa/guia_turistico/network/updates
+# https://github.com/mpbarbosa/guia.js/network/updates
 ```
 
 ---

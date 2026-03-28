@@ -254,8 +254,8 @@ Deprecated APIs are marked with `@deprecated` JSDoc tags and logged warnings. AP
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/mpbarbosa/guia_turistico/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/mpbarbosa/guia_turistico/discussions)
+- **Issues**: [GitHub Issues](https://github.com/mpbarbosa/guia.js/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/mpbarbosa/guia.js/discussions)
 - **Documentation**: See [docs/](../) directory
 
 ---

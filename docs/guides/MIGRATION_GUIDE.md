@@ -536,7 +536,7 @@ positionManager.addObserver(ADDRESS_FETCHED_EVENT, handler);
 
 - **Documentation**: [docs/api/README.md](./api/README.md)
 - **Examples**: [examples/](../examples/)
-- **Issues**: [GitHub Issues](https://github.com/mpbarbosa/guia_turistico/issues)
+- **Issues**: [GitHub Issues](https://github.com/mpbarbosa/guia.js/issues)
 
 ### Testing Your Migration
 

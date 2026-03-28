@@ -311,7 +311,7 @@ The workflow automation runs automatically during AI-assisted development sessio
 ### Phase 1: Clean Up Old Files (Optional, 5 minutes)
 
 ```bash
-cd /home/mpb/Documents/GitHub/guia_turistico
+cd /home/mpb/Documents/GitHub/guia_js
 
 # Remove ai_workflow files from git tracking
 git rm -r --cached .ai_workflow/

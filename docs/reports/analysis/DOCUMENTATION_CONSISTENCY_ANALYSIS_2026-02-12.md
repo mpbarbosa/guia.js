@@ -473,7 +473,7 @@ After implementing fixes, verify:
 
 **Report Generated**: 2026-02-12 01:24:00 UTC
 **Analysis Performed By**: GitHub Copilot CLI
-**Project**: guia_turistico (Guia Turístico SPA)
+**Project**: guia_js (Guia Turístico SPA)
 **Current Version**: 0.9.0-alpha
 
 **Next Steps**: Review critical issues and implement Phase 1 quick wins to improve documentation quality score to 8/10+.

@@ -42,7 +42,7 @@
 
 ### Session Context
 
-- **Working Directory**: `/home/mpb/Documents/GitHub/guia_turistico`
+- **Working Directory**: `/home/mpb/Documents/GitHub/guia_js`
 - **IDE Integration**: Visual Studio Code - Insiders
 - **Workspace**: Active Git repository
 

@@ -586,11 +586,11 @@ All static wrapper methods have been removed. Use singleton instance instead.
 
 ```javascript
 // Update your code from:
-import AddressCache from 'guia_turistico/AddressCache';
+import AddressCache from 'guia_js/AddressCache';
 AddressCache.clearCache();
 
 // To:
-import AddressCache from 'guia_turistico/AddressCache';
+import AddressCache from 'guia_js/AddressCache';
 const cache = AddressCache.getInstance();
 cache.clearCache();
 ```

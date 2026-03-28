@@ -171,7 +171,7 @@ Dados IBGE:
 
 ```
 http://localhost:9000/libs/sidra/tab6579_municipios.json
-→ /home/mpb/Documents/GitHub/guia_turistico/libs/sidra/tab6579_municipios.json
+→ /home/mpb/Documents/GitHub/guia_js/libs/sidra/tab6579_municipios.json
 ```
 
 **Production Build** (npm run build):

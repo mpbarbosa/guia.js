@@ -537,8 +537,8 @@ npm run test:all
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/mpbarbosa/guia_turistico.git
-cd guia_turistico
+git clone https://github.com/mpbarbosa/guia.js.git
+cd guia_js
 
 # 2. Install dependencies (includes Husky setup)
 npm install
@@ -622,7 +622,7 @@ npm run validate
 **Expected Output**:
 
 ```
-> guia_turistico@0.9.0-alpha validate
+> guia_js@0.9.0-alpha validate
 > node -c src/app.js && node -c src/guia.js
 
 ✓ No syntax errors detected

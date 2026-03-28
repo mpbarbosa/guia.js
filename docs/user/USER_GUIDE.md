@@ -720,7 +720,7 @@ To revoke location permission:
 
 **Found a bug?**
 
-- Report at: https://github.com/mpbarbosa/guia_turistico/issues
+- Report at: https://github.com/mpbarbosa/guia.js/issues
 
 **Have a question?**
 

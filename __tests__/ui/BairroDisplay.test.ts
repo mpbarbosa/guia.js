@@ -548,14 +548,14 @@ describe('BairroDisplay - MP Barbosa Travel Guide (v0.4.1-alpha)', () => {
         test('should handle submodule authentication requirements gracefully', () => {
             // Test handling of submodule authentication issues (per copilot instructions)
             const submoduleStatus = {
-                guia_turistico: BairroDisplay ? 'available' : 'not_initialized',
+                guia_js: BairroDisplay ? 'available' : 'not_initialized',
                 authentication_required: true,
                 fallback_behavior: 'graceful_degradation',
                 expected_404_on_links: true
             };
 
             // This is expected behavior when submodules require authentication
-            if (submoduleStatus.guia_turistico === 'not_initialized') {
+            if (submoduleStatus.guia_js === 'not_initialized') {
                 console.log('Submodule not initialized - this is normal without GitHub authentication');
                 expect(submoduleStatus.authentication_required).toBe(true);
                 expect(submoduleStatus.expected_404_on_links).toBe(true);
@@ -584,7 +584,7 @@ describe('BairroDisplay - MP Barbosa Travel Guide (v0.4.1-alpha)', () => {
             const jestConfig = {
                 testEnvironment: 'node', // This test uses node environment
                 testMatch: ['**/__tests__/**/*.test.js', '**/?(*.)+(spec|test).js'],
-                collectCoverageFrom: ['submodules/guia_turistico/src/libs/guia_js/src/**/*.js']
+                collectCoverageFrom: ['submodules/guia_js/src/libs/guia_js/src/**/*.js']
             };
 
             expect(jestConfig.testEnvironment).toBe('node');

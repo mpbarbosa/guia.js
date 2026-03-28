@@ -83,16 +83,16 @@ git mv docs/file.md .github/file.md
 git commit -m "docs: Move file to .github/"
 git push origin main
 
-# 2. In guia_turistico parent
-cd ../../../..  # Navigate to guia_turistico root
+# 2. In guia_js parent
+cd ../../../..  # Navigate to guia_js root
 git add src/libs/guia_js
 git commit -m "Update guia_js submodule with documentation reorganization"
 git push origin main
 
 # 3. In main mpbarbosa_site repository
 cd ../../../..  # Navigate to main repo root
-git add src/submodules/guia_turistico
-git commit -m "Update guia_turistico submodule with latest changes"
+git add src/submodules/guia_js
+git commit -m "Update guia_js submodule with latest changes"
 git push origin main
 ```
 

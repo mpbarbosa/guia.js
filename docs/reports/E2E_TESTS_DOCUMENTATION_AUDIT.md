@@ -1,7 +1,7 @@
 # E2E Tests Documentation Audit
 
 **Audit Date**: 2026-01-06
-**Project**: guia_turistico v0.9.0-alpha
+**Project**: guia_js v0.9.0-alpha
 **Focus Area**: `__tests__/e2e/` directory and main TESTING.md integration
 **Priority**: Low
 **Status**: ✅ Complete

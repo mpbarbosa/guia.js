@@ -462,13 +462,13 @@ describe('ImmediateAddressFlow - MP Barbosa Travel Guide (v0.4.1-alpha)', () => 
             // Test handling of submodule authentication issues (per instructions)
             const submoduleStatus = {
                 music_in_numbers: ImmediateAddressFlow ? 'available' : 'not_initialized',
-                guia_turistico: CurrentPosition ? 'available' : 'not_initialized'
+                guia_js: CurrentPosition ? 'available' : 'not_initialized'
             };
 
             // This is expected behavior when submodules require authentication
-            if (submoduleStatus.guia_turistico === 'not_initialized') {
+            if (submoduleStatus.guia_js === 'not_initialized') {
                 console.log('Submodule not initialized - this is normal without GitHub authentication');
-                expect(submoduleStatus.guia_turistico).toBe('not_initialized');
+                expect(submoduleStatus.guia_js).toBe('not_initialized');
             }
         });
     });
@@ -480,7 +480,7 @@ describe('ImmediateAddressFlow - MP Barbosa Travel Guide (v0.4.1-alpha)', () => 
             const currentFilePath = new URL(import.meta.url).pathname;
             
             expect(currentFilePath).toContain('__tests__');
-            // Note: Directory name varies by installation (guia_js, guia_turistico, etc.)
+            // Note: Directory name varies by installation (guia_js, guia_js, etc.)
             // so we don't assert the specific project directory name
         });
 
@@ -506,7 +506,7 @@ describe('ImmediateAddressFlow - MP Barbosa Travel Guide (v0.4.1-alpha)', () => 
             const jestConfig = {
                 testEnvironment: 'node', // This test uses node environment
                 testMatch: ['**/__tests__/**/*.test.js'],
-                collectCoverageFrom: ['submodules/guia_turistico/src/libs/guia_js/src/**/*.js']
+                collectCoverageFrom: ['submodules/guia_js/src/libs/guia_js/src/**/*.js']
             };
 
             expect(jestConfig.testEnvironment).toBe('node');

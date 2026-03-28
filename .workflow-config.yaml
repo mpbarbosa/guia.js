@@ -4,7 +4,7 @@
 # Updated on 2026-03-23 to add project.version (maintained by sync-version skill)
 
 project:
-  name: "guia_turistico"
+  name: "guia_js"
   version: "0.12.12-alpha"
   kind: "location_based_service"
   description: "Tourist guide Single-Page Application with geolocation tracking"

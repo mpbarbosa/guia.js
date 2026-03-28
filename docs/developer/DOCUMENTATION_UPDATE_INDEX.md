@@ -8,7 +8,7 @@ This document tracks the documentation updates made to reflect the completion of
 
 ### 1. CLASS_EXTRACTION_PHASE_4.md ✅ CREATED
 
-**Location**: `/src/submodules/guia_turistico/src/libs/guia_js/CLASS_EXTRACTION_PHASE_4.md`
+**Location**: `/src/submodules/guia_js/src/libs/guia_js/CLASS_EXTRACTION_PHASE_4.md`
 
 **Content**:
 
@@ -31,7 +31,7 @@ This document tracks the documentation updates made to reflect the completion of
 
 ### 2. CLASS_EXTRACTION_SUMMARY.md ✅ UPDATED
 
-**Location**: `/src/submodules/guia_turistico/src/libs/guia_js/CLASS_EXTRACTION_SUMMARY.md`
+**Location**: `/src/submodules/guia_js/src/libs/guia_js/CLASS_EXTRACTION_SUMMARY.md`
 
 **Changes Made**:
 
@@ -57,7 +57,7 @@ This document tracks the documentation updates made to reflect the completion of
 
 ### 3. REFACTORING_SUMMARY.md ✅ UPDATED
 
-**Location**: `/src/submodules/guia_turistico/src/libs/guia_js/.github/REFACTORING_SUMMARY.md`
+**Location**: `/src/submodules/guia_js/src/libs/guia_js/.github/REFACTORING_SUMMARY.md`
 
 **Changes Made**:
 
@@ -74,7 +74,7 @@ This document tracks the documentation updates made to reflect the completion of
 
 ### 4. javascript-async-await-best-practices.md ✅ ALREADY CREATED
 
-**Location**: `/src/submodules/guia_turistico/src/libs/guia_js/docs/javascript-async-await-best-practices.md`
+**Location**: `/src/submodules/guia_js/src/libs/guia_js/docs/javascript-async-await-best-practices.md`
 
 **Status**: Previously created with comprehensive async-await patterns
 **Content**: 15 sections covering async programming best practices
@@ -85,7 +85,7 @@ This document tracks the documentation updates made to reflect the completion of
 ### Class Extraction Documentation Hierarchy
 
 ```
-src/submodules/guia_turistico/src/libs/guia_js/
+src/submodules/guia_js/src/libs/guia_js/
 ├── CLASS_EXTRACTION_SUMMARY.md        # Main overview (all phases)
 ├── CLASS_EXTRACTION_PHASE_3.md        # Phase 3: Data processing layer
 ├── CLASS_EXTRACTION_PHASE_4.md        # Phase 4: Legacy facade (NEW)

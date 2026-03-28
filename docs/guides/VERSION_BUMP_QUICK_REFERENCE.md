@@ -26,7 +26,7 @@
 **Commands**:
 
 ```bash
-cd /home/mpb/Documents/GitHub/guia_turistico
+cd /home/mpb/Documents/GitHub/guia_js
 
 # Push commit
 git push origin main
@@ -76,13 +76,13 @@ git push origin v0.9.0-alpha
 **Primary CDN URL**:
 
 ```
-https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@0.9.0-alpha/src/guia.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js
 ```
 
 **Commit-Specific URL** (available now):
 
 ```
-https://cdn.jsdelivr.net/gh/mpbarbosa/guia_turistico@cef4a71/src/guia.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@cef4a71/src/guia.js
 ```
 
 ---

@@ -45,7 +45,7 @@ and consume disk space. This skill removes all three in one pass.
 
 ## Prerequisites
 
-- The working directory is the root of the `guia_turistico` repository.
+- The working directory is the root of the `guia_js` repository.
 - No other process is actively writing to `.ai_workflow/logs/`.
 
 ## Step-by-step execution

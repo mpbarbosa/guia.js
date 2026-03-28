@@ -166,6 +166,8 @@
     "vue-router": "^4.6.4"
   },
   "overrides": {
-    "minimatch": "^10.2.2"
+    "minimatch": "^10.2.2",
+    "test-exclude": "^7.0.2",
+    "html-encoding-sniffer": "^6.0.0"
   }
 }

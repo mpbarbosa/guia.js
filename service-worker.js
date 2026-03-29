@@ -4,7 +4,7 @@
  * @version 0.12.12-alpha
  */
 
-const CACHE_NAME = 'guia-turistico-v0.14.0-alpha-20260329-ad9e628';
+const CACHE_NAME = 'guia-turistico-v0.14.1-alpha-20260329-cd368ce';
 
 /** Shell assets precached on install — routes that must work offline. */
 const STATIC_ASSETS = [

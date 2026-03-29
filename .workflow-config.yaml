@@ -7,7 +7,7 @@ project:
   name: "guia_js"
   version: "0.12.12-alpha"
   kind: "location_based_service"
-  description: "Tourist guide Single-Page Application with geolocation tracking"
+  description: "Vue.js/TypeScript tourist guide SPA with Brazilian geocoding and address parsing (municipality, district, neighbourhood)"
 tech_stack:
   primary_language: "typescript"
   framework: "vite"

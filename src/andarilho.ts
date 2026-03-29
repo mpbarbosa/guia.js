@@ -7,6 +7,8 @@
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// `any` is intentional here: `address` is a legacy global injected by the
+// surrounding page at runtime; its shape is unknown to TypeScript.
 
 // Globals expected to be set by the surrounding app (legacy pattern)
 declare function renderAddress(address: unknown): string;

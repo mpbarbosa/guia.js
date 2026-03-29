@@ -236,15 +236,15 @@ Choose your path based on your role or goal:
 ### 🏗️ Architecture Deep Dive
 1. Start: [PROJECT_PURPOSE_AND_ARCHITECTURE.md](./PROJECT_PURPOSE_AND_ARCHITECTURE.md)
 2. Then: [CLASS_DIAGRAM.md](./architecture/CLASS_DIAGRAM.md)
-3. Next: [MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)
+3. Next: [MODULES.md](./architecture/MODULES.md)
 4. Finally: [WEB_GEOCODING_MANAGER.md](./architecture/WEB_GEOCODING_MANAGER.md)
 
 **Estimated time**: 3 hours reading + exploration
 
 ### 🧪 Testing & Quality
-1. Start: [TESTING.md](../TESTING.md) - Overview
-2. Then: [JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md)
-3. Next: [TESTING_HTML_GENERATION.md](./TESTING_HTML_GENERATION.md)
+1. Start: [TESTING.md](./testing/TESTING.md) - Overview
+2. Then: [UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md)
+3. Next: [TESTING_HTML_GENERATION.md](./testing/TESTING_HTML_GENERATION.md)
 4. Finally: [TDD_GUIDE.md](../.github/TDD_GUIDE.md)
 
 **Estimated time**: 2 hours reading
@@ -269,5 +269,5 @@ Choose your path based on your role or goal:
 ```markdown
 ### 🐛 Fixing Bugs
 1. Start: [GitHub Issues](https://github.com/mpbarbosa/guia.js/issues)
-2. Then: [TESTING.md](../TESTING.md#troubleshooting) - Reproduce
+2. Then: [TESTING.md](./testing/TESTING.md#troubleshooting) - Reproduce
 3. Next: [TDD_GUIDE.md](..

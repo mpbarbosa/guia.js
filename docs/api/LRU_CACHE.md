@@ -170,7 +170,7 @@ const cache = new LRUCache(3);  // Max 3 entries
 
 cache.set('a', 1);
 cache.set('b', 2);
-cache.set('c', 
+cache.set('c',
 
 ---
 

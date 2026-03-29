@@ -234,8 +234,8 @@ Skipped: 2 warnings (upstream)
 **Chain:** `ts-jest` → `@jest/transform` → `babel-plugin-istanbul@7.0.1` →
 `test-exclude@6.0.0` → `glob@7.2.3` → `inflight@1.0.6`
 
-**Fix:** `"test-exclude": "^7.0.2"` in `package.json` `overrides`.  
-`test-exclude@7` uses `glob@^10.4.1` and no longer pulls `inflight`.  
+**Fix:** `"test-exclude": "^7.0.2"` in `package.json` `overrides`.
+`test-exclude@7` uses `glob@^10.4.1` and no longer pulls `inflight`.
 `babel-plugin-istanbul@7.0.1` is API-compatible with `test-exclude@7` despite
 specifying `^6.0.0` in its own dependencies.
 
@@ -244,7 +244,7 @@ specifying `^6.0.0` in its own dependencies.
 **Chain:** `http-server@14.1.1` → `html-encoding-sniffer@3.0.0` →
 `whatwg-encoding@2.0.0`
 
-**Fix:** `"html-encoding-sniffer": "^6.0.0"` in `package.json` `overrides`.  
+**Fix:** `"html-encoding-sniffer": "^6.0.0"` in `package.json` `overrides`.
 `html-encoding-sniffer@6` uses `@exodus/bytes` instead of `whatwg-encoding`.
 
 ### `whatwg-encoding@3.1.1` _(upstream — cannot fix locally)_

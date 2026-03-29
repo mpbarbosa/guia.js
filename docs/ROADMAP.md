@@ -140,3 +140,5 @@ Issues identified from `.ai_workflow` workflow runs and resolved via the `audit-
 | RI-036 | 10,411 MDL violations across 443 .md files (MD007/MD009/MD026/MD047) | markdown-lint | Stripped trailing whitespace, ensured final newlines, fixed SKILLS.md setext heading | fd1cf81 |
 | RI-037 | Missing try/catch in .github/scripts/jsdoc-audit.js fs calls | architecture-mismatch | Wrapped readdirSync/statSync/readFileSync in try/catch with safe defaults | d14b153 |
 | RI-038 | Undocumented eslint-disable any in src/andarilho.ts | typescript-issue | Added inline comment explaining legacy global pattern | 40c820c |
+| RI-039 | Version mismatch in src/config/defaults.ts (patch: 1 vs patch: 2) | docs-outdated | Changed `patch: 1` → `patch: 2` in `APP_VERSION`; `npm run check:version` exits 0 | 410abff |
+| RI-040 | Broken links in docs/INDEX.md (MODULE_SPLITTING, TESTING, JEST guide, TESTING_HTML) | docs-outdated | Replaced 4 broken links with correct existing paths; `npm run lint:md` exits 0 | a02c4d6 |

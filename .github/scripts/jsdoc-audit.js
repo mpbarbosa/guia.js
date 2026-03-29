@@ -16,10 +16,23 @@ const results = {
 };
 
 function findJsFiles(dir, fileList = []) {
-  const files = readdirSync(dir);
+  let files;
+  try {
+    files = readdirSync(dir);
+  } catch (err) {
+    console.error(`Warning: cannot read directory ${dir}: ${err.message}`);
+    return fileList;
+  }
   files.forEach(file => {
     const filePath = join(dir, file);
-    if (statSync(filePath).isDirectory()) {
+    let stat;
+    try {
+      stat = statSync(filePath);
+    } catch (err) {
+      console.error(`Warning: cannot stat ${filePath}: ${err.message}`);
+      return;
+    }
+    if (stat.isDirectory()) {
       if (!file.startsWith('.') && file !== 'node_modules') {
         findJsFiles(filePath, fileList);
       }
@@ -58,7 +71,13 @@ function checkJSDoc(content, exportMatch, lineNum) {
 }
 
 function auditFile(filePath) {
-  const content = readFileSync(filePath, 'utf-8');
+  let content;
+  try {
+    content = readFileSync(filePath, 'utf-8');
+  } catch (err) {
+    console.error(`Warning: cannot read ${filePath}: ${err.message}`);
+    return;
+  }
   const lines = content.split('\n');
   const fileResult = {
     path: filePath.replace(/^.*\/guia_js\//, ''),

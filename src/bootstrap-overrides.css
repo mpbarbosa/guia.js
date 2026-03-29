@@ -1,0 +1,47 @@
+/**
+ * Bootstrap → MD3 Token Bridge
+ *
+ * Maps Bootstrap CSS custom properties to the project's Material Design 3
+ * design tokens so the navbar inherits the existing colour palette without
+ * introducing a second independent colour system.
+ */
+
+:root {
+  /* Primary brand colour */
+  --bs-primary:              var(--md-sys-color-primary, #1976d2);
+  --bs-primary-rgb:          25, 118, 210;
+
+  /* Surface / background */
+  --bs-body-bg:              var(--md-sys-color-surface, #ffffff);
+  --bs-body-color:           var(--md-sys-color-on-surface, #1a1a1a);
+
+  /* Navbar-specific overrides */
+  --bs-navbar-color:         var(--md-sys-color-on-surface, #1a1a1a);
+  --bs-navbar-hover-color:   var(--md-sys-color-primary, #1976d2);
+  --bs-navbar-active-color:  var(--md-sys-color-primary, #1976d2);
+  --bs-navbar-brand-color:   var(--md-sys-color-primary, #1976d2);
+  --bs-navbar-brand-hover-color: var(--md-sys-color-primary, #1976d2);
+  --bs-navbar-toggler-border-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Navbar surface uses the MD3 surface container colour */
+.navbar.app-navbar {
+  background-color: var(--md-sys-color-surface-container, #f0f4ff) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Active link uses MD3 primary with pill indicator */
+.app-navbar .navbar-nav .nav-link.active {
+  color: var(--md-sys-color-primary, #1976d2) !important;
+  font-weight: 600;
+  background: rgba(25, 118, 210, 0.08);
+  border-radius: 20px;
+}
+
+/* Focus ring aligned with MD3 style */
+.app-navbar .navbar-nav .nav-link:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary, #1976d2);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

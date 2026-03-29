@@ -5,6 +5,29 @@ All notable changes to Guia Turístico will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0-alpha] - 2026-03-29
+
+### Added
+
+- **Bootstrap 5.3 responsive navbar** (`src/index.html`, `src/app.ts`):
+  - `<nav class="navbar navbar-expand-md app-navbar">` inserted above main content
+  - **Início** (`#/`) and **Conversor** (`#/converter`) nav links with Bootstrap Icons
+  - Hamburger toggle (`navbar-expand-md`) for mobile viewports
+  - Active route highlighted with `.active` class and `aria-current="page"`
+  - Mobile collapse auto-closes after navigation
+- **`src/bootstrap-overrides.css`**: Maps Bootstrap CSS custom properties (`--bs-*`) to existing MD3 design tokens (`--md-sys-color-*`), preventing palette conflicts
+- **`@types/bootstrap`** dev-dependency for Bootstrap 5 TypeScript types
+
+### Changed
+
+- **`updateActiveNavLink()`** in `src/app.ts`: extended to add/remove `.active` + `aria-current` on `.navbar-nav .nav-link` in addition to legacy selectors; auto-closes mobile menu on route change
+- **`vite.config.js`**: Bootstrap assets routed to a dedicated `ui` manual chunk (separate from `vendor`); removed stale `guia.js` from `optimizeDeps.include`
+- **`src/navigation.css`**: Removed the 45-line commented-out `.app-navigation` block deprecated since v0.9.0; removed dead mobile media query for `.app-navigation`
+
+### Removed
+
+- **Footer converter links** in `src/index.html`: the `<aside class="feature-discovery">` card and the plain `<p>` link for the Converter route were removed — navigation is now handled by the navbar
+
 ## [0.13.1-alpha] - 2026-03-27
 
 ### Added

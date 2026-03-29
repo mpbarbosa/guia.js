@@ -54,6 +54,7 @@
     <link rel="stylesheet" href="accessibility-compliance.css">
     <link rel="stylesheet" href="performance-optimizations.css">
     <link rel="stylesheet" href="navigation.css">
+    <link rel="stylesheet" href="bootstrap-overrides.css">
     <link rel="stylesheet" href="header-hero.css">
     <link rel="stylesheet" href="onboarding.css">
     <link rel="stylesheet" href="advanced-controls.css">
@@ -573,7 +574,42 @@
       </div>
     </noscript>
     
-
+    <!-- Primary Navigation -->
+    <nav class="navbar navbar-expand-md app-navbar" aria-label="Navegação principal">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#/">
+          <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+          Guia JS
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#main-nav"
+          aria-controls="main-nav"
+          aria-expanded="false"
+          aria-label="Abrir/fechar menu de navegação"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="main-nav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#/">
+                <i class="bi bi-house-fill me-1" aria-hidden="true"></i>
+                Início
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#/converter">
+                <i class="bi bi-arrow-left-right me-1" aria-hidden="true"></i>
+                Conversor
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
     <!-- Main App Content (dynamically loaded by router) -->
     <main id="app-content" role="main">
@@ -770,26 +806,6 @@
 
     <!-- Footer with secondary features -->
     <footer class="app-footer" role="contentinfo">
-      <!-- Feature Discovery Card -->
-      <aside class="feature-discovery" role="complementary" aria-labelledby="feature-discovery-title">
-        <h3 id="feature-discovery-title" class="feature-discovery-title">Outras Ferramentas</h3>
-        <div class="feature-card">
-          <a href="#/converter" class="feature-link" aria-label="Ir para conversor de coordenadas">
-            <span class="feature-icon" aria-hidden="true">🗺️</span>
-            <div class="feature-content">
-              <h4 class="feature-title">Conversor de Coordenadas</h4>
-              <p class="feature-description">Converta coordenadas geográficas para endereços brasileiros</p>
-            </div>
-            <span class="feature-arrow" aria-hidden="true">→</span>
-          </a>
-        </div>
-      </aside>
-      
-      <p>
-        <a href="#/converter" aria-label="Ir para conversor de coordenadas para endereço">
-          Conversor de Coordenadas para Endereço
-        </a>
-      </p>
       <!-- Version Display (Enhanced with Modal) -->
       <div 
         class="app-version" 

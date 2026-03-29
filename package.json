@@ -1,6 +1,6 @@
 {
   "name": "guia_js",
-  "version": "0.13.1-alpha",
+  "version": "0.14.0-alpha",
   "private": true,
   "description": "Tourist guide web application built on top of guia.js library",
   "type": "module",
@@ -137,6 +137,7 @@
     }
   },
   "devDependencies": {
+    "@types/bootstrap": "^5.2.10",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.3.0",
     "@vitejs/plugin-legacy": "^7.2.1",
@@ -159,6 +160,8 @@
     "vue-tsc": "^3.2.5"
   },
   "dependencies": {
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
     "ibira.js": "github:mpbarbosa/ibira.js#v0.4.22-alpha",
     "maplibre-gl": "^5.19.0",
     "vue": "^3.5.29",

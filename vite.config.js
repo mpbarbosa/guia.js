@@ -66,6 +66,11 @@ export default defineConfig(({ mode }) => {
               return 'map';
             }
 
+            // Bootstrap UI framework gets its own chunk
+            if (id.includes('bootstrap') || id.includes('bootstrap-icons')) {
+              return 'ui';
+            }
+
             // Vendor chunks for external dependencies
             if (id.includes('node_modules')) {
               return 'vendor';
@@ -135,7 +140,7 @@ export default defineConfig(({ mode }) => {
     
     // Optimize dependencies
     optimizeDeps: {
-      include: ['guia.js', 'ibira.js'],
+      include: ['ibira.js'],
     },
   };
 });

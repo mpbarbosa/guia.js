@@ -23,6 +23,10 @@ import { findNearby } from './services/OverpassService.js';
 import { fetchStats } from './services/IBGECityStatsService.js';
 import HTMLNearbyPlacesPanel from './html/HTMLNearbyPlacesPanel.js';
 import HTMLCityStatsPanel from './html/HTMLCityStatsPanel.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import './bootstrap-overrides.css';
+import { Collapse } from 'bootstrap';
 
 interface AppStateType {
   currentRoute: string | null;
@@ -161,14 +165,22 @@ function navigateTo(path: string): void {
 function updateActiveNavLink(): void {
   const hash = window.location.hash || '#/';
 
-  document.querySelectorAll('.app-navigation a, .app-footer a').forEach((link) => {
+  document.querySelectorAll('.app-navigation a, .app-footer a, .navbar-nav .nav-link').forEach((link) => {
     const href = link.getAttribute('href');
     if (href === hash) {
       link.setAttribute('aria-current', 'page');
+      link.classList.add('active');
     } else {
       link.removeAttribute('aria-current');
+      link.classList.remove('active');
     }
   });
+
+  // Close the mobile hamburger menu after navigation
+  const navCollapse = document.getElementById('main-nav');
+  if (navCollapse && navCollapse.classList.contains('show')) {
+    Collapse.getInstance(navCollapse)?.hide();
+  }
 }
 
 function showLoading(): void {

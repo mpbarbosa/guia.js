@@ -109,8 +109,7 @@ a pull request with the full set of changes.
 
 ## SKILL
 
----
-
+```yaml
 name: update-bessa
 description: >
   Update the bessa_patterns.ts dependency in paraty_geocore.js to the latest
@@ -119,9 +118,9 @@ description: >
   asked to bump, upgrade, or refresh bessa_patterns.ts, or when the
   update-bessa GitHub Actions workflow needs to be triggered, debugged, or
   explained
----
+```
 
-## Overview
+## Skill Overview
 
 `bessa_patterns.ts` is consumed by this project exclusively via a **jsDelivr
 CDN URL** hard-coded in `src/index.html` as an importmap entry:

@@ -32,95 +32,16 @@
 
 ## 🚧 Near-Term (v0.14-alpha) — In Progress
 
-### Repo Consolidation — Rename `guia_js` → `guia_js`
+### ✅ Repo Consolidation — `guia_turistico` → `guia_js` (DONE)
 
-Infrastructure housekeeping to align the local folder name and GitHub repo name, eliminating the confusion caused by having two local clones pointing to the same remote.
+Local folder renamed from `guia_turistico/` to `guia_js/` to match the GitHub remote (`guia.js`). All internal references updated across both repos. Stale self-dependency (`"guia.js": "github:mpbarbosa/guia_js#v0.6.0-alpha"`) removed from `package.json`. Companion updates applied to `mpbarbosa_site`.
 
-**Context**: The active project lives in a local folder named `guia_js/` whose remote is `github.com/mpbarbosa/guia.js`. A second local folder `guia_js/` is an outdated clone of the same remote (at v0.6.0). Both point to the same GitHub repo via a redirect.
+**Optional follow-up: Rename GitHub repo `guia.js` → `guia_js`**
 
-**Execution mode: one step at a time — stop after each step and wait for confirmation before proceeding.**
+Recommended for full name consistency between local folder and remote, but independent — can be done any time.
 
-#### Step 1 — Pre-flight
-Commit pending changes (`docs/ROADMAP.md`); push the 2 local-only commits so the remote is fully current.
-*Test*: `git status` shows clean; `git log --oneline -3` shows HEAD matches `origin/main`.
-⏸ **Stop — wait for user confirmation.**
-
-#### Step 2 — Backup
-`cp -r /home/mpb/Documents/GitHub/guia_js /home/mpb/Documents/GitHub/guia_js.bak`
-*Test*: `ls /home/mpb/Documents/GitHub/guia_js.bak/src` lists source files.
-⏸ **Stop — wait for user confirmation.**
-
-#### Step 3 — Remove outdated local clone
-`rm -rf /home/mpb/Documents/GitHub/guia_js`
-*Test*: `ls /home/mpb/Documents/GitHub/guia_js` returns "No such file or directory".
-⏸ **Stop — wait for user confirmation.**
-
-#### Step 4 — Rename local folder
-`mv /home/mpb/Documents/GitHub/guia_js /home/mpb/Documents/GitHub/guia_js`
-*Test*: `ls /home/mpb/Documents/GitHub/guia_js/src` lists source files; `guia_js/` no longer exists.
-⏸ **Stop — wait for user confirmation.**
-
-#### Step 5 — Verify git remote
-`cd /home/mpb/Documents/GitHub/guia_js && git remote -v && git fetch origin`
-*Test*: remote URL still resolves to `guia.js.git`; `git fetch` exits 0.
-⏸ **Stop — wait for user confirmation.**
-
-#### Step 6 — Update internal references
-Update all occurrences of `guia_js` across the project:
-
-- `package.json` — `"name"` field: `guia_js` → `guia_js`
-- `.workflow-config.yaml` — `name: "guia_js"` → `name: "guia_js"`
-- `scripts/build_and_deploy.sh` — line 80 comment referencing `guia_js/`
-- `scripts/deploy-preflight.sh` — verify and update any path references
-- **`.github/skills/`** — 8 references across 6 files:
-  - `validate-node-modules/SKILL.md` — lines 68 and 210
-  - `sync-version/SKILL.md` — line 284
-  - `purge-workflow-logs/SKILL.md` — line 48
-  - `next-roadmap-phase/SKILL.md` — lines 14 and 66 (includes `gh issue list --repo mpbarbosa/guia_js`)
-  - `update-paraty-geocore/SKILL.md` — line 4
-  - `update-guia/SKILL.md` — line 4
-  - `update-ibira/SKILL.md` — line 4
-- `README.md` — ~15 occurrences (clone URLs, directory tree, CDN URL examples)
-- `.github/workflows/` — any badge URLs or repo path references
-- `.github/` other scripts and docs — scan for any remaining `guia_js` strings
-- `cdn-urls.txt` — regenerate with `./.github/scripts/cdn-delivery.sh`
-- **`mpbarbosa_site` repo** — companion updates needed in the sibling repo:
-  - `src/index.html` line 96: `href="guia_js/"` → `href="guia_js/"`
-  - `src/pages/guia-turistico.html`: redirect URL `../guia_js/index.html` → `../guia_js/index.html`
-  - Shell deploy scripts: `cd ../guia_js` → `cd ../guia_js`; rename `copy_guia_js_project` function and `public/guia_js/` deploy target → `public/guia_js/`
-  - Tests (`html_functionality.test.js`, `project_navigation.test.js`, `shell_scripts.test.js`, `shell_integration.test.js`): update all `guia_js` string expectations
-  - `src/README.md` and `shell_scripts/README.md`: update path references
-  - `COMPREHENSIVE_ROADMAP_2025-12-27.md`: update repo path and deployed path references
-  - **Note**: renaming `public/guia_js/` → `public/guia_js/` changes the live URL on the site; consider a `guia_js/index.html` redirect file to preserve old bookmarks
-
-*Test*: `grep -r "guia_js" . --include="*.sh" --include="*.json" --include="*.md" --include="*.yml" --include="*.yaml" --exclude-dir=node_modules --exclude-dir=.git` returns no matches.
-⏸ **Stop — wait for user confirmation.**
-
-#### Step 7 — Verify (full test suite)
-`npm install` → `npm run validate` → `npm run build` → `npm run test:all`
-*Test*: All pass; no new failures vs. baseline.
-⏸ **Stop — wait for user confirmation.**
-
-#### Step 8 — Commit and push
-Commit all reference changes with a clear message; push to `origin/main`.
-*Test*: `git log --oneline -1` shows the commit; `git status` is clean.
-⏸ **Stop — wait for user confirmation.**
-
-#### Step 9 — Remove backup
-`rm -rf /home/mpb/Documents/GitHub/guia_js.bak`
-*Test*: path no longer exists.
-⏸ **Done.**
-
-### Optional follow-up: Rename GitHub repo `guia.js` → `guia_js`
-
-Recommended for full name consistency between local folder and remote, but independent — can be done any time after Step 8.
-
-1. GitHub → repository Settings → rename `guia.js` to `guia_js`. GitHub creates a permanent redirect from the old name, so all existing external links, CDN URLs, and `npm install` references remain valid.
+1. GitHub → repository Settings → rename `guia.js` to `guia_js`. GitHub creates a permanent redirect from the old name, so all existing external links and CDN URLs remain valid.
 2. `git remote set-url origin git@github.com:mpbarbosa/guia_js.git` → `git fetch` to confirm.
-3. Verify the `"guia.js"` dependency in `package.json` (`github:mpbarbosa/guia_js#<TAG>`) resolves correctly with `npm install`.
-4. Commit: `chore: update remote URL after GitHub repo rename guia.js → guia_js`.
-
-**Risks**: GitHub redirect keeps old CDN URLs valid; jsDelivr resolves through the redirect. Out-of-repo scripts referencing the old `guia_js` path must be updated manually.
 
 ### Offline-First Architecture
 

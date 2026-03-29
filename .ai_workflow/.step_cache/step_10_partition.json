@@ -1,12 +1,10 @@
 {
   "version": 1,
   "partitionIndex": 1,
-  "totalPartitions": 30,
-  "filesHash": "7f885753",
+  "totalPartitions": 27,
+  "filesHash": "45fd2e37",
   "partitionLabels": [
-    "src/coordination",
-    "src/coordination (2)",
-    "src/core",
+    "package-lock.json, package.json, src/coordination, src/core",
     "src/data",
     "src/data (2)",
     "src/data (3)",
@@ -32,8 +30,7 @@
     "scripts",
     "scripts (2)",
     "service-worker.js, jest.vue-transformer.cjs, .markdownlint.json, .vscode, .workflow_session_cloc_cache.json",
-    "jsdoc.json, libs/sidra, manifest.json, package-lock.json, package.json",
-    "public/libs, tsconfig.json"
+    "jsdoc.json, libs/sidra, manifest.json, public/libs, tsconfig.json"
   ],
-  "updatedAt": "2026-03-27T15:48:11.652Z"
+  "updatedAt": "2026-03-29T17:43:24.189Z"
 }

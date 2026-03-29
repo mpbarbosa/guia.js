@@ -134,3 +134,9 @@ Issues identified from `.ai_workflow` workflow runs and resolved via the `audit-
 | RI-030 | `navigator.permissions` not restored after 4 tests in `onboarding.test.ts` | missing-test-coverage | Added `beforeEach`/`afterEach` to save and restore `navigator.permissions`; 10/10 tests pass | e5ac928 |
 | RI-031 | Browser `fetch()` fallback in `ReverseGeocoder.ts` has no AbortController | missing-test-coverage | Added `AbortController` to native `fetch()` path only; stored as `_abortController` instance field; `tsc --noEmit` exits 0 | 7b4c2a5 |
 | RI-032 | Unsafe `as Record<string, unknown>` casts in `address-parser.ts` without validation | typescript-issue | Added `isRecord()` type guard; guard is called before each cast; 49/49 tests pass | 85948b9 |
+| RI-033 | Version mismatch in README.md (0.12.x vs 0.14.1-alpha) | docs-outdated | Updated front-matter and badge to 0.14.1-alpha | ca4fc3c |
+| RI-034 | Version mismatch in src/config/defaults.ts (patch: 0 vs patch: 1) | docs-outdated | Changed patch to 1 in APP_VERSION | ca4fc3c |
+| RI-035 | 6 broken internal links in docs/INDEX.md | docs-outdated | Replaced each broken link with correct existing path | f6b34ec |
+| RI-036 | 10,411 MDL violations across 443 .md files (MD007/MD009/MD026/MD047) | markdown-lint | Stripped trailing whitespace, ensured final newlines, fixed SKILLS.md setext heading | fd1cf81 |
+| RI-037 | Missing try/catch in .github/scripts/jsdoc-audit.js fs calls | architecture-mismatch | Wrapped readdirSync/statSync/readFileSync in try/catch with safe defaults | d14b153 |
+| RI-038 | Undocumented eslint-disable any in src/andarilho.ts | typescript-issue | Added inline comment explaining legacy global pattern | 40c820c |

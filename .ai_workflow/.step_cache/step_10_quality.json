@@ -170,6 +170,31 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-03-29T17:43:24.188Z"
+    },
+    "src/data/AddressCache.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-29T23:09:27.115Z"
+    },
+    "src/data/AddressChangeDetector.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-29T23:09:27.115Z"
+    },
+    "src/data/AddressDataExtractor.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-29T23:09:27.115Z"
+    },
+    "src/data/AddressDataStore.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-29T23:09:27.115Z"
+    },
+    "src/data/AddressExtractor.ts": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-03-29T23:09:27.115Z"
     }
   }
 }

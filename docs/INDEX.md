@@ -31,7 +31,7 @@ Choose your path based on your role or goal:
 
 1. Start: [PROJECT_PURPOSE_AND_ARCHITECTURE.md](./PROJECT_PURPOSE_AND_ARCHITECTURE.md) - Overview
 2. Then: [CLASS_DIAGRAM.md](./architecture/CLASS_DIAGRAM.md) - System design
-3. Next: [MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md) - Module organization
+3. Next: [MODULES.md](./architecture/MODULES.md) - Module organization
 4. Finally: [WEB_GEOCODING_MANAGER.md](./architecture/WEB_GEOCODING_MANAGER.md) - Core component
 
 **Estimated time**: 3 hours reading + exploration
@@ -39,7 +39,7 @@ Choose your path based on your role or goal:
 ### 🧪 Testing & Quality
 
 1. Start: [TESTING.md](./testing/TESTING.md) - Testing overview
-2. Then: [JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md) - Jest setup
+2. Then: [TESTING.md](./testing/TESTING.md) - Jest setup
 3. Next: [HTML_GENERATION.md](./testing/HTML_GENERATION.md) - HTML testing
 4. Finally: [TDD_GUIDE.md](../.github/TDD_GUIDE.md) - TDD methodology
 
@@ -48,7 +48,7 @@ Choose your path based on your role or goal:
 ### 🔧 Development Setup
 
 1. Start: [README.md](../README.md#installation) - Installation
-2. Then: [WORKFLOW_SETUP.md](./WORKFLOW_SETUP.md) - Development workflow
+2. Then: [WORKFLOW_SETUP.md](../WORKFLOW_SETUP.md) - Development workflow
 3. Next: [JSDOC_GUIDE.md](../.github/JSDOC_GUIDE.md) - Documentation standards
 4. Finally: [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Best practices
 
@@ -57,9 +57,9 @@ Choose your path based on your role or goal:
 ### 🐛 Debugging & Troubleshooting
 
 1. Start: [TESTING.md](./testing/TESTING.md#troubleshooting) - Common issues
-2. Then: [JEST_COMMONJS_ES6_GUIDE.md](../.github/JEST_COMMONJS_ES6_GUIDE.md) - Module issues
+2. Then: [TESTING.md](./testing/TESTING.md) - Module issues
 3. Next: [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Contribution guidelines and immutability principles
-4. Also: [CODE_PATTERN_DOCUMENTATION_GUIDE.md](./CODE_PATTERN_DOCUMENTATION_GUIDE.md) - Valid code patterns
+4. Also: [JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md) - Valid code patterns
 5. Finally: [GitHub Issues](https://github.com/mpbarbosa/guia.js/issues) - Report bugs
 
 **Estimated time**: Variable
@@ -92,13 +92,13 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 
 ### Project Structure
 
-- **[PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)** - Project structure and organization 🆕
+- **[PROJECT_PURPOSE_AND_ARCHITECTURE.md](./PROJECT_PURPOSE_AND_ARCHITECTURE.md)** - Project structure and organization 🆕
   - Purpose as library component (not standalone site)
   - Integration with mpbarbosa.com personal website
   - Directory structure explanation (/src for library organization)
   - Historical context of restructuring commit
 
-- **[PROJECT_CLARIFICATION.md](./PROJECT_CLARIFICATION.md)** - 📦 ARCHIVED: Historical clarifications (2026-01-06)
+- **[PROJECT_CLARIFICATION.md](./misc/PROJECT_CLARIFICATION.md)** - 📦 ARCHIVED: Historical clarifications (2026-01-06)
   - Historical record of project identity confusion resolution
   - Preserved for audit trail and AI tool reference
   - See current docs: README.md, PROJECT_PURPOSE_AND_ARCHITECTURE.md

@@ -1,6 +1,6 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
-**Current Version**: `0.14.0-alpha` | **Status**: Active Development
+**Current Version**: `0.14.1-alpha` | **Status**: Active Development
 **Last Updated**: 2026-03-29
 
 ---
@@ -27,7 +27,7 @@
 - **Nearby Places** — `OverpassService.ts` + `HTMLNearbyPlacesPanel.ts`; Overpass API integration for 6 categories; auto-enables when GPS available (v0.13.1-alpha)
 - **City Statistics** — `IBGECityStatsService.ts` + `HTMLCityStatsPanel.ts`; live IBGE population + area data; offline-capable (v0.13.1-alpha)
 - **Dependency upgrades** (v0.13.1-alpha): `paraty_geocore.js` → `v0.12.10-alpha`, `ibira.js` → `v0.4.22-alpha`, `bessa_patterns.ts` → `v0.12.15-alpha`
-- **Bootstrap 5.3 responsive navbar** (v0.14.0-alpha): Bootstrap 5.3 + Bootstrap Icons; `<nav class="navbar navbar-expand-md">` with Início + Conversor links, hamburger toggle, MD3 token bridge via `bootstrap-overrides.css`, dedicated `ui` Vite chunk; footer converter links removed
+- **Bootstrap 5.3 responsive navbar** (v0.14.1-alpha): Bootstrap 5.3 + Bootstrap Icons; `<nav class="navbar navbar-expand-md">` with Início + Conversor links, hamburger toggle, MD3 token bridge via `bootstrap-overrides.css`, dedicated `ui` Vite chunk; footer converter links removed
 
 ---
 

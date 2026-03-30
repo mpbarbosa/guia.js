@@ -1,11 +1,17 @@
 ---
 name: fix-log-issues
 description: >
-  Consume the .ai_workflow/plan.md file produced by the validate-logs skill
+  Consume the $project_root/.ai_workflow/plan.md file produced by the validate-logs skill
   and fix each open issue in the codebase. After every fix is applied and
   verified, insert the resolved items into the project roadmap. Use this skill
   when asked to apply, resolve, or close the issues listed in plan.md, or
   immediately after running validate-logs.
+parameters:
+  project_root:
+    description: >
+      Root directory of the project to operate on.
+      Defaults to the current GitHub Copilot CLI working directory.
+    default: $PWD
 ---
 
 ## Overview
@@ -13,17 +19,17 @@ description: >
 This skill is the second half of the log-validation pipeline:
 
 ```text
-validate-logs  →  .ai_workflow/plan.md  →  fix-log-issues
+validate-logs  →  $project_root/.ai_workflow/plan.md  →  fix-log-issues
 ```
 
-It reads `.ai_workflow/plan.md`, works through every issue with status
+It reads `$project_root/.ai_workflow/plan.md`, works through every issue with status
 `open` in dependency order, applies the minimal fix required, verifies the
 fix, updates the issue status in `plan.md`, and finally records all resolved
 items in the project roadmap (`docs/ROADMAP.md`).
 
 ## Prerequisites
 
-- `.ai_workflow/plan.md` must exist and contain at least one issue with
+- `$project_root/.ai_workflow/plan.md` must exist and contain at least one issue with
   `**Status:** open`.
 - Run `validate-logs` first if `plan.md` is absent or empty.
 
@@ -61,7 +67,7 @@ The directory at `Path` is not referenced in any documentation file.
    `README.md` inside the same parent directory, or `docs/ARCHITECTURE.md`).
 2. Add a brief description of the directory's purpose under the relevant
    section (e.g., "Files and directories" or "Directory structure").
-3. Run `npm run lint:md` to confirm no markdown violations were introduced.
+3. Run `cd "$project_root" && npm run lint:md` to confirm no markdown violations were introduced.
 
 ### `markdown-lint`
 
@@ -69,11 +75,11 @@ One or more markdownlint rules are violated in the file at `Path`.
 
 **Fix procedure:**
 
-1. Run `npm run lint:md:fix` to apply auto-fixable corrections.
-2. Run `npm run lint:md` to identify any remaining violations.
+1. Run `cd "$project_root" && npm run lint:md:fix` to apply auto-fixable corrections.
+2. Run `cd "$project_root" && npm run lint:md` to identify any remaining violations.
 3. For each remaining violation, edit the file manually to comply with the
    rule referenced in the `Description` field.
-4. Re-run `npm run lint:md` and confirm zero violations for the affected
+4. Re-run `cd "$project_root" && npm run lint:md` and confirm zero violations for the affected
    file(s).
 
 ### `dependency-warning`
@@ -82,10 +88,10 @@ One or more markdownlint rules are violated in the file at `Path`.
 
 **Fix procedure:**
 
-1. Run `npm audit --audit-level=moderate` to reproduce the warning.
-2. If the advisory has a fix available: run `npm audit fix` (non-breaking
+1. Run `cd "$project_root" && npm audit --audit-level=moderate` to reproduce the warning.
+2. If the advisory has a fix available: run `cd "$project_root" && npm audit fix` (non-breaking
    only — do not use `--force`).
-3. Run `npm ci && npm run build && npm test` to confirm nothing regressed.
+3. Run `cd "$project_root" && npm ci && npm run build && npm test` to confirm nothing regressed.
 4. If no automated fix exists, add a comment to `package.json` (or open a
    GitHub issue) and mark the plan item as `skipped` with a reason.
 
@@ -95,11 +101,11 @@ One or more markdownlint rules are violated in the file at `Path`.
 
 **Fix procedure:**
 
-1. Run `npx tsc --noEmit` to reproduce.
+1. Run `cd "$project_root" && npx tsc --noEmit` to reproduce.
 2. Edit the file at `Path` to resolve the type error using the minimum
    change that preserves existing behaviour.
-3. Re-run `npx tsc --noEmit` and confirm zero new errors.
-4. Run `npm test` to confirm no test regressions.
+3. Re-run `cd "$project_root" && npx tsc --noEmit` and confirm zero new errors.
+4. Run `cd "$project_root" && npm test` to confirm no test regressions.
 
 ### `architecture-mismatch`
 
@@ -111,7 +117,7 @@ The directory tree diverges from the description in `docs/ARCHITECTURE.md`.
    - If the code changed intentionally: update `docs/ARCHITECTURE.md`.
    - If a directory was added accidentally: remove it or move it to the
      correct location.
-2. Run `npm run lint:md` after editing any documentation.
+2. Run `cd "$project_root" && npm run lint:md` after editing any documentation.
 
 ### `missing-test-coverage`
 
@@ -123,7 +129,7 @@ A module or exported function has no corresponding test.
 2. Create or extend the matching test file under `test/` following the
    existing test structure (e.g., `test/core/`, `test/utils/`).
 3. Write tests covering the normal path and any documented edge cases.
-4. Run `npm run test:coverage` and confirm the new code is covered.
+4. Run `cd "$project_root" && npm run test:coverage` and confirm the new code is covered.
 
 ### `docs-outdated`
 
@@ -135,7 +141,7 @@ exists in the codebase.
 1. Open the documentation file at `Path`.
 2. Locate the stale reference described in `Description`.
 3. Update or remove the reference to match the current codebase state.
-4. Run `npm run lint:md` to confirm no violations were introduced.
+4. Run `cd "$project_root" && npm run lint:md` to confirm no violations were introduced.
 
 ## Processing loop
 
@@ -173,7 +179,7 @@ Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
 ## Updating the project roadmap
 
 After all issues have been processed (status `done` or `skipped`), append
-the results to `docs/ROADMAP.md` under a
+the results to `$project_root/docs/ROADMAP.md` under a
 `## Roadmap — Minor Issues` section (create if absent):
 
 ```markdown
@@ -208,7 +214,7 @@ Print a console summary when all issues have been processed:
   Total:   N
 
 plan.md updated — all issues are now done or skipped.
-Roadmap updated in docs/ROADMAP.md.
+Roadmap updated in $project_root/docs/ROADMAP.md.
 ```
 
 ## What NOT to do
@@ -222,7 +228,7 @@ Roadmap updated in docs/ROADMAP.md.
 
 ## Related files
 
-- `.ai_workflow/plan.md` — input: structured issue list from `validate-logs`
-- `docs/ROADMAP.md` — output: roadmap updated with results
+- `$project_root/.ai_workflow/plan.md` — input: structured issue list from `validate-logs`
+- `$project_root/docs/ROADMAP.md` — output: roadmap updated with results
 - `.github/skills/validate-logs/SKILL.md` — the upstream skill that creates plan.md
 - `.github/SKILLS.md` — skills index for this project

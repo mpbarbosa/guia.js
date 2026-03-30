@@ -1,17 +1,23 @@
 ---
 name: validate-logs
 description: >
-  Validate the log files in the .ai_workflow/logs folder against the actual
-  codebase and produce a structured plan.md at .ai_workflow/plan.md listing
+  Validate the log files in the $project_root/.ai_workflow/logs folder against the actual
+  codebase and produce a structured plan.md at $project_root/.ai_workflow/plan.md listing
   every confirmed minor issue. The plan.md is then consumed by the
   fix-log-issues skill to apply each fix. Use this skill when asked to
   cross-check AI workflow analysis against live code or audit past workflow
   runs for outstanding issues.
+parameters:
+  project_root:
+    description: >
+      Root directory of the project to operate on.
+      Defaults to the current GitHub Copilot CLI working directory.
+    default: $PWD
 ---
 
 ## Overview
 
-AI workflow runs produce structured logs under `.ai_workflow/logs/`. Each run
+AI workflow runs produce structured logs under `$project_root/.ai_workflow/logs/`. Each run
 directory contains per-step logs (`steps/`) and the AI prompt/response pairs
 that drove automated analysis (`prompts/`). Over time these records drift out
 of sync with the codebase — files get renamed, issues get fixed, new patterns
@@ -21,8 +27,10 @@ the live codebase and writing a machine-readable `plan.md` that the
 
 ## Log folder structure
 
+> All paths below are relative to `$project_root`.
+
 ```text
-.ai_workflow/
+$project_root/.ai_workflow/
   logs/
     workflow_<YYYYMMDD_HHmmss>/
       workflow.log              # top-level run narrative
@@ -41,7 +49,7 @@ the live codebase and writing a machine-readable `plan.md` that the
 
 ## What to validate
 
-For each workflow run directory found under `.ai_workflow/logs/`:
+For each workflow run directory found under `$project_root/.ai_workflow/logs/`:
 
 1. **Step logs** (`steps/*.log`) — Scan for lines containing `⚠`, `WARNING`,
    `issue(s)`, `error`, or `failed`. For each flagged entry, verify whether
@@ -52,7 +60,7 @@ For each workflow run directory found under `.ai_workflow/logs/`:
    **Medium** or lower (minor issues). Verify each against the live codebase
    using the tools available (grep, view, glob, bash).
 
-3. **Workflow summary** (`.ai_workflow/summaries/**/workflow_summary.md`) —
+3. **Workflow summary** (`$project_root/.ai_workflow/summaries/**/workflow_summary.md`) —
    Review the Recommendations section for any `LOW` or `MEDIUM` priority
    items that have not been addressed.
 
@@ -72,10 +80,10 @@ Before inserting any item into the roadmap, confirm the issue still exists:
 - **Undocumented directories** — run `ls <path>` and check whether the
   directory has since been documented in a `README.md` or the relevant
   `docs/` file.
-- **Markdown linting violations** — run `npm run lint:md` and compare the
+- **Markdown linting violations** — run `cd "$project_root" && npm run lint:md` and compare the
   reported violations against what the log recorded.
-- **Dependency warnings** — run `npm install --dry-run` and compare output.
-- **TypeScript issues** — run `npx tsc --noEmit` and compare.
+- **Dependency warnings** — run `cd "$project_root" && npm install --dry-run` and compare output.
+- **TypeScript issues** — run `cd "$project_root" && npx tsc --noEmit` and compare.
 - **Architecture mismatches** — diff the directory tree against `docs/ARCHITECTURE.md`.
 
 Only issues that are **still present** after verification are written to
@@ -83,7 +91,7 @@ Only issues that are **still present** after verification are written to
 
 ## Output: plan.md
 
-Write (or overwrite) `.ai_workflow/plan.md` after validation completes.
+Write (or overwrite) `$project_root/.ai_workflow/plan.md` after validation completes.
 The file is the handoff contract between this skill and `fix-log-issues`.
 
 ### Format
@@ -128,7 +136,7 @@ The file is the handoff contract between this skill and `fix-log-issues`.
 ### ID assignment
 
 - IDs are sequential: `RI-001`, `RI-002`, etc.
-- If `.ai_workflow/plan.md` already exists and contains existing IDs, continue
+- If `$project_root/.ai_workflow/plan.md` already exists and contains existing IDs, continue
   from the highest existing number.
 - Never reuse an ID, even for issues that have been resolved.
 
@@ -146,7 +154,7 @@ The file is the handoff contract between this skill and `fix-log-issues`.
 1. List all workflow run directories:
 
    ```bash
-   ls .ai_workflow/logs/
+   ls "$project_root/.ai_workflow/logs/"
    ```
 
 2. For each run directory, read `workflow.log` and all `steps/*.log` files.
@@ -158,7 +166,7 @@ The file is the handoff contract between this skill and `fix-log-issues`.
 4. Verify each candidate issue against the live codebase (see
    [Verifying issues](#verifying-issues-against-the-codebase)).
 
-5. Write `.ai_workflow/plan.md` using the format described above.
+5. Write `$project_root/.ai_workflow/plan.md` using the format described above.
 
 6. Print a summary to the console:
 
@@ -177,8 +185,8 @@ The file is the handoff contract between this skill and `fix-log-issues`.
 
 ## Related files
 
-- `.ai_workflow/logs/` — source log directories
-- `.ai_workflow/summaries/` — executive summary per run
-- `.ai_workflow/plan.md` — output: structured issue list for `fix-log-issues`
+- `$project_root/.ai_workflow/logs/` — source log directories
+- `$project_root/.ai_workflow/summaries/` — executive summary per run
+- `$project_root/.ai_workflow/plan.md` — output: structured issue list for `fix-log-issues`
 - `.github/skills/fix-log-issues/SKILL.md` — the skill that consumes plan.md
 - `.github/SKILLS.md` — skills index for this project

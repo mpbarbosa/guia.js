@@ -782,6 +782,11 @@ class AddressCache {
 			// Check for bairro change after caching the new address
 			if (this.bairroChangeCallback && bairroReallyChanged) {
 				const changeDetails = this.getBairroChangeDetails();
+				// getBairroChangeDetails() reads dataStore.getPrevious(), which may have
+				// been overwritten N-1 times during the confirmation window. Use the
+				// buffer's last confirmed value (captured before observe()) instead.
+				changeDetails.previous.bairro = prevConfirmedBairro ?? undefined;
+				changeDetails.from = prevConfirmedBairro ?? null;
 				try {
 					this.bairroChangeCallback(changeDetails);
 				} catch (callbackError) {
@@ -795,6 +800,10 @@ class AddressCache {
 			// Check for municipio change after caching the new address
 			if (this.municipioChangeCallback && municipioReallyChanged) {
 				const changeDetails = this.getMunicipioChangeDetails();
+				// getMunicipioChangeDetails() reads dataStore.getPrevious(), which may
+				// have been overwritten N-1 times during the confirmation window. Use
+				// the buffer's last confirmed value (captured before observe()) instead.
+				changeDetails.previous.municipio = prevConfirmedMunicipio ?? undefined;
 				try {
 					this.municipioChangeCallback(changeDetails);
 				} catch (callbackError) {

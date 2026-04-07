@@ -1,0 +1,30 @@
+# Installed packages — npm ci installs these fresh inside the container
+node_modules/
+
+# Vite build output — not needed for tests
+dist/
+
+# Previous coverage output — tests produce their own inside the container
+coverage/
+
+# Jest cache — stale host cache must not contaminate the clean container
+.jest-cache/
+
+# Git metadata — not needed at runtime
+.git/
+
+# Logs
+*.log
+npm-debug.log*
+.npm/
+
+# OS artefacts
+.DS_Store
+
+# Python / pytest
+venv/
+.pytest_cache/
+**/__pycache__/
+
+# AI workflow artefacts
+.ai_workflow/

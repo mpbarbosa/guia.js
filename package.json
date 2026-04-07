@@ -49,7 +49,10 @@
     "automation:test": "npm run check:version && echo '✅ Automation scripts ready'",
     "docs:generate": "jsdoc -c jsdoc.json -r src/ -d docs/api-generated/",
     "docs:serve": "npx http-server docs/api-generated/ -p 8080",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:docker": "bash scripts/run-tests-docker.sh",
+    "test:docker:e2e": "bash scripts/run-e2e-tests-docker.sh",
+    "test:docker:all": "bash scripts/run-all-tests-docker.sh"
   },
   "keywords": [
     "tourist-guide",

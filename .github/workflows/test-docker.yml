@@ -1,0 +1,75 @@
+name: Docker Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  unit-tests-docker:
+    name: Unit / Integration (Docker)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build unit test image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.test
+          tags: guia_js-test:ci
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run unit / integration tests
+        run: |
+          docker run --rm \
+            -e CI=true \
+            -v "${{ github.workspace }}/coverage:/workspace/guia_js/coverage" \
+            guia_js-test:ci \
+            sh -c "npm run test:unit -- --runInBand --coverage"
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-coverage
+          path: coverage/
+          retention-days: 14
+
+  e2e-tests-docker:
+    name: E2E / Puppeteer (Docker)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build E2E test image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.test.e2e
+          tags: guia_js-test-e2e:ci
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run E2E tests
+        run: |
+          docker run --rm \
+            -e CI=true \
+            --shm-size=256m \
+            guia_js-test-e2e:ci \
+            sh -c "npm run test:e2e -- --runInBand"

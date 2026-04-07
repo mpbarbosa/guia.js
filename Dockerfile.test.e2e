@@ -1,0 +1,41 @@
+# Dockerfile.test.e2e — End-to-End (Puppeteer) Test Runner
+#
+# Runs `npm run test:e2e` inside an Alpine container with system Chromium.
+#
+# Key design decisions:
+#   1. node:20-alpine matches .nvmrc (20.19.0).
+#   2. chromium is installed via apk — this avoids Puppeteer downloading its own
+#      ~400 MB Chrome bundle during npm ci.
+#   3. PUPPETEER_SKIP_DOWNLOAD=true prevents the bundled download.
+#   4. PUPPETEER_EXECUTABLE_PATH points to the system Chromium binary.
+#   5. Puppeteer tests already pass --no-sandbox and --disable-setuid-sandbox
+#      (required when running as root inside Docker).
+#   6. No sibling repos are needed — E2E tests launch a real browser against
+#      src/index.html; CDN imports are fetched by the browser at runtime.
+
+FROM node:20-alpine
+
+# Chromium and its shared-library dependencies
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
+# Tell Puppeteer to skip its bundled Chrome download and use system Chromium
+ENV PUPPETEER_SKIP_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+WORKDIR /workspace/guia_js
+
+COPY package.json package-lock.json ./
+
+# Override NODE_ENV before npm ci so devDependencies (Jest, Puppeteer, etc.) are installed.
+ENV NODE_ENV=test
+RUN npm ci --ignore-scripts
+
+COPY . .
+
+CMD ["npm", "run", "test:e2e"]

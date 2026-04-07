@@ -136,7 +136,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
         timeout:   30_000,
       });
 
-      const h1 = await page.$eval('h1', el => el.textContent?.trim());
+      const h1 = await page.$eval('h1', el => el.textContent?.replace(/\s+/g, ' ').trim());
       expect(h1).toBe('Onde estou?');
     });
   });

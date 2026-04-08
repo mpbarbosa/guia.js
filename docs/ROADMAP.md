@@ -142,4 +142,6 @@ Issues identified from `.ai_workflow` workflow runs and resolved via the `audit-
 | RI-038 | Undocumented eslint-disable any in src/andarilho.ts | typescript-issue | Added inline comment explaining legacy global pattern | 40c820c |
 | RI-039 | Version mismatch in src/config/defaults.ts (patch: 1 vs patch: 2) | docs-outdated | Changed `patch: 1` → `patch: 2` in `APP_VERSION`; `npm run check:version` exits 0 | 410abff |
 | RI-040 | Broken links in docs/INDEX.md (MODULE_SPLITTING, TESTING, JEST guide, TESTING_HTML) | docs-outdated | Replaced 4 broken links with correct existing paths; `npm run lint:md` exits 0 | a02c4d6 |
-| RI-041 | Version mismatch in src/config/defaults.ts (patch: 2 vs patch: 3) | docs-outdated | Changed `patch: 2` → `patch: 3` in `APP_VERSION`; also resolved stale service-worker.js merge conflict; `npm run check:version` exits 0 | 35bca9b |
+| RI-041 | Version mismatch: `APP_VERSION.patch` was `2` in `src/config/defaults.ts` vs `patch: 3` in `package.json` | docs-outdated | Changed `patch: 2` → `patch: 3`; `npm run check:version` exits 0 | af7b940 |
+| RI-042 | `.workflow_session_cloc_cache.json` was git-tracked auto-generated artefact | architecture-mismatch | Added `.workflow_session_cloc_cache.json` to `.gitignore` and ran `git rm --cached` | 8c7d6fd |
+| RI-043 | Divergent paths in `manifest.json` vs `public/manifest.json` (absolute vs relative) | docs-outdated | Updated `manifest.json` to use relative paths (`./`) matching canonical `public/manifest.json` | bad6580 |

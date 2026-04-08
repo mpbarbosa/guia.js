@@ -81,3 +81,6 @@ public/*
 !public/icon-512.png
 !public/offline.html
 !public/favicon.svg
+
+# Auto-generated workflow artefacts
+.workflow_session_cloc_cache.json

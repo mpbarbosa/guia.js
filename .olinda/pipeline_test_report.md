@@ -6,12 +6,14 @@
 **Result:** ✅ All tests passed
 
 ## Summary
+
 | Metric | Count |
 |--------|-------|
 | Passed | 0 |
 | Failed | 0 |
 
 ## Full Output
+
 ```
 No tests yet
 

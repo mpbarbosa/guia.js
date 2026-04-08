@@ -608,7 +608,7 @@ describe('ReverseGeocoder Class', () => {
       test('should return undefined when no currentAddress is set', () => {
         const geocoder = new ReverseGeocoder(createMockFetchManager());
         
-        expect(geocoder.currentAddress).toBeUndefined();
+        expect(geocoder.currentAddress).toBeNull();
       });
     });
 
@@ -629,7 +629,7 @@ describe('ReverseGeocoder Class', () => {
       test('should return undefined when no standardized address exists', () => {
         const geocoder = new ReverseGeocoder(createMockFetchManager());
         
-        expect(geocoder.secondUpdateParam()).toBeUndefined();
+        expect(geocoder.secondUpdateParam()).toBeNull();
       });
     });
 

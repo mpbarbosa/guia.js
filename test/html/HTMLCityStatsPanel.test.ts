@@ -1,16 +1,32 @@
 import { jest } from '@jest/globals';
-
-// Manual mocks in src/utils/__mocks__/ are used automatically.
-jest.mock('../../src/utils/logger.js');
-jest.mock('../../src/utils/html-sanitizer.js');
-
-import { HTMLCityStatsPanel } from '../../src/html/HTMLCityStatsPanel';
 import type { CityStats } from '../../src/services/IBGECityStatsService';
-import * as loggerModule from '../../src/utils/logger.js';
-import * as htmlSanitizerModule from '../../src/utils/html-sanitizer.js';
 
-const log = loggerModule.log as jest.Mock;
-const escapeHtml = htmlSanitizerModule.escapeHtml as jest.Mock;
+let HTMLCityStatsPanel: typeof import('../../src/html/HTMLCityStatsPanel').HTMLCityStatsPanel;
+let log: jest.Mock;
+let escapeHtml: jest.Mock;
+
+beforeAll(async () => {
+  await jest.unstable_mockModule('../../src/utils/logger.js', () => ({
+    log: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    debug: jest.fn(),
+  }));
+  await jest.unstable_mockModule('../../src/utils/html-sanitizer.js', () => ({
+    escapeHtml: jest.fn((s: string) => {
+      const e = String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      return `[escaped:${e}]`;
+    }),
+    sanitizeUrl: jest.fn((u: string) => u),
+    sanitizeHtml: jest.fn((h: string) => h),
+  }));
+  const panelMod = await import('../../src/html/HTMLCityStatsPanel');
+  HTMLCityStatsPanel = panelMod.HTMLCityStatsPanel;
+  const loggerMod = await import('../../src/utils/logger.js') as any;
+  log = loggerMod.log;
+  const sanitizerMod = await import('../../src/utils/html-sanitizer.js') as any;
+  escapeHtml = sanitizerMod.escapeHtml;
+});
 
 describe('HTMLCityStatsPanel', () => {
   let panelElem: HTMLElement;

@@ -229,9 +229,10 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        // 3 unique cache keys, same fields → buffer confirms 'São Paulo' / 'Centro' / 'Rua das Flores'
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-000' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-001' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-002' } });
 
         // Add second address with different municipality, bairro, and logradouro — 3x
         const secondAddress = {
@@ -246,9 +247,10 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
+        // 3 unique cache keys → buffers confirm 'Rio de Janeiro' / 'Copacabana' / 'Avenida Copacabana'
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '22070-000' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '22070-001' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '22070-002' } });
 
         // All three callbacks should have been called
         expect(municipioCallbackCount).toBe(1);
@@ -284,9 +286,10 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        // 3 unique cache keys, same city → buffer confirms 'São Paulo'
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-000' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-001' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-002' } });
 
         // Add second address with different municipality — 3x
         const secondAddress = {
@@ -301,9 +304,10 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
+        // 3 unique cache keys, same city → buffer confirms 'Rio de Janeiro'
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '22070-000' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '22070-001' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '22070-002' } });
 
         // Callback should have been called once
         expect(callbackCallCount).toBe(1);
@@ -325,9 +329,10 @@ describe('AddressDataExtractor Municipio Change Detection', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
+        // 3 unique cache keys, same city → no new callback (Rio de Janeiro already confirmed)
+        AddressDataExtractor.getBrazilianStandardAddress({ ...thirdAddress, address: { ...thirdAddress.address, postcode: '22640-010' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...thirdAddress, address: { ...thirdAddress.address, postcode: '22640-011' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...thirdAddress, address: { ...thirdAddress.address, postcode: '22640-012' } });
 
         // Callback count should remain the same (no change detected)
         expect(callbackCallCount).toBe(1);

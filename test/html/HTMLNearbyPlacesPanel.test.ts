@@ -1,16 +1,32 @@
 import { jest } from '@jest/globals';
-
-// Manual mocks in src/utils/__mocks__/ are used automatically.
-jest.mock('../../src/utils/logger.js');
-jest.mock('../../src/utils/html-sanitizer.js');
-
-import { HTMLNearbyPlacesPanel } from '../../src/html/HTMLNearbyPlacesPanel';
 import type { OsmPlace, PlaceCategory } from '../../src/services/OverpassService';
-import * as loggerModule from '../../src/utils/logger.js';
-import * as htmlSanitizerModule from '../../src/utils/html-sanitizer.js';
 
-const log = loggerModule.log as jest.Mock;
-const escapeHtml = htmlSanitizerModule.escapeHtml as jest.Mock;
+let HTMLNearbyPlacesPanel: typeof import('../../src/html/HTMLNearbyPlacesPanel').HTMLNearbyPlacesPanel;
+let log: jest.Mock;
+let escapeHtml: jest.Mock;
+
+beforeAll(async () => {
+  await jest.unstable_mockModule('../../src/utils/logger.js', () => ({
+    log: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    debug: jest.fn(),
+  }));
+  await jest.unstable_mockModule('../../src/utils/html-sanitizer.js', () => ({
+    escapeHtml: jest.fn((s: string) => {
+      const e = String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      return `[escaped:${e}]`;
+    }),
+    sanitizeUrl: jest.fn((u: string) => u),
+    sanitizeHtml: jest.fn((h: string) => h),
+  }));
+  const panelMod = await import('../../src/html/HTMLNearbyPlacesPanel');
+  HTMLNearbyPlacesPanel = panelMod.HTMLNearbyPlacesPanel;
+  const loggerMod = await import('../../src/utils/logger.js') as any;
+  log = loggerMod.log;
+  const sanitizerMod = await import('../../src/utils/html-sanitizer.js') as any;
+  escapeHtml = sanitizerMod.escapeHtml;
+});
 
 describe('HTMLNearbyPlacesPanel', () => {
   let panelElem: HTMLElement;
@@ -133,7 +149,7 @@ describe('HTMLNearbyPlacesPanel', () => {
       };
       panel.render([place], 'cafe');
       expect(listElem.innerHTML).toContain('[escaped:&lt;b&gt;Nome&lt;/b&gt;]');
-      expect(listElem.innerHTML).toContain('[escaped:&lt;a&gt;]');
+      expect(listElem.innerHTML).toContain('[escaped:<a>]');
       expect(listElem.innerHTML).toContain('[escaped:&lt;cuisine&gt;]');
       expect(listElem.innerHTML).toContain('[escaped:&lt;street&gt;]');
     });

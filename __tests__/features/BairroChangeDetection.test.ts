@@ -276,9 +276,10 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        // 3 unique cache keys (different postcodes), same neighbourhood → buffer confirms 'Centro'
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-000' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-001' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-002' } });
 
         // No callback should be called yet (first confirmation, no prior confirmed value)
         expect(callbackCallCount).toBe(0);
@@ -297,9 +298,10 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
+        // 3 unique cache keys, same neighbourhood → buffer confirms 'Bela Vista'
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '01310-000' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '01310-001' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '01310-002' } });
 
         // Callback should have been called once
         expect(callbackCallCount).toBe(1);
@@ -321,9 +323,10 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
+        // 3 unique cache keys, same neighbourhood → no new callback (Bela Vista already confirmed)
+        AddressDataExtractor.getBrazilianStandardAddress({ ...thirdAddress, address: { ...thirdAddress.address, postcode: '01310-010' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...thirdAddress, address: { ...thirdAddress.address, postcode: '01310-011' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...thirdAddress, address: { ...thirdAddress.address, postcode: '01310-012' } });
 
         // Callback count should remain the same (no change detected)
         expect(callbackCallCount).toBe(1);
@@ -440,9 +443,10 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        // 3 unique cache keys, same neighbourhood → buffer confirms 'Centro'
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-000' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-001' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-002' } });
 
         // Add second address with both different street and neighborhood — 3x
         const secondAddress = {
@@ -457,9 +461,10 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
+        // 3 unique cache keys, same neighbourhood → buffer confirms 'Bela Vista'
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '01310-000' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '01310-001' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '01310-002' } });
 
         // Both callbacks should have been called
         expect(bairroCallbackCount).toBe(1);
@@ -478,9 +483,10 @@ describe('AddressDataExtractor Bairro Change Detection', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(thirdAddress);
+        // 3 unique cache keys, same neighbourhood → buffer confirms 'Jardins'
+        AddressDataExtractor.getBrazilianStandardAddress({ ...thirdAddress, address: { ...thirdAddress.address, postcode: '01310-010' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...thirdAddress, address: { ...thirdAddress.address, postcode: '01310-011' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...thirdAddress, address: { ...thirdAddress.address, postcode: '01310-012' } });
 
         // Only bairro callback should have been called (not logradouro)
         expect(bairroCallbackCount).toBe(2);

@@ -125,6 +125,7 @@ async function fetchPopulation(ibgeCode: string): Promise<{ population: number; 
 export async function fetchStats(municipio: string, siglaUf: string): Promise<CityStats | null> {
   log(`(IBGECityStatsService) Fetching stats for ${municipio} / ${siglaUf}`);
 
+  try {
   const localidade = await findMunicipioByName(municipio, siglaUf);
   if (!localidade) {
     warn(`(IBGECityStatsService) Municipality not found: "${municipio}"`);
@@ -149,6 +150,10 @@ export async function fetchStats(municipio: string, siglaUf: string): Promise<Ci
 
   log(`(IBGECityStatsService) Stats for ${stats.name}/${stats.uf}: pop=${stats.population}, area=${stats.areaKm2}km²`);
   return stats;
+  } catch (err) {
+    warn(`(IBGECityStatsService) Failed to fetch stats for "${municipio}": ${(err as Error).message}`);
+    return null;
+  }
 }
 
 export default { fetchStats };

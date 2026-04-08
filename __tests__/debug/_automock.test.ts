@@ -1,8 +1,18 @@
-import { jest } from '@jest/globals';
+import { jest, test, expect } from '@jest/globals';
 
-jest.mock('../../src/utils/logger.js');
+// In ESM mode (--experimental-vm-modules), jest.mock() hoisting is unreliable.
+// jest.unstable_mockModule() + dynamic import is the correct ESM pattern.
+jest.unstable_mockModule('../../src/utils/logger.js', () => ({
+  log: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+  debug: jest.fn(),
+  formatTimestamp: jest.fn(() => '2025-01-01T00:00:00.000Z'),
+  getLogLevel: jest.fn(() => ({ level: 3, levelName: 'log', enabled: true })),
+  setLogLevel: jest.fn(),
+}));
 
-import * as loggerMod from '../../src/utils/logger.js';
+const loggerMod = await import('../../src/utils/logger.js');
 
 test('check auto-mock', () => {
   process.stderr.write('isMock: ' + jest.isMockFunction(loggerMod.log) + '\n');

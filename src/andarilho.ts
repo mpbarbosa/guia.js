@@ -17,21 +17,38 @@ declare function speak(text: string): void;
 declare function checkGeolocation(container: HTMLElement | null): void;
 declare let address: any;
 
-let currentCoords: GeolocationCoordinates | null = null;
-let currentAddress: unknown = null;
-const findRestaurantsBtn = document.getElementById('findRestaurantsBtn') as HTMLButtonElement | null;
-const cityStatsBtn = document.getElementById('cityStatsBtn') as HTMLButtonElement | null;
+function setBtn(id: string, disabled: boolean): void {
+  const btn = document.getElementById(id) as HTMLButtonElement | null;
+  if (btn) btn.disabled = disabled;
+}
+
+function getCurrentCoords(): GeolocationCoordinates | null {
+  return (globalThis as any).currentCoords ?? null;
+}
+
+function setCurrentCoords(coords: GeolocationCoordinates | null): void {
+  (globalThis as any).currentCoords = coords;
+}
+
+function getCurrentAddress(): unknown {
+  return (globalThis as any).currentAddress ?? null;
+}
+
+function setCurrentAddress(addr: unknown): void {
+  (globalThis as any).currentAddress = addr;
+}
 
 function getLocation(): void {
   const locationResult = document.getElementById('locationResult');
   checkGeolocation(locationResult);
 
-  currentCoords = null;
-  currentAddress = null;
+  setCurrentCoords(null);
+  setCurrentAddress(null);
 
   navigator.geolocation.getCurrentPosition(
-    async (_position: GeolocationPosition) => {
+    async (position: GeolocationPosition) => {
       try {
+        setCurrentCoords(position.coords);
         const addressSection = document.getElementById('addressSection');
         if (addressSection) addressSection.innerHTML = renderAddress(address);
 
@@ -39,7 +56,7 @@ function getLocation(): void {
           address?.address &&
           (address.address.city || address.address.town || address.address.village)
         ) {
-          if (cityStatsBtn) cityStatsBtn.disabled = false;
+          setBtn('cityStatsBtn', false);
         }
 
         const text_input = document.getElementById('text-input') as HTMLInputElement | null;
@@ -72,8 +89,8 @@ function getLocation(): void {
           errorMessage = 'An unknown error occurred.';
       }
       if (locationResult) locationResult.innerHTML = `<p class="error">Error: ${errorMessage}</p>`;
-      if (findRestaurantsBtn) findRestaurantsBtn.disabled = true;
-      if (cityStatsBtn) cityStatsBtn.disabled = true;
+      setBtn('findRestaurantsBtn', true);
+      setBtn('cityStatsBtn', true);
     },
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
   );
@@ -89,7 +106,8 @@ interface OsmElement {
 }
 
 async function findNearbyRestaurants(): Promise<void> {
-  if (!currentCoords) {
+  const coords = getCurrentCoords();
+  if (!coords) {
     alert('Please get your location first');
     return;
   }
@@ -99,12 +117,12 @@ async function findNearbyRestaurants(): Promise<void> {
 
   if (restaurantsSection) restaurantsSection.style.display = 'block';
   if (restaurantsList) restaurantsList.innerHTML = '<p class="loading">Searching for restaurants within 500 meters...</p>';
-  if (findRestaurantsBtn) findRestaurantsBtn.disabled = true;
+  setBtn('findRestaurantsBtn', true);
 
   try {
     const restaurants = await getNearbyRestaurants(
-      currentCoords.latitude,
-      currentCoords.longitude,
+      coords.latitude,
+      coords.longitude,
       500
     );
 
@@ -130,7 +148,7 @@ async function findNearbyRestaurants(): Promise<void> {
   } catch (err) {
     if (restaurantsList) restaurantsList.innerHTML = `<p class="error">Failed to fetch restaurants: ${(err as Error).message}</p>`;
   } finally {
-    if (findRestaurantsBtn) findRestaurantsBtn.disabled = false;
+    setBtn('findRestaurantsBtn', false);
   }
 }
 
@@ -148,7 +166,7 @@ interface CityStats {
 }
 
 async function getCityStats(): Promise<void> {
-  const addr = currentAddress as { address?: Record<string, string> } | null;
+  const addr = getCurrentAddress() as { address?: Record<string, string> } | null;
   if (!addr?.address) {
     alert('City information not available');
     return;
@@ -159,7 +177,7 @@ async function getCityStats(): Promise<void> {
 
   if (cityStatsSection) cityStatsSection.style.display = 'block';
   if (cityStatsDiv) cityStatsDiv.innerHTML = '<p class="loading">Fetching city statistics from Wikipedia...</p>';
-  if (cityStatsBtn) cityStatsBtn.disabled = true;
+  setBtn('cityStatsBtn', true);
 
   try {
     const cityName = addr.address.city || addr.address.town || addr.address.village;
@@ -201,7 +219,7 @@ async function getCityStats(): Promise<void> {
   } catch (err) {
     if (cityStatsDiv) cityStatsDiv.innerHTML = `<p class="error">Failed to fetch city statistics: ${(err as Error).message}</p>`;
   } finally {
-    if (cityStatsBtn) cityStatsBtn.disabled = false;
+    setBtn('cityStatsBtn', false);
   }
 }
 

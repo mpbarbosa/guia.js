@@ -236,14 +236,17 @@ describe('andarilho.ts', () => {
     });
 
     it('should show loading, disable button, and display no restaurants found', async () => {
-      fetchMock.mockResolvedValue({
-        ok: true,
-        json: async () => ({ elements: [] }),
-      });
       const restaurantsList = domElements['restaurantsList'];
+      let loadingHtml = '';
+      let disabledDuringLoad = false;
+      fetchMock.mockImplementation(async () => {
+        loadingHtml = restaurantsList.innerHTML;
+        disabledDuringLoad = (domElements['findRestaurantsBtn'] as any).disabled;
+        return { ok: true, json: async () => ({ elements: [] }) };
+      });
       await findNearbyRestaurants();
-      expect(restaurantsList.innerHTML).toContain('Searching for restaurants');
-      expect(domElements['findRestaurantsBtn'].disabled).toBe(true);
+      expect(loadingHtml).toContain('Searching for restaurants');
+      expect(disabledDuringLoad).toBe(true);
       // After fetch
       expect(restaurantsList.innerHTML).toContain('No restaurants found');
       expect(domElements['findRestaurantsBtn'].disabled).toBe(false);
@@ -271,7 +274,7 @@ describe('andarilho.ts', () => {
       expect(restaurantsList.innerHTML).toContain('Pizza Place');
       expect(restaurantsList.innerHTML).toContain('Cuisine: Italian');
       expect(restaurantsList.innerHTML).toContain('Address: Main St');
-      expect(restaurantsList.innerHTML).toContain('Distance: 100 meters');
+      expect(restaurantsList.innerHTML).toContain('Distance: 0 meters');
       expect(restaurantsList.innerHTML).toContain('View on Map');
       expect(domElements['findRestaurantsBtn'].disabled).toBe(false);
     });

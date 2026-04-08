@@ -29,10 +29,13 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [resolveJsToTs(), vue()],
     resolve: {
-      alias: {
-        // Map importmap alias to the local bessa_patterns.ts package for Vite/Rollup
-        'bessa_patterns.ts': resolve(dirname(new URL(import.meta.url).pathname), '../bessa_patterns.ts/dist/index.mjs'),
-      },
+      alias: (() => {
+        // Map importmap alias to the local bessa_patterns.ts package for Vite/Rollup.
+        // Fall back to src/index.ts (e.g. in Docker where dist/ hasn't been built yet).
+        const bessaDist = resolve(dirname(new URL(import.meta.url).pathname), '../bessa_patterns.ts/dist/index.mjs');
+        const bessaSrc  = resolve(dirname(new URL(import.meta.url).pathname), '../bessa_patterns.ts/src/index.ts');
+        return { 'bessa_patterns.ts': existsSync(bessaDist) ? bessaDist : bessaSrc };
+      })(),
     },
     root: 'src',
     base: './',

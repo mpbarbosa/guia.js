@@ -28,6 +28,11 @@ const __dirname  = path.dirname(__filename);
 const PORT = 9889;
 const ROOT = path.join(__dirname, '../..');
 
+// When TEST_SERVE_DIST=1 (set by run-e2e-tests-docker.sh) tests are run against
+// the compiled production bundle in dist/ instead of raw TypeScript source files.
+const SERVE_DIST = process.env.TEST_SERVE_DIST === '1';
+const INDEX_HTML = SERVE_DIST ? '/dist/index.html' : '/src/index.html';
+
 const MIME = {
   '.html': 'text/html',
   '.js':   'text/javascript',
@@ -36,11 +41,15 @@ const MIME = {
   '.json': 'application/json',
   '.png':  'image/png',
   '.svg':  'image/svg+xml',
+  '.mjs':  'text/javascript',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.ico':  'image/x-icon',
 };
 
 function createServer() {
   return http.createServer((req, res) => {
-    const urlPath  = req.url === '/' ? '/src/index.html' : (req.url ?? '/');
+    const urlPath  = req.url === '/' ? INDEX_HTML : (req.url ?? '/');
     const filePath = path.join(ROOT, urlPath);
     const ext      = path.extname(filePath);
 
@@ -87,7 +96,15 @@ describe('Sanity: Integration (Puppeteer)', () => {
 
     browser = await puppeteer.launch({
       headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security'],
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-web-security',
+        // Disable service workers so their fetch handlers never intercept
+        // Puppeteer's CDP request mocks (nominatim, etc.).
+        '--disable-features=ServiceWorker',
+      ],
+      defaultViewport: { width: 1280, height: 800 },
     });
   }, 30_000);
 
@@ -112,7 +129,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
       const jsErrors = [];
       page.on('pageerror', err => jsErrors.push(err.message));
 
-      await page.goto(`http://localhost:${PORT}/src/index.html`, {
+      await page.goto(`http://localhost:${PORT}${INDEX_HTML}`, {
         waitUntil: 'networkidle0',
         timeout:   30_000,
       });
@@ -121,7 +138,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
     });
 
     test('page title contains "Guia Turístico"', async () => {
-      await page.goto(`http://localhost:${PORT}/src/index.html`, {
+      await page.goto(`http://localhost:${PORT}${INDEX_HTML}`, {
         waitUntil: 'networkidle0',
         timeout:   30_000,
       });
@@ -131,7 +148,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
     });
 
     test('main heading says "Onde estou?"', async () => {
-      await page.goto(`http://localhost:${PORT}/src/index.html`, {
+      await page.goto(`http://localhost:${PORT}${INDEX_HTML}`, {
         waitUntil: 'networkidle0',
         timeout:   30_000,
       });
@@ -145,7 +162,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
 
   describe('2. Critical DOM elements present', () => {
     beforeEach(async () => {
-      await page.goto(`http://localhost:${PORT}/src/index.html`, {
+      await page.goto(`http://localhost:${PORT}${INDEX_HTML}`, {
         waitUntil: 'networkidle0',
         timeout:   30_000,
       });
@@ -176,7 +193,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
 
   describe('3. Version badge', () => {
     test('meta[name="version"] contains a semver string', async () => {
-      await page.goto(`http://localhost:${PORT}/src/index.html`, {
+      await page.goto(`http://localhost:${PORT}${INDEX_HTML}`, {
         waitUntil: 'networkidle0',
         timeout:   30_000,
       });
@@ -191,7 +208,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
     });
 
     test('version badge element is present and has an accessible label', async () => {
-      await page.goto(`http://localhost:${PORT}/src/index.html`, {
+      await page.goto(`http://localhost:${PORT}${INDEX_HTML}`, {
         waitUntil: 'networkidle0',
         timeout:   30_000,
       });
@@ -209,7 +226,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
 
   describe('4. Onboarding card', () => {
     test('onboarding card is visible before location is activated', async () => {
-      await page.goto(`http://localhost:${PORT}/src/index.html`, {
+      await page.goto(`http://localhost:${PORT}${INDEX_HTML}`, {
         waitUntil: 'networkidle0',
         timeout:   30_000,
       });
@@ -222,7 +239,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
     });
 
     test('"Ativar Localização" button is enabled', async () => {
-      await page.goto(`http://localhost:${PORT}/src/index.html`, {
+      await page.goto(`http://localhost:${PORT}${INDEX_HTML}`, {
         waitUntil: 'networkidle0',
         timeout:   30_000,
       });
@@ -241,17 +258,17 @@ describe('Sanity: Integration (Puppeteer)', () => {
      * With the raw-source HTTP server, TypeScript imports fail silently.
      */
     async function isAppInitialized() {
+      // In SERVE_DIST mode the compiled bundle is always present — no need to check.
+      if (SERVE_DIST) return true;
       return page.evaluate(() => {
-        // app.js logs "Initializing …" to the navigation-log on startup
+        // In raw TS source mode, app.js logs "Initializing …" only when the user
+        // grants geolocation.  An empty log means the bundle failed to load.
         const log = document.querySelector('#navigation-log');
         return log !== null && log.textContent !== '';
       });
     }
 
     async function setupGeolocationPage() {
-      const ctx = browser.defaultBrowserContext();
-      await ctx.overridePermissions(`http://localhost:${PORT}`, ['geolocation']);
-
       await page.setGeolocation({
         latitude:  MOCK_COORD.lat,
         longitude: MOCK_COORD.lon,
@@ -272,12 +289,18 @@ describe('Sanity: Integration (Puppeteer)', () => {
         }
       });
 
-      await page.goto(`http://localhost:${PORT}/src/index.html`, {
-        waitUntil: 'networkidle0',
+      // Grant geolocation permission BEFORE goto() so it is already active when
+      // the app initialises.  The app calls watchPosition() during init; if the
+      // permission grant arrives after that call the browser returns
+      // "User denied Geolocation" for the in-flight request and the app enters
+      // a stopped state that is not recovered by a subsequent button click.
+      const ctx = browser.defaultBrowserContext();
+      await ctx.overridePermissions(`http://localhost:${PORT}`, ['geolocation']);
+
+      await page.goto(`http://localhost:${PORT}${INDEX_HTML}`, {
+        waitUntil: 'networkidle2',
         timeout:   30_000,
       });
-
-      await page.click('#enable-location-btn');
     }
 
     test('municipio-value updates to "São Paulo" after mocked geolocation', async () => {
@@ -346,7 +369,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
 
   describe('6. Converter route (#/converter)', () => {
     test('navigating to #/converter renders the converter view', async () => {
-      await page.goto(`http://localhost:${PORT}/src/index.html#/converter`, {
+      await page.goto(`http://localhost:${PORT}${INDEX_HTML}#/converter`, {
         waitUntil: 'networkidle0',
         timeout:   30_000,
       });
@@ -356,7 +379,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
     });
 
     test('converter footer link is present on the home page', async () => {
-      await page.goto(`http://localhost:${PORT}/src/index.html`, {
+      await page.goto(`http://localhost:${PORT}${INDEX_HTML}`, {
         waitUntil: 'networkidle0',
         timeout:   30_000,
       });
@@ -370,7 +393,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
 
   describe('7. Accessibility basics', () => {
     beforeEach(async () => {
-      await page.goto(`http://localhost:${PORT}/src/index.html`, {
+      await page.goto(`http://localhost:${PORT}${INDEX_HTML}`, {
         waitUntil: 'networkidle0',
         timeout:   30_000,
       });
@@ -408,8 +431,9 @@ describe('Sanity: Integration (Puppeteer)', () => {
 
   describe('8. Service Worker', () => {
     test('service-worker.js is reachable (HTTP 200)', async () => {
+      const swPath = SERVE_DIST ? '/dist/service-worker.js' : '/service-worker.js';
       const response = await page.goto(
-        `http://localhost:${PORT}/service-worker.js`,
+        `http://localhost:${PORT}${swPath}`,
         { timeout: 10_000 },
       );
       expect(response?.status()).toBe(200);

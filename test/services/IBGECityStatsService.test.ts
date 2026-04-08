@@ -1,20 +1,36 @@
 import { jest } from '@jest/globals';
 
-// Manual mocks in src/utils/__mocks__/ and src/config/__mocks__/ are used automatically.
-jest.mock('../../src/utils/logger.js');
-jest.mock('../../src/config/environment.js');
+let fetchStats: typeof import('../../src/services/IBGECityStatsService').fetchStats;
+let log: jest.Mock;
+let warn: jest.Mock;
 
-import { fetchStats } from '../../src/services/IBGECityStatsService';
-import * as loggerModule from '../../src/utils/logger.js';
+beforeAll(async () => {
+  await jest.unstable_mockModule('../../src/utils/logger.js', () => ({
+    log: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    debug: jest.fn(),
+  }));
+  await jest.unstable_mockModule('../../src/config/environment.js', () => ({
+    env: {
+      isProduction: jest.fn(() => false),
+      isDevelopment: jest.fn(() => true),
+    },
+    getEnvVar: jest.fn((_key: string) => undefined),
+  }));
+  const svcMod = await import('../../src/services/IBGECityStatsService');
+  fetchStats = svcMod.fetchStats;
+  const loggerMod = await import('../../src/utils/logger.js') as any;
+  log = loggerMod.log;
+  warn = loggerMod.warn;
+});
 
-const log = loggerModule.log as jest.Mock;
-const warn = loggerModule.warn as jest.Mock;
-
-const mockFetch = global.fetch as jest.Mock;
+let mockFetch: jest.Mock;
 
 beforeEach(() => {
   jest.resetAllMocks();
   global.fetch = jest.fn();
+  mockFetch = global.fetch as jest.Mock;
 });
 
 describe('IBGECityStatsService.fetchStats', () => {

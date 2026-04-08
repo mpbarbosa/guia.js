@@ -1,6 +1,8 @@
 # Dockerfile.test.e2e — End-to-End (Puppeteer) Test Runner
 #
 # Runs `npm run test:e2e` inside an Alpine container with system Chromium.
+# The app is compiled with `npm run build` so tests run against the real
+# production bundle (no TS source-mode skips).
 #
 # Key design decisions:
 #   1. node:20-alpine matches .nvmrc (20.19.0).
@@ -10,23 +12,34 @@
 #   4. PUPPETEER_EXECUTABLE_PATH points to the system Chromium binary.
 #   5. Puppeteer tests already pass --no-sandbox and --disable-setuid-sandbox
 #      (required when running as root inside Docker).
-#   6. No sibling repos are needed — E2E tests launch a real browser against
-#      src/index.html; CDN imports are fetched by the browser at runtime.
+#   6. bessa_patterns.ts is cloned at /workspace/ so vite.config.js can resolve
+#      the 'bessa_patterns.ts' alias during npm run build.  The vite config falls
+#      back to src/index.ts when dist/index.mjs is absent, so no separate build
+#      of the sibling repo is required.
+#   7. TEST_SERVE_DIST=1 tells sanity.e2e.test.js to serve dist/ instead of src/.
 
 FROM node:20-alpine
 
-# Chromium and its shared-library dependencies
+# Chromium, its shared-library dependencies, and git (for sibling repo clone)
 RUN apk add --no-cache \
     chromium \
     nss \
     freetype \
     harfbuzz \
     ca-certificates \
-    ttf-freefont
+    ttf-freefont \
+    git
 
 # Tell Puppeteer to skip its bundled Chrome download and use system Chromium
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+# Clone bessa_patterns.ts sibling repo so vite.config.js alias resolves during build
+WORKDIR /workspace
+RUN git clone --depth 1 \
+    https://github.com/mpbarbosa/bessa_patterns.ts.git
+
+# ─── Project setup ────────────────────────────────────────────────────────────
 
 WORKDIR /workspace/guia_js
 
@@ -37,5 +50,8 @@ ENV NODE_ENV=test
 RUN npm ci --ignore-scripts
 
 COPY . .
+
+# Build the production bundle; tests are served from dist/
+RUN npm run build
 
 CMD ["npm", "run", "test:e2e"]

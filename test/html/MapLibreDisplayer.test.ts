@@ -1,12 +1,12 @@
-import { MapLibreDisplayer } from '../../src/html/MapLibreDisplayer';
+import { jest } from '@jest/globals';
 
 // Mock maplibre-gl and its classes
 const setCenter = jest.fn();
-const setLngLat = jest.fn();
 const addTo = jest.fn();
+const setLngLat = jest.fn().mockReturnValue({ addTo });
 const resize = jest.fn();
 const addControl = jest.fn();
-const on = jest.fn((event, cb) => {
+const on = jest.fn((event: string, cb: () => void) => {
   if (event === 'load') cb();
 });
 
@@ -24,17 +24,23 @@ const MapMock = jest.fn().mockImplementation(() => ({
   on,
 }));
 
-jest.mock('maplibre-gl', () => ({
-  __esModule: true,
-  default: {
+let MapLibreDisplayer: typeof import('../../src/html/MapLibreDisplayer').MapLibreDisplayer;
+
+beforeAll(async () => {
+  await jest.unstable_mockModule('maplibre-gl', () => ({
+    __esModule: true,
+    default: {
+      Map: MapMock,
+      Marker: MarkerMock,
+      NavigationControl: NavigationControlMock,
+    },
     Map: MapMock,
     Marker: MarkerMock,
     NavigationControl: NavigationControlMock,
-  },
-  Map: MapMock,
-  Marker: MarkerMock,
-  NavigationControl: NavigationControlMock,
-}));
+  }));
+  const mod = await import('../../src/html/MapLibreDisplayer');
+  MapLibreDisplayer = mod.MapLibreDisplayer;
+});
 
 describe('MapLibreDisplayer', () => {
   let mapContainer: HTMLElement;

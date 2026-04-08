@@ -67,9 +67,10 @@ describe('AddressDataExtractor Municipio Change Callback Integration', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(firstAddress);
+        // 3 unique cache keys (different postcodes), same city → buffer confirms 'São Paulo'
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-000' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-001' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...firstAddress, address: { ...firstAddress.address, postcode: '01000-002' } });
         
         // Add second address with different municipality — 3x to trigger callback
         const secondAddress = {
@@ -84,9 +85,10 @@ describe('AddressDataExtractor Municipio Change Callback Integration', () => {
                 country_code: 'BR'
             }
         };
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
-        AddressDataExtractor.getBrazilianStandardAddress(secondAddress);
+        // 3 unique cache keys → buffer confirms 'Rio de Janeiro'
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '22070-000' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '22070-001' } });
+        AddressDataExtractor.getBrazilianStandardAddress({ ...secondAddress, address: { ...secondAddress.address, postcode: '22070-002' } });
         
         // Callback should have been called once
         expect(mockCallback).toHaveBeenCalledTimes(1);

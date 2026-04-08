@@ -50,6 +50,7 @@ docker run \
   --rm \
   --name "${IMAGE_NAME}-run" \
   -e CI=true \
+  -e TEST_SERVE_DIST=1 \
   --shm-size=256m \
   "${IMAGE_NAME}" \
   sh -c "npm run test:e2e -- --runInBand ${EXTRA_ARGS}"

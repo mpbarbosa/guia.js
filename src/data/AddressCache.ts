@@ -238,6 +238,11 @@ class AddressCache {
 		
 		// Clear dataStore history
 		this.dataStore.clear();
+
+		// Reset confirmation buffers so tests start with a clean state
+		this._logradouroTrigger.reset();
+		this._bairroBuffer.reset();
+		this._municipioBuffer.reset();
 	}
 
 	/**
@@ -787,6 +792,8 @@ class AddressCache {
 				// buffer's last confirmed value (captured before observe()) instead.
 				changeDetails.previous.bairro = prevConfirmedBairro ?? undefined;
 				changeDetails.from = prevConfirmedBairro ?? null;
+				// Recompute hasChanged against the confirmed previous, not raw dataStore previous
+				changeDetails.hasChanged = (changeDetails.current.bairro ?? null) !== (prevConfirmedBairro ?? null);
 				try {
 					this.bairroChangeCallback(changeDetails);
 				} catch (callbackError) {
@@ -804,6 +811,8 @@ class AddressCache {
 				// have been overwritten N-1 times during the confirmation window. Use
 				// the buffer's last confirmed value (captured before observe()) instead.
 				changeDetails.previous.municipio = prevConfirmedMunicipio ?? undefined;
+				// Recompute hasChanged against the confirmed previous, not raw dataStore previous
+				changeDetails.hasChanged = (changeDetails.current.municipio ?? null) !== (prevConfirmedMunicipio ?? null);
 				try {
 					this.municipioChangeCallback(changeDetails);
 				} catch (callbackError) {

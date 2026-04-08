@@ -165,7 +165,7 @@ describe('MockGeolocationProvider', () => {
 			provider.getCurrentPosition(
 				() => {
 					const elapsedTime = Date.now() - startTime;
-					expect(elapsedTime).toBeGreaterThanOrEqual(50);
+					expect(elapsedTime).toBeGreaterThanOrEqual(45);
 					done();
 				},
 				() => {

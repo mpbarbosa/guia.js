@@ -1,6 +1,6 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
-**Current Version**: `0.14.3-alpha` | **Status**: Active Development
+**Current Version**: `0.14.4-alpha` | **Status**: Active Development
 **Last Updated**: 2026-03-29
 
 ---
@@ -27,7 +27,7 @@
 - **Nearby Places** — `OverpassService.ts` + `HTMLNearbyPlacesPanel.ts`; Overpass API integration for 6 categories; auto-enables when GPS available (v0.13.1-alpha)
 - **City Statistics** — `IBGECityStatsService.ts` + `HTMLCityStatsPanel.ts`; live IBGE population + area data; offline-capable (v0.13.1-alpha)
 - **Dependency upgrades** (v0.13.1-alpha): `paraty_geocore.js` → `v0.12.10-alpha`, `ibira.js` → `v0.4.22-alpha`, `bessa_patterns.ts` → `v0.12.15-alpha`
-- **Bootstrap 5.3 responsive navbar** (v0.14.3-alpha): Bootstrap 5.3 + Bootstrap Icons; `<nav class="navbar navbar-expand-md">` with Início + Conversor links, hamburger toggle, MD3 token bridge via `bootstrap-overrides.css`, dedicated `ui` Vite chunk; footer converter links removed
+- **Bootstrap 5.3 responsive navbar** (v0.14.4-alpha): Bootstrap 5.3 + Bootstrap Icons; `<nav class="navbar navbar-expand-md">` with Início + Conversor links, hamburger toggle, MD3 token bridge via `bootstrap-overrides.css`, dedicated `ui` Vite chunk; footer converter links removed
 
 ---
 
@@ -134,7 +134,7 @@ Issues identified from `.ai_workflow` workflow runs and resolved via the `audit-
 | RI-030 | `navigator.permissions` not restored after 4 tests in `onboarding.test.ts` | missing-test-coverage | Added `beforeEach`/`afterEach` to save and restore `navigator.permissions`; 10/10 tests pass | e5ac928 |
 | RI-031 | Browser `fetch()` fallback in `ReverseGeocoder.ts` has no AbortController | missing-test-coverage | Added `AbortController` to native `fetch()` path only; stored as `_abortController` instance field; `tsc --noEmit` exits 0 | 7b4c2a5 |
 | RI-032 | Unsafe `as Record<string, unknown>` casts in `address-parser.ts` without validation | typescript-issue | Added `isRecord()` type guard; guard is called before each cast; 49/49 tests pass | 85948b9 |
-| RI-033 | Version mismatch in README.md (0.12.x vs 0.14.3-alpha) | docs-outdated | Updated front-matter and badge to 0.14.3-alpha | ca4fc3c |
+| RI-033 | Version mismatch in README.md (0.12.x vs 0.14.4-alpha) | docs-outdated | Updated front-matter and badge to 0.14.4-alpha | ca4fc3c |
 | RI-034 | Version mismatch in src/config/defaults.ts (patch: 0 vs patch: 1) | docs-outdated | Changed patch to 1 in APP_VERSION | ca4fc3c |
 | RI-035 | 6 broken internal links in docs/INDEX.md | docs-outdated | Replaced each broken link with correct existing path | f6b34ec |
 | RI-036 | 10,411 MDL violations across 443 .md files (MD007/MD009/MD026/MD047) | markdown-lint | Stripped trailing whitespace, ensured final newlines, fixed SKILLS.md setext heading | fd1cf81 |

@@ -8,6 +8,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'src/**/*.js'
+      - 'src/**/*.ts'
       - 'docs/**/*.md'
       - '.github/**/*.md'
 
@@ -36,11 +37,15 @@ jobs:
           VERSION="${{ steps.package-version.outputs.version }}"
           echo "Checking version references in source files..."
           
-          # Check src/app.js
-          if ! grep -q "version $VERSION" src/app.js; then
-            echo "❌ Version mismatch in src/app.js"
+          # Check src/app.ts
+          if [ ! -f src/app.ts ]; then
+            echo "❌ Expected src/app.ts to exist, but it was not found."
+            exit 1
+          fi
+          if ! grep -q "version $VERSION" src/app.ts; then
+            echo "❌ Version mismatch in src/app.ts"
             echo "Expected: $VERSION"
-            echo "Found: $(grep -o 'version [0-9.]*-alpha' src/app.js)"
+            echo "Found: $(grep -o 'version [0-9.]*-alpha' src/app.ts || true)"
             exit 1
           fi
           

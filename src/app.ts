@@ -3,7 +3,7 @@
 /**
  * Main Application Entry Point
  * SPA Router and Application Initialization
- * @version 0.9.0-alpha
+ * @version 0.14.4-alpha
  */
 
 import HomeViewController from './views/home.js';

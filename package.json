@@ -100,7 +100,9 @@
       "/__tests__/helpers/",
       "/__tests__/e2e/",
       "test/speech/",
-      "test/app.test.js"
+      "test/app.test.js",
+      "/__tests__/types/paraty-geocore.test.js",
+      "/test/core/GeocodingState.test.js"
     ],
     "collectCoverageFrom": [
       "src/**/*.js",

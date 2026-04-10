@@ -65,6 +65,22 @@
   }
 }
 
+/* Logradouro change blink — brief highlight when the street name updates */
+.highlight-card.card-blink {
+  animation: card-blink 0.6s ease-in-out;
+}
+
+@keyframes card-blink {
+  0%, 100% { background: linear-gradient(135deg, var(--md-sys-color-primary-container, #d1e4ff) 0%, var(--md-sys-color-secondary-container, #e8def8) 100%); }
+  35%, 65% { background: var(--md-sys-color-tertiary-container, #ffd8e4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .highlight-card.card-blink {
+    animation: none;
+  }
+}
+
 /* Loaded state - enhanced appearance */
 .highlight-card.loaded {
   transform: scale(1);

@@ -356,4 +356,138 @@ describe('HTMLHighlightCardsDisplayer - Município State Abbreviation Display', 
             expect(() => testDisplayer.update({}, enderecoPadronizado)).not.toThrow();
         });
     });
+
+    describe('Logradouro Card Blink (v0.14.5-alpha)', () => {
+        let blinkDisplayer;
+        let logradouroElement;
+        let logradouroCard;
+
+        beforeEach(() => {
+            logradouroCard = {
+                classList: {
+                    add: jest.fn(),
+                    remove: jest.fn(),
+                },
+                addEventListener: jest.fn(),
+                setAttribute: jest.fn(),
+                removeAttribute: jest.fn(),
+            };
+            logradouroElement = {
+                textContent: '',
+                closest: (selector) => selector === '.highlight-card' ? logradouroCard : null,
+            };
+
+            const blinkMockDoc = {
+                getElementById: (id) => {
+                    if (id === 'logradouro-value') return logradouroElement;
+                    return null;
+                },
+            };
+
+            blinkDisplayer = new HTMLHighlightCardsDisplayer(blinkMockDoc);
+        });
+
+        test('should NOT blink on the first logradouro update', () => {
+            const addr = new BrazilianStandardAddress();
+            addr.logradouro = 'Rua das Flores';
+
+            blinkDisplayer.update({}, addr);
+
+            expect(logradouroCard.classList.add).not.toHaveBeenCalledWith('card-blink');
+        });
+
+        test('should blink when logradouro changes', () => {
+            const addr1 = new BrazilianStandardAddress();
+            addr1.logradouro = 'Rua das Flores';
+            blinkDisplayer.update({}, addr1);
+
+            const addr2 = new BrazilianStandardAddress();
+            addr2.logradouro = 'Avenida Brasil';
+            blinkDisplayer.update({}, addr2);
+
+            expect(logradouroCard.classList.add).toHaveBeenCalledWith('card-blink');
+        });
+
+        test('should NOT blink when logradouro stays the same', () => {
+            const addr1 = new BrazilianStandardAddress();
+            addr1.logradouro = 'Rua das Flores';
+            blinkDisplayer.update({}, addr1);
+
+            logradouroCard.classList.add.mockClear();
+
+            const addr2 = new BrazilianStandardAddress();
+            addr2.logradouro = 'Rua das Flores';
+            blinkDisplayer.update({}, addr2);
+
+            expect(logradouroCard.classList.add).not.toHaveBeenCalledWith('card-blink');
+        });
+
+        test('should register an animationend listener when blinking', () => {
+            const addr1 = new BrazilianStandardAddress();
+            addr1.logradouro = 'Rua A';
+            blinkDisplayer.update({}, addr1);
+
+            const addr2 = new BrazilianStandardAddress();
+            addr2.logradouro = 'Rua B';
+            blinkDisplayer.update({}, addr2);
+
+            expect(logradouroCard.addEventListener).toHaveBeenCalledWith(
+                'animationend',
+                expect.any(Function),
+                { once: true },
+            );
+        });
+
+        test('should remove card-blink class when animationend fires', () => {
+            const addr1 = new BrazilianStandardAddress();
+            addr1.logradouro = 'Rua A';
+            blinkDisplayer.update({}, addr1);
+
+            const addr2 = new BrazilianStandardAddress();
+            addr2.logradouro = 'Rua B';
+            blinkDisplayer.update({}, addr2);
+
+            // Retrieve and invoke the animationend callback
+            const [, onEnd] = logradouroCard.addEventListener.mock.calls.find(
+                ([event]) => event === 'animationend',
+            );
+            onEnd();
+
+            expect(logradouroCard.classList.remove).toHaveBeenCalledWith('card-blink');
+        });
+
+        test('should blink when logradouro changes from a value to null (—)', () => {
+            const addr1 = new BrazilianStandardAddress();
+            addr1.logradouro = 'Rua das Flores';
+            blinkDisplayer.update({}, addr1);
+
+            logradouroCard.classList.add.mockClear();
+
+            const addr2 = new BrazilianStandardAddress();
+            addr2.logradouro = null;
+            blinkDisplayer.update({}, addr2);
+
+            expect(logradouroCard.classList.add).toHaveBeenCalledWith('card-blink');
+        });
+
+        test('should NOT blink when logradouroCard is null', () => {
+            // Displayer where logradouro element has no closest card parent
+            const noCardDoc = {
+                getElementById: (id) => {
+                    if (id === 'logradouro-value') return { textContent: '', closest: () => null };
+                    return null;
+                },
+            };
+            const noCardDisplayer = new HTMLHighlightCardsDisplayer(noCardDoc);
+
+            const addr1 = new BrazilianStandardAddress();
+            addr1.logradouro = 'Rua A';
+            noCardDisplayer.update({}, addr1);
+
+            const addr2 = new BrazilianStandardAddress();
+            addr2.logradouro = 'Rua B';
+            // Should not throw even when _logradouroCard is null
+            expect(() => noCardDisplayer.update({}, addr2)).not.toThrow();
+        });
+    });
 });

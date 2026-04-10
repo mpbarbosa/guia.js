@@ -12,6 +12,14 @@ import type BrazilianStandardAddress from '../data/BrazilianStandardAddress.js';
  */
 
 /**
+ * Module-level WeakMap used to store per-instance mutable state for the
+ * frozen HTMLHighlightCardsDisplayer instances.  Keyed by the displayer
+ * instance; the value is the previously-displayed logradouro string (or
+ * `null` before the first update).
+ */
+const _previousLogradouro = new WeakMap<HTMLHighlightCardsDisplayer, string | null>();
+
+/**
  * Displayer for municipio, bairro, and logradouro highlight cards
  * 
  * @class
@@ -47,7 +55,27 @@ class HTMLHighlightCardsDisplayer {
         this._bairroCard = this._bairroElement?.closest ? this._bairroElement.closest('.highlight-card') : null;
         this._logradouroCard = this._logradouroElement?.closest ? this._logradouroElement.closest('.highlight-card') : null;
         
+        // Initialise mutable state before freezing
+        _previousLogradouro.set(this, null);
+        
         Object.freeze(this);
+    }
+    
+    /**
+     * Briefly applies the `card-blink` CSS animation to the logradouro card
+     * to signal that the street name has changed.
+     * The class is removed automatically when the animation ends.
+     * 
+     * @private
+     */
+    _blinkLogradouroCard(): void {
+        const card = this._logradouroCard;
+        if (!card || !card.classList) return;
+
+        card.classList.add('card-blink');
+        card.addEventListener('animationend', function onEnd() {
+            card.classList.remove('card-blink');
+        }, { once: true });
     }
     
     /**
@@ -141,6 +169,11 @@ class HTMLHighlightCardsDisplayer {
         // Update logradouro
         if (this._logradouroElement) {
             const logradouro = enderecoPadronizado.logradouro || '—';
+            const previous = _previousLogradouro.get(this);
+            if (previous !== null && logradouro !== previous) {
+                this._blinkLogradouroCard();
+            }
+            _previousLogradouro.set(this, logradouro);
             this._logradouroElement.textContent = logradouro;
             log('(HTMLHighlightCardsDisplayer) Updated logradouro-value to:', logradouro);
         } else {

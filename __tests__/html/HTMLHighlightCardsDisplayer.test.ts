@@ -369,7 +369,6 @@ describe('HTMLHighlightCardsDisplayer - Município State Abbreviation Display', 
                     remove: jest.fn(),
                 },
                 addEventListener: jest.fn(),
-                removeEventListener: jest.fn(),
                 setAttribute: jest.fn(),
                 removeAttribute: jest.fn(),
             };
@@ -435,6 +434,7 @@ describe('HTMLHighlightCardsDisplayer - Município State Abbreviation Display', 
             expect(logradouroCard.addEventListener).toHaveBeenCalledWith(
                 'animationend',
                 expect.any(Function),
+                { once: true },
             );
         });
 

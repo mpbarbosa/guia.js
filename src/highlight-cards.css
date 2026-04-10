@@ -71,10 +71,8 @@
 }
 
 @keyframes card-blink {
-  0%   { background: linear-gradient(135deg, var(--md-sys-color-primary-container, #d1e4ff) 0%, var(--md-sys-color-secondary-container, #e8def8) 100%); }
-  35%  { background: var(--md-sys-color-tertiary-container, #ffd8e4); }
-  65%  { background: var(--md-sys-color-tertiary-container, #ffd8e4); }
-  100% { background: linear-gradient(135deg, var(--md-sys-color-primary-container, #d1e4ff) 0%, var(--md-sys-color-secondary-container, #e8def8) 100%); }
+  0%, 100% { background: linear-gradient(135deg, var(--md-sys-color-primary-container, #d1e4ff) 0%, var(--md-sys-color-secondary-container, #e8def8) 100%); }
+  35%, 65% { background: var(--md-sys-color-tertiary-container, #ffd8e4); }
 }
 
 @media (prefers-reduced-motion: reduce) {

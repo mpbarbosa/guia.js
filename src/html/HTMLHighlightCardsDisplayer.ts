@@ -75,8 +75,7 @@ class HTMLHighlightCardsDisplayer {
         card.classList.add('card-blink');
         card.addEventListener('animationend', function onEnd() {
             card.classList.remove('card-blink');
-            card.removeEventListener('animationend', onEnd);
-        });
+        }, { once: true });
     }
     
     /**

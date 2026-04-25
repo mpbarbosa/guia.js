@@ -1,14 +1,12 @@
 {
   "version": 1,
   "partitionIndex": 1,
-  "totalPartitions": 5,
-  "filesHash": "464c9ca3",
+  "totalPartitions": 3,
+  "filesHash": "646aff47",
   "partitionLabels": [
-    "__mocks__, docs/api-generated, eslint.config.js",
     "examples",
-    "jest.config.e2e.js, jest.config.unit.js, jest.setup.js, jest.vue-transformer.cjs, public",
-    "scripts, service-worker.js",
+    "service-worker.js, jest.config.e2e.js, jest.config.unit.js, jest.setup.js, jest.vue-transformer.cjs",
     "src/utils"
   ],
-  "updatedAt": "2026-04-25T00:01:58.733Z"
+  "updatedAt": "2026-04-25T15:34:04.505Z"
 }

@@ -1,9 +1,36 @@
-import HTMLConfirmationBufferDisplayer from '../html/HTMLConfirmationBufferDisplayer';
-import timerManager from '../../utils/TimerManager.js';
-import AddressCache from '../../data/AddressCache.js';
+import { jest } from '@jest/globals';
 
-jest.mock('../../utils/TimerManager.js');
-jest.mock('../../data/AddressCache.js');
+let HTMLConfirmationBufferDisplayer: typeof import('../../src/html/HTMLConfirmationBufferDisplayer').default;
+let timerManager: {
+  setInterval: jest.Mock;
+  clearTimer: jest.Mock;
+};
+let AddressCache: {
+  getInstance: jest.Mock;
+};
+
+beforeAll(async () => {
+  await jest.unstable_mockModule('../../src/utils/TimerManager.js', () => ({
+    default: {
+      setInterval: jest.fn(),
+      clearTimer: jest.fn(),
+    },
+  }));
+
+  await jest.unstable_mockModule('../../src/data/AddressCache.js', () => ({
+    default: {
+      getInstance: jest.fn(),
+    },
+  }));
+
+  ({ default: HTMLConfirmationBufferDisplayer } = await import('../../src/html/HTMLConfirmationBufferDisplayer.js'));
+  ({ default: timerManager } = await import('../../src/utils/TimerManager.js') as {
+    default: { setInterval: jest.Mock; clearTimer: jest.Mock };
+  });
+  ({ default: AddressCache } = await import('../../src/data/AddressCache.js') as {
+    default: { getInstance: jest.Mock };
+  });
+});
 
 const TIMER_ID = 'confirmation-buffer-card';
 
@@ -26,7 +53,7 @@ const getMockConfirmationBufferState = (overrides = {}) => ({
 
 describe('HTMLConfirmationBufferDisplayer', () => {
   let element: HTMLElement;
-  let displayer: HTMLConfirmationBufferDisplayer;
+  let displayer: InstanceType<typeof HTMLConfirmationBufferDisplayer>;
   let getInstanceMock: jest.Mock;
   let getConfirmationBufferStateMock: jest.Mock;
 

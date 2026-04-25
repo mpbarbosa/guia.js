@@ -178,8 +178,3 @@ class AddressFieldConfirmationBuffer {
 
 // Export for ES6 modules
 export default AddressFieldConfirmationBuffer;
-
-// CommonJS compatibility (Node.js)
-if (typeof module !== 'undefined' && module.exports) {
-	module.exports = AddressFieldConfirmationBuffer;
-}

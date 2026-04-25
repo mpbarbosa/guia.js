@@ -5,12 +5,12 @@
 
 project:
   name: "guia_js"
-  version: "0.12.12-alpha"
+  version: "0.16.0-alpha"
   kind: "location_based_service"
   description: "Vue.js/TypeScript tourist guide SPA with Brazilian geocoding and address parsing (municipality, district, neighbourhood)"
 tech_stack:
   primary_language: "typescript"
-  framework: "vite"
+  framework: "vue"
   build_system: "npm"
   test_framework: "jest"
   test_command: "npm test"
@@ -18,7 +18,7 @@ tech_stack:
   lint_commands:
     markdown: "npm run lint:md"
   routing: "hash_based"
-  spa_entry: "src/app.ts"
+  spa_entry: "src/main.ts"
 structure:
   source_dirs:
     - src
@@ -46,7 +46,7 @@ ai_personas:
     - performance_engineer       # Vite SPA build, MapLibre GL rendering, service worker caching, performance-optimizations.css, timing/ dir
     - security_expert            # AwsGeocoder.ts (AWS credentials), deps:audit script, security_audit appears in all routing steps
     - test_engineer              # Jest + @vue/test-utils, jsdom, multiple suites (unit/e2e/features/services/visual/chrome)
-    - code_quality_analyst       # ESLint + @typescript-eslint, complex SPA with many layers
+    - code_quality_analyst       # ESLint flat config for JS surfaces plus TypeScript/Vue code quality review
     - documentation_expert       # jsdoc + docs/, JSDoc comments required; docs:generate script
     - technical_writer           # markdownlint-cli2, CHANGELOG, docs/, many markdown files
     - git_specialist             # deploy script, version sync (check:version, update:version-refs, update:badges)
@@ -69,264 +69,273 @@ workflow:
 
   steps:
     - id: step_00
-      name: "Pre-Analysis / Environment Scan"
-      file: "step_00.js"
-      description: "Scan SPA project structure, detect project kind (location_based_service/SPA), validate environment"
-      phase: 1
+      name: "Pre-Analysis"
+      description: "Analyze git state and SPA project context"
+      phase: analysis
       enabled: true
-      can_parallelize: false
       dependencies: []
       ai_persona: documentation_expert
 
-    - id: step_01
-      name: "Documentation Analysis"
-      file: "step_01.js"
-      description: "Validate README, docs/, JSDoc (jsdoc.json) coverage; check docs:generate output"
-      phase: 1
+    - id: step_0b
+      name: "Bootstrap Documentation"
+      description: "Generate initial documentation and missing JSDoc scaffolding when needed"
+      phase: analysis
       enabled: true
-      can_parallelize: false
-      dependencies: [step_00]
+      dependencies:
+        - step_00
+      ai_persona: documentation_expert
+
+    - id: step_01
+      name: "Documentation Updates"
+      description: "Validate README, docs/, and repo-visible documentation against the current codebase"
+      phase: analysis
+      enabled: true
+      dependencies:
+        - step_00
+      ai_persona: documentation_expert
+
+    - id: step_01_5
+      name: "Copilot Instructions Validation"
+      description: "Audit and refresh .github/copilot-instructions.md against live repo facts"
+      phase: analysis
+      enabled: true
+      dependencies:
+        - step_01
       ai_persona: documentation_expert
 
     - id: step_02
       name: "Consistency Analysis"
-      file: "step_02.js"
-      description: "Cross-check docs/code consistency; verify JSDoc comments in src/services/, src/core/, src/views/"
-      phase: 1
+      description: "Cross-check docs and code consistency across SPA services, views, and shared utilities"
+      phase: analysis
       enabled: true
-      can_parallelize: true
-      dependencies: [step_01]
+      dependencies:
+        - step_01_5
       ai_persona: documentation_expert
 
-    - id: step_03
-      name: "Script Reference Analysis"
-      file: "step_03.js"
-      description: "Validate package.json scripts (build, test:*, deps:*, check:*, update:*, cdn:generate), vite.config.js references"
-      phase: 1
+    - id: step_02_5
+      name: "Documentation Optimization"
+      description: "Optimize documentation size, structure, and signal density"
+      phase: analysis
       enabled: true
-      can_parallelize: true
-      dependencies: [step_00]
+      dependencies:
+        - step_02
+      ai_persona: technical_writer
+
+    - id: step_21
+      name: "Doc Consolidation"
+      description: "Find similar markdown documents and consolidate them into canonical docs"
+      phase: quality
+      enabled: true
+      dependencies:
+        - step_02_5
+      ai_persona: technical_writer
+
+    - id: step_03
+      name: "Script References"
+      description: "Validate package.json script references and related build tooling docs"
+      phase: validation
+      enabled: true
+      dependencies:
+        - step_02
       ai_persona: devops_engineer
 
     - id: step_04
-      name: "Config Validation"
-      file: "step_04.js"
-      description: "Validate tsconfig.json, jest.config.unit.js, jest.config.e2e.js, vite.config.js, eslint.config.js"
-      phase: 1
+      name: "Configuration Validation"
+      description: "Validate tsconfig, Jest, Vite, ESLint, and other project configuration"
+      phase: validation
       enabled: true
-      can_parallelize: true
-      dependencies: [step_00]
+      dependencies:
+        - step_00
       ai_persona: devops_engineer
 
     - id: step_05
-      name: "Directory Structure Validation"
-      file: "step_05.js"
-      description: "Validate src/ SPA layers: views/, components/, services/, features/, coordination/, observers/, core/, utils/, html/"
-      phase: 1
+      name: "Directory Structure"
+      description: "Validate SPA directory layout across views, components, services, observers, core, and utils"
+      phase: validation
       enabled: true
-      can_parallelize: true
-      dependencies: [step_00]
+      dependencies:
+        - step_04
       ai_persona: architecture_reviewer
 
     - id: step_06
-      name: "Integration Tests"
-      file: "step_06.js"
-      description: "Run Jest suites (test:unit, test:features, test:services, test:integration) with @vue/test-utils and jsdom"
-      phase: 2
+      name: "Test Review"
+      description: "Review existing Jest and Vue test coverage"
+      phase: testing
       enabled: true
-      can_parallelize: false
-      dependencies: [step_03, step_04]
+      dependencies:
+        - step_05
       ai_persona: test_engineer
 
     - id: step_07
-      name: "Coverage Report Generation"
-      file: "step_07.js"
-      description: "Generate coverage report across SPA components, services (GeolocationService, ReverseGeocoder, AwsGeocoder)"
-      phase: 2
+      name: "Test Generation"
+      description: "Generate new tests for uncovered SPA code paths"
+      phase: testing
       enabled: true
-      can_parallelize: false
-      dependencies: [step_06]
+      dependencies:
+        - step_06
       ai_persona: test_engineer
 
     - id: step_08
-      name: "Release Readiness Check"
-      file: "step_08.js"
-      description: "Validate version sync across package.json, src/config/version.ts, service-worker.js; CDN URL generation"
-      phase: 2
+      name: "Test Execution"
+      description: "Execute the configured test suite"
+      phase: testing
       enabled: true
-      can_parallelize: false
-      dependencies: [step_07]
-      ai_persona: git_specialist
+      dependencies:
+        - step_07
+      ai_persona: test_engineer
 
     - id: step_09
-      name: "Dependency Audit"
-      file: "step_09.js"
-      description: "Audit ibira.js + maplibre-gl + vue + vue-router + bootstrap prod deps; run deps:audit and deps:check"
-      phase: 2
+      name: "Dependency Analysis"
+      description: "Audit third-party dependencies and dependency health"
+      phase: quality
       enabled: true
-      can_parallelize: true
-      dependencies: [step_00]
+      dependencies:
+        - step_08
       ai_persona: dependency_analyst
 
     - id: step_10
-      name: "Code Quality Analysis"
-      file: "step_10.js"
-      description: "Run ESLint (@typescript-eslint) against src/**/*.ts; check Vue component patterns, service layer quality"
-      phase: 2
+      name: "Code Quality"
+      description: "Run code quality analysis across JavaScript, TypeScript, and Vue sources"
+      phase: quality
       enabled: true
-      can_parallelize: true
-      dependencies: [step_06]
+      dependencies:
+        - step_09
       ai_persona: code_quality_analyst
 
-    - id: step_11
-      name: "Context Optimization"
-      file: "step_11.js"
-      description: "Optimize AI context for subsequent steps using project analysis results"
-      phase: 2
-      enabled: true
-      can_parallelize: true
-      dependencies: [step_01, step_02]
-      ai_persona: documentation_expert
-
-    - id: step_12
-      name: "Git Status Analysis"
-      file: "step_12.js"
-      description: "Analyze git diff, stage changes, validate conventional commit message format"
-      phase: 3
-      enabled: true
-      can_parallelize: false
-      dependencies: [step_10]
-      ai_persona: git_specialist
-
     - id: step_13
-      name: "Markdown Lint"
-      file: "step_13.js"
-      description: "Lint docs/ markdown files and README.md with markdownlint-cli2 (.markdownlint.yaml)"
-      phase: 3
+      name: "Markdown Linting"
+      description: "Lint repository markdown with markdownlint-cli2"
+      phase: quality
       enabled: true
-      can_parallelize: true
-      dependencies: [step_01]
+      dependencies:
+        - step_10
       ai_persona: technical_writer
 
-    - id: step_14
-      name: "Prompt Engineering Review"
-      file: "step_14.js"
-      description: "Review AI prompt structure and optimization for workflow effectiveness"
-      phase: 3
+    - id: step_11
+      name: "Context Management"
+      description: "Manage workflow context for downstream analysis steps"
+      phase: quality
+      enabled: true
+      dependencies:
+        - step_13
+      ai_persona: documentation_expert
+
+    - id: step_11_5
+      name: "AWS LBS Validation"
+      description: "Reserved for aws_lbs_backend_setup-specific validation"
+      phase: quality
       enabled: false
-      reason: "guia_js is not an AI project; no AI prompt artifacts to review"
-      can_parallelize: true
-      dependencies: [step_11]
+      dependencies:
+        - step_11
+      ai_persona: aws_serverless_engineer
+
+    - id: step_11_6
+      name: "AWS Serverless AI Review"
+      description: "Reserved for aws_lbs_backend_setup deployment-readiness review"
+      phase: quality
+      enabled: false
+      dependencies:
+        - step_11_5
+      ai_persona: aws_serverless_engineer
+
+    - id: step_14
+      name: "Prompt Engineering"
+      description: "Analyze and optimize AI prompts when the project contains prompt assets"
+      phase: quality
+      enabled: false
+      dependencies:
+        - step_13
       ai_persona: prompt_engineer
 
     - id: step_15
       name: "UX Analysis"
-      file: "step_15.js"
-      description: "Review Vue SPA UX: map interactions, geocoding displays, onboarding, HTMLPositionDisplayer/HTMLAddressDisplayer components, error recovery"
-      phase: 3
+      description: "Review SPA UX, accessibility flows, and interaction patterns"
+      phase: quality
       enabled: true
-      can_parallelize: true
-      dependencies: [step_10]
+      dependencies:
+        - step_14
       ai_persona: ux_analyst
 
     - id: step_16
       name: "Version Update"
-      file: "step_16.js"
-      description: "Bump semver version; sync across package.json, src/config/version.ts, service-worker.js, .workflow-config.yaml"
-      phase: 3
+      description: "Review and update semantic versioning across project metadata when appropriate"
+      phase: finalization
       enabled: true
-      can_parallelize: false
-      dependencies: [step_08, step_12]
+      dependencies:
+        - step_15
       ai_persona: git_specialist
-
-    - id: step_17
-      name: "Summary Generation"
-      file: "step_17.js"
-      description: "Generate workflow execution summary and backlog report"
-      phase: 3
-      enabled: true
-      can_parallelize: false
-      dependencies: [step_16]
-      ai_persona: technical_writer
 
     - id: step_18
       name: "Debugging Analysis"
-      file: "step_18.js"
-      description: "Analyze async bugs: GeolocationService callbacks, AwsGeocoder request handling, OverpassService, observer patterns"
-      phase: 2
+      description: "Analyze async bugs, observer chains, and runtime failure patterns"
+      phase: quality
       enabled: true
-      can_parallelize: true
-      dependencies: [step_06]
+      dependencies:
+        - step_16
       ai_persona: async_performance_engineer
 
     - id: step_19
       name: "TypeScript Review"
-      file: "step_19.js"
-      description: "Review TypeScript strictness across SPA: Vue component types, service layer interfaces, geolocation type definitions"
-      phase: 2
+      description: "Review strict typing across components, services, and shared interfaces"
+      phase: quality
       enabled: true
-      can_parallelize: true
-      dependencies: [step_10]
+      dependencies:
+        - step_18
       ai_persona: typescript_reviewer
 
     - id: step_20
       name: "Async Performance Review"
-      file: "step_20.js"
-      description: "Review GeolocationService async patterns, service worker caching, ibira.js fetch integration, observer notification chains"
-      phase: 2
+      description: "Review async patterns, fetch flows, and service worker behavior"
+      phase: quality
       enabled: true
-      can_parallelize: true
-      dependencies: [step_06]
+      dependencies:
+        - step_19
       ai_persona: async_performance_engineer
-
-    - id: step_21
-      name: "Architecture Review"
-      file: "step_21.js"
-      description: "Review SPA layer separation (views/components/services/coordination/observers); AWS + IBGE + Overpass service integration"
-      phase: 2
-      enabled: true
-      can_parallelize: true
-      dependencies: [step_05]
-      ai_persona: architecture_reviewer
 
     - id: step_22
       name: "Accessibility Review"
-      file: "step_22.js"
-      description: "WCAG 2.1 AA/AAA review: HTMLDisplayer components, skip-link.css, accessibility-compliance.css, reduced-motion.css, HtmlSpeechSynthesisDisplayer"
-      phase: 3
+      description: "Run WCAG-focused accessibility review on user-facing SPA surfaces"
+      phase: quality
       enabled: true
-      can_parallelize: true
-      dependencies: [step_10]
+      dependencies:
+        - step_21
       ai_persona: accessibility_expert
 
     - id: step_23
       name: "Performance Review"
-      file: "step_23.js"
-      description: "Performance review: Vite SPA bundle, MapLibre GL rendering, service worker caching, performance-optimizations.css, timing/ directory"
-      phase: 3
+      description: "Review bundle, rendering, and runtime performance characteristics"
+      phase: quality
       enabled: true
-      can_parallelize: true
-      dependencies: [step_10]
+      dependencies:
+        - step_22
       ai_persona: performance_engineer
 
-    - id: step_0b
-      name: "Bootstrap Documentation"
-      file: "step_0b.js"
-      description: "Bootstrap missing JSDoc stubs for undocumented Vue components and services"
-      phase: 1
+    - id: step_17
+      name: "Workflow Summary"
+      description: "Generate workflow execution summary and backlog report"
+      phase: finalization
       enabled: true
-      can_parallelize: false
-      dependencies: [step_01]
-      ai_persona: documentation_expert
+      dependencies:
+        - step_20
+        - step_23
+      ai_persona: technical_writer
 
     - id: step_0f
-      name: "Artifact Commit"
-      file: "step_0f.js"
-      description: "Commit all workflow outputs (backlog, metrics, logs) to repo"
-      phase: 3
+      name: "Commit Artifacts"
+      description: "Commit workflow artifacts generated during the run"
+      phase: finalization
       enabled: true
-      can_parallelize: false
-      dependencies: [step_17]
+      dependencies:
+        - step_17
+      ai_persona: git_specialist
+
+    - id: step_12
+      name: "Git Finalization"
+      description: "Stage, commit, and finalize workflow modifications"
+      phase: finalization
+      enabled: true
+      dependencies:
+        - step_0f
       ai_persona: git_specialist
 
 # Linting Configuration
@@ -354,10 +363,10 @@ deploy:
 spa:
   routes:
     - path: "/"
-      view: "src/views/home.ts"
+      view: "src/components/HomeView.vue"
       description: "Main geolocation tracking interface"
     - path: "/converter"
-      view: "src/views/converter.ts"
+      view: "src/components/ConverterView.vue"
       description: "Coordinate converter utility"
   components:
     - src/html/HTMLPositionDisplayer.ts
@@ -376,6 +385,7 @@ conditionals:
     run_if:
       - "src/**/*.ts": changed
       - "__tests__/**/*.test.ts": changed
+      - "__tests__/**/*.test.js": changed
     description: "Skip tests if only documentation or non-code files changed"
   
   step4_directory_structure:
@@ -404,18 +414,24 @@ conditionals:
 change_patterns:
   code_files:
     - "src/**/*.ts"
+    - "src/**/*.js"
+    - "src/**/*.vue"
     - "src/**/*.css"
     - "src/**/*.html"
   test_files:
     - "__tests__/**/*.ts"
     - "__tests__/**/*.js"
     - "tests/**/*.ts"
+    - "tests/**/*.js"
+    - "tests/**/*.py"
+    - "tests/**/*.sh"
   documentation_files:
     - "**/*.md"
     - "docs/**/*"
   config_files:
     - "package.json"
     - ".github/**/*.yml"
+    - ".github/**/*.yaml"
     - ".workflow-config.yaml"
 
 # Version Configuration

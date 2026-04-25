@@ -1,10 +1,10 @@
 /**
  * Jest and ES6 Modules - Migration Example
- * 
+ *
  * This file demonstrates the migration from CommonJS to ES6 modules in Jest tests.
- * 
- * @see docs/JEST_COMMONJS_ES6_GUIDE.md for complete guide
- * @see .github/TESTING_MODULE_SYSTEMS.md for quick reference
+ *
+ * @see docs/guides/JEST_COMMONJS_ES6_GUIDE.md for complete guide
+ * @see docs/guides/TESTING_MODULE_SYSTEMS.md for quick reference
  */
 
 console.log('='.repeat(80));
@@ -35,11 +35,12 @@ console.log('// ❌ Error: Cannot use import statement outside a module');
 console.log('```');
 console.log();
 
-console.log('📊 Current Guia.js Statistics:');
+console.log('📊 Historical Migration Snapshot:');
 console.log('  - Total test suites: 40');
 console.log('  - Failing suites: 19 (47.5%)');
 console.log('  - Passing suites: 21 (52.5%)');
 console.log('  - Root cause: require() incompatible with ES6 import');
+console.log('  - Note: current suite counts have evolved; see README.md for live totals');
 console.log();
 
 // ============================================================================
@@ -325,15 +326,15 @@ console.log('  ✅ Future-proof for Guia.js');
 console.log();
 
 console.log('Documentation:');
-console.log('  📖 Complete Guide: docs/JEST_COMMONJS_ES6_GUIDE.md');
-console.log('  📖 Quick Reference: .github/TESTING_MODULE_SYSTEMS.md');
-console.log('  📖 Module Splitting: docs/MODULE_SPLITTING_GUIDE.md');
+console.log('  📖 Complete Guide: docs/guides/JEST_COMMONJS_ES6_GUIDE.md');
+console.log('  📖 Quick Reference: docs/guides/TESTING_MODULE_SYSTEMS.md');
+console.log('  📖 Module Splitting: docs/guides/MODULE_SPLITTING_GUIDE.md');
 console.log();
 
 console.log('='.repeat(80));
 console.log('For detailed instructions, see:');
-console.log('  - docs/JEST_COMMONJS_ES6_GUIDE.md (comprehensive)');
-console.log('  - .github/TESTING_MODULE_SYSTEMS.md (quick ref)');
+console.log('  - docs/guides/JEST_COMMONJS_ES6_GUIDE.md (comprehensive)');
+console.log('  - docs/guides/TESTING_MODULE_SYSTEMS.md (quick ref)');
 console.log('='.repeat(80));
 console.log();
 

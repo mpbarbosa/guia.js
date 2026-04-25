@@ -1,17 +1,76 @@
 /**
- * Example demonstrating the referentially transparent GeoPosition class
- * 
+ * Example demonstrating the referentially transparent GeoPosition contract.
+ *
+ * This file is intentionally self-contained so it can run with plain Node.js
+ * even though the canonical GeoPosition implementation is provided by
+ * paraty_geocore.js in browser and bundled environments.
+ *
  * This example shows:
  * 1. Pure construction (no side effects)
  * 2. Immutability (defensive copying)
  * 3. Pure methods (deterministic outputs)
- * 
+ *
  * @author MP Barbosa
  * @since 0.6.0-alpha
  */
 
-// Load the GeoPosition class
-const { GeoPosition, calculateDistance } = require('../src/guia.js');
+const EARTH_RADIUS_METERS = 6_371_000;
+
+function calculateDistance(latitude1, longitude1, latitude2, longitude2) {
+    const toRadians = (value) => (value * Math.PI) / 180;
+    const deltaLatitude = toRadians(latitude2 - latitude1);
+    const deltaLongitude = toRadians(longitude2 - longitude1);
+    const lat1 = toRadians(latitude1);
+    const lat2 = toRadians(latitude2);
+    const a = (
+        Math.sin(deltaLatitude / 2) ** 2 +
+        Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLongitude / 2) ** 2
+    );
+
+    return 2 * EARTH_RADIUS_METERS * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+class GeoPosition {
+    constructor(position) {
+        this.coords = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            altitude: position.coords.altitude ?? null,
+            altitudeAccuracy: position.coords.altitudeAccuracy ?? null,
+            heading: position.coords.heading ?? null,
+            speed: position.coords.speed ?? null
+        };
+        this.timestamp = position.timestamp;
+        Object.freeze(this.coords);
+        Object.freeze(this);
+    }
+
+    get latitude() {
+        return this.coords.latitude;
+    }
+
+    get longitude() {
+        return this.coords.longitude;
+    }
+
+    distanceTo(otherPosition) {
+        return calculateDistance(
+            this.latitude,
+            this.longitude,
+            otherPosition.latitude,
+            otherPosition.longitude
+        );
+    }
+
+    static getAccuracyQuality(accuracy) {
+        if (accuracy <= 10) return 'excellent';
+        if (accuracy <= 20) return 'good';
+        if (accuracy <= 100) return 'medium';
+        if (accuracy <= 250) return 'bad';
+        return 'very bad';
+    }
+}
 
 console.log('='.repeat(70));
 console.log('Referentially Transparent GeoPosition Example');

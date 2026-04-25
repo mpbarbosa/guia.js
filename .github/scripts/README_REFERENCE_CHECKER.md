@@ -234,7 +234,7 @@ Potential improvements:
 
 ## Related Documentation
 
-- [REFERENCE_CHECK_FALSE_POSITIVES_2026-01-28.md](../docs/reports/REFERENCE_CHECK_FALSE_POSITIVES_2026-01-28.md) - Analysis of false positive patterns
+- [REFERENCE_CHECK_FALSE_POSITIVES_2026-01-28.md](../../docs/reports/REFERENCE_CHECK_FALSE_POSITIVES_2026-01-28.md) - Analysis of false positive patterns
 - [check-links.py](./check-links.py) - Markdown link checker
 - [validate-cross-references.sh](./validate-cross-references.sh) - Cross-reference validator
 

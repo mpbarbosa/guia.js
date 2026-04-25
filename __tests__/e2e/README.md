@@ -422,9 +422,9 @@ These E2E tests are part of the CI pipeline:
 ## Related Documentation
 
 - [Main Test README](../README.md) - Overview of all tests
-- [Integration Tests](../integration/README.md) - Component interaction tests
-- [Feature Tests](../features/README.md) - Feature-specific tests
-- [TESTING.md](../../TESTING.md) - General testing guidelines
+- `integration/` - Component interaction tests (see [Main Test README](../README.md))
+- `features/` - Feature-specific tests (see [Main Test README](../README.md))
+- [Testing Guide](../../docs/testing/TESTING.md) - General testing guidelines
 
 ## Version
 

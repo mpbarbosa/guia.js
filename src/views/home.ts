@@ -20,6 +20,7 @@ import PositionManager from '../core/PositionManager.js';
 import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
 import { log, warn, error } from '../utils/logger.js';
 import MapLibreDisplayer from '../html/MapLibreDisplayer.js';
+import HTMLConfirmationBufferDisplayer from '../html/HTMLConfirmationBufferDisplayer.js';
 
 /** Speech synthesis element IDs configuration. */
 interface SpeechSynthesisIds {
@@ -194,7 +195,10 @@ class HomeViewController {
       
       // 4. Initialize MapLibre map displayer
       this._initializeMapDisplayer();
-      
+
+      // 5. Initialize confirmation-buffer debug card
+      this._initializeConfirmationBufferDisplayer();
+
       // Mark as initialized BEFORE auto-start to avoid check error
       this.initialized = true;
       
@@ -424,6 +428,18 @@ class HomeViewController {
     } catch (err) {
       error('HomeViewController: Failed to initialize MapLibreDisplayer:', err);
       // Non-critical — app works without the map
+    }
+  }
+
+  private _initializeConfirmationBufferDisplayer(): void {
+    try {
+      const el = this.document.getElementById('confirmation-buffer-card');
+      if (el) {
+        new HTMLConfirmationBufferDisplayer(el as HTMLElement);
+        log('HomeViewController: HTMLConfirmationBufferDisplayer initialized');
+      }
+    } catch (err) {
+      error('HomeViewController: Failed to initialize HTMLConfirmationBufferDisplayer:', err);
     }
   }
 

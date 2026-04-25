@@ -42,6 +42,21 @@ import {
 	MUNICIPIO_CONFIRMATION_COUNT
 } from '../config/defaults.js';
 
+export interface FieldBufferState {
+	confirmed:    string | null;
+	isConfirmed:  boolean;
+	pending:      string | null;
+	hasPending:   boolean;
+	pendingCount: number;
+	threshold:    number;
+}
+
+export interface ConfirmationBufferState {
+	logradouro: FieldBufferState;
+	bairro:     FieldBufferState;
+	municipio:  FieldBufferState;
+}
+
 class AddressCache {
 
 	/**
@@ -1277,6 +1292,44 @@ class AddressCache {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Returns a read-only snapshot of all three confirmation-buffer states.
+	 * Intended for diagnostics and debug UI.
+	 */
+	getConfirmationBufferState(): ConfirmationBufferState {
+		return {
+			logradouro: {
+				confirmed:    this._logradouroTrigger.confirmed,
+				isConfirmed:  this._logradouroTrigger.isConfirmed,
+				pending:      this._logradouroTrigger.pending,
+				hasPending:   this._logradouroTrigger.hasPending,
+				pendingCount: this._logradouroTrigger.pendingCount,
+				threshold:    this._logradouroTrigger.threshold,
+			},
+			bairro: {
+				confirmed:    this._bairroBuffer.confirmed,
+				isConfirmed:  this._bairroBuffer.isConfirmed,
+				pending:      this._bairroBuffer.pending,
+				hasPending:   this._bairroBuffer.hasPending,
+				pendingCount: this._bairroBuffer.pendingConfirmationCount,
+				threshold:    this._bairroBuffer.threshold,
+			},
+			municipio: {
+				confirmed:    this._municipioBuffer.confirmed,
+				isConfirmed:  this._municipioBuffer.isConfirmed,
+				pending:      this._municipioBuffer.pending,
+				hasPending:   this._municipioBuffer.hasPending,
+				pendingCount: this._municipioBuffer.pendingConfirmationCount,
+				threshold:    this._municipioBuffer.threshold,
+			},
+		};
+	}
+
+	/** Static wrapper so callers can use AddressCache.getConfirmationBufferState(). */
+	static getConfirmationBufferState(): ConfirmationBufferState {
+		return AddressCache.getInstance().getConfirmationBufferState();
 	}
 
 	/**

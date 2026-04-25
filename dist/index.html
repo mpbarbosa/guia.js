@@ -1,7 +1,7 @@
 <html lang="pt-BR"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="0.9.0-alpha" data-source="src/config/version.js">
+    <meta name="version" content="0.14.4-alpha" data-source="src/config/version.js">
     
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com https://demotiles.maplibre.org; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'">
@@ -462,18 +462,18 @@
         margin-bottom: 2rem;
       }
     </style>
-    <script type="module" crossorigin src="./assets/main-YstkhadH.js"></script>
+    <script type="module" crossorigin src="./assets/main-CoAT3nBe.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/vendor-CDLgd9d9.js">
     <link rel="modulepreload" crossorigin href="./assets/ui-B-f8qHlr.js">
-    <link rel="modulepreload" crossorigin href="./assets/data-Dd8OvOIO.js">
-    <link rel="modulepreload" crossorigin href="./assets/speech-Caw3awAV.js">
-    <link rel="modulepreload" crossorigin href="./assets/services-DFesu_QH.js">
+    <link rel="modulepreload" crossorigin href="./assets/data-B-skgsKH.js">
+    <link rel="modulepreload" crossorigin href="./assets/speech-BN6R0yMX.js">
+    <link rel="modulepreload" crossorigin href="./assets/services-CcLbrLKb.js">
     <link rel="modulepreload" crossorigin href="./assets/map-WLs8NypD.js">
-    <link rel="modulepreload" crossorigin href="./assets/html-D5k9mSFb.js">
-    <link rel="modulepreload" crossorigin href="./assets/coordination-DPLdjUFR.js">
+    <link rel="modulepreload" crossorigin href="./assets/html-D7CZ9dKu.js">
+    <link rel="modulepreload" crossorigin href="./assets/coordination-PrqTLbV8.js">
     <link rel="stylesheet" crossorigin href="./assets/ui-Cw7tTYSV.css">
     <link rel="stylesheet" crossorigin href="./assets/map-DwUhsmFz.css">
-    <link rel="stylesheet" crossorigin href="./assets/main-Do_GyC8A.css">
+    <link rel="stylesheet" crossorigin href="./assets/main-HUNfOvz7.css">
   </head>
   <body><div class="navigation-progress" role="progressbar" aria-label="Progresso de navegação"><div class="navigation-progress-bar" style="width: 0%;"></div></div>
     
@@ -562,8 +562,8 @@
       </div>
     </noscript>
     
-    <!-- Primary Navigation -->
-    <nav class="navbar navbar-expand-md app-navbar" aria-label="Navegação principal">
+    <!-- Primary Navigation (always-collapsed: no navbar-expand-* breakpoint) -->
+    <nav class="navbar app-navbar" aria-label="Navegação principal">
       <div class="container-fluid">
         <a class="navbar-brand" href="#/">
           <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
@@ -581,7 +581,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="main-nav">
-          <ul class="navbar-nav ms-auto">
+          <ul class="navbar-nav ms-auto mb-2">
             <li class="nav-item">
               <a class="nav-link" href="#/">
                 <i class="bi bi-house-fill me-1" aria-hidden="true"></i>
@@ -595,6 +595,16 @@
               </a>
             </li>
           </ul>
+          <!-- Confirmation-buffer debug card -->
+          <div class="card mb-2" aria-label="Estado dos buffers de confirmação de endereço">
+            <div class="card-header py-1 small fw-semibold d-flex align-items-center gap-2">
+              <i class="bi bi-activity" aria-hidden="true"></i>
+              Buffers de Confirmação
+            </div>
+            <div class="card-body p-2" id="confirmation-buffer-card">
+              <p class="text-muted small mb-0">Aguardando dados…</p>
+            </div>
+          </div>
         </div>
       </div>
     </nav>

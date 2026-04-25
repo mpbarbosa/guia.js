@@ -225,6 +225,31 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-04-08T14:07:36.629Z"
+    },
+    "__mocks__/fileMock.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T00:01:58.733Z"
+    },
+    "docs/api-generated/scripts/linenumber.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T00:01:58.733Z"
+    },
+    "docs/api-generated/scripts/prettify/lang-css.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T00:01:58.733Z"
+    },
+    "docs/api-generated/scripts/prettify/prettify.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T00:01:58.733Z"
+    },
+    "eslint.config.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T00:01:58.733Z"
     }
   }
 }

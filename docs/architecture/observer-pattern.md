@@ -1,7 +1,7 @@
 # ObserverSubject Pattern Documentation - Guia Turístico
 
-**Version:** 0.9.0-alpha
-**Date:** 2026-02-11
+**Version:** 0.14.4-alpha
+**Date:** 2026-04-24
 **Author:** Comprehensive analysis of Observer pattern implementation
 
 ---
@@ -49,110 +49,25 @@ The Guia Turístico project implements the Observer pattern using **composition*
 
 ### ObserverSubject Class
 
-**File:** `src/core/ObserverSubject.js` (198 lines)
+**File:** `src/core/ObserverSubject.ts` (11 lines — re-export only)
 
-#### Class Definition
+> **Moved in v0.11.9-alpha**: The canonical `DualObserverSubject` implementation now lives in the
+> [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) library
+> (`src/core/DualObserverSubject.ts`). This file re-exports it under the original name to keep all
+> local callers working without changes.
 
-```javascript
-class ObserverSubject {
-    constructor() {
-        this.observers = [];
-        this.functionObservers = [];
-    }
-}
+```typescript
+export { DualObserverSubject as default }
+    from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
 ```
 
-#### Object Observer Methods
+The `DualObserverSubject` supports both **object observers** (`subscribe` / `unsubscribe` /
+`notifyObservers`) and **function observers** (`subscribeFunction` / `unsubscribeFunction` /
+`notifyFunctionObservers`). Key implementation characteristics (defined in paraty_geocore.js):
 
-```javascript
-/**
- * Subscribes an observer object to receive notifications.
- * Uses immutable pattern - creates new array instead of mutating.
- *
- * @param {Object} observer - Observer with update() method
- * @returns {void}
- */
-subscribe(observer) {
-    if (observer) {
-        this.observers = [...this.observers, observer];
-    }
-}
-
-/**
- * Unsubscribes an observer from notifications.
- * Uses immutable pattern - filters to new array.
- *
- * @param {Object} observer - Observer to remove
- * @returns {void}
- */
-unsubscribe(observer) {
-    this.observers = this.observers.filter((o) => o !== observer);
-}
-
-/**
- * Notifies all subscribed observer objects.
- * Passes this subject as first argument plus any additional args.
- *
- * @param {...*} args - Arguments to pass to update()
- * @returns {void}
- */
-notifyObservers(...args) {
-    this.observers.forEach((observer) => {
-        if (typeof observer.update === "function") {
-            observer.update(...args);
-        } else {
-            warn("Observer missing update() method:", observer);
-        }
-    });
-}
-```
-
-#### Function Observer Methods
-
-```javascript
-/**
- * Subscribes a function to receive notifications.
- * Supports functional programming style.
- *
- * @param {Function} observerFunction - Callback function
- * @returns {void}
- */
-subscribeFunction(observerFunction) {
-    if (observerFunction) {
-        this.functionObservers = [...this.functionObservers, observerFunction];
-    }
-}
-
-/**
- * Unsubscribes a function from notifications.
- *
- * @param {Function} observerFunction - Function to remove
- * @returns {void}
- */
-unsubscribeFunction(observerFunction) {
-    this.functionObservers = this.functionObservers.filter(
-        (fn) => fn !== observerFunction
-    );
-}
-
-/**
- * Notifies all subscribed function observers.
- *
- * @param {...*} args - Arguments to pass to functions
- * @returns {void}
- */
-notifyFunctionObservers(...args) {
-    this.functionObservers.forEach((fn) => {
-        if (typeof fn === "function") {
-            try {
-                fn(...args);
-            } catch (err) {
-                error("Function observer error:", err);
-            }
-        }
-    });
-}
-```
+- Immutable array updates via spread/filter (never `push`/`splice` on the observer list)
+- Duck-typed observer validation (`typeof observer.update === 'function'`)
+- Error-resilient notification loops (try/catch per observer)
 
 ---
 
@@ -164,9 +79,14 @@ Classes that **publish events** by maintaining an `observerSubject` instance.
 
 ### 1. PositionManager ⭐
 
-**File:** `src/core/PositionManager.js` (543 lines)
+**File:** `src/core/PositionManager.ts` (16 lines — re-export only)
 **Role:** Subject + Observer (dual-role)
 **Pattern:** Singleton
+
+> **Moved in v0.12.11-alpha**: The canonical implementation now lives in
+> `paraty_geocore.js`. This file re-exports `PositionManager`,
+> `createPositionManagerConfig`, `initializeConfig`, and the
+> `PositionManagerConfig` type.
 
 #### Subject Behavior
 
@@ -263,64 +183,67 @@ positionManager.subscribe(myObserver);
 
 ### 2. ReverseGeocoder ⭐
 
-**File:** `src/services/ReverseGeocoder.js` (512 lines)
+**File:** `src/services/ReverseGeocoder.ts` (749 lines)
 **Role:** Subject + Observer (dual-role)
-**Pattern:** Multi-instance (one per coordinate pair)
+**Pattern:** Multi-instance (one per geocoding session)
 
 #### Subject Behavior
 
-```javascript
-// Initialization (line 113)
+```typescript
+// Initialization (constructor)
 this.observerSubject = new ObserverSubject();
 
-// Custom notification method (lines 139-142)
-notifyObservers(...args) {
+// Custom notification method
+notifyObservers(...args: unknown[]) {
     log("(ReverseGeocoder) Notifying observers with args:", args);
     this.observerSubject.notifyObservers(...args);
 }
 
-// Mixin delegation (line 500)
+// Mixin delegation (bottom of file)
 Object.assign(ReverseGeocoder.prototype, withObserver({ excludeNotify: true }));
 // Provides: subscribe(), unsubscribe()
 ```
 
+#### Constructor (changed in v0.12.x)
+
+```typescript
+// Takes fetchManager + config, NOT lat/lon
+const geocoder = new ReverseGeocoder(fetchManager, {
+    openstreetmapBaseUrl: '...',  // defaults to env.nominatimApiUrl
+    corsProxy: null,
+    enableCorsFallback: false,
+    awsGeocoder: null,            // injected or auto-created when env.awsLbsEnabled
+});
+
+// Set coordinates separately before geocoding
+geocoder.setCoordinates(latitude, longitude);
+```
+
+#### Dual-Provider Support (v0.12.x)
+
+The geocoder supports AWS Location Based Service as an alternative to Nominatim:
+
+- `_primaryProvider`: `'aws' | 'nominatim'` (runtime-switchable via `switchProvider()`)
+- AWS primary → Nominatim fallback, or Nominatim primary → AWS fallback
+- `switchProvider(provider)` — switches at runtime without restart
+- `hasAwsProvider()` — returns `true` when AWS is configured
+- `getPrimaryProvider()` — returns current primary provider name
+- Fires `CustomEvent('geocoder-provider-used', { detail: { provider } })` after each request
+
 #### Observer Behavior
 
-```javascript
-/**
- * Observer pattern update method.
- * Called when PositionManager notifies of position changes.
- *
- * @param {PositionManager} positionManager - Source of position data
- * @param {string} posEvent - Event type
- * @param {Object} loading - Loading state
- * @param {Object} error - Error information
- * @returns {void}
- */
-update(positionManager, posEvent, loading, error) {
-    // Validate input
-    if (!positionManager || !positionManager.lastPosition) {
-        warn("(ReverseGeocoder) Invalid PositionManager or no last position.");
-        return;
-    }
+```typescript
+update(positionManager, posEvent, _loading, _errState) {
+    if (!positionManager?.lastPosition) return;
 
-    // Filter events - only process position updates
     if (posEvent !== PositionManager.strCurrPosUpdate &&
-        posEvent !== PositionManager.strImmediateAddressUpdate) {
-        return;
-    }
+        posEvent !== PositionManager.strImmediateAddressUpdate) return;
 
-    // Extract coordinates
-    const { latitude, longitude } = positionManager.lastPosition;
+    const { latitude, longitude } = positionManager.lastPosition.coords;
+    this.setCoordinates(latitude, longitude);
 
-    // Trigger async reverse geocoding
-    this.reverseGeocode(latitude, longitude)
-        .then(() => {
-            log("(ReverseGeocoder) Reverse geocode successful");
-        })
-        .catch((err) => {
-            error("(ReverseGeocoder) Reverse geocode failed:", err);
-        });
+    // fetchAddress() handles observer notifications, CORS retry, and error dispatch
+    this.fetchAddress().catch(err => { this.error = err; });
 }
 ```
 
@@ -329,42 +252,36 @@ update(positionManager, posEvent, loading, error) {
 | Event Name | Constant | When Published | Purpose |
 |------------|----------|----------------|---------|
 | Address Fetched | `ADDRESS_FETCHED_EVENT` | After successful reverse geocoding | Notifies all address displayers with new data |
+| Geocoding Error | `GEOCODING_ERROR_EVENT` | After all providers fail | Notifies of geocoding failure |
 
-**Constant Definition** (`src/config/defaults.js`):
+**Constant definitions** (`src/config/defaults.ts`):
 
-```javascript
+```typescript
 export const ADDRESS_FETCHED_EVENT = 'address-fetched';
+export const GEOCODING_ERROR_EVENT = 'Geocoding error';
 ```
 
-#### Notification Signature
+#### Notification Signatures
 
-```javascript
+```typescript
+// Success
 notifyObservers(
-    currentAddress,         // Raw geocoding data from Nominatim API
+    currentAddress,         // Raw geocoding data (Nominatim or AWS)
     enderecoPadronizado,    // BrazilianStandardAddress instance
-    ADDRESS_FETCHED_EVENT,  // posEvent constant
-    false,                  // loading state (always false after fetch)
-    null                    // error (null on success)
-)
-```
-
-#### Notification Code (lines 241-247)
-
-```javascript
-// Successful geocoding notification
-this.notifyObservers(
-    this.currentAddress,
-    this.enderecoPadronizado,
     ADDRESS_FETCHED_EVENT,
-    false,  // loading complete
-    null    // no error
+    false,                  // loading
+    null                    // error
 );
+
+// Failure (all providers exhausted)
+notifyObservers(null, null, GEOCODING_ERROR_EVENT, false, err);
 ```
 
 #### Subscription Example
 
-```javascript
-const reverseGeocoder = new ReverseGeocoder(-23.550520, -46.633309);
+```typescript
+const geocoder = new ReverseGeocoder(fetchManager);
+geocoder.setCoordinates(-23.550520, -46.633309);
 
 const addressDisplayer = {
     update(addressData, standardizedAddress, eventType, loading, error) {
@@ -375,24 +292,33 @@ const addressDisplayer = {
     }
 };
 
-reverseGeocoder.subscribe(addressDisplayer);
+geocoder.subscribe(addressDisplayer);
 ```
 
 ---
 
 ### 3. WebGeocodingManager
 
-**File:** `src/coordination/WebGeocodingManager.js` (847 lines)
+**File:** `src/coordination/WebGeocodingManager.ts` (1108 lines)
 **Role:** Subject only
-**Pattern:** Main application coordinator
+**Pattern:** Main application coordinator (Mediator)
+
+#### Sub-Coordinators (v0.12.x)
+
+WebGeocodingManager now delegates to four focused sub-coordinators:
+
+- `UICoordinator` — manages HTML displayer lifecycle
+- `EventCoordinator` — wires observer subscriptions
+- `ServiceCoordinator` — manages geolocation service lifecycle
+- `SpeechCoordinator` — manages speech synthesis integration
 
 #### Subject Behavior
 
-```javascript
-// Initialization (line 327)
+```typescript
+// Initialization
 this.observerSubject = new ObserverSubject();
 
-// Mixin delegation (line 837)
+// Mixin delegation (bottom of file)
 Object.assign(WebGeocodingManager.prototype, withObserver());
 // Provides: subscribe(), unsubscribe(), notifyObservers()
 ```
@@ -413,69 +339,69 @@ Publishes various geocoding workflow events coordinating the entire application 
 
 ### 4. AddressCache
 
-**File:** `src/data/AddressCache.js` (1171 lines)
+**File:** `src/data/AddressCache.ts` (1321 lines)
 **Role:** Subject only
 **Pattern:** Singleton with composition architecture (v0.9.0-alpha)
 
 #### Subject Behavior
 
-```javascript
-// Initialization (line 78)
+```typescript
+// Initialization
 this.observerSubject = new ObserverSubject();
 
-// Composition architecture
+// Composition architecture (v0.9.0-alpha)
 this.changeDetector = new AddressChangeDetector();
-this.callbackRegistry = new CallbackRegistry();
+this.callbackRegistry = new CallbackRegistry();  // from bessa_patterns.ts
 this.dataStore = new AddressDataStore();
+
+// Confirmation buffers (v0.12.12-alpha) — GPS intersection jitter mitigation
+// Require N consecutive identical readings before firing a field-change callback
+this._logradouroTrigger = new LogradouroChangeTrigger(LOGRADOURO_CONFIRMATION_COUNT);
+this._bairroBuffer     = new AddressFieldConfirmationBuffer(BAIRRO_CONFIRMATION_COUNT);
+this._municipioBuffer  = new AddressFieldConfirmationBuffer(MUNICIPIO_CONFIRMATION_COUNT);
 ```
 
 #### Events Published
 
-- **Address field changes**: municipio, bairro, logradouro
-- **Cache operations**: store, retrieve, eviction (LRU)
-- **Change detection**: Signature-based field comparison
+- **Address field changes** (via callbacks): `municipio`, `bairro`, `logradouro` — only after confirmation buffer is satisfied
+- **Cache state changes** (via ObserverSubject): emits `{ type: 'addressUpdated', address, cacheSize }`
+- **Change detection**: Signature-based field comparison with confirmation buffering
 
 #### Notification Methods
 
-```javascript
+```typescript
 // Via CallbackRegistry composition
 registerCallback(fieldName, callback) {
     this.callbackRegistry.register(fieldName, callback);
 }
 
-// Via ObserverSubject
-subscribe(observer) {
-    this.observerSubject.subscribe(observer);
-}
+// Via ObserverSubject — payload is { type, address, cacheSize }
+subscribe(observer) { this.observerSubject.subscribe(observer); }
+subscribeFunction(fn) { this.observerSubject.subscribeFunction(fn); }
 
-// Change notification (internal)
-_notifyFieldChange(fieldName, currentValue, previousValue) {
-    // Executes registered callbacks
-    const callbacks = this.callbackRegistry.get(fieldName);
-    callbacks.forEach(callback => {
-        try {
-            callback(currentValue, previousValue, fieldName);
-        } catch (error) {
-            error("Callback execution error:", error);
-        }
-    });
-}
+// Observer notification (internal, emitted after address update)
+this.notifyObservers({ type: 'addressUpdated', address: ..., cacheSize: ... });
 ```
+
+> **Note:** Static shortcut methods (`AddressCache.subscribe()`, etc.) are deprecated.
+> Use `AddressCache.getInstance().subscribe()` instead.
 
 #### Subscription Example
 
-```javascript
+```typescript
 const addressCache = AddressCache.getInstance();
 
-// Register field-specific callback
+// Register field-specific callback (fires after confirmation buffer is satisfied)
 addressCache.registerCallback('bairro', (current, previous) => {
     console.log(`Bairro changed: ${previous} → ${current}`);
 });
 
 // Register generic observer
 const observer = {
-    update(addressData, eventDetails) {
-        console.log('Address cache updated:', eventDetails);
+    update(event: { type: string; address: unknown; cacheSize: number }) {
+        if (event.type === 'addressUpdated') {
+            console.log('Address cache updated, size:', event.cacheSize);
+        }
     }
 };
 addressCache.subscribe(observer);
@@ -485,61 +411,51 @@ addressCache.subscribe(observer);
 
 ### 5. SpeechQueue
 
-**File:** `src/speech/SpeechQueue.js` (511 lines)
+**File:** `src/speech/SpeechQueue.ts` (505 lines)
 **Role:** Subject only
-**Pattern:** Priority queue with dual notification
+**Pattern:** Priority queue with dual notification and automatic expiration
+
+#### Constructor
+
+```typescript
+// maxSize: 1-1000 (default 100)
+// expirationMs: 1000-300000 ms (default 30000)
+// enableLogging: default false
+const queue = new SpeechQueue(100, 30000, false);
+```
+
+Items are **automatically expired** (`cleanExpired()` is called internally on every
+`enqueue`, `dequeue`, `isEmpty`, `size`, and `getItems` call).
 
 #### Subject Behavior
 
-```javascript
-// Initialization (line 113)
+```typescript
+// Initialization
 this.observerSubject = new ObserverSubject();
 
-// Custom subscribe with validation (lines 217-228)
-subscribe(observer) {
-    if (observer == null) {
-        warn("(SpeechQueue) Attempted to subscribe a null observer.");
-        return;
-    }
-    if (typeof observer.update !== 'function') {
-        throw new TypeError("Observer must have an update() method");
-    }
-    this.observerSubject.subscribe(observer);
-}
+// Custom subscribe — throws TypeError if observer lacks update()
+subscribe(observer) { ... this.observerSubject.subscribe(observer); }
 
-// Object observer notification (lines 238-240)
-notifyObservers() {
-    this.observerSubject.notifyObservers(this);
-}
+// Object observer notification — passes queue instance
+notifyObservers() { this.observerSubject.notifyObservers(this); }
 
-// Function observer subscription (lines 256-267)
-subscribeFunction(observerFunction) {
-    if (observerFunction == null) {
-        warn("(SpeechQueue) Attempted to subscribe a null observer function.");
-        return;
-    }
-    if (typeof observerFunction !== 'function') {
-        throw new TypeError("Observer must be a function");
-    }
-    this.observerSubject.subscribeFunction(observerFunction);
-}
+// Function observer methods
+subscribeFunction(fn) { this.observerSubject.subscribeFunction(fn); }
+unsubscribeFunction(fn) { this.observerSubject.unsubscribeFunction(fn); }
+notifyFunctionObservers() { /* calls each fn(this) with try/catch */ }
 
-// Function observer notification (lines 291-299)
-notifyFunctionObservers() {
-    this.observerSubject.functionObservers.forEach((fn) => {
-        try {
-            fn(this);
-        } catch (err) {
-            error("(SpeechQueue) Error in function observer:", err);
-        }
-    });
-}
-
-// Mixin partial delegation (line 499)
-Object.assign(SpeechQueue.prototype, {
-    unsubscribe: mixinMethods.unsubscribe
-});
+// Mixin — only unsubscribe is delegated
+Object.assign(SpeechQueue.prototype, { unsubscribe: mixinMethods.unsubscribe });
 ```
+
+#### Additional API
+
+| Method | Description |
+|--------|-------------|
+| `isEmpty()` | Returns true when no valid (non-expired) items remain |
+| `getItems()` | Returns a shallow copy of current non-expired items |
+| `cleanExpired()` | Removes expired items (called automatically by queue operations) |
+| `enableLogs()` / `disableLogs()` / `toggleLogs()` | Runtime logging control |
 
 #### Events Published
 
@@ -561,20 +477,20 @@ update(queue) // receives SpeechQueue instance
 
 #### Subscription Example
 
-```javascript
+```typescript
 const speechQueue = new SpeechQueue();
 
 // Object observer
 const queueMonitor = {
-    update(queue) {
+    update(queue: SpeechQueue) {
         console.log(`Queue size: ${queue.size()}`);
-        console.log(`Has items: ${queue.hasItems()}`);
+        console.log(`Empty: ${queue.isEmpty()}`);
     }
 };
 speechQueue.subscribe(queueMonitor);
 
 // Function observer
-speechQueue.subscribeFunction((queue) => {
+speechQueue.subscribeFunction((queue: SpeechQueue) => {
     if (queue.size() > 5) {
         console.warn('Speech queue is getting large!');
     }
@@ -987,7 +903,7 @@ update(addressData, enderecoPadronizado, posEvent, loading, error) {
 
 #### 8. HtmlSpeechSynthesisDisplayer
 
-**File:** `src/html/HtmlSpeechSynthesisDisplayer.js` (779 lines)
+**File:** `src/html/HtmlSpeechSynthesisDisplayer.ts` (524 lines — facade)
 **Subscribes To:** ReverseGeocoder, AddressCache
 
 ```javascript
@@ -1478,7 +1394,8 @@ const addressLogger = {
 };
 
 // Subscribe to address updates
-const reverseGeocoder = new ReverseGeocoder(-23.550520, -46.633309);
+const reverseGeocoder = new ReverseGeocoder(fetchManager);
+reverseGeocoder.setCoordinates(-23.550520, -46.633309);
 reverseGeocoder.subscribe(addressLogger);
 
 // Subscribe reverse geocoder to position manager
@@ -1511,24 +1428,24 @@ addressCache.registerCallback('municipio', (currentValue, previousValue) => {
 
 ### Example 4: Speech Queue Observers
 
-```javascript
+```typescript
 const speechQueue = new SpeechQueue();
 
 // Object observer
 const queueMonitor = {
-    update(queue) {
+    update(queue: SpeechQueue) {
         const size = queue.size();
         console.log(`Queue size: ${size}`);
 
-        if (queue.hasItems()) {
-            const nextItem = queue.peek();
-            console.log(`Next speech: "${nextItem.text}" (priority ${nextItem.priority})`);
+        if (!queue.isEmpty()) {
+            const items = queue.getItems();
+            console.log(`Next speech: "${items[0].text}" (priority ${items[0].priority})`);
         }
     }
 };
 
 // Function observer
-const queueWarning = (queue) => {
+const queueWarning = (queue: SpeechQueue) => {
     if (queue.size() > 5) {
         console.warn('Queue is getting large! Consider adjusting priorities.');
     }
@@ -1574,7 +1491,7 @@ async function setupGeolocationChain() {
     const speechSynthesisDisplayer = new HtmlSpeechSynthesisDisplayer(speechQueue);
 
     // 4. Create reverse geocoder
-    const reverseGeocoder = new ReverseGeocoder(0, 0); // Initial coords
+    const reverseGeocoder = new ReverseGeocoder(fetchManager);
 
     // 5. Wire position observers
     positionManager.subscribe(positionDisplayer);
@@ -1598,7 +1515,7 @@ async function setupGeolocationChain() {
     // 8. Wire speech queue observers
     const speechManager = new SpeechSynthesisManager();
     speechQueue.subscribeFunction((queue) => {
-        if (queue.hasItems()) {
+        if (!queue.isEmpty()) {
             speechManager.processQueue(queue);
         }
     });
@@ -1844,6 +1761,12 @@ async reverseGeocode(lat, lon) {
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 0.14.4-alpha | 2026-04-24 | All source files migrated to TypeScript |
+| 0.12.12-alpha | — | AddressCache: confirmation buffers (LogradouroChangeTrigger, AddressFieldConfirmationBuffer) for GPS jitter |
+| 0.12.11-alpha | — | PositionManager and ObserverSubject moved to paraty_geocore.js (re-export shims kept) |
+| 0.12.x | — | ReverseGeocoder: dual-provider (AWS + Nominatim), switchProvider(), new constructor signature |
+| 0.11.9-alpha | — | ObserverSubject canonical implementation moved to paraty_geocore.js as DualObserverSubject |
+| 0.11.0-alpha | — | HtmlSpeechSynthesisDisplayer refactored to facade (HtmlSpeechControls + AddressSpeechObserver + SpeechTextBuilder) |
 | 0.9.0-alpha | 2026-02-11 | Added metropolitan region display, refactored AddressCache composition |
 | 0.9.0-alpha | 2025-12-15 | Introduced ObserverSubject class, refactored to composition pattern |
 | 0.9.0-alpha | 2025-11-10 | Added ReverseGeocoder observer role, SIDRA displayer |
@@ -1903,6 +1826,6 @@ ObserverSubject (base class)
 
 **END OF DOCUMENTATION**
 
-*Generated: 2026-02-11*
-*Version: 0.9.0-alpha*
+*Updated: 2026-04-24*
+*Version: 0.14.4-alpha*
 *Guia Turístico - Tourist Guide Application*

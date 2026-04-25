@@ -250,6 +250,46 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-04-25T00:01:58.733Z"
+    },
+    "service-worker.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T00:42:56.820Z"
+    },
+    "examples/geolocation-service-demo.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T15:34:04.505Z"
+    },
+    "examples/geoposition-immutability-demo.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T15:34:04.505Z"
+    },
+    "examples/jest-esm-migration-example.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T15:34:04.505Z"
+    },
+    "examples/provider-pattern-demo.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T15:34:04.505Z"
+    },
+    "examples/security-integration.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T15:34:04.505Z"
+    },
+    "public/service-worker.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T14:06:06.495Z"
+    },
+    "scripts/lint-md.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-25T14:06:06.495Z"
     }
   }
 }

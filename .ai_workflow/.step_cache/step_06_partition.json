@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "partitionIndex": 3,
-  "totalPartitions": 51,
-  "filesHash": "81cb7852",
+  "partitionIndex": 6,
+  "totalPartitions": 52,
+  "filesHash": "1b896fb8",
   "partitionLabels": [
     "__tests__/components",
     "__tests__/components (2)",
@@ -50,11 +50,12 @@
     "test (2)",
     "test/e2e",
     "test/html",
+    "test/html (2)",
     "test/integration, test/observers",
     "test/services",
     "test/services (2)",
     "test/types",
     "test/utils"
   ],
-  "updatedAt": "2026-04-25T00:01:05.490Z"
+  "updatedAt": "2026-04-25T23:17:10.739Z"
 }

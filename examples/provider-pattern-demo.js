@@ -1,19 +1,97 @@
 /**
  * Example: Using GeolocationService with MockGeolocationProvider
- * 
+ *
  * This example demonstrates how to use the new provider pattern to inject
  * mock geolocation behavior for testing and development.
- * 
+ *
+ * The production classes live under src/, but this walkthrough is kept
+ * self-contained so it remains runnable with plain Node.js after the
+ * TypeScript migration.
+ *
  * @author MP Barbosa
  * @since 0.6.1-alpha
  */
 
-import {
-	GeolocationService,
-	MockGeolocationProvider,
-	BrowserGeolocationProvider,
-	PositionManager
-} from '../src/guia.js';
+class BrowserGeolocationProvider {
+	constructor(navigatorObject = null) {
+		this.navigator = navigatorObject;
+	}
+
+	isSupported() {
+		return Boolean(this.navigator?.geolocation);
+	}
+
+	getCurrentPosition(successCallback, errorCallback) {
+		if (!this.isSupported()) {
+			errorCallback(new Error('Geolocation is not supported by this browser'));
+			return;
+		}
+
+		this.navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+	}
+}
+
+class MockGeolocationProvider {
+	constructor(config = {}) {
+		this.supported = config.supported ?? true;
+		this.defaultPosition = config.defaultPosition ?? null;
+		this.defaultError = config.defaultError ?? null;
+	}
+
+	isSupported() {
+		return this.supported;
+	}
+
+	setPosition(position) {
+		this.defaultPosition = position;
+		this.defaultError = null;
+	}
+
+	getCurrentPosition(successCallback, errorCallback) {
+		if (!this.isSupported()) {
+			errorCallback(new Error('Geolocation is not supported by this browser'));
+			return;
+		}
+
+		if (this.defaultError) {
+			const error = new Error(this.defaultError.message);
+			error.name = 'GeolocationPositionError';
+			error.code = this.defaultError.code;
+			errorCallback(error);
+			return;
+		}
+
+		successCallback(this.defaultPosition);
+	}
+}
+
+class GeolocationService {
+	constructor(_locationResult = null, providerOrNavigator = null, positionManager = null) {
+		if (providerOrNavigator?.getCurrentPosition) {
+			this.provider = providerOrNavigator;
+		} else if (providerOrNavigator?.geolocation) {
+			this.provider = new BrowserGeolocationProvider(providerOrNavigator);
+		} else {
+			this.provider = new BrowserGeolocationProvider(
+				typeof navigator !== 'undefined' ? navigator : null
+			);
+		}
+
+		this.positionManager = positionManager ?? { update: () => undefined };
+	}
+
+	async getSingleLocationUpdate() {
+		return new Promise((resolve, reject) => {
+			this.provider.getCurrentPosition(
+				(position) => {
+					this.positionManager.update(position);
+					resolve(position);
+				},
+				reject
+			);
+		});
+	}
+}
 
 console.log('='.repeat(70));
 console.log('GeolocationService Provider Pattern Example');

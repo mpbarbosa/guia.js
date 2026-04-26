@@ -31,6 +31,7 @@ state.
 | Audit and fix | _(Copilot skill)_ | Manual | Run validate-logs then fix-log-issues in one pass |
 | Next roadmap phase | _(Copilot skill)_ | Manual | Propose and implement the next version milestone |
 | Sync version | _(Copilot skill)_ | Manual | Propagate package.json version to all dependent files |
+| Sync workflow config | _(Copilot skill)_ | Manual | Audit and update `.workflow-config.yaml` from package scripts, routes, structure, and automation settings |
 | Copy TS to project | _(Copilot skill)_ | Manual | Migrate a TypeScript file into any target repository with tests, exports, and docs |
 | Purge workflow logs | _(Copilot skill)_ | Manual | Delete transient `.ai_workflow/` artefacts (logs, backlog, summaries) after an audit run |
 
@@ -206,3 +207,37 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/bessa_patterns.ts@<TAG>/dist/index.mjs
 - `.github/workflows/update-bessa.yml` — the full workflow definition
 - `src/index.html` — importmap with the jsDelivr CDN URL
 - `.github/SKILLS.md` — skills and workflows index for this project
+
+---
+
+## sync-workflow-config (Copilot skill)
+
+### Overview
+
+`sync-workflow-config` is a project-local Copilot skill that keeps
+`.workflow-config.yaml` aligned with the actual repository. It treats package
+metadata, router configuration, directory structure, linting integration, and
+deploy/version surfaces as the source of truth, then applies targeted edits only
+where the workflow config has drifted.
+
+### Primary sources of truth
+
+- `package.json`
+- `src/router.ts`
+- `src/config/routes.ts`
+- `scripts/lint-md.js`
+- `.workflow-config.yaml`
+
+### Typical use cases
+
+- after adding or removing npm scripts
+- after changing SPA routes or view file paths
+- after reorganizing source, test, or docs directories
+- after changing markdown lint or deploy wiring
+- when `.workflow-config.yaml` still references stale JS-era paths or tooling
+
+### File location
+
+```text
+.github/skills/sync-workflow-config/SKILL.md
+```

@@ -1,14 +1,27 @@
 /**
  * Example: Integrating Security Features
- * 
+ *
  * This example demonstrates how to integrate environment variables,
  * CSP, and rate limiting in the Guia Turístico application.
  */
 
-import { env } from '../src/config/environment.js';
-import { getCSPMetaContent, getAllSecurityHeaders } from '../src/config/csp.js';
-import RateLimiter, { createDefaultLimiters } from '../src/utils/rate-limiter.js';
-import ReverseGeocoder from '../src/services/ReverseGeocoder.js';
+import { env } from '../src/config/environment.ts';
+import { getCSPMetaContent, getAllSecurityHeaders } from '../src/config/csp.ts';
+import RateLimiter from '../src/utils/rate-limiter.ts';
+
+class ExampleReverseGeocoder {
+  constructor(latitude, longitude) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+  }
+
+  async fetch() {
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    return {
+      display_name: `Mock address for ${this.latitude.toFixed(6)}, ${this.longitude.toFixed(6)}`
+    };
+  }
+}
 
 // ========================================
 // 1. Environment Variables Usage
@@ -75,12 +88,24 @@ console.log('IBGE limiter:', env.rateLimitIbge, 'req/min');
 /**
  * Rate-limited reverse geocoder wrapper.
  */
-class RateLimitedReverseGeocoder extends ReverseGeocoder {
+class RateLimitedReverseGeocoder extends ExampleReverseGeocoder {
+  /**
+   * Creates a rate-limited reverse geocoder wrapper.
+   *
+   * @param {number} latitude - Latitude used for the lookup.
+   * @param {number} longitude - Longitude used for the lookup.
+   * @param {RateLimiter} rateLimiter - Rate limiter used to schedule the lookup.
+   */
   constructor(latitude, longitude, rateLimiter) {
     super(latitude, longitude);
     this.rateLimiter = rateLimiter;
   }
 
+  /**
+   * Fetches an address through the configured rate limiter.
+   *
+   * @returns {Promise<{display_name: string}>} Resolved address payload.
+   */
   async fetch() {
     // Wrap the fetch call with rate limiting
     return this.rateLimiter.schedule(async () => {
@@ -118,7 +143,7 @@ async function example() {
     console.log('- Average wait time:', stats.averageWaitTime.toFixed(2), 'ms');
     
   } catch (error) {
-    console.error('Error:', error.message);
+    console.error('Error:', error instanceof Error ? error.message : error);
   }
 }
 
@@ -163,7 +188,7 @@ async function multipleRequestsExample() {
     console.log('- Rejected:', stats.rejectedRequests);
     
   } catch (error) {
-    console.error('Error:', error.message);
+    console.error('Error:', error instanceof Error ? error.message : error);
   }
 }
 

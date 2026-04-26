@@ -2,14 +2,14 @@
 
 ---
 
-Last Updated: 2026-02-23
+Last Updated: 2026-04-25
 Status: Active
-version: 0.14.4-alpha
+version: 0.16.0-alpha
 
 ---
 
 [![Tests](https://img.shields.io/badge/tests-3074%20passing%20%2F%203242%20total-green)](https://github.com/mpbarbosa/guia.js)
-[![Version](https://img.shields.io/badge/version-0.14.1--alpha-blue)](https://github.com/mpbarbosa/guia.js)
+[![Version](https://img.shields.io/badge/version-0.15.0--alpha-blue)](https://github.com/mpbarbosa/guia.js)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia.js)
 
 > **Note on Test Status**: 3,074 tests pass successfully out of 3,242 total (168 skipped, 0 failing), with 122 of 127 test suites passing (5 skipped). The test suite is stable with 100% pass rate. See the Testing section below for details.
@@ -40,7 +40,7 @@ A single-page web application (SPA) for tourist guidance, built on top of the [g
 - ♿ **Accessibility** - WCAG 2.1 compliant with ARIA support
 - 🔧 **Coordinate Converter** - Secondary utility: convert coordinates to addresses
 
-### ✨ Latest Features (v0.9.0-alpha)
+### ✨ Highlighted Features
 
 #### 🔘 Contextual Button Status Messages
 
@@ -490,8 +490,8 @@ To ensure clear communication about testing concepts:
 ### Architecture Documentation
 
 - **[Class Diagram](docs/architecture/CLASS_DIAGRAM.md)** - System architecture overview
-- **[GeoPosition](docs/architecture/GEO_POSITION.md)** - GPS position wrapper documentation
-- **[PositionManager](docs/architecture/POSITION_MANAGER.md)** - Position state management
+- **[GeoPosition](docs/architecture/ARCHITECTURE.md#geoposition)** - GPS position wrapper documentation
+- **[PositionManager](docs/api/POSITION_MANAGER.md)** - Position state management
 - **[WebGeocodingManager](docs/architecture/WEB_GEOCODING_MANAGER.md)** - Main coordinator documentation
 
 ### Development Guides
@@ -1750,7 +1750,7 @@ python3 -m http.server 8000
 - **Test Coverage**: 76% (statements), 74.2% (branches)
 - **Test Count**: 3,242 tests total (3,074 passing, 168 skipped, 0 failing)
 - **Dependencies**: 2 runtime, 2 dev dependencies
-- **Supported Node.js**: v18+
+- **Supported Node.js**: v20.19.0+
 - **ES Module Type**: ESM (ECMAScript Modules)
 
 ## 📄 License
@@ -1792,6 +1792,6 @@ ISC License - See repository for details
 
 ---
 
-**Version**: 0.9.0-alpha (active development)
-**Status**: Active Development
-**Last Updated**: 2026-02-23
+**Version**: 0.16.0-alpha
+**Status**: Active
+**Last Updated**: 2026-04-25

@@ -5,7 +5,7 @@
  * {@link module:services/IBGECityStatsService}.
  *
  * @module html/HTMLCityStatsPanel
- * @since 0.15.0-alpha
+ * @since 0.16.0-alpha
  * @author Marcelo Pereira Barbosa
  */
 

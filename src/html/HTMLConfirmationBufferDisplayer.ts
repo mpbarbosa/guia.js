@@ -9,7 +9,7 @@ const TIMER_ID = 'confirmation-buffer-card';
  * (logradouro, bairro, municipio) from AddressCache and renders their state inside
  * a Bootstrap card.  Refreshes every second via TimerManager.
  *
- * @since 0.15.0-alpha
+ * @since 0.16.0-alpha
  */
 class HTMLConfirmationBufferDisplayer {
 	private readonly _element: HTMLElement;
@@ -44,20 +44,23 @@ class HTMLConfirmationBufferDisplayer {
 </table>`;
 	}
 
-	private _buildRow(label: string, f: FieldBufferState): string {
-		const confirmedText = f.isConfirmed
-			? (f.confirmed !== null ? f.confirmed : '<em class="text-muted">nulo</em>')
+	private _buildRow(label: string, fieldState?: Partial<FieldBufferState>): string {
+		const thresholdText = typeof fieldState?.threshold === 'number'
+			? String(fieldState.threshold)
+			: '—';
+		const confirmedText = fieldState?.isConfirmed
+			? (fieldState.confirmed !== null && fieldState.confirmed !== undefined ? fieldState.confirmed : '<em class="text-muted">nulo</em>')
 			: '<em class="text-muted">—</em>';
 
-		const pendingText = f.hasPending
-			? (f.pending !== null ? f.pending : '<em class="text-muted">nulo</em>')
+		const pendingText = fieldState?.hasPending
+			? (fieldState.pending !== null && fieldState.pending !== undefined ? fieldState.pending : '<em class="text-muted">nulo</em>')
 			: '<span class="text-muted">—</span>';
 
-		const countText = f.hasPending
-			? `<span class="badge text-bg-warning">${f.pendingCount} / ${f.threshold}</span>`
-			: `<span class="text-muted">— / ${f.threshold}</span>`;
+		const countText = fieldState?.hasPending
+			? `<span class="badge text-bg-warning">${fieldState.pendingCount ?? 0} / ${thresholdText}</span>`
+			: `<span class="text-muted">— / ${thresholdText}</span>`;
 
-		const rowClass = f.hasPending ? 'table-warning' : '';
+		const rowClass = fieldState?.hasPending ? 'table-warning' : '';
 
 		return `
     <tr class="${rowClass}">

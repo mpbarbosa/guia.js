@@ -26,5 +26,5 @@ Use the local simulation script:
 
 ## Related Guides
 
-- [docs/github/GITHUB_ACTIONS_GUIDE.md](./GITHUB_ACTIONS_GUIDE.md) — GitHub Actions configuration reference
-- [.github/workflows/README.md](../.github/workflows/README.md) — Workflow descriptions
+- [docs/github/GITHUB_ACTIONS_GUIDE.md](./docs/github/GITHUB_ACTIONS_GUIDE.md) — GitHub Actions configuration reference
+- [.github/workflows/README.md](./.github/workflows/README.md) — Workflow descriptions

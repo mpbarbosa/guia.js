@@ -19,8 +19,8 @@ console.log('===================================================================
 
 console.log('This example demonstrates the key concepts of the refactored');
 console.log('GeolocationService class. For actual runnable tests, see:');
-console.log('  __tests__/services/GeolocationService.helpers.test.js');
-console.log('  __tests__/services/GeolocationService.injection.test.js\n');
+console.log('  __tests__/services/GeolocationService.helpers.test.ts');
+console.log('  __tests__/services/GeolocationService.injection.test.ts\n');
 
 // ============================================================================
 // 1. Pure Helper Functions - Conceptual Examples
@@ -192,7 +192,7 @@ console.log('-------------------------------------------------------------------
 console.log('New Tests Added: 37 total\n');
 
 console.log('Pure Helper Functions (20 tests):');
-console.log('  ✅ GeolocationService.helpers.test.js');
+console.log('  ✅ GeolocationService.helpers.test.ts');
 console.log('     - getGeolocationErrorInfo: 4 tests');
 console.log('     - formatGeolocationError: 3 tests');
 console.log('     - getGeolocationErrorMessage: 3 tests');
@@ -202,7 +202,7 @@ console.log('     - isPermissionsAPISupported: 4 tests');
 console.log('     - Overall purity verification: 1 test\n');
 
 console.log('Dependency Injection (17 tests):');
-console.log('  ✅ GeolocationService.injection.test.js');
+console.log('  ✅ GeolocationService.injection.test.ts');
 console.log('     - Constructor DI: 3 tests');
 console.log('     - checkPermissions with mocks: 3 tests');
 console.log('     - getSingleLocationUpdate with mocks: 4 tests');
@@ -233,7 +233,7 @@ console.log('  - More reusable (pure functions work anywhere)\n');
 
 console.log('✅ Follows Project Standards:');
 console.log('  - Aligns with GeoPosition refactoring pattern');
-console.log('  - Follows REFERENTIAL_TRANSPARENCY.md guidelines');
+console.log('  - Follows docs/guides/REFERENTIAL_TRANSPARENCY.md guidelines');
 console.log('  - Maintains backward compatibility\n');
 
 console.log('To run the actual tests:');
@@ -245,4 +245,3 @@ console.log('  docs/architecture/GEOLOCATION_SERVICE_REFACTORING.md\n');
 console.log('======================================================================');
 console.log('Demonstration Complete ✓');
 console.log('======================================================================\n');
-

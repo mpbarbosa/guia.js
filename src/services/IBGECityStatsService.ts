@@ -7,7 +7,7 @@
  *   - IBGE SIDRA aggregate 6579 → most recent population estimate
  *
  * @module services/IBGECityStatsService
- * @since 0.16.0-alpha
+ * @since 0.16.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 

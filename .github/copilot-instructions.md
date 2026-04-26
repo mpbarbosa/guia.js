@@ -40,8 +40,7 @@ Supporting workflow surfaces:
 - Align package exports and entry points with `package.json` and API docs.
 - For details, link to authoritative docs rather than duplicating content.
 
-Authoritative references:
-
+Authoritative references include:
 - `README.md`
 - `docs/ARCHITECTURE.md`
 - `docs/guides/MIGRATION_GUIDE.md`

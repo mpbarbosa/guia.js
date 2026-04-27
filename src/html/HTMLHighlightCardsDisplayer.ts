@@ -1,3 +1,4 @@
+import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
 import { log, warn } from '../utils/logger.js';
 import type BrazilianStandardAddress from '../data/BrazilianStandardAddress.js';
 /**
@@ -18,6 +19,13 @@ import type BrazilianStandardAddress from '../data/BrazilianStandardAddress.js';
  * `null` before the first update).
  */
 const _previousLogradouro = new WeakMap<HTMLHighlightCardsDisplayer, string | null>();
+const _hasRenderedAddress = new WeakMap<HTMLHighlightCardsDisplayer, boolean>();
+
+const CONFIRMED_FIELD_CHANGE_EVENTS = new Set([
+    'MunicipioChanged',
+    'BairroChanged',
+    'LogradouroChanged'
+] as const);
 
 /**
  * Displayer for municipio, bairro, and logradouro highlight cards
@@ -57,6 +65,7 @@ class HTMLHighlightCardsDisplayer {
         
         // Initialise mutable state before freezing
         _previousLogradouro.set(this, null);
+        _hasRenderedAddress.set(this, false);
         
         Object.freeze(this);
     }
@@ -115,6 +124,34 @@ class HTMLHighlightCardsDisplayer {
     hideLoading(): void {
         this._setLoadingState(false);
     }
+
+    private _resolveAddressForUpdate(
+        currentAddressOrRawData: Record<string, unknown> | BrazilianStandardAddress | null,
+        enderecoPadronizadoOrEvent: BrazilianStandardAddress | string | null,
+        posEvent?: string | null,
+        changeDetails?: { currentAddress?: BrazilianStandardAddress | null }
+    ): BrazilianStandardAddress | null {
+        if (
+            typeof enderecoPadronizadoOrEvent === 'string' &&
+            CONFIRMED_FIELD_CHANGE_EVENTS.has(enderecoPadronizadoOrEvent as 'MunicipioChanged' | 'BairroChanged' | 'LogradouroChanged')
+        ) {
+            return changeDetails?.currentAddress ?? (
+                currentAddressOrRawData instanceof Object
+                    ? currentAddressOrRawData as BrazilianStandardAddress
+                    : null
+            );
+        }
+
+        if (typeof enderecoPadronizadoOrEvent === 'string') {
+            return null;
+        }
+
+        if (posEvent === ADDRESS_FETCHED_EVENT && _hasRenderedAddress.get(this)) {
+            return null;
+        }
+
+        return enderecoPadronizadoOrEvent;
+    }
     
     /**
      * Updates highlight cards when address data changes
@@ -122,26 +159,39 @@ class HTMLHighlightCardsDisplayer {
      * @param {Object} addressData - Address data from geocoding
      * @param {Object} enderecoPadronizado - Standardized Brazilian address
      */
-    update(addressData: Record<string, unknown>, enderecoPadronizado: BrazilianStandardAddress): void {
+    update(
+        addressData: Record<string, unknown> | BrazilianStandardAddress | null,
+        enderecoPadronizado: BrazilianStandardAddress | string | null,
+        _posEvent?: string | null,
+        changeDetails?: { currentAddress?: BrazilianStandardAddress | null }
+    ): void {
+        const resolvedAddress = this._resolveAddressForUpdate(
+            addressData,
+            enderecoPadronizado,
+            _posEvent,
+            changeDetails
+        );
+
         log('(HTMLHighlightCardsDisplayer) update called with:', {
             hasAddressData: !!addressData,
-            hasEnderecoPadronizado: !!enderecoPadronizado,
-            municipio: enderecoPadronizado?.municipio,
-            regiaoMetropolitana: enderecoPadronizado?.regiaoMetropolitana,
-            bairro: enderecoPadronizado?.bairro
+            hasEnderecoPadronizado: !!resolvedAddress,
+            municipio: resolvedAddress?.municipio,
+            regiaoMetropolitana: resolvedAddress?.regiaoMetropolitana,
+            bairro: resolvedAddress?.bairro
         });
         
-        if (!enderecoPadronizado) {
+        if (!resolvedAddress) {
             warn('(HTMLHighlightCardsDisplayer) No enderecoPadronizado provided, skipping update');
             return;
         }
         
         // Clear loading state before updating content
         this._setLoadingState(false);
+        _hasRenderedAddress.set(this, true);
         
         // Update metropolitan region (displayed between label and municipality)
         if (this._regiaoMetropolitanaElement) {
-            const regiaoMetropolitana = enderecoPadronizado.regiaoMetropolitanaFormatada();
+            const regiaoMetropolitana = resolvedAddress.regiaoMetropolitanaFormatada();
             this._regiaoMetropolitanaElement.textContent = regiaoMetropolitana;
             log('(HTMLHighlightCardsDisplayer) Updated regiao-metropolitana-value to:', regiaoMetropolitana || '(empty)');
         } else {
@@ -150,7 +200,7 @@ class HTMLHighlightCardsDisplayer {
         
         // Update municipio with state abbreviation
         if (this._municipioElement) {
-            const municipio = enderecoPadronizado.municipioCompleto() || '—';
+            const municipio = resolvedAddress.municipioCompleto() || '—';
             this._municipioElement.textContent = municipio;
             log('(HTMLHighlightCardsDisplayer) Updated municipio-value to:', municipio);
         } else {
@@ -159,7 +209,7 @@ class HTMLHighlightCardsDisplayer {
         
         // Update bairro
         if (this._bairroElement) {
-            const bairro = enderecoPadronizado.bairro || '—';
+            const bairro = resolvedAddress.bairro || '—';
             this._bairroElement.textContent = bairro;
             log('(HTMLHighlightCardsDisplayer) Updated bairro-value to:', bairro);
         } else {
@@ -168,7 +218,7 @@ class HTMLHighlightCardsDisplayer {
         
         // Update logradouro
         if (this._logradouroElement) {
-            const logradouro = enderecoPadronizado.logradouro || '—';
+            const logradouro = resolvedAddress.logradouro || '—';
             const previous = _previousLogradouro.get(this);
             if (previous !== null && logradouro !== previous) {
                 this._blinkLogradouroCard();

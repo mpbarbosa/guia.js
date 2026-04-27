@@ -211,6 +211,74 @@ describe('HTMLHighlightCardsDisplayer - Município State Abbreviation Display', 
 
             expect(municipioElement.textContent).toBe('Recife, PE');
         });
+
+        test('should update from confirmed change events using changeDetails.currentAddress', () => {
+            const confirmedAddress = new BrazilianStandardAddress();
+            confirmedAddress.municipio = 'Recife';
+            confirmedAddress.siglaUF = 'PE';
+            confirmedAddress.bairro = 'Boa Viagem';
+
+            displayer.update(
+                'Boa Viagem',
+                'BairroChanged',
+                null,
+                { currentAddress: confirmedAddress }
+            );
+
+            expect(municipioElement.textContent).toBe('Recife, PE');
+            expect(bairroElement.textContent).toBe('Boa Viagem');
+        });
+
+        test('should hydrate from the first Address fetched event', () => {
+            const initialAddress = new BrazilianStandardAddress();
+            initialAddress.municipio = 'Sao Paulo';
+            initialAddress.siglaUF = 'SP';
+            initialAddress.bairro = 'Bela Vista';
+
+            displayer.update({}, initialAddress, 'Address fetched');
+
+            expect(municipioElement.textContent).toBe('Sao Paulo, SP');
+            expect(bairroElement.textContent).toBe('Bela Vista');
+        });
+
+        test('should ignore subsequent Address fetched events after initial hydration', () => {
+            const initialAddress = new BrazilianStandardAddress();
+            initialAddress.municipio = 'Recife';
+            initialAddress.siglaUF = 'PE';
+            initialAddress.bairro = 'Boa Viagem';
+            displayer.update({}, initialAddress, 'Address fetched');
+
+            const jitterAddress = new BrazilianStandardAddress();
+            jitterAddress.municipio = 'Olinda';
+            jitterAddress.siglaUF = 'PE';
+            jitterAddress.bairro = 'Casa Caiada';
+            displayer.update({}, jitterAddress, 'Address fetched');
+
+            expect(municipioElement.textContent).toBe('Recife, PE');
+            expect(bairroElement.textContent).toBe('Boa Viagem');
+        });
+
+        test('should still apply confirmed updates after initial Address fetched hydration', () => {
+            const initialAddress = new BrazilianStandardAddress();
+            initialAddress.municipio = 'Recife';
+            initialAddress.siglaUF = 'PE';
+            initialAddress.bairro = 'Boa Viagem';
+            displayer.update({}, initialAddress, 'Address fetched');
+
+            const confirmedAddress = new BrazilianStandardAddress();
+            confirmedAddress.municipio = 'Olinda';
+            confirmedAddress.siglaUF = 'PE';
+            confirmedAddress.bairro = 'Casa Caiada';
+            displayer.update(
+                'Olinda',
+                'MunicipioChanged',
+                null,
+                { currentAddress: confirmedAddress }
+            );
+
+            expect(municipioElement.textContent).toBe('Olinda, PE');
+            expect(bairroElement.textContent).toBe('Casa Caiada');
+        });
     });
 
     describe('Bairro Display (Unchanged)', () => {

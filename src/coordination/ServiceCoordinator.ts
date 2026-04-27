@@ -69,6 +69,10 @@ interface IChangeDetectionCoordinatorForSC {
 	setupChangeDetection(): void;
 }
 
+interface IObserverSubjectForSC {
+	subscribe(observer: unknown): void;
+}
+
 interface IDisplayerFactory {
 	createPositionDisplayer(el: unknown): unknown;
 	createAddressDisplayer(el1: unknown, el2: unknown): unknown;
@@ -106,6 +110,7 @@ class ServiceCoordinator {
     private _document: Document | undefined;
     private _reverseGeocoder: IReverseGeocoderForSC | null;
     private _changeDetectionCoordinator: IChangeDetectionCoordinatorForSC | null;
+    private _observerSubject: IObserverSubjectForSC | null;
     private _displayerFactory: IDisplayerFactory | null;
     private _displayers: Readonly<IDisplayers> | null;
     private _watchId: number | null;
@@ -181,6 +186,7 @@ class ServiceCoordinator {
          * @type {ObserverSubject}
          * @private
          */
+        this._observerSubject = params.observerSubject as IObserverSubjectForSC;
 
         /**
          * Factory for creating displayers
@@ -334,10 +340,14 @@ class ServiceCoordinator {
                 warn('(ServiceCoordinator) address displayer is null, cannot subscribe!');
             }
             
-            // Subscribe highlight cards displayer to address updates
-            if (this._displayers.highlightCards) {
+            // Subscribe highlight cards displayer to the first fetched address so
+            // the cards populate immediately, then keep them aligned with the
+            // confirmation-buffered change notifications for subsequent updates.
+            if (this._displayers.highlightCards && this._observerSubject) {
                 log('>>> (ServiceCoordinator) Subscribing HTMLHighlightCardsDisplayer to ReverseGeocoder', this._displayers.highlightCards);
                 this._reverseGeocoder.subscribe(this._displayers.highlightCards);
+                log('>>> (ServiceCoordinator) Subscribing HTMLHighlightCardsDisplayer to confirmed change observerSubject', this._displayers.highlightCards);
+                this._observerSubject.subscribe(this._displayers.highlightCards);
                 log('>>> ServiceCoordinator: Highlight cards displayer wired');
             } else {
                 warn('(ServiceCoordinator) highlightCards displayer is null, cannot subscribe!');
@@ -352,11 +362,11 @@ class ServiceCoordinator {
                 warn('(ServiceCoordinator) referencePlace displayer is null, cannot subscribe!');
             }
             
-            log('>>> (ServiceCoordinator) Wiring SIDRA-related displayer to ReverseGeocoder: ', this._displayers.sidra);
-            // Subscribe SIDRA displayer to address updates
-            if (this._displayers.sidra) {
-                log('>>> (ServiceCoordinator) Subscribing HTMLSidraDisplayer to ReverseGeocoder', this._displayers.sidra);
-                this._reverseGeocoder.subscribe(this._displayers.sidra);
+            log('>>> (ServiceCoordinator) Wiring SIDRA-related displayer to confirmed municipio changes: ', this._displayers.sidra);
+            // Subscribe SIDRA displayer to confirmed municipality changes only.
+            if (this._displayers.sidra && this._observerSubject) {
+                log('>>> (ServiceCoordinator) Subscribing HTMLSidraDisplayer to confirmed change observerSubject', this._displayers.sidra);
+                this._observerSubject.subscribe(this._displayers.sidra);
                 log('>>> ServiceCoordinator: SIDRA displayer wired');
             } else {
                 warn('(ServiceCoordinator) sidra displayer is null, cannot subscribe!');

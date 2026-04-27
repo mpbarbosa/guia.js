@@ -10,7 +10,6 @@
 
 import { jest } from '@jest/globals';
 import HTMLSidraDisplayer from '../../src/html/HTMLSidraDisplayer.js';
-import { ADDRESS_FETCHED_EVENT } from '../../src/config/defaults.js';
 import ibgeDataFormatter from '../../src/utils/ibge-data-formatter.js';
 
 describe('HTMLSidraDisplayer Class', () => {
@@ -72,7 +71,7 @@ describe('HTMLSidraDisplayer Class', () => {
     });
 
     test('should handle loading state', () => {
-      displayer.update(null, null, ADDRESS_FETCHED_EVENT, true, null);
+      displayer.update(null, null, null, true, null);
       
       expect(mockElement.innerHTML).toContain('Carregando dados do IBGE');
       expect(mockElement.innerHTML).toContain('loading');
@@ -80,20 +79,26 @@ describe('HTMLSidraDisplayer Class', () => {
 
     test('should handle error state', () => {
       const error = new Error('Test error');
-      displayer.update(null, null, ADDRESS_FETCHED_EVENT, false, error);
+      displayer.update(null, null, null, false, error);
       
       expect(mockElement.innerHTML).toContain('Erro ao carregar dados do IBGE');
       expect(mockElement.innerHTML).toContain('Test error');
       expect(mockElement.innerHTML).toContain('error');
     });
 
-    test('should update SIDRA data on ADDRESS_FETCHED_EVENT', () => {
+    test('should update SIDRA data on MunicipioChanged', () => {
       const mockEnderecoPadronizado = {
         municipio: 'São Paulo',
         siglaUF: 'SP'
       };
 
-      displayer.update(null, mockEnderecoPadronizado, ADDRESS_FETCHED_EVENT, false, null);
+      displayer.update(
+        mockEnderecoPadronizado,
+        'MunicipioChanged',
+        null,
+        { currentAddress: mockEnderecoPadronizado },
+        null
+      );
 
       expect(mockDisplaySidraDadosParams).toHaveBeenCalledWith(
         mockElement,
@@ -102,13 +107,24 @@ describe('HTMLSidraDisplayer Class', () => {
       );
     });
 
-    test('should not update on other event types', () => {
+    test('should not update on ADDRESS_FETCHED_EVENT anymore', () => {
       const mockEnderecoPadronizado = {
         municipio: 'São Paulo',
         siglaUF: 'SP'
       };
 
-      displayer.update(null, mockEnderecoPadronizado, 'PositionManager updated', false, null);
+      displayer.update(null, mockEnderecoPadronizado, 'Address fetched', false, null);
+
+      expect(mockDisplaySidraDadosParams).not.toHaveBeenCalled();
+    });
+
+    test('should not update on non-municipio confirmed change events', () => {
+      const mockEnderecoPadronizado = {
+        municipio: 'São Paulo',
+        siglaUF: 'SP'
+      };
+
+      displayer.update(mockEnderecoPadronizado, 'BairroChanged', null, { currentAddress: mockEnderecoPadronizado }, null);
 
       expect(mockDisplaySidraDadosParams).not.toHaveBeenCalled();
     });
@@ -117,12 +133,18 @@ describe('HTMLSidraDisplayer Class', () => {
       const noElementDisplayer = new HTMLSidraDisplayer(null);
       
       expect(() => {
-        noElementDisplayer.update(null, { municipio: 'Test' }, ADDRESS_FETCHED_EVENT, false, null);
+        noElementDisplayer.update(
+          { municipio: 'Test', siglaUF: 'SP' },
+          'MunicipioChanged',
+          null,
+          { currentAddress: { municipio: 'Test', siglaUF: 'SP' } },
+          null
+        );
       }).not.toThrow();
     });
 
     test('should handle missing enderecoPadronizado', () => {
-      displayer.update(null, null, ADDRESS_FETCHED_EVENT, false, null);
+      displayer.update(null, 'MunicipioChanged', null, { currentAddress: null }, null);
       
       expect(mockDisplaySidraDadosParams).not.toHaveBeenCalled();
     });
@@ -136,7 +158,13 @@ describe('HTMLSidraDisplayer Class', () => {
       };
 
       expect(() => {
-        displayer.update(null, mockEnderecoPadronizado, ADDRESS_FETCHED_EVENT, false, null);
+        displayer.update(
+          mockEnderecoPadronizado,
+          'MunicipioChanged',
+          null,
+          { currentAddress: mockEnderecoPadronizado },
+          null
+        );
       }).not.toThrow();
     });
 
@@ -150,7 +178,13 @@ describe('HTMLSidraDisplayer Class', () => {
         siglaUF: 'SP'
       };
 
-      displayer.update(null, mockEnderecoPadronizado, ADDRESS_FETCHED_EVENT, false, null);
+      displayer.update(
+        mockEnderecoPadronizado,
+        'MunicipioChanged',
+        null,
+        { currentAddress: mockEnderecoPadronizado },
+        null
+      );
 
       expect(mockElement.innerHTML).toContain('Dados do IBGE temporariamente indisponíveis');
       expect(mockElement.innerHTML).toContain('error');
@@ -202,7 +236,13 @@ describe('HTMLSidraDisplayer Class', () => {
       };
 
       // Simulate observer notification
-      displayer.update(null, mockEnderecoPadronizado, ADDRESS_FETCHED_EVENT, false, null);
+      displayer.update(
+        mockEnderecoPadronizado,
+        'MunicipioChanged',
+        null,
+        { currentAddress: mockEnderecoPadronizado },
+        null
+      );
 
       expect(mockFn).toHaveBeenCalled();
       
@@ -216,7 +256,7 @@ describe('HTMLSidraDisplayer Class', () => {
       const displayer = new HTMLSidraDisplayer(mockElement);
       
       const error = new Error('Test error');
-      displayer.update(null, null, ADDRESS_FETCHED_EVENT, false, error);
+      displayer.update(null, null, null, false, error);
       
       expect(mockElement.innerHTML).toContain('Erro ao carregar dados do IBGE');
     });
@@ -225,7 +265,7 @@ describe('HTMLSidraDisplayer Class', () => {
       const mockElement = { id: 'test-sidra', innerHTML: '' };
       const displayer = new HTMLSidraDisplayer(mockElement);
       
-      displayer.update(null, null, ADDRESS_FETCHED_EVENT, true, null);
+      displayer.update(null, null, null, true, null);
       
       expect(mockElement.innerHTML).toContain('Carregando dados do IBGE');
     });
@@ -246,7 +286,13 @@ describe('HTMLSidraDisplayer Class', () => {
       ];
 
       brazilianMunicipalities.forEach(endereco => {
-        displayer.update(null, endereco, ADDRESS_FETCHED_EVENT, false, null);
+        displayer.update(
+          endereco,
+          'MunicipioChanged',
+          null,
+          { currentAddress: endereco },
+          null
+        );
         
         expect(mockDisplaySidraDadosParams).toHaveBeenCalledWith(
           mockElement,

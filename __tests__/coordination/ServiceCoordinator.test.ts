@@ -104,6 +104,14 @@ function createMockDisplayerFactory() {
         createReferencePlaceDisplayer: jest.fn(() => ({
             update: jest.fn(),
             type: 'referencePlace'
+        })),
+        createHighlightCardsDisplayer: jest.fn(() => ({
+            update: jest.fn(),
+            type: 'highlightCards'
+        })),
+        createSidraDisplayer: jest.fn(() => ({
+            update: jest.fn(),
+            type: 'sidra'
         }))
     };
 }
@@ -354,6 +362,32 @@ describe('ServiceCoordinator', () => {
             expect(() => {
                 coordinator.wireObservers();
             }).not.toThrow();
+        });
+
+        test('should wire highlight cards to reverse geocoder and confirmed change observer subject', () => {
+            params.document = { getElementById: jest.fn(() => null) };
+            const coordinator = new ServiceCoordinator(params);
+            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
+
+            const highlightCards = coordinator.getDisplayers().highlightCards;
+
+            coordinator.wireObservers();
+
+            expect(params.observerSubject.subscribe).toHaveBeenCalledWith(highlightCards);
+            expect(params.reverseGeocoder.subscribe).toHaveBeenCalledWith(highlightCards);
+        });
+
+        test('should wire sidra displayer to confirmed change observer subject instead of reverse geocoder', () => {
+            params.document = { getElementById: jest.fn(() => null) };
+            const coordinator = new ServiceCoordinator(params);
+            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display', 'reference-display', 'dados-sidra');
+
+            const sidraDisplayer = coordinator.getDisplayers().sidra;
+
+            coordinator.wireObservers();
+
+            expect(params.observerSubject.subscribe).toHaveBeenCalledWith(sidraDisplayer);
+            expect(params.reverseGeocoder.subscribe).not.toHaveBeenCalledWith(sidraDisplayer);
         });
     });
 

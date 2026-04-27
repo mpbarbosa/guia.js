@@ -3,7 +3,7 @@ import { escapeHtml } from '../utils/html-sanitizer.js';
 import ibgeDataFormatter from '../utils/ibge-data-formatter.js';
 import type { BrazilianStandardAddress } from '../data/BrazilianStandardAddress.js';
 
-import { ADDRESS_FETCHED_EVENT, IBGE_LOADING_MESSAGE, IBGE_ERROR_MESSAGE, IBGE_UNAVAILABLE_MESSAGE } from '../config/defaults.js';
+import { IBGE_LOADING_MESSAGE, IBGE_ERROR_MESSAGE, IBGE_UNAVAILABLE_MESSAGE } from '../config/defaults.js';
 
 /**
  * HTML-based SIDRA data displayer with IBGE integration.
@@ -27,11 +27,11 @@ import { ADDRESS_FETCHED_EVENT, IBGE_LOADING_MESSAGE, IBGE_ERROR_MESSAGE, IBGE_U
  * const sidraElement = document.getElementById('dadosSidra');
  * const displayer = new HTMLSidraDisplayer(sidraElement);
  * 
- * // Subscribe to address updates (example with ReverseGeocoder)
- * reverseGeocoder.subscribe(displayer);
+ * // Subscribe to confirmed address-field change updates
+ * observerSubject.subscribe(displayer);
  * 
  * // Manual update
- * displayer.update(addressData, standardizedAddress, ADDRESS_FETCHED_EVENT, false, null);
+ * displayer.update(standardizedAddress, 'MunicipioChanged', null, { currentAddress: standardizedAddress }, null);
  * ```
  * 
  * @class HTMLSidraDisplayer
@@ -79,34 +79,53 @@ class HTMLSidraDisplayer {
 	 * from the standardized address and triggers SIDRA data display through the
 	 * global displaySidraDadosParams function (if available).
 	 * 
-	 * The method filters updates to only process ADDRESS_FETCHED_EVENT to avoid
-	 * unnecessary data fetching on other event types.
+	 * The method filters updates to only process confirmed `MunicipioChanged`
+	 * events so population data refreshes only when the municipality itself
+	 * changes.
 	 * 
-	 * @param {Object} addressData - Raw address data from geocoding API (unused in current implementation)
-	 * @param {Object} enderecoPadronizado - Standardized Brazilian address object
-	 * @param {string} enderecoPadronizado.municipio - Municipality name (e.g., "São Paulo")
-	 * @param {string} enderecoPadronizado.siglaUF - State abbreviation (e.g., "SP")
-	 * @param {string} posEvent - Position event type (should be ADDRESS_FETCHED_EVENT for SIDRA updates)
-	 * @param {boolean} loading - Loading state indicator
+	 * @param {Object} currentAddressOrEventData - Current full address or legacy address data payload
+	 * @param {Object|string|null} enderecoPadronizadoOrEvent - Standardized Brazilian address or change event name
+	 * @param {string|null} posEvent - Legacy position event type (unused for confirmed municipality changes)
+	 * @param {boolean|Object} loadingOrChangeDetails - Loading state or confirmed change details payload
 	 * @param {Error|null} error - Error object if update failed
 	 * 
 	 * @example
 	 * // Called automatically by observer pattern
-	 * displayer.update(addressData, { municipio: 'São Paulo', siglaUF: 'SP' }, ADDRESS_FETCHED_EVENT, false, null);
+	 * displayer.update(
+	 *   { municipio: 'São Paulo', siglaUF: 'SP' },
+	 *   'MunicipioChanged',
+	 *   null,
+	 *   { currentAddress: { municipio: 'São Paulo', siglaUF: 'SP' } },
+	 *   null
+	 * );
 	 * 
 	 * @since 0.9.0-alpha
 	 */
-	update(_addressData: object, enderecoPadronizado: BrazilianStandardAddress | null, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
+	update(
+		currentAddressOrEventData: BrazilianStandardAddress | object | null,
+		enderecoPadronizadoOrEvent: BrazilianStandardAddress | string | null,
+		posEvent: string | null,
+		loadingOrChangeDetails: unknown,
+		error: { message: string } | null | false
+	): void {
 		// Log update for debugging (following MP Barbosa logging standards)
-		log(`(HTMLSidraDisplayer) update() called with posEvent: ${posEvent}`);
+		log(`(HTMLSidraDisplayer) update() called with event: ${String(enderecoPadronizadoOrEvent)} posEvent: ${String(posEvent)}`);
 		
 		if (!this.element) {
 			warn('(HTMLSidraDisplayer) No element provided, skipping update');
 			return;
 		}
+
+		const isMunicipioChanged = enderecoPadronizadoOrEvent === 'MunicipioChanged';
+		const changeDetails = isMunicipioChanged && loadingOrChangeDetails && typeof loadingOrChangeDetails === 'object'
+			? loadingOrChangeDetails as { currentAddress?: BrazilianStandardAddress | null }
+			: null;
+		const resolvedAddress = isMunicipioChanged
+			? changeDetails?.currentAddress ?? currentAddressOrEventData as BrazilianStandardAddress | null
+			: (typeof enderecoPadronizadoOrEvent === 'string' ? null : enderecoPadronizadoOrEvent);
 		
 		// Handle loading state with Portuguese localized message
-		if (loading) {
+		if (loadingOrChangeDetails === true) {
 			this.element.innerHTML = `<p class="loading">${IBGE_LOADING_MESSAGE}</p>`;
 			return;
 		}
@@ -118,9 +137,9 @@ class HTMLSidraDisplayer {
 			return;
 		}
 
-		// Only update SIDRA data on address fetch events
-		if (posEvent === ADDRESS_FETCHED_EVENT && enderecoPadronizado) {
-			this._updateSidraData(enderecoPadronizado);
+		// Only update SIDRA data when the municipality has been confirmed as changed.
+		if (isMunicipioChanged && resolvedAddress) {
+			this._updateSidraData(resolvedAddress);
 		}
 	}
 

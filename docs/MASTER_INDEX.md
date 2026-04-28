@@ -85,6 +85,7 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 - **[Class Diagram](architecture/CLASS_DIAGRAM.md)** - Class structure
 - **[Sequence Diagrams](architecture/observer-pattern-sequence.md)** - Interaction flows
+- **[Logradouro confirmation mismatch analysis](architecture/LOGRADOURO_CONFIRMATION_MISMATCH_ANALYSIS.md)** - Investigation of raw-vs-confirmed address divergence
 - **[Version Timeline](architecture/VERSION_TIMELINE.md)** - Evolution history
 
 ### 4. Developer Guides

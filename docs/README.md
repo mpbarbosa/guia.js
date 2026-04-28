@@ -2,7 +2,7 @@
 
 ---
 
-Last Updated: 2026-01-28
+Last Updated: 2026-04-27
 Status: Active
 Category: Guide
 
@@ -152,7 +152,7 @@ Uncategorized and work-in-progress documentation:
 
 - [Test Strategy](./testing/TEST_STRATEGY.md)
 - [Test Infrastructure](./testing/TEST_INFRASTRUCTURE.md)
-- [E2E Test Scenarios](./E2E_TEST_SCENARIO_MUNICIPIO_BAIRRO.md)
+- [E2E Test Scenarios](./testing/E2E_TEST_SCENARIO_MUNICIPIO_BAIRRO.md)
 
 **Development Tools**
 
@@ -197,9 +197,9 @@ For a comprehensive, categorized list of all documentation files, see:
 > **Note**: Files below show recent changes. For detailed change history, see [CHANGELOG.md](../CHANGELOG.md)
 
 - **2026-01-28**: [Reference Check False Positives Report](./reports/REFERENCE_CHECK_FALSE_POSITIVES_2026-01-28.md)
-- **2026-01-23**: [Architecture Documentation Fixes](./ARCHITECTURE_DOCUMENTATION_FIXES_2026-01-23.md)
-- **2026-01-24**: [Node Version Fix](./NODE_VERSION_FIX_2026-01-24.md)
-- **2026-01-24**: [Security Monitoring](./SECURITY_MONITORING_2026-01-24.md)
+- **2026-01-23**: [Architecture Documentation Fixes](./maintenance/ARCHITECTURE_DOCUMENTATION_FIXES_2026-01-23.md)
+- **2026-01-24**: [Node Version Fix](./maintenance/NODE_VERSION_FIX_2026-01-24.md)
+- **2026-01-24**: [Security Monitoring](./maintenance/SECURITY_MONITORING_2026-01-24.md)
 - **2026-01-15**: [UI Component Validation Report](./reports/analysis/UI_COMPONENT_VALIDATION_REPORT_2026-01-15.md)
 
 ---
@@ -233,7 +233,7 @@ Found outdated information or broken links? Want to improve documentation?
 
 ---
 
-**Last Updated**: 2026-02-15
-**Documentation Version**: 0.9.0-alpha
+**Last Updated**: 2026-04-27
+**Documentation Version**: 0.17.1-alpha
 **Total Documentation Files**: 312+ markdown files
 **Directory Structure**: 20 documented categories

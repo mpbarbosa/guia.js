@@ -1,7 +1,7 @@
 # API Documentation - Guia Turístico
 
-**Version**: 0.9.0-alpha
-**Last Updated**: 2026-02-09
+**Version**: 0.17.1-alpha
+**Last Updated**: 2026-04-27
 **Service APIs Documentation Complete**: GeolocationService, ReverseGeocoder, ChangeDetectionCoordinator
 
 ## Overview
@@ -15,7 +15,7 @@ Guia Turístico provides a comprehensive set of APIs for building geolocation-aw
 Foundation classes providing essential data structures and state management.
 
 - [**PositionManager**](./POSITION_MANAGER.md) - Singleton managing current geolocation state
-- [**GeoPosition**](./GEO_POSITION.md) - Immutable position value object
+- [**GeoPosition**](./API_REFERENCE.md#geoposition) - Immutable position value object
 - [**GeocodingState**](./GEOCODING_STATE.md) - State machine for geocoding operations
 - [**ObserverSubject**](./OBSERVER_SUBJECT.md) - Observer pattern implementation
 
@@ -31,7 +31,7 @@ Services handling external integrations and browser APIs.
 
 Orchestration layer coordinating multiple services and components.
 
-- [**WebGeocodingManager**](./WEB_GEOCODING_MANAGER.md) - Main application coordinator
+- [**WebGeocodingManager**](../architecture/WEB_GEOCODING_MANAGER.md) - Main application coordinator
 - [**ServiceCoordinator**](./SERVICE_COORDINATOR.md) - Service lifecycle management
 - [**EventCoordinator**](./EVENT_COORDINATOR.md) - Event-based coordination
 - [**SpeechCoordinator**](./SPEECH_COORDINATOR.md) - Speech synthesis coordination
@@ -52,69 +52,64 @@ Classes for data extraction, transformation, and caching.
 
 Components for rendering geographic data in the browser.
 
-- [**HTMLPositionDisplayer**](./HTML_POSITION_DISPLAYER.md) - Coordinate display and Google Maps integration
-- [**HTMLAddressDisplayer**](./HTML_ADDRESS_DISPLAYER.md) - Address formatting and display
-- [**HTMLHighlightCardsDisplayer**](./HTML_HIGHLIGHT_CARDS_DISPLAYER.md) - Municipality and neighborhood highlight cards
-- [**HTMLReferencePlaceDisplayer**](./HTML_REFERENCE_PLACE_DISPLAYER.md) - Reference place display
-- [**HTMLSidraDisplayer**](./HTML_SIDRA_DISPLAYER.md) - IBGE SIDRA demographic data display
+- [**HTMLPositionDisplayer**](./API_REFERENCE.md#htmlpositiondisplayer) - Coordinate display and Google Maps integration
+- [**HTMLAddressDisplayer**](./API_REFERENCE.md#htmladdressdisplayer) - Address formatting and display
+- [**HTMLHighlightCardsDisplayer**](./API_REFERENCE.md#htmlhighlightcardsdisplayer) - Municipality and neighborhood highlight cards
+- [**Reference place display components**](./API_COMPLETE_REFERENCE.md#displayui-apis) - Reference place rendering coverage in the consolidated UI API guide
+- [**HTMLSidraDisplayer**](./API_REFERENCE.md#htmlsidradisplayer) - IBGE SIDRA demographic data display
 - [**DisplayerFactory**](./DISPLAYER_FACTORY.md) - Factory for creating display components
-- [**HtmlText**](./HTML_TEXT.md) - Text display utilities
 
 ### Speech Synthesis APIs
 
 Text-to-speech functionality with queue management.
 
 - [**SpeechSynthesisManager**](./SPEECH_SYNTHESIS_MANAGER.md) - Main facade for text-to-speech (Facade pattern)
-- [**SpeechController**](./SPEECH_CONTROLLER.md) - Core speech synthesis control
-- [**SpeechQueueProcessor**](./SPEECH_QUEUE_PROCESSOR.md) - Queue processing and execution
-- [**SpeechConfiguration**](./SPEECH_CONFIGURATION.md) - Configuration management
-- [**VoiceManager**](./VOICE_MANAGER.md) - Voice selection and management
-- [**SpeechQueue**](./SPEECH_QUEUE.md) - Speech queue data structure
-- [**SpeechItem**](./SPEECH_ITEM.md) - Individual speech item
+- [**VoiceLoader**](./VOICE_LOADER.md) - Browser voice discovery and loading
+- [**Speech internals**](./API_COMPLETE_REFERENCE.md#speech-synthesis-apis) - Queue, controller, and configuration coverage in the consolidated speech guide
 
 ### Performance & Timing APIs
 
 Performance monitoring and timer management.
 
-- [**Chronometer**](./CHRONOMETER.md) - Performance timing and elapsed time tracking (Observer pattern)
-- [**TimerManager**](./TIMER_MANAGER.md) - Centralized timer management preventing memory leaks
+- [**Chronometer**](./API_REFERENCE.md#chronometer) - Performance timing and elapsed time tracking (Observer pattern)
+- [**TimerManager**](./API_REFERENCE.md#timermanager) - Centralized timer management preventing memory leaks
 
 ### Status Management APIs
 
 Application-wide status tracking.
 
-- [**SingletonStatusManager**](./SINGLETON_STATUS_MANAGER.md) - Singleton for status management across components
+- [**SingletonStatusManager**](./COMPLETE_API_REFERENCE.md#singletonstatusmanager) - Singleton for status management across components
 
 ### Utility APIs
 
 Helper functions and utilities.
 
-- [**distance**](./DISTANCE.md) - Distance calculation utilities (Haversine formula)
-- [**logger**](./LOGGER.md) - Logging utilities with DOM and console output
-- [**device**](./DEVICE.md) - Device detection (mobile/desktop)
-- [**accessibility**](./ACCESSIBILITY.md) - Accessibility utilities
-- [**button-utils**](./BUTTON_UTILS.md) - Button state management
+- [**distance**](./COMPLETE_API_REFERENCE.md#distance) - Distance calculation utilities (Haversine formula)
+- [**logger**](./COMPLETE_API_REFERENCE.md#logger) - Logging utilities with DOM and console output
+- [**device**](./COMPLETE_API_REFERENCE.md#device) - Device detection (mobile/desktop)
+- [**accessibility**](./COMPLETE_API_REFERENCE.md#accessibility) - Accessibility utilities
+- [**button-status**](./COMPLETE_API_REFERENCE.md#button-status) - Button state management
 
 ### Configuration APIs
 
 Application configuration and constants.
 
-- [**defaults**](./DEFAULTS.md) - Application configuration constants
-- [**version**](./VERSION.md) - Version information
+- [**defaults**](./API_COMPLETE_REFERENCE.md#configuration) - Application configuration constants
+- [**version**](./API_COMPLETE_REFERENCE.md#configuration) - Version information
 
 ### View Controllers
 
 SPA route handlers and view logic.
 
-- [**HomeView**](./HOME_VIEW.md) - Home view controller for location tracking (`src/views/home.js`)
-- [**ConverterView**](./CONVERTER_VIEW.md) - Coordinate converter view controller (`src/views/converter.js`)
+- [**HomeView**](../architecture/VIEWS_LAYER.md) - Home view controller for location tracking (`src/views/home.js`)
+- [**ConverterView**](../architecture/VIEWS_LAYER.md) - Coordinate converter view controller (`src/views/converter.js`)
 
 ## External API Integrations
 
-- [**OpenStreetMap Nominatim**](./NOMINATIM_INTEGRATION.md) - Reverse geocoding API
-- [**IBGE API**](./IBGE_INTEGRATION.md) - Brazilian location data
-- [**SIDRA API**](./SIDRA_INTEGRATION.md) - Brazilian demographic statistics
-- [**Google Maps**](./GOOGLE_MAPS_INTEGRATION.md) - Map viewing and Street View
+- [**OpenStreetMap Nominatim**](../api-integration/NOMINATIM_INTEGRATION.md) - Reverse geocoding API
+- [**IBGE API**](../guides/IBIRA_INTEGRATION.md) - Brazilian location data
+- [**SIDRA API**](../guides/SIDRA_INTEGRATION.md) - Brazilian demographic statistics
+- [**Google Maps**](./API_COMPLETE_REFERENCE.md#google-maps) - Map viewing and Street View
 
 ## Design Patterns
 
@@ -260,4 +255,4 @@ Deprecated APIs are marked with `@deprecated` JSDoc tags and logged warnings. AP
 
 ---
 
-**Quick Links**: [Architecture](../architecture/) | [Developer Guide](../developer/) | [Examples](../examples/) | [Testing](../testing/)
+**Quick Links**: [Architecture](../architecture/) | [Developer Guide](../developer/) | [Examples](../../examples/) | [Testing](../testing/)

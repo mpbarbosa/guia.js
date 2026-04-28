@@ -2,7 +2,7 @@
 
 **Purpose:** Documentation for workflow automation, CI/CD optimization, security strategies, and automated testing infrastructure.
 
-**Last Updated:** 2026-02-11
+**Last Updated:** 2026-04-27
 
 ---
 
@@ -53,6 +53,12 @@ Use these directories instead:
   - Jest cache optimization
   - Cache invalidation strategies
   - Performance improvements
+
+- **`CI_CD_EVOLUTION_ROADMAP.md`** - Planned CI/CD evolution path
+  - Current workflow pain points and consolidation themes
+  - Near-term and mid-term milestones
+  - Release/deployment boundary decisions
+  - Maintainer-focused simplification goals
 
 ### Security & Monitoring
 

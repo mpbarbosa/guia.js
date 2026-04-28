@@ -290,6 +290,31 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-04-25T14:06:06.495Z"
+    },
+    "src/utils/logger.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-28T23:48:53.980Z"
+    },
+    "src/utils/button-utils.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-28T23:48:53.980Z"
+    },
+    "src/utils/maps-integration.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-28T23:48:53.980Z"
+    },
+    "src/utils/progressive-disclosure.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-28T23:48:53.980Z"
+    },
+    "src/utils/version-display-manager.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-28T23:48:53.980Z"
     }
   }
 }

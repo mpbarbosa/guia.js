@@ -95,6 +95,46 @@ flexible than a pure observer or pure callback approach:
 
 ---
 
+## Three-surface address model
+
+A single geocoding result touches three distinct UI surfaces, each with its own semantics:
+
+| Surface | Class | Update trigger | Semantic |
+|---|---|---|---|
+| Highlight cards | `HTMLHighlightCardsDisplayer` | First `ADDRESS_FETCHED_EVENT` (raw), then `LogradouroChanged` / `BairroChanged` / `MunicipioChanged` | Freshest address for the current session |
+| Confirmation buffer panel | `HTMLConfirmationBufferDisplayer` | 1-second poll of `AddressCache.getConfirmationBufferState()` | Internal buffer diagnostics — not user-facing authority |
+| Speech | `AddressSpeechObserver` | First `ADDRESS_FETCHED_EVENT` (first-address path), then confirmed field-change events | Spoken changes gated on confirmation to avoid intersection jitter |
+
+### Why these surfaces can show different values simultaneously
+
+The highlight cards accept the first raw geocoder result immediately (fast hydration for the
+current displayer instance). After that first render, they ignore subsequent raw events and
+only update when a confirmed field-change event fires.
+
+The confirmation buffer panel shows what the **singleton** `AddressCache` has accumulated.
+Because `AddressCache` is a singleton that persists across Vue component lifecycle events,
+its "último estabilizado" value may reflect a prior session's confirmed logradouro while the
+newly created highlight-card displayer shows a fresh raw geocoder result.
+
+Speech is intentionally the most conservative surface: it waits for confirmation (the same
+`LogradouroChanged` path that drives post-hydration card updates) to prevent repeated,
+contradictory announcements at GPS intersections.
+
+This means the following state is **expected and correct**:
+
+```
+Highlight card:              Rua Herval        ← first hydration from fresh geocoder result
+Buffer "último estabilizado": Rua Silva Jardim ← singleton confirmed this from prior readings
+Buffer "candidato atual":     Rua Herval (1/3) ← still accumulating toward next confirmation
+Speech:                       (silent)          ← no LogradouroChanged fired yet
+```
+
+The buffer panel is a **diagnostic tool**; it does not imply that the visible card is wrong.
+See [LOGRADOURO_CONFIRMATION_MISMATCH_ANALYSIS.md](./LOGRADOURO_CONFIRMATION_MISMATCH_ANALYSIS.md)
+for the full analysis.
+
+---
+
 ## Example Observers
 
 - `ReverseGeocoder` — receives new positions via `update()`, calls `setCoordinates()` + `fetchAddress()`
@@ -118,6 +158,7 @@ flexible than a pure observer or pure callback approach:
 - [CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md) - Complete class architecture and relationships
 - [WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md) - PR #189 refactoring details
 - [observer-pattern.md](./observer-pattern.md) - Full observer pattern reference (subjects, observers, notification signatures)
+- [LOGRADOURO_CONFIRMATION_MISMATCH_ANALYSIS.md](./LOGRADOURO_CONFIRMATION_MISMATCH_ANALYSIS.md) - Investigation of raw `ADDRESS_FETCHED_EVENT` updates diverging from confirmation-buffered state
 
 ### Development Guidelines
 

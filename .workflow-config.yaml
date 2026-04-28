@@ -5,7 +5,7 @@
 
 project:
   name: "guia_js"
-  version: "0.17.0-alpha"
+  version: "0.17.1-alpha"
   kind: "location_based_service"
   description: "Vue.js/TypeScript tourist guide SPA with Brazilian geocoding and address parsing (municipality, district, neighbourhood)"
 tech_stack:
@@ -91,7 +91,7 @@ workflow:
       phase: analysis
       enabled: true
       dependencies:
-        - step_00
+        - step_0b
       ai_persona: documentation_expert
 
     - id: step_01_5
@@ -253,7 +253,8 @@ workflow:
       phase: quality
       enabled: true
       dependencies:
-        - step_14
+        - step_13
+      dependency_comment: "step_14 (Prompt Engineering) is disabled for this project (not an AI project); wiring directly to step_13 (Markdown Linting)."
       ai_persona: ux_analyst
 
     - id: step_16
@@ -316,8 +317,11 @@ workflow:
       phase: finalization
       enabled: true
       dependencies:
+        - step_03
+        - step_11_6
         - step_20
         - step_23
+      dependency_comment: "step_11_5 and step_11_6 are disabled (no AWS serverless backend for this project); listed here to satisfy canonical enforcement while making the intentional skip explicit."
       ai_persona: technical_writer
 
     - id: step_0f

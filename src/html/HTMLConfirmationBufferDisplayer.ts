@@ -9,7 +9,7 @@ const TIMER_ID = 'confirmation-buffer-card';
  * (logradouro, bairro, municipio) from AddressCache and renders their state inside
  * a Bootstrap card.  Refreshes every second via TimerManager.
  *
- * @since 0.17.0-alpha
+ * @since 0.17.1-alpha
  */
 class HTMLConfirmationBufferDisplayer {
 	private readonly _element: HTMLElement;
@@ -28,11 +28,16 @@ class HTMLConfirmationBufferDisplayer {
 	private _buildHtml(state: ConfirmationBufferState): string {
 		return `
 <table class="table table-sm table-borderless mb-0 confirmation-buffer-table">
+  <caption class="caption-top small text-muted px-0 pb-1">
+    Diagnóstico interno. "Último estabilizado" é o valor confirmado pelo buffer após
+    <em>N</em> leituras consecutivas idênticas — pode diferir do card visível durante
+    a primeira hidratação da sessão.
+  </caption>
   <thead>
     <tr>
       <th class="ps-0">Campo</th>
-      <th>Confirmado</th>
-      <th>Pendente</th>
+      <th>Último estabilizado</th>
+      <th>Candidato atual</th>
       <th class="text-center">Qtd / Limiar</th>
     </tr>
   </thead>

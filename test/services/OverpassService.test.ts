@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals';
 
 let findNearby: typeof import('../../src/services/OverpassService').findNearby;
+let resetNearbyCacheForTests: typeof import('../../src/services/OverpassService').__resetNearbyCacheForTests;
 let log: jest.Mock;
 let warn: jest.Mock;
 let calculateDistance: jest.Mock;
@@ -19,6 +20,7 @@ beforeAll(async () => {
   }));
   const svcMod = await import('../../src/services/OverpassService');
   findNearby = svcMod.findNearby;
+  resetNearbyCacheForTests = svcMod.__resetNearbyCacheForTests;
   const loggerMod = await import('../../src/utils/logger.js') as any;
   log = loggerMod.log;
   warn = loggerMod.warn;
@@ -28,6 +30,7 @@ beforeAll(async () => {
 
 beforeEach(() => {
   jest.resetAllMocks();
+  resetNearbyCacheForTests();
   global.fetch = jest.fn();
   mockFetch = global.fetch as jest.Mock;
   calculateDistance.mockReturnValue(123);
@@ -159,5 +162,38 @@ describe('OverpassService.findNearby', () => {
       await findNearby(lat, lon, 1000, cat);
       expect(log).toHaveBeenCalledWith(expect.stringContaining(cat));
     }
+  });
+
+  it('reuses cached nearby results for the same query', async () => {
+    mockOverpassResponse([
+      { id: 1, lat, lon, tags: { name: 'Cached' } },
+    ]);
+    (calculateDistance as jest.Mock).mockReturnValue(10);
+
+    const first = await findNearby(lat, lon, radius, category);
+    const second = await findNearby(lat, lon, radius, category);
+
+    expect(first).toEqual(second);
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('dedupes concurrent nearby lookups for the same query', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      json: async () => ({
+        elements: [{ id: 1, lat, lon, tags: { name: 'Concurrent' } }],
+      }),
+    });
+    (calculateDistance as jest.Mock).mockReturnValue(15);
+
+    const [first, second] = await Promise.all([
+      findNearby(lat, lon, radius, category),
+      findNearby(lat, lon, radius, category),
+    ]);
+
+    expect(first).toEqual(second);
+    expect(mockFetch).toHaveBeenCalledTimes(1);
   });
 });

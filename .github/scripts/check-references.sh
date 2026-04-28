@@ -101,7 +101,7 @@ extract_references() {
     
     # shellcheck disable=SC2094  # $file is read-only here; done < "$file" is safe
     while IFS= read -r line; do
-        ((line_num++))
+        ((line_num+=1))
         
         # Track code block state
         if echo "$line" | grep -q '^```'; then
@@ -126,11 +126,11 @@ extract_references() {
             while IFS= read -r ref; do
                 [ -z "$ref" ] && continue
                 
-                ((TOTAL_REFERENCES++))
+                ((TOTAL_REFERENCES+=1))
                 
                 # Check if should be excluded
                 if should_exclude "$line" "$ref"; then
-                    ((EXCLUDED_PATTERNS++))
+                    ((EXCLUDED_PATTERNS+=1))
                     EXCLUDED_REFS+=("$file:$line_num: $ref (excluded pattern)")
                     continue
                 fi
@@ -151,9 +151,9 @@ extract_references() {
                 
                 # Check if target exists
                 if [ -f "$target" ] || [ -d "$target" ]; then
-                    ((VALID_REFERENCES++))
+                    ((VALID_REFERENCES+=1))
                 else
-                    ((BROKEN_REFERENCES++))
+                    ((BROKEN_REFERENCES+=1))
                     BROKEN_REFS+=("$file:$line_num: $ref → $target (NOT FOUND)")
                 fi
             done <<< "$refs"
@@ -181,7 +181,7 @@ echo ""
 PROCESSED=0
 while IFS= read -r file; do
     [ ! -f "$file" ] && continue
-    ((PROCESSED++))
+    ((PROCESSED+=1))
     
     # Show progress every 10 files
     if [ $((PROCESSED % 10)) -eq 0 ]; then

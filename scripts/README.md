@@ -117,7 +117,7 @@
 **Prerequisites**:
 
 - `mpbarbosa_site` repository cloned at `../mpbarbosa_site`
-- Valid staging configuration and sync script at `mpbarbosa_site/shell_scripts/sync_to_staging.sh`
+- Valid staging configuration and sync script at `../mpbarbosa_site/shell_scripts/sync_to_staging.sh`
 - Production build completes without errors (`npm run build`)
 - Write permissions for deployment target
 
@@ -275,6 +275,20 @@ npm run cleanup:ai-workflow
 
 ---
 
+### 7. Docker test wrapper scripts
+
+These scripts are lightweight entrypoints for the Docker-based test flow. Full walkthroughs, troubleshooting, and container details live in [`docs/DOCKER_TESTING.md`](../docs/DOCKER_TESTING.md).
+
+| Path | Purpose | Usage | npm script | Prerequisites |
+|------|---------|-------|------------|---------------|
+| `scripts/run-tests-docker.sh` | Build `Dockerfile.test` and run the unit/integration Jest suite inside Docker | `bash scripts/run-tests-docker.sh -- --coverage` | `npm run test:docker` | Docker daemon available; `Dockerfile.test` present |
+| `scripts/run-e2e-tests-docker.sh` | Build `Dockerfile.test.e2e` and run the Puppeteer E2E suite inside Docker | `bash scripts/run-e2e-tests-docker.sh -- --verbose` | `npm run test:docker:e2e` | Docker daemon available; `Dockerfile.test.e2e` present |
+| `scripts/run-all-tests-docker.sh` | Run both Docker test wrappers sequentially and return a combined exit code | `bash scripts/run-all-tests-docker.sh` | `npm run test:docker:all` | Same prerequisites as the two wrapper scripts above |
+
+All three wrappers print a pass/fail summary and exit non-zero when their underlying test run fails.
+
+---
+
 ## Running Scripts
 
 ### Executable Permissions
@@ -321,6 +335,9 @@ Every script begins with `#!/bin/bash` as the first line. This means:
 ./scripts/build_and_deploy.sh --help      # Show build_and_deploy.sh usage
 ./scripts/cleanup-ai-workflow.sh          # Remove old .ai_workflow/ runs and caches
 ./scripts/cleanup-ai-workflow.sh --dry-run  # Preview what would be deleted
+bash scripts/run-tests-docker.sh -- --coverage      # Dockerized unit/integration tests
+bash scripts/run-e2e-tests-docker.sh -- --verbose   # Dockerized E2E tests
+bash scripts/run-all-tests-docker.sh                # Run both Docker test suites
 ```
 
 ### Via npm Scripts
@@ -703,12 +720,12 @@ Key `.github/scripts/` files and the workflows that call them:
 
 | Script | Workflow |
 |--------|---------|
-| `cdn-delivery.sh` | Manual / `npm run cdn:generate` |
-| `check-version-consistency.sh` | `version-consistency.yml` |
-| `check-references.sh` | `documentation-lint.yml` |
-| `update-badges.sh` | `test-badges.yml`, `documentation-lint.yml` |
-| `test-workflow-locally.sh` | Manual (`npm run ci:test-local`) |
-| `validate-jsdom-update.sh` | Manual (jsdom upgrade validation) |
+| `.github/scripts/cdn-delivery.sh` | Manual / `npm run cdn:generate` |
+| `.github/scripts/check-version-consistency.sh` | `version-consistency.yml` |
+| `.github/scripts/check-references.sh` | `documentation-lint.yml` |
+| `.github/scripts/update-badges.sh` | `test-badges.yml`, `documentation-lint.yml` |
+| `.github/scripts/test-workflow-locally.sh` | Manual (`npm run ci:test-local`) |
+| `.github/scripts/validate-jsdom-update.sh` | Manual (jsdom upgrade validation) |
 
 ### When to use scripts/ vs waiting for CI
 
@@ -716,17 +733,18 @@ Key `.github/scripts/` files and the workflows that call them:
 |-----------|-----|
 | You edited docs and want timestamps updated now | `./scripts/update-doc-dates.sh` |
 | You ran tests locally and want docs to reflect counts | `./scripts/update-test-counts.sh` |
-| You are about to deploy to staging | `./scripts/deploy-preflight.sh` then `build_and_deploy.sh` |
+| You are about to deploy to staging | `./scripts/deploy-preflight.sh` then `./scripts/build_and_deploy.sh` |
 | You pushed to `main` and want badges updated | CI handles it automatically (`test-badges.yml`) |
 | You opened a PR and want docs linted | CI handles it automatically (`documentation-lint.yml`) |
 | You want to simulate the full CI run locally | `./.github/scripts/test-workflow-locally.sh` |
 
-### No container or IaC scripts
+### No container orchestration or IaC scripts
 
-This project does not use Docker, Kubernetes, Terraform, Ansible, or any other
-container/orchestration tooling. Deployment is a file-sync operation handled by
-`build_and_deploy.sh` → `mpbarbosa_site/shell_scripts/sync_to_staging.sh`.
-There are no infrastructure-as-code scripts to document.
+This project does not use Kubernetes, Terraform, Ansible, or any other
+infrastructure-as-code tooling. Deployment is still a file-sync operation handled by
+`./scripts/build_and_deploy.sh` → `../mpbarbosa_site/shell_scripts/sync_to_staging.sh`.
+Docker is used only for the local test wrappers documented above and in
+[`docs/DOCKER_TESTING.md`](../docs/DOCKER_TESTING.md).
 
 ## Related Documentation
 

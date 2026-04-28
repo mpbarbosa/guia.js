@@ -7,7 +7,7 @@
  *   - IBGE SIDRA aggregate 6579 → most recent population estimate
  *
  * @module services/IBGECityStatsService
- * @since 0.17.0-alpha
+ * @since 0.17.1-alpha
  * @author Marcelo Pereira Barbosa
  */
 
@@ -15,6 +15,12 @@ import { log, warn } from '../utils/logger.js';
 import { env } from '../config/environment.js';
 
 const BASE = (env.ibgeApiUrl as string) || 'https://servicodados.ibge.gov.br';
+const CITY_STATS_CACHE_TTL_MS = 5 * 60 * 1000;
+
+interface CacheEntry<T> {
+  value: T;
+  expiresAt: number;
+}
 
 export interface CityStats {
   /** IBGE municipality code (7-digit). */
@@ -44,6 +50,30 @@ interface SidraResult {
       serie?: Record<string, string>;
     }>;
   }>;
+}
+
+const cityStatsCache = new Map<string, CacheEntry<CityStats | null>>();
+const inflightCityStatsRequests = new Map<string, Promise<CityStats | null>>();
+
+function buildCityStatsCacheKey(municipio: string, siglaUf: string): string {
+  return `${municipio.trim().toLowerCase()}::${siglaUf.trim().toUpperCase()}`;
+}
+
+function getCachedCityStats(cacheKey: string): CityStats | null | undefined {
+  const cached = cityStatsCache.get(cacheKey);
+  if (!cached) return undefined;
+  if (cached.expiresAt <= Date.now()) {
+    cityStatsCache.delete(cacheKey);
+    return undefined;
+  }
+  return cached.value;
+}
+
+function setCachedCityStats(cacheKey: string, value: CityStats | null): void {
+  cityStatsCache.set(cacheKey, {
+    value,
+    expiresAt: Date.now() + CITY_STATS_CACHE_TTL_MS,
+  });
 }
 
 /**
@@ -123,37 +153,64 @@ async function fetchPopulation(ibgeCode: string): Promise<{ population: number; 
  * @returns Populated CityStats object, or null if the municipality could not be found.
  */
 export async function fetchStats(municipio: string, siglaUf: string): Promise<CityStats | null> {
+  const cacheKey = buildCityStatsCacheKey(municipio, siglaUf);
+  const cachedStats = getCachedCityStats(cacheKey);
+  if (cachedStats !== undefined) {
+    log(`(IBGECityStatsService) Reusing cached stats for ${municipio} / ${siglaUf}`);
+    return cachedStats;
+  }
+
+  const inflightRequest = inflightCityStatsRequests.get(cacheKey);
+  if (inflightRequest) {
+    log(`(IBGECityStatsService) Awaiting in-flight stats request for ${municipio} / ${siglaUf}`);
+    return inflightRequest;
+  }
+
   log(`(IBGECityStatsService) Fetching stats for ${municipio} / ${siglaUf}`);
 
-  try {
-  const localidade = await findMunicipioByName(municipio, siglaUf);
-  if (!localidade) {
-    warn(`(IBGECityStatsService) Municipality not found: "${municipio}"`);
-    return null;
-  }
+  const requestPromise = (async (): Promise<CityStats | null> => {
+    try {
+      const localidade = await findMunicipioByName(municipio, siglaUf);
+      if (!localidade) {
+        warn(`(IBGECityStatsService) Municipality not found: "${municipio}"`);
+        setCachedCityStats(cacheKey, null);
+        return null;
+      }
 
-  const ibgeCode = String(localidade.id);
+      const ibgeCode = String(localidade.id);
 
-  const [popData, area] = await Promise.all([
-    fetchPopulation(ibgeCode),
-    fetchArea(ibgeCode),
-  ]);
+      const [popData, area] = await Promise.all([
+        fetchPopulation(ibgeCode),
+        fetchArea(ibgeCode),
+      ]);
 
-  const stats: CityStats = {
-    ibgeCode,
-    name: localidade.nome,
-    uf: siglaUf.toUpperCase(),
-    areaKm2: area,
-    population: popData?.population ?? null,
-    populationYear: popData?.year ?? null,
-  };
+      const stats: CityStats = {
+        ibgeCode,
+        name: localidade.nome,
+        uf: siglaUf.toUpperCase(),
+        areaKm2: area,
+        population: popData?.population ?? null,
+        populationYear: popData?.year ?? null,
+      };
 
-  log(`(IBGECityStatsService) Stats for ${stats.name}/${stats.uf}: pop=${stats.population}, area=${stats.areaKm2}km²`);
-  return stats;
-  } catch (err) {
-    warn(`(IBGECityStatsService) Failed to fetch stats for "${municipio}": ${(err as Error).message}`);
-    return null;
-  }
+      setCachedCityStats(cacheKey, stats);
+      log(`(IBGECityStatsService) Stats for ${stats.name}/${stats.uf}: pop=${stats.population}, area=${stats.areaKm2}km²`);
+      return stats;
+    } catch (err) {
+      warn(`(IBGECityStatsService) Failed to fetch stats for "${municipio}": ${(err as Error).message}`);
+      return null;
+    } finally {
+      inflightCityStatsRequests.delete(cacheKey);
+    }
+  })();
+
+  inflightCityStatsRequests.set(cacheKey, requestPromise);
+  return requestPromise;
+}
+
+export function __resetCityStatsCacheForTests(): void {
+  cityStatsCache.clear();
+  inflightCityStatsRequests.clear();
 }
 
 export default { fetchStats };

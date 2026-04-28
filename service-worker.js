@@ -4,7 +4,7 @@
  * @version 0.12.12-alpha
  */
 
-const CACHE_NAME = 'guia-turistico-v0.17.0-alpha-20260426-3f116c2';
+const CACHE_NAME = 'guia-turistico-v0.17.1-alpha-20260426-3f116c2';
 
 /** Shell assets precached on install — routes that must work offline. */
 const STATIC_ASSETS = [
@@ -15,6 +15,9 @@ const STATIC_ASSETS = [
   './icon-192.png',
   './icon-512.png',
 ];
+const STATIC_ASSET_PATHS = new Set(
+  STATIC_ASSETS.map((asset) => new URL(asset, self.location.origin).pathname)
+);
 
 /**
  * External API origins whose responses should be cached for offline use.
@@ -73,6 +76,11 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
+  const isSameOrigin = url.origin === self.location.origin;
+  const isNavigationRequest = request.mode === 'navigate';
+  const isPrecachedShellAsset = isSameOrigin && STATIC_ASSET_PATHS.has(url.pathname);
+  const isStaticSubresource =
+    isSameOrigin && ['script', 'style', 'image', 'font'].includes(request.destination);
   
   // Skip non-GET requests
   if (request.method !== 'GET') {
@@ -91,9 +99,17 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // All other app assets use network-first strategy so the dev server (Vite)
-  // always processes requests — critical for html-proxy virtual modules.
-  // Falls back to cache (including offline.html) when truly offline.
+  // Serve navigations and same-origin static assets from cache first once they
+  // have been populated. This avoids paying network latency on repeat app-shell
+  // loads while the versioned cache key still guarantees fresh assets after a
+  // deploy.
+  if (isNavigationRequest || isPrecachedShellAsset || isStaticSubresource) {
+    event.respondWith(cacheFirstStrategy(request));
+    return;
+  }
+
+  // Other same-origin requests stay network-first so dynamic responses still
+  // prefer fresh content and only fall back to cache when offline.
   event.respondWith(networkFirstStrategy(request));
 });
 

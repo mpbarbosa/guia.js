@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals';
 
 let fetchStats: typeof import('../../src/services/IBGECityStatsService').fetchStats;
+let resetCityStatsCacheForTests: typeof import('../../src/services/IBGECityStatsService').__resetCityStatsCacheForTests;
 let log: jest.Mock;
 let warn: jest.Mock;
 
@@ -20,6 +21,7 @@ beforeAll(async () => {
   }));
   const svcMod = await import('../../src/services/IBGECityStatsService');
   fetchStats = svcMod.fetchStats;
+  resetCityStatsCacheForTests = svcMod.__resetCityStatsCacheForTests;
   const loggerMod = await import('../../src/utils/logger.js') as any;
   log = loggerMod.log;
   warn = loggerMod.warn;
@@ -29,6 +31,7 @@ let mockFetch: jest.Mock;
 
 beforeEach(() => {
   jest.resetAllMocks();
+  resetCityStatsCacheForTests();
   global.fetch = jest.fn();
   mockFetch = global.fetch as jest.Mock;
 });
@@ -384,5 +387,83 @@ describe('IBGECityStatsService.fetchStats', () => {
     mockFetch.mockRejectedValue(new Error('Network error'));
     const stats = await fetchStats('Cidade P', 'SP');
     expect(stats).toBeNull();
+  });
+
+  it('reuses cached results for the same municipality lookup', async () => {
+    mockFindMunicipioByNameResponse([
+      {
+        id: ibgeCode,
+        nome: 'São Paulo',
+        microrregiao: { mesorregiao: { UF: { sigla: 'SP' } } },
+      },
+    ]);
+    mockFetchPopulationResponse([
+      {
+        resultados: [
+          {
+            series: [
+              {
+                serie: { '2022': '12345678' },
+              },
+            ],
+          },
+        ],
+      },
+    ]);
+    mockFetchAreaResponse({
+      features: [{ properties: { area_km2: 1521.11 } }],
+    });
+
+    const first = await fetchStats(municipio, siglaUf);
+    const second = await fetchStats(municipio, siglaUf);
+
+    expect(first).toEqual(second);
+    expect(mockFetch).toHaveBeenCalledTimes(3);
+  });
+
+  it('dedupes concurrent requests for the same municipality lookup', async () => {
+    const deferred = Promise.resolve({
+      ok: true,
+      json: async () => [
+        {
+          id: ibgeCode,
+          nome: 'São Paulo',
+          microrregiao: { mesorregiao: { UF: { sigla: 'SP' } } },
+        },
+      ],
+    });
+
+    mockFetch
+      .mockImplementationOnce(() => deferred)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => [
+          {
+            resultados: [
+              {
+                series: [
+                  {
+                    serie: { '2022': '12345678' },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          features: [{ properties: { area_km2: 1521.11 } }],
+        }),
+      });
+
+    const [first, second] = await Promise.all([
+      fetchStats(municipio, siglaUf),
+      fetchStats(municipio, siglaUf),
+    ]);
+
+    expect(first).toEqual(second);
+    expect(mockFetch).toHaveBeenCalledTimes(3);
   });
 });

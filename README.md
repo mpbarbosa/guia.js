@@ -4,7 +4,7 @@
 
 Last Updated: 2026-04-25
 Status: Active
-version: 0.17.0-alpha
+version: 0.17.1-alpha
 
 ---
 
@@ -275,6 +275,9 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 | `scripts/deploy-preflight.sh` | Production deployment pre-flight checklist (build + file checks + live smoke test) | *(none)* | `dist/`, `libs/sidra/tab6579_municipios.json`, `vite.config.js` |
 | `scripts/build_and_deploy.sh` | Build production bundle and push to staging via sibling repo | `-h`, `--help` | `dist/`, `../mpbarbosa_site/shell_scripts/sync_to_staging.sh` |
 | `scripts/cleanup-ai-workflow.sh` | Remove old `.ai_workflow/` run artifact directories and local build/test caches | `--days N`, `--dry-run` | `.ai_workflow/`, `.jest-cache/`, `coverage/` |
+| `scripts/run-tests-docker.sh` | Build `Dockerfile.test` and run the unit/integration Jest suite inside Docker | `-- <jest args>` | `Dockerfile.test`, `npm run test:unit` |
+| `scripts/run-e2e-tests-docker.sh` | Build `Dockerfile.test.e2e` and run the Puppeteer E2E suite inside Docker | `-- <jest args>` | `Dockerfile.test.e2e`, `npm run test:e2e` |
+| `scripts/run-all-tests-docker.sh` | Run the unit/integration and E2E Docker wrappers sequentially and combine their exit status | *(none)* | `scripts/run-tests-docker.sh`, `scripts/run-e2e-tests-docker.sh` |
 
 ```bash
 # Replace console.log/warn/error with centralized logger across src/
@@ -300,9 +303,15 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 
 # Remove workflow artifact directories older than 14 days
 ./scripts/cleanup-ai-workflow.sh --days 14
+
+# Run the unit/integration suite inside Docker and forward Jest args
+bash scripts/run-tests-docker.sh -- --coverage
+
+# Run the full Docker-based test flow (unit/integration + E2E)
+bash scripts/run-all-tests-docker.sh
 ```
 
-For full details on each script — including executable permissions, shebangs, environment variables, exit codes, workflow relationships, and CI/CD integration — see [`scripts/README.md`](./scripts/README.md).
+For full details on each script — including executable permissions, shebangs, environment variables, exit codes, workflow relationships, and CI/CD integration — see [`scripts/README.md`](./scripts/README.md) and [`docs/DOCKER_TESTING.md`](./docs/DOCKER_TESTING.md) for the Docker test wrappers.
 
 > **Integration tests**: `tests/integration/run_visual_hierarchy_tests.sh` starts a local HTTP server and runs Selenium-based visual hierarchy tests. See [`scripts/README.md`](./scripts/README.md) for full documentation.
 > **CI/CD note**: These scripts are **local developer tools**. GitHub Actions workflows in `.github/workflows/` automate equivalent operations (badge updates, test-count sync, doc linting) on push/PR. For CI helper scripts used inside workflows, see [`.github/scripts/`](./.github/scripts/).
@@ -316,21 +325,21 @@ These scripts are invoked by GitHub Actions workflows and by the `npm run ci:tes
 
 | Script | Purpose |
 |---|---|
-| `bump-sw-cache.sh` | Updates `CACHE_NAME` in `service-worker.js` with current version, date, and git SHA |
-| `cdn-delivery.sh` | Generates jsDelivr CDN URLs for the current version; output saved to `cdn-urls.txt` |
-| `change-type-detector.sh` | Detects change type from Conventional Commit messages (used by workflow routing) |
-| `check-references.sh` | Validates internal file references in docs; filters known false-positive patterns |
-| `check-terminology.sh` | Validates documentation against the project terminology guide |
-| `check-version-consistency.sh` | Verifies version numbers are consistent across all files; `--fix` flag auto-corrects |
-| `test-change-type-detection.sh` | Test suite for the change-type detector (all Conventional Commit scenarios) |
-| `test-conditional-execution.sh` | Test suite for the workflow condition evaluator |
-| `test-workflow-locally.sh` | Simulates the GitHub Actions workflow locally; run before pushing to catch CI failures |
-| `update-badges.sh` | Extracts test/coverage results from `npm test` output and updates README badges |
-| `update-doc-metadata.sh` | Adds or updates "Last Updated" metadata in documentation files |
-| `update-version-references.sh` | Propagates the version from `package.json` to all version reference points |
-| `validate-cross-references.sh` | Validates internal hyperlinks in documentation files |
-| `validate-jsdom-update.sh` | Validates jsdom upgrade compatibility (run after bumping `jsdom` devDependency) |
-| `workflow-condition-evaluator.sh` | Evaluates conditional execution rules from `.workflow-config.yaml` |
+| `.github/scripts/bump-sw-cache.sh` | Updates `CACHE_NAME` in `service-worker.js` with current version, date, and git SHA |
+| `.github/scripts/cdn-delivery.sh` | Generates jsDelivr CDN URLs for the current version; output saved to `cdn-urls.txt` |
+| `.github/scripts/change-type-detector.sh` | Detects change type from Conventional Commit messages (used by workflow routing) |
+| `.github/scripts/check-references.sh` | Validates internal file references in docs; filters known false-positive patterns |
+| `.github/scripts/check-terminology.sh` | Validates documentation against the project terminology guide |
+| `.github/scripts/check-version-consistency.sh` | Verifies version numbers are consistent across all files; `--fix` flag auto-corrects |
+| `.github/scripts/test-change-type-detection.sh` | Test suite for the change-type detector (all Conventional Commit scenarios) |
+| `.github/scripts/test-conditional-execution.sh` | Test suite for the workflow condition evaluator |
+| `.github/scripts/test-workflow-locally.sh` | Simulates the GitHub Actions workflow locally; run before pushing to catch CI failures |
+| `.github/scripts/update-badges.sh` | Extracts test/coverage results from `npm test` output and updates README badges |
+| `.github/scripts/update-doc-metadata.sh` | Adds or updates "Last Updated" metadata in documentation files |
+| `.github/scripts/update-version-references.sh` | Propagates the version from `package.json` to all version reference points |
+| `.github/scripts/validate-cross-references.sh` | Validates internal hyperlinks in documentation files |
+| `.github/scripts/validate-jsdom-update.sh` | Validates jsdom upgrade compatibility (run after bumping `jsdom` devDependency) |
+| `.github/scripts/workflow-condition-evaluator.sh` | Evaluates conditional execution rules from `.workflow-config.yaml` |
 
 ## 📁 Project Structure
 
@@ -1792,6 +1801,6 @@ ISC License - See repository for details
 
 ---
 
-**Version**: 0.17.0-alpha
+**Version**: 0.17.1-alpha
 **Status**: Active
 **Last Updated**: 2026-04-25

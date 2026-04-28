@@ -111,6 +111,12 @@ const _isLevelEnabled = (level: number) => {
 	return logConfig.enabled && logConfig.level >= level;
 };
 
+const _withPrefix = (message: string): [string] | [string, string] => {
+	return logConfig.timestamp
+		? [`[${formatTimestamp()}]`, message]
+		: [message];
+};
+
 /**
  * Formats current timestamp for log messages.
  * 
@@ -141,7 +147,7 @@ export const formatTimestamp = () => new Date().toISOString();
  */
 export const log = (message: string, ...params: unknown[]): void => {
 	if (_isLevelEnabled(LOG_LEVELS.log)) {
-		console.log(`[${formatTimestamp()}]`, message, ...params);
+		console.log(..._withPrefix(message), ...params);
 	}
 };
 
@@ -163,7 +169,7 @@ export const log = (message: string, ...params: unknown[]): void => {
  */
 export const warn = (message: string, ...params: unknown[]): void => {
 	if (_isLevelEnabled(LOG_LEVELS.warn)) {
-		console.warn(`[${formatTimestamp()}]`, message, ...params);
+		console.warn(..._withPrefix(message), ...params);
 	}
 };
 
@@ -185,7 +191,7 @@ export const warn = (message: string, ...params: unknown[]): void => {
  */
 export const error = (message: string, ...params: unknown[]): void => {
 	if (_isLevelEnabled(LOG_LEVELS.error)) {
-		console.error(`[${formatTimestamp()}]`, message, ...params);
+		console.error(..._withPrefix(message), ...params);
 	}
 };
 
@@ -207,7 +213,7 @@ export const error = (message: string, ...params: unknown[]): void => {
  */
 export const debug = (message: string, ...params: unknown[]): void => {
 	if (_isLevelEnabled(LOG_LEVELS.debug)) {
-		console.debug(`[${formatTimestamp()}] [DEBUG]`, message, ...params);
+		console.debug(..._withPrefix(`[DEBUG] ${message}`), ...params);
 	}
 };
 

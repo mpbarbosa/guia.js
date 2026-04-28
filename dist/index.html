@@ -1,7 +1,7 @@
 <html lang="pt-BR"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="0.17.0-alpha" data-source="src/config/version.js">
+    <meta name="version" content="0.17.1-alpha" data-source="src/config/version.js">
     
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com https://demotiles.maplibre.org; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'">
@@ -462,15 +462,15 @@
         margin-bottom: 2rem;
       }
     </style>
-    <script type="module" crossorigin src="./assets/main-CisJEZo9.js"></script>
+    <script type="module" crossorigin src="./assets/main-pHGEnbCy.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/vendor-CDLgd9d9.js">
     <link rel="modulepreload" crossorigin href="./assets/ui-B-f8qHlr.js">
-    <link rel="modulepreload" crossorigin href="./assets/data-D9Uu2KGY.js">
-    <link rel="modulepreload" crossorigin href="./assets/speech-CH3y9SWl.js">
-    <link rel="modulepreload" crossorigin href="./assets/services-W-A79EbK.js">
+    <link rel="modulepreload" crossorigin href="./assets/data-Brpextzr.js">
+    <link rel="modulepreload" crossorigin href="./assets/speech-BU7_aJPA.js">
+    <link rel="modulepreload" crossorigin href="./assets/services-B_u6_-XS.js">
     <link rel="modulepreload" crossorigin href="./assets/map-WLs8NypD.js">
-    <link rel="modulepreload" crossorigin href="./assets/html-fgBylE1D.js">
-    <link rel="modulepreload" crossorigin href="./assets/coordination-DzinhkmF.js">
+    <link rel="modulepreload" crossorigin href="./assets/html-CDjzpK_Z.js">
+    <link rel="modulepreload" crossorigin href="./assets/coordination-aBRIJpf5.js">
     <link rel="stylesheet" crossorigin href="./assets/ui-Cw7tTYSV.css">
     <link rel="stylesheet" crossorigin href="./assets/map-DwUhsmFz.css">
     <link rel="stylesheet" crossorigin href="./assets/main-HUNfOvz7.css">
@@ -596,10 +596,11 @@
             </li>
           </ul>
           <!-- Confirmation-buffer debug card -->
-          <div class="card mb-2" aria-label="Estado dos buffers de confirmação de endereço">
+          <div class="card mb-2" aria-label="Estado dos buffers de confirmação de endereço (diagnóstico)">
             <div class="card-header py-1 small fw-semibold d-flex align-items-center gap-2">
               <i class="bi bi-activity" aria-hidden="true"></i>
               Buffers de Confirmação
+              <span class="badge text-bg-secondary ms-auto fw-normal">diagnóstico</span>
             </div>
             <div class="card-body p-2" id="confirmation-buffer-card">
               <p class="text-muted small mb-0">Aguardando dados…</p>
@@ -716,6 +717,7 @@
           </section>
 
           <section class="section" aria-labelledby="location-info-heading">
+            <h2 id="location-info-heading" class="sr-only">Dados IBGE</h2>
             <p><strong>Dados IBGE:</strong> <span id="dadosSidra">Aguardando localização...</span></p>
           </section>
           
@@ -738,7 +740,7 @@
               <span class="button-text">Lugares Próximos</span>
             </button>
             <ul id="nearby-places-panel" class="nearby-places-panel" aria-label="Lugares próximos" hidden>
-              <span class="nearby-panel-heading" aria-hidden="true"></span>
+              <li class="nearby-panel-heading" aria-hidden="true"></li>
               <li id="nearby-places-list"></li>
             </ul>
           </div>
@@ -886,52 +888,7 @@
     <!-- App Entry Point -->
   
 
-<div class="toast-container" role="region" aria-label="Notificações" aria-live="polite"></div><div id="give-freely-root-kkkbiiikppgjdiebcabomlbidfodipjg" class="give-freely-root" data-extension-id="kkkbiiikppgjdiebcabomlbidfodipjg" data-extension-name="Substital: Add subtitles to videos and movies" style="display: block;"><template shadowrootmode="open"><style>
-  :host {
-    all: initial;
-  }
-
-  .gf-scroll-remove::-webkit-scrollbar {
-    border-radius-bottom-right: 15px;
-  }
-
-  button {
-    cursor: pointer;
-    transition: transform 0.1s ease;
-  }
-
-  button:active {
-    transform: scale(0.98);
-  }
-
-  .give-freely-close-button:hover {
-    opacity: 0.7;
-  }
-
-  input[type="radio"] {
-    margin-right: 8px;
-  }
-
-  hr {
-    border: none;
-    border-top: 1px solid #e5e5e5;
-    margin: 1em 0;
-  }
-
-  @media (max-width: 600px), (max-height: 480px) {
-    #give-freely-checkout-popup {
-      display: none !important;
-    }
-  }
-
-  dialog::backdrop  {
-    background-color: rgba(180, 180, 180, 0.8);
-  }
-
-  dialog.backdrop-hidden::backdrop  {
-    background-color: transparent;
-  }
-</style><div><div class="gf-app"></div></div></template></div>
+<div class="toast-container" role="region" aria-label="Notificações" aria-live="polite"></div>
 
 <!-- Button Utilities -->
 

@@ -1,5 +1,5 @@
 import { ADDRESS_FETCHED_EVENT } from '../config/defaults.js';
-import { log, warn } from '../utils/logger.js';
+import { debug, log, warn } from '../utils/logger.js';
 import type BrazilianStandardAddress from '../data/BrazilianStandardAddress.js';
 /**
  * HTMLHighlightCardsDisplayer - Updates highlight cards for municipio, bairro, and logradouro
@@ -66,7 +66,8 @@ class HTMLHighlightCardsDisplayer {
         // Initialise mutable state before freezing
         _previousLogradouro.set(this, null);
         _hasRenderedAddress.set(this, false);
-        
+
+        debug('(HTMLHighlightCardsDisplayer) created — hasRenderedAddress reset to false');
         Object.freeze(this);
     }
     
@@ -108,7 +109,7 @@ class HTMLHighlightCardsDisplayer {
             }
         });
         
-        log(`(HTMLHighlightCardsDisplayer) Loading state: ${isLoading ? 'started' : 'completed'}`);
+        debug(`(HTMLHighlightCardsDisplayer) Loading state: ${isLoading ? 'started' : 'completed'}`);
     }
     
     /**
@@ -172,7 +173,7 @@ class HTMLHighlightCardsDisplayer {
             changeDetails
         );
 
-        log('(HTMLHighlightCardsDisplayer) update called with:', {
+        debug('(HTMLHighlightCardsDisplayer) update called with:', {
             hasAddressData: !!addressData,
             hasEnderecoPadronizado: !!resolvedAddress,
             municipio: resolvedAddress?.municipio,
@@ -202,7 +203,7 @@ class HTMLHighlightCardsDisplayer {
         if (this._municipioElement) {
             const municipio = resolvedAddress.municipioCompleto() || '—';
             this._municipioElement.textContent = municipio;
-            log('(HTMLHighlightCardsDisplayer) Updated municipio-value to:', municipio);
+            debug('(HTMLHighlightCardsDisplayer) Updated municipio-value to:', municipio);
         } else {
             warn('(HTMLHighlightCardsDisplayer) municipioElement not found');
         }
@@ -211,7 +212,7 @@ class HTMLHighlightCardsDisplayer {
         if (this._bairroElement) {
             const bairro = resolvedAddress.bairro || '—';
             this._bairroElement.textContent = bairro;
-            log('(HTMLHighlightCardsDisplayer) Updated bairro-value to:', bairro);
+            debug('(HTMLHighlightCardsDisplayer) Updated bairro-value to:', bairro);
         } else {
             warn('(HTMLHighlightCardsDisplayer) bairroElement not found');
         }
@@ -225,7 +226,7 @@ class HTMLHighlightCardsDisplayer {
             }
             _previousLogradouro.set(this, logradouro);
             this._logradouroElement.textContent = logradouro;
-            log('(HTMLHighlightCardsDisplayer) Updated logradouro-value to:', logradouro);
+            debug('(HTMLHighlightCardsDisplayer) Updated logradouro-value to:', logradouro);
         } else {
             warn('(HTMLHighlightCardsDisplayer) logradouroElement not found');
         }

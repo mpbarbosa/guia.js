@@ -26,10 +26,7 @@ Supporting workflow surfaces:
 
 ## Design Principles
 
-- Prefer pure functions for business logic where practical.
-- Keep I/O (filesystem, process, environment) at the boundaries.
-- Reuse helpers and respect module boundaries.
-- Keep documentation and public surfaces aligned with actual behavior.
+Follow established design principles and module boundaries. Prefer modularity and clarity. Avoid introducing project-specific conventions not confirmed by authoritative docs.
 
 ---
 
@@ -38,14 +35,12 @@ Supporting workflow surfaces:
 - Sync user-facing changes with `README.md` and reference docs.
 - Update `docs/ARCHITECTURE.md` for architecture or layout changes.
 - Align package exports and entry points with `package.json` and API docs.
-- For details, link to authoritative docs rather than duplicating content.
-
-**Authoritative references:**
-- `README.md`
-- `docs/ARCHITECTURE.md`
-- `docs/guides/MIGRATION_GUIDE.md`
-- `CHANGELOG.md`
-- `CONTRIBUTING.md`
+- For details, refer to authoritative docs:
+  - `README.md`
+  - `docs/ARCHITECTURE.md`
+  - `docs/guides/MIGRATION_GUIDE.md`
+  - `CHANGELOG.md`
+  - `CONTRIBUTING.md`
 
 ---
 
@@ -56,8 +51,6 @@ For substantive code changes, always validate with:
 - `npm run lint`
 - `npm test`
 - `npm run build`
-
-Use narrower scripts from `package.json` only for intentionally scoped tasks.
 
 ---
 

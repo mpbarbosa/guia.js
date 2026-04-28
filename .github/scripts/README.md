@@ -3,13 +3,13 @@
 **Purpose**: Automation scripts for CI/CD workflows, git hooks, and documentation maintenance
 
 **Location**: `.github/scripts/`
-**Count**: 17 executable files (13 shell, 3 Python, 1 JavaScript)
+**Scope**: Primary automation helpers used by GitHub Actions, local validation commands, and documentation maintenance
 
 ---
 
 ## Script Inventory
 
-### Documentation & Consistency (5 scripts)
+### Documentation & Consistency (7 scripts)
 
 #### 1. check-version-consistency.sh (243 lines)
 
@@ -143,9 +143,48 @@ Used in documentation validation workflows to ensure all internal links remain v
 
 ---
 
+#### 6. bump-sw-cache.sh
+
+**Purpose**: Updates `CACHE_NAME` in `service-worker.js` with the current app version, date, and git SHA
+**Usage**: `./.github/scripts/bump-sw-cache.sh`
+**Documentation**: README.md, `.github/workflows/bump-sw-cache.yml`
+
+**What it does**:
+
+- Reads the version from `package.json`
+- Builds a new cache name with version + UTC date + git short SHA
+- Rewrites `service-worker.js` in place
+- Exits non-zero if run outside the repository root or if `service-worker.js` is missing
+
+**Integration**:
+Executed by the `bump-sw-cache.yml` workflow after pushes to `main`.
+
+---
+
+#### 7. update-version-references.sh
+
+**Purpose**: Propagates the current `package.json` version to documentation and source files that still carry older version strings
+**Usage**: `./.github/scripts/update-version-references.sh [--dry-run]`
+**npm script**: `npm run update:version-refs`
+**Documentation**: README.md, `docs/reports/implementation/VERSION_REFERENCES_UPDATE_2026-02-13.md`
+
+**What it does**:
+
+- Reads the canonical version from `package.json`
+- Scans `docs/`, `src/`, `__tests__/`, `examples/`, `.github/`, `scripts/`, and root markdown files
+- Replaces tracked legacy version strings with the current version
+- Prints a scan/update summary and supports dry-run previews
+
+**Exit codes**:
+
+- `0`: Scan completed successfully
+- `1`: Failed to read `package.json` version or a replacement command failed under `set -e`
+
+---
+
 ### CDN & Distribution (1 script)
 
-#### 6. cdn-delivery.sh (229 lines)
+#### 8. cdn-delivery.sh (229 lines)
 
 **Purpose**: Generates jsDelivr CDN URLs for the current version
 **Usage**: `./.github/scripts/cdn-delivery.sh`
@@ -169,7 +208,7 @@ Used in documentation validation workflows to ensure all internal links remain v
 
 ### Testing & CI/CD (5 scripts)
 
-#### 7. test-workflow-locally.sh (318 lines)
+#### 9. test-workflow-locally.sh (318 lines)
 
 **Purpose**: Simulates GitHub Actions workflow locally before pushing
 **Usage**: `./.github/scripts/test-workflow-locally.sh`
@@ -191,7 +230,7 @@ Used in documentation validation workflows to ensure all internal links remain v
 
 ---
 
-#### 8. validate-jsdom-update.sh (120+ lines)
+#### 10. validate-jsdom-update.sh (120+ lines)
 
 **Purpose**: Validates jsdom dependency updates for DOM API compatibility
 **Usage**: `./.github/scripts/validate-jsdom-update.sh [version]`
@@ -275,7 +314,7 @@ npm install    # Reinstall original dependencies
 
 ---
 
-#### 9. change-type-detector.sh (308 lines)
+#### 11. change-type-detector.sh (308 lines)
 
 **Purpose**: Detects change type from Conventional Commits messages
 **Usage**: `./.github/scripts/change-type-detector.sh [base_ref]`
@@ -355,7 +394,7 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 
 ---
 
-#### 10. test-change-type-detection.sh (237 lines)
+#### 12. test-change-type-detection.sh (237 lines)
 
 **Purpose**: Test suite for change-type-detector.sh
 **Usage**: `./.github/scripts/test-change-type-detection.sh [OPTIONS]`
@@ -402,7 +441,7 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 
 ---
 
-#### 11. test-conditional-execution.sh (203 lines)
+#### 13. test-conditional-execution.sh (203 lines)
 
 **Purpose**: Test suite for workflow-condition-evaluator.sh
 **Usage**: `./.github/scripts/test-conditional-execution.sh [OPTIONS]`
@@ -452,7 +491,7 @@ Used in `.github/workflows/modified-files.yml` to determine which jobs to run:
 
 ---
 
-#### 12. workflow-condition-evaluator.sh (225 lines)
+#### 14. workflow-condition-evaluator.sh (225 lines)
 
 **Purpose**: Evaluates conditional workflow execution rules from .workflow-config.yaml
 **Usage**: `./.github/scripts/workflow-condition-evaluator.sh <step_name> [base_ref]`
@@ -557,7 +596,7 @@ Used in `.github/workflows/modified-files.yml`:
 
 ### Badge Management (1 script)
 
-#### 13. update-badges.sh
+#### 15. update-badges.sh
 
 **Purpose**: Updates README badges (test counts, coverage, etc.)
 **Usage**: `./.github/scripts/update-badges.sh`
@@ -593,7 +632,7 @@ Some validation checks have both Python and shell implementations. Understanding
 
 ---
 
-#### 14. check-references.py
+#### 16. check-references.py
 
 **Purpose**: Enhanced reference checker with false positive filtering
 **Usage**: `python3 .github/scripts/check-references.py`
@@ -643,7 +682,7 @@ EXCLUDE_REGEX_PATTERNS = [
 
 ---
 
-#### 15. check-terminology.py
+#### 17. check-terminology.py
 
 **Purpose**: Terminology consistency validator with context awareness
 **Usage**: `python3 .github/scripts/check-terminology.py`
@@ -702,7 +741,7 @@ EXCLUDE_REGEX_PATTERNS = [
 
 ---
 
-#### 16. check-links.py
+#### 18. check-links.py
 
 **Purpose**: External link checker with timeout handling and status validation
 **Usage**: `python3 .github/scripts/check-links.py`
@@ -775,7 +814,7 @@ python3 .github/scripts/check-links.py --verbose
 
 ### JavaScript Utilities (1 script)
 
-#### 17. generate_api_docs.js
+#### 19. generate_api_docs.js
 
 **Purpose**: Generates API documentation from JSDoc comments
 **Usage**: `node .github/scripts/generate_api_docs.js`

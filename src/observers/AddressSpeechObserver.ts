@@ -29,6 +29,7 @@ export class AddressSpeechObserver {
 
     // NOTE: We do not freeze this instance because _firstAddressAnnounced needs
     // to be mutable to track state across update() calls
+    log('(AddressSpeechObserver) created — firstAddressAnnounced reset to false');
   }
 
   update(
@@ -55,14 +56,17 @@ export class AddressSpeechObserver {
 
     if (posEvent === ADDRESS_FETCHED_EVENT && !this._firstAddressAnnounced) {
       if (typeof console !== "undefined" && typeof console.log === "function") {
-        log("+++ (305) (AddressSpeechObserver) First address - announcing");
+        log("+++ (305) (AddressSpeechObserver) First address - attempting announcement");
       }
       textToBeSpoken = this.textBuilder.buildTextToSpeech(
         enderecoPadronizadoOrEvent,
       );
       priority = SPEECH_PRIORITY.FIRST_ADDRESS;
-      this._firstAddressAnnounced = true;
+      // Only consume the first-address slot when there is actual text to speak.
+      // If buildTextToSpeech returns empty (incomplete address data, voices not
+      // loaded yet, etc.) the next ADDRESS_FETCHED_EVENT gets another attempt.
       if (textToBeSpoken) {
+        this._firstAddressAnnounced = true;
         this.speechManager.speak(textToBeSpoken, priority);
         if (this.textInput) {
           this.textInput.value = textToBeSpoken;

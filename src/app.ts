@@ -3,12 +3,12 @@
 /**
  * Main Application Entry Point
  * SPA Router and Application Initialization
- * @version 0.17.0-alpha
+ * @version 0.17.1-alpha
  */
 
 import HomeViewController from './views/home.js';
 import HTMLHeaderDisplayer from './html/HTMLHeaderDisplayer.js';
-import { log, warn, error } from './utils/logger.js';
+import { debug, log, warn, error } from './utils/logger.js';
 import { VERSION_STRING } from './config/version.js';
 import { env } from './config/environment.js';
 import {
@@ -31,12 +31,14 @@ import { Collapse } from 'bootstrap';
 interface AppStateType {
   currentRoute: string | null;
   homeController: InstanceType<typeof HomeViewController> | null;
+  homeViewHTML: string | null;
   errorBoundaries: Record<string, ReturnType<typeof createDefaultErrorBoundary>>;
 }
 
 const AppState: AppStateType = {
   currentRoute: null,
   homeController: null,
+  homeViewHTML: null,
   errorBoundaries: {},
 };
 
@@ -44,7 +46,7 @@ const AppState: AppStateType = {
  * Initialize the Guia Turístico single-page application.
  */
 async function init(): Promise<void> {
-  console.log('[GT] init() called');
+  debug('[GT] init() called');
   log(`Initializing ${VERSION_STRING}...`);
 
   setupGlobalErrorHandler((err: Error) => {
@@ -52,13 +54,18 @@ async function init(): Promise<void> {
   });
 
   const appLoading = document.getElementById('app-loading');
-  console.log('[GT] app-loading element:', appLoading ? 'found' : 'NOT found');
+  debug('[GT] app-loading element:', appLoading ? 'found' : 'NOT found');
   if (appLoading) {
     appLoading.classList.add('hidden');
     setTimeout(() => appLoading.remove(), 300);
   }
 
-  console.log('[GT] window.dependenciesLoading:', window.dependenciesLoading, '| IbiraAPIFetchManager:', typeof window.IbiraAPIFetchManager);
+  debug(
+    '[GT] window.dependenciesLoading:',
+    window.dependenciesLoading,
+    '| IbiraAPIFetchManager:',
+    typeof window.IbiraAPIFetchManager
+  );
   if (window.dependenciesLoading) {
     log('⏳ Waiting for dependencies to load...');
     try {
@@ -76,7 +83,7 @@ async function init(): Promise<void> {
     }
   }
 
-  console.log('[GT] calling initRouter/initNavigation/handleRoute');
+  debug('[GT] calling initRouter/initNavigation/handleRoute');
   initRouter();
   initNavigation();
 
@@ -87,7 +94,7 @@ async function init(): Promise<void> {
   window.addEventListener('hashchange', handleRoute);
   window.addEventListener('popstate', handleRoute);
 
-  console.log('[GT] init() complete');
+  debug('[GT] init() complete');
   log('✓ Application initialized successfully');
 }
 
@@ -110,7 +117,7 @@ async function handleRoute(): Promise<void> {
   const hash = window.location.hash || '#/';
   const route = hash.substring(1);
 
-  console.log('[GT] handleRoute() called, route:', route);
+  debug('[GT] handleRoute() called, route:', route);
   log('Routing to:', route);
 
   updateActiveNavLink();
@@ -119,6 +126,16 @@ async function handleRoute(): Promise<void> {
     if (route === '/' || route === '') {
       await initializeHomeView();
     } else {
+      // Leaving home: snapshot the HTML and destroy the controller so that
+      // returning to '#/' always gets a fresh controller, fresh card displayer,
+      // and fresh speech observer — all with correct DOM references.
+      if (AppState.homeController) {
+        const content = document.getElementById('app-content');
+        if (content) AppState.homeViewHTML = content.innerHTML;
+        AppState.homeController.destroy();
+        AppState.homeController = null;
+        log('Home controller destroyed on route change to:', route);
+      }
       showLoading();
       if (route === '/converter') {
         await loadConverterView();
@@ -194,19 +211,30 @@ function showError(err: Error): void {
 }
 
 async function initializeHomeView(): Promise<void> {
-  console.log('[GT] initializeHomeView() called, homeController exists:', !!AppState.homeController);
+  debug('[GT] initializeHomeView() called, homeController exists:', !!AppState.homeController);
 
   if (!AppState.homeController) {
+    // Restore the home view HTML snapshot before wiring up the controller so
+    // that the new card displayer and speech observer get live DOM references.
+    if (AppState.homeViewHTML) {
+      const content = document.getElementById('app-content');
+      if (content) {
+        content.innerHTML = AppState.homeViewHTML;
+        log('Home view HTML restored from snapshot');
+      }
+      AppState.homeViewHTML = null;
+    }
+
     if (!AppState.errorBoundaries.home) {
       AppState.errorBoundaries.home = createDefaultErrorBoundary('Home View');
     }
 
     const boundary = AppState.errorBoundaries.home;
     const container = document.getElementById('app-content');
-    console.log('[GT] app-content container:', container ? 'found' : 'NOT found');
+    debug('[GT] app-content container:', container ? 'found' : 'NOT found');
 
     const safeInit = boundary.wrap(async () => {
-      console.log('[GT] creating HomeViewController...');
+      debug('[GT] creating HomeViewController...');
       AppState.homeController = new HomeViewController(document, {
         locationResult: 'locationResult',
         elementIds: {
@@ -231,16 +259,15 @@ async function initializeHomeView(): Promise<void> {
         autoStartTracking: true,
       });
 
-      console.log('[GT] HomeViewController created, calling init()...');
+      debug('[GT] HomeViewController created, calling init()...');
       await AppState.homeController!.init();
-      console.log('[GT] HomeViewController.init() resolved');
+      debug('[GT] HomeViewController.init() resolved');
       log('Home view initialized successfully');
     }, container ?? undefined);
 
     try {
       await safeInit();
     } catch (err) {
-      console.error('[GT] Error initializing home view:', err);
       error('Error initializing home view:', err);
       showErrorToast('Erro', 'Falha ao inicializar página inicial');
     }

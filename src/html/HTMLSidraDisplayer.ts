@@ -1,4 +1,4 @@
-import { log, warn, error as logError } from '../utils/logger.js';
+import { debug, warn, error as logError } from '../utils/logger.js';
 import { escapeHtml } from '../utils/html-sanitizer.js';
 import ibgeDataFormatter from '../utils/ibge-data-formatter.js';
 import type { BrazilianStandardAddress } from '../data/BrazilianStandardAddress.js';
@@ -67,7 +67,7 @@ class HTMLSidraDisplayer {
 	constructor(element: HTMLElement | string, options: { dataType?: string } = {}) {
 		this.element = typeof element === 'string' ? document.getElementById(element) as HTMLElement : element;
 		this.dataType = options.dataType || 'PopEst';
-		log(`>>> (HTMLSidraDisplayer) Created for element id='${this.element?.id || 'no-id'}' with dataType='${this.dataType}'`);
+		debug(`>>> (HTMLSidraDisplayer) Created for element id='${this.element?.id || 'no-id'}' with dataType='${this.dataType}'`);
 		Object.freeze(this); // Prevent further modification following MP Barbosa standards
 	}
 
@@ -109,7 +109,7 @@ class HTMLSidraDisplayer {
 		error: { message: string } | null | false
 	): void {
 		// Log update for debugging (following MP Barbosa logging standards)
-		log(`(HTMLSidraDisplayer) update() called with event: ${String(enderecoPadronizadoOrEvent)} posEvent: ${String(posEvent)}`);
+		debug(`(HTMLSidraDisplayer) update() called with event: ${String(enderecoPadronizadoOrEvent)} posEvent: ${String(posEvent)}`);
 		
 		if (!this.element) {
 			warn('(HTMLSidraDisplayer) No element provided, skipping update');
@@ -178,7 +178,7 @@ class HTMLSidraDisplayer {
 			"siglaUf": enderecoPadronizado.siglaUF
 		};
 
-		log(`(HTMLSidraDisplayer) Updating SIDRA data for ${params.municipio}, ${params.siglaUf} with enhanced formatter`);
+		debug(`(HTMLSidraDisplayer) Updating SIDRA data for ${params.municipio}, ${params.siglaUf} with enhanced formatter`);
 		
 		// Use enhanced IBGE Data Formatter for user-friendly display
 		try {

@@ -289,7 +289,7 @@ class HomeViewController {
     this.chronometer = null;
     this._boundHandlers = {};
     
-    log('HomeViewController destroyed');
+    log('(HomeViewController) destroyed — card displayer and speech observer released');
   }
   
   /**

@@ -26,7 +26,7 @@
 - **Log audit fixes** (2026-03-26): resolved `APP_VERSION.patch` mismatch in `src/config/defaults.ts` (RI-001), merge conflict in `service-worker.js` (RI-002), restored files staged for deletion by failed workflow run (RI-003)
 - **Nearby Places** — `OverpassService.ts` + `HTMLNearbyPlacesPanel.ts`; Overpass API integration for 6 categories; auto-enables when GPS available (v0.13.1-alpha)
 - **City Statistics** — `IBGECityStatsService.ts` + `HTMLCityStatsPanel.ts`; live IBGE population + area data; offline-capable (v0.13.1-alpha)
-- **Dependency upgrades** (v0.13.1-alpha): `paraty_geocore.js` → `v0.12.10-alpha`, `ibira.js` → `v0.4.22-alpha`, `bessa_patterns.ts` → `v0.12.15-alpha`
+- **Dependency upgrades** (v0.13.1-alpha): `paraty_geocore.js` → `v0.12.10-alpha`, `ibira.js` → `v0.4.22-alpha`, `bessa_patterns.ts` → `0.12.16-alpha`
 - **Bootstrap 5.3 responsive navbar** (v0.17.0-alpha): Bootstrap 5.3 + Bootstrap Icons; `<nav class="navbar navbar-expand-md">` with Início + Conversor links, hamburger toggle, MD3 token bridge via `bootstrap-overrides.css`, dedicated `ui` Vite chunk; footer converter links removed
 
 ---

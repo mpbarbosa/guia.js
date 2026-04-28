@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Updated CDN URL across all source files, test files, `jest.config.unit.js`, `package.json`, and `src/types/paraty-geocore.d.ts`
 - **`ibira.js` dependency** upgraded from `v0.4.13-alpha` to `v0.4.22-alpha`:
   - Updated `src/guia.ts`, `src/index.html`, `package.json`, `src/types/paraty-geocore.d.ts`, and all documentation references
-- **`bessa_patterns.ts` dependency** upgraded from `v0.12.13-alpha` to `v0.12.15-alpha`:
+- **`bessa_patterns.ts` dependency** upgraded from `v0.12.13-alpha` to `0.12.16-alpha`:
   - Updated jsDelivr importmap URL in `src/index.html`
 
 ### Fixed

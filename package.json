@@ -1,6 +1,6 @@
 {
   "name": "guia_js",
-  "version": "0.17.2-alpha",
+  "version": "0.18.0-alpha",
   "private": true,
   "description": "Tourist guide web application built on top of guia.js library",
   "type": "module",

@@ -1,12 +1,13 @@
 /**
- * Styles for Nearby Places and City Statistics panels.
+ * Styles for Nearby Places, City Statistics, and Route Planning panels.
  *
- * @since 0.17.2-alpha
+ * @since 0.18.0-alpha
  */
 
 /* ── Common section wrapper ─────────────────────────────────────── */
 #nearby-places-section,
-#city-stats-section {
+#city-stats-section,
+#route-planner-section {
   margin-top: var(--space-3, 12px);
 }
 
@@ -121,3 +122,124 @@
   margin: 0;
 }
 .stats-error { color: var(--color-error, #d32f2f); }
+
+/* ── Route planner ────────────────────────────────────────────────── */
+.route-planner-card {
+  margin-top: var(--space-2, 8px);
+  padding: var(--space-3, 12px);
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: var(--radius-md, 8px);
+  background: var(--color-surface, #ffffff);
+}
+
+.route-planner-form {
+  display: grid;
+  gap: var(--space-3, 12px);
+}
+
+.route-planner-field {
+  display: grid;
+  gap: var(--space-1, 4px);
+}
+
+.route-planner-field label {
+  font-weight: 600;
+  color: var(--color-on-surface, #1c1b1f);
+}
+
+.route-planner-field input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border, #cbd5e0);
+  border-radius: var(--radius-sm, 6px);
+  background: var(--color-surface, #ffffff);
+}
+
+.route-planner-field input:focus {
+  outline: 2px solid var(--color-primary, #1a73e8);
+  outline-offset: 2px;
+}
+
+.route-planner-helper {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary, #666);
+}
+
+.route-planner-panel {
+  margin-top: var(--space-3, 12px);
+  padding: var(--space-3, 12px);
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: var(--radius-md, 8px);
+  background: var(--color-surface, #ffffff);
+}
+
+.route-panel-heading {
+  margin: 0 0 var(--space-2, 8px);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.route-panel-summary,
+.route-panel-loading,
+.route-panel-error {
+  margin: 0;
+}
+
+.route-panel-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-2, 8px);
+  margin: var(--space-3, 12px) 0;
+}
+
+.route-panel-stat {
+  padding: var(--space-2, 8px);
+  border-radius: var(--radius-sm, 4px);
+  background: var(--color-surface-variant, #f5f5f5);
+}
+
+.route-panel-stat dt {
+  margin-bottom: 2px;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #666);
+}
+
+.route-panel-stat dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.route-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 8px);
+  margin-bottom: var(--space-3, 12px);
+}
+
+.route-panel-link {
+  color: var(--color-primary, #1a73e8);
+  font-weight: 500;
+}
+
+.route-panel-steps {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.route-panel-step {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2, 8px);
+  margin-bottom: var(--space-2, 8px);
+}
+
+.route-panel-step-meta {
+  color: var(--color-text-secondary, #666);
+  white-space: nowrap;
+}
+
+.route-panel-error {
+  color: var(--color-error, #d32f2f);
+}

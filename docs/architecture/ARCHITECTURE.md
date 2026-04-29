@@ -3,7 +3,7 @@
 ---
 
 **Last Updated**: 2026-04-29
-**Version**: 0.18.0-alpha
+**Version**: 0.19.0-alpha
 **Status**: Active
 **Category**: Architecture
 
@@ -27,13 +27,14 @@
 
 ## System Overview
 
-Guia Turístico is a **Single-Page Application (SPA)** tourist guide built on top of the **guia.js** geolocation library. The application provides real-time location tracking with Brazilian address geocoding, speech synthesis, IBGE demographic data integration, and route planning for Brazilian destinations.
+Guia Turístico is a **Single-Page Application (SPA)** tourist guide built on top of the **guia.js** geolocation library. The application provides real-time location tracking with Brazilian address geocoding, speech synthesis, IBGE demographic data integration, route planning for Brazilian destinations, and offline-first restoration of the latest cached location data.
 
 ### Key Features
 
 - **Real-time geolocation** tracking with browser Geolocation API
 - **Brazilian address standardization** via OpenStreetMap Nominatim
 - **IBGE integration** for demographic statistics (SIDRA API)
+- **Offline-first cache foundation** for recent location snapshots and municipality statistics
 - **Speech synthesis** with Brazilian Portuguese voice prioritization
 - **Responsive UI** with highlight cards for municipality and neighborhood
 - **Single-page routing** for location tracking and coordinate conversion
@@ -104,7 +105,8 @@ The application follows a **layered architecture** with clear separation of conc
 - **ReverseGeocoder**: OpenStreetMap Nominatim integration
 - **ChangeDetectionCoordinator**: Address change tracking
 - **OverpassService** (`src/services/OverpassService.ts`): Overpass API (OpenStreetMap) place search — queries by category (restaurants, pharmacies, hospitals, tourist attractions, cafés, supermarkets) within a radius of the current GPS position; exported as `findNearby(lat, lon, category)`
-- **IBGECityStatsService** (`src/services/IBGECityStatsService.ts`): Live IBGE Localidades + SIDRA population queries; returns population, area (km²), and IBGE municipality code; exported as `fetchStats(municipioName)`
+- **IBGECityStatsService** (`src/services/IBGECityStatsService.ts`): Live IBGE Localidades + SIDRA population queries with persistent offline reuse; returns population, area (km²), and IBGE municipality code; exported as `fetchStats(municipioName)`
+- **OfflineCacheService** (`src/services/OfflineCacheService.ts`): IndexedDB-backed key-value cache for recent location/address snapshots and municipality statistics, with in-memory fallback for tests and non-browser contexts
 - **RouteNavigationService** (`src/services/RouteNavigationService.ts`): Geocodes Brazilian origin/destination inputs via Nominatim search, requests public OSRM driving routes, and returns route summaries plus external handoff URLs
 
 **Key Principle**: API abstraction and error handling
@@ -684,6 +686,7 @@ export class MyCoordinator {
 ### Performance Optimizations
 
 - **LRU Caching**: Address data caching with automatic eviction
+- **Offline Persistence**: IndexedDB storage for recent addresses/positions and IBGE municipality stats
 - **Lazy Loading**: Code split by feature (speech, services, etc.)
 - **Timer Management**: Centralized with leak prevention
 - **HMR**: Hot Module Replacement in development (Vite)
@@ -702,5 +705,5 @@ export class MyCoordinator {
 ---
 
 **Last Updated**: 2026-04-29
-**Architecture Version**: 0.18.0-alpha
+**Architecture Version**: 0.19.0-alpha
 **Documentation Status**: ✅ Complete

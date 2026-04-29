@@ -9,7 +9,7 @@ version: 0.17.2-alpha
 ---
 
 [![Tests](https://img.shields.io/badge/tests-3074%20passing%20%2F%203242%20total-green)](https://github.com/mpbarbosa/guia.js)
-[![Version](https://img.shields.io/badge/version-0.15.0--alpha-blue)](https://github.com/mpbarbosa/guia.js)
+[![Version](https://img.shields.io/badge/version-0.17.2--alpha-blue)](https://github.com/mpbarbosa/guia.js)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia.js)
 
 > **Note on Test Status**: 3,074 tests pass successfully out of 3,242 total (168 skipped, 0 failing), with 122 of 127 test suites passing (5 skipped). The test suite is stable with 100% pass rate. See the Testing section below for details.

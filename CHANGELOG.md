@@ -5,6 +5,26 @@ All notable changes to Guia Turístico will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.0-alpha] - 2026-04-29
+
+### Added
+
+- **Route Navigation MVP** (`src/services/RouteNavigationService.ts`, `src/html/HTMLRoutePlannerPanel.ts`, `src/views/home.ts`, `src/index.html`):
+  - Home-view route planner with editable origin and destination fields
+  - Current-location fallback when the origin field is left blank
+  - Public OSRM driving route calculation with Google Maps and OpenStreetMap handoff links
+  - Route summary with distance, duration, and key steps in a dedicated panel
+
+### Changed
+
+- **Home feature panels**: route planning now ships alongside nearby places, city statistics, and the inline map as a first-class utility on the main screen
+- **`src/index.html` CSP**: `connect-src` now includes `https://router.project-osrm.org` for public route planning
+
+### Fixed
+
+- **Version metadata sync**: `package.json`, `src/config/version.ts`, `src/config/defaults.ts`, `src/app.ts`, and `src/index.html` now consistently reflect `0.18.0-alpha`
+- **Architecture and roadmap docs**: release docs now reflect the TypeScript codebase and the shipped route-planning milestone
+
 ## [0.17.2-alpha] - 2026-03-29
 
 ### Added

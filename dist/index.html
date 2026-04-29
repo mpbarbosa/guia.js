@@ -1,10 +1,10 @@
 <html lang="pt-BR"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="0.17.2-alpha" data-source="src/config/version.js">
+    <meta name="version" content="0.18.0-alpha" data-source="src/config/version.js">
     
     <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com https://demotiles.maplibre.org; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com https://demotiles.maplibre.org https://router.project-osrm.org; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'">
     
     <!-- Security Headers (meta tag fallback for static hosting) -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -462,18 +462,18 @@
         margin-bottom: 2rem;
       }
     </style>
-    <script type="module" crossorigin src="./assets/main-CP9aG2AW.js"></script>
+    <script type="module" crossorigin src="./assets/main-Dn82oU-u.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/vendor-CDLgd9d9.js">
     <link rel="modulepreload" crossorigin href="./assets/ui-B-f8qHlr.js">
-    <link rel="modulepreload" crossorigin href="./assets/data-CZfsxXsi.js">
-    <link rel="modulepreload" crossorigin href="./assets/speech-LksISFgB.js">
-    <link rel="modulepreload" crossorigin href="./assets/services-Zzmr2vVI.js">
+    <link rel="modulepreload" crossorigin href="./assets/data-CwE7ueDs.js">
+    <link rel="modulepreload" crossorigin href="./assets/speech-2uRZ8J1U.js">
+    <link rel="modulepreload" crossorigin href="./assets/services-DmUK5Djg.js">
     <link rel="modulepreload" crossorigin href="./assets/map-WLs8NypD.js">
-    <link rel="modulepreload" crossorigin href="./assets/html-NscY0qD-.js">
-    <link rel="modulepreload" crossorigin href="./assets/coordination-BJ10BP-m.js">
+    <link rel="modulepreload" crossorigin href="./assets/html-BNlWd4V3.js">
+    <link rel="modulepreload" crossorigin href="./assets/coordination-DW4Tv2So.js">
     <link rel="stylesheet" crossorigin href="./assets/ui-Cw7tTYSV.css">
     <link rel="stylesheet" crossorigin href="./assets/map-DwUhsmFz.css">
-    <link rel="stylesheet" crossorigin href="./assets/main-HUNfOvz7.css">
+    <link rel="stylesheet" crossorigin href="./assets/main-CkBs6NVG.css">
   </head>
   <body><div class="navigation-progress" role="progressbar" aria-label="Progresso de navegação"><div class="navigation-progress-bar" style="width: 0%;"></div></div>
     
@@ -753,6 +753,51 @@
               <span class="button-text">Estatísticas da Cidade</span>
             </button>
             <div id="city-stats-panel" class="city-stats-panel" aria-label="Estatísticas do município" hidden></div>
+          </div>
+
+          <div id="route-planner-section">
+            <div class="route-planner-card">
+              <h2>🧭 Planejar rota</h2>
+              <p class="route-planner-helper">
+                Deixe a origem em branco para usar sua localização atual.
+              </p>
+
+              <form id="route-planner-form" class="route-planner-form">
+                <div class="route-planner-field">
+                  <label for="route-origin-input">Origem</label>
+                  <input
+                    id="route-origin-input"
+                    name="route-origin"
+                    type="text"
+                    autocomplete="street-address"
+                    placeholder="Ex.: Rua da Aurora, Recife - PE"
+                  />
+                  <p id="route-origin-current" class="route-planner-helper">
+                    Origem atual: aguardando localização...
+                  </p>
+                </div>
+
+                <div class="route-planner-field">
+                  <label for="route-destination-input">Destino</label>
+                  <input
+                    id="route-destination-input"
+                    name="route-destination"
+                    type="text"
+                    autocomplete="street-address"
+                    placeholder="Ex.: Marco Zero, Recife - PE"
+                    required
+                  />
+                </div>
+
+                <button id="planRouteBtn" type="submit" class="md3-button-outlined" disabled
+                        aria-label="Calcular rota até o destino informado">
+                  <span class="button-icon" aria-hidden="true">🧭</span>
+                  <span class="button-text">Calcular rota</span>
+                </button>
+              </form>
+
+              <div id="route-planner-panel" class="route-planner-panel" aria-live="polite" hidden></div>
+            </div>
           </div>
 
         </div>

@@ -21,6 +21,14 @@ import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocor
 import { log, warn, error } from '../utils/logger.js';
 import MapLibreDisplayer from '../html/MapLibreDisplayer.js';
 import HTMLConfirmationBufferDisplayer from '../html/HTMLConfirmationBufferDisplayer.js';
+import HTMLRoutePlannerPanel from '../html/HTMLRoutePlannerPanel.js';
+import { planRoute } from '../services/RouteNavigationService.js';
+import {
+  clearLoadingState,
+  disableWithReason,
+  enableWithMessage,
+  setLoadingState,
+} from '../utils/button-status.js';
 
 /** Speech synthesis element IDs configuration. */
 interface SpeechSynthesisIds {
@@ -108,6 +116,8 @@ class HomeViewController {
   private _boundHandlers: Record<string, EventListener>;
   private _mapDisplayer: MapLibreDisplayer | null;
   private _mapPositionObserver: MapPositionObserver | null;
+  private _routePlannerPanel: HTMLRoutePlannerPanel | null;
+  private _routePlannerPositionObserver: MapPositionObserver | null;
 
   /**
    * Creates a HomeViewController instance.
@@ -146,6 +156,8 @@ class HomeViewController {
     // Map components (initialized in _initializeMapDisplayer)
     this._mapDisplayer = null;
     this._mapPositionObserver = null;
+    this._routePlannerPanel = null;
+    this._routePlannerPositionObserver = null;
     
     log('HomeViewController created (not yet initialized)');
   }
@@ -198,6 +210,9 @@ class HomeViewController {
 
       // 5. Initialize confirmation-buffer debug card
       this._initializeConfirmationBufferDisplayer();
+
+      // 6. Initialize route planner panel
+      this._initializeRoutePlannerPanel();
 
       // Mark as initialized BEFORE auto-start to avoid check error
       this.initialized = true;
@@ -276,11 +291,15 @@ class HomeViewController {
 
     // Unsubscribe map position observer
     if (this._mapPositionObserver) {
-      try {
-        PositionManager.getInstance().unsubscribe(this._mapPositionObserver as { update?: (...args: unknown[]) => void });
-      } catch (_) { /* ignore */ }
+      PositionManager.getInstance().unsubscribe(this._mapPositionObserver as { update?: (...args: unknown[]) => void });
       this._mapPositionObserver = null;
       this._mapDisplayer = null;
+    }
+
+    if (this._routePlannerPositionObserver) {
+      PositionManager.getInstance().unsubscribe(this._routePlannerPositionObserver as { update?: (...args: unknown[]) => void });
+      this._routePlannerPositionObserver = null;
+      this._routePlannerPanel = null;
     }
     
     // Reset state
@@ -443,6 +462,148 @@ class HomeViewController {
     }
   }
 
+  private _initializeRoutePlannerPanel(): void {
+    this._routePlannerPanel = new HTMLRoutePlannerPanel();
+    this._routePlannerPositionObserver = {
+      update: () => {
+        this._updateRoutePlannerAvailability();
+      }
+    };
+
+    PositionManager.getInstance().subscribe(this._routePlannerPositionObserver as { update?: (...args: unknown[]) => void });
+    this._updateRoutePlannerAvailability();
+  }
+
+  private _getCurrentCoordinates(): { latitude: number; longitude: number } | null {
+    const positionManager = PositionManager.getInstance() as unknown as {
+      latitude?: number | null;
+      longitude?: number | null;
+    };
+
+    if (typeof positionManager.latitude !== 'number' || typeof positionManager.longitude !== 'number') {
+      return null;
+    }
+
+    return {
+      latitude: positionManager.latitude,
+      longitude: positionManager.longitude,
+    };
+  }
+
+  private _getCurrentOriginLabel(coords: { latitude: number; longitude: number } | null): string {
+    const address = (this.manager as {
+      getBrazilianStandardAddress?(): {
+        logradouro?: string | null;
+        bairro?: string | null;
+        municipio?: string | null;
+        siglaUF?: string | null;
+      } | null;
+    } | null)?.getBrazilianStandardAddress?.();
+
+    const parts = [
+      address?.logradouro ?? null,
+      address?.bairro ?? null,
+      address?.municipio ?? null,
+      address?.siglaUF ?? null,
+    ].filter((value): value is string => Boolean(value && value.trim()));
+
+    if (parts.length > 0) {
+      return parts.join(', ');
+    }
+
+    if (coords) {
+      return `Localização atual (${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)})`;
+    }
+
+    return 'Localização atual';
+  }
+
+  private _updateRoutePlannerAvailability(): void {
+    const button = this.document.getElementById('planRouteBtn') as HTMLButtonElement | null;
+    const originInput = this.document.getElementById('route-origin-input') as HTMLInputElement | null;
+    const destinationInput = this.document.getElementById('route-destination-input') as HTMLInputElement | null;
+    const currentOrigin = this.document.getElementById('route-origin-current');
+    const currentCoords = this._getCurrentCoordinates();
+
+    if (currentOrigin) {
+      currentOrigin.textContent = currentCoords
+        ? `Origem atual: ${this._getCurrentOriginLabel(currentCoords)}`
+        : 'Origem atual: aguardando localização...';
+    }
+
+    if (!button || !originInput || !destinationInput) {
+      return;
+    }
+
+    const hasTypedOrigin = originInput.value.trim().length > 0;
+    const hasDestination = destinationInput.value.trim().length > 0;
+    const hasAvailableOrigin = hasTypedOrigin || currentCoords !== null;
+
+    if (!hasDestination) {
+      disableWithReason(button, 'Informe um destino para calcular a rota.');
+      return;
+    }
+
+    if (!hasAvailableOrigin) {
+      disableWithReason(button, 'Digite uma origem ou aguarde sua localização atual.');
+      return;
+    }
+
+    enableWithMessage(button);
+  }
+
+  private async _handleRoutePlannerSubmit(event?: Event): Promise<void> {
+    event?.preventDefault();
+
+    const button = this.document.getElementById('planRouteBtn') as HTMLButtonElement | null;
+    const originInput = this.document.getElementById('route-origin-input') as HTMLInputElement | null;
+    const destinationInput = this.document.getElementById('route-destination-input') as HTMLInputElement | null;
+
+    if (!button || !destinationInput || !this._routePlannerPanel) {
+      return;
+    }
+
+    const originQuery = originInput?.value.trim() ?? '';
+    const destinationQuery = destinationInput.value.trim();
+    const currentCoords = this._getCurrentCoordinates();
+
+    if (!destinationQuery) {
+      this._routePlannerPanel.showError('Informe um destino para calcular a rota.');
+      disableWithReason(button, 'Informe um destino para calcular a rota.');
+      destinationInput.focus();
+      return;
+    }
+
+    if (!originQuery && !currentCoords) {
+      this._routePlannerPanel.showError('Aguardando sua localização atual ou uma origem digitada.');
+      disableWithReason(button, 'Digite uma origem ou aguarde sua localização atual.');
+      return;
+    }
+
+    try {
+      setLoadingState(button, 'Calculando rota...');
+      this._routePlannerPanel.showLoading();
+
+      const route = await planRoute({
+        origin: originQuery
+          ? { query: originQuery }
+          : {
+              latitude: currentCoords!.latitude,
+              longitude: currentCoords!.longitude,
+              displayName: this._getCurrentOriginLabel(currentCoords),
+            },
+        destination: { query: destinationQuery },
+      });
+
+      this._routePlannerPanel.render(route);
+      enableWithMessage(button, 'Rota pronta.');
+    } catch (err) {
+      clearLoadingState(button);
+      this._routePlannerPanel.showError((err as Error).message || 'Não foi possível calcular a rota.');
+      this._updateRoutePlannerAvailability();
+    }
+  }
+
   /**
    * Sets up event listeners for UI buttons.
    * @private
@@ -478,6 +639,31 @@ class HomeViewController {
       testBtn.addEventListener('click', this._boundHandlers.testPositionClick);
       log('HomeViewController: Test position button listener added');
     }
+
+    const routeForm = this.document.getElementById('route-planner-form');
+    const originInput = this.document.getElementById('route-origin-input');
+    const destinationInput = this.document.getElementById('route-destination-input');
+
+    if (routeForm) {
+      this._boundHandlers.routePlannerSubmit = (event: Event) => {
+        void this._handleRoutePlannerSubmit(event);
+      };
+      routeForm.addEventListener('submit', this._boundHandlers.routePlannerSubmit);
+    }
+
+    if (originInput) {
+      this._boundHandlers.routeOriginInput = () => {
+        this._updateRoutePlannerAvailability();
+      };
+      originInput.addEventListener('input', this._boundHandlers.routeOriginInput);
+    }
+
+    if (destinationInput) {
+      this._boundHandlers.routeDestinationInput = () => {
+        this._updateRoutePlannerAvailability();
+      };
+      destinationInput.addEventListener('input', this._boundHandlers.routeDestinationInput);
+    }
   }
   
   /**
@@ -502,6 +688,21 @@ class HomeViewController {
     if (testBtn && this._boundHandlers.testPositionClick) {
       testBtn.removeEventListener('click', this._boundHandlers.testPositionClick);
       log('HomeViewController: Test position button listener removed');
+    }
+
+    const routeForm = this.document.getElementById('route-planner-form');
+    if (routeForm && this._boundHandlers.routePlannerSubmit) {
+      routeForm.removeEventListener('submit', this._boundHandlers.routePlannerSubmit);
+    }
+
+    const originInput = this.document.getElementById('route-origin-input');
+    if (originInput && this._boundHandlers.routeOriginInput) {
+      originInput.removeEventListener('input', this._boundHandlers.routeOriginInput);
+    }
+
+    const destinationInput = this.document.getElementById('route-destination-input');
+    if (destinationInput && this._boundHandlers.routeDestinationInput) {
+      destinationInput.removeEventListener('input', this._boundHandlers.routeDestinationInput);
     }
     
     // Clear bound handlers

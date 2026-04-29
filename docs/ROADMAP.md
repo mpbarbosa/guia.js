@@ -1,11 +1,11 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
-**Current Version**: `0.17.2-alpha` | **Status**: Active Development
-**Last Updated**: 2026-04-27
+**Current Version**: `0.18.0-alpha` | **Status**: Active Development
+**Last Updated**: 2026-04-29
 
 ---
 
-## ✅ Completed (v0.9 – v0.13)
+## ✅ Completed (v0.9 – v0.18)
 
 - Real-time geolocation tracking with position/address display
 - Brazilian address standardization (Nominatim + IBGE)
@@ -28,10 +28,11 @@
 - **City Statistics** — `IBGECityStatsService.ts` + `HTMLCityStatsPanel.ts`; live IBGE population + area data; offline-capable (v0.13.1-alpha)
 - **Dependency upgrades** (v0.13.1-alpha): `paraty_geocore.js` → `v0.12.10-alpha`, `ibira.js` → `v0.4.22-alpha`, `bessa_patterns.ts` → `v0.12.15-alpha`
 - **Bootstrap 5.3 responsive navbar** (v0.17.2-alpha): Bootstrap 5.3 + Bootstrap Icons; `<nav class="navbar navbar-expand-md">` with Início + Conversor links, hamburger toggle, MD3 token bridge via `bootstrap-overrides.css`, dedicated `ui` Vite chunk; footer converter links removed
+- **Route Navigation MVP** (v0.18.0-alpha): `RouteNavigationService.ts` + `HTMLRoutePlannerPanel.ts`; typed origin/destination route planning, current-location fallback for the origin field, public OSRM driving routes, and Google Maps/OpenStreetMap handoff links
 
 ---
 
-## 🚧 Near-Term (v0.15-alpha)
+## 🚧 Near-Term (v0.19-alpha)
 
 ### ✅ Repo Consolidation — `guia_turistico` → `guia_js` (DONE)
 
@@ -49,11 +50,6 @@ Recommended for full name consistency between local folder and remote, but indep
 - Cache IBGE municipality data locally (IndexedDB)
 - Cache recent addresses and positions for offline access
 - Background sync for queued address lookups
-
-### Route Navigation Utility
-
-- Simple A→B route between two Brazilian addresses
-- Integration with public OpenRouteService or OSRM
 
 ### CI/CD Evolution Roadmap
 
@@ -99,7 +95,7 @@ Recommended for full name consistency between local folder and remote, but indep
 | ~~Replace placeholder `findNearbyRestaurants()`~~ ✅ Done | ~~Medium~~ |
 | ~~Replace placeholder `fetchCityStatistics()`~~ ✅ Done | ~~Medium~~ |
 | Offline-First Architecture (IndexedDB caching) | Medium |
-| Route Navigation Utility (OpenRouteService/OSRM) | Low |
+| ~~Route Navigation Utility (OpenRouteService/OSRM)~~ ✅ Done | ~~Low~~ |
 | Consolidate duplicate `CHANGELOG.md` v0.9.0 entries | ~~Low~~ ✅ Done |
 
 ---

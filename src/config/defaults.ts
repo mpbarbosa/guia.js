@@ -12,8 +12,8 @@
 // Version Information
 export const APP_VERSION = {
 	major: 0,
-	minor: 14,
-	patch: 3,
+	minor: 18,
+	patch: 0,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;

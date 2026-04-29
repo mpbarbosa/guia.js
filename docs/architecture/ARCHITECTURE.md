@@ -2,8 +2,8 @@
 
 ---
 
-**Last Updated**: 2026-04-27
-**Version**: 0.17.2-alpha
+**Last Updated**: 2026-04-29
+**Version**: 0.18.0-alpha
 **Status**: Active
 **Category**: Architecture
 
@@ -27,7 +27,7 @@
 
 ## System Overview
 
-Guia Turístico is a **Single-Page Application (SPA)** tourist guide built on top of the **guia.js** geolocation library. The application provides real-time location tracking with Brazilian address geocoding, speech synthesis, and IBGE demographic data integration.
+Guia Turístico is a **Single-Page Application (SPA)** tourist guide built on top of the **guia.js** geolocation library. The application provides real-time location tracking with Brazilian address geocoding, speech synthesis, IBGE demographic data integration, and route planning for Brazilian destinations.
 
 ### Key Features
 
@@ -37,6 +37,7 @@ Guia Turístico is a **Single-Page Application (SPA)** tourist guide built on to
 - **Speech synthesis** with Brazilian Portuguese voice prioritization
 - **Responsive UI** with highlight cards for municipality and neighborhood
 - **Single-page routing** for location tracking and coordinate conversion
+- **Route planning** with current-location fallback and OSRM-based driving directions
 
 ### Architecture Principles
 
@@ -104,6 +105,7 @@ The application follows a **layered architecture** with clear separation of conc
 - **ChangeDetectionCoordinator**: Address change tracking
 - **OverpassService** (`src/services/OverpassService.ts`): Overpass API (OpenStreetMap) place search — queries by category (restaurants, pharmacies, hospitals, tourist attractions, cafés, supermarkets) within a radius of the current GPS position; exported as `findNearby(lat, lon, category)`
 - **IBGECityStatsService** (`src/services/IBGECityStatsService.ts`): Live IBGE Localidades + SIDRA population queries; returns population, area (km²), and IBGE municipality code; exported as `fetchStats(municipioName)`
+- **RouteNavigationService** (`src/services/RouteNavigationService.ts`): Geocodes Brazilian origin/destination inputs via Nominatim search, requests public OSRM driving routes, and returns route summaries plus external handoff URLs
 
 **Key Principle**: API abstraction and error handling
 
@@ -132,6 +134,7 @@ The application follows a **layered architecture** with clear separation of conc
   - `HTMLSidraDisplayer`: IBGE population statistics panel (observer pattern)
   - `HTMLNearbyPlacesPanel` (`src/html/HTMLNearbyPlacesPanel.ts`): Renders Overpass API results as a list with distance, category icon, and OSM link; auto-shows on GPS availability
   - `HTMLCityStatsPanel` (`src/html/HTMLCityStatsPanel.ts`): Renders IBGE city statistics (population, area, IBGE code); sources municipality name from cached Nominatim data
+  - `HTMLRoutePlannerPanel` (`src/html/HTMLRoutePlannerPanel.ts`): Renders route summaries, key steps, and Google Maps/OpenStreetMap handoff links for planned journeys
   - `HtmlSpeechSynthesisDisplayer`: Speech synthesis facade (facade pattern, 3 sub-components)
   - `MapLibreDisplayer`: Interactive MapLibre GL 5.x inline map with position marker
 - **UI Components**: Toast notifications, empty states, skeletons
@@ -155,8 +158,8 @@ GeoPosition (immutable)
 
 #### GeoPosition
 
-**Source**: [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) (external library, `v0.12.10-alpha`)
-**CDN URL**: `https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-alpha/dist/esm/index.js`
+**Source**: [`paraty_geocore.js`](https://github.com/mpbarbosa/paraty_geocore.js) (external library, `v0.12.11-alpha`)
+**CDN URL**: `https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js`
 **Purpose**: Immutable geographic coordinate container
 
 > ⚠️ `src/core/GeoPosition.ts` was removed in `v0.12.12-alpha`. `GeoPosition` is now imported directly from the `paraty_geocore.js` CDN (ESM build).
@@ -164,7 +167,7 @@ GeoPosition (immutable)
 **Import**:
 
 ```ts
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.10-alpha/dist/esm/index.js';
+import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
 ```
 
 **Key Methods**:
@@ -177,7 +180,7 @@ import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocor
 
 #### PositionManager
 
-**File**: `src/core/PositionManager.js`
+**File**: `src/core/PositionManager.ts`
 **Purpose**: Centralized position state management
 
 **Key Methods**:
@@ -205,7 +208,7 @@ Nominatim API Response
 
 #### BrazilianStandardAddress
 
-**File**: `src/data/BrazilianStandardAddress.js`
+**File**: `src/data/BrazilianStandardAddress.ts`
 **Purpose**: Brazilian address standardization
 
 **Key Properties**:
@@ -221,7 +224,7 @@ Nominatim API Response
 
 #### AddressCache
 
-**File**: `src/data/AddressCache.js`
+**File**: `src/data/AddressCache.ts`
 **Purpose**: Address caching with change detection
 
 **Architecture**: Composition pattern with 3 components:
@@ -249,7 +252,7 @@ WebGeocodingManager (main coordinator)
 
 #### WebGeocodingManager
 
-**File**: `src/coordination/WebGeocodingManager.js`
+**File**: `src/coordination/WebGeocodingManager.ts`
 **Purpose**: Main application coordinator
 
 **Key Responsibilities**:
@@ -279,7 +282,7 @@ SpeechSynthesisManager (main orchestrator)
 
 #### SpeechSynthesisManager
 
-**File**: `src/speech/SpeechSynthesisManager.js`
+**File**: `src/speech/SpeechSynthesisManager.ts`
 **Purpose**: Speech synthesis orchestration using composition
 
 **Composition Pattern**: 4 focused components
@@ -533,7 +536,7 @@ export class MyViewController {
 }
 ```
 
-**Register in Router** (`src/app.js`):
+**Register in Router** (`src/app.ts`):
 
 ```javascript
 routes['/my-route'] = async () => {
@@ -642,7 +645,7 @@ export class MyCoordinator {
 
 ### Frontend
 
-- **JavaScript**: ES2022 with ES modules
+- **TypeScript**: strict-mode TypeScript with ES2022 modules
 - **Build Tool**: Vite 7.3.1 (development server, HMR, code splitting)
 - **Routing**: Hash-based SPA routing (`#/`, `#/converter`)
 - **Styling**: Modular CSS (15 files: accessibility, typography, navigation, etc.)
@@ -653,6 +656,7 @@ export class MyCoordinator {
 - **Geocoding**: OpenStreetMap Nominatim (`nominatim.openstreetmap.org`)
 - **Brazilian Data**: IBGE API (`servicodados.ibge.gov.br`)
 - **Demographics**: SIDRA API (IBGE population estimates)
+- **Routing**: OSRM public routing (`router.project-osrm.org`)
 - **Maps**: Google Maps (view-only links, Street View)
 
 ### Testing
@@ -697,6 +701,6 @@ export class MyCoordinator {
 
 ---
 
-**Last Updated**: 2026-02-17
-**Architecture Version**: 0.11.0-alpha
+**Last Updated**: 2026-04-29
+**Architecture Version**: 0.18.0-alpha
 **Documentation Status**: ✅ Complete

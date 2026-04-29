@@ -4,7 +4,7 @@
 
 Last Updated: 2026-04-25
 Status: Active
-version: 0.17.1-alpha
+version: 0.17.2-alpha
 
 ---
 
@@ -1801,6 +1801,6 @@ ISC License - See repository for details
 
 ---
 
-**Version**: 0.17.1-alpha
+**Version**: 0.17.2-alpha
 **Status**: Active
 **Last Updated**: 2026-04-25

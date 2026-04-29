@@ -5,7 +5,7 @@
  * {@link module:services/OverpassService}.
  *
  * @module html/HTMLNearbyPlacesPanel
- * @since 0.17.1-alpha
+ * @since 0.17.2-alpha
  * @author Marcelo Pereira Barbosa
  */
 

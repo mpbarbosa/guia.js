@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Project Is
 
-**Guia Turístico** is a Vue 3 + TypeScript SPA (v0.17.1-alpha) built on the **guia.js** geolocation library. It provides real-time location tracking, reverse geocoding, and an interactive tourist guide for Brazilian addresses. The app runs at `#/` (location tracking) and `#/converter` (coordinate conversion).
+**Guia Turístico** is a Vue 3 + TypeScript SPA (v0.17.2-alpha) built on the **guia.js** geolocation library. It provides real-time location tracking, reverse geocoding, and an interactive tourist guide for Brazilian addresses. The app runs at `#/` (location tracking) and `#/converter` (coordinate conversion).
 
 Key external dependencies:
 

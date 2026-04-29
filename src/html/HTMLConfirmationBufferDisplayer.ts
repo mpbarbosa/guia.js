@@ -9,7 +9,7 @@ const TIMER_ID = 'confirmation-buffer-card';
  * (logradouro, bairro, municipio) from AddressCache and renders their state inside
  * a Bootstrap card.  Refreshes every second via TimerManager.
  *
- * @since 0.17.1-alpha
+ * @since 0.17.2-alpha
  */
 class HTMLConfirmationBufferDisplayer {
 	private readonly _element: HTMLElement;

@@ -2,7 +2,7 @@
  * OverpassService — query the Overpass API for nearby OpenStreetMap places.
  *
  * @module services/OverpassService
- * @since 0.17.1-alpha
+ * @since 0.17.2-alpha
  * @author Marcelo Pereira Barbosa
  */
 

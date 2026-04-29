@@ -315,6 +315,26 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-04-28T23:48:53.980Z"
+    },
+    "jest.config.e2e.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-29T00:38:17.110Z"
+    },
+    "jest.config.unit.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-29T00:38:17.110Z"
+    },
+    "jest.setup.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-29T00:38:17.110Z"
+    },
+    "jest.vue-transformer.cjs": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-04-29T00:38:17.110Z"
     }
   }
 }

@@ -1,6 +1,6 @@
 # ObserverSubject Pattern Documentation - Guia Turístico
 
-**Version:** 0.17.1-alpha
+**Version:** 0.17.2-alpha
 **Date:** 2026-04-24
 **Author:** Comprehensive analysis of Observer pattern implementation
 
@@ -1761,7 +1761,7 @@ async reverseGeocode(lat, lon) {
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 0.17.1-alpha | 2026-04-24 | All source files migrated to TypeScript |
+| 0.17.2-alpha | 2026-04-24 | All source files migrated to TypeScript |
 | 0.12.12-alpha | — | AddressCache: confirmation buffers (LogradouroChangeTrigger, AddressFieldConfirmationBuffer) for GPS jitter |
 | 0.12.11-alpha | — | PositionManager and ObserverSubject moved to paraty_geocore.js (re-export shims kept) |
 | 0.12.x | — | ReverseGeocoder: dual-provider (AWS + Nominatim), switchProvider(), new constructor signature |
@@ -1827,5 +1827,5 @@ ObserverSubject (base class)
 **END OF DOCUMENTATION**
 
 *Updated: 2026-04-24*
-*Version: 0.17.1-alpha*
+*Version: 0.17.2-alpha*
 *Guia Turístico - Tourist Guide Application*

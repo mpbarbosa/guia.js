@@ -3,7 +3,7 @@
 ---
 
 **Last Updated**: 2026-04-27
-**Version**: 0.17.1-alpha
+**Version**: 0.17.2-alpha
 **Status**: Active
 **Category**: Architecture
 

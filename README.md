@@ -4,12 +4,12 @@
 
 Last Updated: 2026-04-29
 Status: Active
-version: 0.18.0-alpha
+version: 0.19.0-alpha
 
 ---
 
 [![Tests](https://img.shields.io/badge/tests-3074%20passing%20%2F%203242%20total-green)](https://github.com/mpbarbosa/guia.js)
-[![Version](https://img.shields.io/badge/version-0.18.0--alpha-blue)](https://github.com/mpbarbosa/guia.js)
+[![Version](https://img.shields.io/badge/version-0.19.0--alpha-blue)](https://github.com/mpbarbosa/guia.js)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia.js)
 
 > **Note on Test Status**: 3,074 tests pass successfully out of 3,242 total (168 skipped, 0 failing), with 122 of 127 test suites passing (5 skipped). The test suite is stable with 100% pass rate. See the Testing section below for details.
@@ -35,6 +35,7 @@ A single-page web application (SPA) for tourist guidance, built on top of the [g
 - 🌍 **Powered by guia.js** - Uses guia.js library for geolocation functionality
 - 🇧🇷 **Brazilian Focus** - Specialized support for Brazilian locations via IBGE integration
 - 📊 **IBGE SIDRA Integration** - Population statistics and demographic data display (v0.9.0+)
+- 💾 **Offline-First Foundation** - Restores the latest saved location/address snapshot and reuses cached municipality statistics when the network is unavailable
 - 📱 **Mobile-First Design** - Responsive interface optimized for mobile devices
 - 🎨 **Material Design 3** - Modern UI following Material Design guidelines
 - ♿ **Accessibility** - WCAG 2.1 compliant with ARIA support
@@ -665,7 +666,7 @@ python3 -m http.server 9000
 - `HTMLReferencePlaceDisplayer` - Displays nearby reference places
 - `HTMLSidraDisplayer` - IBGE SIDRA data display with observer pattern (v0.9.0+)
   - **Features**: Population statistics, Brazilian Portuguese localization, automatic updates
-  - **Data Source**: IBGE SIDRA API with offline fallback (libs/sidra/tab6579_municipios.json)
+  - **Data Source**: IBGE SIDRA API with persistent offline cache reuse for the latest successful municipality lookup
 - `DisplayerFactory` - Factory pattern for display component creation (5 methods, v0.9.0-alpha) ✅
 
 #### Speech Synthesis Layer (Refactored v0.11.1-alpha) 🆕
@@ -1801,6 +1802,6 @@ ISC License - See repository for details
 
 ---
 
-**Version**: 0.18.0-alpha
+**Version**: 0.19.0-alpha
 **Status**: Active
-**Last Updated**: 2026-04-25
+**Last Updated**: 2026-04-29

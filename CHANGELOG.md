@@ -5,6 +5,25 @@ All notable changes to Guia Turístico will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.0-alpha] - 2026-04-29
+
+### Added
+
+- **Offline cache foundation** (`src/services/OfflineCacheService.ts`, `src/views/home.ts`):
+  - IndexedDB-backed persistence for the latest and recent location/address snapshots
+  - Home view now restores the last saved coordinates and standardized address when live data is not yet available
+  - Route planner can reuse the last saved location as its implicit origin fallback
+
+### Changed
+
+- **`IBGECityStatsService.ts`**: city-stat lookups now persist successful IBGE responses and reuse them before or after a network failure
+- **Offline-first behavior**: cached municipality stats and last-known location data now complement the existing online-first home workflow instead of introducing a separate offline mode
+
+### Fixed
+
+- **Version metadata sync**: `package.json`, `src/config/version.ts`, `src/config/defaults.ts`, `src/app.ts`, and `src/index.html` now consistently reflect `0.19.0-alpha`
+- **Release docs**: README, roadmap, and architecture docs now describe the shipped offline-first foundation
+
 ## [0.18.0-alpha] - 2026-04-29
 
 ### Added

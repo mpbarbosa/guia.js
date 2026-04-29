@@ -29,6 +29,12 @@ import {
   enableWithMessage,
   setLoadingState,
 } from '../utils/button-status.js';
+import {
+  getLatestLocationSnapshot,
+  saveLocationSnapshot,
+  type CachedAddressSummary,
+  type CachedLocationSnapshot,
+} from '../services/OfflineCacheService.js';
 
 /** Speech synthesis element IDs configuration. */
 interface SpeechSynthesisIds {
@@ -118,6 +124,8 @@ class HomeViewController {
   private _mapPositionObserver: MapPositionObserver | null;
   private _routePlannerPanel: HTMLRoutePlannerPanel | null;
   private _routePlannerPositionObserver: MapPositionObserver | null;
+  private _offlineSnapshot: CachedLocationSnapshot | null;
+  private _offlinePositionObserver: MapPositionObserver | null;
 
   /**
    * Creates a HomeViewController instance.
@@ -158,6 +166,8 @@ class HomeViewController {
     this._mapPositionObserver = null;
     this._routePlannerPanel = null;
     this._routePlannerPositionObserver = null;
+    this._offlineSnapshot = null;
+    this._offlinePositionObserver = null;
     
     log('HomeViewController created (not yet initialized)');
   }
@@ -213,6 +223,9 @@ class HomeViewController {
 
       // 6. Initialize route planner panel
       this._initializeRoutePlannerPanel();
+
+      // 7. Restore cached offline snapshot for last-known location display
+      await this._restoreOfflineSnapshot();
 
       // Mark as initialized BEFORE auto-start to avoid check error
       this.initialized = true;
@@ -300,6 +313,12 @@ class HomeViewController {
       PositionManager.getInstance().unsubscribe(this._routePlannerPositionObserver as { update?: (...args: unknown[]) => void });
       this._routePlannerPositionObserver = null;
       this._routePlannerPanel = null;
+    }
+
+    if (this._offlinePositionObserver) {
+      PositionManager.getInstance().unsubscribe(this._offlinePositionObserver as { update?: (...args: unknown[]) => void });
+      this._offlinePositionObserver = null;
+      this._offlineSnapshot = null;
     }
     
     // Reset state
@@ -474,13 +493,91 @@ class HomeViewController {
     this._updateRoutePlannerAvailability();
   }
 
-  private _getCurrentCoordinates(): { latitude: number; longitude: number } | null {
+  private async _restoreOfflineSnapshot(): Promise<void> {
+    this._offlinePositionObserver = {
+      update: () => {
+        void this._persistOfflineSnapshot();
+        this._updateRoutePlannerAvailability();
+      }
+    };
+
+    PositionManager.getInstance().subscribe(this._offlinePositionObserver as { update?: (...args: unknown[]) => void });
+    this._offlineSnapshot = await getLatestLocationSnapshot();
+    if (!this._offlineSnapshot) {
+      this._updateRoutePlannerAvailability();
+      return;
+    }
+
+    const coordsDisplay = this.document.getElementById('lat-long-display');
+    if (coordsDisplay && coordsDisplay.textContent?.includes('Aguardando')) {
+      coordsDisplay.textContent = `${this._offlineSnapshot.latitude.toFixed(6)}, ${this._offlineSnapshot.longitude.toFixed(6)} (último registro salvo)`;
+    }
+
+    const addressDisplay = this.document.getElementById('endereco-padronizado-display');
+    if (addressDisplay && this._offlineSnapshot.address?.displayText && addressDisplay.textContent?.includes('Aguardando')) {
+      addressDisplay.textContent = `${this._offlineSnapshot.address.displayText} (último registro salvo)`;
+    }
+
+    this._updateRoutePlannerAvailability();
+  }
+
+  private _getCachedAddressSummary(): CachedAddressSummary | null {
+    const address = (this.manager as {
+      getBrazilianStandardAddress?(): {
+        logradouro?: string | null;
+        bairro?: string | null;
+        municipio?: string | null;
+        siglaUF?: string | null;
+      } | null;
+    } | null)?.getBrazilianStandardAddress?.();
+
+    const displayParts = [
+      address?.logradouro ?? null,
+      address?.bairro ?? null,
+      address?.municipio ?? null,
+      address?.siglaUF ?? null,
+    ].filter((value): value is string => Boolean(value && value.trim()));
+
+    if (displayParts.length === 0) {
+      return this._offlineSnapshot?.address ?? null;
+    }
+
+    return {
+      logradouro: address?.logradouro ?? null,
+      bairro: address?.bairro ?? null,
+      municipio: address?.municipio ?? null,
+      siglaUF: address?.siglaUF ?? null,
+      displayText: displayParts.join(', '),
+    };
+  }
+
+  private async _persistOfflineSnapshot(): Promise<void> {
+    const coords = this._getCurrentCoordinates(false);
+    if (!coords) {
+      return;
+    }
+
+    this._offlineSnapshot = await saveLocationSnapshot({
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+      timestamp: Date.now(),
+      address: this._getCachedAddressSummary(),
+    });
+  }
+
+  private _getCurrentCoordinates(includeOfflineFallback = true): { latitude: number; longitude: number } | null {
     const positionManager = PositionManager.getInstance() as unknown as {
       latitude?: number | null;
       longitude?: number | null;
     };
 
     if (typeof positionManager.latitude !== 'number' || typeof positionManager.longitude !== 'number') {
+      if (includeOfflineFallback && this._offlineSnapshot) {
+        return {
+          latitude: this._offlineSnapshot.latitude,
+          longitude: this._offlineSnapshot.longitude,
+        };
+      }
       return null;
     }
 
@@ -509,6 +606,10 @@ class HomeViewController {
 
     if (parts.length > 0) {
       return parts.join(', ');
+    }
+
+    if (this._offlineSnapshot?.address?.displayText) {
+      return `${this._offlineSnapshot.address.displayText} (último registro salvo)`;
     }
 
     if (coords) {
@@ -802,7 +903,9 @@ class HomeViewController {
         if (typeof this.manager.notifyFunctionObservers === 'function') {
           this.manager.notifyFunctionObservers();
         }
-        
+
+        await this._persistOfflineSnapshot();
+
         log('HomeViewController: Single location update successful');
       }
       

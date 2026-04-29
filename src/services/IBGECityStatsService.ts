@@ -13,6 +13,10 @@
 
 import { log, warn } from '../utils/logger.js';
 import { env } from '../config/environment.js';
+import {
+  getCityStatsFromOfflineCache,
+  saveCityStatsToOfflineCache,
+} from './OfflineCacheService.js';
 
 const BASE = (env.ibgeApiUrl as string) || 'https://servicodados.ibge.gov.br';
 const CITY_STATS_CACHE_TTL_MS = 5 * 60 * 1000;
@@ -160,6 +164,23 @@ export async function fetchStats(municipio: string, siglaUf: string): Promise<Ci
     return cachedStats;
   }
 
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    const offlineStats = await getCityStatsFromOfflineCache(municipio, siglaUf);
+    if (offlineStats) {
+      log(`(IBGECityStatsService) Reusing offline stats for ${municipio} / ${siglaUf}`);
+      const stats: CityStats = {
+        ibgeCode: offlineStats.ibgeCode,
+        name: offlineStats.name,
+        uf: offlineStats.uf,
+        areaKm2: offlineStats.areaKm2,
+        population: offlineStats.population,
+        populationYear: offlineStats.populationYear,
+      };
+      setCachedCityStats(cacheKey, stats);
+      return stats;
+    }
+  }
+
   const inflightRequest = inflightCityStatsRequests.get(cacheKey);
   if (inflightRequest) {
     log(`(IBGECityStatsService) Awaiting in-flight stats request for ${municipio} / ${siglaUf}`);
@@ -194,10 +215,25 @@ export async function fetchStats(municipio: string, siglaUf: string): Promise<Ci
       };
 
       setCachedCityStats(cacheKey, stats);
+      await saveCityStatsToOfflineCache(municipio, siglaUf, stats);
       log(`(IBGECityStatsService) Stats for ${stats.name}/${stats.uf}: pop=${stats.population}, area=${stats.areaKm2}km²`);
       return stats;
     } catch (err) {
       warn(`(IBGECityStatsService) Failed to fetch stats for "${municipio}": ${(err as Error).message}`);
+      const offlineStats = await getCityStatsFromOfflineCache(municipio, siglaUf);
+      if (offlineStats) {
+        const stats: CityStats = {
+          ibgeCode: offlineStats.ibgeCode,
+          name: offlineStats.name,
+          uf: offlineStats.uf,
+          areaKm2: offlineStats.areaKm2,
+          population: offlineStats.population,
+          populationYear: offlineStats.populationYear,
+        };
+        setCachedCityStats(cacheKey, stats);
+        log(`(IBGECityStatsService) Falling back to offline stats for ${municipio} / ${siglaUf}`);
+        return stats;
+      }
       return null;
     } finally {
       inflightCityStatsRequests.delete(cacheKey);

@@ -1,7 +1,7 @@
 <html lang="pt-BR"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="0.19.0-alpha" data-source="src/config/version.js">
+    <meta name="version" content="0.19.2-alpha" data-source="src/config/version.js">
     
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com https://demotiles.maplibre.org https://router.project-osrm.org; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'">
@@ -462,16 +462,16 @@
         margin-bottom: 2rem;
       }
     </style>
-    <script type="module" crossorigin src="./assets/main-DnaW-0PQ.js"></script>
+    <script type="module" crossorigin src="./assets/main-D7ZLaPi6.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/vendor-CDLgd9d9.js">
-    <link rel="modulepreload" crossorigin href="./assets/ui-B-f8qHlr.js">
-    <link rel="modulepreload" crossorigin href="./assets/data-DUV0D_wG.js">
-    <link rel="modulepreload" crossorigin href="./assets/speech-DEUSWqiD.js">
-    <link rel="modulepreload" crossorigin href="./assets/services-C9hIdYhv.js">
+    <link rel="modulepreload" crossorigin href="./assets/ui-Cq4JWmV_.js">
+    <link rel="modulepreload" crossorigin href="./assets/data-BNMpkr-9.js">
+    <link rel="modulepreload" crossorigin href="./assets/speech-BKtLYwcq.js">
+    <link rel="modulepreload" crossorigin href="./assets/services-p5kKoyOt.js">
     <link rel="modulepreload" crossorigin href="./assets/map-WLs8NypD.js">
-    <link rel="modulepreload" crossorigin href="./assets/html-crmgUWP9.js">
-    <link rel="modulepreload" crossorigin href="./assets/coordination-BN477wnO.js">
-    <link rel="stylesheet" crossorigin href="./assets/ui-Cw7tTYSV.css">
+    <link rel="modulepreload" crossorigin href="./assets/html-B3jvmo8k.js">
+    <link rel="modulepreload" crossorigin href="./assets/coordination-Dhi8hP3N.js">
+    <link rel="stylesheet" crossorigin href="./assets/ui-CEjEGl8W.css">
     <link rel="stylesheet" crossorigin href="./assets/map-DwUhsmFz.css">
     <link rel="stylesheet" crossorigin href="./assets/main-CkBs6NVG.css">
   </head>
@@ -595,15 +595,19 @@
               </a>
             </li>
           </ul>
-          <!-- Confirmation-buffer debug card -->
-          <div class="card mb-2" aria-label="Estado dos buffers de confirmação de endereço (diagnóstico)">
-            <div class="card-header py-1 small fw-semibold d-flex align-items-center gap-2">
-              <i class="bi bi-activity" aria-hidden="true"></i>
-              Buffers de Confirmação
-              <span class="badge text-bg-secondary ms-auto fw-normal">diagnóstico</span>
-            </div>
-            <div class="card-body p-2" id="confirmation-buffer-card">
-              <p class="text-muted small mb-0">Aguardando dados…</p>
+          <div class="navbar-confirmation-tools">
+            <div id="address-confirmation-threshold-control"></div>
+
+            <!-- Confirmation-buffer debug card -->
+            <div class="card mb-2 confirmation-buffer-diagnostic-card" aria-label="Estado dos buffers de confirmação de endereço (diagnóstico)">
+              <div class="card-header py-1 small fw-semibold d-flex align-items-center gap-2">
+                <i class="bi bi-activity" aria-hidden="true"></i>
+                Buffers de Confirmação
+                <span class="badge text-bg-secondary ms-auto fw-normal">diagnóstico</span>
+              </div>
+              <div class="card-body p-2" id="confirmation-buffer-card">
+                <p class="text-muted small mb-0">Aguardando dados…</p>
+              </div>
             </div>
           </div>
         </div>

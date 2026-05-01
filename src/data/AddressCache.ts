@@ -36,11 +36,14 @@ import AddressDataStore from './AddressDataStore.js';
 // NEW (v0.12.12-alpha): Confirmation buffers for GPS intersection jitter mitigation
 import AddressFieldConfirmationBuffer from './AddressFieldConfirmationBuffer.js';
 import LogradouroChangeTrigger from './LogradouroChangeTrigger.js';
+import type {
+	AddressConfirmationThresholdOptions,
+	AddressConfirmationThresholds
+} from '../config/addressConfirmation.js';
 import {
-	LOGRADOURO_CONFIRMATION_COUNT,
-	BAIRRO_CONFIRMATION_COUNT,
-	MUNICIPIO_CONFIRMATION_COUNT
-} from '../config/defaults.js';
+	resolveAddressConfirmationThresholds,
+	DEFAULT_ADDRESS_CONFIRMATION_THRESHOLDS
+} from '../config/addressConfirmation.js';
 
 export interface FieldBufferState {
 	confirmed:    string | null;
@@ -58,6 +61,8 @@ export interface ConfirmationBufferState {
 }
 
 class AddressCache {
+	static confirmationThresholds: Readonly<AddressConfirmationThresholds> =
+		DEFAULT_ADDRESS_CONFIRMATION_THRESHOLDS;
 
 	/**
 	 * Singleton instance holder. Only one AddressCache exists per application.
@@ -72,16 +77,38 @@ class AddressCache {
 	 * 
 	 * Implements the singleton pattern ensuring only one AddressCache instance
 	 * exists throughout the application lifecycle.
+	 *
+	 * Pass `addressConfirmationBufferThreshold` to override the default
+	 * confirmation buffer size for all tracked address fields. Invalid overrides
+	 * are ignored so the existing 3-reading behavior remains unchanged.
 	 * 
 	 * @static
 	 * @returns {AddressCache} The singleton AddressCache instance
 	 * @since 0.9.0-alpha
 	 */
-	static getInstance(): AddressCache {
+	static getInstance(options?: AddressConfirmationThresholdOptions): AddressCache {
+		if (options) {
+			AddressCache.configure(options);
+		}
 		if (!AddressCache.instance) {
-			AddressCache.instance = new AddressCache();
+			AddressCache.instance = new AddressCache(AddressCache.confirmationThresholds);
 		}
 		return AddressCache.instance!;
+	}
+
+	/**
+	 * Updates the confirmation-buffer configuration for the singleton.
+	 *
+	 * Reconfiguration swaps in new buffer instances and clears any pending
+	 * candidates so old state is not interpreted using a new threshold.
+	 */
+	static configure(options: AddressConfirmationThresholdOptions = {}): Readonly<AddressConfirmationThresholds> {
+		const thresholds = resolveAddressConfirmationThresholds(options);
+		AddressCache.confirmationThresholds = thresholds;
+		if (AddressCache.instance) {
+			AddressCache.instance.applyConfirmationThresholds(thresholds);
+		}
+		return thresholds;
 	}
 
 	/**
@@ -128,7 +155,15 @@ class AddressCache {
 	// GeolocationService to fast-throttle mode during a confirmation window)
 	private _pendingConfirmationCallback: ((isPending: boolean) => void) | null;
 	private _anyBufferPending: boolean;
-	constructor() {
+	private _confirmationThresholds: Readonly<AddressConfirmationThresholds>;
+
+	/**
+	 * @param confirmationThresholds - Normalized thresholds for the three
+	 *   address-field confirmation buffers.
+	 */
+	constructor(
+		confirmationThresholds: Readonly<AddressConfirmationThresholds> = DEFAULT_ADDRESS_CONFIRMATION_THRESHOLDS
+	) {
 		this.observerSubject = new ObserverSubject();
 		
 		// Use LRUCache for efficient caching with automatic eviction
@@ -155,9 +190,10 @@ class AddressCache {
 		this.previousRawData = this.dataStore.getPreviousRawData();
 
 		// NEW (v0.12.12-alpha): one confirmation buffer per tracked address field
-		this._logradouroTrigger = new LogradouroChangeTrigger(LOGRADOURO_CONFIRMATION_COUNT);
-		this._bairroBuffer     = new AddressFieldConfirmationBuffer(BAIRRO_CONFIRMATION_COUNT);
-		this._municipioBuffer  = new AddressFieldConfirmationBuffer(MUNICIPIO_CONFIRMATION_COUNT);
+		this._confirmationThresholds = confirmationThresholds;
+		this._logradouroTrigger = new LogradouroChangeTrigger(confirmationThresholds.logradouro);
+		this._bairroBuffer     = new AddressFieldConfirmationBuffer(confirmationThresholds.bairro);
+		this._municipioBuffer  = new AddressFieldConfirmationBuffer(confirmationThresholds.municipio);
 		this._pendingConfirmationCallback = null;
 		this._anyBufferPending = false;
 		
@@ -165,6 +201,31 @@ class AddressCache {
 		timerManager.setInterval(() => {
 			this.cleanExpiredEntries();
 		}, 60000, 'address-cache-cleanup'); // Clean expired entries every 60 seconds
+	}
+
+	private applyConfirmationThresholds(
+		confirmationThresholds: Readonly<AddressConfirmationThresholds>
+	): void {
+		const thresholdsChanged =
+			this._confirmationThresholds.logradouro !== confirmationThresholds.logradouro ||
+			this._confirmationThresholds.bairro !== confirmationThresholds.bairro ||
+			this._confirmationThresholds.municipio !== confirmationThresholds.municipio;
+
+		if (!thresholdsChanged) {
+			return;
+		}
+
+		const hadPendingBuffers = this._anyBufferPending;
+
+		this._confirmationThresholds = confirmationThresholds;
+		this._logradouroTrigger = new LogradouroChangeTrigger(confirmationThresholds.logradouro);
+		this._bairroBuffer = new AddressFieldConfirmationBuffer(confirmationThresholds.bairro);
+		this._municipioBuffer = new AddressFieldConfirmationBuffer(confirmationThresholds.municipio);
+		this._anyBufferPending = false;
+
+		if (hadPendingBuffers && this._pendingConfirmationCallback) {
+			this._pendingConfirmationCallback(false);
+		}
 	}
 
 	/**

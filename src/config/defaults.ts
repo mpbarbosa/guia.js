@@ -127,6 +127,14 @@ export const BAIRRO_CONFIRMATION_COUNT = 3;
  */
 export const MUNICIPIO_CONFIRMATION_COUNT = 3;
 
+/**
+ * Shared default threshold for address-field confirmation buffering.
+ * The application can override this at initialization/runtime, but the
+ * default remains 3 consecutive reads to preserve current behavior.
+ * @since 0.19.2-alpha
+ */
+export const ADDRESS_CONFIRMATION_BUFFER_THRESHOLD = LOGRADOURO_CONFIRMATION_COUNT;
+
 /** Speech queue timer interval in milliseconds */
 export const QUEUE_TIMER_INTERVAL = 5000;
 
@@ -214,6 +222,7 @@ export const createDefaultConfig = () => ({
 	trackingInterval: TRACKING_INTERVAL,
 	minimumDistanceChange: MINIMUM_DISTANCE_CHANGE,
 	minimumTimeChange: MINIMUM_TIME_CHANGE,
+	addressConfirmationBufferThreshold: ADDRESS_CONFIRMATION_BUFFER_THRESHOLD,
 	independentQueueTimerInterval: QUEUE_TIMER_INTERVAL,
 	noReferencePlace: NO_REFERENCE_PLACE,
 	validRefPlaceClasses: [...VALID_REF_PLACE_CLASSES],

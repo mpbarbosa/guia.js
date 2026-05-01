@@ -74,6 +74,11 @@ import ServiceCoordinator from './ServiceCoordinator.js';
 
 // Import configuration
 import { CORS_PROXY, ENABLE_CORS_FALLBACK } from '../config/defaults.js';
+import {
+	getCurrentAddressConfirmationBufferThreshold,
+	setCurrentAddressConfirmationBufferThreshold,
+	type AddressConfirmationThresholdOptions
+} from '../config/addressConfirmation.js';
 import SpeechCoordinator from './SpeechCoordinator.js';
 
 // Import service layer classes
@@ -83,6 +88,7 @@ import ChangeDetectionCoordinator from '../services/ChangeDetectionCoordinator.j
 
 // Import data processing layer classes
 import AddressDataExtractor from '../data/AddressDataExtractor.js';
+import AddressCache from '../data/AddressCache.js';
 
 // Import timing classes
 
@@ -123,7 +129,35 @@ import { withObserver } from '../utils/ObserverMixin.js';
  * 
  * @since 0.9.0-alpha
  */
-const DEFAULT_ELEMENT_IDS = {
+export interface WebGeocodingManagerSpeechSynthesisIds {
+	[key: string]: string | undefined;
+	languageSelectId?: string;
+	voiceSelectId?: string;
+	textInputId?: string;
+	speakBtnId?: string;
+	pauseBtnId?: string;
+	resumeBtnId?: string;
+	stopBtnId?: string;
+	rateInputId?: string;
+	rateValueId?: string;
+	pitchInputId?: string;
+	pitchValueId?: string;
+}
+
+export interface WebGeocodingManagerElementIds {
+	[key: string]: unknown;
+	chronometer?: string;
+	findRestaurantsBtn?: string;
+	cityStatsBtn?: string;
+	timestampDisplay?: string;
+	positionDisplay?: string;
+	referencePlaceDisplay?: string;
+	enderecoPadronizadoDisplay?: string;
+	sidraDisplay?: string;
+	speechSynthesis?: WebGeocodingManagerSpeechSynthesisIds;
+}
+
+const DEFAULT_ELEMENT_IDS: Readonly<WebGeocodingManagerElementIds> = {
 	chronometer: "chronometer",
 	findRestaurantsBtn: "findRestaurantsBtn",
 	cityStatsBtn: "cityStatsBtn",
@@ -149,9 +183,9 @@ const DEFAULT_ELEMENT_IDS = {
 Object.freeze(DEFAULT_ELEMENT_IDS.speechSynthesis);
 Object.freeze(DEFAULT_ELEMENT_IDS);
 
-interface WebGeocodingManagerParams {
+interface WebGeocodingManagerParams extends AddressConfirmationThresholdOptions {
 	locationResult: string | HTMLElement;
-	elementIds?: typeof DEFAULT_ELEMENT_IDS;
+	elementIds?: WebGeocodingManagerElementIds;
 	displayerFactory?: unknown;
 	geolocationService?: unknown;
 	reverseGeocoder?: unknown;
@@ -206,7 +240,7 @@ interface WebGeocodingManagerParams {
 class WebGeocodingManager {
 	document!: Document;
 	locationResult: HTMLElement | null;
-	elementIds!: typeof DEFAULT_ELEMENT_IDS;
+	elementIds!: WebGeocodingManagerElementIds;
 	positionDisplay: HTMLElement | null;
 	enderecoPadronizadoDisplay: HTMLElement | null;
 	referencePlaceDisplay: HTMLElement | null;
@@ -279,6 +313,8 @@ class WebGeocodingManager {
 	 * @param {string} [params.enderecoPadronizadoDisplay] - ID of element for standardized address display
 	 * @param {string} [params.referencePlaceDisplay] - ID of element for reference place display
 	 * @param {Object} [params.elementIds] - Optional custom element IDs (defaults to DEFAULT_ELEMENT_IDS)
+	 * @param {number} [params.addressConfirmationBufferThreshold] - Optional shared
+	 *   threshold for the logradouro, bairro, and municipio confirmation buffers.
 	 * @param {Object} [params.displayerFactory] - Optional factory for creating displayers (defaults to DisplayerFactory)
 	 * @param {GeolocationService} [params.geolocationService] - Optional GeolocationService instance (defaults to new GeolocationService)
 	 * @param {ReverseGeocoder} [params.reverseGeocoder] - Optional ReverseGeocoder instance (defaults to new ReverseGeocoder)
@@ -300,7 +336,8 @@ class WebGeocodingManager {
 	 * 
 	 * const manager = new WebGeocodingManager(document, {
 	 *   locationResult: 'location-result',
-	 *   reverseGeocoder: customGeocoder
+	 *   reverseGeocoder: customGeocoder,
+	 *   addressConfirmationBufferThreshold: 2
 	 * });
 	 * 
 	 * @example
@@ -341,6 +378,14 @@ class WebGeocodingManager {
 		// Store element IDs configuration (frozen to prevent mutations)
 		this.elementIds = params.elementIds || DEFAULT_ELEMENT_IDS;
 		Object.freeze(this.elementIds);
+
+		if (params.addressConfirmationBufferThreshold !== undefined) {
+			setCurrentAddressConfirmationBufferThreshold(params.addressConfirmationBufferThreshold);
+		}
+
+		AddressCache.configure({
+			addressConfirmationBufferThreshold: getCurrentAddressConfirmationBufferThreshold()
+		});
 
 		// Resolve display elements from element IDs or use provided params
 		this.positionDisplay = params.positionDisplay || 
@@ -421,7 +466,7 @@ class WebGeocodingManager {
 		// Phase 3: SpeechCoordinator replaces initSpeechSynthesis() logic
 		this.speechCoordinator = new SpeechCoordinator(
 			document,
-			this.elementIds.speechSynthesis,
+			this.elementIds.speechSynthesis ?? DEFAULT_ELEMENT_IDS.speechSynthesis!,
 			this.reverseGeocoder as unknown as { subscribe(o: unknown): void; unsubscribe(o: unknown): void },
 			this.observerSubject as unknown as { subscribe(o: unknown): void; unsubscribe(o: unknown): void }
 		);

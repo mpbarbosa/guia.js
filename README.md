@@ -4,7 +4,7 @@
 
 Last Updated: 2026-04-29
 Status: Active
-version: 0.19.1-alpha
+version: 0.19.2-alpha
 
 ---
 
@@ -232,6 +232,42 @@ npm run lint
 # Auto-fix linting issues
 npm run lint:fix
 ```
+
+### Configuring the Address Confirmation Buffer
+
+The address confirmation buffer still defaults to **3 consecutive reverse-geocoding reads** before a new `logradouro`, `bairro`, or `municipio` value is published. That default remains unchanged because it filters short GPS jitter at intersections without changing current behavior.
+
+The navbar now includes an accessible **range slider above the diagnostic buffer card** so you can tune that shared threshold in real time between **1** and **10** reads. The slider defaults to the application's current threshold and updates the live confirmation-buffer state immediately.
+
+You can also override that shared threshold through the existing initialization flow:
+
+```ts
+import HomeViewController from './src/views/home.js';
+
+const controller = new HomeViewController(document, {
+  locationResult: 'locationResult',
+  addressConfirmationBufferThreshold: 2,
+});
+```
+
+```ts
+import WebGeocodingManager from './src/coordination/WebGeocodingManager.js';
+
+const manager = new WebGeocodingManager(document, {
+  locationResult: 'location-result',
+  addressConfirmationBufferThreshold: 4,
+});
+```
+
+You can also configure it via environment variables:
+
+```bash
+VITE_ADDRESS_CONFIRMATION_BUFFER_THRESHOLD=4 npm run dev
+```
+
+**Rationale:** different deployments may prefer faster address confirmation or stricter jitter filtering. Making the threshold configurable avoids editing source constants for that tradeoff, and the navbar slider makes that tradeoff easy to inspect while the app is running.
+
+**API impact:** the new option is fully optional. If you do nothing, the existing 3-read confirmation behavior is preserved. Invalid values such as `0`, negative numbers, floats, or non-numeric environment values are ignored and fall back to the default. Runtime slider changes do not require a page reload.
 
 ### Utility Scripts
 
@@ -1802,6 +1838,6 @@ ISC License - See repository for details
 
 ---
 
-**Version**: 0.19.1-alpha
+**Version**: 0.19.2-alpha
 **Status**: Active
 **Last Updated**: 2026-04-29

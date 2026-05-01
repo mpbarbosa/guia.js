@@ -3,7 +3,7 @@
 /**
  * Main Application Entry Point
  * SPA Router and Application Initialization
- * @version 0.19.1-alpha
+ * @version 0.19.2-alpha
  */
 
 import HomeViewController from './views/home.js';
@@ -23,6 +23,7 @@ import { findNearby } from './services/OverpassService.js';
 import { fetchStats } from './services/IBGECityStatsService.js';
 import HTMLNearbyPlacesPanel from './html/HTMLNearbyPlacesPanel.js';
 import HTMLCityStatsPanel from './html/HTMLCityStatsPanel.js';
+import HTMLConfirmationThresholdSlider from './html/HTMLConfirmationThresholdSlider.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './bootstrap-overrides.css';
@@ -33,6 +34,7 @@ interface AppStateType {
   homeController: InstanceType<typeof HomeViewController> | null;
   homeViewHTML: string | null;
   errorBoundaries: Record<string, ReturnType<typeof createDefaultErrorBoundary>>;
+  confirmationThresholdSlider: InstanceType<typeof HTMLConfirmationThresholdSlider> | null;
 }
 
 const AppState: AppStateType = {
@@ -40,6 +42,7 @@ const AppState: AppStateType = {
   homeController: null,
   homeViewHTML: null,
   errorBoundaries: {},
+  confirmationThresholdSlider: null,
 };
 
 /**
@@ -88,6 +91,7 @@ async function init(): Promise<void> {
   initNavigation();
 
   HTMLHeaderDisplayer.create(document);
+  initializeConfirmationThresholdSlider();
 
   handleRoute();
 
@@ -111,6 +115,17 @@ function initRouter(): void {
 
 function initNavigation(): void {
   updateActiveNavLink();
+}
+
+function initializeConfirmationThresholdSlider(): void {
+  const container = document.getElementById('address-confirmation-threshold-control');
+  if (!container) {
+    warn('Confirmation threshold slider container not found');
+    return;
+  }
+
+  AppState.confirmationThresholdSlider?.destroy();
+  AppState.confirmationThresholdSlider = new HTMLConfirmationThresholdSlider(container);
 }
 
 async function handleRoute(): Promise<void> {

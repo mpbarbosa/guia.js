@@ -29,6 +29,9 @@ const defaults = {
   // Rate Limiting (requests per minute)
   RATE_LIMIT_NOMINATIM: 60,
   RATE_LIMIT_IBGE: 120,
+
+  // Address confirmation buffering
+  ADDRESS_CONFIRMATION_BUFFER_THRESHOLD: undefined,
   
   // Feature Flags
   ENABLE_SPEECH_SYNTHESIS: true,
@@ -85,6 +88,7 @@ const VITE_STATIC_ENV: Record<string, string | undefined> = typeof import.meta !
       GEOCODING_PRIMARY_PROVIDER:   import.meta.env.VITE_GEOCODING_PRIMARY_PROVIDER,
       RATE_LIMIT_NOMINATIM:   import.meta.env.VITE_RATE_LIMIT_NOMINATIM,
       RATE_LIMIT_IBGE:        import.meta.env.VITE_RATE_LIMIT_IBGE,
+      ADDRESS_CONFIRMATION_BUFFER_THRESHOLD: import.meta.env.VITE_ADDRESS_CONFIRMATION_BUFFER_THRESHOLD,
       ENABLE_SPEECH_SYNTHESIS:import.meta.env.VITE_ENABLE_SPEECH_SYNTHESIS,
       ENABLE_OFFLINE_MODE:    import.meta.env.VITE_ENABLE_OFFLINE_MODE,
       ENABLE_ANALYTICS:       import.meta.env.VITE_ENABLE_ANALYTICS,
@@ -133,6 +137,12 @@ export const env = {
   // Rate Limiting
   rateLimitNominatim: getEnv('RATE_LIMIT_NOMINATIM', defaults.RATE_LIMIT_NOMINATIM),
   rateLimitIbge: getEnv('RATE_LIMIT_IBGE', defaults.RATE_LIMIT_IBGE),
+
+  // Address confirmation buffering
+  addressConfirmationBufferThreshold: getEnv(
+    'ADDRESS_CONFIRMATION_BUFFER_THRESHOLD',
+    defaults.ADDRESS_CONFIRMATION_BUFFER_THRESHOLD
+  ),
   
   // Feature Flags
   enableSpeechSynthesis: getEnv('ENABLE_SPEECH_SYNTHESIS', defaults.ENABLE_SPEECH_SYNTHESIS),

@@ -5,7 +5,7 @@ All notable changes to Guia Turístico will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.19.1-alpha] - 2026-04-29
+## [0.19.2-alpha] - 2026-04-29
 
 ### Added
 
@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **Version metadata sync**: `package.json`, `src/config/version.ts`, `src/config/defaults.ts`, `src/app.ts`, and `src/index.html` now consistently reflect `0.19.1-alpha`
+- **Version metadata sync**: `package.json`, `src/config/version.ts`, `src/config/defaults.ts`, `src/app.ts`, and `src/index.html` now consistently reflect `0.19.2-alpha`
 - **Release docs**: README, roadmap, and architecture docs now describe the shipped offline-first foundation
 
 ## [0.18.0-alpha] - 2026-04-29

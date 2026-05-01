@@ -326,6 +326,40 @@ describe('AddressCache', () => {
       cache.getBrazilianStandardAddress(makeRoad('Rua B', 6)); // pending B, count=1 again
       expect(cb).not.toHaveBeenCalled();
     });
+
+    test('custom threshold is applied to all buffers from getInstance options', () => {
+      const cache = AddressCache.getInstance({ addressConfirmationBufferThreshold: 2 });
+      const state = cache.getConfirmationBufferState();
+      expect(state.logradouro.threshold).toBe(2);
+      expect(state.bairro.threshold).toBe(2);
+      expect(state.municipio.threshold).toBe(2);
+    });
+
+    test('custom threshold confirms on the configured observation count', () => {
+      const cache = AddressCache.getInstance({ addressConfirmationBufferThreshold: 2 });
+      const cb = jest.fn();
+      cache.setLogradouroChangeCallback(cb);
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 1));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 2)); // confirm initial street at threshold=2
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 3)); // 1st
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 4)); // 2nd -> fires
+      expect(cb).toHaveBeenCalledTimes(1);
+    });
+
+    test('invalid custom threshold falls back to the default behavior', () => {
+      const cache = AddressCache.getInstance({ addressConfirmationBufferThreshold: 0 });
+      const cb = jest.fn();
+      cache.setLogradouroChangeCallback(cb);
+      expect(cache.getConfirmationBufferState().logradouro.threshold).toBe(3);
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 1));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 2));
+      cache.getBrazilianStandardAddress(makeRoad('Rua A', 3));
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 4));
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 5));
+      expect(cb).not.toHaveBeenCalled();
+      cache.getBrazilianStandardAddress(makeRoad('Rua B', 6));
+      expect(cb).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('confirmation buffer — bairro', () => {

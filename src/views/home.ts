@@ -15,6 +15,9 @@
  */
 
 import WebGeocodingManager from '../coordination/WebGeocodingManager.js';
+import type {
+  WebGeocodingManagerElementIds,
+} from '../coordination/WebGeocodingManager.js';
 import Chronometer from '../timing/Chronometer.js';
 import PositionManager from '../core/PositionManager.js';
 import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
@@ -35,33 +38,13 @@ import {
   type CachedAddressSummary,
   type CachedLocationSnapshot,
 } from '../services/OfflineCacheService.js';
-
-/** Speech synthesis element IDs configuration. */
-interface SpeechSynthesisIds {
-  languageSelectId?: string;
-  voiceSelectId?: string;
-  textInputId?: string;
-  speakBtnId?: string;
-  pauseBtnId?: string;
-  resumeBtnId?: string;
-  stopBtnId?: string;
-  rateInputId?: string;
-  rateValueId?: string;
-  pitchInputId?: string;
-  pitchValueId?: string;
-}
+import type { AddressConfirmationThresholdOptions } from '../config/addressConfirmation.js';
 
 /** Element IDs for all display components. */
-interface ElementIds {
-  positionDisplay?: string;
-  referencePlaceDisplay?: string;
-  enderecoPadronizadoDisplay?: string;
-  speechSynthesis?: SpeechSynthesisIds;
-  sidraDisplay?: string;
-}
+type ElementIds = WebGeocodingManagerElementIds;
 
 /** Constructor parameters for HomeViewController. */
-interface HomeViewControllerParams {
+interface HomeViewControllerParams extends AddressConfirmationThresholdOptions {
   locationResult: string | HTMLElement;
   elementIds?: ElementIds;
   manager?: WebGeocodingManager;
@@ -91,6 +74,7 @@ interface MapPositionObserver {
  * // Basic usage
  * const controller = new HomeViewController(document, {
  *   locationResult: 'locationResult',
+ *   addressConfirmationBufferThreshold: 2,
  *   elementIds: {
  *     positionDisplay: 'lat-long-display',
  *     referencePlaceDisplay: 'reference-place-display',
@@ -132,6 +116,8 @@ class HomeViewController {
    * 
    * @param {Document} document - Browser document object for DOM manipulation
    * @param {HomeViewControllerParams} params - Configuration parameters
+   * @param {number} [params.addressConfirmationBufferThreshold] - Optional shared
+   *   threshold for the logradouro, bairro, and municipio confirmation buffers.
    * 
    * @throws {TypeError} If document is not provided
    * @throws {TypeError} If params.locationResult is not specified
@@ -365,29 +351,35 @@ class HomeViewController {
     try {
       console.log('[GT] _initializeManager: creating WebGeocodingManager...'); // DEBUG
       // WebGeocodingManager expects params object with locationResult property
-      this.manager = new WebGeocodingManager(this.document, {
+      const elementIds = this.params.elementIds || {
+        positionDisplay: 'lat-long-display',
+        referencePlaceDisplay: 'reference-place-display',
+        enderecoPadronizadoDisplay: 'endereco-padronizado-display',
+        speechSynthesis: {
+          languageSelectId: "language",
+          voiceSelectId: "voice-select",
+          textInputId: "text-input",
+          speakBtnId: "speak-btn",
+          pauseBtnId: "pause-btn",
+          resumeBtnId: "resume-btn",
+          stopBtnId: "stop-btn",
+          rateInputId: "rate",
+          rateValueId: "rate-value",
+          pitchInputId: "pitch",
+          pitchValueId: "pitch-value"
+        },
+        sidraDisplay: 'dadosSidra'
+      };
+      const managerParams = {
         locationResult: this.params.locationResult,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        elementIds: (this.params.elementIds as any) || {
-          positionDisplay: 'lat-long-display',
-          referencePlaceDisplay: 'reference-place-display',
-          enderecoPadronizadoDisplay: 'endereco-padronizado-display',
-          speechSynthesis: {
-            languageSelectId: "language",
-            voiceSelectId: "voice-select",
-            textInputId: "text-input",
-            speakBtnId: "speak-btn",
-            pauseBtnId: "pause-btn",
-            resumeBtnId: "resume-btn",
-            stopBtnId: "stop-btn",
-            rateInputId: "rate",
-            rateValueId: "rate-value",
-            pitchInputId: "pitch",
-            pitchValueId: "pitch-value"
-          },
-          sidraDisplay: 'dadosSidra'
-        }
-      });
+        elementIds,
+        ...(this.params.addressConfirmationBufferThreshold === undefined
+          ? {}
+          : {
+              addressConfirmationBufferThreshold: this.params.addressConfirmationBufferThreshold
+            })
+      };
+      this.manager = new WebGeocodingManager(this.document, managerParams);
       console.log('[GT] _initializeManager: WebGeocodingManager created OK'); // DEBUG
       
       log('HomeViewController: WebGeocodingManager initialized');

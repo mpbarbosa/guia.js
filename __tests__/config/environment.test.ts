@@ -38,6 +38,10 @@ describe('environment config', () => {
     test('has cspEnabled boolean', () => {
       expect(typeof env.cspEnabled).toBe('boolean');
     });
+
+    test('has addressConfirmationBufferThreshold key', () => {
+      expect('addressConfirmationBufferThreshold' in env).toBe(true);
+    });
   });
 
   // ─── isDevelopment / isProduction ─────────────────────────────────────────
@@ -129,6 +133,13 @@ describe('environment getEnv branches (isolated)', () => {
     process.env.VITE_RATE_LIMIT_NOMINATIM = '999';
     expect(parseInt(process.env.VITE_RATE_LIMIT_NOMINATIM, 10)).toBe(999);
     delete process.env.VITE_RATE_LIMIT_NOMINATIM;
+  });
+
+  test('reads address confirmation threshold from process.env', async () => {
+    process.env.VITE_ADDRESS_CONFIRMATION_BUFFER_THRESHOLD = '4';
+    const { env: freshEnv } = await import('../../src/config/environment.js?threshold=1');
+    expect(freshEnv.addressConfirmationBufferThreshold).toBe(4);
+    delete process.env.VITE_ADDRESS_CONFIRMATION_BUFFER_THRESHOLD;
   });
 
   test('isDevelopment returns true when debugMode is set to true', () => {

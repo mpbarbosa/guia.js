@@ -166,6 +166,22 @@ describe('AddressFieldConfirmationBuffer', () => {
 			const buf = new AddressFieldConfirmationBuffer(7);
 			expect(buf.threshold).toBe(7);
 		});
+
+		it('falls back to the default threshold when the override is invalid', () => {
+			const buf = new AddressFieldConfirmationBuffer(0);
+			expect(buf.threshold).toBe(3);
+			expect(buf.observe('Rua A')).toBe(false);
+			expect(buf.observe('Rua A')).toBe(false);
+			expect(buf.observe('Rua A')).toBe(true);
+		});
+
+		it('supports large thresholds without confirming early', () => {
+			const buf = new AddressFieldConfirmationBuffer(10);
+			for (let i = 0; i < 9; i++) {
+				expect(buf.observe('Rua A')).toBe(false);
+			}
+			expect(buf.observe('Rua A')).toBe(true);
+		});
 	});
 
 	describe('Scenario 8: reset() clears all state', () => {

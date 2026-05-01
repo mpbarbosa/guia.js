@@ -1,7 +1,7 @@
 <html lang="pt-BR"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="0.19.1-alpha" data-source="src/config/version.js">
+    <meta name="version" content="0.19.2-alpha" data-source="src/config/version.js">
     
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com https://demotiles.maplibre.org https://router.project-osrm.org; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'">
@@ -607,15 +607,19 @@
               </a>
             </li>
           </ul>
-          <!-- Confirmation-buffer debug card -->
-          <div class="card mb-2" aria-label="Estado dos buffers de confirmação de endereço (diagnóstico)">
-            <div class="card-header py-1 small fw-semibold d-flex align-items-center gap-2">
-              <i class="bi bi-activity" aria-hidden="true"></i>
-              Buffers de Confirmação
-              <span class="badge text-bg-secondary ms-auto fw-normal">diagnóstico</span>
-            </div>
-            <div class="card-body p-2" id="confirmation-buffer-card">
-              <p class="text-muted small mb-0">Aguardando dados…</p>
+          <div class="navbar-confirmation-tools">
+            <div id="address-confirmation-threshold-control"></div>
+
+            <!-- Confirmation-buffer debug card -->
+            <div class="card mb-2 confirmation-buffer-diagnostic-card" aria-label="Estado dos buffers de confirmação de endereço (diagnóstico)">
+              <div class="card-header py-1 small fw-semibold d-flex align-items-center gap-2">
+                <i class="bi bi-activity" aria-hidden="true"></i>
+                Buffers de Confirmação
+                <span class="badge text-bg-secondary ms-auto fw-normal">diagnóstico</span>
+              </div>
+              <div class="card-body p-2" id="confirmation-buffer-card">
+                <p class="text-muted small mb-0">Aguardando dados…</p>
+              </div>
             </div>
           </div>
         </div>

@@ -45,6 +45,7 @@
  */
 
 import { LOGRADOURO_CONFIRMATION_COUNT } from '../config/defaults.js';
+import { normalizeAddressConfirmationThreshold } from '../config/addressConfirmation.js';
 
 // Sentinel used internally to distinguish "never confirmed" from "confirmed null".
 // null is a valid address field value (e.g. no street name in rural areas).
@@ -62,7 +63,10 @@ class AddressFieldConfirmationBuffer {
 	 *   `LOGRADOURO_CONFIRMATION_COUNT` (3).
 	 */
 	constructor(threshold: number = LOGRADOURO_CONFIRMATION_COUNT) {
-		this._threshold = threshold;
+		this._threshold = normalizeAddressConfirmationThreshold(
+			threshold,
+			LOGRADOURO_CONFIRMATION_COUNT
+		);
 		this._confirmed = UNCONFIRMED;
 		this._pending   = UNCONFIRMED;
 		this._pendingCount = 0;

@@ -318,10 +318,10 @@ workflow:
       enabled: true
       dependencies:
         - step_03
-        - step_11_6
+        - step_11
         - step_20
         - step_23
-      dependency_comment: "step_11_5 and step_11_6 are disabled (no AWS serverless backend for this project); listed here to satisfy canonical enforcement while making the intentional skip explicit."
+      dependency_comment: "step_11_5 and step_11_6 are disabled (no AWS serverless backend for this project); wired to step_11 (last enabled step in the AWS branch chain) instead."
       ai_persona: technical_writer
 
     - id: step_0f

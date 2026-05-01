@@ -1,10 +1,8 @@
 {
   "version": 1,
   "partitionIndex": 0,
-  "totalPartitions": 1,
-  "filesHash": "f17401ac",
-  "partitionLabels": [
-    "jest.config.e2e.js, jest.config.unit.js, jest.setup.js, jest.vue-transformer.cjs"
-  ],
-  "updatedAt": "2026-04-29T00:38:17.111Z"
+  "totalPartitions": 0,
+  "filesHash": "e3b0c442",
+  "partitionLabels": [],
+  "updatedAt": "2026-04-30T23:49:48.438Z"
 }

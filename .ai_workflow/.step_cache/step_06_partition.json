@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "partitionIndex": 14,
-  "totalPartitions": 52,
-  "filesHash": "1b896fb8",
+  "partitionIndex": 1,
+  "totalPartitions": 53,
+  "filesHash": "48cf3613",
   "partitionLabels": [
     "__tests__/components",
     "__tests__/components (2)",
@@ -29,6 +29,7 @@
     "__tests__",
     "__tests__/services",
     "__tests__/services (2)",
+    "__tests__/services (3)",
     "__tests__/speech",
     "__tests__/ui",
     "__tests__/unit",
@@ -57,5 +58,5 @@
     "test/types",
     "test/utils"
   ],
-  "updatedAt": "2026-04-29T00:36:03.782Z"
+  "updatedAt": "2026-04-30T23:48:11.578Z"
 }

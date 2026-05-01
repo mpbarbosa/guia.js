@@ -2,7 +2,7 @@
   "version": 1,
   "partitionIndex": 1,
   "totalPartitions": 53,
-  "filesHash": "48cf3613",
+  "filesHash": "1c3603bc",
   "partitionLabels": [
     "__tests__/components",
     "__tests__/components (2)",
@@ -49,7 +49,7 @@
     "src/utils",
     "test",
     "test (2)",
-    "test/e2e",
+    "test/config, test/e2e",
     "test/html",
     "test/html (2)",
     "test/integration, test/observers",
@@ -58,5 +58,5 @@
     "test/types",
     "test/utils"
   ],
-  "updatedAt": "2026-04-30T23:48:11.578Z"
+  "updatedAt": "2026-05-01T02:52:26.369Z"
 }

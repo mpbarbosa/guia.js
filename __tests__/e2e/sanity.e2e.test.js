@@ -279,7 +279,16 @@ describe('Sanity: Integration (Puppeteer)', () => {
 
       await page.setRequestInterception(true);
       page.on('request', req => {
-        if (req.url().includes('nominatim.openstreetmap.org')) {
+        const url = req.url();
+        // Intercept direct Nominatim requests AND CORS-proxy-wrapped Nominatim
+        // requests (api.allorigins.win/raw?url=<encoded nominatim URL>).
+        // The CORS fallback in ReverseGeocoder rewrites the URL when a direct
+        // fetch fails, so both patterns must return the same mock payload.
+        const isNominatim = url.includes('nominatim.openstreetmap.org');
+        const isCorsProxiedNominatim =
+          url.includes('allorigins.win') &&
+          decodeURIComponent(url).includes('nominatim');
+        if (isNominatim || isCorsProxiedNominatim) {
           req.respond({
             status:      200,
             contentType: 'application/json',
@@ -354,10 +363,14 @@ describe('Sanity: Integration (Puppeteer)', () => {
         return;
       }
 
+      // Wait until the element shows the mocked value, not just any non-empty
+      // string.  This eliminates the race where waitForFunction resolves on a
+      // transient "Bela Vista" reading and $eval then sees a subsequent real
+      // Nominatim response (e.g. "Cerqueira César") that bypassed the mock.
       await page.waitForFunction(
         () => {
           const el = document.querySelector('#bairro-value');
-          return el && el.textContent?.trim() !== '' && el.textContent?.trim() !== '—';
+          return el && /Bela Vista/i.test(el.textContent?.trim() ?? '');
         },
         { timeout: 20_000 },
       );

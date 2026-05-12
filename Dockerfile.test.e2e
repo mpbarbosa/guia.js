@@ -12,10 +12,12 @@
 #   4. PUPPETEER_EXECUTABLE_PATH points to the system Chromium binary.
 #   5. Puppeteer tests already pass --no-sandbox and --disable-setuid-sandbox
 #      (required when running as root inside Docker).
-#   6. bessa_patterns.ts is cloned at /workspace/ so vite.config.js can resolve
-#      the 'bessa_patterns.ts' alias during npm run build.  The vite config falls
-#      back to src/index.ts when dist/index.mjs is absent, so no separate build
-#      of the sibling repo is required.
+#   6. bessa_patterns.ts and paraty_geoservices are cloned at /workspace/ so
+#      vite.config.js can resolve the 'bessa_patterns.ts' alias and the
+#      resolveParatyGeoservicesCDN plugin can bundle paraty_geoservices inline
+#      (eliminating runtime CDN fetches that would prevent networkidle0 in E2E tests).
+#      The vite config falls back to src/index.ts when dist/index.mjs is absent,
+#      so no separate build of the sibling repos is required.
 #   7. TEST_SERVE_DIST=1 tells sanity.e2e.test.js to serve dist/ instead of src/.
 
 FROM node:20-alpine
@@ -34,10 +36,17 @@ RUN apk add --no-cache \
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
-# Clone bessa_patterns.ts sibling repo so vite.config.js alias resolves during build
+# Clone sibling repos so vite.config.js aliases/plugins resolve during build:
+#   - bessa_patterns.ts: required by resolve.alias in vite.config.js
+#   - paraty_geoservices: required by resolveParatyGeoservicesCDN plugin so the
+#     library is bundled inline (eliminates runtime CDN fetches in E2E tests)
 WORKDIR /workspace
 RUN git clone --depth 1 \
     https://github.com/mpbarbosa/bessa_patterns.ts.git
+
+RUN git clone --depth 1 \
+    --branch v1.2.0 \
+    https://github.com/mpbarbosa/paraty_geoservices.git
 
 # ─── Project setup ────────────────────────────────────────────────────────────
 

@@ -17,6 +17,23 @@ function resolveJsToTs() {
   };
 }
 
+// Plugin: resolve the paraty_geoservices CDN URL to the local sibling repo source
+// when the repo is present (Docker build, local dev with sibling repo cloned).
+// This bundles the provider inline and eliminates the runtime CDN fetch, which
+// prevents network-dependent failures in E2E tests and improves build hermeticity.
+function resolveParatyGeoservicesCDN(paratySrc) {
+  const CDN_URL = 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.0/dist/esm/index.js';
+  return {
+    name: 'resolve-paraty-geoservices-cdn',
+    enforce: 'pre',
+    resolveId(source) {
+      if (source === CDN_URL) return paratySrc;
+      return null;
+    },
+  };
+}
+
+
 export default defineConfig(({ mode }) => {
   const envVars = loadEnv(mode, process.cwd(), '');
 
@@ -26,8 +43,14 @@ export default defineConfig(({ mode }) => {
     envVars.VITE_AWS_LBS_BASE_URL ||
     'https://b2inkriw8k.execute-api.us-east-1.amazonaws.com';
 
+  const paratySrc = resolve(dirname(new URL(import.meta.url).pathname), '../paraty_geoservices/src/index.ts');
+
   return {
-    plugins: [resolveJsToTs(), vue()],
+    plugins: [
+      resolveJsToTs(),
+      ...(existsSync(paratySrc) ? [resolveParatyGeoservicesCDN(paratySrc)] : []),
+      vue(),
+    ],
     resolve: {
       alias: (() => {
         // Map importmap alias to the local bessa_patterns.ts package for Vite/Rollup.

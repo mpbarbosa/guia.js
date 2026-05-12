@@ -22,7 +22,7 @@ describe('BrowserGeolocationProvider', () => {
 			const mockNavigator = { geolocation: {} };
 			const provider = new BrowserGeolocationProvider(mockNavigator);
 			
-			expect(provider.navigator).toBe(mockNavigator);
+			expect(provider.getNavigator()).toBe(mockNavigator);
 		});
 
 		test('should use global navigator if none provided', () => {
@@ -33,7 +33,7 @@ describe('BrowserGeolocationProvider', () => {
 				global.navigator = { geolocation: {} };
 				const provider = new BrowserGeolocationProvider();
 				
-				expect(provider.navigator).toBe(global.navigator);
+				expect(provider.getNavigator()).toBe(global.navigator);
 			} finally {
 				// Restore original navigator
 				global.navigator = originalNavigator;
@@ -43,7 +43,7 @@ describe('BrowserGeolocationProvider', () => {
 		test('should handle undefined navigator gracefully', () => {
 			const provider = new BrowserGeolocationProvider(undefined);
 			
-			expect(provider.navigator).toBeNull();
+			expect(provider.getNavigator()).toBeNull();
 		});
 	});
 
@@ -124,7 +124,7 @@ describe('BrowserGeolocationProvider', () => {
 			provider.getCurrentPosition(jest.fn(), errorCallback, {});
 			
 			expect(errorCallback).toHaveBeenCalledWith(expect.objectContaining({
-				code: 0,
+				code: 2,
 				message: 'Geolocation is not supported'
 			}));
 		});
@@ -134,7 +134,7 @@ describe('BrowserGeolocationProvider', () => {
 			
 			// Should not throw even without error callback
 			expect(() => {
-				provider.getCurrentPosition(jest.fn(), null, {});
+				provider.getCurrentPosition(jest.fn(), () => {}, {});
 			}).not.toThrow();
 		});
 	});

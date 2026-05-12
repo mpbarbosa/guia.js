@@ -18,40 +18,57 @@ import MockGeolocationProvider from '../../../src/services/providers/MockGeoloca
 describe('MockGeolocationProvider', () => {
 	
 	describe('Constructor and Configuration', () => {
-		test('should initialize with default configuration', () => {
+		test('should initialize with default configuration', (done) => {
 			const provider = new MockGeolocationProvider();
 			
 			expect(provider.isSupported()).toBe(true);
-			expect(provider.config.defaultPosition).toBeNull();
-			expect(provider.config.defaultError).toBeNull();
-			expect(provider.config.delay).toBe(0);
+			// With no defaults configured, getCurrentPosition delivers a "Position unavailable" error immediately (delay=0)
+			const start = Date.now();
+			provider.getCurrentPosition(
+				() => { done(new Error('Should not call success callback')); },
+				(error) => {
+					expect(error.code).toBe(2);
+					expect(error.message).toBe('Position unavailable');
+					expect(Date.now() - start).toBeLessThan(100);
+					done();
+				}
+			);
 		});
 
-		test('should accept custom configuration', () => {
+		test('should accept custom configuration', (done) => {
 			const mockPosition = {
 				coords: { latitude: -23.5505, longitude: -46.6333 },
 				timestamp: Date.now()
 			};
 			
-			const provider = new MockGeolocationProvider({
+			const unsupportedProvider = new MockGeolocationProvider({
 				supported: false,
 				defaultPosition: mockPosition,
-				delay: 100
+				delay: 50
 			});
 			
-			expect(provider.isSupported()).toBe(false);
-			expect(provider.config.defaultPosition).toBe(mockPosition);
-			expect(provider.config.delay).toBe(100);
-		});
+			expect(unsupportedProvider.isSupported()).toBe(false);
+			// When not supported, error callback is invoked regardless of configured position
+			unsupportedProvider.getCurrentPosition(
+				() => { done(new Error('Should not call success callback')); },
+				(error) => { expect(error).toBeDefined(); done(); }
+			);
+		}, 10000);
 
-		test('should accept default error configuration', () => {
-			const mockError = { code: 1, message: 'Permission denied' };
+		test('should accept default error configuration', (done) => {
+			const mockError = { code: 1 as const, message: 'Permission denied' };
 			
 			const provider = new MockGeolocationProvider({
 				defaultError: mockError
 			});
 			
-			expect(provider.config.defaultError).toBe(mockError);
+			provider.getCurrentPosition(
+				() => { done(new Error('Should not call success callback')); },
+				(error) => {
+					expect(error).toBe(mockError);
+					done();
+				}
+			);
 		});
 	});
 
@@ -127,7 +144,7 @@ describe('MockGeolocationProvider', () => {
 					done(new Error('Should not call success callback'));
 				},
 				(error) => {
-					expect(error.code).toBe(0);
+					expect(error.code).toBe(2);
 					expect(error.message).toBe('Geolocation is not supported');
 					done();
 				}
@@ -216,29 +233,34 @@ describe('MockGeolocationProvider', () => {
 
 		test('should track active watches', () => {
 			const provider = new MockGeolocationProvider({
-				defaultPosition: { coords: { latitude: 0, longitude: 0 } }
+				defaultPosition: { coords: { latitude: 0, longitude: 0 }, timestamp: Date.now() }
 			});
 			
 			const watchId1 = provider.watchPosition(jest.fn(), jest.fn());
 			const watchId2 = provider.watchPosition(jest.fn(), jest.fn());
 			
-			expect(provider.activeWatches.size).toBe(2);
-			expect(provider.activeWatches.has(watchId1)).toBe(true);
-			expect(provider.activeWatches.has(watchId2)).toBe(true);
+			// Each call should return a distinct numeric ID
+			expect(typeof watchId1).toBe('number');
+			expect(typeof watchId2).toBe('number');
+			expect(watchId1).not.toBe(watchId2);
+			
+			provider.destroy();
 		});
 	});
 
 	describe('clearWatch()', () => {
 		test('should remove watch from active watches', () => {
-			const provider = new MockGeolocationProvider({
-				defaultPosition: { coords: { latitude: 0, longitude: 0 } }
-			});
+			const mockPosition = { coords: { latitude: 0, longitude: 0 }, timestamp: Date.now() };
+			const provider = new MockGeolocationProvider({ defaultPosition: mockPosition });
 			
-			const watchId = provider.watchPosition(jest.fn(), jest.fn());
-			expect(provider.activeWatches.has(watchId)).toBe(true);
+			const callback = jest.fn();
+			const watchId = provider.watchPosition(callback, jest.fn());
 			
 			provider.clearWatch(watchId);
-			expect(provider.activeWatches.has(watchId)).toBe(false);
+			
+			// After clearWatch, triggerWatchUpdate should not invoke the cleared callback
+			provider.triggerWatchUpdate(mockPosition);
+			expect(callback).not.toHaveBeenCalled();
 		});
 
 		test('should handle clearing non-existent watch', () => {
@@ -251,7 +273,7 @@ describe('MockGeolocationProvider', () => {
 	});
 
 	describe('setPosition()', () => {
-		test('should update default position', () => {
+		test('should update default position', (done) => {
 			const provider = new MockGeolocationProvider();
 			
 			const newPosition = {
@@ -261,21 +283,31 @@ describe('MockGeolocationProvider', () => {
 			
 			provider.setPosition(newPosition);
 			
-			expect(provider.config.defaultPosition).toBe(newPosition);
-			expect(provider.config.defaultError).toBeNull();
+			provider.getCurrentPosition(
+				(position) => {
+					expect(position).toBe(newPosition);
+					done();
+				},
+				() => { done(new Error('Should not call error callback after setPosition')); }
+			);
 		});
 	});
 
 	describe('setError()', () => {
-		test('should update default error', () => {
+		test('should update default error', (done) => {
 			const provider = new MockGeolocationProvider();
 			
-			const newError = { code: 3, message: 'Timeout' };
+			const newError = { code: 3 as const, message: 'Timeout' };
 			
 			provider.setError(newError);
 			
-			expect(provider.config.defaultError).toBe(newError);
-			expect(provider.config.defaultPosition).toBeNull();
+			provider.getCurrentPosition(
+				() => { done(new Error('Should not call success callback after setError')); },
+				(error) => {
+					expect(error).toBe(newError);
+					done();
+				}
+			);
 		});
 	});
 

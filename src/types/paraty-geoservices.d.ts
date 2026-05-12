@@ -73,6 +73,8 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.0/d
 	 * Intended for browser environments only.
 	 */
 	export class BrowserGeolocationProvider extends GeolocationProvider {
+		constructor(navigatorObj?: Navigator | null);
+
 		getCurrentPosition(
 			successCallback: (pos: GeoPosition) => void,
 			errorCallback: (err: GeoPositionError) => void,
@@ -83,10 +85,48 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.0/d
 			successCallback: (pos: GeoPosition) => void,
 			errorCallback: (err: GeoPositionError) => void,
 			options?: GeoPositionOptions,
-		): number;
+		): number | null;
 
 		clearWatch(watchId: number): void;
 		isSupported(): boolean;
+		isPermissionsAPISupported(): boolean;
+		getNavigator(): Navigator | null;
+	}
+
+	/** Configuration options for MockGeolocationProvider. */
+	export interface MockGeolocationProviderConfig {
+		supported?: boolean;
+		defaultPosition?: GeoPosition | null;
+		defaultError?: GeoPositionError | null;
+		delay?: number;
+	}
+
+	/**
+	 * Mock geolocation provider for tests and deterministic local development.
+	 */
+	export class MockGeolocationProvider extends GeolocationProvider {
+		constructor(config?: MockGeolocationProviderConfig);
+
+		getCurrentPosition(
+			successCallback: (pos: GeoPosition) => void,
+			errorCallback: (err: GeoPositionError) => void,
+			options?: GeoPositionOptions,
+		): void;
+
+		watchPosition(
+			successCallback: (pos: GeoPosition) => void,
+			errorCallback: (err: GeoPositionError) => void,
+			options?: GeoPositionOptions,
+		): number | null;
+
+		clearWatch(watchId: number): void;
+		isSupported(): boolean;
+		isPermissionsAPISupported(): boolean;
+		setPosition(position: GeoPosition): void;
+		setError(error: GeoPositionError): void;
+		triggerWatchUpdate(position?: GeoPosition): void;
+		triggerWatchError(error?: GeoPositionError): void;
+		destroy(): void;
 	}
 
 	/**

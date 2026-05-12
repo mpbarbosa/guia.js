@@ -1,11 +1,11 @@
 /**
- * Tests for GeolocationProvider base class/interface
- * 
+ * Tests for GeolocationProvider base class/interface (re-exported from paraty_geoservices).
+ *
  * This test suite verifies that:
- * - The base class enforces the provider interface
- * - Abstract methods throw errors when not implemented
- * - Subclasses must implement all required methods
- * 
+ * - GeolocationProvider is an abstract base class that can be extended
+ * - Concrete subclasses that implement all methods work correctly
+ * - Unimplemented abstract methods are absent at runtime (not a function)
+ *
  * @jest-environment node
  * @author MP Barbosa
  * @since 0.6.1-alpha
@@ -15,38 +15,30 @@ import { describe, test, expect } from '@jest/globals';
 import GeolocationProvider from '../../../src/services/providers/GeolocationProvider.js';
 
 describe('GeolocationProvider - Base Class/Interface', () => {
-	
+
 	describe('Abstract Methods', () => {
-		test('should throw error when getCurrentPosition is not implemented', () => {
-			const provider = new GeolocationProvider();
-			
-			expect(() => {
-				provider.getCurrentPosition(() => {}, () => {}, {});
-			}).toThrow('GeolocationProvider.getCurrentPosition() must be implemented by subclass');
+		test('should not have getCurrentPosition on prototype when not implemented', () => {
+			class Stub extends GeolocationProvider {}
+			const provider = new Stub();
+			expect(typeof provider.getCurrentPosition).toBe('undefined');
 		});
 
-		test('should throw error when watchPosition is not implemented', () => {
-			const provider = new GeolocationProvider();
-			
-			expect(() => {
-				provider.watchPosition(() => {}, () => {}, {});
-			}).toThrow('GeolocationProvider.watchPosition() must be implemented by subclass');
+		test('should not have watchPosition on prototype when not implemented', () => {
+			class Stub extends GeolocationProvider {}
+			const provider = new Stub();
+			expect(typeof provider.watchPosition).toBe('undefined');
 		});
 
-		test('should throw error when clearWatch is not implemented', () => {
-			const provider = new GeolocationProvider();
-			
-			expect(() => {
-				provider.clearWatch(123);
-			}).toThrow('GeolocationProvider.clearWatch() must be implemented by subclass');
+		test('should not have clearWatch on prototype when not implemented', () => {
+			class Stub extends GeolocationProvider {}
+			const provider = new Stub();
+			expect(typeof provider.clearWatch).toBe('undefined');
 		});
 
-		test('should throw error when isSupported is not implemented', () => {
-			const provider = new GeolocationProvider();
-			
-			expect(() => {
-				provider.isSupported();
-			}).toThrow('GeolocationProvider.isSupported() must be implemented by subclass');
+		test('should not have isSupported on prototype when not implemented', () => {
+			class Stub extends GeolocationProvider {}
+			const provider = new Stub();
+			expect(typeof provider.isSupported).toBe('undefined');
 		});
 	});
 
@@ -71,7 +63,7 @@ describe('GeolocationProvider - Base Class/Interface', () => {
 			}
 
 			const provider = new TestProvider();
-			
+
 			expect(provider.getCurrentPosition(() => {}, () => {}, {})).toBe('implemented');
 			expect(provider.watchPosition(() => {}, () => {}, {})).toBe(123);
 			expect(provider.clearWatch(123)).toBe(true);
@@ -87,13 +79,10 @@ describe('GeolocationProvider - Base Class/Interface', () => {
 			}
 
 			const provider = new IncompleteProvider();
-			
-			expect(() => provider.watchPosition(() => {}, () => {}, {}))
-				.toThrow('GeolocationProvider.watchPosition() must be implemented by subclass');
-			expect(() => provider.clearWatch(123))
-				.toThrow('GeolocationProvider.clearWatch() must be implemented by subclass');
-			expect(() => provider.isSupported())
-				.toThrow('GeolocationProvider.isSupported() must be implemented by subclass');
+
+			expect(() => provider.watchPosition(() => {}, () => {}, {})).toThrow();
+			expect(() => provider.clearWatch(123)).toThrow();
+			expect(() => provider.isSupported()).toThrow();
 		});
 	});
 });

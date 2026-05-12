@@ -22,17 +22,18 @@
  */
 
 import GeolocationProvider from './GeolocationProvider.js';
+import type { GeoPosition, GeoPositionError, GeoPositionOptions } from './GeolocationProvider.js';
 
 interface MockGeoConfig {
 	supported?: boolean;
-	defaultPosition?: GeolocationPosition | null;
-	defaultError?: GeolocationPositionError | null;
+	defaultPosition?: GeoPosition | null;
+	defaultError?: GeoPositionError | null;
 	delay?: number;
 }
 
 interface WatchEntry {
-	successCallback: ((pos: GeolocationPosition) => void) | null;
-	errorCallback: ((err: GeolocationPositionError) => void) | null;
+	successCallback: ((pos: GeoPosition) => void) | null;
+	errorCallback: ((err: GeoPositionError) => void) | null;
 }
 
 /**
@@ -42,7 +43,7 @@ interface WatchEntry {
  * @extends GeolocationProvider
  */
 class MockGeolocationProvider extends GeolocationProvider {
-	config: {supported: boolean, defaultPosition: GeolocationPosition | null, defaultError: GeolocationPositionError | null, delay: number};
+	config: {supported: boolean, defaultPosition: GeoPosition | null, defaultError: GeoPositionError | null, delay: number};
 	watchIdCounter: number;
 	activeWatches: Map<number, WatchEntry>;
 	pendingTimeouts: Set<ReturnType<typeof setTimeout>>;
@@ -99,14 +100,14 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} options - Geolocation options (unused in mock)
 	 * @returns {void}
 	 */
-	getCurrentPosition(successCallback: (pos: GeolocationPosition) => void, errorCallback: (err: GeolocationPositionError) => void, _options: PositionOptions): void {
+	getCurrentPosition(successCallback: (pos: GeoPosition) => void, errorCallback: (err: GeoPositionError) => void, _options?: GeoPositionOptions): void {
 		if (!this.isSupported()) {
-			const error = {
-				code: 0,
+			const error: GeoPositionError = {
+				code: 2,
 				message: 'Geolocation is not supported'
 			};
 			this._callWithDelay(() => {
-				if (errorCallback) errorCallback(error as unknown as GeolocationPositionError);
+				if (errorCallback) errorCallback(error);
 			});
 			return;
 		}
@@ -126,8 +127,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 					errorCallback({
 						code: 2,
 						message: 'Position unavailable',
-						PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3
-					} as unknown as GeolocationPositionError);
+					} as GeoPositionError);
 				}
 			}
 		});
@@ -143,7 +143,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} options - Geolocation options (unused in mock)
 	 * @returns {number|null} Watch ID for clearing the watch, or null if not supported
 	 */
-	watchPosition(successCallback: (pos: GeolocationPosition) => void, errorCallback: (err: GeolocationPositionError) => void, _options: PositionOptions): number | null {
+	watchPosition(successCallback: (pos: GeoPosition) => void, errorCallback: (err: GeoPositionError) => void, _options?: GeoPositionOptions): number | null {
 		if (!this.isSupported()) {
 			return null;
 		}
@@ -217,7 +217,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 *   timestamp: Date.now()
 	 * });
 	 */
-	setPosition(position: GeolocationPosition): void {
+	setPosition(position: GeoPosition): void {
 		this.config.defaultPosition = position;
 		this.config.defaultError = null;
 	}
@@ -233,7 +233,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * @example
 	 * provider.setError({ code: 1, message: 'Permission denied' });
 	 */
-	setError(error: GeolocationPositionError): void {
+	setError(error: GeoPositionError): void {
 		this.config.defaultError = error;
 		this.config.defaultPosition = null;
 	}
@@ -250,7 +250,7 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * const watchId = provider.watchPosition(callback);
 	 * provider.triggerWatchUpdate({ coords: { latitude: -23.5, longitude: -46.6 } });
 	 */
-	triggerWatchUpdate(position?: GeolocationPosition): void {
+	triggerWatchUpdate(position?: GeoPosition): void {
 		const positionToSend = position || this.config.defaultPosition;
 		
 		this.activeWatches.forEach((watch) => {
@@ -266,12 +266,11 @@ class MockGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} [error] - Error to send (uses default if not provided)
 	 * @returns {void}
 	 */
-	triggerWatchError(error?: GeolocationPositionError): void {
-		const errorToSend = (error || this.config.defaultError || {
+	triggerWatchError(error?: GeoPositionError): void {
+		const errorToSend: GeoPositionError = error || this.config.defaultError || {
 			code: 2,
 			message: 'Position unavailable',
-			PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3
-		}) as unknown as GeolocationPositionError;
+		};
 		
 		this.activeWatches.forEach((watch) => {
 			if (watch.errorCallback) {

@@ -21,6 +21,7 @@
  */
 
 import GeolocationProvider from './GeolocationProvider.js';
+import type { GeoPosition, GeoPositionError, GeoPositionOptions } from './GeolocationProvider.js';
 
 /**
  * Browser geolocation provider using navigator.geolocation API.
@@ -81,10 +82,10 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} options - Geolocation options
 	 * @returns {void}
 	 */
-	getCurrentPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options?: object): void {
+	getCurrentPosition(successCallback: (pos: GeoPosition) => void, errorCallback: (err: GeoPositionError) => void, options?: GeoPositionOptions): void {
 		if (!this.isSupported()) {
-			const error = {
-				code: 0,
+			const error: GeoPositionError = {
+				code: 2,
 				message: 'Geolocation is not supported',
 			};
 			if (errorCallback) {
@@ -94,8 +95,8 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 		}
 
 		this.navigator!.geolocation.getCurrentPosition(
-			successCallback as PositionCallback,
-			errorCallback as PositionErrorCallback,
+			successCallback as unknown as PositionCallback,
+			errorCallback as unknown as PositionErrorCallback,
 			options as PositionOptions
 		);
 	}
@@ -110,14 +111,14 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} options - Geolocation options
 	 * @returns {number|null} Watch ID for clearing the watch, or null if not supported
 	 */
-	watchPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options?: object): number | null {
+	watchPosition(successCallback: (pos: GeoPosition) => void, errorCallback: (err: GeoPositionError) => void, options?: GeoPositionOptions): number | null {
 		if (!this.isSupported()) {
 			return null;
 		}
 
 		return this.navigator!.geolocation.watchPosition(
-			successCallback as PositionCallback,
-			errorCallback as PositionErrorCallback,
+			successCallback as unknown as PositionCallback,
+			errorCallback as unknown as PositionErrorCallback,
 			options as PositionOptions
 		);
 	}

@@ -66,8 +66,10 @@ function createServer() {
 }
 
 // ─── Mock Nominatim response (São Paulo – Bela Vista) ────────────────────────
-
-const MOCK_COORD = { lat: -23.55052, lon: -46.633308 };
+// Coordinates: MASP museum area, Av. Paulista 1578, Bela Vista, São Paulo.
+// Using a location that is unambiguously in Bela Vista so that real Nominatim
+// responses (if the mock ever fails) also return the expected neighbourhood.
+const MOCK_COORD = { lat: -23.5614, lon: -46.6558 };
 
 const MOCK_NOMINATIM = {
   place_id: 999,
@@ -431,7 +433,9 @@ describe('Sanity: Integration (Puppeteer)', () => {
 
   describe('8. Service Worker', () => {
     test('service-worker.js is reachable (HTTP 200)', async () => {
-      const swPath = SERVE_DIST ? '/dist/service-worker.js' : '/service-worker.js';
+      // service-worker.js lives in public/ (served at /service-worker.js by Vite
+      // dev and copied to dist/ by the production build).
+      const swPath = SERVE_DIST ? '/dist/service-worker.js' : '/public/service-worker.js';
       const response = await page.goto(
         `http://localhost:${PORT}${swPath}`,
         { timeout: 10_000 },

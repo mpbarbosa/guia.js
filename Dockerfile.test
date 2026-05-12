@@ -5,9 +5,9 @@
 # Key design decisions:
 #   1. node:20-alpine matches .nvmrc (20.19.0) and keeps the image lean.
 #   2. git is installed so sibling repos can be cloned at build time.
-#   3. Both sibling projects (paraty_geocore.js and bessa_patterns.ts) are
-#      cloned into /workspace/ so that jest.config.unit.js moduleNameMapper
-#      paths (../paraty_geocore.js, ../bessa_patterns.ts) resolve correctly —
+#   3. All sibling projects (paraty_geocore.js, paraty_geoservices, and
+#      bessa_patterns.ts) are cloned into /workspace/ so that
+#      jest.config.unit.js moduleNameMapper paths resolve correctly —
 #      no test-file changes required.
 #   4. ENV NODE_ENV=test before npm ci ensures devDependencies are installed
 #      (node:20-alpine ships with NODE_ENV=production which silently skips them).
@@ -20,6 +20,7 @@ RUN apk add --no-cache git
 # ─── Sibling project dependencies ──────────────────────────────────────────
 # jest.config.unit.js maps CDN/alias imports to local sibling dirs:
 #   ../paraty_geocore.js/src/index
+#   ../paraty_geoservices/src/index
 #   ../bessa_patterns.ts/src/index
 # Cloning them here so the relative paths resolve inside the container.
 
@@ -28,6 +29,10 @@ WORKDIR /workspace
 RUN git clone --depth 1 \
     --branch v0.12.11-alpha \
     https://github.com/mpbarbosa/paraty_geocore.js.git
+
+RUN git clone --depth 1 \
+    --branch v1.0.3 \
+    https://github.com/mpbarbosa/paraty_geoservices.git
 
 RUN git clone --depth 1 \
     https://github.com/mpbarbosa/bessa_patterns.ts.git

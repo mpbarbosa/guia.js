@@ -103,3 +103,4 @@ export default GeolocationProvider;
  * @exports GeolocationProvider - Abstract base class for geolocation provider implementations
  */
 export { GeolocationProvider };
+

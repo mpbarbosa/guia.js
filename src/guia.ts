@@ -11,6 +11,7 @@ import {
 } from './config/defaults.js';
 
 import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
+import { GetCurrentPositionUseCase, WatchPositionUseCase } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.0.3/dist/esm/index.js';
 import ObserverSubject from './core/ObserverSubject.js';
 import PositionManager from './core/PositionManager.js';
 
@@ -197,6 +198,8 @@ export {
   BrowserGeolocationProvider,
   MockGeolocationProvider,
   ChangeDetectionCoordinator,
+  GetCurrentPositionUseCase,
+  WatchPositionUseCase,
   BrazilianStandardAddress,
   ReferencePlace,
   AddressExtractor,

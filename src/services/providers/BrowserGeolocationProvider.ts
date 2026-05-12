@@ -81,13 +81,12 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} options - Geolocation options
 	 * @returns {void}
 	 */
-	getCurrentPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options: object): void {
+	getCurrentPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options?: object): void {
 		if (!this.isSupported()) {
 			const error = {
 				code: 0,
 				message: 'Geolocation is not supported',
-				PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3
-			} as unknown as GeolocationPositionError;
+			};
 			if (errorCallback) {
 				errorCallback(error);
 			}
@@ -95,9 +94,9 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 		}
 
 		this.navigator!.geolocation.getCurrentPosition(
-			successCallback,
-			errorCallback,
-			options
+			successCallback as PositionCallback,
+			errorCallback as PositionErrorCallback,
+			options as PositionOptions
 		);
 	}
 
@@ -111,15 +110,15 @@ class BrowserGeolocationProvider extends GeolocationProvider {
 	 * @param {Object} options - Geolocation options
 	 * @returns {number|null} Watch ID for clearing the watch, or null if not supported
 	 */
-	watchPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options: object): number | null {
+	watchPosition(successCallback: (pos: object) => void, errorCallback: (err: object) => void, options?: object): number | null {
 		if (!this.isSupported()) {
 			return null;
 		}
 
 		return this.navigator!.geolocation.watchPosition(
-			successCallback,
-			errorCallback,
-			options
+			successCallback as PositionCallback,
+			errorCallback as PositionErrorCallback,
+			options as PositionOptions
 		);
 	}
 
@@ -178,3 +177,4 @@ export default BrowserGeolocationProvider;
  * @exports BrowserGeolocationProvider - Native browser Geolocation API implementation
  */
 export { BrowserGeolocationProvider };
+

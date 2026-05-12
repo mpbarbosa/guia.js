@@ -6,10 +6,10 @@
  * GetCurrentPositionUseCase, WatchPositionUseCase, GetCurrentPositionOutput.
  *
  * @see https://github.com/mpbarbosa/paraty_geoservices
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.1.0/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.1.1/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.1.0/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.1.1/dist/esm/index.js' {
 	/** Geographic coordinates and metadata returned by a provider. */
 	export interface GeoPosition {
 		coords: {

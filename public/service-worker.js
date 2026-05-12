@@ -81,9 +81,22 @@ self.addEventListener('fetch', event => {
   const isPrecachedShellAsset = isSameOrigin && STATIC_ASSET_PATHS.has(url.pathname);
   const isStaticSubresource =
     isSameOrigin && ['script', 'style', 'image', 'font'].includes(request.destination);
-  
+
   // Skip non-GET requests
   if (request.method !== 'GET') {
+    return;
+  }
+
+  // In development (localhost / 127.0.0.1), bypass the SW entirely so Vite's
+  // dev server, HMR websocket, and hot-module replacement all work correctly.
+  const isDev =
+    url.hostname === 'localhost' ||
+    url.hostname === '127.0.0.1' ||
+    url.hostname.startsWith('192.168.') ||
+    url.pathname.startsWith('/@vite/') ||
+    url.pathname.startsWith('/@fs/') ||
+    url.pathname.startsWith('/node_modules/');
+  if (isDev) {
     return;
   }
 

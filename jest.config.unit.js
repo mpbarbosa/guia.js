@@ -96,6 +96,7 @@ export default {
     '/test/html/HTMLHeaderDisplayer.test.ts',  // ESM jest.mock path resolution issue
     '/test/speech/SpeechSynthesisManager.facade-wip.test.js',  // WIP file - .js extension stripping breaks resolution
     '/test/types/paraty-geocore.d.test.ts',  // Imports from CDN URL (not resolvable in Jest)
+    '/test/types/paraty-geoservices.d.test.ts',  // Imports src/types/paraty-geoservices.d.ts — ambient module declaration files cannot be transpiled by ts-jest
     '/test/types/global.d.test.ts',  // Imports src/types/global.d.ts — TypeScript declaration files cannot be transpiled by ts-jest
     '/test/vite-env.d.test.ts',  // ScriptTransformer cannot handle this test file
     '/test/geolocation-banner.test',  // ESM read-only named exports — jest.spyOn not applicable

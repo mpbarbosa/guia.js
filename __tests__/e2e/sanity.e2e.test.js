@@ -278,13 +278,46 @@ describe('Sanity: Integration (Puppeteer)', () => {
         accuracy:  5,
       });
 
+      // Intercept Nominatim fetch() calls at the JavaScript level BEFORE any
+      // page scripts run.  Puppeteer's CDP request interception (setRequestInterception)
+      // does not reliably catch requests that ibira.js makes via the global fetch()
+      // function in the compiled production bundle; this in-page patch catches them
+      // earlier and returns the mock payload synchronously, guaranteeing that every
+      // geocoding result — including the very first one during page initialisation —
+      // is "Bela Vista".  The CDP handler below still covers any XHR/fetch calls
+      // that may originate outside the ibira.js path (CORS fallback, etc.).
+      await page.evaluateOnNewDocument((mockPayload) => {
+        // Clear IndexedDB so a previous test's cached geocoding result cannot
+        // pre-populate #bairro-value with a stale address (e.g. "Cerqueira César").
+        try { indexedDB.deleteDatabase('guia-offline-cache'); } catch (_) {}
+        try { localStorage.clear(); } catch (_) {}
+        try { sessionStorage.clear(); } catch (_) {}
+
+        const originalFetch = window.fetch;
+        window.fetch = function(input, init) {
+          const url = typeof input === 'string' ? input : (input instanceof URL ? input.href : input.url);
+          const isNominatim = url && (
+            url.includes('nominatim.openstreetmap.org') ||
+            (url.includes('allorigins.win') && decodeURIComponent(url).includes('nominatim'))
+          );
+          if (isNominatim) {
+            return Promise.resolve(
+              new Response(JSON.stringify(mockPayload), {
+                status:  200,
+                headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+              })
+            );
+          }
+          return originalFetch.call(this, input, init);
+        };
+      }, MOCK_NOMINATIM);
+
+      // CDP-level interception handles any Nominatim requests that slip through
+      // the in-page fetch mock (e.g. requests originating from service workers or
+      // non-fetch paths) and ensures all other requests are continued normally.
       await page.setRequestInterception(true);
       page.on('request', req => {
         const url = req.url();
-        // Intercept direct Nominatim requests AND CORS-proxy-wrapped Nominatim
-        // requests (api.allorigins.win/raw?url=<encoded nominatim URL>).
-        // The CORS fallback in ReverseGeocoder rewrites the URL when a direct
-        // fetch fails, so both patterns must return the same mock payload.
         const isNominatim = url.includes('nominatim.openstreetmap.org');
         const isCorsProxiedNominatim =
           url.includes('allorigins.win') &&
@@ -364,16 +397,28 @@ describe('Sanity: Integration (Puppeteer)', () => {
         return;
       }
 
-      // Wait until the element shows the mocked value, not just any non-empty
-      // string.  This eliminates the race where waitForFunction resolves on a
-      // transient "Bela Vista" reading and $eval then sees a subsequent real
-      // Nominatim response (e.g. "Cerqueira César") that bypassed the mock.
+      // The confirmation buffer (BAIRRO_CONFIRMATION_COUNT = 3) requires three
+      // consecutive identical geocoding results before displaying the bairro.
+      // The initial page load provides observation #1 via the in-page fetch mock.
+      // Trigger two more position fixes (each > 20 m = MINIMUM_DISTANCE_CHANGE) so
+      // the app issues two additional geocoding requests, all answered with "Bela
+      // Vista" by the in-page mock.  2 s spacing > GEOLOCATION_THROTTLE_CONFIRMATION_
+      // INTERVAL (1.5 s), so each update passes the throttle guard.
+      for (const latOffset of [0.0003, 0.0006]) {
+        await new Promise(r => setTimeout(r, 2000));
+        await page.setGeolocation({
+          latitude:  MOCK_COORD.lat + latOffset,
+          longitude: MOCK_COORD.lon,
+          accuracy:  5,
+        });
+      }
+
       await page.waitForFunction(
         () => {
           const el = document.querySelector('#bairro-value');
           return el && /Bela Vista/i.test(el.textContent?.trim() ?? '');
         },
-        { timeout: 20_000 },
+        { timeout: 10_000 },
       );
 
       const bairro = await page.$eval('#bairro-value', el => el.textContent?.trim());

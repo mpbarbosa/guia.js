@@ -12,6 +12,7 @@ Root cause: `ibira.js` (bundled from node_modules in the Vite dist) calls the gl
 Additionally, `OfflineCacheService` uses IndexedDB (`guia-offline-cache`) which persists geocoding results across pages in the same browser session. A previous test's real Nominatim response (e.g. "Cerqueira César" for MASP area coords) can populate this cache, causing the bairro to show real data instead of the mock.
 
 **Fix** (in `__tests__/e2e/sanity.e2e.test.js` `setupGeolocationPage()`):
+
 1. Use `page.evaluateOnNewDocument()` to patch `window.fetch` at the JS level — intercept `nominatim.openstreetmap.org` URLs and return the mock payload as `Promise.resolve(new Response(...))`.
 2. Also clear IndexedDB (`guia-offline-cache`), localStorage, and sessionStorage in the same `evaluateOnNewDocument` call.
 3. Keep the CDP interceptor (`setRequestInterception`) as a fallback for any non-fetch path.

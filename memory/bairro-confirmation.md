@@ -12,6 +12,7 @@ In E2E Puppeteer tests, `page.setGeolocation()` triggers `watchPosition` once. A
 **Fix for bairro test**: After page setup, call `page.setGeolocation()` twice more with lat offsets of 0.0003° (≈33m, > `MINIMUM_DISTANCE_CHANGE`=20m) spaced 2s apart (> `GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL`=1.5s). This triggers geocoding observations #2 and #3, reaching confirmation threshold.
 
 Once observation #1 arrives, `ServiceCoordinator` activates confirmation mode:
+
 - `GeolocationService.setThrottleInterval(1500)` reduces throttle to 1.5s
 - `PositionManager.setBypassDistanceRule(true)` bypasses the distance gate
 

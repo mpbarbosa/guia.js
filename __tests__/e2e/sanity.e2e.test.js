@@ -76,6 +76,7 @@ const MOCK_NOMINATIM = {
   display_name: 'Bela Vista, São Paulo, SP, Brasil',
   address: {
     road:             'Avenida Paulista',
+    neighbourhood:    'Bela Vista',
     suburb:           'Bela Vista',
     city:             'São Paulo',
     state:            'São Paulo',
@@ -277,19 +278,28 @@ describe('Sanity: Integration (Puppeteer)', () => {
         accuracy:  5,
       });
 
-      await page.setRequestInterception(true);
-      page.on('request', req => {
-        if (req.url().includes('nominatim.openstreetmap.org')) {
-          req.respond({
-            status:      200,
-            contentType: 'application/json',
-            headers:     { 'Access-Control-Allow-Origin': '*' },
-            body:        JSON.stringify(MOCK_NOMINATIM),
-          });
-        } else {
-          req.continue();
-        }
-      });
+      await page.evaluateOnNewDocument((mockResponse) => {
+        const originalFetch = window.fetch.bind(window);
+
+        window.fetch = async (resource, init) => {
+          const requestUrl =
+            typeof resource === 'string'
+              ? resource
+              : (resource && 'url' in resource ? resource.url : '');
+
+          if (requestUrl.includes('nominatim.openstreetmap.org/reverse')) {
+            return new Response(JSON.stringify(mockResponse), {
+              status: 200,
+              headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+              },
+            });
+          }
+
+          return originalFetch(resource, init);
+        };
+      }, MOCK_NOMINATIM);
 
       // Grant geolocation permission BEFORE goto() so it is already active when
       // the app initialises.  The app calls watchPosition() during init; if the

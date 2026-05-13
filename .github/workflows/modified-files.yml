@@ -209,34 +209,36 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           
       - name: Validate markdown syntax
+        shell: bash
         run: |
           echo "Validating markdown files..."
-          
-          # Basic markdown validation
-          for file in ${{ steps.changed_docs.outputs.files }}; do
+
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+
             if [ -f "$file" ]; then
               echo "Checking $file..."
-              
+
               # Check for common issues
               if grep -q $'\r' "$file"; then
                 echo "⚠️ Warning: $file contains Windows line endings"
               fi
-              
+
               # Check for broken internal links (basic)
               INTERNAL_LINKS=$(grep -oP '\[.*?\]\((?!http)[^\)]+\)' "$file" || true)
-              if [ ! -z "$INTERNAL_LINKS" ]; then
+              if [ -n "$INTERNAL_LINKS" ]; then
                 echo "Found internal links in $file:"
-                echo "$INTERNAL_LINKS" | while read link; do
+                echo "$INTERNAL_LINKS" | while IFS= read -r link; do
                   LINK_PATH=$(echo "$link" | grep -oP '\([^\)]+\)' | tr -d '()')
                   if [ ! -f "$LINK_PATH" ] && [ ! -d "$LINK_PATH" ]; then
                     echo "⚠️ Potential broken link: $LINK_PATH"
                   fi
                 done
               fi
-              
+
               echo "✅ $file validation complete"
             fi
-          done
+          done <<< "${{ steps.changed_docs.outputs.files }}"
           
       - name: Check documentation index
         run: |

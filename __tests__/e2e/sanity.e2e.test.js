@@ -76,6 +76,7 @@ const MOCK_NOMINATIM = {
   display_name: 'Bela Vista, São Paulo, SP, Brasil',
   address: {
     road:             'Avenida Paulista',
+    neighbourhood:    'Bela Vista',
     suburb:           'Bela Vista',
     city:             'São Paulo',
     state:            'São Paulo',

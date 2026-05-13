@@ -264,6 +264,7 @@ workflow:
       enabled: true
       dependencies:
         - step_15
+      dependency_comment: "step_14 (Prompt Engineering) is disabled; step_16 is chained after step_15 (UX Analysis), the last enabled step in the quality branch before finalization, consistent with the step_15 dependency override above."
       ai_persona: git_specialist
 
     - id: step_18

@@ -195,14 +195,18 @@ jobs:
         id: changed_docs
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ]; then
-            CHANGED_DOCS=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep "\.md$" || echo "")
+            CHANGED_DOCS=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep "\.md$" || true)
           else
-            CHANGED_DOCS=$(git diff --name-only HEAD~1 HEAD | grep "\.md$" || echo "")
+            CHANGED_DOCS=$(git diff --name-only HEAD~1 HEAD | grep "\.md$" || true)
           fi
           
           echo "Changed documentation files:"
           echo "$CHANGED_DOCS"
-          echo "files=$CHANGED_DOCS" >> $GITHUB_OUTPUT
+          {
+            echo "files<<EOF"
+            echo "$CHANGED_DOCS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
           
       - name: Validate markdown syntax
         run: |

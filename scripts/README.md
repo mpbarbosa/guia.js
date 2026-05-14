@@ -93,7 +93,62 @@
 
 ---
 
-### 4. build_and_deploy.sh
+### 4. deploy.sh
+
+**Path**: `scripts/deploy.sh`
+**Purpose**: Build production bundle, sync it to the `mpbarbosa.com` website repository, and commit + push changes
+**Usage**: `./scripts/deploy.sh [-h|--help]`
+**npm script**: `npm run deploy`
+**Related modules**: `dist/`, `vite.config.js`, `/home/mpb/Documents/GitHub/mpbarbosa.com`
+
+**Arguments**:
+
+| Flag | Description |
+|------|-------------|
+| `-h`, `--help` | Show help message and exit |
+
+**Environment variables**:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MPBARBOSA_COM_ROOT` | `/home/mpb/Documents/GitHub/mpbarbosa.com` | Path to the mpbarbosa.com repository |
+
+**Exit codes**:
+
+- `0` — Deployment completed successfully (or no changes to push)
+- `1` — Any step failed (`set -euo pipefail`)
+
+**Prerequisites**:
+
+- `mpbarbosa.com` repository cloned at `$MPBARBOSA_COM_ROOT`
+- `rsync` available on `PATH`
+- Node.js v18+ and npm installed
+- git configured with push access to the `mpbarbosa.com` remote
+
+**What it does**:
+
+1. Validates prerequisites (repo exists, is a git repo, rsync available)
+2. Runs `npm run build` to compile `dist/`
+3. Rsyncs `dist/` to `$MPBARBOSA_COM_ROOT/guia_js/` (with `--delete` to keep the target in sync)
+4. If `git status --porcelain` reports changes: runs `git add -A`, `git commit`, and `git push`
+5. Skips the git step entirely if there are no changes
+
+**Example**:
+
+```bash
+# Standard deploy
+./scripts/deploy.sh
+
+# Override repository path
+MPBARBOSA_COM_ROOT=~/repos/mpbarbosa.com ./scripts/deploy.sh
+
+# Via npm
+npm run deploy
+```
+
+---
+
+### 5. build_and_deploy.sh
 
 **Path**: `scripts/build_and_deploy.sh`
 **Purpose**: Build production bundle and deploy to staging environment
@@ -202,7 +257,7 @@ jobs:
 
 ---
 
-### 5. deploy-preflight.sh
+### 6. deploy-preflight.sh
 
 **Path**: `scripts/deploy-preflight.sh`
 **Purpose**: Production deployment pre-flight checklist — verifies the build is ready before deploying
@@ -234,7 +289,7 @@ jobs:
 
 ---
 
-### 6. cleanup-ai-workflow.sh
+### 7. cleanup-ai-workflow.sh
 
 **Path**: `scripts/cleanup-ai-workflow.sh`
 **Purpose**: Removes old `.ai_workflow/` run artifact directories and local build/test caches
@@ -275,7 +330,7 @@ npm run cleanup:ai-workflow
 
 ---
 
-### 7. Docker test wrapper scripts
+### 8. Docker test wrapper scripts
 
 These scripts are lightweight entrypoints for the Docker-based test flow. Full walkthroughs, troubleshooting, and container details live in [`docs/DOCKER_TESTING.md`](../docs/DOCKER_TESTING.md).
 

@@ -161,6 +161,44 @@ The build process (via `vite.config.js`) automatically:
 
 **Do not modify** the build output manually - always redeploy from a fresh build.
 
+### Deploying to mpbarbosa.com (Automated)
+
+Use `scripts/deploy.sh` to build and publish the app to the
+[mpbarbosa.com](https://github.com/mpbarbosa/mpbarbosa.com) website repository in one step:
+
+```bash
+# Run the full deploy pipeline
+npm run deploy
+# or directly:
+./scripts/deploy.sh
+```
+
+**What the script does**:
+
+1. Runs `npm run build` to compile `dist/`
+2. Rsyncs `dist/` → `$MPBARBOSA_COM_ROOT/guia_js/` (default: `/home/mpb/Documents/GitHub/mpbarbosa.com`)
+3. If there are changes in `mpbarbosa.com`:
+   - `git add -A`
+   - `git commit -m "chore: automated deploy from guia_js"`
+   - `git push`
+4. Skips the git step if there is nothing new to commit.
+
+**Prerequisites**:
+
+- `mpbarbosa.com` repository cloned at `$MPBARBOSA_COM_ROOT`
+- `rsync` on `PATH`
+- git push access to the `mpbarbosa.com` remote
+
+Override the repository path with an environment variable:
+
+```bash
+MPBARBOSA_COM_ROOT=~/repos/mpbarbosa.com ./scripts/deploy.sh
+```
+
+See `scripts/README.md` for full reference documentation.
+
+---
+
 ### Testing Production Build Locally
 
 Before deploying to production, test the build locally:

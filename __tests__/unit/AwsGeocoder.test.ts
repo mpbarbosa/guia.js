@@ -61,16 +61,15 @@ describe('AwsGeocoder', () => {
 			);
 		});
 
-		test('returns rawData and enderecoPadronizado', async () => {
+		test('returns GeoAddress with mapped fields', async () => {
 			mockFetch(sampleAwsResponse);
 			const g = new AwsGeocoder(BASE_URL);
 			const result = await g.reverseGeocode(-23.55052, -46.633309);
 
-			expect(result.rawData).toEqual(sampleAwsResponse);
-			expect(result.enderecoPadronizado.municipio).toBe('São Paulo');
-			expect(result.enderecoPadronizado.bairro).toBe('Sé');
-			expect(result.enderecoPadronizado.cep).toBe('01016-000');
-			expect(result.enderecoPadronizado.pais).toBe('Brasil');
+			expect(result.city).toBe('São Paulo');
+			expect(result.neighborhood).toBe('Sé');
+			expect(result.postalCode).toBe('01016-000');
+			expect(result.country).toBe('Brasil');
 		});
 
 		test('throws on non-OK HTTP response', async () => {

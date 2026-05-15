@@ -45,7 +45,7 @@ RUN git clone --depth 1 \
     https://github.com/mpbarbosa/bessa_patterns.ts.git
 
 RUN git clone --depth 1 \
-    --branch v1.2.0 \
+    --branch v1.2.5 \
     https://github.com/mpbarbosa/paraty_geoservices.git
 
 # ─── Project setup ────────────────────────────────────────────────────────────

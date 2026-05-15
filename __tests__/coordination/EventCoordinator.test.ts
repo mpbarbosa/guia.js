@@ -112,17 +112,17 @@ describe('EventCoordinator', () => {
         // Create mock geocoding state
         mockGeocodingState = new GeocodingState();
 
-        // Reset window mock
-        mockWindow = {
-            findNearbyRestaurants: undefined,
-            fetchCityStatistics: undefined
-        };
-        global.window = mockWindow;
+        // Reset window mock properties without replacing the non-configurable window object
+        mockWindow = global.window as typeof global.window & { findNearbyRestaurants?: unknown; fetchCityStatistics?: unknown };
+        delete mockWindow.findNearbyRestaurants;
+        delete mockWindow.fetchCityStatistics;
     });
 
     afterEach(() => {
-        // Cleanup
-        delete global.window;
+        // Cleanup only the properties we may have added
+        const win = global.window as typeof global.window & { findNearbyRestaurants?: unknown; fetchCityStatistics?: unknown };
+        delete win.findNearbyRestaurants;
+        delete win.fetchCityStatistics;
     });
 
     describe('Constructor', () => {

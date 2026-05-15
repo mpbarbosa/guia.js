@@ -1,7 +1,7 @@
 <html lang="pt-BR"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="0.20.0-alpha" data-source="src/config/version.js">
+    <meta name="version" content="0.20.2-alpha" data-source="src/config/version.js">
     
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com https://demotiles.maplibre.org https://router.project-osrm.org; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'">
@@ -39,7 +39,7 @@
     </script>
 
     <!-- Preload ibira.js for API fetching and caching -->
-    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/src/index.js">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/dist/index.mjs">
     
     <!-- Design System -->
     <link rel="stylesheet" href="design-tokens.css">
@@ -944,7 +944,7 @@
       
       try {
         const { IbiraAPIFetchManager } = await Promise.race([
-          import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/src/index.js'),
+          import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/dist/index.mjs'),
           new Promise((_, reject) => setTimeout(() => reject(new Error('CDN timeout after 5s')), 5000))
         ]);
         window.IbiraAPIFetchManager = IbiraAPIFetchManager;

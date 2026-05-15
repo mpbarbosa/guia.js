@@ -1,6 +1,6 @@
 {
   "name": "guia_js",
-  "version": "0.20.0-alpha",
+  "version": "0.20.2-alpha",
   "private": true,
   "description": "Tourist guide web application built on top of guia.js library",
   "type": "module",
@@ -114,7 +114,7 @@
     ],
     "moduleNameMapper": {
       "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.11-alpha/dist/esm/index\\.js$": "<rootDir>/../paraty_geocore.js/src/index",
-      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@1\\.2\\.0/dist/esm/index\\.js$": "<rootDir>/../paraty_geoservices/src/index",
+      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@1\\.2\\.5/dist/esm/index\\.js$": "<rootDir>/../paraty_geoservices/src/index",
       "\\.(css|less|scss|sass)$": "<rootDir>/__mocks__/fileMock.js",
       "^(\\.{1,2}/.*)\\.js$": "$1"
     },

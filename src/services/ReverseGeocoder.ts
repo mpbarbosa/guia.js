@@ -38,6 +38,7 @@ import { ADDRESS_FETCHED_EVENT, GEOCODING_ERROR_EVENT } from '../config/defaults
 import { withObserver } from '../utils/ObserverMixin.js';
 import { env } from '../config/environment.js';
 import AwsGeocoder from './AwsGeocoder.js';
+import type { GeoAddress } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/dist/esm/index.js';
 
 /**
  * Generates OpenStreetMap Nominatim API URL for reverse geocoding.
@@ -86,7 +87,7 @@ class ReverseGeocoder {
 	longitude: number | null;
 	url: string | null;
 	config: { openstreetmapBaseUrl: string; corsProxy: string | null; enableCorsFallback: boolean };
-	_awsGeocoder: { reverseGeocode(lat: number, lon: number): Promise<{ rawData: unknown; enderecoPadronizado: unknown }> } | null;
+	_awsGeocoder: AwsGeocoder | null;
 	_primaryProvider: 'aws' | 'nominatim';
 	_corsRetryAttempted: boolean;
 	observerSubject!: ObserverSubject;
@@ -121,7 +122,7 @@ class ReverseGeocoder {
 		openstreetmapBaseUrl?: string;
 		corsProxy?: string | null;
 		enableCorsFallback?: boolean;
-		awsGeocoder?: ReverseGeocoder['_awsGeocoder'];
+		awsGeocoder?: AwsGeocoder | null;
 	} = {}) {
 		// Initialize declared properties
 		this.latitude = null;
@@ -148,7 +149,7 @@ class ReverseGeocoder {
 
 		// AWS geocoder: use injected instance, or auto-create when AWS is enabled
 		this._awsGeocoder = config.awsGeocoder ||
-			(env.awsLbsEnabled && env.awsLbsBaseUrl ? new AwsGeocoder() : null);
+			(env.awsLbsEnabled && env.awsLbsBaseUrl ? new AwsGeocoder(env.awsLbsBaseUrl as string) : null);
 
 		// Runtime-switchable primary provider (initialized from env config)
 		this._primaryProvider = (env.geocodingPrimaryProvider === 'nominatim') ? 'nominatim' : 'aws';
@@ -286,11 +287,11 @@ class ReverseGeocoder {
 		// ── Primary provider: AWS Location Based Service (when configured as primary) ──
 		if (primaryIsAws && this._awsGeocoder && this.latitude && this.longitude) {
 			try {
-				const { rawData, enderecoPadronizado } = await this._awsGeocoder.reverseGeocode(
+				const geoAddress: GeoAddress = await this._awsGeocoder.reverseGeocode(
 					this.latitude, this.longitude
 				);
-				this.currentAddress = rawData;
-				this.enderecoPadronizado = enderecoPadronizado;
+				this.currentAddress = geoAddress;
+				this.enderecoPadronizado = geoAddress;
 				log('(ReverseGeocoder.fetchAddress) AWS provider succeeded');
 				this._dispatchProviderEvent('aws');
 				this.notifyObservers(
@@ -300,7 +301,7 @@ class ReverseGeocoder {
 					false,
 					null
 				);
-				return rawData;
+				return geoAddress;
 			} catch (awsErr) {
 				warn('(ReverseGeocoder.fetchAddress) AWS provider failed, falling back to Nominatim:', (awsErr as Error).message);
 			}
@@ -346,11 +347,11 @@ class ReverseGeocoder {
 			// ── Fallback: AWS Location Based Service (when Nominatim is primary) ─
 			if (!primaryIsAws && this._awsGeocoder && this.latitude && this.longitude) {
 				try {
-					const { rawData, enderecoPadronizado } = await this._awsGeocoder.reverseGeocode(
+					const geoAddress: GeoAddress = await this._awsGeocoder.reverseGeocode(
 						this.latitude, this.longitude
 					);
-					this.currentAddress = rawData;
-					this.enderecoPadronizado = enderecoPadronizado;
+					this.currentAddress = geoAddress;
+					this.enderecoPadronizado = geoAddress;
 					log('(ReverseGeocoder.fetchAddress) AWS fallback succeeded');
 					this._dispatchProviderEvent('aws');
 					this.notifyObservers(
@@ -360,7 +361,7 @@ class ReverseGeocoder {
 						false,
 						null
 					);
-					return rawData;
+					return geoAddress;
 				} catch (awsErr) {
 					warn('(ReverseGeocoder.fetchAddress) AWS fallback also failed:', (awsErr as Error).message);
 				}

@@ -22,7 +22,7 @@ function resolveJsToTs() {
 // This bundles the provider inline and eliminates the runtime CDN fetch, which
 // prevents network-dependent failures in E2E tests and improves build hermeticity.
 function resolveParatyGeoservicesCDN(paratySrc) {
-  const CDN_URL = 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.0/dist/esm/index.js';
+  const CDN_URL = 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.5/dist/index.js';
   return {
     name: 'resolve-paraty-geoservices-cdn',
     enforce: 'pre',

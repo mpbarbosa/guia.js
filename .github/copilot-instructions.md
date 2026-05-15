@@ -41,6 +41,7 @@ Follow established design principles and module boundaries. Prefer modularity an
   - `docs/guides/MIGRATION_GUIDE.md`
   - `CHANGELOG.md`
   - `CONTRIBUTING.md`
+  - `CLAUDE.md`
 
 ---
 

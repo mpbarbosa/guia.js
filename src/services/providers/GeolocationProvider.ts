@@ -4,6 +4,6 @@
  * @module services/providers/GeolocationProvider
  * @see https://github.com/mpbarbosa/paraty_geoservices
  */
-export { GeolocationProvider, GeolocationProvider as default } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.0/dist/esm/index.js';
-export type { GeoPosition, GeoPositionError, GeoPositionOptions } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.0/dist/esm/index.js';
+export { GeolocationProvider, GeolocationProvider as default } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/dist/esm/index.js';
+export type { GeoPosition, GeoPositionError, GeoPositionOptions } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/dist/esm/index.js';
 

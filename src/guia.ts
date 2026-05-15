@@ -11,7 +11,7 @@ import {
 } from './config/defaults.js';
 
 import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
-import { GetCurrentPositionUseCase, WatchPositionUseCase } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.0/dist/esm/index.js';
+import { GetCurrentPositionUseCase, WatchPositionUseCase } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/dist/esm/index.js';
 import ObserverSubject from './core/ObserverSubject.js';
 import PositionManager from './core/PositionManager.js';
 
@@ -82,7 +82,7 @@ const ibiraLoadingPromise: Promise<unknown> = (async (): Promise<IbiraLoadResult
         const timeoutPromise = new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('CDN import timeout')), 5000)
         );
-        const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/src/index.js') as Promise<IbiraModule>;
+        const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/dist/index.mjs') as Promise<IbiraModule>;
         const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
 
         if (!ibiraModule?.IbiraAPIFetchManager) throw new Error('Invalid ibira.js module from CDN');

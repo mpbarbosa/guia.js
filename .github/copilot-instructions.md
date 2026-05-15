@@ -4,8 +4,6 @@
 
 ---
 
-## Purpose
-
 This file provides concise, project-specific guidance to help Copilot make high-quality, context-aware edits for `guia_js`, a tourist guide web application built on top of the guia.js library.
 
 ---
@@ -26,7 +24,9 @@ Supporting workflow surfaces:
 
 ## Design Principles
 
-Follow established design principles and module boundaries. Prefer modularity and clarity. Avoid introducing project-specific conventions not confirmed by authoritative docs.
+- Follow established design principles and module boundaries.
+- Prefer modularity and clarity.
+- Avoid introducing project-specific conventions not confirmed by authoritative docs.
 
 ---
 

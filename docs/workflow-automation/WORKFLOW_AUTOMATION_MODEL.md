@@ -226,18 +226,23 @@ That improves the developer experience without much maintenance cost.
 This workflow is a good template because it demonstrates several healthy automation principles:
 
 ### 1. Change-aware execution
+
 Only relevant jobs run.
 
 ### 2. Separation of concerns
+
 Each job has a clear responsibility.
 
 ### 3. Progressive automation
+
 Some jobs are simple today but structured for future expansion.
 
 ### 4. Documentation as a first-class concern
+
 Docs are validated and updated, not ignored.
 
 ### 5. Clear reporting
+
 The summary job improves visibility and trust in CI.
 
 ## Recommended Practices for Teams Reusing This Model

@@ -120,14 +120,14 @@ Before placing a document in `docs/misc/`, consider these directories:
 
 - **[../reports/](../reports/)** - Analysis, bug fixes, and implementation reports
 - **[../infrastructure/](../infrastructure/)** - Infrastructure and tooling documentation
-- **[../DIRECTORY_ORGANIZATION.md](../DIRECTORY_ORGANIZATION.md)** - Complete directory structure guide
+- **[../developer/DIRECTORY_ORGANIZATION.md](../developer/DIRECTORY_ORGANIZATION.md)** - Complete directory structure guide
 
 ### Finding Moved Documents
 
 - **Analysis reports**: See [../reports/analysis/](../reports/analysis/)
 - **Bug fix records**: See [../reports/bugfixes/](../reports/bugfixes/)
 - **Implementation summaries**: See [../reports/implementation/](../reports/implementation/)
-- **Project clarification**: See [../PROJECT_CLARIFICATION.md](../PROJECT_CLARIFICATION.md)
+- **Project clarification**: See [./PROJECT_CLARIFICATION.md](./PROJECT_CLARIFICATION.md)
 
 ---
 

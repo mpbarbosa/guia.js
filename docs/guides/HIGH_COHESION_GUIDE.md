@@ -640,8 +640,8 @@ describe('AddressCache', () => {
 
 ### Within This Repository
 
-- [LOW_COUPLING_GUIDE.md](./LOW_COUPLING_GUIDE.md) - Complementary principles for loose coupling
-- [REFACTORING_SUMMARY.md](./REFACTORING_SUMMARY.md) - Real examples of improving cohesion (PR #121)
+- [LOW_COUPLING_GUIDE.md](../../.github/LOW_COUPLING_GUIDE.md) - Complementary principles for loose coupling
+- [REFACTORING_SUMMARY.md](../developer/REFACTORING_SUMMARY.md) - Real examples of improving cohesion (PR #121)
 - [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md) - Reviewing for cohesion
 - [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) - Pure functions and single responsibility
 - [TDD_GUIDE.md](./TDD_GUIDE.md) - Testing cohesive components
@@ -649,10 +649,10 @@ describe('AddressCache', () => {
 
 ### Architecture Examples
 
-- [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) - Architecture showing cohesive classes
-- [WEBGEOCODINGMANAGER_REFACTORING.md](../docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - PR #189 cohesion improvements
-- [WEB_GEOCODING_MANAGER.md](../docs/architecture/WEB_GEOCODING_MANAGER.md) - Coordinator with focused responsibilities
-- [REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md) - Single-purpose class example
+- [CLASS_DIAGRAM.md](../architecture/CLASS_DIAGRAM.md) - Architecture showing cohesive classes
+- [WEBGEOCODINGMANAGER_REFACTORING.md](../architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - PR #189 cohesion improvements
+- [WEB_GEOCODING_MANAGER.md](../architecture/WEB_GEOCODING_MANAGER.md) - Coordinator with focused responsibilities
+- [REFERENCE_PLACE.md](../architecture/REFERENCE_PLACE.md) - Single-purpose class example
 
 ### External Resources
 
@@ -681,7 +681,7 @@ describe('AddressCache', () => {
 
 ## Questions
 
-If you have questions about applying high cohesion principles or need help refactoring for better cohesion, please open an issue using the [GitHub Configuration template](./ISSUE_TEMPLATE/github_config.md).
+If you have questions about applying high cohesion principles or need help refactoring for better cohesion, please open an issue using the [GitHub Configuration template](../../.github/ISSUE_TEMPLATE/github_config.md).
 
 ## Summary Checklist
 

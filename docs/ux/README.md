@@ -238,9 +238,9 @@ After implementing fixes:
 
 ### Internal Documentation
 
-- [DIRECTORY_ORGANIZATION.md](../DIRECTORY_ORGANIZATION.md) - Docs structure
-- [PROJECT_PURPOSE_AND_ARCHITECTURE.md](../PROJECT_PURPOSE_AND_ARCHITECTURE.md) - Architecture overview
-- [TESTING.md](../TESTING.md) - Testing strategy
+- [DIRECTORY_ORGANIZATION.md](../developer/DIRECTORY_ORGANIZATION.md) - Docs structure
+- [PROJECT_PURPOSE_AND_ARCHITECTURE.md](../architecture/PROJECT_PURPOSE_AND_ARCHITECTURE.md) - Architecture overview
+- [TESTING.md](../../TESTING.md) - Testing strategy
 
 ### External Resources
 

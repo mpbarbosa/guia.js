@@ -10,7 +10,7 @@ This folder contains comprehensive documentation for the class extraction and mo
 
 - **[PHASE_3_SUMMARY.md](./PHASE_3_SUMMARY.md)** - Early phase summary
 - **[CLASS_EXTRACTION_PHASE_2.md](./CLASS_EXTRACTION_PHASE_2.md)** - Foundation setup
-- **[CLASS_EXTRACTION_PHASE_3.md](./CLASS_EXTRACTION_PHASE_3.md)** - Initial extractions
+
 - **[CLASS_EXTRACTION_PHASE_4.md](./CLASS_EXTRACTION_PHASE_4.md)** - Core class development
 - **[CLASS_EXTRACTION_PHASE_5.md](./CLASS_EXTRACTION_PHASE_5.md)** - Service layer formation
 
@@ -133,9 +133,9 @@ src/
 
 ## 🔗 Related Documentation
 
-- **[../ES6_IMPORT_EXPORT_BEST_PRACTICES.md](../ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - ES6 module patterns and best practices
-- **[../MODULE_SPLITTING_GUIDE.md](../MODULE_SPLITTING_GUIDE.md)** - General module splitting guidelines
-- **[../JEST_COMMONJS_ES6_GUIDE.md](../JEST_COMMONJS_ES6_GUIDE.md)** - Testing patterns for ES6 modules
+- **[../guides/ES6_IMPORT_EXPORT_BEST_PRACTICES.md](../guides/ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - ES6 module patterns and best practices
+- **[../guides/MODULE_SPLITTING_GUIDE.md](../guides/MODULE_SPLITTING_GUIDE.md)** - General module splitting guidelines
+- **[../guides/JEST_COMMONJS_ES6_GUIDE.md](../guides/JEST_COMMONJS_ES6_GUIDE.md)** - Testing patterns for ES6 modules
 - **[../INDEX.md](../INDEX.md)** - Complete documentation index
 
 ## 📝 Contributing

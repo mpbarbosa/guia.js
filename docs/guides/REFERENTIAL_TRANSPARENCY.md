@@ -653,9 +653,9 @@ function generateColor(rand1, rand2, rand3) {
 
 ### Related Documentation
 
-- [CONTRIBUTING.md](./CONTRIBUTING.md) - Immutability principles and guidelines
+- [CONTRIBUTING.md](../../.github/CONTRIBUTING.md) - Immutability principles and guidelines
 - [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md) - Review checklist for referential transparency
-- [LOW_COUPLING_GUIDE.md](./LOW_COUPLING_GUIDE.md) - Architectural principles
+- [LOW_COUPLING_GUIDE.md](../../.github/LOW_COUPLING_GUIDE.md) - Architectural principles
 - [HIGH_COHESION_GUIDE.md](./HIGH_COHESION_GUIDE.md) - Single responsibility principle
 - [TDD_GUIDE.md](./TDD_GUIDE.md) - Test-driven development with pure functions
 - [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md) - Testing referentially transparent code
@@ -672,11 +672,9 @@ The Guia Turístico project demonstrates referential transparency in several are
 
 For architecture examples:
 
-- [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) - Overall architecture showing pure functions
-- [GEO_POSITION.md](../docs/architecture/GEO_POSITION.md) - Example of immutable data classes
-- [REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md) - Frozen objects for immutability
-- [POSITION_MANAGER.md](../docs/architecture/POSITION_MANAGER.md) - ObserverSubject immutable observer management
-- [WEBGEOCODINGMANAGER_REFACTORING.md](../docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - Refactoring toward better separation of concerns
+- [CLASS_DIAGRAM.md](../architecture/CLASS_DIAGRAM.md) - Overall architecture showing pure functions
+- [REFERENCE_PLACE.md](../architecture/REFERENCE_PLACE.md) - Frozen objects for immutability
+- [WEBGEOCODINGMANAGER_REFACTORING.md](../architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - Refactoring toward better separation of concerns
 
 ### Academic Papers
 
@@ -687,7 +685,7 @@ For architecture examples:
 
 ### Core Guides
 
-- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines with FP principles
+- **[CONTRIBUTING.md](../../.github/CONTRIBUTING.md)** - Contribution guidelines with FP principles
 - **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Review checklist with FP focus
 - **[JAVASCRIPT_BEST_PRACTICES.md](./JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript standards
 - **[TDD_GUIDE.md](./TDD_GUIDE.md)** - Test-driven development
@@ -695,9 +693,7 @@ For architecture examples:
 
 ### Architecture Examples
 
-- **[docs/architecture/GEO_POSITION.md](../docs/architecture/GEO_POSITION.md)** - Immutable data classes
-- **[docs/architecture/REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md)** - Frozen objects
-- **[docs/architecture/POSITION_MANAGER.md](../docs/architecture/POSITION_MANAGER.md)** - Observer pattern with immutability
+- **[docs/architecture/REFERENCE_PLACE.md](../architecture/REFERENCE_PLACE.md)** - Frozen objects
 
 ### Complete Guide Index
 

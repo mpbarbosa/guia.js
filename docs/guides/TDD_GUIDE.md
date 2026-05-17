@@ -881,10 +881,9 @@ When opening a PR:
 
 ### Architecture Examples
 
-- **[CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md)** - Complete class architecture
-- **[GEO_POSITION.md](../docs/architecture/GEO_POSITION.md)** - Example of well-tested class
-- **[REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md)** - TDD implementation example
-- **[WEBGEOCODINGMANAGER_REFACTORING.md](../docs/architecture/WEBGEOCODINGMANAGER_REFACTORING.md)** - Refactoring with tests
+- **[CLASS_DIAGRAM.md](../architecture/CLASS_DIAGRAM.md)** - Complete class architecture
+- **[REFERENCE_PLACE.md](../architecture/REFERENCE_PLACE.md)** - TDD implementation example
+- **[WEBGEOCODINGMANAGER_REFACTORING.md](../architecture/WEBGEOCODINGMANAGER_REFACTORING.md)** - Refactoring with tests
 
 ### Jest Documentation
 

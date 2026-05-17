@@ -66,9 +66,7 @@ Session summaries, completion reports, and implementation documentation.
   - Work: Git hooks, validation scripts
   - Status: ✅ Complete
 
-- **[PREREQUISITE_VALIDATION_COMPLETE.md](implementation/PREREQUISITE_VALIDATION_COMPLETE.md)** (468 lines, 12KB)
-  - Prerequisites documentation implementation
-  - Status: ✅ Complete
+- PREREQUISITE_VALIDATION_COMPLETE.md — Prerequisites documentation implementation (archived)
 
 ---
 
@@ -120,7 +118,7 @@ Session summaries, completion reports, and implementation documentation.
 1. [PRE_PUSH_VALIDATION_COMPLETE.md](implementation/PRE_PUSH_VALIDATION_COMPLETE.md) - Git hooks validation
 2. [ENVIRONMENT_VARIABLES_COMPLETE.md](implementation/ENVIRONMENT_VARIABLES_COMPLETE.md) - Environment configuration
 3. [ERROR_HANDLING_COMPLETE.md](implementation/ERROR_HANDLING_COMPLETE.md) - Error handling patterns
-4. [PREREQUISITE_VALIDATION_COMPLETE.md](implementation/PREREQUISITE_VALIDATION_COMPLETE.md) - Prerequisites docs
+4. PREREQUISITE_VALIDATION_COMPLETE.md - Prerequisites docs (archived)
 
 ---
 
@@ -186,8 +184,8 @@ Session summaries, completion reports, and implementation documentation.
 
 - **[../INDEX.md](../INDEX.md)** - Main documentation index
 - **[../../README.md](../../README.md)** - Project overview
-- **[../.github/IMPLEMENTATION_PROGRESS_TRACKER.md](../../.github/IMPLEMENTATION_PROGRESS_TRACKER.md)** - Current session tracking
-- **[../TESTING.md](../TESTING.md)** - Testing documentation
+- **[./IMPLEMENTATION_PROGRESS_TRACKER.md](./IMPLEMENTATION_PROGRESS_TRACKER.md)** - Current session tracking
+- **[../../TESTING.md](../../TESTING.md)** - Testing documentation
 
 ---
 

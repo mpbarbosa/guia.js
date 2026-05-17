@@ -1278,7 +1278,7 @@ test('calculateDistance works', () => {
 - **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Code review checklist
 - **[UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)** - Unit testing best practices
 - **[TDD_GUIDE.md](./TDD_GUIDE.md)** - Test-driven development
-- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
+- **[CONTRIBUTING.md](../../.github/CONTRIBUTING.md)** - Contribution guidelines
 
 ### External Resources
 
@@ -1314,7 +1314,7 @@ test('calculateDistance works', () => {
 - For code review: [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)
 - For testing: [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md), [TDD_GUIDE.md](./TDD_GUIDE.md)
 - For functional programming: [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)
-- For architecture: [docs/architecture/CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md)
+- For architecture: [docs/architecture/CLASS_DIAGRAM.md](../architecture/CLASS_DIAGRAM.md)
 
 ---
 

@@ -645,11 +645,11 @@ git push
 
 ## 📚 Related Documentation
 
-- **[GITHUB_ACTIONS_GUIDE.md](docs/github/GITHUB_ACTIONS_GUIDE.md)** - Detailed user guide
-- **[.github/workflows/README.md](.github/workflows/README.md)** - Technical reference
-- **[.github/hooks/pre-commit](.github/hooks/pre-commit)** - Pre-commit hook for local validation
-- **[TESTING.md](TESTING.md)** - Test suite documentation
-- **[CONTRIBUTING.md](.github/CONTRIBUTING.md)** - Contribution guidelines
+- **[GITHUB_ACTIONS_GUIDE.md](../github/GITHUB_ACTIONS_GUIDE.md)** - Detailed user guide
+- **[.github/workflows/README.md](../../.github/workflows/README.md)** - Technical reference
+- **[.github/hooks/pre-commit](../../.github/hooks/pre-commit)** - Pre-commit hook for local validation
+- **[TESTING.md](../../TESTING.md)** - Test suite documentation
+- **[CONTRIBUTING.md](../../.github/CONTRIBUTING.md)** - Contribution guidelines
 
 ---
 
@@ -685,9 +685,9 @@ git push
 
 **Questions?** Check the documentation:
 
-1. [GITHUB_ACTIONS_GUIDE.md](docs/github/GITHUB_ACTIONS_GUIDE.md) - User guide
-2. [.github/workflows/README.md](.github/workflows/README.md) - Technical reference
-3. [TDD_GUIDE.md](.github/TDD_GUIDE.md) - Test Driven Development guide
+1. [GITHUB_ACTIONS_GUIDE.md](../github/GITHUB_ACTIONS_GUIDE.md) - User guide
+2. [.github/workflows/README.md](../../.github/workflows/README.md) - Technical reference
+3. [TDD_GUIDE.md](../../.github/TDD_GUIDE.md) - Test Driven Development guide
 
 **Issues?**
 

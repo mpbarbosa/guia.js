@@ -1494,10 +1494,9 @@ npm test -- --coverage --collectCoverageFrom="src/utils.js"
 
 ### Architecture Examples with Tests
 
-- **[CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md)** - Complete class architecture and test organization
-- **[GEO_POSITION.md](../docs/architecture/GEO_POSITION.md)** - Well-tested GeoPosition class example
-- **[REFERENCE_PLACE.md](../docs/architecture/REFERENCE_PLACE.md)** - ReferencePlace with comprehensive test coverage
-- **[WEB_GEOCODING_MANAGER.md](../docs/architecture/WEB_GEOCODING_MANAGER.md)** - Complex class with unit tests
+- **[CLASS_DIAGRAM.md](../architecture/CLASS_DIAGRAM.md)** - Complete class architecture and test organization
+- **[REFERENCE_PLACE.md](../architecture/REFERENCE_PLACE.md)** - ReferencePlace with comprehensive test coverage
+- **[WEB_GEOCODING_MANAGER.md](../architecture/WEB_GEOCODING_MANAGER.md)** - Complex class with unit tests
 
 ### Jest Documentation
 

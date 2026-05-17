@@ -433,7 +433,7 @@ Maintain consistent tag ordering for readability:
 
 ### Core Guides
 
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - General contribution guidelines
+- **[CONTRIBUTING.md](../../.github/CONTRIBUTING.md)** - General contribution guidelines
 - **[JAVASCRIPT_BEST_PRACTICES.md](JAVASCRIPT_BEST_PRACTICES.md)** - Coding standards
 - **[REFERENTIAL_TRANSPARENCY.md](REFERENTIAL_TRANSPARENCY.md)** - Functional programming principles
 - **[TDD_GUIDE.md](TDD_GUIDE.md)** - Test-driven development
@@ -441,7 +441,7 @@ Maintain consistent tag ordering for readability:
 
 ### Complete Guide Index
 
-- **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
+- **[docs/INDEX.md](../INDEX.md)** - Comprehensive documentation index
 
 ---
 

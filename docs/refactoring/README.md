@@ -154,7 +154,7 @@ All refactoring documents should include:
 - **[../class-extraction/](../class-extraction/)** - Historical refactoring (Phases 1-16)
 - **[../architecture/](../architecture/)** - Current architecture documentation
 - **[../reports/](../reports/)** - Analysis and implementation reports
-- **[../MODULES.md](../MODULES.md)** - Module system documentation
+- **[../architecture/MODULES.md](../architecture/MODULES.md)** - Module system documentation
 
 ### External Resources
 

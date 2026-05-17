@@ -4,7 +4,7 @@
 
 Last Updated: 2026-01-28
 Status: Active
-Version: 0.24.1-alpha
+Version: 0.24.2-alpha
 Category: Guide
 
 ---

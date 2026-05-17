@@ -131,7 +131,7 @@ export const MUNICIPIO_CONFIRMATION_COUNT = 3;
  * Shared default threshold for address-field confirmation buffering.
  * The application can override this at initialization/runtime, but the
  * default remains 3 consecutive reads to preserve current behavior.
- * @since 0.24.1-alpha
+ * @since 0.24.2-alpha
  */
 export const ADDRESS_CONFIRMATION_BUFFER_THRESHOLD = LOGRADOURO_CONFIRMATION_COUNT;
 

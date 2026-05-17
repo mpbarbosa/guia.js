@@ -38,7 +38,7 @@ import { ADDRESS_FETCHED_EVENT, GEOCODING_ERROR_EVENT } from '../config/defaults
 import { withObserver } from '../utils/ObserverMixin.js';
 import { env } from '../config/environment.js';
 import AwsGeocoder from './AwsGeocoder.js';
-import type { GeoAddress } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/dist/esm/index.js';
+import type { GeoAddress } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js';
 
 /**
  * Generates OpenStreetMap Nominatim API URL for reverse geocoding.

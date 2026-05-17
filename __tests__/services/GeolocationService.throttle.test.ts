@@ -69,7 +69,7 @@ describe('GeolocationService – getSingleLocationUpdate throttle', () => {
 
 		const pos = makePosition();
 		const provider = makeProvider(pos);
-		const service = new GeolocationService(null, provider, makePositionManager());
+		const service = new GeolocationService(provider);
 
 		const result = await service.getSingleLocationUpdate();
 		expect(result).toBe(pos);
@@ -81,7 +81,7 @@ describe('GeolocationService – getSingleLocationUpdate throttle', () => {
 
 		const pos = makePosition();
 		const provider = makeProvider(pos);
-		const service = new GeolocationService(null, provider, makePositionManager());
+		const service = new GeolocationService(provider);
 
 		await service.getSingleLocationUpdate(); // populates cache, stamps time
 
@@ -106,7 +106,7 @@ describe('GeolocationService – getSingleLocationUpdate throttle', () => {
 			watchPosition: jest.fn(),
 			clearWatch: jest.fn(),
 		};
-		const service = new GeolocationService(null, provider, makePositionManager());
+		const service = new GeolocationService(provider);
 
 		await service.getSingleLocationUpdate(); // call 1 → pos1
 
@@ -122,7 +122,7 @@ describe('GeolocationService – getSingleLocationUpdate throttle', () => {
 
 		const pos = makePosition();
 		const provider = makeProvider(pos);
-		const service = new GeolocationService(null, provider, makePositionManager());
+		const service = new GeolocationService(provider);
 
 		// Do NOT call getSingleLocationUpdate first — no cached position yet
 		// Even if lastSingleFetchTime were somehow > 0, there's no cache to return
@@ -151,7 +151,7 @@ describe('GeolocationService – flushThrottle()', () => {
 			watchPosition: jest.fn(),
 			clearWatch: jest.fn(),
 		};
-		const service = new GeolocationService(null, provider, makePositionManager());
+		const service = new GeolocationService(provider);
 
 		await service.getSingleLocationUpdate(); // first fetch
 
@@ -183,9 +183,9 @@ describe('GeolocationService – watchCurrentLocation throttle', () => {
 			clearWatch: jest.fn(),
 		};
 		const pm = makePositionManager();
-		const service = new GeolocationService(null, provider, pm);
+		const service = new GeolocationService(provider);
 
-		service.watchCurrentLocation();
+		service.watchCurrentLocation(pm.update);
 
 		const pos = makePosition();
 		capturedSuccess(pos);
@@ -205,9 +205,9 @@ describe('GeolocationService – watchCurrentLocation throttle', () => {
 			clearWatch: jest.fn(),
 		};
 		const pm = makePositionManager();
-		const service = new GeolocationService(null, provider, pm);
+		const service = new GeolocationService(provider);
 
-		service.watchCurrentLocation();
+		service.watchCurrentLocation(pm.update);
 
 		capturedSuccess(makePosition(-23.55, -46.63)); // fires
 		jest.advanceTimersByTime(100);
@@ -227,9 +227,9 @@ describe('GeolocationService – watchCurrentLocation throttle', () => {
 			clearWatch: jest.fn(),
 		};
 		const pm = makePositionManager();
-		const service = new GeolocationService(null, provider, pm);
+		const service = new GeolocationService(provider);
 
-		service.watchCurrentLocation();
+		service.watchCurrentLocation(pm.update);
 
 		capturedSuccess(makePosition(-23.55, -46.63)); // call 1
 		jest.advanceTimersByTime(5001);
@@ -249,9 +249,9 @@ describe('GeolocationService – watchCurrentLocation throttle', () => {
 			clearWatch: jest.fn(),
 		};
 		const pm = makePositionManager();
-		const service = new GeolocationService(null, provider, pm);
+		const service = new GeolocationService(provider);
 
-		service.watchCurrentLocation();
+		service.watchCurrentLocation(pm.update);
 
 		capturedSuccess(makePosition()); // fires
 		jest.advanceTimersByTime(100);
@@ -276,8 +276,8 @@ describe('GeolocationService – watchCurrentLocation throttle', () => {
 			clearWatch: jest.fn(),
 		};
 		const pm = makePositionManager();
-		const service = new GeolocationService(null, provider, pm);
-		service.watchCurrentLocation();
+		const service = new GeolocationService(provider);
+		service.watchCurrentLocation(pm.update);
 
 		// Switch to 2s throttle
 		service.setThrottleInterval(2000);
@@ -300,8 +300,8 @@ describe('GeolocationService – watchCurrentLocation throttle', () => {
 			clearWatch: jest.fn(),
 		};
 		const pm = makePositionManager();
-		const service = new GeolocationService(null, provider, pm);
-		service.watchCurrentLocation();
+		const service = new GeolocationService(provider);
+		service.watchCurrentLocation(pm.update);
 
 		service.setThrottleInterval(2000);
 
@@ -323,8 +323,8 @@ describe('GeolocationService – watchCurrentLocation throttle', () => {
 			clearWatch: jest.fn(),
 		};
 		const pm = makePositionManager();
-		const service = new GeolocationService(null, provider, pm);
-		service.watchCurrentLocation();
+		const service = new GeolocationService(provider);
+		service.watchCurrentLocation(pm.update);
 
 		// Switch to fast mode then back to normal
 		service.setThrottleInterval(2000);

@@ -6,10 +6,10 @@
  * GetCurrentPositionUseCase, WatchPositionUseCase, GetCurrentPositionOutput.
  *
  * @see https://github.com/mpbarbosa/paraty_geoservices
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js' {
 	/** Geographic coordinates and metadata returned by a provider. */
 	export interface GeoPosition {
 		coords: {
@@ -35,6 +35,12 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/d
 		enableHighAccuracy?: boolean;
 		timeout?: number;
 		maximumAge?: number;
+	}
+
+	export type GeolocationPermissionState = 'granted' | 'denied' | 'prompt';
+
+	export interface GeolocationPermissionReader {
+		checkPermissions(): Promise<GeolocationPermissionState>;
 	}
 
 	/** Output DTO for the GetCurrentPosition use case. */
@@ -152,6 +158,28 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/d
 		get isWatching(): boolean;
 	}
 
+	export interface GeolocationServiceConfig {
+		geolocationOptions?: GeoPositionOptions;
+		permissionReader?: GeolocationPermissionReader;
+	}
+
+	export class GeolocationService {
+		constructor(provider: GeolocationProvider, config?: GeolocationServiceConfig);
+		checkPermissions(): Promise<GeolocationPermissionState>;
+		getSingleLocationUpdate(): Promise<GeoPosition>;
+		watchCurrentLocation(
+			onUpdate?: (pos: GeoPosition) => void,
+			onError?: (err: GeoPositionError) => void,
+		): number | null;
+		stopWatching(): void;
+		getLastKnownPosition(): GeoPosition | null;
+		isCurrentlyWatching(): boolean;
+		getCurrentWatchId(): number | null;
+		hasPendingRequest(): boolean;
+		flushThrottle(): void;
+		setThrottleInterval(ms: number): void;
+	}
+
 	/** Provider-agnostic resolved address returned by any reverse geocoder. */
 	export interface GeoAddress {
 		street: string | null;
@@ -204,4 +232,83 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/d
 		constructor(baseUrl?: string);
 		reverseGeocode(latitude: number, longitude: number): Promise<GeoAddress>;
 	}
+}
+
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/application/services/ChangeDetectionCoordinator.js' {
+	type GeoPosition = import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js').GeoPosition;
+	type GeoAddress = import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js').GeoAddress;
+
+	export interface AddressFieldChangeEvent {
+		from: string | null;
+		to: string | null;
+		previousAddress: GeoAddress | null;
+		currentAddress: GeoAddress | null;
+	}
+
+	export type AddressChangeType = 'StreetChanged' | 'NeighborhoodChanged' | 'CityChanged';
+
+	export interface IAddressChangeObserver {
+		update(
+			newValue: string | null,
+			changeType: AddressChangeType,
+			reserved: null,
+			event: AddressFieldChangeEvent,
+		): void;
+	}
+
+	export interface IObserverSubject {
+		observers: IAddressChangeObserver[] | null;
+		functionObservers: Array<(
+			position: GeoPosition | null,
+			address: GeoAddress | null,
+			event: AddressFieldChangeEvent,
+		) => void>;
+	}
+
+	export interface IAddressComponentExtractor {
+		setStreetChangeCallback(cb: ((event: AddressFieldChangeEvent) => void) | null): void;
+		setNeighborhoodChangeCallback(cb: ((event: AddressFieldChangeEvent) => void) | null): void;
+		setCityChangeCallback(cb: ((event: AddressFieldChangeEvent) => void) | null): void;
+	}
+
+	export interface IAddressState {
+		currentAddress: GeoAddress | null;
+	}
+
+	export interface ILogger {
+		warn(message: string, ...args: unknown[]): void;
+		error(message: string, ...args: unknown[]): void;
+		info(message: string, ...args: unknown[]): void;
+	}
+
+	export class ChangeDetectionCoordinator {
+		addressState: IAddressState;
+		observerSubject: IObserverSubject;
+		currentPosition: GeoPosition | null;
+
+		constructor(params: {
+			addressState: IAddressState;
+			observerSubject: IObserverSubject;
+			logger: ILogger;
+		});
+
+		setAddressComponentExtractor(extractor: IAddressComponentExtractor): void;
+		setCurrentPosition(position: GeoPosition | null): void;
+		setupChangeDetection(): void;
+		removeAllChangeDetection(): void;
+		setupStreetChangeDetection(): void;
+		removeStreetChangeDetection(): void;
+		setupNeighborhoodChangeDetection(): void;
+		removeNeighborhoodChangeDetection(): void;
+		setupCityChangeDetection(): void;
+		removeCityChangeDetection(): void;
+		handleStreetChange(event: AddressFieldChangeEvent): void;
+		handleNeighborhoodChange(event: AddressFieldChangeEvent): void;
+		handleCityChange(event: AddressFieldChangeEvent): void;
+		notifyStreetChangeObservers(event: AddressFieldChangeEvent): void;
+		notifyNeighborhoodChangeObservers(event: AddressFieldChangeEvent): void;
+		notifyCityChangeObservers(event: AddressFieldChangeEvent): void;
+	}
+
+	export default ChangeDetectionCoordinator;
 }

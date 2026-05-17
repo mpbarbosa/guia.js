@@ -21,13 +21,22 @@ function resolveJsToTs() {
 // when the repo is present (Docker build, local dev with sibling repo cloned).
 // This bundles the provider inline and eliminates the runtime CDN fetch, which
 // prevents network-dependent failures in E2E tests and improves build hermeticity.
-function resolveParatyGeoservicesCDN(paratySrc) {
-  const CDN_URL = 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.5/dist/index.js';
+function resolveParatyGeoservicesCDN(paratySrc, paratyChangeDetectionSrc) {
+  // All CDN entry-point URLs for paraty_geoservices that should be resolved to
+  // the local sibling repo source. This includes both the CJS and ESM index
+  // paths so that provider re-exports (BrowserGeolocationProvider, etc.) are
+  // bundled inline and do not require a live CDN fetch at runtime.
+  const CDN_URLS = [
+    'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/index.js',
+    'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js',
+  ];
+  const CHANGE_DETECTION_CDN_URL = 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/application/services/ChangeDetectionCoordinator.js';
   return {
     name: 'resolve-paraty-geoservices-cdn',
     enforce: 'pre',
     resolveId(source) {
-      if (source === CDN_URL) return paratySrc;
+      if (CDN_URLS.includes(source)) return paratySrc;
+      if (source === CHANGE_DETECTION_CDN_URL) return paratyChangeDetectionSrc;
       return null;
     },
   };
@@ -44,11 +53,17 @@ export default defineConfig(({ mode }) => {
     'https://b2inkriw8k.execute-api.us-east-1.amazonaws.com';
 
   const paratySrc = resolve(dirname(new URL(import.meta.url).pathname), '../paraty_geoservices/src/index.ts');
+  const paratyChangeDetectionSrc = resolve(
+    dirname(new URL(import.meta.url).pathname),
+    '../paraty_geoservices/src/application/services/ChangeDetectionCoordinator.ts'
+  );
 
   return {
     plugins: [
       resolveJsToTs(),
-      ...(existsSync(paratySrc) ? [resolveParatyGeoservicesCDN(paratySrc)] : []),
+      ...(existsSync(paratySrc) && existsSync(paratyChangeDetectionSrc)
+        ? [resolveParatyGeoservicesCDN(paratySrc, paratyChangeDetectionSrc)]
+        : []),
       vue(),
     ],
     resolve: {

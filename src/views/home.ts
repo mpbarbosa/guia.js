@@ -21,6 +21,7 @@ import type {
 import Chronometer from '../timing/Chronometer.js';
 import PositionManager from '../core/PositionManager.js';
 import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
+import type { GeoPosition as GeoservicesGeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js';
 import { log, warn, error } from '../utils/logger.js';
 import MapLibreDisplayer from '../html/MapLibreDisplayer.js';
 import HTMLConfirmationBufferDisplayer from '../html/HTMLConfirmationBufferDisplayer.js';
@@ -857,14 +858,14 @@ class HomeViewController {
    * 5. Handle errors gracefully
    * 
    * @async
-   * @returns {Promise<GeolocationPosition>} Resolves with position object
+   * @returns {Promise<GeoservicesGeoPosition>} Resolves with position object
    * @throws {Error} If not initialized
    * @throws {GeolocationError} If geolocation fails
    * 
    * @example
    * await controller.getSingleLocationUpdate();
    */
-  async getSingleLocationUpdate(options?: { silent?: boolean }): Promise<GeolocationPosition> {
+  async getSingleLocationUpdate(options?: { silent?: boolean }): Promise<GeoservicesGeoPosition> {
     if (!this.initialized) {
       throw new Error('HomeViewController not initialized. Call init() first.');
     }
@@ -950,15 +951,11 @@ class HomeViewController {
         this.manager.speechCoordinator.initializeSpeechSynthesis();
       }
       
-      // Get initial location without surfacing errors — the continuous watch
-      // is started immediately below and will deliver a position once the
-      // device acquires one, so a timeout here is not user-actionable.
-      this.getSingleLocationUpdate({ silent: true }).catch(err => {
-        warn('HomeViewController: Initial location update failed:', err.message);
-        // Continue with tracking even if initial update fails
-      });
-      
-      // Start continuous tracking via ServiceCoordinator
+      // Start continuous tracking via ServiceCoordinator.
+      // The watch delivers the initial position, avoiding a race where a
+      // concurrent getSingleLocationUpdate() would set the same coordinates
+      // milliseconds before the first watch callback, causing PositionManager
+      // to reject the watch position as distance=0/time=0.
       if (this.manager && this.manager.serviceCoordinator) {
         this.manager.serviceCoordinator.startTracking();
       }

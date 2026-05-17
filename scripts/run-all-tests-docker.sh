@@ -33,6 +33,14 @@ bash "${SCRIPT_DIR}/run-e2e-tests-docker.sh"
 E2E_EXIT=$?
 set -e
 
+# ─── Playwright sanity tests ─────────────────────────────────────────────────
+echo ""
+echo "▶ Phase 3: Playwright sanity tests"
+set +e
+bash "${SCRIPT_DIR}/run-playwright-tests-docker.sh"
+PLAYWRIGHT_EXIT=$?
+set -e
+
 # ─── Summary ────────────────────────────────────────────────────────────────
 echo ""
 echo "══════════════════════════════════════════"
@@ -45,11 +53,15 @@ UNIT_STATUS="✅ passed"
 E2E_STATUS="✅ passed"
 [[ $E2E_EXIT -ne 0 ]] && E2E_STATUS="❌ FAILED (exit ${E2E_EXIT})"
 
+PLAYWRIGHT_STATUS="✅ passed"
+[[ $PLAYWRIGHT_EXIT -ne 0 ]] && PLAYWRIGHT_STATUS="❌ FAILED (exit ${PLAYWRIGHT_EXIT})"
+
 echo " Unit / Integration: ${UNIT_STATUS}"
 echo " E2E:                ${E2E_STATUS}"
+echo " Playwright:         ${PLAYWRIGHT_STATUS}"
 echo ""
 
-FINAL_EXIT=$(( UNIT_EXIT | E2E_EXIT ))
+FINAL_EXIT=$(( UNIT_EXIT | E2E_EXIT | PLAYWRIGHT_EXIT ))
 
 if [[ $FINAL_EXIT -eq 0 ]]; then
   echo "✅ All Docker tests passed!"

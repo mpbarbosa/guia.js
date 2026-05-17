@@ -5,7 +5,7 @@
  * non-browser or test environments.
  *
  * @module services/OfflineCacheService
- * @since 0.21.0-alpha
+ * @since 0.24.0-alpha
  */
 
 import { calculateDistance } from '../utils/distance.js';
@@ -66,6 +66,17 @@ function openDb(): Promise<IDBDatabase | null> {
   });
 }
 
+function closeDbOnce(db: IDBDatabase): () => void {
+  let closed = false;
+
+  return () => {
+    if (!closed) {
+      closed = true;
+      db.close();
+    }
+  };
+}
+
 async function getStoredValue<T>(key: string): Promise<T | null> {
   const db = await openDb();
   if (!db) {
@@ -76,15 +87,33 @@ async function getStoredValue<T>(key: string): Promise<T | null> {
     const transaction = db.transaction(STORE_NAME, 'readonly');
     const store = transaction.objectStore(STORE_NAME);
     const request = store.get(key);
+    const closeDb = closeDbOnce(db);
+    let settled = false;
+    let result: T | null = null;
+
+    const rejectOnce = (err: Error) => {
+      if (settled) return;
+      settled = true;
+      closeDb();
+      reject(err);
+    };
+
+    const resolveOnce = (value: T | null) => {
+      if (settled) return;
+      settled = true;
+      closeDb();
+      resolve(value);
+    };
 
     request.onsuccess = () => {
-      resolve((request.result as T | undefined) ?? null);
-      db.close();
+      result = (request.result as T | undefined) ?? null;
     };
-    request.onerror = () => {
-      db.close();
-      reject(request.error ?? new Error(`IndexedDB get failed for key ${key}`));
-    };
+    request.onerror = () => rejectOnce(request.error ?? new Error(`IndexedDB get failed for key ${key}`));
+    transaction.oncomplete = () => resolveOnce(result);
+    transaction.onerror = () =>
+      rejectOnce(transaction.error ?? new Error(`IndexedDB transaction failed for key ${key}`));
+    transaction.onabort = () =>
+      rejectOnce(transaction.error ?? new Error(`IndexedDB transaction aborted for key ${key}`));
   });
 }
 
@@ -99,14 +128,29 @@ async function setStoredValue<T>(key: string, value: T): Promise<void> {
     const transaction = db.transaction(STORE_NAME, 'readwrite');
     const store = transaction.objectStore(STORE_NAME);
     const request = store.put(value, key);
+    const closeDb = closeDbOnce(db);
+    let settled = false;
 
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error ?? new Error(`IndexedDB put failed for key ${key}`));
-    transaction.oncomplete = () => db.close();
-    transaction.onerror = () => {
-      db.close();
-      reject(transaction.error ?? new Error(`IndexedDB transaction failed for key ${key}`));
+    const rejectOnce = (err: Error) => {
+      if (settled) return;
+      settled = true;
+      closeDb();
+      reject(err);
     };
+
+    const resolveOnce = () => {
+      if (settled) return;
+      settled = true;
+      closeDb();
+      resolve();
+    };
+
+    request.onerror = () => rejectOnce(request.error ?? new Error(`IndexedDB put failed for key ${key}`));
+    transaction.oncomplete = () => resolveOnce();
+    transaction.onerror = () =>
+      rejectOnce(transaction.error ?? new Error(`IndexedDB transaction failed for key ${key}`));
+    transaction.onabort = () =>
+      rejectOnce(transaction.error ?? new Error(`IndexedDB transaction aborted for key ${key}`));
   });
 }
 
@@ -194,14 +238,29 @@ export async function __resetOfflineCacheForTests(): Promise<void> {
     const transaction = db.transaction(STORE_NAME, 'readwrite');
     const store = transaction.objectStore(STORE_NAME);
     const request = store.clear();
+    const closeDb = closeDbOnce(db);
+    let settled = false;
 
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error ?? new Error('IndexedDB clear failed'));
-    transaction.oncomplete = () => db.close();
-    transaction.onerror = () => {
-      db.close();
-      reject(transaction.error ?? new Error('IndexedDB clear transaction failed'));
+    const rejectOnce = (err: Error) => {
+      if (settled) return;
+      settled = true;
+      closeDb();
+      reject(err);
     };
+
+    const resolveOnce = () => {
+      if (settled) return;
+      settled = true;
+      closeDb();
+      resolve();
+    };
+
+    request.onerror = () => rejectOnce(request.error ?? new Error('IndexedDB clear failed'));
+    transaction.oncomplete = () => resolveOnce();
+    transaction.onerror = () =>
+      rejectOnce(transaction.error ?? new Error('IndexedDB clear transaction failed'));
+    transaction.onabort = () =>
+      rejectOnce(transaction.error ?? new Error('IndexedDB clear transaction aborted'));
   });
 }
 

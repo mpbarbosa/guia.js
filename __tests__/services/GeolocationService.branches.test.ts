@@ -30,12 +30,6 @@ try {
 }
 
 describe('GeolocationService – null navigator branch', () => {
-  /**
-   * A minimal provider that satisfies the "Case 1" constructor branch:
-   *   has getCurrentPosition → treated as a provider
-   *   no getNavigator       → this.navigator = null
-   *   no isPermissionsAPISupported → checkPermissions falls back to module-level fn
-   */
   function makeMinimalProvider() {
     return {
       getCurrentPosition: jest.fn((_success, error) => error(new Error('test'))),
@@ -43,14 +37,7 @@ describe('GeolocationService – null navigator branch', () => {
     };
   }
 
-  function makePositionManager() {
-    return {
-      update: jest.fn(),
-      getInstance: jest.fn(),
-    };
-  }
-
-  test('checkPermissions with null navigator (no Permissions API) returns "prompt"', async () => {
+  test('checkPermissions with no permissionReader returns "prompt"', async () => {
     if (!GeolocationService) {
       console.warn('GeolocationService not loaded – skipping');
       expect(true).toBe(true);
@@ -58,14 +45,9 @@ describe('GeolocationService – null navigator branch', () => {
     }
 
     const provider = makeMinimalProvider();
-    const posManager = makePositionManager();
 
-    // provider has getCurrentPosition → Case 1: this.provider = provider, this.navigator = null
-    const service = new GeolocationService(null, provider, posManager);
-
-    // checkPermissions will call isPermissionsAPISupported(null)
-    // null && 'permissions' in null → false (covers the false branch at line 80)
-    // hasPermissionsAPI is false → returns 'prompt'
+    // provider has no checkPermissions → permissionReader is null → returns 'prompt'
+    const service = new GeolocationService(provider);
     const result = await service.checkPermissions();
     expect(result).toBe('prompt');
   });

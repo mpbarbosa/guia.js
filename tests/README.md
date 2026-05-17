@@ -410,7 +410,7 @@ This shows:
 ### Feature-Specific Guides
 
 - **[integration/README_CONSOLE_CAPTURE.md](integration/README_CONSOLE_CAPTURE.md)** - Console log capture library
-- **[integration/README_GEOLOCATION_MOCKING.md](integration/README_GEOLOCATION_MOCKING.md)** - Geolocation mocking utilities
+- **[integration/README_MOCK_GEOLOCATION.md](integration/README_MOCK_GEOLOCATION.md)** - Geolocation mocking utilities
 - **[integration/README_MILHO_VERDE.md](integration/README_MILHO_VERDE.md)** - Milho Verde test case
 - **[integration/README_MOCK_GEOLOCATION.md](integration/README_MOCK_GEOLOCATION.md)** - Mock geolocation implementation
 

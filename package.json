@@ -1,6 +1,6 @@
 {
   "name": "guia_js",
-  "version": "0.21.0-alpha",
+  "version": "0.24.0-alpha",
   "private": true,
   "description": "Tourist guide web application built on top of guia.js library",
   "type": "module",
@@ -14,6 +14,7 @@
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "test:verbose": "node --experimental-vm-modules node_modules/jest/bin/jest.js --verbose",
     "test:e2e": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.config.e2e.js",
+    "test:playwright": "playwright test tests/e2e/sanity.playwright.ts",
     "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.config.unit.js",
     "test:all-suites": "npm run test:unit && npm run test:e2e",
     "validate": "test -f src/app.ts && test -f src/guia.ts && test -f src/guia_ibge.ts && npx tsc --noEmit",
@@ -114,7 +115,8 @@
     ],
     "moduleNameMapper": {
       "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.11-alpha/dist/esm/index\\.js$": "<rootDir>/../paraty_geocore.js/src/index",
-      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@1\\.2\\.5/dist/esm/index\\.js$": "<rootDir>/../paraty_geoservices/src/index",
+      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.5\\.0/dist/index\\.js$": "<rootDir>/../paraty_geoservices/src/index",
+      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.5\\.0/dist/esm/application/services/ChangeDetectionCoordinator\\.js$": "<rootDir>/../paraty_geoservices/src/application/services/ChangeDetectionCoordinator",
       "\\.(css|less|scss|sass)$": "<rootDir>/__mocks__/fileMock.js",
       "^(\\.{1,2}/.*)\\.js$": "$1"
     },
@@ -144,6 +146,7 @@
     }
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@types/bootstrap": "^5.2.10",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.3.0",

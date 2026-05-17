@@ -40,6 +40,10 @@
 import PositionManager from '../core/PositionManager.js';
 import { log, warn, error as logError } from '../utils/logger.js';
 import AddressCache from '../data/AddressCache.js';
+import type {
+	GeoPosition,
+	GeoPositionError,
+} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js';
 import {
 	GEOLOCATION_THROTTLE_INTERVAL,
 	GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL
@@ -48,8 +52,12 @@ import {
 // ─── Local minimal interfaces for injected dependencies ──────────────────────
 
 interface IGeolocationServiceForSC {
-	getSingleLocationUpdate(): Promise<GeolocationPosition>;
-	watchCurrentLocation(): number | null;
+	getSingleLocationUpdate(): Promise<GeoPosition>;
+	watchCurrentLocation?(
+		onUpdate?: (position: GeoPosition) => void,
+		onError?: (error: GeoPositionError) => void,
+	): number | null;
+	stopWatching?(): void;
 	stopTracking?(): void;
 	setThrottleInterval?(ms: number): void;
 }
@@ -455,7 +463,20 @@ class ServiceCoordinator {
         }
 
         // Start continuous position watching
-        this._watchId = this._geolocationService.watchCurrentLocation();
+        this._watchId = this._geolocationService.watchCurrentLocation?.(
+            (position) => {
+                if (position && position.coords) {
+                    const positionManager = PositionManager.getInstance();
+                    positionManager.update(position);
+                    this._changeDetectionCoordinator!.setCurrentPosition(position);
+                    this._reverseGeocoder!.latitude = position.coords.latitude;
+                    this._reverseGeocoder!.longitude = position.coords.longitude;
+                }
+            },
+            (err) => {
+                logError('ServiceCoordinator: Position watch error', err);
+            },
+        ) ?? null;
         
         // Set up address component change detection
         this._changeDetectionCoordinator!.setupChangeDetection();
@@ -498,6 +519,8 @@ class ServiceCoordinator {
         if (this._geolocationService && this._watchId !== null) {
             if (typeof this._geolocationService.stopTracking === 'function') {
                 this._geolocationService.stopTracking();
+            } else if (typeof this._geolocationService.stopWatching === 'function') {
+                this._geolocationService.stopWatching();
             }
             this._watchId = null;
             log('ServiceCoordinator: Tracking stopped');

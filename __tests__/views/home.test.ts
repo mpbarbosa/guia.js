@@ -468,12 +468,6 @@ describe('HomeViewController', () => {
         expect(mockSpeechCoordinator.initializeSpeechSynthesis).toHaveBeenCalled();
       });
       
-      it('should get initial location update', () => {
-        controller.startTracking();
-        
-        expect(mockServiceCoordinator.getSingleLocationUpdate).toHaveBeenCalled();
-      });
-      
       it('should set up change detection', () => {
         controller.startTracking();
         

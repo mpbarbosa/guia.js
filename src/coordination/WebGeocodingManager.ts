@@ -84,6 +84,7 @@ import SpeechCoordinator from './SpeechCoordinator.js';
 // Import service layer classes
 import ReverseGeocoder from '../services/ReverseGeocoder.js';
 import GeolocationService from '../services/GeolocationService.js';
+import BrowserGeolocationProvider from '../services/providers/BrowserGeolocationProvider.js';
 import ChangeDetectionCoordinator from '../services/ChangeDetectionCoordinator.js';
 
 // Import data processing layer classes
@@ -437,7 +438,9 @@ class WebGeocodingManager {
 			displayerFactory?: typeof DisplayerFactory;
 			document?: Document;
 		}) => ServiceCoordinator)({
-			geolocationService: (params.geolocationService as GeolocationService | undefined) ?? new GeolocationService(this.locationResult),
+			geolocationService:
+				(params.geolocationService as GeolocationService | undefined) ??
+				new GeolocationService(new BrowserGeolocationProvider()),
 			reverseGeocoder: this.reverseGeocoder,
 			changeDetectionCoordinator: this.changeDetectionCoordinator,
 			observerSubject: this.observerSubject,

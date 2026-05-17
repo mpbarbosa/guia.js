@@ -2,70 +2,109 @@
 
 ---
 
-Last Updated: 2026-03-23
+Last Updated: 2026-05-15
 Status: Active
 Category: Guide
 
 ---
 
-Modules in Guia Turístico should depend on abstractions, not on concrete
-implementations. This makes each component easier to test, replace, and reason
-about in isolation.
+Modules in Guia Turistico should depend on narrow contracts instead of concrete
+implementations whenever practical. This keeps coordinators, services, and UI
+adapters easier to test, replace, and reason about in isolation.
 
 ## Signs of High Coupling (avoid)
 
-- A class instantiates its own dependencies with `new` inside the constructor.
-- A module imports a singleton and calls methods directly on it.
-- A function accepts a large "god object" and reads only 2–3 fields from it.
+- A module imports a singleton directly when the dependency could be injected.
+- A class depends on a concrete collaborator but only needs 2-3 methods from it.
+- UI code mixes DOM rendering, network requests, caching, and route orchestration
+  in the same file.
+- Changing one service forces edits across unrelated `html/`, `data/`, and
+  `coordination/` modules.
 
 ## Techniques for Low Coupling
 
 ### Dependency Injection
 
-Pass dependencies in through the constructor instead of creating them inside:
+Pass collaborators through constructors or explicit setup methods instead of
+hardwiring them inside the class:
 
 ```typescript
-// Bad — tightly coupled
-class ReverseGeocoder {
-  private cache = AddressCache.getInstance(); // hard dependency
-}
-
-// Good — injectable
-class ReverseGeocoder {
-  constructor(private cache: IAddressCache) {}
-}
+// Good - ServiceCoordinator receives collaborators from the outside
+const coordinator = new ServiceCoordinator({
+  geolocationService,
+  reverseGeocoder,
+  changeDetectionCoordinator,
+  observerSubject,
+  displayerFactory,
+  document,
+});
 ```
+
+This keeps wiring at the composition boundary and lets tests swap focused test
+doubles without rewriting the caller.
 
 ### Interface / Type Boundaries
 
-Define a minimal interface for what a collaborator needs to provide:
+Define the smallest interface that matches what the collaborator actually needs:
 
 ```typescript
-interface IAddressCache {
-  get(key: string): BrazilianStandardAddress | null;
-  set(key: string, value: BrazilianStandardAddress): void;
+interface IReverseGeocoderForCDC {
+  currentAddress: unknown;
+  enderecoPadronizado: unknown;
+}
+
+interface IAddressDataExtractorForCDC {
+  setLogradouroChangeCallback(cb: ((changeDetails: unknown) => void) | null): void;
+  setBairroChangeCallback(cb: ((changeDetails: unknown) => void) | null): void;
+  setMunicipioChangeCallback(cb: ((changeDetails: unknown) => void) | null): void;
 }
 ```
 
-This lets tests pass a simple mock object without importing the real class.
+`ChangeDetectionCoordinator` follows this pattern so it can coordinate address
+change callbacks without importing broader concrete implementations.
 
-### Factory Methods
+### Factory Methods at Composition Boundaries
 
-Use static factory methods to construct objects when wiring is complex:
+Use factory methods where wiring is simple but should stay out of callers:
 
 ```typescript
-// Creates a fully wired instance for production
-const mgr = await WebGeocodingManager.create(document, 'app');
+const headerDisplayer = HTMLHeaderDisplayer.create(document);
 ```
+
+This keeps construction details localized and avoids spreading setup logic
+across route or bootstrap code.
+
+### Keep Singletons at the Edge
+
+This repository does use shared managers such as `PositionManager`,
+`TimerManager`, and `AddressCache`, but direct singleton lookups should stay at
+well-defined coordination boundaries. Prefer passing derived state or narrow
+ports deeper into helpers, observers, and displayers instead of letting every
+module call `getInstance()` on its own.
 
 ## Module-Level Rules
 
-- Each file exports one primary class or function.
-- Avoid barrel files (`index.ts`) that re-export many unrelated things.
-- Keep `import` lists short — if a file imports more than 8–10 modules,
-  consider splitting it.
+- Keep `src/coordination/` focused on wiring services, observers, and displayers
+  through constructor parameters, setup methods, or small interfaces.
+- Keep `src/services/` depending on external APIs and value types, not on DOM
+  displayers or route controllers.
+- Keep `src/html/` focused on rendering and browser APIs, not on reverse
+  geocoding, caching, or service orchestration.
+- Keep `src/data/` focused on extraction, normalization, caching, and change
+  detection with no direct UI responsibilities.
+- If a file imports many modules from different layers just to perform one task,
+  split the responsibility or introduce a narrower boundary.
+
+## Review Heuristic
+
+If replacing a collaborator with a mock or fake requires changing the caller's
+logic, the dependency boundary is probably too concrete. If one change forces
+simultaneous edits across `coordination`, `services`, and `html`, coupling is
+likely too high and the responsibility split should be revisited.
 
 ## See Also
 
-- [HIGH_COHESION_GUIDE.md](./HIGH_COHESION_GUIDE.md) — the complementary principle.
-- [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) — immutability reduces accidental coupling through shared state.
+- [HIGH_COHESION_GUIDE.md](./HIGH_COHESION_GUIDE.md) - cohesion and coupling
+  should improve together.
+- [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) - immutable data
+  reduces accidental coupling through shared mutable state.

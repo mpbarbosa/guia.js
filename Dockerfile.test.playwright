@@ -1,0 +1,43 @@
+# Dockerfile.test.playwright — Playwright Sanity Test Runner
+#
+# Runs `npm run test:playwright` inside the official Playwright Docker image,
+# which ships all browsers pre-installed.
+#
+# Key design decisions:
+#   1. mcr.microsoft.com/playwright:v1.60.0-jammy matches the @playwright/test
+#      version pinned in package.json and ships Chromium/Firefox/WebKit.
+#   2. Sibling repos (bessa_patterns.ts, paraty_geoservices) are cloned so
+#      vite.config.js aliases and the resolveParatyGeoservicesCDN plugin resolve
+#      during `npm run build` — same pattern as Dockerfile.test.e2e.
+#   3. CI=true triggers --no-sandbox/--disable-setuid-sandbox in playwright.config.ts.
+#   4. The production bundle in dist/ is served by the webServer defined in
+#      playwright.config.ts; tests never import raw TypeScript source.
+
+FROM mcr.microsoft.com/playwright:v1.60.0-jammy
+
+# Clone sibling repos required by vite.config.js
+WORKDIR /workspace
+RUN git clone --depth 1 \
+    https://github.com/mpbarbosa/bessa_patterns.ts.git
+
+RUN git clone --depth 1 \
+    --branch v1.4.0 \
+    https://github.com/mpbarbosa/paraty_geoservices.git
+
+# ─── Project setup ────────────────────────────────────────────────────────────
+
+WORKDIR /workspace/guia_js
+
+COPY package.json package-lock.json ./
+
+ENV NODE_ENV=test
+RUN npm ci --ignore-scripts
+
+COPY . .
+
+# Build the production bundle; playwright.config.ts webServer serves dist/
+RUN npm run build
+
+ENV CI=true
+
+CMD ["npx", "playwright", "test", "tests/e2e/sanity.playwright.ts", "--reporter=list"]

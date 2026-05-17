@@ -66,23 +66,19 @@ describe('Service Modules Integration', () => {
         expect(geocoder.getCacheKey()).toBe('-23.5505,-46.6333');
     });
 
-    test('should create GeolocationService with navigator', async () => {
+    test('should create GeolocationService with provider', async () => {
         const { default: GeolocationService } = await import('../../src/services/GeolocationService.js');
-        const { default: PositionManager } = await import('../../src/core/PositionManager.js');
-        
-        // Mock navigator
-        const mockNavigator = {
-            geolocation: {
-                getCurrentPosition: jest.fn(),
-                watchPosition: jest.fn(),
-                clearWatch: jest.fn()
-            }
+
+        const mockProvider = {
+            isSupported: jest.fn(() => true),
+            getCurrentPosition: jest.fn(),
+            watchPosition: jest.fn(() => 1),
+            clearWatch: jest.fn(),
         };
 
-        const service = new GeolocationService(null, mockNavigator, PositionManager.getInstance());
-        
+        const service = new GeolocationService(mockProvider);
+
         expect(service).toBeDefined();
-        expect(service.navigator).toBe(mockNavigator);
         expect(service.isCurrentlyWatching()).toBe(false);
         expect(service.hasPendingRequest()).toBe(false);
     });
@@ -139,21 +135,22 @@ describe('Service Modules Integration', () => {
 
     test('GeolocationService should check permissions', async () => {
         const { default: GeolocationService } = await import('../../src/services/GeolocationService.js');
-        const { default: PositionManager } = await import('../../src/core/PositionManager.js');
-        
-        // Mock navigator with Permissions API
-        const mockNavigator = {
-            geolocation: {},
-            permissions: {
-                query: jest.fn().mockResolvedValue({ state: 'granted' })
-            }
+
+        const mockProvider = {
+            isSupported: jest.fn(() => true),
+            getCurrentPosition: jest.fn(),
+            watchPosition: jest.fn(() => 1),
+            clearWatch: jest.fn(),
+        };
+        const mockPermissionReader = {
+            checkPermissions: jest.fn().mockResolvedValue('granted'),
         };
 
-        const service = new GeolocationService(null, mockNavigator, PositionManager.getInstance());
+        const service = new GeolocationService(mockProvider, { permissionReader: mockPermissionReader });
         const permission = await service.checkPermissions();
-        
+
         expect(permission).toBe('granted');
-        expect(mockNavigator.permissions.query).toHaveBeenCalledWith({ name: 'geolocation' });
+        expect(mockPermissionReader.checkPermissions).toHaveBeenCalled();
     });
 
     test('ChangeDetectionCoordinator should handle change notifications', async () => {
@@ -193,7 +190,6 @@ describe('Service Modules Integration', () => {
         const { default: GeolocationService } = await import('../../src/services/GeolocationService.js');
         const { default: ChangeDetectionCoordinator } = await import('../../src/services/ChangeDetectionCoordinator.js');
         const { default: ObserverSubject } = await import('../../src/core/ObserverSubject.js');
-        const { default: PositionManager } = await import('../../src/core/PositionManager.js');
         
         // Create mock dependencies
         const mockFetchManager = {
@@ -201,17 +197,16 @@ describe('Service Modules Integration', () => {
             subscribe: jest.fn()
         };
 
-        const mockNavigator = {
-            geolocation: {
-                getCurrentPosition: jest.fn(),
-                watchPosition: jest.fn(),
-                clearWatch: jest.fn()
-            }
+        const mockProvider = {
+            isSupported: jest.fn(() => true),
+            getCurrentPosition: jest.fn(),
+            watchPosition: jest.fn(() => 1),
+            clearWatch: jest.fn(),
         };
-        
+
         // Create instances
         const geocoder = new ReverseGeocoder(mockFetchManager);
-        const geoService = new GeolocationService(null, mockNavigator, PositionManager.getInstance());
+        const geoService = new GeolocationService(mockProvider);
         const observerSubject = new ObserverSubject();
         const coordinator = new ChangeDetectionCoordinator({
             reverseGeocoder: geocoder,

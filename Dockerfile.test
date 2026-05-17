@@ -31,7 +31,7 @@ RUN git clone --depth 1 \
     https://github.com/mpbarbosa/paraty_geocore.js.git
 
 RUN git clone --depth 1 \
-    --branch v1.2.5 \
+    --branch v1.4.0 \
     https://github.com/mpbarbosa/paraty_geoservices.git
 
 RUN git clone --depth 1 \

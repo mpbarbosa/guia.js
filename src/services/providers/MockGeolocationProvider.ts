@@ -4,5 +4,5 @@
  * @module services/providers/MockGeolocationProvider
  * @see https://github.com/mpbarbosa/paraty_geoservices
  */
-export { MockGeolocationProvider, MockGeolocationProvider as default } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/dist/esm/index.js';
-export type { MockGeolocationProviderConfig } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/dist/esm/index.js';
+export { MockGeolocationProvider, MockGeolocationProvider as default } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js';
+export type { MockGeolocationProviderConfig } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js';

@@ -4,6 +4,4 @@
  * @module services/providers/BrowserGeolocationProvider
  * @see https://github.com/mpbarbosa/paraty_geoservices
  */
-export { BrowserGeolocationProvider, BrowserGeolocationProvider as default } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@1.2.6/dist/esm/index.js';
-
-
+export { BrowserGeolocationProvider, BrowserGeolocationProvider as default } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js';

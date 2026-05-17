@@ -284,8 +284,8 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-
 		static strCurrPosNotUpdate: string;
 		static strImmediateAddressUpdate: string;
 
-		static getInstance(position?: GeolocationPosition): PositionManager;
-		constructor(position?: GeolocationPosition);
+		static getInstance(position?: GeoPositionInput): PositionManager;
+		constructor(position?: GeoPositionInput);
 
 		get observers(): unknown[];
 		get latitude(): number | undefined;
@@ -300,7 +300,7 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-
 		subscribe(observer: { update?: (...args: unknown[]) => void }): void;
 		unsubscribe(observer: { update?: (...args: unknown[]) => void }): void;
 		notifyObservers(posEvent: string, data?: unknown, error?: { name: string; message: string } | null): void;
-		update(position: GeolocationPosition): void;
+		update(position: GeoPositionInput): void;
 
 		/**
 		 * Enables or disables the distance/time gate bypass.

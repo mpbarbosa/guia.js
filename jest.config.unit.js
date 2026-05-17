@@ -38,9 +38,13 @@ export default {
     // Map paraty_geocore.js CDN URL to local TS source for Jest (Node.js cannot fetch https:// URLs)
     '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.11-alpha/dist/esm/index\\.js$':
       '<rootDir>/../paraty_geocore.js/src/index',
-    // Map paraty_geoservices CDN URL to local TS source for Jest
-    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@1\\.2\\.6/dist/esm/index\\.js$':
+    // Map paraty_geoservices CDN URLs to local TS source for Jest
+    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.5\\.0/dist/index\\.js$':
       '<rootDir>/../paraty_geoservices/src/index',
+    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.5\\.0/dist/esm/index\\.js$':
+      '<rootDir>/../paraty_geoservices/src/index',
+    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.5\\.0/dist/esm/application/services/ChangeDetectionCoordinator\\.js$':
+      '<rootDir>/../paraty_geoservices/src/application/services/ChangeDetectionCoordinator',
     // Map bessa_patterns.ts importmap alias to local TS source for Jest
     '^bessa_patterns\\.ts$': '<rootDir>/../bessa_patterns.ts/src/index',
     // Strip .js extension from relative imports so Jest resolves .ts before .js

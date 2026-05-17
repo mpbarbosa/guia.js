@@ -4,7 +4,7 @@
  * @version 0.12.12-alpha
  */
 
-const CACHE_NAME = 'guia-turistico-v0.21.0-alpha-20260512-f625221';
+const CACHE_NAME = 'guia-turistico-v0.24.0-alpha-20260512-f625221';
 
 /** Shell assets precached on install — routes that must work offline. */
 const STATIC_ASSETS = [
@@ -108,7 +108,7 @@ self.addEventListener('fetch', event => {
   // External API calls: network-first with cache fallback so offline geocoding
   // can serve the last known result for the same coordinates.
   if (API_ORIGINS.some(origin => url.hostname.includes(origin))) {
-    event.respondWith(networkFirstStrategy(request));
+    event.respondWith(networkFirstStrategy(request, event));
     return;
   }
 
@@ -117,28 +117,39 @@ self.addEventListener('fetch', event => {
   // loads while the versioned cache key still guarantees fresh assets after a
   // deploy.
   if (isNavigationRequest || isPrecachedShellAsset || isStaticSubresource) {
-    event.respondWith(cacheFirstStrategy(request));
+    event.respondWith(cacheFirstStrategy(request, event));
     return;
   }
 
   // Other same-origin requests stay network-first so dynamic responses still
   // prefer fresh content and only fall back to cache when offline.
-  event.respondWith(networkFirstStrategy(request));
+  event.respondWith(networkFirstStrategy(request, event));
 });
+
+function queueCacheWrite(event, request, responseToCache) {
+  const cacheWrite = caches
+    .open(CACHE_NAME)
+    .then(cache => cache.put(request, responseToCache))
+    .catch(error => {
+      console.warn('[SW] Failed to update cache:', request.url, error);
+    });
+
+  event.waitUntil(cacheWrite);
+}
 
 /**
  * Network-first strategy: fetch from network, cache the result, fall back to cache on failure.
  * Used for all requests — ensures the latest content is always preferred.
  * For navigation requests that fail, serves offline.html as a fallback.
  * @param {Request} request
+ * @param {FetchEvent} event
  * @returns {Promise<Response>}
  */
-function networkFirstStrategy(request) {
+function networkFirstStrategy(request, event) {
   return fetch(request)
     .then(response => {
       if (response && response.ok) {
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(request, responseToCache));
+        queueCacheWrite(event, request, response.clone());
         return response;
       }
       // Non-2xx response (e.g. 500): fall back to cache if available
@@ -167,9 +178,10 @@ function networkFirstStrategy(request) {
  * Cache-first strategy: serve from cache if available, fetch from network otherwise.
  * Used for HTML navigation so the PWA shell loads instantly and works offline.
  * @param {Request} request
+ * @param {FetchEvent} event
  * @returns {Promise<Response>}
  */
-function cacheFirstStrategy(request) {
+function cacheFirstStrategy(request, event) {
   return caches.match(request)
     .then(cachedResponse => {
       if (cachedResponse) {
@@ -183,8 +195,7 @@ function cacheFirstStrategy(request) {
           if (!response || response.status !== 200) {
             return response;
           }
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(request, responseToCache));
+          queueCacheWrite(event, request, response.clone());
           return response;
         })
         .catch(error => {

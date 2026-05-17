@@ -3,7 +3,7 @@
 ---
 
 **Last Updated**: 2026-04-29
-**Version**: 0.24.0-alpha
+**Version**: 0.24.1-alpha
 **Status**: Active
 **Category**: Architecture
 
@@ -705,5 +705,5 @@ export class MyCoordinator {
 ---
 
 **Last Updated**: 2026-04-29
-**Architecture Version**: 0.24.0-alpha
+**Architecture Version**: 0.24.1-alpha
 **Documentation Status**: ✅ Complete

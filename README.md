@@ -12,7 +12,7 @@ version: 0.24.0-alpha
 [![Version](https://img.shields.io/badge/version-0.19.0--alpha-blue)](https://github.com/mpbarbosa/guia.js)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia.js)
 
-> **Note on Test Status**: 3,074 tests pass successfully out of 146 total (0 skipped, 0 failing), with 122 of 127 test suites146 passing (0 skipped). The test suite is stable with 100% pass rate. See the Testing section below for details.
+> **Note on Test Status**: 3,074 tests pass successfully out of 148 total (0 skipped, 0 failing), with 122 of 127 test suites148 passing (0 skipped). The test suite is stable with 100% pass rate. See the Testing section below for details.
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
@@ -164,13 +164,13 @@ npm install
 # Validate JavaScript syntax (<1 second)
 npm run validate
 
-# Run test suite (146 total tests, 146 passing, 0 skipped, ~65 seconds)
+# Run test suite (148 total tests, 148 passing, 0 skipped, ~65 seconds)
 npm test
 
 # Run tests with coverage (~30 seconds)
 npm run test:coverage
 
-# Full validation: syntax + tests (~30 seconds146 total)
+# Full validation: syntax + tests (~30 seconds148 total)
 npm run test:all
 ```
 
@@ -323,7 +323,7 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 # Update "Last Updated" dates in all currently git-modified .md files
 ./scripts/update-doc-dates.sh
 
-# Run tests and update146 passing/total counts in README and docs
+# Run tests and update148 passing/total counts in README and docs
 ./scripts/update-test-counts.sh
 
 # Verify build, dist/ contents, and SIDRA JSON before production deploy
@@ -395,7 +395,7 @@ guia_js/
 │   ├── speech/                   # Speech synthesis functionality
 │   ├── views/                    # SPA view controllers (home, converter)
 │   └── utils/                    # Utility functions
-├── __tests__/                    # Test suites (127 suites, 146 passing)
+├── __tests__/                    # Test suites (127 suites, 148 passing)
 │   ├── unit/                     # Unit tests
 │   ├── integration/              # Integration tests
 │   ├── e2e/                      # End-to-end tests (Puppeteer)
@@ -461,9 +461,9 @@ See [examples/README.md](examples/README.md) for detailed documentation and expe
 
 ### Test Suite Overview
 
-- **Total Tests**: 146 total (146 passing, 0 skipped, 0 failing)
-- **Test Suites**: 146 total (146 passing, 0 skipped, 0 failing)
-- **Test Count**: 146 passing tests (146 total with 0 skipped)
+- **Total Tests**: 148 total (148 passing, 0 skipped, 0 failing)
+- **Test Suites**: 148 total (148 passing, 0 skipped, 0 failing)
+- **Test Count**: 148 passing tests (148 total with 0 skipped)
 - **Execution Time**: ~65 seconds
 - **Code Coverage**: 76% overall (exceeds 65% threshold by 11%)
   - Statements: 76%, Branches: 74.2%, Functions: 70.7%, Lines: 76.5%
@@ -494,11 +494,11 @@ npm run test:all
 To ensure clear communication about testing concepts:
 
 - **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`)
-  - The project has 146 passing test suites across 5 categories
+  - The project has 148 passing test suites across 5 categories
 
 - **Test**: Individual test case within a suite using `it()` or `test()`
   - Example: `it('should return singleton instance')`
-  - The project has 3,242 tests146 total (146 passing, 0 skipped)
+  - The project has 3,242 tests148 total (148 passing, 0 skipped)
 
 - **Test Category**: Organizational grouping of related test suites
   - **unit/**: Tests for individual classes and functions in isolation
@@ -519,7 +519,7 @@ To ensure clear communication about testing concepts:
 
 ### Test Definitions
 
-- **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 146 passing suites
+- **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 148 passing suites
 - **Test**: Individual test case within a suite
 - **Test Category**: Organizational grouping by functionality (unit, integration, features, external, managers)
 - **Code Coverage**: Percentage of source code executed during tests (76% overall, exceeds 65% threshold)
@@ -721,7 +721,7 @@ python3 -m http.server 9000
   - **Component 3: SpeechTextBuilder** (312 lines, 48 tests)
     - Brazilian Portuguese text formatting
     - Address component text building methods
-  - **API**: 100% backward compatible, all 60 unit tests146 passing, no breaking changes
+  - **API**: 100% backward compatible, all 60 unit tests148 passing, no breaking changes
 - `SpeechSynthesisManager` - Main orchestrator using composition pattern
   - Composition Components: VoiceLoader, VoiceSelector, SpeechConfiguration, SpeechQueue
 - `SpeechController` - Core speech synthesis control logic
@@ -1669,7 +1669,7 @@ For comprehensive guidance, see:
 ✅ Syntax validation passed
 
 🧪 Running Test Suite...
-✅ Tests passed: 146 passing (146 total, 0 skipped)
+✅ Tests passed: 148 passing (148 total, 0 skipped)
 
 📊 Generating Coverage Report...
 ✅ Coverage: 69.82%
@@ -1794,7 +1794,7 @@ python3 -m http.server 8000
 
 - **Lines of Code**: ~2300+ (main application)
 - **Test Coverage**: 76% (statements), 74.2% (branches)
-- **Test Count**: 3,242 tests146 total (146 passing, 0 skipped, 0 failing)
+- **Test Count**: 3,242 tests148 total (148 passing, 0 skipped, 0 failing)
 - **Dependencies**: 2 runtime, 2 dev dependencies
 - **Supported Node.js**: v20.19.0+
 - **ES Module Type**: ESM (ECMAScript Modules)

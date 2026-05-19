@@ -87,9 +87,32 @@ class NominatimAddressExtractor extends AddressExtractor {
 	 * @override
 	 */
 	padronizaEndereco(): void {
-		if (!this.data || !this.data.address) return;
+		if (!this.data) return;
 
-		const address: NominatimAddress = this.data.address;
+		let address: NominatimAddress;
+		let isOsmElement = false;
+
+		if (this.data.address) {
+			// Nominatim nested format: { address: { road, city, … } }
+			address = this.data.address as NominatimAddress;
+			isOsmElement = true;
+		} else if (this.data.city || this.data.street || this.data.neighborhood) {
+			// Flat GeoAddress format from paraty_geoservices v1.6.x:
+			// { street, streetNumber, neighborhood, city, state, stateCode, postalCode, country }
+			address = {
+				street:       this.data.street       as string | undefined,
+				house_number: this.data.streetNumber  as string | undefined,
+				neighbourhood: this.data.neighborhood as string | undefined,
+				city:          this.data.city          as string | undefined,
+				county:        this.data.metropolitanRegion as string | undefined,
+				state:         this.data.state         as string | undefined,
+				state_code:    this.data.stateCode     as string | undefined,
+				postcode:      this.data.postalCode    as string | undefined,
+				country:       this.data.country       as string | undefined,
+			} as NominatimAddress;
+		} else {
+			return;
+		}
 
 		this.enderecoPadronizado.logradouro =
 			address['addr:street'] || address.road || address.street || address.pedestrian || null;
@@ -124,7 +147,9 @@ class NominatimAddressExtractor extends AddressExtractor {
 				? 'Brasil'
 				: (address.country || 'Brasil');
 
-		this.enderecoPadronizado.referencePlace = new ReferencePlace(this.data as OsmElement);
+		if (isOsmElement) {
+			this.enderecoPadronizado.referencePlace = new ReferencePlace(this.data as OsmElement);
+		}
 	}
 }
 

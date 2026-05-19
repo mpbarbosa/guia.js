@@ -21,7 +21,7 @@ import type {
 import Chronometer from '../timing/Chronometer.js';
 import PositionManager from '../core/PositionManager.js';
 import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
-import type { GeoPosition as GeoservicesGeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js';
+import type { GeoPosition as GeoservicesGeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js';
 import { log, warn, error } from '../utils/logger.js';
 import MapLibreDisplayer from '../html/MapLibreDisplayer.js';
 import HTMLConfirmationBufferDisplayer from '../html/HTMLConfirmationBufferDisplayer.js';

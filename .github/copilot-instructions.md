@@ -26,7 +26,7 @@ Supporting workflow surfaces:
 
 - Sync user-facing changes with `README.md` and other reference docs.
 - Update `docs/ARCHITECTURE.md` for architecture or layout changes.
-- Align package exports and entry points with `package.json`.
+- Align the main entry point with `package.json`.
 - For details, refer to authoritative docs:
   - `README.md`
   - `docs/ARCHITECTURE.md`

@@ -193,7 +193,7 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 - **[Refactoring Summary](../.github/REFACTORING_SUMMARY.md)** - Recent changes
 - **[God Object Refactoring](refactoring/GOD_CLASS_REFACTORING_PLAN_2026-01-24.md)** - Decomposition
-- **[Class Extraction](class-extraction/CLASS_EXTRACTION_SUMMARY.md)** - Module splitting
+- **[Refactoring Overview](refactoring/README.md)** - Active plans and modularization context
 - **[WebGeocodingManager Refactoring](WEBGEOCODINGMANAGER_REFACTORING_PLAN.md)** - Core refactor
 
 #### Technical Debt

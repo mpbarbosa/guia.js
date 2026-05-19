@@ -1,8 +1,10 @@
 {
   "version": 1,
   "partitionIndex": 0,
-  "totalPartitions": 0,
-  "filesHash": "e3b0c442",
-  "partitionLabels": [],
-  "updatedAt": "2026-05-17T23:43:44.276Z"
+  "totalPartitions": 1,
+  "filesHash": "02fc2cbb",
+  "partitionLabels": [
+    "jest.config.unit.js, vite.config.js"
+  ],
+  "updatedAt": "2026-05-19T23:01:03.464Z"
 }

@@ -61,7 +61,7 @@ This directory contains **active working documentation** for ongoing refactoring
 
 ### What Does NOT Belong Here
 
-❌ **Historical refactoring** → Use `docs/class-extraction/` instead
+❌ **Archived modularization history** → Use `docs/reports/implementation/` and `docs/misc/`
 ❌ **Completed features** → Use `docs/reports/implementation/`
 ❌ **Analysis reports** → Use `docs/reports/analysis/`
 ❌ **General architecture** → Use `docs/architecture/`
@@ -74,8 +74,9 @@ This directory contains **active working documentation** for ongoing refactoring
 
 The Guia Turístico project underwent major modularization:
 
-- **Phase 1-16** (Historical): 6,000+ line monolithic file → modular architecture
-  - **Documented in**: `docs/class-extraction/` (16 phases)
+- **Completed modularization** (Historical): 6,000+ line monolithic file → modular architecture
+  - **Current source of truth**: `docs/architecture/MODULES.md`
+  - **Archived implementation records**: `docs/reports/implementation/` and `docs/misc/`
   - **Result**: Established current modular structure
 
 ### Current Initiatives
@@ -151,10 +152,9 @@ All refactoring documents should include:
 
 ### Within Project
 
-- **[../class-extraction/](../class-extraction/)** - Historical refactoring (Phases 1-16)
+- **[../architecture/MODULES.md](../architecture/MODULES.md)** - Current module organization
 - **[../architecture/](../architecture/)** - Current architecture documentation
 - **[../reports/](../reports/)** - Analysis and implementation reports
-- **[../architecture/MODULES.md](../architecture/MODULES.md)** - Module system documentation
 
 ### External Resources
 
@@ -201,7 +201,7 @@ When refactoring is complete:
 ### Active vs. Historical
 
 - **This directory** (`docs/refactoring/`): **Active** working documentation
-- **`docs/class-extraction/`**: **Historical** completed refactoring (Phases 1-16)
+- **Archived modularization history**: `docs/reports/implementation/` and `docs/misc/`
 
 ### Distinction from Reports
 
@@ -212,6 +212,6 @@ Use reports for retrospective analysis, this directory for active work.
 
 ---
 
-**Last Updated**: 2026-01-27
+**Last Updated**: 2026-05-19
 **Maintained By**: Development team
 **Purpose**: Active refactoring session documentation and progress tracking

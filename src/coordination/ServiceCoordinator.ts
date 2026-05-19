@@ -43,7 +43,7 @@ import AddressCache from '../data/AddressCache.js';
 import type {
 	GeoPosition,
 	GeoPositionError,
-} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js';
+} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js';
 import {
 	GEOLOCATION_THROTTLE_INTERVAL,
 	GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL

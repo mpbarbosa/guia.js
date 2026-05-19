@@ -74,6 +74,7 @@ import ServiceCoordinator from './ServiceCoordinator.js';
 
 // Import configuration
 import { CORS_PROXY, ENABLE_CORS_FALLBACK } from '../config/defaults.js';
+import { env } from '../config/environment.js';
 import {
 	getCurrentAddressConfirmationBufferThreshold,
 	setCurrentAddressConfirmationBufferThreshold,
@@ -82,7 +83,7 @@ import {
 import SpeechCoordinator from './SpeechCoordinator.js';
 
 // Import service layer classes
-import ReverseGeocoder from '../services/ReverseGeocoder.js';
+import ReverseGeocoder, { createReverseGeocoderService, type LegacyFetchManager } from '../services/ReverseGeocoder.js';
 import GeolocationService from '../services/GeolocationService.js';
 import BrowserGeolocationProvider from '../services/providers/BrowserGeolocationProvider.js';
 import ChangeDetectionCoordinator from '../services/ChangeDetectionCoordinator.js';
@@ -531,8 +532,8 @@ class WebGeocodingManager {
 	 * @private
 	 */
 	_initializeFetchManager(params: WebGeocodingManagerParams): void {
-		let fetchManager: ReverseGeocoder['fetchManager'] = null;
-		
+		let fetchManager: LegacyFetchManager | null = null;
+
 		// Try to get IbiraAPIFetchManager from various sources
 		const IbiraAPIFetchManagerClass = params.IbiraAPIFetchManager as (new(cfg: unknown) => unknown) | undefined ||
 			(typeof window !== 'undefined' && window.IbiraAPIFetchManager) ||
@@ -540,7 +541,7 @@ class WebGeocodingManager {
 
 		if (IbiraAPIFetchManagerClass) {
 			try {
-				fetchManager = new (IbiraAPIFetchManagerClass as new(cfg: object) => NonNullable<ReverseGeocoder['fetchManager']>)({
+				fetchManager = new (IbiraAPIFetchManagerClass as new(cfg: object) => LegacyFetchManager)({
 					maxCacheSize: 100,           // Maximum cache entries
 					cacheExpiration: 300000,     // 5 minutes cache expiration
 					cleanupInterval: 60000,      // Cleanup every minute
@@ -558,11 +559,14 @@ class WebGeocodingManager {
 		}
 
 		// Create reverse geocoder with or without fetch manager
-		// Pass CORS configuration from defaults
 		this.reverseGeocoder = (params.reverseGeocoder as ReverseGeocoder | undefined) ||
-			new ReverseGeocoder(fetchManager, {
+			createReverseGeocoderService(fetchManager, {
 				corsProxy: CORS_PROXY,
-				enableCorsFallback: ENABLE_CORS_FALLBACK
+				enableCorsFallback: ENABLE_CORS_FALLBACK,
+				awsLbsEnabled: Boolean(env.awsLbsEnabled),
+				...(env.awsLbsBaseUrl ? { awsLbsBaseUrl: env.awsLbsBaseUrl as string } : {}),
+				...(env.geocodingPrimaryProvider ? { geocodingPrimaryProvider: env.geocodingPrimaryProvider as 'aws' | 'nominatim' } : {}),
+				...(env.nominatimApiUrl ? { nominatimApiUrl: env.nominatimApiUrl as string } : {}),
 			});
 		
 		// Inject AddressDataExtractor into ReverseGeocoder to resolve dependency warning

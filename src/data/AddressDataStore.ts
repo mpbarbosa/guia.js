@@ -284,23 +284,35 @@ class AddressDataStore {
 	 * @since 0.9.0-alpha
 	 */
 	static generateCacheKey(data: NominatimResponse | null): string | null {
-		// Validate input data
-		if (!data || !data.address) {
+		if (!data) return null;
+
+		let street: string, houseNumber: string, neighbourhood: string,
+		    city: string, postcode: string, countryCode: string;
+
+		if (data.address) {
+			// Nominatim nested format
+			const address = data.address;
+			street       = address.road || address.street || '';
+			houseNumber  = address.house_number || '';
+			neighbourhood = address.neighbourhood || address.suburb || '';
+			city         = address.city || address.town || address.municipality || '';
+			postcode     = address.postcode || '';
+			countryCode  = address.country_code || '';
+		} else if ((data as Record<string, unknown>).city || (data as Record<string, unknown>).street) {
+			// Flat GeoAddress format from paraty_geoservices v1.6.x
+			const d = data as unknown as Record<string, string | null | undefined>;
+			street       = d.street || '';
+			houseNumber  = d.streetNumber || '';
+			neighbourhood = d.neighborhood || '';
+			city         = d.city || '';
+			postcode     = d.postalCode || '';
+			countryCode  = '';
+		} else {
 			return null;
 		}
 
-		const address = data.address;
-
 		// Create cache key from essential address components
-		// Use components that uniquely identify a location
-		const keyComponents = [
-			address.road || address.street || '',
-			address.house_number || '',
-			address.neighbourhood || address.suburb || '',
-			address.city || address.town || address.municipality || '',
-			address.postcode || '',
-			address.country_code || ''
-		];
+		const keyComponents = [street, houseNumber, neighbourhood, city, postcode, countryCode];
 
 		// Filter out empty components and join with separator
 		const cacheKey = keyComponents

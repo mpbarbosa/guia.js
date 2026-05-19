@@ -34,32 +34,31 @@ describe('Service Modules Integration', () => {
     });
 
     test('should create ReverseGeocoder with fetch manager', async () => {
-        const { default: ReverseGeocoder } = await import('../../src/services/ReverseGeocoder.js');
-        
-        // Mock fetch manager
+        const { createReverseGeocoderService } = await import('../../src/services/ReverseGeocoder.js');
+
+        // Mock fetch manager (LegacyFetchManager interface from paraty_geoservices v1.6.x)
         const mockFetchManager = {
             fetch: jest.fn(),
             subscribe: jest.fn()
         };
 
-        const geocoder = new ReverseGeocoder(mockFetchManager);
-        
+        const geocoder = createReverseGeocoderService(mockFetchManager as never);
+
         expect(geocoder).toBeDefined();
-        expect(geocoder.fetchManager).toBe(mockFetchManager);
         expect(geocoder.toString()).toBe('ReverseGeocoder: No coordinates set');
     });
 
     test('should set coordinates in ReverseGeocoder', async () => {
-        const { default: ReverseGeocoder } = await import('../../src/services/ReverseGeocoder.js');
-        
+        const { createReverseGeocoderService } = await import('../../src/services/ReverseGeocoder.js');
+
         const mockFetchManager = {
             fetch: jest.fn(),
             subscribe: jest.fn()
         };
 
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager as never);
         geocoder.setCoordinates(-23.5505, -46.6333);
-        
+
         expect(geocoder.latitude).toBe(-23.5505);
         expect(geocoder.longitude).toBe(-46.6333);
         expect(geocoder.toString()).toBe('ReverseGeocoder: -23.5505, -46.6333');

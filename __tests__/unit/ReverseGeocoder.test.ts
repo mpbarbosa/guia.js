@@ -4,6 +4,7 @@
 
 import { describe, test, expect, jest } from '@jest/globals';
 import { ReverseGeocoder } from '../../src/guia.js';
+import { createReverseGeocoderService } from '../../src/services/ReverseGeocoder.js';
 
 // Mock DOM functions for testing
 global.document = undefined;
@@ -18,7 +19,7 @@ describe('ReverseGeocoder Class', () => {
   
   describe('toString Method', () => {
     test('should return formatted string with coordinates', () => {
-      const geocoder = new ReverseGeocoder(createMockFetchManager());
+      const geocoder = createReverseGeocoderService(createMockFetchManager());
       geocoder.setCoordinates(-23.5505, -46.6333);
       const result = geocoder.toString();
       
@@ -29,7 +30,7 @@ describe('ReverseGeocoder Class', () => {
     });
 
     test('should handle missing coordinates gracefully', () => {
-      const geocoder = new ReverseGeocoder(createMockFetchManager());
+      const geocoder = createReverseGeocoderService(createMockFetchManager());
       const result = geocoder.toString();
       
       expect(result).toContain('ReverseGeocoder');
@@ -38,7 +39,7 @@ describe('ReverseGeocoder Class', () => {
     });
 
     test('should handle incomplete coordinates (missing longitude)', () => {
-      const geocoder = new ReverseGeocoder(createMockFetchManager());
+      const geocoder = createReverseGeocoderService(createMockFetchManager());
       geocoder.setCoordinates(-23.5505, null);
       const result = geocoder.toString();
       
@@ -48,7 +49,7 @@ describe('ReverseGeocoder Class', () => {
     });
 
     test('should handle incomplete coordinates (missing latitude)', () => {
-      const geocoder = new ReverseGeocoder(createMockFetchManager());
+      const geocoder = createReverseGeocoderService(createMockFetchManager());
       geocoder.setCoordinates(null, -46.6333);
       const result = geocoder.toString();
       
@@ -58,7 +59,7 @@ describe('ReverseGeocoder Class', () => {
     });
 
     test('should reflect coordinates after setCoordinates is called', () => {
-      const geocoder = new ReverseGeocoder(createMockFetchManager());
+      const geocoder = createReverseGeocoderService(createMockFetchManager());
       expect(geocoder.toString()).toBe('ReverseGeocoder: No coordinates set');
       
       geocoder.setCoordinates(-23.5505, -46.6333);
@@ -70,7 +71,7 @@ describe('ReverseGeocoder Class', () => {
     });
 
     test('should show different coordinates after update', () => {
-      const geocoder = new ReverseGeocoder(createMockFetchManager());
+      const geocoder = createReverseGeocoderService(createMockFetchManager());
       geocoder.setCoordinates(-23.5505, -46.6333);
       expect(geocoder.toString()).toBe('ReverseGeocoder: -23.5505, -46.6333');
       
@@ -88,7 +89,7 @@ describe('ReverseGeocoder Class', () => {
         // Mock global fetch to simulate network failure
         global.fetch = jest.fn().mockRejectedValue(new Error('Network error'));
         
-        const geocoder = new ReverseGeocoder(null); // No fetchManager
+        const geocoder = createReverseGeocoderService(null); // No fetchManager
         geocoder.setCoordinates(-23.55, -46.63);
         
         await expect(geocoder.fetchAddress()).rejects.toThrow('Network error');
@@ -103,10 +104,10 @@ describe('ReverseGeocoder Class', () => {
           statusText: 'Internal Server Error'
         });
         
-        const geocoder = new ReverseGeocoder(null);
+        const geocoder = createReverseGeocoderService(null);
         geocoder.setCoordinates(-23.55, -46.63);
         
-        await expect(geocoder.fetchAddress()).rejects.toThrow('HTTP error! status: 500');
+        await expect(geocoder.fetchAddress()).rejects.toThrow('500');
       });
 
       test('should handle rate limiting (429 status)', async () => {
@@ -116,16 +117,16 @@ describe('ReverseGeocoder Class', () => {
           statusText: 'Too Many Requests'
         });
         
-        const geocoder = new ReverseGeocoder(null);
+        const geocoder = createReverseGeocoderService(null);
         geocoder.setCoordinates(-23.55, -46.63);
         
-        await expect(geocoder.fetchAddress()).rejects.toThrow('HTTP error! status: 429');
+        await expect(geocoder.fetchAddress()).rejects.toThrow('429');
       });
 
       test('should handle timeout errors', async () => {
         global.fetch = jest.fn().mockRejectedValue(new Error('Request timeout'));
         
-        const geocoder = new ReverseGeocoder(null);
+        const geocoder = createReverseGeocoderService(null);
         geocoder.setCoordinates(-23.55, -46.63);
         
         await expect(geocoder.fetchAddress()).rejects.toThrow('Request timeout');
@@ -137,7 +138,7 @@ describe('ReverseGeocoder Class', () => {
           json: jest.fn().mockRejectedValue(new Error('Invalid JSON'))
         });
         
-        const geocoder = new ReverseGeocoder(null);
+        const geocoder = createReverseGeocoderService(null);
         geocoder.setCoordinates(-23.55, -46.63);
         
         await expect(geocoder.fetchAddress()).rejects.toThrow('Invalid JSON');
@@ -146,7 +147,7 @@ describe('ReverseGeocoder Class', () => {
 
     describe('Coordinate Validation', () => {
       test('should reject invalid coordinates (missing latitude)', async () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         geocoder.setCoordinates(null, -46.63);
         
         // setCoordinates returns early for invalid coords, so no URL is set
@@ -154,29 +155,25 @@ describe('ReverseGeocoder Class', () => {
       });
 
       test('should reject invalid coordinates (missing longitude)', async () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         geocoder.setCoordinates(-23.55, null);
         
         await expect(geocoder.fetchAddress()).rejects.toThrow('Invalid coordinates');
       });
 
       test('should reject invalid coordinates (both missing)', async () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         // Don't set coordinates at all
         
         await expect(geocoder.fetchAddress()).rejects.toThrow('Invalid coordinates');
       });
 
       test('should reject invalid coordinates (999 out of range)', async () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
-        geocoder.setCoordinates(999, 999);
-        
-        // The geocoder should still attempt to fetch, but the API will fail
-        // This tests that we properly handle API errors for invalid coordinates
         const mockFetchManager = createMockFetchManager();
         mockFetchManager.fetch.mockRejectedValue(new Error('Invalid coordinates from API'));
-        geocoder.fetchManager = mockFetchManager;
-        
+        const geocoder = createReverseGeocoderService(mockFetchManager);
+        geocoder.setCoordinates(999, 999);
+
         await expect(geocoder.fetchAddress()).rejects.toThrow();
       });
     });
@@ -188,13 +185,13 @@ describe('ReverseGeocoder Class', () => {
           address: { city: 'São Paulo' }
         });
         
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager);
         geocoder.setCoordinates(-23.55, -46.63);
         
         const result = await geocoder.fetchAddress();
         
         expect(mockFetchManager.fetch).toHaveBeenCalled();
-        expect(result.address.city).toBe('São Paulo');
+        expect(result.city).toBe('São Paulo');
       });
 
       test('should fall back to browser fetch when fetchManager is null', async () => {
@@ -203,20 +200,20 @@ describe('ReverseGeocoder Class', () => {
           json: async () => ({ address: { city: 'Rio de Janeiro' } })
         });
         
-        const geocoder = new ReverseGeocoder(null);
+        const geocoder = createReverseGeocoderService(null);
         geocoder.setCoordinates(-22.9068, -43.1729);
         
         const result = await geocoder.fetchAddress();
         
         expect(global.fetch).toHaveBeenCalled();
-        expect(result.address.city).toBe('Rio de Janeiro');
+        expect(result.city).toBe('Rio de Janeiro');
       });
 
       test('should handle fetchManager errors gracefully', async () => {
         const mockFetchManager = createMockFetchManager();
         mockFetchManager.fetch.mockRejectedValue(new Error('FetchManager error'));
         
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager);
         geocoder.setCoordinates(-23.55, -46.63);
         
         await expect(geocoder.fetchAddress()).rejects.toThrow('FetchManager error');
@@ -228,7 +225,7 @@ describe('ReverseGeocoder Class', () => {
         const mockFetchManager = createMockFetchManager();
         mockFetchManager.fetch.mockResolvedValue({ address: {} });
         
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager);
         geocoder.setCoordinates(-23.55, -46.63);
         
         await geocoder.fetchAddress();
@@ -247,7 +244,7 @@ describe('ReverseGeocoder Class', () => {
           openstreetmapBaseUrl: 'https://custom.geocoding.api/reverse?format=json'
         };
         
-        const geocoder = new ReverseGeocoder(mockFetchManager, customConfig);
+        const geocoder = createReverseGeocoderService(mockFetchManager, customConfig);
         geocoder.setCoordinates(-23.55, -46.63);
         
         await geocoder.fetchAddress();
@@ -259,7 +256,7 @@ describe('ReverseGeocoder Class', () => {
         const mockFetchManager = createMockFetchManager();
         mockFetchManager.fetch.mockResolvedValue({ address: {} });
         
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager);
         geocoder.setCoordinates(-23.55, -46.63);
         const firstUrl = geocoder.url;
         
@@ -273,7 +270,7 @@ describe('ReverseGeocoder Class', () => {
 
     describe('State Management', () => {
       test('should reset state when setCoordinates is called', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         geocoder.data = { previous: 'data' };
         geocoder.error = new Error('Previous error');
         geocoder.loading = true;
@@ -288,7 +285,7 @@ describe('ReverseGeocoder Class', () => {
       });
 
       test('should not reset state when coordinates are invalid', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         geocoder.data = { preserved: 'data' };
         
         geocoder.setCoordinates(null, -46.63); // Invalid
@@ -303,7 +300,7 @@ describe('ReverseGeocoder Class', () => {
         const customError = new Error('Custom fetch error');
         mockFetchManager.fetch.mockRejectedValue(customError);
         
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager);
         geocoder.setCoordinates(-23.55, -46.63);
         
         await expect(geocoder.fetchAddress()).rejects.toThrow('Custom fetch error');
@@ -313,11 +310,12 @@ describe('ReverseGeocoder Class', () => {
         const mockFetchManager = createMockFetchManager();
         mockFetchManager.fetch.mockResolvedValue(undefined);
         
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager);
         geocoder.setCoordinates(-23.55, -46.63);
         
         const result = await geocoder.fetchAddress();
-        expect(result).toBeUndefined();
+        // NominatimGeocoder maps undefined raw response to a GeoAddress object (never undefined)
+        expect(result).toBeDefined();
       });
 
       test('should handle null response from browser fetch', async () => {
@@ -326,11 +324,12 @@ describe('ReverseGeocoder Class', () => {
           json: async () => null
         });
         
-        const geocoder = new ReverseGeocoder(null);
+        const geocoder = createReverseGeocoderService(null);
         geocoder.setCoordinates(-23.55, -46.63);
         
         const result = await geocoder.fetchAddress();
-        expect(result).toBeNull();
+        // NominatimGeocoder maps null raw response to a GeoAddress object (never null)
+        expect(result).toBeDefined();
       });
     });
   });
@@ -339,7 +338,7 @@ describe('ReverseGeocoder Class', () => {
     
     describe('Subscribe/Unsubscribe', () => {
       test('should subscribe observer to address updates', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         const mockObserver = { update: jest.fn() };
         
         geocoder.subscribe(mockObserver);
@@ -348,7 +347,7 @@ describe('ReverseGeocoder Class', () => {
       });
 
       test('should unsubscribe observer from address updates', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         const mockObserver = { update: jest.fn() };
         
         geocoder.subscribe(mockObserver);
@@ -358,7 +357,7 @@ describe('ReverseGeocoder Class', () => {
       });
 
       test('should notify observers when address data changes', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         const mockObserver = { update: jest.fn() };
         
         geocoder.subscribe(mockObserver);
@@ -368,7 +367,7 @@ describe('ReverseGeocoder Class', () => {
       });
 
       test('should handle multiple observers', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         const observer1 = { update: jest.fn() };
         const observer2 = { update: jest.fn() };
         
@@ -385,7 +384,7 @@ describe('ReverseGeocoder Class', () => {
       
       test('should warn when AddressDataExtractor is not available', () => {
         const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         geocoder.AddressDataExtractor = null;
         
         const mockPositionManager = {
@@ -402,7 +401,7 @@ describe('ReverseGeocoder Class', () => {
 
       test('should handle invalid PositionManager gracefully', () => {
         const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         
         geocoder.update(null, 'PositionManager updated');
         
@@ -412,7 +411,7 @@ describe('ReverseGeocoder Class', () => {
 
       test('should handle PositionManager without lastPosition', () => {
         const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         
         geocoder.update({}, 'PositionManager updated');
         
@@ -425,7 +424,7 @@ describe('ReverseGeocoder Class', () => {
           address: { city: 'São Paulo' }
         });
         
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager);
         const mockObserver = { update: jest.fn() };
         geocoder.subscribe(mockObserver);
         
@@ -452,7 +451,7 @@ describe('ReverseGeocoder Class', () => {
         const geocodingError = new Error('Geocoding failed');
         mockFetchManager.fetch.mockRejectedValue(geocodingError);
         
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager);
         
         const mockPositionManager = {
           lastPosition: {
@@ -481,7 +480,7 @@ describe('ReverseGeocoder Class', () => {
           }
         });
         
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager);
         geocoder.AddressDataExtractor = {
           getBrazilianStandardAddress: jest.fn().mockReturnValue({
             logradouro: 'Avenida Paulista',
@@ -509,7 +508,7 @@ describe('ReverseGeocoder Class', () => {
         const mockFetchManager = createMockFetchManager();
         const mockReverseGeocode = jest.spyOn(ReverseGeocoder.prototype, 'reverseGeocode');
         
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager);
         
         const mockPositionManager = {
           lastPosition: {
@@ -529,7 +528,7 @@ describe('ReverseGeocoder Class', () => {
       });
 
       test('should skip geocoding when coords are missing', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         
         const mockPositionManager = {
           lastPosition: {
@@ -544,7 +543,7 @@ describe('ReverseGeocoder Class', () => {
       });
 
       test('should skip geocoding when latitude is missing', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         
         const mockPositionManager = {
           lastPosition: {
@@ -558,7 +557,7 @@ describe('ReverseGeocoder Class', () => {
       });
 
       test('should skip geocoding when longitude is missing', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         
         const mockPositionManager = {
           lastPosition: {
@@ -574,7 +573,7 @@ describe('ReverseGeocoder Class', () => {
 
     describe('Cache Key Generation', () => {
       test('should generate cache key from coordinates', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         geocoder.setCoordinates(-23.55, -46.63);
         
         const cacheKey = geocoder.getCacheKey();
@@ -583,7 +582,7 @@ describe('ReverseGeocoder Class', () => {
       });
 
       test('should generate different cache keys for different coordinates', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         
         geocoder.setCoordinates(-23.55, -46.63);
         const key1 = geocoder.getCacheKey();
@@ -597,7 +596,7 @@ describe('ReverseGeocoder Class', () => {
 
     describe('CurrentAddress Property', () => {
       test('should set and get currentAddress data', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         const addressData = { address: { city: 'São Paulo' } };
         
         geocoder.currentAddress = addressData;
@@ -606,7 +605,7 @@ describe('ReverseGeocoder Class', () => {
       });
 
       test('should return undefined when no currentAddress is set', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         
         expect(geocoder.currentAddress).toBeNull();
       });
@@ -614,7 +613,7 @@ describe('ReverseGeocoder Class', () => {
 
     describe('secondUpdateParam Method', () => {
       test('should return standardized Brazilian address', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         const standardizedAddress = {
           logradouro: 'Avenida Paulista',
           bairro: 'Jardins',
@@ -627,7 +626,7 @@ describe('ReverseGeocoder Class', () => {
       });
 
       test('should return undefined when no standardized address exists', () => {
-        const geocoder = new ReverseGeocoder(createMockFetchManager());
+        const geocoder = createReverseGeocoderService(createMockFetchManager());
         
         expect(geocoder.secondUpdateParam()).toBeNull();
       });
@@ -636,7 +635,7 @@ describe('ReverseGeocoder Class', () => {
     describe('_subscribe Internal Method', () => {
       test('should subscribe observers to fetchManager', () => {
         const mockFetchManager = createMockFetchManager();
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager);
         const mockObserver = { update: jest.fn() };
         
         geocoder.subscribe(mockObserver);
@@ -649,7 +648,7 @@ describe('ReverseGeocoder Class', () => {
 
       test('should handle multiple observers in _subscribe', () => {
         const mockFetchManager = createMockFetchManager();
-        const geocoder = new ReverseGeocoder(mockFetchManager);
+        const geocoder = createReverseGeocoderService(mockFetchManager);
         const observer1 = { update: jest.fn() };
         const observer2 = { update: jest.fn() };
         

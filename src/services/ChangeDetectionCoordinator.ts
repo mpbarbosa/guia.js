@@ -12,10 +12,10 @@ import {
 	type AddressFieldChangeEvent,
 	type IAddressComponentExtractor,
 	type IObserverSubject,
-} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/application/services/ChangeDetectionCoordinator.js';
+} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/application/services/ChangeDetectionCoordinator.js';
 import type {
 	GeoAddress,
-} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js';
+} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js';
 import { log, error, warn } from '../utils/logger.js';
 
 interface LegacyReverseGeocoder {

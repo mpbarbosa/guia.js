@@ -6,10 +6,10 @@
  * GetCurrentPositionUseCase, WatchPositionUseCase, GetCurrentPositionOutput.
  *
  * @see https://github.com/mpbarbosa/paraty_geoservices
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js' {
 	/** Geographic coordinates and metadata returned by a provider. */
 	export interface GeoPosition {
 		coords: {
@@ -232,11 +232,112 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/
 		constructor(baseUrl?: string);
 		reverseGeocode(latitude: number, longitude: number): Promise<GeoAddress>;
 	}
+
+	/** User-visible error notification; avoids direct `window` coupling. */
+	export interface ReverseGeocodeErrorNotifier {
+		displayError(title: string, message: string): void;
+	}
+
+	/** Optional legacy Brazilian address normalizer (CDN AddressDataExtractor bridge). */
+	export interface BrazilianAddressNormalizer {
+		getBrazilianStandardAddress(data: unknown): unknown;
+	}
+
+	/** Options for constructing a {@link ReverseGeocoderService} directly. */
+	export interface ReverseGeocoderServiceOptions {
+		nominatimGeocoder: ReverseGeocoderPort;
+		awsGeocoder?: ReverseGeocoderPort | null;
+		geocodingPrimaryProvider?: 'aws' | 'nominatim';
+		positionUpdateEvent?: string;
+		immediateAddressUpdateEvent?: string;
+		logger?: { info(msg: string, ...a: unknown[]): void; warn(msg: string, ...a: unknown[]): void; error(msg: string, ...a: unknown[]): void } | null;
+		errorNotifier?: ReverseGeocodeErrorNotifier | null;
+		emitBrowserProviderEvents?: boolean;
+	}
+
+	/** @deprecated Use {@link ReverseGeocoderServiceOptions}. Kept for factory config typing. */
+	export interface ReverseGeocoderConfig {
+		nominatimGeocoder?: ReverseGeocoderPort | null;
+		awsGeocoder?: ReverseGeocoderPort | null;
+		nominatimApiUrl?: string;
+		openstreetmapBaseUrl?: string;
+		corsProxy?: string | null;
+		enableCorsFallback?: boolean;
+		geocodingPrimaryProvider?: 'aws' | 'nominatim';
+		positionUpdateEvent?: string;
+		immediateAddressUpdateEvent?: string;
+		errorNotifier?: ReverseGeocodeErrorNotifier | null;
+		emitBrowserProviderEvents?: boolean;
+	}
+
+	/** Minimal legacy fetch-manager interface accepted by NominatimGeocoder. */
+	export interface LegacyFetchManager {
+		fetch(url: string): Promise<unknown>;
+		subscribe(observer: unknown, url: string): void;
+		observers?: unknown[];
+	}
+
+	/** Factory config for {@link createReverseGeocoderService}. */
+	export interface CreateReverseGeocoderServiceConfig extends ReverseGeocoderConfig {
+		awsLbsEnabled?: boolean;
+		awsLbsBaseUrl?: string;
+	}
+
+	/**
+	 * Orchestrates reverse geocoding across injected providers and notifies observers.
+	 * Exported as `ReverseGeocoderService` from the CDN index; aliased as `ReverseGeocoder`
+	 * in src/services/ReverseGeocoder.ts.
+	 */
+	export class ReverseGeocoderService {
+		latitude: number | null;
+		longitude: number | null;
+		url: string | null;
+		observerSubject: { observers: unknown[]; notifyObservers(...args: unknown[]): void };
+		currentAddress: GeoAddress | null;
+		standardizedAddress: GeoAddress | unknown | null;
+		/** @deprecated Use standardizedAddress. */
+		get enderecoPadronizado(): GeoAddress | unknown | null;
+		set enderecoPadronizado(value: GeoAddress | unknown | null);
+		/** @deprecated Use currentAddress. */
+		get data(): GeoAddress | null;
+		set data(value: GeoAddress | null);
+		error: unknown;
+		loading: boolean;
+		lastFetch: number;
+		AddressDataExtractor: BrazilianAddressNormalizer | null;
+		declare subscribe: (observer: unknown) => void;
+		declare unsubscribe: (observer: unknown) => void;
+
+		constructor(options: ReverseGeocoderServiceOptions);
+
+		_subscribe(url: string): void;
+		notifyObservers(...args: unknown[]): void;
+		secondUpdateParam(): GeoAddress | unknown | null;
+		setCoordinates(latitude: number, longitude: number): void;
+		getCacheKey(): string;
+		fetchAddress(): Promise<GeoAddress>;
+		update(positionManager: unknown, posEvent: unknown, loading: unknown, errState: unknown): void;
+		/** @deprecated Use fetchAddress(). */
+		reverseGeocode(): Promise<GeoAddress>;
+		toString(): string;
+		switchProvider(provider: 'aws' | 'nominatim'): void;
+		hasAwsProvider(): boolean;
+		getPrimaryProvider(): 'aws' | 'nominatim';
+		_dispatchProviderEvent(provider: 'aws' | 'nominatim'): void;
+	}
+
+	/**
+	 * Creates a fully wired {@link ReverseGeocoderService} with Nominatim and optional AWS adapters.
+	 */
+	export function createReverseGeocoderService(
+		fetchManager?: LegacyFetchManager | null,
+		config?: CreateReverseGeocoderServiceConfig,
+	): ReverseGeocoderService;
 }
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/application/services/ChangeDetectionCoordinator.js' {
-	type GeoPosition = import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js').GeoPosition;
-	type GeoAddress = import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.5.0/dist/esm/index.js').GeoAddress;
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/application/services/ChangeDetectionCoordinator.js' {
+	type GeoPosition = import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js').GeoPosition;
+	type GeoAddress = import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js').GeoAddress;
 
 	export interface AddressFieldChangeEvent {
 		from: string | null;

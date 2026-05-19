@@ -4,7 +4,7 @@
 
 Last Updated: 2026-04-29
 Status: Active
-version: 0.24.2-alpha
+version: 0.24.3-alpha
 
 ---
 
@@ -408,7 +408,6 @@ guia_js/
 │   ├── INDEX.md                  # Complete documentation index
 │   ├── architecture/             # Architecture documentation
 │   ├── api-integration/          # API integration guides
-│   ├── class-extraction/         # Modularization history
 │   ├── testing/                  # Test infrastructure documentation
 │   ├── issue-189/                # Issue #189 follow-up docs
 │   └── prompts/                  # Workflow prompts and guides
@@ -1838,6 +1837,6 @@ ISC License - See repository for details
 
 ---
 
-**Version**: 0.24.2-alpha
+**Version**: 0.24.3-alpha
 **Status**: Active
 **Last Updated**: 2026-04-29

@@ -46,19 +46,7 @@
 - Phase-specific documentation
 - Refactoring checkpoints and progress tracking
 
-**Note**: Unlike `class-extraction/`, this contains **active** working documentation, not historical records.
-
-#### `docs/class-extraction/`
-
-**Purpose**: Historical documentation of modularization process
-
-**Key Files**:
-
-- `README.md` - Overview of class extraction phases
-- `CLASS_EXTRACTION_PHASE_*.md` - 16 phases of refactoring
-- `MODULE_SPLITTING_SUMMARY.md` - Module organization results
-
-**Note**: This directory documents the transformation from a 6,000+ line monolithic file to a modular architecture.
+**Note**: Unlike `docs/reports/implementation/` and `docs/misc/`, this contains **active** working documentation, not archived records.
 
 #### `docs/testing/`
 
@@ -245,7 +233,7 @@
 - Architecture → `docs/architecture/`
 - APIs → `docs/api-integration/`
 - Testing → `docs/testing/`
-- History → `docs/class-extraction/`
+- History → `docs/reports/implementation/`, `docs/misc/`
 
 **By Type**:
 
@@ -256,7 +244,7 @@
 **By Status**:
 
 - Current → Root level + core directories
-- Historical → `docs/class-extraction/`, phase files
+- Historical → `docs/reports/implementation/`, `docs/misc/`
 - Experimental → `docs/misc/`
 
 ## Documentation Index

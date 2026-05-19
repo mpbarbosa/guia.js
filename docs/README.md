@@ -2,7 +2,7 @@
 
 ---
 
-Last Updated: 2026-04-27
+Last Updated: 2026-05-19
 Status: Active
 Category: Guide
 
@@ -25,7 +25,7 @@ Category: Guide
 
 - **[Project Architecture](./PROJECT_PURPOSE_AND_ARCHITECTURE.md)** - System design overview
 - **[Views Layer](./architecture/VIEWS_LAYER.md)** - SPA view controllers
-- **[Class Extraction Guide](./class-extraction/README.md)** - Component organization
+- **[Module Structure](./architecture/MODULES.md)** - Current module organization
 - **[Directory Organization](./developer/DIRECTORY_ORGANIZATION.md)** - Documentation structure
 
 ### API & Integration
@@ -50,7 +50,6 @@ Category: Guide
 Explore the system design and component structure:
 
 - [architecture/](./architecture/) - Architecture diagrams and component docs
-- [class-extraction/](./class-extraction/) - Class extraction and refactoring guides
 
 ### 🧪 Testing
 

@@ -577,9 +577,12 @@
         </ul>
       </div>
     </noscript>
-    
-    <!-- Primary Navigation -->
-    <nav class="app-navbar" aria-label="Navegação principal">
+
+    <!-- Vue app shell (Phase 2+) -->
+    <div id="app"></div>
+
+    <!-- Primary Navigation — superseded by Vue AppBar; kept for app.ts compatibility -->
+    <nav class="app-navbar" hidden aria-hidden="true" aria-label="Navegação principal">
       <div class="app-navbar-container">
         <a class="app-navbar-brand" href="#/">
           <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
@@ -992,7 +995,10 @@
       mapsIntegration.init();
     </script>
     
-    <!-- App Entry Point -->
+    <!-- Vue App Shell (Phase 2+) -->
+    <script type="module" src="main.ts"></script>
+
+    <!-- Legacy App Entry Point -->
     <script type="module" src="app.js"></script>
   
 

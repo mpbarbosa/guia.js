@@ -465,15 +465,16 @@
         margin-bottom: 2rem;
       }
     </style>
-    <script type="module" crossorigin src="./assets/main-D9YJ9mmN.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/data-D80ElNPv.js">
-    <link rel="modulepreload" crossorigin href="./assets/speech-CjSg1MVO.js">
+    <script type="module" crossorigin src="./assets/main-Cv09RGDc.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/data-H2d9PQzv.js">
+    <link rel="modulepreload" crossorigin href="./assets/speech-J6AjZTHA.js">
     <link rel="modulepreload" crossorigin href="./assets/map-WLs8NypD.js">
-    <link rel="modulepreload" crossorigin href="./assets/html-BBBlafXr.js">
-    <link rel="modulepreload" crossorigin href="./assets/services-DwTcg4Ij.js">
-    <link rel="modulepreload" crossorigin href="./assets/coordination-_Ne9d5n6.js">
+    <link rel="modulepreload" crossorigin href="./assets/html-DasCBcrV.js">
+    <link rel="modulepreload" crossorigin href="./assets/services-K3PY_95z.js">
+    <link rel="modulepreload" crossorigin href="./assets/coordination-BMrVwlQe.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-DgQch6oK.js">
     <link rel="stylesheet" crossorigin href="./assets/map-DwUhsmFz.css">
-    <link rel="stylesheet" crossorigin href="./assets/main-BdDITOp0.css">
+    <link rel="stylesheet" crossorigin href="./assets/main-COlMmsYD.css">
     <link rel="stylesheet" crossorigin href="./assets/ui-CAugqcqo.css">
   </head>
   <body><div class="navigation-progress" role="progressbar" aria-label="Progresso de navegação"><div class="navigation-progress-bar" style="width: 0%;"></div></div>
@@ -562,9 +563,12 @@
         </ul>
       </div>
     </noscript>
-    
-    <!-- Primary Navigation -->
-    <nav class="app-navbar" aria-label="Navegação principal">
+
+    <!-- Vue app shell (Phase 2+) -->
+    <div id="app"></div>
+
+    <!-- Primary Navigation — superseded by Vue AppBar; kept for app.ts compatibility -->
+    <nav class="app-navbar" hidden aria-hidden="true" aria-label="Navegação principal">
       <div class="app-navbar-container">
         <a class="app-navbar-brand" href="#/">
           <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
@@ -934,7 +938,9 @@
     
     <!-- Maps Integration - Discoverable map viewing options -->
     
-    <!-- App Entry Point -->
+    <!-- Vue App Shell (Phase 2+) -->
+
+    <!-- Legacy App Entry Point -->
   
 
 <div class="toast-container" role="region" aria-label="Notificações" aria-live="polite"></div>

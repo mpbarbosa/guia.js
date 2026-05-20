@@ -27,6 +27,30 @@ const routes: RouteRecordRaw[] = [
     meta: { title: 'Conversor de Coordenadas' },
   },
   {
+    path: '/map',
+    name: 'map',
+    component: defineAsyncComponent(
+      () => import('./components/views/MapView.vue'),
+    ),
+    meta: { title: 'Mapa' },
+  },
+  {
+    path: '/stats',
+    name: 'stats',
+    component: defineAsyncComponent(
+      () => import('./components/views/StatsView.vue'),
+    ),
+    meta: { title: 'Estatísticas' },
+  },
+  {
+    path: '/history',
+    name: 'history',
+    component: defineAsyncComponent(
+      () => import('./components/views/HistoryView.vue'),
+    ),
+    meta: { title: 'Histórico' },
+  },
+  {
     // Catch-all: redirect unknown paths to home
     path: '/:pathMatch(.*)*',
     redirect: '/',

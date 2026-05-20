@@ -22,7 +22,9 @@ describe('App.vue', () => {
     await router.push('/');
     await router.isReady();
     const wrapper = mount(App, { global: { plugins: [router] } });
-    expect(wrapper.find('#vue-app-root').exists()).toBe(true);
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('header').exists()).toBe(true);
+    expect(wrapper.find('nav').exists()).toBe(true);
   });
 
   test('renders RouterView content for / route', async () => {

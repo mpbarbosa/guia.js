@@ -49,6 +49,11 @@
 }
 
 @layer base {
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
   body {
     @apply bg-surface antialiased;
     font-family: var(--font-sans);

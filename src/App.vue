@@ -1,18 +1,15 @@
 <script setup lang="ts">
-/**
- * App Vue Component — Root of the Vue 3 application
- *
- * Hosts the router-view and provides the global layout shell.
- * The full template (nav, header, footer) will be migrated from
- * index.html in subsequent phases.
- *
- * @since 0.12.12-alpha
- */
 import { RouterView } from 'vue-router';
+import AppBar from './components/AppBar.vue';
+import BottomNav from './components/BottomNav.vue';
 </script>
 
 <template>
-  <div id="vue-app-root">
-    <RouterView />
+  <div class="flex flex-col h-screen max-w-md mx-auto bg-surface overflow-hidden shadow-2xl">
+    <AppBar />
+    <main class="flex-1 overflow-y-auto">
+      <RouterView />
+    </main>
+    <BottomNav />
   </div>
 </template>

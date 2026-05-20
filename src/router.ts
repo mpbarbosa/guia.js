@@ -7,47 +7,36 @@
  * @since 0.12.12-alpha
  */
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
-import { defineAsyncComponent } from 'vue';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
-    component: defineAsyncComponent(
-      () => import('./components/HomeView.vue'),
-    ),
+    component: () => import('./components/HomeView.vue'),
     meta: { title: 'Início' },
   },
   {
     path: '/converter',
     name: 'converter',
-    component: defineAsyncComponent(
-      () => import('./components/ConverterView.vue'),
-    ),
+    component: () => import('./components/ConverterView.vue'),
     meta: { title: 'Conversor de Coordenadas' },
   },
   {
     path: '/map',
     name: 'map',
-    component: defineAsyncComponent(
-      () => import('./components/views/MapView.vue'),
-    ),
+    component: () => import('./components/views/MapView.vue'),
     meta: { title: 'Mapa' },
   },
   {
     path: '/stats',
     name: 'stats',
-    component: defineAsyncComponent(
-      () => import('./components/views/StatsView.vue'),
-    ),
+    component: () => import('./components/views/StatsView.vue'),
     meta: { title: 'Estatísticas' },
   },
   {
     path: '/history',
     name: 'history',
-    component: defineAsyncComponent(
-      () => import('./components/views/HistoryView.vue'),
-    ),
+    component: () => import('./components/views/HistoryView.vue'),
     meta: { title: 'Histórico' },
   },
   {

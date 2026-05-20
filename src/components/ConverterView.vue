@@ -185,35 +185,43 @@ defineExpose({
 </script>
 
 <template>
-  <div class="converter-container">
-    <header>
-      <h1>Conversor de Latitude/Longitude para Endereço</h1>
-      <p>
-        <abbr
-          title="Dados salvos localmente para acesso rápido"
-          aria-label="Cache: dados salvos localmente"
-        >Cache</abbr>:
-        <span id="tam-cache" aria-live="polite">{{ cacheSize }}</span> itens
-      </p>
-    </header>
+  <div class="min-h-full bg-surface-variant/30 relative">
+    <!-- Map-style header -->
+    <div class="h-48 bg-surface-variant overflow-hidden relative shrink-0">
+      <img
+        src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?q=80&w=600&auto=format&fit=crop"
+        alt="Mapa"
+        class="w-full h-full object-cover grayscale opacity-50"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent to-surface"></div>
+    </div>
 
-    <!-- Location highlight cards -->
-    <section class="location-highlights" aria-label="Destaques de localização">
-      <div class="highlight-card" role="region" aria-labelledby="municipio-label">
-        <div id="municipio-label" class="highlight-card-label">Município</div>
-        <div class="highlight-card-value" aria-live="polite">{{ municipioValue }}</div>
-      </div>
-      <div class="highlight-card" role="region" :aria-labelledby="'location-type-label'">
-        <div id="location-type-label" class="highlight-card-label">{{ locationTypeLabel }}</div>
-        <div class="highlight-card-value" aria-live="polite">{{ locationTypeValue }}</div>
-      </div>
-    </section>
+    <!-- Bottom sheet -->
+    <div class="bg-white rounded-t-[40px] -mt-10 p-8 space-y-8 min-h-[calc(100%-8rem)] shadow-[0_-10px_40px_rgba(0,0,0,0.05)] border-t border-outline-variant">
+      <div class="w-12 h-1.5 bg-outline-variant rounded-full mx-auto"></div>
 
-    <div class="container">
-      <form novalidate @submit.prevent="fetchAddress">
+      <header>
+        <h2 class="text-3xl font-bold text-indigo-950 tracking-tight">Conversor de Rotas</h2>
+        <p class="text-on-surface-variant font-medium mt-1">Converta coordenadas em endereços reais.</p>
+      </header>
+
+      <!-- Result highlight cards -->
+      <div v-if="municipioValue !== '—'" class="grid grid-cols-2 gap-3">
+        <div class="bg-surface border border-outline-variant p-4 rounded-2xl">
+          <span class="text-[10px] font-black text-outline uppercase tracking-widest">Município</span>
+          <p class="text-base font-bold text-indigo-950 mt-1" aria-live="polite">{{ municipioValue }}</p>
+        </div>
+        <div class="bg-surface border border-outline-variant p-4 rounded-2xl">
+          <span class="text-[10px] font-black text-outline uppercase tracking-widest">{{ locationTypeLabel }}</span>
+          <p class="text-base font-bold text-indigo-950 mt-1" aria-live="polite">{{ locationTypeValue }}</p>
+        </div>
+      </div>
+
+      <!-- Coordinate form -->
+      <form novalidate class="space-y-4" @submit.prevent="fetchAddress">
         <!-- Latitude -->
-        <div class="input-group">
-          <label for="latitude">Latitude:</label>
+        <div class="relative">
+          <div class="absolute left-6 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-outline shrink-0"></div>
           <input
             id="latitude"
             v-model="latitude"
@@ -223,28 +231,29 @@ defineExpose({
             step="any"
             min="-90"
             max="90"
-            placeholder="Digite a latitude (ex: -23.5505)"
-            aria-describedby="latitude-example latitude-error"
+            placeholder="Latitude (ex: -23.5505)"
+            class="w-full pl-14 pr-6 py-5 bg-surface border rounded-2xl font-bold text-indigo-950 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
+            :class="latInvalid ? 'border-error' : 'border-outline-variant'"
+            aria-describedby="latitude-error"
             aria-required="true"
             :aria-invalid="latInvalid ? 'true' : 'false'"
             @blur="validateLatitude"
             @input="clearLatError"
           />
-          <div id="latitude-example" class="example">
-            Exemplo: -23.5505 (São Paulo). Válido: -90 a 90
-          </div>
           <div
+            v-if="latError"
             id="latitude-error"
-            class="error-message"
+            class="mt-1 px-4 text-xs text-error font-medium"
             role="alert"
             aria-live="polite"
-            :hidden="!latError"
           >{{ latError }}</div>
         </div>
 
         <!-- Longitude -->
-        <div class="input-group">
-          <label for="longitude">Longitude:</label>
+        <div class="relative">
+          <div class="absolute left-6 top-1/2 -translate-y-1/2 shrink-0">
+            <i class="bi bi-geo-alt-fill text-primary text-lg leading-none" aria-hidden="true"></i>
+          </div>
           <input
             id="longitude"
             v-model="longitude"
@@ -254,51 +263,66 @@ defineExpose({
             step="any"
             min="-180"
             max="180"
-            placeholder="Digite a longitude (ex: -46.6333)"
-            aria-describedby="longitude-example longitude-error"
+            placeholder="Longitude (ex: -46.6333)"
+            class="w-full pl-14 pr-6 py-5 bg-surface border rounded-2xl font-bold text-indigo-950 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
+            :class="lonInvalid ? 'border-error' : 'border-outline-variant'"
+            aria-describedby="longitude-error"
             aria-required="true"
             :aria-invalid="lonInvalid ? 'true' : 'false'"
             @blur="validateLongitude"
             @input="clearLonError"
           />
-          <div id="longitude-example" class="example">
-            Exemplo: -46.6333 (São Paulo). Válido: -180 a 180
-          </div>
           <div
+            v-if="lonError"
             id="longitude-error"
-            class="error-message"
+            class="mt-1 px-4 text-xs text-error font-medium"
             role="alert"
             aria-live="polite"
-            :hidden="!lonError"
           >{{ lonError }}</div>
         </div>
 
+        <!-- Submit button -->
         <button
           type="submit"
           :disabled="loading"
+          class="w-full bg-primary text-white py-5 rounded-2xl font-bold text-xl shadow-lg flex items-center justify-center gap-3 transition-transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Obter endereço a partir das coordenadas"
         >
-          {{ loading ? 'Buscando...' : 'Obter Endereço' }}
+          <span v-if="loading" class="flex items-center gap-3">
+            <i class="bi bi-arrow-repeat animate-spin text-xl" aria-hidden="true"></i>
+            Buscando...
+          </span>
+          <span v-else class="flex items-center gap-3">
+            Obter Endereço
+            <i class="bi bi-geo-fill text-xl" aria-hidden="true"></i>
+          </span>
         </button>
       </form>
 
-      <!-- Results -->
-      <section
+      <!-- Results card -->
+      <div
+        v-if="resultHtml || loading"
+        class="bg-indigo-50 border border-indigo-100 p-6 rounded-2xl space-y-3"
         role="region"
         aria-live="polite"
         aria-label="Resultados da conversão"
       >
-        <p v-if="loading" class="loading" role="status">Buscando endereço...</p>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div
-          v-else-if="resultIsError"
-          class="error"
-          role="alert"
-          v-html="resultHtml"
-        />
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div v-else v-html="resultHtml" />
-      </section>
+        <div v-if="loading" class="flex items-center gap-2 text-primary">
+          <i class="bi bi-arrow-repeat animate-spin text-lg" aria-hidden="true"></i>
+          <span class="text-xs font-black uppercase tracking-widest">Buscando endereço...</span>
+        </div>
+        <template v-else>
+          <div class="flex items-center gap-2" :class="resultIsError ? 'text-error' : 'text-primary'">
+            <i class="bi text-lg" :class="resultIsError ? 'bi-exclamation-circle' : 'bi-pin-map'" aria-hidden="true"></i>
+            <span class="text-xs font-black uppercase tracking-widest">{{ resultIsError ? 'Erro' : 'Resultado' }}</span>
+          </div>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <div class="text-sm text-on-surface-variant leading-relaxed font-medium result-content" v-html="resultHtml" />
+          <div v-if="!resultIsError" class="pt-2">
+            <span class="bg-indigo-200 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Encontrado</span>
+          </div>
+        </template>
+      </div>
     </div>
   </div>
 </template>

@@ -4,17 +4,17 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 
 const tabs = [
-  { name: 'home',      path: '/',          icon: 'bi-house',        activeIcon: 'bi-house-fill',        label: 'Início'   },
+  { name: 'home',      path: '/',          icon: 'bi-house',         activeIcon: 'bi-house-fill',        label: 'Início'   },
   { name: 'converter', path: '/converter', icon: 'bi-arrow-left-right', activeIcon: 'bi-arrow-left-right', label: 'Rotas'    },
-  { name: 'map',       path: '/map',       icon: 'bi-map',          activeIcon: 'bi-map-fill',          label: 'Mapa'     },
-  { name: 'stats',     path: '/stats',     icon: 'bi-bar-chart',    activeIcon: 'bi-bar-chart-fill',    label: 'Stats'    },
-  { name: 'history',   path: '/history',   icon: 'bi-clock-history',activeIcon: 'bi-clock-history',     label: 'Histórico'},
+  { name: 'map',       path: '/map',       icon: 'bi-map',           activeIcon: 'bi-map-fill',          label: 'Mapa'     },
+  { name: 'stats',     path: '/stats',     icon: 'bi-bar-chart',     activeIcon: 'bi-bar-chart-fill',    label: 'Stats'    },
+  { name: 'history',   path: '/history',   icon: 'bi-clock-history', activeIcon: 'bi-clock-history',     label: 'Histórico'},
 ] as const;
 </script>
 
 <template>
   <nav
-    class="bg-white border-t border-outline-variant flex items-stretch shrink-0"
+    class="bg-white border-t border-outline-variant px-4 py-3 flex items-center justify-around shrink-0"
     role="navigation"
     aria-label="Navegação principal"
   >
@@ -22,19 +22,37 @@ const tabs = [
       v-for="tab in tabs"
       :key="tab.name"
       :href="`#${tab.path}`"
-      class="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-xs font-medium min-h-14 transition-all duration-300 no-underline"
-      :class="route.path === tab.path
-        ? 'bg-primary-container text-white'
-        : 'text-on-surface-variant hover:text-on-surface'"
+      class="flex flex-col items-center gap-1.5 transition-all duration-300 relative px-3 py-1.5 rounded-2xl no-underline"
+      :class="route.path === tab.path ? 'bg-primary/5' : ''"
       :aria-current="route.path === tab.path ? 'page' : undefined"
       :aria-label="tab.label"
     >
-      <i
-        class="bi text-xl leading-none"
-        :class="route.path === tab.path ? tab.activeIcon : tab.icon"
+      <!-- Active indicator dot -->
+      <span
+        v-if="route.path === tab.path"
+        class="absolute -top-1 w-1.5 h-1.5 bg-primary rounded-full"
         aria-hidden="true"
-      ></i>
-      <span class="leading-tight">{{ tab.label }}</span>
+      />
+      <!-- Icon wrapper -->
+      <div
+        class="p-1.5 rounded-xl transition-all duration-300"
+        :class="route.path === tab.path
+          ? 'bg-primary-container text-white'
+          : 'text-on-surface-variant'"
+      >
+        <i
+          class="bi text-xl leading-none block"
+          :class="route.path === tab.path ? tab.activeIcon : tab.icon"
+          aria-hidden="true"
+        ></i>
+      </div>
+      <!-- Label -->
+      <span
+        class="text-[11px] font-bold tracking-wide uppercase leading-tight"
+        :class="route.path === tab.path
+          ? 'text-primary'
+          : 'text-on-surface-variant opacity-60'"
+      >{{ tab.label }}</span>
     </a>
   </nav>
 </template>

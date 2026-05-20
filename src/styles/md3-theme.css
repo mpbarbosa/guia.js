@@ -16,7 +16,7 @@
   --color-surface-card: #ffffff;
   --color-surface-variant: #f1f3f9;
   --color-on-surface: #1c1b1f;
-  --color-on-surface-variant: #49454f;
+  --color-on-surface-variant: #434655;
 
   --color-outline: #737686;
   --color-outline-variant: #c3c6d7;
@@ -46,6 +46,14 @@
   /* Typography */
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Override legacy highlight-card gradient inside Vue app shell */
+#app .highlight-card {
+  background: #ffffff !important;
 }
 
 @layer base {

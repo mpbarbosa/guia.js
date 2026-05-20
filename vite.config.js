@@ -1,4 +1,5 @@
 import { defineConfig, loadEnv } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import { resolve, dirname } from 'path';
 import { existsSync } from 'fs';
@@ -60,6 +61,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
+      tailwindcss(),
       resolveJsToTs(),
       ...(existsSync(paratySrc) && existsSync(paratyChangeDetectionSrc)
         ? [resolveParatyGeoservicesCDN(paratySrc, paratyChangeDetectionSrc)]

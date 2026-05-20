@@ -1,0 +1,26 @@
+/* Bridge: map legacy --color-* vars used by existing CSS to MD3 theme vars.
+   Import this after md3-theme.css. Do not delete until Phase 3 CSS cleanup. */
+:root {
+  --color-primary: #004ac6;
+  --color-primary-hover: #2563eb;
+  --color-primary-light: #dbeafe;
+  --color-primary-dark: #003a9e;
+
+  --color-secondary: #7c3aed;
+  --color-secondary-hover: #6d28d9;
+  --color-secondary-light: #ede9fe;
+
+  --color-surface: #f8f9fa;
+  --color-surface-variant: #f1f3f9;
+  --color-surface-elevated: #ffffff;
+
+  --color-border: #c3c6d7;
+  --color-border-light: #e8eaf6;
+  --color-border-dark: #737686;
+
+  --color-text-primary: #1c1b1f;
+  --color-text-secondary: #49454f;
+  --color-text-tertiary: #737686;
+  --color-text-muted: #737686;
+  --color-text-disabled: #aeafc7;
+}

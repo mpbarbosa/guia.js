@@ -82,6 +82,8 @@ public/*
 !public/offline.html
 !public/favicon.svg
 !public/service-worker.js
+!public/v1/
+!public/v1/**
 
 # Auto-generated workflow artefacts
 .workflow_session_cloc_cache.json

@@ -1,69 +1,39 @@
-# TDD Guide — Test-Driven Development
+# TDD Guide
 
----
+This repository expects small Red-Green-Refactor cycles: write the failing
+test first, make the narrowest change that passes, then refactor safely.
 
-Last Updated: 2026-03-23
-Status: Active
-Category: Guide
+## Source of Truth
 
----
+Use [docs/guides/TDD_GUIDE.md](../docs/guides/TDD_GUIDE.md) as the
+authoritative guide. This `.github/` copy exists so workflow reviews and
+Copilot-oriented guidance can discover the rule in the expected location
+without duplicating the full document.
 
-Guia Turístico follows the **Red–Green–Refactor** TDD cycle.
+## Repository-Specific Rules
 
-## The Cycle
+1. Write or update the failing test before implementation changes; start with
+   `npm run test:unit` for TypeScript unit work and expand to broader suites
+   only when the change crosses that boundary.
+2. Keep each TDD step small: one behavior, one failing reason, and the minimum
+   production code needed to turn red to green.
+3. Name tests by observable behavior rather than implementation details, and
+   structure cases with Arrange-Act-Assert.
+4. Replace browser APIs and external I/O with mocks or stubs, including
+   `fetch`, `navigator.geolocation`, and `speechSynthesis`; the red/green
+   signal should come from the unit under test, not live dependencies.
+5. Refactor only after the relevant tests are green, preserving public behavior
+   while reducing duplication and improving clarity.
+6. Reset singleton, cache, timer, and other shared state in `beforeEach` and
+   `afterEach` so every red-green cycle stays deterministic.
+7. Use Jest fake timers when exercising timer-driven logic instead of waiting
+   on real time.
+8. Keep this `.github/` guide concise and link to related testing guidance
+   instead of copying long walkthroughs or examples.
 
-```
-1. RED    — Write a failing test for the behaviour you want.
-2. GREEN  — Write the minimum code to make the test pass.
-3. REFACTOR — Clean up without breaking the test.
-```
+## Review Heuristic
 
-Repeat for each new behaviour.
-
-## Rules
-
-- Write the test **before** writing the implementation.
-- One logical assertion per test (multiple `expect` calls are fine when they
-  test the same behaviour from different angles).
-- Test names describe the expected behaviour, not the implementation:
-  - ✅ `'returns null when address has no road'`
-  - ❌ `'test the getRoad() function'`
-
-## Test Structure (Arrange–Act–Assert)
-
-```typescript
-test('returns the formatted address when all fields are present', () => {
-  // Arrange
-  const address = new BrazilianStandardAddress({ road: 'Rua das Flores', city: 'Recife' });
-
-  // Act
-  const result = address.format();
-
-  // Assert
-  expect(result).toBe('Rua das Flores, Recife');
-});
-```
-
-## What Belongs in a Unit Test
-
-- One class / one function in isolation.
-- Dependencies are replaced with mocks or stubs.
-- No network calls, no file I/O, no timers (use Jest fake timers).
-
-## Running the Test Suite
-
-```bash
-# All tests (JS + TS)
-npm test
-
-# TypeScript unit tests only
-node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.unit.js
-
-# Watch mode (during development)
-npm run test:watch
-```
-
-## See Also
-
-- [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md) — patterns for common test scenarios.
-- [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md) — test checklist for reviewers.
+If implementation code appears before the failing test, or a "green" step
+depends on broad unrelated changes, real I/O, or hidden shared state, the
+change is drifting away from TDD and should be reduced back to a small
+Red-Green-Refactor cycle.

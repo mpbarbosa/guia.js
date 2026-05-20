@@ -330,7 +330,38 @@ npm run cleanup:ai-workflow
 
 ---
 
-### 8. Docker test wrapper scripts
+### 8. lint-md.js
+
+**Path**: `scripts/lint-md.js`
+**Purpose**: Dispatches markdown linting through the tool configured in `.workflow-config.yaml`
+**Usage**: `node scripts/lint-md.js [--fix]`
+**npm scripts**: `npm run lint:md`, `npm run lint:md:fix`
+**Arguments**:
+
+- `--fix` — forward the configured linter's auto-fix mode
+
+**Related modules**: `.workflow-config.yaml`, `package.json`
+
+**What it does**:
+
+- Reads `md_linter`, `md_glob`, and `md_excludes` from the `linting:` block in `.workflow-config.yaml`
+- Resolves the configured markdown linter from `node_modules/.bin/` when available
+- Runs the configured linter against the declared glob and exclusions
+- Mirrors the child process exit code so CI and npm scripts fail correctly
+
+**Exit codes**:
+
+- `0` — markdown linting completed successfully
+- Non-zero — the underlying linter reported issues, or the dispatcher could not read config / invoke the linter
+
+**Prerequisites**:
+
+- Run from the project root (so `.workflow-config.yaml` resolves correctly)
+- Node.js and project dependencies installed (`npm install`)
+
+---
+
+### 9. Docker test wrapper scripts
 
 These scripts are lightweight entrypoints for the Docker-based test flow. Full walkthroughs, troubleshooting, and container details live in [`docs/DOCKER_TESTING.md`](../docs/DOCKER_TESTING.md).
 
@@ -338,9 +369,10 @@ These scripts are lightweight entrypoints for the Docker-based test flow. Full w
 |------|---------|-------|------------|---------------|
 | `scripts/run-tests-docker.sh` | Build `Dockerfile.test` and run the unit/integration Jest suite inside Docker | `bash scripts/run-tests-docker.sh -- --coverage` | `npm run test:docker` | Docker daemon available; `Dockerfile.test` present |
 | `scripts/run-e2e-tests-docker.sh` | Build `Dockerfile.test.e2e` and run the Puppeteer E2E suite inside Docker | `bash scripts/run-e2e-tests-docker.sh -- --verbose` | `npm run test:docker:e2e` | Docker daemon available; `Dockerfile.test.e2e` present |
-| `scripts/run-all-tests-docker.sh` | Run both Docker test wrappers sequentially and return a combined exit code | `bash scripts/run-all-tests-docker.sh` | `npm run test:docker:all` | Same prerequisites as the two wrapper scripts above |
+| `scripts/run-playwright-tests-docker.sh` | Build `Dockerfile.test.playwright` and run the Playwright sanity suite inside Docker | `bash scripts/run-playwright-tests-docker.sh` | *(none)* | Docker daemon available; `Dockerfile.test.playwright` present |
+| `scripts/run-all-tests-docker.sh` | Run both Jest-based Docker wrappers sequentially and return a combined exit code | `bash scripts/run-all-tests-docker.sh` | `npm run test:docker:all` | Same prerequisites as `run-tests-docker.sh` and `run-e2e-tests-docker.sh` |
 
-All three wrappers print a pass/fail summary and exit non-zero when their underlying test run fails.
+All four wrappers print a pass/fail summary and exit non-zero when their underlying test run fails.
 
 ---
 
@@ -348,8 +380,9 @@ All three wrappers print a pass/fail summary and exit non-zero when their underl
 
 ### Executable Permissions
 
-All scripts in this directory ship with the executable bit already set (`-rwxrwxr-x`).
-If permissions are ever lost (e.g. after a fresh clone on some systems), restore them:
+All shell scripts in this directory ship with the executable bit already set (`-rwxrwxr-x`).
+The Node.js dispatcher `scripts/lint-md.js` is intended to be run via `node` or the npm aliases rather than as a directly executed file.
+If shell-script permissions are ever lost (e.g. after a fresh clone on some systems), restore them:
 
 ```bash
 # Restore executable permissions for all scripts
@@ -372,11 +405,13 @@ ls -la scripts/*.sh
 
 ### Shebangs and Entry Points
 
-Every script begins with `#!/bin/bash` as the first line. This means:
+All shell scripts begin with `#!/bin/bash` as the first line, while `lint-md.js` uses `#!/usr/bin/env node`. This means:
 
 - Scripts **must** be invoked as `./scripts/<name>.sh` or `bash scripts/<name>.sh` — not as `sh scripts/<name>.sh` (which uses `/bin/sh` and may lack bash features).
-- All scripts use `set -e` (fail-fast): any command that exits non-zero causes the script to abort immediately.
-- No script sources another script or imports a shared library; each is self-contained.
+- `lint-md.js` should be invoked as `node scripts/lint-md.js` or through `npm run lint:md` / `npm run lint:md:fix`.
+- All shell scripts use `set -e` (or `set -euo pipefail`) so a failing command aborts the script immediately.
+- `lint-md.js` delegates to the configured markdown linter and mirrors its exit code.
+- No script sources another shell script or imports a shared library; each entrypoint is self-contained.
 
 ### Direct Execution
 
@@ -385,6 +420,8 @@ Every script begins with `#!/bin/bash` as the first line. This means:
 ./scripts/fix-console-logging.sh          # Fix console.* → centralized logger
 ./scripts/update-doc-dates.sh             # Update "Last Updated" in modified .md files
 ./scripts/update-test-counts.sh           # Sync test counts into docs
+node scripts/lint-md.js                   # Lint markdown using .workflow-config.yaml
+node scripts/lint-md.js --fix             # Auto-fix markdown issues when supported
 ./scripts/deploy-preflight.sh             # Pre-flight checklist before production deploy
 ./scripts/build_and_deploy.sh             # Staging deployment (requires ../mpbarbosa_site)
 ./scripts/build_and_deploy.sh --help      # Show build_and_deploy.sh usage
@@ -392,12 +429,15 @@ Every script begins with `#!/bin/bash` as the first line. This means:
 ./scripts/cleanup-ai-workflow.sh --dry-run  # Preview what would be deleted
 bash scripts/run-tests-docker.sh -- --coverage      # Dockerized unit/integration tests
 bash scripts/run-e2e-tests-docker.sh -- --verbose   # Dockerized E2E tests
+bash scripts/run-playwright-tests-docker.sh         # Dockerized Playwright sanity test
 bash scripts/run-all-tests-docker.sh                # Run both Docker test suites
 ```
 
 ### Via npm Scripts
 
 ```bash
+npm run lint:md            # → node scripts/lint-md.js
+npm run lint:md:fix        # → node scripts/lint-md.js --fix
 npm run update:dates      # → ./scripts/update-doc-dates.sh
 npm run update:tests      # → ./scripts/update-test-counts.sh
 npm run cleanup:ai-workflow  # → ./scripts/cleanup-ai-workflow.sh
@@ -417,9 +457,11 @@ All variables they use are defined internally. For reference:
 | `fix-console-logging.sh` | `SCRIPT_DIR`, `PROJECT_ROOT`, `FILES`, `DEPTH`, `PREFIX` | *(none)* |
 | `update-doc-dates.sh` | `TODAY`, `MODIFIED`, `updated` | *(none)* |
 | `update-test-counts.sh` | `PASSING`, `TOTAL`, `FAILED`, `SKIPPED` | *(none)* |
+| `lint-md.js` | `ROOT`, `CONFIG_FILE`, `tool`, `glob`, `excludes` | *(none)* |
 | `deploy-preflight.sh` | `NODE_VERSION`, `JS_COUNT`, `CSS_COUNT`, `PREVIEW_PID` | *(none)* |
 | `build_and_deploy.sh` | *(none beyond `$1`)* | *(none)* |
 | `cleanup-ai-workflow.sh` | `DAYS`, `DRY_RUN`, `DELETED`, `BYTES` | *(none)* |
+| `run-playwright-tests-docker.sh` | `IMAGE_NAME`, `PROJECT_ROOT`, `EXIT_CODE` | *(none)* |
 
 ---
 
@@ -432,9 +474,11 @@ All scripts use `set -e` — any failing command causes immediate exit with code
 | `fix-console-logging.sh` | All files processed | Unexpected shell error |
 | `update-doc-dates.sh` | Dates updated (or no modified files) | Unexpected shell error |
 | `update-test-counts.sh` | Counts synced to docs | `test-results.json` not produced; shell error |
+| `lint-md.js` | Markdown lint passed | Config read failed, linter missing, or lint issues found |
 | `deploy-preflight.sh` | All checks passed; dist/ ready | Missing file, build failure, or endpoint unreachable |
 | `build_and_deploy.sh` | Deployment completed | Build failed or sync script errored |
 | `cleanup-ai-workflow.sh` | Cleanup (or dry-run) complete | Not in project root; unknown argument |
+| `run-playwright-tests-docker.sh` | Playwright sanity suite passed | Docker build or test run failed |
 
 To capture exit status explicitly:
 

@@ -1,84 +1,37 @@
 # Unit Test Guide
 
----
+This repository requires focused unit tests: keep each test centered on one
+behavior and isolate external dependencies.
 
-Last Updated: 2026-03-23
-Status: Active
-Category: Guide
+## Source of Truth
 
----
+Use [docs/guides/UNIT_TEST_GUIDE.md](../docs/guides/UNIT_TEST_GUIDE.md) as the
+authoritative guide. This `.github/` copy exists so workflow reviews and
+Copilot-oriented guidance can discover the rule in the expected location
+without duplicating the full document.
 
-Patterns and recipes for writing unit tests in Guia Turístico.
+## Repository-Specific Rules
 
-## Test File Location
+1. Put TypeScript unit tests in `__tests__/` and mirror the relevant `src/`
+   directory structure so source and test ownership stay aligned.
+2. Use `npm run test:unit` for the repository's Jest TypeScript unit suite;
+   reserve `npm test` for the broader default Jest run.
+3. Test one unit or behavior at a time, use descriptive behavior-based names,
+   and structure cases with Arrange-Act-Assert.
+4. Replace browser APIs and external I/O with mocks or stubs, including
+   `fetch`, `navigator.geolocation`, and `speechSynthesis`; unit tests must not
+   make live network or platform calls.
+5. Reset singleton, cache, timer, and other shared state in `beforeEach` and
+   `afterEach` so tests remain order-independent.
+6. Use Jest fake timers when exercising timer-driven logic instead of waiting
+   on real time.
+7. Keep assertions on observable behavior and public results rather than
+   internal implementation details.
+8. Keep this `.github/` guide concise and link to related testing guidance
+   instead of copying long examples.
 
-| Source file | Test file |
-|-------------|-----------|
-| `src/data/AddressCache.ts` | `__tests__/data/AddressCache.test.ts` |
-| `src/services/GeolocationService.ts` | `__tests__/services/GeolocationService.test.ts` |
-| `src/html/HTMLAddressDisplayer.ts` | `__tests__/html/HTMLAddressDisplayer.test.ts` |
+## Review Heuristic
 
-Mirror the `src/` directory structure under `__tests__/`.
-
-## Mocking Browser APIs
-
-```typescript
-// Geolocation
-global.navigator.geolocation = {
-  watchPosition: jest.fn(),
-  clearWatch: jest.fn(),
-  getCurrentPosition: jest.fn(),
-};
-
-// Speech synthesis
-global.speechSynthesis = {
-  speak: jest.fn(),
-  cancel: jest.fn(),
-  getVoices: jest.fn().mockReturnValue([]),
-};
-```
-
-## Resetting Singletons Between Tests
-
-Classes like `AddressCache` are singletons. Reset them in `beforeEach`:
-
-```typescript
-beforeEach(() => {
-  AddressCache.clearCache();
-  // or, if a reset method exists:
-  AddressCache.getInstance().reset();
-});
-```
-
-## Testing Callbacks
-
-```typescript
-test('fires the callback when the value changes', () => {
-  const cb = jest.fn();
-  cache.setLogradouroChangeCallback(cb);
-
-  cache.update({ road: 'Rua Nova' });
-
-  expect(cb).toHaveBeenCalledTimes(1);
-  expect(cb).toHaveBeenCalledWith(expect.objectContaining({ current: 'Rua Nova' }));
-});
-```
-
-## Testing Async Code
-
-```typescript
-test('resolves with the address after the API responds', async () => {
-  global.fetch = jest.fn().mockResolvedValue({
-    json: async () => ({ road: 'Rua das Flores' }),
-  });
-
-  const result = await geocoder.reverse(-8.05, -34.9);
-
-  expect(result.road).toBe('Rua das Flores');
-});
-```
-
-## See Also
-
-- [TDD_GUIDE.md](./TDD_GUIDE.md) — the Red–Green–Refactor cycle.
-- [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md) — review checklist for tests.
+If a test needs real network access, persistent shared state from another test,
+or detailed knowledge of internal implementation to pass, it is probably no
+longer a unit test and should be narrowed or moved to a broader test layer.

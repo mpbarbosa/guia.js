@@ -814,10 +814,18 @@ python3 .github/scripts/check-links.py --verbose
 
 ### JavaScript Utilities (1 script)
 
-#### 19. generate_api_docs.js
+#### 19. jsdoc-audit.js
 
-**Purpose**: Generates API documentation from JSDoc comments
-**Usage**: `node .github/scripts/generate_api_docs.js`
+**Purpose**: Audits exported APIs in `src/` and reports which public exports still lack JSDoc coverage
+**Usage**: `node .github/scripts/jsdoc-audit.js`
+
+**What it does**:
+
+- Recursively scans `src/` for `.js` files
+- Detects exported classes, functions, and variables
+- Looks backwards from each export for a nearby `/** ... */` block
+- Prints a coverage-style report with undocumented exports grouped by file
+- Exits non-zero when undocumented exports are found
 
 ---
 
@@ -863,7 +871,7 @@ npm run ci:test-local         # Test workflow locally
 | documentation-lint.yml | ⚠️ References update-badges.sh | 🟡 Partial integration |
 | link-checker.yml | ⚠️ Inline curl (could use check-links.py) | 🟡 Enhancement opportunity |
 | modified-files.yml | ⚠️ Inline git diff (could use change-type-detector.sh) | 🔴 Migration recommended |
-| jsdoc-coverage.yml | ✅ Uses jsdoc-audit.js via npm | ✅ Properly integrated |
+| jsdoc-coverage.yml | ⚠️ Computes coverage inline; `jsdoc-audit.js` is a local audit helper | 🟡 Partial alignment |
 | test-badges.yml | ⚠️ Inline (could integrate update-badges.sh) | 🟡 Enhancement opportunity |
 | dependency-audit.yml | ✅ Self-contained workflow | ✅ Well documented |
 | test.yml | ✅ Uses npm scripts | ✅ Appropriate architecture |

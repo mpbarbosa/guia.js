@@ -1,6 +1,6 @@
 # Copilot Instructions: guia_js
 
-> Durable, high-signal guidance for Copilot-assisted development in this repository. Focus on stable architecture, design principles, documentation sync, and validation. Link to authoritative docs for details.
+> Durable, high-signal guidance for Copilot-assisted development in this repository. Focus on stable architecture, documentation sync, and validation. Link to authoritative docs for details.
 
 This file provides concise, project-specific guidance to help Copilot make high-quality, context-aware edits for `guia_js`, a tourist guide web application built on top of the guia.js library.
 
@@ -16,17 +16,11 @@ Supporting workflow surfaces:
 - `.workflow-config.yaml` – Project-local workflow configuration
 - `.ai_workflow/` – Runtime artifacts, cache, and checkpoints
 
-## Design Principles
-
-- Follow established design principles and module boundaries.
-- Prefer modularity and clarity.
-- Avoid introducing project-specific conventions not confirmed by authoritative docs.
-
 ## Documentation and Change Coordination
 
 - Sync user-facing changes with `README.md` and other reference docs.
 - Update `docs/ARCHITECTURE.md` for architecture or layout changes.
-- Align the main entry point with `package.json`.
+- Ensure the main entry point aligns with `package.json`.
 - For details, refer to authoritative docs:
   - `README.md`
   - `docs/ARCHITECTURE.md`
@@ -45,6 +39,6 @@ For substantive code changes, always validate with:
 
 ## Entry Point
 
-- Main entry: `src/app.js`
+- Editable source entry: `src/app.ts` (`package.json` `main` points to the compiled output `src/app.js`)
 
 > Do not duplicate implementation status, inventories, installation, or migration details—link to the above docs instead.

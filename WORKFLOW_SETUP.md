@@ -24,6 +24,33 @@ Use the local simulation script:
 ./.github/scripts/test-workflow-locally.sh
 ```
 
+### Conditional Execution
+
+The local workflow runner supports conditional step execution through
+`.workflow-config.yaml` and `.github/scripts/workflow-condition-evaluator.sh`.
+This lets local runs skip unnecessary work for cases such as documentation-only
+changes, test-only changes, or unchanged directory structure scans.
+
+Useful commands:
+
+```bash
+# Check whether a step should run
+./.github/scripts/workflow-condition-evaluator.sh step7_test_execution
+
+# Validate the supporting scripts
+bash -n .github/scripts/workflow-condition-evaluator.sh
+bash -n .github/scripts/test-workflow-locally.sh
+
+# Reset cached directory-structure data
+rm -rf .github/cache/
+```
+
+Relevant files:
+
+- `.workflow-config.yaml` — conditional rules and change-detection patterns
+- `.github/scripts/workflow-condition-evaluator.sh` — evaluates whether steps run
+- `.github/scripts/test-conditional-execution.sh` — conditional execution tests
+
 ## Related Guides
 
 - [docs/github/GITHUB_ACTIONS_GUIDE.md](./docs/github/GITHUB_ACTIONS_GUIDE.md) — GitHub Actions configuration reference

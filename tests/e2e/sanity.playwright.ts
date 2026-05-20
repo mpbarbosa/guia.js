@@ -8,7 +8,7 @@
  * Run:
  *   npx playwright test tests/e2e/sanity.playwright.ts
  *
- * @since 0.24.4-alpha
+ * @since 0.24.5-alpha
  */
 
 import { test, expect, type BrowserContext, type Page } from '@playwright/test';

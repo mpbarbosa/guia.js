@@ -1,55 +1,41 @@
-# Referential Transparency & Immutability
+# Referential Transparency
 
----
+This repository prefers pure, deterministic logic: given the same inputs, code
+should return the same result and avoid hidden side effects or input mutation.
 
-Last Updated: 2026-03-23
-Status: Active
-Category: Guide
+## Source of Truth
 
----
+Use [docs/guides/REFERENTIAL_TRANSPARENCY.md](../docs/guides/REFERENTIAL_TRANSPARENCY.md)
+as the authoritative guide. This `.github/` copy exists so workflow reviews and
+Copilot-oriented guidance can discover the rule in the expected location
+without duplicating the full document.
 
-Guia Turístico follows **immutability-first** principles. Functions should return
-new values rather than mutating their inputs.
+## Repository-Specific Rules
 
-## Core Rule
+1. Prefer pure helper functions for calculations, formatting, parsing, and
+   change detection; pass dependencies in as parameters instead of reading
+   hidden globals when practical.
+2. Do not mutate arrays or objects passed into a function; return new values
+   with non-mutating patterns such as object spread, `map`, `filter`, and copied
+   arrays before sorting or reversing.
+3. Keep immutable value objects immutable: set their data through constructors
+   or explicit creation helpers rather than public setters or in-place updates.
+4. Isolate unavoidable side effects such as DOM updates, browser APIs, speech,
+   geolocation, timers, and network calls behind focused coordinator, manager,
+   service, or displayer layers.
+5. Use `src/utils/TimerManager` for timer-based behavior instead of bare
+   `setTimeout` or `setInterval`, so time-driven side effects stay explicit and
+   controllable.
+6. In tests, assert that pure transformations leave their inputs unchanged and
+   produce the same outputs for the same inputs.
+7. When state must change, make the boundary explicit and keep the mutation
+   localized to the smallest responsible component.
+8. Keep this `.github/` guide concise and link to related engineering guidance
+   instead of copying long explanations or examples.
 
-> A function is referentially transparent if it always returns the same output
-> for the same input and produces no observable side effects.
+## Review Heuristic
 
-## Immutability Patterns
-
-### Arrays — use instead of mutating methods
-
-| Avoid | Use instead |
-|-------|-------------|
-| `arr.push(x)` | `[...arr, x]` |
-| `arr.splice(i, 1)` | `arr.filter((_, idx) => idx !== i)` |
-| `arr.sort()` | `[...arr].sort()` |
-| `arr.reverse()` | `[...arr].reverse()` |
-
-### Objects — use spread or `Object.assign`
-
-```javascript
-// Bad — mutates the original
-address.city = 'Recife';
-
-// Good — returns a new object
-const updated = { ...address, city: 'Recife' };
-```
-
-### Classes and state
-
-- Prefer value objects (all fields set in constructor, no setters).
-- If mutable state is unavoidable, isolate it in dedicated manager classes.
-- Never expose raw mutable arrays or objects from public getters — return copies.
-
-## Why This Matters
-
-- Easier to test (no setup/teardown for shared state).
-- Safer in event-driven code (no race conditions on shared data structures).
-- Enables cheap equality checks (`prev !== next` suffices for change detection).
-
-## See Also
-
-- [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md) — review checklist includes immutability checks.
-- [CONTRIBUTING.md](./CONTRIBUTING.md) — pull request checklist.
+If a function reads hidden mutable state, mutates its arguments, or mixes
+calculation with DOM, timer, network, or browser side effects, it is probably
+not referentially transparent and should be split so the pure logic can stand
+on its own.

@@ -12,8 +12,8 @@
 // Version Information
 export const APP_VERSION = {
 	major: 0,
-	minor: 19,
-	patch: 0,
+	minor: 24,
+	patch: 4,
 	prerelease: "alpha", // Indicates unstable development
 	toString: function () {
 		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
@@ -131,7 +131,7 @@ export const MUNICIPIO_CONFIRMATION_COUNT = 3;
  * Shared default threshold for address-field confirmation buffering.
  * The application can override this at initialization/runtime, but the
  * default remains 3 consecutive reads to preserve current behavior.
- * @since 0.24.4-alpha
+ * @since 0.24.5-alpha
  */
 export const ADDRESS_CONFIRMATION_BUFFER_THRESHOLD = LOGRADOURO_CONFIRMATION_COUNT;
 

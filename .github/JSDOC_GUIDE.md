@@ -1,65 +1,38 @@
 # JSDoc Guide
 
----
+This repository expects JSDoc on public APIs so exported behavior, parameters,
+return values, and versioned changes remain clear to readers and generated docs.
 
-Last Updated: 2026-03-23
-Status: Active
-Category: Guide
+## Source of Truth
 
----
+Use [docs/guides/JSDOC_GUIDE.md](../docs/guides/JSDOC_GUIDE.md) as the
+authoritative guide. This `.github/` copy exists so workflow reviews and
+Copilot-oriented guidance can discover the rule in the expected location
+without duplicating the full document.
 
-All public APIs in Guia Turístico must be documented with JSDoc comments.
+## Repository-Specific Rules
 
-## Basic Structure
+1. Document exported functions, classes, and public methods with a concise
+   summary plus the tags needed for safe usage, especially `@param`,
+   `@returns`, and `@throws` when applicable.
+2. Add `@since` for new public APIs using the repository's prerelease version
+   format, and keep version tags updated when a documented API is introduced.
+3. Use examples for non-obvious behavior, constructors, or APIs with multiple
+   call patterns so generated docs show real usage.
+4. Describe responsibilities and observable behavior rather than repeating the
+   implementation line by line.
+5. Keep module and class docs aligned with the current architecture so public
+   contracts stay in sync with `src/` ownership and layering.
+6. Skip heavy JSDoc on private helpers, test-only utilities, and trivial local
+   lambdas when an inline comment or readable naming is enough.
+7. Use `npm run docs:generate` when you need to refresh generated API output in
+   `docs/api-generated/`.
+8. Keep this `.github/` guide concise and link to related documentation guidance
+   instead of copying long templates or extended examples.
 
-```javascript
-/**
- * Brief one-line summary ending with a period.
- *
- * Longer description if needed.
- *
- * @param {string} name - Description of the parameter.
- * @returns {string} Description of the return value.
- * @throws {TypeError} When `name` is not a string.
- * @example
- * const result = myFunction('hello');
- */
-```
+## Review Heuristic
 
-## Required Tags
-
-| Tag | Required for | Notes |
-|-----|-------------|-------|
-| `@param` | Every parameter | Include type and description |
-| `@returns` | Non-void functions | Include type and description |
-| `@throws` | Functions that throw | Document the condition |
-| `@since` | New public APIs | Use `x.y.z-prerelease` format |
-
-## Class Documentation
-
-```javascript
-/**
- * Brief description of the class and its responsibility.
- *
- * @class
- * @example
- * const instance = new MyClass(config);
- * instance.doWork();
- */
-```
-
-## When NOT to add JSDoc
-
-- Private methods and fields (prefix `_`) — keep a short inline comment instead.
-- Test helper functions — `// arrange / act / assert` comments are sufficient.
-- One-line utility lambdas where the intent is obvious.
-
-## Tooling
-
-Generate the API reference with:
-
-```bash
-npm run docs:generate
-```
-
-Output is written to `docs/api-generated/`.
+If a public API lacks enough JSDoc for a caller to understand its inputs,
+outputs, failure modes, or usage without reading the implementation, the
+documentation is probably incomplete and should be strengthened before review
+passes.

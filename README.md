@@ -4,12 +4,12 @@
 
 Last Updated: 2026-04-29
 Status: Active
-version: 0.24.4-alpha
+version: 0.24.5-alpha
 
 ---
 
 [![Tests](https://img.shields.io/badge/tests-3074%20passing%20%2F%203242%20total-green)](https://github.com/mpbarbosa/guia.js)
-[![Version](https://img.shields.io/badge/version-0.19.0--alpha-blue)](https://github.com/mpbarbosa/guia.js)
+[![Version](https://img.shields.io/badge/version-0.24.4--alpha-blue)](https://github.com/mpbarbosa/guia.js)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia.js)
 
 > **Note on Test Status**: 3,074 tests pass successfully out of 148 total (0 skipped, 0 failing), with 122 of 127 test suites148 passing (0 skipped). The test suite is stable with 100% pass rate. See the Testing section below for details.
@@ -279,6 +279,10 @@ npm run check:version        # Verify version consistency across files
 npm run check:references     # Check for broken documentation references
 npm run check:terminology    # Validate terminology consistency
 
+# Documentation Validation
+npm run lint:md              # Lint markdown via scripts/lint-md.js
+npm run lint:md:fix          # Auto-fix markdown lint issues with the configured linter
+
 # Documentation Updates
 npm run update:dates         # Update "Last Updated" metadata in docs
 npm run update:tests         # Update test count documentation
@@ -300,6 +304,8 @@ npm run test:visual          # Run Selenium visual hierarchy tests
 
 > **Tip**: Run `npm run ci:test-local` before pushing to catch issues early.
 
+`npm run lint:md` and `npm run lint:md:fix` dispatch through `scripts/lint-md.js`, which reads the active markdown-lint tool, glob, and exclusions from `.workflow-config.yaml`.
+
 #### Shell Scripts (`scripts/`)
 
 The `scripts/` directory contains standalone shell scripts for maintenance, deployment, and automation tasks:
@@ -314,6 +320,7 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 | `scripts/cleanup-ai-workflow.sh` | Remove old `.ai_workflow/` run artifact directories and local build/test caches | `--days N`, `--dry-run` | `.ai_workflow/`, `.jest-cache/`, `coverage/` |
 | `scripts/run-tests-docker.sh` | Build `Dockerfile.test` and run the unit/integration Jest suite inside Docker | `-- <jest args>` | `Dockerfile.test`, `npm run test:unit` |
 | `scripts/run-e2e-tests-docker.sh` | Build `Dockerfile.test.e2e` and run the Puppeteer E2E suite inside Docker | `-- <jest args>` | `Dockerfile.test.e2e`, `npm run test:e2e` |
+| `scripts/run-playwright-tests-docker.sh` | Build `Dockerfile.test.playwright` and run the Playwright sanity suite inside Docker | *(none)* | `Dockerfile.test.playwright`, `npm run test:playwright` |
 | `scripts/run-all-tests-docker.sh` | Run the unit/integration and E2E Docker wrappers sequentially and combine their exit status | *(none)* | `scripts/run-tests-docker.sh`, `scripts/run-e2e-tests-docker.sh` |
 
 ```bash
@@ -344,6 +351,9 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 # Run the unit/integration suite inside Docker and forward Jest args
 bash scripts/run-tests-docker.sh -- --coverage
 
+# Run the Playwright sanity suite inside Docker
+bash scripts/run-playwright-tests-docker.sh
+
 # Run the full Docker-based test flow (unit/integration + E2E)
 bash scripts/run-all-tests-docker.sh
 ```
@@ -352,9 +362,9 @@ For full details on each script — including executable permissions, shebangs, 
 
 > **Integration tests**: `tests/integration/run_visual_hierarchy_tests.sh` starts a local HTTP server and runs Selenium-based visual hierarchy tests. See [`scripts/README.md`](./scripts/README.md) for full documentation.
 > **CI/CD note**: These scripts are **local developer tools**. GitHub Actions workflows in `.github/workflows/` automate equivalent operations (badge updates, test-count sync, doc linting) on push/PR. For CI helper scripts used inside workflows, see [`.github/scripts/`](./.github/scripts/).
-> **Permissions**: All scripts ship executable (`chmod +x`). If lost after cloning, restore with `chmod +x scripts/*.sh`.
-> **Entry point**: Scripts use `#!/bin/bash` and must be invoked as `./scripts/<name>.sh` or `bash scripts/<name>.sh`, not `sh`.
-> **Error handling**: All scripts use `set -e` — any failing command exits immediately with code 1. None require external environment variables.
+> **Permissions**: Shell scripts in `scripts/` ship executable (`chmod +x`). If those bits are lost after cloning, restore them with `chmod +x scripts/*.sh`.
+> **Entry points**: Shell scripts use `#!/bin/bash` and must be invoked as `./scripts/<name>.sh` or `bash scripts/<name>.sh`, not `sh`. The markdown-lint helper is `scripts/lint-md.js` and runs via `node` or `npm run lint:md`.
+> **Error handling**: Shell scripts use `set -e`/`set -euo pipefail`; `scripts/lint-md.js` mirrors the configured linter's exit code. None require external environment variables.
 
 #### GitHub CI/CD Helper Scripts (`.github/scripts/`)
 
@@ -1837,6 +1847,6 @@ ISC License - See repository for details
 
 ---
 
-**Version**: 0.24.4-alpha
+**Version**: 0.24.5-alpha
 **Status**: Active
 **Last Updated**: 2026-04-29

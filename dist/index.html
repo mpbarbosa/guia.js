@@ -1,7 +1,7 @@
 <html lang="pt-BR"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="0.24.5-alpha" data-source="src/config/version.js">
+    <meta name="version" content="0.24.6-alpha" data-source="src/config/version.js">
     
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com https://demotiles.maplibre.org https://router.project-osrm.org; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'">
@@ -47,6 +47,7 @@
     <!-- Design System -->
     
     <!-- Critical CSS - Common across all views -->
+
     
     <!-- App Shell Styles -->
     <style>
@@ -464,18 +465,16 @@
         margin-bottom: 2rem;
       }
     </style>
-    <script type="module" crossorigin src="./assets/main-CypWF08K.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/vendor-CDLgd9d9.js">
-    <link rel="modulepreload" crossorigin href="./assets/ui-Cq4JWmV_.js">
-    <link rel="modulepreload" crossorigin href="./assets/data-Bsz0jkXl.js">
-    <link rel="modulepreload" crossorigin href="./assets/speech-BxZ5Hvgc.js">
+    <script type="module" crossorigin src="./assets/main-D9YJ9mmN.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/data-D80ElNPv.js">
+    <link rel="modulepreload" crossorigin href="./assets/speech-CjSg1MVO.js">
     <link rel="modulepreload" crossorigin href="./assets/map-WLs8NypD.js">
-    <link rel="modulepreload" crossorigin href="./assets/html-DyrmiBaM.js">
-    <link rel="modulepreload" crossorigin href="./assets/services-DXmm1bUK.js">
-    <link rel="modulepreload" crossorigin href="./assets/coordination-fgOwOExD.js">
-    <link rel="stylesheet" crossorigin href="./assets/ui-CEjEGl8W.css">
+    <link rel="modulepreload" crossorigin href="./assets/html-BBBlafXr.js">
+    <link rel="modulepreload" crossorigin href="./assets/services-DwTcg4Ij.js">
+    <link rel="modulepreload" crossorigin href="./assets/coordination-_Ne9d5n6.js">
     <link rel="stylesheet" crossorigin href="./assets/map-DwUhsmFz.css">
-    <link rel="stylesheet" crossorigin href="./assets/main-D0JlYLKH.css">
+    <link rel="stylesheet" crossorigin href="./assets/main-BdDITOp0.css">
+    <link rel="stylesheet" crossorigin href="./assets/ui-CAugqcqo.css">
   </head>
   <body><div class="navigation-progress" role="progressbar" aria-label="Progresso de navegação"><div class="navigation-progress-bar" style="width: 0%;"></div></div>
     
@@ -564,35 +563,34 @@
       </div>
     </noscript>
     
-    <!-- Primary Navigation (always-collapsed: no navbar-expand-* breakpoint) -->
-    <nav class="navbar app-navbar" aria-label="Navegação principal">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#/">
+    <!-- Primary Navigation -->
+    <nav class="app-navbar" aria-label="Navegação principal">
+      <div class="app-navbar-container">
+        <a class="app-navbar-brand" href="#/">
           <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
           Guia JS
         </a>
         <button
-          class="navbar-toggler"
+          id="nav-toggle"
+          class="app-navbar-toggle"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#main-nav"
           aria-controls="main-nav"
           aria-expanded="false"
           aria-label="Abrir/fechar menu de navegação"
         >
-          <span class="navbar-toggler-icon"></span>
+          <i class="bi bi-list" aria-hidden="true"></i>
         </button>
-        <div class="collapse navbar-collapse" id="main-nav">
-          <ul class="navbar-nav ms-auto mb-2">
-            <li class="nav-item">
-              <a class="nav-link" href="#/">
-                <i class="bi bi-house-fill me-1" aria-hidden="true"></i>
+        <div id="main-nav" class="app-nav-panel" hidden>
+          <ul class="app-nav-links">
+            <li>
+              <a class="app-nav-link" href="#/">
+                <i class="bi bi-house-fill" aria-hidden="true"></i>
                 Início
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#/converter">
-                <i class="bi bi-arrow-left-right me-1" aria-hidden="true"></i>
+            <li>
+              <a class="app-nav-link" href="#/converter">
+                <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
                 Conversor
               </a>
             </li>
@@ -601,14 +599,14 @@
             <div id="address-confirmation-threshold-control"></div>
 
             <!-- Confirmation-buffer debug card -->
-            <div class="card mb-2 confirmation-buffer-diagnostic-card" aria-label="Estado dos buffers de confirmação de endereço (diagnóstico)">
-              <div class="card-header py-1 small fw-semibold d-flex align-items-center gap-2">
+            <div class="confirmation-buffer-diagnostic-card" aria-label="Estado dos buffers de confirmação de endereço (diagnóstico)">
+              <div class="app-diag-card-header">
                 <i class="bi bi-activity" aria-hidden="true"></i>
                 Buffers de Confirmação
-                <span class="badge text-bg-secondary ms-auto fw-normal">diagnóstico</span>
+                <span class="app-badge">diagnóstico</span>
               </div>
-              <div class="card-body p-2" id="confirmation-buffer-card">
-                <p class="text-muted small mb-0">Aguardando dados…</p>
+              <div id="confirmation-buffer-card" class="app-diag-card-body">
+                <p class="app-text-muted">Aguardando dados…</p>
               </div>
             </div>
           </div>
@@ -940,6 +938,20 @@
   
 
 <div class="toast-container" role="region" aria-label="Notificações" aria-live="polite"></div>
+
+<!-- Nav toggle (vanilla JS, no framework dependency) -->
+<script>
+  (function () {
+    var toggle = document.getElementById('nav-toggle');
+    var panel = document.getElementById('main-nav');
+    if (!toggle || !panel) return;
+    toggle.addEventListener('click', function () {
+      var isOpen = !panel.hidden;
+      panel.hidden = isOpen;
+      toggle.setAttribute('aria-expanded', String(!isOpen));
+    });
+  }());
+</script>
 
 <!-- Button Utilities -->
 

@@ -104,7 +104,7 @@ describe('HTMLConfirmationBufferDisplayer', () => {
 
     displayer = new HTMLConfirmationBufferDisplayer(element);
 
-    expect(element.innerHTML).toContain('confirmation-buffer-table');
+    expect(element.innerHTML).toContain('buf-table');
     expect(element.innerHTML).toContain('Rua A');
     expect(element.innerHTML).toContain('Cidade X');
     expect(element.innerHTML).toContain('2 / 3');
@@ -126,7 +126,7 @@ describe('HTMLConfirmationBufferDisplayer', () => {
 
     displayer = new HTMLConfirmationBufferDisplayer(element);
 
-    expect(element.innerHTML).toContain('<em class="text-muted">nulo</em>');
+    expect(element.innerHTML).toContain('<em class="buf-muted">nulo</em>');
   });
 
   it('renders correct HTML for not confirmed and not pending', () => {
@@ -141,12 +141,12 @@ describe('HTMLConfirmationBufferDisplayer', () => {
 
     displayer = new HTMLConfirmationBufferDisplayer(element);
 
-    expect(element.innerHTML).toContain('<em class="text-muted">—</em>');
-    expect(element.innerHTML).toContain('<span class="text-muted">—</span>');
-    expect(element.innerHTML).toContain('<span class="text-muted">— / 5</span>');
+    expect(element.innerHTML).toContain('<em class="buf-muted">—</em>');
+    expect(element.innerHTML).toContain('<span class="buf-muted">—</span>');
+    expect(element.innerHTML).toContain('<span class="buf-muted">— / 5</span>');
   });
 
-  it('applies table-warning class when hasPending is true', () => {
+  it('applies buf-row--pending class when hasPending is true', () => {
     const state = getMockConfirmationBufferState({
       bairro: getMockFieldBufferState({
         hasPending: true,
@@ -158,7 +158,7 @@ describe('HTMLConfirmationBufferDisplayer', () => {
 
     displayer = new HTMLConfirmationBufferDisplayer(element);
 
-    expect(element.innerHTML).toContain('class="table-warning"');
+    expect(element.innerHTML).toContain('class="buf-row--pending"');
   });
 
   it('calls timerManager.clearTimer on destroy', () => {
@@ -195,7 +195,7 @@ describe('HTMLConfirmationBufferDisplayer', () => {
     displayer = new HTMLConfirmationBufferDisplayer(element);
 
     // Should not throw, but will render undefined fields
-    expect(element.innerHTML).toContain('confirmation-buffer-table');
+    expect(element.innerHTML).toContain('buf-table');
   });
 
   it('handles edge case: field buffer with missing properties', () => {
@@ -206,7 +206,7 @@ describe('HTMLConfirmationBufferDisplayer', () => {
 
     displayer = new HTMLConfirmationBufferDisplayer(element);
 
-    expect(element.innerHTML).toContain('confirmation-buffer-table');
+    expect(element.innerHTML).toContain('buf-table');
   });
 
   it('does not throw if destroy is called multiple times', () => {

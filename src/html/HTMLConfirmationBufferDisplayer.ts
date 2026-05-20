@@ -27,18 +27,18 @@ class HTMLConfirmationBufferDisplayer {
 
 	private _buildHtml(state: ConfirmationBufferState): string {
 		return `
-<table class="table table-sm table-borderless mb-0 confirmation-buffer-table">
-  <caption class="caption-top small text-muted px-0 pb-1">
+<table class="buf-table">
+  <caption class="buf-caption">
     Diagnóstico interno. "Último estabilizado" é o valor confirmado pelo buffer após
     <em>N</em> leituras consecutivas idênticas — pode diferir do card visível durante
     a primeira hidratação da sessão.
   </caption>
   <thead>
     <tr>
-      <th class="ps-0">Campo</th>
+      <th>Campo</th>
       <th>Último estabilizado</th>
       <th>Candidato atual</th>
-      <th class="text-center">Qtd / Limiar</th>
+      <th class="buf-col-count">Qtd / Limiar</th>
     </tr>
   </thead>
   <tbody>
@@ -54,22 +54,22 @@ class HTMLConfirmationBufferDisplayer {
 			? String(fieldState.threshold)
 			: '—';
 		const confirmedText = fieldState?.isConfirmed
-			? (fieldState.confirmed !== null && fieldState.confirmed !== undefined ? fieldState.confirmed : '<em class="text-muted">nulo</em>')
-			: '<em class="text-muted">—</em>';
+			? (fieldState.confirmed !== null && fieldState.confirmed !== undefined ? fieldState.confirmed : '<em class="buf-muted">nulo</em>')
+			: '<em class="buf-muted">—</em>';
 
 		const pendingText = fieldState?.hasPending
-			? (fieldState.pending !== null && fieldState.pending !== undefined ? fieldState.pending : '<em class="text-muted">nulo</em>')
-			: '<span class="text-muted">—</span>';
+			? (fieldState.pending !== null && fieldState.pending !== undefined ? fieldState.pending : '<em class="buf-muted">nulo</em>')
+			: '<span class="buf-muted">—</span>';
 
 		const countText = fieldState?.hasPending
-			? `<span class="badge text-bg-warning">${fieldState.pendingCount ?? 0} / ${thresholdText}</span>`
-			: `<span class="text-muted">— / ${thresholdText}</span>`;
+			? `<span class="buf-badge buf-badge--warning">${fieldState.pendingCount ?? 0} / ${thresholdText}</span>`
+			: `<span class="buf-muted">— / ${thresholdText}</span>`;
 
-		const rowClass = fieldState?.hasPending ? 'table-warning' : '';
+		const rowClass = fieldState?.hasPending ? 'buf-row--pending' : '';
 
 		return `
     <tr class="${rowClass}">
-      <td class="ps-0 fw-semibold">${label}</td>
+      <td class="buf-field-name">${label}</td>
       <td>${confirmedText}</td>
       <td>${pendingText}</td>
       <td class="text-center">${countText}</td>

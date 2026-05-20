@@ -1,23 +1,294 @@
-/* Navigation Styles */
-/* Note: Primary app navigation is handled by Bootstrap navbar (.app-navbar) */
-/* Keeping breadcrumb and progress bar styles for future use */
+/* MD3 Application Navigation */
 
-/* Footer Styles */
+.app-navbar {
+  background-color: var(--color-surface-elevated, #ffffff);
+  border-bottom: 1px solid var(--color-border, rgba(0,0,0,0.08));
+  box-shadow: var(--shadow-level-1, 0 1px 2px rgba(0,0,0,.3), 0 1px 3px 1px rgba(0,0,0,.15));
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.app-navbar-container {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  min-height: 56px;
+  flex-wrap: wrap;
+}
+
+.app-navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-primary, #004ac6);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  padding: 0.5rem 0;
+  transition: opacity 0.2s;
+}
+
+.app-navbar-brand:hover { opacity: 0.8; }
+
+.app-navbar-brand:focus-visible {
+  outline: 2px solid var(--color-primary, #004ac6);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs, 4px);
+}
+
+.app-navbar-toggle {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--color-on-surface, #1c1b1f);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.app-navbar-toggle:hover { background: var(--color-surface-variant, #f1f3f9); }
+
+.app-navbar-toggle:focus-visible {
+  outline: 2px solid var(--color-primary, #004ac6);
+  outline-offset: 2px;
+}
+
+.app-nav-panel {
+  width: 100%;
+  padding: 0.5rem 0 1rem;
+  border-top: 1px solid var(--color-border, rgba(0,0,0,0.08));
+}
+
+.app-nav-links {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  gap: 0.125rem;
+}
+
+.app-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border-radius: var(--radius-full, 9999px);
+  color: var(--color-on-surface, #1c1b1f);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.app-nav-link:hover { background: var(--color-surface-variant, #f1f3f9); }
+
+.app-nav-link.active {
+  color: var(--color-primary, #004ac6);
+  font-weight: 600;
+  background: rgba(0, 74, 198, 0.08);
+}
+
+.app-nav-link:focus-visible {
+  outline: 2px solid var(--color-primary, #004ac6);
+  outline-offset: 2px;
+}
+
+/* Confirmation tools in nav */
+.navbar-confirmation-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: min(100%, 28rem);
+  margin-left: auto;
+}
+
+.confirmation-threshold-control {
+  padding: 0.875rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+}
+
+.confirmation-threshold-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.confirmation-threshold-copy { min-width: 0; }
+
+.confirmation-threshold-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-on-surface, #1c1b1f);
+  margin-bottom: 0.25rem;
+}
+
+.confirmation-threshold-help {
+  font-size: 0.8125rem;
+  color: rgba(0, 0, 0, 0.68);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.confirmation-threshold-range {
+  display: block;
+  width: 100%;
+  margin: 0.75rem 0 0.25rem;
+}
+
+.confirmation-threshold-range:focus-visible {
+  outline: 2px solid var(--color-primary, #004ac6);
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+
+.confirmation-threshold-value {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.625rem;
+  border-radius: var(--radius-full, 9999px);
+  background: var(--color-primary, #004ac6);
+  color: var(--color-on-primary, #ffffff);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.confirmation-threshold-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Diagnostic card */
+.confirmation-buffer-diagnostic-card {
+  width: 100%;
+  border: 1px solid var(--color-border, rgba(0,0,0,0.12));
+  border-radius: var(--radius-sm, 8px);
+  overflow: hidden;
+  background: var(--color-surface-card, #ffffff);
+}
+
+.app-diag-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  background: var(--color-surface-variant, #f1f3f9);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-on-surface, #1c1b1f);
+}
+
+.app-diag-card-body {
+  padding: 0.5rem 0.75rem;
+}
+
+.app-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-full, 9999px);
+  font-size: 0.75rem;
+  font-weight: 400;
+  background: var(--color-surface-variant, #f1f3f9);
+  color: var(--color-on-surface-variant, #49454f);
+  margin-left: auto;
+}
+
+.app-text-muted {
+  color: var(--color-text-secondary, #49454f);
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+/* Debug buffer table (HTMLConfirmationBufferDisplayer) */
+.buf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  margin: 0;
+}
+
+.buf-caption {
+  caption-side: top;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #49454f);
+  padding: 0 0 0.25rem;
+  text-align: left;
+}
+
+.buf-table th,
+.buf-table td {
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+  border: none;
+  vertical-align: middle;
+}
+
+.buf-table th:first-child,
+.buf-table td:first-child { padding-left: 0; }
+
+.buf-field-name { font-weight: 600; }
+
+.buf-muted {
+  color: var(--color-text-secondary, #49454f);
+  font-style: italic;
+}
+
+.buf-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-full, 9999px);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.buf-badge--warning { background: #fef3c7; color: #92400e; }
+
+.buf-row--pending { background: rgba(255, 243, 200, 0.3); }
+
+.buf-col-count { text-align: center; }
+
+@media (max-width: 768px) {
+  .navbar-confirmation-tools { width: 100%; }
+
+  .confirmation-threshold-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .confirmation-threshold-value { align-self: flex-start; }
+}
+
+/* Footer */
 .app-footer {
-  background: var(--md-sys-color-surface, #f5f5f5);
+  background: var(--color-surface, #f8f9fa);
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   padding: 16px;
   text-align: center;
   margin-top: 24px;
 }
 
-.app-footer p {
-  margin: 0;
-  font-size: 14px;
-}
+.app-footer p { margin: 0; font-size: 14px; }
 
 .app-footer a {
-  color: var(--md-sys-color-primary, #1976d2);
+  color: var(--color-primary, #004ac6);
   text-decoration: none;
   font-weight: 500;
   padding: 8px 16px;
@@ -27,24 +298,18 @@
 }
 
 .app-footer a:hover {
-  background: rgba(25, 118, 210, 0.08);
+  background: rgba(0, 74, 198, 0.08);
   text-decoration: underline;
 }
 
 .app-footer a:focus {
-  outline: 2px solid var(--md-sys-color-primary, #1976d2);
+  outline: 2px solid var(--color-primary, #004ac6);
   outline-offset: 2px;
 }
 
 @media (max-width: 600px) {
-  .app-footer {
-    padding: 12px;
-  }
-  
-  .app-footer a {
-    font-size: 13px;
-    padding: 6px 12px;
-  }
+  .app-footer { padding: 12px; }
+  .app-footer a { font-size: 13px; padding: 6px 12px; }
 }
 
 /* Navigation Progress Bar */
@@ -60,13 +325,11 @@
   transition: opacity 0.3s;
 }
 
-.navigation-progress[aria-valuenow] {
-  opacity: 1;
-}
+.navigation-progress[aria-valuenow] { opacity: 1; }
 
 .navigation-progress-bar {
   height: 100%;
-  background: var(--md-sys-color-primary, #1976d2);
+  background: var(--color-primary, #004ac6);
   width: 0;
   transition: width 0.3s ease;
 }
@@ -81,19 +344,12 @@
 }
 
 .breadcrumb a {
-  color: var(--md-sys-color-primary, #1976d2);
+  color: var(--color-primary, #004ac6);
   text-decoration: none;
 }
 
-.breadcrumb a:hover {
-  text-decoration: underline;
-}
+.breadcrumb a:hover { text-decoration: underline; }
 
-.breadcrumb-separator {
-  color: rgba(0, 0, 0, 0.6);
-}
+.breadcrumb-separator { color: rgba(0, 0, 0, 0.6); }
 
-.breadcrumb-current {
-  color: rgba(0, 0, 0, 0.87);
-  font-weight: 500;
-}
+.breadcrumb-current { color: rgba(0, 0, 0, 0.87); font-weight: 500; }

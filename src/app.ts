@@ -3,7 +3,7 @@
 /**
  * Main Application Entry Point
  * SPA Router and Application Initialization
- * @version 0.24.5-alpha
+ * @version 0.24.6-alpha
  */
 
 import HomeViewController from './views/home.js';
@@ -24,10 +24,7 @@ import { fetchStats } from './services/IBGECityStatsService.js';
 import HTMLNearbyPlacesPanel from './html/HTMLNearbyPlacesPanel.js';
 import HTMLCityStatsPanel from './html/HTMLCityStatsPanel.js';
 import HTMLConfirmationThresholdSlider from './html/HTMLConfirmationThresholdSlider.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import './bootstrap-overrides.css';
-import { Collapse } from 'bootstrap';
 
 interface AppStateType {
   currentRoute: string | null;
@@ -197,7 +194,7 @@ function navigateTo(path: string): void {
 function updateActiveNavLink(): void {
   const hash = window.location.hash || '#/';
 
-  document.querySelectorAll('.app-navigation a, .app-footer a, .navbar-nav .nav-link').forEach((link) => {
+  document.querySelectorAll('.app-navigation a, .app-footer a, .app-nav-link').forEach((link) => {
     const href = link.getAttribute('href');
     if (href === hash) {
       link.setAttribute('aria-current', 'page');
@@ -208,10 +205,11 @@ function updateActiveNavLink(): void {
     }
   });
 
-  // Close the mobile hamburger menu after navigation
-  const navCollapse = document.getElementById('main-nav');
-  if (navCollapse && navCollapse.classList.contains('show')) {
-    Collapse.getInstance(navCollapse)?.hide();
+  // Close the hamburger menu after navigation
+  const navPanel = document.getElementById('main-nav');
+  if (navPanel && !navPanel.hidden) {
+    navPanel.hidden = true;
+    document.getElementById('nav-toggle')?.setAttribute('aria-expanded', 'false');
   }
 }
 

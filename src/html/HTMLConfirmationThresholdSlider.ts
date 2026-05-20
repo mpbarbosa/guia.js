@@ -40,16 +40,16 @@ class HTMLConfirmationThresholdSlider {
 <section class="confirmation-threshold-control" aria-labelledby="${LABEL_ID}">
   <div class="confirmation-threshold-header">
     <div class="confirmation-threshold-copy">
-      <label id="${LABEL_ID}" class="form-label small fw-semibold mb-1" for="${SLIDER_ID}">
+      <label id="${LABEL_ID}" class="confirmation-threshold-label" for="${SLIDER_ID}">
         Sensibilidade do buffer de confirmação
       </label>
-      <p id="${HELP_ID}" class="confirmation-threshold-help mb-0">
+      <p id="${HELP_ID}" class="confirmation-threshold-help">
         Ajusta quantas leituras consecutivas iguais confirmam logradouro, bairro e municipio.
       </p>
     </div>
     <output
       id="${VALUE_ID}"
-      class="badge text-bg-primary confirmation-threshold-value"
+      class="confirmation-threshold-value"
       for="${SLIDER_ID}"
       aria-live="polite"
     ></output>
@@ -57,7 +57,7 @@ class HTMLConfirmationThresholdSlider {
 
   <input
     id="${SLIDER_ID}"
-    class="form-range confirmation-threshold-range"
+    class="confirmation-threshold-range"
     type="range"
     min="${MIN_ADDRESS_CONFIRMATION_BUFFER_THRESHOLD}"
     max="${MAX_ADDRESS_CONFIRMATION_BUFFER_THRESHOLD}"

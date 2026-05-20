@@ -360,6 +360,11 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-05-20T00:29:30.354Z"
+    },
+    "public/v1/service-worker.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-05-20T03:42:12.830Z"
     }
   }
 }

@@ -37,13 +37,12 @@
 
 - `GOD_CLASS_REFACTORING_PLAN_2026-01-24.md` - Current refactoring plan
 - `IMPLEMENTATION_GUIDE_2026-01-24.md` - Step-by-step implementation guide
-- `PHASE_3_RESUME_GUIDE.md` - Phase continuation instructions
 
 **Expected Content**:
 
 - Active refactoring session plans
 - Implementation guides for ongoing work
-- Phase-specific documentation
+- Phase-specific documentation when still needed
 - Refactoring checkpoints and progress tracking
 
 **Note**: Unlike `docs/reports/implementation/` and `docs/misc/`, this contains **active** working documentation, not archived records.

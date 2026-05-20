@@ -1,12 +1,10 @@
 {
   "version": 1,
-  "partitionIndex": 1,
-  "totalPartitions": 3,
-  "filesHash": "0e1981de",
+  "partitionIndex": 0,
+  "totalPartitions": 1,
+  "filesHash": "b72f3332",
   "partitionLabels": [
-    "public/v1",
-    "public/v1 (2)",
-    "public/v1 (3)"
+    "public/v1"
   ],
-  "updatedAt": "2026-05-20T00:29:30.355Z"
+  "updatedAt": "2026-05-20T03:42:12.830Z"
 }

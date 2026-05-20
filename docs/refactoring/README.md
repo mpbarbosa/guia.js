@@ -24,21 +24,7 @@
 
 ### Phase Management
 
-- **[PHASE_3_RESUME_GUIDE.md](./PHASE_3_RESUME_GUIDE.md)**
-  - Phase 3 resumption instructions
-  - Purpose: Continue refactoring after interruption
-  - Status: 📋 Reference document
-
-- **[PHASE_4_RESUME_GUIDE.md](./PHASE_4_RESUME_GUIDE.md)**
-  - Phase 4 continuation guide
-  - Purpose: Final validation and cleanup
-  - Status: 📋 Reference document
-
 ### Session Summaries
-
-- **[PHASE_5_STATUS_REPORT.md](./PHASE_5_STATUS_REPORT.md)**
-  - Phase 5 progress status
-  - Status: 📊 Progress tracking
 
 - **[SESSION_SUMMARY_2026-01-24.md](./SESSION_SUMMARY_2026-01-24.md)**
   - Refactoring session summary

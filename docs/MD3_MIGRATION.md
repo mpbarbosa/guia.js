@@ -5,6 +5,7 @@
 guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS files layered on top. A prototype at `/home/mpb/Downloads/guia-js` demonstrates the target visual language: Material Design 3 implemented via Tailwind CSS v4 + custom CSS tokens (no `@material/web` library). The prototype adds 3 new screens (Map, Stats, History) on top of the existing Home and Converter screens, adopting a Bottom Navigation Bar pattern instead of the current top navbar. This plan migrates the app to that target in 8 atomic phases, each ending with a test/commit/push/deploy gate.
 
 **Key decisions:**
+
 - Tailwind CSS v4 (matches prototype; `@theme {}` in CSS, no `tailwind.config.js`)
 - No `@material/web` — custom Tailwind components following MD3 anatomy
 - `@vueuse/motion` for animations (Vue equivalent of Framer Motion)
@@ -12,6 +13,7 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 - TypeScript displayers in `src/html/` are preserved and kept as-is until their screen is Vueified; they write to IDs that Vue renders
 
 **Prototype color palette (replaces current):**
+
 - `--color-primary: #004ac6`
 - `--color-primary-container: #2563eb`
 - `--color-surface: #f8f9fa`
@@ -33,6 +35,7 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 
 1. Run `npm run build` to ensure `dist/` is current.
 2. Copy the production build into `public/v1/` (excluding `.map` source maps to keep repo size ~2.4 MB):
+
    ```bash
    mkdir -p public/v1/assets
    cp dist/index.html dist/offline.html dist/manifest.json dist/service-worker.js \
@@ -40,6 +43,7 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
    rsync -av --exclude="*.map" dist/assets/ public/v1/assets/
    cp -r dist/libs public/v1/libs
    ```
+
 3. Commit `public/v1/` — tracked in git, never rebuilt, never modified during migration.
 
 **Gate:** `npm test` green → `npm run build` to verify `dist/v1/` appears → commit `chore: archive current build to public/v1 (pre-MD3 snapshot)` → push → verify `https://mpbarbosa.com/guia_js/v1` loads correctly
@@ -53,11 +57,13 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 **Goal:** Install Tailwind v4 alongside Bootstrap (no removal yet). Migrate `design-tokens.css` to Tailwind's `@theme {}` block with the prototype's MD3 color palette.
 
 **Files to create:**
+
 - `src/styles/md3-theme.css` — `@import "tailwindcss"` + `@theme {}` with full MD3 palette, typography, elevation, border-radius tokens; `@layer base { body { @apply bg-surface antialiased; } }`
 - `src/styles/compat-tokens.css` — thin bridge mapping old `--color-*` vars to new theme vars so existing CSS keeps resolving
 - `src/styles/fonts.css` — `@import` Inter + JetBrains Mono from Google Fonts
 
 **Files to modify:**
+
 - `package.json` — add `tailwindcss@^4`, `@tailwindcss/vite@^4` to devDependencies
 - `vite.config.js` — add `import tailwindcss from '@tailwindcss/vite'` before `vue()` plugin
 - `src/index.html` — add `<link rel="stylesheet" href="styles/md3-theme.css">` as **first** stylesheet; update CSP meta to include `https://fonts.googleapis.com` (style-src) and `https://fonts.gstatic.com` (font-src)
@@ -76,6 +82,7 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 **New routes:** `/map` → `MapView.vue` (stub), `/stats` → `StatsView.vue` (stub), `/history` → `HistoryView.vue` (stub)
 
 **Files to create:**
+
 - `src/components/AppBar.vue` — `bg-white/80 backdrop-blur-md border-b border-outline-variant`; logo `bg-primary rounded-xl p-2`; title `text-primary font-bold`
 - `src/components/BottomNav.vue` — `bg-white border-t border-outline-variant`; active tab: `bg-primary-container text-white`; CSS transition for active indicator (`transition-all duration-300`)
 - `src/components/views/MapView.vue` (stub → `<EmptyState>`)
@@ -83,6 +90,7 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 - `src/components/views/HistoryView.vue` (stub)
 
 **Files to modify:**
+
 - `src/App.vue` — add shell: `<AppBar>`, `<main class="flex-1 overflow-y-auto">`, `<RouterView>`, `<BottomNav>`; add `flex flex-col h-screen max-w-md mx-auto bg-surface overflow-hidden shadow-2xl`
 - `src/router.ts` — add 3 new routes
 - `src/app.ts` — remove `import { Collapse } from 'bootstrap'` and `.hide()` call
@@ -97,6 +105,7 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 **Goal:** Remove Bootstrap CSS from bundle. Replace all Bootstrap utility classes in `index.html` and Vue SFCs with Tailwind equivalents. Keep all 20+ custom CSS files intact (they use custom properties, not Bootstrap classes).
 
 **Files to modify:**
+
 - `src/index.html` — replace ~38 Bootstrap class usages (`card`, `card-header`, `card-body`, `badge`, `d-flex`, `align-items-center`, `gap-2`, `fw-semibold`, `text-bg-secondary`, `ms-auto`, `collapse`, etc.) with Tailwind equivalents; remove `collapse navbar-collapse` div
 - `src/app.ts` — remove `import 'bootstrap/dist/css/bootstrap.min.css'` and `import './bootstrap-overrides.css'`
 - `src/bootstrap-overrides.css` — remove all `.app-navbar`, `.navbar-*` selectors; keep only `--md-sys-color-*` token declarations at `:root` (repurposed as token bridge)
@@ -114,12 +123,14 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 **Strategy:** "Lift and shift" — HTML structure moves from `index.html` into Vue template syntax, preserving IDs. Displayer classes continue to work unchanged because they find the same IDs in the Vue-rendered DOM.
 
 **Files to create:**
+
 - `src/components/AppHeroHeader.vue` — hero card with gradient `from-primary to-indigo-800`; location title with `aria-live`
 - `src/components/LocationHighlightCards.vue` — 3-card grid (Município, Bairro, Logradouro); preserves IDs `municipio-value`, `bairro-value`, `logradouro-value`; cards: `rounded-3xl border-outline-variant shadow-sm`
 - `src/components/SecondaryInfoPanel.vue` — `<details>` collapsible (coordinates, IBGE, map, nearby places, route planner)
 - `src/components/AdvancedControlsPanel.vue` — `<details>` advanced controls (speech, chronometer)
 
 **Files to modify:**
+
 - `src/components/HomeView.vue` — replace `<slot />` with `<AppHeroHeader>`, `<Onboarding>`, `<LocationHighlightCards>`, `<SecondaryInfoPanel>`, `<AdvancedControlsPanel>`
 - `src/index.html` — remove home screen content from `<main id="app-content">`; keep only: loading spinner, noscript, toast container, `<div id="app">`. Reduces from ~1,285 to ~100 lines.
 
@@ -136,6 +147,7 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 **Goal:** Rewrite `ConverterView.vue` template with Tailwind MD3 classes. Zero logic changes.
 
 **Files to modify:**
+
 - `src/components/ConverterView.vue` — rewrite `<template>` only: card `rounded-3xl border-outline-variant shadow-sm`; inputs `rounded-2xl border-outline-variant`; button `bg-primary text-white py-4 rounded-2xl font-bold`; result cards adopt same pattern as `LocationHighlightCards`
 
 **Gate:** `npm test` → visual check → commit `feat: redesign ConverterView with MD3 Tailwind` → push → deploy
@@ -147,10 +159,12 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 **Goal:** Replace `/map` stub with full `MapView.vue`. Keep `MapLibreDisplayer.ts` as-is, initialized via a Vue composable. Build the MD3 floating overlay UI.
 
 **Files to create:**
+
 - `src/components/views/MapView.vue` — `<div id="maplibre-map" class="absolute inset-0">`; floating overlay with `pointer-events-none` container; floating location card (top); horizontal chip scrollbar (category filters); FAB circle button (bottom right)
 - `src/composables/useMapDisplayer.ts` — wraps `MapLibreDisplayer`, exposes `{ updatePosition }`, instantiated in `onMounted`
 
 **Files to modify:**
+
 - `src/router.ts` — update `/map` to `MapView`
 
 **Gate:** `npm test` → map renders and tracks GPS → commit `feat: implement Map screen with MD3 overlay` → push → deploy
@@ -164,11 +178,13 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 **Goal:** Replace `/stats` stub with `StatsView.vue` showing IBGE data. Use `IBGECityStatsService` via a composable. Replace `HTMLCityStatsPanel` DOM writes with reactive refs.
 
 **Files to create:**
+
 - `src/components/views/StatsView.vue` — horizontal chip filter row; `StatCard` grid; dark "Reference Document" footer card (`bg-indigo-950 text-white`)
 - `src/components/StatCard.vue` — icon, label, value, status badge, optional `<Bar>` chart slot
 - `src/composables/useCityStats.ts` — calls `IBGECityStatsService.fetchStats()`, stores result in `ref<CityStats | null>()`
 
 **Files to modify:**
+
 - `src/router.ts` — update `/stats` to `StatsView`
 - `package.json` — add `vue-chartjs`, `chart.js` to dependencies; add `jest-canvas-mock` to devDependencies
 - `jest.setup.js` (or equivalent) — add `import 'jest-canvas-mock'`
@@ -184,15 +200,18 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 **Goal:** Build `HistoryView.vue` (settings toggles + navigation history). Delete all CSS files superseded by Tailwind. Strip utility classes from `design-tokens.css`, keeping only `:root { ... }` token declarations.
 
 **Files to create:**
+
 - `src/components/views/HistoryView.vue` — settings section with `ToggleSwitch`; navigation history list; system info footer
 - `src/components/ToggleSwitch.vue` — MD3 switch: `w-12 h-6 rounded-full`; thumb `translate-x-6` transition
 - `src/composables/useNavigationHistory.ts`
 
 **Files to modify:**
+
 - `src/router.ts` — update `/history` to `HistoryView`
 - `src/design-tokens.css` — strip all utility classes (`.m-xs`, `.p-sm`, `.elevation-1`, etc.); keep only `:root { --color-primary: ...; --md-sys-elevation-level*: ...; }` declarations
 
 **Files to delete (confirm empty after migration):**
+
 - `src/bootstrap-overrides.css` — vars moved to `md3-theme.css`
 - Review for deletion: `src/header-hero.css`, `src/highlight-cards.css`, `src/onboarding.css`, `src/loc-em-movimento.css`
 - **Keep permanently:** `src/accessibility-compliance.css`, `src/reduced-motion.css`, `src/skip-link.css`, `src/transitions.css`

@@ -335,6 +335,31 @@
       "score": 100,
       "issueCount": 0,
       "lastAnalyzed": "2026-04-29T00:38:17.110Z"
+    },
+    "public/v1/assets/coordination-fgOwOExD.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-05-20T00:29:30.354Z"
+    },
+    "public/v1/assets/core-BR1Ig3Cw.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-05-20T00:29:30.354Z"
+    },
+    "public/v1/assets/data-Bsz0jkXl.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-05-20T00:29:30.354Z"
+    },
+    "public/v1/assets/html-DyrmiBaM.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-05-20T00:29:30.354Z"
+    },
+    "public/v1/assets/main-Bn4g5hbK.js": {
+      "score": 100,
+      "issueCount": 0,
+      "lastAnalyzed": "2026-05-20T00:29:30.354Z"
     }
   }
 }

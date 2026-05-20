@@ -148,7 +148,6 @@
   "devDependencies": {
     "@playwright/test": "^1.60.0",
     "@tailwindcss/vite": "^4.3.0",
-    "@types/bootstrap": "^5.2.10",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.3.0",
     "@vitejs/plugin-legacy": "^7.2.1",
@@ -173,7 +172,6 @@
   },
   "dependencies": {
     "@vueuse/motion": "^2.2.6",
-    "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "ibira.js": "github:mpbarbosa/ibira.js#v0.4.22-alpha",
     "maplibre-gl": "^5.19.0",

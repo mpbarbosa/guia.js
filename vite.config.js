@@ -109,8 +109,8 @@ export default defineConfig(({ mode }) => {
               return 'map';
             }
 
-            // Bootstrap UI framework gets its own chunk
-            if (id.includes('bootstrap') || id.includes('bootstrap-icons')) {
+            // Bootstrap Icons gets its own chunk
+            if (id.includes('bootstrap-icons')) {
               return 'ui';
             }
 

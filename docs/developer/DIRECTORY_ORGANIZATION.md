@@ -27,15 +27,7 @@
 - API endpoint specifications
 - Integration patterns and examples
 
-#### `docs/testing/`
 
-**Purpose**: Test infrastructure, strategy, and execution documentation
-
-**Key Files**:
-
-- `TEST_INFRASTRUCTURE.md` - Dual test infrastructure comparison
-- `TEST_STRATEGY.md` - Comprehensive testing strategy
-- `E2E_TEST_SUMMARY.md` - End-to-end test documentation
 
 #### `docs/issue-189/`
 
@@ -162,8 +154,8 @@ across repository-level guides instead of a dedicated
 
 - Architecture → `docs/architecture/`
 - APIs → `docs/api-integration/`
-- Testing → `docs/testing/`
-- History → `docs/misc/`
+- Testing → `TESTING.md` (root) + `tests/README.md`
+- History → `docs/reports/implementation/`, `docs/misc/`
 
 **By Type**:
 

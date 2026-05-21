@@ -955,9 +955,8 @@ npm run test:all            # Validate + test
 
 ### Testing Guides
 
-- **[UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)** - Unit testing best practices
+- **[docs/guides/UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)** - Unit testing best practices
 - **[JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md)** - Jest configuration
-- **[docs/testing/E2E_TESTING_GUIDE.md](../testing/E2E_TESTING_GUIDE.md)** - End-to-end testing
 
 ### Code Quality
 

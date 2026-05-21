@@ -359,7 +359,7 @@ During refactoring:
 ## Related Documentation
 
 - `docs/infrastructure/NODE_VERSION_ALIGNMENT_PLAN.md` - Node.js environment
-- `docs/testing/TEST_INFRASTRUCTURE.md` - Testing strategy
+- `TESTING.md` - Testing overview and commands
 - `.github/CONTRIBUTING.md` - Development guidelines
 - `CHANGELOG.md` - Version history
 

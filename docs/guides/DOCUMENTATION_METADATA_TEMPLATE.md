@@ -318,7 +318,7 @@ docs/README.md → testing/TEST_STRATEGY.md → TEST_INFRASTRUCTURE.md
 | Topic | Start Here |
 |-------|-----------|
 | **Architecture** | `docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md` |
-| **Testing** | `docs/testing/TEST_STRATEGY.md` |
+| **Testing** | `TESTING.md` (root) |
 | **API Integration** | `docs/SIDRA_INTEGRATION.md`, `docs/IBIRA_INTEGRATION.md` |
 | **Development Setup** | `docs/WORKFLOW_SETUP.md` |
 | **Contributing** | `.github/CONTRIBUTING.md` |
@@ -328,7 +328,7 @@ docs/README.md → testing/TEST_STRATEGY.md → TEST_INFRASTRUCTURE.md
 **Active Docs**: Current, maintained
 
 - Most docs in `docs/architecture/`
-- All guides in `docs/testing/`
+- Testing docs: `TESTING.md` (root) + `tests/README.md`
 - Integration docs in `docs/api-integration/`
 
 **Draft Docs**: Work in progress

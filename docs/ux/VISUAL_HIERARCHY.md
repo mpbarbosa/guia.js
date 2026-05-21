@@ -193,13 +193,11 @@ Tested and compatible with:
 
 ## Testing
 
-See `docs/testing/VISUAL_HIERARCHY_TESTS.md` for test documentation covering:
+Visual hierarchy tests are located in `__tests__/` alongside other UI tests. Run with:
 
-1. Location cards are larger than action buttons
-2. Location cards have higher visual prominence (color, elevation)
-3. Responsive behavior on different screen sizes
-4. Hover and focus states work correctly
-5. Accessibility features are present
+```bash
+npm test
+```
 
 ## Future Enhancements
 

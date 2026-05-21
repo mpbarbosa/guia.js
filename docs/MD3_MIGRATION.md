@@ -116,29 +116,28 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 
 ---
 
-## Phase 4 — Home Screen: Migrate from index.html to HomeView.vue
+## Phase 4 — Home Screen: Migrate from index.html to HomeView.vue ✅ DONE (299a5a0)
 
 **Goal:** Migrate full home screen content from `index.html` into `HomeView.vue` as proper Vue SFCs with Tailwind MD3 styling. Preserve all element IDs that `HomeViewController` and displayers target.
 
 **Strategy:** "Lift and shift" — HTML structure moves from `index.html` into Vue template syntax, preserving IDs. Displayer classes continue to work unchanged because they find the same IDs in the Vue-rendered DOM.
 
-**Files to create:**
+**Created:**
 
-- `src/components/AppHeroHeader.vue` — hero card with gradient `from-primary to-indigo-800`; location title with `aria-live`
-- `src/components/LocationHighlightCards.vue` — 3-card grid (Município, Bairro, Logradouro); preserves IDs `municipio-value`, `bairro-value`, `logradouro-value`; cards: `rounded-3xl border-outline-variant shadow-sm`
-- `src/components/SecondaryInfoPanel.vue` — `<details>` collapsible (coordinates, IBGE, map, nearby places, route planner)
-- `src/components/AdvancedControlsPanel.vue` — `<details>` advanced controls (speech, chronometer)
+- `src/components/AppHeroHeader.vue` — hero gradient card with `id=header-location-text`
+- `src/components/LocationHighlightCards.vue` — 3-card grid preserving `municipio-value`, `bairro-value`, `logradouro-value`
+- `src/components/SecondaryInfoPanel.vue` — collapsible secondary info panel with all secondary IDs; includes secondary-info-collapse CSS
+- `src/components/AdvancedControlsPanel.vue` — advanced controls + navigation log; includes chronometer CSS
 
-**Files to modify:**
+**Modified:**
 
-- `src/components/HomeView.vue` — replace `<slot />` with `<AppHeroHeader>`, `<Onboarding>`, `<LocationHighlightCards>`, `<SecondaryInfoPanel>`, `<AdvancedControlsPanel>`
-- `src/index.html` — remove home screen content from `<main id="app-content">`; keep only: loading spinner, noscript, toast container, `<div id="app">`. Reduces from ~1,285 to ~100 lines.
+- `src/components/HomeView.vue` — full template using sub-components; reactive onboarding state via geolocation events
+- `src/components/Onboarding.vue` — added `id=onboarding-card` + `id=enable-location-btn`; `v-if` → `v-show` (element stays in DOM for getElementById)
+- `src/index.html` — `<main id=app-content>` emptied (kept for app.ts); `onboarding.js` script removed; misplaced post-`</html>` styles deleted (moved to components)
 
-**MD3 visual upgrades applied here:** Hero gradient card; highlight cards with `rounded-3xl`; CTA button `bg-primary text-white py-5 rounded-3xl font-bold`; skeleton shimmer uses Tailwind `animate-pulse`.
-
-**Gate:** `npm test` (especially `HTMLHighlightCardsDisplayer.test.ts`, `HTMLHeaderDisplayer.test.ts`) → browser test of full location tracking flow → commit `feat: migrate home screen to Vue SFCs with MD3 styling` → push → deploy
-
-**Risk (highest):** `HomeViewController.create()` calls `getElementById` on IDs now rendered by Vue. Safe because `onMounted` fires after Vue's synchronous render, so all IDs exist in DOM. jsdom in Jest renders via `@vue/test-utils mount()` — same guarantee holds.
+**Coexistence notes:**
+- `id=address-confirmation-threshold-control` and `id=confirmation-buffer-card` remain in hidden nav (app.ts initializes them before Vue mounts — moving them to Vue would break initialization timing)
+- Two HomeViewController instances still coexist (app.ts + HomeView.vue) — pre-existing issue; Vue elements are found first since `<div id=app>` precedes `<main id=app-content>` in DOM order
 
 ---
 

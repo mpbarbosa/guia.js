@@ -58,7 +58,7 @@ The `.ai_workflow/` directory contains AI-assisted development workflow artifact
 ## Related Documentation
 
 - `.github/CONTRIBUTING.md` - Development workflow
-- `docs/testing/TESTING.md` - Test infrastructure
+- `TESTING.md` - Testing overview and commands
 - `CHANGELOG.md` - Version history
 
 ---

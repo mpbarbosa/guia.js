@@ -1592,7 +1592,6 @@ describe('Feature/Module', () => {
 
 - **[TDD_GUIDE.md](./TDD_GUIDE.md)** - Test-driven development methodology
 - **[JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md)** - Jest configuration
-- **[docs/testing/E2E_TESTING_GUIDE.md](../testing/E2E_TESTING_GUIDE.md)** - End-to-end testing
 
 ### Code Quality
 

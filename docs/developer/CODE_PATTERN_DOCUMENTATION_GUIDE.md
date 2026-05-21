@@ -77,7 +77,7 @@ const closingTags = (html.match(/<\/\w+>/g) || []).length;
 
 **Files Using This Pattern**:
 
-- `docs/testing/HTML_GENERATION.md` (lines 134-135)
+- `__tests__/` (HTML generation tests)
 
 **Why Valid**: These are test assertions ensuring HTML output is well-formed with balanced tags.
 
@@ -199,7 +199,7 @@ const VALIDATE_PATTERNS = [
 ## Related Documentation
 
 - **Style Guide**: `docs/CONTRIBUTING.md` (code example conventions)
-- **Testing Guide**: `docs/testing/HTML_GENERATION.md` (regex validation patterns)
+- **Testing Guide**: `TESTING.md` (testing overview and commands)
 - **Refactoring Guides**: `docs/STATIC_WRAPPER_ELIMINATION.md` (transformation scripts)
 
 ---

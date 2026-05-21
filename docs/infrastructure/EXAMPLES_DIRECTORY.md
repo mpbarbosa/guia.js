@@ -154,8 +154,8 @@ examples/
 
 ## Related Documentation
 
-- `docs/testing/TEST_INFRASTRUCTURE.md` - Test infrastructure overview
-- `docs/testing/TESTING.md` - Comprehensive testing guide
+- `TESTING.md` - Testing overview and commands
+- `tests/README.md` - Test organization and structure
 - `.github/CONTRIBUTING.md` - Development workflow
 - `README.md` - Main project documentation
 

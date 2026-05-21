@@ -65,6 +65,9 @@ tests/integration/__pycache__/
 
 # Jest cache directory
 .jest-cache/
+test-results/
+test-results.unit.json
+playwright-report/
 
 # JSDoc generated API documentation
 docs/api-generated/

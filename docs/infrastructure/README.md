@@ -27,7 +27,7 @@ Use these directories instead:
 
 ❌ **Executable workflow automation scripts** →
 `.github/scripts/` and `.github/workflows/`
-❌ **Testing infrastructure** → `docs/testing/`
+❌ **Testing infrastructure** → `TESTING.md` (root) + `tests/README.md`
 ❌ **Architecture decisions** → `docs/architecture/`
 ❌ **Implementation reports** → `docs/reports/implementation/`
 ❌ **Bug fixes** → `docs/reports/bugfixes/`
@@ -182,7 +182,8 @@ How to revert if needed.
 
 ### Testing Infrastructure
 
-- **`docs/testing/`** - Testing strategies and setup
+- **`TESTING.md`** - Testing overview and quick reference
+- **`tests/README.md`** - Test organization and structure
 - **`__tests__/`** - Actual test suites
 
 ### Configuration Files
@@ -225,7 +226,7 @@ When modifying infrastructure:
 | CI/CD pipeline configuration | This directory (`infrastructure/`) |
 | Workflow automation scripts | `.github/scripts/` and `.github/workflows/` |
 | Workflow setup guides | `WORKFLOW_SETUP.md` and `docs/github/` |
-| Testing setup and strategy | `docs/testing/` |
+| Testing setup and strategy | `TESTING.md` (root) + `tests/README.md` |
 | Build process | This directory (`infrastructure/`) |
 | Deployment scripts | This directory (`infrastructure/`) |
 | Environment variables | This directory (`infrastructure/`) |

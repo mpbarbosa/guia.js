@@ -1521,7 +1521,7 @@ npm test -- --coverage --collectCoverageFrom="src/utils.js"
 
 ---
 
-**Version**: 0.24.8-alpha
+**Version**: 0.24.9-alpha
 **Last Updated**: 2026-05-20
 **Status**: ✅ Ready for use
 **Maintained by**: Guia.js Team
@@ -1606,5 +1606,5 @@ describe('Feature/Module', () => {
 
 ---
 
-**Version**: 0.24.8-alpha
+**Version**: 0.24.9-alpha
 **Last Updated**: 2026-01-11

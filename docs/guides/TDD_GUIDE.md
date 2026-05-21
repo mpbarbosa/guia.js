@@ -906,7 +906,7 @@ When opening a PR:
 
 ---
 
-**Version**: 0.24.8-alpha
+**Version**: 0.24.9-alpha
 **Last Updated**: 2026-05-20
 **Status**: ✅ Ready for use
 **Maintained by**: Guia.js Team
@@ -971,5 +971,5 @@ npm run test:all            # Validate + test
 
 ---
 
-**Version**: 0.24.8-alpha
+**Version**: 0.24.9-alpha
 **Last Updated**: 2026-01-11

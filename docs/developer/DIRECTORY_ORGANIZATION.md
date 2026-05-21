@@ -27,8 +27,6 @@
 - API endpoint specifications
 - Integration patterns and examples
 
-
-
 #### `docs/issue-189/`
 
 **Purpose**: Documentation related to Issue #189 resolution

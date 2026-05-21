@@ -136,6 +136,7 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 - `src/index.html` — `<main id=app-content>` emptied (kept for app.ts); `onboarding.js` script removed; misplaced post-`</html>` styles deleted (moved to components)
 
 **Coexistence notes:**
+
 - `id=address-confirmation-threshold-control` and `id=confirmation-buffer-card` remain in hidden nav (app.ts initializes them before Vue mounts — moving them to Vue would break initialization timing)
 - Two HomeViewController instances still coexist (app.ts + HomeView.vue) — pre-existing issue; Vue elements are found first since `<div id=app>` precedes `<main id=app-content>` in DOM order
 

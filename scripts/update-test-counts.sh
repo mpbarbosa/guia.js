@@ -2,8 +2,8 @@
 #
 # update-test-counts.sh
 # ---------------------
-# Purpose:      Run the Jest test suite and synchronise passing/skipped/total
-#               test counts across project documentation files.
+# Purpose:      Run the non-E2E Jest suite and refresh the managed README
+#               test-status summary without touching unrelated prose.
 #
 # Usage:        ./scripts/update-test-counts.sh
 #               npm run update:tests
@@ -12,78 +12,115 @@
 #
 # Prerequisites:
 #   - Must be run from the project root.
-#   - Requires Node.js v18+ and npm (used to run tests and parse JSON output).
+#   - Requires Node.js v20.19.0+ and npm.
 #
 # What it does:
-#   1. Runs "npm test -- --json --outputFile=test-results.json --silent".
-#   2. Parses numPassedTests / numTotalTests / numFailedTests from JSON output.
-#   3. Updates "N passing" / "N skipped" / "N total" strings in:
-#        README.md
-#        .github/copilot-instructions.md
-#        docs/INDEX.md
-#   4. Removes the temporary test-results.json file on exit.
+#   1. Runs "npm run test:unit -- --json --outputFile=test-results.unit.json --silent".
+#   2. Parses test and suite totals from JSON output.
+#   3. Refuses to rewrite docs when the suite still has failing tests.
+#   4. Rewrites the managed "Note on Test Status" line in README.md only.
+#   5. Removes the temporary test-results.unit.json file on exit.
 #
-# Output:       Prints current counts; lists files changed by "git diff --name-only".
+# Output:       Prints parsed counts and any updated managed files.
 #
 # Exit codes:
-#   0  Test counts updated successfully.
-#   1  test-results.json not produced (hard test-runner failure), or set -e error.
+#   0  Managed test summary updated successfully (or no managed summary line was present).
+#   1  test-results.unit.json not produced, the suite had failures, or set -e error.
 #
-# Related modules: README.md, .github/copilot-instructions.md, docs/INDEX.md
+# Related modules: README.md, jest.config.unit.js
 # See also:        docs/AUTOMATION_IMPLEMENTATION_SUMMARY.md, scripts/README.md
 
-set -e
+set -euo pipefail
+
+RESULTS_FILE="test-results.unit.json"
+
+cleanup() {
+    rm -f "$RESULTS_FILE"
+}
+
+trap cleanup EXIT
 
 echo "📊 Updating test counts..."
 echo
 
 # Run tests with JSON output
-echo "Running tests..."
-npm test -- --json --outputFile=test-results.json --silent || true
+echo "Running non-E2E Jest suite..."
+npm run test:unit -- --json --outputFile="$RESULTS_FILE" --silent || true
 
-if [ ! -f test-results.json ]; then
+if [ ! -f "$RESULTS_FILE" ]; then
     echo "❌ No test results found"
     exit 1
 fi
 
 # Parse results
-PASSING=$(node -p "require('./test-results.json').numPassedTests || 0")
-TOTAL=$(node -p "require('./test-results.json').numTotalTests || 0")
-FAILED=$(node -p "require('./test-results.json').numFailedTests || 0")
+PASSING=$(node -p "require('./$RESULTS_FILE').numPassedTests || 0")
+TOTAL=$(node -p "require('./$RESULTS_FILE').numTotalTests || 0")
+FAILED=$(node -p "require('./$RESULTS_FILE').numFailedTests || 0")
 SKIPPED=$((TOTAL - PASSING - FAILED))
+PASSING_SUITES=$(node -p "require('./$RESULTS_FILE').numPassedTestSuites || 0")
+TOTAL_SUITES=$(node -p "require('./$RESULTS_FILE').numTotalTestSuites || 0")
+FAILED_SUITES=$(node -p "require('./$RESULTS_FILE').numFailedTestSuites || 0")
+SKIPPED_SUITES=$((TOTAL_SUITES - PASSING_SUITES - FAILED_SUITES))
 
 echo "Test Results:"
 echo "  Passing: $PASSING"
 echo "  Failed: $FAILED"
 echo "  Skipped: $SKIPPED"
 echo "  Total: $TOTAL"
+echo "  Passing Suites: $PASSING_SUITES"
+echo "  Failed Suites: $FAILED_SUITES"
+echo "  Skipped Suites: $SKIPPED_SUITES"
+echo "  Total Suites: $TOTAL_SUITES"
 echo
 
-# Update files
-echo "Updating documentation..."
+if [ "$FAILED" -ne 0 ] || [ "$FAILED_SUITES" -ne 0 ]; then
+    echo "❌ Test run has failures; refusing to update documentation counts"
+    exit 1
+fi
 
-# README.md
-sed -i.bak "s/[0-9,]* passing/$PASSING passing/g" README.md
-sed -i "s/[0-9,]* skipped/$SKIPPED skipped/g" README.md
-sed -i "s/[0-9,]* total/$TOTAL total/g" README.md
+SUMMARY_LINE="> **Note on Test Status**: The latest \`npm run test:unit\` run reported ${PASSING} passing tests out of ${TOTAL} total (${SKIPPED} skipped, ${FAILED} failing) across ${PASSING_SUITES} passing suites out of ${TOTAL_SUITES} total (${SKIPPED_SUITES} skipped, ${FAILED_SUITES} failing)."
+export SUMMARY_LINE
 
-# .github/copilot-instructions.md
-sed -i.bak "s/[0-9,]* passing/$PASSING passing/g" .github/copilot-instructions.md
-sed -i "s/[0-9,]* total/$TOTAL total/g" .github/copilot-instructions.md
+echo "Updating managed documentation..."
+node --input-type=module <<'EOF'
+import fs from 'node:fs';
 
-# docs/INDEX.md
-sed -i.bak "s/[0-9,]* passing/$PASSING passing/g" docs/INDEX.md
-sed -i "s/[0-9,]* total/$TOTAL total/g" docs/INDEX.md
+const targets = [
+  {
+    path: 'README.md',
+    pattern: /^> \*\*Note on Test Status\*\*:.*$/m,
+    replacement: process.env.SUMMARY_LINE,
+  },
+];
 
-# Clean up backups
-rm -f README.md.bak .github/copilot-instructions.md.bak docs/INDEX.md.bak
+const updated = [];
+
+for (const target of targets) {
+  if (!fs.existsSync(target.path)) continue;
+
+  const original = fs.readFileSync(target.path, 'utf8');
+  if (!target.pattern.test(original)) continue;
+
+  const next = original.replace(target.pattern, target.replacement);
+  if (next !== original) {
+    fs.writeFileSync(target.path, next);
+    updated.push(target.path);
+  }
+}
+
+if (updated.length === 0) {
+  console.log('ℹ️ No managed test-summary lines found');
+} else {
+  console.log('✅ Updated managed files:');
+  for (const file of updated) {
+    console.log(`  - ${file}`);
+  }
+}
+EOF
 
 echo "✅ Test counts updated"
 echo
 echo "Changed files:"
-git diff --name-only README.md .github/copilot-instructions.md docs/INDEX.md
-
-# Clean up test results
-rm -f test-results.json
+git diff --name-only README.md
 
 exit 0

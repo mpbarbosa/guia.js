@@ -157,3 +157,40 @@ describe('OnboardingManager geolocation event listeners', () => {
     expect(showSpy).toHaveBeenCalled();
   });
 });
+
+describe('OnboardingManager.requestLocation', () => {
+  let origGeolocation: Geolocation | undefined;
+
+  beforeEach(() => {
+    origGeolocation = navigator.geolocation;
+  });
+
+  afterEach(() => {
+    Object.defineProperty(navigator, 'geolocation', {
+      value: origGeolocation,
+      configurable: true,
+    });
+  });
+
+  test('logs and dispatches geolocation errors', () => {
+    const geolocationError = { code: 1, message: 'Denied' };
+    const dispatchSpy = jest.spyOn(document, 'dispatchEvent');
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    Object.defineProperty(navigator, 'geolocation', {
+      value: {
+        getCurrentPosition: jest.fn((_success, error) => error(geolocationError)),
+      },
+      configurable: true,
+    });
+
+    manager.requestLocation();
+
+    expect(errorSpy).toHaveBeenCalledWith('Geolocation error:', geolocationError);
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'geolocation:error',
+      })
+    );
+  });
+});

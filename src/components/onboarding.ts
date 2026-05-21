@@ -102,6 +102,7 @@ class OnboardingManager {
         document.dispatchEvent(new CustomEvent('geolocation:success', { detail: { position } }));
       },
       (err) => {
+        console.error('Geolocation error:', err);
         document.dispatchEvent(new CustomEvent('geolocation:error', { detail: { error: err } }));
       }
     );

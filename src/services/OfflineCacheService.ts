@@ -5,7 +5,7 @@
  * non-browser or test environments.
  *
  * @module services/OfflineCacheService
- * @since 0.24.7-alpha
+ * @since 0.24.8-alpha
  */
 
 import { calculateDistance } from '../utils/distance.js';
@@ -172,13 +172,66 @@ function normalizeRecentLocations(
 }
 
 export async function saveLocationSnapshot(snapshot: CachedLocationSnapshot): Promise<CachedLocationSnapshot> {
-  const recentSnapshots = (await getStoredValue<CachedLocationSnapshot[]>(RECENT_LOCATIONS_KEY)) ?? [];
-  const nextRecentSnapshots = normalizeRecentLocations(recentSnapshots, snapshot);
+  if (!hasIndexedDb()) {
+    const recentSnapshots = (fallbackStore.get(RECENT_LOCATIONS_KEY) as CachedLocationSnapshot[] | undefined) ?? [];
+    const nextRecentSnapshots = normalizeRecentLocations(recentSnapshots, snapshot);
 
-  await Promise.all([
-    setStoredValue(LATEST_LOCATION_KEY, snapshot),
-    setStoredValue(RECENT_LOCATIONS_KEY, nextRecentSnapshots),
-  ]);
+    fallbackStore.set(LATEST_LOCATION_KEY, snapshot);
+    fallbackStore.set(RECENT_LOCATIONS_KEY, nextRecentSnapshots);
+
+    return snapshot;
+  }
+
+  const db = await openDb();
+  if (!db) {
+    const recentSnapshots = (fallbackStore.get(RECENT_LOCATIONS_KEY) as CachedLocationSnapshot[] | undefined) ?? [];
+    const nextRecentSnapshots = normalizeRecentLocations(recentSnapshots, snapshot);
+
+    fallbackStore.set(LATEST_LOCATION_KEY, snapshot);
+    fallbackStore.set(RECENT_LOCATIONS_KEY, nextRecentSnapshots);
+    return snapshot;
+  }
+
+  await new Promise<void>((resolve, reject) => {
+    const transaction = db.transaction(STORE_NAME, 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+    const recentRequest = store.get(RECENT_LOCATIONS_KEY);
+    const closeDb = closeDbOnce(db);
+    let settled = false;
+
+    const rejectOnce = (err: Error) => {
+      if (settled) return;
+      settled = true;
+      closeDb();
+      reject(err);
+    };
+
+    const resolveOnce = () => {
+      if (settled) return;
+      settled = true;
+      closeDb();
+      resolve();
+    };
+
+    recentRequest.onsuccess = () => {
+      const recentSnapshots = (recentRequest.result as CachedLocationSnapshot[] | undefined) ?? [];
+      const nextRecentSnapshots = normalizeRecentLocations(recentSnapshots, snapshot);
+      const latestRequest = store.put(snapshot, LATEST_LOCATION_KEY);
+      const recentWriteRequest = store.put(nextRecentSnapshots, RECENT_LOCATIONS_KEY);
+
+      latestRequest.onerror = () =>
+        rejectOnce(latestRequest.error ?? new Error(`IndexedDB put failed for key ${LATEST_LOCATION_KEY}`));
+      recentWriteRequest.onerror = () =>
+        rejectOnce(recentWriteRequest.error ?? new Error(`IndexedDB put failed for key ${RECENT_LOCATIONS_KEY}`));
+    };
+    recentRequest.onerror = () =>
+      rejectOnce(recentRequest.error ?? new Error(`IndexedDB get failed for key ${RECENT_LOCATIONS_KEY}`));
+    transaction.oncomplete = () => resolveOnce();
+    transaction.onerror = () =>
+      rejectOnce(transaction.error ?? new Error('IndexedDB transaction failed while saving location snapshot'));
+    transaction.onabort = () =>
+      rejectOnce(transaction.error ?? new Error('IndexedDB transaction aborted while saving location snapshot'));
+  });
 
   return snapshot;
 }

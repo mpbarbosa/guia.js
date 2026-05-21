@@ -127,6 +127,37 @@ describe('OfflineCacheService', () => {
     expect(tooFar).toBeNull();
   });
 
+  test('preserves both snapshots when saves overlap', async () => {
+    await Promise.all([
+      saveLocationSnapshot({
+        latitude: -8.06314,
+        longitude: -34.87114,
+        timestamp: 100,
+        address: {
+          municipio: 'Recife',
+          siglaUF: 'PE',
+          displayText: 'Recife Antigo, PE',
+        },
+      }),
+      saveLocationSnapshot({
+        latitude: -8.0645,
+        longitude: -34.8728,
+        timestamp: 200,
+        address: {
+          municipio: 'Recife',
+          siglaUF: 'PE',
+          displayText: 'Recife Novo, PE',
+        },
+      }),
+    ]);
+
+    const firstSnapshot = await findNearestLocationSnapshot(-8.06314, -34.87114, 50);
+    const secondSnapshot = await findNearestLocationSnapshot(-8.0645, -34.8728, 50);
+
+    expect(firstSnapshot?.address?.displayText).toBe('Recife Antigo, PE');
+    expect(secondSnapshot?.address?.displayText).toBe('Recife Novo, PE');
+  });
+
   test('stores and retrieves cached city statistics', async () => {
     await saveCityStatsToOfflineCache('Recife', 'PE', {
       ibgeCode: '2611606',

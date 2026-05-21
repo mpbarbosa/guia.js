@@ -69,27 +69,25 @@
 ### 3. update-test-counts.sh
 
 **Path**: `scripts/update-test-counts.sh`
-**Purpose**: Updates test count statistics in documentation after running tests
+**Purpose**: Refreshes the managed README test-status summary after a clean non-E2E Jest run
 **Usage**: `./scripts/update-test-counts.sh`
 **npm script**: `npm run update:tests`
 **Arguments**: *(none — no flags supported)*
-**Related modules**: `README.md`, `.github/copilot-instructions.md`, `docs/INDEX.md`
+**Related modules**: `README.md`, `jest.config.unit.js`
 **Cross-reference**: `docs/AUTOMATION_IMPLEMENTATION_SUMMARY.md`
 
 **What it does**:
 
-- Runs `npm test -- --json --outputFile=test-results.json --silent` to capture test results
-- Parses `numPassedTests`, `numTotalTests`, `numFailedTests` from JSON output
-- Updates `passing` / `skipped` / `total` count strings in:
-  - `README.md`
-  - `.github/copilot-instructions.md`
-  - `docs/INDEX.md`
-- Cleans up `test-results.json` on exit
+- Runs `npm run test:unit -- --json --outputFile=test-results.unit.json --silent` to capture the non-E2E Jest results
+- Parses passing / skipped / failing counts for both tests and suites
+- Refuses to rewrite docs when the run still has failing tests
+- Rewrites only the managed `> **Note on Test Status**:` line in `README.md`
+- Cleans up `test-results.unit.json` on exit
 
 **Exit codes**:
 
-- `0` — test counts updated successfully
-- `1` — `test-results.json` not produced (test runner failed hard), or `set -e` error
+- `0` — managed test summary updated successfully (or no managed summary line was present)
+- `1` — `test-results.unit.json` not produced, the suite still has failures, or `set -e` triggered
 
 ---
 

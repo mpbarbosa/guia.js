@@ -4,15 +4,15 @@
 
 Last Updated: 2026-04-29
 Status: Active
-version: 0.24.7-alpha
+version: 0.24.8-alpha
 
 ---
 
 [![Tests](https://img.shields.io/badge/tests-3074%20passing%20%2F%203242%20total-green)](https://github.com/mpbarbosa/guia.js)
-[![Version](https://img.shields.io/badge/version-0.24.4--alpha-blue)](https://github.com/mpbarbosa/guia.js)
+[![Version](https://img.shields.io/badge/version-0.24.7--alpha-blue)](https://github.com/mpbarbosa/guia.js)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia.js)
 
-> **Note on Test Status**: 3,074 tests pass successfully out of 148 total (0 skipped, 0 failing), with 122 of 127 test suites148 passing (0 skipped). The test suite is stable with 100% pass rate. See the Testing section below for details.
+> **Note on Test Status**: This repository keeps separate default, non-E2E, E2E, and Playwright test commands. Use the Testing section below to check the current suite status instead of relying on cached prose counts.
 
 A single-page web application (SPA) for tourist guidance, built on top of the [guia.js](https://github.com/mpbarbosa/guia_js) geolocation library. This application provides an interactive tourist guide experience with geolocation services, address geocoding, and mapping integration specifically designed for Brazilian addresses.
 
@@ -164,13 +164,13 @@ npm install
 # Validate JavaScript syntax (<1 second)
 npm run validate
 
-# Run test suite (148 total tests, 148 passing, 0 skipped, ~65 seconds)
+# Run the default Jest suite (~65 seconds on this repo)
 npm test
 
 # Run tests with coverage (~30 seconds)
 npm run test:coverage
 
-# Full validation: syntax + tests (~30 seconds148 total)
+# Full validation: syntax + the default Jest suite
 npm run test:all
 ```
 
@@ -285,7 +285,7 @@ npm run lint:md:fix          # Auto-fix markdown lint issues with the configured
 
 # Documentation Updates
 npm run update:dates         # Update "Last Updated" metadata in docs
-npm run update:tests         # Update test count documentation
+npm run update:tests         # Refresh the managed README test-status summary
 npm run update:badges        # Update README badges
 
 # CDN & Distribution
@@ -314,7 +314,7 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 |--------|---------|-----------|-----------------|
 | `scripts/fix-console-logging.sh` | Replace direct `console.*` calls with centralized logger | *(none)* | `src/utils/logger.js` |
 | `scripts/update-doc-dates.sh` | Update "Last Updated" dates in git-modified `.md` files | *(none)* | `docs/` |
-| `scripts/update-test-counts.sh` | Sync test count statistics across documentation after test runs | *(none)* | `README.md`, `docs/INDEX.md`, `.github/copilot-instructions.md` |
+| `scripts/update-test-counts.sh` | Refresh the managed README test-status summary after a clean non-E2E Jest run | *(none)* | `README.md`, `jest.config.unit.js` |
 | `scripts/deploy-preflight.sh` | Production deployment pre-flight checklist (build + file checks + live smoke test) | *(none)* | `dist/`, `libs/sidra/tab6579_municipios.json`, `vite.config.js` |
 | `scripts/build_and_deploy.sh` | Build production bundle and push to staging via sibling repo | `-h`, `--help` | `dist/`, `../mpbarbosa_site/shell_scripts/sync_to_staging.sh` |
 | `scripts/cleanup-ai-workflow.sh` | Remove old `.ai_workflow/` run artifact directories and local build/test caches | `--days N`, `--dry-run` | `.ai_workflow/`, `.jest-cache/`, `coverage/` |
@@ -330,7 +330,7 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 # Update "Last Updated" dates in all currently git-modified .md files
 ./scripts/update-doc-dates.sh
 
-# Run tests and update148 passing/total counts in README and docs
+# Refresh the managed README test-status summary after a clean non-E2E Jest run
 ./scripts/update-test-counts.sh
 
 # Verify build, dist/ contents, and SIDRA JSON before production deploy
@@ -363,8 +363,8 @@ For full details on each script — including executable permissions, shebangs, 
 > **Integration tests**: `tests/integration/run_visual_hierarchy_tests.sh` starts a local HTTP server and runs Selenium-based visual hierarchy tests. See [`scripts/README.md`](./scripts/README.md) for full documentation.
 > **CI/CD note**: These scripts are **local developer tools**. GitHub Actions workflows in `.github/workflows/` automate equivalent operations (badge updates, test-count sync, doc linting) on push/PR. For CI helper scripts used inside workflows, see [`.github/scripts/`](./.github/scripts/).
 > **Permissions**: Shell scripts in `scripts/` ship executable (`chmod +x`). If those bits are lost after cloning, restore them with `chmod +x scripts/*.sh`.
-> **Entry points**: Shell scripts use `#!/bin/bash` and must be invoked as `./scripts/<name>.sh` or `bash scripts/<name>.sh`, not `sh`. The markdown-lint helper is `scripts/lint-md.js` and runs via `node` or `npm run lint:md`.
-> **Error handling**: Shell scripts use `set -e`/`set -euo pipefail`; `scripts/lint-md.js` mirrors the configured linter's exit code. None require external environment variables.
+> **Entry points**: Shell scripts use `#!/bin/bash` and should be invoked with their documented paths, such as `./scripts/deploy-preflight.sh` or `bash scripts/run-tests-docker.sh`, not `sh`. The markdown-lint helper is `scripts/lint-md.js` and runs via `node` or `npm run lint:md`.
+> **Error handling**: Shell scripts use `set -e`/`set -euo pipefail`; `scripts/lint-md.js` mirrors the configured linter's exit code. Some scripts also accept optional environment variables, so check [`scripts/README.md`](./scripts/README.md) before running operational commands.
 
 #### GitHub CI/CD Helper Scripts (`.github/scripts/`)
 
@@ -405,7 +405,7 @@ guia_js/
 │   ├── speech/                   # Speech synthesis functionality
 │   ├── views/                    # SPA view controllers (home, converter)
 │   └── utils/                    # Utility functions
-├── __tests__/                    # Test suites (127 suites, 148 passing)
+├── __tests__/                    # Jest test suites
 │   ├── unit/                     # Unit tests
 │   ├── integration/              # Integration tests
 │   ├── e2e/                      # End-to-end tests (Puppeteer)
@@ -468,16 +468,14 @@ See [examples/README.md](examples/README.md) for detailed documentation and expe
 
 ## 🧪 Testing
 
-### Test Suite Overview
+### Test Commands at a Glance
 
-- **Total Tests**: 148 total (148 passing, 0 skipped, 0 failing)
-- **Test Suites**: 148 total (148 passing, 0 skipped, 0 failing)
-- **Test Count**: 148 passing tests (148 total with 0 skipped)
-- **Execution Time**: ~65 seconds
-- **Code Coverage**: 76% overall (exceeds 65% threshold by 11%)
-  - Statements: 76%, Branches: 74.2%, Functions: 70.7%, Lines: 76.5%
-  - Critical modules at 100%: DisplayerFactory, HTMLAddressDisplayer, HTMLPositionDisplayer
-  - guia_ibge.js: 100% coverage (perfect)
+- **Default Jest run**: `npm test`
+- **Broader non-E2E Jest run**: `npm run test:unit`
+- **E2E Jest run**: `npm run test:e2e`
+- **Playwright sanity run**: `npm run test:playwright`
+- **Coverage report**: `npm run test:coverage`
+- **Execution time**: the default Jest run usually finishes in about a minute on this repo
 
 ### Running Tests
 
@@ -503,11 +501,11 @@ npm run test:all
 To ensure clear communication about testing concepts:
 
 - **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`)
-  - The project has 148 passing test suites across 5 categories
+  - The repository groups suites across unit, integration, feature, external-service, and manager-oriented areas
 
 - **Test**: Individual test case within a suite using `it()` or `test()`
   - Example: `it('should return singleton instance')`
-  - The project has 3,242 tests148 total (148 passing, 0 skipped)
+  - The repository contains thousands of individual assertions across the maintained Jest suites
 
 - **Test Category**: Organizational grouping of related test suites
   - **unit/**: Tests for individual classes and functions in isolation
@@ -528,7 +526,7 @@ To ensure clear communication about testing concepts:
 
 ### Test Definitions
 
-- **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`) - we have 148 passing suites
+- **Test Suite**: A file containing related tests (e.g., `__tests__/unit/PositionManager.test.js`)
 - **Test**: Individual test case within a suite
 - **Test Category**: Organizational grouping by functionality (unit, integration, features, external, managers)
 - **Code Coverage**: Percentage of source code executed during tests (76% overall, exceeds 65% threshold)
@@ -559,7 +557,7 @@ To ensure clear communication about testing concepts:
 ### Configuration & Tools
 
 - **[ESLint Setup](docs/developer/ESLINT_SETUP.md)** - Linter configuration with custom rules
-- **[Workflow Setup](docs/workflow-automation/WORKFLOW_SETUP.md)** - GitHub Actions and CI/CD
+- **[Workflow Setup](WORKFLOW_SETUP.md)** - GitHub Actions and CI/CD
 - **[Jest & Module Systems](docs/guides/JEST_COMMONJS_ES6_GUIDE.md)** - Testing module configurations
 
 ## ⚡ Build System & Performance
@@ -730,7 +728,7 @@ python3 -m http.server 9000
   - **Component 3: SpeechTextBuilder** (312 lines, 48 tests)
     - Brazilian Portuguese text formatting
     - Address component text building methods
-  - **API**: 100% backward compatible, all 60 unit tests148 passing, no breaking changes
+  - **API**: 100% backward compatible with no intentional breaking changes
 - `SpeechSynthesisManager` - Main orchestrator using composition pattern
   - Composition Components: VoiceLoader, VoiceSelector, SpeechConfiguration, SpeechQueue
 - `SpeechController` - Core speech synthesis control logic
@@ -1636,7 +1634,7 @@ git push
 For comprehensive guidance, see:
 
 - [GitHub Actions Guide](docs/guides/GITHUB_ACTIONS_GUIDE.md)
-- [Workflow Setup](docs/workflow-automation/WORKFLOW_SETUP.md)
+- [Workflow Setup](WORKFLOW_SETUP.md)
 - [Contributing Guidelines](.github/CONTRIBUTING.md)
 
 ### Development Guidelines
@@ -1678,7 +1676,7 @@ For comprehensive guidance, see:
 ✅ Syntax validation passed
 
 🧪 Running Test Suite...
-✅ Tests passed: 148 passing (148 total, 0 skipped)
+✅ Tests passed: no failures reported in the selected suite
 
 📊 Generating Coverage Report...
 ✅ Coverage: 69.82%
@@ -1763,7 +1761,7 @@ This project emphasizes functional programming principles:
 ### Testing Warnings
 
 - Worker process warning about timer cleanup (expected, not blocking)
-- 5 test suites intentionally0 skipped (work in progress)
+- Some suites are intentionally skipped while related work is still in progress
 - Verbose console output in tests (expected behavior for logging tests)
 
 ## 🔧 Troubleshooting
@@ -1803,7 +1801,7 @@ python3 -m http.server 8000
 
 - **Lines of Code**: ~2300+ (main application)
 - **Test Coverage**: 76% (statements), 74.2% (branches)
-- **Test Count**: 3,242 tests148 total (148 passing, 0 skipped, 0 failing)
+- **Test Status**: See the test badge and the Testing section for the current suite status
 - **Dependencies**: 2 runtime, 2 dev dependencies
 - **Supported Node.js**: v20.19.0+
 - **ES Module Type**: ESM (ECMAScript Modules)
@@ -1847,6 +1845,6 @@ ISC License - See repository for details
 
 ---
 
-**Version**: 0.24.7-alpha
+**Version**: 0.24.8-alpha
 **Status**: Active
 **Last Updated**: 2026-04-29

@@ -3,7 +3,7 @@
 /**
  * Main Application Entry Point
  * SPA Router and Application Initialization
- * @version 0.24.7-alpha
+ * @version 0.24.8-alpha
  */
 
 import HomeViewController from './views/home.js';
@@ -41,6 +41,9 @@ const AppState: AppStateType = {
   errorBoundaries: {},
   confirmationThresholdSlider: null,
 };
+
+let activeRouteTransition: Promise<void> | null = null;
+let rerouteRequested = false;
 
 /**
  * Initialize the Guia Turístico single-page application.
@@ -90,10 +93,10 @@ async function init(): Promise<void> {
   HTMLHeaderDisplayer.create(document);
   initializeConfirmationThresholdSlider();
 
-  handleRoute();
+  window.addEventListener('hashchange', scheduleRouteHandling);
+  window.addEventListener('popstate', scheduleRouteHandling);
 
-  window.addEventListener('hashchange', handleRoute);
-  window.addEventListener('popstate', handleRoute);
+  void handleRoute();
 
   debug('[GT] init() complete');
   log('✓ Application initialized successfully');
@@ -125,7 +128,11 @@ function initializeConfirmationThresholdSlider(): void {
   AppState.confirmationThresholdSlider = new HTMLConfirmationThresholdSlider(container);
 }
 
-async function handleRoute(): Promise<void> {
+function scheduleRouteHandling(): void {
+  void handleRoute();
+}
+
+async function processCurrentRoute(): Promise<void> {
   const hash = window.location.hash || '#/';
   const route = hash.substring(1);
 
@@ -162,6 +169,25 @@ async function handleRoute(): Promise<void> {
     error('Route loading error:', err);
     showError(err instanceof Error ? err : new Error(String(err)));
   }
+}
+
+async function handleRoute(): Promise<void> {
+  rerouteRequested = true;
+
+  if (!activeRouteTransition) {
+    activeRouteTransition = (async () => {
+      try {
+        while (rerouteRequested) {
+          rerouteRequested = false;
+          await processCurrentRoute();
+        }
+      } finally {
+        activeRouteTransition = null;
+      }
+    })();
+  }
+
+  await activeRouteTransition;
 }
 
 function manageFocusAfterRouteChange(): void {
@@ -463,3 +489,19 @@ if (typeof window !== 'undefined') {
     }
   };
 }
+
+export {
+  handleRoute,
+  init,
+  initNavigation,
+  initRouter,
+  initializeConverterFeatures,
+  initializeHomeView,
+  loadConverterView,
+  loadNotFoundView,
+  manageFocusAfterRouteChange,
+  navigateTo,
+  showError,
+  showLoading,
+  updateActiveNavLink,
+};

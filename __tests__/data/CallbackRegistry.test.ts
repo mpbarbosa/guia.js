@@ -54,14 +54,15 @@ describe('CallbackRegistry', () => {
 		});
 		
 		it('should catch callback errors', () => {
-			const originalError = console.error;
 			let errorCalled = false;
-			console.error = () => { errorCalled = true; };
+			const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {
+				errorCalled = true;
+			});
 			
 			registry.register('test', () => { throw new Error('test'); });
 			const result = registry.execute('test');
 			
-			console.error = originalError;
+			consoleErrorSpy.mockRestore();
 			expect(result).toBe(false);
 			expect(errorCalled).toBe(true);
 		});

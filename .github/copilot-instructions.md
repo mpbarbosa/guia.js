@@ -6,8 +6,9 @@ This file provides concise, project-specific guidance to help Copilot make high-
 
 ## Architecture and Source Boundaries
 
-Respect these stable source layers:
+Respect these stable source boundaries:
 
+- `src/app.js` – Main package entry point (editable source sibling: `src/app.ts`)
 - `src/core/` – Foundational runtime helpers
 - `src/utils/` – Shared low-level utilities
 
@@ -19,8 +20,7 @@ Supporting workflow surfaces:
 ## Documentation and Change Coordination
 
 - Sync user-facing changes with `README.md` and other reference docs.
-- Update `docs/ARCHITECTURE.md` for architecture or layout changes.
-- Ensure the main entry point aligns with `package.json`.
+- Update `docs/ARCHITECTURE.md` and the linked `docs/architecture/` reference docs for architecture or layout changes.
 - For details, refer to authoritative docs:
   - `README.md`
   - `docs/ARCHITECTURE.md`
@@ -36,9 +36,5 @@ For substantive code changes, always validate with:
 - `npm run lint`
 - `npm test`
 - `npm run build`
-
-## Entry Point
-
-- Editable source entry: `src/app.ts` (`package.json` `main` points to the compiled output `src/app.js`)
 
 > Do not duplicate implementation status, inventories, installation, or migration details—link to the above docs instead.

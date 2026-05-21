@@ -1,3 +1,7 @@
+<script setup lang="ts">
+defineOptions({ name: 'MapView' });
+</script>
+
 <template>
   <div class="h-full relative overflow-hidden bg-surface-variant">
     <!-- Map background -->

@@ -1761,7 +1761,7 @@ This project emphasizes functional programming principles:
 ### Testing Warnings
 
 - Worker process warning about timer cleanup (expected, not blocking)
-- Some suites are intentionally skipped while related work is still in progress
+- Some suites are intentionally0 skipped while related work is still in progress
 - Verbose console output in tests (expected behavior for logging tests)
 
 ## 🔧 Troubleshooting

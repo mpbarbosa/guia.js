@@ -549,6 +549,6 @@ describe('GeocodingState', () => {
 
 ## See Also
 
-- [Phase 17 Refactoring Documentation](../refactoring/PHASE_17.md)
+- [WebGeocodingManager Architecture](../architecture/WEBGEOCODINGMANAGER_REFACTORING.md)
 - [State Management Best Practices](../patterns/STATE_MANAGEMENT.md)
 - [Observer Pattern Guide](../patterns/OBSERVER_PATTERN.md)

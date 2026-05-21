@@ -166,14 +166,14 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### UI Components
 
 - **[Visual Hierarchy](ux/VISUAL_HIERARCHY.md)** - UI design
-- **[Accessibility](reports/implementation/ACCESSIBILITY_UX_IMPROVEMENTS_SUMMARY.md)** - WCAG compliance
+- **[UX Critical Issues](ux/CRITICAL_ISSUES.md)** - Accessibility and UX compliance
 
 ### 8. Infrastructure & Operations
 
 #### Build & Deployment
 
 - **[Deployment Guide](guides/DEPLOYMENT_GUIDE.md)** - Production deployment
-- **[Vite Build](reports/implementation/VITE_BUILD_IMPLEMENTATION.md)** - Build system
+- **[Vite Configuration](../vite.config.js)** - Build system
 - **[CDN Delivery](infrastructure/CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md)** - CDN setup
 
 #### CI/CD
@@ -185,21 +185,17 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### Environment
 
 - **[Node Version Alignment](infrastructure/NODE_VERSION_ALIGNMENT_PLAN.md)** - Node.js setup
-- **[Environment Variables](reports/implementation/ENVIRONMENT_VARIABLES_COMPLETE.md)** - Configuration
+- **[Environment Constants](../src/config/environment.ts)** - Configuration
 
 ### 9. Maintenance & Refactoring
 
 #### Refactoring Guides
 
 - **[Refactoring Summary](developer/REFACTORING_SUMMARY.md)** - Recent changes
-- **[God Object Refactoring](refactoring/GOD_CLASS_REFACTORING_PLAN_2026-01-24.md)** - Decomposition
-- **[Refactoring Overview](refactoring/README.md)** - Active plans and modularization context
-- **[WebGeocodingManager Refactoring](refactoring/WEBGEOCODINGMANAGER_REFACTORING_PLAN.md)** - Core refactor
 
 #### Technical Debt
 
 - **[Console Logging Debt](developer/CONSOLE_LOGGING_TECHNICAL_DEBT.md)** - Logging cleanup
-- **[Timer Management](refactoring/TIMER_MANAGEMENT_CLEANUP.md)** - Memory leaks
 - **[Dependency Management](infrastructure/DEPENDENCY_MANAGEMENT.md)** - Dependency updates
 
 ### 10. Advanced Topics
@@ -207,13 +203,13 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### Performance
 
 - **[Performance Analysis](testing/PERFORMANCE_ANALYSIS_2026-01-24.md)** - Performance metrics
-- **[Optimization Guide](reports/analysis/PHASE3_OPTIMIZATION_ANALYSIS.md)** - Optimization tips
+- **[Performance Optimization](testing/TEST_PERFORMANCE_OPTIMIZATION.md)** - Optimization tips
 - **[Flakiness Analysis](testing/FLAKINESS_ANALYSIS_2026-01-24.md)** - Test stability
 
 #### Security
 
 - **[Security Monitoring](maintenance/SECURITY_MONITORING_2026-01-24.md)** - Security practices
-- **[Security Assessment](reports/analysis/SECURITY_ASSESSMENT_2026-01-09.md)** - Security audit
+- **[Security Monitoring](maintenance/SECURITY_MONITORING_2026-01-24.md)** - Security audit and monitoring guidance
 
 #### Data Management
 
@@ -235,12 +231,9 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 - **[Documentation Metadata Template](guides/DOCUMENTATION_METADATA_TEMPLATE.md)** - Doc standards
 - **[Cross-Reference Template](guides/CROSS_REFERENCE_NAVIGATION_TEMPLATE.md)** - Linking guide
 
-#### Reports
+#### Archives
 
-- **[Reports Index](reports/README.md)** - Analysis reports
-- **[Implementation Reports](reports/implementation/)** - Feature reports
-- **[Bug Fix Reports](reports/bugfixes/)** - Bug fixes
-- **[Analysis Reports](reports/analysis/)** - Code analysis
+- **[Misc Archive](misc/README.md)** - Historical and archived documentation
 
 ### 12. Historical Documentation
 
@@ -253,7 +246,7 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### Migration Guides
 
 - **[Migration Guide](guides/MIGRATION_GUIDE.md)** - Version upgrades
-- **[Dependency Overhaul](reports/implementation/COMPLETE_DEPENDENCY_OVERHAUL_SUMMARY.md)** - Major changes
+- **[Dependency Management](infrastructure/DEPENDENCY_MANAGEMENT.md)** - Major dependency changes and strategy
 
 ---
 
@@ -300,7 +293,7 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### Deploy to Production
 
 - Guide: [Deployment Guide](guides/DEPLOYMENT_GUIDE.md)
-- Build: [Vite Build](reports/implementation/VITE_BUILD_IMPLEMENTATION.md)
+- Build: [Vite Configuration](../vite.config.js)
 - CI/CD: [CI/CD Guide](infrastructure/CI_CD_GUIDE.md)
 
 ---

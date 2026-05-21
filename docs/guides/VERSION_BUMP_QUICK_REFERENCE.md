@@ -69,8 +69,8 @@ git push origin v0.9.0-alpha
 
 **Documentation**:
 
-- Feature Verification: `docs/reports/FEATURE_VERIFICATION_REPORT_2026-01-28.md`
-- Version Bump Summary: `docs/reports/VERSION_BUMP_0.8.7_SUMMARY_2026-01-28.md`
+- Changelog: `CHANGELOG.md`
+- Version consistency script: `.github/scripts/check-version-consistency.sh`
 - CDN URLs: `cdn-urls.txt`
 
 **Primary CDN URL**:

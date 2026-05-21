@@ -316,7 +316,7 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 | `scripts/update-doc-dates.sh` | Update "Last Updated" dates in git-modified `.md` files | *(none)* | `docs/` |
 | `scripts/update-test-counts.sh` | Refresh the managed README test-status summary after a clean non-E2E Jest run | *(none)* | `README.md`, `jest.config.unit.js` |
 | `scripts/deploy-preflight.sh` | Production deployment pre-flight checklist (build + file checks + live smoke test) | *(none)* | `dist/`, `libs/sidra/tab6579_municipios.json`, `vite.config.js` |
-| `scripts/build_and_deploy.sh` | Build production bundle and push to staging via sibling repo | `-h`, `--help` | `dist/`, `../mpbarbosa_site/shell_scripts/sync_to_staging.sh` |
+| `scripts/build_and_deploy.sh` | Build production bundle and push to staging via sibling repo | `-h`, `--help`, `--source dist|src` | `dist/`, `../mpbarbosa_site/shell_scripts/sync_to_staging.sh` |
 | `scripts/cleanup-ai-workflow.sh` | Remove old `.ai_workflow/` run artifact directories and local build/test caches | `--days N`, `--dry-run` | `.ai_workflow/`, `.jest-cache/`, `coverage/` |
 | `scripts/run-tests-docker.sh` | Build `Dockerfile.test` and run the unit/integration Jest suite inside Docker | `-- <jest args>` | `Dockerfile.test`, `npm run test:unit` |
 | `scripts/run-e2e-tests-docker.sh` | Build `Dockerfile.test.e2e` and run the Puppeteer E2E suite inside Docker | `-- <jest args>` | `Dockerfile.test.e2e`, `npm run test:e2e` |
@@ -338,6 +338,9 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 
 # Show help for build/deploy script
 ./scripts/build_and_deploy.sh --help
+
+# Deploy source files directly to staging and skip the build step
+./scripts/build_and_deploy.sh --source src
 
 # Build and push to staging (requires ../mpbarbosa_site sibling repo)
 ./scripts/build_and_deploy.sh
@@ -1835,7 +1838,7 @@ ISC License - See repository for details
 - Complete API error recovery mechanisms
 - Add end-to-end browser tests
 
-**Track Progress**: See [Issue #189 Follow-up](docs/reports/analysis/)
+**Track Progress**: See [ROADMAP](docs/ROADMAP.md)
 
 ## 📞 Support
 

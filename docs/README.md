@@ -64,24 +64,12 @@ External API integrations and data sources:
 
 - [api-integration/](./api-integration/) - Nominatim, IBGE, and other APIs
 
-### 🛠️ Refactoring
-
-Refactoring plans and implementation guides:
-
-- [refactoring/](./refactoring/) - God object elimination, singleton patterns, etc.
-
 ### 🚀 Features
 
 Feature documentation and implementation guides:
 
 - [FEATURE_METROPOLITAN_REGION_DISPLAY.md](./user/features/FEATURE_METROPOLITAN_REGION_DISPLAY.md)
 - [FEATURE_MUNICIPIO_STATE_DISPLAY.md](./user/features/FEATURE_MUNICIPIO_STATE_DISPLAY.md)
-
-### 📊 Reports
-
-Analysis reports, implementation summaries, and audits:
-
-- [reports/](./reports/) - Analysis, implementation, and validation reports
 
 ### 🔧 Utilities
 
@@ -124,7 +112,6 @@ Auto-generated documentation (should not be manually edited):
 Uncategorized and work-in-progress documentation:
 
 - [misc/](./misc/) - Temporary docs, scratch notes, uncategorized content
-- [reports/analysis/](./reports/analysis/) - Analysis reports and issue-specific investigations
 
 ---
 
@@ -198,11 +185,9 @@ For a comprehensive, categorized list of all documentation files, see:
 
 > **Note**: Files below show recent changes. For detailed change history, see [CHANGELOG.md](../CHANGELOG.md)
 
-- **2026-01-28**: [Reference Check False Positives Report](./reports/REFERENCE_CHECK_FALSE_POSITIVES_2026-01-28.md)
 - **2026-01-23**: [Architecture Documentation Fixes](./maintenance/ARCHITECTURE_DOCUMENTATION_FIXES_2026-01-23.md)
 - **2026-01-24**: [Node Version Fix](./maintenance/NODE_VERSION_FIX_2026-01-24.md)
 - **2026-01-24**: [Security Monitoring](./maintenance/SECURITY_MONITORING_2026-01-24.md)
-- **2026-01-15**: [UI Component Validation Report](./reports/analysis/UI_COMPONENT_VALIDATION_REPORT_2026-01-15.md)
 
 ---
 

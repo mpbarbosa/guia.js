@@ -95,7 +95,7 @@ Fix: replace the quoted version string on that line.
 | `.ai_workflow/` | AI-generated log files; not project source |
 | `__tests__/` and `tests/` | Version strings are runtime assertions; a mismatch here means `src/config/defaults.ts` was wrong, not the test |
 | `.github/copilot-instructions.md` | AI instruction file maintained separately |
-| `docs/reports/` | Generated analysis artefacts, not maintained source |
+| `docs/misc/` | Historical archive documents (may contain legacy versions) |
 
 ---
 

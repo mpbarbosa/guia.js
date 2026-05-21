@@ -27,26 +27,6 @@
 - API endpoint specifications
 - Integration patterns and examples
 
-#### `docs/refactoring/`
-
-**Purpose**: Active refactoring session documentation and implementation guides
-**Status**: Working documentation for ongoing refactoring initiatives
-**Category**: God class elimination, implementation guides, phase resumption
-
-**Key Files**:
-
-- `GOD_CLASS_REFACTORING_PLAN_2026-01-24.md` - Current refactoring plan
-- `IMPLEMENTATION_GUIDE_2026-01-24.md` - Step-by-step implementation guide
-
-**Expected Content**:
-
-- Active refactoring session plans
-- Implementation guides for ongoing work
-- Phase-specific documentation when still needed
-- Refactoring checkpoints and progress tracking
-
-**Note**: Unlike `docs/reports/implementation/` and `docs/misc/`, this contains **active** working documentation, not archived records.
-
 #### `docs/testing/`
 
 **Purpose**: Test infrastructure, strategy, and execution documentation
@@ -106,45 +86,6 @@
 - Class method documentation
 - Configuration reference
 
-#### `docs/reports/`
-
-**Purpose**: Comprehensive project analysis, audits, and implementation tracking
-**Status**: Active documentation
-**Organization**: Subdirectories by report type (analysis, bugfixes, implementation)
-
-**Subdirectories**:
-
-##### `docs/reports/analysis/`
-
-**Purpose**: Technical analysis, audits, and improvement planning
-**Expected Content**:
-
-- Architecture validation reports
-- Code quality improvement plans
-- Dependency update strategies
-- Documentation consistency audits (dated)
-- UI component validation reports
-
-##### `docs/reports/bugfixes/`
-
-**Purpose**: Bug fix implementation documentation and resolution records
-**Expected Content**:
-
-- Bug fix summaries with root cause analysis
-- E2E test fix documentation
-- Documentation error fixes (dated)
-- Worker process and environment issue resolutions
-
-##### `docs/reports/implementation/`
-
-**Purpose**: Completed implementation summaries and session records
-**Expected Content**:
-
-- Feature implementation summaries
-- Documentation audit completion reports
-- Multi-phase project completion records
-- Environment configuration implementations
-
 #### Workflow & Automation References
 
 **Purpose**: Current CI/CD and automation documentation is maintained
@@ -171,7 +112,7 @@ across repository-level guides instead of a dedicated
 - ✅ Must be referenced from active documentation
 - ✅ Documents older than current release cycle
 - ❌ NOT for active guides or current documentation
-- ❌ NOT for experimental/draft work (use `docs/reports/analysis/` instead)
+- ❌ NOT for experimental/draft work
 - ❌ NOT for temporary notes (delete instead)
 
 **Expected Content**:
@@ -199,7 +140,6 @@ across repository-level guides instead of a dedicated
 
 - `IBIRA_INTEGRATION.md` - ibira.js integration (IBGE data)
 - `SIDRA_INTEGRATION.md` - SIDRA API integration (population data)
-- `REFACTOR_ADDRESS_FETCHED_CONSTANT.md` - Constant extraction refactoring
 
 ### Process Documentation
 
@@ -223,18 +163,18 @@ across repository-level guides instead of a dedicated
 - Architecture → `docs/architecture/`
 - APIs → `docs/api-integration/`
 - Testing → `docs/testing/`
-- History → `docs/reports/implementation/`, `docs/misc/`
+- History → `docs/misc/`
 
 **By Type**:
 
 - Reference → Root level + `docs/reference/`
 - Guides → `docs/guides/`
-- Reports → `docs/reports/`
+- Reports → `docs/misc/`
 
 **By Status**:
 
 - Current → Root level + core directories
-- Historical → `docs/reports/implementation/`, `docs/misc/`
+- Historical → `docs/misc/`
 - Experimental → `docs/misc/`
 
 ## Documentation Index

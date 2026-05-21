@@ -120,7 +120,7 @@
 
 - `mpbarbosa.com` repository cloned at `$MPBARBOSA_COM_ROOT`
 - `rsync` available on `PATH`
-- Node.js v18+ and npm installed
+- Node.js v20.19.0+ and npm installed
 - git configured with push access to the `mpbarbosa.com` remote
 
 **What it does**:
@@ -159,6 +159,8 @@ npm run deploy
 | Flag | Description | Implemented |
 |------|-------------|-------------|
 | `-h`, `--help` | Show help message and exit | ✅ Yes |
+| `--source dist` | Deploy the built `dist/` bundle (default behavior) | ✅ Yes |
+| `--source src` | Deploy `src/` directly and skip `npm run build` | ✅ Yes |
 | `--dry-run` | Show commands without executing | ❌ Not implemented |
 | `--skip-build` | Skip the `npm run build` step | ❌ Not implemented |
 
@@ -266,7 +268,7 @@ jobs:
 
 **What it does**:
 
-1. Checks Node.js version (warns if < v18)
+1. Checks Node.js version (warns if < v20.19.0)
 2. Runs `npm run build` and fails if the build errors
 3. Verifies that `dist/index.html` exists
 4. Verifies that `dist/libs/sidra/tab6579_municipios.json` exists (SIDRA offline data)
@@ -282,6 +284,7 @@ jobs:
 **Prerequisites**:
 
 - `npm install` has been run
+- Node.js v20.19.0+ available on `PATH`
 - Port 9001 is free (used for smoke-testing the preview server)
 - `curl` available (used for endpoint checks)
 
@@ -447,17 +450,18 @@ npm run cleanup:ai-workflow  # → ./scripts/cleanup-ai-workflow.sh
 
 ## Environment Variables
 
-None of the scripts in this directory require externally-set environment variables.
-All variables they use are defined internally. For reference:
+Most scripts in this directory do not require externally-set environment variables.
+Where an optional override exists, it is listed below. For reference:
 
-| Script | Internal variables | External env vars required |
-|--------|--------------------|---------------------------|
+| Script | Internal variables | External env vars / overrides |
+|--------|--------------------|-----------------------------|
 | `fix-console-logging.sh` | `SCRIPT_DIR`, `PROJECT_ROOT`, `FILES`, `DEPTH`, `PREFIX` | *(none)* |
 | `update-doc-dates.sh` | `TODAY`, `MODIFIED`, `updated` | *(none)* |
 | `update-test-counts.sh` | `PASSING`, `TOTAL`, `FAILED`, `SKIPPED` | *(none)* |
 | `lint-md.js` | `ROOT`, `CONFIG_FILE`, `tool`, `glob`, `excludes` | *(none)* |
+| `deploy.sh` | `SCRIPT_DIR`, `GUIA_ROOT`, `DEPLOY_TARGET`, `COMMIT_MESSAGE` | `MPBARBOSA_COM_ROOT` *(optional override)* |
 | `deploy-preflight.sh` | `NODE_VERSION`, `JS_COUNT`, `CSS_COUNT`, `PREVIEW_PID` | *(none)* |
-| `build_and_deploy.sh` | *(none beyond `$1`)* | *(none)* |
+| `build_and_deploy.sh` | `DEPLOY_SOURCE`, `SCRIPT_DIR`, `GUIA_ROOT`, `MPBARBOSA_SITE_ROOT` | *(none)* |
 | `cleanup-ai-workflow.sh` | `DAYS`, `DRY_RUN`, `DELETED`, `BYTES` | *(none)* |
 | `run-playwright-tests-docker.sh` | `IMAGE_NAME`, `PROJECT_ROOT`, `EXIT_CODE` | *(none)* |
 

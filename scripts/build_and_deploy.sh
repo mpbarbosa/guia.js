@@ -18,7 +18,7 @@
 # Prerequisites:
 #   - mpbarbosa_site repository cloned at ../mpbarbosa_site (sibling of this repo).
 #   - Sync script present: ../mpbarbosa_site/shell_scripts/sync_to_staging.sh
-#   - Node.js v18+ and npm installed.
+#   - Node.js v20.19.0+ and npm installed.
 #   - Production build must succeed (npm run build).
 #   - Write permissions for the staging deployment target.
 #

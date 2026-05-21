@@ -14,7 +14,7 @@
 #   - mpbarbosa.com repository available at $MPBARBOSA_COM_ROOT
 #     (default: /home/mpb/Documents/GitHub/mpbarbosa.com).
 #   - rsync available on PATH.
-#   - Node.js v18+ and npm installed.
+#   - Node.js v20.19.0+ and npm installed.
 #   - git configured with push access to the mpbarbosa.com remote.
 #
 # What it does:
@@ -78,7 +78,7 @@ PROCESS:
 PREREQUISITES:
     ✅ mpbarbosa.com repository cloned at $MPBARBOSA_COM_ROOT
     ✅ rsync available on PATH
-    ✅ Node.js v18+ and npm installed
+    ✅ Node.js v20.19.0+ and npm installed
     ✅ git configured with push access to the mpbarbosa.com remote
 
 EXIT CODES:

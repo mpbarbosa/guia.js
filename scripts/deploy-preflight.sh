@@ -11,11 +11,11 @@
 #
 # Prerequisites:
 #   - Must be run from the project root.
-#   - Requires Node.js v18+, npm, and curl.
+#   - Requires Node.js v20.19.0+, npm, and curl.
 #   - Port 9001 must be free (used for the smoke-test preview server).
 #
 # What it does:
-#   1. Checks Node.js version (warns if < v18).
+#   1. Checks Node.js version (warns if < v20.19.0).
 #   2. Runs "npm run build"; exits 1 if build fails.
 #   3. Verifies dist/index.html exists.
 #   4. Verifies dist/libs/sidra/tab6579_municipios.json exists (SIDRA offline data).
@@ -44,10 +44,10 @@ echo ""
 # 1. Check Node.js version
 echo "✓ Checking Node.js version..."
 NODE_VERSION=$(node --version)
-if echo "$NODE_VERSION" | grep -qE "v(1[89]|2[0-9]|[3-9][0-9])"; then
+if node -e "const [major, minor, patch] = process.versions.node.split('.').map(Number); process.exit(major > 20 || (major === 20 && (minor > 19 || (minor === 19 && patch >= 0))) ? 0 : 1)"; then
     echo "  ✅ Node.js version compatible ($NODE_VERSION)"
 else
-    echo "  ⚠️  Node.js version $NODE_VERSION (recommend v18+)"
+    echo "  ⚠️  Node.js version $NODE_VERSION (recommend v20.19.0+)"
 fi
 
 # 2. Run build

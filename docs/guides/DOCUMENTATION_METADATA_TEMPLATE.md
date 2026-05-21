@@ -334,7 +334,7 @@ docs/README.md → testing/TEST_STRATEGY.md → TEST_INFRASTRUCTURE.md
 **Draft Docs**: Work in progress
 
 - Check metadata: `Status: Draft`
-- Often in `docs/reports/` during analysis
+- Often in topic-specific working directories during analysis
 
 **Deprecated Docs**: Outdated but kept for reference
 

@@ -29,8 +29,8 @@ Use these directories instead:
 `.github/scripts/` and `.github/workflows/`
 ❌ **Testing infrastructure** → `docs/testing/`
 ❌ **Architecture decisions** → `docs/architecture/`
-❌ **Implementation reports** → `docs/reports/implementation/`
-❌ **Bug fixes** → `docs/reports/bugfixes/`
+❌ **Implementation reports** → `docs/maintenance/` or `docs/misc/`
+❌ **Bug fixes** → `docs/maintenance/`
 ❌ **API documentation** → `docs/api/`
 
 ---

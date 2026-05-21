@@ -213,7 +213,6 @@ Potential improvements for future versions:
 
 ## Related Documentation
 
-- [UX Analysis Report](../reports/analysis/UX_ANALYSIS_REPORT_2026-02-11.md)
 - [Spacing Guide](./SPACING_GUIDE.md)
 - [Typography Guide](./TYPOGRAPHY_GUIDE.md)
 - [Highlight Cards CSS](./CRITICAL_ISSUES.md)

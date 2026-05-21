@@ -166,7 +166,7 @@ Executed by the `bump-sw-cache.yml` workflow after pushes to `main`.
 **Purpose**: Propagates the current `package.json` version to documentation and source files that still carry older version strings
 **Usage**: `./.github/scripts/update-version-references.sh [--dry-run]`
 **npm script**: `npm run update:version-refs`
-**Documentation**: README.md, `docs/reports/implementation/VERSION_REFERENCES_UPDATE_2026-02-13.md`
+**Documentation**: README.md, `docs/guides/VERSION_BUMP_QUICK_REFERENCE.md`
 
 **What it does**:
 

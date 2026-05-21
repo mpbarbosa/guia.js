@@ -6,44 +6,11 @@
 
 ---
 
-## 🚨 Reorganization Notice (2026-01-27)
+## 🚨 Reorganization Notice (2026-05-21)
 
-**All files from this directory have been reorganized into appropriate locations.**
+The legacy `docs/reports/` archive was removed from the repository.
 
-### Files Moved to `docs/reports/analysis/` (8 files)
-
-- ✅ BRANCH_COVERAGE_ANALYSIS_2026-01-09.md
-- ✅ COVERAGE_IMPROVEMENT_REALITY_CHECK_2026-01-09.md
-- ✅ DEVOPS_INTEGRATION_ASSESSMENT.md
-- ✅ FLAKY_TEST_ANALYSIS_2026-01-09.md
-- ✅ PERFORMANCE_ANALYSIS_2026-01-09.md
-- ✅ SECURITY_ASSESSMENT_2026-01-09.md
-- ✅ SKIPPED_TESTS_ANALYSIS_2026-01-09.md
-- ✅ UNTESTED_BROWSER_FILES_2026-01-09.md
-
-### Files Moved to `docs/reports/bugfixes/` (1 file)
-
-- ✅ BAIRRO_CARD_UPDATE_INVESTIGATION.md
-
-### Files Moved to `docs/reports/implementation/` (5 files)
-
-- ✅ CICD_IMPLEMENTATION_2026-01-09.md
-- ✅ DOCUMENTATION_IMPROVEMENTS_2026-01-01.md
-- ✅ ERROR_HANDLING_DOCUMENTATION.md
-- ✅ IBIRA_VERSION_UPDATE.md
-- ✅ PREREQUISITES_DOCUMENTATION_UPDATE.md
-
-### Files Moved to `docs/infrastructure/` (1 file)
-
-- ✅ CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md
-
-### Files Moved to `docs/` root (1 file)
-
-- ✅ PROJECT_CLARIFICATION.md (important reference document)
-
-### Files Removed (1 file)
-
-- ❌ documentation_updates.md (temporary working notes)
+Historical and temporary records should now be maintained under this directory (`docs/misc/`) or promoted to a domain directory such as `docs/maintenance/`, `docs/testing/`, or `docs/infrastructure/` when they become stable references.
 
 ---
 
@@ -61,7 +28,7 @@ Documents placed in `docs/misc/` MUST meet ALL of these criteria:
 ✅ **Documents older than current release cycle**
 
 ❌ **NOT for active guides or current documentation** → Use main `docs/` or specific subdirectories
-❌ **NOT for experimental/draft work** → Use `docs/reports/analysis/` instead
+❌ **NOT for experimental/draft work** → Use active feature/topic directories instead
 ❌ **NOT for temporary notes** → Delete instead
 
 ---
@@ -78,9 +45,9 @@ Documents placed in `docs/misc/` MUST meet ALL of these criteria:
 ### ❌ Should NOT Go Here
 
 - **Active documentation** → Use `docs/` root or specific subdirectories
-- **Analysis reports** → Use `docs/reports/analysis/`
-- **Bug fix records** → Use `docs/reports/bugfixes/`
-- **Implementation summaries** → Use `docs/reports/implementation/`
+- **Analysis reports** → Use topic-specific directories (for example `docs/testing/`, `docs/maintenance/`)
+- **Bug fix records** → Use `docs/maintenance/`
+- **Implementation summaries** → Use topic-specific stable directories
 - **Planning documents** → Use `docs/infrastructure/` or `docs/architecture/`
 - **Temporary notes** → Delete or use session workspace
 
@@ -92,14 +59,14 @@ Before placing a document in `docs/misc/`, consider these directories:
 
 | Document Type | Recommended Location |
 |--------------|---------------------|
-| Analysis reports | `docs/reports/analysis/` |
-| Bug investigations | `docs/reports/bugfixes/` |
-| Implementation summaries | `docs/reports/implementation/` |
+| Analysis reports | Topic-specific directories (for example `docs/testing/`, `docs/maintenance/`) |
+| Bug investigations | `docs/maintenance/` |
+| Implementation summaries | Topic-specific stable directories |
 | Architecture decisions | `docs/architecture/` |
 | Infrastructure planning | `docs/infrastructure/` |
 | Testing documentation | `docs/testing/` |
 | API integration docs | `docs/api-integration/` |
-| Refactoring sessions | `docs/refactoring/` |
+| Refactoring sessions | `docs/developer/` (see `REFACTORING_SUMMARY.md`) |
 | General reference | `docs/` root level |
 
 ---
@@ -118,15 +85,14 @@ Before placing a document in `docs/misc/`, consider these directories:
 
 ### Primary Documentation Locations
 
-- **[../reports/](../reports/)** - Analysis, bug fixes, and implementation reports
 - **[../infrastructure/](../infrastructure/)** - Infrastructure and tooling documentation
 - **[../developer/DIRECTORY_ORGANIZATION.md](../developer/DIRECTORY_ORGANIZATION.md)** - Complete directory structure guide
 
 ### Finding Moved Documents
 
-- **Analysis reports**: See [../reports/analysis/](../reports/analysis/)
-- **Bug fix records**: See [../reports/bugfixes/](../reports/bugfixes/)
-- **Implementation summaries**: See [../reports/implementation/](../reports/implementation/)
+- **Analysis reports**: See [../testing/](../testing/) and [../maintenance/](../maintenance/)
+- **Bug fix records**: See [../maintenance/](../maintenance/)
+- **Implementation summaries**: See [../infrastructure/](../infrastructure/) and [../developer/](../developer/)
 - **Project clarification**: See [./PROJECT_CLARIFICATION.md](./PROJECT_CLARIFICATION.md)
 
 ---

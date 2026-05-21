@@ -9,7 +9,7 @@ describe('AppBar.vue', () => {
     const wrapper = mount(AppBar);
 
     expect(wrapper.get('header').attributes('role')).toBe('banner');
-    expect(wrapper.get('h1').text()).toBe('Guia JS');
+    expect(wrapper.get('span.text-xl').text()).toBe('Guia JS');
     expect(wrapper.get('button[aria-label="Notificações"]').exists()).toBe(true);
   });
 

@@ -365,9 +365,9 @@ describe('PositionManager + HTMLPositionDisplayer Integration', () => {
 
 			positionManager.update(position2);
 			
-			// Second update should be rejected due to neither distance nor time threshold being met
-			expect(mockElement.innerHTML).toContain('Neither distance');
-			expect(mockElement.innerHTML).toContain('threshold met');
+			// Second update should be rejected (threshold not met) — displayer silently retains previous content
+			expect(mockElement.innerHTML).toContain('-18.469609');
+			expect(mockElement.innerHTML).not.toContain('threshold met');
 		});
 	});
 

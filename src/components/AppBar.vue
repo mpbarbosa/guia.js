@@ -11,7 +11,7 @@ defineOptions({ name: 'AppBar' });
       <div class="p-2 bg-primary rounded-xl">
         <i class="bi bi-compass-fill text-white text-[1.1rem] leading-none" aria-hidden="true"></i>
       </div>
-      <h1 class="text-xl font-bold text-primary tracking-tight">Guia JS</h1>
+      <span class="text-xl font-bold text-primary tracking-tight">Guia JS</span>
     </div>
     <div class="flex items-center gap-2">
       <button class="p-2 rounded-full hover:bg-surface-variant transition-colors" aria-label="Notificações">

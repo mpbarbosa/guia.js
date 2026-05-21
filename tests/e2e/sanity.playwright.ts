@@ -236,7 +236,7 @@ test.describe('6. Converter route', () => {
 
   test('converter footer link is present on the home page', async ({ page }) => {
     await page.goto(HOME, { waitUntil: 'networkidle' });
-    await expect(page.locator('a[href="#/converter"]')).toBeAttached();
+    await expect(page.locator('a[href="#/converter"]').first()).toBeAttached();
   });
 });
 

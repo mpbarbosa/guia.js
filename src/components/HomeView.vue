@@ -81,7 +81,18 @@ onMounted(async () => {
     });
     isInitialized.value = true;
     isTracking.value = controller.isTracking();
-    if (isTracking.value) showOnboarding.value = false;
+    // Determine onboarding visibility from actual geo permission, not tracking state.
+    // autoStartTracking sets tracking=true even before the user has granted permission,
+    // so checking isTracking() alone would incorrectly hide the onboarding.
+    if (navigator.permissions) {
+      const perm = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
+      showOnboarding.value = perm.state !== 'granted';
+      perm.addEventListener('change', () => {
+        if (perm.state === 'granted') {
+          showOnboarding.value = false;
+        }
+      });
+    }
 
     document.addEventListener('homeview:tracking:started', onTrackingStarted);
     document.addEventListener('homeview:tracking:stopped', onTrackingStopped);

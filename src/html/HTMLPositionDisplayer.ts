@@ -208,6 +208,11 @@ class HTMLPositionDisplayer {
 		// Handle error state with detailed error information
 		// XSS Protection: Sanitize error.message to prevent script injection
 		if (error) {
+			// Threshold rejections are normal internal filtering (same position received
+			// twice within the distance/time window) — not a user-visible error.
+			if (error.message?.includes('threshold')) {
+				return;
+			}
 			this.element.innerHTML = `<p class="error">Erro ao obter posição: ${escapeHtml(error.message)}</p>`;
 			return;
 		}

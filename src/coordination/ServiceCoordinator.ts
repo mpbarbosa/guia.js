@@ -475,6 +475,7 @@ class ServiceCoordinator {
             },
             (err) => {
                 logError('ServiceCoordinator: Position watch error', err);
+                document.dispatchEvent(new CustomEvent('geolocation:error', { detail: { error: err } }));
             },
         ) ?? null;
         

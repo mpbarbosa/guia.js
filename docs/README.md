@@ -2,7 +2,7 @@
 
 ---
 
-Last Updated: 2026-05-19
+Last Updated: 2026-05-20
 Status: Active
 Category: Guide
 
@@ -36,10 +36,10 @@ Category: Guide
 
 ### Development Workflow
 
-- **[Workflow Setup](./workflow-automation/WORKFLOW_SETUP.md)** - Local development environment
+- **[Workflow Setup](../WORKFLOW_SETUP.md)** - Local development environment
 - **[Testing Infrastructure](./testing/TEST_INFRASTRUCTURE.md)** - Test execution and coverage
 - **[Code Quality Plan](./developer/CODE_QUALITY_ACTION_PLAN.md)** - Quality standards
-- **[Automation Tools](./workflow-automation/AUTOMATION_TOOLS.md)** - Scripts and utilities
+- **[GitHub Scripts](../.github/scripts/README.md)** - Scripts and utilities
 
 ---
 
@@ -89,11 +89,14 @@ Utility documentation and helper guides:
 
 - [utils/](./utils/) - Timer management, logging, and other utilities
 
-### 🎯 Workflow & Automation
+### 🎯 CI/CD & Automation
 
-CI/CD, scripts, and automation documentation:
+Workflow setup, GitHub Actions, and automation tooling:
 
-- [workflow-automation/](./workflow-automation/) - GitHub Actions and automation scripts
+- [WORKFLOW_SETUP.md](../WORKFLOW_SETUP.md) - Local workflow setup and CI/CD overview
+- [github/](./github/) - GitHub Actions reference guides
+- [.github/workflows/README.md](../.github/workflows/README.md) - Workflow descriptions
+- [.github/scripts/README.md](../.github/scripts/README.md) - Automation script inventory
 
 ### 📝 Guides
 
@@ -155,7 +158,7 @@ Uncategorized and work-in-progress documentation:
 
 **Development Tools**
 
-- [Automation Tools](./workflow-automation/AUTOMATION_TOOLS.md)
+- [GitHub Scripts](../.github/scripts/README.md)
 - [Reference Checker](../.github/scripts/README_REFERENCE_CHECKER.md)
 - [Version Consistency](../.github/scripts/check-version-consistency.sh)
 
@@ -206,7 +209,7 @@ For a comprehensive, categorized list of all documentation files, see:
 ## 💡 Tips for Documentation Navigation
 
 1. **New to the project?** Start with [Project Overview](../README.md) → [Contributing Guidelines](../.github/CONTRIBUTING.md)
-2. **Setting up development?** Follow [Workflow Setup](./workflow-automation/WORKFLOW_SETUP.md) → [Testing Guide](./testing/TEST_STRATEGY.md)
+2. **Setting up development?** Follow [Workflow Setup](../WORKFLOW_SETUP.md) → [Testing Guide](./testing/TEST_STRATEGY.md)
 3. **Understanding architecture?** Read [Project Architecture](./PROJECT_PURPOSE_AND_ARCHITECTURE.md) → [Views Layer](./architecture/VIEWS_LAYER.md)
 4. **Writing tests?** Check [Test Strategy](./testing/TEST_STRATEGY.md) → [Test Infrastructure](./testing/TEST_INFRASTRUCTURE.md)
 5. **Looking for specific info?** Use [Full Index](./INDEX.md) or search within this page (Ctrl+F / Cmd+F)

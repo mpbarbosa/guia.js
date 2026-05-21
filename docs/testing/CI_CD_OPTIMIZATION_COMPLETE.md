@@ -29,7 +29,8 @@
 
 ### **Phase 4: CI/CD Caching Strategy** ✅
 
-- **Deliverable**: `docs/workflow-automation/CI_CACHING_STRATEGY.md`
+- **Deliverable**: CI caching guidance consolidated into
+  `WORKFLOW_SETUP.md` and `.github/workflows/README.md`
 - **Implementation**: Jest cache enabled, all 7 workflow jobs updated
 - **Expected**: 30-60s faster CI runs (78% improvement)
 

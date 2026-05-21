@@ -145,27 +145,18 @@
 - Multi-phase project completion records
 - Environment configuration implementations
 
-#### `docs/workflow-automation/`
+#### Workflow & Automation References
 
-**Purpose**: CI/CD workflow documentation and automation strategy
-**Status**: Active documentation
-**Category**: Automation implementations, security strategies, and workflow configuration
+**Purpose**: Current CI/CD and automation documentation is maintained
+across repository-level guides instead of a dedicated
+`docs/workflow-automation/` directory
 
-**Key Files**:
+**Primary Locations**:
 
-- `AUTOMATION_SUMMARY.md` - Overview of automation implementations
-- `FINAL_AUTOMATION_SUMMARY.md` - Complete automation system summary
-- `WORKFLOW_TERMINOLOGY_DISAMBIGUATION.md` - Workflow terminology and concepts
-- `CI_CACHING_STRATEGY.md` - CI/CD performance optimization
-- `SECURITY_STRATEGY.md` - Security automation and monitoring
-
-**Expected Content**:
-
-- GitHub Actions workflow documentation
-- Automation tool configurations and strategies
-- CI/CD optimization and caching strategies
-- Security automation patterns
-- Pre-commit and pre-push hook documentation
+- `WORKFLOW_SETUP.md` - Local workflow setup and CI/CD overview
+- `docs/github/GITHUB_ACTIONS_GUIDE.md` - GitHub Actions reference
+- `.github/workflows/README.md` - Workflow catalog
+- `.github/scripts/README.md` - Automation script inventory
 
 #### `docs/misc/`
 

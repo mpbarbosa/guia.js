@@ -1,12 +1,14 @@
 {
   "version": 1,
-  "partitionIndex": 7,
-  "totalPartitions": 53,
-  "filesHash": "de9b2d69",
+  "partitionIndex": 1,
+  "totalPartitions": 55,
+  "filesHash": "8553832b",
   "partitionLabels": [
+    "__tests__/app",
     "__tests__/components",
     "__tests__/components (2)",
     "__tests__/components (3)",
+    "__tests__/components (4)",
     "__tests__/config",
     "__tests__/coordination",
     "__tests__/core",
@@ -56,7 +58,7 @@
     "test/services",
     "test/services (2)",
     "test/types",
-    "test/utils"
+    "test/utils, scripts"
   ],
-  "updatedAt": "2026-05-20T16:35:47.960Z"
+  "updatedAt": "2026-05-21T01:55:59.137Z"
 }

@@ -1,6 +1,6 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
-**Current Version**: `0.24.7-alpha` | **Status**: Active Development
+**Current Version**: `0.24.8-alpha` | **Status**: Active Development
 **Last Updated**: 2026-05-20
 
 ---
@@ -29,7 +29,7 @@
 - **Dependency upgrades** (v0.13.1-alpha): `paraty_geocore.js` → `v0.12.10-alpha`, `ibira.js` → `v0.4.22-alpha`, `bessa_patterns.ts` → `v0.12.15-alpha`
 - **Bootstrap 5.3 responsive navbar** (v0.17.2-alpha): Bootstrap 5.3 + Bootstrap Icons; `<nav class="navbar navbar-expand-md">` with Início + Conversor links, hamburger toggle, MD3 token bridge via `bootstrap-overrides.css`, dedicated `ui` Vite chunk; footer converter links removed
 - **Route Navigation MVP** (v0.18.0-alpha): `RouteNavigationService.ts` + `HTMLRoutePlannerPanel.ts`; typed origin/destination route planning, current-location fallback for the origin field, public OSRM driving routes, and Google Maps/OpenStreetMap handoff links
-- **Offline-First Foundation** (v0.24.7-alpha): `OfflineCacheService.ts` + `IBGECityStatsService.ts` + `HomeViewController`; IndexedDB-backed city-stat caching, last-known location restore, and offline reuse of recent position/address snapshots
+- **Offline-First Foundation** (v0.24.8-alpha): `OfflineCacheService.ts` + `IBGECityStatsService.ts` + `HomeViewController`; IndexedDB-backed city-stat caching, last-known location restore, and offline reuse of recent position/address snapshots
 
 ---
 
@@ -69,7 +69,10 @@ Phases 0–2 shipped the MD3 app shell (AppBar, BottomNav, router). Phase 3 alig
 - Align CI with the TypeScript-first codebase and standardize triggers, caches, and artifact handling
 - Define governance for repo-mutating automations (auto-commit, issue creation, dependency bump jobs)
 - Clarify the release/deployment boundary between this repository and `../mpbarbosa_site`
-- Canonical plan: [`docs/workflow-automation/CI_CD_EVOLUTION_ROADMAP.md`](./workflow-automation/CI_CD_EVOLUTION_ROADMAP.md)
+- Current references:
+  [WORKFLOW_SETUP.md](../WORKFLOW_SETUP.md),
+  [GitHub Actions Guide](./github/GITHUB_ACTIONS_GUIDE.md),
+  and [.github/workflows/README.md](../.github/workflows/README.md)
 
 ---
 

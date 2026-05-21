@@ -5,7 +5,7 @@
  * non-browser or test environments.
  *
  * @module services/OfflineCacheService
- * @since 0.24.8-alpha
+ * @since 0.24.9-alpha
  */
 
 import { calculateDistance } from '../utils/distance.js';

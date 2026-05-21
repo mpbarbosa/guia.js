@@ -21,6 +21,8 @@ Supporting workflow surfaces:
 
 - Sync user-facing changes with `README.md` and other reference docs.
 - Update `docs/ARCHITECTURE.md` and the linked `docs/architecture/` reference docs for architecture or layout changes.
+- For markdown formatting rules, use `.markdownlint.yaml` as the source of truth.
+- Markdown list indentation follows `.markdownlint.yaml` (`MD007.indent: 2`); do not assume a 4-space project rule.
 - For details, refer to authoritative docs:
   - `README.md`
   - `docs/ARCHITECTURE.md`

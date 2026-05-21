@@ -51,7 +51,7 @@ async function loadAppModule(homeInitPromise: Promise<void>) {
     error: mockError,
   }));
   jest.unstable_mockModule('../../src/config/version.js', () => ({
-    VERSION_STRING: 'v0.24.8-alpha',
+    VERSION_STRING: 'v0.24.9-alpha',
   }));
   jest.unstable_mockModule('../../src/config/environment.js', () => ({
     env: { nominatimApiUrl: 'https://api.nominatim.org' },

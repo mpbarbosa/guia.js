@@ -1,7 +1,7 @@
 # Guia Turístico - Master Documentation Index
 
-**Last Updated**: 2026-02-13
-**Version**: 0.9.0-alpha
+**Last Updated**: 2026-05-20
+**Version**: 0.24.8-alpha
 **Status**: ✅ Active
 
 ---
@@ -12,11 +12,11 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 | For... | Start Here |
 |--------|------------|
-| **New Users** | [User Guide](user/USER_GUIDE.md) \| [Quick Start](QUICK_START.md) |
-| **New Developers** | [Developer Onboarding](developer/ONBOARDING.md) \| [Quick Start Guide](QUICK_START_GUIDE.md) |
-| **API Reference** | [Complete API Reference](api/COMPLETE_API_REFERENCE.md) \| [API Quick Reference](API_QUICK_REFERENCE.md) |
-| **Architecture** | [System Overview](architecture/SYSTEM_OVERVIEW.md) \| [Architecture Guide](ARCHITECTURE_OVERVIEW.md) |
-| **Contributing** | [Contributing Guide](../.github/CONTRIBUTING.md) \| [Testing Guide](developer/TESTING_GUIDE.md) |
+| **New Users** | [User Guide](user/USER_GUIDE.md) \| [Quick Start](guides/QUICK_START.md) |
+| **New Developers** | [Getting Started](GETTING_STARTED.md) \| [Developer Guide](developer/DEVELOPER_GUIDE.md) |
+| **API Reference** | [Complete API Reference](api/COMPLETE_API_REFERENCE.md) \| [API Quick Reference](api/API_QUICK_REFERENCE.md) |
+| **Architecture** | [System Overview](architecture/SYSTEM_OVERVIEW.md) \| [Architecture Guide](architecture/ARCHITECTURE.md) |
+| **Contributing** | [Contributing Guide](../.github/CONTRIBUTING.md) \| [Testing Guide](testing/TESTING.md) |
 
 ---
 
@@ -27,18 +27,18 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### For Users
 
 - **[User Guide](user/USER_GUIDE.md)** - Complete guide for end users
-- **[Quick Start](QUICK_START.md)** - Get started in 5 minutes
+- **[Quick Start](guides/QUICK_START.md)** - Get started in 5 minutes
 - **[Feature Guides](user/features/)** - Feature-specific documentation
   - [Location Tracking](user/features/location-tracking.md)
 - **[Troubleshooting](user/TROUBLESHOOTING.md)** - Common issues and solutions
-- **[FAQ](user/FAQ.md)** - Frequently asked questions
+- **[Complete User Guide](user/COMPLETE_USER_GUIDE.md)** - Extended end-user reference
 
 #### For Developers
 
-- **[Developer Onboarding](developer/ONBOARDING.md)** - New developer guide
-- **[Quick Start Guide](QUICK_START_GUIDE.md)** - 5-minute developer setup
+- **[Developer Guide](developer/DEVELOPER_GUIDE.md)** - Complete development guide
+- **[Quick Start Guide](guides/QUICK_START.md)** - 5-minute developer setup
 - **[Getting Started](GETTING_STARTED.md)** - Detailed setup guide
-- **[Project Structure](PROJECT_STRUCTURE.md)** - Codebase organization
+- **[Project Structure](developer/PROJECT_STRUCTURE.md)** - Codebase organization
 - **[Contributing Guide](../.github/CONTRIBUTING.md)** - How to contribute
 
 ### 2. API Documentation
@@ -46,19 +46,19 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### Core APIs
 
 - **[Complete API Reference](api/COMPLETE_API_REFERENCE.md)** - Full API documentation
-- **[API Quick Reference](API_QUICK_REFERENCE.md)** - Quick lookup
-- **[Integration Examples](api/INTEGRATION_EXAMPLES.md)** - Real-world usage patterns
-- **[Error Handling Guide](api/ERROR_HANDLING_GUIDE.md)** - Error scenarios
+- **[API Quick Reference](api/API_QUICK_REFERENCE.md)** - Quick lookup
+- **[Integration Examples](api/API_EXAMPLES.md)** - Real-world usage patterns
+- **[Error Handling Guide](guides/ERROR_HANDLING.md)** - Error scenarios
 
 #### API by Component
 
 | Component | Documentation |
 |-----------|--------------|
-| **Position Management** | [PositionManager](api/POSITION_MANAGER.md) \| [GeoPosition](api/GEO_POSITION.md) |
+| **Position Management** | [PositionManager](api/POSITION_MANAGER.md) \| [GeoPosition](api/API_QUICK_REFERENCE.md#geoposition) |
 | **Geolocation Services** | [GeolocationService](api/GEOLOCATION_SERVICE.md) \| [ReverseGeocoder](api/REVERSE_GEOCODER.md) |
 | **Address Processing** | [AddressExtractor](api/ADDRESS_EXTRACTOR.md) \| [AddressCache](api/ADDRESS_CACHE.md) \| [BrazilianStandardAddress](api/BRAZILIAN_STANDARD_ADDRESS.md) |
 | **UI Display** | [DisplayerFactory](api/DISPLAYER_FACTORY.md) \| [UI Components](api/UI_COORDINATOR.md) |
-| **Speech Synthesis** | [SpeechSynthesisManager](api/SPEECH_SYNTHESIS_MANAGER.md) \| [VoiceLoader](api/VOICE_LOADER.md) |
+| **Speech Synthesis** | [SpeechSynthesisManager](api/SPEECH_SYNTHESIS_MANAGER.md) \| [VoiceLoader](api/VOICE_LOADER.md) \| [VoiceSelector](api/VOICE_SELECTOR.md) \| [SpeechConfiguration](api/SPEECH_CONFIGURATION.md) |
 | **Coordination** | [ServiceCoordinator](api/SERVICE_COORDINATOR.md) \| [EventCoordinator](api/EVENT_COORDINATOR.md) |
 
 #### Generated Documentation
@@ -70,16 +70,16 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### System Design
 
 - **[System Overview](architecture/SYSTEM_OVERVIEW.md)** - High-level architecture
-- **[Architecture Overview](ARCHITECTURE_OVERVIEW.md)** - Comprehensive guide
+- **[Architecture Overview](architecture/ARCHITECTURE.md)** - Comprehensive guide
 - **[Project Purpose & Architecture](PROJECT_PURPOSE_AND_ARCHITECTURE.md)** - Vision and design
 - **[Architecture Decision Records](architecture/ARCHITECTURE_DECISION_RECORD.md)** - Design decisions
 
 #### Component Architecture
 
 - **[Core Components](architecture/COMPREHENSIVE_GUIDE.md)** - Component design
-- **[Observer Pattern](observer-pattern.md)** - Event-driven architecture
+- **[Observer Pattern](architecture/observer-pattern.md)** - Event-driven architecture
 - **[Views Layer](architecture/VIEWS_LAYER.md)** - UI architecture
-- **[Data Flow](ARCHITECTURE_OVERVIEW.md#data-flow)** - Data architecture
+- **[Data Flow](architecture/ARCHITECTURE.md#data-flow)** - Data architecture
 
 #### Diagrams
 
@@ -93,25 +93,25 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### Development Workflow
 
 - **[Developer Guide](developer/DEVELOPER_GUIDE.md)** - Complete development guide
-- **[Onboarding Guide](developer/ONBOARDING.md)** - New developer setup
-- **[Debugging Guide](developer/DEBUGGING_GUIDE.md)** - Debugging tips
-- **[Testing Guide](developer/TESTING_GUIDE.md)** - Testing practices
-- **[Deployment Guide](developer/DEPLOYMENT_GUIDE.md)** - Deploy workflow
+- **[Getting Started](GETTING_STARTED.md)** - New developer setup
+- **[Troubleshooting Guide](user/TROUBLESHOOTING.md)** - Debugging tips
+- **[Testing Guide](testing/TESTING.md)** - Testing practices
+- **[Deployment Guide](guides/DEPLOYMENT_GUIDE.md)** - Deploy workflow
 
 #### Best Practices
 
-- **[Code Quality](CODE_QUALITY_ACTION_PLAN.md)** - Code standards
-- **[Error Handling](ERROR_HANDLING.md)** - Error patterns
-- **[Logging Guide](LOGGING_GUIDE.md)** - Logging best practices
-- **[Naming Conventions](NAMING_CONVENTIONS.md)** - Naming standards
-- **[Code Patterns](CODE_PATTERN_DOCUMENTATION_GUIDE.md)** - Design patterns
+- **[Code Quality](developer/CODE_QUALITY_ACTION_PLAN.md)** - Code standards
+- **[Error Handling](guides/ERROR_HANDLING.md)** - Error patterns
+- **[Logging Guide](developer/LOGGING_GUIDE.md)** - Logging best practices
+- **[Naming Conventions](developer/NAMING_CONVENTIONS.md)** - Naming standards
+- **[Code Patterns](developer/CODE_PATTERN_DOCUMENTATION_GUIDE.md)** - Design patterns
 
 #### Tools & Configuration
 
-- **[ESLint Setup](ESLINT_SETUP.md)** - Linting configuration
+- **[ESLint Setup](developer/ESLINT_SETUP.md)** - Linting configuration
 - **[JSDoc Guide](../.github/JSDOC_GUIDE.md)** - Documentation generation
-- **[Git Best Practices](../.github/GIT_BEST_PRACTICES_GUIDE.md)** - Version control
-- **[Workflow Setup](WORKFLOW_SETUP.md)** - CI/CD configuration
+- **[Git Best Practices](guides/GIT_BEST_PRACTICES_GUIDE.md)** - Version control
+- **[Workflow Setup](../WORKFLOW_SETUP.md)** - CI/CD configuration
 
 ### 5. Testing Documentation
 
@@ -131,7 +131,7 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 #### Coverage & Quality
 
-- **[Coverage Policy](COVERAGE_POLICY.md)** - Coverage requirements
+- **[Coverage Policy](developer/COVERAGE_POLICY.md)** - Coverage requirements
 - **[Coverage Analysis](testing/COVERAGE_ANALYSIS_2026-01-24.md)** - Coverage reports
 - **[Test Performance](testing/TEST_PERFORMANCE_OPTIMIZATION.md)** - Optimization
 - **[Browser Compatibility](testing/BROWSER_COMPATIBILITY_GUIDE.md)** - Cross-browser
@@ -141,32 +141,32 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### External APIs
 
 - **[Nominatim Integration](api-integration/NOMINATIM_INTEGRATION.md)** - OpenStreetMap
-- **[IBGE Integration](IBIRA_INTEGRATION.md)** - Brazilian locations
-- **[SIDRA Integration](SIDRA_INTEGRATION.md)** - Demographics data
+- **[IBGE Integration](guides/IBIRA_INTEGRATION.md)** - Brazilian locations
+- **[SIDRA Integration](guides/SIDRA_INTEGRATION.md)** - Demographics data
 
 #### Service Integration
 
-- **[Geolocation Provider Pattern](GEOLOCATION_PROVIDER_PATTERN.md)** - Provider pattern
+- **[Geolocation Provider Pattern](architecture/GEOLOCATION_PROVIDER_PATTERN.md)** - Provider pattern
 - **[Service Coordination](api/SERVICE_COORDINATOR.md)** - Service orchestration
 
 ### 7. Feature Documentation
 
 #### Core Features
 
-- **[Location Tracking](user/features/location-tracking.md)** - Real-time tracking (v0.9.0+)
-- **[Button Status Messages](FEATURE_BUTTON_STATUS_MESSAGES.md)** - Contextual feedback (v0.9.0+)
-- **[Metropolitan Region Display](FEATURE_METROPOLITAN_REGION_DISPLAY.md)** - Metro regions (v0.9.0+)
-- **[Municipality Display](FEATURE_MUNICIPIO_STATE_DISPLAY.md)** - State codes (v0.9.0+)
+- **[Location Tracking](user/features/location-tracking.md)** - Real-time tracking
+- **[Button Status Messages](user/features/FEATURE_BUTTON_STATUS_MESSAGES.md)** - Contextual feedback
+- **[Metropolitan Region Display](user/features/FEATURE_METROPOLITAN_REGION_DISPLAY.md)** - Metro regions
+- **[Municipality Display](user/features/FEATURE_MUNICIPIO_STATE_DISPLAY.md)** - State codes
 
 #### Speech Synthesis
 
 - **[Speech Synthesis Tutorial](guides/TUTORIAL_SPEECH_SYNTHESIS.md)** - Audio feedback
-- **[Voice Selection](VOICE_SELECTION.md)** - Voice management
+- **[Voice Selection](guides/VOICE_SELECTION.md)** - Voice management
 
 #### UI Components
 
-- **[Visual Hierarchy](VISUAL_HIERARCHY.md)** - UI design
-- **[Accessibility](../src/utils/accessibility.js)** - WCAG compliance
+- **[Visual Hierarchy](ux/VISUAL_HIERARCHY.md)** - UI design
+- **[Accessibility](reports/implementation/ACCESSIBILITY_UX_IMPROVEMENTS_SUMMARY.md)** - WCAG compliance
 
 ### 8. Infrastructure & Operations
 
@@ -178,9 +178,9 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 #### CI/CD
 
-- **[CI/CD Guide](../.github/CI_CD_GUIDE.md)** - Continuous integration
-- **[GitHub Actions](../.github/GITHUB_ACTIONS_GUIDE.md)** - Workflow automation
-- **[Workflow Setup](WORKFLOW_SETUP.md)** - Local testing
+- **[CI/CD Guide](infrastructure/CI_CD_GUIDE.md)** - Continuous integration
+- **[GitHub Actions](github/GITHUB_ACTIONS_GUIDE.md)** - Workflow automation
+- **[Workflow Setup](../WORKFLOW_SETUP.md)** - Local testing
 
 #### Environment
 
@@ -191,33 +191,33 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 #### Refactoring Guides
 
-- **[Refactoring Summary](../.github/REFACTORING_SUMMARY.md)** - Recent changes
+- **[Refactoring Summary](developer/REFACTORING_SUMMARY.md)** - Recent changes
 - **[God Object Refactoring](refactoring/GOD_CLASS_REFACTORING_PLAN_2026-01-24.md)** - Decomposition
 - **[Refactoring Overview](refactoring/README.md)** - Active plans and modularization context
-- **[WebGeocodingManager Refactoring](WEBGEOCODINGMANAGER_REFACTORING_PLAN.md)** - Core refactor
+- **[WebGeocodingManager Refactoring](refactoring/WEBGEOCODINGMANAGER_REFACTORING_PLAN.md)** - Core refactor
 
 #### Technical Debt
 
-- **[Console Logging Debt](CONSOLE_LOGGING_TECHNICAL_DEBT.md)** - Logging cleanup
-- **[Timer Management](TIMER_MANAGEMENT_CLEANUP.md)** - Memory leaks
-- **[Dependency Management](DEPENDENCY_MANAGEMENT.md)** - Dependency updates
+- **[Console Logging Debt](developer/CONSOLE_LOGGING_TECHNICAL_DEBT.md)** - Logging cleanup
+- **[Timer Management](refactoring/TIMER_MANAGEMENT_CLEANUP.md)** - Memory leaks
+- **[Dependency Management](infrastructure/DEPENDENCY_MANAGEMENT.md)** - Dependency updates
 
 ### 10. Advanced Topics
 
 #### Performance
 
 - **[Performance Analysis](testing/PERFORMANCE_ANALYSIS_2026-01-24.md)** - Performance metrics
-- **[Optimization Guide](PHASE3_OPTIMIZATION_ANALYSIS.md)** - Optimization tips
+- **[Optimization Guide](reports/analysis/PHASE3_OPTIMIZATION_ANALYSIS.md)** - Optimization tips
 - **[Flakiness Analysis](testing/FLAKINESS_ANALYSIS_2026-01-24.md)** - Test stability
 
 #### Security
 
-- **[Security Monitoring](SECURITY_MONITORING_2026-01-24.md)** - Security practices
+- **[Security Monitoring](maintenance/SECURITY_MONITORING_2026-01-24.md)** - Security practices
 - **[Security Assessment](reports/analysis/SECURITY_ASSESSMENT_2026-01-09.md)** - Security audit
 
 #### Data Management
 
-- **[Device Detection](DEVICE_DETECTION.md)** - Platform detection
+- **[Device Detection](misc/DEVICE_DETECTION.md)** - Platform detection
 - **[Address Caching](api/ADDRESS_CACHE.md)** - Cache strategy
 - **[LRU Cache](api/LRU_CACHE.md)** - Cache implementation
 
@@ -226,7 +226,7 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### Quick References
 
 - **[Quick Reference Card](guides/QUICK_REFERENCE_CARD.md)** - Command cheatsheet
-- **[Documentation Quick Reference](guides/DOCUMENTATION_QUICK_REFERENCE.md)** - Doc lookup
+- **[Documentation Index](INDEX.md)** - Doc lookup
 - **[Terminology Guide](guides/TERMINOLOGY_GUIDE.md)** - Terms glossary
 - **[Version Bump Guide](guides/VERSION_BUMP_QUICK_REFERENCE.md)** - Release workflow
 
@@ -248,12 +248,12 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 - **[Changelog](../CHANGELOG.md)** - Version history
 - **[Version Timeline](architecture/VERSION_TIMELINE.md)** - Evolution
-- **[Implementation Summaries](IMPLEMENTATION_SUMMARY_v0.7.4.md)** - Feature history
+- **[Legacy Changelog](misc/CHANGELOG_v0.7.4.md)** - Historical release notes
 
 #### Migration Guides
 
-- **[Migration Guide](MIGRATION_GUIDE.md)** - Version upgrades
-- **[Dependency Overhaul](COMPLETE_DEPENDENCY_OVERHAUL_SUMMARY.md)** - Major changes
+- **[Migration Guide](guides/MIGRATION_GUIDE.md)** - Version upgrades
+- **[Dependency Overhaul](reports/implementation/COMPLETE_DEPENDENCY_OVERHAUL_SUMMARY.md)** - Major changes
 
 ---
 
@@ -265,7 +265,7 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 - Start: [Project Purpose & Architecture](PROJECT_PURPOSE_AND_ARCHITECTURE.md)
 - Then: [System Overview](architecture/SYSTEM_OVERVIEW.md)
-- Deep dive: [Architecture Guide](ARCHITECTURE_OVERVIEW.md)
+- Deep dive: [Architecture Guide](architecture/ARCHITECTURE.md)
 
 #### Use the Application
 
@@ -275,33 +275,33 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 #### Start Contributing
 
-- Start: [Developer Onboarding](developer/ONBOARDING.md)
-- Setup: [Quick Start Guide](QUICK_START_GUIDE.md)
+- Start: [Developer Guide](developer/DEVELOPER_GUIDE.md)
+- Setup: [Quick Start Guide](guides/QUICK_START.md)
 - Standards: [Contributing Guide](../.github/CONTRIBUTING.md)
 
 #### Find an API
 
 - Browse: [Complete API Reference](api/COMPLETE_API_REFERENCE.md)
-- Quick lookup: [API Quick Reference](API_QUICK_REFERENCE.md)
-- Examples: [Integration Examples](api/INTEGRATION_EXAMPLES.md)
+- Quick lookup: [API Quick Reference](api/API_QUICK_REFERENCE.md)
+- Examples: [Integration Examples](api/API_EXAMPLES.md)
 
 #### Write Tests
 
-- Guide: [Testing Guide](developer/TESTING_GUIDE.md)
+- Guide: [Testing Guide](testing/TESTING.md)
 - Strategy: [Test Strategy](testing/TEST_STRATEGY.md)
 - Patterns: [E2E Test Patterns](testing/E2E_TEST_PATTERNS.md)
 
 #### Debug an Issue
 
-- Guide: [Debugging Guide](developer/DEBUGGING_GUIDE.md)
-- Errors: [Error Handling Guide](api/ERROR_HANDLING_GUIDE.md)
+- Guide: [Troubleshooting Guide](user/TROUBLESHOOTING.md)
+- Errors: [Error Handling Guide](guides/ERROR_HANDLING.md)
 - Troubleshoot: [Troubleshooting](user/TROUBLESHOOTING.md)
 
 #### Deploy to Production
 
 - Guide: [Deployment Guide](guides/DEPLOYMENT_GUIDE.md)
 - Build: [Vite Build](reports/implementation/VITE_BUILD_IMPLEMENTATION.md)
-- CI/CD: [CI/CD Guide](../.github/CI_CD_GUIDE.md)
+- CI/CD: [CI/CD Guide](infrastructure/CI_CD_GUIDE.md)
 
 ---
 
@@ -315,7 +315,7 @@ All documentation follows these standards:
 - **Quality**: Tested examples, cross-references
 - **Maintenance**: Regular updates, version tracking
 
-See [Documentation Guide](CODE_PATTERN_DOCUMENTATION_GUIDE.md) for details.
+See [Documentation Guide](developer/CODE_PATTERN_DOCUMENTATION_GUIDE.md) for details.
 
 ---
 
@@ -324,7 +324,7 @@ See [Documentation Guide](CODE_PATTERN_DOCUMENTATION_GUIDE.md) for details.
 - **Can't find documentation?** - Check this index or search [docs/](.)
 - **Documentation outdated?** - [Open an issue](https://github.com/mpbarbosa/guia.js/issues)
 - **Want to contribute?** - See [Contributing Guide](../.github/CONTRIBUTING.md)
-- **Have questions?** - See [FAQ](user/FAQ.md) or [Troubleshooting](user/TROUBLESHOOTING.md)
+- **Have questions?** - See [Complete User Guide](user/COMPLETE_USER_GUIDE.md) or [Troubleshooting](user/TROUBLESHOOTING.md)
 
 ---
 
@@ -338,4 +338,4 @@ See [Documentation Guide](CODE_PATTERN_DOCUMENTATION_GUIDE.md) for details.
 
 ---
 
-**Navigation**: [← Back to README](../README.md) | [Quick Start →](QUICK_START_GUIDE.md)
+**Navigation**: [← Back to README](../README.md) | [Quick Start →](guides/QUICK_START.md)

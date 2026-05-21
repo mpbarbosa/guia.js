@@ -872,12 +872,12 @@ When opening a PR:
 
 ### Internal Documentation
 
-- **[TESTING.md](../TESTING.md)** - Test suite overview and configuration
+- **[TESTING.md](../testing/TESTING.md)** - Test suite overview and configuration
 - **[UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)** - Unit testing best practices
 - **[REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)** - Pure functions guide
 - **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Code review checklist
-- **[GITHUB_ACTIONS_GUIDE.md](../docs/github/GITHUB_ACTIONS_GUIDE.md)** - CI/CD workflow guide
-- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
+- **[GITHUB_ACTIONS_GUIDE.md](../github/GITHUB_ACTIONS_GUIDE.md)** - CI/CD workflow guide
+- **[CONTRIBUTING.md](../../.github/CONTRIBUTING.md)** - Contribution guidelines
 
 ### Architecture Examples
 
@@ -906,8 +906,8 @@ When opening a PR:
 
 ---
 
-**Version**: 1.0.0
-**Last Updated**: 2025-01-08
+**Version**: 0.24.8-alpha
+**Last Updated**: 2026-05-20
 **Status**: ✅ Ready for use
 **Maintained by**: Guia.js Team
 
@@ -957,20 +957,20 @@ npm run test:all            # Validate + test
 
 - **[UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)** - Unit testing best practices
 - **[JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md)** - Jest configuration
-- **[docs/testing/E2E_TESTING_GUIDE.md](../docs/testing/E2E_TESTING_GUIDE.md)** - End-to-end testing
+- **[docs/testing/E2E_TESTING_GUIDE.md](../testing/E2E_TESTING_GUIDE.md)** - End-to-end testing
 
 ### Code Quality
 
 - **[REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)** - Functional programming principles
 - **[JAVASCRIPT_BEST_PRACTICES.md](./JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript standards
-- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
+- **[CONTRIBUTING.md](../../.github/CONTRIBUTING.md)** - Contribution guidelines
 - **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Review checklist
 
 ### Complete Guide Index
 
-- **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
+- **[docs/INDEX.md](../INDEX.md)** - Comprehensive documentation index
 
 ---
 
-**Version**: 0.9.0-alpha
+**Version**: 0.24.8-alpha
 **Last Updated**: 2026-01-11

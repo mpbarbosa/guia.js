@@ -1,13 +1,14 @@
 # AddressCache API Documentation
 
-**Version:** 0.9.0-alpha
-**File:** `src/data/AddressCache.js` (1,165 lines)
+**Version:** 0.24.8-alpha
+**Last Updated:** 2026-05-20
+**Module:** `src/data/AddressCache.ts`
 **Author:** Marcelo Pereira Barbosa
 **Since:** 0.9.0-alpha
 
 ## Overview
 
-The `AddressCache` class manages caching of standardized addresses with sophisticated strategies including LRU (Least Recently Used) eviction, time-based expiration, change detection for address components, and callback-based notifications. It implements the **Singleton pattern** ensuring only one cache instance exists throughout the application.
+The `AddressCache` class manages caching of standardized addresses with LRU (Least Recently Used) eviction, time-based expiration, change detection for address components, callback-based notifications, and configurable confirmation buffers that reduce noisy GPS-driven address flips. It implements the **Singleton pattern** so one shared cache coordinates address state across the application.
 
 ## Purpose
 
@@ -17,6 +18,7 @@ The `AddressCache` class manages caching of standardized addresses with sophisti
 - Prevent redundant address extraction and API calls
 - Provide observer pattern integration for reactive components
 - Manage memory with automatic cache cleanup
+- Buffer logradouro, bairro, and municipio updates until repeated readings confirm the change
 
 ## Data Flow
 

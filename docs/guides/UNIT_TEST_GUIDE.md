@@ -1349,7 +1349,7 @@ describe('immutable operations', () => {
 
 **See comprehensive guides:**
 
-- 📖 [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) - Complete analysis and solutions
+- 📖 [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) - Complete analysis and solutions
 - 📖 [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) - Quick reference
 
 **Quick setup for ES6 modules:**
@@ -1485,12 +1485,12 @@ npm test -- --coverage --collectCoverageFrom="src/utils.js"
 
 ### Internal Documentation
 
-- **[TESTING.md](../TESTING.md)** - Overall testing guide and setup
+- **[TESTING.md](../testing/TESTING.md)** - Overall testing guide and setup
 - **[TDD_GUIDE.md](./TDD_GUIDE.md)** - Test-driven development approach
 - **[REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)** - Pure functions and testing
 - **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Review checklist for tests
-- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
-- **[docs/github/GITHUB_ACTIONS_GUIDE.md](../docs/github/GITHUB_ACTIONS_GUIDE.md)** - CI/CD integration
+- **[CONTRIBUTING.md](../../.github/CONTRIBUTING.md)** - Contribution guidelines
+- **[docs/github/GITHUB_ACTIONS_GUIDE.md](../github/GITHUB_ACTIONS_GUIDE.md)** - CI/CD integration
 
 ### Architecture Examples with Tests
 
@@ -1521,8 +1521,8 @@ npm test -- --coverage --collectCoverageFrom="src/utils.js"
 
 ---
 
-**Version**: 1.0.0
-**Last Updated**: 2025-01-09
+**Version**: 0.24.8-alpha
+**Last Updated**: 2026-05-20
 **Status**: ✅ Ready for use
 **Maintained by**: Guia.js Team
 
@@ -1592,20 +1592,20 @@ describe('Feature/Module', () => {
 
 - **[TDD_GUIDE.md](./TDD_GUIDE.md)** - Test-driven development methodology
 - **[JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md)** - Jest configuration
-- **[docs/testing/E2E_TESTING_GUIDE.md](../docs/testing/E2E_TESTING_GUIDE.md)** - End-to-end testing
+- **[docs/testing/E2E_TESTING_GUIDE.md](../testing/E2E_TESTING_GUIDE.md)** - End-to-end testing
 
 ### Code Quality
 
 - **[REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md)** - Functional programming principles
 - **[JAVASCRIPT_BEST_PRACTICES.md](./JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript standards
-- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
+- **[CONTRIBUTING.md](../../.github/CONTRIBUTING.md)** - Contribution guidelines
 - **[JSDOC_GUIDE.md](./JSDOC_GUIDE.md)** - API documentation
 
 ### Complete Guide Index
 
-- **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
+- **[docs/INDEX.md](../INDEX.md)** - Comprehensive documentation index
 
 ---
 
-**Version**: 0.9.0-alpha
+**Version**: 0.24.8-alpha
 **Last Updated**: 2026-01-11

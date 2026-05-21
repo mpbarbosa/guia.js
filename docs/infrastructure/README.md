@@ -2,7 +2,7 @@
 
 **Purpose:** Documentation for project infrastructure, tooling setup, CI/CD configuration, and development environment management.
 
-**Last Updated:** 2026-02-11
+**Last Updated:** 2026-05-20
 
 ---
 
@@ -25,7 +25,8 @@ This directory is for:
 
 Use these directories instead:
 
-❌ **Workflow automation scripts** → `docs/workflow-automation/`
+❌ **Executable workflow automation scripts** →
+`.github/scripts/` and `.github/workflows/`
 ❌ **Testing infrastructure** → `docs/testing/`
 ❌ **Architecture decisions** → `docs/architecture/`
 ❌ **Implementation reports** → `docs/reports/implementation/`
@@ -174,7 +175,10 @@ How to revert if needed.
 
 ### Workflow Automation
 
-- **`docs/workflow-automation/`** - Workflow automation scripts and guides
+- **`WORKFLOW_SETUP.md`** - Local workflow setup and CI/CD overview
+- **`docs/github/GITHUB_ACTIONS_GUIDE.md`** - GitHub Actions reference guide
+- **`.github/workflows/README.md`** - Workflow catalog
+- **`.github/scripts/README.md`** - Automation script inventory
 
 ### Testing Infrastructure
 
@@ -219,7 +223,8 @@ When modifying infrastructure:
 | Infrastructure Topic | Location |
 |---------------------|----------|
 | CI/CD pipeline configuration | This directory (`infrastructure/`) |
-| Workflow automation scripts | `docs/workflow-automation/` |
+| Workflow automation scripts | `.github/scripts/` and `.github/workflows/` |
+| Workflow setup guides | `WORKFLOW_SETUP.md` and `docs/github/` |
 | Testing setup and strategy | `docs/testing/` |
 | Build process | This directory (`infrastructure/`) |
 | Deployment scripts | This directory (`infrastructure/`) |

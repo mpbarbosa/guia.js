@@ -1,9 +1,9 @@
 # VoiceLoader API Reference
 
-**Version**: 0.9.0-alpha
-**Last Updated**: 2026-02-12
+**Version**: 0.24.8-alpha
+**Last Updated**: 2026-05-20
 **Status**: Stable
-**Module**: `src/speech/VoiceLoader.js`
+**Module**: `src/speech/VoiceLoader.ts`
 
 ---
 
@@ -54,7 +54,6 @@ class VoiceLoader {
 | `config.initialDelay` | `number` | `100` | Initial delay in ms |
 | `config.maxDelay` | `number` | `5000` | Maximum delay cap in ms |
 | `config.speechSynthesis` | `SpeechSynthesis` | `window.speechSynthesis` | Speech synthesis instance (for testing) |
-| `config.enableLogging` | `boolean` | `false` | Enable console logging |
 
 ---
 
@@ -206,10 +205,20 @@ const loader = new VoiceLoader({
   maxRetries: 15,        // More retry attempts
   initialDelay: 50,      // Faster initial retry
   maxDelay: 3000,        // Lower delay cap
-  enableLogging: true    // Debug logging
 });
 
 const voices = await loader.loadVoices();
+```
+
+### Retry Configuration
+
+```javascript
+const loader = new VoiceLoader();
+const retryConfig = loader.getRetryConfig();
+
+console.log(retryConfig.maxRetries);
+console.log(retryConfig.initialDelay);
+console.log(retryConfig.maxDelay);
 ```
 
 ### Check Cache Before Loading

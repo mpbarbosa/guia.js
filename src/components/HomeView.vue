@@ -6,12 +6,15 @@
  * The controller handles all the heavy DOM coordination; this SFC manages
  * its lifecycle and exposes reactive tracking state.
  *
- * Full template migration (from index.html) happens in Phase 4.
- *
  * @since 0.12.12-alpha
  */
 import { ref, onMounted, onUnmounted } from 'vue';
 import HomeViewController from '../views/home.js';
+import AppHeroHeader from './AppHeroHeader.vue';
+import Onboarding from './Onboarding.vue';
+import LocationHighlightCards from './LocationHighlightCards.vue';
+import SecondaryInfoPanel from './SecondaryInfoPanel.vue';
+import AdvancedControlsPanel from './AdvancedControlsPanel.vue';
 
 interface Props {
   locationResult?: string;
@@ -23,8 +26,53 @@ const props = withDefaults(defineProps<Props>(), {
 
 const isTracking = ref(false);
 const isInitialized = ref(false);
+const showOnboarding = ref(true);
+const onboardingHasError = ref(false);
+const onboardingErrorTitle = ref('Permissão de Localização Negada');
+const onboardingErrorHtml = ref('');
 
 let controller: InstanceType<typeof HomeViewController> | null = null;
+
+function onTrackingStarted(): void {
+  isTracking.value = true;
+  showOnboarding.value = false;
+  onboardingHasError.value = false;
+}
+
+function onTrackingStopped(): void {
+  isTracking.value = false;
+  showOnboarding.value = true;
+}
+
+function onGeoError(event: Event): void {
+  const customEvent = event as CustomEvent<{ error?: GeolocationPositionError }>;
+  const geoError = customEvent.detail?.error;
+  showOnboarding.value = true;
+  onboardingHasError.value = true;
+  onboardingErrorTitle.value = _geoErrorTitle(geoError?.code);
+  onboardingErrorHtml.value = _geoErrorHtml(geoError);
+}
+
+function _geoErrorTitle(code?: number): string {
+  if (code === 2) return 'Localização Indisponível';
+  if (code === 3) return 'Tempo Esgotado';
+  return 'Permissão de Localização Negada';
+}
+
+function _geoErrorHtml(error?: GeolocationPositionError): string {
+  if (!error) return '<p><strong>Você negou a permissão para acessar sua localização.</strong></p><p>Para usar o rastreamento automático, permita o acesso nas configurações do navegador.</p>';
+  if (error.code === 1) {
+    return `<p><strong>Você negou o acesso à sua localização.</strong></p>
+<ul style="text-align:left;margin:16px 0;padding-left:24px">
+  <li><strong>Chrome/Edge:</strong> clique em 🔒 na barra de endereço → Permissões → Localização → Permitir</li>
+  <li><strong>Firefox:</strong> clique em 🔒 → Conexão segura → Mais informações → Permissões → Localização → Permitir</li>
+  <li><strong>Safari:</strong> Safari → Configurações → Privacidade → Serviços de Localização → Ativar para este site</li>
+</ul>`;
+  }
+  if (error.code === 2) return '<p><strong>Não foi possível determinar sua localização.</strong></p><p>Verifique se o GPS está ativado e tente em área aberta.</p>';
+  if (error.code === 3) return '<p><strong>A busca pela sua localização demorou muito.</strong></p><p>Tente novamente.</p>';
+  return '<p><strong>Erro ao acessar sua localização.</strong></p>';
+}
 
 onMounted(async () => {
   try {
@@ -33,27 +81,26 @@ onMounted(async () => {
     });
     isInitialized.value = true;
     isTracking.value = controller.isTracking();
+    if (isTracking.value) showOnboarding.value = false;
 
-    // Mirror controller tracking state into reactive ref
-    document.addEventListener('homeview:tracking:started', () => {
-      isTracking.value = true;
-    });
-    document.addEventListener('homeview:tracking:stopped', () => {
-      isTracking.value = false;
-    });
+    document.addEventListener('homeview:tracking:started', onTrackingStarted);
+    document.addEventListener('homeview:tracking:stopped', onTrackingStopped);
+    document.addEventListener('geolocation:error', onGeoError);
   } catch (err) {
     console.error('[HomeView] Failed to initialize HomeViewController:', err);
   }
 });
 
 onUnmounted(() => {
+  document.removeEventListener('homeview:tracking:started', onTrackingStarted);
+  document.removeEventListener('homeview:tracking:stopped', onTrackingStopped);
+  document.removeEventListener('geolocation:error', onGeoError);
   controller?.destroy();
   controller = null;
   isInitialized.value = false;
   isTracking.value = false;
 });
 
-/** Toggle tracking — exposed for use by parent or slot buttons */
 function toggleTracking(): void {
   controller?.toggleTracking();
 }
@@ -63,69 +110,23 @@ defineExpose({ isTracking, isInitialized, toggleTracking });
 
 <template>
   <div class="p-6 space-y-6 flex flex-col min-h-full bg-surface">
-    <!-- Hero gradient card -->
-    <div class="bg-gradient-to-br from-primary to-indigo-800 rounded-3xl p-6 text-white shadow-xl shrink-0">
-      <span class="text-xs font-bold uppercase tracking-[0.2em] opacity-80">Onde estou?</span>
-      <div class="flex items-center gap-3 mt-4">
-        <i class="bi bi-navigation-fill text-3xl shrink-0" aria-hidden="true"></i>
-        <h2
-          id="header-location-text"
-          class="text-xl font-bold leading-tight"
-          aria-live="polite"
-          data-pending="true"
-        >— · —</h2>
-      </div>
-    </div>
+    <AppHeroHeader />
 
-    <!-- Address highlight cards -->
-    <div class="space-y-4">
-      <div
-        class="highlight-card bg-white border border-outline-variant p-6 rounded-2xl shadow-sm"
-        role="region"
-        aria-labelledby="municipio-label"
-      >
-        <span id="municipio-label" class="text-[10px] font-black text-outline uppercase tracking-widest">Município</span>
-        <div id="regiao-metropolitana-value" class="text-xs text-outline font-medium mt-0.5"></div>
-        <p id="municipio-value" class="text-xl font-bold text-indigo-950 mt-1" aria-live="polite">—</p>
-      </div>
+    <Onboarding
+      v-show="showOnboarding"
+      :has-error="onboardingHasError"
+      :error-title="onboardingErrorTitle"
+      :error-html="onboardingErrorHtml"
+    />
 
-      <div
-        class="highlight-card bg-white border border-outline-variant p-6 rounded-2xl shadow-sm"
-        role="region"
-        aria-labelledby="bairro-label"
-      >
-        <span id="bairro-label" class="text-[10px] font-black text-outline uppercase tracking-widest">Bairro</span>
-        <p id="bairro-value" class="text-xl font-bold text-indigo-950 mt-1" aria-live="polite">—</p>
-      </div>
+    <div id="geolocation-banner-container"></div>
 
-      <div
-        class="highlight-card bg-white border border-outline-variant p-6 rounded-2xl shadow-sm"
-        role="region"
-        aria-labelledby="logradouro-label"
-      >
-        <span id="logradouro-label" class="text-[10px] font-black text-outline uppercase tracking-widest">Logradouro</span>
-        <p id="logradouro-value" class="text-xl font-bold text-indigo-950 mt-1" aria-live="polite">—</p>
-      </div>
-    </div>
+    <LocationHighlightCards />
 
-    <div class="flex-1"></div>
+    <nav aria-label="Ações da página" class="secondary-actions"></nav>
 
-    <!-- Activate location CTA -->
-    <button
-      id="enable-location-btn"
-      class="w-full bg-primary text-white py-5 rounded-3xl font-bold text-lg flex items-center justify-center gap-3 shadow-lg uppercase tracking-widest transition-transform active:scale-[0.98] shrink-0"
-      aria-label="Ativar localização"
-    >
-      <div class="p-2 bg-white/20 rounded-full">
-        <i class="bi bi-compass text-xl leading-none" aria-hidden="true"></i>
-      </div>
-      Ativar Localização
-    </button>
+    <SecondaryInfoPanel />
 
-    <!-- Coordinates display -->
-    <div class="text-center py-2 shrink-0">
-      <p class="text-[10px] text-outline font-medium tracking-widest uppercase">Latitude · Longitude</p>
-      <p id="lat-long-display" class="text-xs text-on-surface-variant font-mono mt-1" aria-live="polite">—</p>
-    </div>
+    <AdvancedControlsPanel />
   </div>
 </template>

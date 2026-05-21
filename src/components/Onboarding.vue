@@ -9,6 +9,7 @@
  */
 
 interface Props {
+  /** Controls CSS visibility; element stays in DOM so getElementById works. */
   visible?: boolean;
   /** If true, shows the error-recovery variant */
   hasError?: boolean;
@@ -36,7 +37,8 @@ const defaultDescription =
 
 <template>
   <div
-    v-if="props.visible"
+    v-show="props.visible"
+    id="onboarding-card"
     class="onboarding-card"
     role="region"
     aria-labelledby="onboarding-title"
@@ -58,6 +60,7 @@ const defaultDescription =
       <div v-else class="onboarding-description" v-html="props.errorHtml" />
 
       <button
+        id="enable-location-btn"
         class="md3-button-filled onboarding-cta"
         type="button"
         :aria-label="props.hasError ? 'Tentar novamente' : 'Ativar localização'"

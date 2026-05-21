@@ -19,11 +19,9 @@ jest.mock('../../src/views/home.js', () => {
 });
 
 describe('HomeView.vue', () => {
-  test('renders slot content', () => {
-    const wrapper = mount(HomeView, {
-      slots: { default: '<div id="slot-content">Hello</div>' },
-    });
-    expect(wrapper.find('#slot-content').exists()).toBe(true);
+  test('renders the home view shell', () => {
+    const wrapper = mount(HomeView);
+    expect(wrapper.find('.bg-surface').exists()).toBe(true);
   });
 
   test('exposes isTracking as false initially', () => {

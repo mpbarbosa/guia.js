@@ -11,8 +11,12 @@ describe('Onboarding.vue', () => {
   });
 
   test('is hidden when visible=false', () => {
-    const wrapper = mount(Onboarding, { props: { visible: false } });
-    expect(wrapper.find('.onboarding-card').exists()).toBe(false);
+    const wrapper = mount(Onboarding, {
+      props: { visible: false },
+      attachTo: document.body,
+    });
+    expect(wrapper.find('.onboarding-card').isVisible()).toBe(false);
+    wrapper.unmount();
   });
 
   test('shows default title in normal state', () => {

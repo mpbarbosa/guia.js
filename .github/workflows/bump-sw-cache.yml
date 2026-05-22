@@ -40,11 +40,11 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Only commit if service-worker.js was actually changed
-          if git diff --quiet service-worker.js; then
-            echo "ℹ️ service-worker.js unchanged — skipping commit"
+          # Only commit if public/service-worker.js was actually changed
+          if git diff --quiet public/service-worker.js; then
+            echo "ℹ️ public/service-worker.js unchanged — skipping commit"
           else
-            git add service-worker.js
+            git add public/service-worker.js
             git commit -m "chore: bump SW cache name for deployment [skip ci]"
             git push
             echo "✅ Updated CACHE_NAME committed and pushed"

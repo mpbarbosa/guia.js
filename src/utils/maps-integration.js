@@ -38,7 +38,13 @@ class MapsIntegration {
   _setupMapsActionsContainer() {
     const coordinatesSection = document.getElementById('coordinates');
     if (!coordinatesSection) {
-      console.warn('⚠️ Coordinates section not found');
+      const mo = new MutationObserver(() => {
+        if (document.getElementById('coordinates')) {
+          mo.disconnect();
+          this._setupMapsActionsContainer();
+        }
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
       return;
     }
 
@@ -63,7 +69,13 @@ class MapsIntegration {
   _setupCoordinatesObserver() {
     const latLongDisplay = document.getElementById('lat-long-display');
     if (!latLongDisplay) {
-      console.warn('⚠️ Coordinate display not found');
+      const mo = new MutationObserver(() => {
+        if (document.getElementById('lat-long-display')) {
+          mo.disconnect();
+          this._setupCoordinatesObserver();
+        }
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
       return;
     }
 

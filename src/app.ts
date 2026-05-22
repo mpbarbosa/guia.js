@@ -257,6 +257,14 @@ function showError(err: Error): void {
 async function initializeHomeView(): Promise<void> {
   debug('[GT] initializeHomeView() called, homeController exists:', !!AppState.homeController);
 
+  // Vue's HomeView.vue manages HomeViewController when the Vue app is mounted.
+  // Bail out to prevent duplicate observer subscriptions.
+  const vueApp = document.getElementById('app');
+  if (vueApp && vueApp.childElementCount > 0) {
+    debug('[GT] Vue app mounted — skipping legacy HomeViewController init');
+    return;
+  }
+
   if (!AppState.homeController) {
     // Restore the home view HTML snapshot before wiring up the controller so
     // that the new card displayer and speech observer get live DOM references.

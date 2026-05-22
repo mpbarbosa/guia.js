@@ -128,12 +128,20 @@ class ProgressiveDisclosureManager {
 // Export singleton instance
 const progressiveDisclosureManager = new ProgressiveDisclosureManager();
 
-// Auto-initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => progressiveDisclosureManager.init());
-} else {
-  progressiveDisclosureManager.init();
-}
+// Auto-initialize — element lives inside a Vue component, so wait for it
+(function tryInit() {
+  if (document.getElementById('secondary-info')) {
+    progressiveDisclosureManager.init();
+    return;
+  }
+  const observer = new MutationObserver(() => {
+    if (document.getElementById('secondary-info')) {
+      observer.disconnect();
+      progressiveDisclosureManager.init();
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+}());
 
 // ES6 module export
 export default progressiveDisclosureManager;

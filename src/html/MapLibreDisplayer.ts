@@ -44,6 +44,18 @@ export class MapLibreDisplayer {
   // ---------------------------------------------------------------------------
 
   /**
+   * Initialise the map immediately without a toggle button.
+   * Use this in Vue composable context where the map container is always visible.
+   */
+  mount(): void {
+    if (!this._map) {
+      this._initMap();
+    } else {
+      this._map.resize();
+    }
+  }
+
+  /**
    * Bind the toggle button click to show/hide the map container.
    * Call once after the DOM is ready.
    */

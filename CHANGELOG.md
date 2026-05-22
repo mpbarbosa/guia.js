@@ -5,6 +5,28 @@ All notable changes to Guia Turístico will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.26.0-alpha] - 2026-05-21
+
+### Added
+
+- **MD3 Phase 6 — Map screen** (`src/components/views/MapView.vue`):
+  - Replaced Unsplash placeholder image with a real MapLibre GL JS map (`<div id="maplibre-map">`)
+  - Address card now shows live `street`, `neighborhood`, and `city` from the `useMapDisplayer` composable
+- **`useMapDisplayer` composable** (`src/composables/useMapDisplayer.ts`):
+  - First composable in the project; wraps `MapLibreDisplayer` for Vue lifecycle integration
+  - Subscribes to `PositionManager` on mount to forward GPS coordinates to `MapLibreDisplayer.updatePosition()`
+  - Subscribes to `AddressCache` on mount to expose reactive `street`, `neighborhood`, `city` refs
+  - Unsubscribes from both singletons on unmount
+- **`MapLibreDisplayer.mount()`** (`src/html/MapLibreDisplayer.ts`):
+  - New public method that initialises the MapLibre map immediately (no toggle button required)
+  - Calls `resize()` if the map was already initialised, making it safe to call on Vue route re-entry
+- **Jest `bessa_patterns.ts` mapping** (`package.json`): added `moduleNameMapper` entry pointing to the local sibling repo so tests that transitively import `AddressCache` no longer fail to resolve the package
+
+### Tests
+
+- `test/html/MapLibreDisplayer.test.js`: 4 new tests for `mount()` (22 total)
+- `test/composables/useMapDisplayer.test.js`: 12 new unit tests covering initial state, subscription lifecycle, position forwarding, address reactivity, and cleanup on unmount
+
 ## [0.25.0-alpha] - 2026-05-21
 
 ### Changed

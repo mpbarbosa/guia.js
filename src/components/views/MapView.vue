@@ -1,30 +1,27 @@
 <script setup lang="ts">
+import { useMapDisplayer } from '../../composables/useMapDisplayer.js';
+
 defineOptions({ name: 'MapView' });
+
+const { street, neighborhood, city } = useMapDisplayer();
 </script>
 
 <template>
   <div class="h-full relative overflow-hidden bg-surface-variant">
-    <!-- Map background -->
-    <div class="absolute inset-0 bg-surface-variant">
-      <img
-        src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=600&auto=format&fit=crop"
-        alt="Mapa"
-        class="w-full h-full object-cover opacity-80"
-      />
-      <div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent h-64 bottom-0"></div>
-    </div>
+    <!-- MapLibre GL JS map container -->
+    <div id="maplibre-map" class="absolute inset-0 w-full h-full"></div>
 
     <!-- Floating UI overlay -->
     <div class="relative z-10 p-6 flex flex-col h-full pointer-events-none">
       <!-- Location card -->
       <div class="bg-white border border-outline-variant p-4 rounded-3xl shadow-2xl flex items-center justify-between pointer-events-auto">
-        <div>
+        <div class="min-w-0 flex-1 mr-4">
           <span class="text-[10px] font-black text-outline uppercase tracking-widest">Localização Atual</span>
-          <h2 id="map-address-display" class="text-xl font-bold text-indigo-950 mt-0.5">Aguardando...</h2>
+          <h2 class="text-xl font-bold text-indigo-950 mt-0.5 truncate">{{ street }}</h2>
           <div class="flex items-center gap-1.5 text-on-surface-variant text-sm font-medium mt-0.5">
-            <span id="map-neighborhood-display">—</span>
-            <span class="w-1 h-1 bg-outline rounded-full"></span>
-            <span id="map-city-display">—</span>
+            <span class="truncate">{{ neighborhood }}</span>
+            <span class="w-1 h-1 bg-outline rounded-full shrink-0"></span>
+            <span class="truncate">{{ city }}</span>
           </div>
         </div>
         <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg shrink-0">

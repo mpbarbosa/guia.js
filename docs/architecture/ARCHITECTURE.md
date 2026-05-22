@@ -123,7 +123,7 @@ The application follows a **layered architecture** with clear separation of conc
 
 **Key Principle**: Workflow orchestration and service integration
 
-#### 5. **Presentation Layer** (`src/html/`, `src/views/`)
+#### 5. **Presentation Layer** (`src/html/`, `src/views/`, `src/composables/`)
 
 **Purpose**: UI rendering and user interaction
 
@@ -138,7 +138,9 @@ The application follows a **layered architecture** with clear separation of conc
   - `HTMLCityStatsPanel` (`src/html/HTMLCityStatsPanel.ts`): Renders IBGE city statistics (population, area, IBGE code); sources municipality name from cached Nominatim data
   - `HTMLRoutePlannerPanel` (`src/html/HTMLRoutePlannerPanel.ts`): Renders route summaries, key steps, and Google Maps/OpenStreetMap handoff links for planned journeys
   - `HtmlSpeechSynthesisDisplayer`: Speech synthesis facade (facade pattern, 3 sub-components)
-  - `MapLibreDisplayer`: Interactive MapLibre GL 5.x inline map with position marker
+  - `MapLibreDisplayer`: Interactive MapLibre GL 5.x inline map with position marker; `mount()` initialises immediately (Vue context), `bindToggleButton()` for legacy toggle pattern
+- **Vue Composables** (`src/composables/`): Reusable Vue 3 composition functions
+  - `useMapDisplayer`: Wraps `MapLibreDisplayer` for Vue lifecycle; subscribes to `PositionManager` + `AddressCache` singletons on mount, unsubscribes on unmount; exposes reactive `{ street, neighborhood, city }` refs
 - **UI Components**: Toast notifications, empty states, skeletons
 
 **Key Principle**: Declarative UI and separation from business logic

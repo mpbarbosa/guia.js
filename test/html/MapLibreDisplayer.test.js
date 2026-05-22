@@ -205,6 +205,37 @@ describe('MapLibreDisplayer', () => {
     });
   });
 
+  describe('mount()', () => {
+    it('initialises a MapLibre Map on first call', () => {
+      displayer.mount();
+      expect(mockMapLibre.Map).toHaveBeenCalledWith(
+        expect.objectContaining({ container: 'maplibre-map' })
+      );
+    });
+
+    it('uses Brasília fallback coords when no position has been set', () => {
+      displayer.mount();
+      expect(mockMapLibre.Map).toHaveBeenCalledWith(
+        expect.objectContaining({ center: [-47.882778, -15.793889] })
+      );
+    });
+
+    it('uses pending position when updatePosition was called before mount', () => {
+      displayer.updatePosition(-23.5505, -46.6333);
+      displayer.mount();
+      expect(mockMapLibre.Map).toHaveBeenCalledWith(
+        expect.objectContaining({ center: [-46.6333, -23.5505] })
+      );
+    });
+
+    it('calls resize() instead of creating a second Map on subsequent calls', () => {
+      displayer.mount();
+      displayer.mount();
+      expect(mockMapLibre.Map).toHaveBeenCalledTimes(1);
+      expect(mockMapInstance.resize).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('integration: toggle and updatePosition', () => {
     it('applies pending position when map is opened', () => {
       displayer.updatePosition(11, 12);

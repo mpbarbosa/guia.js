@@ -153,22 +153,28 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 
 ---
 
-## Phase 6 — Map Screen (MapView.vue)
+## Phase 6 — Map Screen (MapView.vue) ✅ Done (v0.26.0-alpha)
 
 **Goal:** Replace `/map` stub with full `MapView.vue`. Keep `MapLibreDisplayer.ts` as-is, initialized via a Vue composable. Build the MD3 floating overlay UI.
 
-**Files to create:**
+**Files created:**
 
-- `src/components/views/MapView.vue` — `<div id="maplibre-map" class="absolute inset-0">`; floating overlay with `pointer-events-none` container; floating location card (top); horizontal chip scrollbar (category filters); FAB circle button (bottom right)
-- `src/composables/useMapDisplayer.ts` — wraps `MapLibreDisplayer`, exposes `{ updatePosition }`, instantiated in `onMounted`
+- `src/components/views/MapView.vue` — `<div id="maplibre-map" class="absolute inset-0 w-full h-full">`; floating overlay with `pointer-events-none` container; floating location card bound to composable reactive refs; horizontal chip scrollbar (category filters); FAB circle button (bottom right)
+- `src/composables/useMapDisplayer.ts` — wraps `MapLibreDisplayer` via new `mount()` API; subscribes to `PositionManager` (GPS) and `AddressCache` (address label); exposes reactive `{ street, neighborhood, city }`; cleans up on `onUnmounted`
+- `test/composables/useMapDisplayer.test.js` — 12 unit tests
 
-**Files to modify:**
+**Files modified:**
 
-- `src/router.ts` — update `/map` to `MapView`
+- `src/html/MapLibreDisplayer.ts` — added public `mount()` method for Vue-context (no toggle button needed)
+- `test/html/MapLibreDisplayer.test.js` — 4 new tests for `mount()`
+- `package.json` — added `bessa_patterns.ts` to `moduleNameMapper` so AddressCache-dependent tests resolve correctly
 
-**Gate:** `npm test` → map renders and tracks GPS → commit `feat: implement Map screen with MD3 overlay` → push → deploy
+**Notes:**
 
-**Risk:** `position: absolute; inset: 0` requires explicit height in parent chain. App.vue shell has `h-screen` (from Phase 2). MapLibre chunk still splits correctly (already in `vite.config.js` `manualChunks`).
+- `src/router.ts` was already routing `/map` → `MapView` from Phase 2 — no change needed
+- `HomeViewController` usage of `MapLibreDisplayer` (toggle-button pattern) is unchanged
+
+**Gate:** ✅ `npm test` → 164 tests pass → `npx tsc --noEmit` → clean
 
 ---
 

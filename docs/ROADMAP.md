@@ -1,6 +1,6 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
-**Current Version**: `0.25.0-alpha` | **Status**: Active Development
+**Current Version**: `0.26.0-alpha` | **Status**: Active Development
 **Last Updated**: 2026-05-21
 
 ---
@@ -31,6 +31,7 @@
 - **Route Navigation MVP** (v0.18.0-alpha): `RouteNavigationService.ts` + `HTMLRoutePlannerPanel.ts`; typed origin/destination route planning, current-location fallback for the origin field, public OSRM driving routes, and Google Maps/OpenStreetMap handoff links
 - **Offline-First Foundation** (v0.24.9-alpha): `OfflineCacheService.ts` + `IBGECityStatsService.ts` + `HomeViewController`; IndexedDB-backed city-stat caching, last-known location restore, and offline reuse of recent position/address snapshots
 - **MD3 Phase 5 — ConverterView Redesign** (v0.25.0-alpha): `ConverterView.vue` template aligned to MD3 card spec; legacy router 404 suppressed for Vue-only routes (`/map`, `/stats`, `/history`)
+- **MD3 Phase 6 — Map Screen** (v0.26.0-alpha): `MapView.vue` now renders a real MapLibre GL JS map; `useMapDisplayer` composable (first in the project) wires GPS position and AddressCache updates into the map and the live address card; `MapLibreDisplayer.mount()` added for Vue-context init; `bessa_patterns.ts` mapped in Jest config
 
 ---
 
@@ -47,9 +48,9 @@ Recommended for full name consistency between local folder and remote, but indep
 1. GitHub → repository Settings → rename `guia.js` to `guia_js`. GitHub creates a permanent redirect from the old name, so all existing external links and CDN URLs remain valid.
 2. `git remote set-url origin git@github.com:mpbarbosa/guia_js.git` → `git fetch` to confirm.
 
-### Vue MD3 App Shell — Phases 0–5 ✅ Done / Phase 6 Next
+### Vue MD3 App Shell — Phases 0–6 ✅ Done / Phase 7 Next
 
-Phases 0–5 complete: design tokens, Tailwind v4, AppBar/BottomNav, Bootstrap removal, HomeView migration, ConverterView redesign. Phase 6 replaces the `/map` stub with a full `MapView.vue` + `MapLibreDisplayer` composable.
+Phases 0–6 complete: design tokens, Tailwind v4, AppBar/BottomNav, Bootstrap removal, HomeView migration, ConverterView redesign, Map screen with live GPS + address. Phase 7 replaces the `/stats` stub with `StatsView.vue` + `IBGECityStatsService` composable + `vue-chartjs` charts.
 
 **Outstanding (medium/low priority):**
 

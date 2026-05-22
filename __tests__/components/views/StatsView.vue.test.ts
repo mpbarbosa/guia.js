@@ -7,18 +7,18 @@ import StatsView from '../../../src/components/views/StatsView.vue';
 describe('StatsView.vue', () => {
   test('renders the headline, category pills, and stat cards', () => {
     const wrapper = mount(StatsView);
-    const categoryLabels = wrapper.findAll('button').slice(0, 4).map((button) => button.text());
+    const categoryLabels = wrapper.findAll('div.flex.gap-2.overflow-x-auto.no-scrollbar button').map((button) => button.text());
 
     expect(wrapper.get('header').text()).toContain('Dados da Cidade');
-    expect(categoryLabels).toEqual(['Todos', 'População', 'Economia', 'Educação']);
-    expect(wrapper.text()).toContain('Taxa de Escolarização');
-    expect(wrapper.text()).toContain('Salário Médio');
-    expect(wrapper.text()).toContain('Baixar Relatório PDF');
+    expect(categoryLabels).toEqual(['Todos', 'População', 'Território']);
+    expect(wrapper.text()).toContain('Estimativa Populacional');
+    expect(wrapper.text()).toContain('Área e Densidade');
+    expect(wrapper.text()).toContain('IBGE — Cidades');
   });
 
   test('updates the active category pill when clicked', async () => {
     const wrapper = mount(StatsView);
-    const pills = wrapper.findAll('button').slice(0, 4);
+    const pills = wrapper.findAll('div.flex.gap-2.overflow-x-auto.no-scrollbar button');
 
     expect(pills[0].classes()).toContain('bg-primary');
 

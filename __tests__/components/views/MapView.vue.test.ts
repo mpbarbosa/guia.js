@@ -5,13 +5,12 @@ import { mount } from '@vue/test-utils';
 import MapView from '../../../src/components/views/MapView.vue';
 
 describe('MapView.vue', () => {
-  test('renders the map placeholders and recenter control', () => {
+  test('renders the map container, placeholders, and recenter control', () => {
     const wrapper = mount(MapView);
 
-    expect(wrapper.get('img[alt="Mapa"]').attributes('src')).toContain('unsplash.com/photo-1524661135-423995f22d0b');
-    expect(wrapper.get('#map-address-display').text()).toBe('Aguardando...');
-    expect(wrapper.get('#map-neighborhood-display').text()).toBe('—');
-    expect(wrapper.get('#map-city-display').text()).toBe('—');
+    expect(wrapper.get('#maplibre-map').exists()).toBe(true);
+    expect(wrapper.text()).toContain('Aguardando...');
+    expect(wrapper.text()).toContain('—');
     expect(wrapper.get('button[aria-label="Centrar no mapa"]').exists()).toBe(true);
   });
 

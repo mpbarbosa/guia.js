@@ -9,7 +9,7 @@
 
 set -euo pipefail
 
-SW_FILE="service-worker.js"
+SW_FILE="public/service-worker.js"
 
 if [ ! -f "$SW_FILE" ]; then
   echo "ERROR: $SW_FILE not found. Run from repository root." >&2

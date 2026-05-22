@@ -56,6 +56,18 @@
 - Development workflows
 - Contribution guidelines
 
+#### UI and interaction documentation
+
+**Purpose**: UI and interaction guidance is maintained alongside the feature,
+architecture, and testing docs it supports rather than in a separate
+top-level UX section.
+
+**Primary Locations**:
+
+- `docs/architecture/` - View structure and rendering flow
+- `docs/user/features/` - User-facing behavior and UI features
+- `docs/testing/` - UI-related test coverage and validation guidance
+
 #### `docs/infrastructure/`
 
 **Purpose**: Infrastructure and tooling documentation

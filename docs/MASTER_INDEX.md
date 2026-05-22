@@ -163,11 +163,6 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 - **[Speech Synthesis Tutorial](guides/TUTORIAL_SPEECH_SYNTHESIS.md)** - Audio feedback
 - **[Voice Selection](guides/VOICE_SELECTION.md)** - Voice management
 
-#### UI Components
-
-- **[Visual Hierarchy](ux/VISUAL_HIERARCHY.md)** - UI design
-- **[UX Critical Issues](ux/CRITICAL_ISSUES.md)** - Accessibility and UX compliance
-
 ### 8. Infrastructure & Operations
 
 #### Build & Deployment

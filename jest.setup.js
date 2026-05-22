@@ -8,6 +8,7 @@
 
 import { TextEncoder, TextDecoder } from 'util';
 import { jest } from '@jest/globals';
+import 'jest-canvas-mock';
 
 // Suppress console output during tests to keep test output clean.
 // Individual test files may override specific methods with jest.spyOn if needed.

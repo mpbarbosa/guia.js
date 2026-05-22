@@ -1,18 +1,48 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import StatCard from '../StatCard.vue';
+import { useIBGECityStats } from '../../composables/useIBGECityStats.js';
+
+defineOptions({ name: 'StatsView' });
 
 const activeCategory = ref('Todos');
-const categories = ['Todos', 'População', 'Economia', 'Educação'];
+const categories = ['Todos', 'População', 'Território'];
 
-const chartBars = [
-  { value: 43, active: false },
-  { value: 64, active: false },
-  { value: 54, active: false },
-  { value: 89, active: true },
-  { value: 79, active: true },
-  { value: 100, active: true },
-  { value: 71, active: true },
-];
+const { stats, loading, error } = useIBGECityStats();
+
+const populationFormatted = computed(() => {
+  const pop = stats.value?.population;
+  if (pop == null) return '—';
+  return pop.toLocaleString('pt-BR');
+});
+
+const areaFormatted = computed(() => {
+  const area = stats.value?.areaKm2;
+  if (area == null) return '—';
+  return area.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+});
+
+const densityFormatted = computed(() => {
+  const pop = stats.value?.population;
+  const area = stats.value?.areaKm2;
+  if (!pop || !area) return '—';
+  return (pop / area).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+});
+
+const cityLabel = computed(() => {
+  if (!stats.value) return 'Aguardando localização...';
+  return `${stats.value.name} — ${stats.value.uf}`;
+});
+
+const populationYear = computed(() => stats.value?.populationYear ?? '');
+
+const visibleCategories = computed(() => {
+  const cat = activeCategory.value;
+  return {
+    population: cat === 'Todos' || cat === 'População',
+    territory: cat === 'Todos' || cat === 'Território',
+  };
+});
 </script>
 
 <template>
@@ -24,6 +54,15 @@ const chartBars = [
         Estatísticas IBGE e indicadores municipais para crescimento urbano sustentável.
       </p>
     </header>
+
+    <!-- Error state -->
+    <div
+      v-if="error"
+      class="bg-red-50 border border-red-200 text-red-700 rounded-3xl p-6 text-sm font-medium"
+    >
+      <i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>
+      {{ error }}
+    </div>
 
     <!-- Category filter pills -->
     <div class="flex gap-2 overflow-x-auto no-scrollbar">
@@ -40,86 +79,74 @@ const chartBars = [
       </button>
     </div>
 
+    <!-- City label -->
+    <p class="text-sm font-semibold text-outline -mt-4">{{ cityLabel }}</p>
+
     <!-- Stat cards -->
     <div class="space-y-4">
-      <!-- Education card -->
-      <div class="bg-white border border-outline-variant p-6 rounded-3xl shadow-sm">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-indigo-50 text-primary rounded-xl">
-              <i class="bi bi-mortarboard text-xl leading-none" aria-hidden="true"></i>
-            </div>
-            <span class="text-xs font-black uppercase tracking-widest text-outline">Educação</span>
-          </div>
-          <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-current/10 text-green-600 bg-green-50">
-            ● Ótimo
+      <!-- Population card -->
+      <StatCard
+        v-if="visibleCategories.population"
+        icon="bi-people"
+        category="População"
+        title="Estimativa Populacional"
+        :loading="loading"
+        footnote="Fonte: IBGE SIDRA — Estimativas da população residente nos municípios brasileiros."
+      >
+        <template #badge>
+          <span
+            v-if="populationYear"
+            class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-current/10 text-primary bg-indigo-50"
+          >
+            {{ populationYear }}
           </span>
-        </div>
-        <h4 class="text-2xl font-bold text-indigo-950">Taxa de Escolarização</h4>
-        <div class="flex items-baseline gap-3 mt-1">
-          <p class="text-3xl font-black text-indigo-900">98,2%</p>
-          <span class="text-xs font-bold text-outline uppercase">crianças 6–14 anos</span>
-        </div>
-        <div class="w-full h-1.5 bg-surface-variant rounded-full mt-4 overflow-hidden">
-          <div class="h-full bg-green-500 rounded-full" style="width: 98.2%"></div>
-        </div>
-        <p class="text-[11px] text-outline mt-4 font-medium leading-relaxed">
-          Fonte: Censo Municipal IBGE 2023. Investimentos consistentes em infraestrutura de ensino fundamental.
-        </p>
-      </div>
+        </template>
+        <template #value>
+          <div class="flex items-baseline gap-3">
+            <p class="text-3xl font-black text-indigo-900">{{ populationFormatted }}</p>
+            <span class="text-xs font-bold text-outline uppercase">habitantes</span>
+          </div>
+        </template>
+      </StatCard>
 
-      <!-- Economy card -->
-      <div class="bg-white border border-outline-variant p-6 rounded-3xl shadow-sm">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-indigo-50 text-primary rounded-xl">
-              <i class="bi bi-graph-up text-xl leading-none" aria-hidden="true"></i>
+      <!-- Territory card -->
+      <StatCard
+        v-if="visibleCategories.territory"
+        icon="bi-map"
+        category="Território"
+        title="Área e Densidade"
+        :loading="loading"
+        footnote="Fonte: IBGE Malhas Municipais — área territorial e densidade demográfica estimada."
+      >
+        <template #value>
+          <div class="space-y-1">
+            <div class="flex items-baseline gap-3">
+              <p class="text-3xl font-black text-indigo-900">{{ areaFormatted }}</p>
+              <span class="text-xs font-bold text-outline uppercase">km²</span>
             </div>
-            <span class="text-xs font-black uppercase tracking-widest text-outline">Economia</span>
+            <p class="text-sm text-on-surface-variant font-medium">
+              Densidade: <strong class="text-indigo-900">{{ densityFormatted }}</strong> hab/km²
+            </p>
           </div>
-          <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-current/10 text-primary bg-indigo-50">
-            ● Estável
-          </span>
-        </div>
-        <h4 class="text-2xl font-bold text-indigo-950">Salário Médio</h4>
-        <div class="flex items-baseline gap-3 mt-1">
-          <p class="text-3xl font-black text-indigo-900">3,4 SM</p>
-          <span class="text-xs font-bold text-outline uppercase">Média Mensal</span>
-        </div>
-        <!-- Mini bar chart -->
-        <div class="h-16 mt-4 flex items-end gap-1">
-          <div
-            v-for="(bar, i) in chartBars"
-            :key="i"
-            class="flex-1 rounded-t-sm transition-all"
-            :class="bar.active ? 'bg-primary' : 'bg-outline-variant'"
-            :style="{ height: `${bar.value}%` }"
-          ></div>
-        </div>
-        <p class="text-[11px] text-outline mt-4 font-medium leading-relaxed">
-          Desempenho em todos os setores de emprego formal no perímetro municipal.
-        </p>
-      </div>
+        </template>
+      </StatCard>
     </div>
 
-    <!-- Reference document card -->
-    <div class="bg-indigo-950 rounded-3xl p-6 text-white space-y-6 shadow-2xl">
+    <!-- IBGE reference card -->
+    <div class="bg-indigo-950 rounded-3xl p-6 text-white space-y-4 shadow-2xl">
       <div class="flex items-start gap-4">
         <div class="p-3 bg-white/10 rounded-2xl shrink-0">
           <i class="bi bi-bar-chart-line text-2xl leading-none" aria-hidden="true"></i>
         </div>
         <div class="space-y-1">
-          <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Documento de Referência</span>
-          <h3 class="text-xl font-bold leading-tight">Análise Técnica Municipal</h3>
+          <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Fonte de Dados</span>
+          <h3 class="text-xl font-bold leading-tight">IBGE — Cidades</h3>
         </div>
       </div>
       <p class="text-sm opacity-80 leading-relaxed font-medium">
-        Detalhamento completo de indicadores municipais e projeções socioeconômicas de longo prazo baseadas em dados IBGE.
+        Dados demográficos e territoriais obtidos diretamente das APIs do Instituto Brasileiro de
+        Geografia e Estatística (Localidades e SIDRA).
       </p>
-      <button class="w-full bg-primary-container text-white py-4 rounded-2xl font-bold text-sm tracking-widest uppercase flex items-center justify-center gap-2 hover:bg-primary transition-colors">
-        <i class="bi bi-download" aria-hidden="true"></i>
-        Baixar Relatório PDF
-      </button>
     </div>
   </div>
 </template>

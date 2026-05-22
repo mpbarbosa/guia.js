@@ -3,12 +3,12 @@
  */
 import { ref, nextTick } from 'vue';
 import { useMapDisplayer } from '../../src/composables/useMapDisplayer';
-import MapLibreDisplayer from '../../src/html/MapLibreDisplayer.js';
-import PositionManager from '../../src/core/PositionManager.js';
-import AddressCache from '../../src/data/AddressCache.js';
+import MapLibreDisplayer from '../../src/html/MapLibreDisplayer';
+import PositionManager from '../../src/core/PositionManager';
+import AddressCache from '../../src/data/AddressCache';
 
 // Mocks for MapLibreDisplayer, PositionManager, and AddressCache
-jest.mock('../../src/html/MapLibreDisplayer.js', () => {
+jest.mock('../../src/html/MapLibreDisplayer', () => {
   return jest.fn().mockImplementation(() => ({
     mount: jest.fn(),
     updatePosition: jest.fn(),
@@ -19,7 +19,7 @@ const subscribeMock = jest.fn();
 const unsubscribeMock = jest.fn();
 const getInstanceMock = jest.fn();
 
-jest.mock('../../src/core/PositionManager.js', () => {
+jest.mock('../../src/core/PositionManager', () => {
   return {
     __esModule: true,
     default: {
@@ -28,7 +28,7 @@ jest.mock('../../src/core/PositionManager.js', () => {
   };
 });
 
-jest.mock('../../src/data/AddressCache.js', () => {
+jest.mock('../../src/data/AddressCache', () => {
   return {
     __esModule: true,
     default: {

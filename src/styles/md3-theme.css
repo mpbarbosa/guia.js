@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import "./fonts.css";
+@import "tailwindcss";
 
 @theme {
   /* MD3 Color Palette */

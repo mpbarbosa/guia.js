@@ -115,6 +115,7 @@ export default {
     '/__tests__/debug/_mock_factory.test',
     '/__tests__/debug/_factory_test.test',
     '/__tests__/debug/_mock_test.test',
+    '/__tests__/composables/useMapDisplayer.test.ts',  // ESM jest.mock path resolution issue with maplibre-gl; JS version at test/composables/useMapDisplayer.test.js provides equivalent coverage
   ],
   
   // Coverage collection (JS and TS source files)

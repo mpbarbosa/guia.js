@@ -5,6 +5,20 @@ All notable changes to Guia Turístico will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.25.0-alpha] - 2026-05-21
+
+### Changed
+
+- **MD3 Phase 5 — ConverterView template aligned to spec** (`src/components/ConverterView.vue`):
+  - Main card: `rounded-t-[40px]` bottom-sheet → `rounded-3xl border-outline-variant shadow-sm`
+  - Result highlight cards: `bg-surface p-4` → `bg-white p-6 shadow-sm` (matches `LocationHighlightCards` pattern)
+  - Result content card: `bg-indigo-50 border-indigo-100` → `bg-white border-outline-variant shadow-sm`
+  - Submit button: `py-5` → `py-4`
+
+### Fixed
+
+- **Legacy router 404 for Vue-only routes** (`src/app.ts`): navigating to `#/map`, `#/stats`, or `#/history` no longer renders a 404 panel in `#app-content`; the legacy router now clears that element and lets Vue handle the view
+
 ## [0.24.9-alpha] - 2026-04-29
 
 ### Added

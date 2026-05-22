@@ -197,7 +197,7 @@ defineExpose({
     </div>
 
     <!-- Bottom sheet -->
-    <div class="bg-white rounded-t-[40px] -mt-10 p-8 space-y-8 min-h-[calc(100%-8rem)] shadow-[0_-10px_40px_rgba(0,0,0,0.05)] border-t border-outline-variant">
+    <div class="bg-white rounded-3xl -mt-10 p-8 space-y-8 min-h-[calc(100%-8rem)] shadow-sm border border-outline-variant">
       <div class="w-12 h-1.5 bg-outline-variant rounded-full mx-auto"></div>
 
       <header>
@@ -207,11 +207,11 @@ defineExpose({
 
       <!-- Result highlight cards -->
       <div v-if="municipioValue !== '—'" class="grid grid-cols-2 gap-3">
-        <div class="bg-surface border border-outline-variant p-4 rounded-2xl">
+        <div class="bg-white border border-outline-variant p-6 rounded-2xl shadow-sm">
           <span class="text-[10px] font-black text-outline uppercase tracking-widest">Município</span>
           <p class="text-base font-bold text-indigo-950 mt-1" aria-live="polite">{{ municipioValue }}</p>
         </div>
-        <div class="bg-surface border border-outline-variant p-4 rounded-2xl">
+        <div class="bg-white border border-outline-variant p-6 rounded-2xl shadow-sm">
           <span class="text-[10px] font-black text-outline uppercase tracking-widest">{{ locationTypeLabel }}</span>
           <p class="text-base font-bold text-indigo-950 mt-1" aria-live="polite">{{ locationTypeValue }}</p>
         </div>
@@ -285,7 +285,7 @@ defineExpose({
         <button
           type="submit"
           :disabled="loading"
-          class="w-full bg-primary text-white py-5 rounded-2xl font-bold text-xl shadow-lg flex items-center justify-center gap-3 transition-transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full bg-primary text-white py-4 rounded-2xl font-bold text-xl shadow-lg flex items-center justify-center gap-3 transition-transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Obter endereço a partir das coordenadas"
         >
           <span v-if="loading" class="flex items-center gap-3">
@@ -302,7 +302,7 @@ defineExpose({
       <!-- Results card -->
       <div
         v-if="resultHtml || loading"
-        class="bg-indigo-50 border border-indigo-100 p-6 rounded-2xl space-y-3"
+        class="bg-white border border-outline-variant p-6 rounded-2xl shadow-sm space-y-3"
         role="region"
         aria-live="polite"
         aria-label="Resultados da conversão"

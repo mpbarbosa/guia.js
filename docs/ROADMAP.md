@@ -1,7 +1,7 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
-**Current Version**: `0.24.9-alpha` | **Status**: Active Development
-**Last Updated**: 2026-05-20
+**Current Version**: `0.25.0-alpha` | **Status**: Active Development
+**Last Updated**: 2026-05-21
 
 ---
 
@@ -30,10 +30,11 @@
 - **Bootstrap 5.3 responsive navbar** (v0.17.2-alpha): Bootstrap 5.3 + Bootstrap Icons; `<nav class="navbar navbar-expand-md">` with Início + Conversor links, hamburger toggle, MD3 token bridge via `bootstrap-overrides.css`, dedicated `ui` Vite chunk; footer converter links removed
 - **Route Navigation MVP** (v0.18.0-alpha): `RouteNavigationService.ts` + `HTMLRoutePlannerPanel.ts`; typed origin/destination route planning, current-location fallback for the origin field, public OSRM driving routes, and Google Maps/OpenStreetMap handoff links
 - **Offline-First Foundation** (v0.24.9-alpha): `OfflineCacheService.ts` + `IBGECityStatsService.ts` + `HomeViewController`; IndexedDB-backed city-stat caching, last-known location restore, and offline reuse of recent position/address snapshots
+- **MD3 Phase 5 — ConverterView Redesign** (v0.25.0-alpha): `ConverterView.vue` template aligned to MD3 card spec; legacy router 404 suppressed for Vue-only routes (`/map`, `/stats`, `/history`)
 
 ---
 
-## 🚧 Near-Term (v0.20-alpha)
+## 🚧 Near-Term (v0.25+)
 
 ### ✅ Repo Consolidation — `guia_turistico` → `guia_js` (DONE)
 
@@ -46,15 +47,13 @@ Recommended for full name consistency between local folder and remote, but indep
 1. GitHub → repository Settings → rename `guia.js` to `guia_js`. GitHub creates a permanent redirect from the old name, so all existing external links and CDN URLs remain valid.
 2. `git remote set-url origin git@github.com:mpbarbosa/guia_js.git` → `git fetch` to confirm.
 
-### Vue MD3 App Shell — Phase 3 / 4 (in progress)
+### Vue MD3 App Shell — Phases 0–5 ✅ Done / Phase 6 Next
 
-Phases 0–2 shipped the MD3 app shell (AppBar, BottomNav, router). Phase 3 aligns the visual design to the reference spec; Phase 4 migrates the full `HomeView` template out of the legacy `index.html`.
+Phases 0–5 complete: design tokens, Tailwind v4, AppBar/BottomNav, Bootstrap removal, HomeView migration, ConverterView redesign. Phase 6 replaces the `/map` stub with a full `MapView.vue` + `MapLibreDisplayer` composable.
 
-**Outstanding after Phase 3 (2026-05-20 design pass):**
+**Outstanding (medium/low priority):**
 
-- **Legacy router 404** — `app.ts` hash-router only knows `#/` and `#/converter`; navigating to `#/map`, `#/stats`, `#/history` renders a 404 block below the Vue frame. Fix: extend the legacy router to suppress/redirect unknown routes, or remove it once Phase 4 lands.
 - **Geolocation banner z-index** — `#geolocation-banner-container` (legacy, `position: fixed`) overlays the BottomNav. Needs a coordinated z-index pass once the Vue layer owns the full viewport.
-- **Hero icon visibility** — `bi-navigation-fill` in the HomeView hero card is invisible (white-on-white). Use `text-2xl` with an explicit opaque wrapper or switch to a filled icon with drop-shadow.
 - **CTA button ownership** — `HomeViewController` mutates `#enable-location-btn` text directly. Phase 4 should lift tracking state to a reactive ref so the Vue template drives the button label.
 
 ### Offline-First Architecture Follow-up
@@ -112,7 +111,7 @@ Phases 0–2 shipped the MD3 app shell (AppBar, BottomNav, router). Phase 3 alig
 | Offline-first background sync and cache UX follow-up | Medium |
 | ~~Route Navigation Utility (OpenRouteService/OSRM)~~ ✅ Done | ~~Low~~ |
 | Consolidate duplicate `CHANGELOG.md` v0.9.0 entries | ~~Low~~ ✅ Done |
-| Legacy `app.ts` router returns 404 for Vue-only routes (`/map`, `/stats`, `/history`) — these routes are unknown to the legacy hash-router, causing a 404 panel to appear in the document scroll area below the Vue shell | High |
+| ~~Legacy `app.ts` router returns 404 for Vue-only routes (`/map`, `/stats`, `/history`)~~ ✅ Done (v0.25.0-alpha) | ~~High~~ |
 | Legacy geolocation banner (`#geolocation-banner-container`) renders at a z-index that overlays the Vue `BottomNav` — needs z-index coordination between legacy and Vue layers | Medium |
 | Hero card navigation icon (`bi-navigation-fill`) invisible: inherits `text-white` on a white-tinted gradient, too small to distinguish — increase size or add explicit contrasting wrapper | Low |
 | `HomeViewController` owns `#enable-location-btn` text and auto-starts tracking on mount, so the HomeView CTA reads "Parar Rastreamento" immediately — Phase 4 template migration should expose tracking state as a reactive Vue prop instead | Medium |

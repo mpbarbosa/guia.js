@@ -155,10 +155,15 @@ async function processCurrentRoute(): Promise<void> {
         AppState.homeController = null;
         log('Home controller destroyed on route change to:', route);
       }
-      showLoading();
+      const VUE_ONLY_ROUTES = ['/map', '/stats', '/history'];
       if (route === '/converter') {
+        showLoading();
         await loadConverterView();
+      } else if (VUE_ONLY_ROUTES.includes(route)) {
+        const content = document.getElementById('app-content');
+        if (content) content.innerHTML = '';
       } else {
+        showLoading();
         await loadNotFoundView();
       }
     }

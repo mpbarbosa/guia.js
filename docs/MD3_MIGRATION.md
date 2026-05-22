@@ -142,15 +142,14 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 
 ---
 
-## Phase 5 — ConverterView MD3 Redesign
+## Phase 5 — ConverterView MD3 Redesign ✅ DONE (v0.25.0-alpha)
 
 **Goal:** Rewrite `ConverterView.vue` template with Tailwind MD3 classes. Zero logic changes.
 
-**Files to modify:**
+**Files modified:**
 
-- `src/components/ConverterView.vue` — rewrite `<template>` only: card `rounded-3xl border-outline-variant shadow-sm`; inputs `rounded-2xl border-outline-variant`; button `bg-primary text-white py-4 rounded-2xl font-bold`; result cards adopt same pattern as `LocationHighlightCards`
-
-**Gate:** `npm test` → visual check → commit `feat: redesign ConverterView with MD3 Tailwind` → push → deploy
+- `src/components/ConverterView.vue` — main card `rounded-3xl border-outline-variant shadow-sm`; button `py-4`; result highlight cards and result content card aligned to `LocationHighlightCards` pattern (`bg-white border border-outline-variant p-6 rounded-2xl shadow-sm`)
+- `src/app.ts` — legacy router no longer renders 404 for Vue-only routes (`/map`, `/stats`, `/history`); clears `#app-content` instead
 
 ---
 

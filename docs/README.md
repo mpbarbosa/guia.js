@@ -2,7 +2,7 @@
 
 ---
 
-Last Updated: 2026-05-20
+Last Updated: 2026-05-23
 Status: Active
 Category: Guide
 
@@ -107,11 +107,11 @@ Auto-generated documentation (should not be manually edited):
 - [api-generated/](./api-generated/) - JSDoc-generated API docs (ignored in git)
 - [api/](./api/) - API documentation (may include generated content)
 
-### 🗃️ Miscellaneous & Temporary
+### 🗃️ Miscellaneous Archive
 
-Uncategorized and work-in-progress documentation:
+Controlled historical archive and retired documentation records:
 
-- [misc/](./misc/) - Temporary docs, scratch notes, uncategorized content
+- [misc/](./misc/) - Controlled archive for historical records and retired documentation
 
 ---
 
@@ -218,7 +218,7 @@ Found outdated information or broken links? Want to improve documentation?
 
 ---
 
-**Last Updated**: 2026-04-27
-**Documentation Version**: 0.17.2-alpha
+**Last Updated**: 2026-05-23
+**Documentation Version**: 0.26.3-alpha
 **Total Documentation Files**: 312+ markdown files
 **Directory Structure**: 20 documented categories

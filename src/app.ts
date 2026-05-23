@@ -7,7 +7,6 @@
  */
 
 import HomeViewController from './views/home.js';
-import HTMLHeaderDisplayer from './html/HTMLHeaderDisplayer.js';
 import { debug, log, warn, error } from './utils/logger.js';
 import { VERSION_STRING } from './config/version.js';
 import { env } from './config/environment.js';
@@ -90,7 +89,6 @@ async function init(): Promise<void> {
   initRouter();
   initNavigation();
 
-  HTMLHeaderDisplayer.create(document);
   initializeConfirmationThresholdSlider();
 
   window.addEventListener('hashchange', scheduleRouteHandling);

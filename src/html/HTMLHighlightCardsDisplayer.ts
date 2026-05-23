@@ -63,10 +63,8 @@ class HTMLHighlightCardsDisplayer {
         this._bairroCard = this._bairroElement?.closest ? this._bairroElement.closest('.highlight-card') : null;
         this._logradouroCard = this._logradouroElement?.closest ? this._logradouroElement.closest('.highlight-card') : null;
         
-        // Initialise mutable state before freezing
         _previousLogradouro.set(this, null);
         _hasRenderedAddress.set(this, false);
-
         debug('(HTMLHighlightCardsDisplayer) created — hasRenderedAddress reset to false');
         Object.freeze(this);
     }
@@ -129,7 +127,6 @@ class HTMLHighlightCardsDisplayer {
     private _resolveAddressForUpdate(
         currentAddressOrRawData: Record<string, unknown> | BrazilianStandardAddress | null,
         enderecoPadronizadoOrEvent: BrazilianStandardAddress | string | null,
-        posEvent?: string | null,
         changeDetails?: { currentAddress?: BrazilianStandardAddress | null }
     ): BrazilianStandardAddress | null {
         if (
@@ -147,16 +144,12 @@ class HTMLHighlightCardsDisplayer {
             return null;
         }
 
-        if (posEvent === ADDRESS_FETCHED_EVENT && _hasRenderedAddress.get(this)) {
-            return null;
-        }
-
         return enderecoPadronizadoOrEvent;
     }
-    
+
     /**
      * Updates highlight cards when address data changes
-     * 
+     *
      * @param {Object} addressData - Address data from geocoding
      * @param {Object} enderecoPadronizado - Standardized Brazilian address
      */
@@ -166,10 +159,14 @@ class HTMLHighlightCardsDisplayer {
         _posEvent?: string | null,
         changeDetails?: { currentAddress?: BrazilianStandardAddress | null }
     ): void {
+        if (_posEvent === ADDRESS_FETCHED_EVENT && _hasRenderedAddress.get(this)) {
+            debug('(HTMLHighlightCardsDisplayer) Skipping ADDRESS_FETCHED_EVENT re-fire after initial render');
+            return;
+        }
+
         const resolvedAddress = this._resolveAddressForUpdate(
             addressData,
             enderecoPadronizado,
-            _posEvent,
             changeDetails
         );
 
@@ -180,16 +177,16 @@ class HTMLHighlightCardsDisplayer {
             regiaoMetropolitana: resolvedAddress?.regiaoMetropolitana,
             bairro: resolvedAddress?.bairro
         });
-        
+
         if (!resolvedAddress) {
             warn('(HTMLHighlightCardsDisplayer) No enderecoPadronizado provided, skipping update');
             return;
         }
-        
+
         // Clear loading state before updating content
         this._setLoadingState(false);
         _hasRenderedAddress.set(this, true);
-        
+
         // Update metropolitan region (displayed between label and municipality)
         if (this._regiaoMetropolitanaElement) {
             const regiaoMetropolitana = resolvedAddress.regiaoMetropolitanaFormatada();

@@ -1,6 +1,6 @@
 # Guia Turístico - Master Documentation Index
 
-**Last Updated**: 2026-05-20
+**Last Updated**: 2026-05-22
 **Version**: 0.24.9-alpha
 **Status**: ✅ Active
 
@@ -203,8 +203,8 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 #### Security
 
-- **[Security Monitoring](maintenance/SECURITY_MONITORING_2026-01-24.md)** - Security practices
-- **[Security Monitoring](maintenance/SECURITY_MONITORING_2026-01-24.md)** - Security audit and monitoring guidance
+- **[Security Configuration](infrastructure/SECURITY_CONFIGURATION.md)** - CSP, rate limiting, and security hardening
+- **[Dependency Management](infrastructure/DEPENDENCY_MANAGEMENT.md)** - Dependency updates and recurring audit guidance
 
 #### Data Management
 

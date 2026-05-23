@@ -10,6 +10,7 @@
  */
 import { ref, onMounted, onUnmounted } from 'vue';
 import HomeViewController from '../views/home.js';
+import HTMLHeaderDisplayer from '../html/HTMLHeaderDisplayer.js';
 import AppHeroHeader from './AppHeroHeader.vue';
 import Onboarding from './Onboarding.vue';
 import LocationHighlightCards from './LocationHighlightCards.vue';
@@ -32,6 +33,7 @@ const onboardingErrorTitle = ref('Permissão de Localização Negada');
 const onboardingErrorHtml = ref('');
 
 let controller: InstanceType<typeof HomeViewController> | null = null;
+let headerDisplayer: InstanceType<typeof HTMLHeaderDisplayer> | null = null;
 
 function onTrackingStarted(): void {
   isTracking.value = true;
@@ -81,6 +83,7 @@ onMounted(async () => {
     });
     isInitialized.value = true;
     isTracking.value = controller.isTracking();
+    headerDisplayer = HTMLHeaderDisplayer.create(document);
     // Determine onboarding visibility from actual geo permission, not tracking state.
     // autoStartTracking sets tracking=true even before the user has granted permission,
     // so checking isTracking() alone would incorrectly hide the onboarding.
@@ -107,6 +110,7 @@ onUnmounted(() => {
   document.removeEventListener('homeview:tracking:stopped', onTrackingStopped);
   document.removeEventListener('geolocation:error', onGeoError);
   controller?.destroy();
+  headerDisplayer?.disconnect();
   controller = null;
   isInitialized.value = false;
   isTracking.value = false;

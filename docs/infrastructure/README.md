@@ -2,7 +2,7 @@
 
 **Purpose:** Documentation for project infrastructure, tooling setup, CI/CD configuration, and development environment management.
 
-**Last Updated:** 2026-05-20
+**Last Updated:** 2026-05-22
 
 ---
 
@@ -29,8 +29,8 @@ Use these directories instead:
 `.github/scripts/` and `.github/workflows/`
 ❌ **Testing infrastructure** → `TESTING.md` (root) + `tests/README.md`
 ❌ **Architecture decisions** → `docs/architecture/`
-❌ **Implementation reports** → `docs/maintenance/` or `docs/misc/`
-❌ **Bug fixes** → `docs/maintenance/`
+❌ **Implementation reports** → `docs/misc/` or a topic-specific stable directory
+❌ **Bug fixes** → `docs/misc/` or the affected topic directory
 ❌ **API documentation** → `docs/api/`
 
 ---

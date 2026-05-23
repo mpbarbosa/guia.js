@@ -185,9 +185,7 @@ For a comprehensive, categorized list of all documentation files, see:
 
 > **Note**: Files below show recent changes. For detailed change history, see [CHANGELOG.md](../CHANGELOG.md)
 
-- **2026-01-23**: [Architecture Documentation Fixes](./maintenance/ARCHITECTURE_DOCUMENTATION_FIXES_2026-01-23.md)
-- **2026-01-24**: [Node Version Fix](./maintenance/NODE_VERSION_FIX_2026-01-24.md)
-- **2026-01-24**: [Security Monitoring](./maintenance/SECURITY_MONITORING_2026-01-24.md)
+- **2026-05-22**: Maintenance archive removed; archival guidance now lives in [misc/README.md](./misc/README.md) and stable operational references live under [infrastructure/](./infrastructure/)
 
 ---
 

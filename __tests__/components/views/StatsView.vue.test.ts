@@ -13,11 +13,12 @@ describe('StatsView.vue', () => {
     expect(categoryLabels).toEqual(['Todos', 'População', 'Território']);
     expect(wrapper.text()).toContain('Estimativa Populacional');
     expect(wrapper.text()).toContain('Área e Densidade');
+    expect(wrapper.text()).toContain('IBGE — Cidades');
   });
 
   test('updates the active category pill when clicked', async () => {
     const wrapper = mount(StatsView);
-    const pills = wrapper.findAll('button').slice(0, 3);
+    const pills = wrapper.findAll('button');
 
     expect(pills[0].classes()).toContain('bg-primary');
 

@@ -39,7 +39,11 @@ defineProps<{
     <!-- Optional chart slot -->
     <slot name="chart" />
 
-    <p v-if="footnote" class="text-[11px] text-outline mt-4 font-medium leading-relaxed">
+    <p
+      v-if="footnote"
+      data-testid="statcard-footnote"
+      class="text-[11px] text-outline mt-4 font-medium leading-relaxed"
+    >
       {{ footnote }}
     </p>
   </div>

@@ -18,6 +18,20 @@ class MapsIntegration {
 
     this.currentCoordinates = null;
     this.mapsActionsContainer = null;
+    this.coordinatesObserver = null;
+    this.availabilityObservers = new Set();
+    this._boundContainerClick = (event) => {
+      if (!this.mapsActionsContainer || !(event.target instanceof Element)) {
+        return;
+      }
+
+      const button = event.target.closest('[data-action]');
+      if (!(button instanceof HTMLElement) || !this.mapsActionsContainer.contains(button)) {
+        return;
+      }
+
+      this._handleAction(button.dataset.action || '');
+    };
 
     MapsIntegration.instance = this;
   }
@@ -27,8 +41,33 @@ class MapsIntegration {
    * Sets up action buttons and coordinates listeners
    */
   init() {
+    this.destroy();
     this._setupMapsActionsContainer();
     this._setupCoordinatesObserver();
+  }
+
+  _waitForElement(elementId, onAvailable) {
+    if (document.getElementById(elementId)) {
+      onAvailable();
+      return;
+    }
+
+    if (!document.body) {
+      return;
+    }
+
+    const observer = new MutationObserver(() => {
+      if (!document.getElementById(elementId)) {
+        return;
+      }
+
+      observer.disconnect();
+      this.availabilityObservers.delete(observer);
+      onAvailable();
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+    this.availabilityObservers.add(observer);
   }
 
   /**
@@ -38,15 +77,11 @@ class MapsIntegration {
   _setupMapsActionsContainer() {
     const coordinatesSection = document.getElementById('coordinates');
     if (!coordinatesSection) {
-      const mo = new MutationObserver(() => {
-        if (document.getElementById('coordinates')) {
-          mo.disconnect();
-          this._setupMapsActionsContainer();
-        }
-      });
-      mo.observe(document.body, { childList: true, subtree: true });
+      this._waitForElement('coordinates', () => this._setupMapsActionsContainer());
       return;
     }
+
+    document.getElementById('maps-actions')?.remove();
 
     const container = document.createElement('div');
     container.id = 'maps-actions';
@@ -59,6 +94,7 @@ class MapsIntegration {
 
     coordinatesSection.parentNode?.insertBefore(container, coordinatesSection.nextSibling);
 
+    container.addEventListener('click', this._boundContainerClick);
     this.mapsActionsContainer = container;
   }
 
@@ -69,17 +105,13 @@ class MapsIntegration {
   _setupCoordinatesObserver() {
     const latLongDisplay = document.getElementById('lat-long-display');
     if (!latLongDisplay) {
-      const mo = new MutationObserver(() => {
-        if (document.getElementById('lat-long-display')) {
-          mo.disconnect();
-          this._setupCoordinatesObserver();
-        }
-      });
-      mo.observe(document.body, { childList: true, subtree: true });
+      this._waitForElement('lat-long-display', () => this._setupCoordinatesObserver());
       return;
     }
 
-    const observer = new MutationObserver((mutations) => {
+    this.coordinatesObserver?.disconnect();
+
+    this.coordinatesObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList' || mutation.type === 'characterData') {
           this._handleCoordinatesUpdate();
@@ -87,7 +119,7 @@ class MapsIntegration {
       });
     });
 
-    observer.observe(latLongDisplay, {
+    this.coordinatesObserver.observe(latLongDisplay, {
       childList: true,
       characterData: true,
       subtree: true
@@ -134,8 +166,6 @@ class MapsIntegration {
     if (this.mapsActionsContainer) {
       this.mapsActionsContainer.innerHTML = this._generateMapsActionsHtml(this.currentCoordinates);
       this.mapsActionsContainer.style.display = 'flex';
-
-      this._setupActionListeners();
     }
   }
 
@@ -187,22 +217,6 @@ class MapsIntegration {
         <span class="btn-text">Waze</span>
       </button>
     `;
-  }
-
-  /**
-   * Setup event listeners for action buttons
-   * @private
-   */
-  _setupActionListeners() {
-    if (!this.mapsActionsContainer) return;
-    const buttons = this.mapsActionsContainer.querySelectorAll('[data-action]');
-
-    buttons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        const action = e.currentTarget.dataset.action || '';
-        this._handleAction(action);
-      });
-    });
   }
 
   /**
@@ -357,9 +371,26 @@ class MapsIntegration {
       window.showToast(message, 'success', 3000);
     }
   }
+
+  destroy() {
+    this.coordinatesObserver?.disconnect();
+    this.coordinatesObserver = null;
+
+    this.availabilityObservers.forEach((observer) => observer.disconnect());
+    this.availabilityObservers.clear();
+
+    if (this.mapsActionsContainer) {
+      this.mapsActionsContainer.removeEventListener('click', this._boundContainerClick);
+      this.mapsActionsContainer.remove();
+      this.mapsActionsContainer = null;
+    }
+
+    this.currentCoordinates = null;
+  }
 }
 
 MapsIntegration.instance = null;
 
 // Export singleton instance
+export { MapsIntegration };
 export default new MapsIntegration();

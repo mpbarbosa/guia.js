@@ -10,10 +10,24 @@
  * MapsIntegration
  * Handles generation of map URLs and deep linking for various mapping services
  */
-class MapsIntegration {
+export class MapsIntegration {
   currentCoordinates: { latitude: number; longitude: number } | null = null;
   mapsActionsContainer: HTMLElement | null = null;
+  coordinatesObserver: MutationObserver | null = null;
+  availabilityObservers: Set<MutationObserver> = new Set();
   static instance: MapsIntegration | null = null;
+  private readonly _boundContainerClick = (event: Event): void => {
+    if (!this.mapsActionsContainer || !(event.target instanceof Element)) {
+      return;
+    }
+
+    const button = event.target.closest('[data-action]');
+    if (!(button instanceof HTMLElement) || !this.mapsActionsContainer.contains(button)) {
+      return;
+    }
+
+    this._handleAction(button.dataset.action || '');
+  };
 
   constructor() {
     if (MapsIntegration.instance) {
@@ -22,6 +36,8 @@ class MapsIntegration {
 
     this.currentCoordinates = null;
     this.mapsActionsContainer = null;
+    this.coordinatesObserver = null;
+    this.availabilityObservers = new Set();
 
     MapsIntegration.instance = this;
   }
@@ -31,8 +47,33 @@ class MapsIntegration {
    * Sets up action buttons and coordinates listeners
    */
   init() {
+    this.destroy();
     this._setupMapsActionsContainer();
     this._setupCoordinatesObserver();
+  }
+
+  private _waitForElement(elementId: string, onAvailable: () => void): void {
+    if (document.getElementById(elementId)) {
+      onAvailable();
+      return;
+    }
+
+    if (!document.body) {
+      return;
+    }
+
+    const observer = new MutationObserver(() => {
+      if (!document.getElementById(elementId)) {
+        return;
+      }
+
+      observer.disconnect();
+      this.availabilityObservers.delete(observer);
+      onAvailable();
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+    this.availabilityObservers.add(observer);
   }
 
   /**
@@ -42,9 +83,12 @@ class MapsIntegration {
   _setupMapsActionsContainer() {
     const coordinatesSection = document.getElementById('coordinates');
     if (!coordinatesSection) {
+      this._waitForElement('coordinates', () => this._setupMapsActionsContainer());
       console.warn('⚠️ Coordinates section not found');
       return;
     }
+
+    document.getElementById('maps-actions')?.remove();
 
     // Create maps actions container
     const container = document.createElement('div');
@@ -59,6 +103,7 @@ class MapsIntegration {
     // Insert after coordinates section
     coordinatesSection.parentNode?.insertBefore(container, coordinatesSection.nextSibling);
 
+    container.addEventListener('click', this._boundContainerClick);
     this.mapsActionsContainer = container;
   }
 
@@ -69,12 +114,15 @@ class MapsIntegration {
   _setupCoordinatesObserver() {
     const latLongDisplay = document.getElementById('lat-long-display');
     if (!latLongDisplay) {
+      this._waitForElement('lat-long-display', () => this._setupCoordinatesObserver());
       console.warn('⚠️ Coordinate display not found');
       return;
     }
 
+    this.coordinatesObserver?.disconnect();
+
     // Watch for text content changes
-    const observer = new MutationObserver((mutations) => {
+    this.coordinatesObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList' || mutation.type === 'characterData') {
           this._handleCoordinatesUpdate();
@@ -82,7 +130,7 @@ class MapsIntegration {
       });
     });
 
-    observer.observe(latLongDisplay, {
+    this.coordinatesObserver.observe(latLongDisplay, {
       childList: true,
       characterData: true,
       subtree: true
@@ -132,9 +180,6 @@ class MapsIntegration {
     if (this.mapsActionsContainer) {
       this.mapsActionsContainer.innerHTML = this._generateMapsActionsHtml(this.currentCoordinates);
       this.mapsActionsContainer.style.display = 'flex';
-
-      // Setup event listeners for action buttons
-      this._setupActionListeners();
     }
   }
 
@@ -188,23 +233,6 @@ class MapsIntegration {
         <span class="btn-text">Waze</span>
       </button>
     `;
-  }
-
-  /**
-   * Setup event listeners for action buttons
-   * @private
-   */
-  _setupActionListeners() {
-    if (!this.mapsActionsContainer) return;
-    const buttons = this.mapsActionsContainer.querySelectorAll('[data-action]');
-
-    buttons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        const target = e.currentTarget as HTMLElement;
-        const action = target.dataset.action || '';
-        this._handleAction(action);
-      });
-    });
   }
 
   /**
@@ -371,6 +399,22 @@ class MapsIntegration {
     if (window.showToast) {
       window.showToast(message, 'success', 3000);
     }
+  }
+
+  destroy(): void {
+    this.coordinatesObserver?.disconnect();
+    this.coordinatesObserver = null;
+
+    this.availabilityObservers.forEach((observer) => observer.disconnect());
+    this.availabilityObservers.clear();
+
+    if (this.mapsActionsContainer) {
+      this.mapsActionsContainer.removeEventListener('click', this._boundContainerClick);
+      this.mapsActionsContainer.remove();
+      this.mapsActionsContainer = null;
+    }
+
+    this.currentCoordinates = null;
   }
 }
 

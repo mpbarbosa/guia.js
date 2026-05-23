@@ -104,4 +104,37 @@ describe('MapsIntegration default export', () => {
     expect(instance.currentCoordinates.latitude).toBeCloseTo(-23.55);
     expect(instance.currentCoordinates.longitude).toBeCloseTo(-46.63);
   });
+
+  test('init is idempotent and does not duplicate the actions container', async () => {
+    document.body.innerHTML = `
+      <section id="coordinates"></section>
+      <span id="lat-long-display">-23.5500, -46.6300</span>
+    `;
+
+    const mod = await import('../../src/utils/maps-integration.js');
+    const instance = mod.default;
+
+    instance.init();
+    instance.init();
+
+    expect(document.querySelectorAll('#maps-actions')).toHaveLength(1);
+  });
+
+  test('destroy removes observers state and DOM container', async () => {
+    document.body.innerHTML = `
+      <section id="coordinates"></section>
+      <span id="lat-long-display">-23.5500, -46.6300</span>
+    `;
+
+    const mod = await import('../../src/utils/maps-integration.js');
+    const instance = mod.default;
+
+    instance.init();
+    instance.destroy();
+
+    expect(instance.currentCoordinates).toBeNull();
+    expect(instance.mapsActionsContainer).toBeNull();
+    expect(instance.coordinatesObserver).toBeNull();
+    expect(document.getElementById('maps-actions')).toBeNull();
+  });
 });

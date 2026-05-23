@@ -3,7 +3,7 @@ defineOptions({ name: 'SecondaryInfoPanel' });
 </script>
 
 <template>
-  <details id="secondary-info" class="secondary-info-collapse" open>
+  <details id="secondary-info" class="secondary-info-collapse">
     <summary class="secondary-info-summary">
       <span class="summary-icon" aria-hidden="true">ℹ️</span>
       <span class="summary-text">Informações Adicionais</span>

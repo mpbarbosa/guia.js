@@ -19,7 +19,7 @@ describe('SecondaryInfoPanel.vue', () => {
     const details = wrapper.get('details#secondary-info');
     expect(details.exists()).toBe(true);
     expect(details.classes()).toContain('secondary-info-collapse');
-    expect(details.element.hasAttribute('open')).toBe(true);
+    expect(details.element.hasAttribute('open')).toBe(false);
   });
 
   it('renders the summary with correct text and icons', () => {
@@ -172,6 +172,11 @@ describe('SecondaryInfoPanel.vue', () => {
 
   it('expands and collapses the details panel when clicked', async () => {
     const details = wrapper.get('details#secondary-info');
+    expect(details.element.hasAttribute('open')).toBe(false);
+
+    // Simulate click to open
+    details.element.setAttribute('open', '');
+    await wrapper.vm.$nextTick();
     expect(details.element.hasAttribute('open')).toBe(true);
 
     // Simulate click to close

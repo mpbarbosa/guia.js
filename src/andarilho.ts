@@ -49,6 +49,7 @@ function getLocation(): void {
     async (position: GeolocationPosition) => {
       try {
         setCurrentCoords(position.coords);
+        setCurrentAddress(address);
         const addressSection = document.getElementById('addressSection');
         if (addressSection) addressSection.innerHTML = renderAddress(address);
 

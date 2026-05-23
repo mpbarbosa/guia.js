@@ -3,9 +3,9 @@
  */
 import { nextTick } from 'vue';
 import { useIBGECityStats } from '../../src/composables/useIBGECityStats';
-import type { CityStats } from '../../src/services/IBGECityStatsService';
+import type { CityStats } from '../../src/services/IBGECityStatsService.js';
 
-jest.mock('../../src/services/IBGECityStatsService', () => ({
+jest.mock('../../src/services/IBGECityStatsService.js', () => ({
   fetchStats: jest.fn(),
 }));
 
@@ -28,7 +28,7 @@ jest.mock('../../src/data/AddressCache.js', () => {
   };
 });
 
-import { fetchStats } from '../../src/services/IBGECityStatsService';
+import { fetchStats } from '../../src/services/IBGECityStatsService.js';
 import AddressCache from '../../src/data/AddressCache.js';
 
 describe('useIBGECityStats', () => {

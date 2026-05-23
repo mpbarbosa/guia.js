@@ -1,5 +1,7 @@
 // __tests__/andarilho.test.js
 import {
+  getLocation,
+  getCityStats,
   getNearbyRestaurants,
   searchWikipedia,
   getWikipediaPage,
@@ -7,6 +9,79 @@ import {
 } from '../src/andarilho';
 
 global.fetch = jest.fn();
+
+describe('legacy geolocation state handoff', () => {
+  beforeEach(() => {
+    document.body.innerHTML = `
+      <div id="locationResult"></div>
+      <div id="addressSection"></div>
+      <input id="text-input" />
+      <button id="cityStatsBtn"></button>
+      <button id="findRestaurantsBtn"></button>
+      <section id="cityStatsSection"></section>
+      <div id="cityStats"></div>
+    `;
+
+    global.checkGeolocation = jest.fn();
+    global.renderAddress = jest.fn(() => '<p>Address</p>');
+    global.buildTextToSpeech = jest.fn(() => 'tts');
+    global.speak = jest.fn();
+    global.alert = jest.fn();
+    global.address = {
+      address: {
+        city: 'Paraty',
+        state: 'Rio de Janeiro',
+        country: 'Brazil',
+      },
+    };
+
+    Object.defineProperty(global.navigator, 'geolocation', {
+      configurable: true,
+      value: {
+        getCurrentPosition: jest.fn((success) =>
+          success({
+            coords: { latitude: -23.22, longitude: -44.72 },
+          })
+        ),
+      },
+    });
+
+    fetch.mockReset();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    delete global.checkGeolocation;
+    delete global.renderAddress;
+    delete global.buildTextToSpeech;
+    delete global.speak;
+    delete global.address;
+    delete global.currentCoords;
+    delete global.currentAddress;
+  });
+
+  it('stores the resolved address so city stats can use it later', async () => {
+    fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ query: { search: [{ pageid: 1, title: 'Paraty' }] } }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ query: { pages: { 1: { extract: 'Population 1,000' } } } }),
+      });
+
+    getLocation();
+    await getCityStats();
+
+    expect(global.currentAddress).toEqual(global.address);
+    expect(global.alert).not.toHaveBeenCalled();
+    expect(fetch).toHaveBeenNthCalledWith(
+      1,
+      expect.stringContaining('srsearch=Paraty%2C%20Rio%20de%20Janeiro%20Brazil')
+    );
+  });
+});
 
 describe('getNearbyRestaurants', () => {
   const lat = -19.123;

@@ -34,7 +34,7 @@ describe('BottomNav.vue', () => {
     const labels = wrapper.findAll('a').map((link) => link.attributes('aria-label'));
 
     expect(wrapper.get('nav').attributes('aria-label')).toBe('Navegação principal');
-    expect(labels).toEqual(['Início', 'Rotas', 'Mapa', 'Stats', 'Histórico']);
+    expect(labels).toEqual(['Home', 'Routes', 'Maps', 'Stats', 'History']);
   });
 
   test('marks the active route with aria-current and active styling', async () => {

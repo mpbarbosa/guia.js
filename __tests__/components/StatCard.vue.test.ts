@@ -62,14 +62,14 @@ describe('StatCard.vue', () => {
     const wrapper: VueWrapper = mount(StatCard, {
       props: { ...baseProps, footnote: 'Fonte: IBGE' },
     });
-    const footnote = wrapper.find('p.text-[11px]');
+    const footnote = wrapper.find('[data-testid="statcard-footnote"]');
     expect(footnote.exists()).toBe(true);
     expect(footnote.text()).toBe('Fonte: IBGE');
   });
 
   it('does not render footnote when not provided', () => {
     const wrapper: VueWrapper = mount(StatCard, { props: baseProps });
-    expect(wrapper.find('p.text-[11px]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="statcard-footnote"]').exists()).toBe(false);
   });
 
   it('renders correctly with all optional props and slots', () => {
@@ -84,7 +84,7 @@ describe('StatCard.vue', () => {
     expect(wrapper.find('.badge-slot').text()).toBe('VIP');
     expect(wrapper.find('.value-slot').text()).toBe('1000');
     expect(wrapper.find('.chart-slot').text()).toBe('C');
-    expect(wrapper.find('p.text-[11px]').text()).toBe('Obs.');
+    expect(wrapper.find('[data-testid="statcard-footnote"]').text()).toBe('Obs.');
   });
 
   it('applies correct classes to root and header elements', () => {
@@ -100,7 +100,7 @@ describe('StatCard.vue', () => {
     const wrapper: VueWrapper = mount(StatCard, {
       props: { icon: 'bi-star', category: 'Cat', title: 'T' },
     });
-    expect(wrapper.find('p.text-[11px]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="statcard-footnote"]').exists()).toBe(false);
     expect(wrapper.findAll('.animate-pulse').length).toBe(0);
   });
 });

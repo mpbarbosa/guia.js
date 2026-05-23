@@ -9,7 +9,7 @@ defineOptions({ name: 'AppHeroHeader' });
       <i class="bi bi-navigation-fill text-3xl shrink-0" aria-hidden="true"></i>
       <h2
         id="header-location-text"
-        class="text-xl font-bold leading-tight"
+        class="text-2xl font-bold leading-tight"
         aria-live="polite"
         data-pending="true"
       >— · —</h2>

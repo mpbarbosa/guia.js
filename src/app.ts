@@ -204,13 +204,13 @@ function manageFocusAfterRouteChange(): void {
     const heading = mainContent.querySelector('h1') as HTMLElement | null;
     if (heading) {
       heading.setAttribute('tabindex', '-1');
-      heading.focus();
+      heading.focus({ preventScroll: true });
       heading.setAttribute('aria-live', 'polite');
       setTimeout(() => heading.removeAttribute('aria-live'), 1000);
       log('Focus moved to h1 heading:', heading.textContent);
     } else {
       mainContent.setAttribute('tabindex', '-1');
-      mainContent.focus();
+      mainContent.focus({ preventScroll: true });
       log('Focus moved to main content (no h1 heading found)');
     }
   });

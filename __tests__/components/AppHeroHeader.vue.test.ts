@@ -50,7 +50,7 @@ describe('AppHeroHeader.vue', () => {
     const h2 = wrapper.get('#header-location-text');
     expect(h2.exists()).toBe(true);
     expect(h2.text()).toBe('— · —');
-    expect(h2.classes()).toContain('text-xl');
+    expect(h2.classes()).toContain('text-2xl');
     expect(h2.classes()).toContain('font-bold');
     expect(h2.classes()).toContain('leading-tight');
     expect(h2.attributes('aria-live')).toBe('polite');

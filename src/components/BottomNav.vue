@@ -5,7 +5,7 @@ const route = useRoute();
 
 const tabs = [
   { name: 'home',      path: '/',          icon: 'bi-house',         activeIcon: 'bi-house-fill',        label: 'Home'    },
-  { name: 'converter', path: '/converter', icon: 'bi-arrow-left-right', activeIcon: 'bi-arrow-left-right', label: 'Routes'  },
+  { name: 'converter', path: '/converter', icon: 'bi-compass',          activeIcon: 'bi-compass-fill',          label: 'Routes'  },
   { name: 'map',       path: '/map',       icon: 'bi-map',           activeIcon: 'bi-map-fill',          label: 'Maps'    },
   { name: 'stats',     path: '/stats',     icon: 'bi-bar-chart',     activeIcon: 'bi-bar-chart-fill',    label: 'Stats'   },
   { name: 'history',   path: '/history',   icon: 'bi-clock-history', activeIcon: 'bi-clock-history',     label: 'History' },

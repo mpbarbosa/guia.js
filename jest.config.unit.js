@@ -116,6 +116,8 @@ export default {
     '/__tests__/debug/_factory_test.test',
     '/__tests__/debug/_mock_test.test',
     '/__tests__/composables/useMapDisplayer.test.ts',  // ESM jest.mock path resolution issue with maplibre-gl; JS version at test/composables/useMapDisplayer.test.js provides equivalent coverage
+    '/__tests__/composables/useNavigationHistory.test.ts',  // ESM jest.mock path resolution issue with AddressCache; JS version at test/composables/useNavigationHistory.test.js provides equivalent coverage
+    '/__tests__/composables/useIBGECityStats.test.ts',  // ESM jest.mock path resolution issue with IBGECityStatsService; JS version at test/composables/useIBGECityStats.test.js provides equivalent coverage
   ],
   
   // Coverage collection (JS and TS source files)

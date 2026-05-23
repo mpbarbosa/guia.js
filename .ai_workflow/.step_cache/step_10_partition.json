@@ -2,9 +2,9 @@
   "version": 1,
   "partitionIndex": 0,
   "totalPartitions": 1,
-  "filesHash": "3914eda8",
+  "filesHash": "255b9669",
   "partitionLabels": [
-    "src/utils"
+    "jest.config.unit.js"
   ],
-  "updatedAt": "2026-05-23T20:06:50.749Z"
+  "updatedAt": "2026-05-23T22:28:14.390Z"
 }

@@ -6,11 +6,11 @@
 
 ---
 
-## 🚨 Reorganization Notice (2026-05-21)
+## 🚨 Reorganization Notice (2026-05-22)
 
-The legacy `docs/reports/` archive was removed from the repository.
+The legacy `docs/reports/` archive was removed from the repository, and `docs/maintenance/` has now been retired.
 
-Historical and temporary records should now be maintained under this directory (`docs/misc/`) or promoted to a domain directory such as `docs/maintenance/`, `docs/testing/`, or `docs/infrastructure/` when they become stable references.
+Historical and temporary records should now be maintained under this directory (`docs/misc/`) or promoted to a stable topic directory such as `docs/testing/`, `docs/infrastructure/`, or `docs/developer/` when they become long-lived references.
 
 ---
 
@@ -45,8 +45,8 @@ Documents placed in `docs/misc/` MUST meet ALL of these criteria:
 ### ❌ Should NOT Go Here
 
 - **Active documentation** → Use `docs/` root or specific subdirectories
-- **Analysis reports** → Use topic-specific directories (for example `docs/testing/`, `docs/maintenance/`)
-- **Bug fix records** → Use `docs/maintenance/`
+- **Analysis reports** → Use topic-specific directories (for example `docs/testing/`, `docs/infrastructure/`)
+- **Bug fix records** → Use `docs/misc/` or the affected topic directory
 - **Implementation summaries** → Use topic-specific stable directories
 - **Planning documents** → Use `docs/infrastructure/` or `docs/architecture/`
 - **Temporary notes** → Delete or use session workspace
@@ -59,8 +59,8 @@ Before placing a document in `docs/misc/`, consider these directories:
 
 | Document Type | Recommended Location |
 |--------------|---------------------|
-| Analysis reports | Topic-specific directories (for example `docs/testing/`, `docs/maintenance/`) |
-| Bug investigations | `docs/maintenance/` |
+| Analysis reports | Topic-specific directories (for example `docs/testing/`, `docs/infrastructure/`) |
+| Bug investigations | `docs/misc/` or the affected topic directory |
 | Implementation summaries | Topic-specific stable directories |
 | Architecture decisions | `docs/architecture/` |
 | Infrastructure planning | `docs/infrastructure/` |
@@ -90,8 +90,8 @@ Before placing a document in `docs/misc/`, consider these directories:
 
 ### Finding Moved Documents
 
-- **Analysis reports**: See [../testing/](../testing/) and [../maintenance/](../maintenance/)
-- **Bug fix records**: See [../maintenance/](../maintenance/)
+- **Analysis reports**: See [../testing/](../testing/), [../infrastructure/](../infrastructure/), and [../developer/](../developer/)
+- **Bug fix records**: See this directory and topic-specific guides under [../infrastructure/](../infrastructure/) and [../developer/](../developer/)
 - **Implementation summaries**: See [../infrastructure/](../infrastructure/) and [../developer/](../developer/)
 - **Project clarification**: See [./PROJECT_CLARIFICATION.md](./PROJECT_CLARIFICATION.md)
 
@@ -118,7 +118,7 @@ When documentation becomes historical:
 
 ---
 
-**Last Updated**: 2026-01-27
+**Last Updated**: 2026-05-22
 **Maintained By**: Development team
 **Purpose**: Controlled historical archive with strict acceptance criteria
 **Status**: ✅ Reorganized - Only README remains

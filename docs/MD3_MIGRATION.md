@@ -153,7 +153,7 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 
 ---
 
-## Phase 6 — Map Screen (MapView.vue) ✅ Done (v0.26.1-alpha)
+## Phase 6 — Map Screen (MapView.vue) ✅ Done (v0.26.2-alpha)
 
 **Goal:** Replace `/map` stub with full `MapView.vue`. Keep `MapLibreDisplayer.ts` as-is, initialized via a Vue composable. Build the MD3 floating overlay UI.
 

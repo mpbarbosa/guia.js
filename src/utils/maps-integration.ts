@@ -84,7 +84,6 @@ export class MapsIntegration {
     const coordinatesSection = document.getElementById('coordinates');
     if (!coordinatesSection) {
       this._waitForElement('coordinates', () => this._setupMapsActionsContainer());
-      console.warn('⚠️ Coordinates section not found');
       return;
     }
 
@@ -115,7 +114,6 @@ export class MapsIntegration {
     const latLongDisplay = document.getElementById('lat-long-display');
     if (!latLongDisplay) {
       this._waitForElement('lat-long-display', () => this._setupCoordinatesObserver());
-      console.warn('⚠️ Coordinate display not found');
       return;
     }
 

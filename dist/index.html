@@ -461,7 +461,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="./assets/main-WkBpgsmb.js"></script>
+    <script type="module" crossorigin src="./assets/main-DCLndZT8.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/vendor-CgHL_wjN.js">
     <link rel="modulepreload" crossorigin href="./assets/data-BPgJz4JF.js">
     <link rel="modulepreload" crossorigin href="./assets/speech-8I2Q-vaj.js">
@@ -694,8 +694,6 @@
     
     <!-- Update version display with enhanced manager -->
     
-    <!-- Maps Integration - Discoverable map viewing options -->
-    
     <!-- Vue App Shell (Phase 2+) -->
 
     <!-- Legacy App Entry Point -->
@@ -720,59 +718,5 @@
 <!-- Button Utilities -->
 
 <!-- Service Worker Registration (optional, graceful fallback) -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', async () => {
-      // Unregister any stale service workers (e.g., old sw.js registered at root scope)
-      try {
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        for (const reg of registrations) {
-          const scriptURL = reg.active?.scriptURL || reg.installing?.scriptURL || reg.waiting?.scriptURL || '';
-          if (scriptURL && !scriptURL.endsWith('service-worker.js')) {
-            await reg.unregister();
-            console.log('[App] Unregistered stale service worker:', scriptURL);
-          }
-        }
-      } catch (_) { /* ignore cleanup errors */ }
-
-      // Silently check if service-worker.js exists without logging errors
-      fetch('./service-worker.js', { method: 'HEAD' })
-        .then(response => {
-          if (response.ok) {
-            return navigator.serviceWorker.register('./service-worker.js');
-          }
-          // File doesn't exist - silently skip (development mode)
-          return null;
-        })
-        .then(registration => {
-          if (!registration) return;
-          
-          console.log('✓ Service Worker registered:', registration.scope);
-          
-          // Check for updates
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // New version available - show toast instead of blocking confirm dialog
-                if (window.toast) {
-                  window.toast.info('Nova versão disponível!', 0, () => {
-                    newWorker.postMessage({ type: 'SKIP_WAITING' });
-                    window.location.reload();
-                  });
-                } else if (confirm('Nova versão disponível! Recarregar a página?')) {
-                  newWorker.postMessage({ type: 'SKIP_WAITING' });
-                  window.location.reload();
-                }
-              }
-            });
-          });
-        })
-        .catch(() => {
-          // Silently ignore - development mode without service worker
-        });
-    });
-  }
-</script>
 </body>
 </html>

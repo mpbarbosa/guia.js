@@ -739,7 +739,7 @@ Before submitting your PR, ensure all items are checked:
   - [ ] Architecture docs updated if design changes
   - [ ] JSDoc comments added/updated
 - [ ] Code examples included in documentation
-- [ ] Version numbers updated if releasing (see [VERSION_TIMELINE.md](../docs/architecture/VERSION_TIMELINE.md))
+- [ ] Version numbers updated if releasing (see `CHANGELOG.md`)
 
 #### Code Hygiene
 
@@ -901,7 +901,6 @@ python3 -m http.server 9000
 
 **Understanding the codebase?**
 
-- 📚 Read [VERSION_TIMELINE.md](../docs/architecture/VERSION_TIMELINE.md) for version history
 - 📚 Read [CLASS_DIAGRAM.md](../docs/architecture/CLASS_DIAGRAM.md) for architecture
 - 📚 Read [PROJECT_PURPOSE_AND_ARCHITECTURE.md](../docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md) for goals
 

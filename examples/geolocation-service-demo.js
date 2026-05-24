@@ -239,9 +239,6 @@ console.log('  - Maintains backward compatibility\n');
 console.log('To run the actual tests:');
 console.log('  npm test -- __tests__/services/\n');
 
-console.log('For detailed documentation, see:');
-console.log('  docs/architecture/GEOLOCATION_SERVICE_REFACTORING.md\n');
-
 console.log('======================================================================');
 console.log('Demonstration Complete ✓');
 console.log('======================================================================\n');

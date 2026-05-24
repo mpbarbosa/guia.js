@@ -11,6 +11,8 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import HomeViewController from '../views/home.js';
 import HTMLHeaderDisplayer from '../html/HTMLHeaderDisplayer.js';
+import mapsIntegration from '../utils/maps-integration.js';
+import progressiveDisclosureManager from '../utils/progressive-disclosure.js';
 import AppHeroHeader from './AppHeroHeader.vue';
 import Onboarding from './Onboarding.vue';
 import LocationHighlightCards from './LocationHighlightCards.vue';
@@ -81,6 +83,8 @@ onMounted(async () => {
     controller = await HomeViewController.create(document, {
       locationResult: props.locationResult,
     });
+    progressiveDisclosureManager.init();
+    mapsIntegration.init();
     isInitialized.value = true;
     isTracking.value = controller.isTracking();
     headerDisplayer = HTMLHeaderDisplayer.create(document);
@@ -109,6 +113,8 @@ onUnmounted(() => {
   document.removeEventListener('homeview:tracking:started', onTrackingStarted);
   document.removeEventListener('homeview:tracking:stopped', onTrackingStopped);
   document.removeEventListener('geolocation:error', onGeoError);
+  mapsIntegration.destroy();
+  progressiveDisclosureManager.destroy();
   controller?.destroy();
   headerDisplayer?.disconnect();
   controller = null;

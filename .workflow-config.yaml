@@ -7,7 +7,7 @@
 
 project:
   name: "guia_js"
-  version: "0.24.9-alpha"
+  version: "0.27.1-alpha"
   kind: "location_based_service"
   description: "Vue.js/TypeScript tourist guide SPA with Brazilian geocoding and address parsing (municipality, district, neighbourhood)"
 tech_stack:
@@ -454,6 +454,7 @@ change_patterns:
 # strings that must agree with package.json → "version" at all times.
 version:
   config_files:
+    - ".workflow-config.yaml"
     - "src/config/defaults.ts"
     - "src/config/version.ts"
   service_worker_files:

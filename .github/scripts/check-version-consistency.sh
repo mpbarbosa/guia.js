@@ -11,7 +11,7 @@
 #
 # Usage:
 #   ./check-version-consistency.sh           # Check only
-#   ./check-version-consistency.sh --fix     # Check and auto-fix src/config/defaults.ts
+#   ./check-version-consistency.sh --fix     # Check and auto-fix src/config/defaults.ts and .workflow-config.yaml
 #   
 #   Or as a pre-commit hook:
 #   ln -s ../../.github/scripts/check-version-consistency.sh .git/hooks/pre-commit
@@ -22,6 +22,7 @@
 #   - docs/INDEX.md version
 #   - src/config/defaults.ts GUIA_VERSION
 #   - .github/copilot-instructions.md version
+#   - .workflow-config.yaml project.version
 #
 # ==============================================================================
 
@@ -212,7 +213,38 @@ fi
 echo ""
 
 # ==============================================================================
-# 6. Summary
+# 6. Check .workflow-config.yaml
+# ==============================================================================
+
+echo -e "${YELLOW}Checking .workflow-config.yaml...${NC}"
+
+if [ ! -f ".workflow-config.yaml" ]; then
+    echo -e "${YELLOW}⚠️  .workflow-config.yaml not found (may be optional)${NC}"
+else
+    WORKFLOW_VERSION=$(grep -oP '^\s*version:\s*"\K[^"]+' .workflow-config.yaml | head -1)
+
+    if [ -z "$WORKFLOW_VERSION" ]; then
+        echo -e "${RED}❌ Could not find project.version in .workflow-config.yaml${NC}"
+        INCONSISTENCIES=$((INCONSISTENCIES + 1))
+    elif [ "$WORKFLOW_VERSION" != "$PACKAGE_VERSION" ]; then
+        if [ "$FIX_MODE" = true ]; then
+            sed -i '0,/^\s*version:\s*"[^"]*"/s//  version: "'"$PACKAGE_VERSION"'"/' .workflow-config.yaml
+            echo -e "${GREEN}🔧 Auto-fixed .workflow-config.yaml: $WORKFLOW_VERSION → $PACKAGE_VERSION${NC}"
+        else
+            echo -e "${RED}❌ Version mismatch in .workflow-config.yaml${NC}"
+            echo "   Expected: $PACKAGE_VERSION"
+            echo "   Found: $WORKFLOW_VERSION"
+            echo "   💡 Run with --fix to auto-fix this file"
+            INCONSISTENCIES=$((INCONSISTENCIES + 1))
+        fi
+    else
+        echo -e "${GREEN}✅ .workflow-config.yaml version matches${NC}"
+    fi
+fi
+echo ""
+
+# ==============================================================================
+# 7. Summary
 # ==============================================================================
 
 echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
@@ -230,6 +262,7 @@ if [ $INCONSISTENCIES -eq 0 ]; then
     echo "  ✅ docs/INDEX.md"
     echo "  ✅ src/config/defaults.ts"
     echo "  ✅ .github/copilot-instructions.md"
+    echo "  ✅ .workflow-config.yaml"
     echo ""
     exit 0
 else
@@ -241,7 +274,8 @@ else
     echo "  3. Update README.md version references"
     echo "  4. Update docs/INDEX.md if applicable"
     echo "  5. Update .github/copilot-instructions.md if applicable"
-    echo "  6. Run this script again to verify"
+    echo "  6. Update .workflow-config.yaml project.version"
+    echo "  7. Run this script again to verify"
     echo ""
     echo "Example workflow:"
     echo "  ${BLUE}# Bump version${NC}"

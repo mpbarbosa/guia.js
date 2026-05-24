@@ -119,4 +119,47 @@ describe('service-worker cache writes', () => {
       cacheError
     );
   });
+
+  test('fetch handler uses network-first for navigation requests', async () => {
+    const request = {
+      url: 'https://example.com/',
+      method: 'GET',
+      mode: 'navigate',
+      destination: 'document',
+    };
+    const caches = {
+      open: jest.fn(() =>
+        Promise.resolve({
+          put: jest.fn(() => Promise.resolve()),
+        })
+      ),
+      match: jest.fn(() => Promise.resolve(undefined)),
+      keys: jest.fn(() => Promise.resolve([])),
+      delete: jest.fn(() => Promise.resolve(true)),
+    };
+    const { context, listeners } = loadServiceWorker({
+      caches,
+      fetchImpl: jest.fn(() => Promise.resolve(new Response('ok', { status: 200 }))),
+    });
+    const networkFirstResult = Promise.resolve(new Response('network', { status: 200 }));
+    const cacheFirstResult = Promise.resolve(new Response('cache', { status: 200 }));
+    const networkFirstSpy = jest.fn(() => networkFirstResult);
+    const cacheFirstSpy = jest.fn(() => cacheFirstResult);
+    context.networkFirstStrategy = networkFirstSpy;
+    context.cacheFirstStrategy = cacheFirstSpy;
+
+    const respondWith = jest.fn();
+    listeners.get('fetch')({
+      request,
+      respondWith,
+      waitUntil: jest.fn(),
+    });
+
+    expect(networkFirstSpy).toHaveBeenCalledWith(
+      request,
+      expect.objectContaining({ request, respondWith })
+    );
+    expect(cacheFirstSpy).not.toHaveBeenCalled();
+    expect(respondWith).toHaveBeenCalledWith(networkFirstResult);
+  });
 });

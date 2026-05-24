@@ -2,14 +2,14 @@
 
 ---
 
-Last Updated: 2026-04-29
+Last Updated: 2026-05-23
 Status: Active
-version: 0.24.9-alpha
+version: 0.27.1-alpha
 
 ---
 
 [![Tests](https://img.shields.io/badge/tests-3074%20passing%20%2F%203242%20total-green)](https://github.com/mpbarbosa/guia.js)
-[![Version](https://img.shields.io/badge/version-0.24.7--alpha-blue)](https://github.com/mpbarbosa/guia.js)
+[![Version](https://img.shields.io/badge/version-0.27.0--alpha-blue)](https://github.com/mpbarbosa/guia.js)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia.js)
 
 > **Note on Test Status**: This repository keeps separate default, non-E2E, E2E, and Playwright test commands. Use the Testing section below to check the current suite status instead of relying on cached prose counts.

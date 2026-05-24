@@ -10,22 +10,30 @@
 class ProgressiveDisclosureManager {
   STORAGE_KEY: string;
   detailsElement: HTMLDetailsElement | null;
+  private _boundToggleHandler: (() => void) | null;
 
   constructor() {
     this.STORAGE_KEY = 'guia-turistico-secondary-info-state';
     this.detailsElement = null;
+    this._boundToggleHandler = null;
   }
 
   /**
    * Initialize the progressive disclosure manager
    */
   init() {
-    this.detailsElement = document.getElementById('secondary-info') as HTMLDetailsElement | null;
-    
-    if (!this.detailsElement) {
-      console.warn('Progressive disclosure: secondary-info element not found');
+    const detailsElement = document.getElementById('secondary-info') as HTMLDetailsElement | null;
+    if (!detailsElement) {
+      this.destroy();
       return;
     }
+
+    if (this.detailsElement === detailsElement && this._boundToggleHandler) {
+      return;
+    }
+
+    this.destroy();
+    this.detailsElement = detailsElement;
 
     // Restore saved state (only on mobile)
     if (this.isMobile()) {
@@ -33,12 +41,11 @@ class ProgressiveDisclosureManager {
     }
 
     // Listen for toggle events
-    this.detailsElement.addEventListener('toggle', () => {
+    this._boundToggleHandler = () => {
       this.saveState();
       this.announceState();
-    });
-
-    console.log('Progressive disclosure initialized');
+    };
+    this.detailsElement.addEventListener('toggle', this._boundToggleHandler);
   }
 
   /**
@@ -59,7 +66,6 @@ class ProgressiveDisclosureManager {
     
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify({ open: isOpen }));
-      console.log(`Progressive disclosure: Saved state - ${isOpen ? 'open' : 'closed'}`);
     } catch (error) {
       console.warn('Progressive disclosure: Failed to save state', error);
     }
@@ -76,11 +82,9 @@ class ProgressiveDisclosureManager {
       if (saved) {
         const { open } = JSON.parse(saved);
         this.detailsElement.open = open;
-        console.log(`Progressive disclosure: Restored state - ${open ? 'open' : 'closed'}`);
       } else {
         // Default: closed on mobile for first-time users
         this.detailsElement.open = false;
-        console.log('Progressive disclosure: Default state - closed (first visit)');
       }
     } catch (error) {
       console.warn('Progressive disclosure: Failed to restore state', error);
@@ -121,22 +125,26 @@ class ProgressiveDisclosureManager {
   clearState() {
     try {
       localStorage.removeItem(this.STORAGE_KEY);
-      console.log('Progressive disclosure: State cleared');
     } catch (error) {
       console.warn('Progressive disclosure: Failed to clear state', error);
     }
+  }
+
+  /**
+   * Remove listeners and release the current element reference.
+   */
+  destroy() {
+    if (this.detailsElement && this._boundToggleHandler) {
+      this.detailsElement.removeEventListener('toggle', this._boundToggleHandler);
+    }
+
+    this.detailsElement = null;
+    this._boundToggleHandler = null;
   }
 }
 
 // Export singleton instance
 const progressiveDisclosureManager = new ProgressiveDisclosureManager();
-
-// Auto-initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => progressiveDisclosureManager.init());
-} else {
-  progressiveDisclosureManager.init();
-}
 
 // ES6 module export
 export default progressiveDisclosureManager;

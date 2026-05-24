@@ -26,7 +26,6 @@ Supporting workflow surfaces:
 - For details, refer to authoritative docs:
   - `README.md`
   - `docs/ARCHITECTURE.md`
-  - `docs/guides/MIGRATION_GUIDE.md`
   - `CHANGELOG.md`
   - `CONTRIBUTING.md`
   - `CLAUDE.md`

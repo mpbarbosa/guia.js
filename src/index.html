@@ -713,10 +713,8 @@
           new Promise((_, reject) => setTimeout(() => reject(new Error('CDN timeout after 5s')), 5000))
         ]);
         window.IbiraAPIFetchManager = IbiraAPIFetchManager;
-        console.log('✓ IbiraAPIFetchManager loaded successfully from CDN');
       } catch (error) {
         console.warn('⚠️ Failed to load IbiraAPIFetchManager from CDN:', error.message);
-        console.log('✓ Application will use fallback fetch implementation');
         // App will use fallback - guia.js has IbiraAPIFetchManagerFallback
       } finally {
         // Signal that dependencies are ready
@@ -727,7 +725,6 @@
     
     <script type="module" src="error-recovery.js" onerror="console.error('❌ Failed to load error-recovery.js')"></script>
     <script type="module" src="geolocation-banner.js" onerror="console.error('❌ Failed to load geolocation-banner.js')"></script>
-    <script type="module" src="utils/progressive-disclosure.js" onerror="console.error('❌ Failed to load progressive-disclosure.js')"></script>
     
     <!-- Update version display with enhanced manager -->
     <script type="module">
@@ -738,17 +735,6 @@
       // - Sets up modal interactions
       // - Logs version to console for bug reports
       versionDisplayManager.init();
-    </script>
-    
-    <!-- Maps Integration - Discoverable map viewing options -->
-    <script type="module">
-      import mapsIntegration from './utils/maps-integration.js';
-      
-      // Initialize maps integration
-      // - Creates action buttons for Google Maps, Street View, OSM, Waze
-      // - Observes coordinate updates
-      // - Handles deep linking for native apps
-      mapsIntegration.init();
     </script>
     
     <!-- Vue App Shell (Phase 2+) -->
@@ -778,26 +764,33 @@
 <script type="module" src="utils/button-utils.js"></script>
 
 <!-- Service Worker Registration (optional, graceful fallback) -->
-<script>
+<script type="module">
+  import { VERSION_STRING } from './config/version.js';
+
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
+      const serviceWorkerUrl = new URL('./service-worker.js', window.location.href);
+      serviceWorkerUrl.searchParams.set('v', VERSION_STRING);
+
       // Unregister any stale service workers (e.g., old sw.js registered at root scope)
       try {
         const registrations = await navigator.serviceWorker.getRegistrations();
         for (const reg of registrations) {
           const scriptURL = reg.active?.scriptURL || reg.installing?.scriptURL || reg.waiting?.scriptURL || '';
-          if (scriptURL && !scriptURL.endsWith('service-worker.js')) {
+          const scriptPathname = scriptURL ? new URL(scriptURL).pathname : '';
+          if (scriptURL && !scriptPathname.endsWith('/service-worker.js')) {
             await reg.unregister();
-            console.log('[App] Unregistered stale service worker:', scriptURL);
           }
         }
       } catch (_) { /* ignore cleanup errors */ }
 
       // Silently check if service-worker.js exists without logging errors
-      fetch('./service-worker.js', { method: 'HEAD' })
+      fetch(serviceWorkerUrl, { method: 'HEAD', cache: 'no-store' })
         .then(response => {
           if (response.ok) {
-            return navigator.serviceWorker.register('./service-worker.js');
+            return navigator.serviceWorker.register(serviceWorkerUrl, {
+              updateViaCache: 'none',
+            });
           }
           // File doesn't exist - silently skip (development mode)
           return null;
@@ -805,11 +798,10 @@
         .then(registration => {
           if (!registration) return;
           
-          console.log('✓ Service Worker registered:', registration.scope);
-          
           // Check for updates
           registration.addEventListener('updatefound', () => {
             const newWorker = registration.installing;
+            if (!newWorker) return;
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                 // New version available - show toast instead of blocking confirm dialog

@@ -50,22 +50,22 @@ describe('MapsIntegration', () => {
       expect(setupCoordinatesSpy).toHaveBeenCalled();
     });
 
-    it('should warn if coordinates section is missing (edge case)', () => {
+    it('should stay silent if coordinates section is missing while waiting for the home view', () => {
       const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
       document.body.innerHTML = '';
       instance.init();
-      expect(warnSpy).toHaveBeenCalledWith('⚠️ Coordinates section not found');
+      expect(warnSpy).not.toHaveBeenCalled();
       warnSpy.mockRestore();
     });
 
-    it('should warn if lat-long display is missing (edge case)', () => {
+    it('should stay silent if lat-long display is missing while waiting for coordinates markup', () => {
       const coordinatesSection = document.createElement('div');
       coordinatesSection.id = 'coordinates';
       document.body.appendChild(coordinatesSection);
 
       const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
       instance.init();
-      expect(warnSpy).toHaveBeenCalledWith('⚠️ Coordinate display not found');
+      expect(warnSpy).not.toHaveBeenCalled();
       warnSpy.mockRestore();
     });
   });

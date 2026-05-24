@@ -1,10 +1,10 @@
 /**
  * Service Worker for Guia Turístico
  * Provides offline support and caching for PWA functionality
- * @version 0.12.12-alpha
+ * @version 0.27.1-alpha
  */
 
-const CACHE_NAME = 'guia-turistico-v0.24.9-alpha-20260512-f625221';
+const CACHE_NAME = 'guia-turistico-v0.27.1-alpha-20260523';
 
 /** Shell assets precached on install — routes that must work offline. */
 const STATIC_ASSETS = [
@@ -31,16 +31,12 @@ const API_ORIGINS = [
 
 // Install event - cache static assets
 self.addEventListener('install', event => {
-  console.log('[SW] Installing service worker...');
-  
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('[SW] Caching static assets');
         return cache.addAll(STATIC_ASSETS);
       })
       .then(() => {
-        console.log('[SW] Static assets cached');
         return self.skipWaiting();
       })
       .catch(error => {
@@ -51,24 +47,16 @@ self.addEventListener('install', event => {
 
 // Activate event - clean up old caches
 self.addEventListener('activate', event => {
-  console.log('[SW] Activating service worker...');
-  
   event.waitUntil(
     caches.keys()
       .then(cacheNames => {
         return Promise.all(
           cacheNames
             .filter(name => name !== CACHE_NAME)
-            .map(name => {
-              console.log('[SW] Deleting old cache:', name);
-              return caches.delete(name);
-            })
+            .map(name => caches.delete(name))
         );
       })
-      .then(() => {
-        console.log('[SW] Service worker activated');
-        return self.clients.claim();
-      })
+      .then(() => self.clients.claim())
   );
 });
 
@@ -116,7 +104,12 @@ self.addEventListener('fetch', event => {
   // have been populated. This avoids paying network latency on repeat app-shell
   // loads while the versioned cache key still guarantees fresh assets after a
   // deploy.
-  if (isNavigationRequest || isPrecachedShellAsset || isStaticSubresource) {
+  if (isNavigationRequest) {
+    event.respondWith(networkFirstStrategy(request, event));
+    return;
+  }
+
+  if (isPrecachedShellAsset || isStaticSubresource) {
     event.respondWith(cacheFirstStrategy(request, event));
     return;
   }
@@ -154,15 +147,11 @@ function networkFirstStrategy(request, event) {
       }
       // Non-2xx response (e.g. 500): fall back to cache if available
       return caches.match(request).then(cached => {
-        if (cached) {
-          console.log('[SW] Network error, serving from cache:', request.url);
-          return cached;
-        }
+        if (cached) return cached;
         return response;
       });
     })
     .catch(() => {
-      console.log('[SW] Network failed, serving from cache:', request.url);
       return caches.match(request).then(cached => {
         if (cached) return cached;
         // Navigation fallback: serve offline shell
@@ -185,11 +174,9 @@ function cacheFirstStrategy(request, event) {
   return caches.match(request)
     .then(cachedResponse => {
       if (cachedResponse) {
-        console.log('[SW] Serving from cache:', request.url);
         return cachedResponse;
       }
 
-      console.log('[SW] Fetching from network:', request.url);
       return fetch(request)
         .then(response => {
           if (!response || response.status !== 200) {

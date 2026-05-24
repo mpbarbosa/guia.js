@@ -28,6 +28,12 @@ const routes: RouteRecordRaw[] = [
     meta: { title: 'Mapa' },
   },
   {
+    path: '/monitor',
+    name: 'monitor',
+    component: () => import('./components/views/MonitorView.vue'),
+    meta: { title: 'Monitor' },
+  },
+  {
     path: '/stats',
     name: 'stats',
     component: () => import('./components/views/StatsView.vue'),

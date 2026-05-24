@@ -9,6 +9,7 @@ export class AddressSpeechObserver {
   speechManager: any;
   textBuilder: any;
   textInput: any;
+  textInputResolver: (() => HTMLInputElement | HTMLTextAreaElement | null) | null;
   _firstAddressAnnounced: boolean;
 
   constructor(speechManager: any, textBuilder: any, textInput: any) {
@@ -24,12 +25,21 @@ export class AddressSpeechObserver {
 
     this.speechManager = speechManager;
     this.textBuilder = textBuilder;
-    this.textInput = textInput || null;
+    this.textInput = typeof textInput === 'function' ? null : (textInput || null);
+    this.textInputResolver = typeof textInput === 'function' ? textInput : null;
     this._firstAddressAnnounced = false;
 
     // NOTE: We do not freeze this instance because _firstAddressAnnounced needs
     // to be mutable to track state across update() calls
     log('(AddressSpeechObserver) created — firstAddressAnnounced reset to false');
+  }
+
+  private _getTextInput() {
+    if (this.textInputResolver) {
+      this.textInput = this.textInputResolver();
+    }
+
+    return this.textInput || null;
   }
 
   update(
@@ -68,8 +78,9 @@ export class AddressSpeechObserver {
       if (textToBeSpoken) {
         this._firstAddressAnnounced = true;
         this.speechManager.speak(textToBeSpoken, priority);
-        if (this.textInput) {
-          this.textInput.value = textToBeSpoken;
+        const textInput = this._getTextInput();
+        if (textInput) {
+          textInput.value = textToBeSpoken;
         }
       }
     } else if (
@@ -101,8 +112,9 @@ export class AddressSpeechObserver {
 
       if (textToBeSpoken) {
         this.speechManager.speak(textToBeSpoken, priority);
-        if (this.textInput) {
-          this.textInput.value = textToBeSpoken;
+        const textInput = this._getTextInput();
+        if (textInput) {
+          textInput.value = textToBeSpoken;
         }
       }
     } else if (posEvent === PositionManager.strCurrPosUpdate) {
@@ -110,8 +122,9 @@ export class AddressSpeechObserver {
         enderecoPadronizadoOrEvent,
       );
       priority = SPEECH_PRIORITY.PERIODIC;
-      if (this.textInput) {
-        this.textInput.value = textToBeSpoken;
+      const textInput = this._getTextInput();
+      if (textInput) {
+        textInput.value = textToBeSpoken;
       }
 
       this.speechManager.speak(textToBeSpoken, priority);

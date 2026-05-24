@@ -7,6 +7,7 @@ const tabs = [
   { name: 'home',      path: '/',          icon: 'bi-house',         activeIcon: 'bi-house-fill',        label: 'Home'    },
   { name: 'converter', path: '/converter', icon: 'bi-compass',          activeIcon: 'bi-compass-fill',          label: 'Routes'  },
   { name: 'map',       path: '/map',       icon: 'bi-map',           activeIcon: 'bi-map-fill',          label: 'Maps'    },
+  { name: 'monitor',   path: '/monitor',   icon: 'bi-speedometer2',  activeIcon: 'bi-speedometer2',       label: 'Monitor' },
   { name: 'stats',     path: '/stats',     icon: 'bi-bar-chart',     activeIcon: 'bi-bar-chart-fill',    label: 'Stats'   },
   { name: 'history',   path: '/history',   icon: 'bi-clock-history', activeIcon: 'bi-clock-history',     label: 'History' },
 ] as const;
@@ -22,7 +23,7 @@ const tabs = [
       v-for="tab in tabs"
       :key="tab.name"
       :href="`#${tab.path}`"
-      class="flex flex-col items-center gap-1.5 transition-all duration-300 relative px-3 py-1.5 rounded-2xl no-underline"
+      class="flex flex-col items-center gap-1 transition-all duration-300 relative px-2 py-1.5 rounded-2xl no-underline"
       :class="route.path === tab.path ? 'bg-primary/5' : ''"
       :aria-current="route.path === tab.path ? 'page' : undefined"
       :aria-label="tab.label"

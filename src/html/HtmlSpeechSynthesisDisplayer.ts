@@ -214,7 +214,7 @@ class HtmlSpeechSynthesisDisplayer {
 		this._addressObserver = new AddressSpeechObserver(
 			this.speechManager,
 			this._textBuilder,
-			document.getElementById(elementIds.textInputId || '') // Optional text input for updates
+			() => document.getElementById(elementIds.textInputId || '') as HTMLInputElement | HTMLTextAreaElement | null
 		);
 
 		// Log successful initialization

@@ -136,35 +136,6 @@
   min-height: 0;
 }
 
-/* Secondary Actions - Reduced prominence */
-.secondary-actions {
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.secondary-actions .button-container {
-  margin: 16px 0;
-  opacity: 0.85;
-  transition: opacity 0.2s ease;
-}
-
-.secondary-actions .button-container:hover {
-  opacity: 1;
-}
-
-.secondary-actions .md3-button-outlined {
-  font-size: var(--md-sys-typescale-body-medium);
-  padding: 10px 20px;
-  min-height: 40px;
-}
-
-.secondary-actions .button-status {
-  font-size: var(--md-sys-typescale-body-small);
-  color: #595959; /* 7.0:1 contrast ratio - WCAG AA compliant */
-  /* Removed opacity for better accessibility */
-}
-
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .location-highlights {

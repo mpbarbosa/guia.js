@@ -37,7 +37,7 @@ describe('LocationHighlightCards.vue', () => {
   it('renders the "Município" card with correct labels and values', () => {
     const municipioLabel = wrapper.get('#municipio-label');
     expect(municipioLabel.text()).toBe('Município');
-    expect(municipioLabel.classes()).toContain('text-[10px]');
+    expect(municipioLabel.classes()).toContain('text-xs');
     expect(municipioLabel.classes()).toContain('font-black');
     expect(municipioLabel.classes()).toContain('text-outline');
     expect(municipioLabel.classes()).toContain('uppercase');
@@ -45,25 +45,26 @@ describe('LocationHighlightCards.vue', () => {
 
     const regiaoValue = wrapper.get('#regiao-metropolitana-value');
     expect(regiaoValue.exists()).toBe(true);
-    expect(regiaoValue.classes()).toContain('text-xs');
+    expect(regiaoValue.classes()).toContain('text-sm');
     expect(regiaoValue.classes()).toContain('text-outline');
     expect(regiaoValue.classes()).toContain('font-medium');
-    expect(regiaoValue.classes()).toContain('mt-0.5');
+    expect(regiaoValue.classes()).toContain('mt-1');
     expect(regiaoValue.text()).toBe('');
 
     const municipioValue = wrapper.get('#municipio-value');
     expect(municipioValue.text()).toBe('—');
-    expect(municipioValue.classes()).toContain('text-xl');
-    expect(municipioValue.classes()).toContain('font-bold');
+    expect(municipioValue.classes()).toContain('!text-xl');
+    expect(municipioValue.classes()).toContain('!font-bold');
     expect(municipioValue.classes()).toContain('text-indigo-950');
-    expect(municipioValue.classes()).toContain('mt-1');
+    expect(municipioValue.classes()).toContain('!mt-1');
+    expect(municipioValue.classes()).toContain('!mb-0');
     expect(municipioValue.attributes('aria-live')).toBe('polite');
   });
 
   it('renders the "Bairro" card with correct labels and values', () => {
     const bairroLabel = wrapper.get('#bairro-label');
     expect(bairroLabel.text()).toBe('Bairro');
-    expect(bairroLabel.classes()).toContain('text-[10px]');
+    expect(bairroLabel.classes()).toContain('text-xs');
     expect(bairroLabel.classes()).toContain('font-black');
     expect(bairroLabel.classes()).toContain('text-outline');
     expect(bairroLabel.classes()).toContain('uppercase');
@@ -71,17 +72,18 @@ describe('LocationHighlightCards.vue', () => {
 
     const bairroValue = wrapper.get('#bairro-value');
     expect(bairroValue.text()).toBe('—');
-    expect(bairroValue.classes()).toContain('text-xl');
-    expect(bairroValue.classes()).toContain('font-bold');
+    expect(bairroValue.classes()).toContain('!text-xl');
+    expect(bairroValue.classes()).toContain('!font-bold');
     expect(bairroValue.classes()).toContain('text-indigo-950');
-    expect(bairroValue.classes()).toContain('mt-1');
+    expect(bairroValue.classes()).toContain('!mt-1');
+    expect(bairroValue.classes()).toContain('!mb-0');
     expect(bairroValue.attributes('aria-live')).toBe('polite');
   });
 
   it('renders the "Logradouro" card with correct labels and values', () => {
     const logradouroLabel = wrapper.get('#logradouro-label');
     expect(logradouroLabel.text()).toBe('Logradouro');
-    expect(logradouroLabel.classes()).toContain('text-[10px]');
+    expect(logradouroLabel.classes()).toContain('text-xs');
     expect(logradouroLabel.classes()).toContain('font-black');
     expect(logradouroLabel.classes()).toContain('text-outline');
     expect(logradouroLabel.classes()).toContain('uppercase');
@@ -89,10 +91,11 @@ describe('LocationHighlightCards.vue', () => {
 
     const logradouroValue = wrapper.get('#logradouro-value');
     expect(logradouroValue.text()).toBe('—');
-    expect(logradouroValue.classes()).toContain('text-xl');
-    expect(logradouroValue.classes()).toContain('font-bold');
+    expect(logradouroValue.classes()).toContain('!text-xl');
+    expect(logradouroValue.classes()).toContain('!font-bold');
     expect(logradouroValue.classes()).toContain('text-indigo-950');
-    expect(logradouroValue.classes()).toContain('mt-1');
+    expect(logradouroValue.classes()).toContain('!mt-1');
+    expect(logradouroValue.classes()).toContain('!mb-0');
     expect(logradouroValue.attributes('aria-live')).toBe('polite');
   });
 

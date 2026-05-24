@@ -115,10 +115,6 @@
   font-size: var(--font-size-sm);
 }
 
-#tracking-controls {
-  margin-bottom: 16px;
-}
-
 /* Mobile Responsive */
 @media (max-width: 600px) {
   .advanced-controls-summary {

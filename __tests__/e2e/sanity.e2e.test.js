@@ -181,8 +181,6 @@ describe('Sanity: Integration (Puppeteer)', () => {
       ['#reference-place-display',    'reference place span'],
       ['#dadosSidra',                 'SIDRA data span'],
       ['#navigation-log',             'navigation log output'],
-      ['#chronometer',                'chronometer element'],
-      ['#insertPositionButton',       'insert-position test button'],
       ['.app-version',                'version badge'],
     ];
 
@@ -190,6 +188,12 @@ describe('Sanity: Integration (Puppeteer)', () => {
       const el = await page.$(selector);
       expect(el).not.toBeNull();
     });
+  });
+
+  test('monitor route exposes the chronometer element', async () => {
+    await page.goto(`${baseUrl}#/monitor`, { waitUntil: 'networkidle' });
+    const chronometer = await page.$('#chronometer');
+    expect(chronometer).not.toBeNull();
   });
 
   // ── 3. Version badge ─────────────────────────────────────────────────────

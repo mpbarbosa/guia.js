@@ -209,7 +209,7 @@ defineOptions({ name: 'SecondaryInfoPanel' });
     background: #ffffff;
     padding: 16px;
     margin: 0 -24px 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   }
 
   .location-highlights .highlight-card {

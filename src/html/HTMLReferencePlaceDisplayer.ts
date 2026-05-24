@@ -209,6 +209,7 @@ class HTMLReferencePlaceDisplayer {
 	 * @since 0.9.0-alpha
 	 */
 	update(_addressData: Record<string, unknown>, brazilianStandardAddress: BrazilianStandardAddress | null, posEvent: string, loading: unknown, error: { message: string } | null | false): void {
+		if (!this.element) return;
 		// Log update for debugging (following MP Barbosa logging standards)
 		log(`(HTMLReferencePlaceDisplayer) update() called with posEvent: ${posEvent}`);
 		
@@ -263,7 +264,7 @@ class HTMLReferencePlaceDisplayer {
 	 * @since 0.9.0-alpha
 	 */
 	toString(): string {
-		return `${this.constructor.name}: ${this.element.id || 'no-id'}`;
+		return `${this.constructor.name}: ${this.element?.id || 'no-id'}`;
 	}
 }
 

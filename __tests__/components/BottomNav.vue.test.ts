@@ -12,6 +12,7 @@ async function mountWithRoute(currentPath: string) {
       { path: '/', component: { template: '<div>Home</div>' } },
       { path: '/converter', component: { template: '<div>Converter</div>' } },
       { path: '/map', component: { template: '<div>Map</div>' } },
+      { path: '/monitor', component: { template: '<div>Monitor</div>' } },
       { path: '/stats', component: { template: '<div>Stats</div>' } },
       { path: '/history', component: { template: '<div>History</div>' } },
       { path: '/unknown', component: { template: '<div>Unknown</div>' } },
@@ -34,7 +35,7 @@ describe('BottomNav.vue', () => {
     const labels = wrapper.findAll('a').map((link) => link.attributes('aria-label'));
 
     expect(wrapper.get('nav').attributes('aria-label')).toBe('Navegação principal');
-    expect(labels).toEqual(['Home', 'Routes', 'Maps', 'Stats', 'History']);
+    expect(labels).toEqual(['Home', 'Routes', 'Maps', 'Monitor', 'Stats', 'History']);
   });
 
   test('marks the active route with aria-current and active styling', async () => {

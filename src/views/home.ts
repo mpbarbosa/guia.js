@@ -19,6 +19,11 @@ import type {
   WebGeocodingManagerElementIds,
 } from '../coordination/WebGeocodingManager.js';
 import Chronometer from '../timing/Chronometer.js';
+import {
+  getSharedChronometer,
+  detachSharedChronometerElement,
+  stopSharedChronometer,
+} from '../timing/sharedChronometer.js';
 import PositionManager from '../core/PositionManager.js';
 import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
 import type { GeoPosition as GeoservicesGeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js';
@@ -103,6 +108,7 @@ class HomeViewController {
   tracking: boolean;
   manager: WebGeocodingManager | null;
   chronometer: Chronometer | null;
+  private _ownsChronometer: boolean;
 
   private _boundHandlers: Record<string, EventListener>;
   private _mapDisplayer: MapLibreDisplayer | null;
@@ -144,6 +150,7 @@ class HomeViewController {
     // Components (initialized in init())
     this.manager = params.manager || null;
     this.chronometer = params.chronometer || null;
+    this._ownsChronometer = false;
     
     // Event listener handlers (bound methods stored for cleanup)
     this._boundHandlers = {};
@@ -279,9 +286,9 @@ class HomeViewController {
     // Remove event listeners
     this._removeEventListeners();
     
-    // Destroy chronometer
-    if (this.chronometer && typeof this.chronometer.destroy === 'function') {
-      this.chronometer.destroy();
+    if (this.chronometer && this._ownsChronometer) {
+      stopSharedChronometer();
+      detachSharedChronometerElement();
     }
     
     // Destroy manager
@@ -312,6 +319,7 @@ class HomeViewController {
     this.initialized = false;
     this.manager = null;
     this.chronometer = null;
+    this._ownsChronometer = false;
     this._boundHandlers = {};
     
     log('(HomeViewController) destroyed — card displayer and speech observer released');
@@ -398,7 +406,7 @@ class HomeViewController {
    * @private
    * @async
    * @returns {Promise<void>}
-   * @throws {Error} If chronometer element not found or initialization fails
+   * @throws {Error} If chronometer initialization fails
    */
   private async _initializeChronometer(): Promise<void> {
     // Skip if chronometer already provided via dependency injection
@@ -408,21 +416,8 @@ class HomeViewController {
     }
     
     try {
-      const chronometerElement = this.document.getElementById('chronometer');
-      
-      if (!chronometerElement) {
-        warn('HomeViewController: chronometer element not found - chronometer not initialized');
-        return; // Non-critical, allow initialization to continue
-      }
-      
-      // Create chronometer instance
-      this.chronometer = new Chronometer(chronometerElement);
-      
-      // Subscribe chronometer to PositionManager for automatic updates
-      const positionManager = PositionManager.getInstance();
-      positionManager.subscribe(this.chronometer as unknown as { update?: (...args: unknown[]) => void });
-      
-      // Start the chronometer immediately
+      this.chronometer = getSharedChronometer();
+      this._ownsChronometer = true;
       this.chronometer.start();
       
       log('HomeViewController: Chronometer initialized and started');
@@ -719,20 +714,6 @@ class HomeViewController {
       warn('HomeViewController: enable-location-btn not found');
     }
     
-    // Test Position button (advanced controls)
-    const testBtn = this.document.getElementById('insertPositionButton');
-    if (testBtn) {
-      this._boundHandlers.testPositionClick = async () => {
-        try {
-          await this.getSingleLocationUpdate();
-        } catch (err) {
-          error('Error getting test position:', err);
-        }
-      };
-      testBtn.addEventListener('click', this._boundHandlers.testPositionClick);
-      log('HomeViewController: Test position button listener added');
-    }
-
     const routeForm = this.document.getElementById('route-planner-form');
     const originInput = this.document.getElementById('route-origin-input');
     const destinationInput = this.document.getElementById('route-destination-input');
@@ -776,13 +757,6 @@ class HomeViewController {
       log('HomeViewController: Location button listener removed');
     }
     
-    // Remove test button listener
-    const testBtn = this.document.getElementById('insertPositionButton');
-    if (testBtn && this._boundHandlers.testPositionClick) {
-      testBtn.removeEventListener('click', this._boundHandlers.testPositionClick);
-      log('HomeViewController: Test position button listener removed');
-    }
-
     const routeForm = this.document.getElementById('route-planner-form');
     if (routeForm && this._boundHandlers.routePlannerSubmit) {
       routeForm.removeEventListener('submit', this._boundHandlers.routePlannerSubmit);

@@ -626,16 +626,16 @@ describe('OSM Address Tag Translation', () => {
             expect(result2.siglaUF).toBe('BA');
             expect(result2.siglaUF).toMatch(/^[A-Z]{2}$/);
 
-            // Test case 3: No abbreviation source available
+            // Test case 3: No state_code/ISO3166-2-lvl4 — resolved from full state name lookup
             const dataNoAbbrev = {
                 address: {
                     'state': 'Pernambuco'
-                    // No state_code or ISO3166-2-lvl4
+                    // No state_code or ISO3166-2-lvl4 — resolved via state-name lookup
                 }
             };
             const result3 = AddressDataExtractor.getBrazilianStandardAddress(dataNoAbbrev);
             expect(result3.uf).toBe('Pernambuco');  // Full name present
-            expect(result3.siglaUF).toBeNull();      // No abbreviation available
+            expect(result3.siglaUF).toBe('PE');      // Resolved via state-name fallback
         });
 
         test('edge case: addr:state with two-letter code should populate siglaUF', () => {

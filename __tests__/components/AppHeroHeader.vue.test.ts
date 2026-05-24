@@ -29,19 +29,20 @@ describe('AppHeroHeader.vue', () => {
     const h1 = wrapper.get('h1');
     expect(h1.exists()).toBe(true);
     expect(h1.text()).toBe('Onde estou?');
-    expect(h1.classes()).toContain('text-xs');
-    expect(h1.classes()).toContain('font-bold');
+    expect(h1.classes()).toContain('!text-xs');
+    expect(h1.classes()).toContain('!font-bold');
+    expect(h1.classes()).toContain('!m-0');
     expect(h1.classes()).toContain('uppercase');
     expect(h1.classes()).toContain('tracking-[0.2em]');
     expect(h1.classes()).toContain('opacity-80');
   });
 
   it('renders the navigation icon with correct classes and aria-hidden', () => {
-    const icon = wrapper.get('i.bi-navigation-fill');
+    const icon = wrapper.get('i.bi-cursor-fill');
     expect(icon.exists()).toBe(true);
     expect(icon.classes()).toContain('bi');
-    expect(icon.classes()).toContain('bi-navigation-fill');
-    expect(icon.classes()).toContain('text-3xl');
+    expect(icon.classes()).toContain('bi-cursor-fill');
+    expect(icon.classes()).toContain('text-[2rem]');
     expect(icon.classes()).toContain('shrink-0');
     expect(icon.attributes('aria-hidden')).toBe('true');
   });
@@ -50,17 +51,28 @@ describe('AppHeroHeader.vue', () => {
     const h2 = wrapper.get('#header-location-text');
     expect(h2.exists()).toBe(true);
     expect(h2.text()).toBe('— · —');
-    expect(h2.classes()).toContain('text-2xl');
-    expect(h2.classes()).toContain('font-bold');
-    expect(h2.classes()).toContain('leading-tight');
+    expect(h2.classes()).toContain('!text-2xl');
+    expect(h2.classes()).toContain('!font-bold');
+    expect(h2.classes()).toContain('!m-0');
     expect(h2.attributes('aria-live')).toBe('polite');
     expect(h2.attributes('data-pending')).toBe('true');
+  });
+
+  it('renders the metropolitan region element with correct attributes', () => {
+    const metro = wrapper.get('#hero-regiao-metropolitana');
+    expect(metro.exists()).toBe(true);
+    expect(metro.text()).toBe('');
+    expect(metro.classes()).toContain('!text-xs');
+    expect(metro.classes()).toContain('!m-0');
+    expect(metro.classes()).toContain('!mt-1');
+    expect(metro.classes()).toContain('opacity-70');
+    expect(metro.attributes('aria-live')).toBe('polite');
   });
 
   it('renders the flex container for icon and location text', () => {
     const flexDiv = wrapper.get('div.flex.items-center.gap-3.mt-4');
     expect(flexDiv.exists()).toBe(true);
-    expect(flexDiv.find('i.bi-navigation-fill').exists()).toBe(true);
+    expect(flexDiv.find('i.bi-cursor-fill').exists()).toBe(true);
     expect(flexDiv.find('#header-location-text').exists()).toBe(true);
   });
 

@@ -9,9 +9,9 @@ defineOptions({ name: 'LocationHighlightCards' });
       role="region"
       aria-labelledby="municipio-label"
     >
-      <span id="municipio-label" class="text-[10px] font-black text-outline uppercase tracking-widest">Município</span>
-      <div id="regiao-metropolitana-value" class="text-xs text-outline font-medium mt-0.5"></div>
-      <p id="municipio-value" class="text-xl font-bold text-indigo-950 mt-1 uppercase" aria-live="polite">—</p>
+      <span id="municipio-label" class="text-xs font-black text-outline uppercase tracking-widest">Município</span>
+      <div id="regiao-metropolitana-value" class="text-sm text-outline font-medium mt-1"></div>
+      <p id="municipio-value" class="!text-xl !font-bold text-indigo-950 !mt-1 !mb-0 uppercase !leading-tight" aria-live="polite">—</p>
     </div>
 
     <div
@@ -19,8 +19,8 @@ defineOptions({ name: 'LocationHighlightCards' });
       role="region"
       aria-labelledby="bairro-label"
     >
-      <span id="bairro-label" class="text-[10px] font-black text-outline uppercase tracking-widest">Bairro</span>
-      <p id="bairro-value" class="text-xl font-bold text-indigo-950 mt-1 uppercase" aria-live="polite">—</p>
+      <span id="bairro-label" class="text-xs font-black text-outline uppercase tracking-widest">Bairro</span>
+      <p id="bairro-value" class="!text-xl !font-bold text-indigo-950 !mt-1 !mb-0 uppercase !leading-tight" aria-live="polite">—</p>
     </div>
 
     <div
@@ -28,8 +28,8 @@ defineOptions({ name: 'LocationHighlightCards' });
       role="region"
       aria-labelledby="logradouro-label"
     >
-      <span id="logradouro-label" class="text-[10px] font-black text-outline uppercase tracking-widest">Logradouro</span>
-      <p id="logradouro-value" class="text-xl font-bold text-indigo-950 mt-1 uppercase" aria-live="polite">—</p>
+      <span id="logradouro-label" class="text-xs font-black text-outline uppercase tracking-widest">Logradouro</span>
+      <p id="logradouro-value" class="!text-xl !font-bold text-indigo-950 !mt-1 !mb-0 uppercase !leading-tight" aria-live="polite">—</p>
     </div>
   </section>
 </template>

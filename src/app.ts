@@ -195,22 +195,27 @@ async function handleRoute(): Promise<void> {
 
 function manageFocusAfterRouteChange(): void {
   requestAnimationFrame(() => {
-    const mainContent = document.getElementById('app-content');
-    if (!mainContent) {
+    // When Vue is mounted, content lives in #app — use that as the search root.
+    const vueApp = document.getElementById('app');
+    const legacyContent = document.getElementById('app-content');
+    const searchRoot: Element | null =
+      (vueApp && vueApp.childElementCount > 0) ? vueApp : legacyContent;
+
+    if (!searchRoot) {
       warn('Main content element not found for focus management');
       return;
     }
 
-    const heading = mainContent.querySelector('h1') as HTMLElement | null;
+    const heading = searchRoot.querySelector('h1') as HTMLElement | null;
     if (heading) {
       heading.setAttribute('tabindex', '-1');
       heading.focus({ preventScroll: true });
       heading.setAttribute('aria-live', 'polite');
       setTimeout(() => heading.removeAttribute('aria-live'), 1000);
       log('Focus moved to h1 heading:', heading.textContent);
-    } else {
-      mainContent.setAttribute('tabindex', '-1');
-      mainContent.focus({ preventScroll: true });
+    } else if (legacyContent && searchRoot === legacyContent) {
+      legacyContent.setAttribute('tabindex', '-1');
+      legacyContent.focus({ preventScroll: true });
       log('Focus moved to main content (no h1 heading found)');
     }
   });

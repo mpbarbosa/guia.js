@@ -36,6 +36,7 @@ class HTMLHighlightCardsDisplayer {
 	_document: Document;
 	_municipioElement: HTMLElement | null;
 	_regiaoMetropolitanaElement: HTMLElement | null;
+	_heroRegiaoMetroElement: HTMLElement | null;
 	_bairroElement: HTMLElement | null;
 	_logradouroElement: HTMLElement | null;
 	_municipioCard: HTMLElement | null;
@@ -54,6 +55,7 @@ class HTMLHighlightCardsDisplayer {
         this._document = document;
         this._municipioElement = document.getElementById('municipio-value');
         this._regiaoMetropolitanaElement = document.getElementById('regiao-metropolitana-value');
+        this._heroRegiaoMetroElement = document.getElementById('hero-regiao-metropolitana');
         this._bairroElement = document.getElementById('bairro-value');
         this._logradouroElement = document.getElementById('logradouro-value');
         
@@ -187,13 +189,18 @@ class HTMLHighlightCardsDisplayer {
         this._setLoadingState(false);
         _hasRenderedAddress.set(this, true);
 
-        // Update metropolitan region (displayed between label and municipality)
+        // Update metropolitan region (displayed between label and municipality, and in hero)
+        const regiaoMetropolitana = resolvedAddress.regiaoMetropolitanaFormatada?.() ?? '';
         if (this._regiaoMetropolitanaElement) {
-            const regiaoMetropolitana = resolvedAddress.regiaoMetropolitanaFormatada();
             this._regiaoMetropolitanaElement.textContent = regiaoMetropolitana;
             log('(HTMLHighlightCardsDisplayer) Updated regiao-metropolitana-value to:', regiaoMetropolitana || '(empty)');
         } else {
             warn('(HTMLHighlightCardsDisplayer) regiaoMetropolitanaElement not found');
+        }
+        const heroMetroEl = this._heroRegiaoMetroElement
+            ?? this._document.getElementById('hero-regiao-metropolitana');
+        if (heroMetroEl) {
+            heroMetroEl.textContent = regiaoMetropolitana;
         }
         
         // Update municipio with state abbreviation

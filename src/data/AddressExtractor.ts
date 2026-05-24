@@ -13,6 +13,20 @@ import BrazilianStandardAddress from './BrazilianStandardAddress.js';
 import ReferencePlace from './ReferencePlace.js';
 import type { NominatimAddress, NominatimResponse, OsmElement } from '../types/nominatim.js';
 
+/** Brazilian state full names → two-letter UF abbreviations. Used as a fallback
+ *  when the geocoding provider does not supply a state_code or ISO3166-2-lvl4 field. */
+const BRAZIL_STATE_SIGLAS = new Map([
+	['Acre', 'AC'], ['Alagoas', 'AL'], ['Amapá', 'AP'], ['Amazonas', 'AM'],
+	['Bahia', 'BA'], ['Ceará', 'CE'], ['Distrito Federal', 'DF'],
+	['Espírito Santo', 'ES'], ['Goiás', 'GO'], ['Maranhão', 'MA'],
+	['Mato Grosso', 'MT'], ['Mato Grosso do Sul', 'MS'], ['Minas Gerais', 'MG'],
+	['Pará', 'PA'], ['Paraíba', 'PB'], ['Paraná', 'PR'], ['Pernambuco', 'PE'],
+	['Piauí', 'PI'], ['Rio de Janeiro', 'RJ'], ['Rio Grande do Norte', 'RN'],
+	['Rio Grande do Sul', 'RS'], ['Rondônia', 'RO'], ['Roraima', 'RR'],
+	['Santa Catarina', 'SC'], ['São Paulo', 'SP'], ['Sergipe', 'SE'],
+	['Tocantins', 'TO'],
+]);
+
 /**
  * Base class for extracting geocoding API responses into a standardized
  * Brazilian address format.
@@ -57,6 +71,12 @@ class AddressExtractor {
 		if (!iso3166Code || typeof iso3166Code !== 'string') return null;
 		const match = iso3166Code.match(/^BR-([A-Z]{2})$/);
 		return match ? match[1] : null;
+	}
+
+	/** Maps a full Brazilian state name (e.g. "São Paulo") to its UF abbreviation ("SP"). */
+	static resolveStateSigla(stateName: string | null | undefined): string | null {
+		if (!stateName) return null;
+		return BRAZIL_STATE_SIGLAS.get(stateName) ?? null;
 	}
 
 	toString(): string {
@@ -137,6 +157,12 @@ class NominatimAddressExtractor extends AddressExtractor {
 		// Edge case: uf contains a two-letter code already
 		if (this.enderecoPadronizado.uf && /^[A-Z]{2}$/.test(this.enderecoPadronizado.uf)) {
 			this.enderecoPadronizado.siglaUF = this.enderecoPadronizado.uf;
+		}
+
+		// Fallback: some providers (ibira.js flat format) omit state_code and ISO3166-2-lvl4.
+		// Resolve from the full state name when both are absent.
+		if (!this.enderecoPadronizado.siglaUF && this.enderecoPadronizado.uf) {
+			this.enderecoPadronizado.siglaUF = AddressExtractor.resolveStateSigla(this.enderecoPadronizado.uf);
 		}
 
 		this.enderecoPadronizado.cep =

@@ -65,6 +65,16 @@ describe('Chronometer', () => {
             const nullChronometer = new Chronometer(null);
             expect(nullChronometer.element).toBeNull();
         });
+
+        test('should attach a new element and sync the last display text', () => {
+            chronometer.lastDisplayText = '00:01:28';
+            const replacementElement = { textContent: '', id: 'replacement-chronometer' };
+
+            chronometer.setElement(replacementElement);
+
+            expect(chronometer.element).toBe(replacementElement);
+            expect(replacementElement.textContent).toBe('00:01:28');
+        });
     });
 
     describe('Start functionality', () => {

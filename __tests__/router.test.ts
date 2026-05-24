@@ -16,6 +16,12 @@ describe('router.ts', () => {
     expect(converterRoute?.name).toBe('converter');
   });
 
+  test('has /monitor route named "monitor"', () => {
+    const monitorRoute = router.getRoutes().find(r => r.path === '/monitor');
+    expect(monitorRoute).toBeDefined();
+    expect(monitorRoute?.name).toBe('monitor');
+  });
+
   test('navigates to / and sets currentRoute', async () => {
     await router.push('/');
     await router.isReady();
@@ -26,6 +32,12 @@ describe('router.ts', () => {
     await router.push('/converter');
     await router.isReady();
     expect(router.currentRoute.value.path).toBe('/converter');
+  });
+
+  test('navigates to /monitor', async () => {
+    await router.push('/monitor');
+    await router.isReady();
+    expect(router.currentRoute.value.path).toBe('/monitor');
   });
 
   test('unknown path redirects to /', async () => {
@@ -42,5 +54,10 @@ describe('router.ts', () => {
   test('converter route meta.title is set', () => {
     const route = router.getRoutes().find(r => r.path === '/converter');
     expect(typeof route?.meta?.title).toBe('string');
+  });
+
+  test('monitor route meta.title is "Monitor"', () => {
+    const route = router.getRoutes().find(r => r.path === '/monitor');
+    expect(route?.meta?.title).toBe('Monitor');
   });
 });

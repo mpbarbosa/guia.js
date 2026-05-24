@@ -371,7 +371,7 @@ class WebGeocodingManager {
 		if (typeof params.locationResult === 'string') {
 			this.locationResult = document.getElementById(params.locationResult);
 			if (!this.locationResult) {
-				warn(`(WebGeocodingManager) Location result element '${params.locationResult}' not found in document`);
+				log(`(WebGeocodingManager) Location result element '${params.locationResult}' not found in document`);
 			}
 		} else {
 			this.locationResult = params.locationResult;

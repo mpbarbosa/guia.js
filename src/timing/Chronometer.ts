@@ -39,6 +39,7 @@ class Chronometer {
 	startTime: number | null;
 	isRunning: boolean;
 	intervalId: string | null;
+	lastDisplayText: string;
 	eventConfig: { positionUpdate: string; immediateAddressUpdate: string; positionNotUpdate: string };
 
 	/**
@@ -73,6 +74,7 @@ class Chronometer {
 		this.startTime = null;
 		this.isRunning = false;
 		this.intervalId = null;
+		this.lastDisplayText = '00:00:00';
 		
 		// Configure event names with defaults matching PositionManager constants
 		this.eventConfig = {
@@ -80,6 +82,13 @@ class Chronometer {
 			immediateAddressUpdate: eventConfig.immediateAddressUpdate || 'Immediate address update',
 			positionNotUpdate: eventConfig.positionNotUpdate || 'PositionManager not updated'
 		};
+	}
+
+	setElement(element: HTMLElement | null): void {
+		this.element = element;
+		if (this.element) {
+			this.element.textContent = this.lastDisplayText;
+		}
 	}
 
 	/**
@@ -152,8 +161,9 @@ class Chronometer {
 	reset(): void {
 		this.stop();
 		this.startTime = null;
+		this.lastDisplayText = "00:00:00";
 		if (this.element) {
-			this.element.textContent = "00:00:00";
+			this.element.textContent = this.lastDisplayText;
 		}
 	}
 
@@ -224,10 +234,10 @@ class Chronometer {
 	 * @since 0.9.0-alpha
 	 */
 	updateDisplay(): void {
+		const elapsed = this.getElapsedTime();
+		this.lastDisplayText = this.formatTime(elapsed);
 		if (this.element) {
-			const elapsed = this.getElapsedTime();
-			const formattedTime = this.formatTime(elapsed);
-			this.element.textContent = formattedTime;
+			this.element.textContent = this.lastDisplayText;
 		}
 	}
 

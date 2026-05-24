@@ -25,6 +25,7 @@ const MOCK_NOMINATIM = {
     neighbourhood: 'Bela Vista',
     suburb: 'Bela Vista',
     city: 'São Paulo',
+    county: 'Região Metropolitana de São Paulo',
     state: 'São Paulo',
     'ISO3166-2-lvl4': 'BR-SP',
   },
@@ -34,6 +35,7 @@ const MOCK_NOMINATIM = {
 
 const HOME = '/index.html';
 const CONV = '/index.html#/converter';
+const MONITOR = '/index.html#/monitor';
 
 /** Opens a fresh context with geolocation granted and Nominatim intercepted. */
 async function makeGeoContext(
@@ -111,8 +113,6 @@ const CRITICAL_ELEMENTS: [string, string][] = [
   ['#reference-place-display',      'reference place span'],
   ['#dadosSidra',                   'SIDRA data span'],
   ['#navigation-log',               'navigation log output'],
-  ['#chronometer',                  'chronometer element'],
-  ['#insertPositionButton',         'insert-position test button'],
   ['.app-version',                  'version badge'],
 ];
 
@@ -123,6 +123,13 @@ test.describe('2. Critical DOM elements', () => {
       await expect(page.locator(selector).first()).toBeAttached();
     });
   }
+});
+
+test.describe('2b. Monitor route', () => {
+  test('monitor route exposes the chronometer element', async ({ page }) => {
+    await page.goto(MONITOR, { waitUntil: 'networkidle' });
+    await expect(page.locator('#chronometer')).toBeAttached();
+  });
 });
 
 // ── 3. Version badge ──────────────────────────────────────────────────────────
@@ -279,5 +286,50 @@ test.describe('8. Service Worker', () => {
   test('service-worker.js responds HTTP 200', async ({ page }) => {
     const response = await page.goto('/service-worker.js');
     expect(response?.status()).toBe(200);
+  });
+});
+
+// ── 9. Hero metropolitan region ───────────────────────────────────────────────
+
+const METRO_NAME = 'Região Metropolitana de São Paulo';
+
+test.describe('9. Hero metropolitan region', () => {
+  test('hero card mirrors metropolitan region from the cards displayer', async ({ browser }) => {
+    const { ctx, page } = await makeGeoContext(browser);
+    try {
+      await page.goto(HOME, { waitUntil: 'networkidle' });
+
+      // Ensure the Vue app has mounted and the MutationObserver is wired up.
+      // The element starts hidden (:empty rule), so wait for attached, not visible.
+      await page.waitForSelector('#hero-regiao-metropolitana', { state: 'attached', timeout: 10_000 });
+
+      // Inject the metropolitan region directly into the source element that
+      // HTMLHighlightCardsDisplayer already updates.  The MutationObserver in
+      // HomeView.vue should instantly mirror the value to the hero element.
+      await page.evaluate((metro) => {
+        const src = document.getElementById('regiao-metropolitana-value');
+        if (src) src.textContent = metro;
+      }, METRO_NAME);
+
+      // The MutationObserver mirrors synchronously — no additional wait needed.
+      await expect(page.locator('#hero-regiao-metropolitana')).toHaveText(METRO_NAME);
+
+      // Screenshot: hero card with metropolitan region visible.
+      await page.locator('.bg-gradient-to-br').first().screenshot({
+        path: 'tests/e2e/screenshots/hero-metropolitan-region.png',
+      });
+    } finally {
+      await ctx.close();
+    }
+  });
+
+  test('hero metropolitan region is hidden when empty', async ({ page }) => {
+    await page.goto(HOME, { waitUntil: 'networkidle' });
+
+    // Initially empty → :empty CSS rule applies → display:none.
+    const el = page.locator('#hero-regiao-metropolitana');
+    await expect(el).toBeAttached();
+    const text = await el.textContent();
+    expect(text?.trim()).toBe('');
   });
 });

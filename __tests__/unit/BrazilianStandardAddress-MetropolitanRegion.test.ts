@@ -285,6 +285,65 @@ describe('BrazilianStandardAddress - Metropolitan Region (v0.9.0-alpha)', () => 
         });
     });
 
+    describe('Brazilian macroregion filtering', () => {
+        const macroregions = [
+            'Região Norte',
+            'Região Nordeste',
+            'Região Centro-Oeste',
+            'Região Sudeste',
+            'Região Sul',
+        ];
+
+        macroregions.forEach((region) => {
+            test(`should return empty string for macroregion "${region}"`, () => {
+                if (!BrazilianStandardAddress) { expect(true).toBe(true); return; }
+
+                const address = new BrazilianStandardAddress();
+                address.regiaoMetropolitana = region;
+                expect(address.regiaoMetropolitanaFormatada()).toBe('');
+            });
+        });
+
+        test('should NOT filter proper metropolitan regions', () => {
+            if (!BrazilianStandardAddress) { expect(true).toBe(true); return; }
+
+            const metropolitanRegions = [
+                'Região Metropolitana do Recife',
+                'Região Metropolitana de São Paulo',
+                'Região Metropolitana do Rio de Janeiro',
+                'Região Metropolitana de Belo Horizonte',
+                'Região Metropolitana de Fortaleza',
+                'Região Metropolitana de Salvador',
+            ];
+
+            metropolitanRegions.forEach((region) => {
+                const address = new BrazilianStandardAddress();
+                address.regiaoMetropolitana = region;
+                expect(address.regiaoMetropolitanaFormatada()).toBe(region);
+            });
+        });
+
+        test('should filter "Região Sudeste" (São Paulo macroregion case)', () => {
+            if (!BrazilianStandardAddress) { expect(true).toBe(true); return; }
+
+            const address = new BrazilianStandardAddress();
+            address.municipio = 'São Paulo';
+            address.siglaUF = 'SP';
+            address.regiaoMetropolitana = 'Região Sudeste';
+            expect(address.regiaoMetropolitanaFormatada()).toBe('');
+        });
+
+        test('should filter "Região Nordeste" (Recife outside metro area case)', () => {
+            if (!BrazilianStandardAddress) { expect(true).toBe(true); return; }
+
+            const address = new BrazilianStandardAddress();
+            address.municipio = 'Caruaru';
+            address.siglaUF = 'PE';
+            address.regiaoMetropolitana = 'Região Nordeste';
+            expect(address.regiaoMetropolitanaFormatada()).toBe('');
+        });
+    });
+
     describe('Method behavior consistency', () => {
         test('regiaoMetropolitanaFormatada() should follow same pattern as bairroCompleto()', () => {
             if (!BrazilianStandardAddress) {

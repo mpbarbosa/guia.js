@@ -16,8 +16,6 @@ import progressiveDisclosureManager from '../utils/progressive-disclosure.js';
 import AppHeroHeader from './AppHeroHeader.vue';
 import Onboarding from './Onboarding.vue';
 import LocationHighlightCards from './LocationHighlightCards.vue';
-import SecondaryInfoPanel from './SecondaryInfoPanel.vue';
-import AdvancedControlsPanel from './AdvancedControlsPanel.vue';
 
 interface Props {
   locationResult?: string;
@@ -36,6 +34,7 @@ const onboardingErrorHtml = ref('');
 
 let controller: InstanceType<typeof HomeViewController> | null = null;
 let headerDisplayer: InstanceType<typeof HTMLHeaderDisplayer> | null = null;
+let heroMetroObserver: MutationObserver | null = null;
 
 function onTrackingStarted(): void {
   isTracking.value = true;
@@ -88,6 +87,20 @@ onMounted(async () => {
     isInitialized.value = true;
     isTracking.value = controller.isTracking();
     headerDisplayer = HTMLHeaderDisplayer.create(document);
+
+    // Mirror #regiao-metropolitana-value → #hero-regiao-metropolitana.
+    // The HTMLHighlightCardsDisplayer updates the cards element; we observe it
+    // and keep the hero in sync. Runs here (after controller.create) so both
+    // DOM elements are guaranteed to exist.
+    const metroSource = document.getElementById('regiao-metropolitana-value');
+    const metroTarget = document.getElementById('hero-regiao-metropolitana');
+    if (metroSource && metroTarget) {
+      metroTarget.textContent = metroSource.textContent;
+      heroMetroObserver = new MutationObserver(() => {
+        metroTarget.textContent = metroSource.textContent;
+      });
+      heroMetroObserver.observe(metroSource, { childList: true, characterData: true, subtree: true });
+    }
     // Determine onboarding visibility from actual geo permission, not tracking state.
     // autoStartTracking sets tracking=true even before the user has granted permission,
     // so checking isTracking() alone would incorrectly hide the onboarding.
@@ -117,6 +130,8 @@ onUnmounted(() => {
   progressiveDisclosureManager.destroy();
   controller?.destroy();
   headerDisplayer?.disconnect();
+  heroMetroObserver?.disconnect();
+  heroMetroObserver = null;
   controller = null;
   isInitialized.value = false;
   isTracking.value = false;
@@ -140,14 +155,6 @@ defineExpose({ isTracking, isInitialized, toggleTracking });
       :error-html="onboardingErrorHtml"
     />
 
-    <div id="geolocation-banner-container"></div>
-
     <LocationHighlightCards />
-
-    <nav aria-label="Ações da página" class="secondary-actions"></nav>
-
-    <SecondaryInfoPanel />
-
-    <AdvancedControlsPanel />
   </div>
 </template>

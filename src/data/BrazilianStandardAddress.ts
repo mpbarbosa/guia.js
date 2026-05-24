@@ -107,7 +107,14 @@ class BrazilianStandardAddress {
 	 * address.regiaoMetropolitanaFormatada();
 	 */
 	regiaoMetropolitanaFormatada(): string {
-		return this.regiaoMetropolitana || "";
+		if (!this.regiaoMetropolitana) return "";
+		// Nominatim sometimes returns Brazilian macroregions ("Região Sudeste",
+		// "Região Nordeste", etc.) in the county field. These are not metropolitan
+		// regions and must not be displayed as sub-text under the municipality.
+		const MACROREGIONS = new Set(['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul']);
+		const match = /^Região (.+)$/.exec(this.regiaoMetropolitana);
+		if (match && MACROREGIONS.has(match[1])) return "";
+		return this.regiaoMetropolitana;
 	}
 
 	/**

@@ -280,14 +280,13 @@ class ServiceCoordinator {
             sidraDisplay
         });
         this._displayers = {
-            position: this._displayerFactory.createPositionDisplayer(positionDisplay),
-            address: this._displayerFactory.createAddressDisplayer(
-                addressDisplay,
-                enderecoPadronizadoDisplay
-            ),
-            referencePlace: this._displayerFactory.createReferencePlaceDisplayer(
-                referencePlaceDisplay
-            ),
+            position: positionDisplay ? this._displayerFactory.createPositionDisplayer(positionDisplay) : null,
+            address: (addressDisplay || enderecoPadronizadoDisplay)
+                ? this._displayerFactory.createAddressDisplayer(addressDisplay, enderecoPadronizadoDisplay)
+                : null,
+            referencePlace: referencePlaceDisplay
+                ? this._displayerFactory.createReferencePlaceDisplayer(referencePlaceDisplay)
+                : null,
             highlightCards: this._document ? this._displayerFactory.createHighlightCardsDisplayer(this._document) : null,
             sidra: sidraDisplay ? this._displayerFactory.createSidraDisplayer(sidraDisplay) : null
         };
@@ -344,10 +343,8 @@ class ServiceCoordinator {
                 log('>>> (ServiceCoordinator) Subscribing HTMLAddressDisplayer to ReverseGeocoder', this._displayers.address);
                 this._reverseGeocoder.subscribe(this._displayers.address);
                 log('>>> ServiceCoordinator: Address displayer wired');
-            } else {
-                warn('(ServiceCoordinator) address displayer is null, cannot subscribe!');
             }
-            
+
             // Subscribe highlight cards displayer to the first fetched address so
             // the cards populate immediately, then keep them aligned with the
             // confirmation-buffered change notifications for subsequent updates.
@@ -360,24 +357,19 @@ class ServiceCoordinator {
             } else {
                 warn('(ServiceCoordinator) highlightCards displayer is null, cannot subscribe!');
             }
-            
+
             // Subscribe reference place displayer to address updates
             if (this._displayers.referencePlace) {
                 log('>>> (ServiceCoordinator) Subscribing HTMLReferencePlaceDisplayer to ReverseGeocoder', this._displayers.referencePlace);
                 this._reverseGeocoder.subscribe(this._displayers.referencePlace);
                 log('>>> ServiceCoordinator: Reference place displayer wired');
-            } else {
-                warn('(ServiceCoordinator) referencePlace displayer is null, cannot subscribe!');
             }
-            
-            log('>>> (ServiceCoordinator) Wiring SIDRA-related displayer to confirmed municipio changes: ', this._displayers.sidra);
+
             // Subscribe SIDRA displayer to confirmed municipality changes only.
             if (this._displayers.sidra && this._observerSubject) {
                 log('>>> (ServiceCoordinator) Subscribing HTMLSidraDisplayer to confirmed change observerSubject', this._displayers.sidra);
                 this._observerSubject.subscribe(this._displayers.sidra);
                 log('>>> ServiceCoordinator: SIDRA displayer wired');
-            } else {
-                warn('(ServiceCoordinator) sidra displayer is null, cannot subscribe!');
             }
             
             // Safe logging - check if observerSubject exists

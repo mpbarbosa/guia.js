@@ -36,6 +36,12 @@ export const routes: Record<string, RouteConfig> = {
     title: 'Conversor de Endereços',
     requiresInit: true,
     loadingEnabled: true
+  },
+  '/monitor': {
+    name: 'monitor',
+    title: 'Monitor',
+    requiresInit: false,
+    loadingEnabled: false
   }
 };
 

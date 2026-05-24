@@ -161,15 +161,13 @@ describe('HomeViewController', () => {
       expect(diController.manager).toBe(mockManager);
     });
     
-    it('should initialize chronometer if element exists', async () => {
-      const mockChronometerElement = { id: 'chronometer' };
+    it('should initialize shared chronometer without requiring a local element', async () => {
       const locationBtn = {
         addEventListener: jest.fn(),
         removeEventListener: jest.fn()
       };
       
       mockDocument.getElementById.mockImplementation((id) => {
-        if (id === 'chronometer') return mockChronometerElement;
         if (id === 'enable-location-btn') return locationBtn;
         if (id === 'locationResult') return { innerHTML: '' };
         return null;
@@ -177,16 +175,15 @@ describe('HomeViewController', () => {
       
       await controller.init();
       
-      expect(mockDocument.getElementById).toHaveBeenCalledWith('chronometer');
-      // Chronometer should be created
       expect(controller.chronometer).toBeDefined();
     });
     
-    it('should handle missing chronometer element gracefully', async () => {
+    it('should initialize chronometer gracefully when no local element exists', async () => {
       mockDocument.getElementById.mockReturnValue(null);
       
       await expect(controller.init()).resolves.not.toThrow();
       expect(controller.initialized).toBe(true);
+      expect(controller.chronometer).toBeDefined();
     });
     
     it('should use provided chronometer via dependency injection', async () => {
@@ -569,16 +566,9 @@ describe('HomeViewController - Event Listeners', () => {
       id: 'enable-location-btn'
     };
     
-    const testBtn = {
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      id: 'insertPositionButton'
-    };
-    
     document = {
       getElementById: jest.fn((id) => {
         if (id === 'enable-location-btn') return locationBtn;
-        if (id === 'insertPositionButton') return testBtn;
         if (id === 'chronometer') return null;
         if (id === 'locationResult') return { innerHTML: '' };
         return null;
@@ -621,40 +611,20 @@ describe('HomeViewController - Event Listeners', () => {
       expect(locationBtn.addEventListener).toHaveBeenCalledWith('click', expect.any(Function));
     });
     
-    test('should add click listener to insertPositionButton', async () => {
-      await controller.init();
-      
-      const testBtn = document.getElementById('insertPositionButton');
-      expect(testBtn.addEventListener).toHaveBeenCalledWith('click', expect.any(Function));
-    });
-    
     test('should store bound handlers for cleanup', async () => {
       await controller.init();
       
       expect(controller._boundHandlers.locationClick).toBeInstanceOf(Function);
-      expect(controller._boundHandlers.testPositionClick).toBeInstanceOf(Function);
     });
     
     test('should handle missing enable-location-btn gracefully', async () => {
       document.getElementById = jest.fn((id) => {
-        if (id === 'insertPositionButton') return { addEventListener: jest.fn() };
         return null;
       });
       
       await controller.init(); // Should not throw
       
       expect(controller._boundHandlers.locationClick).toBeUndefined();
-    });
-    
-    test('should handle missing insertPositionButton gracefully', async () => {
-      document.getElementById = jest.fn((id) => {
-        if (id === 'enable-location-btn') return { addEventListener: jest.fn() };
-        return null;
-      });
-      
-      await controller.init(); // Should not throw
-      
-      expect(controller._boundHandlers.testPositionClick).toBeUndefined();
     });
   });
   
@@ -667,15 +637,6 @@ describe('HomeViewController - Event Listeners', () => {
       controller.destroy();
       
       expect(locationBtn.removeEventListener).toHaveBeenCalledWith('click', boundHandler);
-    });
-    
-    test('should remove test button listener on destroy', async () => {
-      await controller.init();
-      const testBtn = document.getElementById('insertPositionButton');
-      
-      controller.destroy();
-      
-      expect(testBtn.removeEventListener).toHaveBeenCalledWith('click', expect.any(Function));
     });
     
     test('should clear bound handlers on destroy', async () => {
@@ -804,19 +765,6 @@ describe('HomeViewController - Event Listeners', () => {
       expect(controller.toggleTracking).toHaveBeenCalled();
     });
     
-    test('should call getSingleLocationUpdate when test button is clicked', async () => {
-      await controller.init();
-      
-      const testBtn = document.getElementById('insertPositionButton');
-      const clickHandler = testBtn.addEventListener.mock.calls[0][1];
-      
-      controller.getSingleLocationUpdate = jest.fn().mockResolvedValue();
-      
-      await clickHandler();
-      
-      expect(controller.getSingleLocationUpdate).toHaveBeenCalled();
-    });
-    
     test('should handle errors in location button click', async () => {
       await controller.init();
       
@@ -828,16 +776,6 @@ describe('HomeViewController - Event Listeners', () => {
       await clickHandler(); // Should not throw
     });
     
-    test('should handle errors in test button click', async () => {
-      await controller.init();
-      
-      const testBtn = document.getElementById('insertPositionButton');
-      const clickHandler = testBtn.addEventListener.mock.calls[0][1];
-      
-      controller.getSingleLocationUpdate = jest.fn().mockRejectedValue(new Error('Test error'));
-      
-      await clickHandler(); // Should not throw
-    });
   });
   
   describe('UI Updates During Tracking', () => {

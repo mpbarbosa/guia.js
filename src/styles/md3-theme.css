@@ -51,9 +51,17 @@
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Override legacy highlight-card gradient inside Vue app shell */
+/* Override legacy highlight-card styles inside Vue app shell */
+#app .location-highlights {
+  display: block !important;
+}
+
 #app .highlight-card {
   background: #ffffff !important;
+  text-align: left !important;
+  padding: 24px !important;
+  min-width: 0 !important;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05) !important;
 }
 
 @layer base {

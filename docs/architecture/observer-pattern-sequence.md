@@ -130,7 +130,6 @@ Speech:                       (silent)          ← no LogradouroChanged fired y
 ```
 
 The buffer panel is a **diagnostic tool**; it does not imply that the visible card is wrong.
-See [LOGRADOURO_CONFIRMATION_MISMATCH_ANALYSIS.md](./LOGRADOURO_CONFIRMATION_MISMATCH_ANALYSIS.md)
 for the full analysis.
 
 ---
@@ -156,9 +155,7 @@ for the full analysis.
 
 - [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - WebGeocodingManager class using observer pattern
 - [CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md) - Complete class architecture and relationships
-- [WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md) - PR #189 refactoring details
 - [observer-pattern.md](./observer-pattern.md) - Full observer pattern reference (subjects, observers, notification signatures)
-- [LOGRADOURO_CONFIRMATION_MISMATCH_ANALYSIS.md](./LOGRADOURO_CONFIRMATION_MISMATCH_ANALYSIS.md) - Investigation of raw `ADDRESS_FETCHED_EVENT` updates diverging from confirmation-buffered state
 
 ### Development Guidelines
 

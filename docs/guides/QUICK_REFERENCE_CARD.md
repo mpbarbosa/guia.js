@@ -106,7 +106,6 @@ guia_js/
 
 - [POSITION_MANAGER.md](docs/architecture/POSITION_MANAGER.md)
 - [WEB_GEOCODING_MANAGER.md](docs/architecture/WEB_GEOCODING_MANAGER.md)
-- [GEOLOCATION_SERVICE_REFACTORING.md](docs/architecture/GEOLOCATION_SERVICE_REFACTORING.md)
 
 ### Testing Guides
 

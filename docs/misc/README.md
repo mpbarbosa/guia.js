@@ -1,124 +1,16 @@
-# Miscellaneous Documentation Archive
+# Miscellaneous Documentation
 
-**Purpose**: Historical project records archive from major documentation initiatives (2026-01-01+)
-**Status**: Reorganized 2026-01-27 - Files moved to appropriate directories
-**Category**: Controlled archive with strict acceptance criteria
+This directory now keeps only documents that still describe behavior present in the codebase but do not yet have a clearer long-term home.
 
----
+## Current Contents
 
-## 🚨 Reorganization Notice (2026-05-22)
+- **[DEVICE_DETECTION.md](./DEVICE_DETECTION.md)** - Device detection behavior and accuracy thresholds
+- **[MOBILE_PROGRESSIVE_DISCLOSURE.md](./MOBILE_PROGRESSIVE_DISCLOSURE.md)** - Mobile secondary-information disclosure behavior
 
-The legacy `docs/reports/` archive was removed from the repository, and `docs/maintenance/` has now been retired.
+## Guidelines
 
-Historical and temporary records should now be maintained under this directory (`docs/misc/`) or promoted to a stable topic directory such as `docs/testing/`, `docs/infrastructure/`, or `docs/developer/` when they become long-lived references.
+- Do **not** add temporary notes, workflow transcripts, or one-off analysis here.
+- Do **not** keep purely historical implementation records here once they stop being useful for current maintenance.
+- Prefer topic directories such as `docs/architecture/`, `docs/developer/`, `docs/testing/`, and `docs/infrastructure/` whenever a better fit exists.
 
----
-
-## 📋 Purpose of This Directory
-
-This directory serves as a **controlled archive** for historical documentation that doesn't fit other categories. With the 2026-01-27 reorganization, it now follows strict acceptance criteria to prevent becoming a "dumping ground."
-
-### Acceptance Criteria (Anti-Dumping Ground)
-
-Documents placed in `docs/misc/` MUST meet ALL of these criteria:
-
-✅ **Historical records of completed work only**
-✅ **Must have clear date in filename** (e.g., `*_2026-01-09.md`)
-✅ **Must be referenced from active documentation**
-✅ **Documents older than current release cycle**
-
-❌ **NOT for active guides or current documentation** → Use main `docs/` or specific subdirectories
-❌ **NOT for experimental/draft work** → Use active feature/topic directories instead
-❌ **NOT for temporary notes** → Delete instead
-
----
-
-## 🎯 When to Use This Directory
-
-### ✅ SHOULD Go Here
-
-- Historical records that don't fit other categories
-- Analysis/planning documents superseded by implementation
-- Working notes that have historical value
-- Audit trail documentation for specific initiatives
-
-### ❌ Should NOT Go Here
-
-- **Active documentation** → Use `docs/` root or specific subdirectories
-- **Analysis reports** → Use topic-specific directories (for example `docs/testing/`, `docs/infrastructure/`)
-- **Bug fix records** → Use `docs/misc/` or the affected topic directory
-- **Implementation summaries** → Use topic-specific stable directories
-- **Planning documents** → Use `docs/infrastructure/` or `docs/architecture/`
-- **Temporary notes** → Delete or use session workspace
-
----
-
-## 📂 Better Alternatives
-
-Before placing a document in `docs/misc/`, consider these directories:
-
-| Document Type | Recommended Location |
-|--------------|---------------------|
-| Analysis reports | Topic-specific directories (for example `docs/testing/`, `docs/infrastructure/`) |
-| Bug investigations | `docs/misc/` or the affected topic directory |
-| Implementation summaries | Topic-specific stable directories |
-| Architecture decisions | `docs/architecture/` |
-| Infrastructure planning | `docs/infrastructure/` |
-| Testing documentation | `docs/testing/` |
-| API integration docs | `docs/api-integration/` |
-| Refactoring sessions | `docs/developer/` (see `REFACTORING_SUMMARY.md`) |
-| General reference | `docs/` root level |
-
----
-
-## 📊 Statistics (Post-Reorganization)
-
-- **Previous**: 18 files (139KB of documentation)
-- **Current**: 1 file (this README)
-- **Files Moved**: 16 files to appropriate directories
-- **Files Removed**: 1 temporary working file
-- **Reorganization Date**: 2026-01-27
-
----
-
-## 🔗 Related Documentation
-
-### Primary Documentation Locations
-
-- **[../infrastructure/](../infrastructure/)** - Infrastructure and tooling documentation
-- **[../developer/DIRECTORY_ORGANIZATION.md](../developer/DIRECTORY_ORGANIZATION.md)** - Complete directory structure guide
-
-### Finding Moved Documents
-
-- **Analysis reports**: See [../testing/](../testing/), [../infrastructure/](../infrastructure/), and [../developer/](../developer/)
-- **Bug fix records**: See this directory and topic-specific guides under [../infrastructure/](../infrastructure/) and [../developer/](../developer/)
-- **Implementation summaries**: See [../infrastructure/](../infrastructure/) and [../developer/](../developer/)
-- **Project clarification**: See [./PROJECT_CLARIFICATION.md](./PROJECT_CLARIFICATION.md)
-
----
-
-## ✍️ Contributing
-
-### Before Adding Files Here
-
-1. **Check if it fits another category** - 90% of documentation has a better home
-2. **Verify it meets acceptance criteria** - Must be historical, dated, and referenced
-3. **Consider alternatives** - Use session workspace for temporary notes
-4. **Update this README** - Add file reference if accepted
-
-### Archival Process
-
-When documentation becomes historical:
-
-1. **Evaluate destination** - Is `docs/misc/` really the best place?
-2. **Add date to filename** - Use `YYYY-MM-DD` format
-3. **Mark as archived** - Update document status
-4. **Add cross-references** - Link from active documentation
-5. **Update this README** - Document the addition
-
----
-
-**Last Updated**: 2026-05-22
-**Maintained By**: Development team
-**Purpose**: Controlled historical archive with strict acceptance criteria
-**Status**: ✅ Reorganized - Only README remains
+**Last Updated**: 2026-05-23

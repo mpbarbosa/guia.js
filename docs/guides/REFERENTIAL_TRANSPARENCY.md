@@ -674,7 +674,6 @@ For architecture examples:
 
 - [CLASS_DIAGRAM.md](../architecture/CLASS_DIAGRAM.md) - Overall architecture showing pure functions
 - [REFERENCE_PLACE.md](../architecture/REFERENCE_PLACE.md) - Frozen objects for immutability
-- [WEBGEOCODINGMANAGER_REFACTORING.md](../architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - Refactoring toward better separation of concerns
 
 ### Academic Papers
 

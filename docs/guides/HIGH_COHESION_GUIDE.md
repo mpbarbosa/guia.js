@@ -402,7 +402,6 @@ runs:
 ├── CONTRIBUTING.md                     # Contribution guidelines
 ├── REFERENTIAL_TRANSPARENCY.md        # Pure functions and immutability
 ├── CODE_REVIEW_GUIDE.md               # Code review checklist
-├── REFACTORING_SUMMARY.md             # Refactoring history (PR #121)
 │
 ├── actions/                            # Reusable actions (high cohesion)
 │   ├── validate-js/                   # ✅ Single purpose: JS validation
@@ -641,7 +640,6 @@ describe('AddressCache', () => {
 ### Within This Repository
 
 - [LOW_COUPLING_GUIDE.md](../../.github/LOW_COUPLING_GUIDE.md) - Complementary principles for loose coupling
-- [REFACTORING_SUMMARY.md](../developer/REFACTORING_SUMMARY.md) - Real examples of improving cohesion (PR #121)
 - [CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md) - Reviewing for cohesion
 - [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) - Pure functions and single responsibility
 - [TDD_GUIDE.md](./TDD_GUIDE.md) - Testing cohesive components
@@ -650,7 +648,6 @@ describe('AddressCache', () => {
 ### Architecture Examples
 
 - [CLASS_DIAGRAM.md](../architecture/CLASS_DIAGRAM.md) - Architecture showing cohesive classes
-- [WEBGEOCODINGMANAGER_REFACTORING.md](../architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - PR #189 cohesion improvements
 - [WEB_GEOCODING_MANAGER.md](../architecture/WEB_GEOCODING_MANAGER.md) - Coordinator with focused responsibilities
 - [REFERENCE_PLACE.md](../architecture/REFERENCE_PLACE.md) - Single-purpose class example
 

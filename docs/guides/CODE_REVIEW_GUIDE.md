@@ -534,8 +534,6 @@ This ensures the original data isn't modified, making the code more predictable 
 ### Architecture Documentation
 
 - [CLASS_DIAGRAM.md](../architecture/CLASS_DIAGRAM.md) - Complete class architecture
-- [WEBGEOCODINGMANAGER_REFACTORING.md](../architecture/WEBGEOCODINGMANAGER_REFACTORING.md) - Example of high-quality refactoring
-- [REFACTORING_SUMMARY.md](../developer/REFACTORING_SUMMARY.md) - Major refactoring history
 
 ### Testing
 

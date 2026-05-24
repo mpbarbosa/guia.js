@@ -358,7 +358,7 @@ During refactoring:
 
 ## Related Documentation
 
-- `docs/infrastructure/NODE_VERSION_ALIGNMENT_PLAN.md` - Node.js environment
+- `.nvmrc` and `package.json` - Node.js environment
 - `TESTING.md` - Testing overview and commands
 - `.github/CONTRIBUTING.md` - Development guidelines
 - `CHANGELOG.md` - Version history

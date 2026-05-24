@@ -164,7 +164,6 @@ describe('WebGeocodingManager', () => {
 
 - [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - Main class using ElementIdsConfiguration
 - [CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md) - Complete class architecture
-- [WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md) - Refactoring details
 
 ### Development Guidelines
 

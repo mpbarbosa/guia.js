@@ -18,7 +18,7 @@ Central index of all user-facing and technical feature documentation.
 |---------|--------------|--------|
 | Geolocation Services | [README.md](../../README.md) | ✅ Core |
 | Address Geocoding | [API Reference](../../api/API_REFERENCE.md) | ✅ Core |
-| Speech Synthesis | [Voice Selection Guide](../../guides/VOICE_SELECTION.md) | ✅ Core |
+| Speech Synthesis | [Speech Synthesis Tutorial](../../guides/TUTORIAL_SPEECH_SYNTHESIS.md) | ✅ Core |
 | IBGE/SIDRA Integration | [SIDRA Integration](../../guides/SIDRA_INTEGRATION.md) | ✅ v0.9.0-alpha |
 
 ## Architecture & Technical
@@ -30,7 +30,6 @@ Central index of all user-facing and technical feature documentation.
 | [API Reference](../../api/API_REFERENCE.md) | API endpoints reference |
 | [TESTING.md](../../testing/TESTING.md) | Testing strategy and coverage |
 | [DEVELOPER_GUIDE.md](../../developer/DEVELOPER_GUIDE.md) | Developer setup and workflow |
-| [MIGRATION_v0.10.0.md](../../guides/MIGRATION_v0.10.0.md) | v0.10.0 migration guide |
 
 ## Browsing All Docs
 

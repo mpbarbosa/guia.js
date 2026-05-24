@@ -85,8 +85,6 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 - **[Class Diagram](architecture/CLASS_DIAGRAM.md)** - Class structure
 - **[Sequence Diagrams](architecture/observer-pattern-sequence.md)** - Interaction flows
-- **[Logradouro confirmation mismatch analysis](architecture/LOGRADOURO_CONFIRMATION_MISMATCH_ANALYSIS.md)** - Investigation of raw-vs-confirmed address divergence
-- **[Version Timeline](architecture/VERSION_TIMELINE.md)** - Evolution history
 
 ### 4. Developer Guides
 
@@ -161,7 +159,6 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### Speech Synthesis
 
 - **[Speech Synthesis Tutorial](guides/TUTORIAL_SPEECH_SYNTHESIS.md)** - Audio feedback
-- **[Voice Selection](guides/VOICE_SELECTION.md)** - Voice management
 
 ### 8. Infrastructure & Operations
 
@@ -169,7 +166,6 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 - **[Deployment Guide](guides/DEPLOYMENT_GUIDE.md)** - Production deployment
 - **[Vite Configuration](../vite.config.js)** - Build system
-- **[CDN Delivery](infrastructure/CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md)** - CDN setup
 
 #### CI/CD
 
@@ -179,18 +175,12 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 #### Environment
 
-- **[Node Version Alignment](infrastructure/NODE_VERSION_ALIGNMENT_PLAN.md)** - Node.js setup
 - **[Environment Constants](../src/config/environment.ts)** - Configuration
 
 ### 9. Maintenance & Refactoring
 
-#### Refactoring Guides
-
-- **[Refactoring Summary](developer/REFACTORING_SUMMARY.md)** - Recent changes
-
 #### Technical Debt
 
-- **[Console Logging Debt](developer/CONSOLE_LOGGING_TECHNICAL_DEBT.md)** - Logging cleanup
 - **[Dependency Management](infrastructure/DEPENDENCY_MANAGEMENT.md)** - Dependency updates
 
 ### 10. Advanced Topics
@@ -235,12 +225,9 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 #### Version History
 
 - **[Changelog](../CHANGELOG.md)** - Version history
-- **[Version Timeline](architecture/VERSION_TIMELINE.md)** - Evolution
-- **[Legacy Changelog](misc/CHANGELOG_v0.7.4.md)** - Historical release notes
 
-#### Migration Guides
+#### Migration & Upgrade References
 
-- **[Migration Guide](guides/MIGRATION_GUIDE.md)** - Version upgrades
 - **[Dependency Management](infrastructure/DEPENDENCY_MANAGEMENT.md)** - Major dependency changes and strategy
 
 ---

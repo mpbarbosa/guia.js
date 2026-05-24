@@ -241,7 +241,6 @@ Performance monitoring and helper utilities.
 - `COMPREHENSIVE_GUIDE.md` - Complete architecture overview
 - `CLASS_DIAGRAM.md` - UML class diagrams
 - `SYSTEM_OVERVIEW.md` - High-level system design
-- `VERSION_TIMELINE.md` - Version history and evolution
 
 **Design Patterns**:
 

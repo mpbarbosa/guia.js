@@ -33,7 +33,6 @@ const errorMap = { /* ... */ };
 
 - `docs/issue-189/CREATE_ISSUES_GUIDE.md` (line 572)
 - `docs/issue-189/ISSUE_189_NEXT_STEPS.md` (line 473)
-- `docs/architecture/GEOLOCATION_SERVICE_REFACTORING.md` (lines 142, 159, 197)
 - `docs/ESLINT_CONFIGURATION_ISSUE_ANALYSIS.md` (lines 87, 147, 270)
 
 **Why Valid**: This is a standard documentation convention to indicate "implementation details omitted" without cluttering examples with unnecessary code.
@@ -96,9 +95,7 @@ const closingTags = (html.match(/<\/\w+>/g) || []).length;
 if (matches(/\/\*\s*\.\.\.\s*\*\//)) skip();
 ```
 
-**Files Using This Pattern**:
-
-- `docs/misc/PROJECT_CLARIFICATION.md`
+**Files Using This Pattern**: none currently
 
 **Why Valid**: This is documentation showing how to configure automated tools to ignore `/* ... */` patterns.
 

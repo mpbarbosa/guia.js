@@ -37,31 +37,13 @@ Use these directories instead:
 
 ## Current Contents
 
-### CI/CD & Deployment
+### Active Reference Docs
 
-- **`CDN_DELIVERY_SCRIPT_RELOCATION_PLAN.md`** - jsDelivr CDN URL generation strategy
-  - Planning document for `.github/scripts/cdn-delivery.sh`
-  - CDN URL templates and version management
-  - Relocation from root to .github/scripts/
-
-### Development Environment
-
-- **`NODE_VERSION_ALIGNMENT_PLAN.md`** - Node.js version standardization
-  - Node.js v18+ requirement across all environments
-  - `.nvmrc` and GitHub Actions alignment
-  - Version consistency strategy
-
-- **`EXAMPLES_DIRECTORY.md`** - Examples directory organization
-  - Structure and purpose of `/examples` directory
-  - Usage demonstration files
-  - Integration examples
-
-### AI-Assisted Development
-
-- **`AI_WORKFLOW_INFRASTRUCTURE.md`** - AI-assisted development setup
-  - GitHub Copilot integration
-  - Copilot instructions configuration
-  - AI workflow best practices
+- **`CI_CD_GUIDE.md`** - CI/CD behavior and local validation workflow
+- **`DEPENDENCY_MANAGEMENT.md`** - Dependency strategy and audit guidance
+- **`DEPLOYMENT.md`** - Production deployment and publishing
+- **`SECURITY_CONFIGURATION.md`** - CSP, rate limiting, and security hardening
+- **`AI_WORKFLOW_INFRASTRUCTURE.md`** - AI workflow directory and handling notes
 
 ---
 
@@ -71,11 +53,10 @@ Use these directories instead:
 
 Use this directory for:
 
-1. **Planning Documents** - Before implementing major infrastructure changes
-2. **Configuration Strategies** - CI/CD, environment, deployment strategies
-3. **Setup Guides** - How to configure development environments
-4. **Migration Plans** - Moving infrastructure components
-5. **Alignment Plans** - Ensuring consistency across environments
+1. **Configuration Strategies** - CI/CD, security, deployment strategies
+2. **Setup Guides** - How to configure development environments
+3. **Operational References** - Deployment and dependency maintenance
+4. **Workflow Notes** - Durable documentation for infrastructure-related tooling
 
 ### Document Template
 
@@ -129,17 +110,7 @@ How to revert if needed.
 
 ## Key Infrastructure Components
 
-### 1. Node.js Environment
-
-**Files:**
-
-- `.nvmrc` - Node.js version specification
-- `package.json` - Engine requirements
-- `.github/workflows/*.yml` - CI Node.js versions
-
-**Standard:** Node.js v18+ (LTS)
-
-### 2. GitHub Actions CI/CD
+### 1. GitHub Actions CI/CD
 
 **Files:**
 
@@ -153,16 +124,7 @@ How to revert if needed.
 - Coverage reporting
 - Pre-commit hooks
 
-### 3. CDN Delivery
-
-**Files:**
-
-- `.github/scripts/cdn-delivery.sh` - URL generation
-- `cdn-urls.txt` - Generated URLs
-
-**Provider:** jsDelivr CDN
-
-### 4. Development Scripts
+### 2. Development Scripts
 
 **Files:**
 

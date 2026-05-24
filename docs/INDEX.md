@@ -98,12 +98,6 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
   - Directory structure explanation (/src for library organization)
   - Historical context of restructuring commit
 
-- **[PROJECT_CLARIFICATION.md](./misc/PROJECT_CLARIFICATION.md)** - 📦 ARCHIVED: Historical clarifications (2026-01-06)
-  - Historical record of project identity confusion resolution
-  - Preserved for audit trail and AI tool reference
-  - See current docs: README.md, PROJECT_PURPOSE_AND_ARCHITECTURE.md
-  - Development workflow and CDN distribution
-  - **Source Directory Details**:
     - **Views Module** (`/src/views
 
 ---

@@ -1030,7 +1030,6 @@ Marcelo Pereira Barbosa
 ### Related Architecture Documentation
 
 - **[CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md)** - Complete class architecture and relationships
-- **[WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md)** - Detailed refactoring analysis (PR #189)
 - **[GEO_POSITION.md](./GEO_POSITION.md)** - Geographic position data documentation
 - **[REFERENCE_PLACE.md](./REFERENCE_PLACE.md)** - Reference place class documentation
 - **[observer-pattern-sequence.md](./observer-pattern-sequence.md)** - Observer pattern execution flow diagrams

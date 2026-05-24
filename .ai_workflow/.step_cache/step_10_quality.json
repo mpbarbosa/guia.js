@@ -259,7 +259,7 @@
     "examples/geolocation-service-demo.js": {
       "score": 100,
       "issueCount": 0,
-      "lastAnalyzed": "2026-04-25T15:34:04.505Z"
+      "lastAnalyzed": "2026-05-24T01:21:09.732Z"
     },
     "examples/geoposition-immutability-demo.js": {
       "score": 100,
@@ -284,7 +284,7 @@
     "public/service-worker.js": {
       "score": 100,
       "issueCount": 0,
-      "lastAnalyzed": "2026-05-17T17:11:34.171Z"
+      "lastAnalyzed": "2026-05-24T01:21:09.732Z"
     },
     "scripts/lint-md.js": {
       "score": 100,
@@ -309,7 +309,7 @@
     "src/utils/progressive-disclosure.js": {
       "score": 100,
       "issueCount": 0,
-      "lastAnalyzed": "2026-04-28T23:48:53.980Z"
+      "lastAnalyzed": "2026-05-24T01:21:09.732Z"
     },
     "src/utils/version-display-manager.js": {
       "score": 100,
@@ -364,7 +364,7 @@
     "public/v1/service-worker.js": {
       "score": 100,
       "issueCount": 0,
-      "lastAnalyzed": "2026-05-20T03:42:12.830Z"
+      "lastAnalyzed": "2026-05-24T01:21:09.732Z"
     }
   }
 }

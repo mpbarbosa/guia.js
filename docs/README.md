@@ -121,7 +121,6 @@ Controlled historical archive and retired documentation records:
 
 **Geolocation & Location Services**
 
-- [GeolocationService Implementation](./guides/GEOLOCATION_SERVICE_IMPLEMENTATION.md)
 - [Position Management](./api/POSITION_MANAGER.md)
 - [Address Extraction](./api/ADDRESS_EXTRACTOR.md)
 
@@ -219,6 +218,6 @@ Found outdated information or broken links? Want to improve documentation?
 ---
 
 **Last Updated**: 2026-05-23
-**Documentation Version**: 0.27.0-alpha
+**Documentation Version**: 0.27.1-alpha
 **Total Documentation Files**: 312+ markdown files
 **Directory Structure**: 20 documented categories

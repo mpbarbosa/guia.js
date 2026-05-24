@@ -883,7 +883,6 @@ When opening a PR:
 
 - **[CLASS_DIAGRAM.md](../architecture/CLASS_DIAGRAM.md)** - Complete class architecture
 - **[REFERENCE_PLACE.md](../architecture/REFERENCE_PLACE.md)** - TDD implementation example
-- **[WEBGEOCODINGMANAGER_REFACTORING.md](../architecture/WEBGEOCODINGMANAGER_REFACTORING.md)** - Refactoring with tests
 
 ### Jest Documentation
 

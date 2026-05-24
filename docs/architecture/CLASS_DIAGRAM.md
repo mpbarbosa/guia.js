@@ -575,7 +575,6 @@ guia_js/
 │   └── CLASS_DIAGRAM.md (this file)
 ├── TESTING.md
 ├── DEVICE_DETECTION.md
-├── VOICE_SELECTION.md
 └── package.json
 ```
 
@@ -601,7 +600,6 @@ guia_js/
 - [GEO_POSITION.md](./GEO_POSITION.md) - GeoPosition class documentation
 - [REFERENCE_PLACE.md](./REFERENCE_PLACE.md) - ReferencePlace class documentation
 - [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - WebGeocodingManager coordination layer
-- [WEBGEOCODINGMANAGER_REFACTORING.md](./WEBGEOCODINGMANAGER_REFACTORING.md) - PR #189 refactoring details
 - [GEO_POSITION_FUNC_SPEC.md](./GEO_POSITION_FUNC_SPEC.md) - Functional specification for GeoPosition
 
 ### Development Guidelines

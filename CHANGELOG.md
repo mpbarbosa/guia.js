@@ -5,6 +5,23 @@ All notable changes to Guia Turístico will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.28.0-alpha] - 2026-05-28
+
+### Added
+
+- **Shared coordinator contracts** (`src/types/coordinator-services.ts`):
+  - Extracted `ServiceCoordinator` dependency interfaces into a reusable type module
+  - Exported `ServiceCoordinatorParams` so coordination-layer callers can share the same constructor contract
+
+### Changed
+
+- **`ServiceCoordinator.ts`**:
+  - Replaced file-local dependency interfaces with imports from `src/types/coordinator-services.ts`
+- **`WebGeocodingManager.ts`**:
+  - Reused the exported `ServiceCoordinatorParams` type instead of an inline constructor shape cast when creating `ServiceCoordinator`
+- **Coordinator unit tests**:
+  - Typed the existing service mocks against the exported shared coordinator interfaces
+
 ## [0.27.3-alpha] - 2026-05-21
 
 ### Added

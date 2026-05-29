@@ -4,8 +4,9 @@
 
 ---
 
-Last Updated: 2026-01-28
+Last Updated: 2026-05-28
 Status: Active
+Version: 0.28.0-alpha
 Category: Guide
 
 ---

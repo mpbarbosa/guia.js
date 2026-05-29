@@ -7,6 +7,14 @@
  */
 
 import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globals';
+import type {
+    IChangeDetectionCoordinatorForSC,
+    IDisplayerFactory,
+    IGeolocationServiceForSC,
+    IObserverSubjectForSC,
+    IReverseGeocoderForSC,
+    ServiceCoordinatorParams
+} from '../../src/types/coordinator-services.js';
 
 // Mock console to suppress logging during tests
 global.console = {
@@ -36,7 +44,7 @@ try {
 /**
  * Helper to create mock GeolocationService
  */
-function createMockGeolocationService() {
+function createMockGeolocationService(): IGeolocationServiceForSC {
     return {
         getSingleLocationUpdate: jest.fn(),
         watchCurrentLocation: jest.fn(() => 12345), // Return mock watch ID
@@ -48,7 +56,7 @@ function createMockGeolocationService() {
 /**
  * Helper to create mock ReverseGeocoder
  */
-function createMockReverseGeocoder() {
+function createMockReverseGeocoder(): IReverseGeocoderForSC {
     return {
         latitude: null,
         longitude: null,
@@ -64,7 +72,7 @@ function createMockReverseGeocoder() {
 /**
  * Helper to create mock ChangeDetectionCoordinator
  */
-function createMockChangeDetectionCoordinator() {
+function createMockChangeDetectionCoordinator(): IChangeDetectionCoordinatorForSC {
     return {
         setCurrentPosition: jest.fn(),
         setupChangeDetection: jest.fn(),
@@ -77,7 +85,7 @@ function createMockChangeDetectionCoordinator() {
 /**
  * Helper to create mock ObserverSubject
  */
-function createMockObserverSubject() {
+function createMockObserverSubject(): IObserverSubjectForSC {
     return {
         observers: [],
         functionObservers: [],
@@ -91,7 +99,7 @@ function createMockObserverSubject() {
 /**
  * Helper to create mock DisplayerFactory
  */
-function createMockDisplayerFactory() {
+function createMockDisplayerFactory(): IDisplayerFactory {
     return {
         createPositionDisplayer: jest.fn(() => ({
             update: jest.fn(),
@@ -119,7 +127,7 @@ function createMockDisplayerFactory() {
 /**
  * Helper to create valid params object
  */
-function createValidParams() {
+function createValidParams(): ServiceCoordinatorParams {
     return {
         geolocationService: createMockGeolocationService(),
         reverseGeocoder: createMockReverseGeocoder(),

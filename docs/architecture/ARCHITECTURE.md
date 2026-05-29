@@ -2,8 +2,8 @@
 
 ---
 
-**Last Updated**: 2026-04-29
-**Version**: 0.24.9-alpha
+**Last Updated**: 2026-05-28
+**Version**: 0.28.0-alpha
 **Status**: Active
 **Category**: Architecture
 
@@ -120,6 +120,7 @@ The application follows a **layered architecture** with clear separation of conc
 - **EventCoordinator**: Event dispatching
 - **UICoordinator**: UI update coordination
 - **SpeechCoordinator**: Speech synthesis workflow
+- **Coordinator service contracts** (`src/types/coordinator-services.ts`): shared dependency-injection interfaces for coordination-layer services, displayers, and constructor parameters
 
 **Key Principle**: Workflow orchestration and service integration
 
@@ -265,11 +266,24 @@ WebGeocodingManager (main coordinator)
 - Coordinate geolocation workflows
 - Manage event subscriptions
 - Handle errors and state transitions
+- Reuse the exported `ServiceCoordinatorParams` contract when wiring `ServiceCoordinator`
+
+#### ServiceCoordinator
+
+**File**: `src/coordination/ServiceCoordinator.ts`
+**Purpose**: Manage service lifecycle, displayer creation, and observer wiring
+
+**Dependency Contracts**:
+
+- Imports shared interfaces from `src/types/coordinator-services.ts`
+- Keeps constructor wiring testable without coupling callers to concrete service classes
+- Provides the narrow service surface consumed by `WebGeocodingManager`
 
 **Key Methods**:
 
-- `async init()` - Initialize all coordinators
-- `getSingleLocationUpdate()` - One-time position capture
+- `createDisplayers()` - Create the position, address, reference-place, highlight-card, and SIDRA displayers
+- `wireObservers()` - Connect position, reverse-geocoder, and confirmed-change observers
+- `getSingleLocationUpdate()` - One-time position capture and downstream service updates
 - `startTracking()` - Continuous tracking
 - `stopTracking()` - Stop tracking
 
@@ -706,6 +720,6 @@ export class MyCoordinator {
 
 ---
 
-**Last Updated**: 2026-04-29
-**Architecture Version**: 0.24.9-alpha
+**Last Updated**: 2026-05-28
+**Architecture Version**: 0.28.0-alpha
 **Documentation Status**: ✅ Complete

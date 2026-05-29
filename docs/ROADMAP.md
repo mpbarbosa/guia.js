@@ -1,6 +1,6 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
-**Current Version**: `0.27.3-alpha` | **Status**: Active Development
+**Current Version**: `0.28.0-alpha` | **Status**: Active Development
 **Last Updated**: 2026-05-28
 
 ---
@@ -32,6 +32,7 @@
 - **Offline-First Foundation** (v0.24.9-alpha): `OfflineCacheService.ts` + `IBGECityStatsService.ts` + `HomeViewController`; IndexedDB-backed city-stat caching, last-known location restore, and offline reuse of recent position/address snapshots
 - **MD3 Phase 5 — ConverterView Redesign** (v0.25.0-alpha): `ConverterView.vue` template aligned to MD3 card spec; legacy router 404 suppressed for Vue-only routes (`/map`, `/stats`, `/history`)
 - **MD3 Phase 6 — Map Screen** (v0.27.3-alpha): `MapView.vue` now renders a real MapLibre GL JS map; `useMapDisplayer` composable (first in the project) wires GPS position and AddressCache updates into the map and the live address card; `MapLibreDisplayer.mount()` added for Vue-context init; `bessa_patterns.ts` mapped in Jest config
+- **Architecture Refactor Phase 1 — Shared coordinator contracts** (v0.28.0-alpha): extracted `ServiceCoordinator` dependency contracts into `src/types/coordinator-services.ts`, updated coordinator tests to use the shared interfaces, and replaced `WebGeocodingManager`'s inline `ServiceCoordinator` constructor shape with the exported contract type
 
 ---
 
@@ -68,6 +69,8 @@ Phases 0–6 complete: design tokens, Tailwind v4, AppBar/BottomNav, Bootstrap r
 A dedicated phased plan now covers the next architecture cleanup pass focused on coordinator contracts, composition-root discipline, and displayer factory injection.
 
 See [`architecture/ARCHITECTURE_REFACTOR_ROADMAP.md`](./architecture/ARCHITECTURE_REFACTOR_ROADMAP.md).
+
+**Current status:** Phase 1 is complete. Phase 2 is next: move route-planning and offline-cache ownership behind `WebGeocodingManager` so `home.ts` stops wiring those services directly.
 
 ### CI/CD Evolution Roadmap
 

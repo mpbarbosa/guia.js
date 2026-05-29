@@ -65,6 +65,7 @@
 // Import core domain classes
 import { GeoPosition, GeocodingState } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
 import ObserverSubject from '../core/ObserverSubject.js';
+import type { ServiceCoordinatorParams } from '../types/coordinator-services.js';
 
 
 // Import Phase 1 & Phase 3 coordinator classes
@@ -432,14 +433,7 @@ class WebGeocodingManager {
 		this.changeDetectionCoordinator.setAddressDataExtractor(AddressDataExtractor);
 		
 		// ServiceCoordinator replaces service initialization and coordination
-		this.serviceCoordinator = new (ServiceCoordinator as unknown as new(p: {
-			geolocationService: GeolocationService;
-			reverseGeocoder: ReverseGeocoder;
-			changeDetectionCoordinator: ChangeDetectionCoordinator;
-			observerSubject: ObserverSubject;
-			displayerFactory?: typeof DisplayerFactory;
-			document?: Document;
-		}) => ServiceCoordinator)({
+		this.serviceCoordinator = new (ServiceCoordinator as unknown as new(p: ServiceCoordinatorParams) => ServiceCoordinator)({
 			geolocationService:
 				(params.geolocationService as GeolocationService | undefined) ??
 				new GeolocationService(new BrowserGeolocationProvider()),

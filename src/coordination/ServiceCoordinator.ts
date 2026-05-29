@@ -40,72 +40,19 @@
 import PositionManager from '../core/PositionManager.js';
 import { log, warn, error as logError } from '../utils/logger.js';
 import AddressCache from '../data/AddressCache.js';
-import type {
-	GeoPosition,
-	GeoPositionError,
-} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/esm/index.js';
 import {
 	GEOLOCATION_THROTTLE_INTERVAL,
 	GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL
 } from '../config/defaults.js';
-
-// ─── Local minimal interfaces for injected dependencies ──────────────────────
-
-interface IGeolocationServiceForSC {
-	getSingleLocationUpdate(): Promise<GeoPosition>;
-	watchCurrentLocation?(
-		onUpdate?: (position: GeoPosition) => void,
-		onError?: (error: GeoPositionError) => void,
-	): number | null;
-	stopWatching?(): void;
-	stopTracking?(): void;
-	setThrottleInterval?(ms: number): void;
-}
-
-interface IReverseGeocoderForSC {
-	subscribe(observer: unknown): void;
-	observerSubject?: { observers: unknown[] };
-	latitude: number;
-	longitude: number;
-	currentAddress: unknown;
-	enderecoPadronizado: unknown;
-	update?: (...args: unknown[]) => void;
-}
-
-interface IChangeDetectionCoordinatorForSC {
-	setCurrentPosition(position: unknown): void;
-	setupChangeDetection(): void;
-}
-
-interface IObserverSubjectForSC {
-	subscribe(observer: unknown): void;
-}
-
-interface IDisplayerFactory {
-	createPositionDisplayer(el: unknown): unknown;
-	createAddressDisplayer(el1: unknown, el2: unknown): unknown;
-	createReferencePlaceDisplayer(el: unknown): unknown;
-	createHighlightCardsDisplayer(doc: Document): unknown;
-	createSidraDisplayer(el: unknown): unknown;
-}
-
-interface IDisplayers {
-	position: unknown;
-	address: unknown;
-	referencePlace: unknown;
-	highlightCards: unknown;
-	sidra: unknown;
-	[key: string]: unknown;
-}
-
-interface ServiceCoordinatorParams {
-	geolocationService: IGeolocationServiceForSC;
-	reverseGeocoder: IReverseGeocoderForSC;
-	changeDetectionCoordinator: IChangeDetectionCoordinatorForSC;
-	observerSubject: unknown;
-	displayerFactory?: IDisplayerFactory;
-	document?: Document;
-}
+import type {
+	IChangeDetectionCoordinatorForSC,
+	IDisplayerFactory,
+	IDisplayers,
+	IGeolocationServiceForSC,
+	IObserverSubjectForSC,
+	IReverseGeocoderForSC,
+	ServiceCoordinatorParams,
+} from '../types/coordinator-services.js';
 
 /**
  * ServiceCoordinator class - Manages service lifecycle and coordination

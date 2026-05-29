@@ -2,14 +2,14 @@
 
 ---
 
-Last Updated: 2026-05-23
+Last Updated: 2026-05-28
 Status: Active
-version: 0.27.3-alpha
+version: 0.28.0-alpha
 
 ---
 
 [![Tests](https://img.shields.io/badge/tests-3074%20passing%20%2F%203242%20total-green)](https://github.com/mpbarbosa/guia.js)
-[![Version](https://img.shields.io/badge/version-0.27.0--alpha-blue)](https://github.com/mpbarbosa/guia.js)
+[![Version](https://img.shields.io/badge/version-0.28.0--alpha-blue)](https://github.com/mpbarbosa/guia.js)
 [![License](https://img.shields.io/badge/license-ISC-blue)](https://github.com/mpbarbosa/guia.js)
 
 > **Note on Test Status**: This repository keeps separate default, non-E2E, E2E, and Playwright test commands. Use the Testing section below to check the current suite status instead of relying on cached prose counts.
@@ -316,7 +316,7 @@ The `scripts/` directory contains standalone shell scripts for maintenance, depl
 | `scripts/update-doc-dates.sh` | Update "Last Updated" dates in git-modified `.md` files | *(none)* | `docs/` |
 | `scripts/update-test-counts.sh` | Refresh the managed README test-status summary after a clean non-E2E Jest run | *(none)* | `README.md`, `jest.config.unit.js` |
 | `scripts/deploy-preflight.sh` | Production deployment pre-flight checklist (build + file checks + live smoke test) | *(none)* | `dist/`, `libs/sidra/tab6579_municipios.json`, `vite.config.js` |
-| `scripts/build_and_deploy.sh` | Build production bundle and push to staging via sibling repo | `-h`, `--help`, `--source dist|src` | `dist/`, `../mpbarbosa_site/shell_scripts/sync_to_staging.sh` |
+| `scripts/build_and_deploy.sh` | Build production bundle and push to staging via sibling repo | `-h`, `--help`, `--source dist\|src` | `dist/`, `../mpbarbosa_site/shell_scripts/sync_to_staging.sh` |
 | `scripts/cleanup-ai-workflow.sh` | Remove old `.ai_workflow/` run artifact directories and local build/test caches | `--days N`, `--dry-run` | `.ai_workflow/`, `.jest-cache/`, `coverage/` |
 | `scripts/run-tests-docker.sh` | Build `Dockerfile.test` and run the unit/integration Jest suite inside Docker | `-- <jest args>` | `Dockerfile.test`, `npm run test:unit` |
 | `scripts/run-e2e-tests-docker.sh` | Build `Dockerfile.test.e2e` and run the Puppeteer E2E suite inside Docker | `-- <jest args>` | `Dockerfile.test.e2e`, `npm run test:e2e` |
@@ -1848,6 +1848,6 @@ ISC License - See repository for details
 
 ---
 
-**Version**: 0.24.9-alpha
+**Version**: 0.28.0-alpha
 **Status**: Active
-**Last Updated**: 2026-04-29
+**Last Updated**: 2026-05-28

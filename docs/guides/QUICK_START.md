@@ -1,13 +1,12 @@
 # Quick Start Guide
 
-**Version:** 0.9.0-alpha
+**Version:** 0.27.3-alpha
 **Get up and running in under 10 minutes**
 
 ## Prerequisites
 
 - **Node.js** v20.19.0 or higher
 - **npm** v10.0.0 or higher
-- **Python** 3.11+ (for local web server)
 - Modern web browser with geolocation support
 
 ## 5-Minute Setup
@@ -43,20 +42,23 @@ npm test
 
 ```
 ✅ Syntax validation passed
-✅ 2,235 tests passing (2,401 total)
+✅ 4,000+ tests passing (~190 suites)
 ```
 
 ### Step 3: Start Development Server (30 seconds)
 
 ```bash
-# Start local web server
-python3 -m http.server 9000
+# Start Vite dev server with HMR
+npm run dev
 ```
 
 **Expected output:**
 
 ```
-Serving HTTP on 0.0.0.0 port 9000 (http://0.0.0.0:9000/) ...
+  VITE v5.x.x  ready in ~3s
+
+  ➜  Local:   http://localhost:9000/
+  ➜  Network: use --host to expose
 ```
 
 ### Step 4: Open Application (10 seconds)
@@ -64,7 +66,7 @@ Serving HTTP on 0.0.0.0 port 9000 (http://0.0.0.0:9000/) ...
 Open your browser and navigate to:
 
 ```
-http://localhost:9000/src/index.html
+http://localhost:9000/
 ```
 
 ### Step 5: Test Geolocation (1 minute)
@@ -74,7 +76,7 @@ http://localhost:9000/src/index.html
 3. View your coordinates and address
 4. See highlight cards for municipality and neighborhood
 
-**🎉 Congratulations!** You're now running Guia Turístico locally.
+**Congratulations!** You're now running Guia Turístico locally.
 
 ---
 
@@ -82,14 +84,14 @@ http://localhost:9000/src/index.html
 
 ### Modify the Welcome Message
 
-**File:** `src/views/home.js` (line ~30)
+**File:** `src/views/home.ts` (search for `inicializado`)
 
-```javascript
+```typescript
 // Change this:
-this.log('Guia Turístico v0.9.0-alpha inicializado');
+this.log('Guia Turístico v0.27.3-alpha inicializado');
 
 // To this:
-this.log('My Custom Tourist Guide v0.9.0-alpha inicializado');
+this.log('My Custom Tourist Guide v0.27.3-alpha inicializado');
 ```
 
 **Reload the page** and you'll see your custom message in the log area.
@@ -105,7 +107,7 @@ this.log('My Custom Tourist Guide v0.9.0-alpha inicializado');
 npm test
 
 # Run specific test suite
-npm test -- __tests__/unit/core/PositionManager.test.js
+npm test -- __tests__/unit/core/PositionManager.test.ts
 
 # Run tests with coverage
 npm run test:coverage
@@ -114,13 +116,23 @@ npm run test:coverage
 npm run test:watch
 ```
 
+### Build for Production
+
+```bash
+# Compile TypeScript + bundle with Vite
+npm run build
+
+# Preview the production bundle locally
+npm run preview
+```
+
 ### Validate Code Quality
 
 ```bash
 # Full validation (syntax + tests)
 npm run test:all
 
-# Lint JavaScript
+# Lint TypeScript/JavaScript
 npm run lint
 
 # Fix lint issues automatically
@@ -147,16 +159,19 @@ npm run check:terminology
 ```
 guia_js/
 ├── src/
-│   ├── app.js              # Main SPA entry point
+│   ├── app.ts              # Vue entry point + router (#/, #/converter)
+│   ├── main.ts             # Vue app bootstrap
 │   ├── index.html          # Main HTML page
-│   ├── core/               # Core classes (PositionManager, GeoPosition)
-│   ├── services/           # Services (Geolocation, Geocoding)
-│   ├── data/               # Data processing (Address, Cache)
-│   ├── html/               # Display components
+│   ├── core/               # Singletons (PositionManager, GeoPosition)
+│   ├── services/           # External APIs (Geolocation, Geocoding, IBGE)
+│   ├── data/               # Value objects + processing (Address, Cache)
+│   ├── html/               # UI displayers
 │   ├── speech/             # Speech synthesis
-│   ├── coordination/       # Service coordinators
-│   └── utils/              # Utilities
-├── __tests__/              # Test suites
+│   ├── coordination/       # Service orchestration
+│   ├── components/         # Vue SFCs (HomeView, AppHeroHeader, etc.)
+│   └── utils/              # Utilities (TimerManager, button-status)
+├── __tests__/              # Unit + integration test suites
+├── tests/e2e/              # Playwright E2E tests
 ├── docs/                   # Documentation
 └── package.json            # Project configuration
 ```
@@ -165,14 +180,15 @@ guia_js/
 
 ## Key Files to Know
 
-| File | Purpose | Lines |
-|------|---------|-------|
-| `src/app.js` | SPA routing and initialization | 543 |
-| `src/index.html` | Main application page | 379 |
-| `src/core/PositionManager.js` | Central geolocation state | ~300 |
-| `src/services/GeolocationService.js` | Browser geolocation wrapper | ~200 |
-| `src/data/BrazilianStandardAddress.js` | Address standardization | ~300 |
-| `src/config/defaults.js` | Configuration constants | 130+ |
+| File | Purpose |
+|------|---------|
+| `src/app.ts` | Vue entry point + SPA router |
+| `src/index.html` | Main application page |
+| `src/core/PositionManager.ts` | Central geolocation state (Singleton) |
+| `src/services/GeolocationService.ts` | Browser geolocation wrapper |
+| `src/data/BrazilianStandardAddress.ts` | Address value object |
+| `src/config/defaults.js` | Configuration constants |
+| `src/components/HomeView.vue` | Main view component |
 
 ---
 
@@ -181,80 +197,28 @@ guia_js/
 ```bash
 # Development
 npm install                  # Install dependencies
-npm run validate            # Validate syntax
-npm test                    # Run all tests
-python3 -m http.server 9000 # Start web server
+npm run dev                  # Vite dev server (port 9000, HMR)
+npm run build                # Production bundle to dist/
+npm run preview              # Preview production build (port 9001)
 
 # Testing
-npm run test:unit           # Unit tests only
-npm run test:integration    # Integration tests only
-npm run test:coverage       # Coverage report
-npm run test:watch          # Watch mode
+npm test                     # All tests (~4,000+)
+npm run test:unit            # Unit tests only
+npm run test:e2e             # Puppeteer E2E tests
+npm run test:playwright      # Playwright E2E tests
+npm run test:coverage        # Coverage report
+npm run test:watch           # Watch mode
 
 # Code Quality
-npm run lint                # Lint JavaScript
-npm run lint:fix            # Auto-fix lint issues
-npm run test:all            # Syntax + tests
+npm run validate             # JS syntax validation
+npm run lint                 # Lint TypeScript/JavaScript
+npm run lint:fix             # Auto-fix lint issues
+npm run test:all             # Syntax + tests
 
 # Utilities
-npm run check:version       # Version consistency
-npm run cdn:generate        # Generate CDN URLs
-npm run docs:generate       # Generate JSDoc
-```
-
----
-
-## Basic API Usage
-
-### Get Current Position
-
-```javascript
-import GeolocationService from './src/services/GeolocationService.js';
-
-const service = new GeolocationService();
-
-service.getCurrentPosition(
-  (position) => {
-    console.log('Lat:', position.coords.latitude);
-    console.log('Lon:', position.coords.longitude);
-  },
-  (error) => {
-    console.error('Error:', error.message);
-  }
-);
-```
-
-### Fetch Address
-
-```javascript
-import ReverseGeocoder from './src/services/ReverseGeocoder.js';
-import BrazilianStandardAddress from './src/data/BrazilianStandardAddress.js';
-
-async function getAddress(lat, lon) {
-  const geocoder = new ReverseGeocoder(lat, lon);
-  const data = await geocoder.fetchAddress();
-
-  const address = new BrazilianStandardAddress();
-  address.setFromNominatim(data);
-
-  console.log(address.toString());
-  return address;
-}
-
-// Usage
-getAddress(-23.550520, -46.633309);
-```
-
-### Display on Map
-
-```javascript
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.1-alpha/dist/esm/index.js';
-import HTMLPositionDisplayer from './src/html/HTMLPositionDisplayer.js';
-
-const displayer = new HTMLPositionDisplayer(document, 'position-container');
-const position = new GeoPosition(-23.550520, -46.633309);
-
-displayer.display(position);
+npm run check:version        # Version consistency
+npm run cdn:generate         # Generate CDN URLs
+npm run docs:generate        # Generate JSDoc
 ```
 
 ---
@@ -292,13 +256,13 @@ node --version  # Should be v20.19.0+
 2. Grant location permissions in browser
 3. Check browser console for error messages
 
-### Issue: Web server port already in use
+### Issue: Dev server port already in use
 
 **Solution:** Use a different port:
 
 ```bash
-python3 -m http.server 8000
-# Then open: http://localhost:8000/src/index.html
+npm run dev -- --port 8000
+# Then open: http://localhost:8000/
 ```
 
 ---
@@ -307,16 +271,16 @@ python3 -m http.server 8000
 
 ### 1. Read Core Documentation
 
-- [API Reference](./API_REFERENCE.md) - Complete API documentation
-- [API Examples](./API_EXAMPLES.md) - Code examples
-- [Architecture Overview](./ARCHITECTURE_OVERVIEW.md) - System design
+- [API Reference](../api/API_REFERENCE.md) - Complete API documentation
+- [API Examples](../api/API_EXAMPLES.md) - Code examples
+- [Architecture Overview](../architecture/SYSTEM_OVERVIEW.md) - System design
 
 ### 2. Explore Test Examples
 
 ```bash
 # Read test files for usage examples
-cat __tests__/unit/core/PositionManager.test.js
-cat __tests__/integration/address/AddressCache.test.js
+cat __tests__/unit/core/PositionManager.test.ts
+cat __tests__/integration/address/AddressCache.test.ts
 ```
 
 ### 3. Try Modifying Components
@@ -331,13 +295,16 @@ Start with simple changes:
 ### 4. Run E2E Tests
 
 ```bash
-# See real-world workflows
-npm test -- __tests__/e2e/CompleteGeolocationWorkflow.e2e.test.js
+# Puppeteer end-to-end tests
+npm run test:e2e
+
+# Playwright end-to-end tests
+npm run test:playwright
 ```
 
 ### 5. Contribute
 
-Read the [Contributing Guide](../.github/CONTRIBUTING.md) to learn about:
+Read the [Contributing Guide](../../.github/CONTRIBUTING.md) to learn about:
 
 - Code style conventions
 - Immutability principles
@@ -350,24 +317,24 @@ Read the [Contributing Guide](../.github/CONTRIBUTING.md) to learn about:
 
 ### Beginner (Week 1)
 
-- ✅ Complete this Quick Start
-- 📖 Read API Reference basics
-- 🧪 Run and understand existing tests
-- 💻 Make your first code change
+- Complete this Quick Start
+- Read API Reference basics
+- Run and understand existing tests
+- Make your first code change
 
 ### Intermediate (Week 2-3)
 
-- 🏗️ Understand architecture patterns
-- 🔧 Implement a new display component
-- 🧩 Add a new field to BrazilianStandardAddress
-- 📝 Write your first test
+- Understand architecture patterns
+- Implement a new display component
+- Add a new field to BrazilianStandardAddress
+- Write your first test
 
 ### Advanced (Week 4+)
 
-- 🎯 Implement a new service integration
-- ⚡ Optimize performance bottlenecks
-- 🔍 Debug complex E2E test scenarios
-- 🤝 Contribute to the project
+- Implement a new service integration
+- Optimize performance bottlenecks
+- Debug complex E2E test scenarios
+- Contribute to the project
 
 ---
 
@@ -375,10 +342,10 @@ Read the [Contributing Guide](../.github/CONTRIBUTING.md) to learn about:
 
 ### Documentation Resources
 
-1. **In-Project Documentation:** `docs/` directory (80+ guides)
-2. **API Reference:** [API_REFERENCE.md](./API_REFERENCE.md)
-3. **Examples:** [API_EXAMPLES.md](./API_EXAMPLES.md)
-4. **Architecture:** [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md)
+1. **In-Project Documentation:** `docs/` directory
+2. **API Reference:** [docs/api/API_REFERENCE.md](../api/API_REFERENCE.md)
+3. **Examples:** [docs/api/API_EXAMPLES.md](../api/API_EXAMPLES.md)
+4. **Architecture:** [docs/architecture/SYSTEM_OVERVIEW.md](../architecture/SYSTEM_OVERVIEW.md)
 
 ### Code References
 
@@ -394,8 +361,8 @@ Tests serve as living documentation:
 
 ```bash
 # Find usage examples in tests
-cat __tests__/unit/core/PositionManager.test.js
-cat __tests__/integration/services/GeolocationService.test.js
+cat __tests__/unit/core/PositionManager.test.ts
+cat __tests__/integration/services/GeolocationService.test.ts
 ```
 
 ---
@@ -412,7 +379,7 @@ git pull origin main
 git checkout -b feature/my-feature
 
 # 3. Make changes
-# ... edit files ..
+# ... edit files ...
 
 # 4. Validate
 npm run test:all
@@ -447,10 +414,11 @@ git commit --no-verify
 | Operation | Time | Notes |
 |-----------|------|-------|
 | npm install | ~20s | First time only |
-| npm test | ~65s | 2,401 tests |
+| npm run dev | ~3s | Vite dev server with HMR |
+| npm run build | ~5s | Production bundle to dist/ |
+| npm test | ~65s | 4,000+ tests |
 | npm run validate | <1s | Syntax check |
 | npm run test:unit | ~10s | Unit tests only |
-| Server startup | ~3s | Python HTTP server |
 | Page load | <2s | Local network |
 
 ---
@@ -463,14 +431,15 @@ git commit --no-verify
 - Jest configuration
 - Node.js engine requirements
 
-### jsdoc.json
+### vite.config.ts
 
-- JSDoc generation settings
-- API documentation config
+- Vite build configuration
+- CDN URL resolution plugin
+- Module aliases
 
 ### eslint.config.js
 
-- JavaScript linting rules
+- TypeScript/JavaScript linting rules
 - Code style enforcement
 
 ### .husky/
@@ -484,28 +453,28 @@ git commit --no-verify
 
 ### Supported Browsers
 
-- ✅ Chrome 90+
-- ✅ Firefox 88+
-- ✅ Safari 14+
-- ✅ Edge 90+
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
 
 ### Required Features
 
 - Geolocation API
 - Web Speech API (optional, for speech synthesis)
-- ES6 Modules
+- ES Modules
 - Promises/Async-Await
 
 ---
 
 ## Production Deployment
 
-For production deployment, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+For production deployment, see [DEPLOYMENT.md](../infrastructure/DEPLOYMENT.md).
 
 Quick checklist:
 
 - [ ] Run full test suite
-- [ ] Build for production
+- [ ] Build for production (`npm run build`)
 - [ ] Configure HTTPS
 - [ ] Set up error monitoring
 - [ ] Enable caching
@@ -513,36 +482,17 @@ Quick checklist:
 
 ---
 
-## Updates and Versioning
-
-Current version: **0.9.0-alpha**
-
-Check for updates:
-
-```bash
-# Check outdated dependencies
-npm run deps:check
-
-# Update to latest minor versions
-npm run deps:update-minor
-
-# View changelog
-cat CHANGELOG.md
-```
-
----
-
 ## Quick Reference: Important Patterns
 
 ### Singleton Pattern
 
-```javascript
+```typescript
 const manager = PositionManager.getInstance();
 ```
 
 ### Observer Pattern
 
-```javascript
+```typescript
 manager.addObserver({
   update(data) {
     console.log('Updated:', data);
@@ -552,17 +502,16 @@ manager.addObserver({
 
 ### Factory Pattern
 
-```javascript
+```typescript
 const factory = new DisplayerFactory();
 const displayer = factory.createPositionDisplayer(document, 'container');
 ```
 
-### Composition Pattern
+### TimerManager (required for all timers)
 
-```javascript
-// SpeechSynthesisManager uses composition
-const manager = SpeechSynthesisManager.getInstance();
-// Internally uses: VoiceLoader, VoiceSelector, SpeechConfiguration
+```typescript
+import timerManager from '../utils/TimerManager.js';
+timerManager.setInterval(callback, delay, 'my-timer-id');
 ```
 
 ---
@@ -571,14 +520,14 @@ const manager = SpeechSynthesisManager.getInstance();
 
 You've completed the Quick Start when you can:
 
-- ✅ Install dependencies successfully
-- ✅ Run tests and see 2,235+ passing
-- ✅ Start the web server
-- ✅ View the application in browser
-- ✅ Trigger geolocation and see coordinates
-- ✅ View address information
-- ✅ Make a simple code change
-- ✅ Run validation before committing
+- Install dependencies successfully
+- Run tests and see 4,000+ passing
+- Start the dev server with `npm run dev`
+- View the application in browser
+- Trigger geolocation and see coordinates
+- View address information
+- Make a simple code change
+- Run validation before committing
 
 ---
 
@@ -586,25 +535,25 @@ You've completed the Quick Start when you can:
 
 Choose your path:
 
-### 🎨 Frontend Developer
+### Frontend Developer
 
-→ Explore `src/html/` display components
-→ Read [USER_GUIDE.md](./user/USER_GUIDE.md)
+→ Explore `src/components/` Vue SFCs
+→ Read [USER_GUIDE.md](../user/USER_GUIDE.md)
 → Modify CSS in `src/*.css`
 
-### 🔧 Backend Developer
+### Backend Developer
 
 → Explore `src/services/` API integrations
-→ Read [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md)
+→ Read [SYSTEM_OVERVIEW.md](../architecture/SYSTEM_OVERVIEW.md)
 → Implement new service providers
 
-### 🧪 QA Engineer
+### QA Engineer
 
 → Explore `__tests__/` test suites
-→ Read [TESTING_GUIDE.md](./TESTING_GUIDE.md)
+→ Read [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)
 → Write new test scenarios
 
-### 📚 Technical Writer
+### Technical Writer
 
 → Explore `docs/` documentation
 → Read existing guides
@@ -616,6 +565,6 @@ Choose your path:
 
 ---
 
-**Version:** 0.9.0-alpha
-**Last Updated:** 2026-02-11
-**Status:** ✅ Production Ready
+**Version:** 0.27.3-alpha
+**Last Updated:** 2026-05-28
+**Status:** Production Ready

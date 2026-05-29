@@ -2,7 +2,7 @@
   "version": 1,
   "partitionIndex": 1,
   "totalPartitions": 58,
-  "filesHash": "82e558e1",
+  "filesHash": "c6175e52",
   "partitionLabels": [
     "__tests__/app",
     "__tests__/components",
@@ -36,7 +36,7 @@
     "__tests__/services (2)",
     "__tests__/services (3)",
     "__tests__/speech",
-    "__tests__/ui",
+    "__tests__/timing, __tests__/ui",
     "__tests__/unit",
     "__tests__/unit (2)",
     "__tests__/unit (3)",
@@ -63,5 +63,5 @@
     "test/types",
     "test/utils, tests/e2e"
   ],
-  "updatedAt": "2026-05-24T16:51:10.511Z"
+  "updatedAt": "2026-05-29T00:17:27.408Z"
 }

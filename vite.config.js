@@ -28,10 +28,10 @@ function resolveParatyGeoservicesCDN(paratySrc, paratyChangeDetectionSrc) {
   // paths so that provider re-exports (BrowserGeolocationProvider, etc.) are
   // bundled inline and do not require a live CDN fetch at runtime.
   const CDN_URLS = [
-    'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/index.js',
-    'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js',
+    'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/index.js',
+    'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/esm/index.js',
   ];
-  const CHANGE_DETECTION_CDN_URL = 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/application/services/ChangeDetectionCoordinator.js';
+  const CHANGE_DETECTION_CDN_URL = 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/esm/application/services/ChangeDetectionCoordinator.js';
   return {
     name: 'resolve-paraty-geoservices-cdn',
     enforce: 'pre',

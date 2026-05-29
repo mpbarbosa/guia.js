@@ -8,7 +8,7 @@
 
 This document catalogs patterns that are **NOT broken references** but may be incorrectly flagged by automated documentation checkers. These patterns are intentional and valid parts of the documentation.
 
-**Last Updated**: 2026-01-06
+**Last Updated**: 2026-05-28
 **Applies to**: All automated documentation validation tools
 
 ---
@@ -23,7 +23,7 @@ This document catalogs patterns that are **NOT broken references** but may be in
 
 #### Examples from Documentation
 
-**File**: `docs/class-extraction/CLASS_EXTRACTION_PHASE_5.md`
+**File**: `docs/guides/DEVELOPER_GUIDE.md` (and other guides)
 
 ```javascript
 class Chronometer {

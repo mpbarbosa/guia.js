@@ -16,6 +16,8 @@ import progressiveDisclosureManager from '../utils/progressive-disclosure.js';
 import AppHeroHeader from './AppHeroHeader.vue';
 import Onboarding from './Onboarding.vue';
 import LocationHighlightCards from './LocationHighlightCards.vue';
+import SecondaryInfoPanel from './SecondaryInfoPanel.vue';
+import AdvancedControlsPanel from './AdvancedControlsPanel.vue';
 
 interface Props {
   locationResult?: string;
@@ -156,5 +158,7 @@ defineExpose({ isTracking, isInitialized, toggleTracking });
     />
 
     <LocationHighlightCards />
+    <SecondaryInfoPanel />
+    <AdvancedControlsPanel />
   </div>
 </template>

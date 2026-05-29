@@ -191,7 +191,10 @@ describe('Sanity: Integration (Puppeteer)', () => {
   });
 
   test('monitor route exposes the chronometer element', async () => {
-    await page.goto(`${baseUrl}#/monitor`, { waitUntil: 'networkidle' });
+    await page.goto(`http://localhost:${PORT}${INDEX_HTML}#/monitor`, {
+      waitUntil: 'networkidle0',
+      timeout:   30_000,
+    });
     const chronometer = await page.$('#chronometer');
     expect(chronometer).not.toBeNull();
   });

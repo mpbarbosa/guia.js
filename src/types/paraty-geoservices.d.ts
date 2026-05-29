@@ -6,10 +6,10 @@
  * GetCurrentPositionUseCase, WatchPositionUseCase, GetCurrentPositionOutput.
  *
  * @see https://github.com/mpbarbosa/paraty_geoservices
- * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js
+ * @see https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/esm/index.js
  */
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js' {
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/esm/index.js' {
 	/** Geographic coordinates and metadata returned by a provider. */
 	export interface GeoPosition {
 		coords: {
@@ -194,10 +194,16 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/
 		country: string;
 	}
 
-	/** Port interface that all reverse geocoding providers must satisfy. */
-	export interface ReverseGeocoderPort {
+	/**
+	 * Domain port interface that all reverse geocoding providers must satisfy.
+	 * Renamed from `ReverseGeocoderPort` in v1.6.5.
+	 */
+	export interface ReverseGeocoder {
 		reverseGeocode(latitude: number, longitude: number): Promise<GeoAddress>;
 	}
+
+	/** @deprecated Use {@link ReverseGeocoder} — renamed in v1.6.5. */
+	export type ReverseGeocoderPort = ReverseGeocoder;
 
 	/** Raw address field shape returned by the AWS Location Service API. */
 	export interface AwsAddress {
@@ -224,9 +230,9 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/
 
 	/**
 	 * Reverse geocoder that calls an AWS Location Service-compatible API.
-	 * Implements {@link ReverseGeocoderPort}.
+	 * Implements {@link ReverseGeocoder}.
 	 */
-	export class AwsGeocoder implements ReverseGeocoderPort {
+	export class AwsGeocoder implements ReverseGeocoder {
 		readonly baseUrl: string;
 		readonly endpoint: string;
 		constructor(baseUrl?: string);
@@ -335,9 +341,9 @@ declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/
 	): ReverseGeocoderService;
 }
 
-declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/application/services/ChangeDetectionCoordinator.js' {
-	type GeoPosition = import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js').GeoPosition;
-	type GeoAddress = import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js').GeoAddress;
+declare module 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/esm/application/services/ChangeDetectionCoordinator.js' {
+	type GeoPosition = import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/esm/index.js').GeoPosition;
+	type GeoAddress = import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/esm/index.js').GeoAddress;
 
 	export interface AddressFieldChangeEvent {
 		from: string | null;

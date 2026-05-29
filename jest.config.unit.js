@@ -39,11 +39,11 @@ export default {
     '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.11-alpha/dist/esm/index\\.js$':
       '<rootDir>/../paraty_geocore.js/src/index',
     // Map paraty_geoservices CDN URLs to local TS source for Jest
-    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.3/dist/index\\.js$':
+    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/index\\.js$':
       '<rootDir>/../paraty_geoservices/src/index',
-    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.3/dist/esm/index\\.js$':
+    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/esm/index\\.js$':
       '<rootDir>/../paraty_geoservices/src/index',
-    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.3/dist/esm/application/services/ChangeDetectionCoordinator\\.js$':
+    '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/esm/application/services/ChangeDetectionCoordinator\\.js$':
       '<rootDir>/../paraty_geoservices/src/application/services/ChangeDetectionCoordinator',
     // Map bessa_patterns.ts importmap alias to local TS source for Jest
     '^bessa_patterns\\.ts$': '<rootDir>/../bessa_patterns.ts/src/index',
@@ -117,6 +117,8 @@ export default {
     '/__tests__/debug/_mock_test.test',
     '/__tests__/composables/useMapDisplayer.test.ts',  // ESM jest.mock path resolution issue with maplibre-gl; JS version at test/composables/useMapDisplayer.test.js provides equivalent coverage
     '/__tests__/composables/useNavigationHistory.test.ts',  // ESM jest.mock path resolution issue with AddressCache; JS version at test/composables/useNavigationHistory.test.js provides equivalent coverage
+    '/__tests__/timing/sharedChronometer.test.ts',  // ESM jest.mock path resolution issue — jest.mock on Chronometer.js/PositionManager.js fails with --experimental-vm-modules
+    '/__tests__/components/views/MonitorView.vue.test.ts',  // ESM jest.mock path resolution issue — jest.mock on sharedChronometer.js fails with --experimental-vm-modules
     '/__tests__/composables/useIBGECityStats.test.ts',  // ESM jest.mock path resolution issue with IBGECityStatsService; JS version at test/composables/useIBGECityStats.test.js provides equivalent coverage
   ],
   

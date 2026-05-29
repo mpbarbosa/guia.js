@@ -1,7 +1,7 @@
 # 🗺️ Guia Turístico — Project Roadmap
 
-**Current Version**: `0.27.2-alpha` | **Status**: Active Development
-**Last Updated**: 2026-05-21
+**Current Version**: `0.27.3-alpha` | **Status**: Active Development
+**Last Updated**: 2026-05-28
 
 ---
 
@@ -31,7 +31,7 @@
 - **Route Navigation MVP** (v0.18.0-alpha): `RouteNavigationService.ts` + `HTMLRoutePlannerPanel.ts`; typed origin/destination route planning, current-location fallback for the origin field, public OSRM driving routes, and Google Maps/OpenStreetMap handoff links
 - **Offline-First Foundation** (v0.24.9-alpha): `OfflineCacheService.ts` + `IBGECityStatsService.ts` + `HomeViewController`; IndexedDB-backed city-stat caching, last-known location restore, and offline reuse of recent position/address snapshots
 - **MD3 Phase 5 — ConverterView Redesign** (v0.25.0-alpha): `ConverterView.vue` template aligned to MD3 card spec; legacy router 404 suppressed for Vue-only routes (`/map`, `/stats`, `/history`)
-- **MD3 Phase 6 — Map Screen** (v0.27.2-alpha): `MapView.vue` now renders a real MapLibre GL JS map; `useMapDisplayer` composable (first in the project) wires GPS position and AddressCache updates into the map and the live address card; `MapLibreDisplayer.mount()` added for Vue-context init; `bessa_patterns.ts` mapped in Jest config
+- **MD3 Phase 6 — Map Screen** (v0.27.3-alpha): `MapView.vue` now renders a real MapLibre GL JS map; `useMapDisplayer` composable (first in the project) wires GPS position and AddressCache updates into the map and the live address card; `MapLibreDisplayer.mount()` added for Vue-context init; `bessa_patterns.ts` mapped in Jest config
 
 ---
 
@@ -62,6 +62,12 @@ Phases 0–6 complete: design tokens, Tailwind v4, AppBar/BottomNav, Bootstrap r
 - Background sync for queued address lookups
 - Add explicit offline-status messaging for cached address/route results
 - Expand persistent caching beyond recent snapshots to additional feature panels
+
+### Architecture Refactor Roadmap
+
+A dedicated phased plan now covers the next architecture cleanup pass focused on coordinator contracts, composition-root discipline, and displayer factory injection.
+
+See [`architecture/ARCHITECTURE_REFACTOR_ROADMAP.md`](./architecture/ARCHITECTURE_REFACTOR_ROADMAP.md).
 
 ### CI/CD Evolution Roadmap
 

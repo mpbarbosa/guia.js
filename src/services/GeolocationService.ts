@@ -6,7 +6,7 @@
  * - Race-condition guard for single-shot requests ({@link GeolocationService.hasPendingRequest})
  * - Automatic low-accuracy retry on GPS timeout (error code 3)
  *
- * Ported from paraty_geoservices@v1.6.3.
+ * Ported from paraty_geoservices@v1.6.5.
  *
  * @module services/GeolocationService
  * @see https://github.com/mpbarbosa/paraty_geoservices
@@ -17,7 +17,7 @@ import type { GeoPosition, GeoPositionError, GeoPositionOptions } from './provid
 import type {
 	GeolocationPermissionReader,
 	GeolocationPermissionState,
-} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js';
+} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/esm/index.js';
 import { throttle } from '../utils/throttle';
 import type { ThrottledFunction } from '../utils/throttle';
 

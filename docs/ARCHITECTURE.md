@@ -13,6 +13,7 @@
 | [`architecture/CLASS_DIAGRAM.md`](architecture/CLASS_DIAGRAM.md) | Class relationships |
 | [`architecture/MODULES.md`](architecture/MODULES.md) | Module boundaries |
 | [`architecture/WEB_GEOCODING_MANAGER.md`](architecture/WEB_GEOCODING_MANAGER.md) | Core coordinator |
+| [`architecture/ARCHITECTURE_REFACTOR_ROADMAP.md`](architecture/ARCHITECTURE_REFACTOR_ROADMAP.md) | Phased architecture implementation roadmap |
 | [`PROJECT_PURPOSE_AND_ARCHITECTURE.md`](PROJECT_PURPOSE_AND_ARCHITECTURE.md) | Purpose and high-level design |
 
 ---

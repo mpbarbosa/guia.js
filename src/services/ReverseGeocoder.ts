@@ -10,9 +10,9 @@ export {
 	ReverseGeocoderService as ReverseGeocoder,
 	ReverseGeocoderService as default,
 	createReverseGeocoderService,
-} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js';
+} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/esm/index.js';
 export type {
 	ReverseGeocoderConfig,
 	CreateReverseGeocoderServiceConfig,
 	LegacyFetchManager,
-} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.3/dist/esm/index.js';
+} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/esm/index.js';

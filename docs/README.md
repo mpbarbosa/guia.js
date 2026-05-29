@@ -218,6 +218,6 @@ Found outdated information or broken links? Want to improve documentation?
 ---
 
 **Last Updated**: 2026-05-23
-**Documentation Version**: 0.27.2-alpha
+**Documentation Version**: 0.27.3-alpha
 **Total Documentation Files**: 312+ markdown files
 **Directory Structure**: 20 documented categories

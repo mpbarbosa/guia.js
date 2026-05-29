@@ -332,4 +332,37 @@ test.describe('9. Hero metropolitan region', () => {
     const text = await el.textContent();
     expect(text?.trim()).toBe('');
   });
+
+  test('geocoding pipeline populates hero metropolitan region from Nominatim county field', async ({ browser }) => {
+    // This test verifies the full end-to-end pipeline:
+    //   NominatimGeocoderPort (county → metropolitanRegion)
+    //   → HTMLHighlightCardsDisplayer (regiaoMetropolitana → #regiao-metropolitana-value)
+    //   → MutationObserver (mirrors to #hero-regiao-metropolitana)
+    const { ctx, page } = await makeGeoContext(browser);
+    try {
+      await page.goto(HOME, { waitUntil: 'networkidle' });
+
+      // Wait for the geocoding pipeline to fire and populate the source element.
+      // The mock Nominatim response includes county: "Região Metropolitana de São Paulo"
+      // which our NominatimGeocoderPort correctly maps to metropolitanRegion.
+      await page.waitForFunction(
+        (metro) => {
+          const src = document.getElementById('regiao-metropolitana-value');
+          return src?.textContent?.trim() === metro;
+        },
+        METRO_NAME,
+        { timeout: 20_000 },
+      );
+
+      // The MutationObserver in HomeView.vue mirrors it to the hero element.
+      await expect(page.locator('#hero-regiao-metropolitana')).toHaveText(METRO_NAME);
+
+      // Screenshot showing the metropolitan region in the hero card.
+      await page.locator('.bg-gradient-to-br').first().screenshot({
+        path: 'tests/e2e/screenshots/hero-metropolitan-region-geocoded.png',
+      });
+    } finally {
+      await ctx.close();
+    }
+  });
 });

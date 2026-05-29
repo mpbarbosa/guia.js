@@ -87,6 +87,7 @@ import ReverseGeocoder, { createReverseGeocoderService, type LegacyFetchManager 
 import GeolocationService from '../services/GeolocationService.js';
 import BrowserGeolocationProvider from '../services/providers/BrowserGeolocationProvider.js';
 import ChangeDetectionCoordinator from '../services/ChangeDetectionCoordinator.js';
+import NominatimGeocoderPort from '../services/NominatimGeocoderPort.js';
 
 // Import data processing layer classes
 import AddressDataExtractor from '../data/AddressDataExtractor.js';
@@ -558,7 +559,7 @@ class WebGeocodingManager {
 			warn('(WebGeocodingManager) IbiraAPIFetchManager not available');
 		}
 
-		// Create reverse geocoder with or without fetch manager
+		// Create reverse geocoder with or without fetch manager.
 		this.reverseGeocoder = (params.reverseGeocoder as ReverseGeocoder | undefined) ||
 			createReverseGeocoderService(fetchManager, {
 				corsProxy: CORS_PROXY,
@@ -568,6 +569,19 @@ class WebGeocodingManager {
 				...(env.geocodingPrimaryProvider ? { geocodingPrimaryProvider: env.geocodingPrimaryProvider as 'aws' | 'nominatim' } : {}),
 				...(env.nominatimApiUrl ? { nominatimApiUrl: env.nominatimApiUrl as string } : {}),
 			});
+
+		// paraty_geoservices@v1.6.x createReverseGeocoderService ignores the
+		// `nominatimGeocoder` option and always builds its own internal geocoder that
+		// maps `address.region` → metropolitanRegion.  In Brazil, Nominatim puts the
+		// metropolitan region in `address.county` — so we patch the internal `_nominatim`
+		// field on the freshly-created instance to use our corrected port.
+		// Only patch when the reverseGeocoder was created here (not injected via params).
+		if (!params.reverseGeocoder) {
+			const nominatimBaseUrl = (env.nominatimApiUrl as string | undefined) ?? undefined;
+			const nominatimGeocoder = new NominatimGeocoderPort(nominatimBaseUrl);
+			(this.reverseGeocoder as unknown as Record<string, unknown>)['_nominatim'] = nominatimGeocoder;
+			log('(WebGeocodingManager) Patched _nominatim with NominatimGeocoderPort (county → metropolitanRegion fix)');
+		}
 		
 		// Inject AddressDataExtractor into ReverseGeocoder to resolve dependency warning
 		this.reverseGeocoder.AddressDataExtractor = AddressDataExtractor;

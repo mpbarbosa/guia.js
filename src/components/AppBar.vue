@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { VERSION } from '../config/version.js';
+
 defineOptions({ name: 'AppBar' });
 </script>
 
@@ -11,7 +13,15 @@ defineOptions({ name: 'AppBar' });
       <div class="p-2 bg-primary rounded-xl">
         <i class="bi bi-compass-fill text-white text-[1.1rem] leading-none" aria-hidden="true"></i>
       </div>
-      <span class="text-xl font-bold text-primary tracking-tight">Guia JS</span>
+      <div class="flex flex-col gap-1">
+        <span class="text-xl font-bold text-primary tracking-tight">Guia JS</span>
+        <span
+          class="inline-flex w-fit items-center rounded-full bg-primary/10 px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide text-primary"
+          aria-label="Versão do aplicativo"
+        >
+          v{{ VERSION }}
+        </span>
+      </div>
     </div>
     <div class="flex items-center gap-2">
       <button class="p-2 rounded-full hover:bg-surface-variant transition-colors" aria-label="Notificações">

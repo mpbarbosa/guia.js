@@ -3,6 +3,7 @@
  */
 import { mount } from '@vue/test-utils';
 import AppBar from '../../src/components/AppBar.vue';
+import { VERSION } from '../../src/config/version.js';
 
 describe('AppBar.vue', () => {
   test('renders the banner title and actions', () => {
@@ -10,6 +11,7 @@ describe('AppBar.vue', () => {
 
     expect(wrapper.get('header').attributes('role')).toBe('banner');
     expect(wrapper.get('span.text-xl').text()).toBe('Guia JS');
+    expect(wrapper.get('[aria-label="Versão do aplicativo"]').text()).toBe(`v${VERSION}`);
     expect(wrapper.get('button[aria-label="Notificações"]').exists()).toBe(true);
   });
 

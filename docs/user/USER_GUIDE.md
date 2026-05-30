@@ -2,7 +2,7 @@
 
 **Complete guide for using the Guia Turístico tourist guide application.**
 
-**Version**: 0.12.12-alpha
+**Version**: 0.28.2-alpha
 **Last Updated**: 2026-03-02
 **Status**: Complete
 
@@ -729,7 +729,7 @@ To revoke location permission:
 
 **Want to contribute?**
 
-- See: [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md)
+- See: [.github/CONTRIBUTING.md](../../.github/CONTRIBUTING.md)
 
 ### Documentation
 
@@ -751,6 +751,6 @@ To revoke location permission:
 
 ---
 
-**Version**: 0.12.12-alpha
+**Version**: 0.28.2-alpha
 **Last Updated**: 2026-03-02
 **Status**: Complete

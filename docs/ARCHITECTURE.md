@@ -22,7 +22,8 @@
 
 ```
 src/
-├── app.js                    # SPA entry point — router, bootstrap
+├── main.ts                   # Vue runtime entry point — app creation, router mount
+├── app.js                    # Package/legacy entry point — existing SPA bootstrap pipeline
 ├── views/                    # View controllers (HomeViewController, ConverterViewController)
 ├── core/                     # Position management, GeoPosition value object
 ├── services/                 # API integrations (ReverseGeocoder, GeolocationService)

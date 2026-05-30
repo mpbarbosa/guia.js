@@ -842,8 +842,8 @@ If jQuery (a JavaScript library similar to Guia.js) wouldn't do it, Guia.js shou
 
 - [README.md](../README.md) - Project overview
 - [Architecture Documentation](architecture/) - Technical architecture details
-- [Contributing Guide](../.github/CONTRIBUTING.md) - Development guidelines
-- [CDN Delivery Script](../.github/scripts/cdn-delivery.sh) - Distribution automation
+- [Contributing Guide](../../.github/CONTRIBUTING.md) - Development guidelines
+- [CDN Delivery Script](../../.github/scripts/cdn-delivery.sh) - Distribution automation
 
 ### External Resources
 

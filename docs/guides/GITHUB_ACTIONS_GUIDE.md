@@ -472,7 +472,7 @@ A: Yes, edit the actions files. Current format: `2025-01-08 12:34:56 UTC`
 
 - [Workflows README](.github/workflows/README.md) - Technical workflow details
 - [TESTING.md](../TESTING.md) - Test suite documentation
-- [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Contribution guidelines
+- [CONTRIBUTING.md](../../.github/CONTRIBUTING.md) - Contribution guidelines
 - [GitHub Actions Documentation](https://docs.github.com/en/actions) - Official GitHub docs
 
 ---

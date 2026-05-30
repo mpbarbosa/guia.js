@@ -146,8 +146,8 @@ Use emojis for visual clarity:
 - [Test Infrastructure](./TEST_INFRASTRUCTURE.md) - Execution details
 
 ### Development Guides
-- [Contributing Guidelines](../.github/CONTRIBUTING.md) - How to contribute
-- [TDD Guide](../.github/TDD_GUIDE.md) - Test-Driven Development
+- [Contributing Guidelines](../../.github/CONTRIBUTING.md) - How to contribute
+- [TDD Guide](../../.github/TDD_GUIDE.md) - Test-Driven Development
 
 ### Documentation Hub
 - [Documentation Index](./INDEX.md) - Complete catalog

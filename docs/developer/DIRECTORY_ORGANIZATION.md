@@ -236,7 +236,7 @@ Documentation older than 2 releases or 6 months (whichever is longer) should be:
 
 - [INDEX.md](./INDEX.md) - Complete documentation index
 - [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - Project file organization
-- [CONTRIBUTING.md](../.github/CONTRIBUTING.md) - Contribution guidelines
+- [CONTRIBUTING.md](../../.github/CONTRIBUTING.md) - Contribution guidelines
 
 ---
 

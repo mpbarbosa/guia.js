@@ -298,9 +298,9 @@ open docs/api/index.html
 
 ## Related Documentation
 
-- **[JSDOC_GUIDE.md](../.github/JSDOC_GUIDE.md)** - JSDoc standards and guidelines
-- **[CONTRIBUTING.md](../.github/CONTRIBUTING.md)** - General contribution guidelines
-- **[JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript standards
+- **[JSDOC_GUIDE.md](../../.github/JSDOC_GUIDE.md)** - JSDoc standards and guidelines
+- **[CONTRIBUTING.md](../../.github/CONTRIBUTING.md)** - General contribution guidelines
+- **[JAVASCRIPT_BEST_PRACTICES.md](../../.github/JAVASCRIPT_BEST_PRACTICES.md)** - JavaScript standards
 
 ---
 

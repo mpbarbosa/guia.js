@@ -3205,4 +3205,4 @@ See `__tests__/e2e/` for comprehensive end-to-end test examples using Puppeteer.
 **Last Updated**: 2026-02-11
 **Status**: Complete ✅
 
-For questions or contributions, see [CONTRIBUTING.md](../.github/CONTRIBUTING.md).
+For questions or contributions, see [CONTRIBUTING.md](../../.github/CONTRIBUTING.md).

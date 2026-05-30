@@ -1209,8 +1209,8 @@ See [API_EXAMPLES.md](./API_EXAMPLES.md) for comprehensive code examples.
 
 - **Documentation:** [docs/](../docs/)
 - **Issues:** GitHub Issues
-- **Contributing:** [CONTRIBUTING.md](../.github/CONTRIBUTING.md)
-- **Testing:** [TESTING.md](./TESTING.md)
+- **Contributing:** [CONTRIBUTING.md](../../.github/CONTRIBUTING.md)
+- **Testing:** [TESTING.md](../testing/TESTING.md)
 
 ---
 

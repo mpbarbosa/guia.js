@@ -780,7 +780,7 @@ console.log(timerManager.getActiveTimers());
 - **API Reference**: [API_QUICK_REFERENCE.md](./API_QUICK_REFERENCE.md)
 - **Integration**: [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)
 - **Performance**: [PERFORMANCE_GUIDE.md](./PERFORMANCE_GUIDE.md)
-- **Contributing**: [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md)
+- **Contributing**: [.github/CONTRIBUTING.md](../../.github/CONTRIBUTING.md)
 
 ---
 

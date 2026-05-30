@@ -938,8 +938,8 @@ if (voices.length === 0) {
 
 - [API Reference](./API_REFERENCE.md) - Complete API documentation
 - [Architecture Overview](./ARCHITECTURE_OVERVIEW.md) - System design
-- [Testing Guide](./TESTING.md) - Testing strategies
-- [Contributing Guide](../.github/CONTRIBUTING.md) - Development workflow
+- [Testing Guide](../testing/TESTING.md) - Testing strategies
+- [Contributing Guide](../../.github/CONTRIBUTING.md) - Development workflow
 
 ---
 

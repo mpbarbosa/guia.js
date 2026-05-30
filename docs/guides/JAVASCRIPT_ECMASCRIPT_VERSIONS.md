@@ -773,10 +773,10 @@ const fixed = badString.toWellFormed();
 
 ### Project Documentation
 
-- [JAVASCRIPT_BEST_PRACTICES.md](../.github/JAVASCRIPT_BEST_PRACTICES.md)
-- [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md)
+- [JAVASCRIPT_BEST_PRACTICES.md](../../.github/JAVASCRIPT_BEST_PRACTICES.md)
+- [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md)
 - [MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)
-- [CONTRIBUTING.md](../.github/CONTRIBUTING.md)
+- [CONTRIBUTING.md](../../.github/CONTRIBUTING.md)
 
 ### External Resources
 

@@ -1516,8 +1516,8 @@ Do you control the codebase?
 - [MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md) - Complete guide to module splitting
 - [MODULE_SPLITTING_SUMMARY.md](./MODULE_SPLITTING_SUMMARY.md) - Implementation summary
 - [MODULES.md](./MODULES.md) - Module system documentation
-- [REFERENTIAL_TRANSPARENCY.md](../.github/REFERENTIAL_TRANSPARENCY.md) - Pure function principles
-- [UNIT_TEST_GUIDE.md](../.github/UNIT_TEST_GUIDE.md) - Testing best practices
+- [REFERENTIAL_TRANSPARENCY.md](../../.github/REFERENTIAL_TRANSPARENCY.md) - Pure function principles
+- [UNIT_TEST_GUIDE.md](../../.github/UNIT_TEST_GUIDE.md) - Testing best practices
 
 ### Related Guides
 

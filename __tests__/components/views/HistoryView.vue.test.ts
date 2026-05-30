@@ -3,6 +3,7 @@
  */
 import { mount } from '@vue/test-utils';
 import HistoryView from '../../../src/components/views/HistoryView.vue';
+import { VERSION } from '../../../src/config/version.js';
 
 describe('HistoryView.vue', () => {
   test('renders the preferences and empty history sections', () => {
@@ -32,5 +33,11 @@ describe('HistoryView.vue', () => {
     expect(buttons[0].classes()).toContain('bg-outline-variant');
     expect(buttons[1].attributes('aria-label')).toBe('Desativar rastreamento de tempo');
     expect(buttons[1].classes()).toContain('bg-primary');
+  });
+
+  test('renders the current application version from config', () => {
+    const wrapper = mount(HistoryView);
+
+    expect(wrapper.text()).toContain(`Versão ${VERSION}`);
   });
 });

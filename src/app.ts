@@ -3,7 +3,7 @@
 /**
  * Main Application Entry Point
  * SPA Router and Application Initialization
- * @version 0.28.1-alpha
+ * @version 0.28.2-alpha
  */
 
 import HomeViewController from './views/home.js';
@@ -98,6 +98,18 @@ async function init(): Promise<void> {
 
   debug('[GT] init() complete');
   log('✓ Application initialized successfully');
+}
+
+async function startApp(): Promise<void> {
+  try {
+    await init();
+  } catch (err) {
+    error('Application startup failed:', err);
+    showErrorToast(
+      'Erro Inesperado',
+      err instanceof Error ? err.message : 'Falha ao inicializar a aplicação'
+    );
+  }
 }
 
 function initRouter(): void {
@@ -338,18 +350,36 @@ async function loadConverterView(): Promise<void> {
 }
 
 function initializeConverterFeatures(): void {
-  const form = document.getElementById('coords-to-address-form');
+  const form = document.getElementById('coords-to-address-form') as HTMLFormElement | null;
   const resultDiv = document.getElementById('address-result');
+  const submitButton = form?.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+  let requestInFlight = false;
 
   if (form && resultDiv) {
     form.addEventListener('submit', async (event: Event) => {
       event.preventDefault();
+
+      if (requestInFlight) {
+        return;
+      }
 
       const latInput = document.getElementById('latitude') as HTMLInputElement | null;
       const lonInput = document.getElementById('longitude') as HTMLInputElement | null;
       const lat = parseFloat(latInput?.value ?? '');
       const lon = parseFloat(lonInput?.value ?? '');
 
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+        resultDiv.innerHTML = `
+          <div class="md3-card text-error">
+            <h3>❌ Erro na Conversão</h3>
+            <p>Informe coordenadas válidas antes de converter.</p>
+          </div>
+        `;
+        return;
+      }
+
+      requestInFlight = true;
+      if (submitButton) submitButton.disabled = true;
       resultDiv.innerHTML = '<p class="loading">⏳ Convertendo coordenadas...</p>';
 
       try {
@@ -391,6 +421,9 @@ function initializeConverterFeatures(): void {
             <p>${(err as Error).message}</p>
           </div>
         `;
+      } finally {
+        requestInFlight = false;
+        if (submitButton) submitButton.disabled = false;
       }
     });
   }
@@ -404,9 +437,11 @@ async function loadNotFoundView(): Promise<void> {
 // Initialize app when DOM is ready (browser-only)
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+      void startApp();
+    }, { once: true });
   } else {
-    init();
+    void startApp();
   }
 } else {
   log('Running in Node.js - skipping browser initialization');
@@ -509,6 +544,7 @@ if (typeof window !== 'undefined') {
 export {
   handleRoute,
   init,
+  startApp,
   initNavigation,
   initRouter,
   initializeConverterFeatures,

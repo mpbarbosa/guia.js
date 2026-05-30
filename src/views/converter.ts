@@ -55,6 +55,8 @@ export default {
   title: 'Conversor de Coordenadas',
   
   styles: [],
+
+  _requestInFlight: false,
   
   /**
    * Render converter view HTML
@@ -339,15 +341,33 @@ export default {
   },
   
   _initConverter(form: HTMLFormElement, latitudeInput: HTMLInputElement, longitudeInput: HTMLInputElement): void {
+    const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+
     // Setup form submission
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      if (this._requestInFlight) {
+        return;
+      }
       
       const latValid = this._validateInput(latitudeInput, "latitude");
       const lonValid = this._validateInput(longitudeInput, "longitude");
       
       if (latValid && lonValid) {
-        this._fetchAddress(latitudeInput.value, longitudeInput.value);
+        this._requestInFlight = true;
+        if (submitButton) {
+          submitButton.disabled = true;
+        }
+
+        try {
+          await this._fetchAddress(latitudeInput.value, longitudeInput.value);
+        } finally {
+          this._requestInFlight = false;
+          if (submitButton) {
+            submitButton.disabled = false;
+          }
+        }
       }
     });
     

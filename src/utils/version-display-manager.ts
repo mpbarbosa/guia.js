@@ -15,7 +15,9 @@ import { VERSION, BUILD_DATE, VERSION_WITH_DATE } from '../config/version.js';
 class VersionDisplayManager {
   versionBadge: HTMLElement | null = null;
   modalOverlay: HTMLElement | null = null;
+  modalDialog: HTMLElement | null = null;
   modalCloseBtn: HTMLElement | null = null;
+  previousFocusedElement: HTMLElement | null = null;
   isModalOpen: boolean = false;
   static instance: VersionDisplayManager | null = null;
 
@@ -26,7 +28,9 @@ class VersionDisplayManager {
 
     this.versionBadge = null;
     this.modalOverlay = null;
+    this.modalDialog = null;
     this.modalCloseBtn = null;
+    this.previousFocusedElement = null;
     this.isModalOpen = false;
 
     VersionDisplayManager.instance = this;
@@ -59,12 +63,16 @@ class VersionDisplayManager {
    */
   _setupEventListeners() {
     this.modalOverlay = document.querySelector('.version-modal-overlay');
+    this.modalDialog = document.querySelector('.version-modal');
     this.modalCloseBtn = document.querySelector('.version-modal-close');
 
-    if (!this.versionBadge || !this.modalOverlay || !this.modalCloseBtn) {
+    if (!this.versionBadge || !this.modalOverlay || !this.modalDialog || !this.modalCloseBtn) {
       console.warn('⚠️ Version display elements not found');
       return;
     }
+
+    this.modalOverlay.setAttribute('aria-hidden', 'true');
+    this.versionBadge.setAttribute('aria-expanded', 'false');
 
     // Click on version badge opens modal
     this.versionBadge.addEventListener('click', () => this.openModal());
@@ -89,7 +97,16 @@ class VersionDisplayManager {
 
     // Escape key closes modal
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.isModalOpen) {
+      if (!this.isModalOpen) {
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        this._trapFocus(e);
+        return;
+      }
+
+      if (e.key === 'Escape') {
         this.closeModal();
       }
     });
@@ -99,16 +116,19 @@ class VersionDisplayManager {
    * Open the version info modal
    */
   openModal(): void {
-    if (!this.modalOverlay) return;
+    if (!this.modalOverlay || !this.modalDialog) return;
 
+    this.previousFocusedElement = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
     this._populateModalData();
+    this.modalOverlay.setAttribute('aria-hidden', 'false');
     this.modalOverlay.classList.add('visible');
     this.isModalOpen = true;
+    this.versionBadge?.setAttribute('aria-expanded', 'true');
 
-    // Focus close button for keyboard navigation
-    setTimeout(() => {
-      this.modalCloseBtn?.focus();
-    }, 100);
+    this._setBackgroundInert(true);
+    this.modalCloseBtn?.focus();
 
     // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden';
@@ -124,16 +144,81 @@ class VersionDisplayManager {
     if (!this.modalOverlay) return;
 
     this.modalOverlay.classList.remove('visible');
+    this.modalOverlay.setAttribute('aria-hidden', 'true');
     this.isModalOpen = false;
+    this.versionBadge?.setAttribute('aria-expanded', 'false');
 
     // Restore body scroll
     document.body.style.overflow = '';
+    this._setBackgroundInert(false);
 
     // Return focus to version badge
-    this.versionBadge?.focus();
+    this.previousFocusedElement?.focus();
+    this.previousFocusedElement = null;
 
     // Announce modal close to screen readers
     this._announceToScreenReader('Modal de informações da versão fechado');
+  }
+
+  _getFocusableElements(): HTMLElement[] {
+    if (!this.modalDialog) {
+      return [];
+    }
+
+    return Array.from(
+      this.modalDialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter((element) => !element.hasAttribute('hidden') && element.getAttribute('aria-hidden') !== 'true');
+  }
+
+  _trapFocus(event: KeyboardEvent): void {
+    if (!this.modalDialog) {
+      return;
+    }
+
+    const focusableElements = this._getFocusableElements();
+    if (focusableElements.length === 0) {
+      event.preventDefault();
+      this.modalDialog.focus();
+      return;
+    }
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+    const activeElement = document.activeElement as HTMLElement | null;
+
+    if (event.shiftKey) {
+      if (!activeElement || activeElement === firstElement || !this.modalDialog.contains(activeElement)) {
+        event.preventDefault();
+        lastElement.focus();
+      }
+      return;
+    }
+
+    if (!activeElement || activeElement === lastElement || !this.modalDialog.contains(activeElement)) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  }
+
+  _setBackgroundInert(isInert: boolean): void {
+    const backgroundElements = [
+      document.getElementById('app-content'),
+      this.versionBadge,
+      document.getElementById('lbs-provider-indicator'),
+    ].filter((element): element is HTMLElement => element instanceof HTMLElement);
+
+    for (const element of backgroundElements) {
+      if (isInert) {
+        element.setAttribute('inert', '');
+        element.setAttribute('aria-hidden', 'true');
+        continue;
+      }
+
+      element.removeAttribute('inert');
+      element.removeAttribute('aria-hidden');
+    }
   }
 
   /**

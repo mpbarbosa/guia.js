@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import ToggleSwitch from '../ToggleSwitch.vue';
 import { useNavigationHistory } from '../../composables/useNavigationHistory.js';
+import { VERSION } from '../../config/version.js';
 
 defineOptions({ name: 'HistoryView' });
 
@@ -95,7 +96,7 @@ const { history, formatTime } = useNavigationHistory();
     <!-- Version info -->
     <div class="pt-8 text-center space-y-1">
       <p class="text-[10px] font-black text-outline uppercase tracking-widest">Guia JS — Informações do Sistema</p>
-      <p class="text-xs text-on-surface-variant font-medium">Versão 0.27.3-alpha</p>
+      <p class="text-xs text-on-surface-variant font-medium">Versão {{ VERSION }}</p>
       <p class="text-[11px] text-outline font-medium">Desenvolvido para Excelência Técnica</p>
     </div>
   </div>

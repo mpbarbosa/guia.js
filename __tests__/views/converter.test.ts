@@ -30,6 +30,22 @@ function buildConverterDOM() {
   `;
 }
 
+function createDeferred() {
+  let resolve;
+  let reject;
+  const promise = new Promise((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise;
+    reject = rejectPromise;
+  });
+
+  return { promise, resolve, reject };
+}
+
+async function flushMicrotasks() {
+  await Promise.resolve();
+  await Promise.resolve();
+}
+
 // ─── render ───────────────────────────────────────────────────────────────────
 
 describe('converterView.render()', () => {
@@ -204,5 +220,43 @@ describe('converterView._fetchAddress()', () => {
     });
     await converterView._fetchAddress('-23.55', '-46.63');
     expect(document.getElementById('results').innerHTML).toContain('Erro');
+  });
+});
+
+describe('converterView._initConverter()', () => {
+  beforeEach(buildConverterDOM);
+
+  test('ignores overlapping submits while a request is in flight', async () => {
+    const form = document.getElementById('converter-form');
+    const latitudeInput = document.getElementById('latitude');
+    const longitudeInput = document.getElementById('longitude');
+    const submitButton = document.getElementById('fetchButton');
+    const response = createDeferred();
+
+    latitudeInput.value = '-23.55';
+    longitudeInput.value = '-46.63';
+    global.fetch = jest.fn().mockReturnValue(response.promise);
+
+    converterView._initConverter(form, latitudeInput, longitudeInput);
+
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await flushMicrotasks();
+
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(submitButton.disabled).toBe(true);
+
+    response.resolve({
+      ok: true,
+      json: jest.fn().mockResolvedValue({
+        display_name: 'Rua ABC, São Paulo',
+        address: { road: 'Rua ABC', city: 'São Paulo', country: 'Brazil' },
+      }),
+    });
+
+    await flushMicrotasks();
+    await flushMicrotasks();
+
+    expect(submitButton.disabled).toBe(false);
   });
 });

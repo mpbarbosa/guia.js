@@ -149,7 +149,7 @@ describe('HomeViewController', () => {
     });
     
     it('should use provided manager via dependency injection', async () => {
-      const mockManager = { test: 'manager' };
+      const mockManager = { test: 'manager', getLatestLocationSnapshot: jest.fn().mockResolvedValue(null) };
       const diController = new HomeViewController(mockDocument, {
         locationResult: 'locationResult',
         manager: mockManager,
@@ -217,9 +217,10 @@ describe('HomeViewController', () => {
         serviceCoordinator: mockServiceCoordinator,
         changeDetectionCoordinator: mockChangeDetectionCoordinator,
         speechCoordinator: mockSpeechCoordinator,
-        notifyFunctionObservers: jest.fn()
+        notifyFunctionObservers: jest.fn(),
+        getLatestLocationSnapshot: jest.fn().mockResolvedValue(null),
       };
-      
+
       const autoStartController = new HomeViewController(mockDocument, {
         locationResult: 'locationResult',
         manager: mockManager,
@@ -234,7 +235,8 @@ describe('HomeViewController', () => {
     
     it('should not auto-start tracking if disabled', async () => {
       const mockManager = {
-        startTracking: jest.fn()
+        startTracking: jest.fn(),
+        getLatestLocationSnapshot: jest.fn().mockResolvedValue(null),
       };
       const noAutoStartController = new HomeViewController(mockDocument, {
         locationResult: 'locationResult',
@@ -301,7 +303,8 @@ describe('HomeViewController', () => {
     beforeEach(async () => {
       const mockManager = {
         startTracking: jest.fn(),
-        stopTracking: jest.fn()
+        stopTracking: jest.fn(),
+        getLatestLocationSnapshot: jest.fn().mockResolvedValue(null),
       };
       
       controller = new HomeViewController(mockDocument, {
@@ -350,7 +353,7 @@ describe('HomeViewController', () => {
   
   describe('Static Factory Method', () => {
     it('should create and initialize in one step', async () => {
-      const mockManager = { startTracking: jest.fn() };
+      const mockManager = { startTracking: jest.fn(), getLatestLocationSnapshot: jest.fn().mockResolvedValue(null) };
       
       controller = await HomeViewController.create(mockDocument, {
         locationResult: 'locationResult',
@@ -396,18 +399,20 @@ describe('HomeViewController', () => {
         changeDetectionCoordinator: mockChangeDetectionCoordinator,
         speechCoordinator: mockSpeechCoordinator,
         notifyFunctionObservers: jest.fn(),
-        _displayError: jest.fn()
+        _displayError: jest.fn(),
+        getLatestLocationSnapshot: jest.fn().mockResolvedValue(null),
+        saveLocationSnapshot: jest.fn().mockImplementation(async (s) => s),
       };
-      
+
       controller = new HomeViewController(mockDocument, {
         locationResult: 'locationResult',
         manager: mockManager,
         autoStartTracking: false
       });
-      
+
       await controller.init();
     });
-    
+
     describe('getSingleLocationUpdate()', () => {
       it('should get single location update successfully', async () => {
         const position = await controller.getSingleLocationUpdate();
@@ -593,7 +598,9 @@ describe('HomeViewController - Event Listeners', () => {
         initializeSpeechSynthesis: jest.fn()
       },
       notifyFunctionObservers: jest.fn(),
-      _displayError: jest.fn()
+      _displayError: jest.fn(),
+      getLatestLocationSnapshot: jest.fn().mockResolvedValue(null),
+      saveLocationSnapshot: jest.fn().mockImplementation(async (s) => s),
     };
     
     controller = new HomeViewController(document, {

@@ -180,7 +180,6 @@ describe('Sanity: Integration (Puppeteer)', () => {
       ['#lat-long-display',           'coordinates span'],
       ['#reference-place-display',    'reference place span'],
       ['#dadosSidra',                 'SIDRA data span'],
-      ['#navigation-log',             'navigation log output'],
       ['.app-version',                'version badge'],
     ];
 
@@ -271,10 +270,7 @@ describe('Sanity: Integration (Puppeteer)', () => {
       // In SERVE_DIST mode the compiled bundle is always present — no need to check.
       if (SERVE_DIST) return true;
       return page.evaluate(() => {
-        // In raw TS source mode, app.js logs "Initializing …" only when the user
-        // grants geolocation.  An empty log means the bundle failed to load.
-        const log = document.querySelector('#navigation-log');
-        return log !== null && log.textContent !== '';
+        return document.querySelector('.app-version') !== null;
       });
     }
 

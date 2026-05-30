@@ -1,7 +1,7 @@
 <html lang="pt-BR"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="0.25.0-alpha" data-source="src/config/version.js">
+    <meta name="version" content="0.28.2-alpha" data-source="src/config/version.js">
     
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://nominatim.openstreetmap.org https://servicodados.ibge.gov.br https://apisidra.ibge.gov.br https://cdn.jsdelivr.net https://b2inkriw8k.execute-api.us-east-1.amazonaws.com https://demotiles.maplibre.org https://router.project-osrm.org; worker-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'">
@@ -461,14 +461,14 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="./assets/main-BMYKBU7I.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/vendor-9ucY_N_Q.js">
-    <link rel="modulepreload" crossorigin href="./assets/data-CVxc2f4T.js">
-    <link rel="modulepreload" crossorigin href="./assets/speech-CpHQD9N-.js">
+    <script type="module" crossorigin src="./assets/main-CZc3JCEX.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/vendor-CoF2ApIo.js">
+    <link rel="modulepreload" crossorigin href="./assets/data-BH2Fo2y8.js">
+    <link rel="modulepreload" crossorigin href="./assets/speech-B_fLlByf.js">
     <link rel="modulepreload" crossorigin href="./assets/map-WLs8NypD.js">
-    <link rel="modulepreload" crossorigin href="./assets/html-CxM6wE7I.js">
-    <link rel="modulepreload" crossorigin href="./assets/services-V4EjOQhC.js">
-    <link rel="modulepreload" crossorigin href="./assets/coordination-BUEWrEy0.js">
+    <link rel="modulepreload" crossorigin href="./assets/html-CzLZmWiM.js">
+    <link rel="modulepreload" crossorigin href="./assets/services-BYDdJufi.js">
+    <link rel="modulepreload" crossorigin href="./assets/coordination-CSFUmrtX.js">
     <link rel="stylesheet" crossorigin href="./assets/map-DwUhsmFz.css">
     <link rel="stylesheet" crossorigin href="./assets/main-xEuM6c8S.css">
     <link rel="stylesheet" crossorigin href="./assets/ui-CAugqcqo.css">
@@ -626,6 +626,8 @@
         tabindex="0"
         aria-label="Versão do aplicativo - clique para ver detalhes"
         aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="version-modal-dialog"
       >
         <!-- Updated dynamically by version.js -->
       </div>
@@ -644,8 +646,14 @@
       </div>
       
       <!-- Version Info Modal -->
-      <div class="version-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="version-modal-title">
-        <div class="version-modal">
+      <div
+        class="version-modal-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="version-modal-title"
+        aria-hidden="true"
+      >
+        <div class="version-modal" id="version-modal-dialog" tabindex="-1">
           <div class="version-modal-header">
             <span class="version-modal-icon" aria-hidden="true">ℹ️</span>
             <h3 id="version-modal-title">Informações da Versão</h3>

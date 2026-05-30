@@ -7,9 +7,11 @@
 
 project:
   name: "guia_js"
-  version: "0.28.1-alpha"
+  version: "0.28.2-alpha"
   kind: "location_based_service"
   description: "Vue.js/TypeScript tourist guide SPA with Brazilian geocoding and address parsing (municipality, district, neighbourhood)"
+  target_audience: "Tourists and travelers using a location-aware guide"
+  design_system: "Material Design 3 with shared design tokens and accessible status messaging"
 tech_stack:
   primary_language: "typescript"
   framework: "vue"

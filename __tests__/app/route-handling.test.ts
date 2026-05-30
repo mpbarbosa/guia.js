@@ -21,7 +21,10 @@ async function flushMicrotasks(): Promise<void> {
   await Promise.resolve();
 }
 
-async function loadAppModule(homeInitPromise: Promise<void>) {
+async function loadAppModule(
+  homeInitPromise: Promise<void>,
+  options: { setupGlobalErrorHandlerImpl?: () => void } = {}
+) {
   jest.resetModules();
 
   const mockHomeController = {
@@ -66,7 +69,9 @@ async function loadAppModule(homeInitPromise: Promise<void>) {
     createDefaultErrorBoundary: jest.fn(() => ({
       wrap: (fn: () => Promise<void>) => fn,
     })),
-    setupGlobalErrorHandler: jest.fn(),
+    setupGlobalErrorHandler: jest.fn(() => {
+      options.setupGlobalErrorHandlerImpl?.();
+    }),
   }));
   jest.unstable_mockModule('../../src/utils/error-notifications.js', () => ({
     showErrorToast: mockShowErrorToast,
@@ -168,5 +173,60 @@ describe('app route handling', () => {
     expect(document.getElementById('app-content')?.innerHTML).toContain('Converter View');
     expect((window as Window & { GuiaApp?: { getState?: () => { currentRoute: string | null } } }).GuiaApp?.getState?.().currentRoute)
       .toBe('/converter');
+  });
+
+  test('prevents overlapping converter submissions while a request is in flight', async () => {
+    document.body.innerHTML = `
+      <form id="coords-to-address-form">
+        <input id="latitude" value="-23.55" />
+        <input id="longitude" value="-46.63" />
+        <button type="submit">Converter</button>
+      </form>
+      <div id="address-result"></div>
+    `;
+
+    const response = createDeferred<Response>();
+    global.fetch = jest.fn(() => response.promise) as typeof fetch;
+
+    const { module } = await loadAppModule(Promise.resolve());
+    module.initializeConverterFeatures();
+
+    const form = document.getElementById('coords-to-address-form') as HTMLFormElement;
+    const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await flushMicrotasks();
+
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(submitButton.disabled).toBe(true);
+
+    response.resolve(
+      new Response(
+        JSON.stringify({
+          display_name: 'Rua ABC, São Paulo',
+          address: { road: 'Rua ABC', city: 'São Paulo' },
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      )
+    );
+
+    await flushMicrotasks();
+    await flushMicrotasks();
+
+    expect(submitButton.disabled).toBe(false);
+  });
+
+  test('startApp surfaces initialization failures locally', async () => {
+    const startupError = new Error('startup exploded');
+    const { module, mockError, mockShowErrorToast } = await loadAppModule(Promise.resolve(), {
+      setupGlobalErrorHandlerImpl: () => {
+        throw startupError;
+      },
+    });
+
+    await module.startApp();
+
+    expect(mockError).toHaveBeenCalledWith('Application startup failed:', startupError);
+    expect(mockShowErrorToast).toHaveBeenCalledWith('Erro Inesperado', 'startup exploded');
   });
 });

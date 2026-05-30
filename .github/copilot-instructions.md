@@ -9,6 +9,7 @@ This file provides concise, project-specific guidance to help Copilot make high-
 Respect these stable source boundaries:
 
 - `src/app.js` – Main package entry point (editable source sibling: `src/app.ts`)
+- `src/main.ts` – Vue runtime entry point that creates the app, wires the router, and mounts `#app`
 - `src/core/` – Foundational runtime helpers
 - `src/utils/` – Shared low-level utilities
 
@@ -27,7 +28,7 @@ Supporting workflow surfaces:
   - `README.md`
   - `docs/ARCHITECTURE.md`
   - `CHANGELOG.md`
-  - `CONTRIBUTING.md`
+  - `.github/CONTRIBUTING.md`
   - `CLAUDE.md`
 
 ## Validation Commands

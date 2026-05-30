@@ -14,16 +14,23 @@ import { describe, test, expect, beforeEach } from '@jest/globals';
 // Build minimal DOM that the singleton expects
 function buildDom() {
   document.body.innerHTML = `
-    <span class="app-version"></span>
-    <div class="version-modal-overlay" style="display:none">
-      <div class="version-modal">
-        <button class="version-modal-close">×</button>
-        <span class="version-modal-version"></span>
-        <span class="version-modal-date"></span>
-        <span class="version-modal-browser"></span>
-        <span class="version-modal-os"></span>
+    <main id="app-content">
+      <a id="background-link" href="#main">Background</a>
+    </main>
+    <footer>
+      <span class="app-version" tabindex="0"></span>
+      <div id="lbs-provider-indicator">Provider</div>
+      <div class="version-modal-overlay" style="display:none" aria-hidden="true">
+        <div class="version-modal" id="version-modal-dialog" tabindex="-1">
+          <a href="#changelog" class="version-changelog-link">Changelog</a>
+          <button class="version-modal-close">×</button>
+          <span id="modal-version"></span>
+          <span id="modal-build-date"></span>
+          <span id="modal-browser"></span>
+          <span id="modal-user-agent"></span>
+        </div>
       </div>
-    </div>
+    </footer>
   `;
 }
 
@@ -126,5 +133,52 @@ describe('VersionDisplayManager modal', () => {
     vdm.openModal();
     vdm.closeModal();
     expect(vdm.isModalOpen).toBe(false);
+  });
+
+  test('openModal hides background content from assistive tech', async () => {
+    const { default: vdm } = await import('../../src/utils/version-display-manager.js');
+    vdm.openModal();
+
+    expect(document.getElementById('app-content')?.getAttribute('aria-hidden')).toBe('true');
+    expect(document.getElementById('app-content')?.hasAttribute('inert')).toBe(true);
+    expect(document.getElementById('lbs-provider-indicator')?.getAttribute('aria-hidden')).toBe('true');
+    expect(document.querySelector('.app-version')?.getAttribute('aria-hidden')).toBe('true');
+    expect(document.querySelector('.version-modal-overlay')?.getAttribute('aria-hidden')).toBe('false');
+  });
+
+  test('closeModal restores background accessibility state', async () => {
+    const { default: vdm } = await import('../../src/utils/version-display-manager.js');
+    vdm.openModal();
+    vdm.closeModal();
+
+    expect(document.getElementById('app-content')?.hasAttribute('inert')).toBe(false);
+    expect(document.getElementById('app-content')?.hasAttribute('aria-hidden')).toBe(false);
+    expect(document.querySelector('.version-modal-overlay')?.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  test('traps focus within the modal when tabbing forward', async () => {
+    const { default: vdm } = await import('../../src/utils/version-display-manager.js');
+    vdm.openModal();
+
+    const closeButton = document.querySelector('.version-modal-close');
+    const link = document.querySelector('.version-changelog-link');
+    closeButton.focus();
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+
+    expect(document.activeElement).toBe(link);
+  });
+
+  test('traps focus within the modal when tabbing backward', async () => {
+    const { default: vdm } = await import('../../src/utils/version-display-manager.js');
+    vdm.openModal();
+
+    const closeButton = document.querySelector('.version-modal-close');
+    const link = document.querySelector('.version-changelog-link');
+    link.focus();
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true }));
+
+    expect(document.activeElement).toBe(closeButton);
   });
 });

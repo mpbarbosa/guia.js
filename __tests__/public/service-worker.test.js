@@ -162,4 +162,33 @@ describe('service-worker cache writes', () => {
     expect(cacheFirstSpy).not.toHaveBeenCalled();
     expect(respondWith).toHaveBeenCalledWith(networkFirstResult);
   });
+
+  test('cacheFirstStrategy uses offline shell for navigate fallback when fetch fails', async () => {
+    const offlineResponse = new Response('offline shell', { status: 200 });
+    const caches = {
+      open: jest.fn(() =>
+        Promise.resolve({
+          put: jest.fn(() => Promise.resolve()),
+        })
+      ),
+      match: jest.fn((key) => {
+        if (key === './offline.html') {
+          return Promise.resolve(offlineResponse);
+        }
+        return Promise.resolve(undefined);
+      }),
+    };
+    const { context } = loadServiceWorker({
+      caches,
+      fetchImpl: jest.fn(() => Promise.reject(new Error('offline'))),
+    });
+
+    const response = await context.cacheFirstStrategy(
+      { url: 'https://example.com/converter', mode: 'navigate' },
+      { waitUntil: jest.fn() }
+    );
+
+    expect(response).toBe(offlineResponse);
+    expect(caches.match).toHaveBeenCalledWith('./offline.html');
+  });
 });

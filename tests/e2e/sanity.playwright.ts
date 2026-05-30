@@ -112,7 +112,6 @@ const CRITICAL_ELEMENTS: [string, string][] = [
   ['#lat-long-display',             'coordinates span'],
   ['#reference-place-display',      'reference place span'],
   ['#dadosSidra',                   'SIDRA data span'],
-  ['#navigation-log',               'navigation log output'],
   ['.app-version',                  'version badge'],
 ];
 

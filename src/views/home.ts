@@ -31,19 +31,16 @@ import { debug, log, warn, error } from '../utils/logger.js';
 import MapLibreDisplayer from '../html/MapLibreDisplayer.js';
 import HTMLConfirmationBufferDisplayer from '../html/HTMLConfirmationBufferDisplayer.js';
 import HTMLRoutePlannerPanel from '../html/HTMLRoutePlannerPanel.js';
-import { planRoute } from '../services/RouteNavigationService.js';
 import {
   clearLoadingState,
   disableWithReason,
   enableWithMessage,
   setLoadingState,
 } from '../utils/button-status.js';
-import {
-  getLatestLocationSnapshot,
-  saveLocationSnapshot,
-  type CachedAddressSummary,
-  type CachedLocationSnapshot,
-} from '../services/OfflineCacheService.js';
+import type {
+  CachedAddressSummary,
+  CachedLocationSnapshot,
+} from '../coordination/WebGeocodingManager.js';
 import type { AddressConfirmationThresholdOptions } from '../config/addressConfirmation.js';
 
 /** Element IDs for all display components. */
@@ -489,7 +486,7 @@ class HomeViewController {
     };
 
     PositionManager.getInstance().subscribe(this._offlinePositionObserver as { update?: (...args: unknown[]) => void });
-    this._offlineSnapshot = await getLatestLocationSnapshot();
+    this._offlineSnapshot = await this.manager!.getLatestLocationSnapshot();
     if (!this._offlineSnapshot) {
       this._updateRoutePlannerAvailability();
       return;
@@ -544,7 +541,7 @@ class HomeViewController {
       return;
     }
 
-    this._offlineSnapshot = await saveLocationSnapshot({
+    this._offlineSnapshot = await this.manager!.saveLocationSnapshot({
       latitude: coords.latitude,
       longitude: coords.longitude,
       timestamp: Date.now(),
@@ -672,7 +669,7 @@ class HomeViewController {
       setLoadingState(button, 'Calculando rota...');
       this._routePlannerPanel.showLoading();
 
-      const route = await planRoute({
+      const route = await this.manager!.planRoute({
         origin: originQuery
           ? { query: originQuery }
           : {

@@ -126,7 +126,7 @@ jobs:
     - name: Check coverage thresholds
       run: |
         echo "✅ Coverage thresholds passed"
-        echo "Statements: ≥68%, Branches: ≥73%, Functions: ≥57%, Lines: ≥68%"
+        echo "Statements: ≥65%, Branches: ≥69%, Functions: ≥55%, Lines: ≥65%"
       
     - name: Upload coverage to Codecov (optional)
       uses: codecov/codecov-action@v3

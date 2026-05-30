@@ -89,6 +89,13 @@ import GeolocationService from '../services/GeolocationService.js';
 import BrowserGeolocationProvider from '../services/providers/BrowserGeolocationProvider.js';
 import ChangeDetectionCoordinator from '../services/ChangeDetectionCoordinator.js';
 import NominatimGeocoderPort from '../services/NominatimGeocoderPort.js';
+import { planRoute as _planRoute } from '../services/RouteNavigationService.js';
+import type { RouteLocationInput, PlannedRoute } from '../services/RouteNavigationService.js';
+import {
+	getLatestLocationSnapshot as _getLatestLocationSnapshot,
+	saveLocationSnapshot as _saveLocationSnapshot,
+} from '../services/OfflineCacheService.js';
+import type { CachedAddressSummary, CachedLocationSnapshot } from '../services/OfflineCacheService.js';
 
 // Import data processing layer classes
 import AddressDataExtractor from '../data/AddressDataExtractor.js';
@@ -1084,6 +1091,36 @@ class WebGeocodingManager {
 	}
 
 	/**
+	 * Plans a driving route between two locations.
+	 *
+	 * Delegates to RouteNavigationService so view controllers do not need to
+	 * import the service directly.
+	 */
+	planRoute(params: { origin: RouteLocationInput; destination: RouteLocationInput }): Promise<PlannedRoute> {
+		return _planRoute(params);
+	}
+
+	/**
+	 * Retrieves the most recently saved offline location snapshot from IndexedDB.
+	 *
+	 * Delegates to OfflineCacheService so view controllers do not need to
+	 * import the service directly.
+	 */
+	getLatestLocationSnapshot(): Promise<CachedLocationSnapshot | null> {
+		return _getLatestLocationSnapshot();
+	}
+
+	/**
+	 * Persists a location snapshot to the offline cache.
+	 *
+	 * Delegates to OfflineCacheService so view controllers do not need to
+	 * import the service directly.
+	 */
+	saveLocationSnapshot(snapshot: CachedLocationSnapshot): Promise<CachedLocationSnapshot> {
+		return _saveLocationSnapshot(snapshot);
+	}
+
+	/**
 	 * Destroys the manager and cleans up all resources.
 	 * 
 	 * **Phase 2-3 Refactoring**: Delegates cleanup to coordinators
@@ -1167,3 +1204,4 @@ export default WebGeocodingManager;
  * @exports DEFAULT_ELEMENT_IDS - Default HTML element IDs configuration
  */
 export { WebGeocodingManager, DEFAULT_ELEMENT_IDS };
+export type { CachedAddressSummary, CachedLocationSnapshot };

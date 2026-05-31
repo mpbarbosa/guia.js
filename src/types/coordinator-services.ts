@@ -6,7 +6,7 @@
  * coordinator entry points.
  *
  * @module types/coordinator-services
- * @since 0.28.2-alpha
+ * @since 0.28.3-alpha
  */
 
 import type {

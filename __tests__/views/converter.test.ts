@@ -21,7 +21,7 @@ function buildConverterDOM() {
         <div id="latitude-error" hidden></div>
         <input id="longitude" type="number" value="" />
         <div id="longitude-error" hidden></div>
-        <button type="submit">Converter</button>
+        <button id="fetchButton" type="submit">Converter</button>
       </form>
       <div id="results"></div>
       <div id="municipio-card"></div>

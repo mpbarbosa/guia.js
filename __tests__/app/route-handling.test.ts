@@ -200,15 +200,14 @@ describe('app route handling', () => {
     expect(global.fetch).toHaveBeenCalledTimes(1);
     expect(submitButton.disabled).toBe(true);
 
-    response.resolve(
-      new Response(
-        JSON.stringify({
-          display_name: 'Rua ABC, São Paulo',
-          address: { road: 'Rua ABC', city: 'São Paulo' },
-        }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      )
-    );
+    response.resolve({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        display_name: 'Rua ABC, São Paulo',
+        address: { road: 'Rua ABC', city: 'São Paulo' },
+      }),
+    } as unknown as Response);
 
     await flushMicrotasks();
     await flushMicrotasks();

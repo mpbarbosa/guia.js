@@ -13,6 +13,7 @@ import {
 } from '../../src/services/OfflineCacheService.js';
 
 const originalIndexedDb = globalThis.indexedDB;
+const originalBroadcastChannel = globalThis.BroadcastChannel;
 
 function createIndexedDbLifecycleMock(operation: 'put' | 'clear') {
   const request = {
@@ -87,6 +88,7 @@ describe('OfflineCacheService', () => {
 
   afterEach(() => {
     globalThis.indexedDB = originalIndexedDb;
+    globalThis.BroadcastChannel = originalBroadcastChannel;
   });
 
   test('stores and retrieves the latest location snapshot', async () => {
@@ -106,6 +108,33 @@ describe('OfflineCacheService', () => {
     expect(snapshot).not.toBeNull();
     expect(snapshot?.latitude).toBeCloseTo(-8.063149);
     expect(snapshot?.address?.displayText).toBe('Recife, PE');
+  });
+
+  test('publishes snapshot updates after saving the latest location', async () => {
+    const postMessage = jest.fn();
+
+    globalThis.BroadcastChannel = jest.fn(() => ({
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      close: jest.fn(),
+      postMessage,
+    })) as unknown as typeof BroadcastChannel;
+
+    const snapshot = {
+      latitude: -8.063149,
+      longitude: -34.871139,
+      timestamp: 123,
+      address: {
+        municipio: 'Recife',
+        siglaUF: 'PE',
+        displayText: 'Recife, PE',
+      },
+    } as const;
+
+    await saveLocationSnapshot(snapshot);
+
+    expect(globalThis.BroadcastChannel).toHaveBeenCalledWith('guia-location-snapshot-updates');
+    expect(postMessage).toHaveBeenCalledWith(snapshot);
   });
 
   test('returns the nearest recent location snapshot within range', async () => {

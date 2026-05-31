@@ -100,6 +100,29 @@ padronizado, stored in IndexedDB. Shown on startup when a fresh GPS fix has not
 yet arrived, giving the user immediately useful context.
 _Avoid_: Cached location, last-known position, saved address
 
+**Snapshot surface**:
+A read-only UI surface that renders the persisted Location snapshot without
+owning live geolocation tracking.
+_Avoid_: Live tracker, tracking widget, geolocation controller
+
+**LocationSnapshotCard**:
+The Vue component that renders the Snapshot surface on the Extra page. It shows
+persisted location-derived data without starting or owning Rastreamento.
+_Avoid_: SecondaryInfo, tracking card, live location panel
+
+**Snapshot update event**:
+The repository-level notification emitted after the persisted Location snapshot
+is written, allowing Snapshot surfaces to refresh without subscribing to live
+tracking objects directly.
+_Avoid_: Tracking event, live geolocation event, address observer
+
+### Navigation
+
+**Extra page**:
+The existing `#/extra` route rendered by `ExtraView.vue`. Reserved for
+additional, non-primary content that complements the Home screen.
+_Avoid_: Extra screen, misc page, secondary home
+
 ### Statistics
 
 **IBGE**:

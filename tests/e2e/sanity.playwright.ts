@@ -34,6 +34,7 @@ const MOCK_NOMINATIM = {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 const HOME = '/index.html';
+const EXTRA = '/index.html#/extra';
 const CONV = '/index.html#/converter';
 const MONITOR = '/index.html#/monitor';
 
@@ -103,22 +104,32 @@ test.describe('1. Page load', () => {
 
 // ── 2. Critical DOM elements ──────────────────────────────────────────────────
 
-const CRITICAL_ELEMENTS: [string, string][] = [
+const HOME_CRITICAL_ELEMENTS: [string, string][] = [
   ['#enable-location-btn',          'onboarding CTA button'],
   ['#municipio-value',              'municipio highlight card'],
   ['#bairro-value',                 'bairro highlight card'],
   ['#logradouro-value',             'logradouro highlight card'],
+  ['.app-version',                  'version badge'],
+];
+
+const EXTRA_CRITICAL_ELEMENTS: [string, string][] = [
   ['#endereco-padronizado-display', 'standardised address span'],
   ['#lat-long-display',             'coordinates span'],
   ['#reference-place-display',      'reference place span'],
   ['#dadosSidra',                   'SIDRA data span'],
-  ['.app-version',                  'version badge'],
 ];
 
 test.describe('2. Critical DOM elements', () => {
-  for (const [selector, label] of CRITICAL_ELEMENTS) {
+  for (const [selector, label] of HOME_CRITICAL_ELEMENTS) {
     test(`${selector} (${label}) exists`, async ({ page }) => {
       await page.goto(HOME, { waitUntil: 'networkidle' });
+      await expect(page.locator(selector).first()).toBeAttached();
+    });
+  }
+
+  for (const [selector, label] of EXTRA_CRITICAL_ELEMENTS) {
+    test(`${selector} (${label}) exists`, async ({ page }) => {
+      await page.goto(EXTRA, { waitUntil: 'networkidle' });
       await expect(page.locator(selector).first()).toBeAttached();
     });
   }
@@ -189,8 +200,17 @@ test.describe('5. Geolocation injection → address display', () => {
 
       await page.waitForFunction(
         () => {
+          const el = document.querySelector('#municipio-value');
+          return el && el.textContent?.trim() !== '' && el.textContent?.trim() !== '—';
+        },
+        { timeout: 20_000 },
+      );
+
+      await page.goto(EXTRA, { waitUntil: 'networkidle' });
+      await page.waitForFunction(
+        () => {
           const el = document.querySelector('#lat-long-display');
-          return el && el.textContent?.trim() !== 'Aguardando localização...';
+          return el && /último registro salvo/.test(el.textContent ?? '');
         },
         { timeout: 20_000 },
       );

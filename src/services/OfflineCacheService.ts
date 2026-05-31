@@ -15,6 +15,7 @@
  */
 
 import { calculateDistance } from '../utils/distance.js';
+import { publishLocationSnapshotUpdate } from './LocationSnapshotEvents.js';
 
 const DB_NAME = 'guia-offline-cache';
 const DB_VERSION = 1;
@@ -184,6 +185,7 @@ export async function saveLocationSnapshot(snapshot: CachedLocationSnapshot): Pr
 
     fallbackStore.set(LATEST_LOCATION_KEY, snapshot);
     fallbackStore.set(RECENT_LOCATIONS_KEY, nextRecentSnapshots);
+    publishLocationSnapshotUpdate(snapshot);
 
     return snapshot;
   }
@@ -195,6 +197,7 @@ export async function saveLocationSnapshot(snapshot: CachedLocationSnapshot): Pr
 
     fallbackStore.set(LATEST_LOCATION_KEY, snapshot);
     fallbackStore.set(RECENT_LOCATIONS_KEY, nextRecentSnapshots);
+    publishLocationSnapshotUpdate(snapshot);
     return snapshot;
   }
 
@@ -239,6 +242,7 @@ export async function saveLocationSnapshot(snapshot: CachedLocationSnapshot): Pr
       rejectOnce(transaction.error ?? new Error('IndexedDB transaction aborted while saving location snapshot'));
   });
 
+  publishLocationSnapshotUpdate(snapshot);
   return snapshot;
 }
 

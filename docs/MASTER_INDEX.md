@@ -1,7 +1,7 @@
 # Guia Turístico - Master Documentation Index
 
 **Last Updated**: 2026-05-22
-**Version**: 0.28.2-alpha
+**Version**: 0.28.3-alpha
 **Status**: ✅ Active
 
 ---

@@ -47,7 +47,6 @@ import {
 import type {
 	IChangeDetectionCoordinatorForSC,
 	IGeolocationServiceForSC,
-	IObserverSubjectForSC,
 	IReverseGeocoderForSC,
 	ServiceCoordinatorParams,
 } from '../types/coordinator-services.js';
@@ -62,7 +61,6 @@ class ServiceCoordinator {
     private _geolocationService: IGeolocationServiceForSC | null;
     private _reverseGeocoder: IReverseGeocoderForSC | null;
     private _changeDetectionCoordinator: IChangeDetectionCoordinatorForSC | null;
-    private _observerSubject: IObserverSubjectForSC | null;
     private _watchId: number | null;
     private _initialized: boolean;
     /**
@@ -123,13 +121,6 @@ class ServiceCoordinator {
          * @private
          */
         this._changeDetectionCoordinator = params.changeDetectionCoordinator;
-
-        /**
-         * Observer subject for notifications
-         * @type {ObserverSubject}
-         * @private
-         */
-        this._observerSubject = params.observerSubject as IObserverSubjectForSC;
 
         /**
          * Watch ID from geolocation service (for cleanup)
@@ -402,8 +393,6 @@ class ServiceCoordinator {
         this._geolocationService = null;
         this._reverseGeocoder = null;
         this._changeDetectionCoordinator = null;
-        this._displayerFactory = null;
-        this._displayers = null;
         this._initialized = false;
 
         log('ServiceCoordinator: Destroyed');
@@ -421,8 +410,7 @@ class ServiceCoordinator {
     toString() {
         const initStatus = this._initialized ? 'initialized' : 'not initialized';
         const trackStatus = this._watchId !== null ? `tracking (watchId: ${this._watchId})` : 'not tracking';
-        const displayerCount = this._displayers ? Object.keys(this._displayers).length : 0;
-        return `ServiceCoordinator: ${initStatus}, ${trackStatus}, ${displayerCount} displayers`;
+        return `ServiceCoordinator: ${initStatus}, ${trackStatus}`;
     }
 }
 

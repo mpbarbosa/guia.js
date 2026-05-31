@@ -6,7 +6,7 @@
  * coordinator entry points.
  *
  * @module types/coordinator-services
- * @since 0.28.5-alpha
+ * @since 0.28.6-alpha
  */
 
 import type {
@@ -66,6 +66,4 @@ export interface ServiceCoordinatorParams {
   reverseGeocoder: IReverseGeocoderForSC;
   changeDetectionCoordinator: IChangeDetectionCoordinatorForSC;
   observerSubject: unknown;
-  displayerFactory?: IDisplayerFactory;
-  document?: Document;
 }

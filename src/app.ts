@@ -3,7 +3,7 @@
 /**
  * Main Application Entry Point
  * SPA Router and Application Initialization
- * @version 0.28.5-alpha
+ * @version 0.28.6-alpha
  */
 
 import HomeViewController from './views/home.js';
@@ -165,7 +165,7 @@ async function processCurrentRoute(): Promise<void> {
         AppState.homeController = null;
         log('Home controller destroyed on route change to:', route);
       }
-      const VUE_ONLY_ROUTES = ['/map', '/stats', '/history'];
+      const VUE_ONLY_ROUTES = ['/map', '/stats', '/history', '/extra', '/monitor'];
       if (route === '/converter') {
         showLoading();
         await loadConverterView();

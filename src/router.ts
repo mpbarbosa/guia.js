@@ -46,6 +46,12 @@ const routes: RouteRecordRaw[] = [
     meta: { title: 'Histórico' },
   },
   {
+    path: '/extra',
+    name: 'extra',
+    component: () => import('./components/views/ExtraView.vue'),
+    meta: { title: 'Extra' },
+  },
+  {
     // Catch-all: redirect unknown paths to home
     path: '/:pathMatch(.*)*',
     redirect: '/',

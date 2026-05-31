@@ -15,6 +15,8 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import type { IDisplayerFactory } from '../../src/types/coordinator-services.js';
 import { defaultDisplayerFactory } from '../../src/html/DisplayerFactory.js';
+// IDisplayerFactory import is kept — the interface still exists in types for
+// future use; these tests verify the contract via defaultDisplayerFactory.
 import WebGeocodingManager from '../../src/coordination/WebGeocodingManager.js';
 
 // ── helpers ───────────────────────────────────────────────────────────────────
@@ -69,125 +71,23 @@ describe('defaultDisplayerFactory', () => {
   });
 });
 
-// ── 2. ServiceCoordinator mock-factory injection ───────────────────────────────
+// ── 2. Phase 4 cleanup: factory injection removed from coordination layer ────────
+//
+// createDisplayers() and the displayerFactory param were removed in the
+// dead-code cleanup (legacy assessment phase). Displayer creation now lives
+// in Vue composables (useHighlightCards, usePositionDisplayer, etc.).
+// The tests below confirm the layer no longer exposes these entry points.
 
-describe('ServiceCoordinator — mock IDisplayerFactory injection', () => {
-  it('calls createHighlightCardsDisplayer on the injected mock, not on DisplayerFactory', async () => {
-    const { default: ServiceCoordinator } = await import(
-      '../../src/coordination/ServiceCoordinator.js'
-    );
-    const { default: ReverseGeocoder, createReverseGeocoderService } = await import(
-      '../../src/services/ReverseGeocoder.js'
-    );
-    const { default: GeolocationService } = await import(
-      '../../src/services/GeolocationService.js'
-    );
-    const { default: BrowserGeolocationProvider } = await import(
-      '../../src/services/providers/BrowserGeolocationProvider.js'
-    );
-    const { default: ChangeDetectionCoordinator } = await import(
-      '../../src/services/ChangeDetectionCoordinator.js'
-    );
-    const { default: ObserverSubject } = await import(
-      '../../src/core/ObserverSubject.js'
-    );
-
-    const mockFactory = makeMockFactory();
-    const reverseGeocoder = createReverseGeocoderService(null, {});
-    const changeDetector = new ChangeDetectionCoordinator({
-      reverseGeocoder,
-      observerSubject: new ObserverSubject(),
-    });
-
-    const coordinator = new (ServiceCoordinator as unknown as new(p: unknown) => {
-      createDisplayers(...args: unknown[]): unknown;
-    })({
-      geolocationService: new GeolocationService(new BrowserGeolocationProvider()),
-      reverseGeocoder,
-      changeDetectionCoordinator: changeDetector,
-      observerSubject: new ObserverSubject(),
-      displayerFactory: mockFactory,
-      document,
-    });
-
-    const el = document.createElement('span');
-    coordinator.createDisplayers(el, el, el, el, el);
-
-    // The mock was called — no static patching of DisplayerFactory needed
-    expect(mockFactory.createPositionDisplayer).toHaveBeenCalledTimes(1);
-    expect(mockFactory.createAddressDisplayer).toHaveBeenCalledTimes(1);
-    expect(mockFactory.createHighlightCardsDisplayer).toHaveBeenCalledTimes(1);
-  });
-
-  it('uses defaultDisplayerFactory when no factory is injected', async () => {
-    const { default: ServiceCoordinator } = await import(
-      '../../src/coordination/ServiceCoordinator.js'
-    );
-    const { createReverseGeocoderService } = await import(
-      '../../src/services/ReverseGeocoder.js'
-    );
-    const { default: GeolocationService } = await import(
-      '../../src/services/GeolocationService.js'
-    );
-    const { default: BrowserGeolocationProvider } = await import(
-      '../../src/services/providers/BrowserGeolocationProvider.js'
-    );
-    const { default: ChangeDetectionCoordinator } = await import(
-      '../../src/services/ChangeDetectionCoordinator.js'
-    );
-    const { default: ObserverSubject } = await import(
-      '../../src/core/ObserverSubject.js'
-    );
-
-    const reverseGeocoder = createReverseGeocoderService(null, {});
-    const changeDetector = new ChangeDetectionCoordinator({
-      reverseGeocoder,
-      observerSubject: new ObserverSubject(),
-    });
-
-    // No displayerFactory supplied — should fall back to defaultDisplayerFactory
-    const coordinator = new (ServiceCoordinator as unknown as new(p: unknown) => {
-      createDisplayers(...args: unknown[]): unknown;
-      _displayerFactory: IDisplayerFactory | null;
-    })({
-      geolocationService: new GeolocationService(new BrowserGeolocationProvider()),
-      reverseGeocoder,
-      changeDetectionCoordinator: changeDetector,
-      observerSubject: new ObserverSubject(),
-      document,
-    });
-
-    expect(coordinator._displayerFactory).toBe(defaultDisplayerFactory);
-  });
-});
-
-// ── 3. WebGeocodingManager.displayerFactory is IDisplayerFactory ──────────────
-
-describe('WebGeocodingManager.displayerFactory', () => {
-  it('is defaultDisplayerFactory when no factory is injected', () => {
-    // Use Object.create to skip the heavy constructor
+describe('WebGeocodingManager — Phase 4 cleanup', () => {
+  it('does not expose a displayerFactory property', () => {
     const wgm = Object.create(
       WebGeocodingManager.prototype,
     ) as InstanceType<typeof WebGeocodingManager>;
-
-    // Simulate minimal constructor state
-    (wgm as unknown as Record<string, unknown>).displayerFactory = defaultDisplayerFactory;
-
-    expect(wgm.displayerFactory).toBe(defaultDisplayerFactory);
-    expect(typeof wgm.displayerFactory.createPositionDisplayer).toBe('function');
+    expect((wgm as unknown as Record<string, unknown>).displayerFactory).toBeUndefined();
   });
 
-  it('accepts a mock IDisplayerFactory without casting', () => {
-    const mockFactory = makeMockFactory();
-
-    // This assignment is valid TypeScript — no cast needed.
-    // (Verified at compile time via ts-jest; the test proves it at runtime too.)
-    const wgm = Object.create(
-      WebGeocodingManager.prototype,
-    ) as InstanceType<typeof WebGeocodingManager>;
-    (wgm as unknown as Record<string, unknown>).displayerFactory = mockFactory;
-
-    expect(wgm.displayerFactory).toBe(mockFactory);
-    expect(wgm.displayerFactory.createSidraDisplayer).toBe(mockFactory.createSidraDisplayer);
+  it('defaultDisplayerFactory still satisfies IDisplayerFactory contract', () => {
+    expect(typeof defaultDisplayerFactory.createPositionDisplayer).toBe('function');
+    expect(typeof defaultDisplayerFactory.createHighlightCardsDisplayer).toBe('function');
   });
 });

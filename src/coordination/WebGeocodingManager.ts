@@ -104,11 +104,6 @@ import AddressCache from '../data/AddressCache.js';
 // Import timing classes
 
 
-// Import HTML classes
-
-import { defaultDisplayerFactory } from '../html/DisplayerFactory.js';
-import type { IDisplayerFactory } from '../types/coordinator-services.js';
-
 // Import utility functions
 import { log, warn, error } from '../utils/logger.js';
 import { showError } from '../utils/toast.js';
@@ -198,14 +193,9 @@ Object.freeze(DEFAULT_ELEMENT_IDS);
 interface WebGeocodingManagerParams extends AddressConfirmationThresholdOptions {
 	locationResult: string | HTMLElement;
 	elementIds?: WebGeocodingManagerElementIds;
-	displayerFactory?: IDisplayerFactory;
 	geolocationService?: unknown;
 	reverseGeocoder?: unknown;
 	IbiraAPIFetchManager?: unknown;
-	positionDisplay?: HTMLElement | null;
-	enderecoPadronizadoDisplay?: HTMLElement | null;
-	referencePlaceDisplay?: HTMLElement | null;
-	sidraDisplay?: HTMLElement | null;
 }
 
 /**
@@ -253,11 +243,6 @@ class WebGeocodingManager {
 	document!: Document;
 	locationResult: HTMLElement | null;
 	elementIds!: WebGeocodingManagerElementIds;
-	positionDisplay: HTMLElement | null;
-	enderecoPadronizadoDisplay: HTMLElement | null;
-	referencePlaceDisplay: HTMLElement | null;
-	sidraDisplay: HTMLElement | null;
-	displayerFactory: IDisplayerFactory;
 	observerSubject!: ObserverSubject;
 	geocodingState!: InstanceType<typeof GeocodingState>;
 	uiCoordinator!: UICoordinator;
@@ -399,19 +384,6 @@ class WebGeocodingManager {
 			addressConfirmationBufferThreshold: getCurrentAddressConfirmationBufferThreshold()
 		});
 
-		// Resolve display elements from element IDs or use provided params
-		this.positionDisplay = params.positionDisplay || 
-			(this.elementIds.positionDisplay ? document.getElementById(this.elementIds.positionDisplay) : null);
-		this.enderecoPadronizadoDisplay = params.enderecoPadronizadoDisplay || 
-			(this.elementIds.enderecoPadronizadoDisplay ? document.getElementById(this.elementIds.enderecoPadronizadoDisplay) : null);
-		this.referencePlaceDisplay = params.referencePlaceDisplay || 
-			(this.elementIds.referencePlaceDisplay ? document.getElementById(this.elementIds.referencePlaceDisplay) : null);
-		this.sidraDisplay = params.sidraDisplay || 
-			(this.elementIds.sidraDisplay ? document.getElementById(this.elementIds.sidraDisplay) : null);
-
-		// Store displayer factory (enables dependency injection for testing)
-		this.displayerFactory = params.displayerFactory ?? defaultDisplayerFactory;
-
 		// Initialize observer subject for external subscribers
 		this.observerSubject = new ObserverSubject();
 
@@ -448,27 +420,14 @@ class WebGeocodingManager {
 			reverseGeocoder: this.reverseGeocoder,
 			changeDetectionCoordinator: this.changeDetectionCoordinator,
 			observerSubject: this.observerSubject,
-			displayerFactory: this.displayerFactory,
-			document: document
 		});
 
 		log('>>> (WebGeocodingManager) Created with params:', params);
 		log('>>> (WebGeocodingManager) locationResult element:', this.locationResult);
-		log('>>> (WebGeocodingManager) positionDisplay element:', this.positionDisplay);
-		log('>>> (WebGeocodingManager) enderecoPadronizadoDisplay element:', this.enderecoPadronizadoDisplay);
-		log('>>> (WebGeocodingManager) referencePlaceDisplay element:', this.referencePlaceDisplay);
-		log('>>> (WebGeocodingManager) sidraDisplay element:', this.sidraDisplay);
-		// Create displayers and wire observers via ServiceCoordinator
-		// Position display goes to positionDisplay, address display goes to locationResult
-		this.serviceCoordinator
-			.createDisplayers(
-				this.positionDisplay,
-				this.locationResult,
-				this.enderecoPadronizadoDisplay,
-				this.referencePlaceDisplay,
-				this.sidraDisplay
-			)
-			.wireObservers();
+
+		// Wire the reverse geocoder to PositionManager so GPS position changes
+		// trigger the geocoding pipeline. Displayers are now Vue composables.
+		this.serviceCoordinator.wireObservers();
 		
 		// Phase 3: SpeechCoordinator replaces initSpeechSynthesis() logic
 		this.speechCoordinator = new SpeechCoordinator(
@@ -619,30 +578,6 @@ class WebGeocodingManager {
 	 */
 	get cityStatsBtn() {
 		return this.uiCoordinator.getElement('cityStatsBtn');
-	}
-
-	/**
-	 * Gets position displayer (backward compatibility with ServiceCoordinator).
-	 * @returns {Object|null} Position displayer or null
-	 */
-	get positionDisplayer() {
-		return (this.serviceCoordinator as unknown as { positionDisplayer: unknown }).positionDisplayer;
-	}
-
-	/**
-	 * Gets address displayer (backward compatibility with ServiceCoordinator).
-	 * @returns {Object|null} Address displayer or null
-	 */
-	get addressDisplayer() {
-		return (this.serviceCoordinator as unknown as { addressDisplayer: unknown }).addressDisplayer;
-	}
-
-	/**
-	 * Gets reference place displayer (backward compatibility with ServiceCoordinator).
-	 * @returns {Object|null} Reference place displayer or null
-	 */
-	get referencePlaceDisplayer() {
-		return (this.serviceCoordinator as unknown as { referencePlaceDisplayer: unknown }).referencePlaceDisplayer;
 	}
 
 	/**

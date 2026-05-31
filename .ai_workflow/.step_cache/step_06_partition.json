@@ -1,8 +1,8 @@
 {
   "version": 1,
   "partitionIndex": 1,
-  "totalPartitions": 58,
-  "filesHash": "e409bf70",
+  "totalPartitions": 59,
+  "filesHash": "2e016593",
   "partitionLabels": [
     "__tests__/app",
     "__tests__/components",
@@ -11,6 +11,7 @@
     "__tests__/components (4)",
     "__tests__/components (5)",
     "__tests__/composables",
+    "__tests__/composables (2)",
     "__tests__/config",
     "__tests__/coordination",
     "__tests__/coordination (2)",
@@ -63,5 +64,5 @@
     "test/types",
     "test/utils"
   ],
-  "updatedAt": "2026-05-31T15:04:28.648Z"
+  "updatedAt": "2026-05-31T17:47:41.299Z"
 }

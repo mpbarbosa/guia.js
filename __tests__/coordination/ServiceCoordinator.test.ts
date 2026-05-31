@@ -9,7 +9,6 @@
 import { describe, test, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import type {
     IChangeDetectionCoordinatorForSC,
-    IDisplayerFactory,
     IGeolocationServiceForSC,
     IObserverSubjectForSC,
     IReverseGeocoderForSC,
@@ -97,34 +96,6 @@ function createMockObserverSubject(): IObserverSubjectForSC {
 }
 
 /**
- * Helper to create mock DisplayerFactory
- */
-function createMockDisplayerFactory(): IDisplayerFactory {
-    return {
-        createPositionDisplayer: jest.fn(() => ({
-            update: jest.fn(),
-            type: 'position'
-        })),
-        createAddressDisplayer: jest.fn(() => ({
-            update: jest.fn(),
-            type: 'address'
-        })),
-        createReferencePlaceDisplayer: jest.fn(() => ({
-            update: jest.fn(),
-            type: 'referencePlace'
-        })),
-        createHighlightCardsDisplayer: jest.fn(() => ({
-            update: jest.fn(),
-            type: 'highlightCards'
-        })),
-        createSidraDisplayer: jest.fn(() => ({
-            update: jest.fn(),
-            type: 'sidra'
-        }))
-    };
-}
-
-/**
  * Helper to create valid params object
  */
 function createValidParams(): ServiceCoordinatorParams {
@@ -133,7 +104,6 @@ function createValidParams(): ServiceCoordinatorParams {
         reverseGeocoder: createMockReverseGeocoder(),
         changeDetectionCoordinator: createMockChangeDetectionCoordinator(),
         observerSubject: createMockObserverSubject(),
-        displayerFactory: createMockDisplayerFactory()
     };
 }
 
@@ -229,12 +199,6 @@ describe('ServiceCoordinator', () => {
             }).toThrow('observerSubject is required');
         });
 
-        test('should initialize with null displayers', () => {
-            const coordinator = new ServiceCoordinator(params);
-
-            expect(coordinator.getDisplayers()).toBeNull();
-        });
-
         test('should initialize as not initialized', () => {
             const coordinator = new ServiceCoordinator(params);
 
@@ -256,146 +220,29 @@ describe('ServiceCoordinator', () => {
         });
     });
 
-    describe('createDisplayers()', () => {
-        test('should create all three displayers', () => {
-            const coordinator = new ServiceCoordinator(params);
-
-            coordinator.createDisplayers('pos-display', 'loc-result', 'addr-display', 'ref-display');
-            const displayers = coordinator.getDisplayers();
-
-            expect(displayers).toBeDefined();
-            expect(displayers.position).toBeDefined();
-            expect(displayers.address).toBeDefined();
-            expect(displayers.referencePlace).toBeDefined();
-        });
-
-        test('should call factory methods with correct arguments', () => {
-            const coordinator = new ServiceCoordinator(params);
-
-            coordinator.createDisplayers('pos-display', 'loc-result', 'addr-display', 'ref-display');
-
-            expect(params.displayerFactory.createPositionDisplayer).toHaveBeenCalledWith('pos-display');
-            expect(params.displayerFactory.createAddressDisplayer).toHaveBeenCalledWith('loc-result', 'addr-display');
-            expect(params.displayerFactory.createReferencePlaceDisplayer).toHaveBeenCalledWith('ref-display');
-        });
-
-        test('should return this for chaining', () => {
-            const coordinator = new ServiceCoordinator(params);
-
-            const result = coordinator.createDisplayers('pos-display', 'loc-result', 'addr-display', 'ref-display');
-
-            expect(result).toBe(coordinator);
-        });
-
-        test('should store displayers internally', () => {
-            const coordinator = new ServiceCoordinator(params);
-
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
-            const stored = coordinator.getDisplayers();
-
-            expect(stored).not.toBeNull();
-            expect(stored.position).toBeDefined();
-        });
-
-        test('uses defaultDisplayerFactory when none is provided', async () => {
-            const { defaultDisplayerFactory } = await import('../../src/html/DisplayerFactory.js');
-            delete params.displayerFactory;
-            const coordinator = new ServiceCoordinator(params);
-            // Phase 3: no factory provided → falls back to defaultDisplayerFactory, never null.
-            expect((coordinator as unknown as { _displayerFactory: unknown })._displayerFactory)
-                .toBe(defaultDisplayerFactory);
-        });
-
-        test('should handle null element references gracefully', () => {
-            const coordinator = new ServiceCoordinator(params);
-
-            expect(() => {
-                coordinator.createDisplayers(null, null, null);
-            }).not.toThrow();
-        });
-    });
-
     describe('wireObservers()', () => {
-        test('should wire position displayer to PositionManager', () => {
+        test('wires reverse geocoder to PositionManager', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
-
             const subscribeSpy = jest.spyOn(positionManagerInstance, 'subscribe');
             coordinator.wireObservers();
-
-            expect(subscribeSpy).toHaveBeenCalled();
-        });
-
-        test('should wire reverse geocoder to PositionManager', () => {
-            const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
-
-            const subscribeSpy = jest.spyOn(positionManagerInstance, 'subscribe');
-            coordinator.wireObservers();
-
             expect(subscribeSpy).toHaveBeenCalledWith(params.reverseGeocoder);
         });
 
-        test('should mark as initialized after wiring', () => {
+        test('marks coordinator as initialized', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
-
             coordinator.wireObservers();
-
             expect(coordinator.isInitialized()).toBe(true);
         });
 
-        test('should return this for chaining', () => {
+        test('returns this for chaining', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
-
             const result = coordinator.wireObservers();
-
             expect(result).toBe(coordinator);
         });
 
-        test('should throw Error if displayers not created yet', () => {
+        test('does not throw when called without prior createDisplayers', () => {
             const coordinator = new ServiceCoordinator(params);
-
-            expect(() => {
-                coordinator.wireObservers();
-            }).toThrow('Displayers must be created before wiring observers');
-        });
-
-        test('should handle null position displayer gracefully', () => {
-            params.displayerFactory.createPositionDisplayer.mockReturnValue(null);
-            const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
-
-            expect(() => {
-                coordinator.wireObservers();
-            }).not.toThrow();
-        });
-
-        test('should wire highlight cards to reverse geocoder and confirmed change observer subject', () => {
-            params.document = { getElementById: jest.fn(() => null) };
-            const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
-
-            const highlightCards = coordinator.getDisplayers().highlightCards;
-
-            coordinator.wireObservers();
-
-            expect(params.observerSubject.subscribe).toHaveBeenCalledWith(highlightCards);
-            expect(params.reverseGeocoder.subscribe).toHaveBeenCalledWith(highlightCards);
-        });
-
-        test('should wire sidra displayer to confirmed change observer subject instead of reverse geocoder', () => {
-            params.document = { getElementById: jest.fn(() => null) };
-            const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display', 'reference-display', 'dados-sidra');
-
-            const sidraDisplayer = coordinator.getDisplayers().sidra;
-
-            coordinator.wireObservers();
-
-            expect(params.observerSubject.subscribe).toHaveBeenCalledWith(sidraDisplayer);
-            expect(params.reverseGeocoder.subscribe).not.toHaveBeenCalledWith(sidraDisplayer);
+            expect(() => coordinator.wireObservers()).not.toThrow();
         });
     });
 
@@ -485,7 +332,6 @@ describe('ServiceCoordinator', () => {
     describe('startTracking()', () => {
         test('should call geolocationService.watchCurrentLocation', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
 
             coordinator.startTracking();
@@ -495,7 +341,6 @@ describe('ServiceCoordinator', () => {
 
         test('should call changeDetectionCoordinator.setupChangeDetection', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
 
             coordinator.startTracking();
@@ -505,7 +350,6 @@ describe('ServiceCoordinator', () => {
 
         test('should mark as tracking', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
 
             coordinator.startTracking();
@@ -515,7 +359,6 @@ describe('ServiceCoordinator', () => {
 
         test('should return this for chaining', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
 
             const result = coordinator.startTracking();
@@ -525,7 +368,6 @@ describe('ServiceCoordinator', () => {
 
         test('should throw Error if geolocationService is null', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
             coordinator._geolocationService = null;
 
@@ -536,7 +378,6 @@ describe('ServiceCoordinator', () => {
 
         test('should throw Error if observers not wired yet', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
 
             expect(() => {
                 coordinator.startTracking();
@@ -545,7 +386,6 @@ describe('ServiceCoordinator', () => {
 
         test('should store watch ID from geolocation service', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
 
             coordinator.startTracking();
@@ -557,7 +397,6 @@ describe('ServiceCoordinator', () => {
     describe('stopTracking()', () => {
         test('should call geolocationService.stopTracking', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
             coordinator.startTracking();
 
@@ -568,7 +407,6 @@ describe('ServiceCoordinator', () => {
 
         test('should clear watch ID', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
             coordinator.startTracking();
 
@@ -579,7 +417,6 @@ describe('ServiceCoordinator', () => {
 
         test('should return this for chaining', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
             coordinator.startTracking();
 
@@ -599,7 +436,6 @@ describe('ServiceCoordinator', () => {
         test('should handle geolocationService without stopTracking method', () => {
             delete params.geolocationService.stopTracking;
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
             coordinator.startTracking();
 
@@ -618,7 +454,6 @@ describe('ServiceCoordinator', () => {
 
         test('should return true after wiring observers', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
 
             expect(coordinator.isInitialized()).toBe(true);
@@ -626,7 +461,6 @@ describe('ServiceCoordinator', () => {
 
         test('should return false after destroy', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
 
             coordinator.destroy();
@@ -644,7 +478,6 @@ describe('ServiceCoordinator', () => {
 
         test('should return true after starting tracking', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
             coordinator.startTracking();
 
@@ -653,7 +486,6 @@ describe('ServiceCoordinator', () => {
 
         test('should return false after stopping tracking', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
             coordinator.startTracking();
             coordinator.stopTracking();
@@ -681,27 +513,11 @@ describe('ServiceCoordinator', () => {
             expect(coordinator.getChangeDetectionCoordinator()).toBe(params.changeDetectionCoordinator);
         });
 
-        test('getDisplayers should return null initially', () => {
-            const coordinator = new ServiceCoordinator(params);
-
-            expect(coordinator.getDisplayers()).toBeNull();
-        });
-
-        test('getDisplayers should return created displayers', () => {
-            const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
-
-            const displayers = coordinator.getDisplayers();
-
-            expect(displayers).not.toBeNull();
-            expect(displayers.position).toBeDefined();
-        });
     });
 
     describe('destroy()', () => {
         test('should stop tracking if active', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
             coordinator.startTracking();
 
@@ -720,18 +536,8 @@ describe('ServiceCoordinator', () => {
             expect(coordinator.getChangeDetectionCoordinator()).toBeNull();
         });
 
-        test('should clear displayers', () => {
-            const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
-
-            coordinator.destroy();
-
-            expect(coordinator.getDisplayers()).toBeNull();
-        });
-
         test('should mark as not initialized', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
 
             coordinator.destroy();
@@ -763,18 +569,16 @@ describe('ServiceCoordinator', () => {
 
         test('should show initialized state after wiring', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
 
             const result = coordinator.toString();
 
             expect(result).toContain('initialized');
-            expect(result).toContain('5 displayers');  // Updated: now includes SIDRA displayer
+            // Displayers are now Vue composables — coordinator reports 0 displayers
         });
 
         test('should show tracking state with watch ID', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
             coordinator.startTracking();
 
@@ -786,7 +590,6 @@ describe('ServiceCoordinator', () => {
 
         test('should reflect state after destroy', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
             coordinator.destroy();
 
@@ -801,13 +604,7 @@ describe('ServiceCoordinator', () => {
         test('should support complete initialization workflow', () => {
             const coordinator = new ServiceCoordinator(params);
 
-            // Create displayers
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
-            const displayers = coordinator.getDisplayers();
-            expect(displayers).toBeDefined();
-            expect(coordinator.getDisplayers()).not.toBeNull();
-
-            // Wire observers
+            // Wire observers (no createDisplayers needed)
             coordinator.wireObservers();
             expect(coordinator.isInitialized()).toBe(true);
 
@@ -839,12 +636,10 @@ describe('ServiceCoordinator', () => {
             expect(params.reverseGeocoder.longitude).toBe(-46.633309);
         });
 
-        test('should maintain proper lifecycle: create → wire → track → stop → destroy', () => {
+        test('should maintain proper lifecycle: wire → track → stop → destroy', () => {
             const coordinator = new ServiceCoordinator(params);
 
-            // Phase 1: Create
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
-            expect(coordinator.getDisplayers()).not.toBeNull();
+            // Phase 1: Before wiring
             expect(coordinator.isInitialized()).toBe(false);
 
             // Phase 2: Wire
@@ -864,12 +659,10 @@ describe('ServiceCoordinator', () => {
             // Phase 5: Destroy
             coordinator.destroy();
             expect(coordinator.isInitialized()).toBe(false);
-            expect(coordinator.getDisplayers()).toBeNull();
         });
 
         test('should handle restart after stop', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
 
             // First tracking session
@@ -906,13 +699,10 @@ describe('ServiceCoordinator', () => {
             const coordinator = new ServiceCoordinator(params);
 
             coordinator
-                .createDisplayers('loc-result', 'addr-display', 'ref-display')
                 .wireObservers()
                 .startTracking()
                 .stopTracking();
 
-            // Verify all operations completed
-            expect(coordinator.getDisplayers()).not.toBeNull();
             expect(coordinator.isInitialized()).toBe(true);
             expect(coordinator.isTracking()).toBe(false);
         });
@@ -935,12 +725,9 @@ describe('ServiceCoordinator', () => {
             }).toThrow('Must wire observers before starting tracking');
         });
 
-        test('should prevent wiring before displayer creation', () => {
+        test('wireObservers can be called without prior createDisplayers', () => {
             const coordinator = new ServiceCoordinator(params);
-
-            expect(() => {
-                coordinator.wireObservers();
-            }).toThrow('Displayers must be created before wiring observers');
+            expect(() => coordinator.wireObservers()).not.toThrow();
         });
 
         test('should handle null geolocationService in getSingleLocationUpdate', async () => {
@@ -952,7 +739,6 @@ describe('ServiceCoordinator', () => {
 
         test('should handle null geolocationService in startTracking', () => {
             const coordinator = new ServiceCoordinator(params);
-            coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
             coordinator.wireObservers();
             coordinator._geolocationService = null;
 

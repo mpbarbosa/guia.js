@@ -38,17 +38,14 @@
  */
 
 import PositionManager from '../core/PositionManager.js';
-import { log, warn, error as logError } from '../utils/logger.js';
+import { log, error as logError } from '../utils/logger.js';
 import AddressCache from '../data/AddressCache.js';
-import { defaultDisplayerFactory } from '../html/DisplayerFactory.js';
 import {
 	GEOLOCATION_THROTTLE_INTERVAL,
 	GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL
 } from '../config/defaults.js';
 import type {
 	IChangeDetectionCoordinatorForSC,
-	IDisplayerFactory,
-	IDisplayers,
 	IGeolocationServiceForSC,
 	IObserverSubjectForSC,
 	IReverseGeocoderForSC,
@@ -63,12 +60,9 @@ import type {
 class ServiceCoordinator {
     // ─── Private property declarations ─────────────────────────────────────
     private _geolocationService: IGeolocationServiceForSC | null;
-    private _document: Document | undefined;
     private _reverseGeocoder: IReverseGeocoderForSC | null;
     private _changeDetectionCoordinator: IChangeDetectionCoordinatorForSC | null;
     private _observerSubject: IObserverSubjectForSC | null;
-    private _displayerFactory: IDisplayerFactory | null;
-    private _displayers: Readonly<IDisplayers> | null;
     private _watchId: number | null;
     private _initialized: boolean;
     /**
@@ -117,13 +111,6 @@ class ServiceCoordinator {
         this._geolocationService = params.geolocationService;
         
         /**
-         * Document object for DOM manipulation
-         * @type {Document}
-         * @private
-         */
-        this._document = params.document;
-
-        /**
          * Reverse geocoder for address lookup
          * @type {ReverseGeocoder}
          * @private
@@ -143,20 +130,6 @@ class ServiceCoordinator {
          * @private
          */
         this._observerSubject = params.observerSubject as IObserverSubjectForSC;
-
-        /**
-         * Factory for creating displayers
-         * @type {Object}
-         * @private
-         */
-        this._displayerFactory = params.displayerFactory ?? defaultDisplayerFactory;
-
-        /**
-         * Created displayers (position, address, reference place)
-         * @type {Object|null}
-         * @private
-         */
-        this._displayers = null;
 
         /**
          * Watch ID from geolocation service (for cleanup)
@@ -187,143 +160,20 @@ class ServiceCoordinator {
     }
 
     /**
-     * Creates displayer instances for UI updates.
-     * 
-     * Factory method that creates all displayer instances needed for the application:
-     * - Position displayer (coordinates, accuracy, altitude)
-     * - Address displayer (raw geocoding data and standardized addresses)
-     * - Reference place displayer (nearby landmarks)
-     * - Highlight cards displayer (municipio/bairro cards)
-     * - SIDRA displayer (IBGE statistical data)
-     * 
-     * All created displayers are frozen after creation to prevent modification.
-     * 
-     * @param {HTMLElement} positionDisplay - Element for coordinate display  
-     * @param {HTMLElement} addressDisplay - Element for raw address display
-     * @param {HTMLElement} enderecoPadronizadoDisplay - Element for standardized address display
-     * @param {HTMLElement} referencePlaceDisplay - Element for reference place display
-     * @param {HTMLElement} sidraDisplay - Element for SIDRA/IBGE data display
+     * Wire the reverse geocoder to PositionManager so every accepted GPS position
+     * triggers a new geocoding cycle.  This is the core data-pipeline connection;
+     * displayer subscriptions are now owned by Vue composables (useHighlightCards,
+     * usePositionDisplayer, useAddressDisplayer, useReferencePlaceDisplayer,
+     * useSidraDisplayer).
+     *
      * @returns {ServiceCoordinator} This instance for chaining
-     * @throws {Error} If displayerFactory not configured
-     * 
-     * @example
-     * const displayers = coordinator.createDisplayers(
-     *   positionElement,
-     *   addressElement,
-     *   standardizedAddressElement,
-     *   referencePlaceElement,
-     *   sidraElement
-     * );
-     */
-    createDisplayers(positionDisplay: unknown, addressDisplay: unknown, enderecoPadronizadoDisplay: unknown, referencePlaceDisplay: unknown, sidraDisplay: unknown) {
-        if (!this._displayerFactory) {
-            throw new Error('ServiceCoordinator: displayerFactory not configured');
-        }
-
-        log('>>> (ServiceCoordinator) Creating displayers with elements:', {
-            positionDisplay,
-            addressDisplay,
-            enderecoPadronizadoDisplay,
-            referencePlaceDisplay,
-            sidraDisplay
-        });
-        this._displayers = {
-            position: positionDisplay ? this._displayerFactory.createPositionDisplayer(positionDisplay) : null,
-            address: (addressDisplay || enderecoPadronizadoDisplay)
-                ? this._displayerFactory.createAddressDisplayer(addressDisplay, enderecoPadronizadoDisplay)
-                : null,
-            referencePlace: referencePlaceDisplay
-                ? this._displayerFactory.createReferencePlaceDisplayer(referencePlaceDisplay)
-                : null,
-            highlightCards: this._document ? this._displayerFactory.createHighlightCardsDisplayer(this._document) : null,
-            sidra: sidraDisplay ? this._displayerFactory.createSidraDisplayer(sidraDisplay) : null
-        };
-
-        Object.freeze(this._displayers);
-        
-        log('ServiceCoordinator: Displayers created', {
-            position: !!this._displayers.position,
-            address: !!this._displayers.address,
-            referencePlace: !!this._displayers.referencePlace,
-            highlightCards: !!this._displayers.highlightCards,
-            sidra: !!this._displayers.sidra
-        });
-
-        return this;
-    }
-
-    /**
-     * Wire all observers between services and displayers
-     * 
-     * Sets up the observer pattern connections:
-     * - PositionManager → positionDisplayer, reverseGeocoder
-     * 
-     * Must be called after createDisplayers().
-     * 
-     * @returns {ServiceCoordinator} This instance for chaining
-     * @throws {Error} If displayers not created yet
-     * 
-     * @example
-     * coordinator.createDisplayers(...);
-     * coordinator.wireObservers();
      */
     wireObservers() {
-        if (!this._displayers) {
-            throw new Error('ServiceCoordinator: Displayers must be created before wiring observers');
-        }
-
         const positionManager = PositionManager.getInstance();
 
-        // Wire position displayer to position updates
-        if (this._displayers.position) {
-            positionManager.subscribe(this._displayers.position as { update?: (...args: unknown[]) => void });
-            log('ServiceCoordinator: Position displayer wired');
-        }
-
-        // Wire reverse geocoder to position updates
         if (this._reverseGeocoder) {
             positionManager.subscribe(this._reverseGeocoder);
-            log('ServiceCoordinator: Reverse geocoder wired');
-            
-            // Subscribe address displayer to address updates
-            log('>>> (ServiceCoordinator) Wiring address-related displayers to ReverseGeocoder');
-            if (this._displayers.address) {
-                log('>>> (ServiceCoordinator) Subscribing HTMLAddressDisplayer to ReverseGeocoder', this._displayers.address);
-                this._reverseGeocoder.subscribe(this._displayers.address);
-                log('>>> ServiceCoordinator: Address displayer wired');
-            }
-
-            // Subscribe highlight cards displayer to the first fetched address so
-            // the cards populate immediately, then keep them aligned with the
-            // confirmation-buffered change notifications for subsequent updates.
-            if (this._displayers.highlightCards && this._observerSubject) {
-                log('>>> (ServiceCoordinator) Subscribing HTMLHighlightCardsDisplayer to ReverseGeocoder', this._displayers.highlightCards);
-                this._reverseGeocoder.subscribe(this._displayers.highlightCards);
-                log('>>> (ServiceCoordinator) Subscribing HTMLHighlightCardsDisplayer to confirmed change observerSubject', this._displayers.highlightCards);
-                this._observerSubject.subscribe(this._displayers.highlightCards);
-                log('>>> ServiceCoordinator: Highlight cards displayer wired');
-            } else {
-                warn('(ServiceCoordinator) highlightCards displayer is null, cannot subscribe!');
-            }
-
-            // Subscribe reference place displayer to address updates
-            if (this._displayers.referencePlace) {
-                log('>>> (ServiceCoordinator) Subscribing HTMLReferencePlaceDisplayer to ReverseGeocoder', this._displayers.referencePlace);
-                this._reverseGeocoder.subscribe(this._displayers.referencePlace);
-                log('>>> ServiceCoordinator: Reference place displayer wired');
-            }
-
-            // Subscribe SIDRA displayer to confirmed municipality changes only.
-            if (this._displayers.sidra && this._observerSubject) {
-                log('>>> (ServiceCoordinator) Subscribing HTMLSidraDisplayer to confirmed change observerSubject', this._displayers.sidra);
-                this._observerSubject.subscribe(this._displayers.sidra);
-                log('>>> ServiceCoordinator: SIDRA displayer wired');
-            }
-            
-            // Safe logging - check if observerSubject exists
-            if (this._reverseGeocoder.observerSubject?.observers) {
-                log('(ServiceCoordinator) ReverseGeocoder now has', this._reverseGeocoder.observerSubject.observers.length, 'observers');
-            }
+            log('ServiceCoordinator: Reverse geocoder wired to PositionManager');
         }
 
         this._initialized = true;
@@ -532,21 +382,6 @@ class ServiceCoordinator {
      */
     getChangeDetectionCoordinator() {
         return this._changeDetectionCoordinator;
-    }
-
-    /**
-     * Get created displayers
-     * 
-     * @returns {Object|null} Frozen displayers object or null if not created
-     * 
-     * @example
-     * const displayers = coordinator.getDisplayers();
-     * if (displayers) {
-     *   log(displayers.position);
-     * }
-     */
-    getDisplayers() {
-        return this._displayers;
     }
 
     /**

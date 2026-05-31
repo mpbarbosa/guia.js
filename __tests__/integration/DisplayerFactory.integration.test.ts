@@ -97,67 +97,10 @@ describe('DisplayerFactory Module Integration Tests', () => {
     });
 
     describe('WebGeocodingManager Integration', () => {
-        test('should work with WebGeocodingManager dependency injection', async () => {
-            // Import directly from source to avoid circular dependency
+        test('WebGeocodingManager constructs without displayerFactory param (Phase 4: factory removed from coordination layer)', async () => {
+            // displayerFactory was removed from WebGeocodingManager in the dead-code cleanup.
+            // Displayers are now Vue composables; the factory is no longer a coordinator concern.
             const WebGeocodingManager = (await import('../../src/coordination/WebGeocodingManager.js')).default;
-            const guia = await import('../../src/guia.js');
-            const { DisplayerFactory: GuiaDisplayerFactory } = guia;
-            
-            // Mock document and basic DOM structure
-            const mockDocument = {
-                getElementById: jest.fn().mockReturnValue({ 
-                    id: 'mock-element', 
-                    innerHTML: '', 
-                    addEventListener: jest.fn(),
-                    textContent: ''
-                })
-            };
-            
-            // Test that WebGeocodingManager can use DisplayerFactory
-            const manager = new WebGeocodingManager(mockDocument, {
-                locationResult: 'location-result',
-                displayerFactory: GuiaDisplayerFactory
-            });
-            
-            expect(manager).toBeDefined();
-            // WebGeocodingManager should store the factory for use
-            expect(manager.displayerFactory).toBe(GuiaDisplayerFactory);
-        });
-
-        test('should enable mock factory injection for testing', async () => {
-            // Import directly from source to avoid circular dependency
-            const WebGeocodingManager = (await import('../../src/coordination/WebGeocodingManager.js')).default;
-            
-            // Create mock factory
-            const MockDisplayerFactory = {
-                createPositionDisplayer: jest.fn().mockReturnValue({
-                    element: { id: 'mock-position' },
-                    update: jest.fn(),
-                    toString: () => 'MockPositionDisplayer'
-                }),
-                createAddressDisplayer: jest.fn().mockReturnValue({
-                    element: { id: 'mock-address' },
-                    enderecoPadronizadoDisplay: false,
-                    update: jest.fn(),
-                    toString: () => 'MockAddressDisplayer'
-                }),
-                createReferencePlaceDisplayer: jest.fn().mockReturnValue({
-                    element: { id: 'mock-reference' },
-                    referencePlaceDisplay: false,
-                    update: jest.fn(), 
-                    toString: () => 'MockReferencePlaceDisplayer'
-                }),
-                createHighlightCardsDisplayer: jest.fn().mockReturnValue({
-                    update: jest.fn(),
-                    toString: () => 'MockHighlightCardsDisplayer'
-                }),
-                createSidraDisplayer: jest.fn().mockReturnValue({
-                    element: { id: 'mock-sidra' },
-                    update: jest.fn(),
-                    toString: () => 'MockSidraDisplayer'
-                })
-            };
-            
             const mockDocument = {
                 getElementById: jest.fn().mockReturnValue({
                     id: 'mock-element',
@@ -166,15 +109,11 @@ describe('DisplayerFactory Module Integration Tests', () => {
                     textContent: ''
                 })
             };
-            
-            // Test dependency injection
             const manager = new WebGeocodingManager(mockDocument, {
                 locationResult: 'location-result',
-                displayerFactory: MockDisplayerFactory
             });
-            
-            // Verify mock factory was stored
-            expect(manager.displayerFactory).toBe(MockDisplayerFactory);
+            expect(manager).toBeDefined();
+            expect((manager as unknown as Record<string, unknown>).displayerFactory).toBeUndefined();
         });
     });
 
@@ -463,29 +402,10 @@ describe('DisplayerFactory Module Integration Tests', () => {
     });
 
     describe('Configuration and Dependency Injection Integration', () => {
-        test('should work with different WebGeocodingManager configurations', async () => {
-            // Import directly from source to avoid circular dependency
+        test('WebGeocodingManager constructs with different locationResult values (Phase 4: displayerFactory removed)', async () => {
+            // displayerFactory was removed from WebGeocodingManager params in the
+            // dead-code cleanup — displayers are now Vue composables.
             const WebGeocodingManager = (await import('../../src/coordination/WebGeocodingManager.js')).default;
-            const guia = await import('../../src/guia.js');
-            const { DisplayerFactory: GuiaDisplayerFactory } = guia;
-            
-            const configurations = [
-                {
-                    locationResult: 'location-result-1',
-                    displayerFactory: GuiaDisplayerFactory
-                },
-                {
-                    locationResult: 'location-result-2',
-                    enderecoPadronizadoDisplay: 'endereco-display',
-                    displayerFactory: GuiaDisplayerFactory
-                },
-                {
-                    locationResult: 'location-result-3',
-                    referencePlaceDisplay: 'reference-display',
-                    displayerFactory: GuiaDisplayerFactory
-                }
-            ];
-            
             const mockDocument = {
                 getElementById: jest.fn().mockReturnValue({
                     id: 'mock-element',
@@ -494,13 +414,10 @@ describe('DisplayerFactory Module Integration Tests', () => {
                     textContent: ''
                 })
             };
-            
-            // All configurations should work with DisplayerFactory
-            configurations.forEach((config, index) => {
-                expect(() => {
-                    const manager = new WebGeocodingManager(mockDocument, config);
-                    expect(manager.displayerFactory).toBe(GuiaDisplayerFactory);
-                }).not.toThrow();
+
+            const locationResults = ['location-result-1', 'location-result-2', 'location-result-3'];
+            locationResults.forEach((locationResult) => {
+                expect(() => new WebGeocodingManager(mockDocument, { locationResult })).not.toThrow();
             });
         });
     });

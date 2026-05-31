@@ -10,6 +10,7 @@ const tabs = [
   { name: 'monitor',   path: '/monitor',   icon: 'bi-speedometer2',  activeIcon: 'bi-speedometer2',       label: 'Monitor' },
   { name: 'stats',     path: '/stats',     icon: 'bi-bar-chart',     activeIcon: 'bi-bar-chart-fill',    label: 'Stats'   },
   { name: 'history',   path: '/history',   icon: 'bi-clock-history', activeIcon: 'bi-clock-history',     label: 'History' },
+  { name: 'extra',     path: '/extra',     icon: 'bi-grid',          activeIcon: 'bi-grid-fill',          label: 'Extra'   },
 ] as const;
 </script>
 

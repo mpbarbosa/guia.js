@@ -1,6 +1,6 @@
 # System Architecture Overview
 
-**Version**: 0.28.6-alpha
+**Version**: 0.28.7-alpha
 **Last Updated**: 2026-05-30
 **Document Type**: Technical Architecture Guide
 
@@ -1029,5 +1029,5 @@ GET /reverse?format=json&lat=-23.5505&lon=-46.6333&addressdetails=1
 ---
 
 **Last Updated**: 2026-05-30
-**Version**: 0.28.6-alpha
+**Version**: 0.28.7-alpha
 **Status**: ✅ Complete and Validated

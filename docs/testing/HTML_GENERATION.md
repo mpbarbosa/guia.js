@@ -1,6 +1,6 @@
 # HTML Generation Testing
 
-**Version**: 0.28.3-alpha
+**Version**: 0.28.4-alpha
 **Last Updated**: 2026-05-30
 
 Use this guide when a change affects rendered markup, component output, or
@@ -18,4 +18,4 @@ browser-visible structure.
 ## Related references
 
 - [Testing Guide](./TESTING.md)
-- [tests/integration/README_VISUAL_HIERARCHY.md](../../tests/integration/README_VISUAL_HIERARCHY.md)
+- [`__tests__/e2e/metropolitan-region-display.e2e.test.ts`](../../__tests__/e2e/metropolitan-region-display.e2e.test.ts)

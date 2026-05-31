@@ -4,7 +4,7 @@ This document describes the modular architecture of Guia.js after the module spl
 
 ## Overview
 
-The Guia.js codebase has been split into focused, maintainable modules following the principles outlined in `/docs/MODULE_SPLITTING_GUIDE.md`. This improves:
+The Guia.js codebase has been split into focused, maintainable modules following the principles outlined in the [Module Splitting Guide](../guides/MODULE_SPLITTING_GUIDE.md). This improves:
 
 - **Maintainability**: Smaller, focused files are easier to understand and modify
 - **Testability**: Individual modules can be tested in isolation
@@ -213,16 +213,16 @@ See `.github/REFERENTIAL_TRANSPARENCY.md` for more details.
 
 ## Related Documentation
 
-- **[INDEX.md](./INDEX.md)** - Complete documentation index
-- **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](./ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - ES6 Import/Export System Best Practices Guide 🆕
+- **[INDEX.md](../INDEX.md)** - Complete documentation index
+- **[ES6_IMPORT_EXPORT_BEST_PRACTICES.md](../guides/ES6_IMPORT_EXPORT_BEST_PRACTICES.md)** - ES6 Import/Export System Best Practices Guide 🆕
   - Essential reference for all ES6 module development
   - Comprehensive export/import patterns and conventions
   - Common pitfalls and practical solutions
   - HTML integration with `type="module"`
   - Based on actual guia.js modularization experience
-- **[MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)** - Comprehensive module splitting guide
-- **[JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md)** - Critical analysis of Jest and module systems
-- **[CLASS_EXTRACTION_SUMMARY.md](./CLASS_EXTRACTION_SUMMARY.md)** - Complete Phase 16 summary
+- **[MODULE_SPLITTING_GUIDE.md](../guides/MODULE_SPLITTING_GUIDE.md)** - Comprehensive module splitting guide
+- **[JEST_COMMONJS_ES6_GUIDE.md](../guides/JEST_COMMONJS_ES6_GUIDE.md)** - Critical analysis of Jest and module systems
+- **[PROJECT_STRUCTURE.md](../developer/PROJECT_STRUCTURE.md)** - Current repository layout and file organization
 
 ## Contributors
 

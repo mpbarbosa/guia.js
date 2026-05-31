@@ -1,6 +1,6 @@
 # Testing Guide
 
-**Version**: 0.28.3-alpha
+**Version**: 0.28.4-alpha
 **Last Updated**: 2026-05-30
 
 ## Overview

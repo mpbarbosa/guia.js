@@ -1,6 +1,6 @@
 # Views Layer Documentation
 
-**Version**: 0.9.0+
+**Version**: 0.28.4-alpha
 **Location**: `src/views/`
 **Purpose**: SPA view controllers for route-specific functionality
 
@@ -182,6 +182,6 @@ describe('New View', () => {
 
 ## Related Documentation
 
-- [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md) - Overall project organization
+- [PROJECT_STRUCTURE.md](../developer/PROJECT_STRUCTURE.md) - Overall project organization
 - [ROUTING.md](./ROUTING.md) - SPA routing documentation
 - [TEST_INFRASTRUCTURE.md](../testing/TEST_INFRASTRUCTURE.md) - Testing strategy

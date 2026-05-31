@@ -1,7 +1,7 @@
 # Guia Turístico Project Structure Documentation
 
-**Version:** 0.9.0-alpha
-**Last Updated:** 2026-01-16
+**Version:** 0.28.4-alpha
+**Last Updated:** 2026-05-30
 **Project Type:** Tourist Guide Web Application
 
 > **Project Overview**: For project identity, features, and quick start guide, see the [README.md](../README.md). This document focuses on directory organization and file structure.

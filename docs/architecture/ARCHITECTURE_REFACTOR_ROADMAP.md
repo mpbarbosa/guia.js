@@ -166,26 +166,36 @@ This roadmap intentionally does **not** include:
 - Tests can inject a mock factory object directly.
 - The coordination layer no longer depends on a static class reference as its only factory shape.
 
-## Phase 4 - Cleanup, deprecation follow-through, and documentation sync
+## Phase 4 - Cleanup, deprecation follow-through, and documentation sync ✅ Done (2026-05-31)
 
 **Objective**: finish the migration without leaving ambiguous ownership behind.
 
-### Implementation
+### What was done
 
-1. Add deprecation notes to direct view-layer service entry points that should now flow through `WebGeocodingManager`.
-2. Update architecture docs that describe `WebGeocodingManager`, `ServiceCoordinator`, and `DisplayerFactory`.
-3. Decide whether any deprecated entry points can be removed in the next milestone or should stay until `v1.0`.
+1. **Module-level JSDoc notes** added to `RouteNavigationService` and `OfflineCacheService`
+   steering view-layer readers toward `WebGeocodingManager` without marking the service
+   functions themselves `@deprecated` (they remain valid infrastructure consumed by WGM
+   internally).
 
-### Deliverables
+2. **Removed 10 deprecated WGM pass-through methods** that had been tagged
+   `@deprecated` since v0.10.0-alpha with no remaining callers:
+   `initSpeechSynthesis`, `getSingleLocationUpdate`, `startTracking`, `stopTracking`,
+   and the six `setup/remove*ChangeDetection` wrappers.
 
-- Clear deprecation notes for transitional imports
-- Updated architecture and API docs
-- A follow-up removal plan for any deprecated paths
+3. **`DisplayerFactory` class** received a module-level note directing DI consumers
+   to `defaultDisplayerFactory` instead of the static class.
 
-### Acceptance criteria
+4. **ADR 0001** created at `docs/adr/0001-composition-root-boundary.md` recording
+   the composition-root boundary decision and the rejected alternative.
 
-- Reviewers can tell which path is preferred and which path is transitional.
-- Documentation matches the final composition-root ownership model.
+5. **Refactor roadmap** updated to reflect all four phases complete.
+
+### Acceptance criteria — met
+
+- Service module docs clearly name `WebGeocodingManager` as the view-layer entry point.
+- The deprecated WGM surface is gone; `WebGeocodingManager`'s public API now reflects its actual role.
+- `DisplayerFactory` guides new contributors toward `defaultDisplayerFactory` for DI.
+- `docs/adr/0001` records the why behind the composition-root boundary.
 
 ## Compatibility and migration policy
 

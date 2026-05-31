@@ -1,7 +1,7 @@
 # System Architecture Overview
 
-**Version**: 0.9.0-alpha
-**Last Updated**: 2026-02-11
+**Version**: 0.28.4-alpha
+**Last Updated**: 2026-05-30
 **Document Type**: Technical Architecture Guide
 
 ## Table of Contents
@@ -1021,13 +1021,13 @@ GET /reverse?format=json&lat=-23.5505&lon=-46.6333&addressdetails=1
 
 ## Related Documentation
 
-- [Complete API Reference](./API_COMPLETE_REFERENCE.md)
-- [Development Guide](./developer/DEVELOPMENT_GUIDE.md)
-- [Testing Guide](./developer/TESTING_GUIDE.md)
-- [User Guide](./user/USER_GUIDE.md)
+- [Complete API Reference](../api/API_COMPLETE_REFERENCE.md)
+- [Developer Guide](../developer/DEVELOPER_GUIDE.md)
+- [Testing Guide](../testing/TESTING.md)
+- [User Guide](../user/USER_GUIDE.md)
 
 ---
 
-**Last Updated**: 2026-02-11
-**Version**: 0.9.0-alpha
+**Last Updated**: 2026-05-30
+**Version**: 0.28.4-alpha
 **Status**: ✅ Complete and Validated

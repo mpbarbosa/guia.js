@@ -1,8 +1,8 @@
-# Complete API Reference - Guia Turístico v0.9.0-alpha
+# Complete API Reference - Guia Turístico v0.28.4-alpha
 
 ---
-**Last Updated**: 2026-02-11
-**Version**: 0.9.0-alpha
+**Last Updated**: 2026-05-30
+**Version**: 0.28.4-alpha
 **Status**: Complete Reference
 
 ---
@@ -3197,7 +3197,7 @@ See `__tests__/e2e/` for comprehensive end-to-end test examples using Puppeteer.
 - [Architecture Overview](./architecture/SYSTEM_OVERVIEW.md)
 - [Developer Guide](./developer/GETTING_STARTED.md)
 - [User Guide](./user/USER_GUIDE.md)
-- [Testing Guide](./developer/TESTING_GUIDE.md)
+- [Testing Guide](../testing/TESTING.md)
 
 ---
 

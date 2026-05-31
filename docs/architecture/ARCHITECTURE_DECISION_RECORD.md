@@ -1,8 +1,8 @@
 # Architecture Decision Record (ADR)
 
 **Project**: Guia Turístico (Tourist Guide SPA)
-**Version**: 0.9.0-alpha
-**Date**: 2026-01-06
+**Version**: 0.28.4-alpha
+**Date**: 2026-05-30
 
 ---
 
@@ -57,7 +57,7 @@ Guia Turístico SHALL be treated as a **Single-Page Web Application** with the f
 **References**:
 
 - [PROJECT_PURPOSE_AND_ARCHITECTURE.md](docs/PROJECT_PURPOSE_AND_ARCHITECTURE.md) - Complete documentation
-- [PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) - Structure analysis
+- [PROJECT_STRUCTURE.md](../developer/PROJECT_STRUCTURE.md) - Structure analysis
 - [README.md](README.md) - Usage and integration guide
 
 ---

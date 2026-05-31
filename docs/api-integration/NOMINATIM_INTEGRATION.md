@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides comprehensive documentation for the Nominatim API integration and OSM address translation in the Guia Turístico project (version 0.9.0-alpha). Nominatim is the geocoding service provided by OpenStreetMap that powers the reverse geocoding functionality, translating geographic coordinates into Brazilian standard addresses.
+This document provides comprehensive documentation for the Nominatim API integration and OSM address translation in the Guia Turístico project (version 0.28.4-alpha). Nominatim is the geocoding service provided by OpenStreetMap that powers the reverse geocoding functionality, translating geographic coordinates into Brazilian standard addresses.
 
 **Key Features:**
 
@@ -743,9 +743,9 @@ npm run test:coverage
 
 ## Related Documentation
 
-- [Brazilian Standard Address](../architecture/BRAZILIAN_ADDRESS.md) - BrazilianStandardAddress class documentation (if exists)
+- [Brazilian Standard Address](../api/BRAZILIAN_STANDARD_ADDRESS.md) - BrazilianStandardAddress class documentation
 - [Reference Place](../architecture/REFERENCE_PLACE.md) - Location type classification
-- [Address Cache](../architecture/ADDRESS_CACHE.md) - Caching documentation (if exists)
+- [Address Cache](../api/ADDRESS_CACHE.md) - Caching documentation
 - [Class Diagram](../architecture/CLASS_DIAGRAM.md) - System architecture overview
 - [Testing Guide](../TESTING.md) - Testing documentation
 
@@ -792,6 +792,6 @@ Documentation is part of the Guia Turístico project. See repository root for li
 
 ---
 
-**Last Updated**: 2026-01-10
-**Version**: 0.9.0-alpha
+**Last Updated**: 2026-05-30
+**Version**: 0.28.4-alpha
 **Status**: ✅ Complete and up-to-date

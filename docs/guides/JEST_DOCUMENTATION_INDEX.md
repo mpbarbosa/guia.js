@@ -9,7 +9,7 @@
 
 ### 1. Comprehensive Guide (Main Reference)
 
-**File:** [docs/JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md)
+**File:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md)
 **Length:** 1,505 lines
 **Audience:** All contributors, maintainers, GitHub Copilot
 
@@ -62,7 +62,7 @@
 
 ### 3. Module Splitting Guide (Updated)
 
-**File:** [docs/MODULE_SPLITTING_GUIDE.md](../docs/MODULE_SPLITTING_GUIDE.md)
+**File:** [MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)
 **Updates:** Added Jest and ES6 modules section
 
 **New Content:**
@@ -135,11 +135,11 @@ node examples/jest-esm-migration-example.js
 
 1. **Start here:** [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) → Troubleshooting section
 2. **Read:** Error descriptions and quick fixes
-3. **If still stuck:** [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) → Troubleshooting section
+3. **If still stuck:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) → Troubleshooting section
 
 ### Scenario 2: "I need to migrate tests to ES6"
 
-1. **Read:** [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) → Migration Guide section
+1. **Read:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) → Migration Guide section
 2. **Use:** [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) → Migration Checklist
 3. **Reference:** Common patterns section during implementation
 4. **Run:** `node examples/jest-esm-migration-example.js` for overview
@@ -152,15 +152,15 @@ node examples/jest-esm-migration-example.js
 
 ### Scenario 4: "I'm deciding between ES6 and CommonJS"
 
-1. **Read:** [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) → Decision Matrix
+1. **Read:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) → Decision Matrix
 2. **Review:** Solution Strategies section
 3. **Check:** The Guia.js Context section for project-specific recommendation
 
 ### Scenario 5: "I'm splitting modules"
 
-1. **Primary:** [MODULE_SPLITTING_GUIDE.md](../docs/MODULE_SPLITTING_GUIDE.md)
+1. **Primary:** [MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md)
 2. **Testing setup:** Jest and ES6 Modules section
-3. **Reference:** [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) for test configuration
+3. **Reference:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) for test configuration
 
 ---
 
@@ -296,11 +296,11 @@ describe('myFunction', () => {
 
 1. **Quick Reference:** [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) (30 min)
 2. **Example:** Run `node examples/jest-esm-migration-example.js` (5 min)
-3. **Deep Dive:** [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) (2 hours)
+3. **Deep Dive:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) (2 hours)
 
 ### For Maintainers
 
-1. **Context:** [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) → The Guia.js Context (15 min)
+1. **Context:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) → The Guia.js Context (15 min)
 2. **Strategy:** Decision Matrix section (10 min)
 3. **Implementation:** Migration Guide section (30 min)
 4. **Reference:** Keep [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) open during work
@@ -309,7 +309,7 @@ describe('myFunction', () => {
 
 1. **Standards:** [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) → Best Practices (15 min)
 2. **Patterns:** Common Patterns section (10 min)
-3. **Reference:** [JEST_COMMONJS_ES6_GUIDE.md](../docs/JEST_COMMONJS_ES6_GUIDE.md) → Best Practices (30 min)
+3. **Reference:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) → Best Practices (30 min)
 
 ---
 
@@ -318,7 +318,7 @@ describe('myFunction', () => {
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution guidelines
 - [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) - Pure function principles
 - [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md) - Unit testing guide
-- [MODULE_SPLITTING_GUIDE.md](../docs/MODULE_SPLITTING_GUIDE.md) - Module splitting
+- [MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md) - Module splitting
 - [INDEX.md](../docs/INDEX.md) - Complete documentation index
 
 ---

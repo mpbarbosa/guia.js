@@ -1,6 +1,6 @@
 # Module Splitting Guide
 
-**Version**: 0.28.4-alpha
+**Version**: 0.28.5-alpha
 **Last Updated**: 2026-05-30
 
 Use this guide when a file has grown large enough that responsibilities,

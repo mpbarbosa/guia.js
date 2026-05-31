@@ -2,7 +2,7 @@
   "version": 1,
   "partitionIndex": 1,
   "totalPartitions": 58,
-  "filesHash": "2b84fef0",
+  "filesHash": "6030e9ca",
   "partitionLabels": [
     "__tests__/app",
     "__tests__/components",
@@ -21,6 +21,7 @@
     "__tests__/e2e",
     "__tests__/e2e (2)",
     "__tests__/e2e (3)",
+    "__tests__",
     "__tests__/external",
     "__tests__/features",
     "__tests__/features (2)",
@@ -31,7 +32,6 @@
     "__tests__/integration (3)",
     "__tests__/integration (4)",
     "__tests__/managers, __tests__/observers, __tests__/patterns",
-    "__tests__",
     "__tests__/services",
     "__tests__/services (2)",
     "__tests__/services (3)",
@@ -63,5 +63,5 @@
     "test/types",
     "test/utils"
   ],
-  "updatedAt": "2026-05-31T04:09:15.337Z"
+  "updatedAt": "2026-05-31T05:02:32.913Z"
 }

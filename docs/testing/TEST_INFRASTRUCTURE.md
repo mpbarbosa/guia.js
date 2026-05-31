@@ -1,6 +1,6 @@
 # Test Infrastructure
 
-**Version**: 0.28.4-alpha
+**Version**: 0.28.5-alpha
 **Last Updated**: 2026-05-30
 
 ## Core infrastructure

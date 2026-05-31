@@ -1,6 +1,6 @@
 # BrazilianStandardAddress API Documentation
 
-**Version:** 0.28.4-alpha
+**Version:** 0.28.5-alpha
 **File:** `src/data/BrazilianStandardAddress.ts`
 **Author:** Marcelo Pereira Barbosa
 **Since:** 0.9.0-alpha

@@ -5,7 +5,7 @@
 Last Updated: 2026-03-02
 Status: Active
 Category: User Guide
-Version: 0.28.7-alpha
+Version: 0.28.8-alpha
 
 ---
 
@@ -867,9 +867,9 @@ See [Developer Guide](../developer/DEVELOPER_GUIDE.md) for details.
 ---
 
 **Last Updated**: 2026-02-16
-**Version**: 0.28.7-alpha
+**Version**: 0.28.8-alpha
 **License**: ISC
 
 ---
 
-*This guide covers version 0.28.7-alpha. Features and UI may change in future versions.*
+*This guide covers version 0.28.8-alpha. Features and UI may change in future versions.*

@@ -1,6 +1,6 @@
 # AddressCache API Documentation
 
-**Version:** 0.28.7-alpha
+**Version:** 0.28.8-alpha
 **Last Updated:** 2026-05-30
 **Module:** `src/data/AddressCache.ts`
 **Author:** Marcelo Pereira Barbosa

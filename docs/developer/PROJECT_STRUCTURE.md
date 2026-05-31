@@ -1,6 +1,6 @@
 # Guia Turístico Project Structure Documentation
 
-**Version:** 0.28.7-alpha
+**Version:** 0.28.8-alpha
 **Last Updated:** 2026-05-30
 **Project Type:** Tourist Guide Web Application
 

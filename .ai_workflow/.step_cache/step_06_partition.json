@@ -2,7 +2,7 @@
   "version": 1,
   "partitionIndex": 1,
   "totalPartitions": 59,
-  "filesHash": "2e016593",
+  "filesHash": "4d2b3645",
   "partitionLabels": [
     "__tests__/app",
     "__tests__/components",
@@ -62,7 +62,7 @@
     "test/services",
     "test/services (2)",
     "test/types",
-    "test/utils"
+    "test/utils, tests/e2e"
   ],
-  "updatedAt": "2026-05-31T17:47:41.299Z"
+  "updatedAt": "2026-05-31T20:00:21.472Z"
 }

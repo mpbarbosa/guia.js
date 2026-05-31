@@ -2,8 +2,8 @@
 
 ---
 
-**Last Updated**: 2026-05-28
-**Version**: 0.28.7-alpha
+**Last Updated**: 2026-05-31
+**Version**: 0.28.8-alpha
 **Status**: Active
 **Category**: Architecture
 
@@ -106,7 +106,7 @@ The application follows a **layered architecture** with clear separation of conc
 - **ChangeDetectionCoordinator**: Address change tracking
 - **OverpassService** (`src/services/OverpassService.ts`): Overpass API (OpenStreetMap) place search — queries by category (restaurants, pharmacies, hospitals, tourist attractions, cafés, supermarkets) within a radius of the current GPS position; exported as `findNearby(lat, lon, category)`
 - **IBGECityStatsService** (`src/services/IBGECityStatsService.ts`): Live IBGE Localidades + SIDRA population queries with persistent offline reuse; returns population, area (km²), and IBGE municipality code; exported as `fetchStats(municipioName)`
-- **OfflineCacheService** (`src/services/OfflineCacheService.ts`): IndexedDB-backed key-value cache for recent location/address snapshots and municipality statistics, with in-memory fallback for tests and non-browser contexts
+- **OfflineCacheService** (`src/services/OfflineCacheService.ts`): IndexedDB-backed key-value cache for recent location/address snapshots and municipality statistics, with in-memory fallback for tests and non-browser contexts; location snapshot updates may be broadcast across tabs via `BroadcastChannel`, with read-once fallback when the API is unavailable
 - **RouteNavigationService** (`src/services/RouteNavigationService.ts`): Geocodes Brazilian origin/destination inputs via Nominatim search, requests public OSRM driving routes, and returns route summaries plus external handoff URLs
 
 **Key Principle**: API abstraction and error handling
@@ -142,7 +142,14 @@ The application follows a **layered architecture** with clear separation of conc
   - `MapLibreDisplayer`: Interactive MapLibre GL 5.x inline map with position marker; `mount()` initialises immediately (Vue context), `bindToggleButton()` for legacy toggle pattern
 - **Vue Composables** (`src/composables/`): Reusable Vue 3 composition functions
   - `useMapDisplayer`: Wraps `MapLibreDisplayer` for Vue lifecycle; subscribes to `PositionManager` + `AddressCache` singletons on mount, unsubscribes on unmount; exposes reactive `{ street, neighborhood, city }` refs
+  - `useLocationSnapshot`: Route-level snapshot reader for `#/extra`; loads the persisted location snapshot for `LocationSnapshotCard` and may refresh from repository-level snapshot update events without taking ownership of live tracking
 - **UI Components**: Toast notifications, empty states, skeletons
+
+**Route ownership note**:
+
+- `HomeViewController` owns live tracking, geocoding orchestration, and Home-only HTML restoration.
+- `#/extra` owns `LocationSnapshotCard`, a snapshot surface that renders persisted address/coordinate summary data with field-level placeholders when no snapshot exists.
+- `LocationSnapshotCard` keeps the existing DOM ids for address, coordinates, reference place, and municipality label compatibility, but it does not start geolocation tracking or load richer IBGE statistics.
 
 **Key Principle**: Declarative UI and separation from business logic
 
@@ -721,5 +728,5 @@ export class MyCoordinator {
 ---
 
 **Last Updated**: 2026-05-28
-**Architecture Version**: 0.28.7-alpha
+**Architecture Version**: 0.28.8-alpha
 **Documentation Status**: ✅ Complete

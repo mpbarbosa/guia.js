@@ -34,7 +34,7 @@
  * @requires data/AddressDataExtractor
  * @requires timing/Chronometer
  * @requires html/HtmlText
- * @requires html/DisplayerFactory
+ * @requires html/DisplayerFactory (defaultDisplayerFactory)
  * @requires html/HtmlSpeechSynthesisDisplayer
  * @requires utils/logger
  * 
@@ -106,7 +106,7 @@ import AddressCache from '../data/AddressCache.js';
 
 // Import HTML classes
 
-import DisplayerFactory, { defaultDisplayerFactory } from '../html/DisplayerFactory.js';
+import { defaultDisplayerFactory } from '../html/DisplayerFactory.js';
 import type { IDisplayerFactory } from '../types/coordinator-services.js';
 
 // Import utility functions
@@ -327,7 +327,7 @@ class WebGeocodingManager {
 	 * @param {Object} [params.elementIds] - Optional custom element IDs (defaults to DEFAULT_ELEMENT_IDS)
 	 * @param {number} [params.addressConfirmationBufferThreshold] - Optional shared
 	 *   threshold for the logradouro, bairro, and municipio confirmation buffers.
-	 * @param {Object} [params.displayerFactory] - Optional factory for creating displayers (defaults to DisplayerFactory)
+	 * @param {Object} [params.displayerFactory] - Optional factory for creating displayers (defaults to defaultDisplayerFactory)
 	 * @param {GeolocationService} [params.geolocationService] - Optional GeolocationService instance (defaults to new GeolocationService)
 	 * @param {ReverseGeocoder} [params.reverseGeocoder] - Optional ReverseGeocoder instance (defaults to new ReverseGeocoder)
 	 * @param {Function} [params.IbiraAPIFetchManager] - Optional IbiraAPIFetchManager class (for dependency injection)

@@ -1,6 +1,6 @@
 # Test Performance Optimization
 
-**Version**: 0.28.5-alpha
+**Version**: 0.28.6-alpha
 **Last Updated**: 2026-05-30
 
 Keep feedback loops fast by matching the suite size to the change and reserving

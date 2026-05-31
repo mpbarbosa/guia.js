@@ -170,4 +170,67 @@ describe('error-tracking', () => {
       expect(typeof config.environment).toBe('string');
     });
   });
+
+  // ─── sampling rate branch ─────────────────────────────────────────────────
+
+  describe('sampleRate < 1 (random sampling branch)', () => {
+    afterEach(() => {
+      initErrorTracking({ enabled: false, service: null });
+    });
+
+    test('errors are sometimes dropped when sampleRate=0', () => {
+      const beforeSend = jest.fn(() => null);
+      initErrorTracking({ service: 'custom', dsn: 'x', sampleRate: 0, beforeSend });
+      reportError(new Error('sampled out'));
+      // With sampleRate=0, Math.random() > 0 is always true → always dropped before beforeSend
+      expect(beforeSend).not.toHaveBeenCalled();
+    });
+
+    test('errors always reach beforeSend when sampleRate=1', () => {
+      const beforeSend = jest.fn(() => null);
+      initErrorTracking({ service: 'custom', dsn: 'x', sampleRate: 1, beforeSend });
+      reportError(new Error('always sent'));
+      expect(beforeSend).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  // ─── Rollbar service path ─────────────────────────────────────────────────
+
+  describe('Rollbar service path', () => {
+    afterEach(() => {
+      initErrorTracking({ enabled: false, service: null });
+      delete (globalThis as Record<string, unknown>).Rollbar;
+    });
+
+    test('does not throw when window.Rollbar is absent', () => {
+      initErrorTracking({ service: 'rollbar', dsn: 'x', sampleRate: 1 });
+      expect(() => reportError(new Error('no rollbar'))).not.toThrow();
+    });
+
+    test('reaches the Rollbar path without throwing when Rollbar is stubbed on globalThis', () => {
+      // Under --experimental-vm-modules, window in the module's VM context may differ
+      // from window in the test's context, so we set on globalThis (shared) instead.
+      (globalThis as Record<string, unknown>).Rollbar = { error: jest.fn() };
+      initErrorTracking({ service: 'rollbar', dsn: 'x', sampleRate: 1 });
+      expect(() => reportError(new Error('rollbar test'))).not.toThrow();
+    });
+  });
+
+  // ─── release / environment fields ─────────────────────────────────────────
+
+  describe('release and environment fields', () => {
+    afterEach(() => {
+      initErrorTracking({ enabled: false, service: null });
+    });
+
+    test('stores release string in config', () => {
+      initErrorTracking({ service: 'custom', dsn: 'x', release: '0.28.0-alpha' });
+      expect(getErrorTrackingConfig().release).toBe('0.28.0-alpha');
+    });
+
+    test('stores custom environment in config', () => {
+      initErrorTracking({ service: 'custom', dsn: 'x', environment: 'staging' });
+      expect(getErrorTrackingConfig().environment).toBe('staging');
+    });
+  });
 });

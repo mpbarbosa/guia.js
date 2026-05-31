@@ -106,7 +106,8 @@ import AddressCache from '../data/AddressCache.js';
 
 // Import HTML classes
 
-import DisplayerFactory from '../html/DisplayerFactory.js';
+import DisplayerFactory, { defaultDisplayerFactory } from '../html/DisplayerFactory.js';
+import type { IDisplayerFactory } from '../types/coordinator-services.js';
 
 // Import utility functions
 import { log, warn, error } from '../utils/logger.js';
@@ -197,7 +198,7 @@ Object.freeze(DEFAULT_ELEMENT_IDS);
 interface WebGeocodingManagerParams extends AddressConfirmationThresholdOptions {
 	locationResult: string | HTMLElement;
 	elementIds?: WebGeocodingManagerElementIds;
-	displayerFactory?: unknown;
+	displayerFactory?: IDisplayerFactory;
 	geolocationService?: unknown;
 	reverseGeocoder?: unknown;
 	IbiraAPIFetchManager?: unknown;
@@ -256,7 +257,7 @@ class WebGeocodingManager {
 	enderecoPadronizadoDisplay: HTMLElement | null;
 	referencePlaceDisplay: HTMLElement | null;
 	sidraDisplay: HTMLElement | null;
-	displayerFactory: unknown;
+	displayerFactory: IDisplayerFactory;
 	observerSubject!: ObserverSubject;
 	geocodingState!: InstanceType<typeof GeocodingState>;
 	uiCoordinator!: UICoordinator;
@@ -409,7 +410,7 @@ class WebGeocodingManager {
 			(this.elementIds.sidraDisplay ? document.getElementById(this.elementIds.sidraDisplay) : null);
 
 		// Store displayer factory (enables dependency injection for testing)
-		this.displayerFactory = params.displayerFactory || DisplayerFactory;
+		this.displayerFactory = params.displayerFactory ?? defaultDisplayerFactory;
 
 		// Initialize observer subject for external subscribers
 		this.observerSubject = new ObserverSubject();
@@ -447,7 +448,7 @@ class WebGeocodingManager {
 			reverseGeocoder: this.reverseGeocoder,
 			changeDetectionCoordinator: this.changeDetectionCoordinator,
 			observerSubject: this.observerSubject,
-			displayerFactory: (this.displayerFactory ?? DisplayerFactory) as typeof DisplayerFactory,
+			displayerFactory: this.displayerFactory,
 			document: document
 		});
 
@@ -782,38 +783,7 @@ class WebGeocodingManager {
 	}
 
 	/**
-	 * Initializes speech synthesis UI components.
-	 * 
-	 * **Phase 3**: Delegates to SpeechCoordinator
-	 * 
-	 * Creates and configures the HTML speech synthesis displayer with configured
-	 * element IDs for voice controls. Subscribes the displayer to both reverse
-	 * geocoder and manager notifications, then freezes it to prevent modifications.
-	 * 
-	 * This method should be called after the relevant DOM elements are available.
-	 * Element IDs can be customized via the elementIds configuration in constructor.
-	 * 
-	 * @returns {void}
-	 */
-	/**
-	 * Initializes the speech synthesis manager and UI components.
-	 * 
-	 * @deprecated Since v0.10.0-alpha - Moved to HomeViewController
-	 * @see HomeViewController - Speech synthesis is initialized automatically during tracking
-	 * 
-	 * Delegates to SpeechCoordinator to initialize the speech synthesis system.
-	 * This method should be called after the relevant DOM elements are available.
-	 * Element IDs can be customized via the elementIds configuration in constructor.
-	 * 
-	 * @returns {void}
-	 */
-	initSpeechSynthesis() {
-		warn('WebGeocodingManager.initSpeechSynthesis() is deprecated since v0.10.0-alpha. Speech synthesis is now initialized automatically by HomeViewController.startTracking().');
-		this.speechCoordinator.initializeSpeechSynthesis();
-	}
-
-	/**
-	 * Gets speech synthesis displayer (backward compatibility).
+	 * Gets speech synthesis displayer.
 	 * @returns {Object|null} Speech displayer or null
 	 */
 	get htmlSpeechSynthesisDisplayer() {
@@ -855,206 +825,6 @@ class WebGeocodingManager {
 				// Continue with other observers even if one fails
 			}
 		});
-	}
-
-	/**
-	 * Gets a single location update without starting continuous tracking.
-	 * 
-	 * @deprecated Since v0.10.0-alpha - Moved to HomeViewController.getSingleLocationUpdate()
-	 * @see HomeViewController#getSingleLocationUpdate
-	 * 
-	 * Initiates a one-time location request without starting continuous tracking.
-	 * Useful for situations where you only need the current location without monitoring.
-	 * 
-	 * **Workflow**:
-	 * 1. Request current position from GeolocationService
-	 * 2. Update internal state with coordinates
-	 * 3. Trigger reverse geocoding
-	 * 4. Process and store results
-	 * 5. Notify observers
-	 * 
-	 * @returns {Promise<Object>} Promise resolving to position object
-	 * 
-	 * @example
-	 * // OLD (deprecated):
-	 * manager.getSingleLocationUpdate();
-	 * 
-	 * // NEW (recommended):
-	 * const controller = new HomeViewController(document, { locationResult: 'location-result' });
-	 * await controller.init();
-	 * await controller.getSingleLocationUpdate();
-	 * 
-	 * @fires ReverseGeocoder#notifyObservers - When geocoding completes
-	 * @fires WebGeocodingManager#notifyFunctionObservers - After geocoding completes
-	 */
-	getSingleLocationUpdate() {
-		warn('WebGeocodingManager.getSingleLocationUpdate() is deprecated since v0.10.0-alpha. Use HomeViewController.getSingleLocationUpdate() instead.');
-		
-		return this.serviceCoordinator
-			.getSingleLocationUpdate()
-			.then((position) => {
-				if (position && position.coords) {
-					// Wrap raw browser position in GeoPosition instance
-					const geoPosition = new GeoPosition(position);
-					
-					// Update GeocodingState for backward compatibility
-					this.currentPosition = geoPosition;
-					this.currentCoords = position.coords;
-					
-					// Update change detection coordinator
-					this.changeDetectionCoordinator.setCurrentPosition(position);
-					
-					// Notify function observers
-					this.notifyFunctionObservers();
-				}
-				return position;
-			})
-			.catch((e: unknown) => {
-				this._displayError(e as Error);
-				throw e;
-			});
-	}
-
-	/**
-	 * Starts continuous location tracking and initializes all monitoring systems.
-	 * 
-	 * Delegates service coordination to ServiceCoordinator:
-	 * 1. Initializes speech synthesis UI
-	 * 2. Gets initial location update
-	 * 3. Starts continuous position watching
-	 * 4. Registers callbacks for address component change detection
-	 * 
-	 * @returns {void}
-	 * @deprecated Since v0.10.0-alpha - Moved to HomeViewController.startTracking()
-	 * @see HomeViewController#startTracking
-	 * 
-	 * @example
-	 * // OLD (deprecated):
-	 * const manager = new WebGeocodingManager(document, {
-	 *   locationResult: 'location-result'
-	 * });
-	 * manager.startTracking(); // Begins continuous tracking
-	 * 
-	 * // NEW (recommended):
-	 * const controller = new HomeViewController(document, {
-	 *   locationResult: 'location-result'
-	 * });
-	 * await controller.init();
-	 * controller.startTracking();
-	 */
-	startTracking() {
-		warn('WebGeocodingManager.startTracking() is deprecated since v0.10.0-alpha. Use HomeViewController.startTracking() instead.');
-		
-		// Delegate implementation for backward compatibility
-		this.speechCoordinator.initializeSpeechSynthesis();
-		this.getSingleLocationUpdate(); // Call getSingleLocationUpdate which handles errors internally
-		this.serviceCoordinator.startTracking();
-		this.changeDetectionCoordinator.setupChangeDetection();
-	}
-
-	/**
-	 * Stops continuous geolocation tracking.
-	 * 
-	 * @deprecated Since v0.10.0-alpha - Moved to HomeViewController.stopTracking()
-	 * @see HomeViewController#stopTracking
-	 * 
-	 * Delegates to ServiceCoordinator to stop the GeolocationService tracking.
-	 * This method can be called to stop tracking when the user toggles off
-	 * the tracking feature or when cleaning up resources.
-	 * 
-	 * @returns {void}
-	 * 
-	 * @example
-	 * // OLD (deprecated):
-	 * const manager = new WebGeocodingManager(document, {
-	 *   locationResult: 'location-result'
-	 * });
-	 * manager.startTracking();
-	 * // Later...
-	 * manager.stopTracking(); // Stops tracking
-	 * 
-	 * // NEW (recommended):
-	 * const controller = new HomeViewController(document, {
-	 *   locationResult: 'location-result'
-	 * });
-	 * await controller.init();
-	 * controller.startTracking();
-	 * // Later...
-	 * controller.stopTracking();
-	 */
-	stopTracking() {
-		warn('WebGeocodingManager.stopTracking() is deprecated since v0.10.0-alpha. Use HomeViewController.stopTracking() instead.');
-		
-		if (this.serviceCoordinator && typeof this.serviceCoordinator.stopTracking === 'function') {
-			this.serviceCoordinator.stopTracking();
-			log('WebGeocodingManager: Tracking stopped (deprecated method)');
-		}
-	}
-
-	/**
-	 * Sets up logradouro (street) change detection using callback mechanism.
-	 * Delegates to ChangeDetectionCoordinator.
-	 * 
-	 * @deprecated Use changeDetectionCoordinator.setupLogradouroChangeDetection() instead
-	 * @returns {void}
-	 */
-	setupLogradouroChangeDetection() {
-		this.changeDetectionCoordinator.setupLogradouroChangeDetection();
-	}
-
-	/**
-	 * Removes the logradouro change detection callback.
-	 * Delegates to ChangeDetectionCoordinator.
-	 * 
-	 * @deprecated Use changeDetectionCoordinator.removeLogradouroChangeDetection() instead
-	 * @returns {void}
-	 */
-	removeLogradouroChangeDetection() {
-		this.changeDetectionCoordinator.removeLogradouroChangeDetection();
-	}
-
-	/**
-	 * Sets up bairro (neighborhood) change detection using callback mechanism.
-	 * Delegates to ChangeDetectionCoordinator.
-	 * 
-	 * @deprecated Use changeDetectionCoordinator.setupBairroChangeDetection() instead
-	 * @returns {void}
-	 */
-	setupBairroChangeDetection() {
-		this.changeDetectionCoordinator.setupBairroChangeDetection();
-	}
-
-	/**
-	 * Removes the bairro change detection callback.
-	 * Delegates to ChangeDetectionCoordinator.
-	 * 
-	 * @deprecated Use changeDetectionCoordinator.removeBairroChangeDetection() instead
-	 * @returns {void}
-	 */
-	removeBairroChangeDetection() {
-		this.changeDetectionCoordinator.removeBairroChangeDetection();
-	}
-
-	/**
-	 * Sets up municipio (municipality/city) change detection using callback mechanism.
-	 * Delegates to ChangeDetectionCoordinator.
-	 * 
-	 * @deprecated Use changeDetectionCoordinator.setupMunicipioChangeDetection() instead
-	 * @returns {void}
-	 */
-	setupMunicipioChangeDetection() {
-		this.changeDetectionCoordinator.setupMunicipioChangeDetection();
-	}
-
-	/**
-	 * Removes the municipio change detection callback.
-	 * Delegates to ChangeDetectionCoordinator.
-	 * 
-	 * @deprecated Use changeDetectionCoordinator.removeMunicipioChangeDetection() instead
-	 * @returns {void}
-	 */
-	removeMunicipioChangeDetection() {
-		this.changeDetectionCoordinator.removeMunicipioChangeDetection();
 	}
 
 	/**

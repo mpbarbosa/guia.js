@@ -297,13 +297,13 @@ describe('ServiceCoordinator', () => {
             expect(stored.position).toBeDefined();
         });
 
-        test('should throw Error if displayerFactory is not configured', () => {
+        test('uses defaultDisplayerFactory when none is provided', async () => {
+            const { defaultDisplayerFactory } = await import('../../src/html/DisplayerFactory.js');
             delete params.displayerFactory;
             const coordinator = new ServiceCoordinator(params);
-
-            expect(() => {
-                coordinator.createDisplayers('loc-result', 'addr-display', 'ref-display');
-            }).toThrow('displayerFactory not configured');
+            // Phase 3: no factory provided → falls back to defaultDisplayerFactory, never null.
+            expect((coordinator as unknown as { _displayerFactory: unknown })._displayerFactory)
+                .toBe(defaultDisplayerFactory);
         });
 
         test('should handle null element references gracefully', () => {

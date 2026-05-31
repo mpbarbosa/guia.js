@@ -40,6 +40,7 @@
 import PositionManager from '../core/PositionManager.js';
 import { log, warn, error as logError } from '../utils/logger.js';
 import AddressCache from '../data/AddressCache.js';
+import { defaultDisplayerFactory } from '../html/DisplayerFactory.js';
 import {
 	GEOLOCATION_THROTTLE_INTERVAL,
 	GEOLOCATION_THROTTLE_CONFIRMATION_INTERVAL
@@ -148,7 +149,7 @@ class ServiceCoordinator {
          * @type {Object}
          * @private
          */
-        this._displayerFactory = params.displayerFactory ?? null;
+        this._displayerFactory = params.displayerFactory ?? defaultDisplayerFactory;
 
         /**
          * Created displayers (position, address, reference place)

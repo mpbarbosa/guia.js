@@ -1,8 +1,14 @@
 /**
  * RouteNavigationService — geocode Brazilian addresses and plan OSRM routes.
  *
+ * **View-layer usage**: view controllers must not import `planRoute` or
+ * `geocodeBrazilianAddress` directly. Access them through
+ * `WebGeocodingManager.planRoute()` so the coordination layer owns all
+ * service wiring.
+ *
  * @module services/RouteNavigationService
  * @since 0.18.0-alpha
+ * @see WebGeocodingManager#planRoute
  */
 
 import { log } from '../utils/logger.js';

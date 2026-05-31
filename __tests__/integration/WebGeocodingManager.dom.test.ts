@@ -424,112 +424,105 @@ describe('WebGeocodingManager DOM Integration', () => {
     });
     
     describe('Tracking Lifecycle', () => {
-        test('should start tracking and initialize systems', async () => {
+        test('should start tracking via serviceCoordinator', async () => {
             // Arrange
             manager = new WebGeocodingManager(mockDocument, {
                 locationResult: 'location-result',
                 geolocationService: mockServices.geolocationService,
                 reverseGeocoder: mockServices.reverseGeocoder
             });
-            
-            // Act
-            manager.startTracking();
+
+            // Act — tracking is initiated through serviceCoordinator (Phase 4: removed WGM pass-through)
+            manager.serviceCoordinator.startTracking();
             await new Promise(resolve => setTimeout(resolve, 100));
-            
+
             // Assert
-            expect(mockServices.geolocationService.getSingleLocationUpdate).toHaveBeenCalled();
+            expect(mockServices.geolocationService.watchCurrentLocation).toHaveBeenCalled();
         });
-        
-        test('should stop tracking when requested', () => {
+
+        test('should stop tracking via serviceCoordinator', () => {
             // Arrange
             manager = new WebGeocodingManager(mockDocument, {
                 locationResult: 'location-result',
                 geolocationService: mockServices.geolocationService,
                 reverseGeocoder: mockServices.reverseGeocoder
             });
-            
-            manager.startTracking();
-            
+
+            manager.serviceCoordinator.startTracking();
+
             // Act
-            manager.stopTracking();
-            
+            manager.serviceCoordinator.stopTracking();
+
             // Assert
             expect(mockServices.geolocationService.stopTracking).toHaveBeenCalled();
         });
-        
-        test('should handle stop tracking when service coordinator not available', () => {
+
+        test('should handle destroy gracefully when serviceCoordinator is unavailable', () => {
             // Arrange
             manager = new WebGeocodingManager(mockDocument, {
                 locationResult: 'location-result',
                 geolocationService: mockServices.geolocationService,
                 reverseGeocoder: mockServices.reverseGeocoder
             });
-            
+
             manager.serviceCoordinator = null;
-            
-            // Act - should not throw
+
+            // Act — destroy should not throw even with null serviceCoordinator
             expect(() => {
-                manager.stopTracking();
+                manager.destroy();
             }).not.toThrow();
+
+            manager = null; // already destroyed
         });
-        
-        test('should get single location update via delegation', async () => {
+
+        test('should get single location update via serviceCoordinator', async () => {
             // Arrange
             manager = new WebGeocodingManager(mockDocument, {
                 locationResult: 'location-result',
                 geolocationService: mockServices.geolocationService,
                 reverseGeocoder: mockServices.reverseGeocoder
             });
-            
-            // Act
-            const position = await manager.getSingleLocationUpdate();
-            
+
+            // Act — view controllers call this via HomeViewController; here we test SC directly
+            const position = await manager.serviceCoordinator.getSingleLocationUpdate();
+
             // Assert
             expect(position).toBeTruthy();
             expect(position.coords.latitude).toBe(-23.550520);
             expect(mockServices.geolocationService.getSingleLocationUpdate).toHaveBeenCalled();
         });
-        
-        test('should update internal state after location update', async () => {
+
+        test('should return correct coordinates from serviceCoordinator', async () => {
             // Arrange
             manager = new WebGeocodingManager(mockDocument, {
                 locationResult: 'location-result',
                 geolocationService: mockServices.geolocationService,
                 reverseGeocoder: mockServices.reverseGeocoder
             });
-            
+
             // Act
-            await manager.getSingleLocationUpdate();
-            
-            // Assert
-            expect(manager.currentPosition).toBeTruthy();
-            expect(manager.currentCoords).toBeTruthy();
-            expect(manager.currentCoords.latitude).toBe(-23.550520);
+            const position = await manager.serviceCoordinator.getSingleLocationUpdate();
+
+            // Assert — serviceCoordinator correctly proxies geolocationService result
+            expect(position.coords.latitude).toBe(-23.550520);
+            expect(position.coords.longitude).toBe(-46.633309);
         });
     });
     
     describe('Error Display', () => {
-        test('should display error in dedicated error element', async () => {
+        test('should display error in dedicated error element', () => {
             // Arrange
-            mockServices.geolocationService.getSingleLocationUpdate.mockRejectedValue({
-                name: 'GeolocationError',
-                message: 'User denied geolocation',
-                code: 1
-            });
-            
             manager = new WebGeocodingManager(mockDocument, {
                 locationResult: 'location-result',
                 geolocationService: mockServices.geolocationService,
                 reverseGeocoder: mockServices.reverseGeocoder
             });
-            
-            // Act
-            try {
-                await manager.getSingleLocationUpdate();
-            } catch (err) {
-                // Expected
-            }
-            
+
+            // Act — _displayError is called by HomeViewController on failure;
+            // the deprecated WGM.getSingleLocationUpdate() pass-through that called it was removed in Phase 4
+            const err = Object.assign(new Error('User denied geolocation'), { name: 'GeolocationError', code: 1 });
+            manager._displayError(err);
+
             // Assert
             expect(elements.errorDisplay.innerHTML).toContain('Erro');
             expect(elements.errorDisplay.innerHTML).toContain('GeolocationError');
@@ -577,27 +570,18 @@ describe('WebGeocodingManager DOM Integration', () => {
             expect(elements.locationResult.innerHTML).toContain('Test error');
         });
         
-        test('should include error code in display when available', async () => {
+        test('should include error code in display when available', () => {
             // Arrange
-            mockServices.geolocationService.getSingleLocationUpdate.mockRejectedValue({
-                name: 'TimeoutError',
-                message: 'Request timeout',
-                code: 3
-            });
-            
             manager = new WebGeocodingManager(mockDocument, {
                 locationResult: 'location-result',
                 geolocationService: mockServices.geolocationService,
                 reverseGeocoder: mockServices.reverseGeocoder
             });
-            
+
             // Act
-            try {
-                await manager.getSingleLocationUpdate();
-            } catch (err) {
-                // Expected
-            }
-            
+            const errWithCode = Object.assign(new Error('Request timeout'), { name: 'TimeoutError', code: 3 });
+            manager._displayError(errWithCode);
+
             // Assert
             expect(elements.errorDisplay.innerHTML).toContain('Código');
             expect(elements.errorDisplay.innerHTML).toContain('3');
@@ -613,9 +597,9 @@ describe('WebGeocodingManager DOM Integration', () => {
                 reverseGeocoder: mockServices.reverseGeocoder
             });
             
-            // Act - should not throw
+            // Act - speech coordinator initialisation should not throw
             expect(() => {
-                manager.initSpeechSynthesis();
+                manager.speechCoordinator.initializeSpeechSynthesis();
             }).not.toThrow();
         });
         
@@ -627,8 +611,8 @@ describe('WebGeocodingManager DOM Integration', () => {
                 reverseGeocoder: mockServices.reverseGeocoder
             });
             
-            manager.initSpeechSynthesis();
-            
+            manager.speechCoordinator.initializeSpeechSynthesis();
+
             // Act
             const speechDisplayer = manager.htmlSpeechSynthesisDisplayer;
             
@@ -771,17 +755,15 @@ describe('WebGeocodingManager DOM Integration', () => {
 });
 
 /**
- * NOTE: Deprecation Warnings (v0.10.0-alpha)
- * 
- * The following methods are deprecated and emit console warnings:
- * - initSpeechSynthesis() → Use HomeViewController (automatic initialization)
- * - getSingleLocationUpdate() → Use HomeViewController.getSingleLocationUpdate()
- * - startTracking() → Use HomeViewController.startTracking()
- * - stopTracking() → Use HomeViewController.stopTracking()
- * 
- * Backward compatibility is maintained - all methods still work correctly.
- * Tests above verify functional correctness of deprecated methods.
- * Deprecation warnings are emitted via warn() calls in WebGeocodingManager.js.
+ * NOTE: Removed deprecated methods (Phase 4 cleanup, 2026-05-31)
+ *
+ * The following WGM pass-through methods were removed after being deprecated
+ * since v0.10.0-alpha with no remaining callers:
+ *   - initSpeechSynthesis()       → manager.speechCoordinator.initializeSpeechSynthesis()
+ *   - getSingleLocationUpdate()   → HomeViewController.getSingleLocationUpdate()
+ *   - startTracking()             → HomeViewController.startTracking()
+ *   - stopTracking()              → HomeViewController.stopTracking()
+ *   - setup/remove*ChangeDetection() → changeDetectionCoordinator.*
  * 
  * See HomeViewController tests (__tests__/views/home.test.js) for new API tests.
  */

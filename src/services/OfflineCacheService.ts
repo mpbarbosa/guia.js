@@ -4,8 +4,14 @@
  * Uses IndexedDB when available and falls back to an in-memory store in
  * non-browser or test environments.
  *
+ * **View-layer usage**: view controllers must not import `getLatestLocationSnapshot`,
+ * `saveLocationSnapshot`, or `findNearestLocationSnapshot` directly. Access them
+ * through `WebGeocodingManager` so the coordination layer owns all service wiring.
+ *
  * @module services/OfflineCacheService
  * @since 0.24.9-alpha
+ * @see WebGeocodingManager#getLatestLocationSnapshot
+ * @see WebGeocodingManager#saveLocationSnapshot
  */
 
 import { calculateDistance } from '../utils/distance.js';

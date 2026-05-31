@@ -34,6 +34,7 @@ state.
 | Sync workflow config | _(Copilot skill)_ | Manual | Audit and update `.workflow-config.yaml` from package scripts, routes, structure, and automation settings |
 | Copy TS to project | _(Copilot skill)_ | Manual | Migrate a TypeScript file into any target repository with tests, exports, and docs |
 | Purge workflow logs | _(Copilot skill)_ | Manual | Delete transient `.ai_workflow/` artefacts (logs, backlog, summaries) after an audit run |
+| [Grill with docs](./skills/grill-with-docs/SKILL.md) | _(Copilot skill)_ | Manual | Stress-test a plan against the domain model; sharpen terminology; update CONTEXT.md and ADRs inline |
 
 ---
 

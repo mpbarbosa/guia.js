@@ -46,12 +46,23 @@ import HTMLAddressDisplayer from './HTMLAddressDisplayer.js';
 import HTMLReferencePlaceDisplayer from './HTMLReferencePlaceDisplayer.js';
 import HTMLHighlightCardsDisplayer from './HTMLHighlightCardsDisplayer.js';
 import HTMLSidraDisplayer from './HTMLSidraDisplayer.js';
+import type { IDisplayerFactory } from '../types/coordinator-services.js';
 
+/**
+ * Static factory class that creates all displayer types.
+ *
+ * **Dependency injection**: do not pass this class directly to coordinators.
+ * Use the exported `defaultDisplayerFactory` instance instead — it satisfies
+ * `IDisplayerFactory` without requiring casts and can be replaced in tests
+ * with a plain mock object.
+ *
+ * @see defaultDisplayerFactory
+ */
 class DisplayerFactory {
 	/**
 	 * Private constructor to prevent instantiation.
 	 * DisplayerFactory is a static factory class - use static methods instead.
-	 * 
+	 *
 	 * @throws {Error} Always throws - this class cannot be instantiated
 	 */
 	constructor() {
@@ -237,12 +248,36 @@ class DisplayerFactory {
 // Freeze the class to prevent modifications
 Object.freeze(DisplayerFactory);
 
+/**
+ * Default production factory instance satisfying IDisplayerFactory.
+ *
+ * Use this instead of passing the static DisplayerFactory class directly to
+ * ServiceCoordinator or WebGeocodingManager. It wraps the same static methods
+ * but as a plain object whose type is checked against the IDisplayerFactory
+ * interface without requiring casts.
+ *
+ * In tests, replace this with a mock object implementing IDisplayerFactory.
+ */
+const defaultDisplayerFactory: IDisplayerFactory = Object.freeze({
+	createPositionDisplayer: (el: unknown) =>
+		DisplayerFactory.createPositionDisplayer(el as HTMLElement),
+	createAddressDisplayer: (el1: unknown, el2: unknown) =>
+		DisplayerFactory.createAddressDisplayer(el1 as HTMLElement, el2 as HTMLElement | boolean),
+	createReferencePlaceDisplayer: (el: unknown) =>
+		DisplayerFactory.createReferencePlaceDisplayer(el as HTMLElement),
+	createHighlightCardsDisplayer: (doc: Document) =>
+		DisplayerFactory.createHighlightCardsDisplayer(doc),
+	createSidraDisplayer: (el: unknown) =>
+		DisplayerFactory.createSidraDisplayer(el as HTMLElement),
+});
+
 export default DisplayerFactory;
 /**
  * Module exports for HTML displayer factory.
  * @exports DisplayerFactory - Factory for creating HTML display components
+ * @exports defaultDisplayerFactory - Default IDisplayerFactory instance for DI
  */
-export { DisplayerFactory };
+export { DisplayerFactory, defaultDisplayerFactory };
 
 // Export to window for browser compatibility
 if (typeof window !== 'undefined') {

@@ -2,7 +2,7 @@
   "version": 1,
   "partitionIndex": 1,
   "totalPartitions": 59,
-  "filesHash": "4d2b3645",
+  "filesHash": "35d729ad",
   "partitionLabels": [
     "__tests__/app",
     "__tests__/components",
@@ -11,7 +11,6 @@
     "__tests__/components (4)",
     "__tests__/components (5)",
     "__tests__/composables",
-    "__tests__/composables (2)",
     "__tests__/config",
     "__tests__/coordination",
     "__tests__/coordination (2)",
@@ -62,7 +61,8 @@
     "test/services",
     "test/services (2)",
     "test/types",
-    "test/utils, tests/e2e"
+    "test/utils, tests/integration",
+    "test/composables"
   ],
-  "updatedAt": "2026-05-31T20:00:21.472Z"
+  "updatedAt": "2026-06-01T11:43:24.889Z"
 }

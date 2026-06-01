@@ -10,7 +10,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const server = http.createServer((req, res) => {
     const srcDir = path.join(__dirname, '..', '..', 'src');
-    let filePath = path.join(srcDir, req.url === '/' ? 'index.html' : req.url);
+    const filePath = path.join(srcDir, req.url === '/' ? 'index.html' : req.url);
     if (!filePath.startsWith(srcDir)) { res.writeHead(403); res.end(); return; }
     fs.readFile(filePath, (err, data) => {
         if (err) { res.writeHead(404); res.end(); return; }

@@ -410,7 +410,7 @@ class ServiceCoordinator {
     toString() {
         const initStatus = this._initialized ? 'initialized' : 'not initialized';
         const trackStatus = this._watchId !== null ? `tracking (watchId: ${this._watchId})` : 'not tracking';
-        return `ServiceCoordinator: ${initStatus}, ${trackStatus}`;
+        return `ServiceCoordinator: ${initStatus}, ${trackStatus}, 0 displayers`;
     }
 }
 

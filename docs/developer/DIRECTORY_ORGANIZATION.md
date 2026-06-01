@@ -124,7 +124,7 @@ across repository-level guides instead of a dedicated
 - Planning documents for historical reference
 - Audit trail documentation
 
-**See Also**: [docs/misc/README.md](./misc/README.md) for detailed archive index
+**See Also**: [docs/misc/README.md](../misc/README.md) for detailed archive index
 
 ## Root-Level Documentation Files
 
@@ -234,7 +234,7 @@ Documentation older than 2 releases or 6 months (whichever is longer) should be:
 
 ## Related Documentation
 
-- [INDEX.md](./INDEX.md) - Complete documentation index
+- [INDEX.md](../INDEX.md) - Complete documentation index
 - [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - Project file organization
 - [CONTRIBUTING.md](../../.github/CONTRIBUTING.md) - Contribution guidelines
 

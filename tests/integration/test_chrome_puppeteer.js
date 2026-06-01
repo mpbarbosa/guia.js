@@ -30,7 +30,7 @@ const HTTP_PORT = 9999;
 // Start a simple HTTP server
 function startHttpServer(rootDir) {
     const server = http.createServer((req, res) => {
-        let filePath = path.join(rootDir, req.url === '/' ? 'index.html' : req.url);
+        const filePath = path.join(rootDir, req.url === '/' ? 'index.html' : req.url);
         
         // Security: prevent directory traversal
         if (!filePath.startsWith(rootDir)) {

@@ -592,9 +592,9 @@ const mockPosition = {
 
 ## See Also
 
-- [PositionManager Documentation](../core/POSITION_MANAGER.md)
+- [PositionManager Documentation](./POSITION_MANAGER.md)
 - [ReverseGeocoder Documentation](./REVERSE_GEOCODER.md)
-- [BrowserGeolocationProvider Documentation](./providers/BROWSER_GEOLOCATION_PROVIDER.md)
+- BrowserGeolocationProvider Documentation
 - [HTML5 Geolocation API Specification](https://www.w3.org/TR/geolocation-API/)
 - [OpenStreetMap Nominatim API](https://nominatim.openstreetmap.org/)
 

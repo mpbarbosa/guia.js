@@ -42,7 +42,7 @@ Detects which types of files have been modified:
 
 Runs tests when JavaScript or test files are modified:
 
-- Executes all tests with `npm test`
+- Executes the default Jest suite with `npm test`
 - Generates coverage report with `npm run test:coverage`
 - Validates JavaScript syntax with `npm run validate`
 
@@ -207,7 +207,7 @@ To test the workflow locally before pushing:
 # Validate JavaScript syntax
 npm run validate
 
-# Run all tests
+# Run the default Jest suite
 npm test
 
 # Run tests with coverage

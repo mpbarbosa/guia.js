@@ -1416,10 +1416,10 @@ module.exports = async () => {
 - **[TESTING.md](../TESTING.md)** - Overall testing guide and setup
 - **[UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md)** - Unit testing best practices
 - **[TDD_GUIDE.md](./TDD_GUIDE.md)** - Test-driven development approach
-- **[docs/github/GITHUB_ACTIONS_GUIDE.md](../docs/github/GITHUB_ACTIONS_GUIDE.md)** - Workflow documentation
-- **[WORKFLOW_SETUP.md](../WORKFLOW_SETUP.md)** - Workflow implementation details
+- **[docs/github/GITHUB_ACTIONS_GUIDE.md](../github/GITHUB_ACTIONS_GUIDE.md)** - Workflow documentation
+- **[WORKFLOW_SETUP.md](../../WORKFLOW_SETUP.md)** - Workflow implementation details
 - **[CODE_REVIEW_GUIDE.md](./CODE_REVIEW_GUIDE.md)** - Review checklist for tests
-- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
+- **[CONTRIBUTING.md](../../.github/CONTRIBUTING.md)** - Contribution guidelines
 
 ### GitHub Actions Documentation
 

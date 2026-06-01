@@ -491,7 +491,7 @@ Documents are extensively cross-referenced:
 1. Read [CONTRIBUTING.md](../../.github/CONTRIBUTING.md)
 2. Review [TDD_GUIDE.md](../../.github/TDD_GUIDE.md)
 3. Check [DEVELOPER_GUIDE.md](../developer/DEVELOPER_GUIDE.md)
-4. Follow [CODE_PATTERN_DOCUMENTATION_GUIDE.md](../CODE_PATTERN_DOCUMENTATION_GUIDE.md)
+4. Follow [CODE_PATTERN_DOCUMENTATION_GUIDE.md](../developer/CODE_PATTERN_DOCUMENTATION_GUIDE.md)
 
 ### For End Users
 

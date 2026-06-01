@@ -21,7 +21,7 @@ const HTTP_PORT = 9999;
 
 function startHttpServer(rootDir) {
     const server = http.createServer((req, res) => {
-        let filePath = path.join(rootDir, req.url === '/' ? 'index.html' : req.url);
+        const filePath = path.join(rootDir, req.url === '/' ? 'index.html' : req.url);
         
         if (!filePath.startsWith(rootDir)) {
             res.writeHead(403);

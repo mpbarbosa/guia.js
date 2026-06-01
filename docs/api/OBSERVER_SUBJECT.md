@@ -492,7 +492,7 @@ cleanup(); // Clean up when done
 - **[PositionManager](./POSITION_MANAGER.md)** - Uses ObserverSubject for position notifications
 - **SingletonStatusManager** (`src/status/SingletonStatusManager.js`) - Uses ObserverSubject
 - **[GeocodingState](./GEOCODING_STATE.md)** - Alternative observer implementation
-- **[GeoPosition](./GEO_POSITION.md)** - Position data passed to observers
+- **GeoPosition** - Position data passed to observers
 
 ## Design Patterns
 
@@ -608,7 +608,7 @@ class NewClass {
 
 ## See Also
 
-- [Observer Pattern Documentation](../patterns/OBSERVER_PATTERN.md)
-- [Immutability Guide](../guides/IMMUTABILITY.md)
+- [Observer Pattern Documentation](../architecture/observer-pattern.md)
+- Immutability Guide
 - [PositionManager Implementation](./POSITION_MANAGER.md)
-- [Composition vs Inheritance](../patterns/COMPOSITION.md)
+- Composition vs Inheritance

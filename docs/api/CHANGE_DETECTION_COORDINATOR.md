@@ -891,11 +891,11 @@ const analyticsObserver = {
 
 ## See Also
 
-- [AddressDataExtractor Documentation](../data/ADDRESS_DATA_EXTRACTOR.md)
+- [AddressDataExtractor Documentation](./ADDRESS_DATA_EXTRACTOR.md)
 - [ReverseGeocoder Documentation](./REVERSE_GEOCODER.md)
-- [ObserverSubject Documentation](../core/OBSERVER_SUBJECT.md)
-- [HTMLHighlightCardsDisplayer Documentation](../html/HTML_HIGHLIGHT_CARDS_DISPLAYER.md)
-- [WebGeocodingManager Documentation](../coordination/WEB_GEOCODING_MANAGER.md)
+- [ObserverSubject Documentation](./OBSERVER_SUBJECT.md)
+- HTMLHighlightCardsDisplayer Documentation
+- [WebGeocodingManager Documentation](../architecture/WEB_GEOCODING_MANAGER.md)
 
 ## Change Log
 

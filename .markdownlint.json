@@ -9,7 +9,7 @@
   "MD025": true,
   "MD026": { "punctuation": ".,;:!" },
   "MD029": { "style": "ordered" },
-  "MD033": { "allowed_elements": ["details", "summary", "br", "sub", "sup", "String", "Position", "Object", "SpeechSynthesisVoice", "T", "previous", "current"] },
+  "MD033": { "allowed_elements": ["details", "summary", "br", "sub", "sup", "String", "Position", "Object", "SpeechSynthesisVoice", "T", "previous", "current", "what-to-do", "supporting-info"] },
   "MD034": false,
   "MD036": false,
   "MD040": false,

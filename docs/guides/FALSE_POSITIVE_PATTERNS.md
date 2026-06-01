@@ -355,4 +355,4 @@ Before flagging as broken reference, ask:
 
 **Maintained by**: Documentation Team
 **Review Cycle**: Quarterly or when new false positives discovered
-**Contact**: See [CONTRIBUTING.md](./CONTRIBUTING.md) for questions
+**Contact**: See [CONTRIBUTING.md](../../.github/CONTRIBUTING.md) for questions

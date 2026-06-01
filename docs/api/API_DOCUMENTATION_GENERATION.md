@@ -204,8 +204,8 @@ npm run docs:generate 2>&1 | grep -i "error"
 
 ## Related Documentation
 
-- [JSDoc Coverage Report](../JSDOC_COVERAGE_REPORT.md) - Current coverage status
-- [Code Quality Plan](../CODE_QUALITY_ACTION_PLAN.md) - Quality improvements
+- [JSDoc Coverage Report](./JSDOC_COVERAGE_REPORT.md) - Current coverage status
+- [Code Quality Plan](../developer/CODE_QUALITY_ACTION_PLAN.md) - Quality improvements
 - [Testing Strategy](../testing/TEST_STRATEGY.md) - Test documentation
 
 ## npm Scripts Reference

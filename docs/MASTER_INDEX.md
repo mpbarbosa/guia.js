@@ -118,21 +118,21 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 - **[Testing Guide](testing/TESTING.md)** - Complete testing guide
 - **[Test Strategy](testing/TEST_STRATEGY.md)** - Testing approach
 - **[Test Infrastructure](testing/TEST_INFRASTRUCTURE.md)** - Test setup
-- **[E2E Testing Guide](testing/E2E_TESTING_GUIDE.md)** - End-to-end tests
+- **E2E Testing Guide** - End-to-end tests
 
 #### Test Types
 
 - **[Unit Testing](../__tests__/README.md)** - Unit test guide
 - **[Integration Testing](../__tests__/integration/)** - Integration tests
-- **[E2E Test Patterns](testing/E2E_TEST_PATTERNS.md)** - E2E patterns
-- **[Performance Testing](testing/PERFORMANCE_TESTING_GUIDE.md)** - Performance tests
+- **E2E Test Patterns** - E2E patterns
+- **Performance Testing** - Performance tests
 
 #### Coverage & Quality
 
 - **[Coverage Policy](developer/COVERAGE_POLICY.md)** - Coverage requirements
-- **[Coverage Analysis](testing/COVERAGE_ANALYSIS_2026-01-24.md)** - Coverage reports
+- **Coverage Analysis** - Coverage reports
 - **[Test Performance](testing/TEST_PERFORMANCE_OPTIMIZATION.md)** - Optimization
-- **[Browser Compatibility](testing/BROWSER_COMPATIBILITY_GUIDE.md)** - Cross-browser
+- **Browser Compatibility** - Cross-browser
 
 ### 6. Integration Documentation
 
@@ -187,9 +187,9 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 #### Performance
 
-- **[Performance Analysis](testing/PERFORMANCE_ANALYSIS_2026-01-24.md)** - Performance metrics
+- **Performance Analysis** - Performance metrics
 - **[Performance Optimization](testing/TEST_PERFORMANCE_OPTIMIZATION.md)** - Optimization tips
-- **[Flakiness Analysis](testing/FLAKINESS_ANALYSIS_2026-01-24.md)** - Test stability
+- **Flakiness Analysis** - Test stability
 
 #### Security
 
@@ -206,10 +206,10 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 #### Quick References
 
-- **[Quick Reference Card](guides/QUICK_REFERENCE_CARD.md)** - Command cheatsheet
+- **Quick Reference Card** - Command cheatsheet
 - **[Documentation Index](INDEX.md)** - Doc lookup
 - **[Terminology Guide](guides/TERMINOLOGY_GUIDE.md)** - Terms glossary
-- **[Version Bump Guide](guides/VERSION_BUMP_QUICK_REFERENCE.md)** - Release workflow
+- **Version Bump Guide** - Release workflow
 
 #### Templates
 
@@ -264,7 +264,7 @@ Welcome to the comprehensive documentation for **Guia Turístico** - a tourist g
 
 - Guide: [Testing Guide](testing/TESTING.md)
 - Strategy: [Test Strategy](testing/TEST_STRATEGY.md)
-- Patterns: [E2E Test Patterns](testing/E2E_TEST_PATTERNS.md)
+- Patterns: **E2E Test Patterns**
 
 #### Debug an Issue
 

@@ -32,4 +32,4 @@ Reusable action building blocks are located under `.github/actions/`:
 ## Related Files
 
 - [WORKFLOW_SETUP.md](../../WORKFLOW_SETUP.md) — local workflow setup
-- [.github/workflows/README.md](../workflows/README.md) — workflow descriptions
+- [.github/workflows/README.md](../../.github/workflows/README.md) — workflow descriptions

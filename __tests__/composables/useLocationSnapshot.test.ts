@@ -1,154 +1,134 @@
-import { nextTick } from 'vue';
+import { defineComponent, nextTick } from 'vue';
+import { mount, type VueWrapper } from '@vue/test-utils';
 import { useLocationSnapshot } from '../../src/composables/useLocationSnapshot';
+import locationSnapshotRepository from '../../src/services/LocationSnapshotRepository';
 import type { CachedLocationSnapshot } from '../../src/services/OfflineCacheService.js';
 
-jest.mock('../../src/services/LocationSnapshotRepository.js', () => {
-  let listener: ((snapshot: CachedLocationSnapshot) => void) | null = null;
-  let latestSnapshot: CachedLocationSnapshot | null = null;
+const WAITING_LABEL = 'Aguardando localização...';
+const SNAPSHOT_SUFFIX = ' (último registro salvo)';
 
+function createSnapshot(
+  overrides: Partial<CachedLocationSnapshot> = {},
+  addressOverrides: Partial<NonNullable<CachedLocationSnapshot['address']>> = {}
+): CachedLocationSnapshot {
   return {
-    __esModule: true,
-    default: {
-      getLatestLocationSnapshot: jest.fn(() => Promise.resolve(latestSnapshot)),
-      subscribe: jest.fn((cb: (snapshot: CachedLocationSnapshot) => void) => {
-        listener = cb;
-        return jest.fn(() => {
-          listener = null;
-        });
-      }),
-      // Helpers for tests
-      __setLatestSnapshot: (snap: CachedLocationSnapshot | null) => {
-        latestSnapshot = snap;
-      },
-      __emit: (snap: CachedLocationSnapshot) => {
-        if (listener) listener(snap);
-      },
-    },
-  };
-});
-
-import locationSnapshotRepository from '../../src/services/LocationSnapshotRepository.js';
-
-describe('useLocationSnapshot', () => {
-  const WAITING_LABEL = 'Aguardando localização...';
-  const SNAPSHOT_SUFFIX = ' (último registro salvo)';
-
-  const baseSnapshot: CachedLocationSnapshot = {
     latitude: -23.55052,
     longitude: -46.633308,
+    timestamp: 1717196400000,
     address: {
       displayText: 'Av. Paulista, 1000',
       municipio: 'São Paulo',
       siglaUF: 'SP',
+      ...addressOverrides,
     },
-    // Add any other required fields if present in real CachedLocationSnapshot
-  } as CachedLocationSnapshot;
+    ...overrides,
+  };
+}
+
+const Harness = defineComponent({
+  setup() {
+    return useLocationSnapshot();
+  },
+  template: `
+    <div>
+      <span data-testid="address">{{ enderecoPadronizado }}</span>
+      <span data-testid="coordinates">{{ coordinates }}</span>
+      <span data-testid="sidra">{{ sidraLabel }}</span>
+    </div>
+  `,
+});
+
+async function flushComposableEffects(): Promise<void> {
+  await Promise.resolve();
+  await nextTick();
+}
+
+describe('useLocationSnapshot', () => {
+  let listener: ((snapshot: CachedLocationSnapshot) => void) | null;
+  let unsubscribeMock: jest.Mock;
+
+  async function mountHarness(): Promise<VueWrapper> {
+    const wrapper = mount(Harness);
+    await flushComposableEffects();
+    return wrapper;
+  }
 
   beforeEach(() => {
-    // @ts-expect-error: __setLatestSnapshot is a test helper, not in the real interface
-    locationSnapshotRepository.__setLatestSnapshot(null);
-    jest.clearAllMocks();
+    listener = null;
+    unsubscribeMock = jest.fn();
+
+    jest.spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot').mockResolvedValue(null);
+    jest.spyOn(locationSnapshotRepository, 'subscribe').mockImplementation((callback) => {
+      listener = callback;
+      return unsubscribeMock;
+    });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('returns waiting labels when no snapshot is available', async () => {
-    // @ts-expect-error: __setLatestSnapshot is a test helper
-    locationSnapshotRepository.__setLatestSnapshot(null);
+    const wrapper = await mountHarness();
 
-    const { enderecoPadronizado, coordinates, sidraLabel } = useLocationSnapshot();
-
-    // Simulate onMounted
-    await nextTick();
-    // Wait for async loadSnapshot
-    await Promise.resolve();
-
-    expect(enderecoPadronizado.value).toBe(WAITING_LABEL);
-    expect(coordinates.value).toBe(WAITING_LABEL);
-    expect(sidraLabel.value).toBe(WAITING_LABEL);
+    expect(wrapper.get('[data-testid="address"]').text()).toBe(WAITING_LABEL);
+    expect(wrapper.get('[data-testid="coordinates"]').text()).toBe(WAITING_LABEL);
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe(WAITING_LABEL);
   });
 
   it('formats snapshot data correctly', async () => {
-    // @ts-expect-error: __setLatestSnapshot is a test helper
-    locationSnapshotRepository.__setLatestSnapshot(baseSnapshot);
+    jest.spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot').mockResolvedValueOnce(createSnapshot());
 
-    const { enderecoPadronizado, coordinates, sidraLabel } = useLocationSnapshot();
+    const wrapper = await mountHarness();
 
-    await nextTick();
-    await Promise.resolve();
-
-    expect(enderecoPadronizado.value).toBe('Av. Paulista, 1000' + SNAPSHOT_SUFFIX);
-    expect(coordinates.value).toBe('-23.550520, -46.633308' + SNAPSHOT_SUFFIX);
-    expect(sidraLabel.value).toBe('São Paulo — SP');
+    expect(wrapper.get('[data-testid="address"]').text()).toBe(`Av. Paulista, 1000${SNAPSHOT_SUFFIX}`);
+    expect(wrapper.get('[data-testid="coordinates"]').text()).toBe(
+      `-23.550520, -46.633308${SNAPSHOT_SUFFIX}`
+    );
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe('São Paulo — SP');
   });
 
   it('handles missing address fields gracefully', async () => {
-    const partialSnapshot: CachedLocationSnapshot = {
-      latitude: 1.234567,
-      longitude: 2.345678,
-      address: {
-        displayText: '',
-        municipio: '',
-        siglaUF: '',
-      },
-    } as CachedLocationSnapshot;
+    jest.spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot').mockResolvedValueOnce(
+      createSnapshot(
+        {},
+        {
+          displayText: '',
+          municipio: '',
+          siglaUF: '',
+        }
+      )
+    );
 
-    // @ts-expect-error: __setLatestSnapshot is a test helper
-    locationSnapshotRepository.__setLatestSnapshot(partialSnapshot);
+    const wrapper = await mountHarness();
 
-    const { enderecoPadronizado, coordinates, sidraLabel } = useLocationSnapshot();
-
-    await nextTick();
-    await Promise.resolve();
-
-    expect(enderecoPadronizado.value).toBe(WAITING_LABEL);
-    expect(coordinates.value).toBe('1.234567, 2.345678' + SNAPSHOT_SUFFIX);
-    expect(sidraLabel.value).toBe(WAITING_LABEL);
+    expect(wrapper.get('[data-testid="address"]').text()).toBe(WAITING_LABEL);
+    expect(wrapper.get('[data-testid="coordinates"]').text()).toBe(
+      `-23.550520, -46.633308${SNAPSHOT_SUFFIX}`
+    );
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe(WAITING_LABEL);
   });
 
-  it('updates snapshot when repository emits a new value', async () => {
-    // @ts-expect-error: __setLatestSnapshot is a test helper
-    locationSnapshotRepository.__setLatestSnapshot(null);
+  it('updates snapshot when the repository emits a new value', async () => {
+    const wrapper = await mountHarness();
 
-    const { enderecoPadronizado, coordinates, sidraLabel } = useLocationSnapshot();
+    expect(wrapper.get('[data-testid="address"]').text()).toBe(WAITING_LABEL);
 
-    await nextTick();
-    await Promise.resolve();
-
-    expect(enderecoPadronizado.value).toBe(WAITING_LABEL);
-
-    // Simulate repository emitting a new snapshot
-    // @ts-expect-error: __emit is a test helper
-    locationSnapshotRepository.__emit(baseSnapshot);
-
+    listener?.(createSnapshot());
     await nextTick();
 
-    expect(enderecoPadronizado.value).toBe('Av. Paulista, 1000' + SNAPSHOT_SUFFIX);
-    expect(coordinates.value).toBe('-23.550520, -46.633308' + SNAPSHOT_SUFFIX);
-    expect(sidraLabel.value).toBe('São Paulo — SP');
+    expect(wrapper.get('[data-testid="address"]').text()).toBe(`Av. Paulista, 1000${SNAPSHOT_SUFFIX}`);
+    expect(wrapper.get('[data-testid="coordinates"]').text()).toBe(
+      `-23.550520, -46.633308${SNAPSHOT_SUFFIX}`
+    );
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe('São Paulo — SP');
   });
 
   it('calls unsubscribe on unmount', async () => {
-    const unsubscribeMock = jest.fn();
-    // Patch subscribe to return our mock
-    (locationSnapshotRepository.subscribe as jest.Mock).mockImplementationOnce(() => unsubscribeMock);
+    const wrapper = await mountHarness();
 
-    const { enderecoPadronizado } = useLocationSnapshot();
+    wrapper.unmount();
 
-    await nextTick();
-    await Promise.resolve();
-
-    // Simulate onUnmounted
-    // The composable does not expose an unmount, so we call the cleanup directly
-    // This is a limitation of testing composables outside a component instance
-    // We'll simulate by calling the returned unsubscribe
-    // (In real usage, onUnmounted would be called by Vue)
-    // For test, we can call all registered onUnmounted hooks if we had access, but here we just check that unsubscribeMock is not called yet
-    expect(unsubscribeMock).not.toHaveBeenCalled();
-    // Simulate unmount
-    // @ts-expect-error: access to composable internals for test only
-    if (typeof (globalThis as any).onUnmounted === 'function') {
-      (globalThis as any).onUnmounted();
-    }
-    // Since we can't trigger onUnmounted directly, this test is limited to verifying subscribe returns the correct function
-    // In a real component test, this would be covered by mounting/unmounting the component
+    expect(unsubscribeMock).toHaveBeenCalledTimes(1);
   });
 });

@@ -36,7 +36,7 @@
 
 ### 2. Quick Reference (Maintainer Guide)
 
-**File:** [.github/TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md)
+**File:** `.github/TESTING_MODULE_SYSTEMS.md`
 **Length:** 666 lines
 **Audience:** Maintainers, contributors, GitHub Copilot
 
@@ -102,7 +102,7 @@
 
 ### 5. Practical Example
 
-**File:** [examples/jest-esm-migration-example.js](../examples/jest-esm-migration-example.js)
+**File:** [examples/jest-esm-migration-example.js](../../examples/jest-esm-migration-example.js)
 **Length:** 400+ lines
 **Type:** Runnable demonstration
 
@@ -133,20 +133,20 @@ node examples/jest-esm-migration-example.js
 
 ### Scenario 1: "My Jest tests are failing with import errors"
 
-1. **Start here:** [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) → Troubleshooting section
+1. **Start here:** `TESTING_MODULE_SYSTEMS.md` → Troubleshooting section
 2. **Read:** Error descriptions and quick fixes
 3. **If still stuck:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) → Troubleshooting section
 
 ### Scenario 2: "I need to migrate tests to ES6"
 
 1. **Read:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) → Migration Guide section
-2. **Use:** [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) → Migration Checklist
+2. **Use:** `TESTING_MODULE_SYSTEMS.md` → Migration Checklist
 3. **Reference:** Common patterns section during implementation
 4. **Run:** `node examples/jest-esm-migration-example.js` for overview
 
 ### Scenario 3: "I'm writing a new test file"
 
-1. **Quick start:** [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) → Test File Template
+1. **Quick start:** `TESTING_MODULE_SYSTEMS.md` → Test File Template
 2. **Copy template** and modify for your needs
 3. **Check:** [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md) → Jest matchers
 
@@ -294,7 +294,7 @@ describe('myFunction', () => {
 
 ### For New Contributors
 
-1. **Quick Reference:** [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) (30 min)
+1. **Quick Reference:** `TESTING_MODULE_SYSTEMS.md` (30 min)
 2. **Example:** Run `node examples/jest-esm-migration-example.js` (5 min)
 3. **Deep Dive:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) (2 hours)
 
@@ -303,11 +303,11 @@ describe('myFunction', () => {
 1. **Context:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) → The Guia.js Context (15 min)
 2. **Strategy:** Decision Matrix section (10 min)
 3. **Implementation:** Migration Guide section (30 min)
-4. **Reference:** Keep [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) open during work
+4. **Reference:** Keep `TESTING_MODULE_SYSTEMS.md` open during work
 
 ### For Code Reviewers
 
-1. **Standards:** [TESTING_MODULE_SYSTEMS.md](./TESTING_MODULE_SYSTEMS.md) → Best Practices (15 min)
+1. **Standards:** `TESTING_MODULE_SYSTEMS.md` → Best Practices (15 min)
 2. **Patterns:** Common Patterns section (10 min)
 3. **Reference:** [JEST_COMMONJS_ES6_GUIDE.md](./JEST_COMMONJS_ES6_GUIDE.md) → Best Practices (30 min)
 
@@ -315,11 +315,11 @@ describe('myFunction', () => {
 
 ## 🔗 Related Documentation
 
-- [CONTRIBUTING.md](./CONTRIBUTING.md) - Contribution guidelines
+- [CONTRIBUTING.md](../../.github/CONTRIBUTING.md) - Contribution guidelines
 - [REFERENTIAL_TRANSPARENCY.md](./REFERENTIAL_TRANSPARENCY.md) - Pure function principles
 - [UNIT_TEST_GUIDE.md](./UNIT_TEST_GUIDE.md) - Unit testing guide
 - [MODULE_SPLITTING_GUIDE.md](./MODULE_SPLITTING_GUIDE.md) - Module splitting
-- [INDEX.md](../docs/INDEX.md) - Complete documentation index
+- [INDEX.md](../INDEX.md) - Complete documentation index
 
 ---
 

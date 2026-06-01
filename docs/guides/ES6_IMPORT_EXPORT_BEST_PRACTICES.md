@@ -1095,9 +1095,9 @@ This guide provides comprehensive best practices for ES6 import/export systems b
 ### Additional Resources
 
 - [MDN ES6 Modules Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
-- [guia.js Module Documentation](./MODULES.md)
+- [guia.js Module Documentation](../architecture/MODULES.md)
 - [Jest ES6 Module Configuration](./JEST_COMMONJS_ES6_GUIDE.md)
-- [Phase 16 Extraction Documentation](../CLASS_EXTRACTION_PHASE_16.md)
+- `CLASS_EXTRACTION_PHASE_16.md`
 
 ---
 

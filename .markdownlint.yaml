@@ -52,6 +52,8 @@ MD033:
     - T
     - previous
     - current
+    - what-to-do
+    - supporting-info
 
 # MD034 - Bare URLs: disabled — bare URLs are used intentionally in some docs
 MD034: false

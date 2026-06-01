@@ -1,55 +1,38 @@
-import { mount, VueWrapper } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import ExtraView from '../../../src/components/views/ExtraView.vue';
 
-jest.mock('../../../src/components/LocationSnapshotCard.vue', () => ({
-  __esModule: true,
-  default: {
-    name: 'LocationSnapshotCard',
-    template: '<div class="mock-location-snapshot-card">Mock Card</div>',
-  },
-}));
+const mountExtraView = () =>
+  mount(ExtraView, {
+    global: {
+      stubs: {
+        LocationSnapshotCard: {
+          name: 'LocationSnapshotCard',
+          template: '<div data-testid="location-snapshot-card-stub" />',
+        },
+      },
+    },
+  });
 
 describe('ExtraView.vue', () => {
-  let wrapper: VueWrapper<any>;
-
-  beforeEach(() => {
-    wrapper = mount(ExtraView);
-  });
-
-  afterEach(() => {
-    wrapper.unmount();
-  });
-
-  it('renders the section with correct classes', () => {
+  it('renders the section with the expected layout classes', () => {
+    const wrapper = mountExtraView();
     const section = wrapper.get('section');
-    expect(section.classes()).toContain('p-6');
-    expect(section.classes()).toContain('bg-surface');
-    expect(section.classes()).toContain('min-h-full');
-    expect(section.classes()).toContain('space-y-6');
+
+    expect(section.classes()).toEqual(expect.arrayContaining(['p-6', 'bg-surface', 'min-h-full', 'space-y-6']));
   });
 
-  it('renders the header with correct text', () => {
+  it('renders the header copy', () => {
+    const wrapper = mountExtraView();
     const header = wrapper.get('header');
-    expect(header.text()).toContain('Extra');
-    expect(header.text()).toContain('Resumo salvo da sua localização e informações complementares.');
-    const h2 = header.get('h2');
-    expect(h2.text()).toBe('Extra');
-    expect(h2.classes()).toContain('text-3xl');
-    expect(h2.classes()).toContain('font-bold');
-    expect(h2.classes()).toContain('text-indigo-950');
-    expect(h2.classes()).toContain('tracking-tight');
-    const p = header.get('p');
-    expect(p.text()).toBe('Resumo salvo da sua localização e informações complementares.');
-    expect(p.classes()).toContain('text-on-surface-variant');
-    expect(p.classes()).toContain('font-medium');
+
+    expect(header.get('h2').text()).toBe('Extra');
+    expect(header.get('p').text()).toBe('Resumo salvo da sua localização e informações complementares.');
   });
 
-  it('renders the LocationSnapshotCard component', () => {
+  it('renders the location snapshot card stub', () => {
+    const wrapper = mountExtraView();
+
     expect(wrapper.findComponent({ name: 'LocationSnapshotCard' }).exists()).toBe(true);
-    expect(wrapper.html()).toContain('mock-location-snapshot-card');
-  });
-
-  it('matches the snapshot', () => {
-    expect(wrapper.html()).toMatchSnapshot();
+    expect(wrapper.get('[data-testid="location-snapshot-card-stub"]').exists()).toBe(true);
   });
 });

@@ -610,8 +610,8 @@ speechManager.speak("Hello");
 - [VoiceLoader](./VOICE_LOADER.md) - Asynchronous voice loading
 - [VoiceSelector](./VOICE_SELECTOR.md) - Voice selection strategy
 - [SpeechConfiguration](./SPEECH_CONFIGURATION.md) - Parameter management
-- [SpeechQueue](./SPEECH_QUEUE.md) - Queue data structure
-- [TimerManager](./TIMER_MANAGER.md) - Timer management
+- SpeechQueue - Queue data structure
+- TimerManager - Timer management
 
 ---
 

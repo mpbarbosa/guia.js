@@ -696,7 +696,7 @@ For architecture examples:
 
 ### Complete Guide Index
 
-- **[docs/INDEX.md](../docs/INDEX.md)** - Comprehensive documentation index
+- **[docs/INDEX.md](../INDEX.md)** - Comprehensive documentation index
 
 ---
 

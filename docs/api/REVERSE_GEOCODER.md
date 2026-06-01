@@ -815,9 +815,9 @@ expect(testObserver.update).toHaveBeenCalledWith(
 ## See Also
 
 - [GeolocationService Documentation](./GEOLOCATION_SERVICE.md)
-- [PositionManager Documentation](../core/POSITION_MANAGER.md)
-- [AddressDataExtractor Documentation](../data/ADDRESS_DATA_EXTRACTOR.md)
-- [BrazilianStandardAddress Documentation](../data/BRAZILIAN_STANDARD_ADDRESS.md)
+- [PositionManager Documentation](./POSITION_MANAGER.md)
+- [AddressDataExtractor Documentation](./ADDRESS_DATA_EXTRACTOR.md)
+- [BrazilianStandardAddress Documentation](./BRAZILIAN_STANDARD_ADDRESS.md)
 - [OpenStreetMap Nominatim Documentation](https://nominatim.org/release-docs/latest/)
 - [OpenStreetMap Usage Policy](https://operations.osmfoundation.org/policies/nominatim/)
 

@@ -123,6 +123,13 @@ The existing `#/extra` route rendered by `ExtraView.vue`. Reserved for
 additional, non-primary content that complements the Home screen.
 _Avoid_: Extra screen, misc page, secondary home
 
+### Validation workflow
+
+**Default Jest run**:
+The repository's plain Jest invocation exposed as `npm test`. It is a narrower
+check than the full test matrix and must not be described as the entire suite.
+_Avoid_: Full suite, all tests, unit+integration+e2e
+
 ### Statistics
 
 **IBGE**:

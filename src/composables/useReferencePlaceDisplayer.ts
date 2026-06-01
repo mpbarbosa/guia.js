@@ -1,8 +1,9 @@
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onUnmounted } from 'vue';
 import AddressCache from '../data/AddressCache.js';
 
 type AddressCacheInstance = ReturnType<typeof AddressCache.getInstance>;
 type SubscribeParam = Parameters<AddressCacheInstance['subscribe']>[0];
+type CurrentAddress = AddressCacheInstance['currentAddress'];
 
 /**
  * Reactive ponto de referência name sourced from AddressCache.
@@ -13,22 +14,24 @@ type SubscribeParam = Parameters<AddressCacheInstance['subscribe']>[0];
  */
 export function useReferencePlaceDisplayer() {
   const referencePlaceName = ref<string | null>(null);
+  const addressCache = AddressCache.getInstance();
+
+  function syncFromAddress(addr: CurrentAddress): void {
+    const place = addr?.referencePlace;
+    referencePlaceName.value = place?.name ?? null;
+  }
 
   const observer = {
-    update(cache: { currentAddress: {
-      referencePlace?: { name?: string | null } | null;
-    } | null }) {
-      const place = cache.currentAddress?.referencePlace;
-      referencePlaceName.value = place?.name ?? null;
+    update() {
+      syncFromAddress(addressCache.currentAddress);
     },
   };
 
-  onMounted(() => {
-    AddressCache.getInstance().subscribe(observer as SubscribeParam);
-  });
+  syncFromAddress(addressCache.currentAddress);
+  addressCache.subscribe(observer as SubscribeParam);
 
   onUnmounted(() => {
-    AddressCache.getInstance().unsubscribe(observer as SubscribeParam);
+    addressCache.unsubscribe(observer as SubscribeParam);
   });
 
   return { referencePlaceName };

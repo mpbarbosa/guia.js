@@ -48,7 +48,8 @@
      // Map bessa_patterns.ts importmap alias to local TS source for Jest
      '^bessa_patterns\\.ts$': '<rootDir>/../bessa_patterns.ts/src/index',
      // Strip .js extension from relative imports so Jest resolves .ts before .js
-     '^(\\.{1,2}/.*)\\.js$': '$1',
+     // Uses ((?:\.{1,2}/)+) to handle any depth of ../ (e.g., ../../src/foo.js → ../../src/foo)
+     '^((?:\\.{1,2}/)+.*)\\.js$': '$1',
      // Mock static assets (CSS, images, etc.) so imports don't fail
      '\\.(css|less|scss|sass|png|jpg|gif|svg|woff|woff2|ttf|eot)$': '<rootDir>/__mocks__/fileMock.js',
    },

@@ -218,7 +218,7 @@ Executed by the `bump-sw-cache.yml` workflow after pushes to `main`.
 **What it validates**:
 
 - JavaScript syntax (npm run validate)
-- Test suite execution (npm test)
+- Default Jest suite execution (npm test)
 - Test coverage generation
 - Documentation format checks
 - Change detection
@@ -240,7 +240,7 @@ Executed by the `bump-sw-cache.yml` workflow after pushes to `main`.
 
 - Backs up current state with git stash
 - Updates jsdom to specified version (or 27.4.0 default)
-- Runs full test suite (syntax validation + all tests)
+- Runs syntax validation plus the default Jest suite
 - Validates DOM API compatibility
 - Reports any breaking changes or test failures
 - Provides rollback instructions if update fails
@@ -256,7 +256,7 @@ Executed by the `bump-sw-cache.yml` workflow after pushes to `main`.
 2. Create backup (`git stash`)
 3. Update jsdom to target version
 4. Run syntax validation (`npm run validate`)
-5. Run full test suite (`npm test`)
+5. Run the default Jest suite (`npm test`)
 6. Report results and recommendations
 
 **Output**:

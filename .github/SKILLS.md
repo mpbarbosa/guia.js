@@ -25,6 +25,7 @@ state.
 | [Update bessa_patterns.ts](#update-bessayml) | `update-bessa.yml` | Weekly (Tue) / manual | Bump bessa_patterns.ts jsDelivr CDN URL in importmap |
 | [Update guia.js](#update-guiayml) | `update-guia.yml` | Weekly (Mon) / manual | Bump guia.js npm dependency tag |
 | Update paraty_geocore.js | `update-paraty-geocore.yml` | Weekly (Wed) / manual | Bump paraty_geocore.js jsDelivr CDN URL |
+| [Update ibira.js](./skills/update-ibira/SKILL.md) | _(Copilot skill)_ | Manual | Update ibira.js across CDN, npm fallback, tests, and docs |
 | Validate node modules | _(Copilot skill)_ | Manual | Audit npm deprecation warnings, trace chains, apply safe overrides, verify tests |
 | Validate logs | _(Copilot skill)_ | Manual | Validate `.ai_workflow/logs` against codebase; write `plan.md` |
 | Fix log issues | _(Copilot skill)_ | Manual (after validate-logs) | Consume `plan.md`, apply fixes, update roadmap |

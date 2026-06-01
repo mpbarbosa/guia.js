@@ -3194,9 +3194,9 @@ See `__tests__/e2e/` for comprehensive end-to-end test examples using Puppeteer.
 
 ### Related Documentation
 
-- [Architecture Overview](./architecture/SYSTEM_OVERVIEW.md)
-- [Developer Guide](./developer/GETTING_STARTED.md)
-- [User Guide](./user/USER_GUIDE.md)
+- [Architecture Overview](../architecture/SYSTEM_OVERVIEW.md)
+- [Developer Guide](../developer/DEVELOPER_GUIDE.md)
+- [User Guide](../user/USER_GUIDE.md)
 - [Testing Guide](../testing/TESTING.md)
 
 ---

@@ -1,8 +1,9 @@
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onUnmounted } from 'vue';
 import AddressCache from '../data/AddressCache.js';
 
 type AddressCacheInstance = ReturnType<typeof AddressCache.getInstance>;
 type SubscribeParam = Parameters<AddressCacheInstance['subscribe']>[0];
+type CurrentAddress = AddressCacheInstance['currentAddress'];
 
 /**
  * Reactive IBGE/SIDRA label sourced from AddressCache.
@@ -14,26 +15,26 @@ type SubscribeParam = Parameters<AddressCacheInstance['subscribe']>[0];
  */
 export function useSidraDisplayer() {
   const sidraLabel = ref<string>('Aguardando localização...');
+  const addressCache = AddressCache.getInstance();
+
+  function syncFromAddress(addr: CurrentAddress): void {
+    if (!addr?.municipio) return;
+    sidraLabel.value = addr.siglaUF
+      ? `${addr.municipio} — ${addr.siglaUF}`
+      : addr.municipio;
+  }
 
   const observer = {
-    update(cache: { currentAddress: {
-      municipio?: string | null;
-      siglaUF?: string | null;
-    } | null }) {
-      const addr = cache.currentAddress;
-      if (!addr?.municipio) return;
-      sidraLabel.value = addr.siglaUF
-        ? `${addr.municipio} — ${addr.siglaUF}`
-        : addr.municipio;
+    update() {
+      syncFromAddress(addressCache.currentAddress);
     },
   };
 
-  onMounted(() => {
-    AddressCache.getInstance().subscribe(observer as SubscribeParam);
-  });
+  syncFromAddress(addressCache.currentAddress);
+  addressCache.subscribe(observer as SubscribeParam);
 
   onUnmounted(() => {
-    AddressCache.getInstance().unsubscribe(observer as SubscribeParam);
+    addressCache.unsubscribe(observer as SubscribeParam);
   });
 
   return { sidraLabel };

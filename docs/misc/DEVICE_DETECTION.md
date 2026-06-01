@@ -405,9 +405,9 @@ setupParams.notAcceptedAccuracy = setupParams.mobileNotAcceptedAccuracy;
 
 ## Related Documentation
 
-- [Main README](README.md)
-- [Testing Guide](TESTING.md)
-- [Referential Transparency Guide](.github/REFERENTIAL_TRANSPARENCY.md)
+- [Main README](../../README.md)
+- [Testing Guide](../testing/TESTING.md)
+- [Referential Transparency Guide](../../.github/REFERENTIAL_TRANSPARENCY.md)
 - [Geolocation API Documentation](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
 
 ## Design Principles

@@ -788,13 +788,13 @@ However, immutability principles are applied where appropriate (displayers, conf
 
 ## Related Classes
 
-- **[PositionManager](./POSITION_MANAGER.md)**: Singleton managing current device position state
+- **[PositionManager](../api/POSITION_MANAGER.md)**: Singleton managing current device position state
 - **[ReverseGeocoder](./CLASS_DIAGRAM.md)**: Converts coordinates to addresses via Nominatim API
 - **[GeolocationService](./CLASS_DIAGRAM.md)**: Wraps browser Geolocation API
 - **[ChangeDetectionCoordinator](./CLASS_DIAGRAM.md)**: Manages address component change detection callbacks
 - **[ObserverSubject](./CLASS_DIAGRAM.md)**: Observer pattern implementation for subscriptions
 - **[DisplayerFactory](./CLASS_DIAGRAM.md)**: Factory for creating UI displayer instances
-- **[GeoPosition](./GEO_POSITION.md)**: Geographic position data wrapper
+- **GeoPosition**: Geographic position data wrapper
 
 ## Common Patterns
 
@@ -1030,7 +1030,7 @@ Marcelo Pereira Barbosa
 ### Related Architecture Documentation
 
 - **[CLASS_DIAGRAM.md](./CLASS_DIAGRAM.md)** - Complete class architecture and relationships
-- **[GEO_POSITION.md](./GEO_POSITION.md)** - Geographic position data documentation
+- **GEO_POSITION.md** - Geographic position data documentation
 - **[REFERENCE_PLACE.md](./REFERENCE_PLACE.md)** - Reference place class documentation
 - **[observer-pattern-sequence.md](./observer-pattern-sequence.md)** - Observer pattern execution flow diagrams
 
@@ -1049,7 +1049,7 @@ Marcelo Pereira Barbosa
 
 ### Related Issues and Technical Debt
 
-- **[ISSUE_189_NEXT_STEPS.md](../issue-189/ISSUE_189_NEXT_STEPS.md)** - Follow-up technical debt items
+- **ISSUE_189_NEXT_STEPS.md** - Follow-up technical debt items
 
 ## External Documentation
 

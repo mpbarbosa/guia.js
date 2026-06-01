@@ -384,7 +384,7 @@ These scripts are invoked by GitHub Actions workflows and by the `npm run ci:tes
 | `.github/scripts/test-change-type-detection.sh` | Test suite for the change-type detector (all Conventional Commit scenarios) |
 | `.github/scripts/test-conditional-execution.sh` | Test suite for the workflow condition evaluator |
 | `.github/scripts/test-workflow-locally.sh` | Simulates the GitHub Actions workflow locally; run before pushing to catch CI failures |
-| `.github/scripts/update-badges.sh` | Extracts test/coverage results from `npm test` output and updates README badges |
+| `.github/scripts/update-badges.sh` | Extracts default Jest and coverage results from `npm test` / `npm run test:coverage` output and updates README badges |
 | `.github/scripts/update-doc-metadata.sh` | Adds or updates "Last Updated" metadata in documentation files |
 | `.github/scripts/update-version-references.sh` | Propagates the version from `package.json` to all version reference points |
 | `.github/scripts/validate-cross-references.sh` | Validates internal hyperlinks in documentation files |
@@ -476,6 +476,7 @@ See [examples/README.md](examples/README.md) for detailed documentation and expe
 - **Default Jest run**: `npm test`
 - **Broader non-E2E Jest run**: `npm run test:unit`
 - **E2E Jest run**: `npm run test:e2e`
+- **Combined Jest suites**: `npm run test:all-suites`
 - **Playwright sanity run**: `npm run test:playwright`
 - **Coverage report**: `npm run test:coverage`
 - **Execution time**: the default Jest run usually finishes in about a minute on this repo
@@ -483,8 +484,11 @@ See [examples/README.md](examples/README.md) for detailed documentation and expe
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run the default Jest suite
 npm test
+
+# Run the combined unit + E2E Jest suites
+npm run test:all-suites
 
 # Run tests in watch mode (development)
 npm run test:watch
@@ -1576,7 +1580,7 @@ We welcome contributions! Please follow these guidelines:
 **What it validates**:
 
 - ✅ JavaScript syntax (npm run validate)
-- ✅ Test suite execution (npm test)
+- ✅ Default Jest suite execution (npm test)
 - ✅ Coverage generation (npm run test:coverage)
 - ✅ Documentation format checks
 - ✅ Change detection (shows what will trigger in CI)
@@ -1592,8 +1596,8 @@ We welcome contributions! Please follow these guidelines:
 
 The script detects file changes and runs appropriate validations:
 
-- **JavaScript changes**: Runs syntax validation + tests
-- **Test file changes**: Runs full test suite + coverage
+- **JavaScript changes**: Runs syntax validation + the default Jest suite
+- **Test file changes**: Runs the default Jest suite + coverage
 - **Documentation changes**: Validates markdown format + updates index
 
 **Exit Codes**:
@@ -1660,7 +1664,7 @@ For comprehensive guidance, see:
 **What it validates**:
 
 - ✅ JavaScript syntax validation (`npm run validate`)
-- ✅ Test suite execution (`npm test`)
+- ✅ Default Jest suite execution (`npm test`)
 - ✅ Coverage generation (`npm run test:coverage`)
 - ✅ Documentation format checks
 - ✅ Shows exactly what will trigger in CI/CD

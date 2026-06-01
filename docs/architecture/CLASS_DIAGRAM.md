@@ -16,8 +16,8 @@ The application is organized into the following architectural layers:
 
 **Purpose**: Fundamental data structures and position management
 
-- **[GeoPosition](./GEO_POSITION.md)**: Represents a geographic position with coordinates
-- **[PositionManager](./POSITION_MANAGER.md)**: Singleton managing current position state (Observer pattern)
+- **GeoPosition**: Represents a geographic position with coordinates
+- **[PositionManager](../api/POSITION_MANAGER.md)**: Singleton managing current position state (Observer pattern)
 - **SingletonStatusManager**: Application-wide status management
 
 ### 2. Service Layer
@@ -597,10 +597,10 @@ guia_js/
 
 ### Related Documentation
 
-- [GEO_POSITION.md](./GEO_POSITION.md) - GeoPosition class documentation
+- GEO_POSITION.md - GeoPosition class documentation
 - [REFERENCE_PLACE.md](./REFERENCE_PLACE.md) - ReferencePlace class documentation
 - [WEB_GEOCODING_MANAGER.md](./WEB_GEOCODING_MANAGER.md) - WebGeocodingManager coordination layer
-- [GEO_POSITION_FUNC_SPEC.md](./GEO_POSITION_FUNC_SPEC.md) - Functional specification for GeoPosition
+- GEO_POSITION_FUNC_SPEC.md - Functional specification for GeoPosition
 
 ### Development Guidelines
 

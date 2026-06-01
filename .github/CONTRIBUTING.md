@@ -572,8 +572,11 @@ For comprehensive guidance on Test Driven Development, see [TDD_GUIDE.md](./TDD_
 # Syntax validation (~1 second)
 npm run validate
 
-# Run all tests (~45 seconds, 1,982 passing / 2,176 total)
+# Run the default Jest suite
 npm test
+
+# Run the combined unit + E2E Jest suites
+npm run test:all-suites
 
 # Run tests with coverage (~45 seconds, ~70% coverage)
 npm run test:coverage
@@ -581,7 +584,7 @@ npm run test:coverage
 # Run tests in watch mode (continuous, for development)
 npm run test:watch
 
-# Combined validation (~8 seconds, syntax + tests)
+# Combined validation (syntax + default Jest suite)
 npm run test:all
 ```
 
@@ -632,7 +635,7 @@ npm run validate
 
 ---
 
-#### 2. Full Test Suite (~7 seconds)
+#### 2. Default Jest Suite
 
 ```bash
 npm test
@@ -647,7 +650,7 @@ Snapshots:   0 total
 Time:        6.789 s
 ```
 
-**What it checks**: All automated tests across 68 test suites
+**What it checks**: The repository's default Jest configuration (`npm test`)
 
 **Timing Note**: Execution time varies ±1-2 seconds depending on system performance.
 
@@ -671,7 +674,17 @@ Coverage:    ~70% overall
 
 ---
 
-#### 4. Combined Validation (~8 seconds)
+#### 4. Combined Jest Suites
+
+```bash
+npm run test:all-suites
+```
+
+**What it checks**: Runs the dedicated unit and E2E Jest configs back-to-back
+
+---
+
+#### 5. Combined Validation
 
 ```bash
 npm run test:all
@@ -685,11 +698,11 @@ npm run test:all
 ✓ All validation checks completed
 ```
 
-**What it checks**: Runs both syntax validation and full test suite
+**What it checks**: Runs syntax validation plus the default Jest suite
 
 ---
 
-#### 5. Verify Test Results
+#### 6. Verify Test Results
 
 **Expected Test Counts** (as of version 0.9.0-alpha):
 
@@ -723,8 +736,8 @@ Before submitting your PR, ensure all items are checked:
 
 - [ ] **All validation commands pass** (see [Pre-Submission Validation Commands](#pre-submission-validation-commands) above)
   - [ ] `npm run validate` - Syntax validation passes
-  - [ ] `npm test` - All 1,982 tests pass, 146 skipped
-  - [ ] Test counts match expected values (1,982 passing / 2,176 total)
+  - [ ] `npm test` - Default Jest suite passes
+  - [ ] Run any additional suite-specific commands your change touches (for example `npm run test:all-suites`, `npm run test:integration`, or `npm run test:coverage`)
 - [ ] New functionality has comprehensive tests
   - [ ] Happy path tested
   - [ ] Edge cases covered
@@ -883,9 +896,10 @@ python3 -m http.server 9000
 | Command | Purpose | Time | Expected Result |
 |---------|---------|------|-----------------|
 | `npm run validate` | Syntax check | ~1s | No syntax errors |
-| `npm test` | Full test suite | ~45s | 1,982 passing, 146 skipped |
+| `npm test` | Default Jest suite | ~45s | Default Jest run passes |
+| `npm run test:all-suites` | Combined unit + E2E Jest suites | ~60s | Both dedicated Jest suites pass |
 | `npm run test:coverage` | Tests + coverage | ~7s | ~70% coverage |
-| `npm run test:all` | Syntax + tests | ~8s | All checks pass |
+| `npm run test:all` | Syntax + default Jest suite | ~8s | All checks pass |
 | `npm run test:watch` | Dev mode tests | Continuous | Watch for changes |
 
 ---

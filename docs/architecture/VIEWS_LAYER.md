@@ -183,5 +183,5 @@ describe('New View', () => {
 ## Related Documentation
 
 - [PROJECT_STRUCTURE.md](../developer/PROJECT_STRUCTURE.md) - Overall project organization
-- [ROUTING.md](./ROUTING.md) - SPA routing documentation
+- `ROUTING.md` - SPA routing documentation
 - [TEST_INFRASTRUCTURE.md](../testing/TEST_INFRASTRUCTURE.md) - Testing strategy

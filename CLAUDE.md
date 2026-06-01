@@ -21,12 +21,13 @@ npm run build        # Production bundle to dist/ (~5s)
 npm run preview      # Preview production build on port 9001
 
 # Testing
-npm test             # Full test suite (~65s, 3000+ tests)
+npm test             # Default Jest suite (~65s)
 npm run test:watch   # Watch mode
 npm run test:coverage  # With coverage (~76% overall)
 npm run test:unit    # Unit tests only
 npm run test:e2e     # Puppeteer E2E tests only
-npm run test:all     # Syntax validation + full test suite
+npm run test:all-suites  # Combined unit + E2E Jest suites
+npm run test:all     # Syntax validation + default Jest suite
 
 # Validation
 node -c src/app.js   # Syntax check (<1s) — run before commits
@@ -39,7 +40,7 @@ npm run check:version  # Version consistency across all files
 ./.github/scripts/test-workflow-locally.sh
 ```
 
-Git hooks (Husky) run automatically: pre-commit runs syntax + unit tests; pre-push runs the full suite.
+Git hooks (Husky) run automatically: pre-commit runs syntax + unit tests; pre-push runs the default Jest suite.
 
 ## Architecture
 

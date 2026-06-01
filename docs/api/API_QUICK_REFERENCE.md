@@ -674,10 +674,10 @@ try {
 
 ## Further Reading
 
-- **Getting Started**: [GETTING_STARTED.md](./GETTING_STARTED.md)
-- **User Guide**: [USER_GUIDE.md](./user/USER_GUIDE.md)
-- **Developer Guide**: [DEVELOPER_GUIDE.md](./DEVELOPER_GUIDE.md)
-- **Complete API**: [api/COMPLETE_API_REFERENCE.md](./api/COMPLETE_API_REFERENCE.md)
+- **Getting Started**: [GETTING_STARTED.md](../GETTING_STARTED.md)
+- **User Guide**: [USER_GUIDE.md](../user/USER_GUIDE.md)
+- **Developer Guide**: [DEVELOPER_GUIDE.md](../developer/DEVELOPER_GUIDE.md)
+- **Complete API**: [api/COMPLETE_API_REFERENCE.md](./COMPLETE_API_REFERENCE.md)
 
 ---
 

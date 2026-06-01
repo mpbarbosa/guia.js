@@ -1,54 +1,74 @@
-import locationSnapshotRepository from '../../src/services/LocationSnapshotRepository';
+import { jest } from '@jest/globals';
 import type { CachedLocationSnapshot } from '../../src/services/OfflineCacheService.js';
 import type { LocationSnapshotListener } from '../../src/services/LocationSnapshotEvents.js';
 
-jest.mock('../../src/services/OfflineCacheService.js', () => ({
-  __esModule: true,
-  getLatestLocationSnapshot: jest.fn(),
-}));
+let locationSnapshotRepository: typeof import('../../src/services/LocationSnapshotRepository').default;
+let getLatestLocationSnapshotMock: jest.Mock;
+let subscribeToLocationSnapshotUpdatesMock: jest.Mock;
 
-jest.mock('../../src/services/LocationSnapshotEvents.js', () => ({
-  __esModule: true,
-  subscribeToLocationSnapshotUpdates: jest.fn(),
-}));
+function createSnapshot(): CachedLocationSnapshot {
+  return {
+    latitude: 1,
+    longitude: 2,
+    timestamp: 1717196400000,
+    address: {
+      displayText: 'Rua Teste',
+      municipio: 'Cidade',
+      siglaUF: 'UF',
+    },
+  };
+}
 
-import { getLatestLocationSnapshot } from '../../src/services/OfflineCacheService.js';
-import { subscribeToLocationSnapshotUpdates } from '../../src/services/LocationSnapshotEvents.js';
+beforeAll(async () => {
+  await jest.unstable_mockModule('../../src/services/OfflineCacheService.js', () => ({
+    getLatestLocationSnapshot: jest.fn(),
+  }));
+
+  await jest.unstable_mockModule('../../src/services/LocationSnapshotEvents.js', () => ({
+    subscribeToLocationSnapshotUpdates: jest.fn(),
+  }));
+
+  const repositoryModule = await import('../../src/services/LocationSnapshotRepository');
+  locationSnapshotRepository = repositoryModule.default;
+
+  const offlineCacheService = await import('../../src/services/OfflineCacheService.js');
+  getLatestLocationSnapshotMock = offlineCacheService.getLatestLocationSnapshot as jest.Mock;
+
+  const locationSnapshotEvents = await import('../../src/services/LocationSnapshotEvents.js');
+  subscribeToLocationSnapshotUpdatesMock =
+    locationSnapshotEvents.subscribeToLocationSnapshotUpdates as jest.Mock;
+});
 
 describe('locationSnapshotRepository', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   describe('getLatestLocationSnapshot', () => {
     it('returns the latest snapshot when available', async () => {
-      const snapshot: CachedLocationSnapshot = {
-        latitude: 1,
-        longitude: 2,
-        address: { displayText: 'Rua Teste', municipio: 'Cidade', siglaUF: 'UF' },
-      } as CachedLocationSnapshot;
-
-      (getLatestLocationSnapshot as jest.Mock).mockResolvedValueOnce(snapshot);
+      const snapshot = createSnapshot();
+      getLatestLocationSnapshotMock.mockResolvedValueOnce(snapshot);
 
       const result = await locationSnapshotRepository.getLatestLocationSnapshot();
-      expect(getLatestLocationSnapshot).toHaveBeenCalled();
+
+      expect(getLatestLocationSnapshotMock).toHaveBeenCalledTimes(1);
       expect(result).toBe(snapshot);
     });
 
     it('returns null when no snapshot is available', async () => {
-      (getLatestLocationSnapshot as jest.Mock).mockResolvedValueOnce(null);
+      getLatestLocationSnapshotMock.mockResolvedValueOnce(null);
 
       const result = await locationSnapshotRepository.getLatestLocationSnapshot();
-      expect(getLatestLocationSnapshot).toHaveBeenCalled();
+
+      expect(getLatestLocationSnapshotMock).toHaveBeenCalledTimes(1);
       expect(result).toBeNull();
     });
 
     it('propagates errors from getLatestLocationSnapshot', async () => {
-      const error = new Error('Failed to load');
-      (getLatestLocationSnapshot as jest.Mock).mockRejectedValueOnce(error);
+      getLatestLocationSnapshotMock.mockRejectedValueOnce(new Error('Failed to load'));
 
       await expect(locationSnapshotRepository.getLatestLocationSnapshot()).rejects.toThrow('Failed to load');
-      expect(getLatestLocationSnapshot).toHaveBeenCalled();
+      expect(getLatestLocationSnapshotMock).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -56,16 +76,15 @@ describe('locationSnapshotRepository', () => {
     it('subscribes to location snapshot updates and returns the unsubscribe function', () => {
       const listener: LocationSnapshotListener = jest.fn();
       const unsubscribeMock = jest.fn();
-
-      (subscribeToLocationSnapshotUpdates as jest.Mock).mockReturnValueOnce(unsubscribeMock);
+      subscribeToLocationSnapshotUpdatesMock.mockReturnValueOnce(unsubscribeMock);
 
       const unsubscribe = locationSnapshotRepository.subscribe(listener);
 
-      expect(subscribeToLocationSnapshotUpdates).toHaveBeenCalledWith(listener);
-      expect(typeof unsubscribe).toBe('function');
+      expect(subscribeToLocationSnapshotUpdatesMock).toHaveBeenCalledWith(listener);
 
       unsubscribe();
-      expect(unsubscribeMock).toHaveBeenCalled();
+
+      expect(unsubscribeMock).toHaveBeenCalledTimes(1);
     });
 
     it('handles multiple subscriptions independently', () => {
@@ -74,21 +93,21 @@ describe('locationSnapshotRepository', () => {
       const unsubscribeMock1 = jest.fn();
       const unsubscribeMock2 = jest.fn();
 
-      (subscribeToLocationSnapshotUpdates as jest.Mock)
+      subscribeToLocationSnapshotUpdatesMock
         .mockReturnValueOnce(unsubscribeMock1)
         .mockReturnValueOnce(unsubscribeMock2);
 
       const unsubscribe1 = locationSnapshotRepository.subscribe(listener1);
       const unsubscribe2 = locationSnapshotRepository.subscribe(listener2);
 
-      expect(subscribeToLocationSnapshotUpdates).toHaveBeenCalledWith(listener1);
-      expect(subscribeToLocationSnapshotUpdates).toHaveBeenCalledWith(listener2);
+      expect(subscribeToLocationSnapshotUpdatesMock).toHaveBeenNthCalledWith(1, listener1);
+      expect(subscribeToLocationSnapshotUpdatesMock).toHaveBeenNthCalledWith(2, listener2);
 
       unsubscribe1();
       unsubscribe2();
 
-      expect(unsubscribeMock1).toHaveBeenCalled();
-      expect(unsubscribeMock2).toHaveBeenCalled();
+      expect(unsubscribeMock1).toHaveBeenCalledTimes(1);
+      expect(unsubscribeMock2).toHaveBeenCalledTimes(1);
     });
   });
 });

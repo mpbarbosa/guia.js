@@ -934,8 +934,8 @@ __tests__/
 - [Developer Guide](../developer/DEVELOPER_GUIDE.md)
 - [User Guide](../user/USER_GUIDE.md)
 - [Testing Guide](../testing/TESTING.md)
-- [Design Patterns](./DESIGN_PATTERNS.md)
-- [Data Flow Diagrams](./DATA_FLOW.md)
+- Design Patterns
+- Data Flow Diagrams
 
 ---
 

@@ -1,8 +1,9 @@
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onUnmounted } from 'vue';
 import AddressCache from '../data/AddressCache.js';
 
 type AddressCacheInstance = ReturnType<typeof AddressCache.getInstance>;
 type SubscribeParam = Parameters<AddressCacheInstance['subscribe']>[0];
+type CurrentAddress = AddressCacheInstance['currentAddress'];
 
 /**
  * Reactive highlight-cards data sourced directly from AddressCache.
@@ -16,29 +17,27 @@ export function useHighlightCards() {
   const bairro              = ref<string>('—');
   const logradouro          = ref<string>('—');
   const regiaoMetropolitana = ref<string | null>(null);
+  const addressCache = AddressCache.getInstance();
+
+  function syncFromAddress(addr: CurrentAddress): void {
+    if (!addr) return;
+    municipio.value = addr.municipio?.trim() ? addr.municipio.toUpperCase() : '—';
+    bairro.value = addr.bairro?.trim() ? addr.bairro.toUpperCase() : '—';
+    logradouro.value = addr.logradouro?.trim() ? addr.logradouro.toUpperCase() : '—';
+    regiaoMetropolitana.value = addr.regiaoMetropolitana?.trim() || null;
+  }
 
   const observer = {
-    update(cache: { currentAddress: {
-      municipio?: string | null;
-      bairro?: string | null;
-      logradouro?: string | null;
-      regiaoMetropolitana?: string | null;
-    } | null }) {
-      const addr = cache.currentAddress;
-      if (!addr) return;
-      if (addr.municipio   != null) municipio.value           = addr.municipio.toUpperCase();
-      if (addr.bairro      != null) bairro.value              = addr.bairro.toUpperCase();
-      if (addr.logradouro  != null) logradouro.value          = addr.logradouro.toUpperCase();
-      regiaoMetropolitana.value = addr.regiaoMetropolitana ?? null;
+    update() {
+      syncFromAddress(addressCache.currentAddress);
     },
   };
 
-  onMounted(() => {
-    AddressCache.getInstance().subscribe(observer as SubscribeParam);
-  });
+  syncFromAddress(addressCache.currentAddress);
+  addressCache.subscribe(observer as SubscribeParam);
 
   onUnmounted(() => {
-    AddressCache.getInstance().unsubscribe(observer as SubscribeParam);
+    addressCache.unsubscribe(observer as SubscribeParam);
   });
 
   return { municipio, bairro, logradouro, regiaoMetropolitana };

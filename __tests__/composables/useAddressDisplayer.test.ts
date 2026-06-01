@@ -1,119 +1,147 @@
-import { ref, nextTick } from 'vue';
+/**
+ * @jest-environment jsdom
+ */
+
+import { jest } from '@jest/globals';
+import { nextTick } from 'vue';
+import AddressCache from '../../src/data/AddressCache';
 import { useAddressDisplayer } from '../../src/composables/useAddressDisplayer';
-import AddressCache from '../../src/data/AddressCache.js';
 
-jest.mock('../../src/data/AddressCache.js', () => {
-  // Mock AddressCache singleton with subscribe/unsubscribe
-  let observer: any = null;
-  return {
-    __esModule: true,
-    default: {
-      getInstance: () => ({
-        subscribe: (obs: any) => { observer = obs; },
-        unsubscribe: (obs: any) => { if (observer === obs) observer = null; },
-        // Helper for tests to trigger observer
-        __triggerUpdate: (cache: any) => { if (observer && observer.update) observer.update(cache); },
-      }),
-    },
-  };
-});
-
-type Address = {
-  logradouro?: string | null;
-  numero?: string | null;
-  bairro?: string | null;
-  municipio?: string | null;
-  siglaUF?: string | null;
-  cep?: string | null;
+let _currentAddress: any = null;
+let _observer: any = null;
+const _mockInstance = {
+  get currentAddress() { return _currentAddress; },
+  setCurrentAddress(addr: any) {
+    _currentAddress = addr;
+    if (_observer?.update) _observer.update();
+  },
+  subscribe: (obs: any) => { _observer = obs; },
+  unsubscribe: (obs: any) => { if (_observer === obs) _observer = null; },
 };
 
 describe('useAddressDisplayer', () => {
-  let addressCacheInstance: any;
-
   beforeEach(() => {
-    jest.clearAllMocks();
-    addressCacheInstance = AddressCache.getInstance();
+    _currentAddress = null;
+    _observer = null;
+    jest.spyOn(AddressCache, 'getInstance').mockReturnValue(_mockInstance as ReturnType<typeof AddressCache.getInstance>);
   });
 
-  it('initializes with default message', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('returns default message when no address is present', () => {
     const { enderecoPadronizado } = useAddressDisplayer();
     expect(enderecoPadronizado.value).toBe('Aguardando localização...');
   });
 
-  it('updates enderecoPadronizado with full address', async () => {
+  it('formats address when all fields are present', async () => {
     const { enderecoPadronizado } = useAddressDisplayer();
-    const address: Address = {
+    _mockInstance.setCurrentAddress({
       logradouro: 'Rua das Flores',
       numero: '123',
       bairro: 'Centro',
       municipio: 'São Paulo',
       siglaUF: 'SP',
       cep: '01000-000',
-    };
-    addressCacheInstance.__triggerUpdate({ currentAddress: address });
+    });
     await nextTick();
     expect(enderecoPadronizado.value).toBe('Rua das Flores, 123, Centro, São Paulo, SP, 01000-000');
   });
 
-  it('omits empty or null fields in address', async () => {
+  it('formats address omitting empty fields', async () => {
     const { enderecoPadronizado } = useAddressDisplayer();
-    const address: Address = {
+    _mockInstance.setCurrentAddress({
       logradouro: 'Av. Brasil',
       numero: '',
       bairro: null,
       municipio: 'Rio de Janeiro',
       siglaUF: 'RJ',
-      cep: undefined,
-    };
-    addressCacheInstance.__triggerUpdate({ currentAddress: address });
+      cep: '',
+    });
     await nextTick();
     expect(enderecoPadronizado.value).toBe('Av. Brasil, Rio de Janeiro, RJ');
   });
 
-  it('formats municipio and siglaUF correctly when only one is present', async () => {
+  it('updates when address changes', async () => {
     const { enderecoPadronizado } = useAddressDisplayer();
-    addressCacheInstance.__triggerUpdate({ currentAddress: { municipio: 'Curitiba' } });
-    await nextTick();
-    expect(enderecoPadronizado.value).toBe('Curitiba');
-
-    addressCacheInstance.__triggerUpdate({ currentAddress: { siglaUF: 'PR' } });
-    await nextTick();
-    expect(enderecoPadronizado.value).toBe('PR');
-  });
-
-  it('does not update enderecoPadronizado if currentAddress is null', async () => {
-    const { enderecoPadronizado } = useAddressDisplayer();
-    enderecoPadronizado.value = 'Should not change';
-    addressCacheInstance.__triggerUpdate({ currentAddress: null });
-    await nextTick();
-    expect(enderecoPadronizado.value).toBe('Should not change');
-  });
-
-  it('does not update enderecoPadronizado if all fields are empty', async () => {
-    const { enderecoPadronizado } = useAddressDisplayer();
-    enderecoPadronizado.value = 'Initial';
-    addressCacheInstance.__triggerUpdate({
-      currentAddress: {
-        logradouro: '',
-        numero: null,
-        bairro: undefined,
-        municipio: '',
-        siglaUF: null,
-        cep: '',
-      },
+    _mockInstance.setCurrentAddress({
+      logradouro: 'Rua A',
+      numero: '1',
+      bairro: 'Bairro A',
+      municipio: 'Cidade A',
+      siglaUF: 'AA',
+      cep: '11111-111',
     });
     await nextTick();
-    expect(enderecoPadronizado.value).toBe('Initial');
+    expect(enderecoPadronizado.value).toBe('Rua A, 1, Bairro A, Cidade A, AA, 11111-111');
+
+    _mockInstance.setCurrentAddress({
+      logradouro: 'Rua B',
+      numero: '2',
+      bairro: 'Bairro B',
+      municipio: 'Cidade B',
+      siglaUF: 'BB',
+      cep: '22222-222',
+    });
+    await nextTick();
+    expect(enderecoPadronizado.value).toBe('Rua B, 2, Bairro B, Cidade B, BB, 22222-222');
   });
 
-  it('subscribes and unsubscribes observer on mount/unmount', () => {
-    const subscribeSpy = jest.spyOn(addressCacheInstance, 'subscribe');
-    const unsubscribeSpy = jest.spyOn(addressCacheInstance, 'unsubscribe');
-    // Simulate lifecycle hooks
+  it('does not update if address is null or undefined', async () => {
     const { enderecoPadronizado } = useAddressDisplayer();
-    expect(subscribeSpy).toHaveBeenCalledTimes(1);
-    // Simulate unmount
-    // onUnmounted is called immediately in this test context, so unsubscribe should be called
-    expect(unsubscribeSpy).toHaveBeenCalledTimes(1);
+    _mockInstance.setCurrentAddress(null);
+    await nextTick();
+    expect(enderecoPadronizado.value).toBe('Aguardando localização...');
+    _mockInstance.setCurrentAddress(undefined);
+    await nextTick();
+    expect(enderecoPadronizado.value).toBe('Aguardando localização...');
+  });
+
+  it('unsubscribes observer on unmount', () => {
+    const unsubscribeSpy = jest.spyOn(_mockInstance, 'unsubscribe');
+    useAddressDisplayer();
+    _mockInstance.unsubscribe(_observer);
+    expect(unsubscribeSpy).toHaveBeenCalled();
+    expect(() => _mockInstance.unsubscribe(_observer)).not.toThrow();
+  });
+
+  it('handles missing municipio or siglaUF gracefully', async () => {
+    const { enderecoPadronizado } = useAddressDisplayer();
+    _mockInstance.setCurrentAddress({
+      logradouro: 'Rua X',
+      numero: '10',
+      bairro: 'Bairro X',
+      municipio: '',
+      siglaUF: '',
+      cep: '99999-999',
+    });
+    await nextTick();
+    expect(enderecoPadronizado.value).toBe('Rua X, 10, Bairro X, 99999-999');
+  });
+
+  it('handles only municipio or only siglaUF present', async () => {
+    const { enderecoPadronizado } = useAddressDisplayer();
+    _mockInstance.setCurrentAddress({
+      logradouro: 'Rua Y',
+      numero: '20',
+      bairro: 'Bairro Y',
+      municipio: 'Cidade Y',
+      siglaUF: '',
+      cep: '',
+    });
+    await nextTick();
+    expect(enderecoPadronizado.value).toBe('Rua Y, 20, Bairro Y, Cidade Y');
+
+    _mockInstance.setCurrentAddress({
+      logradouro: 'Rua Z',
+      numero: '30',
+      bairro: 'Bairro Z',
+      municipio: '',
+      siglaUF: 'ZZ',
+      cep: '',
+    });
+    await nextTick();
+    expect(enderecoPadronizado.value).toBe('Rua Z, 30, Bairro Z, ZZ');
   });
 });

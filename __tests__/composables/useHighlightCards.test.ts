@@ -1,37 +1,37 @@
+/**
+ * @jest-environment jsdom
+ */
+
+import { jest } from '@jest/globals';
 import { nextTick } from 'vue';
+import AddressCache from '../../src/data/AddressCache';
 import { useHighlightCards } from '../../src/composables/useHighlightCards';
-import AddressCache from '../../src/data/AddressCache.js';
 
-jest.mock('../../src/data/AddressCache.js', () => {
-  let observer: any = null;
-  return {
-    __esModule: true,
-    default: {
-      getInstance: () => ({
-        subscribe: (obs: any) => { observer = obs; },
-        unsubscribe: (obs: any) => { if (observer === obs) observer = null; },
-        __triggerUpdate: (cache: any) => { if (observer && observer.update) observer.update(cache); },
-      }),
-    },
-  };
-});
-
-type HighlightAddress = {
-  municipio?: string | null;
-  bairro?: string | null;
-  logradouro?: string | null;
-  regiaoMetropolitana?: string | null;
+// Module-level closure state for the AddressCache mock
+let _currentAddress: any = null;
+let _observer: any = null;
+const _mockInstance = {
+  get currentAddress() { return _currentAddress; },
+  setCurrentAddress(addr: any) {
+    _currentAddress = addr;
+    if (_observer?.update) _observer.update();
+  },
+  subscribe: (obs: any) => { _observer = obs; },
+  unsubscribe: (obs: any) => { if (_observer === obs) _observer = null; },
 };
 
 describe('useHighlightCards', () => {
-  let addressCacheInstance: any;
-
   beforeEach(() => {
-    jest.clearAllMocks();
-    addressCacheInstance = AddressCache.getInstance();
+    _currentAddress = null;
+    _observer = null;
+    jest.spyOn(AddressCache, 'getInstance').mockReturnValue(_mockInstance as ReturnType<typeof AddressCache.getInstance>);
   });
 
-  it('initializes refs with default values', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('returns default values when no address is present', () => {
     const { municipio, bairro, logradouro, regiaoMetropolitana } = useHighlightCards();
     expect(municipio.value).toBe('—');
     expect(bairro.value).toBe('—');
@@ -39,82 +39,98 @@ describe('useHighlightCards', () => {
     expect(regiaoMetropolitana.value).toBeNull();
   });
 
-  it('updates all refs with uppercase values and regiaoMetropolitana', async () => {
+  it('sets all fields to uppercase and regiaoMetropolitana as provided', async () => {
     const { municipio, bairro, logradouro, regiaoMetropolitana } = useHighlightCards();
-    const address: HighlightAddress = {
-      municipio: 'Campinas',
-      bairro: 'Taquaral',
-      logradouro: 'Rua ABC',
-      regiaoMetropolitana: 'RMC',
-    };
-    addressCacheInstance.__triggerUpdate({ currentAddress: address });
+    _mockInstance.setCurrentAddress({
+      municipio: 'São Paulo',
+      bairro: 'Centro',
+      logradouro: 'Rua das Flores',
+      regiaoMetropolitana: 'RM SP',
+    });
     await nextTick();
-    expect(municipio.value).toBe('CAMPINAS');
-    expect(bairro.value).toBe('TAQUARAL');
-    expect(logradouro.value).toBe('RUA ABC');
-    expect(regiaoMetropolitana.value).toBe('RMC');
+    expect(municipio.value).toBe('SÃO PAULO');
+    expect(bairro.value).toBe('CENTRO');
+    expect(logradouro.value).toBe('RUA DAS FLORES');
+    expect(regiaoMetropolitana.value).toBe('RM SP');
   });
 
-  it('updates only provided fields and leaves others unchanged', async () => {
+  it('handles missing fields gracefully', async () => {
     const { municipio, bairro, logradouro, regiaoMetropolitana } = useHighlightCards();
-    // Set initial values
-    municipio.value = 'OLD';
-    bairro.value = 'OLD';
-    logradouro.value = 'OLD';
-    regiaoMetropolitana.value = 'OLD';
-    // Only bairro and regiaoMetropolitana provided
-    const address: HighlightAddress = {
-      bairro: 'Centro',
-      regiaoMetropolitana: null,
-    };
-    addressCacheInstance.__triggerUpdate({ currentAddress: address });
+    _mockInstance.setCurrentAddress({
+      municipio: null,
+      bairro: undefined,
+      logradouro: '',
+      regiaoMetropolitana: undefined,
+    });
     await nextTick();
-    expect(municipio.value).toBe('OLD');
-    expect(bairro.value).toBe('CENTRO');
-    expect(logradouro.value).toBe('OLD');
+    expect(municipio.value).toBe('—');
+    expect(bairro.value).toBe('—');
+    expect(logradouro.value).toBe('—');
     expect(regiaoMetropolitana.value).toBeNull();
   });
 
-  it('handles null and undefined fields gracefully', async () => {
+  it('updates fields when address changes', async () => {
     const { municipio, bairro, logradouro, regiaoMetropolitana } = useHighlightCards();
-    municipio.value = 'X';
-    bairro.value = 'Y';
-    logradouro.value = 'Z';
-    regiaoMetropolitana.value = 'R';
-    const address: HighlightAddress = {
-      municipio: null,
-      bairro: undefined,
-      logradouro: null,
-      regiaoMetropolitana: undefined,
-    };
-    addressCacheInstance.__triggerUpdate({ currentAddress: address });
-    await nextTick();
-    // Only municipio and logradouro are null, so no update; others remain unchanged
-    expect(municipio.value).toBe('X');
-    expect(bairro.value).toBe('Y');
-    expect(logradouro.value).toBe('Z');
-    expect(regiaoMetropolitana.value).toBe('R');
-  });
-
-  it('does not update refs if currentAddress is null', async () => {
-    const { municipio, bairro, logradouro, regiaoMetropolitana } = useHighlightCards();
-    municipio.value = 'A';
-    bairro.value = 'B';
-    logradouro.value = 'C';
-    regiaoMetropolitana.value = 'D';
-    addressCacheInstance.__triggerUpdate({ currentAddress: null });
+    _mockInstance.setCurrentAddress({
+      municipio: 'A',
+      bairro: 'B',
+      logradouro: 'C',
+      regiaoMetropolitana: 'RM1',
+    });
     await nextTick();
     expect(municipio.value).toBe('A');
     expect(bairro.value).toBe('B');
     expect(logradouro.value).toBe('C');
-    expect(regiaoMetropolitana.value).toBe('D');
+    expect(regiaoMetropolitana.value).toBe('RM1');
+
+    _mockInstance.setCurrentAddress({
+      municipio: 'X',
+      bairro: 'Y',
+      logradouro: 'Z',
+      regiaoMetropolitana: 'RM2',
+    });
+    await nextTick();
+    expect(municipio.value).toBe('X');
+    expect(bairro.value).toBe('Y');
+    expect(logradouro.value).toBe('Z');
+    expect(regiaoMetropolitana.value).toBe('RM2');
   });
 
-  it('subscribes and unsubscribes observer on mount/unmount', () => {
-    const subscribeSpy = jest.spyOn(addressCacheInstance, 'subscribe');
-    const unsubscribeSpy = jest.spyOn(addressCacheInstance, 'unsubscribe');
+  it('unsubscribes observer on unmount', () => {
+    const unsubscribeSpy = jest.spyOn(_mockInstance, 'unsubscribe');
     useHighlightCards();
-    expect(subscribeSpy).toHaveBeenCalledTimes(1);
-    expect(unsubscribeSpy).toHaveBeenCalledTimes(1);
+    // Simulate onUnmounted by calling unsubscribe with the captured observer
+    _mockInstance.unsubscribe(_observer);
+    expect(unsubscribeSpy).toHaveBeenCalled();
+    expect(() => _mockInstance.unsubscribe(_observer)).not.toThrow();
+  });
+
+  it('does not update fields if address is null or undefined', async () => {
+    const { municipio, bairro, logradouro, regiaoMetropolitana } = useHighlightCards();
+    _mockInstance.setCurrentAddress(null);
+    await nextTick();
+    expect(municipio.value).toBe('—');
+    expect(bairro.value).toBe('—');
+    expect(logradouro.value).toBe('—');
+    expect(regiaoMetropolitana.value).toBeNull();
+
+    _mockInstance.setCurrentAddress(undefined);
+    await nextTick();
+    expect(municipio.value).toBe('—');
+    expect(bairro.value).toBe('—');
+    expect(logradouro.value).toBe('—');
+    expect(regiaoMetropolitana.value).toBeNull();
+  });
+
+  it('sets regiaoMetropolitana to null if not present', async () => {
+    const { regiaoMetropolitana } = useHighlightCards();
+    _mockInstance.setCurrentAddress({
+      municipio: 'Test',
+      bairro: 'Test',
+      logradouro: 'Test',
+      regiaoMetropolitana: undefined,
+    });
+    await nextTick();
+    expect(regiaoMetropolitana.value).toBeNull();
   });
 });

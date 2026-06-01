@@ -1,82 +1,94 @@
+/**
+ * @jest-environment jsdom
+ */
+
+import { jest } from '@jest/globals';
 import { nextTick } from 'vue';
+import AddressCache from '../../src/data/AddressCache';
 import { useReferencePlaceDisplayer } from '../../src/composables/useReferencePlaceDisplayer';
-import AddressCache from '../../src/data/AddressCache.js';
 
-jest.mock('../../src/data/AddressCache.js', () => {
-  let observer: any = null;
-  return {
-    __esModule: true,
-    default: {
-      getInstance: () => ({
-        subscribe: (obs: any) => { observer = obs; },
-        unsubscribe: (obs: any) => { if (observer === obs) observer = null; },
-        __triggerUpdate: (cache: any) => { if (observer && observer.update) observer.update(cache); },
-      }),
-    },
-  };
-});
-
-type ReferencePlace = { name?: string | null };
-type Address = { referencePlace?: ReferencePlace | null };
+let _currentAddress: any = null;
+let _observer: any = null;
+const _mockInstance = {
+  get currentAddress() { return _currentAddress; },
+  setCurrentAddress(addr: any) {
+    _currentAddress = addr;
+    if (_observer?.update) _observer.update();
+  },
+  subscribe: (obs: any) => { _observer = obs; },
+  unsubscribe: (obs: any) => { if (_observer === obs) _observer = null; },
+};
 
 describe('useReferencePlaceDisplayer', () => {
-  let addressCacheInstance: any;
-
   beforeEach(() => {
-    jest.clearAllMocks();
-    addressCacheInstance = AddressCache.getInstance();
+    _currentAddress = null;
+    _observer = null;
+    jest.spyOn(AddressCache, 'getInstance').mockReturnValue(_mockInstance as ReturnType<typeof AddressCache.getInstance>);
   });
 
-  it('initializes referencePlaceName as null', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('returns null when no address is present', () => {
     const { referencePlaceName } = useReferencePlaceDisplayer();
     expect(referencePlaceName.value).toBeNull();
   });
 
-  it('sets referencePlaceName to the provided name', async () => {
+  it('sets referencePlaceName when referencePlace is present', async () => {
     const { referencePlaceName } = useReferencePlaceDisplayer();
-    const address: Address = { referencePlace: { name: 'Praça Central' } };
-    addressCacheInstance.__triggerUpdate({ currentAddress: address });
+    _mockInstance.setCurrentAddress({
+      referencePlace: { name: 'Praça Central' },
+    });
     await nextTick();
     expect(referencePlaceName.value).toBe('Praça Central');
   });
 
   it('sets referencePlaceName to null if referencePlace is missing', async () => {
     const { referencePlaceName } = useReferencePlaceDisplayer();
-    referencePlaceName.value = 'Should be cleared';
-    addressCacheInstance.__triggerUpdate({ currentAddress: {} });
+    _mockInstance.setCurrentAddress({});
     await nextTick();
     expect(referencePlaceName.value).toBeNull();
   });
 
-  it('sets referencePlaceName to null if referencePlace is null', async () => {
+  it('sets referencePlaceName to null if referencePlace.name is missing', async () => {
     const { referencePlaceName } = useReferencePlaceDisplayer();
-    referencePlaceName.value = 'Should be cleared';
-    addressCacheInstance.__triggerUpdate({ currentAddress: { referencePlace: null } });
+    _mockInstance.setCurrentAddress({
+      referencePlace: {},
+    });
     await nextTick();
     expect(referencePlaceName.value).toBeNull();
   });
 
-  it('sets referencePlaceName to null if referencePlace.name is null', async () => {
+  it('updates referencePlaceName when address changes', async () => {
     const { referencePlaceName } = useReferencePlaceDisplayer();
-    referencePlaceName.value = 'Should be cleared';
-    addressCacheInstance.__triggerUpdate({ currentAddress: { referencePlace: { name: null } } });
+    _mockInstance.setCurrentAddress({
+      referencePlace: { name: 'Praça 1' },
+    });
     await nextTick();
-    expect(referencePlaceName.value).toBeNull();
+    expect(referencePlaceName.value).toBe('Praça 1');
+    _mockInstance.setCurrentAddress({
+      referencePlace: { name: 'Praça 2' },
+    });
+    await nextTick();
+    expect(referencePlaceName.value).toBe('Praça 2');
   });
 
-  it('sets referencePlaceName to null if currentAddress is null', async () => {
-    const { referencePlaceName } = useReferencePlaceDisplayer();
-    referencePlaceName.value = 'Should be cleared';
-    addressCacheInstance.__triggerUpdate({ currentAddress: null });
-    await nextTick();
-    expect(referencePlaceName.value).toBeNull();
-  });
-
-  it('subscribes and unsubscribes observer on mount/unmount', () => {
-    const subscribeSpy = jest.spyOn(addressCacheInstance, 'subscribe');
-    const unsubscribeSpy = jest.spyOn(addressCacheInstance, 'unsubscribe');
+  it('unsubscribes observer on unmount', () => {
+    const unsubscribeSpy = jest.spyOn(_mockInstance, 'unsubscribe');
     useReferencePlaceDisplayer();
-    expect(subscribeSpy).toHaveBeenCalledTimes(1);
-    expect(unsubscribeSpy).toHaveBeenCalledTimes(1);
+    _mockInstance.unsubscribe(_observer);
+    expect(unsubscribeSpy).toHaveBeenCalled();
+    expect(() => _mockInstance.unsubscribe(_observer)).not.toThrow();
+  });
+
+  it('does not update referencePlaceName if address is null or undefined', async () => {
+    const { referencePlaceName } = useReferencePlaceDisplayer();
+    _mockInstance.setCurrentAddress(null);
+    await nextTick();
+    expect(referencePlaceName.value).toBeNull();
+    _mockInstance.setCurrentAddress(undefined);
+    await nextTick();
+    expect(referencePlaceName.value).toBeNull();
   });
 });

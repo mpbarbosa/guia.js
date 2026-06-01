@@ -1,8 +1,12 @@
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onUnmounted } from 'vue';
 import PositionManager from '../core/PositionManager.js';
 
 type PositionManagerInstance = ReturnType<typeof PositionManager.getInstance>;
 type SubscribeParam = Parameters<PositionManagerInstance['subscribe']>[0];
+type CurrentPosition = {
+  latitude: number | null;
+  longitude: number | null;
+};
 
 /**
  * Reactive GPS coordinates sourced from PositionManager.
@@ -12,22 +16,25 @@ type SubscribeParam = Parameters<PositionManagerInstance['subscribe']>[0];
  */
 export function usePositionDisplayer() {
   const coordinates = ref<string>('Aguardando localização...');
+  const positionManager = PositionManager.getInstance();
+
+  function syncFromPosition(position: CurrentPosition): void {
+    const { latitude: lat, longitude: lon } = position;
+    if (lat != null && lon != null) {
+      coordinates.value = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+    }
+  }
 
   const observer = {
-    update(pm: { latitude: number | null; longitude: number | null }) {
-      const { latitude: lat, longitude: lon } = pm;
-      if (lat != null && lon != null) {
-        coordinates.value = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
-      }
+    update(position: CurrentPosition) {
+      syncFromPosition(position);
     },
   };
 
-  onMounted(() => {
-    PositionManager.getInstance().subscribe(observer as SubscribeParam);
-  });
+  positionManager.subscribe(observer as SubscribeParam);
 
   onUnmounted(() => {
-    PositionManager.getInstance().unsubscribe(observer as SubscribeParam);
+    positionManager.unsubscribe(observer as SubscribeParam);
   });
 
   return { coordinates };

@@ -14,7 +14,12 @@
 set -euo pipefail
 
 IMAGE_NAME="guia_js-test"
+CONTAINER_NAME="${IMAGE_NAME}-run"
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+cleanup_container() {
+  docker container rm -f "$1" >/dev/null 2>&1 || true
+}
 
 # ─── Step 1: Build ──────────────────────────────────────────────────────────
 echo ""
@@ -40,6 +45,9 @@ done
 echo ""
 echo "🧪 Running unit tests inside Docker..."
 
+cleanup_container "${CONTAINER_NAME}"
+trap 'cleanup_container "${CONTAINER_NAME}"' EXIT
+
 EXTRA_ARGS=""
 if [[ ${#JEST_ARGS[@]} -gt 0 ]]; then
   EXTRA_ARGS="${JEST_ARGS[*]}"
@@ -49,12 +57,14 @@ fi
 set +e
 docker run \
   --rm \
-  --name "${IMAGE_NAME}-run" \
+  --name "${CONTAINER_NAME}" \
   -e CI=true \
   "${IMAGE_NAME}" \
   sh -c "npm run test:unit -- --runInBand ${EXTRA_ARGS}"
 EXIT_CODE=$?
 set -e
+trap - EXIT
+cleanup_container "${CONTAINER_NAME}"
 
 # ─── Step 3: Report ─────────────────────────────────────────────────────────
 echo ""

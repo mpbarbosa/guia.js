@@ -163,7 +163,7 @@ The build process (via `vite.config.js`) automatically:
 
 ### Deploying to mpbarbosa.com (Automated)
 
-Use `scripts/deploy.sh` to build and publish the app to the
+Use `scripts/deploy.sh` to run the production preflight, then publish the app to the
 [mpbarbosa.com](https://github.com/mpbarbosa/mpbarbosa.com) website repository in one step:
 
 ```bash
@@ -176,16 +176,20 @@ npm run deploy
 **What the script does**:
 
 1. Runs `npm run build` to compile `dist/`
-2. Rsyncs `dist/` → `$MPBARBOSA_COM_ROOT/guia_js/` (default: `/home/mpb/Documents/GitHub/mpbarbosa.com`)
-3. If there are changes in `mpbarbosa.com`:
-   - `git add -A`
-   - `git commit -m "chore: automated deploy from guia_js"`
+2. Refuses to run unless both `guia_js` and `mpbarbosa.com` have clean worktrees
+3. Fast-forwards `mpbarbosa.com` from its upstream with `git pull --ff-only`
+4. Runs `scripts/deploy-preflight.sh` to verify `dist/` is deploy-ready
+5. Rsyncs `dist/` → `$MPBARBOSA_COM_ROOT/guia_js/` (default: `/home/mpb/Documents/GitHub/mpbarbosa.com`)
+6. If there are changes in `mpbarbosa.com/guia_js`:
+   - `git add -A -- guia_js`
+   - `git commit -m "chore(deploy): publish guia_js <version> (<sha>)"`
    - `git push`
-4. Skips the git step if there is nothing new to commit.
+7. Skips the git step if there is nothing new to commit under `guia_js/`.
 
 **Prerequisites**:
 
 - `mpbarbosa.com` repository cloned at `$MPBARBOSA_COM_ROOT`
+- clean worktrees in both `guia_js` and `mpbarbosa.com`
 - `rsync` on `PATH`
 - git push access to the `mpbarbosa.com` remote
 

@@ -94,7 +94,7 @@
 ### 4. deploy.sh
 
 **Path**: `scripts/deploy.sh`
-**Purpose**: Build production bundle, sync it to the `mpbarbosa.com` website repository, and commit + push changes
+**Purpose**: Run the production preflight, sync the validated `dist/` bundle to the `mpbarbosa.com` website repository, and commit + push only the `guia_js` deployment subtree
 **Usage**: `./scripts/deploy.sh [-h|--help]`
 **npm script**: `npm run deploy`
 **Related modules**: `dist/`, `vite.config.js`, `/home/mpb/Documents/GitHub/mpbarbosa.com`
@@ -113,23 +113,27 @@
 
 **Exit codes**:
 
-- `0` — Deployment completed successfully (or no changes to push)
+- `0` — Deployment completed successfully (or no `guia_js` changes to push)
 - `1` — Any step failed (`set -euo pipefail`)
 
 **Prerequisites**:
 
+- `guia_js` worktree is clean (no uncommitted source changes)
 - `mpbarbosa.com` repository cloned at `$MPBARBOSA_COM_ROOT`
+- `mpbarbosa.com` worktree is clean (no unrelated website changes in progress)
 - `rsync` available on `PATH`
 - Node.js v20.19.0+ and npm installed
 - git configured with push access to the `mpbarbosa.com` remote
 
 **What it does**:
 
-1. Validates prerequisites (repo exists, is a git repo, rsync available)
-2. Runs `npm run build` to compile `dist/`
-3. Rsyncs `dist/` to `$MPBARBOSA_COM_ROOT/guia_js/` (with `--delete` to keep the target in sync)
-4. If `git status --porcelain` reports changes: runs `git add -A`, `git commit`, and `git push`
-5. Skips the git step entirely if there are no changes
+1. Validates prerequisites (repos exist, are git repos, `rsync` available)
+2. Refuses to run unless both `guia_js` and `mpbarbosa.com` have clean worktrees
+3. Fast-forwards `mpbarbosa.com` from its upstream with `git pull --ff-only`
+4. Runs `scripts/deploy-preflight.sh` to build and validate `dist/`
+5. Rsyncs `dist/` to `$MPBARBOSA_COM_ROOT/guia_js/` (with `--delete` to keep the target in sync)
+6. If `git status --porcelain -- guia_js` reports changes: runs `git add -A -- guia_js`, commits with the `guia_js` version + source SHA, and pushes
+7. Skips the git step entirely if there are no `guia_js` changes
 
 **Example**:
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # bump-sw-cache.sh
-# Updates the CACHE_NAME in service-worker.js with the current app version,
+# Updates the CACHE_NAME in public/service-worker.js with the current app version,
 # date, and git short SHA. Run automatically by CI/CD on push to main.
 #
 # Usage: ./.github/scripts/bump-sw-cache.sh
 #
-# Output: Updates service-worker.js in place.
+# Output: Updates public/service-worker.js in place.
 
 set -euo pipefail
 

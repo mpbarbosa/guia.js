@@ -145,7 +145,7 @@ Used in documentation validation workflows to ensure all internal links remain v
 
 #### 6. bump-sw-cache.sh
 
-**Purpose**: Updates `CACHE_NAME` in `service-worker.js` with the current app version, date, and git SHA
+**Purpose**: Updates `CACHE_NAME` in `public/service-worker.js` with the current app version, date, and git SHA
 **Usage**: `./.github/scripts/bump-sw-cache.sh`
 **Documentation**: README.md, `.github/workflows/bump-sw-cache.yml`
 
@@ -153,8 +153,9 @@ Used in documentation validation workflows to ensure all internal links remain v
 
 - Reads the version from `package.json`
 - Builds a new cache name with version + UTC date + git short SHA
-- Rewrites `service-worker.js` in place
-- Exits non-zero if run outside the repository root or if `service-worker.js` is missing
+- Resolves the repository root from the script location
+- Rewrites `public/service-worker.js` in place
+- Exits non-zero if the repository root or `public/service-worker.js` is missing
 
 **Integration**:
 Executed by the `bump-sw-cache.yml` workflow after pushes to `main`.

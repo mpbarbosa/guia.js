@@ -108,7 +108,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 # Navigation Structure Improvement Guide
 
 **Generated**: 2026-01-06
-**Project**: Guia Turístico v0.28.10-alpha
+**Project**: Guia Turístico v0.28.11-alpha
 **Status**: 🟢 **Implementation Guide**
 
 ---

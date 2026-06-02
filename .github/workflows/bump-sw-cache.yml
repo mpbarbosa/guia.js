@@ -1,7 +1,7 @@
 name: Bump SW Cache Name
 
 # Runs on every push to main AFTER the main validation workflow.
-# Updates CACHE_NAME in service-worker.js with current version + date + git SHA,
+# Updates CACHE_NAME in public/service-worker.js with current version + date + git SHA,
 # then commits and pushes the change back to main.
 #
 # The [skip ci] tag in the commit message prevents an infinite trigger loop.

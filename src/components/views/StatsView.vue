@@ -10,7 +10,12 @@ const categories = ['Todos', 'População', 'Território'];
 
 const { stats, loading, error } = useIBGECityStats();
 
+const hasFreshSidraPopulation = computed(() =>
+  stats.value?.populationSource === 'sidra-fresh' && stats.value.population !== null
+);
+
 const populationFormatted = computed(() => {
+  if (!hasFreshSidraPopulation.value) return '—';
   const pop = stats.value?.population;
   if (pop == null) return '—';
   return pop.toLocaleString('pt-BR');
@@ -23,6 +28,7 @@ const areaFormatted = computed(() => {
 });
 
 const densityFormatted = computed(() => {
+  if (!hasFreshSidraPopulation.value) return '—';
   const pop = stats.value?.population;
   const area = stats.value?.areaKm2;
   if (!pop || !area) return '—';
@@ -35,6 +41,11 @@ const cityLabel = computed(() => {
 });
 
 const populationYear = computed(() => stats.value?.populationYear ?? '');
+const showPopulationYear = computed(() => hasFreshSidraPopulation.value && Boolean(stats.value?.populationYear));
+const populationUnavailable = computed(() => !loading.value && stats.value !== null && !hasFreshSidraPopulation.value);
+const densityUnavailable = computed(() =>
+  !loading.value && stats.value !== null && stats.value.areaKm2 !== null && !hasFreshSidraPopulation.value
+);
 
 const visibleCategories = computed(() => {
   const cat = activeCategory.value;
@@ -95,14 +106,20 @@ const visibleCategories = computed(() => {
       >
         <template #badge>
           <span
-            v-if="populationYear"
+            v-if="showPopulationYear"
             class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-current/10 text-primary bg-indigo-50"
           >
             {{ populationYear }}
           </span>
         </template>
         <template #value>
-          <div class="flex items-baseline gap-3">
+          <div v-if="populationUnavailable" class="space-y-2">
+            <p class="text-lg font-black text-indigo-900">Estimativa indisponível no momento</p>
+            <p class="text-sm text-on-surface-variant font-medium">
+              O valor atual da população deste município não pôde ser confirmado pela API SIDRA.
+            </p>
+          </div>
+          <div v-else class="flex items-baseline gap-3">
             <p class="text-3xl font-black text-indigo-900">{{ populationFormatted }}</p>
             <span class="text-xs font-bold text-outline uppercase">habitantes</span>
           </div>
@@ -125,7 +142,12 @@ const visibleCategories = computed(() => {
               <span class="text-xs font-bold text-outline uppercase">km²</span>
             </div>
             <p class="text-sm text-on-surface-variant font-medium">
-              Densidade: <strong class="text-indigo-900">{{ densityFormatted }}</strong> hab/km²
+              <template v-if="densityUnavailable">
+                Densidade: <strong class="text-indigo-900">indisponível</strong> sem estimativa SIDRA atual
+              </template>
+              <template v-else>
+                Densidade: <strong class="text-indigo-900">{{ densityFormatted }}</strong> hab/km²
+              </template>
             </p>
           </div>
         </template>

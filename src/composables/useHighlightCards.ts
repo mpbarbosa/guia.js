@@ -31,12 +31,8 @@ export function useHighlightCards() {
     const normalizedBairro = normalizeDisplayField(addr.bairro);
     const normalizedDistrito = normalizeDisplayField(addr.distrito);
 
-    if (normalizedBairro !== null && normalizedDistrito !== null) {
-      throw new Error('BrazilianStandardAddress cannot have both bairro and distrito');
-    }
-
     municipio.value = normalizeDisplayField(addr.municipio) ?? '—';
-    bairroLabel.value = normalizedDistrito !== null ? 'Distrito' : 'Bairro';
+    bairroLabel.value = normalizedBairro !== null ? 'Bairro' : normalizedDistrito !== null ? 'Distrito' : 'Bairro';
     bairro.value = normalizedBairro ?? normalizedDistrito ?? '—';
     logradouro.value = normalizeDisplayField(addr.logradouro) ?? '—';
     regiaoMetropolitana.value = addr.regiaoMetropolitana?.trim() || null;

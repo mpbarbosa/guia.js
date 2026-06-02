@@ -12,9 +12,6 @@
 
 import type ReferencePlace from './ReferencePlace.js';
 
-const BAIRRO_DISTRITO_CONFLICT_MESSAGE =
-	'BrazilianStandardAddress cannot have both bairro and distrito';
-
 /**
  * Represents a standardized Brazilian address with formatting capabilities.
  * 
@@ -49,9 +46,6 @@ class BrazilianStandardAddress {
 
 	set bairro(value: string | null | undefined) {
 		const normalized = BrazilianStandardAddress.normalizeNullableAddressField(value);
-		if (normalized !== null && this.#distrito !== null) {
-			throw new Error(BAIRRO_DISTRITO_CONFLICT_MESSAGE);
-		}
 		this.#bairro = normalized;
 	}
 
@@ -61,9 +55,6 @@ class BrazilianStandardAddress {
 
 	set distrito(value: string | null | undefined) {
 		const normalized = BrazilianStandardAddress.normalizeNullableAddressField(value);
-		if (normalized !== null && this.#bairro !== null) {
-			throw new Error(BAIRRO_DISTRITO_CONFLICT_MESSAGE);
-		}
 		this.#distrito = normalized;
 	}
 
@@ -162,9 +153,13 @@ class BrazilianStandardAddress {
 	 * @since 0.9.0-alpha
 	 */
 	enderecoCompleto(): string {
+		const localidadeCompleta = [this.bairro, this.distrito]
+			.filter((value): value is string => Boolean(value))
+			.join(", ");
+
 		return [
 			this.logradouroCompleto(),
-			this.bairroCompleto(),
+			localidadeCompleta,
 			this.municipioCompleto(),
 			this.cep
 		]

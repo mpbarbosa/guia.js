@@ -19,12 +19,8 @@ import {
 } from './OfflineCacheService.js';
 
 const BASE = (env.ibgeApiUrl as string) || 'https://servicodados.ibge.gov.br';
-const CITY_STATS_CACHE_TTL_MS = 5 * 60 * 1000;
 
-interface CacheEntry<T> {
-  value: T;
-  expiresAt: number;
-}
+export type PopulationSource = 'sidra-fresh' | 'offline-cache' | 'unavailable';
 
 export interface CityStats {
   /** IBGE municipality code (7-digit). */
@@ -39,6 +35,8 @@ export interface CityStats {
   population: number | null;
   /** Year of the population estimate. */
   populationYear: string | null;
+  /** Whether population data came from a fresh SIDRA fetch or had to be withheld. */
+  populationSource: PopulationSource;
 }
 
 interface IbgeLocalidade {
@@ -56,28 +54,27 @@ interface SidraResult {
   }>;
 }
 
-const cityStatsCache = new Map<string, CacheEntry<CityStats | null>>();
 const inflightCityStatsRequests = new Map<string, Promise<CityStats | null>>();
 
 function buildCityStatsCacheKey(municipio: string, siglaUf: string): string {
   return `${municipio.trim().toLowerCase()}::${siglaUf.trim().toUpperCase()}`;
 }
 
-function getCachedCityStats(cacheKey: string): CityStats | null | undefined {
-  const cached = cityStatsCache.get(cacheKey);
-  if (!cached) return undefined;
-  if (cached.expiresAt <= Date.now()) {
-    cityStatsCache.delete(cacheKey);
-    return undefined;
-  }
-  return cached.value;
-}
-
-function setCachedCityStats(cacheKey: string, value: CityStats | null): void {
-  cityStatsCache.set(cacheKey, {
-    value,
-    expiresAt: Date.now() + CITY_STATS_CACHE_TTL_MS,
-  });
+function buildOfflineFallbackStats(offlineStats: {
+  ibgeCode: string;
+  name: string;
+  uf: string;
+  areaKm2: number | null;
+}): CityStats {
+  return {
+    ibgeCode: offlineStats.ibgeCode,
+    name: offlineStats.name,
+    uf: offlineStats.uf,
+    areaKm2: offlineStats.areaKm2,
+    population: null,
+    populationYear: null,
+    populationSource: 'offline-cache',
+  };
 }
 
 /**
@@ -158,26 +155,11 @@ async function fetchPopulation(ibgeCode: string): Promise<{ population: number; 
  */
 export async function fetchStats(municipio: string, siglaUf: string): Promise<CityStats | null> {
   const cacheKey = buildCityStatsCacheKey(municipio, siglaUf);
-  const cachedStats = getCachedCityStats(cacheKey);
-  if (cachedStats !== undefined) {
-    log(`(IBGECityStatsService) Reusing cached stats for ${municipio} / ${siglaUf}`);
-    return cachedStats;
-  }
-
   if (typeof navigator !== 'undefined' && navigator.onLine === false) {
     const offlineStats = await getCityStatsFromOfflineCache(municipio, siglaUf);
     if (offlineStats) {
-      log(`(IBGECityStatsService) Reusing offline stats for ${municipio} / ${siglaUf}`);
-      const stats: CityStats = {
-        ibgeCode: offlineStats.ibgeCode,
-        name: offlineStats.name,
-        uf: offlineStats.uf,
-        areaKm2: offlineStats.areaKm2,
-        population: offlineStats.population,
-        populationYear: offlineStats.populationYear,
-      };
-      setCachedCityStats(cacheKey, stats);
-      return stats;
+      log(`(IBGECityStatsService) Reusing offline area stats for ${municipio} / ${siglaUf} without stale SIDRA population`);
+      return buildOfflineFallbackStats(offlineStats);
     }
   }
 
@@ -194,7 +176,6 @@ export async function fetchStats(municipio: string, siglaUf: string): Promise<Ci
       const localidade = await findMunicipioByName(municipio, siglaUf);
       if (!localidade) {
         warn(`(IBGECityStatsService) Municipality not found: "${municipio}"`);
-        setCachedCityStats(cacheKey, null);
         return null;
       }
 
@@ -212,27 +193,25 @@ export async function fetchStats(municipio: string, siglaUf: string): Promise<Ci
         areaKm2: area,
         population: popData?.population ?? null,
         populationYear: popData?.year ?? null,
+        populationSource: popData ? 'sidra-fresh' : 'unavailable',
       };
 
-      setCachedCityStats(cacheKey, stats);
-      await saveCityStatsToOfflineCache(municipio, siglaUf, stats);
-      log(`(IBGECityStatsService) Stats for ${stats.name}/${stats.uf}: pop=${stats.population}, area=${stats.areaKm2}km²`);
+      await saveCityStatsToOfflineCache(municipio, siglaUf, {
+        ibgeCode: stats.ibgeCode,
+        name: stats.name,
+        uf: stats.uf,
+        areaKm2: stats.areaKm2,
+        population: stats.population,
+        populationYear: stats.populationYear,
+      });
+      log(`(IBGECityStatsService) Stats for ${stats.name}/${stats.uf}: pop=${stats.population}, area=${stats.areaKm2}km², source=${stats.populationSource}`);
       return stats;
     } catch (err) {
       warn(`(IBGECityStatsService) Failed to fetch stats for "${municipio}": ${(err as Error).message}`);
       const offlineStats = await getCityStatsFromOfflineCache(municipio, siglaUf);
       if (offlineStats) {
-        const stats: CityStats = {
-          ibgeCode: offlineStats.ibgeCode,
-          name: offlineStats.name,
-          uf: offlineStats.uf,
-          areaKm2: offlineStats.areaKm2,
-          population: offlineStats.population,
-          populationYear: offlineStats.populationYear,
-        };
-        setCachedCityStats(cacheKey, stats);
-        log(`(IBGECityStatsService) Falling back to offline stats for ${municipio} / ${siglaUf}`);
-        return stats;
+        log(`(IBGECityStatsService) Falling back to offline area stats for ${municipio} / ${siglaUf} without stale SIDRA population`);
+        return buildOfflineFallbackStats(offlineStats);
       }
       return null;
     } finally {
@@ -245,7 +224,6 @@ export async function fetchStats(municipio: string, siglaUf: string): Promise<Ci
 }
 
 export function __resetCityStatsCacheForTests(): void {
-  cityStatsCache.clear();
   inflightCityStatsRequests.clear();
 }
 

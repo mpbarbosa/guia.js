@@ -2,7 +2,7 @@
 
 # PositionManager API Documentation
 
-**Version:** 0.9.0-alpha
+**Version:** 0.28.10-alpha
 **Module:** `src/core/PositionManager.js`
 **Pattern:** Singleton, Observer
 **Author:** Marcelo Pereira Barbosa
@@ -27,7 +27,7 @@ Centralized singleton manager for device geographic position. `PositionManager` 
 - Multi-layer validation (accuracy quality, distance OR time threshold)
 - Integration with GeoPosition for enhanced position data
 
-## Validation Rules (v0.9.0-alpha)
+## Validation Rules (v0.28.10-alpha)
 
 1. **Accuracy Quality**: Rejects medium/bad/very bad accuracy on mobile devices
 2. **Distance OR Time Threshold**: Updates if EITHER condition is met:
@@ -67,7 +67,7 @@ Creates a new PositionManager instance (private - use `getInstance()` instead).
 const manager = new PositionManager(geolocationPosition);
 ```
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ## Static Methods
 
@@ -99,7 +99,7 @@ navigator.geolocation.getCurrentPosition((position) => {
 });
 ```
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ## Static Constants
 
@@ -139,7 +139,7 @@ Subscribes an observer to position change notifications.
 
 ## Overview
 
-The `PositionManager` class is the central singleton for managing the current geographic position in the Guia.js application. Introduced in version 0.9.0-alpha, it wraps the browser's Geolocation API, implements sophisticated position validation and filtering rules, and provides an observer-based notification system for position changes. Following the Singleton and Observer design patterns, it ensures only one position state exists throughout the application while allowing multiple components to react to position updates.
+The `PositionManager` class is the central singleton for managing the current geographic position in the Guia.js application. Introduced in version 0.28.10-alpha, it wraps the browser's Geolocation API, implements sophisticated position validation and filtering rules, and provides an observer-based notification system for position changes. Following the Singleton and Observer design patterns, it ensures only one position state exists throughout the application while allowing multiple components to react to position updates.
 
 ## Motivation
 

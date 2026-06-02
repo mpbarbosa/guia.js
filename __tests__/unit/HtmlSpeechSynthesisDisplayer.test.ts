@@ -104,6 +104,7 @@ class MockBrazilianStandardAddress {
 		this.logradouro = data.logradouro || null;
 		this.numero = data.numero || null;
 		this.bairro = data.bairro || null;
+		this.distrito = data.distrito || null;
 		this.municipio = data.municipio || null;
 		this.uf = data.uf || null;
 	}
@@ -116,7 +117,7 @@ class MockBrazilianStandardAddress {
 	}
 
 	bairroCompleto() {
-		return this.bairro || 'Bairro não disponível';
+		return this.bairro || this.distrito || 'Bairro não disponível';
 	}
 }
 
@@ -492,6 +493,19 @@ describe('HtmlSpeechSynthesisDisplayer - MP Barbosa Travel Guide (v0.9.0-alpha)'
 
 				const result = displayer.buildTextToSpeech(address);
 				expect(result).toBe('Você está em bairro Copacabana, Rio de Janeiro');
+			});
+
+			test('should include both bairro and distrito in full address speech', () => {
+				const address = new MockBrazilianStandardAddress({
+					logradouro: 'Rua das Flores',
+					numero: '123',
+					bairro: 'Centro',
+					distrito: 'Distrito Sede',
+					municipio: 'São Paulo'
+				});
+
+				const result = displayer.buildTextToSpeech(address);
+				expect(result).toBe('Você está em Rua das Flores, 123, Centro, distrito Distrito Sede, São Paulo');
 			});
 
 			test('should build text with only municipio', () => {

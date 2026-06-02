@@ -775,8 +775,8 @@ When modifying Nominatim integration:
 
 ## Version History
 
-- **v0.9.0-alpha** (2026-01-06) - Consolidated Nominatim documentation for Guia Turístico application
-- **v0.9.0-alpha** (2025-10-07) - Initial implementation of OSM address tag translation
+- **v0.28.10-alpha** (2026-01-06) - Consolidated Nominatim documentation for Guia Turístico application
+- **v0.28.10-alpha** (2025-10-07) - Initial implementation of OSM address tag translation
 
 ## Target Audience
 

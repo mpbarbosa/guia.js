@@ -10,7 +10,7 @@ Category: Architecture
 
 **Navigation**: [🏠 Home](../README.md) > [📚 Docs](./README.md) > Project Purpose & Architecture
 
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Document Date**: 2026-02-09
 **Purpose**: Define project boundaries and prevent inappropriate architectural decisions
 
@@ -187,7 +187,7 @@ Category: Architecture
 ✅ CORRECT APPROACH: CDN Distribution + Integration
 ┌─────────────────────────────────────┐
 │  jsDelivr CDN                        │
-│  ├── guia.js@0.9.0-alpha             │
+│  ├── guia.js@0.28.10-alpha             │
 │  └── Developer imports into app     │
 └─────────────────────────────────────┘
         ↓
@@ -222,7 +222,7 @@ Category: Architecture
 ./.github/scripts/cdn-delivery.sh
 
 # Developers use in their HTML
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.28.10-alpha/src/guia.js"></script>
 ```
 
 **Why this works**:
@@ -395,12 +395,12 @@ npm version minor  # 0.9.0 → 0.9.0
 
 # 3. Commit version bump
 git add package.json cdn-urls.txt
-git commit -m "chore: bump version to v0.9.0"
+git commit -m "chore: bump version to v0.28.10"
 
 # 4. Create and push tag
-git tag v0.9.0
+git tag v0.28.10
 git push origin main
-git push origin v0.9.0
+git push origin v0.28.10
 
 # 5. jsDelivr automatically syncs (5-10 minutes)
 # Library is now available at:
@@ -445,7 +445,7 @@ echo "<html>...</html>" > index.html
     <div id="map-container"></div>
 
     <!-- Import Guia.js from CDN -->
-    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.9.0-alpha/src/guia.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia_js@0.28.10-alpha/src/guia.js"></script>
 
     <script>
         // Use Guia.js APIs
@@ -517,7 +517,7 @@ geocode(-23.550520, -46.633309);
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  jsDelivr CDN                                               │
-│  ├── guia.js@0.9.0-alpha                                    │
+│  ├── guia.js@0.28.10-alpha                                    │
 │  ├── Provides geolocation APIs                              │
 │  └── Embedded in developer's app                            │
 │                                                              │

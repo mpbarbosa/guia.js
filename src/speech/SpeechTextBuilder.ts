@@ -283,17 +283,31 @@ export class SpeechTextBuilder {
 		}
 		
 		let speechText = "Você está em ";
+		const hasBairro = Boolean(currentAddress.bairro);
+		const hasDistrito = Boolean(currentAddress.distrito);
 
 		if (currentAddress.logradouro) {
 			speechText += currentAddress.logradouroCompleto();
-			if (currentAddress.bairro) {
+			if (hasBairro) {
 				speechText += `, ${currentAddress.bairroCompleto()}`;
+			}
+			if (hasDistrito) {
+				speechText += hasBairro
+					? `, distrito ${currentAddress.distrito}`
+					: `, ${currentAddress.bairroCompleto()}`;
 			}
 			if (currentAddress.municipio) {
 				speechText += `, ${currentAddress.municipio}`;
 			}
-		} else if (currentAddress.bairro) {
-			speechText += `bairro ${currentAddress.bairroCompleto()}`;
+		} else if (hasBairro || hasDistrito) {
+			if (hasBairro) {
+				speechText += `bairro ${currentAddress.bairroCompleto()}`;
+				if (hasDistrito) {
+					speechText += `, distrito ${currentAddress.distrito}`;
+				}
+			} else {
+				speechText += `distrito ${currentAddress.bairroCompleto()}`;
+			}
 			if (currentAddress.municipio) {
 				speechText += `, ${currentAddress.municipio}`;
 			}

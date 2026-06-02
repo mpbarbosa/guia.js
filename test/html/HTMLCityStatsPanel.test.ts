@@ -68,6 +68,7 @@ describe('HTMLCityStatsPanel', () => {
       population: 12345678,
       populationYear: '2021',
       areaKm2: 1521.11,
+      populationSource: 'sidra-fresh',
     };
 
     it('renders all stats with valid data', () => {
@@ -90,6 +91,7 @@ describe('HTMLCityStatsPanel', () => {
         population: null,
         populationYear: null,
         areaKm2: null,
+        populationSource: 'unavailable',
       });
       expect(panelElem.innerHTML).toContain('–');
       expect(panelElem.innerHTML).not.toContain('estimativa');
@@ -103,12 +105,24 @@ describe('HTMLCityStatsPanel', () => {
         population: 1,
         populationYear: '<2022>',
         areaKm2: 1,
+        populationSource: 'sidra-fresh',
       };
       panel.render(stats);
       expect(panelElem.innerHTML).toContain('[escaped:&lt;script&gt;bad&lt;/script&gt;]');
       expect(panelElem.innerHTML).toContain('[escaped:&lt;b&gt;SP&lt;/b&gt;]');
       expect(panelElem.innerHTML).toContain('[escaped:&lt;img&gt;]');
       expect(panelElem.innerHTML).toContain('[escaped:&lt;2022&gt;]');
+    });
+
+    it('renders population as unavailable when SIDRA freshness is missing', () => {
+      panel.render({
+        ...baseStats,
+        population: 12345678,
+        populationYear: '2021',
+        populationSource: 'offline-cache',
+      });
+      expect(panelElem.innerHTML).toContain('Estimativa indisponível no momento');
+      expect(panelElem.innerHTML).not.toContain('12.345.678');
     });
 
     it('does nothing if panel is missing', () => {

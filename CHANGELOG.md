@@ -128,7 +128,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **`updateActiveNavLink()`** in `src/app.ts`: extended to add/remove `.active` + `aria-current` on `.navbar-nav .nav-link` in addition to legacy selectors; auto-closes mobile menu on route change
 - **`vite.config.js`**: Bootstrap assets routed to a dedicated `ui` manual chunk (separate from `vendor`); removed stale `guia.js` from `optimizeDeps.include`
-- **`src/navigation.css`**: Removed the 45-line commented-out `.app-navigation` block deprecated since v0.9.0; removed dead mobile media query for `.app-navigation`
+- **`src/navigation.css`**: Removed the 45-line commented-out `.app-navigation` block deprecated since v0.28.10; removed dead mobile media query for `.app-navigation`
 
 ### Removed
 

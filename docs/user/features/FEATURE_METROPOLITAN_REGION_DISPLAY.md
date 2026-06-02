@@ -4,7 +4,7 @@
 
 Display metropolitan region information (Região Metropolitana) in the Municipality Card to provide additional geographic context for users in metropolitan areas.
 
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Date**: 2026-01-28
 **Author**: Marcelo Pereira Barbosa
 
@@ -84,7 +84,7 @@ constructor() {
 /**
  * Returns the formatted metropolitan region name.
  * @returns {string} Metropolitan region name or empty string
- * @since 0.9.0-alpha
+ * @since 0.28.10-alpha
  */
 regiaoMetropolitanaFormatada() {
     return this.regiaoMetropolitana || "";
@@ -380,7 +380,7 @@ All necessary infrastructure already exists.
 
 1. ✅ `docs/FEATURE_METROPOLITAN_REGION_DISPLAY.md` (this file)
 2. ⏳ `README.md` - Add to feature list
-3. ⏳ `CHANGELOG.md` - Add entry for v0.9.0-alpha
+3. ⏳ `CHANGELOG.md` - Add entry for v0.28.10-alpha
 4. ⏳ Test files - Create comprehensive test suites
 
 ## References

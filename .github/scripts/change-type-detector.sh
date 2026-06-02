@@ -16,7 +16,7 @@ USAGE:
 
 PARAMETERS:
     base_ref    Optional git reference to compare against (default: HEAD~1)
-                Examples: HEAD~1, abc123, origin/main, v0.9.0
+                Examples: HEAD~1, abc123, origin/main, v0.28.10
 
 OUTPUT:
     Change type string: feat|fix|docs|test|refactor|chore|ci|perf|style

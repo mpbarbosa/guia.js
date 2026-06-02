@@ -44,7 +44,7 @@ Related: [Link to related docs] (optional)
 
 **Version**
 
-- Format: Semantic versioning (e.g., `0.9.0-alpha`)
+- Format: Semantic versioning (e.g., `0.28.10-alpha`)
 - Use when: Documentation is version-specific
 - Sync with: `package.json` version
 
@@ -113,7 +113,7 @@ Related: [IBGE Integration](./IBIRA_INTEGRATION.md), [Data Architecture](./archi
 ---
 Last Updated: 2026-01-28
 Status: Draft
-Version: 0.9.0-alpha
+Version: 0.28.10-alpha
 Category: Guide
 ---
 
@@ -284,7 +284,7 @@ Status: Active
 ---
 Last Updated: 2026-01-28
 Status: Active
-Version: 0.9.0-alpha
+Version: 0.28.10-alpha
 Category: Testing
 Maintainer: @username
 Related: [Link](./path.md)

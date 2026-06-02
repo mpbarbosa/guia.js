@@ -1,9 +1,9 @@
 # AddressDataExtractor API Documentation
 
-**Version:** 0.9.0-alpha
+**Version:** 0.28.10-alpha
 **File:** `src/data/AddressDataExtractor.js`
 **Author:** Marcelo Pereira Barbosa
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 **Status:** ⚠️ **DEPRECATED** - Use `AddressCache` directly for new code
 
 ## Overview
@@ -21,7 +21,7 @@ The `AddressDataExtractor` class is a **legacy wrapper** that maintains backward
 
 ## Architecture Refactoring
 
-### Original (Pre-v0.9.0)
+### Original (Pre-v0.28.10)
 
 ```
 AddressDataExtractor (Single class handling everything)
@@ -32,7 +32,7 @@ AddressDataExtractor (Single class handling everything)
 └── LRU eviction
 ```
 
-### Refactored (v0.9.0+)
+### Refactored (v0.28.10+)
 
 ```
 AddressDataExtractor (Facade - backward compatibility only)
@@ -585,9 +585,9 @@ console.log(cache.getCacheSize());  // Includes both address1 and address2
 
 ### Migration Timeline
 
-- **v0.9.0-alpha**: Refactored into `AddressExtractor` and `AddressCache`
-- **v0.9.0-alpha**: AddressDataExtractor marked as deprecated facade
-- **v0.9.0** (Future): AddressDataExtractor may be removed
+- **v0.28.10-alpha**: Refactored into `AddressExtractor` and `AddressCache`
+- **v0.28.10-alpha**: AddressDataExtractor marked as deprecated facade
+- **v0.28.10** (Future): AddressDataExtractor may be removed
 
 ### How to Migrate
 

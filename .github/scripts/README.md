@@ -331,7 +331,7 @@ npm install    # Reinstall original dependencies
 **Parameters**:
 
 - `base_ref` (optional): Git reference to compare against (default: HEAD~1)
-  - Examples: `HEAD~1`, `abc123`, `origin/main`, `v0.9.0`
+  - Examples: `HEAD~1`, `abc123`, `origin/main`, `v0.28.10`
 
 **Output**:
 

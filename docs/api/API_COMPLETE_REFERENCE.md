@@ -1,6 +1,6 @@
 # Complete API Reference
 
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Last Updated**: 2026-02-11
 
 This document provides a comprehensive reference for all public APIs in the Guia Turístico application.
@@ -52,7 +52,7 @@ positionManager.setCurrentPosition(position);
 
 - `geoPosition` (GeoPosition) - Immutable position value object
 
-**Thresholds** (v0.9.0+):
+**Thresholds** (v0.28.10+):
 
 - Distance: 20 meters (MINIMUM_DISTANCE_CHANGE)
 - Time: 30 seconds (MINIMUM_TIME_CHANGE)
@@ -297,7 +297,7 @@ geocoder.fetchAddress()
     state: "São Paulo",
     postcode: "01310-100",
     country: "Brasil",
-    county: "Região Metropolitana de São Paulo" // v0.9.0-alpha
+    county: "Região Metropolitana de São Paulo" // v0.28.10-alpha
   },
   lat: "-23.5505",
   lon: "-46.6333"
@@ -324,7 +324,7 @@ geocoder.addObserver((event, data) => {
 
 - `callback` (Function) - Observer callback
 
-**Events** (v0.9.0+):
+**Events** (v0.28.10+):
 
 - `ADDRESS_FETCHED` - Address successfully fetched (uses constant from config/defaults.js)
 
@@ -350,7 +350,7 @@ address.bairro = "Bela Vista";
 address.municipio = "São Paulo";
 address.uf = "SP";
 address.cep = "01310-100";
-address.regiaoMetropolitana = "Região Metropolitana de São Paulo"; // v0.9.0-alpha
+address.regiaoMetropolitana = "Região Metropolitana de São Paulo"; // v0.28.10-alpha
 ```
 
 #### Properties
@@ -364,7 +364,7 @@ address.municipio            // String: Municipality/City
 address.uf                   // String: State code (2 letters)
 address.cep                  // String: Postal code
 address.pais                 // String: Country
-address.regiaoMetropolitana  // String: Metropolitan region (v0.9.0-alpha)
+address.regiaoMetropolitana  // String: Metropolitan region (v0.28.10-alpha)
 ```
 
 #### Methods
@@ -380,7 +380,7 @@ const fullCity = address.municipioCompleto();
 
 **Returns**: `String` - "Município, UF" format
 
-##### `regiaoMetropolitanaFormatada()` (v0.9.0-alpha)
+##### `regiaoMetropolitanaFormatada()` (v0.28.10-alpha)
 
 Returns formatted metropolitan region name.
 
@@ -416,11 +416,11 @@ const json = address.toJSON();
 
 ### AddressCache
 
-**Purpose**: LRU cache for address data with change detection (v0.9.0-alpha refactored with composition).
+**Purpose**: LRU cache for address data with change detection (v0.28.10-alpha refactored with composition).
 
 **File**: `src/data/AddressCache.js`
 
-**Architecture** (v0.9.0-alpha):
+**Architecture** (v0.28.10-alpha):
 
 - Uses composition pattern with 3 focused classes
 - **AddressChangeDetector**: Field change detection with signature tracking
@@ -493,7 +493,7 @@ cache.registerChangeCallback('bairro', (oldValue, newValue) => {
 - `municipio` - Municipality changes
 - `bairro` - Neighborhood changes
 - `uf` - State changes
-- `regiaoMetropolitana` - Metropolitan region changes (v0.9.0-alpha)
+- `regiaoMetropolitana` - Metropolitan region changes (v0.28.10-alpha)
 
 ##### `clear()`
 
@@ -526,7 +526,7 @@ const address = extractor.extract(nominatimData);
 console.log(address.municipio);
 console.log(address.bairro);
 console.log(address.uf);
-console.log(address.regiaoMetropolitana); // v0.9.0-alpha
+console.log(address.regiaoMetropolitana); // v0.28.10-alpha
 ```
 
 **Parameters**:
@@ -535,12 +535,12 @@ console.log(address.regiaoMetropolitana); // v0.9.0-alpha
 
 **Returns**: `BrazilianStandardAddress` - Standardized address object
 
-**Extraction Logic** (v0.9.0-alpha):
+**Extraction Logic** (v0.28.10-alpha):
 
 - Municipality: `city`, `town`, `village`, `municipality`
 - Neighborhood: `neighbourhood`, `suburb`, `quarter`
 - State: `state` field
-- Metropolitan Region: `county` field (new in v0.9.0-alpha)
+- Metropolitan Region: `county` field (new in v0.28.10-alpha)
 
 ---
 
@@ -572,7 +572,7 @@ const place = new ReferencePlace(
 
 ##### `calculateCategory()`
 
-Determines place category from type (v0.9.0+).
+Determines place category from type (v0.28.10+).
 
 ```javascript
 const category = place.calculateCategory();
@@ -699,7 +699,7 @@ CEP: 01310-100
 
 ### HTMLHighlightCardsDisplayer
 
-**Purpose**: Displays municipality and neighborhood highlight cards (v0.9.0+).
+**Purpose**: Displays municipality and neighborhood highlight cards (v0.28.10+).
 
 **File**: `src/html/HTMLHighlightCardsDisplayer.js`
 
@@ -739,7 +739,7 @@ displayer.displayBairro('Boa Viagem');
 
 - `bairro` (String) - Neighborhood name
 
-##### `displayRegiaoMetropolitana(regiaoMetropolitana)` (v0.9.0-alpha)
+##### `displayRegiaoMetropolitana(regiaoMetropolitana)` (v0.28.10-alpha)
 
 Displays metropolitan region highlight.
 
@@ -763,7 +763,7 @@ displayer.clear();
 
 ### HTMLSidraDisplayer
 
-**Purpose**: Displays IBGE SIDRA demographic statistics (v0.9.0+).
+**Purpose**: Displays IBGE SIDRA demographic statistics (v0.28.10+).
 
 **File**: `src/html/HTMLSidraDisplayer.js`
 
@@ -827,7 +827,7 @@ displayer.addObserver((data) => {
 
 ### DisplayerFactory
 
-**Purpose**: Factory for creating display components (v0.9.0+).
+**Purpose**: Factory for creating display components (v0.28.10+).
 
 **File**: `src/html/DisplayerFactory.js`
 
@@ -876,7 +876,7 @@ const cardsDisplayer = factory.createHighlightCardsDisplayer(document);
 
 **Returns**: `HTMLHighlightCardsDisplayer`
 
-##### `createSidraDisplayer(document, elementId)` (v0.9.0+)
+##### `createSidraDisplayer(document, elementId)` (v0.28.10+)
 
 Creates SIDRA displayer.
 
@@ -892,11 +892,11 @@ const sidraDisplayer = factory.createSidraDisplayer(document, 'stats-output');
 
 ### SpeechSynthesisManager
 
-**Purpose**: Main orchestrator for speech synthesis using composition pattern (v0.9.0-alpha refactored).
+**Purpose**: Main orchestrator for speech synthesis using composition pattern (v0.28.10-alpha refactored).
 
 **File**: `src/speech/SpeechSynthesisManager.js`
 
-**Architecture** (v0.9.0-alpha):
+**Architecture** (v0.28.10-alpha):
 
 - Manager/Controller with Composition
 - Coordinates 4 focused components:
@@ -996,7 +996,7 @@ speechManager.resume();
 
 ### VoiceLoader
 
-**Purpose**: Asynchronous voice loading with exponential backoff retry (v0.9.0-alpha).
+**Purpose**: Asynchronous voice loading with exponential backoff retry (v0.28.10-alpha).
 
 **File**: `src/speech/VoiceLoader.js`
 
@@ -1056,7 +1056,7 @@ loader.clearCache();
 
 ### VoiceSelector
 
-**Purpose**: Intelligent Brazilian Portuguese voice selection (v0.9.0-alpha).
+**Purpose**: Intelligent Brazilian Portuguese voice selection (v0.28.10-alpha).
 
 **File**: `src/speech/VoiceSelector.js`
 
@@ -1140,7 +1140,7 @@ const info = selector.getVoiceInfo(voice);
 
 ### SpeechConfiguration
 
-**Purpose**: Rate/pitch parameter validation and management (v0.9.0-alpha).
+**Purpose**: Rate/pitch parameter validation and management (v0.28.10-alpha).
 
 **File**: `src/speech/SpeechConfiguration.js`
 
@@ -1222,7 +1222,7 @@ config.reset();
 
 ### TimerManager
 
-**Purpose**: Centralized timer management preventing memory leaks (v0.9.0+ migration complete).
+**Purpose**: Centralized timer management preventing memory leaks (v0.28.10+ migration complete).
 
 **File**: `src/utils/TimerManager.js`
 
@@ -1314,7 +1314,7 @@ timerManager.clearTimer('my-timer');
 const id = setInterval(callback, 1000); // Memory leak risk!
 ```
 
-**Migrated Components** (v0.9.0+):
+**Migrated Components** (v0.28.10+):
 
 - SpeechSynthesisManager
 - VoiceManager
@@ -1325,7 +1325,7 @@ const id = setInterval(callback, 1000); // Memory leak risk!
 
 ### Button Status Utility
 
-**Purpose**: Contextual status messages for disabled buttons (v0.9.0-alpha).
+**Purpose**: Contextual status messages for disabled buttons (v0.28.10-alpha).
 
 **File**: `src/utils/button-status.js`
 
@@ -1420,7 +1420,7 @@ removeButtonStatus(button);
 import { APP_VERSION, APP_NAME } from './config/defaults.js';
 
 console.log(APP_NAME);     // "Guia Turístico"
-console.log(APP_VERSION);  // "0.9.0-alpha"
+console.log(APP_VERSION);  // "0.28.10-alpha"
 ```
 
 #### Timing Configuration
@@ -1456,7 +1456,7 @@ geocoder.addObserver((event) => {
 - `MINIMUM_TIME_CHANGE` - Position update time threshold (30s)
 - `MINIMUM_DISTANCE_CHANGE` - Position update distance threshold (20m)
 - `ADDRESS_FETCHED_EVENT` - Address fetch event name
-- `BUTTON_STATUS_MESSAGES` - Brazilian Portuguese button status messages (v0.9.0-alpha)
+- `BUTTON_STATUS_MESSAGES` - Brazilian Portuguese button status messages (v0.28.10-alpha)
 
 **Usage Guidelines**:
 
@@ -1602,14 +1602,14 @@ addrDisplayer.display(standardAddress);
 - Prevents memory leaks in long-running sessions
 - Named timer tracking for debugging
 
-### v0.9.0 Changes
+### v0.28.10 Changes
 
 **ServiceCoordinator Enhancement**:
 
 - Added SIDRA displayer management
 - Factory method: `createSidraDisplayer()`
 
-### v0.9.0 Changes
+### v0.28.10 Changes
 
 **Position Update Logic**:
 
@@ -1628,7 +1628,7 @@ addrDisplayer.display(standardAddress);
 - Added `calculateCategory()` method
 - Supports: place, shop, amenity, railway, building
 
-### v0.9.0 Changes
+### v0.28.10 Changes
 
 **Highlight Cards**:
 
@@ -1653,5 +1653,5 @@ addrDisplayer.display(standardAddress);
 ---
 
 **Last Updated**: 2026-02-11
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Status**: ✅ Complete and Validated

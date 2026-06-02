@@ -217,10 +217,10 @@ The test validates the following expected data:
 
 This Selenium test complements:
 
-1. **E2E Tests** (`tests/e2e/MilhoVerde-SerroMG.e2e.test.js`)
-   - Jest-based unit/integration tests
-   - Tests data processing without browser
-   - 18 tests covering API mocking and data validation
+1. **Integration regressions** (`__tests__/integration/data-modules.test.ts` and `__tests__/integration/AddressDataExtractor-module.test.ts`)
+   - Jest-based address-pipeline regressions
+   - Tests the Milho Verde payload through `AddressExtractor` and `AddressDataExtractor`
+   - Covers standardized address formatting and tourism reference-place extraction
 
 2. **Unit Tests** (`tests/unit/`)
    - Pure function testing

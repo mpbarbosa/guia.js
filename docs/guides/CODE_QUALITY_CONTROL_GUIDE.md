@@ -13,6 +13,7 @@ changes, not as a replacement for the architecture and design guides.
 Use this guide together with:
 
 - [Architecture Guide](../architecture/ARCHITECTURE.md)
+- [DRY Guide](./DRY_GUIDE.md)
 - [High Cohesion Guide](./HIGH_COHESION_GUIDE.md)
 - [Low Coupling Guide](./LOW_COUPLING_GUIDE.md)
 - [Referential Transparency Guide](./REFERENTIAL_TRANSPARENCY.md)
@@ -60,6 +61,8 @@ Every substantive code change should satisfy these gates.
 
 - Keep pure mapping, parsing, normalization, and validation logic in small
   reusable helpers where practical.
+- Avoid cloning the same mapping or normalization rule across multiple layers;
+  keep one canonical implementation and delegate to it.
 - Keep filesystem, process, environment, network, and SDK session work in
   explicit runtime-facing modules (`src/services/`, `src/coordination/`).
 - Do not hide side effects behind utility-sounding names.
@@ -78,7 +81,9 @@ Every substantive code change should satisfy these gates.
 
 - Update user-facing docs when public API behavior, exports, or recommended
   usage changes.
-- Cross-link to related design guides instead of restating them.
+- Cross-link to related design guides instead of restating them. See
+  [DRY Guide](./DRY_GUIDE.md) when deciding whether prose belongs in a new doc
+  or should reference an existing one.
 - Call out intentional breaking cleanup in `CHANGELOG.md` (project root).
 
 ### 7. Architecture gate

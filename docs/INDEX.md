@@ -40,7 +40,7 @@ Choose your path based on your role or goal:
 ### 🧪 Testing & Quality
 
 1. Start: [TESTING.md](./testing/TESTING.md) - Testing overview
-2. Then: [TESTING.md](./testing/TESTING.md) - Jest setup
+2. Then: [DRY_GUIDE.md](./guides/DRY_GUIDE.md) - Single-source-of-truth rules
 3. Next: [HTML_GENERATION.md](./testing/HTML_GENERATION.md) - HTML testing
 4. Finally: [TDD_GUIDE.md](../.github/TDD_GUIDE.md) - TDD methodology
 
@@ -108,7 +108,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 # Navigation Structure Improvement Guide
 
 **Generated**: 2026-01-06
-**Project**: Guia Turístico v0.9.0-alpha
+**Project**: Guia Turístico v0.28.10-alpha
 **Status**: 🟢 **Implementation Guide**
 
 ---

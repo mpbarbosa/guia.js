@@ -33,20 +33,23 @@ npm run test:all
 
 ## Test Files
 
-- `MilhoVerde-SerroMG.e2e.test.js` - Complete address validation workflow for Milho Verde, Serro, MG
-  - Coordinates: Lat -18.4696091, Lon -43.4953982
-  - Tests OSM API integration, address extraction, and Brazilian address formatting
+This legacy directory no longer carries active Jest E2E scenarios.
+Milho Verde payload regressions now live in the executed integration suite:
+
+- `__tests__/integration/data-modules.test.ts`
+- `__tests__/integration/AddressDataExtractor-module.test.ts`
+
+The stale `__tests__/e2e/MilhoVerde-SerroMG.e2e.test.ts` artifact was removed
+after the docs/testing audit because it was not part of the active E2E runner.
 
 ## Writing New E2E Tests
 
 When adding new E2E tests:
 
-1. Use CommonJS format (`require` instead of `import`)
-2. Mock external dependencies (fetch, DOM, console)
-3. Set up `global.setupParams` for application configuration
-4. Use real data from OpenStreetMap for test scenarios
-5. Validate complete workflows, not just individual functions
-6. Follow the naming pattern: `Location-City.e2e.test.js`
+1. Add browser-level E2E coverage under `__tests__/e2e/`
+2. Keep fixture-based payload regressions in `__tests__/integration/`
+3. Use real data from OpenStreetMap for scenario fixtures
+4. Validate production code paths, not the fixture literals themselves
 
 ## Test Environment
 
@@ -85,7 +88,6 @@ describe('E2E: Location Test', () => {
 
 ## Notes
 
-- E2E tests focus on integration between components from the `guia_js` library
-- These tests validate data flow without requiring a browser environment
-- For browser-based UI testing, see `tests/integration/` (Selenium tests)
-- For pure function testing, see `tests/unit/` (Jest unit tests)
+- Browser-based Jest E2E tests live under `__tests__/e2e/`
+- Fixture-driven address-pipeline regressions live under `__tests__/integration/`
+- For Selenium-based browser validation, see `tests/integration/`

@@ -2,11 +2,11 @@
 
 # ReferencePlace API Documentation
 
-**Version:** 0.9.0-alpha
+**Version:** 0.28.10-alpha
 **File:** `src/data/ReferencePlace.js`
 **Author:** Marcelo Pereira Barbosa
-**Since:** 0.9.0-alpha
-**Version Info:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
+**Version Info:** 0.28.10-alpha
 
 ## Overview
 
@@ -151,11 +151,11 @@ Reference place mapping for known OSM classes/types. Maps OpenStreetMap feature 
 
 ## Overview
 
-The `ReferencePlace` class was **introduced in version 0.9.0-alpha** to encapsulate information about reference places extracted from geocoding API responses. Reference places include shopping centers, subway stations, cafes, and other points of interest that help provide contextual information about a user's location.
+The `ReferencePlace` class was **introduced in version 0.28.10-alpha** to encapsulate information about reference places extracted from geocoding API responses. Reference places include shopping centers, subway stations, cafes, and other points of interest that help provide contextual information about a user's location.
 
-**Current Status (v0.9.0-alpha)**: This class is planned for future implementation (version 0.8.x-alpha). The documentation describes the intended design and functionality.
+**Current Status (v0.28.10-alpha)**: This class is planned for future implementation (version 0.8.x-alpha). The documentation describes the intended design and functionality.
 
-**Version Note**: While introduced conceptually in 0.9.0-alpha design documents, the implementation is targeted for version 0.8.x-alpha or later.
+**Version Note**: While introduced conceptually in 0.28.10-alpha design documents, the implementation is targeted for version 0.8.x-alpha or later.
 
 ## Motivation
 

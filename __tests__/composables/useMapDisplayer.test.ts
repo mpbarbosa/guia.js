@@ -12,6 +12,8 @@ jest.mock('../../src/html/MapLibreDisplayer', () => {
   return jest.fn().mockImplementation(() => ({
     mount: jest.fn(),
     updatePosition: jest.fn(),
+    onMapClick: jest.fn(),
+    offMapClick: jest.fn(),
   }));
 });
 
@@ -40,7 +42,12 @@ jest.mock('../../src/data/AddressCache', () => {
 describe('useMapDisplayer', () => {
   let positionSubscribers: Array<any>;
   let addressSubscribers: Array<any>;
-  let mapDisplayerInstance: { mount: jest.Mock; updatePosition: jest.Mock };
+  let mapDisplayerInstance: {
+    mount: jest.Mock;
+    updatePosition: jest.Mock;
+    onMapClick: jest.Mock;
+    offMapClick: jest.Mock;
+  };
 
   beforeEach(() => {
     // Reset mocks and subscriber arrays
@@ -49,6 +56,8 @@ describe('useMapDisplayer', () => {
     mapDisplayerInstance = {
       mount: jest.fn(),
       updatePosition: jest.fn(),
+      onMapClick: jest.fn(),
+      offMapClick: jest.fn(),
     };
 
     // MapLibreDisplayer mock

@@ -1,9 +1,9 @@
 # AddressExtractor API Documentation
 
-**Version:** 0.9.0-alpha
+**Version:** 0.28.10-alpha
 **File:** `src/data/AddressExtractor.js`
 **Author:** Marcelo Pereira Barbosa
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ## Overview
 
@@ -134,7 +134,7 @@ Extracts the state abbreviation (siglaUF) from ISO3166-2-lvl4 field.
 
 **Returns:** `string | null` - The state abbreviation (e.g., "RJ", "SP") or null if invalid
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 **Example:**
 
@@ -250,9 +250,10 @@ this.enderecoPadronizado.distrito =
 **Note:** This is a strict raw mapping of Nominatim `city_district`. It does not
 fall back to `district`, `suburb`, `village`, or `town`.
 
-If provider data also supplies a neighborhood field that would populate
-`bairro`, the `BrazilianStandardAddress` invariant rejects the result with:
-`BrazilianStandardAddress cannot have both bairro and distrito`.
+If provider data also supplies a neighborhood field that populates `bairro`, the
+extractor now preserves both locality levels on `BrazilianStandardAddress`.
+The only de-duplication rule is that `city_district` is dropped when it merely
+repeats the `município` value after normalization.
 
 #### 5. Municipality (`municipio`)
 
@@ -270,7 +271,7 @@ this.enderecoPadronizado.municipio =
 
 **Note:** `hamlet` is intentionally NOT included - hamlets are subdivisions within municipalities, not municipalities themselves.
 
-#### 6. Metropolitan Region (`regiaoMetropolitana`) - *v0.9.0-alpha*
+#### 6. Metropolitan Region (`regiaoMetropolitana`) - *v0.28.10-alpha*
 
 ```javascript
 this.enderecoPadronizado.regiaoMetropolitana = address.county || null;
@@ -362,7 +363,7 @@ Creates a `ReferencePlace` instance from the geocoding data (includes `class`, `
 | `numero` | `house_number` | `addr:housenumber` | OSM tag first | Street number |
 | `bairro` | `neighbourhood`, `suburb`, `quarter` | `addr:neighbourhood` | OSM tag first | Neighborhood |
 | `municipio` | `city`, `town`, `municipality`, `village` | `addr:city` | OSM tag first | Municipality |
-| `regiaoMetropolitana` | `county` | - | - | Metropolitan region (v0.9.0) |
+| `regiaoMetropolitana` | `county` | - | - | Metropolitan region (v0.28.10) |
 | `uf` | `state` | `addr:state` | OSM tag first | State full name |
 | `siglaUF` | `state_code`, `ISO3166-2-lvl4` | - | state_code first | State abbreviation |
 | `cep` | `postcode` | `addr:postcode` | OSM tag first | Postal code |
@@ -552,19 +553,19 @@ console.log(Object.isFrozen(extractor));  // true
 
 ## Version History
 
-### v0.9.0-alpha (Current)
+### v0.28.10-alpha (Current)
 
 - **Added**: Metropolitan region extraction from `county` field
 - **Enhancement**: `regiaoMetropolitana` support in `BrazilianStandardAddress`
 - **Integration**: Used by `HTMLHighlightCardsDisplayer` for metro region display
 
-### v0.9.0-alpha
+### v0.28.10-alpha
 
 - **Added**: `extractSiglaUF()` static method for ISO3166-2-lvl4 parsing
 - **Enhancement**: Improved state abbreviation extraction logic
 - **Documentation**: Added comprehensive field mapping documentation
 
-### v0.9.0-alpha (Initial)
+### v0.28.10-alpha (Initial)
 
 - Initial implementation with full field mapping
 - Support for both Nominatim format and OSM address tags

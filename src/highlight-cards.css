@@ -121,7 +121,7 @@
 /* Metropolitan Region - WCAG AAA accessible contrast 
  * Color (#4a4952) achieves 6.85:1 to 6.87:1 contrast on gradient (AA compliant)
  * Text shadow boosts effective contrast to ~8:1+ (AAA level)
- * v0.9.0-alpha: Enhanced for gradient readability
+ * v0.28.10-alpha: Enhanced for gradient readability
  */
 .metropolitan-region-value {
   font-size: var(--md-sys-typescale-body-medium);

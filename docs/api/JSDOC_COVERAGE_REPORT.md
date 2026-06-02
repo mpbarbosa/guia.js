@@ -1,7 +1,7 @@
 # JSDoc Coverage Report
 
 **Date**: 2026-01-11
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Total Files**: 41 JavaScript files analyzed
 
 ---
@@ -142,7 +142,7 @@ These files demonstrate excellent JSDoc practices and serve as reference example
  * adding convenience methods for distance calculations and accuracy assessment.
  *
  * @module core/GeoPosition
- * @since 0.9.0-alpha
+ * @since 0.28.10-alpha
  * @author Marcelo Pereira Barbosa
  */
 

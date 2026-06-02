@@ -3,7 +3,7 @@
 **Version:** 0.28.9-alpha
 **File:** `src/data/BrazilianStandardAddress.ts`
 **Author:** Marcelo Pereira Barbosa
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ## Overview
 
@@ -16,7 +16,7 @@ The `BrazilianStandardAddress` class provides a standardized data structure for 
 - Support Brazilian-specific address components (logradouro, bairro, distrito, município, UF, CEP)
 - Enforce the mutual-exclusion invariant between `bairro` and `distrito`
 - Follow immutability principles for data manipulation
-- Support metropolitan region display (v0.9.0-alpha)
+- Support metropolitan region display (v0.28.10-alpha)
 
 ## Data Flow
 
@@ -69,17 +69,17 @@ class throws if both fields become non-null.
 
 | Property | Type | Description | Default | Version |
 |----------|------|-------------|---------|---------|
-| `logradouro` | `string \| null` | Street name (e.g., "Avenida Paulista") | `null` | 0.9.0-alpha |
-| `numero` | `string \| null` | Street number (e.g., "1578") | `null` | 0.9.0-alpha |
-| `complemento` | `string \| null` | Address complement (e.g., "Apt 10") | `null` | 0.9.0-alpha |
-| `bairro` | `string \| null` | Neighborhood (e.g., "Bela Vista") | `null` | 0.9.0-alpha |
+| `logradouro` | `string \| null` | Street name (e.g., "Avenida Paulista") | `null` | 0.28.10-alpha |
+| `numero` | `string \| null` | Street number (e.g., "1578") | `null` | 0.28.10-alpha |
+| `complemento` | `string \| null` | Address complement (e.g., "Apt 10") | `null` | 0.28.10-alpha |
+| `bairro` | `string \| null` | Neighborhood (e.g., "Bela Vista") | `null` | 0.28.10-alpha |
 | `distrito` | `string \| null` | Raw Nominatim `city_district` value (e.g., "Milho Verde") | `null` | 0.28.9-alpha |
-| `municipio` | `string \| null` | Municipality/city (e.g., "São Paulo") | `null` | 0.9.0-alpha |
-| `regiaoMetropolitana` | `string \| null` | Metropolitan region (e.g., "Região Metropolitana do Recife") | `null` | 0.9.0-alpha |
-| `uf` | `string \| null` | State full name (e.g., "São Paulo", "Rio de Janeiro") | `null` | 0.9.0-alpha |
-| `siglaUF` | `string \| null` | State abbreviation (e.g., "SP", "RJ") | `null` | 0.9.0-alpha |
-| `cep` | `string \| null` | Postal code (e.g., "01310-100") | `null` | 0.9.0-alpha |
-| `pais` | `string` | Country name | `"Brasil"` | 0.9.0-alpha |
+| `municipio` | `string \| null` | Municipality/city (e.g., "São Paulo") | `null` | 0.28.10-alpha |
+| `regiaoMetropolitana` | `string \| null` | Metropolitan region (e.g., "Região Metropolitana do Recife") | `null` | 0.28.10-alpha |
+| `uf` | `string \| null` | State full name (e.g., "São Paulo", "Rio de Janeiro") | `null` | 0.28.10-alpha |
+| `siglaUF` | `string \| null` | State abbreviation (e.g., "SP", "RJ") | `null` | 0.28.10-alpha |
+| `cep` | `string \| null` | Postal code (e.g., "01310-100") | `null` | 0.28.10-alpha |
+| `pais` | `string` | Country name | `"Brasil"` | 0.28.10-alpha |
 
 ### Property Details
 
@@ -101,18 +101,18 @@ class throws if both fields become non-null.
 
 ### `bairro` / `distrito` invariant
 
-- `bairro` and `distrito` are mutually exclusive in `BrazilianStandardAddress`
+- `bairro` and `distrito` can coexist in `BrazilianStandardAddress`
 - Blank and whitespace-only values normalize to `null`
-- Assigning a non-null `bairro` while `distrito` is non-null throws
-- Assigning a non-null `distrito` while `bairro` is non-null throws
-- Error message: `BrazilianStandardAddress cannot have both bairro and distrito`
+- Assignment order does not matter: `bairro` then `distrito` and `distrito` then `bairro` are both valid
+- `bairroCompleto()` remains the single-locality helper: it prefers `bairro` and falls back to `distrito`
+- `enderecoCompleto()` includes both values when both are present
 
 **`municipio` (Municipality)**
 
 - City or municipality name
 - Examples: "São Paulo", "Rio de Janeiro", "Recife"
 
-**`regiaoMetropolitana` (Metropolitan Region)** - *New in v0.9.0-alpha*
+**`regiaoMetropolitana` (Metropolitan Region)** - *New in v0.28.10-alpha*
 
 - Metropolitan region name for cities in metro areas
 - Extracted from Nominatim `county` field
@@ -194,9 +194,9 @@ bairroCompleto() {
 }
 ```
 
-`bairroCompleto()` is the canonical locality formatter used by
-`enderecoCompleto()`. It prefers `bairro` and falls back to `distrito` when the
-neighborhood field is absent.
+`bairroCompleto()` is the legacy single-locality helper used by surfaces that
+only render one locality slot. It prefers `bairro` and falls back to
+`distrito` when the neighborhood field is absent.
 
 ---
 
@@ -236,7 +236,7 @@ municipioCompleto() {
 
 ---
 
-### `regiaoMetropolitanaFormatada()` *(New in v0.9.0-alpha)*
+### `regiaoMetropolitanaFormatada()` *(New in v0.28.10-alpha)*
 
 Returns the formatted metropolitan region name.
 
@@ -288,21 +288,26 @@ const address = new BrazilianStandardAddress();
 address.logradouro = "Avenida Paulista";
 address.numero = "1578";
 address.bairro = "Bela Vista";
+address.distrito = "Distrito da Sé";
 address.municipio = "São Paulo";
 address.siglaUF = "SP";
 address.cep = "01310-100";
 
 console.log(address.enderecoCompleto());
-// Output: "Avenida Paulista, 1578, Bela Vista, São Paulo, SP, 01310-100"
+// Output: "Avenida Paulista, 1578, Bela Vista, Distrito da Sé, São Paulo, SP, 01310-100"
 ```
 
 **Implementation:**
 
 ```javascript
 enderecoCompleto() {
+    const localidadeCompleta = [this.bairro, this.distrito]
+        .filter(Boolean)
+        .join(", ");
+
     return [
         this.logradouroCompleto(),
-        this.bairro,
+        localidadeCompleta,
         this.municipioCompleto(),
         this.cep
     ]
@@ -347,7 +352,7 @@ console.log(empty.toString());
 | `house_number` | `numero` | Street number |
 | `neighbourhood`, `suburb`, `quarter` | `bairro` | Neighborhood |
 | `city`, `town`, `municipality`, `village` | `municipio` | Municipality |
-| `county` | `regiaoMetropolitana` | Metropolitan region (v0.9.0) |
+| `county` | `regiaoMetropolitana` | Metropolitan region (v0.28.10) |
 | `state` | `uf` | State full name |
 | `state_code`, `ISO3166-2-lvl4` | `siglaUF` | State abbreviation |
 | `postcode` | `cep` | Postal code |
@@ -470,14 +475,14 @@ displayer.display();
 
 ## Version History
 
-### v0.9.0-alpha (Current)
+### v0.28.10-alpha (Current)
 
 - **Added**: `regiaoMetropolitana` property for metropolitan region support
 - **Added**: `regiaoMetropolitanaFormatada()` method
 - **Enhancement**: Support for displaying metropolitan region context in highlight cards
 - **Integration**: Used by `HTMLHighlightCardsDisplayer` for metro region display
 
-### v0.9.0-alpha (Initial)
+### v0.28.10-alpha (Initial)
 
 - Initial implementation with all core properties
 - Immutable data manipulation patterns using `filter()` and `join()`

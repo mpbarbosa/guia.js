@@ -39,12 +39,15 @@ export class HTMLCityStatsPanel {
     panel.hidden = false;
     panel.removeAttribute('aria-busy');
 
-    const population = stats.population !== null
+    const hasFreshSidraPopulation = stats.populationSource === 'sidra-fresh' && stats.population !== null;
+    const population = hasFreshSidraPopulation && stats.population !== null
       ? stats.population.toLocaleString('pt-BR')
       : '–';
-    const populationLabel = stats.populationYear
+    const populationLabel = hasFreshSidraPopulation && stats.populationYear
       ? `${population} <span class="stats-year">(estimativa ${escapeHtml(stats.populationYear)})</span>`
-      : population;
+      : hasFreshSidraPopulation
+        ? population
+        : 'Estimativa indisponível no momento';
 
     const area = stats.areaKm2 !== null
       ? stats.areaKm2.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + ' km²'

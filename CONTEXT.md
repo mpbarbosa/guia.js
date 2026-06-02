@@ -18,9 +18,9 @@ The neighbourhood component of a Brazilian address, one level below município.
 _Avoid_: District, neighbourhood, suburb, quarter
 
 **Distrito**:
-The raw Nominatim `address.city_district` value captured on the endereço
-padronizado without fallback inference. Distinct from bairro, which remains the
-canonical neighbourhood-level term in this project.
+A sub-municipal administrative division captured on the endereço padronizado,
+typically from a meaningful, non-redundant Nominatim `address.city_district`
+value. Distinct from bairro, but no longer mutually exclusive with it.
 _Avoid_: District, neighbourhood, suburb, quarter
 
 **Município**:

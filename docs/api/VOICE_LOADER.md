@@ -525,7 +525,7 @@ See `__tests__/unit/speech/VoiceLoader.test.js` for comprehensive test coverage.
 
 ## Changelog
 
-### v0.9.0-alpha
+### v0.28.10-alpha
 
 - ✅ Initial release
 - ✅ Exponential backoff retry algorithm

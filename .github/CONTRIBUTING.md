@@ -588,7 +588,7 @@ npm run test:watch
 npm run test:all
 ```
 
-**Expected Results** (as of version 0.9.0-alpha):
+**Expected Results** (as of version 0.28.10-alpha):
 
 - Test Suites: 78 passing, 6 skipped, 84 total
 - Tests: 1,982 passing, 146 skipped, 2,176 total
@@ -625,7 +625,7 @@ npm run validate
 **Expected Output**:
 
 ```
-> guia_js@0.9.0-alpha validate
+> guia_js@0.28.10-alpha validate
 > node -c src/app.js && node -c src/guia.js
 
 ✓ No syntax errors detected
@@ -704,7 +704,7 @@ npm run test:all
 
 #### 6. Verify Test Results
 
-**Expected Test Counts** (as of version 0.9.0-alpha):
+**Expected Test Counts** (as of version 0.28.10-alpha):
 
 - **Total Tests**: 1,653
 - **Passing**: 1,516
@@ -821,7 +821,7 @@ npm test -- --no-coverage
 
 **If you see different test counts**:
 
-**Expected** (v0.9.0-alpha):
+**Expected** (v0.28.10-alpha):
 
 - 1,982 passing / 2,176 total / 146 skipped
 
@@ -946,6 +946,6 @@ Thank you for contributing to Guia Turístico! 🎉
 
 ---
 
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Status**: Active Development
 **Last Updated**: 2026-01-28

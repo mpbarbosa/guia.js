@@ -26,6 +26,7 @@ checks.
 - [Test Infrastructure](./TEST_INFRASTRUCTURE.md)
 - [HTML Generation Testing](./HTML_GENERATION.md)
 - [Municipio/Bairro E2E Scenario](./E2E_TEST_SCENARIO_MUNICIPIO_BAIRRO.md)
+- [Milho Verde E2E Test Assessment](./MILHO_VERDE_E2E_TEST_ASSESSMENT.md)
 - [Test Performance Optimization](./TEST_PERFORMANCE_OPTIMIZATION.md)
 - [docs/DOCKER_TESTING.md](../DOCKER_TESTING.md)
 - [tests/README.md](../../tests/README.md)

@@ -9,7 +9,7 @@
 The SIDRA (Sistema IBGE de Recuperação Automática) integration provides population statistics and demographic information for Brazilian municipalities. This integration includes:
 
 - Real-time IBGE API queries
-- Offline fallback data (190KB JSON)
+- Offline fallback data (190KB JSON) for municipality context when live SIDRA population is unavailable
 - Observer pattern for automatic updates
 - Brazilian Portuguese localization
 
@@ -28,8 +28,8 @@ The SIDRA (Sistema IBGE de Recuperação Automática) integration provides popul
 2. ReverseGeocoder fetches address with municipality info
 3. ReverseGeocoder notifies observers with ADDRESS_FETCHED_EVENT
 4. HTMLSidraDisplayer receives update
-5. SIDRA API query (or offline fallback)
-6. Population data displayed in Brazilian Portuguese
+5. SIDRA API query (or offline fallback for municipality metadata)
+6. Population data displayed only when it comes from a fresh SIDRA response
 
 ## Usage Example
 

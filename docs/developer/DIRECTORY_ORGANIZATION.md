@@ -152,7 +152,7 @@ across repository-level guides instead of a dedicated
 
 ### Historical Documentation
 
-- `CHANGELOG_v0.9.0.md` - Version 0.9.0 changes
+- `CHANGELOG_v0.28.10.md` - Version 0.9.0 changes
 - `DOCUMENTATION_FIXES_2026-01-09.md` - Documentation update history
 - `PHASE*_*.md` - Implementation phase documentation
 

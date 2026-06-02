@@ -28,7 +28,7 @@
 - `0` — completed successfully
 - `1` — `set -e` triggered by an unexpected error
 
-**Fixed Issues** (v0.9.0+):
+**Fixed Issues** (v0.28.10+):
 
 - ✅ Removed hardcoded absolute path
 - ✅ Added portable `SCRIPT_DIR` resolution

@@ -79,6 +79,12 @@ class AddressExtractor {
 		return BRAZIL_STATE_SIGLAS.get(stateName) ?? null;
 	}
 
+	static normalizeComparisonValue(value: string | null | undefined): string | null {
+		if (typeof value !== 'string') return null;
+		const normalized = value.trim().replace(/\s+/g, ' ');
+		return normalized === '' ? null : normalized.toLocaleLowerCase('pt-BR');
+	}
+
 	toString(): string {
 		return `${this.constructor.name}: ${this.enderecoPadronizado.enderecoCompleto()}`;
 	}
@@ -140,14 +146,20 @@ class NominatimAddressExtractor extends AddressExtractor {
 		this.enderecoPadronizado.numero =
 			address['addr:housenumber'] || address.house_number || null;
 
-		this.enderecoPadronizado.bairro =
+		const bairro =
 			address['addr:neighbourhood'] || address.neighbourhood || address.suburb || address.quarter || null;
-
-		this.enderecoPadronizado.distrito =
-			address.city_district || null;
-
-		this.enderecoPadronizado.municipio =
+		const municipio =
 			address['addr:city'] || address.city || address.town || address.municipality || address.village || null;
+		const distrito = address.city_district || null;
+		const redundantDistrito =
+			AddressExtractor.normalizeComparisonValue(distrito) !== null &&
+			AddressExtractor.normalizeComparisonValue(distrito) ===
+				AddressExtractor.normalizeComparisonValue(municipio);
+
+		this.enderecoPadronizado.bairro = bairro;
+		// Nominatim may echo the municipality name in city_district; keep only meaningful distrito values.
+		this.enderecoPadronizado.distrito = redundantDistrito ? null : distrito;
+		this.enderecoPadronizado.municipio = municipio;
 
 		this.enderecoPadronizado.regiaoMetropolitana = address.county || null;
 

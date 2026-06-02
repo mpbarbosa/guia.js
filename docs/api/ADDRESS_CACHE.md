@@ -4,7 +4,7 @@
 **Last Updated:** 2026-05-30
 **Module:** `src/data/AddressCache.ts`
 **Author:** Marcelo Pereira Barbosa
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ## Overview
 

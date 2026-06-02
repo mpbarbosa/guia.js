@@ -445,5 +445,5 @@ Maintain consistent tag ordering for readability:
 
 ---
 
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Last Updated**: 2026-01-11

@@ -712,7 +712,7 @@ const address = new BrazilianStandardAddress({
 | `uf` | String | State abbreviation (2 letters) |
 | `cep` | String | Postal code (CEP) |
 | `pais` | String | Country (default: 'Brasil') |
-| `regiaoMetropolitana` | String | Metropolitan region name (v0.9.0+) |
+| `regiaoMetropolitana` | String | Metropolitan region name (v0.28.10+) |
 
 #### Methods
 
@@ -787,7 +787,7 @@ const address = extractor.extractAddress(nominatimData);
 - `municipio`: From `city`, `town`, `municipality`, or `village`
 - `uf`: From `state` (mapped to abbreviation)
 - `cep`: From `postcode`
-- `regiaoMetropolitana`: From `county` field (v0.9.0+)
+- `regiaoMetropolitana`: From `county` field (v0.28.10+)
 
 ##### `extractReferencePlace(raw)`
 
@@ -1087,7 +1087,7 @@ displayer.displayMunicipioCard(address, cardElement);
 - `address` (BrazilianStandardAddress): Address with municipality data
 - `element` (HTMLElement): Target card element
 
-**Card Content (v0.9.0+):**
+**Card Content (v0.28.10+):**
 
 ```
 ┌─────────────────────────────────┐
@@ -2047,7 +2047,7 @@ console.log(ACCESSIBLE_EMOJIS.get('🗺️')); // "Map icon"
 
 ### button-status
 
-Contextual button status messages for improved UX (v0.9.0-alpha).
+Contextual button status messages for improved UX (v0.28.10-alpha).
 
 #### Functions
 
@@ -2547,7 +2547,7 @@ import {
 | Constant | Value | Description |
 |----------|-------|-------------|
 | `APP_NAME` | 'Guia Turístico' | Application name |
-| `APP_VERSION` | '0.9.0-alpha' | Current version |
+| `APP_VERSION` | '0.28.10-alpha' | Current version |
 | `NOMINATIM_API_BASE` | 'https://nominatim.openstreetmap.org' | Nominatim API base URL |
 | `CORS_PROXY` | '' | CORS proxy URL (empty = direct) |
 | `MINIMUM_DISTANCE_CHANGE` | 20 | Minimum distance in meters to trigger update |
@@ -3093,7 +3093,7 @@ disableWithReason(button, 'Aguardando localização');
 
 ## Migration Guides
 
-### From v0.9.0 to v0.9.0-alpha
+### From v0.28.10 to v0.28.10-alpha
 
 **New Features:**
 

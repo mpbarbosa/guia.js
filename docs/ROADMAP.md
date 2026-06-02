@@ -120,7 +120,7 @@ See [`architecture/ARCHITECTURE_REFACTOR_ROADMAP.md`](./architecture/ARCHITECTUR
 | ~~Replace placeholder `fetchCityStatistics()`~~ ✅ Done | ~~Medium~~ |
 | Offline-first background sync and cache UX follow-up | Medium |
 | ~~Route Navigation Utility (OpenRouteService/OSRM)~~ ✅ Done | ~~Low~~ |
-| Consolidate duplicate `CHANGELOG.md` v0.9.0 entries | ~~Low~~ ✅ Done |
+| Consolidate duplicate `CHANGELOG.md` v0.28.10 entries | ~~Low~~ ✅ Done |
 | ~~Legacy `app.ts` router returns 404 for Vue-only routes (`/map`, `/stats`, `/history`)~~ ✅ Done (v0.25.0-alpha) | ~~High~~ |
 | Legacy geolocation banner (`#geolocation-banner-container`) renders at a z-index that overlays the Vue `BottomNav` — needs z-index coordination between legacy and Vue layers | Medium |
 | Hero card navigation icon (`bi-navigation-fill`) invisible: inherits `text-white` on a white-tinted gradient, too small to distinguish — increase size or add explicit contrasting wrapper | Low |

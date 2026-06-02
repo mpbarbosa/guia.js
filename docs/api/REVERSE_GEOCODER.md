@@ -1,6 +1,6 @@
 # ReverseGeocoder API Documentation
 
-**Version:** 0.9.0-alpha
+**Version:** 0.28.10-alpha
 **Module:** `services/ReverseGeocoder`
 **Location:** `src/services/ReverseGeocoder.js`
 
@@ -829,7 +829,7 @@ expect(testObserver.update).toHaveBeenCalledWith(
 - Added fallback to native `fetch()` when fetch manager unavailable
 - Enhanced documentation with comprehensive examples
 
-### v0.9.0-alpha
+### v0.28.10-alpha
 
 - Initial version with OpenStreetMap Nominatim integration
 - Brazilian address standardization support

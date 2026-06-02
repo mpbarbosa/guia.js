@@ -1,6 +1,6 @@
 # API Documentation Summary - Comprehensive Overview
 
-**Project**: Guia Turístico v0.9.0-alpha
+**Project**: Guia Turístico v0.28.10-alpha
 **Last Updated**: 2026-02-12
 **Status**: Active Development
 
@@ -22,7 +22,7 @@
 | **NEW: Speech Synthesis** | 3 | 33% |
 | **NEW: Tutorials** | 1 | 25% |
 
-### 🚧 In Progress (New in v0.9.0)
+### 🚧 In Progress (New in v0.28.10)
 
 | Category | Status | Priority |
 |----------|--------|----------|
@@ -250,7 +250,7 @@ Performance monitoring and helper utilities.
 - **Facade**: SpeechSynthesisManager
 - **Value Object**: GeoPosition, BrazilianStandardAddress
 - **State**: GeocodingState
-- **Composition**: SpeechSynthesisManager (v0.9.0+)
+- **Composition**: SpeechSynthesisManager (v0.28.10+)
 
 ---
 
@@ -404,7 +404,7 @@ displayer.display(addressData);
 All documentation includes:
 
 ```markdown
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Last Updated**: YYYY-MM-DD
 **Status**: [Stable|Beta|Experimental]
 **Module**: path/to/module.js

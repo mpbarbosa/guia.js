@@ -33,18 +33,19 @@ beforeAll(async () => {
 });
 
 describe('MapView.vue', () => {
-  test('renders the recenter control and address overlay', () => {
+  test('renders the GPS control and address overlay', () => {
     const wrapper = mount(MapView, { attachTo: document.body });
 
-    expect(wrapper.get('button[aria-label="Centrar no mapa"]').exists()).toBe(true);
+    expect(wrapper.get('button[aria-label="Usar localização atual"]').exists()).toBe(true);
     expect(wrapper.text()).toContain('Localização Atual');
+    expect(wrapper.text()).toContain('Usar localização atual');
 
     wrapper.unmount();
   });
 
   test('renders all category chips', () => {
     const wrapper = mount(MapView, { attachTo: document.body });
-    const chipLabels = wrapper.findAll('button').slice(1).map((chip) => chip.text());
+    const chipLabels = wrapper.findAll('[data-testid="map-category-chip"]').map((chip) => chip.text());
 
     expect(chipLabels).toEqual(['Restaurantes', 'Postos', 'Hospitais', 'Estacionamento']);
 

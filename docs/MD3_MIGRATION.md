@@ -159,8 +159,8 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 
 **Files created:**
 
-- `src/components/views/MapView.vue` — `<div id="maplibre-map" class="absolute inset-0 w-full h-full">`; floating overlay with `pointer-events-none` container; floating location card bound to composable reactive refs; horizontal chip scrollbar (category filters); FAB circle button (bottom right)
-- `src/composables/useMapDisplayer.ts` — wraps `MapLibreDisplayer` via new `mount()` API; subscribes to `PositionManager` (GPS) and `AddressCache` (address label); exposes reactive `{ street, neighborhood, city }`; cleans up on `onUnmounted`
+- `src/components/views/MapView.vue` — `<div id="maplibre-map" class="absolute inset-0 w-full h-full">`; floating overlay with `pointer-events-none` container; floating location card bound to composable reactive refs; horizontal chip scrollbar (category filters); explicit GPS/manual source button for returning from a manually selected map point to live tracking
+- `src/composables/useMapDisplayer.ts` — wraps `MapLibreDisplayer` via new `mount()` API; subscribes to `PositionManager` (GPS) and `AddressCache` (address label); keeps the latest live GPS state in memory while the Maps tab can temporarily switch to a manual clicked point with one-shot reverse geocoding; cleans up on `onUnmounted`
 - `test/composables/useMapDisplayer.test.js` — 12 unit tests
 
 **Files modified:**

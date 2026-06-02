@@ -1,6 +1,6 @@
 # SpeechSynthesisManager API Reference
 
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Last Updated**: 2026-02-12
 **Status**: Stable
 **Module**: `src/speech/SpeechSynthesisManager.js`
@@ -23,7 +23,7 @@ The **SpeechSynthesisManager** is the main facade for managing Web Speech API in
 
 ### Architecture Pattern
 
-**Manager/Controller with Composition** (v0.9.0-alpha refactored)
+**Manager/Controller with Composition** (v0.28.10-alpha refactored)
 
 The class uses composition to delegate responsibilities:
 
@@ -630,7 +630,7 @@ See `__tests__/unit/speech/SpeechSynthesisManager.test.js` for comprehensive tes
 - ✅ Added exponential backoff voice loading
 - ✅ Integrated TimerManager to prevent memory leaks
 
-### v0.9.0-alpha
+### v0.28.10-alpha
 
 - Initial stable release
 - Brazilian Portuguese voice prioritization

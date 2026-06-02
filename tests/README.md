@@ -38,9 +38,8 @@ The Guia Turístico project uses **dual testing frameworks**:
 tests/
 ├── requirements.txt              # Python dependencies
 ├── README.md                     # This file
-├── e2e/                          # End-to-end test scenarios
-│   ├── MilhoVerde-SerroMG.e2e.test.js  # Jest E2E test (not pytest)
-│   └── README.md                 # E2E test documentation
+├── e2e/                          # Legacy Jest E2E notes and migration docs
+│   └── README.md                 # E2E directory documentation
 └── integration/                  # Selenium integration tests
     ├── conftest.py               # pytest fixtures and configuration
     ├── firefox_console_capture.py        # Console log capture library

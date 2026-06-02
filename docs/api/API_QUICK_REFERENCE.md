@@ -157,7 +157,7 @@ address.municipio               // Municipality
 address.uf                      // State abbreviation
 address.cep                     // Postal code
 address.pais                    // Country
-address.regiaoMetropolitana     // Metropolitan region (v0.9.0+)
+address.regiaoMetropolitana     // Metropolitan region (v0.28.10+)
 
 // Methods
 address.municipioCompleto()             // "São Paulo, SP"
@@ -194,7 +194,7 @@ extractor.extractLogradouro()        // Returns street name
 extractor.extractBairro()            // Returns neighborhood
 extractor.extractMunicipio()         // Returns municipality
 extractor.extractUF()                // Returns state abbreviation
-extractor.extractMetropolitanRegion() // Returns metro region (v0.9.0+)
+extractor.extractMetropolitanRegion() // Returns metro region (v0.28.10+)
 
 // Example
 const geocoder = new ReverseGeocoder(-23.550520, -46.633309);
@@ -437,7 +437,7 @@ timerManager.clearTimer('my-update-timer');
 
 ### Button Status Utilities
 
-**Contextual status messages for buttons (v0.9.0+).**
+**Contextual status messages for buttons (v0.28.10+).**
 
 ```javascript
 import {
@@ -489,12 +489,12 @@ import {
 } from './src/config/defaults.js';
 
 // Constants
-APP_VERSION                  // "0.9.0-alpha"
+APP_VERSION                  // "0.28.10-alpha"
 MINIMUM_DISTANCE_CHANGE      // 20 (meters)
 MINIMUM_TIME_CHANGE          // 30000 (milliseconds = 30 seconds)
 ADDRESS_FETCHED_EVENT        // "addressFetched"
 
-// Button status messages (v0.9.0+)
+// Button status messages (v0.28.10+)
 BUTTON_STATUS_MESSAGES.WAITING_FOR_LOCATION
 BUTTON_STATUS_MESSAGES.READY_TO_USE
 BUTTON_STATUS_MESSAGES.PROCESSING
@@ -682,4 +682,4 @@ try {
 ---
 
 **Last Updated**: 2026-02-12
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha

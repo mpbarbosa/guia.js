@@ -425,7 +425,7 @@ In browser console:
 
 **Solutions**:
 
-#### Check Status Message (v0.9.0-alpha)
+#### Check Status Message (v0.28.10-alpha)
 
 ```
 Button shows reason:

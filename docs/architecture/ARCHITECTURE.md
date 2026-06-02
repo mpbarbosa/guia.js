@@ -105,7 +105,7 @@ The application follows a **layered architecture** with clear separation of conc
 - **ReverseGeocoder**: OpenStreetMap Nominatim integration
 - **ChangeDetectionCoordinator**: Address change tracking
 - **OverpassService** (`src/services/OverpassService.ts`): Overpass API (OpenStreetMap) place search — queries by category (restaurants, pharmacies, hospitals, tourist attractions, cafés, supermarkets) within a radius of the current GPS position; exported as `findNearby(lat, lon, category)`
-- **IBGECityStatsService** (`src/services/IBGECityStatsService.ts`): Live IBGE Localidades + SIDRA population queries with persistent offline reuse; returns population, area (km²), and IBGE municipality code; exported as `fetchStats(municipioName)`
+- **IBGECityStatsService** (`src/services/IBGECityStatsService.ts`): Live IBGE Localidades + SIDRA population queries; returns municipality area (km²), IBGE municipality code, and population only when a fresh SIDRA lookup succeeds, while offline fallback preserves municipality context without surfacing stale population totals; exported as `fetchStats(municipioName)`
 - **OfflineCacheService** (`src/services/OfflineCacheService.ts`): IndexedDB-backed key-value cache for recent location/address snapshots and municipality statistics, with in-memory fallback for tests and non-browser contexts; location snapshot updates may be broadcast across tabs via `BroadcastChannel`, with read-once fallback when the API is unavailable
 - **RouteNavigationService** (`src/services/RouteNavigationService.ts`): Geocodes Brazilian origin/destination inputs via Nominatim search, requests public OSRM driving routes, and returns route summaries plus external handoff URLs
 
@@ -139,9 +139,9 @@ The application follows a **layered architecture** with clear separation of conc
   - `HTMLCityStatsPanel` (`src/html/HTMLCityStatsPanel.ts`): Renders IBGE city statistics (population, area, IBGE code); sources municipality name from cached Nominatim data
   - `HTMLRoutePlannerPanel` (`src/html/HTMLRoutePlannerPanel.ts`): Renders route summaries, key steps, and Google Maps/OpenStreetMap handoff links for planned journeys
   - `HtmlSpeechSynthesisDisplayer`: Speech synthesis facade (facade pattern, 3 sub-components)
-  - `MapLibreDisplayer`: Interactive MapLibre GL 5.x inline map with position marker; `mount()` initialises immediately (Vue context), `bindToggleButton()` for legacy toggle pattern
+  - `MapLibreDisplayer`: Interactive MapLibre GL 5.x inline map with position marker; `mount()` initialises immediately (Vue context), `bindToggleButton()` for legacy toggle pattern, and map clicks can be relayed back to Vue callers without owning the active GPS/manual source state
 - **Vue Composables** (`src/composables/`): Reusable Vue 3 composition functions
-  - `useMapDisplayer`: Wraps `MapLibreDisplayer` for Vue lifecycle; subscribes to `PositionManager` + `AddressCache` singletons on mount, unsubscribes on unmount; exposes reactive `{ street, neighborhood, city }` refs
+  - `useMapDisplayer`: Wraps `MapLibreDisplayer` for Vue lifecycle; subscribes to `PositionManager` + `AddressCache` singletons on mount, unsubscribes on unmount; keeps live GPS state separate from Maps-tab-local manual picks; exposes reactive map-card state, manual geocoding errors, and the explicit return-to-GPS action
   - `useLocationSnapshot`: Route-level snapshot reader for `#/extra`; loads the persisted location snapshot for `LocationSnapshotCard` and may refresh from repository-level snapshot update events without taking ownership of live tracking
 - **UI Components**: Toast notifications, empty states, skeletons
 

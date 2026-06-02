@@ -34,12 +34,13 @@ A single-page web application (SPA) for tourist guidance, built on top of the [g
 - 📍 **Real-Time Location Tracking** - Primary feature: continuous location monitoring while navigating
 - 🌍 **Powered by guia.js** - Uses guia.js library for geolocation functionality
 - 🇧🇷 **Brazilian Focus** - Specialized support for Brazilian locations via IBGE integration
-- 📊 **IBGE SIDRA Integration** - Population statistics and demographic data display (v0.9.0+)
+- 📊 **IBGE SIDRA Integration** - Population statistics and demographic data display (v0.28.10+)
 - 💾 **Offline-First Foundation** - Restores the latest saved location/address snapshot and reuses cached municipality statistics when the network is unavailable
 - 📱 **Mobile-First Design** - Responsive interface optimized for mobile devices
 - 🎨 **Material Design 3** - Modern UI following Material Design guidelines
 - ♿ **Accessibility** - WCAG 2.1 compliant with ARIA support
 - 🔧 **Coordinate Converter** - Secondary utility: convert coordinates to addresses
+- 🗺️ **Interactive Maps Tab** - Follows live GPS by default, supports temporary manual point inspection on map click, and offers an explicit return-to-GPS control
 
 ### ✨ Highlighted Features
 
@@ -710,14 +711,14 @@ python3 -m http.server 9000
 
 - `HTMLPositionDisplayer` - Coordinate display and Google Maps links
 - `HTMLAddressDisplayer` - Address formatting and presentation
-- `HTMLHighlightCardsDisplayer` - Municipio and locality highlight cards (Bairro/Distrito) (v0.9.0+)
-  - **v0.9.0-alpha**: Metropolitan region display (Região Metropolitana) with reduced visual prominence ✅
+- `HTMLHighlightCardsDisplayer` - Municipio and locality highlight cards (Bairro/Distrito) (v0.28.10+)
+  - **v0.28.10-alpha**: Metropolitan region display (Região Metropolitana) with reduced visual prominence ✅
   - **Features**: Municipality with state abbreviation (e.g., "Recife, PE"), region context for metro areas
 - `HTMLReferencePlaceDisplayer` - Displays nearby reference places
-- `HTMLSidraDisplayer` - IBGE SIDRA data display with observer pattern (v0.9.0+)
+- `HTMLSidraDisplayer` - IBGE SIDRA data display with observer pattern (v0.28.10+)
   - **Features**: Population statistics, Brazilian Portuguese localization, automatic updates
-  - **Data Source**: IBGE SIDRA API with persistent offline cache reuse for the latest successful municipality lookup
-- `DisplayerFactory` - Factory pattern for display component creation (5 methods, v0.9.0-alpha) ✅
+  - **Data Source**: IBGE SIDRA API for fresh population estimates; offline fallback preserves municipality context without surfacing stale population totals
+- `DisplayerFactory` - Factory pattern for display component creation (5 methods, v0.28.10-alpha) ✅
 
 #### Speech Synthesis Layer (Refactored v0.11.1-alpha) 🆕
 
@@ -1008,19 +1009,19 @@ node -p "JSON.parse(require('fs').readFileSync('package.json', 'utf8'))"
 
 ```bash
 # 1. Check if tag exists locally
-git tag | grep v0.9.0-alpha
+git tag | grep v0.28.10-alpha
 
 # 2. If missing, create tag
-git tag v0.9.0-alpha
+git tag v0.28.10-alpha
 
 # 3. Push tag to GitHub
-git push origin v0.9.0-alpha
+git push origin v0.28.10-alpha
 
 # 4. Wait for jsDelivr to sync (5-10 minutes)
 # Check status at: https://www.jsdelivr.com/package/gh/mpbarbosa/guia.js
 
 # 5. Verify CDN availability
-curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/app.js"
+curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/app.js"
 # Should return: HTTP/7.1.0
 
 # Alternative: Use commit hash instead (available immediately)
@@ -1088,7 +1089,7 @@ git push origin v0.6.1-alpha
 # 5. Wait 5-10 minutes for jsDelivr sync
 
 # 6. Verify CDN availability
-curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/package.json"
+curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/package.json"
 ```
 
 **Scenario 2: Documentation Update**
@@ -1227,13 +1228,13 @@ OUTPUT_FILE="${OUTPUT_FILE:-custom-urls.txt}"
 # Commit: abc1234567890abcdef1234567890abcdef12345
 
 Version-specific URLs:
-https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.js
+https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia.js
 ...
 ```
 
 #### Best Practices
 
-> **📌 Important**: Always use **version-specific CDN URLs** (e.g., `@0.9.0-alpha`) in production for stability and cache consistency. Avoid branch-based URLs (`@main`) which auto-update and can break applications unexpectedly.
+> **📌 Important**: Always use **version-specific CDN URLs** (e.g., `@0.28.10-alpha`) in production for stability and cache consistency. Avoid branch-based URLs (`@main`) which auto-update and can break applications unexpectedly.
 
 1. **Run after every version change**
 
@@ -1252,7 +1253,7 @@ https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.js
 
    ```html
    <!-- ✅ Good: Pinned version -->
-   <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia.js"></script>
 
    <!-- ❌ Avoid: Latest version (unpredictable) -->
    <script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@main/src/guia.js"></script>
@@ -1294,7 +1295,7 @@ bash -x ./.github/scripts/cdn-delivery.sh
 git ls-remote --tags origin
 
 # Check jsDelivr status
-curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/package.json"
+curl -I "https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/package.json"
 
 # Use commit URL as temporary alternative
 ```
@@ -1319,13 +1320,13 @@ Load a specific version for stability and cache consistency:
 
 ```html
 <!-- Main guia.js file -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia.js"></script>
 
 <!-- Load entire src directory -->
-<link rel="prefetch" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/">
+<link rel="prefetch" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/">
 
 <!-- IBGE utilities -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia_ibge.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia_ibge.js"></script>
 ```
 
 **Benefits:**
@@ -1379,10 +1380,10 @@ jsDelivr automatically minifies files:
 
 ```html
 <!-- Auto-minified version (adds .min.js) -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia.min.js"></script>
 
 <!-- Source maps (for debugging) -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.js.map"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia.js.map"></script>
 ```
 
 ### 📚 Combine Multiple Files
@@ -1391,7 +1392,7 @@ Combine and minify multiple files in a single request:
 
 ```html
 <!-- Combine guia.js and guia_ibge.js -->
-<script src="https://cdn.jsdelivr.net/combine/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.js,gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia_ibge.js"></script>
+<script src="https://cdn.jsdelivr.net/combine/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia.js,gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia_ibge.js"></script>
 ```
 
 **Benefits:**
@@ -1406,7 +1407,7 @@ Combine and minify multiple files in a single request:
 
 ```html
 <!-- Load specific version -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia.js"></script>
 
 <!-- Use after load -->
 <script>
@@ -1419,7 +1420,7 @@ Combine and minify multiple files in a single request:
 
 ```html
 <!-- Generate SRI hash at: https://www.srihash.org/ -->
-<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.js"
+<script src="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia.js"
         integrity="sha384-HASH_HERE"
         crossorigin="anonymous"></script>
 ```
@@ -1430,7 +1431,7 @@ Combine and minify multiple files in a single request:
 
 ```html
 <script type="module">
-  import { WebGeocodingManager, PositionManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.js';
+  import { WebGeocodingManager, PositionManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia.js';
 
   // Use imported classes
   const manager = new WebGeocodingManager(document, 'map-container');
@@ -1442,11 +1443,11 @@ Combine and minify multiple files in a single request:
 
 ```html
 <!-- Preload for better performance -->
-<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.js">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia.js">
 
 <script type="module">
   // Module is already cached
-  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.js';
+  import { WebGeocodingManager } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia.js';
 </script>
 ```
 
@@ -1456,7 +1457,7 @@ If guia_js is published to npm registry:
 
 ```html
 <!-- Load from npm -->
-<script src="https://cdn.jsdelivr.net/npm/guia_js@0.9.0-alpha/src/guia.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/guia_js@0.28.10-alpha/src/guia.js"></script>
 
 <!-- Load latest version -->
 <script src="https://cdn.jsdelivr.net/npm/guia_js/src/guia.js"></script>
@@ -1468,12 +1469,12 @@ If guia_js is published to npm registry:
 
 ```javascript
 // Get package.json
-fetch('https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/package.json')
+fetch('https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/package.json')
   .then(res => res.json())
   .then(pkg => console.log(pkg.version));
 
 // List all files in package
-fetch('https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia.js@0.9.0-alpha')
+fetch('https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia.js@0.28.10-alpha')
   .then(res => res.json())
   .then(data => console.log(data.files));
 ```
@@ -1503,7 +1504,7 @@ fetch('https://data.jsdelivr.com/v1/package/gh/mpbarbosa/guia.js@0.9.0-alpha')
 
 ```bash
 # Using curl and openssl
-curl -s https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/src/guia.js | \
+curl -s https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/src/guia.js | \
   openssl dgst -sha384 -binary | openssl base64 -A
 
 # Or use online tool: https://www.srihash.org/
@@ -1528,7 +1529,7 @@ git tag v0.6.0-alpha
 git push origin v0.6.0-alpha
 
 # 4. Wait a few minutes for jsDelivr to sync
-# Then test: https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.9.0-alpha/package.json
+# Then test: https://cdn.jsdelivr.net/gh/mpbarbosa/guia.js@0.28.10-alpha/package.json
 ```
 
 ### 📁 CDN Files Reference

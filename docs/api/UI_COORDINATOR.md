@@ -1,8 +1,8 @@
 # UICoordinator API Documentation
 
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Module**: `coordination/UICoordinator`
-**Since**: 0.9.0-alpha (Phase 1: WebGeocodingManager refactoring)
+**Since**: 0.28.10-alpha (Phase 1: WebGeocodingManager refactoring)
 
 ---
 

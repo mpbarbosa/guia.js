@@ -303,7 +303,7 @@ const addressDisplayer = DisplayerFactory.createAddressDisplayer(document);
 
 **Used for**: Complex managers with multiple responsibilities
 
-**Example**: `SpeechSynthesisManager` (v0.9.0+)
+**Example**: `SpeechSynthesisManager` (v0.28.10+)
 
 ```javascript
 // Manager composes focused components
@@ -785,4 +785,4 @@ console.log(timerManager.getActiveTimers());
 ---
 
 **Last Updated**: 2026-02-12
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha

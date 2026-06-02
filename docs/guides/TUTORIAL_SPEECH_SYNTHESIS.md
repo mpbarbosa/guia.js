@@ -1,6 +1,6 @@
 # Tutorial: Integrating Speech Synthesis
 
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Last Updated**: 2026-02-12
 **Difficulty**: Intermediate
 **Time**: 30 minutes

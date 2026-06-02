@@ -107,6 +107,31 @@ describe('MapLibreDisplayer', () => {
     });
   });
 
+  describe('map click subscriptions', () => {
+    it('notifies subscribers with clicked coordinates', () => {
+      const handler = jest.fn();
+      displayer.onMapClick(handler);
+      displayer.mount();
+
+      const clickHandler = mockMapInstance.on.mock.calls.find(([event]) => event === 'click')[1];
+      clickHandler({ lngLat: { lat: -23.5505, lng: -46.6333 } });
+
+      expect(handler).toHaveBeenCalledWith(-23.5505, -46.6333);
+    });
+
+    it('stops notifying a handler after it is removed', () => {
+      const handler = jest.fn();
+      displayer.onMapClick(handler);
+      displayer.offMapClick(handler);
+      displayer.mount();
+
+      const clickHandler = mockMapInstance.on.mock.calls.find(([event]) => event === 'click')[1];
+      clickHandler({ lngLat: { lat: -22.9068, lng: -43.1729 } });
+
+      expect(handler).not.toHaveBeenCalled();
+    });
+  });
+
   describe('_toggle', () => {
     it('shows map container and initializes map on first open', () => {
       expect(mapContainer.hidden).toBe(true);
@@ -182,6 +207,7 @@ describe('MapLibreDisplayer', () => {
       expect(mockMapLibre.NavigationControl).toHaveBeenCalled();
       expect(mockMapInstance.addControl).toHaveBeenCalled();
       expect(mockMapInstance.on).toHaveBeenCalledWith('load', expect.any(Function));
+      expect(mockMapInstance.on).toHaveBeenCalledWith('click', expect.any(Function));
     });
 
     it('initializes map with default Brasília coordinates if no pending lat/lon', () => {
@@ -257,4 +283,3 @@ describe('MapLibreDisplayer', () => {
     });
   });
 });
-

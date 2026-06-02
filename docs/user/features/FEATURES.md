@@ -8,9 +8,9 @@ Central index of all user-facing and technical feature documentation.
 
 | Feature | Documentation | Status |
 |---------|--------------|--------|
-| Button Status Messages | [FEATURE_BUTTON_STATUS_MESSAGES.md](FEATURE_BUTTON_STATUS_MESSAGES.md) | ✅ v0.9.0-alpha |
-| Metropolitan Region Display | [FEATURE_METROPOLITAN_REGION_DISPLAY.md](FEATURE_METROPOLITAN_REGION_DISPLAY.md) | ✅ v0.9.0-alpha |
-| Município/State Display | [FEATURE_MUNICIPIO_STATE_DISPLAY.md](FEATURE_MUNICIPIO_STATE_DISPLAY.md) | ✅ v0.9.0-alpha |
+| Button Status Messages | [FEATURE_BUTTON_STATUS_MESSAGES.md](FEATURE_BUTTON_STATUS_MESSAGES.md) | ✅ v0.28.10-alpha |
+| Metropolitan Region Display | [FEATURE_METROPOLITAN_REGION_DISPLAY.md](FEATURE_METROPOLITAN_REGION_DISPLAY.md) | ✅ v0.28.10-alpha |
+| Município/State Display | [FEATURE_MUNICIPIO_STATE_DISPLAY.md](FEATURE_MUNICIPIO_STATE_DISPLAY.md) | ✅ v0.28.10-alpha |
 
 ## Core Features
 
@@ -19,7 +19,7 @@ Central index of all user-facing and technical feature documentation.
 | Geolocation Services | [README.md](../../README.md) | ✅ Core |
 | Address Geocoding | [API Reference](../../api/API_REFERENCE.md) | ✅ Core |
 | Speech Synthesis | [Speech Synthesis Tutorial](../../guides/TUTORIAL_SPEECH_SYNTHESIS.md) | ✅ Core |
-| IBGE/SIDRA Integration | [SIDRA Integration](../../guides/SIDRA_INTEGRATION.md) | ✅ v0.9.0-alpha |
+| IBGE/SIDRA Integration | [SIDRA Integration](../../guides/SIDRA_INTEGRATION.md) | ✅ v0.28.10-alpha |
 
 ## Architecture & Technical
 

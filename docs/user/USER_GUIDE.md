@@ -224,6 +224,10 @@ The application continuously monitors your location as you move around the city.
 
 **Data Source**: Brazilian Institute of Geography and Statistics (IBGE)
 
+If the live SIDRA lookup is unavailable, the card stays visible but the
+population estimate and density remain unavailable until a fresh municipal
+response is fetched.
+
 ### 4. Reference Places
 
 **Nearby landmarks and points of interest**

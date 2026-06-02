@@ -1,6 +1,6 @@
 # GeolocationService API Documentation
 
-**Version:** 0.9.0-alpha
+**Version:** 0.28.10-alpha
 **Module:** `services/GeolocationService`
 **Location:** `src/services/GeolocationService.js`
 
@@ -605,7 +605,7 @@ const mockPosition = {
 - Added race condition prevention with `isPendingRequest` flag
 - Improved documentation and type annotations
 
-### v0.9.0-alpha
+### v0.28.10-alpha
 
 - Enhanced PositionManager integration
 - Added permission checking via Permissions API

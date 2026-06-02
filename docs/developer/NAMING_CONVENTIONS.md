@@ -1,6 +1,6 @@
 # JavaScript Naming Conventions
 
-## Standard Adopted (v0.9.0-alpha)
+## Standard Adopted (v0.28.10-alpha)
 
 ### 1. Classes
 

@@ -136,6 +136,15 @@ describe('SpeechTextBuilder', () => {
 			builder.buildTextToSpeechBairro(address);
 			expect(spy).toHaveBeenCalled();
 		});
+
+		test('should keep bairro announcement focused on bairro when distrito also exists', () => {
+			const address = new BrazilianStandardAddress();
+						address.bairro = 'Centro';
+						address.distrito = 'Distrito Sede';
+
+			const text = builder.buildTextToSpeechBairro(address);
+			expect(text).toBe('Você entrou no bairro Centro');
+		});
 	});
 
 	describe('buildTextToSpeechMunicipio', () => {
@@ -258,6 +267,27 @@ describe('SpeechTextBuilder', () => {
 
 			const text = builder.buildTextToSpeech(address);
 			expect(text).toBe('Você está em bairro Copacabana, Rio de Janeiro');
+		});
+
+		test('should include both bairro and distrito in full address speech', () => {
+			const address = new BrazilianStandardAddress();
+						address.logradouro = 'Rua das Flores';
+						address.numero = '123';
+						address.bairro = 'Centro';
+						address.distrito = 'Distrito Sede';
+						address.municipio = 'São Paulo';
+
+			const text = builder.buildTextToSpeech(address);
+			expect(text).toBe('Você está em Rua das Flores, 123, Centro, distrito Distrito Sede, São Paulo');
+		});
+
+		test('should announce only distrito when bairro is absent', () => {
+			const address = new BrazilianStandardAddress();
+						address.distrito = 'Milho Verde';
+						address.municipio = 'Serro';
+
+			const text = builder.buildTextToSpeech(address);
+			expect(text).toBe('Você está em distrito Milho Verde, Serro');
 		});
 
 		test('should build address with only municipio', () => {

@@ -122,7 +122,7 @@ app.use((req, res, next) => {
 
 ---
 
-**Fixed in version**: 0.9.0-alpha
+**Fixed in version**: 0.28.10-alpha
 **Date**: 2026-02-16
 
 ---

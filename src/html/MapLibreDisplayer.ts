@@ -25,6 +25,7 @@ export class MapLibreDisplayer {
   private _marker: maplibregl.Marker | null;
   private _pendingLat: number | null;
   private _pendingLon: number | null;
+  private _mapClickSubscribers: Set<(lat: number, lon: number) => void>;
 
   /**
    * @param {string} mapContainerId - ID of the div that will host the map canvas.
@@ -37,6 +38,7 @@ export class MapLibreDisplayer {
     this._marker = null;
     this._pendingLat = null;
     this._pendingLon = null;
+    this._mapClickSubscribers = new Set();
   }
 
   // ---------------------------------------------------------------------------
@@ -88,6 +90,14 @@ export class MapLibreDisplayer {
     }
   }
 
+  onMapClick(handler: (lat: number, lon: number) => void): void {
+    this._mapClickSubscribers.add(handler);
+  }
+
+  offMapClick(handler: (lat: number, lon: number) => void): void {
+    this._mapClickSubscribers.delete(handler);
+  }
+
   // ---------------------------------------------------------------------------
   // Private helpers
   // ---------------------------------------------------------------------------
@@ -133,6 +143,11 @@ export class MapLibreDisplayer {
 
     this._map.on('load', () => {
       this._createMarker(lat, lon);
+    });
+
+    this._map.on('click', (event) => {
+      const { lat: clickedLat, lng: clickedLon } = event.lngLat;
+      this._mapClickSubscribers.forEach((handler) => handler(clickedLat, clickedLon));
     });
   }
 

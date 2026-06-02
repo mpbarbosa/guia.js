@@ -1,8 +1,8 @@
 # SpeechCoordinator API Documentation
 
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Module**: `coordination/SpeechCoordinator`
-**Since**: 0.9.0-alpha
+**Since**: 0.28.10-alpha
 
 ---
 

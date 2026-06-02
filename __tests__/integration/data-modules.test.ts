@@ -111,6 +111,20 @@ describe('Data Processing Modules Integration', () => {
             expect(address.enderecoCompleto()).toBe('Estrada Real, Milho Verde, Serro, MG');
         });
 
+        test('should include both bairro and distrito in the full formatted address', async () => {
+            const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
+
+            const address = new BrazilianStandardAddress();
+            address.logradouro = 'Rua das Flores';
+            address.bairro = 'Centro';
+            address.distrito = 'Distrito Sede';
+            address.municipio = 'Serro';
+            address.siglaUF = 'MG';
+
+            expect(address.bairroCompleto()).toBe('Centro');
+            expect(address.enderecoCompleto()).toBe('Rua das Flores, Centro, Distrito Sede, Serro, MG');
+        });
+
         test('should normalize blank bairro and distrito values to null', async () => {
             const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
 
@@ -122,26 +136,26 @@ describe('Data Processing Modules Integration', () => {
             expect(address.distrito).toBeNull();
         });
 
-        test('should throw when bairro and distrito are both assigned', async () => {
+        test('should allow bairro and distrito to coexist when bairro is assigned first', async () => {
             const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
 
             const address = new BrazilianStandardAddress();
-            address.bairro = 'Milho Verde';
+            address.bairro = 'Bela Vista';
+            address.distrito = 'Distrito Central';
 
-            expect(() => {
-                address.distrito = 'Milho Verde';
-            }).toThrow('BrazilianStandardAddress cannot have both bairro and distrito');
+            expect(address.bairro).toBe('Bela Vista');
+            expect(address.distrito).toBe('Distrito Central');
         });
 
-        test('should throw when distrito is already set and bairro is assigned later', async () => {
+        test('should allow bairro and distrito to coexist when distrito is assigned first', async () => {
             const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
 
             const address = new BrazilianStandardAddress();
-            address.distrito = 'Milho Verde';
+            address.distrito = 'Distrito Central';
+            address.bairro = 'Bela Vista';
 
-            expect(() => {
-                address.bairro = 'Milho Verde';
-            }).toThrow('BrazilianStandardAddress cannot have both bairro and distrito');
+            expect(address.bairro).toBe('Bela Vista');
+            expect(address.distrito).toBe('Distrito Central');
         });
     });
 
@@ -274,23 +288,169 @@ describe('Data Processing Modules Integration', () => {
             expect(address.enderecoCompleto()).toBe('Milho Verde, Serro, MG');
         });
 
-        test('should throw when provider data contains both bairro and distrito', async () => {
+        test('should standardize the Milho Verde Camping Nozinho payload with tourism reference place metadata', async () => {
+            const { default: AddressExtractor } = await import('../../src/data/AddressExtractor.js');
+            const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
+
+            const nominatimResponse = {
+                place_id: 10564916,
+                osm_type: 'node',
+                osm_id: 7612345678,
+                class: 'tourism',
+                type: 'camp_site',
+                name: 'Camping Nozinho',
+                display_name: 'Camping Nozinho, 172, Rua Direita, Milho Verde, Serro, Região Geográfica Imediata de Diamantina, Região Geográfica Intermediária de Teófilo Otoni, Minas Gerais, Região Sudeste, 39150-000, Brasil',
+                address: {
+                    tourism: 'Camping Nozinho',
+                    house_number: '172',
+                    road: 'Rua Direita',
+                    city_district: 'Milho Verde',
+                    town: 'Serro',
+                    municipality: 'Região Geográfica Imediata de Diamantina',
+                    state_district: 'Região Geográfica Intermediária de Teófilo Otoni',
+                    state: 'Minas Gerais',
+                    'ISO3166-2-lvl4': 'BR-MG',
+                    region: 'Região Sudeste',
+                    postcode: '39150-000',
+                    country: 'Brasil',
+                    country_code: 'br'
+                }
+            };
+
+            const extractor = new AddressExtractor(nominatimResponse);
+            const address = extractor.enderecoPadronizado;
+
+            expect(address).toBeInstanceOf(BrazilianStandardAddress);
+            expect(address.logradouro).toBe('Rua Direita');
+            expect(address.numero).toBe('172');
+            expect(address.bairro).toBeNull();
+            expect(address.distrito).toBe('Milho Verde');
+            expect(address.municipio).toBe('Serro');
+            expect(address.uf).toBe('Minas Gerais');
+            expect(address.siglaUF).toBe('MG');
+            expect(address.cep).toBe('39150-000');
+            expect(address.pais).toBe('Brasil');
+            expect(address.referencePlace?.name).toBe('Camping Nozinho');
+            expect(address.referencePlace?.className).toBe('tourism');
+            expect(address.referencePlace?.typeName).toBe('camp_site');
+            expect(address.logradouroCompleto()).toBe('Rua Direita, 172');
+            expect(address.bairroCompleto()).toBe('Milho Verde');
+            expect(address.municipioCompleto()).toBe('Serro, MG');
+            expect(address.enderecoCompleto()).toBe('Rua Direita, 172, Milho Verde, Serro, MG, 39150-000');
+            expect(address.toString()).toBe('BrazilianStandardAddress: Rua Direita, 172, Milho Verde, Serro, MG, 39150-000');
+        });
+
+        test('should normalize the Padaria Nova Armada Nominatim response without duplicating municipio as distrito', async () => {
+            const { default: AddressExtractor } = await import('../../src/data/AddressExtractor.js');
+            const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
+
+            const nominatimResponse = {
+                place_id: 13667678,
+                licence: 'Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright',
+                osm_type: 'node',
+                osm_id: 2418401651,
+                lat: '-8.0461695',
+                lon: '-34.9072916',
+                class: 'shop',
+                type: 'bakery',
+                place_rank: 30,
+                importance: 0.00006983978027003918,
+                addresstype: 'shop',
+                name: 'Padaria Nova Armada',
+                display_name: 'Padaria Nova Armada, Rua José Bonifácio, Torre, Recife, Região Geográfica Imediata do Recife, Região Metropolitana do Recife, Região Geográfica Intermediária do Recife, Pernambuco, Região Nordeste, 50710-435, Brasil',
+                address: {
+                    shop: 'Padaria Nova Armada',
+                    road: 'Rua José Bonifácio',
+                    suburb: 'Torre',
+                    city_district: 'Recife',
+                    city: 'Recife',
+                    municipality: 'Região Geográfica Imediata do Recife',
+                    county: 'Região Metropolitana do Recife',
+                    state_district: 'Região Geográfica Intermediária do Recife',
+                    state: 'Pernambuco',
+                    'ISO3166-2-lvl4': 'BR-PE',
+                    region: 'Região Nordeste',
+                    postcode: '50710-435',
+                    country: 'Brasil',
+                    country_code: 'br'
+                },
+                boundingbox: [
+                    '-8.0462195',
+                    '-8.0461195',
+                    '-34.9073416',
+                    '-34.9072416'
+                ]
+            };
+
+            const extractor = new AddressExtractor(nominatimResponse);
+            const address = extractor.enderecoPadronizado;
+
+            expect(address).toBeInstanceOf(BrazilianStandardAddress);
+            expect(address.logradouro).toBe('Rua José Bonifácio');
+            expect(address.numero).toBeNull();
+            expect(address.bairro).toBe('Torre');
+            expect(address.distrito).toBeNull();
+            expect(address.municipio).toBe('Recife');
+            expect(address.regiaoMetropolitana).toBe('Região Metropolitana do Recife');
+            expect(address.uf).toBe('Pernambuco');
+            expect(address.siglaUF).toBe('PE');
+            expect(address.cep).toBe('50710-435');
+            expect(address.pais).toBe('Brasil');
+            expect(address.referencePlace).toBeDefined();
+            expect(address.referencePlace?.name).toBe('Padaria Nova Armada');
+            expect(address.referencePlace?.className).toBe('shop');
+            expect(address.referencePlace?.typeName).toBe('bakery');
+            expect(address.logradouroCompleto()).toBe('Rua José Bonifácio');
+            expect(address.bairroCompleto()).toBe('Torre');
+            expect(address.municipioCompleto()).toBe('Recife, PE');
+            expect(address.regiaoMetropolitanaFormatada()).toBe('Região Metropolitana do Recife');
+            expect(address.enderecoCompleto()).toBe('Rua José Bonifácio, Torre, Recife, PE, 50710-435');
+        });
+
+        test('should drop redundant distrito values after normalizing city_district and municipio strings', async () => {
             const { default: AddressExtractor } = await import('../../src/data/AddressExtractor.js');
 
-            const conflictingResponse = {
+            const redundantDistritoResponse = {
                 address: {
-                    suburb: 'Bela Vista',
-                    city_district: 'Bela Vista',
-                    city: 'São Paulo',
-                    state: 'São Paulo',
-                    'ISO3166-2-lvl4': 'BR-SP',
+                    suburb: 'Torre',
+                    city_district: '  recife  ',
+                    city: 'Recife',
+                    state: 'Pernambuco',
+                    'ISO3166-2-lvl4': 'BR-PE',
+                    postcode: '50710-435',
                     country: 'Brasil'
                 }
             };
 
-            expect(() => {
-                new AddressExtractor(conflictingResponse);
-            }).toThrow('BrazilianStandardAddress cannot have both bairro and distrito');
+            const extractor = new AddressExtractor(redundantDistritoResponse);
+            const address = extractor.enderecoPadronizado;
+
+            expect(address.bairro).toBe('Torre');
+            expect(address.distrito).toBeNull();
+            expect(address.municipio).toBe('Recife');
+        });
+
+        test('should preserve both bairro and distrito when provider data supplies distinct locality values', async () => {
+            const { default: AddressExtractor } = await import('../../src/data/AddressExtractor.js');
+
+            const response = {
+                address: {
+                    road: 'Rua José Bonifácio',
+                    suburb: 'Torre',
+                    city_district: 'Distrito Sanitário IV',
+                    city: 'Recife',
+                    state: 'Pernambuco',
+                    'ISO3166-2-lvl4': 'BR-PE',
+                    postcode: '50710-435',
+                    country: 'Brasil'
+                }
+            };
+
+            const address = new AddressExtractor(response).enderecoPadronizado;
+            expect(address.bairro).toBe('Torre');
+            expect(address.distrito).toBe('Distrito Sanitário IV');
+            expect(address.bairroCompleto()).toBe('Torre');
+            expect(address.enderecoCompleto()).toBe('Rua José Bonifácio, Torre, Distrito Sanitário IV, Recife, PE, 50710-435');
         });
     });
 

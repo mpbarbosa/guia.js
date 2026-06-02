@@ -1,8 +1,8 @@
 # EventCoordinator API Documentation
 
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Module**: `coordination/EventCoordinator`
-**Since**: 0.9.0-alpha (Phase 1: WebGeocodingManager refactoring)
+**Since**: 0.28.10-alpha (Phase 1: WebGeocodingManager refactoring)
 
 ---
 
@@ -488,7 +488,7 @@ removeEventListeners() {
 
 ## Version History
 
-- **0.9.0-alpha** (2026-01-28) - Initial implementation
+- **0.28.10-alpha** (2026-01-28) - Initial implementation
   - Extracted from monolithic WebGeocodingManager
   - Implements Single Responsibility Principle
   - Full event handler cleanup support

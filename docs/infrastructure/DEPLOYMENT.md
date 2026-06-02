@@ -273,4 +273,4 @@ If you see `"CORS proxy fallback also failed"`, check:
 ---
 
 **Last Updated**: 2026-02-16
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha

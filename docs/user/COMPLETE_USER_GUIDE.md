@@ -177,7 +177,7 @@ See your current address in Brazilian format:
 
 ---
 
-### 🏘️ Highlight Cards (v0.9.0+)
+### 🏘️ Highlight Cards (v0.28.10+)
 
 See important location context at a glance:
 
@@ -221,7 +221,7 @@ See important location context at a glance:
 
 ---
 
-### 📊 Population Statistics (v0.9.0+)
+### 📊 Population Statistics (v0.28.10+)
 
 See IBGE population data for your current city:
 

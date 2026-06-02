@@ -39,6 +39,7 @@ Category: Guide
 - **[Workflow Setup](../WORKFLOW_SETUP.md)** - Local development environment
 - **[Testing Infrastructure](./testing/TEST_INFRASTRUCTURE.md)** - Test execution and coverage
 - **[Code Quality Plan](./developer/CODE_QUALITY_ACTION_PLAN.md)** - Quality standards
+- **[DRY Guide](./guides/DRY_GUIDE.md)** - Single-source-of-truth rules for code, tests, and docs
 - **[GitHub Scripts](../.github/scripts/README.md)** - Scripts and utilities
 
 ---
@@ -141,6 +142,7 @@ Controlled historical archive and retired documentation records:
 - [Test Strategy](./testing/TEST_STRATEGY.md)
 - [Test Infrastructure](./testing/TEST_INFRASTRUCTURE.md)
 - [E2E Test Scenarios](./testing/E2E_TEST_SCENARIO_MUNICIPIO_BAIRRO.md)
+- [DRY Guide](./guides/DRY_GUIDE.md)
 
 **Development Tools**
 

@@ -10,6 +10,8 @@ const mockMapInstance = {
   on: jest.fn((event, cb) => { if (event === 'load') cb(); }),
 };
 const mockMarkerInstance = { setLngLat: jest.fn().mockReturnThis(), addTo: jest.fn() };
+const setCoordinatesMock = jest.fn();
+const fetchAddressMock = jest.fn();
 
 jest.unstable_mockModule('maplibre-gl', () => ({
   __esModule: true,
@@ -30,6 +32,9 @@ const refImpl = (initial) => {
 jest.unstable_mockModule('vue', () => ({
   __esModule: true,
   ref: jest.fn(refImpl),
+  computed: jest.fn((getter) =>
+    Object.defineProperty({}, 'value', { get: getter, enumerable: true })
+  ),
   onMounted: jest.fn((cb) => { mountedCb = cb; }),
   onUnmounted: jest.fn((cb) => { unmountedCb = cb; }),
 }));
@@ -71,8 +76,18 @@ describe('useMapDisplayer', () => {
 
     mockMapInstance.resize.mockClear();
     mockMapInstance.setCenter.mockClear();
+    mockMapInstance.on.mockClear();
+    mockMapInstance.on.mockImplementation((event, cb) => { if (event === 'load') cb(); });
+    mockMarkerInstance.setLngLat.mockClear();
+    setCoordinatesMock.mockClear();
+    fetchAddressMock.mockReset();
 
-    result = useMapDisplayer();
+    result = useMapDisplayer({
+      createReverseGeocoder: () => ({
+        setCoordinates: setCoordinatesMock,
+        fetchAddress: fetchAddressMock,
+      }),
+    });
   });
 
   afterEach(() => jest.restoreAllMocks());
@@ -90,6 +105,12 @@ describe('useMapDisplayer', () => {
     it('returns city ref defaulting to "—"', () => {
       expect(result.city.value).toBe('—');
     });
+
+    it('returns live mode metadata by default', () => {
+      expect(result.locationTitle.value).toBe('Localização Atual');
+      expect(result.isManualMode.value).toBe(false);
+      expect(result.manualLocationError.value).toBeNull();
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -102,6 +123,10 @@ describe('useMapDisplayer', () => {
 
     it('subscribes to AddressCache', () => {
       expect(mockAddrSubscribe).toHaveBeenCalledTimes(1);
+    });
+
+    it('registers a map click listener through the displayer', () => {
+      expect(mockMapInstance.on).toHaveBeenCalledWith('click', expect.any(Function));
     });
   });
 
@@ -145,6 +170,90 @@ describe('useMapDisplayer', () => {
     it('does nothing when currentAddress is null', () => {
       capturedAddrObserver.update({ currentAddress: null });
       expect(result.street.value).toBe('Aguardando...');
+    });
+
+    it('falls back to distrito when bairro is unavailable', () => {
+      capturedAddrObserver.update({
+        currentAddress: {
+          logradouro: 'Rua da Matriz',
+          bairro: null,
+          distrito: 'Distrito Sede',
+          municipio: 'Paraty',
+        },
+      });
+
+      expect(result.neighborhood.value).toBe('Distrito Sede');
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  describe('manual map selection', () => {
+    beforeEach(() => mountedCb());
+
+    function triggerMapClick(lat, lon) {
+      const clickHandler = mockMapInstance.on.mock.calls.find(([event]) => event === 'click')?.[1];
+      clickHandler({ lngLat: { lat, lng: lon } });
+    }
+
+    it('switches to manual mode and reverse geocodes the clicked point', async () => {
+      fetchAddressMock.mockResolvedValue({
+        street: 'Praça da Sé',
+        neighborhood: 'Centro Histórico',
+        city: 'São Paulo',
+        state: 'São Paulo',
+        stateCode: 'SP',
+        country: 'Brasil',
+      });
+
+      triggerMapClick(-23.55052, -46.63331);
+      await Promise.resolve();
+
+      expect(result.isManualMode.value).toBe(true);
+      expect(result.locationTitle.value).toBe('Localização Selecionada');
+      expect(setCoordinatesMock).toHaveBeenCalledWith(-23.55052, -46.63331);
+      expect(fetchAddressMock).toHaveBeenCalledTimes(1);
+      expect(mockMapInstance.setCenter).toHaveBeenCalledWith([-46.63331, -23.55052]);
+      expect(result.street.value).toBe('Praça da Sé');
+      expect(result.neighborhood.value).toBe('Centro Histórico');
+      expect(result.city.value).toBe('São Paulo');
+    });
+
+    it('keeps the latest live position in memory and restores it when returning to GPS', async () => {
+      capturedPosObserver.update({ latitude: -22.9068, longitude: -43.1729 });
+      fetchAddressMock.mockResolvedValue({
+        street: 'Av. Atlântica',
+        neighborhood: 'Copacabana',
+        city: 'Rio de Janeiro',
+        state: 'Rio de Janeiro',
+        stateCode: 'RJ',
+        country: 'Brasil',
+      });
+
+      triggerMapClick(-22.97196, -43.18254);
+      await Promise.resolve();
+
+      mockMapInstance.setCenter.mockClear();
+      capturedPosObserver.update({ latitude: -22.9035, longitude: -43.2096 });
+
+      expect(mockMapInstance.setCenter).not.toHaveBeenCalled();
+
+      result.returnToLivePosition();
+
+      expect(result.isManualMode.value).toBe(false);
+      expect(mockMapInstance.setCenter).toHaveBeenCalledWith([-43.2096, -22.9035]);
+    });
+
+    it('keeps the selected coordinates and exposes an error when reverse geocoding fails', async () => {
+      fetchAddressMock.mockRejectedValue(new Error('network error'));
+
+      triggerMapClick(-12.9714, -38.5014);
+      await Promise.resolve();
+
+      expect(result.isManualMode.value).toBe(true);
+      expect(result.street.value).toBe('Lat -12.97140, Lon -38.50140');
+      expect(result.manualLocationError.value).toBe(
+        'Não foi possível buscar o endereço desta localização.'
+      );
     });
   });
 

@@ -4,9 +4,9 @@ This document provides a comprehensive overview of the Guia Turístico class arc
 
 ## Overview
 
-Guia.js is a geolocation web application (**version 0.9.0-alpha**, current) that provides geolocation services, address geocoding, and mapping integration for Brazilian addresses. The architecture follows object-oriented design patterns with clear separation of concerns.
+Guia.js is a geolocation web application (**version 0.28.10-alpha**, current) that provides geolocation services, address geocoding, and mapping integration for Brazilian addresses. The architecture follows object-oriented design patterns with clear separation of concerns.
 
-**Version Context**: This diagram reflects the architecture as of version 0.9.0-alpha. Some components (e.g., ReferencePlace) are documented for future implementation in version 0.8.x-alpha.
+**Version Context**: This diagram reflects the architecture as of version 0.28.10-alpha. Some components (e.g., ReferencePlace) are documented for future implementation in version 0.8.x-alpha.
 
 ## Architecture Layers
 
@@ -419,7 +419,7 @@ The original `AddressDataExtractor` class suffered from low cohesion, mixing two
 
 Split into two specialized classes with single, clear responsibilities:
 
-**Before (0.9.0-alpha)**:
+**Before (0.28.10-alpha)**:
 
 ```
 AddressDataExtractor (554 lines)
@@ -430,7 +430,7 @@ AddressDataExtractor (554 lines)
 └── Callback management
 ```
 
-**After (0.9.0-alpha)**:
+**After (0.28.10-alpha)**:
 
 ```
 AddressExtractor (91 lines)
@@ -580,11 +580,11 @@ guia_js/
 
 ## Version History
 
-- **0.9.0-alpha** (Current): Refactored address extraction architecture (PR #121)
-- **0.9.0-alpha**: Original unified AddressDataExtractor implementation
-- **0.9.0-alpha**: Address change detection features
-- **0.9.0-alpha**: Brazilian address standardization
-- **0.9.0-alpha**: Core geocoding functionality
+- **0.28.10-alpha** (Current): Refactored address extraction architecture (PR #121)
+- **0.28.10-alpha**: Original unified AddressDataExtractor implementation
+- **0.28.10-alpha**: Address change detection features
+- **0.28.10-alpha**: Brazilian address standardization
+- **0.28.10-alpha**: Core geocoding functionality
 
 ## References
 
@@ -626,12 +626,12 @@ See repository root for license information.
 ---
 
 **Last Updated**: 2026-01-11
-**Version**: 0.9.0-alpha (Class Diagram for version 0.9.0-alpha)
+**Version**: 0.28.10-alpha (Class Diagram for version 0.28.10-alpha)
 **Status**: ✅ Complete and up-to-date
 
 ### Version History
 
-- **0.9.0-alpha** (October 2025): Initial class architecture with core domain, service, and data processing layers
-- **0.9.0-alpha** (January 3, 2026): Enhanced with ChangeDetectionCoordinator and refined patterns
-- **0.9.0-alpha** (January 11, 2026 - Current): Documentation updates, stable architecture
+- **0.28.10-alpha** (October 2025): Initial class architecture with core domain, service, and data processing layers
+- **0.28.10-alpha** (January 3, 2026): Enhanced with ChangeDetectionCoordinator and refined patterns
+- **0.28.10-alpha** (January 11, 2026 - Current): Documentation updates, stable architecture
 - **0.8.x-alpha** (Planned): ReferencePlace implementation, PR #189 refactoring integration

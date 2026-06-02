@@ -341,7 +341,7 @@ Publishes various geocoding workflow events coordinating the entire application 
 
 **File:** `src/data/AddressCache.ts` (1321 lines)
 **Role:** Subject only
-**Pattern:** Singleton with composition architecture (v0.9.0-alpha)
+**Pattern:** Singleton with composition architecture (v0.28.10-alpha)
 
 #### Subject Behavior
 
@@ -349,7 +349,7 @@ Publishes various geocoding workflow events coordinating the entire application 
 // Initialization
 this.observerSubject = new ObserverSubject();
 
-// Composition architecture (v0.9.0-alpha)
+// Composition architecture (v0.28.10-alpha)
 this.changeDetector = new AddressChangeDetector();
 this.callbackRegistry = new CallbackRegistry();  // from bessa_patterns.ts
 this.dataStore = new AddressDataStore();
@@ -751,7 +751,7 @@ update(addressData, enderecoPadronizado) {
     const municipio = enderecoPadronizado.municipioCompleto(); // e.g., "Recife, PE"
     this.updateMunicipioCard(municipio);
 
-    // Update metropolitan region (v0.9.0-alpha)
+    // Update metropolitan region (v0.28.10-alpha)
     const regiaoMetro = enderecoPadronizado.regiaoMetropolitanaFormatada();
     this.updateRegiaoMetropolitanaCard(regiaoMetro);
 
@@ -1031,7 +1031,7 @@ update(newAddress, newRawData) {
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        NOTIFICATION CHAINS                           │
-│                     Guia Turístico v0.9.0-alpha                     │
+│                     Guia Turístico v0.28.10-alpha                     │
 └─────────────────────────────────────────────────────────────────────┘
 
 ═══════════════════════════════════════════════════════════════════════
@@ -1138,7 +1138,7 @@ update(newAddress, newRawData) {
 ┌──────────────────────────────────────────────────────────────────────┐
 │ AddressCache ⭐ SUBJECT                                               │
 │                                                                       │
-│ Composition Architecture (v0.9.0-alpha):                             │
+│ Composition Architecture (v0.28.10-alpha):                             │
 │ ┌──────────────────┐  ┌─────────────────┐  ┌──────────────────┐   │
 │ │AddressChangeDetector│  │CallbackRegistry │  │AddressDataStore │   │
 │ │                  │  │                 │  │                  │   │
@@ -1767,10 +1767,10 @@ async reverseGeocode(lat, lon) {
 | 0.12.x | — | ReverseGeocoder: dual-provider (AWS + Nominatim), switchProvider(), new constructor signature |
 | 0.11.9-alpha | — | ObserverSubject canonical implementation moved to paraty_geocore.js as DualObserverSubject |
 | 0.11.0-alpha | — | HtmlSpeechSynthesisDisplayer refactored to facade (HtmlSpeechControls + AddressSpeechObserver + SpeechTextBuilder) |
-| 0.9.0-alpha | 2026-02-11 | Added metropolitan region display, refactored AddressCache composition |
-| 0.9.0-alpha | 2025-12-15 | Introduced ObserverSubject class, refactored to composition pattern |
-| 0.9.0-alpha | 2025-11-10 | Added ReverseGeocoder observer role, SIDRA displayer |
-| 0.9.0-alpha | 2025-10-20 | Added highlight cards displayer, municipio/bairro observers |
+| 0.28.10-alpha | 2026-02-11 | Added metropolitan region display, refactored AddressCache composition |
+| 0.28.10-alpha | 2025-12-15 | Introduced ObserverSubject class, refactored to composition pattern |
+| 0.28.10-alpha | 2025-11-10 | Added ReverseGeocoder observer role, SIDRA displayer |
+| 0.28.10-alpha | 2025-10-20 | Added highlight cards displayer, municipio/bairro observers |
 
 ---
 

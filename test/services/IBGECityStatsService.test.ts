@@ -102,6 +102,7 @@ describe('IBGECityStatsService.fetchStats', () => {
       areaKm2: 1521.11,
       population: 12345678,
       populationYear: '2022',
+      populationSource: 'sidra-fresh',
     });
     expect(log).toHaveBeenCalledWith(expect.stringContaining('Fetching stats'));
     expect(log).toHaveBeenCalledWith(expect.stringContaining('Stats for São Paulo/SP'));
@@ -223,6 +224,7 @@ describe('IBGECityStatsService.fetchStats', () => {
     const stats = await fetchStats('Cidade W', 'SP');
     expect(stats?.population).toBeNull();
     expect(stats?.populationYear).toBeNull();
+    expect(stats?.populationSource).toBe('unavailable');
   });
 
   it('handles fetchPopulation with empty series', async () => {
@@ -249,6 +251,7 @@ describe('IBGECityStatsService.fetchStats', () => {
     const stats = await fetchStats('Cidade V', 'SP');
     expect(stats?.population).toBeNull();
     expect(stats?.populationYear).toBeNull();
+    expect(stats?.populationSource).toBe('unavailable');
   });
 
   it('handles fetchPopulation with non-numeric value', async () => {
@@ -279,6 +282,7 @@ describe('IBGECityStatsService.fetchStats', () => {
     const stats = await fetchStats('Cidade U', 'SP');
     expect(stats?.population).toBeNull();
     expect(stats?.populationYear).toBeNull();
+    expect(stats?.populationSource).toBe('unavailable');
   });
 
   it('handles fetchArea API error gracefully', async () => {
@@ -332,6 +336,7 @@ describe('IBGECityStatsService.fetchStats', () => {
     const stats = await fetchStats('Cidade S', 'SP');
     expect(stats?.population).toBeNull();
     expect(stats?.populationYear).toBeNull();
+    expect(stats?.populationSource).toBe('unavailable');
   });
 
   it('handles fetchArea network error gracefully', async () => {
@@ -381,6 +386,7 @@ describe('IBGECityStatsService.fetchStats', () => {
     expect(stats?.population).toBeNull();
     expect(stats?.populationYear).toBeNull();
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('Could not fetch population'));
+    expect(stats?.populationSource).toBe('unavailable');
   });
 
   it('returns null if all fetches fail', async () => {
@@ -389,7 +395,30 @@ describe('IBGECityStatsService.fetchStats', () => {
     expect(stats).toBeNull();
   });
 
-  it('reuses cached results for the same municipality lookup', async () => {
+  it('refetches sequential lookups so population always comes from a fresh SIDRA request', async () => {
+    mockFindMunicipioByNameResponse([
+      {
+        id: ibgeCode,
+        nome: 'São Paulo',
+        microrregiao: { mesorregiao: { UF: { sigla: 'SP' } } },
+      },
+    ]);
+    mockFetchPopulationResponse([
+      {
+        resultados: [
+          {
+            series: [
+              {
+                serie: { '2022': '12345678' },
+              },
+            ],
+          },
+        ],
+      },
+    ]);
+    mockFetchAreaResponse({
+      features: [{ properties: { area_km2: 1521.11 } }],
+    });
     mockFindMunicipioByNameResponse([
       {
         id: ibgeCode,
@@ -418,7 +447,7 @@ describe('IBGECityStatsService.fetchStats', () => {
     const second = await fetchStats(municipio, siglaUf);
 
     expect(first).toEqual(second);
-    expect(mockFetch).toHaveBeenCalledTimes(3);
+    expect(mockFetch).toHaveBeenCalledTimes(6);
   });
 
   it('dedupes concurrent requests for the same municipality lookup', async () => {

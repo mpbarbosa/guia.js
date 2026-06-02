@@ -1,7 +1,7 @@
 # Dependency Management and Code Deprecation
 
 **Last Updated:** 2026-01-10
-**Version:** 0.9.0-alpha
+**Version:** 0.28.10-alpha
 **Status:** ✅ Active Reference
 
 ---
@@ -385,13 +385,13 @@ Total deprecated overhead: ~425 lines (53%)
 **Problem:** "Temporary" backward compatibility becomes permanent.
 
 ```javascript
-// Added in v0.9.0 "for backward compatibility"
-// Still present in v0.9.0
+// Added in v0.28.10 "for backward compatibility"
+// Still present in v0.28.10
 // No removal plan, no migration guide
 // Accumulating more deprecated code
 
 /**
- * @deprecated Since v0.9.0 - Use getInstance().method()
+ * @deprecated Since v0.28.10 - Use getInstance().method()
  * @static
  */
 static method() { ... }
@@ -408,7 +408,7 @@ static method() { ... }
 
 **Reality Check:**
 
-- This is v0.9.0-alpha (pre-release)
+- This is v0.28.10-alpha (pre-release)
 - No public API guarantee in alpha versions
 - No external consumers identified
 - Breaking changes are expected in alpha
@@ -729,7 +729,7 @@ cache.generateCacheKey(data);
 
 ### Immediate (This Week)
 
-- [ ] Tag release: `git tag v0.9.0-alpha-deps-updated`
+- [ ] Tag release: `git tag v0.28.10-alpha-deps-updated`
 - [ ] Update CI/CD documentation with new Node.js requirements
 - [ ] Notify team of Node.js version requirement (>=18.0.0)
 

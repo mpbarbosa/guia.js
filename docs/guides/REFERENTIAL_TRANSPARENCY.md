@@ -702,5 +702,5 @@ For architecture examples:
 
 **Remember**: Referential transparency is not about dogma—it's about making code more predictable, testable, and maintainable. Use these principles as tools to write better software.
 
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Last Updated**: 2026-01-11

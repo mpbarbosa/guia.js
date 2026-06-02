@@ -1,8 +1,8 @@
 # ServiceCoordinator API Documentation
 
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Module**: `coordination/ServiceCoordinator`
-**Since**: 0.9.0-alpha (Phase 1: WebGeocodingManager refactoring)
+**Since**: 0.28.10-alpha (Phase 1: WebGeocodingManager refactoring)
 
 ---
 
@@ -426,7 +426,7 @@ try {
 
 ## Version History
 
-- **0.9.0-alpha** (2026-01-28) - Initial implementation as part of WebGeocodingManager refactoring
+- **0.28.10-alpha** (2026-01-28) - Initial implementation as part of WebGeocodingManager refactoring
 - Extracted from monolithic WebGeocodingManager class
 - Implements Single Responsibility Principle
 - Full observer pattern support

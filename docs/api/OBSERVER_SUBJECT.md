@@ -1,6 +1,6 @@
 # ObserverSubject API Documentation
 
-**Version:** 0.9.0-alpha
+**Version:** 0.28.10-alpha
 **Module:** `src/core/ObserverSubject.js`
 **Pattern:** Observer (Subject Implementation)
 **Author:** Marcelo Pereira Barbosa
@@ -54,7 +54,7 @@ import ObserverSubject from './core/ObserverSubject.js';
 const subject = new ObserverSubject();
 ```
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ## Public Methods
 
@@ -90,7 +90,7 @@ const newArray = observerSubject.observers;
 console.log(originalArray !== newArray); // true - new array created
 ```
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ---
 
@@ -118,7 +118,7 @@ const arrayAfter = observerSubject.observers;
 console.log(arrayBefore !== arrayAfter); // true - new array created
 ```
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ---
 
@@ -138,7 +138,7 @@ Notifies all subscribed object observers. Calls the update() method on each obse
 observerSubject.notifyObservers(data1, data2, eventType);
 ```
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ---
 
@@ -165,7 +165,7 @@ const handler = (subject, ...args) => {
 observerSubject.subscribeFunction(handler);
 ```
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ---
 
@@ -187,7 +187,7 @@ Unsubscribes a function from notifications.
 observerSubject.unsubscribeFunction(handler);
 ```
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ---
 
@@ -207,7 +207,7 @@ Notifies all subscribed function observers.
 observerSubject.notifyFunctionObservers(data1, data2);
 ```
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ---
 
@@ -225,7 +225,7 @@ Gets the count of subscribed object observers.
 console.log(`Object observers: ${subject.getObserverCount()}`);
 ```
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ---
 
@@ -241,7 +241,7 @@ Gets the count of subscribed function observers.
 console.log(`Function observers: ${subject.getFunctionObserverCount()}`);
 ```
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ---
 
@@ -259,7 +259,7 @@ console.log(subject.getObserverCount()); // 0
 console.log(subject.getFunctionObserverCount()); // 0
 ```
 
-**Since:** 0.9.0-alpha
+**Since:** 0.28.10-alpha
 
 ## Properties
 

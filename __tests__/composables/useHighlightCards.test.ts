@@ -141,14 +141,27 @@ describe('useHighlightCards', () => {
     expect(regiaoMetropolitana.value).toBeNull();
   });
 
-  it('throws when bairro and distrito are both present', () => {
-    useHighlightCards();
-    expect(() => {
-      _mockInstance.setCurrentAddress({
-        bairro: 'Centro',
-        distrito: 'Milho Verde',
-      });
-    }).toThrow('BrazilianStandardAddress cannot have both bairro and distrito');
+  it('prefers bairro when bairro and distrito are both present', async () => {
+    const { bairro, bairroLabel } = useHighlightCards();
+    _mockInstance.setCurrentAddress({
+      bairro: 'Centro',
+      distrito: 'Milho Verde',
+    });
+    await nextTick();
+
+    expect(bairroLabel.value).toBe('Bairro');
+    expect(bairro.value).toBe('CENTRO');
+  });
+
+  it('still uses distrito when bairro is absent', async () => {
+    const { bairro, bairroLabel } = useHighlightCards();
+    _mockInstance.setCurrentAddress({
+      distrito: 'Milho Verde',
+    });
+    await nextTick();
+
+    expect(bairroLabel.value).toBe('Distrito');
+    expect(bairro.value).toBe('MILHO VERDE');
   });
 
   it('sets regiaoMetropolitana to null if not present', async () => {

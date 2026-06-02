@@ -176,7 +176,7 @@ guia_js/
 # Quick Start Guide - Guia Turístico
 
 **Last Updated**: 2026-02-13
-**Version**: 0.9.0-alpha
+**Version**: 0.28.10-alpha
 **Estimated Time**: 5-10 minutes
 
 ---

@@ -46,6 +46,9 @@ describe('IBGECityStatsService offline fallback', () => {
     const stats = await fetchStats('Recife', 'PE');
 
     expect(stats?.ibgeCode).toBe('2611606');
+    expect(stats?.population).toBeNull();
+    expect(stats?.populationYear).toBeNull();
+    expect(stats?.populationSource).toBe('offline-cache');
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
@@ -64,6 +67,8 @@ describe('IBGECityStatsService offline fallback', () => {
     const stats = await fetchStats('Olinda', 'PE');
 
     expect(stats?.name).toBe('Olinda');
-    expect(stats?.population).toBe(349976);
+    expect(stats?.population).toBeNull();
+    expect(stats?.populationYear).toBeNull();
+    expect(stats?.populationSource).toBe('offline-cache');
   });
 });

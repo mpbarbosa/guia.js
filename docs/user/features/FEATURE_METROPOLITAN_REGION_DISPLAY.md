@@ -127,7 +127,7 @@ update(addressData, enderecoPadronizado) {
         log('Updated regiao-metropolitana-value to:', regiaoMetropolitana || '(empty)');
     }
 
-    // ... existing municipio and bairro updates
+    // ... existing municipio and locality (bairro/distrito) updates
 }
 ```
 

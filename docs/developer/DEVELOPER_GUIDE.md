@@ -1,6 +1,6 @@
 # Developer Guide - Guia Turístico
 
-**Version**: 0.28.8-alpha
+**Version**: 0.28.9-alpha
 **Last Updated**: 2026-05-30
 **Audience**: Developers contributing to or building on Guia Turístico
 

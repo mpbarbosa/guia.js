@@ -5,6 +5,20 @@ All notable changes to Guia Turístico will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.28.9-alpha] - 2026-06-01
+
+### Changed
+
+- **Sub-municipal locality handling** (`src/data/BrazilianStandardAddress.ts`, `src/data/AddressExtractor.ts`):
+  - Enforced `bairro` / `distrito` mutual exclusion in the standardized address model
+  - Normalized blank `bairro` / `distrito` values to `null`
+  - Reused the best available locality in `bairroCompleto()` and `enderecoCompleto()`
+- **Home locality cards** (`src/composables/useHighlightCards.ts`, `src/components/LocationHighlightCards.vue`):
+  - Switched the locality card label between `Bairro` and `Distrito` based on the raw address fields
+  - Kept the existing empty-state label while surfacing malformed dual-populated locality data
+- **Hero header locality text** (`src/html/HTMLHeaderDisplayer.ts`, `src/components/AppHeroHeader.vue`):
+  - Clarified and tested that the hero mirrors `Município · localidade`, where the displayed locality can come from `bairro` or `distrito`
+
 ## [0.28.8-alpha] - 2026-05-28
 
 ### Added

@@ -62,6 +62,7 @@ describe('AwsAddressExtractor integration — region maps to uf and siglaUF', ()
 		expect(addr.logradouro).toBe('Avenida Julio De Castilhos');
 		expect(addr.numero).toBe('831');
 		expect(addr.bairro).toBe('Belém');
+		expect(addr.distrito).toBeNull();
 		expect(addr.municipio).toBe('São Paulo');
 		expect(addr.uf).toBe('São Paulo');
 		expect(addr.siglaUF).toBe('SP');

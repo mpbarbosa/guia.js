@@ -1,17 +1,36 @@
 /**
  * @jest-environment jsdom
  */
+import { jest } from '@jest/globals';
+import { nextTick } from 'vue';
 import { mount, VueWrapper } from '@vue/test-utils';
 import LocationHighlightCards from '../../src/components/LocationHighlightCards.vue';
+import AddressCache from '../../src/data/AddressCache';
+
+let _currentAddress: any = null;
+let _observer: any = null;
+const _mockInstance = {
+  get currentAddress() { return _currentAddress; },
+  setCurrentAddress(addr: any) {
+    _currentAddress = addr;
+    if (_observer?.update) _observer.update();
+  },
+  subscribe: (obs: any) => { _observer = obs; },
+  unsubscribe: (obs: any) => { if (_observer === obs) _observer = null; },
+};
 
 describe('LocationHighlightCards.vue', () => {
   let wrapper: VueWrapper<any>;
 
   beforeEach(() => {
+    _currentAddress = null;
+    _observer = null;
+    jest.spyOn(AddressCache, 'getInstance').mockReturnValue(_mockInstance as ReturnType<typeof AddressCache.getInstance>);
     wrapper = mount(LocationHighlightCards);
   });
 
   afterEach(() => {
+    jest.restoreAllMocks();
     wrapper.unmount();
   });
 
@@ -78,6 +97,19 @@ describe('LocationHighlightCards.vue', () => {
     expect(bairroValue.classes()).toContain('!mt-1');
     expect(bairroValue.classes()).toContain('!mb-0');
     expect(bairroValue.attributes('aria-live')).toBe('polite');
+  });
+
+  it('switches the locality card label to "Distrito" when distrito is present', async () => {
+    _mockInstance.setCurrentAddress({
+      distrito: 'Milho Verde',
+      municipio: 'Serro',
+      logradouro: 'Estrada Real',
+    });
+
+    await nextTick();
+
+    expect(wrapper.get('#bairro-label').text()).toBe('Distrito');
+    expect(wrapper.get('#bairro-value').text()).toBe('MILHO VERDE');
   });
 
   it('renders the "Logradouro" card with correct labels and values', () => {

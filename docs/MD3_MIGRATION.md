@@ -124,7 +124,7 @@ guia_js currently uses Bootstrap 5.3 as its CSS framework, with 20+ custom CSS f
 
 **Created:**
 
-- `src/components/AppHeroHeader.vue` — hero gradient card with `id=header-location-text`
+- `src/components/AppHeroHeader.vue` — hero gradient card with `id=header-location-text`, mirroring `Município · localidade` from the live location cards
 - `src/components/LocationHighlightCards.vue` — 3-card grid preserving `municipio-value`, `bairro-value`, `logradouro-value`
 - `src/components/SecondaryInfoPanel.vue` — collapsible secondary info panel with all secondary IDs; includes secondary-info-collapse CSS
 - `src/components/AdvancedControlsPanel.vue` — advanced controls + navigation log; includes chronometer CSS

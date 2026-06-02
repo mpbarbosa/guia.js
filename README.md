@@ -4,7 +4,7 @@
 
 Last Updated: 2026-05-28
 Status: Active
-version: 0.28.8-alpha
+version: 0.28.9-alpha
 
 ---
 
@@ -710,7 +710,7 @@ python3 -m http.server 9000
 
 - `HTMLPositionDisplayer` - Coordinate display and Google Maps links
 - `HTMLAddressDisplayer` - Address formatting and presentation
-- `HTMLHighlightCardsDisplayer` - Municipio and bairro highlight cards (v0.9.0+)
+- `HTMLHighlightCardsDisplayer` - Municipio and locality highlight cards (Bairro/Distrito) (v0.9.0+)
   - **v0.9.0-alpha**: Metropolitan region display (Região Metropolitana) with reduced visual prominence ✅
   - **Features**: Municipality with state abbreviation (e.g., "Recife, PE"), region context for metro areas
 - `HTMLReferencePlaceDisplayer` - Displays nearby reference places
@@ -1852,6 +1852,6 @@ ISC License - See repository for details
 
 ---
 
-**Version**: 0.28.8-alpha
+**Version**: 0.28.9-alpha
 **Status**: Active
 **Last Updated**: 2026-05-28

@@ -73,6 +73,7 @@ describe('Data Processing Modules Integration', () => {
             expect(address.logradouro).toBeNull();
             expect(address.numero).toBeNull();
             expect(address.bairro).toBeNull();
+            expect(address.distrito).toBeNull();
             expect(address.municipio).toBeNull();
             expect(address.uf).toBeNull();
             expect(address.siglaUF).toBeNull();
@@ -95,6 +96,52 @@ describe('Data Processing Modules Integration', () => {
             expect(address.bairroCompleto()).toBe('Bela Vista');
             expect(address.municipioCompleto()).toBe('São Paulo, SP');
             expect(address.enderecoCompleto()).toBe('Avenida Paulista, 1578, Bela Vista, São Paulo, SP, 01310-200');
+        });
+
+        test('should use distrito in the formatted locality slot when bairro is null', async () => {
+            const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
+
+            const address = new BrazilianStandardAddress();
+            address.logradouro = 'Estrada Real';
+            address.distrito = 'Milho Verde';
+            address.municipio = 'Serro';
+            address.siglaUF = 'MG';
+
+            expect(address.bairroCompleto()).toBe('Milho Verde');
+            expect(address.enderecoCompleto()).toBe('Estrada Real, Milho Verde, Serro, MG');
+        });
+
+        test('should normalize blank bairro and distrito values to null', async () => {
+            const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
+
+            const address = new BrazilianStandardAddress();
+            address.bairro = '   ';
+            address.distrito = '\t';
+
+            expect(address.bairro).toBeNull();
+            expect(address.distrito).toBeNull();
+        });
+
+        test('should throw when bairro and distrito are both assigned', async () => {
+            const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
+
+            const address = new BrazilianStandardAddress();
+            address.bairro = 'Milho Verde';
+
+            expect(() => {
+                address.distrito = 'Milho Verde';
+            }).toThrow('BrazilianStandardAddress cannot have both bairro and distrito');
+        });
+
+        test('should throw when distrito is already set and bairro is assigned later', async () => {
+            const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
+
+            const address = new BrazilianStandardAddress();
+            address.distrito = 'Milho Verde';
+
+            expect(() => {
+                address.bairro = 'Milho Verde';
+            }).toThrow('BrazilianStandardAddress cannot have both bairro and distrito');
         });
     });
 
@@ -156,6 +203,7 @@ describe('Data Processing Modules Integration', () => {
             expect(extractor.enderecoPadronizado.logradouro).toBe('Avenida Paulista');
             expect(extractor.enderecoPadronizado.numero).toBe('1578');
             expect(extractor.enderecoPadronizado.bairro).toBe('Bela Vista');
+            expect(extractor.enderecoPadronizado.distrito).toBeNull();
             expect(extractor.enderecoPadronizado.municipio).toBe('São Paulo');
             expect(extractor.enderecoPadronizado.siglaUF).toBe('SP');
             expect(extractor.enderecoPadronizado.cep).toBe('01310-200');
@@ -169,6 +217,80 @@ describe('Data Processing Modules Integration', () => {
             expect(AddressExtractor.extractSiglaUF('BR-RJ')).toBe('RJ');
             expect(AddressExtractor.extractSiglaUF('invalid')).toBeNull();
             expect(AddressExtractor.extractSiglaUF(null)).toBeNull();
+        });
+
+        test('should standardize the Milho Verde residential Nominatim response into a BrazilianStandardAddress', async () => {
+            const { default: AddressExtractor } = await import('../../src/data/AddressExtractor.js');
+            const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
+
+            const nominatimResponse = {
+                place_id: 11055065,
+                licence: 'Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright',
+                osm_type: 'way',
+                osm_id: 275380508,
+                lat: '-18.4663204',
+                lon: '-43.4911983',
+                category: 'highway',
+                type: 'residential',
+                place_rank: 26,
+                importance: 0.053390317387655414,
+                addresstype: 'road',
+                name: '',
+                display_name: 'Milho Verde, Serro, Minas Gerais, Região Sudeste, Brasil',
+                address: {
+                    city_district: 'Milho Verde',
+                    town: 'Serro',
+                    state: 'Minas Gerais',
+                    'ISO3166-2-lvl4': 'BR-MG',
+                    region: 'Região Sudeste',
+                    country: 'Brasil',
+                    country_code: 'br'
+                },
+                boundingbox: [
+                    '-18.4664976',
+                    '-18.4659396',
+                    '-43.4916595',
+                    '-43.4910056'
+                ]
+            };
+
+            const extractor = new AddressExtractor(nominatimResponse);
+            const address = extractor.enderecoPadronizado;
+
+            expect(address).toBeInstanceOf(BrazilianStandardAddress);
+            expect(address.logradouro).toBeNull();
+            expect(address.numero).toBeNull();
+            expect(address.bairro).toBeNull();
+            expect(address.distrito).toBe('Milho Verde');
+            expect(address.municipio).toBe('Serro');
+            expect(address.uf).toBe('Minas Gerais');
+            expect(address.siglaUF).toBe('MG');
+            expect(address.regiaoMetropolitana).toBeNull();
+            expect(address.cep).toBeNull();
+            expect(address.pais).toBe('Brasil');
+            expect(address.bairroCompleto()).toBe('Milho Verde');
+            expect(address.municipioCompleto()).toBe('Serro, MG');
+            expect(address.regiaoMetropolitanaFormatada()).toBe('');
+            expect(address.enderecoCompleto()).toBe('Milho Verde, Serro, MG');
+        });
+
+        test('should throw when provider data contains both bairro and distrito', async () => {
+            const { default: AddressExtractor } = await import('../../src/data/AddressExtractor.js');
+
+            const conflictingResponse = {
+                address: {
+                    suburb: 'Bela Vista',
+                    city_district: 'Bela Vista',
+                    city: 'São Paulo',
+                    state: 'São Paulo',
+                    'ISO3166-2-lvl4': 'BR-SP',
+                    country: 'Brasil'
+                }
+            };
+
+            expect(() => {
+                new AddressExtractor(conflictingResponse);
+            }).toThrow('BrazilianStandardAddress cannot have both bairro and distrito');
         });
     });
 

@@ -1,6 +1,6 @@
 # BrazilianStandardAddress API Documentation
 
-**Version:** 0.28.8-alpha
+**Version:** 0.28.9-alpha
 **File:** `src/data/BrazilianStandardAddress.ts`
 **Author:** Marcelo Pereira Barbosa
 **Since:** 0.9.0-alpha
@@ -13,7 +13,8 @@ The `BrazilianStandardAddress` class provides a standardized data structure for 
 
 - Standardize Brazilian address data structure
 - Provide formatted output methods for address display
-- Support Brazilian-specific address components (logradouro, bairro, município, UF, CEP)
+- Support Brazilian-specific address components (logradouro, bairro, distrito, município, UF, CEP)
+- Enforce the mutual-exclusion invariant between `bairro` and `distrito`
 - Follow immutability principles for data manipulation
 - Support metropolitan region display (v0.9.0-alpha)
 
@@ -62,7 +63,9 @@ console.log(address.municipio); // null
 
 ## Properties
 
-All properties are public and can be directly accessed and modified:
+All properties are public and can be directly accessed and modified. `bairro`
+and `distrito` are validated setters: blank values normalize to `null`, and the
+class throws if both fields become non-null.
 
 | Property | Type | Description | Default | Version |
 |----------|------|-------------|---------|---------|
@@ -70,6 +73,7 @@ All properties are public and can be directly accessed and modified:
 | `numero` | `string \| null` | Street number (e.g., "1578") | `null` | 0.9.0-alpha |
 | `complemento` | `string \| null` | Address complement (e.g., "Apt 10") | `null` | 0.9.0-alpha |
 | `bairro` | `string \| null` | Neighborhood (e.g., "Bela Vista") | `null` | 0.9.0-alpha |
+| `distrito` | `string \| null` | Raw Nominatim `city_district` value (e.g., "Milho Verde") | `null` | 0.28.9-alpha |
 | `municipio` | `string \| null` | Municipality/city (e.g., "São Paulo") | `null` | 0.9.0-alpha |
 | `regiaoMetropolitana` | `string \| null` | Metropolitan region (e.g., "Região Metropolitana do Recife") | `null` | 0.9.0-alpha |
 | `uf` | `string \| null` | State full name (e.g., "São Paulo", "Rio de Janeiro") | `null` | 0.9.0-alpha |
@@ -88,6 +92,20 @@ All properties are public and can be directly accessed and modified:
 
 - Brazilian neighborhood or district
 - Examples: "Copacabana", "Ipanema", "Centro"
+
+**`distrito` (District)**
+
+- Raw Nominatim `city_district` value captured without fallback inference
+- Distinct from `bairro`, which remains the canonical neighborhood field used for formatting
+- Example: "Milho Verde"
+
+### `bairro` / `distrito` invariant
+
+- `bairro` and `distrito` are mutually exclusive in `BrazilianStandardAddress`
+- Blank and whitespace-only values normalize to `null`
+- Assigning a non-null `bairro` while `distrito` is non-null throws
+- Assigning a non-null `distrito` while `bairro` is non-null throws
+- Error message: `BrazilianStandardAddress cannot have both bairro and distrito`
 
 **`municipio` (Municipality)**
 
@@ -149,9 +167,9 @@ logradouroCompleto() {
 
 ### `bairroCompleto()`
 
-Returns the complete formatted neighborhood information.
+Returns the best available formatted sub-municipal locality information.
 
-**Returns:** `string` - Formatted neighborhood name
+**Returns:** `string` - Formatted neighborhood or district name
 
 **Example:**
 
@@ -161,15 +179,24 @@ address.bairro = "Copacabana";
 
 console.log(address.bairroCompleto());
 // Output: "Copacabana"
+
+address.bairro = null;
+address.distrito = "Milho Verde";
+console.log(address.bairroCompleto());
+// Output: "Milho Verde"
 ```
 
 **Implementation:**
 
 ```javascript
 bairroCompleto() {
-    return this.bairro || "";
+    return this.bairro || this.distrito || "";
 }
 ```
+
+`bairroCompleto()` is the canonical locality formatter used by
+`enderecoCompleto()`. It prefers `bairro` and falls back to `distrito` when the
+neighborhood field is absent.
 
 ---
 

@@ -10,7 +10,7 @@ Mobile users faced excessive information overload:
 
 - **3-4 screens** of vertical scrolling to see all content
 - Highlight cards + address + coordinates + references + IBGE + chronometer all stacked
-- Primary information (município/bairro) lost in visual noise
+- Primary information (município/localidade) lost in visual noise
 - Reduced "glanceability" - users couldn't quickly scan location
 - High cognitive load for simple task ("Where am I?")
 
@@ -18,7 +18,7 @@ Mobile users faced excessive information overload:
 
 **Before progressive disclosure**:
 
-1. Open app → See município/bairro cards
+1. Open app → See município/localidade cards
 2. Scroll down → Full address section
 3. Scroll down → Coordinates section
 4. Scroll down → Reference place section
@@ -191,7 +191,7 @@ class ProgressiveDisclosureManager {
 
 ### Mobile First-Time User
 
-1. **App loads** → See município/bairro cards (sticky at top)
+1. **App loads** → See município/localidade cards (sticky at top)
 2. **Primary info visible** → "Recife, PE" / "Boa Viagem"
 3. **Below**: "ℹ️ Informações Adicionais ▼" (collapsed)
 4. **Scroll** → Sticky cards stay visible, no clutter

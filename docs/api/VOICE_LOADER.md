@@ -1,6 +1,6 @@
 # VoiceLoader API Reference
 
-**Version**: 0.28.8-alpha
+**Version**: 0.28.9-alpha
 **Last Updated**: 2026-05-20
 **Status**: Stable
 **Module**: `src/speech/VoiceLoader.ts`

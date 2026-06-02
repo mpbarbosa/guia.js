@@ -23,6 +23,7 @@ export interface NominatimAddress {
   neighbourhood?: string;
   suburb?: string;
   quarter?: string;
+  city_district?: string;
   village?: string;
   district?: string;
   hamlet?: string;

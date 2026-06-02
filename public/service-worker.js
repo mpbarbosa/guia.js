@@ -1,10 +1,10 @@
 /**
  * Service Worker for Guia Turístico
  * Provides offline support and caching for PWA functionality
- * @version 0.28.8-alpha
+ * @version 0.28.9-alpha
  */
 
-const CACHE_NAME = 'guia-turistico-v0.28.8-alpha-20260523';
+const CACHE_NAME = 'guia-turistico-v0.28.9-alpha-20260523';
 
 /** Shell assets precached on install — routes that must work offline. */
 const STATIC_ASSETS = [

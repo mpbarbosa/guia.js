@@ -3,7 +3,7 @@ import { useHighlightCards } from '../composables/useHighlightCards.js';
 
 defineOptions({ name: 'LocationHighlightCards' });
 
-const { municipio, bairro, logradouro, regiaoMetropolitana } = useHighlightCards();
+const { municipio, bairro, bairroLabel, logradouro, regiaoMetropolitana } = useHighlightCards();
 </script>
 
 <template>
@@ -31,7 +31,7 @@ const { municipio, bairro, logradouro, regiaoMetropolitana } = useHighlightCards
       role="region"
       aria-labelledby="bairro-label"
     >
-      <span id="bairro-label" class="text-xs font-black text-outline uppercase tracking-widest">Bairro</span>
+      <span id="bairro-label" class="text-xs font-black text-outline uppercase tracking-widest">{{ bairroLabel }}</span>
       <p
         id="bairro-value"
         class="!text-xl !font-bold text-indigo-950 !mt-1 !mb-0 uppercase !leading-tight"

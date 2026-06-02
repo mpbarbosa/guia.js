@@ -2,8 +2,8 @@
  * HTMLHeaderDisplayer
  *
  * Watches the live location DOM elements (`#municipio-value`, `#bairro-value`)
- * via MutationObserver and mirrors their text into `#header-location-text`
- * inside the hero header.
+ * via MutationObserver and mirrors their displayed municipio + localidade text
+ * into `#header-location-text` inside the hero header.
  *
  * Follows the existing Displayer conventions (frozen instance, log/warn,
  * toString, static factory method).
@@ -34,7 +34,8 @@ export class HTMLHeaderDisplayer {
 		// Render once with whatever is already in the DOM
 		this._render();
 
-		// Watch for text changes in both source elements
+		// Watch for text changes in both source elements. `#bairro-value` remains
+		// the DOM source even when it currently displays a distrito.
 		this._observer = new MutationObserver(() => this._render());
 
 		const observerOptions: MutationObserverInit = {

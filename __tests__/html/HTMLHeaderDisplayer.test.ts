@@ -38,7 +38,7 @@ describe('HTMLHeaderDisplayer', () => {
       expect(Object.isFrozen(d)).toBe(true);
     });
 
-    it('calls _render() immediately and sets header text to municipio · bairro', () => {
+    it('calls _render() immediately and sets header text to municipio · localidade', () => {
       const headerEl = makeEl('header-location-text');
       doc.body.append(headerEl, makeEl('municipio-value', 'Paraty'), makeEl('bairro-value', 'Centro'));
       new HTMLHeaderDisplayer(doc);
@@ -106,6 +106,18 @@ describe('HTMLHeaderDisplayer', () => {
       d._render();
 
       expect(headerEl.textContent).toBe('Paraty · Trindade');
+      expect(headerEl.getAttribute('data-pending')).toBe('false');
+    });
+
+    it('mirrors a distrito-derived locality value from #bairro-value into the hero header', () => {
+      const headerEl = makeEl('header-location-text');
+      const municipioEl = makeEl('municipio-value', 'Serro');
+      const bairroEl = makeEl('bairro-value', 'Milho Verde');
+      doc.body.append(headerEl, municipioEl, bairroEl);
+
+      new HTMLHeaderDisplayer(doc);
+
+      expect(headerEl.textContent).toBe('Serro · Milho Verde');
       expect(headerEl.getAttribute('data-pending')).toBe('false');
     });
 

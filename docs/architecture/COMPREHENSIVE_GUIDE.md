@@ -601,7 +601,7 @@ class GeoPosition {
    ↓
 10. Parallel display updates:
     ├─→ HTMLAddressDisplayer: Format and display address
-    ├─→ HTMLHighlightCardsDisplayer: Show municipio/bairro cards
+    ├─→ HTMLHighlightCardsDisplayer: Show municipio/localidade cards (`Bairro`/`Distrito`)
     ├─→ HTMLReferencePlaceDisplayer: Show nearby places
     ├─→ HTMLSidraDisplayer: Fetch and show population stats
     └─→ SpeechCoordinator: Announce address change (if enabled)

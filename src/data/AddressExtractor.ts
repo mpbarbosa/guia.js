@@ -143,6 +143,9 @@ class NominatimAddressExtractor extends AddressExtractor {
 		this.enderecoPadronizado.bairro =
 			address['addr:neighbourhood'] || address.neighbourhood || address.suburb || address.quarter || null;
 
+		this.enderecoPadronizado.distrito =
+			address.city_district || null;
+
 		this.enderecoPadronizado.municipio =
 			address['addr:city'] || address.city || address.town || address.municipality || address.village || null;
 
@@ -188,4 +191,3 @@ class NominatimAddressExtractor extends AddressExtractor {
 export default NominatimAddressExtractor;
 
 export { AddressExtractor, NominatimAddressExtractor };
-

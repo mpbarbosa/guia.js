@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides comprehensive documentation for the Nominatim API integration and OSM address translation in the Guia Turístico project (version 0.28.8-alpha). Nominatim is the geocoding service provided by OpenStreetMap that powers the reverse geocoding functionality, translating geographic coordinates into Brazilian standard addresses.
+This document provides comprehensive documentation for the Nominatim API integration and OSM address translation in the Guia Turístico project (version 0.28.9-alpha). Nominatim is the geocoding service provided by OpenStreetMap that powers the reverse geocoding functionality, translating geographic coordinates into Brazilian standard addresses.
 
 **Key Features:**
 
@@ -498,7 +498,12 @@ The translation produces a `BrazilianStandardAddress` object with the following 
 | `numero` | string\|null | House/building number | "123" |
 | `complemento` | string\|null | Complement (not extracted from OSM) | null |
 | `bairro` | string\|null | Neighborhood | "Jardins" |
+| `distrito` | string\|null | Raw Nominatim `city_district` value | "Milho Verde" |
 | `municipio` | string\|null | City/Municipality | "São Paulo" |
+
+When both a neighborhood field (such as `suburb`) and `city_district` are
+present, extraction fails instead of silently choosing one. The standardized
+address model does not allow `bairro` and `distrito` to be non-null together.
 | `uf` | string\|null | **Full state name only** | "São Paulo", "Rio de Janeiro" |
 | `siglaUF` | string\|null | **Two-letter state abbreviation only** | "SP", "RJ" |
 | `cep` | string\|null | Postal code | "01426-001" |
@@ -793,5 +798,5 @@ Documentation is part of the Guia Turístico project. See repository root for li
 ---
 
 **Last Updated**: 2026-05-30
-**Version**: 0.28.8-alpha
+**Version**: 0.28.9-alpha
 **Status**: ✅ Complete and up-to-date

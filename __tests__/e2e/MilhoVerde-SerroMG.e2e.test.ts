@@ -85,6 +85,7 @@ global.fetch = jest.fn();
 const { default: BrazilianStandardAddress } = await import('../../src/data/BrazilianStandardAddress.js');
 const { default: AddressDataExtractor } = await import('../../src/data/AddressDataExtractor.js');
 const { default: ReferencePlace } = await import('../../src/data/ReferencePlace.js');
+const { default: AddressExtractor } = await import('../../src/data/AddressExtractor.js');
 const { GeoPosition } = await import('https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js');
 
 describe('E2E: Milho Verde, Serro, MG - Complete Address Validation', () => {
@@ -319,17 +320,99 @@ describe('E2E: Milho Verde, Serro, MG - Complete Address Validation', () => {
     });
 
     describe('Reference Place Validation', () => {
-        
+
         test('should create reference place for tourism camp_site', () => {
             const refPlace = new ReferencePlace({
                 class: 'tourism',
                 type: 'camp_site',
                 name: 'Camping Nozinho'
             });
-            
+
             expect(refPlace.className).toBe('tourism');
             expect(refPlace.typeName).toBe('camp_site');
             expect(refPlace.name).toBe('Camping Nozinho');
+        });
+    });
+
+    describe('AddressExtractor Direct Instantiation', () => {
+
+        test('should instantiate NominatimAddressExtractor with Milho Verde OSM data', () => {
+            const extractor = new AddressExtractor(EXPECTED_OSM_RESPONSE);
+
+            expect(extractor).toBeDefined();
+            expect(extractor.data).toBe(EXPECTED_OSM_RESPONSE);
+            expect(extractor.enderecoPadronizado).toBeDefined();
+            expect(Object.isFrozen(extractor)).toBe(true);
+        });
+
+        test('should extract correct enderecoPadronizado properties from Milho Verde OSM data', () => {
+            const extractor = new AddressExtractor(EXPECTED_OSM_RESPONSE);
+            const addr = extractor.enderecoPadronizado;
+
+            expect(addr.logradouro).toBe('Rua Direita');
+            expect(addr.numero).toBe('172');
+            expect(addr.bairro).toBeNull();
+            expect(addr.distrito).toBe('Milho Verde');
+            expect(addr.municipio).toBe('Serro');
+            expect(addr.uf).toBe('Minas Gerais');
+            expect(addr.siglaUF).toBe('MG');
+            expect(addr.cep).toBe('39150-000');
+            expect(addr.pais).toBe('Brasil');
+        });
+
+        test('should attach correct referencePlace for tourism camp_site', () => {
+            const extractor = new AddressExtractor(EXPECTED_OSM_RESPONSE);
+            const ref = extractor.enderecoPadronizado.referencePlace;
+
+            expect(ref).toBeDefined();
+            expect(ref.className).toBe('tourism');
+            expect(ref.typeName).toBe('camp_site');
+            expect(ref.name).toBe('Camping Nozinho');
+        });
+    });
+
+    describe('BrazilianStandardAddress Methods via AddressExtractor', () => {
+
+        test('enderecoPadronizado should be an instance of BrazilianStandardAddress', () => {
+            const { enderecoPadronizado: addr } = new AddressExtractor(EXPECTED_OSM_RESPONSE);
+
+            expect(addr).toBeInstanceOf(BrazilianStandardAddress);
+        });
+
+        test('logradouroCompleto should concatenate logradouro and numero', () => {
+            const { enderecoPadronizado: addr } = new AddressExtractor(EXPECTED_OSM_RESPONSE);
+
+            expect(addr.logradouroCompleto()).toBe('Rua Direita, 172');
+        });
+
+        test('bairroCompleto should return empty string when bairro is null', () => {
+            const { enderecoPadronizado: addr } = new AddressExtractor(EXPECTED_OSM_RESPONSE);
+
+            expect(addr.bairroCompleto()).toBe('');
+        });
+
+        test('municipioCompleto should return municipio with siglaUF', () => {
+            const { enderecoPadronizado: addr } = new AddressExtractor(EXPECTED_OSM_RESPONSE);
+
+            expect(addr.municipioCompleto()).toBe('Serro, MG');
+        });
+
+        test('regiaoMetropolitanaFormatada should return empty string when absent', () => {
+            const { enderecoPadronizado: addr } = new AddressExtractor(EXPECTED_OSM_RESPONSE);
+
+            expect(addr.regiaoMetropolitanaFormatada()).toBe('');
+        });
+
+        test('enderecoCompleto should join logradouro, municipio and CEP omitting null bairro', () => {
+            const { enderecoPadronizado: addr } = new AddressExtractor(EXPECTED_OSM_RESPONSE);
+
+            expect(addr.enderecoCompleto()).toBe('Rua Direita, 172, Serro, MG, 39150-000');
+        });
+
+        test('toString should return class name prefixed to enderecoCompleto', () => {
+            const { enderecoPadronizado: addr } = new AddressExtractor(EXPECTED_OSM_RESPONSE);
+
+            expect(addr.toString()).toBe('BrazilianStandardAddress: Rua Direita, 172, Serro, MG, 39150-000');
         });
     });
 });

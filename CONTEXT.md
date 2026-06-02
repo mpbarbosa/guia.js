@@ -17,6 +17,12 @@ _Avoid_: Street, road, via
 The neighbourhood component of a Brazilian address, one level below município.
 _Avoid_: District, neighbourhood, suburb, quarter
 
+**Distrito**:
+The raw Nominatim `address.city_district` value captured on the endereço
+padronizado without fallback inference. Distinct from bairro, which remains the
+canonical neighbourhood-level term in this project.
+_Avoid_: District, neighbourhood, suburb, quarter
+
 **Município**:
 The Brazilian administrative unit that contains bairros and maps to what the
 rest of the world calls a city or town. A município is uniquely identified by
@@ -43,8 +49,8 @@ _Avoid_: Metropolitan region, metro area
 **Endereço Padronizado**:
 The canonical structured address object produced by this project after a
 geocoding result is extracted and normalised. Contains logradouro, bairro,
-município, siglaUF, CEP, país, regiãoMetropolitana, and referencePlace. The
-authoritative output of the geocoding pipeline.
+distrito, município, siglaUF, CEP, país, regiãoMetropolitana, and
+referencePlace. The authoritative output of the geocoding pipeline.
 _Avoid_: Standardised address, parsed address, address object
 
 **Ponto de Referência (ReferencePlace)**:

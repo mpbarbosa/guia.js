@@ -15,15 +15,30 @@ type CurrentAddress = AddressCacheInstance['currentAddress'];
 export function useHighlightCards() {
   const municipio           = ref<string>('—');
   const bairro              = ref<string>('—');
+  const bairroLabel         = ref<string>('Bairro');
   const logradouro          = ref<string>('—');
   const regiaoMetropolitana = ref<string | null>(null);
   const addressCache = AddressCache.getInstance();
 
+  function normalizeDisplayField(value: string | null | undefined): string | null {
+    const trimmed = value?.trim();
+    return trimmed ? trimmed.toUpperCase() : null;
+  }
+
   function syncFromAddress(addr: CurrentAddress): void {
     if (!addr) return;
-    municipio.value = addr.municipio?.trim() ? addr.municipio.toUpperCase() : '—';
-    bairro.value = addr.bairro?.trim() ? addr.bairro.toUpperCase() : '—';
-    logradouro.value = addr.logradouro?.trim() ? addr.logradouro.toUpperCase() : '—';
+
+    const normalizedBairro = normalizeDisplayField(addr.bairro);
+    const normalizedDistrito = normalizeDisplayField(addr.distrito);
+
+    if (normalizedBairro !== null && normalizedDistrito !== null) {
+      throw new Error('BrazilianStandardAddress cannot have both bairro and distrito');
+    }
+
+    municipio.value = normalizeDisplayField(addr.municipio) ?? '—';
+    bairroLabel.value = normalizedDistrito !== null ? 'Distrito' : 'Bairro';
+    bairro.value = normalizedBairro ?? normalizedDistrito ?? '—';
+    logradouro.value = normalizeDisplayField(addr.logradouro) ?? '—';
     regiaoMetropolitana.value = addr.regiaoMetropolitana?.trim() || null;
   }
 
@@ -40,5 +55,5 @@ export function useHighlightCards() {
     addressCache.unsubscribe(observer as SubscribeParam);
   });
 
-  return { municipio, bairro, logradouro, regiaoMetropolitana };
+  return { municipio, bairro, bairroLabel, logradouro, regiaoMetropolitana };
 }

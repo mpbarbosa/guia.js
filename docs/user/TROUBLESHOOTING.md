@@ -1,6 +1,6 @@
 # Guia Turístico - Troubleshooting Guide
 
-**Version**: 0.28.8-alpha
+**Version**: 0.28.9-alpha
 **Last Updated**: 2026-03-02
 **Status**: Complete
 
@@ -787,7 +787,7 @@ When reporting bugs, provide:
 
 ---
 
-**Version**: 0.28.8-alpha
+**Version**: 0.28.9-alpha
 **Last Updated**: 2026-03-02
 **Maintainer**: GitHub Copilot CLI
 **Status**: ✅ Complete

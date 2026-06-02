@@ -12,6 +12,9 @@
 
 import type ReferencePlace from './ReferencePlace.js';
 
+const BAIRRO_DISTRITO_CONFLICT_MESSAGE =
+	'BrazilianStandardAddress cannot have both bairro and distrito';
+
 /**
  * Represents a standardized Brazilian address with formatting capabilities.
  * 
@@ -25,10 +28,12 @@ import type ReferencePlace from './ReferencePlace.js';
  * @class
  */
 class BrazilianStandardAddress {
+	#bairro: string | null;
+	#distrito: string | null;
+
 	logradouro: string | null;
 	numero: string | null;
 	complemento: string | null;
-	bairro: string | null;
 	municipio: string | null;
 	regiaoMetropolitana: string | null;
 	uf: string | null;
@@ -38,6 +43,30 @@ class BrazilianStandardAddress {
 	/** Point-of-interest data extracted from the geocoding response, if present. */
 	referencePlace: ReferencePlace | null;
 
+	get bairro(): string | null {
+		return this.#bairro;
+	}
+
+	set bairro(value: string | null | undefined) {
+		const normalized = BrazilianStandardAddress.normalizeNullableAddressField(value);
+		if (normalized !== null && this.#distrito !== null) {
+			throw new Error(BAIRRO_DISTRITO_CONFLICT_MESSAGE);
+		}
+		this.#bairro = normalized;
+	}
+
+	get distrito(): string | null {
+		return this.#distrito;
+	}
+
+	set distrito(value: string | null | undefined) {
+		const normalized = BrazilianStandardAddress.normalizeNullableAddressField(value);
+		if (normalized !== null && this.#bairro !== null) {
+			throw new Error(BAIRRO_DISTRITO_CONFLICT_MESSAGE);
+		}
+		this.#distrito = normalized;
+	}
+
 	/**
 	 * Creates a new BrazilianStandardAddress instance.
 	 * 
@@ -45,10 +74,13 @@ class BrazilianStandardAddress {
 	 * that can be populated with standardized Brazilian address data.
 	 */
 	constructor() {
+		this.#bairro = null;
+		this.#distrito = null;
 		this.logradouro = null;
 		this.numero = null;
 		this.complemento = null;
 		this.bairro = null;
+		this.distrito = null;
 		this.municipio = null;
 		this.regiaoMetropolitana = null;
 		this.uf = null;
@@ -56,6 +88,11 @@ class BrazilianStandardAddress {
 		this.cep = null;
 		this.pais = "Brasil";
 		this.referencePlace = null;
+	}
+
+	private static normalizeNullableAddressField(value: string | null | undefined): string | null {
+		if (value == null) return null;
+		return value.trim() === '' ? null : value;
 	}
 
 	/**
@@ -73,13 +110,13 @@ class BrazilianStandardAddress {
 	}
 
 	/**
-	 * Returns the complete formatted neighborhood information.
+	 * Returns the best available formatted sub-municipal locality information.
 	 * 
-	 * @returns {string} Formatted neighborhood name
+	 * @returns {string} Formatted neighborhood or district name
 	 * @since 0.9.0-alpha
 	 */
 	bairroCompleto(): string {
-		return this.bairro || "";
+		return this.bairro || this.distrito || "";
 	}
 
 	/**
@@ -127,7 +164,7 @@ class BrazilianStandardAddress {
 	enderecoCompleto(): string {
 		return [
 			this.logradouroCompleto(),
-			this.bairro,
+			this.bairroCompleto(),
 			this.municipioCompleto(),
 			this.cep
 		]

@@ -15,6 +15,8 @@ The `AddressExtractor` class extracts and standardizes address data from geocodi
 - Standardize various address field formats into Brazilian standard
 - Provide intelligent fallback logic for missing data
 - Support both Nominatim format and OSM address tags
+- Preserve raw Nominatim `city_district` data in `BrazilianStandardAddress.distrito`
+- Fail fast when provider data would populate both `bairro` and `distrito`
 - Create immutable address instances (frozen after creation)
 - Extract reference place information for context
 
@@ -113,6 +115,7 @@ const extractor = new AddressExtractor(geocodingData);
 const address = extractor.enderecoPadronizado;
 
 console.log(address.logradouro);     // "Avenida Paulista"
+console.log(address.distrito);       // null or raw city_district
 console.log(address.municipio);      // "São Paulo"
 console.log(address.siglaUF);        // "SP"
 ```
@@ -234,7 +237,24 @@ this.enderecoPadronizado.bairro =
 
 **Supported Fields:** `addr:neighbourhood`, `neighbourhood`, `suburb`, `quarter`
 
-#### 4. Municipality (`municipio`)
+#### 4. District (`distrito`)
+
+```javascript
+this.enderecoPadronizado.distrito =
+    address.city_district ||
+    null;
+```
+
+**Supported Fields:** `city_district`
+
+**Note:** This is a strict raw mapping of Nominatim `city_district`. It does not
+fall back to `district`, `suburb`, `village`, or `town`.
+
+If provider data also supplies a neighborhood field that would populate
+`bairro`, the `BrazilianStandardAddress` invariant rejects the result with:
+`BrazilianStandardAddress cannot have both bairro and distrito`.
+
+#### 5. Municipality (`municipio`)
 
 ```javascript
 this.enderecoPadronizado.municipio =
@@ -250,7 +270,7 @@ this.enderecoPadronizado.municipio =
 
 **Note:** `hamlet` is intentionally NOT included - hamlets are subdivisions within municipalities, not municipalities themselves.
 
-#### 5. Metropolitan Region (`regiaoMetropolitana`) - *v0.9.0-alpha*
+#### 6. Metropolitan Region (`regiaoMetropolitana`) - *v0.9.0-alpha*
 
 ```javascript
 this.enderecoPadronizado.regiaoMetropolitana = address.county || null;

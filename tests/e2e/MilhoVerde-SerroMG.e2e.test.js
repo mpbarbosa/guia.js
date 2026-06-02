@@ -141,8 +141,6 @@ describe('E2E: Milho Verde, Serro, MG - Complete Address Validation', () => {
         });
         
         test('should have valid coordinates for Milho Verde location', () => {
-            expect(TEST_LATITUDE).toBeDefined();
-            expect(TEST_LONGITUDE).toBeDefined();
             expect(typeof TEST_LATITUDE).toBe('number');
             expect(typeof TEST_LONGITUDE).toBe('number');
         });
@@ -188,7 +186,7 @@ describe('E2E: Milho Verde, Serro, MG - Complete Address Validation', () => {
     describe('Address Data Validation', () => {
         
         test('should have complete Brazilian address components', () => {
-            const address = EXPECTED_OSM_RESPONSE.address;
+            const { address } = EXPECTED_OSM_RESPONSE;
             
             expect(address.road).toBe('Rua Direita');
             expect(address.house_number).toBe('172');
@@ -197,6 +195,16 @@ describe('E2E: Milho Verde, Serro, MG - Complete Address Validation', () => {
             expect(address.postcode).toBe('39150-000');
             expect(address.country).toBe('Brasil');
             expect(address.city_district).toBe('Milho Verde');
+        });
+
+        test('should preserve city_district as distrito in the standardized address', async () => {
+            const { default: AddressExtractor } = await import('../../src/data/AddressExtractor.js');
+
+            const extractor = new AddressExtractor(EXPECTED_OSM_RESPONSE);
+
+            expect(extractor.enderecoPadronizado.distrito).toBe('Milho Verde');
+            expect(extractor.enderecoPadronizado.bairro).toBeNull();
+            expect(extractor.enderecoPadronizado.municipio).toBe('Serro');
         });
         
         test('should have tourism reference place data', () => {
@@ -223,15 +231,15 @@ describe('E2E: Milho Verde, Serro, MG - Complete Address Validation', () => {
         });
         
         test('should validate all address components are present', () => {
-            const address = EXPECTED_OSM_RESPONSE.address;
+            const { road, house_number, town, state, postcode, country } = EXPECTED_OSM_RESPONSE.address;
             
             // Validate required Brazilian address components
-            expect(address.road).toBeTruthy();
-            expect(address.house_number).toBeTruthy();
-            expect(address.town).toBeTruthy();
-            expect(address.state).toBeTruthy();
-            expect(address.postcode).toBeTruthy();
-            expect(address.country).toBeTruthy();
+            expect(road).toBeTruthy();
+            expect(house_number).toBeTruthy();
+            expect(town).toBeTruthy();
+            expect(state).toBeTruthy();
+            expect(postcode).toBeTruthy();
+            expect(country).toBeTruthy();
         });
     });
 
@@ -252,7 +260,7 @@ describe('E2E: Milho Verde, Serro, MG - Complete Address Validation', () => {
         });
         
         test('should validate all expected fields are present', () => {
-            const address = EXPECTED_OSM_RESPONSE.address;
+            const { address } = EXPECTED_OSM_RESPONSE;
             
             expect(address).toBeDefined();
             expect(address.state).toBe('Minas Gerais');

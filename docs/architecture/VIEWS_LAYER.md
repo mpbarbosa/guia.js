@@ -1,6 +1,6 @@
 # Views Layer Documentation
 
-**Version**: 0.28.8-alpha
+**Version**: 0.28.9-alpha
 **Location**: `src/views/`
 **Purpose**: SPA view controllers for route-specific functionality
 

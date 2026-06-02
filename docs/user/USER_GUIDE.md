@@ -2,7 +2,7 @@
 
 **Complete guide for using the Guia Turístico tourist guide application.**
 
-**Version**: 0.28.8-alpha
+**Version**: 0.28.9-alpha
 **Last Updated**: 2026-03-02
 **Status**: Complete
 
@@ -751,6 +751,6 @@ To revoke location permission:
 
 ---
 
-**Version**: 0.28.8-alpha
+**Version**: 0.28.9-alpha
 **Last Updated**: 2026-03-02
 **Status**: Complete

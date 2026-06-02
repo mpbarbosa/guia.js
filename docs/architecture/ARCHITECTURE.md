@@ -3,7 +3,7 @@
 ---
 
 **Last Updated**: 2026-05-31
-**Version**: 0.28.8-alpha
+**Version**: 0.28.9-alpha
 **Status**: Active
 **Category**: Architecture
 
@@ -132,7 +132,7 @@ The application follows a **layered architecture** with clear separation of conc
 - **HTML Displayers**: Component-specific rendering
   - `HTMLPositionDisplayer`: Coordinate display and Google Maps links
   - `HTMLAddressDisplayer`: Brazilian address formatting
-  - `HTMLHighlightCardsDisplayer`: Municipio and bairro cards with metropolitan region
+  - `HTMLHighlightCardsDisplayer`: Municipio and locality cards (`Bairro`/`Distrito`) with metropolitan region
   - `HTMLReferencePlaceDisplayer`: Nearby reference place display
   - `HTMLSidraDisplayer`: IBGE population statistics panel (observer pattern)
   - `HTMLNearbyPlacesPanel` (`src/html/HTMLNearbyPlacesPanel.ts`): Renders Overpass API results as a list with distance, category icon, and OSM link; auto-shows on GPS availability
@@ -728,5 +728,5 @@ export class MyCoordinator {
 ---
 
 **Last Updated**: 2026-05-28
-**Architecture Version**: 0.28.8-alpha
+**Architecture Version**: 0.28.9-alpha
 **Documentation Status**: ✅ Complete

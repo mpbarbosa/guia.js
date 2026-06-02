@@ -1,6 +1,6 @@
 // HTMLHeaderDisplayer.test.ts
-import HTMLHeaderDisplayer from '../../src/html/HTMLHeaderDisplayer';
-import { log, warn } from '../../src/utils/logger';
+import HTMLHeaderDisplayer from '../../src/html/HTMLHeaderDisplayer.js';
+import { log, warn } from '../../src/utils/logger.js';
 
 jest.mock('../../src/utils/logger', () => ({
   log: jest.fn(),
@@ -22,7 +22,7 @@ describe('HTMLHeaderDisplayer', () => {
     jest.clearAllMocks();
   });
 
-  it('should initialize and observe municipio and bairro elements', () => {
+  it('should initialize and observe municipio and displayed-locality elements', () => {
     const headerTextEl = createMockElement('header-location-text');
     const municipioEl = createMockElement('municipio-value', 'Paraty');
     const bairroEl = createMockElement('bairro-value', 'Centro');
@@ -36,11 +36,11 @@ describe('HTMLHeaderDisplayer', () => {
     expect(displayer._observer).toBeInstanceOf(MutationObserver);
     expect(Object.isFrozen(displayer)).toBe(true);
     expect(log).toHaveBeenCalledWith('(HTMLHeaderDisplayer) Initialized — observing municipio + bairro');
-    expect(headerTextEl.textContent).toBe(' · ');
+    expect(headerTextEl.textContent).toBe('Paraty · Centro');
     expect(headerTextEl.getAttribute('data-pending')).toBe('false');
   });
 
-  it('should set data-pending to true if both municipio and bairro are missing', () => {
+  it('should set data-pending to true if both municipio and displayed locality are missing', () => {
     const headerTextEl = createMockElement('header-location-text');
     const municipioEl = createMockElement('municipio-value', '');
     const bairroEl = createMockElement('bairro-value', '');
@@ -51,7 +51,7 @@ describe('HTMLHeaderDisplayer', () => {
     expect(headerTextEl.getAttribute('data-pending')).toBe('true');
   });
 
-  it('should handle missing municipio or bairro elements gracefully', () => {
+  it('should handle missing municipio or displayed-locality elements gracefully', () => {
     const headerTextEl = createMockElement('header-location-text');
     documentMock.body.append(headerTextEl);
 
@@ -75,7 +75,7 @@ describe('HTMLHeaderDisplayer', () => {
     expect(Object.isFrozen(displayer)).toBe(true);
   });
 
-  it('should update header text when municipio or bairro changes', () => {
+  it('should update header text when municipio or displayed locality changes', () => {
     const headerTextEl = createMockElement('header-location-text');
     const municipioEl = createMockElement('municipio-value', 'Old');
     const bairroEl = createMockElement('bairro-value', 'Old');
@@ -84,16 +84,27 @@ describe('HTMLHeaderDisplayer', () => {
     const displayer = new HTMLHeaderDisplayer(documentMock);
 
     municipioEl.textContent = 'NewMunicipio';
-    const mutation = new MutationRecord();
     displayer._render();
-    expect(headerTextEl.textContent).toBe(' · ');
+    expect(headerTextEl.textContent).toBe('NewMunicipio · Old');
     expect(headerTextEl.getAttribute('data-pending')).toBe('false');
-    expect(log).toHaveBeenCalledWith(`(HTMLHeaderDisplayer) Updated: " · "`);
+    expect(log).toHaveBeenCalledWith('(HTMLHeaderDisplayer) Updated: "NewMunicipio · Old"');
 
     municipioEl.textContent = '';
     bairroEl.textContent = '';
     displayer._render();
     expect(headerTextEl.getAttribute('data-pending')).toBe('true');
+  });
+
+  it('should mirror a distrito-derived locality value from #bairro-value into the hero header', () => {
+    const headerTextEl = createMockElement('header-location-text');
+    const municipioEl = createMockElement('municipio-value', 'Serro');
+    const bairroEl = createMockElement('bairro-value', 'Milho Verde');
+    documentMock.body.append(headerTextEl, municipioEl, bairroEl);
+
+    new HTMLHeaderDisplayer(documentMock);
+
+    expect(headerTextEl.textContent).toBe('Serro · Milho Verde');
+    expect(headerTextEl.getAttribute('data-pending')).toBe('false');
   });
 
   it('should disconnect observer and log on disconnect', () => {

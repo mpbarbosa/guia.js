@@ -114,11 +114,11 @@
       "!coverage/**"
     ],
     "moduleNameMapper": {
-      "^bessa_patterns\\.ts$": "<rootDir>/../bessa_patterns.ts/src/index",
-      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.11-alpha/dist/esm/index\\.js$": "<rootDir>/../paraty_geocore.js/src/index",
-      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/index\\.js$": "<rootDir>/../paraty_geoservices/src/index",
-      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/esm/index\\.js$": "<rootDir>/../paraty_geoservices/src/index",
-      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/esm/application/services/ChangeDetectionCoordinator\\.js$": "<rootDir>/../paraty_geoservices/src/application/services/ChangeDetectionCoordinator",
+      "^bessa_patterns\\.ts$": "<rootDir>/__mocks__/bessa_patterns.ts.js",
+      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.11-alpha/dist/esm/index\\.js$": "<rootDir>/__mocks__/paraty_geocore.js",
+      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/index\\.js$": "<rootDir>/__mocks__/paraty_geoservices.js",
+      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/esm/index\\.js$": "<rootDir>/__mocks__/paraty_geoservices.js",
+      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/esm/application/services/ChangeDetectionCoordinator\\.js$": "<rootDir>/__mocks__/paraty_geoservices.js",
       "\\.(css|less|scss|sass)$": "<rootDir>/__mocks__/fileMock.js",
       "^(\\.{1,2}/.*)\\.js$": "$1"
     },

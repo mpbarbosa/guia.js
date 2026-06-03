@@ -11,16 +11,16 @@
  * @author Marcelo Pereira Barbosa
  */
 
-import { log, warn } from '../utils/logger.js';
-import { env } from '../config/environment.js';
+import { log, warn } from "../utils/logger.js";
+import { env } from "../config/environment.js";
 import {
   getCityStatsFromOfflineCache,
   saveCityStatsToOfflineCache,
-} from './OfflineCacheService.js';
+} from "./OfflineCacheService.js";
 
-const BASE = (env.ibgeApiUrl as string) || 'https://servicodados.ibge.gov.br';
+const BASE = (env.ibgeApiUrl as string) || "https://servicodados.ibge.gov.br";
 
-export type PopulationSource = 'sidra-fresh' | 'offline-cache' | 'unavailable';
+export type PopulationSource = "sidra-fresh" | "offline-cache" | "unavailable";
 
 export interface CityStats {
   /** IBGE municipality code (7-digit). */
@@ -43,7 +43,7 @@ interface IbgeLocalidade {
   id: number;
   nome: string;
   microrregiao?: { mesorregiao?: { UF?: { sigla?: string } } };
-  'regiao-imediata'?: { 'regiao-intermediaria'?: { UF?: { sigla?: string } } };
+  "regiao-imediata"?: { "regiao-intermediaria"?: { UF?: { sigla?: string } } };
 }
 
 interface SidraResult {
@@ -73,7 +73,7 @@ function buildOfflineFallbackStats(offlineStats: {
     areaKm2: offlineStats.areaKm2,
     population: null,
     populationYear: null,
-    populationSource: 'offline-cache',
+    populationSource: "offline-cache",
   };
 }
 
@@ -81,21 +81,26 @@ function buildOfflineFallbackStats(offlineStats: {
  * Look up an IBGE municipality by (approximate) name and state.
  * Returns the best match or null.
  */
-async function findMunicipioByName(municipio: string, uf: string): Promise<IbgeLocalidade | null> {
+async function findMunicipioByName(
+  municipio: string,
+  uf: string,
+): Promise<IbgeLocalidade | null> {
   const encoded = encodeURIComponent(municipio);
   const url = `${BASE}/api/v1/localidades/municipios?nome=${encoded}`;
   const response = await fetch(url);
-  if (!response.ok) throw new Error(`IBGE Localidades API error: ${response.status}`);
+  if (!response.ok)
+    throw new Error(`IBGE Localidades API error: ${response.status}`);
 
-  const results = await response.json() as IbgeLocalidade[];
+  const results = (await response.json()) as IbgeLocalidade[];
   if (!results.length) return null;
 
   // Prefer exact UF match
   const ufUpper = uf.toUpperCase();
-  const exact = results.find(r => {
+  const exact = results.find((r) => {
     const sigla =
       r.microrregiao?.mesorregiao?.UF?.sigla ??
-      r['regiao-imediata']?.['regiao-intermediaria']?.UF?.sigla ?? '';
+      r["regiao-imediata"]?.["regiao-intermediaria"]?.UF?.sigla ??
+      "";
     return sigla.toUpperCase() === ufUpper;
   });
 
@@ -107,11 +112,13 @@ async function findMunicipioByName(municipio: string, uf: string): Promise<IbgeL
  */
 async function fetchArea(ibgeCode: string): Promise<number | null> {
   try {
-    const url = `${BASE}/api/v2/malhas/municipios/${ibgeCode}?formato=application/json`;
+    const url = `${BASE}/api/v3/malhas/municipios/${ibgeCode}?formato=application/json`;
     const response = await fetch(url);
     if (!response.ok) return null;
 
-    const data = await response.json() as { features?: Array<{ properties?: { area_km2?: number } }> };
+    const data = (await response.json()) as {
+      features?: Array<{ properties?: { area_km2?: number } }>;
+    };
     return data.features?.[0]?.properties?.area_km2 ?? null;
   } catch {
     warn(`(IBGECityStatsService) Could not fetch area for code ${ibgeCode}`);
@@ -123,14 +130,16 @@ async function fetchArea(ibgeCode: string): Promise<number | null> {
  * Fetch the most recent population estimate from IBGE SIDRA (aggregate 6579).
  * Returns { population, year } or null on failure.
  */
-async function fetchPopulation(ibgeCode: string): Promise<{ population: number; year: string } | null> {
+async function fetchPopulation(
+  ibgeCode: string,
+): Promise<{ population: number; year: string } | null> {
   try {
     // Aggregate 6579 = population estimates; variable 9324 = estimated resident population
     const url = `${BASE}/api/v3/agregados/6579/periodos/-1/variaveis/9324?localidades=N6[${ibgeCode}]`;
     const response = await fetch(url);
     if (!response.ok) return null;
 
-    const data = await response.json() as SidraResult[];
+    const data = (await response.json()) as SidraResult[];
     const serie = data[0]?.resultados?.[0]?.series?.[0]?.serie;
     if (!serie) return null;
 
@@ -141,7 +150,9 @@ async function fetchPopulation(ibgeCode: string): Promise<{ population: number; 
     const value = parseInt(serie[year], 10);
     return isNaN(value) ? null : { population: value, year };
   } catch {
-    warn(`(IBGECityStatsService) Could not fetch population for code ${ibgeCode}`);
+    warn(
+      `(IBGECityStatsService) Could not fetch population for code ${ibgeCode}`,
+    );
     return null;
   }
 }
@@ -153,19 +164,26 @@ async function fetchPopulation(ibgeCode: string): Promise<{ population: number; 
  * @param siglaUf   - State abbreviation (e.g. 'SP', 'RJ').
  * @returns Populated CityStats object, or null if the municipality could not be found.
  */
-export async function fetchStats(municipio: string, siglaUf: string): Promise<CityStats | null> {
+export async function fetchStats(
+  municipio: string,
+  siglaUf: string,
+): Promise<CityStats | null> {
   const cacheKey = buildCityStatsCacheKey(municipio, siglaUf);
-  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+  if (typeof navigator !== "undefined" && navigator.onLine === false) {
     const offlineStats = await getCityStatsFromOfflineCache(municipio, siglaUf);
     if (offlineStats) {
-      log(`(IBGECityStatsService) Reusing offline area stats for ${municipio} / ${siglaUf} without stale SIDRA population`);
+      log(
+        `(IBGECityStatsService) Reusing offline area stats for ${municipio} / ${siglaUf} without stale SIDRA population`,
+      );
       return buildOfflineFallbackStats(offlineStats);
     }
   }
 
   const inflightRequest = inflightCityStatsRequests.get(cacheKey);
   if (inflightRequest) {
-    log(`(IBGECityStatsService) Awaiting in-flight stats request for ${municipio} / ${siglaUf}`);
+    log(
+      `(IBGECityStatsService) Awaiting in-flight stats request for ${municipio} / ${siglaUf}`,
+    );
     return inflightRequest;
   }
 
@@ -193,7 +211,7 @@ export async function fetchStats(municipio: string, siglaUf: string): Promise<Ci
         areaKm2: area,
         population: popData?.population ?? null,
         populationYear: popData?.year ?? null,
-        populationSource: popData ? 'sidra-fresh' : 'unavailable',
+        populationSource: popData ? "sidra-fresh" : "unavailable",
       };
 
       await saveCityStatsToOfflineCache(municipio, siglaUf, {
@@ -204,13 +222,22 @@ export async function fetchStats(municipio: string, siglaUf: string): Promise<Ci
         population: stats.population,
         populationYear: stats.populationYear,
       });
-      log(`(IBGECityStatsService) Stats for ${stats.name}/${stats.uf}: pop=${stats.population}, area=${stats.areaKm2}km², source=${stats.populationSource}`);
+      log(
+        `(IBGECityStatsService) Stats for ${stats.name}/${stats.uf}: pop=${stats.population}, area=${stats.areaKm2}km², source=${stats.populationSource}`,
+      );
       return stats;
     } catch (err) {
-      warn(`(IBGECityStatsService) Failed to fetch stats for "${municipio}": ${(err as Error).message}`);
-      const offlineStats = await getCityStatsFromOfflineCache(municipio, siglaUf);
+      warn(
+        `(IBGECityStatsService) Failed to fetch stats for "${municipio}": ${(err as Error).message}`,
+      );
+      const offlineStats = await getCityStatsFromOfflineCache(
+        municipio,
+        siglaUf,
+      );
       if (offlineStats) {
-        log(`(IBGECityStatsService) Falling back to offline area stats for ${municipio} / ${siglaUf} without stale SIDRA population`);
+        log(
+          `(IBGECityStatsService) Falling back to offline area stats for ${municipio} / ${siglaUf} without stale SIDRA population`,
+        );
         return buildOfflineFallbackStats(offlineStats);
       }
       return null;

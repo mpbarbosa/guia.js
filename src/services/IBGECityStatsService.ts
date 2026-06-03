@@ -56,6 +56,15 @@ interface SidraResult {
 
 const inflightCityStatsRequests = new Map<string, Promise<CityStats | null>>();
 
+function normalizeMunicipioLookupValue(value: string): string {
+  return value
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLocaleLowerCase("pt-BR")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
 function buildCityStatsCacheKey(municipio: string, siglaUf: string): string {
   return `${municipio.trim().toLowerCase()}::${siglaUf.trim().toUpperCase()}`;
 }
@@ -94,17 +103,20 @@ async function findMunicipioByName(
   const results = (await response.json()) as IbgeLocalidade[];
   if (!results.length) return null;
 
-  // Prefer exact UF match
+  const municipioNormalized = normalizeMunicipioLookupValue(municipio);
   const ufUpper = uf.toUpperCase();
   const exact = results.find((r) => {
     const sigla =
       r.microrregiao?.mesorregiao?.UF?.sigla ??
       r["regiao-imediata"]?.["regiao-intermediaria"]?.UF?.sigla ??
       "";
-    return sigla.toUpperCase() === ufUpper;
+    return (
+      normalizeMunicipioLookupValue(r.nome) === municipioNormalized &&
+      sigla.toUpperCase() === ufUpper
+    );
   });
 
-  return exact ?? results[0];
+  return exact ?? null;
 }
 
 /**

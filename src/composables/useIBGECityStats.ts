@@ -7,6 +7,12 @@ import type { CityStats } from '../services/IBGECityStatsService.js';
  * Subscribes to AddressCache and fetches live IBGE city statistics whenever
  * the resolved municipio/uf changes. Exposes reactive stats, loading, and error.
  */
+interface StatsAddressSnapshot {
+  municipio: string | null;
+  uf?: string | null;
+  siglaUF?: string | null;
+}
+
 export function useIBGECityStats() {
   const stats = ref<CityStats | null>(null);
   const loading = ref(false);
@@ -33,10 +39,10 @@ export function useIBGECityStats() {
   }
 
   const addressObserver = {
-    update(cache: { currentAddress: { municipio: string | null; uf: string | null } | null }) {
+    update(cache: { currentAddress: StatsAddressSnapshot | null }) {
       const addr = cache.currentAddress;
-      if (!addr?.municipio || !addr.uf) return;
-      void load(addr.municipio, addr.uf);
+      if (!addr?.municipio || !addr.siglaUF) return;
+      void load(addr.municipio, addr.siglaUF);
     },
   };
 
@@ -46,8 +52,8 @@ export function useIBGECityStats() {
 
     // Seed from current state if already resolved
     const addr = cache.currentAddress;
-    if (addr?.municipio && addr.uf) {
-      void load(addr.municipio, addr.uf);
+    if (addr?.municipio && addr.siglaUF) {
+      void load(addr.municipio, addr.siglaUF);
     }
   });
 

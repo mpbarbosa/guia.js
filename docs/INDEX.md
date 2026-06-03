@@ -6,7 +6,7 @@
 
 Last Updated: 2026-05-28
 Status: Active
-Version: 0.28.13-alpha
+Version: 0.28.14-alpha
 Category: Guide
 
 ---
@@ -108,7 +108,7 @@ Welcome to the Guia Turístico documentation! This index provides an overview of
 # Navigation Structure Improvement Guide
 
 **Generated**: 2026-01-06
-**Project**: Guia Turístico v0.28.13-alpha
+**Project**: Guia Turístico v0.28.14-alpha
 **Status**: 🟢 **Implementation Guide**
 
 ---

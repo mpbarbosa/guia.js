@@ -733,16 +733,20 @@ class AddressCache {
 		const previousMunicipio = previous?.municipio ?? undefined;
 		const currentUf = current?.uf ?? undefined;
 		const previousUf = previous?.uf ?? undefined;
+		const currentSiglaUf = current?.siglaUF ?? undefined;
+		const previousSiglaUf = previous?.siglaUF ?? undefined;
 
 		return {
 			hasChanged: (currentMunicipio ?? null) !== (previousMunicipio ?? null),
 			current: {
 				municipio: currentMunicipio,
-				uf: currentUf
+				uf: currentUf,
+				siglaUF: currentSiglaUf
 			},
 			previous: {
 				municipio: previousMunicipio,
-				uf: previousUf
+				uf: previousUf,
+				siglaUF: previousSiglaUf
 			},
 			currentAddress: current ?? null,
 			previousAddress: previous ?? null,

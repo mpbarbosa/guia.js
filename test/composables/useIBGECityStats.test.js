@@ -106,7 +106,7 @@ describe('useIBGECityStats', () => {
       jest.spyOn(AddressCache, 'getInstance').mockReturnValue({
         subscribe: mockSubscribe,
         unsubscribe: mockUnsubscribe,
-        currentAddress: { municipio: 'Rio de Janeiro', uf: 'RJ' },
+        currentAddress: { municipio: 'Rio de Janeiro', uf: 'Rio de Janeiro', siglaUF: 'RJ' },
       });
 
       result = useIBGECityStats();
@@ -129,7 +129,7 @@ describe('useIBGECityStats', () => {
 
     it('calls IBGE API when observer fires with valid address', async () => {
       mockIBGESuccess();
-      capturedObserver.update({ currentAddress: { municipio: 'Rio de Janeiro', uf: 'RJ' } });
+      capturedObserver.update({ currentAddress: { municipio: 'Rio de Janeiro', uf: 'Rio de Janeiro', siglaUF: 'RJ' } });
 
       await new Promise((r) => setTimeout(r, 0));
 
@@ -138,7 +138,7 @@ describe('useIBGECityStats', () => {
 
     it('sets stats.value with fetched data', async () => {
       mockIBGESuccess({ name: 'Rio de Janeiro', uf: 'RJ', population: 6748000, year: '2023', area: 1200.27 });
-      capturedObserver.update({ currentAddress: { municipio: 'Rio de Janeiro', uf: 'RJ' } });
+      capturedObserver.update({ currentAddress: { municipio: 'Rio de Janeiro', uf: 'Rio de Janeiro', siglaUF: 'RJ' } });
 
       await new Promise((r) => setTimeout(r, 0));
 
@@ -152,7 +152,7 @@ describe('useIBGECityStats', () => {
     it('keeps stats null when service returns null (city not found)', async () => {
       // IBGE localidades returns empty array → service returns null (no throw)
       global.fetch.mockResolvedValueOnce({ ok: true, json: async () => [] });
-      capturedObserver.update({ currentAddress: { municipio: 'CidadeInexistente', uf: 'ZZ' } });
+      capturedObserver.update({ currentAddress: { municipio: 'CidadeInexistente', uf: 'Estado Z', siglaUF: 'ZZ' } });
 
       await new Promise((r) => setTimeout(r, 0));
 
@@ -163,12 +163,12 @@ describe('useIBGECityStats', () => {
 
     it('deduplicates: does not re-fetch for same municipio/uf', async () => {
       mockIBGESuccess();
-      capturedObserver.update({ currentAddress: { municipio: 'Rio de Janeiro', uf: 'RJ' } });
+      capturedObserver.update({ currentAddress: { municipio: 'Rio de Janeiro', uf: 'Rio de Janeiro', siglaUF: 'RJ' } });
       await new Promise((r) => setTimeout(r, 0));
 
       const firstCallCount = global.fetch.mock.calls.length;
 
-      capturedObserver.update({ currentAddress: { municipio: 'Rio de Janeiro', uf: 'RJ' } });
+      capturedObserver.update({ currentAddress: { municipio: 'Rio de Janeiro', uf: 'Rio de Janeiro', siglaUF: 'RJ' } });
       await new Promise((r) => setTimeout(r, 0));
 
       expect(global.fetch.mock.calls.length).toBe(firstCallCount);
@@ -176,19 +176,34 @@ describe('useIBGECityStats', () => {
 
     it('re-fetches when city changes', async () => {
       mockIBGESuccess({ name: 'Rio de Janeiro' });
-      capturedObserver.update({ currentAddress: { municipio: 'Rio de Janeiro', uf: 'RJ' } });
+      capturedObserver.update({ currentAddress: { municipio: 'Rio de Janeiro', uf: 'Rio de Janeiro', siglaUF: 'RJ' } });
       await new Promise((r) => setTimeout(r, 0));
 
       __resetCityStatsCacheForTests();
       mockIBGESuccess({ code: 3303807, name: 'Paraty' });
-      capturedObserver.update({ currentAddress: { municipio: 'Paraty', uf: 'RJ' } });
+      capturedObserver.update({ currentAddress: { municipio: 'Paraty', uf: 'Rio de Janeiro', siglaUF: 'RJ' } });
       await new Promise((r) => setTimeout(r, 0));
 
       expect(result.stats.value?.name).toBe('Paraty');
     });
 
+    it('prefers siglaUF over the full state name in uf', async () => {
+      mockIBGESuccess({ code: 3550308, name: 'São Paulo', uf: 'SP', population: 12345678, year: '2025', area: 1521.11 });
+      capturedObserver.update({ currentAddress: { municipio: 'São Paulo', uf: 'São Paulo', siglaUF: 'SP' } });
+
+      await new Promise((r) => setTimeout(r, 0));
+
+      expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('localidades/municipios?nome=S%C3%A3o%20Paulo'));
+      expect(result.stats.value?.uf).toBe('SP');
+    });
+
     it('skips update when municipio is null', () => {
-      capturedObserver.update({ currentAddress: { municipio: null, uf: 'RJ' } });
+      capturedObserver.update({ currentAddress: { municipio: null, uf: 'Rio de Janeiro', siglaUF: 'RJ' } });
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
+
+    it('skips update when siglaUF is missing even if full uf is present', () => {
+      capturedObserver.update({ currentAddress: { municipio: 'São Paulo', uf: 'São Paulo', siglaUF: null } });
       expect(global.fetch).not.toHaveBeenCalled();
     });
 

@@ -115,7 +115,7 @@ describe('IBGECityStatsService.fetchStats', () => {
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('Municipality not found'));
   });
 
-  it('returns first result if no exact UF match', async () => {
+  it('returns null if no exact normalized municipio/UF match exists', async () => {
     mockFindMunicipioByNameResponse([
       {
         id: 1,
@@ -128,44 +128,52 @@ describe('IBGECityStatsService.fetchStats', () => {
         microrregiao: { mesorregiao: { UF: { sigla: 'SP' } } },
       },
     ]);
-    // fetchPopulation
-    mockFetchPopulationResponse([
-      {
-        resultados: [
-          {
-            series: [
-              {
-                serie: { '2020': '1000' },
-              },
-            ],
-          },
-        ],
-      },
-    ]);
-    // fetchArea
-    mockFetchAreaResponse({
-      features: [{ properties: { area_km2: 10 } }],
-    });
 
     const stats = await fetchStats('Cidade X', 'RJ');
-    expect(stats?.ibgeCode).toBe('1');
-    expect(stats?.name).toBe('Cidade X');
+    expect(stats).toBeNull();
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('Municipality not found'));
   });
 
-  it('handles missing microrregiao and regiao-imediata gracefully', async () => {
+  it('returns null when IBGE omits UF metadata required for strict matching', async () => {
     mockFindMunicipioByNameResponse([
       {
         id: 3,
         nome: 'Cidade Y',
       },
     ]);
+
+    const stats = await fetchStats('Cidade Y', 'SP');
+    expect(stats).toBeNull();
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('Municipality not found'));
+  });
+
+  it('matches the intended municipio in a full-list response instead of using the first entry', async () => {
+    mockFindMunicipioByNameResponse([
+      {
+        id: 1100015,
+        nome: "Alta Floresta D'Oeste",
+        microrregiao: { mesorregiao: { UF: { sigla: 'RO' } } },
+      },
+      {
+        id: 1100023,
+        nome: 'Ariquemes',
+        microrregiao: { mesorregiao: { UF: { sigla: 'RO' } } },
+      },
+      {
+        id: ibgeCode,
+        nome: 'São Paulo',
+        microrregiao: { mesorregiao: { UF: { sigla: 'SP' } } },
+      },
+    ]);
     mockFetchPopulationResponse([
       {
         resultados: [
           {
             series: [
               {
-                serie: { '2021': '5000' },
+                serie: { '2025': '12345678' },
               },
             ],
           },
@@ -173,12 +181,45 @@ describe('IBGECityStatsService.fetchStats', () => {
       },
     ]);
     mockFetchAreaResponse({
-      features: [{ properties: { area_km2: 20 } }],
+      features: [{ properties: { area_km2: 1521.11 } }],
     });
 
-    const stats = await fetchStats('Cidade Y', 'SP');
-    expect(stats?.ibgeCode).toBe('3');
-    expect(stats?.name).toBe('Cidade Y');
+    const stats = await fetchStats('São Paulo', 'SP');
+
+    expect(stats?.ibgeCode).toBe(String(ibgeCode));
+    expect(stats?.name).toBe('São Paulo');
+    expect(stats?.population).toBe(12345678);
+  });
+
+  it('matches municipio names accent-insensitively within the requested UF', async () => {
+    mockFindMunicipioByNameResponse([
+      {
+        id: ibgeCode,
+        nome: 'São Paulo',
+        microrregiao: { mesorregiao: { UF: { sigla: 'SP' } } },
+      },
+    ]);
+    mockFetchPopulationResponse([
+      {
+        resultados: [
+          {
+            series: [
+              {
+                serie: { '2025': '12345678' },
+              },
+            ],
+          },
+        ],
+      },
+    ]);
+    mockFetchAreaResponse({
+      features: [{ properties: { area_km2: 1521.11 } }],
+    });
+
+    const stats = await fetchStats('Sao   Paulo', 'SP');
+
+    expect(stats?.ibgeCode).toBe(String(ibgeCode));
+    expect(stats?.name).toBe('São Paulo');
   });
 
   it('sets areaKm2 to null if fetchArea returns null', async () => {

@@ -3,7 +3,11 @@ import MapLibreDisplayer from '../html/MapLibreDisplayer.js';
 import PositionManager from '../core/PositionManager.js';
 import AddressCache from '../data/AddressCache.js';
 import { createReverseGeocoderService } from '../services/ReverseGeocoder.js';
+import locationSnapshotRepository, {
+  type LocationSnapshotRepository,
+} from '../services/LocationSnapshotRepository.js';
 import NominatimAddressExtractor from '../data/AddressExtractor.js';
+import type { CachedAddressSummary } from '../services/OfflineCacheService.js';
 
 const MAP_CONTAINER_ID = 'maplibre-map';
 const DEFAULT_STREET = 'Aguardando...';
@@ -16,6 +20,19 @@ type ReverseGeocoderFactory = typeof createReverseGeocoderService;
 
 interface UseMapDisplayerOptions {
   createReverseGeocoder?: ReverseGeocoderFactory;
+  locationSnapshotRepository?: Pick<LocationSnapshotRepository, 'getLatestLocationSnapshot'>;
+}
+
+interface LiveAddressSnapshot {
+  logradouro: string | null;
+  bairro: string | null;
+  distrito?: string | null;
+  municipio: string | null;
+}
+
+interface PositionManagerSnapshot {
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 /**
@@ -35,6 +52,7 @@ export function useMapDisplayer(options: UseMapDisplayerOptions = {}) {
   let latestLivePosition: { latitude: number; longitude: number } | null = null;
   let activeManualRequestId = 0;
   const createReverseGeocoder = options.createReverseGeocoder ?? createReverseGeocoderService;
+  const snapshotRepository = options.locationSnapshotRepository ?? locationSnapshotRepository;
 
   const liveAddress = {
     street: DEFAULT_STREET,
@@ -58,6 +76,28 @@ export function useMapDisplayer(options: UseMapDisplayerOptions = {}) {
 
   const formatCoordinateLabel = (lat: number, lon: number) =>
     `Lat ${lat.toFixed(5)}, Lon ${lon.toFixed(5)}`;
+
+  const applyLiveAddress = (
+    address: Pick<LiveAddressSnapshot, 'logradouro' | 'bairro' | 'distrito' | 'municipio'> | null,
+  ) => {
+    liveAddress.street = address?.logradouro ?? DEFAULT_STREET;
+    liveAddress.neighborhood = address?.bairro ?? address?.distrito ?? DEFAULT_LOCALITY;
+    liveAddress.city = address?.municipio ?? DEFAULT_LOCALITY;
+
+    if (activePositionSource.value === 'live') {
+      syncDisplayedAddress();
+    }
+  };
+
+  const applySnapshotAddress = (address: CachedAddressSummary | null) => {
+    liveAddress.street = address?.logradouro?.trim() || DEFAULT_STREET;
+    liveAddress.neighborhood = address?.bairro?.trim() || DEFAULT_LOCALITY;
+    liveAddress.city = address?.municipio?.trim() || DEFAULT_LOCALITY;
+
+    if (activePositionSource.value === 'live') {
+      syncDisplayedAddress();
+    }
+  };
 
   const returnToLivePosition = () => {
     activePositionSource.value = 'live';
@@ -112,7 +152,7 @@ export function useMapDisplayer(options: UseMapDisplayerOptions = {}) {
   };
 
   const positionObserver = {
-    update(positionManager: { latitude: number | null; longitude: number | null }) {
+    update(positionManager: PositionManagerSnapshot) {
       const { latitude: lat, longitude: lon } = positionManager;
       if (lat != null && lon != null) {
         latestLivePosition = { latitude: lat, longitude: lon };
@@ -126,33 +166,57 @@ export function useMapDisplayer(options: UseMapDisplayerOptions = {}) {
 
   const addressObserver = {
     update(cache: {
-      currentAddress: {
-        logradouro: string | null;
-        bairro: string | null;
-        distrito?: string | null;
-        municipio: string | null;
-      } | null;
+      currentAddress: LiveAddressSnapshot | null;
     }) {
-      const addr = cache.currentAddress;
-      if (!addr) return;
-
-      liveAddress.street = addr.logradouro ?? DEFAULT_STREET;
-      liveAddress.neighborhood = addr.bairro ?? addr.distrito ?? DEFAULT_LOCALITY;
-      liveAddress.city = addr.municipio ?? DEFAULT_LOCALITY;
-
-      if (activePositionSource.value === 'live') {
-        syncDisplayedAddress();
-      }
+      applyLiveAddress(cache.currentAddress);
     },
   };
 
-  onMounted(() => {
-    displayer = new MapLibreDisplayer(MAP_CONTAINER_ID, '');
-    displayer.mount();
-    displayer.onMapClick(handleManualMapSelection);
+  onMounted(async () => {
+    const currentDisplayer = new MapLibreDisplayer(MAP_CONTAINER_ID, '');
+    displayer = currentDisplayer;
+    currentDisplayer.onMapClick(handleManualMapSelection);
 
-    PositionManager.getInstance().subscribe(positionObserver as Parameters<ReturnType<typeof PositionManager.getInstance>['subscribe']>[0]);
-    AddressCache.getInstance().subscribe(addressObserver as Parameters<ReturnType<typeof AddressCache.getInstance>['subscribe']>[0]);
+    const positionManager = PositionManager.getInstance() as ReturnType<typeof PositionManager.getInstance> & PositionManagerSnapshot;
+    const addressCache = AddressCache.getInstance() as ReturnType<typeof AddressCache.getInstance> & {
+      currentAddress?: LiveAddressSnapshot | null;
+    };
+
+    positionManager.subscribe(positionObserver as Parameters<ReturnType<typeof PositionManager.getInstance>['subscribe']>[0]);
+    addressCache.subscribe(addressObserver as Parameters<ReturnType<typeof AddressCache.getInstance>['subscribe']>[0]);
+
+    applyLiveAddress(addressCache.currentAddress ?? null);
+
+    const liveLat = positionManager.latitude;
+    const liveLon = positionManager.longitude;
+
+    if (liveLat != null && liveLon != null) {
+      latestLivePosition = { latitude: liveLat, longitude: liveLon };
+      currentDisplayer.updatePosition(liveLat, liveLon);
+      currentDisplayer.mount();
+      return;
+    }
+
+    try {
+      const snapshot = await snapshotRepository.getLatestLocationSnapshot();
+      if (
+        displayer === currentDisplayer &&
+        !latestLivePosition &&
+        activePositionSource.value === 'live' &&
+        snapshot
+      ) {
+        currentDisplayer.updatePosition(snapshot.latitude, snapshot.longitude);
+        applySnapshotAddress(snapshot.address);
+      }
+    } catch (error) {
+      console.error('(useMapDisplayer) Error loading initial location snapshot:', error);
+    }
+
+    if (displayer !== currentDisplayer) {
+      return;
+    }
+
+    currentDisplayer.mount();
   });
 
   onUnmounted(() => {

@@ -3,6 +3,7 @@
  */
 
 // Mock maplibre-gl (package name - required by MapLibreDisplayer internals)
+let lastMapOptions = null;
 const mockMapInstance = {
   setCenter: jest.fn(),
   resize: jest.fn(),
@@ -12,11 +13,16 @@ const mockMapInstance = {
 const mockMarkerInstance = { setLngLat: jest.fn().mockReturnThis(), addTo: jest.fn() };
 const setCoordinatesMock = jest.fn();
 const fetchAddressMock = jest.fn();
+const getLatestLocationSnapshotMock = jest.fn();
+const mapConstructorMock = jest.fn((options) => {
+  lastMapOptions = options;
+  return mockMapInstance;
+});
 
 jest.unstable_mockModule('maplibre-gl', () => ({
   __esModule: true,
   default: {
-    Map: jest.fn(() => mockMapInstance),
+    Map: mapConstructorMock,
     Marker: jest.fn(() => mockMarkerInstance),
     NavigationControl: jest.fn(),
   },
@@ -52,12 +58,22 @@ describe('useMapDisplayer', () => {
   let mockPosSubscribe, mockPosUnsubscribe;
   let mockAddrSubscribe, mockAddrUnsubscribe;
   let capturedPosObserver, capturedAddrObserver;
+  let positionManagerState;
+  let addressCacheState;
 
   beforeEach(() => {
     mountedCb = null;
     unmountedCb = null;
     capturedPosObserver = null;
     capturedAddrObserver = null;
+    positionManagerState = {
+      latitude: undefined,
+      longitude: undefined,
+    };
+    addressCacheState = {
+      currentAddress: null,
+    };
+    lastMapOptions = null;
 
     mockPosSubscribe = jest.fn((obs) => { capturedPosObserver = obs; });
     mockPosUnsubscribe = jest.fn();
@@ -67,11 +83,14 @@ describe('useMapDisplayer', () => {
     jest.spyOn(PositionManager, 'getInstance').mockReturnValue({
       subscribe: mockPosSubscribe,
       unsubscribe: mockPosUnsubscribe,
+      get latitude() { return positionManagerState.latitude; },
+      get longitude() { return positionManagerState.longitude; },
     });
 
     jest.spyOn(AddressCache, 'getInstance').mockReturnValue({
       subscribe: mockAddrSubscribe,
       unsubscribe: mockAddrUnsubscribe,
+      get currentAddress() { return addressCacheState.currentAddress; },
     });
 
     mockMapInstance.resize.mockClear();
@@ -79,14 +98,20 @@ describe('useMapDisplayer', () => {
     mockMapInstance.on.mockClear();
     mockMapInstance.on.mockImplementation((event, cb) => { if (event === 'load') cb(); });
     mockMarkerInstance.setLngLat.mockClear();
+    mapConstructorMock.mockClear();
     setCoordinatesMock.mockClear();
     fetchAddressMock.mockReset();
+    getLatestLocationSnapshotMock.mockReset();
+    getLatestLocationSnapshotMock.mockResolvedValue(null);
 
     result = useMapDisplayer({
       createReverseGeocoder: () => ({
         setCoordinates: setCoordinatesMock,
         fetchAddress: fetchAddressMock,
       }),
+      locationSnapshotRepository: {
+        getLatestLocationSnapshot: getLatestLocationSnapshotMock,
+      },
     });
   });
 
@@ -115,24 +140,138 @@ describe('useMapDisplayer', () => {
 
   // ---------------------------------------------------------------------------
   describe('onMounted callback', () => {
-    beforeEach(() => mountedCb());
-
-    it('subscribes to PositionManager', () => {
+    it('subscribes to PositionManager', async () => {
+      await mountedCb();
       expect(mockPosSubscribe).toHaveBeenCalledTimes(1);
     });
 
-    it('subscribes to AddressCache', () => {
+    it('subscribes to AddressCache', async () => {
+      await mountedCb();
       expect(mockAddrSubscribe).toHaveBeenCalledTimes(1);
     });
 
-    it('registers a map click listener through the displayer', () => {
+    it('registers a map click listener through the displayer', async () => {
+      await mountedCb();
       expect(mockMapInstance.on).toHaveBeenCalledWith('click', expect.any(Function));
+    });
+
+    it('seeds the map from the current live position before mounting', async () => {
+      positionManagerState.latitude = -23.55052;
+      positionManagerState.longitude = -46.63331;
+
+      result = useMapDisplayer({
+        createReverseGeocoder: () => ({
+          setCoordinates: setCoordinatesMock,
+          fetchAddress: fetchAddressMock,
+        }),
+        locationSnapshotRepository: {
+          getLatestLocationSnapshot: getLatestLocationSnapshotMock,
+        },
+      });
+
+      await mountedCb();
+
+      expect(lastMapOptions?.center).toEqual([-46.63331, -23.55052]);
+      expect(getLatestLocationSnapshotMock).not.toHaveBeenCalled();
+    });
+
+    it('falls back to the persisted snapshot when no live position exists yet', async () => {
+      getLatestLocationSnapshotMock.mockResolvedValue({
+        latitude: -23.55052,
+        longitude: -46.63331,
+        timestamp: Date.now(),
+        address: {
+          logradouro: 'Rua Elói Cerqueira',
+          bairro: 'Belém',
+          municipio: 'São Paulo',
+          siglaUF: 'SP',
+          displayText: 'Rua Elói Cerqueira, Belém, São Paulo, SP',
+        },
+      });
+
+      result = useMapDisplayer({
+        createReverseGeocoder: () => ({
+          setCoordinates: setCoordinatesMock,
+          fetchAddress: fetchAddressMock,
+        }),
+        locationSnapshotRepository: {
+          getLatestLocationSnapshot: getLatestLocationSnapshotMock,
+        },
+      });
+
+      await mountedCb();
+
+      expect(getLatestLocationSnapshotMock).toHaveBeenCalledTimes(1);
+      expect(lastMapOptions?.center).toEqual([-46.63331, -23.55052]);
+      expect(result.street.value).toBe('Rua Elói Cerqueira');
+      expect(result.neighborhood.value).toBe('Belém');
+      expect(result.city.value).toBe('São Paulo');
+    });
+
+    it('does not let a slower snapshot override a live position that arrives first', async () => {
+      let resolveSnapshot;
+      getLatestLocationSnapshotMock.mockImplementation(
+        () => new Promise((resolve) => { resolveSnapshot = resolve; })
+      );
+
+      result = useMapDisplayer({
+        createReverseGeocoder: () => ({
+          setCoordinates: setCoordinatesMock,
+          fetchAddress: fetchAddressMock,
+        }),
+        locationSnapshotRepository: {
+          getLatestLocationSnapshot: getLatestLocationSnapshotMock,
+        },
+      });
+
+      const mountPromise = mountedCb();
+      capturedPosObserver.update({ latitude: -23.55052, longitude: -46.63331 });
+      resolveSnapshot({
+        latitude: -12.9714,
+        longitude: -38.5014,
+        timestamp: Date.now(),
+        address: {
+          logradouro: 'Praça Municipal',
+          bairro: 'Centro',
+          municipio: 'Salvador',
+          siglaUF: 'BA',
+          displayText: 'Praça Municipal, Centro, Salvador, BA',
+        },
+      });
+      await mountPromise;
+
+      expect(lastMapOptions?.center).toEqual([-46.63331, -23.55052]);
+      expect(result.city.value).not.toBe('Salvador');
+    });
+
+    it('does not mount after unmounting while snapshot seeding is still pending', async () => {
+      let resolveSnapshot;
+      getLatestLocationSnapshotMock.mockImplementation(
+        () => new Promise((resolve) => { resolveSnapshot = resolve; })
+      );
+
+      result = useMapDisplayer({
+        createReverseGeocoder: () => ({
+          setCoordinates: setCoordinatesMock,
+          fetchAddress: fetchAddressMock,
+        }),
+        locationSnapshotRepository: {
+          getLatestLocationSnapshot: getLatestLocationSnapshotMock,
+        },
+      });
+
+      const mountPromise = mountedCb();
+      unmountedCb();
+      resolveSnapshot(null);
+
+      await expect(mountPromise).resolves.toBeUndefined();
+      expect(lastMapOptions).toBeNull();
     });
   });
 
   // ---------------------------------------------------------------------------
   describe('position observer', () => {
-    beforeEach(() => mountedCb());
+    beforeEach(async () => { await mountedCb(); });
 
     it('forwards coordinates to updatePosition', () => {
       capturedPosObserver.update({ latitude: -22.9068, longitude: -43.1729 });
@@ -147,7 +286,7 @@ describe('useMapDisplayer', () => {
 
   // ---------------------------------------------------------------------------
   describe('address observer', () => {
-    beforeEach(() => mountedCb());
+    beforeEach(async () => { await mountedCb(); });
 
     it('updates street, neighborhood, city refs', () => {
       capturedAddrObserver.update({
@@ -188,7 +327,7 @@ describe('useMapDisplayer', () => {
 
   // ---------------------------------------------------------------------------
   describe('manual map selection', () => {
-    beforeEach(() => mountedCb());
+    beforeEach(async () => { await mountedCb(); });
 
     function triggerMapClick(lat, lon) {
       const clickHandler = mockMapInstance.on.mock.calls.find(([event]) => event === 'click')?.[1];
@@ -259,7 +398,7 @@ describe('useMapDisplayer', () => {
 
   // ---------------------------------------------------------------------------
   describe('onUnmounted callback', () => {
-    beforeEach(() => { mountedCb(); unmountedCb(); });
+    beforeEach(async () => { await mountedCb(); unmountedCb(); });
 
     it('unsubscribes from PositionManager', () => {
       expect(mockPosUnsubscribe).toHaveBeenCalledTimes(1);

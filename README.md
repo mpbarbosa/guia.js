@@ -780,17 +780,16 @@ https://servicodados.ibge.gov.br/api/v1/localidades/estados/
 
 ### IBGE API via ibira.js
 
-Guia.js integrates with IBGE (Brazilian statistics) through the **ibira.js** library using a three-tier loading strategy:
+Guia.js integrates with IBGE (Brazilian statistics) through the **ibira.js** library, installed as an npm dependency and bundled by Vite. Loading is two-tier:
 
-1. **CDN Loading** (primary): jsDelivr CDN v0.2.2-alpha with 5-second timeout
-2. **Local Module** (fallback): `node_modules/ibira.js` for Node.js environments
-3. **Mock Fallback** (testing): Stub implementation when neither source is available
+1. **Bundled module** (primary): `ibira.js` resolved from `node_modules` and bundled into the app — no runtime CDN fetch.
+2. **Mock Fallback** (last resort): stub implementation if the module fails to load (e.g. in tests where it is absent).
 
 ```javascript
-// Dynamic CDN import with timeout
-import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/src/index.js')
+// Bundled dynamic import (Vite resolves ibira.js from node_modules)
+import('ibira.js')
   .then(module => module.IbiraAPIFetchManager)
-  .catch(() => import('ibira.js')); // Fallback to local
+  .catch(() => IbiraAPIFetchManagerFallback); // stub fallback
 ```
 
 **Features**:

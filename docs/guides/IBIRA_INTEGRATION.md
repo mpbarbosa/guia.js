@@ -2,57 +2,32 @@
 
 ## Overview
 
-This project integrates [ibira.js](https://github.com/mpbarbosa/ibira.js) v0.4.22-alpha for API fetching and caching capabilities.
+This project integrates [ibira.js](https://github.com/mpbarbosa/ibira.js) for API fetching and caching capabilities. It is installed as an npm dependency (`ibira.js@^0.5.0`) and bundled by Vite.
+
+> **History:** ibira.js was previously loaded at runtime from the jsDelivr CDN with a `node_modules` fallback. Since it is now published to npm, the app depends on it directly and Vite bundles it — there is no runtime CDN fetch.
 
 ## Integration Strategy
 
-The integration uses a **three-tier fallback approach**:
+The integration uses a **two-tier approach**:
 
-1. **CDN (Primary)** - Loads from jsDelivr CDN (browser only)
-2. **Local Node Module (Fallback)** - Uses installed npm package
-3. **Minimal Fallback (Last Resort)** - Provides stub implementation if both fail
+1. **Bundled Module (Primary)** - `ibira.js` is resolved from `node_modules` and bundled into the app by Vite.
+2. **Minimal Fallback (Last Resort)** - Provides a stub implementation if the module fails to load (e.g. in tests where it is absent).
 
-## CDN Configuration
+## Installation
 
-### Production URL (Recommended)
-
-```javascript
-https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/dist/index.mjs
-```
-
-**Benefits:**
-
-- ✅ Specific version pinning (0.4.22-alpha)
-- ✅ Global CDN with 750+ locations
-- ✅ Automatic compression (Brotli/Gzip)
-- ✅ HTTP/2 and HTTP/3 support
-- ✅ No npm installation required for browser usage
-
-### HTML Usage (Optional)
-
-If you want to preload ibira.js before guia.js loads:
-
-```html
-<!-- Preload ibira.js from CDN -->
-<link rel="modulepreload" href="https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/dist/index.mjs">
-
-<!-- Then load guia.js which will use the cached version -->
-<script type="module" src="src/guia.ts"></script>
-```
-
-## Local Module Fallback
-
-### Installation
+ibira.js is a normal dependency — `npm install` pulls it from the npm registry:
 
 ```bash
-npm install mpbarbosa/ibira.js
+npm install ibira.js
 ```
 
-### When It's Used
+It is declared in `package.json`:
 
-- Node.js environments (no CDN support)
-- CDN fails to load (network issues, timeout, etc.)
-- Browser with CDN blocked
+```json
+"dependencies": {
+  "ibira.js": "^0.5.0"
+}
+```
 
 ## Implementation Details
 
@@ -61,23 +36,20 @@ npm install mpbarbosa/ibira.js
 ```javascript
 const ibiraLoadingPromise = (async () => {
     try {
-        // 1. Try CDN first (browser only)
-        if (typeof window !== 'undefined') {
-            const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/dist/index.mjs');
-            const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
-            // Success: return { success: true, source: 'cdn', manager }
-        }
-
-        // 2. Fallback to local module
+        // Bundled npm dependency — Vite/Rollup resolves this from node_modules
         const ibiraModule = await import('ibira.js');
         // Success: return { success: true, source: 'local', manager }
-
     } catch (error) {
-        // 3. Use minimal fallback
-        // Returns stub implementation
+        // Minimal fallback: returns stub implementation
     }
 })();
 ```
+
+### HTML Preload (optional)
+
+An inline module script in `src/index.html` eagerly loads `ibira.js` (also a bare
+`import('ibira.js')`, bundled by Vite) and assigns `window.IbiraAPIFetchManager`
+so it is available before `guia.js` initializes.
 
 ### Timeout Configuration
 
@@ -146,56 +118,43 @@ manager.subscribe(observer);
 
 ## Version Information
 
-- **ibira.js version:** 0.4.22-alpha
-- **CDN Provider:** jsDelivr
-- **Integration date:** 2025-12-15
-- **Last updated:** 2026-01-01
+- **ibira.js version:** 0.5.0 (npm)
+- **Registry:** npm (`ibira.js`)
 - **Status:** ✅ Active
 
 ## Troubleshooting
 
-### CDN Not Loading
-
-**Symptoms:** Console warning "CDN load failed"
-
-**Solution:** The system automatically falls back to local module. Ensure ibira.js is installed:
-
-```bash
-npm install mpbarbosa/ibira.js
-```
-
-### Local Module Not Found
+### Module Not Found
 
 **Symptoms:** Console warning "Local module load failed"
 
-**Solution:** Install the package:
+**Solution:** Install dependencies:
 
 ```bash
-npm install mpbarbosa/ibira.js
+npm install
 ```
 
 ### Fallback Implementation Active
 
 **Symptoms:** Console warning "Using fallback - ibira.js not available"
 
-**Solution:** This means both CDN and local module failed. Check:
+**Solution:** This means the module failed to load. Check:
 
-1. Internet connectivity (for CDN)
-2. npm dependencies are installed
-3. Node modules are not corrupted
+1. npm dependencies are installed (`npm install`)
+2. Node modules are not corrupted
 
 ### Checking Load Status
 
 ```javascript
 window.ibiraLoadingPromise.then(result => {
     console.log('Load result:', result);
-    // { success: true, source: 'cdn' | 'local' | 'fallback', manager: <class> }
+    // { success: true, source: 'local' | 'fallback', manager: <class> }
 });
 ```
 
 ## Testing
 
-### Test CDN Loading
+### Test Loading (browser)
 
 Open browser console on any HTML page:
 
@@ -204,9 +163,7 @@ await window.ibiraLoadingPromise;
 console.log('Ibira loaded successfully');
 ```
 
-### Test Local Module
-
-Run in Node.js:
+### Test Local Module (Node.js)
 
 ```bash
 node -e "import('ibira.js').then(m => console.log('Loaded:', m.IbiraAPIFetchManager))"
@@ -216,20 +173,13 @@ node -e "import('ibira.js').then(m => console.log('Loaded:', m.IbiraAPIFetchMana
 
 If you need to upgrade to a newer version:
 
-1. Update CDN URL in `src/guia.js`:
-
-   ```javascript
-   // Change @0.4.22-alpha to new version
-   import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@NEW_VERSION/dist/index.mjs')
-   ```
-
-2. Update npm package:
+1. Update the npm package:
 
    ```bash
-   npm install mpbarbosa/ibira.js@NEW_VERSION
+   npm install ibira.js@NEW_VERSION
    ```
 
-3. Test both CDN and local loading
+2. Type-check and test (`npm run validate && npm test`)
 
 ## Resources
 

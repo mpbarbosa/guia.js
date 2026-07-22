@@ -115,7 +115,7 @@
     ],
     "moduleNameMapper": {
       "^bessa_patterns\\.ts$": "<rootDir>/../bessa_patterns.ts/src/index",
-      "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.11-alpha/dist/esm/index\\.js$": "<rootDir>/../paraty_geocore.js/src/index",
+      "^paraty_geocore\\.js$": "<rootDir>/../paraty_geocore.js/src/index",
       "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/index\\.js$": "<rootDir>/../paraty_geoservices/src/index",
       "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/esm/index\\.js$": "<rootDir>/../paraty_geoservices/src/index",
       "^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/esm/application/services/ChangeDetectionCoordinator\\.js$": "<rootDir>/../paraty_geoservices/src/application/services/ChangeDetectionCoordinator",
@@ -175,10 +175,12 @@
   },
   "dependencies": {
     "@vueuse/motion": "^2.2.6",
+    "bessa_patterns.ts": "^0.13.0",
     "bootstrap-icons": "^1.13.1",
     "chart.js": "^4.5.1",
-    "ibira.js": "github:mpbarbosa/ibira.js#v0.4.22-alpha",
+    "ibira.js": "^0.5.0",
     "maplibre-gl": "^5.19.0",
+    "paraty_geocore.js": "0.17.1-alpha",
     "vue": "^3.5.29",
     "vue-chartjs": "^5.3.3",
     "vue-router": "^4.6.4"

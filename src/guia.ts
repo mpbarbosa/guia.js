@@ -10,7 +10,7 @@ import {
   createDefaultConfig,
 } from './config/defaults.js';
 
-import { GeoPosition } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
+import { GeoPosition } from 'paraty_geocore.js';
 import { GetCurrentPositionUseCase, WatchPositionUseCase } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geoservices@v1.6.5/dist/esm/index.js';
 import ObserverSubject from './core/ObserverSubject.js';
 import PositionManager from './core/PositionManager.js';
@@ -77,35 +77,14 @@ type IbiraLoadResult =
 
 const ibiraLoadingPromise: Promise<unknown> = (async (): Promise<IbiraLoadResult> => {
   try {
-    if (typeof window !== 'undefined') {
-      try {
-        const timeoutPromise = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('CDN import timeout')), 5000)
-        );
-        const importPromise = import('https://cdn.jsdelivr.net/gh/mpbarbosa/ibira.js@0.4.22-alpha/dist/index.mjs') as Promise<IbiraModule>;
-        const ibiraModule = await Promise.race([importPromise, timeoutPromise]);
+    // ibira.js is a bundled npm dependency — Vite/Rollup resolves this from
+    // node_modules; no runtime CDN fetch needed.
+    const ibiraModule = await import('ibira.js') as IbiraModule;
+    if (!ibiraModule?.IbiraAPIFetchManager) throw new Error('Invalid ibira.js module from node_modules');
 
-        if (!ibiraModule?.IbiraAPIFetchManager) throw new Error('Invalid ibira.js module from CDN');
-
-        IbiraAPIFetchManager = ibiraModule.IbiraAPIFetchManager;
-        log('(guia.js) Ibira.js loaded successfully from CDN');
-        return { success: true, source: 'cdn', manager: IbiraAPIFetchManager } as IbiraLoadResult;
-      } catch (cdnError) {
-        warn('(guia.js) CDN load failed:', (cdnError as Error).message, '- trying local module');
-      }
-    }
-
-    try {
-      const ibiraModule = await import('ibira.js') as IbiraModule;
-      if (!ibiraModule?.IbiraAPIFetchManager) throw new Error('Invalid ibira.js module from node_modules');
-
-      IbiraAPIFetchManager = ibiraModule.IbiraAPIFetchManager;
-      log('(guia.js) Ibira.js loaded successfully from node_modules');
-      return { success: true, source: 'local', manager: IbiraAPIFetchManager } as IbiraLoadResult;
-    } catch (localError) {
-      warn('(guia.js) Local module load failed:', (localError as Error).message);
-      throw new Error('Failed to load ibira.js from both CDN and node_modules');
-    }
+    IbiraAPIFetchManager = ibiraModule.IbiraAPIFetchManager;
+    log('(guia.js) Ibira.js loaded successfully from node_modules');
+    return { success: true, source: 'local', manager: IbiraAPIFetchManager } as IbiraLoadResult;
   } catch (err) {
     warn('(guia.js) Failed to load ibira.js from any source:', (err as Error).message);
 

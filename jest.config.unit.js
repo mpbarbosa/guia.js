@@ -35,9 +35,9 @@
      '^@vue/server-renderer$': '<rootDir>/node_modules/@vue/server-renderer/index.js',
      '^@vue/compiler-sfc$': '<rootDir>/node_modules/@vue/compiler-sfc/index.js',
      '^@vue/test-utils$': '<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js',
-     // Map paraty_geocore.js CDN URL to local TS source for Jest (Node.js cannot fetch https:// URLs)
-     '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geocore\\.js@0\\.12\\.11-alpha/dist/esm/index\\.js$':
-       '<rootDir>/../paraty_geocore.js/src/index',
+     // Map paraty_geocore.js bare specifier to local TS source for Jest
+     // (mirrors bessa_patterns.ts; production/Vite resolve it from node_modules)
+     '^paraty_geocore\\.js$': '<rootDir>/../paraty_geocore.js/src/index',
      // Map paraty_geoservices CDN URLs to local TS source for Jest
      '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/index\\.js$':
        '<rootDir>/../paraty_geoservices/src/index',
@@ -45,7 +45,7 @@
        '<rootDir>/../paraty_geoservices/src/index',
      '^https://cdn\\.jsdelivr\\.net/gh/mpbarbosa/paraty_geoservices@v1\\.6\\.5/dist/esm/application/services/ChangeDetectionCoordinator\\.js$':
        '<rootDir>/../paraty_geoservices/src/application/services/ChangeDetectionCoordinator',
-     // Map bessa_patterns.ts importmap alias to local TS source for Jest
+     // Map bessa_patterns.ts bare specifier to local TS source for Jest
      '^bessa_patterns\\.ts$': '<rootDir>/../bessa_patterns.ts/src/index',
      // Strip .js extension from relative imports so Jest resolves .ts before .js
      // Uses ((?:\.{1,2}/)+) to handle any depth of ../ (e.g., ../../src/foo.js → ../../src/foo)

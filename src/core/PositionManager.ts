@@ -12,5 +12,5 @@ export {
 	PositionManager as default,
 	createPositionManagerConfig,
 	initializeConfig,
-} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
-export type { PositionManagerConfig } from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
+} from 'paraty_geocore.js';
+export type { PositionManagerConfig } from 'paraty_geocore.js';

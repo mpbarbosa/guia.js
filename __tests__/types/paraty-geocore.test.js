@@ -8,7 +8,7 @@ import {
   calculateDistance,
   delay,
   GeoPositionError,
-} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
+} from 'paraty_geocore.js';
 
 const validCoords = {
   latitude: -23.219,

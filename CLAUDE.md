@@ -8,12 +8,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The codebase is essentially all TypeScript (137 `.ts`, ~20 `.vue` SFCs, only a handful of legacy `.js`). It is mid-migration to **Material Design 3 + Tailwind v4** — see `### Coexistence model` below before touching entry points.
 
-Key external dependencies (sibling repos, resolved via Vite aliases/CDN — see `vite.config.js`):
+Key external dependencies:
 
 - `guia.js` — core geolocation library (this repo IS the guia.js project)
-- `ibira.js` — Brazilian IBGE integration
-- `paraty_geoservices` / `paraty_geocore.js` — geocoding utilities
-- `bessa_patterns.ts` — shared design-pattern primitives (importmap alias)
+- `ibira.js` — Brazilian IBGE integration — **npm dependency**
+- `paraty_geocore.js` — core geocoding value objects (`GeoPosition`, `PositionManager`, `GeocodingState`, `ReferencePlace`, `DualObserverSubject`) — **npm dependency**
+- `bessa_patterns.ts` — shared design-pattern primitives (`CallbackRegistry`, `withObserver`) — **npm dependency**
+- `paraty_geoservices` — geocoding use-cases — resolved via Vite CDN-resolution plugin (still CDN-hosted; see `vite.config.js`)
+- `catas_altas_speech` — pt-BR Web Speech engine — importmap alias / Vite alias (still CDN-hosted)
 
 ## Commands
 
@@ -101,7 +103,7 @@ src/
 
 - `@vitejs/plugin-vue` + `@tailwindcss/vite` (Tailwind v4).
 - Custom plugin resolves `.js` imports to a sibling `.ts` file when present — enables gradual `.js`→`.ts` migration without rewriting import paths.
-- Sibling packages are wired in here: `bessa_patterns.ts` via alias, `paraty_geoservices` via a CDN-resolution plugin (intercepts both `dist/index.js` and `dist/esm/index.js`). Dev server on **9000**, preview on **9001**, build target `es2022` (top-level await).
+- `ibira.js`, `paraty_geocore.js` and `bessa_patterns.ts` are npm dependencies — resolved from `node_modules`, no alias/importmap needed. Remaining sibling packages are wired here: `catas_altas_speech` via alias (local sibling → jsDelivr CDN fallback + importmap), `paraty_geoservices` via a CDN-resolution plugin (intercepts both `dist/index.js` and `dist/esm/index.js`). Dev server on **9000**, preview on **9001**, build target `es2022` (top-level await).
 
 ### Key Design Patterns
 

@@ -70,11 +70,20 @@ export default defineConfig(({ mode }) => {
     ],
     resolve: {
       alias: (() => {
-        // Map importmap alias to the local bessa_patterns.ts package for Vite/Rollup.
-        // Fall back to src/index.ts (e.g. in Docker where dist/ hasn't been built yet).
-        const bessaDist = resolve(dirname(new URL(import.meta.url).pathname), '../bessa_patterns.ts/dist/index.mjs');
-        const bessaSrc  = resolve(dirname(new URL(import.meta.url).pathname), '../bessa_patterns.ts/src/index.ts');
-        return { 'bessa_patterns.ts': existsSync(bessaDist) ? bessaDist : bessaSrc };
+        const here = dirname(new URL(import.meta.url).pathname);
+        // bessa_patterns.ts, ibira.js and paraty_geocore.js are now published npm
+        // packages resolved from node_modules — no alias needed.
+
+        // catas_altas_speech: prefer the local sibling repo when present (offline /
+        // Docker / hermetic builds), otherwise fall back to the jsDelivr CDN URL,
+        // which Rollup leaves external and the browser resolves via the importmap.
+        const cataDist = resolve(here, '../catas_altas_speech/dist/esm/index.js');
+        const cataSrc  = resolve(here, '../catas_altas_speech/src/index.ts');
+        const cataCDN  = 'https://cdn.jsdelivr.net/gh/mpbarbosa/catas_altas_speech@0.1.3/dist/esm/index.js';
+
+        return {
+          'catas_altas_speech': existsSync(cataDist) ? cataDist : existsSync(cataSrc) ? cataSrc : cataCDN,
+        };
       })(),
     },
     root: 'src',

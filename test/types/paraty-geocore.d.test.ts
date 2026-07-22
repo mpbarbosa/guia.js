@@ -6,7 +6,7 @@ import GeoPosition, {
   GeoPositionError,
   GeoPositionInput,
   GeoCoords,
-} from 'https://cdn.jsdelivr.net/gh/mpbarbosa/paraty_geocore.js@0.12.11-alpha/dist/esm/index.js';
+} from 'paraty_geocore.js';
 
 describe('GeoPosition', () => {
   const validCoords: GeoCoords = {

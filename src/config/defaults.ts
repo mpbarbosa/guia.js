@@ -13,10 +13,12 @@
 export const APP_VERSION = {
 	major: 0,
 	minor: 28,
-	patch: 16,
-	prerelease: "alpha", // Indicates unstable development
+	patch: 17,
+	prerelease: "", // Empty for stable releases; e.g. "alpha" for unstable
 	toString: function () {
-		return `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`;
+		return this.prerelease
+			? `${this.major}.${this.minor}.${this.patch}-${this.prerelease}`
+			: `${this.major}.${this.minor}.${this.patch}`;
 	},
 };
 

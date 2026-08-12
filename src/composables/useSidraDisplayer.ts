@@ -1,40 +1,46 @@
-import { ref, onUnmounted } from 'vue';
-import AddressCache from '../data/AddressCache.js';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+import type { CachedLocationSnapshot } from '../services/OfflineCacheService.js';
+import locationSnapshotRepository from '../services/LocationSnapshotRepository.js';
 
-type AddressCacheInstance = ReturnType<typeof AddressCache.getInstance>;
-type SubscribeParam = Parameters<AddressCacheInstance['subscribe']>[0];
-type CurrentAddress = AddressCacheInstance['currentAddress'];
+const WAITING_LABEL = 'Aguardando localização...';
 
 /**
- * Reactive IBGE/SIDRA label sourced from AddressCache.
+ * Reactive IBGE/SIDRA label sourced from the location snapshot repository —
+ * the same live source as useLocationSnapshot / useHighlightCards.
  *
- * Replaces HTMLSidraDisplayer: exposes a simple reactive label showing the
- * confirmed município and UF. Full SIDRA stat fetching belongs in the Stats
- * screen composable (useIBGECityStats); this composable keeps the secondary
- * info panel lightweight.
+ * Exposes a simple reactive label showing the município and UF. Full SIDRA stat
+ * fetching belongs in the Stats screen composable (useIBGECityStats); this
+ * composable keeps the secondary info panel lightweight and consistent with the
+ * other address displays (single source of truth).
  */
 export function useSidraDisplayer() {
-  const sidraLabel = ref<string>('Aguardando localização...');
-  const addressCache = AddressCache.getInstance();
+  const snapshot = ref<CachedLocationSnapshot | null>(null);
+  let unsubscribe: (() => void) | null = null;
 
-  function syncFromAddress(addr: CurrentAddress): void {
-    if (!addr?.municipio) return;
-    sidraLabel.value = addr.siglaUF
-      ? `${addr.municipio} — ${addr.siglaUF}`
-      : addr.municipio;
+  const sidraLabel = computed(() => {
+    const address = snapshot.value?.address;
+    const municipio = address?.municipio?.trim();
+    if (!municipio) {
+      return WAITING_LABEL;
+    }
+    const siglaUF = address?.siglaUF?.trim();
+    return siglaUF ? `${municipio} — ${siglaUF}` : municipio;
+  });
+
+  async function loadSnapshot(): Promise<void> {
+    snapshot.value = await locationSnapshotRepository.getLatestLocationSnapshot();
   }
 
-  const observer = {
-    update() {
-      syncFromAddress(addressCache.currentAddress);
-    },
-  };
-
-  syncFromAddress(addressCache.currentAddress);
-  addressCache.subscribe(observer as SubscribeParam);
+  onMounted(() => {
+    void loadSnapshot();
+    unsubscribe = locationSnapshotRepository.subscribe((nextSnapshot) => {
+      snapshot.value = nextSnapshot;
+    });
+  });
 
   onUnmounted(() => {
-    addressCache.unsubscribe(observer as SubscribeParam);
+    unsubscribe?.();
+    unsubscribe = null;
   });
 
   return { sidraLabel };

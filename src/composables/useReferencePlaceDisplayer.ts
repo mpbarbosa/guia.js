@@ -1,37 +1,35 @@
-import { ref, onUnmounted } from 'vue';
-import AddressCache from '../data/AddressCache.js';
-
-type AddressCacheInstance = ReturnType<typeof AddressCache.getInstance>;
-type SubscribeParam = Parameters<AddressCacheInstance['subscribe']>[0];
-type CurrentAddress = AddressCacheInstance['currentAddress'];
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+import type { CachedLocationSnapshot } from '../services/OfflineCacheService.js';
+import locationSnapshotRepository from '../services/LocationSnapshotRepository.js';
 
 /**
- * Reactive ponto de referência name sourced from AddressCache.
+ * Reactive ponto de referência name sourced from the location snapshot
+ * repository — the same live source as useLocationSnapshot / useHighlightCards.
  *
- * Replaces HTMLReferencePlaceDisplayer: reads referencePlace from the
- * confirmed BrazilianStandardAddress and exposes its name as a ref.
- * Returns null when no reference place is available.
+ * Reads the reference-place name captured on the snapshot (see home.ts
+ * _getCachedAddressSummary) and exposes it as a ref. Returns null when no
+ * reference place is available.
  */
 export function useReferencePlaceDisplayer() {
-  const referencePlaceName = ref<string | null>(null);
-  const addressCache = AddressCache.getInstance();
+  const snapshot = ref<CachedLocationSnapshot | null>(null);
+  let unsubscribe: (() => void) | null = null;
 
-  function syncFromAddress(addr: CurrentAddress): void {
-    const place = addr?.referencePlace;
-    referencePlaceName.value = place?.name ?? null;
+  const referencePlaceName = computed(() => snapshot.value?.address?.referencePlaceName?.trim() || null);
+
+  async function loadSnapshot(): Promise<void> {
+    snapshot.value = await locationSnapshotRepository.getLatestLocationSnapshot();
   }
 
-  const observer = {
-    update() {
-      syncFromAddress(addressCache.currentAddress);
-    },
-  };
-
-  syncFromAddress(addressCache.currentAddress);
-  addressCache.subscribe(observer as SubscribeParam);
+  onMounted(() => {
+    void loadSnapshot();
+    unsubscribe = locationSnapshotRepository.subscribe((nextSnapshot) => {
+      snapshot.value = nextSnapshot;
+    });
+  });
 
   onUnmounted(() => {
-    addressCache.unsubscribe(observer as SubscribeParam);
+    unsubscribe?.();
+    unsubscribe = null;
   });
 
   return { referencePlaceName };

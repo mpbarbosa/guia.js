@@ -33,6 +33,7 @@ export interface CachedAddressSummary {
   municipio?: string | null;
   regiaoMetropolitana?: string | null;
   siglaUF?: string | null;
+  referencePlaceName?: string | null;
   displayText: string;
 }
 

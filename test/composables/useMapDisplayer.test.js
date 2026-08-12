@@ -14,6 +14,12 @@ const mockMarkerInstance = { setLngLat: jest.fn().mockReturnThis(), addTo: jest.
 const setCoordinatesMock = jest.fn();
 const fetchAddressMock = jest.fn();
 const getLatestLocationSnapshotMock = jest.fn();
+let capturedSnapshotListener = null;
+const mockSnapshotUnsubscribe = jest.fn();
+const mockSnapshotSubscribe = jest.fn((listener) => {
+  capturedSnapshotListener = listener;
+  return mockSnapshotUnsubscribe;
+});
 const mapConstructorMock = jest.fn((options) => {
   lastMapOptions = options;
   return mockMapInstance;
@@ -47,50 +53,37 @@ jest.unstable_mockModule('vue', () => ({
 
 // Import modules after mocks are registered
 const PositionManagerMod = await import('../../src/core/PositionManager');
-const AddressCacheMod = await import('../../src/data/AddressCache');
 const { useMapDisplayer } = await import('../../src/composables/useMapDisplayer');
 
 const PositionManager = PositionManagerMod.default;
-const AddressCache = AddressCacheMod.default;
 
 describe('useMapDisplayer', () => {
   let result;
   let mockPosSubscribe, mockPosUnsubscribe;
-  let mockAddrSubscribe, mockAddrUnsubscribe;
-  let capturedPosObserver, capturedAddrObserver;
+  let capturedPosObserver;
   let positionManagerState;
-  let addressCacheState;
 
   beforeEach(() => {
     mountedCb = null;
     unmountedCb = null;
     capturedPosObserver = null;
-    capturedAddrObserver = null;
+    capturedSnapshotListener = null;
     positionManagerState = {
       latitude: undefined,
       longitude: undefined,
-    };
-    addressCacheState = {
-      currentAddress: null,
     };
     lastMapOptions = null;
 
     mockPosSubscribe = jest.fn((obs) => { capturedPosObserver = obs; });
     mockPosUnsubscribe = jest.fn();
-    mockAddrSubscribe = jest.fn((obs) => { capturedAddrObserver = obs; });
-    mockAddrUnsubscribe = jest.fn();
+    mockSnapshotSubscribe.mockClear();
+    mockSnapshotUnsubscribe.mockClear();
 
     jest.spyOn(PositionManager, 'getInstance').mockReturnValue({
       subscribe: mockPosSubscribe,
       unsubscribe: mockPosUnsubscribe,
       get latitude() { return positionManagerState.latitude; },
       get longitude() { return positionManagerState.longitude; },
-    });
-
-    jest.spyOn(AddressCache, 'getInstance').mockReturnValue({
-      subscribe: mockAddrSubscribe,
-      unsubscribe: mockAddrUnsubscribe,
-      get currentAddress() { return addressCacheState.currentAddress; },
     });
 
     mockMapInstance.resize.mockClear();
@@ -111,6 +104,7 @@ describe('useMapDisplayer', () => {
       }),
       locationSnapshotRepository: {
         getLatestLocationSnapshot: getLatestLocationSnapshotMock,
+        subscribe: mockSnapshotSubscribe,
       },
     });
   });
@@ -145,9 +139,9 @@ describe('useMapDisplayer', () => {
       expect(mockPosSubscribe).toHaveBeenCalledTimes(1);
     });
 
-    it('subscribes to AddressCache', async () => {
+    it('subscribes to the location snapshot repository', async () => {
       await mountedCb();
-      expect(mockAddrSubscribe).toHaveBeenCalledTimes(1);
+      expect(mockSnapshotSubscribe).toHaveBeenCalledTimes(1);
     });
 
     it('registers a map click listener through the displayer', async () => {
@@ -166,6 +160,7 @@ describe('useMapDisplayer', () => {
         }),
         locationSnapshotRepository: {
           getLatestLocationSnapshot: getLatestLocationSnapshotMock,
+          subscribe: mockSnapshotSubscribe,
         },
       });
 
@@ -196,6 +191,7 @@ describe('useMapDisplayer', () => {
         }),
         locationSnapshotRepository: {
           getLatestLocationSnapshot: getLatestLocationSnapshotMock,
+          subscribe: mockSnapshotSubscribe,
         },
       });
 
@@ -221,6 +217,7 @@ describe('useMapDisplayer', () => {
         }),
         locationSnapshotRepository: {
           getLatestLocationSnapshot: getLatestLocationSnapshotMock,
+          subscribe: mockSnapshotSubscribe,
         },
       });
 
@@ -257,6 +254,7 @@ describe('useMapDisplayer', () => {
         }),
         locationSnapshotRepository: {
           getLatestLocationSnapshot: getLatestLocationSnapshotMock,
+          subscribe: mockSnapshotSubscribe,
         },
       });
 
@@ -285,41 +283,44 @@ describe('useMapDisplayer', () => {
   });
 
   // ---------------------------------------------------------------------------
-  describe('address observer', () => {
+  describe('snapshot address listener', () => {
     beforeEach(async () => { await mountedCb(); });
 
+    const snapshot = (address) => ({ latitude: 0, longitude: 0, timestamp: 0, address });
+
     it('updates street, neighborhood, city refs', () => {
-      capturedAddrObserver.update({
-        currentAddress: { logradouro: 'Rua das Flores', bairro: 'Centro', municipio: 'Paraty' },
-      });
+      capturedSnapshotListener(
+        snapshot({ logradouro: 'Rua das Flores', bairro: 'Centro', municipio: 'Paraty', displayText: '' })
+      );
       expect(result.street.value).toBe('Rua das Flores');
       expect(result.neighborhood.value).toBe('Centro');
       expect(result.city.value).toBe('Paraty');
     });
 
     it('keeps placeholders when address fields are null', () => {
-      capturedAddrObserver.update({
-        currentAddress: { logradouro: null, bairro: null, municipio: null },
-      });
+      capturedSnapshotListener(
+        snapshot({ logradouro: null, bairro: null, municipio: null, displayText: '' })
+      );
       expect(result.street.value).toBe('Aguardando...');
       expect(result.neighborhood.value).toBe('—');
       expect(result.city.value).toBe('—');
     });
 
-    it('does nothing when currentAddress is null', () => {
-      capturedAddrObserver.update({ currentAddress: null });
+    it('does nothing when the snapshot is null', () => {
+      capturedSnapshotListener(null);
       expect(result.street.value).toBe('Aguardando...');
     });
 
     it('falls back to distrito when bairro is unavailable', () => {
-      capturedAddrObserver.update({
-        currentAddress: {
+      capturedSnapshotListener(
+        snapshot({
           logradouro: 'Rua da Matriz',
           bairro: null,
           distrito: 'Distrito Sede',
           municipio: 'Paraty',
-        },
-      });
+          displayText: '',
+        })
+      );
 
       expect(result.neighborhood.value).toBe('Distrito Sede');
     });
@@ -404,8 +405,8 @@ describe('useMapDisplayer', () => {
       expect(mockPosUnsubscribe).toHaveBeenCalledTimes(1);
     });
 
-    it('unsubscribes from AddressCache', () => {
-      expect(mockAddrUnsubscribe).toHaveBeenCalledTimes(1);
+    it('unsubscribes from the location snapshot repository', () => {
+      expect(mockSnapshotUnsubscribe).toHaveBeenCalledTimes(1);
     });
   });
 });

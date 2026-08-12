@@ -1,13 +1,12 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import MapLibreDisplayer from '../html/MapLibreDisplayer.js';
 import PositionManager from '../core/PositionManager.js';
-import AddressCache from '../data/AddressCache.js';
 import { createReverseGeocoderService } from '../services/ReverseGeocoder.js';
 import locationSnapshotRepository, {
   type LocationSnapshotRepository,
 } from '../services/LocationSnapshotRepository.js';
 import NominatimAddressExtractor from '../data/AddressExtractor.js';
-import type { CachedAddressSummary } from '../services/OfflineCacheService.js';
+import type { CachedAddressSummary, CachedLocationSnapshot } from '../services/OfflineCacheService.js';
 
 const MAP_CONTAINER_ID = 'maplibre-map';
 const DEFAULT_STREET = 'Aguardando...';
@@ -20,14 +19,7 @@ type ReverseGeocoderFactory = typeof createReverseGeocoderService;
 
 interface UseMapDisplayerOptions {
   createReverseGeocoder?: ReverseGeocoderFactory;
-  locationSnapshotRepository?: Pick<LocationSnapshotRepository, 'getLatestLocationSnapshot'>;
-}
-
-interface LiveAddressSnapshot {
-  logradouro: string | null;
-  bairro: string | null;
-  distrito?: string | null;
-  municipio: string | null;
+  locationSnapshotRepository?: Pick<LocationSnapshotRepository, 'getLatestLocationSnapshot' | 'subscribe'>;
 }
 
 interface PositionManagerSnapshot {
@@ -51,6 +43,7 @@ export function useMapDisplayer(options: UseMapDisplayerOptions = {}) {
   let displayer: MapLibreDisplayer | null = null;
   let latestLivePosition: { latitude: number; longitude: number } | null = null;
   let activeManualRequestId = 0;
+  let snapshotUnsubscribe: (() => void) | null = null;
   const createReverseGeocoder = options.createReverseGeocoder ?? createReverseGeocoderService;
   const snapshotRepository = options.locationSnapshotRepository ?? locationSnapshotRepository;
 
@@ -77,21 +70,10 @@ export function useMapDisplayer(options: UseMapDisplayerOptions = {}) {
   const formatCoordinateLabel = (lat: number, lon: number) =>
     `Lat ${lat.toFixed(5)}, Lon ${lon.toFixed(5)}`;
 
-  const applyLiveAddress = (
-    address: Pick<LiveAddressSnapshot, 'logradouro' | 'bairro' | 'distrito' | 'municipio'> | null,
-  ) => {
-    liveAddress.street = address?.logradouro ?? DEFAULT_STREET;
-    liveAddress.neighborhood = address?.bairro ?? address?.distrito ?? DEFAULT_LOCALITY;
-    liveAddress.city = address?.municipio ?? DEFAULT_LOCALITY;
-
-    if (activePositionSource.value === 'live') {
-      syncDisplayedAddress();
-    }
-  };
-
   const applySnapshotAddress = (address: CachedAddressSummary | null) => {
     liveAddress.street = address?.logradouro?.trim() || DEFAULT_STREET;
-    liveAddress.neighborhood = address?.bairro?.trim() || DEFAULT_LOCALITY;
+    liveAddress.neighborhood =
+      address?.bairro?.trim() || address?.distrito?.trim() || DEFAULT_LOCALITY;
     liveAddress.city = address?.municipio?.trim() || DEFAULT_LOCALITY;
 
     if (activePositionSource.value === 'live') {
@@ -164,28 +146,21 @@ export function useMapDisplayer(options: UseMapDisplayerOptions = {}) {
     },
   };
 
-  const addressObserver = {
-    update(cache: {
-      currentAddress: LiveAddressSnapshot | null;
-    }) {
-      applyLiveAddress(cache.currentAddress);
-    },
-  };
-
   onMounted(async () => {
     const currentDisplayer = new MapLibreDisplayer(MAP_CONTAINER_ID, '');
     displayer = currentDisplayer;
     currentDisplayer.onMapClick(handleManualMapSelection);
 
     const positionManager = PositionManager.getInstance() as ReturnType<typeof PositionManager.getInstance> & PositionManagerSnapshot;
-    const addressCache = AddressCache.getInstance() as ReturnType<typeof AddressCache.getInstance> & {
-      currentAddress?: LiveAddressSnapshot | null;
-    };
 
     positionManager.subscribe(positionObserver as Parameters<ReturnType<typeof PositionManager.getInstance>['subscribe']>[0]);
-    addressCache.subscribe(addressObserver as Parameters<ReturnType<typeof AddressCache.getInstance>['subscribe']>[0]);
 
-    applyLiveAddress(addressCache.currentAddress ?? null);
+    // Live address tracks the location snapshot repository — the same source as
+    // the highlight cards and the "último registro salvo" line — so the map
+    // label stays consistent with the rest of the UI.
+    snapshotUnsubscribe = snapshotRepository.subscribe((snapshot: CachedLocationSnapshot | null) => {
+      applySnapshotAddress(snapshot?.address ?? null);
+    });
 
     const liveLat = positionManager.latitude;
     const liveLon = positionManager.longitude;
@@ -221,7 +196,8 @@ export function useMapDisplayer(options: UseMapDisplayerOptions = {}) {
 
   onUnmounted(() => {
     PositionManager.getInstance().unsubscribe(positionObserver as Parameters<ReturnType<typeof PositionManager.getInstance>['unsubscribe']>[0]);
-    AddressCache.getInstance().unsubscribe(addressObserver as Parameters<ReturnType<typeof AddressCache.getInstance>['unsubscribe']>[0]);
+    snapshotUnsubscribe?.();
+    snapshotUnsubscribe = null;
     displayer?.offMapClick(handleManualMapSelection);
     activeManualRequestId += 1;
     displayer = null;

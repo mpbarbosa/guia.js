@@ -514,6 +514,7 @@ class HomeViewController {
         municipio?: string | null;
         regiaoMetropolitana?: string | null;
         siglaUF?: string | null;
+        referencePlace?: { name?: string | null } | null;
       } | null;
     } | null)?.getBrazilianStandardAddress?.();
 
@@ -535,6 +536,7 @@ class HomeViewController {
       municipio: address?.municipio ?? null,
       regiaoMetropolitana: address?.regiaoMetropolitana ?? null,
       siglaUF: address?.siglaUF ?? null,
+      referencePlaceName: address?.referencePlace?.name ?? null,
       displayText: displayParts.join(', '),
     };
   }

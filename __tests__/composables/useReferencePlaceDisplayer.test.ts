@@ -2,93 +2,108 @@
  * @jest-environment jsdom
  */
 
-import { jest } from '@jest/globals';
-import { nextTick } from 'vue';
-import AddressCache from '../../src/data/AddressCache';
+import { defineComponent, nextTick } from 'vue';
+import { mount, type VueWrapper } from '@vue/test-utils';
 import { useReferencePlaceDisplayer } from '../../src/composables/useReferencePlaceDisplayer';
+import locationSnapshotRepository from '../../src/services/LocationSnapshotRepository';
+import type { CachedLocationSnapshot } from '../../src/services/OfflineCacheService.js';
 
-let _currentAddress: any = null;
-let _observer: any = null;
-const _mockInstance = {
-  get currentAddress() { return _currentAddress; },
-  setCurrentAddress(addr: any) {
-    _currentAddress = addr;
-    if (_observer?.update) _observer.update();
+function createSnapshot(
+  addressOverrides: Partial<NonNullable<CachedLocationSnapshot['address']>> = {}
+): CachedLocationSnapshot {
+  return {
+    latitude: 0,
+    longitude: 0,
+    timestamp: 0,
+    address: { displayText: '', ...addressOverrides },
+  };
+}
+
+const Harness = defineComponent({
+  setup() {
+    return useReferencePlaceDisplayer();
   },
-  subscribe: (obs: any) => { _observer = obs; },
-  unsubscribe: (obs: any) => { if (_observer === obs) _observer = null; },
-};
+  template: `<span data-testid="rp">{{ referencePlaceName ?? '' }}</span>`,
+});
+
+async function flushComposableEffects(): Promise<void> {
+  await Promise.resolve();
+  await nextTick();
+}
 
 describe('useReferencePlaceDisplayer', () => {
+  let listener: ((snapshot: CachedLocationSnapshot | null) => void) | null;
+  let unsubscribeMock: jest.Mock;
+
+  async function mountHarness(): Promise<VueWrapper> {
+    const wrapper = mount(Harness);
+    await flushComposableEffects();
+    return wrapper;
+  }
+
   beforeEach(() => {
-    _currentAddress = null;
-    _observer = null;
-    jest.spyOn(AddressCache, 'getInstance').mockReturnValue(_mockInstance as ReturnType<typeof AddressCache.getInstance>);
+    listener = null;
+    unsubscribeMock = jest.fn();
+    jest.spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot').mockResolvedValue(null);
+    jest.spyOn(locationSnapshotRepository, 'subscribe').mockImplementation((callback) => {
+      listener = callback;
+      return unsubscribeMock;
+    });
   });
 
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  it('returns null when no address is present', () => {
-    const { referencePlaceName } = useReferencePlaceDisplayer();
-    expect(referencePlaceName.value).toBeNull();
+  it('returns null when no snapshot is available', async () => {
+    const wrapper = await mountHarness();
+    expect(wrapper.get('[data-testid="rp"]').text()).toBe('');
   });
 
-  it('sets referencePlaceName when referencePlace is present', async () => {
-    const { referencePlaceName } = useReferencePlaceDisplayer();
-    _mockInstance.setCurrentAddress({
-      referencePlace: { name: 'Praça Central' },
-    });
-    await nextTick();
-    expect(referencePlaceName.value).toBe('Praça Central');
+  it('exposes the reference-place name from the snapshot', async () => {
+    jest
+      .spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot')
+      .mockResolvedValueOnce(createSnapshot({ referencePlaceName: 'Praça Central' }));
+
+    const wrapper = await mountHarness();
+    expect(wrapper.get('[data-testid="rp"]').text()).toBe('Praça Central');
   });
 
-  it('sets referencePlaceName to null if referencePlace is missing', async () => {
-    const { referencePlaceName } = useReferencePlaceDisplayer();
-    _mockInstance.setCurrentAddress({});
-    await nextTick();
-    expect(referencePlaceName.value).toBeNull();
+  it('returns null when the snapshot has no reference-place name', async () => {
+    jest
+      .spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot')
+      .mockResolvedValueOnce(createSnapshot({ referencePlaceName: null }));
+
+    const wrapper = await mountHarness();
+    expect(wrapper.get('[data-testid="rp"]').text()).toBe('');
   });
 
-  it('sets referencePlaceName to null if referencePlace.name is missing', async () => {
-    const { referencePlaceName } = useReferencePlaceDisplayer();
-    _mockInstance.setCurrentAddress({
-      referencePlace: {},
-    });
+  it('updates the name when the repository emits a new snapshot', async () => {
+    const wrapper = await mountHarness();
+
+    listener?.(createSnapshot({ referencePlaceName: 'Praça 1' }));
     await nextTick();
-    expect(referencePlaceName.value).toBeNull();
+    expect(wrapper.get('[data-testid="rp"]').text()).toBe('Praça 1');
+
+    listener?.(createSnapshot({ referencePlaceName: 'Praça 2' }));
+    await nextTick();
+    expect(wrapper.get('[data-testid="rp"]').text()).toBe('Praça 2');
   });
 
-  it('updates referencePlaceName when address changes', async () => {
-    const { referencePlaceName } = useReferencePlaceDisplayer();
-    _mockInstance.setCurrentAddress({
-      referencePlace: { name: 'Praça 1' },
-    });
+  it('clears the name when the snapshot becomes null', async () => {
+    const wrapper = await mountHarness();
+    listener?.(createSnapshot({ referencePlaceName: 'Praça 1' }));
     await nextTick();
-    expect(referencePlaceName.value).toBe('Praça 1');
-    _mockInstance.setCurrentAddress({
-      referencePlace: { name: 'Praça 2' },
-    });
+    expect(wrapper.get('[data-testid="rp"]').text()).toBe('Praça 1');
+
+    listener?.(null);
     await nextTick();
-    expect(referencePlaceName.value).toBe('Praça 2');
+    expect(wrapper.get('[data-testid="rp"]').text()).toBe('');
   });
 
-  it('unsubscribes observer on unmount', () => {
-    const unsubscribeSpy = jest.spyOn(_mockInstance, 'unsubscribe');
-    useReferencePlaceDisplayer();
-    _mockInstance.unsubscribe(_observer);
-    expect(unsubscribeSpy).toHaveBeenCalled();
-    expect(() => _mockInstance.unsubscribe(_observer)).not.toThrow();
-  });
-
-  it('does not update referencePlaceName if address is null or undefined', async () => {
-    const { referencePlaceName } = useReferencePlaceDisplayer();
-    _mockInstance.setCurrentAddress(null);
-    await nextTick();
-    expect(referencePlaceName.value).toBeNull();
-    _mockInstance.setCurrentAddress(undefined);
-    await nextTick();
-    expect(referencePlaceName.value).toBeNull();
+  it('unsubscribes on unmount', async () => {
+    const wrapper = await mountHarness();
+    wrapper.unmount();
+    expect(unsubscribeMock).toHaveBeenCalledTimes(1);
   });
 });

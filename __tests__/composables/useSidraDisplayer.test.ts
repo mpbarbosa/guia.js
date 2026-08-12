@@ -2,100 +2,120 @@
  * @jest-environment jsdom
  */
 
-import { jest } from '@jest/globals';
-import { nextTick } from 'vue';
-import AddressCache from '../../src/data/AddressCache';
+import { defineComponent, nextTick } from 'vue';
+import { mount, type VueWrapper } from '@vue/test-utils';
 import { useSidraDisplayer } from '../../src/composables/useSidraDisplayer';
+import locationSnapshotRepository from '../../src/services/LocationSnapshotRepository';
+import type { CachedLocationSnapshot } from '../../src/services/OfflineCacheService.js';
 
-let _currentAddress: any = null;
-let _observer: any = null;
-const _mockInstance = {
-  get currentAddress() { return _currentAddress; },
-  setCurrentAddress(addr: any) {
-    _currentAddress = addr;
-    if (_observer?.update) _observer.update();
+const WAITING_LABEL = 'Aguardando localização...';
+
+function createSnapshot(
+  addressOverrides: Partial<NonNullable<CachedLocationSnapshot['address']>> | null = {}
+): CachedLocationSnapshot {
+  return {
+    latitude: 0,
+    longitude: 0,
+    timestamp: 0,
+    address: addressOverrides === null ? null : { displayText: '', ...addressOverrides },
+  };
+}
+
+const Harness = defineComponent({
+  setup() {
+    return useSidraDisplayer();
   },
-  subscribe: (obs: any) => { _observer = obs; },
-  unsubscribe: (obs: any) => { if (_observer === obs) _observer = null; },
-};
+  template: `<span data-testid="sidra">{{ sidraLabel }}</span>`,
+});
+
+async function flushComposableEffects(): Promise<void> {
+  await Promise.resolve();
+  await nextTick();
+}
 
 describe('useSidraDisplayer', () => {
+  let listener: ((snapshot: CachedLocationSnapshot | null) => void) | null;
+  let unsubscribeMock: jest.Mock;
+
+  async function mountHarness(): Promise<VueWrapper> {
+    const wrapper = mount(Harness);
+    await flushComposableEffects();
+    return wrapper;
+  }
+
   beforeEach(() => {
-    _currentAddress = null;
-    _observer = null;
-    jest.spyOn(AddressCache, 'getInstance').mockReturnValue(_mockInstance as ReturnType<typeof AddressCache.getInstance>);
+    listener = null;
+    unsubscribeMock = jest.fn();
+    jest.spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot').mockResolvedValue(null);
+    jest.spyOn(locationSnapshotRepository, 'subscribe').mockImplementation((callback) => {
+      listener = callback;
+      return unsubscribeMock;
+    });
   });
 
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  it('returns default label when no address is present', () => {
-    const { sidraLabel } = useSidraDisplayer();
-    expect(sidraLabel.value).toBe('Aguardando localização...');
+  it('returns the waiting label when no snapshot is available', async () => {
+    const wrapper = await mountHarness();
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe(WAITING_LABEL);
   });
 
-  it('sets sidraLabel to "municipio — siglaUF" when both are present', async () => {
-    const { sidraLabel } = useSidraDisplayer();
-    _mockInstance.setCurrentAddress({
-      municipio: 'São Paulo',
-      siglaUF: 'SP',
-    });
-    await nextTick();
-    expect(sidraLabel.value).toBe('São Paulo — SP');
+  it('sets the label to "municipio — siglaUF" when both are present', async () => {
+    jest
+      .spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot')
+      .mockResolvedValueOnce(createSnapshot({ municipio: 'São Paulo', siglaUF: 'SP' }));
+
+    const wrapper = await mountHarness();
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe('São Paulo — SP');
   });
 
-  it('sets sidraLabel to "municipio" when only municipio is present', async () => {
-    const { sidraLabel } = useSidraDisplayer();
-    _mockInstance.setCurrentAddress({
-      municipio: 'Rio de Janeiro',
-      siglaUF: '',
-    });
-    await nextTick();
-    expect(sidraLabel.value).toBe('Rio de Janeiro');
+  it('sets the label to just "municipio" when there is no UF', async () => {
+    jest
+      .spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot')
+      .mockResolvedValueOnce(createSnapshot({ municipio: 'Rio de Janeiro', siglaUF: '' }));
+
+    const wrapper = await mountHarness();
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe('Rio de Janeiro');
   });
 
-  it('does not update sidraLabel if municipio is missing', async () => {
-    const { sidraLabel } = useSidraDisplayer();
-    _mockInstance.setCurrentAddress({
-      municipio: '',
-      siglaUF: 'RJ',
-    });
-    await nextTick();
-    expect(sidraLabel.value).toBe('Aguardando localização...');
+  it('keeps the waiting label when município is missing', async () => {
+    jest
+      .spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot')
+      .mockResolvedValueOnce(createSnapshot({ municipio: '', siglaUF: 'RJ' }));
+
+    const wrapper = await mountHarness();
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe(WAITING_LABEL);
   });
 
-  it('updates sidraLabel when address changes', async () => {
-    const { sidraLabel } = useSidraDisplayer();
-    _mockInstance.setCurrentAddress({
-      municipio: 'Curitiba',
-      siglaUF: 'PR',
-    });
+  it('updates the label when the repository emits a new snapshot', async () => {
+    const wrapper = await mountHarness();
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe(WAITING_LABEL);
+
+    listener?.(createSnapshot({ municipio: 'Curitiba', siglaUF: 'PR' }));
     await nextTick();
-    expect(sidraLabel.value).toBe('Curitiba — PR');
-    _mockInstance.setCurrentAddress({
-      municipio: 'Florianópolis',
-      siglaUF: 'SC',
-    });
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe('Curitiba — PR');
+
+    listener?.(createSnapshot({ municipio: 'Florianópolis', siglaUF: 'SC' }));
     await nextTick();
-    expect(sidraLabel.value).toBe('Florianópolis — SC');
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe('Florianópolis — SC');
   });
 
-  it('unsubscribes observer on unmount', () => {
-    const unsubscribeSpy = jest.spyOn(_mockInstance, 'unsubscribe');
-    useSidraDisplayer();
-    _mockInstance.unsubscribe(_observer);
-    expect(unsubscribeSpy).toHaveBeenCalled();
-    expect(() => _mockInstance.unsubscribe(_observer)).not.toThrow();
+  it('falls back to the waiting label when the snapshot is null', async () => {
+    const wrapper = await mountHarness();
+    listener?.(createSnapshot({ municipio: 'Curitiba', siglaUF: 'PR' }));
+    await nextTick();
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe('Curitiba — PR');
+
+    listener?.(null);
+    await nextTick();
+    expect(wrapper.get('[data-testid="sidra"]').text()).toBe(WAITING_LABEL);
   });
 
-  it('does not update sidraLabel if address is null or undefined', async () => {
-    const { sidraLabel } = useSidraDisplayer();
-    _mockInstance.setCurrentAddress(null);
-    await nextTick();
-    expect(sidraLabel.value).toBe('Aguardando localização...');
-    _mockInstance.setCurrentAddress(undefined);
-    await nextTick();
-    expect(sidraLabel.value).toBe('Aguardando localização...');
+  it('unsubscribes on unmount', async () => {
+    const wrapper = await mountHarness();
+    wrapper.unmount();
+    expect(unsubscribeMock).toHaveBeenCalledTimes(1);
   });
 });

@@ -183,6 +183,38 @@ fi
 echo ""
 
 # ==============================================================================
+# 4b. Check src/config/version.ts (VERSION — the user-facing source: app badge,
+#     footer/version modal, HistoryView, app init log, service-worker cache-bust)
+# ==============================================================================
+
+echo -e "${YELLOW}Checking src/config/version.ts...${NC}"
+
+if [ ! -f "src/config/version.ts" ]; then
+    echo -e "${RED}❌ src/config/version.ts not found${NC}"
+    INCONSISTENCIES=$((INCONSISTENCIES + 1))
+else
+    VERSION_TS=$(grep -oP "export const VERSION\s*=\s*['\"]\K[^'\"]+" src/config/version.ts | head -1)
+    if [ -z "$VERSION_TS" ]; then
+        echo -e "${RED}❌ Could not find VERSION in src/config/version.ts${NC}"
+        INCONSISTENCIES=$((INCONSISTENCIES + 1))
+    elif [ "$VERSION_TS" != "$PACKAGE_VERSION" ]; then
+        if [ "$FIX_MODE" = true ]; then
+            sed -i "s/\(export const VERSION\s*=\s*['\"]\)[^'\"]*\(['\"]\)/\1$PACKAGE_VERSION\2/" src/config/version.ts
+            echo -e "${GREEN}🔧 Auto-fixed src/config/version.ts: $VERSION_TS → $PACKAGE_VERSION${NC}"
+        else
+            echo -e "${RED}❌ Version mismatch in src/config/version.ts${NC}"
+            echo "   Expected: $PACKAGE_VERSION"
+            echo "   Found: $VERSION_TS"
+            echo "   💡 This is the version shown in the app badge/footer — run with --fix"
+            INCONSISTENCIES=$((INCONSISTENCIES + 1))
+        fi
+    else
+        echo -e "${GREEN}✅ src/config/version.ts version matches${NC}"
+    fi
+fi
+echo ""
+
+# ==============================================================================
 # 5. Check .github/copilot-instructions.md
 # ==============================================================================
 

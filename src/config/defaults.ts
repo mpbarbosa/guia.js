@@ -13,7 +13,7 @@
 export const APP_VERSION = {
 	major: 0,
 	minor: 28,
-	patch: 17,
+	patch: 18,
 	prerelease: "", // Empty for stable releases; e.g. "alpha" for unstable
 	toString: function () {
 		return this.prerelease

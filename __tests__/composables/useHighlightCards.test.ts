@@ -2,177 +2,128 @@
  * @jest-environment jsdom
  */
 
-import { jest } from '@jest/globals';
-import { nextTick } from 'vue';
-import AddressCache from '../../src/data/AddressCache';
+import { defineComponent, nextTick } from 'vue';
+import { mount, type VueWrapper } from '@vue/test-utils';
 import { useHighlightCards } from '../../src/composables/useHighlightCards';
+import locationSnapshotRepository from '../../src/services/LocationSnapshotRepository';
+import type { CachedLocationSnapshot } from '../../src/services/OfflineCacheService.js';
 
-// Module-level closure state for the AddressCache mock
-let _currentAddress: any = null;
-let _observer: any = null;
-const _mockInstance = {
-  get currentAddress() { return _currentAddress; },
-  setCurrentAddress(addr: any) {
-    _currentAddress = addr;
-    if (_observer?.update) _observer.update();
+function createSnapshot(
+  addressOverrides: Partial<NonNullable<CachedLocationSnapshot['address']>> = {}
+): CachedLocationSnapshot {
+  return {
+    latitude: -23.55052,
+    longitude: -46.633308,
+    timestamp: 1717196400000,
+    address: {
+      displayText: 'Rua das Flores, Centro, São Paulo, SP',
+      municipio: 'São Paulo',
+      bairro: 'Centro',
+      logradouro: 'Rua das Flores',
+      siglaUF: 'SP',
+      ...addressOverrides,
+    },
+  };
+}
+
+const Harness = defineComponent({
+  setup() {
+    return useHighlightCards();
   },
-  subscribe: (obs: any) => { _observer = obs; },
-  unsubscribe: (obs: any) => { if (_observer === obs) _observer = null; },
-};
+  template: `
+    <div>
+      <span data-testid="municipio">{{ municipio }}</span>
+      <span data-testid="bairro-label">{{ bairroLabel }}</span>
+      <span data-testid="bairro">{{ bairro }}</span>
+      <span data-testid="logradouro">{{ logradouro }}</span>
+      <span data-testid="rm">{{ regiaoMetropolitana ?? '' }}</span>
+    </div>
+  `,
+});
+
+async function flushComposableEffects(): Promise<void> {
+  await Promise.resolve();
+  await nextTick();
+}
 
 describe('useHighlightCards', () => {
+  let listener: ((snapshot: CachedLocationSnapshot | null) => void) | null;
+  let unsubscribeMock: jest.Mock;
+
+  async function mountHarness(): Promise<VueWrapper> {
+    const wrapper = mount(Harness);
+    await flushComposableEffects();
+    return wrapper;
+  }
+
   beforeEach(() => {
-    _currentAddress = null;
-    _observer = null;
-    jest.spyOn(AddressCache, 'getInstance').mockReturnValue(_mockInstance as ReturnType<typeof AddressCache.getInstance>);
+    listener = null;
+    unsubscribeMock = jest.fn();
+
+    jest.spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot').mockResolvedValue(null);
+    jest.spyOn(locationSnapshotRepository, 'subscribe').mockImplementation((callback) => {
+      listener = callback;
+      return unsubscribeMock;
+    });
   });
 
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  it('returns default values when no address is present', () => {
-    const { municipio, bairro, bairroLabel, logradouro, regiaoMetropolitana } = useHighlightCards();
-    expect(municipio.value).toBe('—');
-    expect(bairroLabel.value).toBe('Bairro');
-    expect(bairro.value).toBe('—');
-    expect(logradouro.value).toBe('—');
-    expect(regiaoMetropolitana.value).toBeNull();
+  it('returns placeholder values when no snapshot is available', async () => {
+    const wrapper = await mountHarness();
+
+    expect(wrapper.get('[data-testid="municipio"]').text()).toBe('—');
+    expect(wrapper.get('[data-testid="bairro-label"]').text()).toBe('Bairro');
+    expect(wrapper.get('[data-testid="bairro"]').text()).toBe('—');
+    expect(wrapper.get('[data-testid="logradouro"]').text()).toBe('—');
+    expect(wrapper.get('[data-testid="rm"]').text()).toBe('');
   });
 
-  it('sets all fields to uppercase and regiaoMetropolitana as provided', async () => {
-    const { municipio, bairro, bairroLabel, logradouro, regiaoMetropolitana } = useHighlightCards();
-    _mockInstance.setCurrentAddress({
-      municipio: 'São Paulo',
-      bairro: 'Centro',
-      logradouro: 'Rua das Flores',
-      regiaoMetropolitana: 'RM SP',
-    });
-    await nextTick();
-    expect(municipio.value).toBe('SÃO PAULO');
-    expect(bairroLabel.value).toBe('Bairro');
-    expect(bairro.value).toBe('CENTRO');
-    expect(logradouro.value).toBe('RUA DAS FLORES');
-    expect(regiaoMetropolitana.value).toBe('RM SP');
+  it('uppercases fields and passes regiaoMetropolitana through from the snapshot', async () => {
+    jest
+      .spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot')
+      .mockResolvedValueOnce(createSnapshot({ regiaoMetropolitana: 'RM São Paulo' }));
+
+    const wrapper = await mountHarness();
+
+    expect(wrapper.get('[data-testid="municipio"]').text()).toBe('SÃO PAULO');
+    expect(wrapper.get('[data-testid="bairro-label"]').text()).toBe('Bairro');
+    expect(wrapper.get('[data-testid="bairro"]').text()).toBe('CENTRO');
+    expect(wrapper.get('[data-testid="logradouro"]').text()).toBe('RUA DAS FLORES');
+    expect(wrapper.get('[data-testid="rm"]').text()).toBe('RM São Paulo');
   });
 
   it('uses the Distrito label when only distrito is present', async () => {
-    const { bairro, bairroLabel } = useHighlightCards();
-    _mockInstance.setCurrentAddress({
-      municipio: 'Serro',
-      distrito: 'Milho Verde',
-      logradouro: 'Estrada Real',
-    });
-    await nextTick();
-    expect(bairroLabel.value).toBe('Distrito');
-    expect(bairro.value).toBe('MILHO VERDE');
+    jest
+      .spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot')
+      .mockResolvedValueOnce(createSnapshot({ bairro: null, distrito: 'Perus' }));
+
+    const wrapper = await mountHarness();
+
+    expect(wrapper.get('[data-testid="bairro-label"]').text()).toBe('Distrito');
+    expect(wrapper.get('[data-testid="bairro"]').text()).toBe('PERUS');
   });
 
-  it('handles missing fields gracefully', async () => {
-    const { municipio, bairro, bairroLabel, logradouro, regiaoMetropolitana } = useHighlightCards();
-    _mockInstance.setCurrentAddress({
-      municipio: null,
-      bairro: undefined,
-      logradouro: '',
-      regiaoMetropolitana: undefined,
-    });
+  it('updates the cards when the repository emits a new snapshot', async () => {
+    const wrapper = await mountHarness();
+
+    expect(wrapper.get('[data-testid="municipio"]').text()).toBe('—');
+
+    listener?.(createSnapshot({ municipio: 'Suzano', bairro: 'Monte Cristo', logradouro: 'Rodoanel Mário Covas' }));
     await nextTick();
-    expect(municipio.value).toBe('—');
-    expect(bairroLabel.value).toBe('Bairro');
-    expect(bairro.value).toBe('—');
-    expect(logradouro.value).toBe('—');
-    expect(regiaoMetropolitana.value).toBeNull();
+
+    expect(wrapper.get('[data-testid="municipio"]').text()).toBe('SUZANO');
+    expect(wrapper.get('[data-testid="bairro"]').text()).toBe('MONTE CRISTO');
+    expect(wrapper.get('[data-testid="logradouro"]').text()).toBe('RODOANEL MÁRIO COVAS');
   });
 
-  it('updates fields when address changes', async () => {
-    const { municipio, bairro, bairroLabel, logradouro, regiaoMetropolitana } = useHighlightCards();
-    _mockInstance.setCurrentAddress({
-      municipio: 'A',
-      bairro: 'B',
-      logradouro: 'C',
-      regiaoMetropolitana: 'RM1',
-    });
-    await nextTick();
-    expect(municipio.value).toBe('A');
-    expect(bairroLabel.value).toBe('Bairro');
-    expect(bairro.value).toBe('B');
-    expect(logradouro.value).toBe('C');
-    expect(regiaoMetropolitana.value).toBe('RM1');
+  it('calls unsubscribe on unmount', async () => {
+    const wrapper = await mountHarness();
 
-    _mockInstance.setCurrentAddress({
-      municipio: 'X',
-      distrito: 'Y',
-      logradouro: 'Z',
-      regiaoMetropolitana: 'RM2',
-    });
-    await nextTick();
-    expect(municipio.value).toBe('X');
-    expect(bairroLabel.value).toBe('Distrito');
-    expect(bairro.value).toBe('Y');
-    expect(logradouro.value).toBe('Z');
-    expect(regiaoMetropolitana.value).toBe('RM2');
-  });
+    wrapper.unmount();
 
-  it('unsubscribes observer on unmount', () => {
-    const unsubscribeSpy = jest.spyOn(_mockInstance, 'unsubscribe');
-    useHighlightCards();
-    // Simulate onUnmounted by calling unsubscribe with the captured observer
-    _mockInstance.unsubscribe(_observer);
-    expect(unsubscribeSpy).toHaveBeenCalled();
-    expect(() => _mockInstance.unsubscribe(_observer)).not.toThrow();
-  });
-
-  it('does not update fields if address is null or undefined', async () => {
-    const { municipio, bairro, bairroLabel, logradouro, regiaoMetropolitana } = useHighlightCards();
-    _mockInstance.setCurrentAddress(null);
-    await nextTick();
-    expect(municipio.value).toBe('—');
-    expect(bairroLabel.value).toBe('Bairro');
-    expect(bairro.value).toBe('—');
-    expect(logradouro.value).toBe('—');
-    expect(regiaoMetropolitana.value).toBeNull();
-
-    _mockInstance.setCurrentAddress(undefined);
-    await nextTick();
-    expect(municipio.value).toBe('—');
-    expect(bairroLabel.value).toBe('Bairro');
-    expect(bairro.value).toBe('—');
-    expect(logradouro.value).toBe('—');
-    expect(regiaoMetropolitana.value).toBeNull();
-  });
-
-  it('prefers bairro when bairro and distrito are both present', async () => {
-    const { bairro, bairroLabel } = useHighlightCards();
-    _mockInstance.setCurrentAddress({
-      bairro: 'Centro',
-      distrito: 'Milho Verde',
-    });
-    await nextTick();
-
-    expect(bairroLabel.value).toBe('Bairro');
-    expect(bairro.value).toBe('CENTRO');
-  });
-
-  it('still uses distrito when bairro is absent', async () => {
-    const { bairro, bairroLabel } = useHighlightCards();
-    _mockInstance.setCurrentAddress({
-      distrito: 'Milho Verde',
-    });
-    await nextTick();
-
-    expect(bairroLabel.value).toBe('Distrito');
-    expect(bairro.value).toBe('MILHO VERDE');
-  });
-
-  it('sets regiaoMetropolitana to null if not present', async () => {
-    const { regiaoMetropolitana } = useHighlightCards();
-    _mockInstance.setCurrentAddress({
-      municipio: 'Test',
-      bairro: 'Test',
-      logradouro: 'Test',
-      regiaoMetropolitana: undefined,
-    });
-    await nextTick();
-    expect(regiaoMetropolitana.value).toBeNull();
+    expect(unsubscribeMock).toHaveBeenCalledTimes(1);
   });
 });

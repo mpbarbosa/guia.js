@@ -29,7 +29,9 @@ const fallbackStore = new Map<string, unknown>();
 export interface CachedAddressSummary {
   logradouro?: string | null;
   bairro?: string | null;
+  distrito?: string | null;
   municipio?: string | null;
+  regiaoMetropolitana?: string | null;
   siglaUF?: string | null;
   displayText: string;
 }

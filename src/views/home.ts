@@ -510,7 +510,9 @@ class HomeViewController {
       getBrazilianStandardAddress?(): {
         logradouro?: string | null;
         bairro?: string | null;
+        distrito?: string | null;
         municipio?: string | null;
+        regiaoMetropolitana?: string | null;
         siglaUF?: string | null;
       } | null;
     } | null)?.getBrazilianStandardAddress?.();
@@ -529,7 +531,9 @@ class HomeViewController {
     return {
       logradouro: address?.logradouro ?? null,
       bairro: address?.bairro ?? null,
+      distrito: address?.distrito ?? null,
       municipio: address?.municipio ?? null,
+      regiaoMetropolitana: address?.regiaoMetropolitana ?? null,
       siglaUF: address?.siglaUF ?? null,
       displayText: displayParts.join(', '),
     };

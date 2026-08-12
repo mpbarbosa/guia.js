@@ -43,14 +43,18 @@ describe('defaults', () => {
       expect(typeof APP_VERSION.patch).toBe('number');
     });
 
-    test('has prerelease string', () => {
+    test('prerelease is a string (empty for stable releases)', () => {
       expect(typeof APP_VERSION.prerelease).toBe('string');
-      expect(APP_VERSION.prerelease.length).toBeGreaterThan(0);
     });
 
-    test('toString() returns semver-like string', () => {
+    test('toString() returns a semver-like string (with optional prerelease)', () => {
       const str = APP_VERSION.toString();
-      expect(str).toMatch(/^\d+\.\d+\.\d+-\w+$/);
+      // Stable release → "X.Y.Z"; prerelease → "X.Y.Z-tag"
+      expect(str).toMatch(/^\d+\.\d+\.\d+(-\w+)?$/);
+      expect(str).toContain(`${APP_VERSION.major}.${APP_VERSION.minor}.${APP_VERSION.patch}`);
+      if (APP_VERSION.prerelease) {
+        expect(str).toBe(`${APP_VERSION.major}.${APP_VERSION.minor}.${APP_VERSION.patch}-${APP_VERSION.prerelease}`);
+      }
     });
   });
 

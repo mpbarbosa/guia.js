@@ -5,27 +5,30 @@ import { jest } from '@jest/globals';
 import { nextTick } from 'vue';
 import { mount, VueWrapper } from '@vue/test-utils';
 import LocationHighlightCards from '../../src/components/LocationHighlightCards.vue';
-import AddressCache from '../../src/data/AddressCache';
+import locationSnapshotRepository from '../../src/services/LocationSnapshotRepository';
+import type { CachedLocationSnapshot } from '../../src/services/OfflineCacheService.js';
 
-let _currentAddress: any = null;
-let _observer: any = null;
-const _mockInstance = {
-  get currentAddress() { return _currentAddress; },
-  setCurrentAddress(addr: any) {
-    _currentAddress = addr;
-    if (_observer?.update) _observer.update();
-  },
-  subscribe: (obs: any) => { _observer = obs; },
-  unsubscribe: (obs: any) => { if (_observer === obs) _observer = null; },
-};
+let _listener: ((snapshot: CachedLocationSnapshot | null) => void) | null = null;
+
+function emitSnapshot(address: Partial<NonNullable<CachedLocationSnapshot['address']>>): void {
+  _listener?.({
+    latitude: 0,
+    longitude: 0,
+    timestamp: 0,
+    address: { displayText: '', ...address },
+  });
+}
 
 describe('LocationHighlightCards.vue', () => {
   let wrapper: VueWrapper<any>;
 
   beforeEach(() => {
-    _currentAddress = null;
-    _observer = null;
-    jest.spyOn(AddressCache, 'getInstance').mockReturnValue(_mockInstance as ReturnType<typeof AddressCache.getInstance>);
+    _listener = null;
+    jest.spyOn(locationSnapshotRepository, 'getLatestLocationSnapshot').mockResolvedValue(null);
+    jest.spyOn(locationSnapshotRepository, 'subscribe').mockImplementation((callback) => {
+      _listener = callback;
+      return jest.fn();
+    });
     wrapper = mount(LocationHighlightCards);
   });
 
@@ -100,7 +103,7 @@ describe('LocationHighlightCards.vue', () => {
   });
 
   it('switches the locality card label to "Distrito" when distrito is present', async () => {
-    _mockInstance.setCurrentAddress({
+    emitSnapshot({
       distrito: 'Milho Verde',
       municipio: 'Serro',
       logradouro: 'Estrada Real',

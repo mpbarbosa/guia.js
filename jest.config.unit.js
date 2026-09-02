@@ -179,7 +179,10 @@ if (missing.length > 0) {
        functions: 55,
        lines: 65
      },
-     './src/services/**/*.js': {
+     // Sources here are TypeScript. The glob previously ended in .js, matched
+     // nothing, and Jest exits 1 when a coverageThreshold path yields no data —
+     // failing the job even with every global threshold comfortably met.
+     './src/services/**/*.ts': {
        branches: 20,
        functions: 18
      }

@@ -167,12 +167,17 @@ if (missing.length > 0) {
    ],
    
    // Coverage thresholds
+   // Raised from 55/60/50/55 to match the values package.json's jest config
+   // carried, so routing the coverage job through this config does not quietly
+   // relax the gate. Actual coverage is 80.66/72.01/79.18/81.47, so these hold
+   // with room to spare — the previously reported 0% was an artifact of the
+   // default config matching only 9 .js suites that never touch the .ts source.
    coverageThreshold: {
      global: {
-       statements: 55,
-       branches: 60,
-       functions: 50,
-       lines: 55
+       statements: 65,
+       branches: 69,
+       functions: 55,
+       lines: 65
      },
      './src/services/**/*.js': {
        branches: 20,

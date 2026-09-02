@@ -1,3 +1,33 @@
+import { existsSync } from 'fs';
+import { dirname, resolve } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// moduleNameMapper below points three bare specifiers at sibling checkouts:
+// paraty_geocore.js, paraty_geoservices and bessa_patterns.ts. They are not
+// optional — roughly a third of this suite imports them transitively.
+//
+// When a sibling is absent the failures are wildly misleading: the two
+// integration suites report "Configuration error", while
+// EventCoordinator.test.ts wraps its imports in a try/catch, swallows the
+// resolution error, and surfaces it as "UICoordinator is not a constructor"
+// because the assignments after the failed import never run. Dropping the
+// mappings instead is worse still — 61 suites fail on unresolvable CDN URLs.
+//
+// So fail fast and say exactly what is missing.
+const REQUIRED_SIBLINGS = ['paraty_geocore.js', 'paraty_geoservices', 'bessa_patterns.ts'];
+const missing = REQUIRED_SIBLINGS.filter((pkg) => !existsSync(resolve(__dirname, '..', pkg, 'src')));
+
+if (missing.length > 0) {
+  throw new Error(
+    `jest.config.unit.js: missing sibling checkout(s): ${missing.join(', ')}.\n` +
+      `These are mapped to local source and are required by this suite.\n` +
+      `Clone them next to this repository:\n` +
+      missing.map((p) => `  git clone --depth 1 https://github.com/mpbarbosa/${p}.git ../${p}`).join('\n')
+  );
+}
+
 /**
  * Jest Configuration for Unit/Integration Tests (Non-E2E)
  * 

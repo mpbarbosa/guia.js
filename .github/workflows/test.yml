@@ -170,6 +170,17 @@ jobs:
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
       
+      # jest.config.unit.js maps paraty_geocore.js, paraty_geoservices and
+      # bessa_patterns.ts to sibling checkouts. Roughly a third of the suite
+      # imports them transitively, so without these clones 61 suites fail —
+      # previously reported as "Configuration error" and the misleading
+      # "UICoordinator is not a constructor". All three repos are public.
+      - name: Checkout sibling repositories
+        run: |
+          for repo in paraty_geocore.js paraty_geoservices bessa_patterns.ts; do
+            git clone --depth 1 "https://github.com/mpbarbosa/$repo.git" "../$repo"
+          done
+      
       - name: Run unit tests
         run: npm run test:unit
       
